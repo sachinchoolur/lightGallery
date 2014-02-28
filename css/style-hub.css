@@ -1,0 +1,147 @@
+.style-headline {
+  padding: 40px 0 60px;
+  text-align: center;
+}
+.style-headline .style-logo {
+  font-size: 54px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  line-height: 70px;
+  color: #000;
+}
+.style-headline .logo {
+  background: url(../img/theme/bm-logo.png) center 0 no-repeat;
+  background-size: 180px 40px;
+  height: 40px;
+  margin: 0 auto 26px;
+  overflow: hidden;
+  text-indent: -9999em;
+  width: 180x;
+}
+.style-headline small {
+  color: #888888;
+  font-size: 16px;
+  font-weight: 200;
+  letter-spacing: 1px;
+  padding-top: 5px;
+}
+.style-group {
+  padding: 60px 0 0;
+  margin-bottom: 20px;
+}
+.style-group:before,
+.style-group:after {
+  content: " ";
+  display: table;
+}
+.style-group:after {
+  clear: both;
+}
+.style-group .info h1 {
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 500;
+  margin: 0 0 30px;
+  line-height: 1;
+}
+.style-group .info p {
+  font-size: 12px;
+  color: #777;
+  line-height: 1.5;
+  padding-right: 20px;
+}
+.style-group h3.sTl-hD {
+  font-size: 14px;
+  color: #AAA;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1;
+  margin: 0 0 30px;
+}
+.style-row {
+  margin-bottom: 20px;
+}
+.style-row.end {
+  margin-bottom: 60px;
+}
+.style-row .demo-panel-title {
+  margin-bottom: 20px;
+  padding-top: 20px;
+}
+.style-row small {
+  color: #888888;
+  font-size: inherit;
+  font-weight: 400;
+}
+.ui-icons-12 {
+  font-size: 12px;
+  position: relative;
+}
+.ui-icons-12 li {
+  padding: 0 !important;
+  margin: 0 10px 10px 0;
+  width: 12px;
+  height: 12px;
+}
+.ui-icons-12 li:first-child {
+  margin-left: 0;
+}
+.ui-icons-16 {
+  font-size: 16px;
+  position: relative;
+}
+.ui-icons-16 li {
+  padding: 0 !important;
+  margin: 0 10px 10px 0;
+  width: 16px;
+  height: 16px;
+}
+.ui-icons-16 li:first-child {
+  margin-left: 0;
+}
+.ui-icons-20 {
+  font-size: 20px;
+  position: relative;
+}
+.ui-icons-20 li {
+  padding: 0 !important;
+  width: 20px;
+  margin: 0 10px 10px 0;
+  height: 20px;
+}
+.ui-icons-20 li:first-child {
+  margin-left: 0;
+}
+.ui-icons-24 {
+  font-size: 24px;
+  position: relative;
+}
+.ui-icons-24 li {
+  padding: 0 !important;
+  margin: 0 10px 10px 0;
+  width: 24px;
+  height: 24px;
+}
+.ui-icons-24 li:first-child {
+  margin-left: 0;
+}
+.font-awesome {
+  list-style-type: none;
+  margin: 0;
+}
+.font-awesome li {
+  cursor: pointer;
+  line-height: 14px;
+  height: 14px;
+  width: 14px;
+  overflow: hidden;
+  padding: 0 !important;
+}
+.font-awesome li [class^="icon-"],
+.font-awesome li [class*=" icon-"] {
+  width: 14px;
+  font-size: 14px;
+}

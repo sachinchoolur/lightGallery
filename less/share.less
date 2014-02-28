@@ -1,0 +1,34 @@
+ #social_net{
+    float:left;
+    .sharrre{
+        cursor: pointer;
+        .box{
+            float: right;
+            a:hover{
+                text-decoration:none;
+            }
+        }
+        .count {
+            background-image: url("../img/share-count-bubble.png");
+            background-repeat: no-repeat;
+            color: @gray;
+            float: left;
+            font-size: 11px;
+            height: 20px;
+            line-height: 18px !important;
+            margin-left: 3px;
+            margin-right: 10px;
+            text-align: center;
+            width: 36px;
+        }
+        &#twitter:before{
+            color: @twitter;
+        }
+        &#facebook:before{
+            color: @facebook;
+        }
+        &#googleplus:before{
+            color: @google;
+        }
+    } 
+}

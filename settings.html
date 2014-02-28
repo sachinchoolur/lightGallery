@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--[if lte IE 9]>         <html lang="en" class="lt-ie8"> <![endif]-->
+    <head>
+    <title>JQuery lightGallery Settings</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Jquery lightGallery is a lightweight jQuery lightbox gallery for displaying image and video gallery" />
+<link rel="shortcut icon" href="static/img/favicon.ico">
+<link href="css/base.css" rel="stylesheet">
+<link rel="stylesheet" href="light-gallery/css/lightGallery.css" />
+<link rel="stylesheet" href="css/prettify.css" />
+<link href='http://fonts.googleapis.com/css?family=Cinzel+Decorative:400,700,900' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800|Roboto+Slab:400,300,700,100' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic|Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+<![endif]-->
+</head>
+<body>
+<header id="mast-head">
+    <div class="container-fluid">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-collapse"> <a href="lightGallery.zip" class="btn btn-success navbar-btn" type="button">Download</a>
+                    <ul class="nav navbar-nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="examples.html">Examples</a></li>
+                        <li class="active"><a href="settings.html">Settings</a></li>
+                        <li><a href="#">Customize</a></li>
+                        <li><a href="contact.html">Help</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<div id="site">
+    <div class="container-fluid">
+    	<div class="navbar-header">
+        <div class="pull-left">
+            <a href="javascript:void(0)" class="pull-left btn-navbar">
+              <button type="button" class="navbar-toggle ib">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <span class="navbar-text ib">Menu</span>
+            </a>
+        </div>
+        <a type="button" class="btn btn-success navbar-btn pull-right" href="lightGallery.zip">Download</a> </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <section class="pageHead">
+                    <h2 class="title">JQuery LightGallery Settings</h2>	 	
+                </section>
+                <section class="options">
+<pre class="prettyprint linenums">mode:'slide'
+// Type of transition 'slide' and 'fade'.
+</pre>	
+<pre class="prettyprint linenums">useCSS : true
+// If true LightGallery will use CSS transitions. if falls jquery animation will be used.</pre>	
+
+<pre class="prettyprint linenums">easing: ''
+// The type of "easing". ex: 'linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'cubic-bezier(n,n,n,n)'.
+// ex = easing:'cubic-bezier(0.25, 0, 0.25, 1)';</pre>	
+
+<pre class="prettyprint linenums">speed: '',
+// Transition duration (in ms). 
+// ex = speed:'1000';</pre>	
+
+<pre class="prettyprint linenums">loop: false,
+// // If false, will disable the ability to loop back to the beginning of the slide when on the last element.</pre>	
+
+<pre class="prettyprint linenums">auto: false,
+// If true, the Slider will automatically start to play.</pre>
+
+<pre class="prettyprint linenums">pause: 4000,
+// The time (in ms) between each auto transition</pre>	
+
+<pre class="prettyprint linenums">escKey:true,
+// Use escape key to close the LightGallery. switch escKey:false, to disable</pre>
+
+<pre class="prettyprint linenums">rel:true,
+// Combine two galleries using data-rel attribute. give same data-rel value for multiple galleries you wish to combine
+<a href="examples.html#relBlock">goTo example →</a>
+</pre>
+
+<pre class="prettyprint linenums">exThumbImage: false,
+// In case if you want to use external image as slider thumbnail add the path of the image inside "data-" attribute &nbsp;&nbsp; and change exThumbImage:'data-yourAttribute';
+// HTML markup = &lt;li data-exthumbimage="externalThumb.jpg" data-src="img/img1.jpg"&gt;&lt;/li&gt;
+// ex = exThumbImage:'data-exthumbimage'; </pre>	
+
+<pre class="prettyprint linenums">thumbnail: true,
+// Enable thumbnails option.</pre>	
+
+<pre class="prettyprint linenums">caption:false,
+// swich captions:true to enable image caption. add Image captions inside "data-title" attribute.
+// HTML markup = &lt;li data-title="Image Title" data-src="img/img1.jpg"&gt;&lt;img src="img/thumb1.jpg" /&gt;&lt;/li&gt;</pre>
+
+<pre class="prettyprint linenums">desc:false,
+// swich desc:true to enable image caption. add Image descriptions inside "data-desc" attribute.
+// HTML markup = &lt;li data-desc="Image Descriptions" data-src="img/img1.jpg"&gt;&lt;img src="img/thumb1.jpg" /&gt;&lt;/li&gt;</pre>
+
+<pre class="prettyprint linenums">controls:true,
+// if controls:false, controls will not be added</pre>
+
+<pre class="prettyprint linenums">hideControlOnEnd:false,
+// if hideControlOnEnd:true, control will be hidden on last slide</pre>
+
+<pre class="prettyprint linenums">mobileSrc: true,
+// To make your website faster in mobile devices you can load separate images (low quality) for Mobile devices. Add &nbsp;&nbsp; the path of the image which you wish to load in mobile devices inside data-responsive-src="" attribute. 
+// switch  mobileSrc: false to disable.
+// HTML markup = &lt;li data-responsive-src="img/img600.jpg" data-src="img/img900.jpg"&gt;&lt;img src="img/thumb1.jpg" /&gt;&lt;/li&gt;</pre>
+
+<pre class="prettyprint linenums">mobileSrcMaxWidth: 640,
+// You can define from which resolution the images for mobile devices should be loaded.
+// ex = mobileSrcMaxWidth: 480</pre>
+
+<pre class="prettyprint linenums">vimeoColor : 'CCCCCC',
+// Set vimeo video player theme color.</pre>
+
+<pre class="prettyprint linenums">videoAutoplay:true,
+// switch videoAutoplay:false to disable video autoplay option</pre>
+
+<pre class="prettyprint linenums">swipeThreshold: 50,,
+// By setting the swipeThreshold you can set how far the user must swipe for the next/prev slide 
+// ex swipeThreshold: 100, (in px);
+</pre>
+
+<pre class="prettyprint linenums">dynamic: true,
+// You can dynamically load lightGallery by passing an array object to the lightGallery.
+<a href="examples.html#dynamicBlock">goTo example →</a>
+</pre>
+
+<pre class="prettyprint linenums">onOpen: function() {},
+// Executes immediately after the slider is loaded</pre>
+
+<pre class="prettyprint linenums">onSlideBefore: function() {},
+// Executes immediately before each slide transition.</pre>
+
+<pre class="prettyprint linenums">onSlideAfter: function() {},
+// Executes immediately after each slide transition.</pre>
+
+<pre class="prettyprint linenums">onSlideNext: function() {},
+// Executes immediately before each "Next" slide transition.</pre>
+
+<pre class="prettyprint linenums">onSlidePrev: function() {},
+// Executes immediately before each "Prev" slide transition. </pre>
+
+<pre class="prettyprint linenums">onBeforeClose: function(){},
+// Executes immediately before the start of the close process.</pre>
+
+<pre class="prettyprint linenums">onCloseAfter: function(){}
+// Executes immediately once Colorbox is closed.</pre>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+<script src="light-gallery/js/lightGallery.js"></script> 
+<script src="js/prettify.js"></script> 
+<script type="text/javascript">
+	var isTouch = ('ontouchstart' in document.documentElement);
+	var site = $('#site');
+	function enableTouch(){
+		if(isTouch){
+			var site = $('#site');
+			var distance,
+			swipeThreshold = 10,
+			startCoords = {}, 
+			endCoords = {};					
+			$('.sub_headder').bind('touchstart', function(e){
+				$('.sub_headder').addClass('touchNav');
+				endCoords = e.originalEvent.targetTouches[0];
+				startCoords.pageX = e.originalEvent.targetTouches[0].pageX;
+				$('.touchNav').bind('touchmove',function(e){
+					e.preventDefault();
+					e.stopPropagation();
+					endCoords = e.originalEvent.targetTouches[0];
+				});
+						
+				return false;
+
+				}).bind('click touchend',function(e){
+					e.preventDefault();
+					e.stopPropagation();
+					distance = endCoords.pageX - startCoords.pageX;
+					if( distance >= swipeThreshold ){
+						$("#mast-head").css('display','block');	
+						site.addClass('translate');	
+						
+					}
+					else if( distance <= - swipeThreshold ){
+						if(site.hasClass('translate')){
+							site.removeClass('translate');
+							setTimeout(function(){
+								$("#mast-head").css('display','none');	
+							},350);
+						}
+					}
+					$('.touchNav').off('touchmove').removeClass('touch');
+				
+			});		
+		}
+		
+	};
+	$(document).ready(function() {
+		window.prettyPrint && prettyPrint()
+		$('#lightGallery').lightGallery({caption:true,desc:true,easing:'ease',speed:1000,exThumbImage:'data-exthumbimage'});   
+		enableTouch();
+		$('.btn-navbar').on('click touchend',function(){
+			if(site.hasClass('translate')){
+				site.removeClass('translate');	
+				setTimeout(function(){
+					$("#mast-head").css('display','none');	
+				},350);	
+			}else{
+				$("#mast-head").css('display','block');	
+				site.addClass('translate');		
+			}
+		});
+		$(window).on("resize orientationchange", function(){
+			if($(window).width() > 767){
+				$("#mast-head").css('display','block');	
+				site.removeClass('translate');
+			}else if(!site.hasClass('translate')){
+				$("#mast-head").css('display','none');		
+			}
+		});
+	});
+</script>
+</body>
+</html>

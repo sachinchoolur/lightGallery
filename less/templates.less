@@ -1,0 +1,35 @@
+.media-cont {
+    border-right: 1px dashed @gray-lighter;
+    border-top: 1px dashed @gray-lighter;
+    padding-right: @base-gutter-width;
+    padding-top: @base-gutter-width;
+}
+.banner{
+	border-bottom: 1px dashed @gray-lighter;
+	margin-bottom: @base-gutter-width;
+	padding-bottom: @base-gutter-width*2;
+}
+.scn{
+	margin-bottom: @base-gutter-width;
+}
+#sideBar{
+
+}
+@media (min-width: @screen-sm-min){
+	.flex-box {
+		display: table;
+    	width: 100%;
+    	> *{
+		    display: table-cell;
+		    float: none;
+		    position: relative;
+		    vertical-align: top;
+    	}
+		#main{
+			width: auto;	
+		}
+		#sideBar{
+			width: 300px;	
+		}
+	}
+}
