@@ -170,31 +170,43 @@
       $(document).ready(function() {
         $("#lightGallery").lightGallery({
           mode:'slide',
-          useCSS : true,
-          easing: '',
-          speed: '',
-          loop: false,
-          auto: false,
-          pause: 4000,
-          escKey:true,
-          exThumbImage: false,
-          thumbnail: true,
-          caption:false,
-          desc:false,
-          controls:true,
-          hideControlOnEnd:true,
-          mobileSrc: true,
-          mobileSrcMaxWidth :640,
-          swipeThreshold: 50,
-          vimeoColor : 'CCCCCC',
-          videoAutoplay:true,
-          onOpen: function() {},
-          onSlideBefore: function() {},
-          onSlideAfter: function() {},
-          onSlideNext: function() {},
-          onSlidePrev: function() {},
-          onBeforeClose: function(){},
-          onCloseAfter: function(){}
+        useCSS : true,
+        easing: 'ease',//'cubic-bezier(0.25, 0, 0.25, 1)',//
+        speed: 1000,
+        loop: false,
+        auto: false,
+        pause: 4000,
+        escKey:true,
+        
+        exThumbImage: false,
+        thumbnail: true,
+        caption:false,
+        desc:false,
+        controls:true,
+        hideControlOnEnd:false,
+        mobileSrc: false,
+        mobileSrcMaxWidth :640,
+
+        //touch
+        swipeThreshold: 50,
+
+        rel:false,
+        dynamic:false,
+        dynamicEl : [],
+        
+        //video
+        vimeoColor : 'CCCCCC',
+        videoAutoplay:true,
+        videoMaxWidth:855,
+        
+        //callbacks
+        onOpen: function() {},
+        onSlideBefore: function() {},
+        onSlideAfter: function() {},
+        onSlideNext: function() {},
+        onSlidePrev: function() {},
+        onBeforeClose: function(){},
+        onCloseAfter: function(){}
         });
       });
     &lt;/script&gt;</pre>
