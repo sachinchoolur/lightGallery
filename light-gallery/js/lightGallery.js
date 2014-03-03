@@ -18,7 +18,6 @@
 				auto: false,
 				pause: 4000,
 				escKey:true,
-				rel:false,
 				
 				exThumbImage: false,
 				thumbnail: true,
@@ -31,14 +30,17 @@
 
 				//touch
 				swipeThreshold: 50,
+
+				rel:false,
+				dynamic:false,
+				dynamicEl : [],
 				
+				//video
 				vimeoColor : 'CCCCCC',
 				videoAutoplay:true,
 				videoMaxWidth:855,
-				dynamic:false,
 				
 				//callbacks
-				dynamicEl : [],
 				onOpen: function() {},
 				onSlideBefore: function() {},
 				onSlideAfter: function() {},
