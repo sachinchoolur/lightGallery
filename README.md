@@ -46,13 +46,13 @@ add the Following code to the <head> of your document.
 Create ul and li elements and add the path of the image or video inside the data-src attributes which you wish to open within the lightGallery.
 ```html
 <ul id="lightGallery">
-    <li data-src="img/img1.jpg">
-        <img src="img/thumb1.jpg" />
-    </li>
-    <li data-src="img/img2.jpg">
-        <img src="img/thumb2.jpg" />
-    </li>
-    ...
+  <li data-src="img/img1.jpg">
+    <img src="img/thumb1.jpg" />
+  </li>
+  <li data-src="img/img2.jpg">
+    <img src="img/thumb2.jpg" />
+  </li>
+  ...
 </ul>
 ```
 ### Call lightGallery! ###
@@ -69,44 +69,44 @@ Create ul and li elements and add the path of the image or video inside the data
   $(document).ready(function() {
     $("#lightGallery").lightGallery({
       mode:'slide',
-    useCSS : true,
-    easing: 'ease',//'cubic-bezier(0.25, 0, 0.25, 1)',//
-    speed: 1000,
-    loop: false,
-    auto: false,
-    pause: 4000,
-    escKey:true,
-    
-    exThumbImage: false,
-    thumbnail: true,
-    caption:false,
-    desc:false,
-    controls:true,
-    hideControlOnEnd:false,
-    mobileSrc: false,
-    mobileSrcMaxWidth :640,
-
-    //touch
-    swipeThreshold: 50,
-
-    rel:false,
-    dynamic:false,
-    dynamicEl : [],
-    
-    //video
-    vimeoColor : 'CCCCCC',
-    videoAutoplay:true,
-    videoMaxWidth:855,
-    
-    //callbacks
-    onOpen: function() {},
-    onSlideBefore: function() {},
-    onSlideAfter: function() {},
-    onSlideNext: function() {},
-    onSlidePrev: function() {},
-    onBeforeClose: function(){},
-    onCloseAfter: function(){}
-    });
+      useCSS : true,
+      easing: 'ease',//'cubic-bezier(0.25, 0, 0.25, 1)',//
+      speed: 1000,
+      loop: false,
+      auto: false,
+      pause: 4000,
+      escKey:true,
+ 
+      exThumbImage: false,
+      thumbnail: true,
+      caption:false,
+      desc:false,
+      controls:true,
+      hideControlOnEnd:false,
+      mobileSrc: false,
+      mobileSrcMaxWidth :640,
+ 
+      //touch
+      swipeThreshold: 50,
+  
+      rel:false,
+      dynamic:false,
+      dynamicEl : [],
+ 
+      //video
+      vimeoColor : 'CCCCCC',
+      videoAutoplay:true,
+      videoMaxWidth:855,
+ 
+      //callbacks
+      onOpen: function() {},
+      onSlideBefore: function() {},
+      onSlideAfter: function() {},
+      onSlideNext: function() {},
+      onSlidePrev: function() {},
+      onBeforeClose: function(){},
+      onCloseAfter: function(){}
+    );
   });
 </script>
 ```
