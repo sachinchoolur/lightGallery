@@ -18,6 +18,7 @@
 				auto: false,
 				pause: 4000,
 				escKey:true,
+				rel:false,
 				
 				exThumbImage: false,
 				thumbnail: true,
@@ -30,17 +31,14 @@
 
 				//touch
 				swipeThreshold: 50,
-
-				rel:false,
-				dynamic:false,
-				dynamicEl : [],
 				
-				//video
 				vimeoColor : 'CCCCCC',
 				videoAutoplay:true,
 				videoMaxWidth:855,
+				dynamic:false,
 				
 				//callbacks
+				dynamicEl : [],
 				onOpen: function() {},
 				onSlideBefore: function() {},
 				onSlideAfter: function() {},
@@ -203,9 +201,9 @@
 					e.preventDefault();
 					xEnd = e.pageX; 
 					if(xEnd-xStart>20){
-						$this.nextSlide();
-					}else if(xStart-xEnd>20){
 						$this.prevSlide();
+					}else if(xStart-xEnd>20){
+						$this.nextSlide();
 					}
 				});
 			},
@@ -605,6 +603,9 @@
 			destroy : function(){
 				settings.onBeforeClose.call( this );
 				lightGalleryOn = false;
+				aTiming= false;
+				aSpeed = false;
+				usingThumb=false;
 				clearInterval(interval);
 				$('.lightGallery').unbind('mousedown');
 				$('.lightGallery').unbind('mouseup');
