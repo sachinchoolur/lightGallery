@@ -29,7 +29,7 @@
                         <li class="active"><a href="index.html">Home</a></li>
                         <li><a href="examples.html">Examples</a></li>
                         <li><a href="settings.html">Settings</a></li>
-                        <li><a href="#">Customize</a></li>
+                        <li><a href="https://github.com/sachinchoolur/lightGallery">Github</a></li>
                         <li><a href="#">Help</a></li>
                     </ul>
                 </div>
@@ -137,80 +137,80 @@
                         <h2>The Code</h2>
                         <p>add the Following code to the &lt;head&gt; of your document.</p>
                         <pre class="prettyprint linenums">
-    &lt;link type="text/css" rel="stylesheet" href="css/lightGallery.css" /&gt;                    
-    &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"&gt;&lt;/script&gt;
-    &lt;script src="js/lightGallery.js"&gt;&lt;/script&gt;
-    // Do not include both lightGallery.js and lightGallery.min.js</pre>
+&lt;link type="text/css" rel="stylesheet" href="css/lightGallery.css" /&gt;                    
+&lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="js/lightGallery.js"&gt;&lt;/script&gt;
+// Do not include both lightGallery.js and lightGallery.min.js</pre>
                     </div>
                     <div class="html">
                         <h2>HTML Structure</h2>
                         <p>Create ul and li elements and add the path of the image or video inside the data-src attributes which you wish to open within the lightGallery.</p>
                         <pre class="prettyprint linenums">
-    &lt;ul id="lightGallery"&gt;
-      &lt;li data-src="img/img1.jpg"&gt;
-          &lt;img src="img/thumb1.jpg" /&gt;
-      &lt;/li&gt;
-      &lt;li data-src="img/img2.jpg"&gt;
-          &lt;img src="img/thumb2.jpg" /&gt;
-      &lt;/li&gt;
-      ...
-    &lt;/ul&gt;</pre>
+&lt;ul id="lightGallery"&gt;
+  &lt;li data-src="img/img1.jpg"&gt;
+    &lt;img src="img/thumb1.jpg" /&gt;
+  &lt;/li&gt;
+  &lt;li data-src="img/img2.jpg"&gt;
+    &lt;img src="img/thumb2.jpg" /&gt;
+  &lt;/li&gt;
+  ...
+&lt;/ul&gt;</pre>
                     </div>
                     <div class="call">
                         <h2>Call lightGallery!</h2>
                         <pre class="prettyprint linenums">
-    &lt;script type="text/javascript"&gt;
-      $(document).ready(function() {
-        $("#lightGallery").lightGallery(); 
-      });
-    &lt;/script&gt;</pre>
+&lt;script type="text/javascript"&gt;
+  $(document).ready(function() {
+    $("#lightGallery").lightGallery(); 
+  });
+&lt;/script&gt;</pre>
                     </div>
                     <div class="call">
                         <h2>Play with settings</h2>
                         <pre class="prettyprint linenums">&lt;script type="text/javascript"&gt;
-      $(document).ready(function() {
-        $("#lightGallery").lightGallery({
-          mode:'slide',
-        useCSS : true,
-        easing: 'ease',//'cubic-bezier(0.25, 0, 0.25, 1)',//
-        speed: 1000,
-        loop: false,
-        auto: false,
-        pause: 4000,
-        escKey:true,
-        
-        exThumbImage: false,
-        thumbnail: true,
-        caption:false,
-        desc:false,
-        controls:true,
-        hideControlOnEnd:false,
-        mobileSrc: false,
-        mobileSrcMaxWidth :640,
+  $(document).ready(function() {
+    $("#lightGallery").lightGallery({
+      mode:'slide',
+      useCSS : true,
+      easing: 'ease',//'cubic-bezier(0.25, 0, 0.25, 1)',//
+      speed: 1000,
+      loop: false,
+      auto: false,
+      pause: 4000,
+      escKey:true,
 
-        //touch
-        swipeThreshold: 50,
+      exThumbImage: false,
+      thumbnail: true,
+      caption:false,
+      desc:false,
+      controls:true,
+      hideControlOnEnd:false,
+      mobileSrc: false,
+      mobileSrcMaxWidth :640,
 
-        rel:false,
-        dynamic:false,
-        dynamicEl : [],
-        
-        //video
-        vimeoColor : 'CCCCCC',
-        videoAutoplay:true,
-        videoMaxWidth:855,
-        
-        //callbacks
-        onOpen: function() {},
-        onSlideBefore: function() {},
-        onSlideAfter: function() {},
-        onSlideNext: function() {},
-        onSlidePrev: function() {},
-        onBeforeClose: function(){},
-        onCloseAfter: function(){}
-        });
-      });
-    &lt;/script&gt;</pre>
+      //touch
+      swipeThreshold: 50,
+  
+      rel:false,
+      dynamic:false,
+      dynamicEl : [],
+
+      //video
+      vimeoColor : 'CCCCCC',
+      videoAutoplay:true,
+      videoMaxWidth:855,
+
+      //callbacks
+      onOpen: function() {},
+      onSlideBefore: function() {},
+      onSlideAfter: function() {},
+      onSlideNext: function() {},
+      onSlidePrev: function() {},
+      onBeforeClose: function(){},
+      onCloseAfter: function(){}
+    );
+  });
+&lt;/script&gt;</pre>
                     </div>
                 </section>
             </div>
