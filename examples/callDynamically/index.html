@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Call Dynamically </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <link rel="stylesheet"  href="lightGallery.css"/>
+    <style>
+    	.btn {
+		  display: inline-block;
+		  margin-bottom: 0;
+		  font-weight: normal;
+		  text-align: center;
+		  vertical-align: middle;
+		  cursor: pointer;
+		  background-image: none;
+		  border: 1px solid transparent;
+		  white-space: nowrap;
+		  padding: 6px 12px;
+		  font-size: 13px;
+		  line-height: 1.428571429;
+		  border-radius: 3px;
+		  -webkit-user-select: none;
+		  -moz-user-select: none;
+		  -ms-user-select: none;
+		  -o-user-select: none;
+		  user-select: none;
+		  text-decoration:none;
+		  margin:40px;
+		}
+		.btn-primary {
+		  color: #ffffff;
+		  background-color: #428bca;
+		  border-color: #357ebd;
+		}
+		.btn-primary:hover,
+		.btn-primary:focus,
+		.btn-primary:active,
+		.btn-primary.active,
+		.open .dropdown-toggle.btn-primary {
+		  color: #ffffff;
+		  background-color: #3276b1;
+		  border-color: #285e8e;
+		}
+		.btn-primary:active,
+		.btn-primary.active,
+		.open .dropdown-toggle.btn-primary {
+		  background-image: none;
+		}
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="lightGallery.js"></script>
+    <script>
+    	 $(document).ready(function() {
+			 $('#dynamic').click(function(e){
+				$(this).lightGallery({					
+					dynamic:true,
+					caption:true,
+					desc:true,
+					mobileSrc:true,
+					dynamicEl:[
+						{"src":"img1.jpg","thumb":"thumb1.jpg", "caption":"caption1", "desc":"Description1","mobileSrc":"mobile1.jpg"},
+						{"src":"img2.jpg","thumb":"thumb2.jpg", "caption":"caption2", "desc":"Description2","mobileSrc":"mobile2.jpg"}
+					]
+				});	
+			 });
+		});
+    </script>
+</head>
+<body>
+	<a href="javascript:void(0)" class="btn btn-primary" id="dynamic">Call LightGallery</a>
+</body>

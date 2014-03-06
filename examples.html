@@ -38,6 +38,7 @@
     </div>
 </header>
 <div id="site" style="padding-bottom: 60px;">
+    <div class="nav-over"></div>
     <div class="hero">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -375,50 +376,7 @@
 <script src="light-gallery/js/lightGallery.min.js"></script> 
 <script src="js/prettify.js"></script> 
 <script type="text/javascript">
-	var isTouch = ('ontouchstart' in document.documentElement);
 	var site = $('#site');
-	function enableTouch(){
-		if(isTouch){
-			var site = $('#site');
-			var distance,
-			swipeThreshold = 10,
-			startCoords = {}, 
-			endCoords = {};					
-			$('.sub_headder').bind('touchstart', function(e){
-				$('.sub_headder').addClass('touchNav');
-				endCoords = e.originalEvent.targetTouches[0];
-				startCoords.pageX = e.originalEvent.targetTouches[0].pageX;
-				$('.touchNav').bind('touchmove',function(e){
-					e.preventDefault();
-					e.stopPropagation();
-					endCoords = e.originalEvent.targetTouches[0];
-				});
-						
-				return false;
-
-				}).bind('click touchend',function(e){
-					e.preventDefault();
-					e.stopPropagation();
-					distance = endCoords.pageX - startCoords.pageX;
-					if( distance >= swipeThreshold ){
-						$("#mast-head").css('display','block');	
-						site.addClass('translate');	
-						
-					}
-					else if( distance <= - swipeThreshold ){
-						if(site.hasClass('translate')){
-							site.removeClass('translate');
-							setTimeout(function(){
-								$("#mast-head").css('display','none');	
-							},350);
-						}
-					}
-					$('.touchNav').off('touchmove').removeClass('touch');
-				
-			});		
-		}
-		
-	};
 	$(document).ready(function() {
 		window.prettyPrint && prettyPrint()
 		$('#lightGallery').lightGallery({mode:'fade'}); 
@@ -462,26 +420,43 @@
 			}	
 		});
 		 
-		enableTouch();
-		$('.btn-navbar').on('click touchend',function(){
-			if(site.hasClass('translate')){
-				site.removeClass('translate');	
-				setTimeout(function(){
-					$("#mast-head").css('display','none');	
-				},350);	
-			}else{
-				$("#mast-head").css('display','block');	
-				site.addClass('translate');		
-			}
-		});
-		$(window).on("resize orientationchange", function(){
-			if($(window).width() > 767){
-				$("#mast-head").css('display','block');	
-				site.removeClass('translate');
-			}else if(!site.hasClass('translate')){
-				$("#mast-head").css('display','none');		
-			}
-		});
+		var clk = true;
+        $('.btn-navbar').on('click',function(){
+            if(site.hasClass('translate')){
+                clk = false;    
+                site.removeClass('translate');  
+                setTimeout(function(){
+                    $("#mast-head").css('display','none');  
+                    clk = true;
+                },700);
+            }else if(clk){
+                $("#mast-head").css('display','block'); 
+                site.addClass('translate');     
+            }
+        });
+        $('#site').on('touchmove', function(e) {
+            if($(this).hasClass('translate')){
+                e.preventDefault();
+            }
+        });
+        $('#site > .nav-over').on('click touchstart',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            clk = false;
+            site.removeClass('translate');  
+            setTimeout(function(){
+                $("#mast-head").css('display','none');  
+                clk = true;
+            },700); 
+        })
+        $(window).on("resize orientationchange", function(){
+            if($(window).width() > 767){
+                $("#mast-head").css('display','block'); 
+                site.removeClass('translate');
+            }else if(!site.hasClass('translate')){
+                $("#mast-head").css('display','none');      
+            }
+        });
 	});
 </script>
 </body>

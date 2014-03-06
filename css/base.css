@@ -2645,10 +2645,11 @@ input[type="button"].btn-block {
 #mast-head {
   background-color: #262A31;
   display: none;
-  height: 100%;
-  padding-bottom: 1000px;
+  height: 200%;
   position: fixed;
+  overflow-y: auto;
   width: 250px;
+  z-index: 1;
 }
 @media (min-width: 768px) {
   #mast-head {
@@ -2659,20 +2660,41 @@ input[type="button"].btn-block {
   }
 }
 #site {
-  -webkit-transition: transform 0.33s cubic-bezier(0.694, 0.0482, 0.335, 1) 0s;
-  transition: transform 0.33s cubic-bezier(0.694, 0.0482, 0.335, 1) 0s;
+  -webkit-transition: -webkit-transform 0.35s cubic-bezier(0.694, 0.0482, 0.335, 1) 0s;
+  -moz-transition: -moz-transform 0.35s cubic-bezier(0.694, 0.0482, 0.335, 1) 0s;
+  -o-transition: -o-transform 0.35s cubic-bezier(0.694, 0.0482, 0.335, 1) 0s;
+  transition: transform 0.35s cubic-bezier(0.694, 0.0482, 0.335, 1) 0s;
   background-color: inherit;
   z-index: 10;
   position: relative;
-  padding: 0 10px;
+}
+#site .nav-over {
+  z-index: 0;
+  -webkit-transition: opacity 0.35s ease 0s;
+  transition: opacity 0.35s ease 0s;
+  background-color: #000;
+  opacity: 0;
 }
 #site.translate {
-  -webkit-transform: translate(250px, 0px);
-  -ms-transform: translate(250px, 0px);
-  transform: translate(250px, 0px);
+  -webkit-transform: translateZ(0);
+  -webkit-transform: translate3d(250px, 0px, 0px);
+  transform: translate3d(250px, 0px, 0px);
 }
 .lt-ie9 #site.translate {
   left: 250px;
+}
+#site.translate .nav-over {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 99999;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0.75;
+  -webkit-transition: opacity 0.35s ease 0s;
+  transition: opacity 0.35s ease 0s;
 }
 @media (min-width: 768px) {
   #site {

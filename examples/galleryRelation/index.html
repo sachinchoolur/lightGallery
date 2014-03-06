@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Gallery Relation </title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <link rel="stylesheet"  href="lightGallery.css"/>
+    <style>
+		#rel1{
+			margin-right:200px;
+		}
+		.clearfix:before,
+		.clearfix:after{
+			content: " ";
+  			display: table;	
+		}
+		.clearfix:after{
+		  clear: both;
+		}
+    	ul{
+			list-style: none outside none;
+		    padding-left: 0;
+		}
+		.gallery li {
+			display: block;
+			float: left;
+			height: 100px;
+			margin-bottom: 6px;
+			margin-right: 6px;
+			width: 100px;
+		}
+		.gallery li a {
+			height: 100px;
+			width: 100px;
+		}
+		.gallery li a img {
+			max-width: 100px;
+		}
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="lightGallery.js"></script>
+    <script>
+    	 $(document).ready(function() {
+			$('#rel1').lightGallery({rel:true});
+			$('#rel2').lightGallery({rel:true}); 
+		});
+    </script>
+</head>
+<body>
+	<div style="float: left;">
+    	<h3>Gallery1</h3>
+        <ul id="rel1" data-rel="imageGallery" class="gallery clearfix">
+            <li data-src="img1.jpg"> 
+                <a href="#">
+                <img src="thumb1.jpg" />
+                </a> 
+            </li>
+            <li data-src="img2.jpg" > 
+                <a href="#">
+                <img src="thumb2.jpg" />
+                </a> 
+            </li>
+        </ul>	
+    </div>
+	<div style="float: left;">
+    	<h3>Gallery2</h3>
+        <ul id="rel2" data-rel="imageGallery" class="gallery clearfix">
+            <li data-src="img3.jpg"> 
+                <a href="#">
+                <img src="thumb3.jpg" />
+                </a> 
+            </li>
+            <li data-src="img4.jpg" > 
+                <a href="#">
+                <img src="thumb4.jpg" />
+                </a> 
+            </li>
+        </ul>	
+    </div>
+   
+</body>
