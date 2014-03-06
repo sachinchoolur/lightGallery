@@ -1,6 +1,5 @@
 jQuery lightGallery
 =============
-***
 
 
 Demo
