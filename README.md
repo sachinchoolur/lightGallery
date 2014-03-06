@@ -35,7 +35,7 @@ How to use lightGallery?
 --------------------
 
 ### The code ###
-add the Following code to the <head> of your document.
+add the Following code to the &lt;head&gt; of your document.
 ```html
 <link type="text/css" rel="stylesheet" href="css/lightGallery.css" />           
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
