@@ -19,7 +19,9 @@
 				pause: 4000,
 				escKey:true,
 				rel:false,
-				
+				lang:{
+					allPhotos : 'All photos'
+				},
 				exThumbImage: false,
 				thumbnail: true,
 				caption:false,
@@ -402,7 +404,7 @@
 						$this.slide(index);
 						clearInterval(interval);
 					});	
-					thumbInfo.prepend('<span class="ib count">All photos ('+$thumb.length+')</span>');
+					thumbInfo.prepend('<span class="ib count">'+settings.lang.allPhotos+' ('+$thumb.length+')</span>');
 				}
 				
 			},
