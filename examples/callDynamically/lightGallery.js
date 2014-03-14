@@ -19,7 +19,9 @@
 				pause: 4000,
 				escKey:true,
 				rel:false,
-				
+				lang:{
+					allPhotos : 'All photos'
+				},
 				exThumbImage: false,
 				thumbnail: true,
 				caption:false,
@@ -402,7 +404,7 @@
 						$this.slide(index);
 						clearInterval(interval);
 					});	
-					thumbInfo.prepend('<span class="ib count">All photos ('+$thumb.length+')</span>');
+					thumbInfo.prepend('<span class="ib count">'+settings.lang.allPhotos+' ('+$thumb.length+')</span>');
 				}
 				
 			},
@@ -607,14 +609,9 @@
 				aSpeed = false;
 				usingThumb=false;
 				clearInterval(interval);
-				$('.lightGallery').unbind('mousedown');
-				$('.lightGallery').unbind('mouseup');
-				$('body').removeClass('touch');
-				$('body').unbind('touchstart');
-				$('body').unbind('touchmove');
-				$('body').unbind('touchend');
-				$(window).unbind('resize');
-				$(window).unbind('keyup');
+				$('.lightGallery').off('mousedown mouseup');
+				$(document.body).removeClass('touch').off('touchstart touchmove touchend');
+				$(window).off('resize keyup');
 				$gallery.addClass('fadeM');
 				setTimeout(function(){
 					$galleryCont.remove();
