@@ -609,14 +609,9 @@
 				aSpeed = false;
 				usingThumb=false;
 				clearInterval(interval);
-				$('.lightGallery').unbind('mousedown');
-				$('.lightGallery').unbind('mouseup');
-				$('body').removeClass('touch');
-				$('body').unbind('touchstart');
-				$('body').unbind('touchmove');
-				$('body').unbind('touchend');
-				$(window).unbind('resize');
-				$(window).unbind('keyup');
+				$('.lightGallery').off('mousedown mouseup');
+				$(document.body).removeClass('touch').off('touchstart touchmove touchend');
+				$(window).off('resize keyup');
 				$gallery.addClass('fadeM');
 				setTimeout(function(){
 					$galleryCont.remove();
