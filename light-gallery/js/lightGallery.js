@@ -27,7 +27,7 @@
 				caption:false,
 				desc:false,
 				controls:true,
-				hideControlOnEnd:false,
+				hideControlOnEnd:true,
 				mobileSrc: false,
 				mobileSrcMaxWidth :640,
 
