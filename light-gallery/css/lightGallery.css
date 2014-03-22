@@ -385,6 +385,7 @@
 #lightGallery-Gallery .thumb_cont .thumb {
 	display: inline-block !important;
 	vertical-align: middle;
+	text-align: center;
  *display: inline;
   /* IE7 inline-block hack */
 
@@ -412,7 +413,8 @@
 	}	
 }
 #lightGallery-Gallery .thumb_cont .thumb > img {
-	height: 100%;
+	height: auto;
+  max-width: 100%;
 }
 #lightGallery-Gallery .thumb_cont .thumb.active, #lightGallery-Gallery .thumb_cont .thumb:hover {
 	opacity: 1;
