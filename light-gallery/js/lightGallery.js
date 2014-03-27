@@ -138,7 +138,7 @@
 				var resizeWindow = function(){
 					windowWidth = $(window).width();
 				};
-				$(window).bind('resize',resizeWindow());
+				$(window).bind('resize.lightGallery',resizeWindow());
 			},
 			doCss : function() {
 				var support = function(){
@@ -164,7 +164,7 @@
 					swipeThreshold = settings.swipeThreshold,
 					startCoords = {}, 
 					endCoords = {};					
-					$('body').bind('touchstart', function(e){
+					$('body').bind('touchstart.lightGallery', function(e){
 						$(this).addClass('touch');
 		  				endCoords = e.originalEvent.targetTouches[0];
 		    			startCoords.pageX = e.originalEvent.targetTouches[0].pageX;
@@ -174,7 +174,7 @@
 		    				endCoords = e.originalEvent.targetTouches[0];
 						});	
 			           	return false;
-	           			}).bind('touchend',function(e){
+					}).bind('touchend.lightGallery',function(e){
 	           				e.preventDefault();
 							e.stopPropagation();
 	   						distance = endCoords.pageX - startCoords.pageX;
@@ -441,7 +441,7 @@
 			},
 			keyPress : function(){
 				var $this = this;
-				$(window).bind('keyup', function(e){
+				$(window).bind('keyup.lightGallery', function(e){
 					e.preventDefault();
 					e.stopPropagation();
 					if (e.keyCode === 37){
@@ -610,8 +610,8 @@
 				usingThumb=false;
 				clearInterval(interval);
 				$('.lightGallery').off('mousedown mouseup');
-				$(document.body).removeClass('touch').off('touchstart touchmove touchend');
-				$(window).off('resize keyup');
+				$(document.body).removeClass('touch').off('touchstart.lightGallery touchmove.lightGallery touchend.lightGallery');
+				$(window).off('resize.lightGallery keyup.lightGallery');
 				$gallery.addClass('fadeM');
 				setTimeout(function(){
 					$galleryCont.remove();
