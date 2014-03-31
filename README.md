@@ -81,6 +81,7 @@ Create ul and li elements and add the path of the image or video inside the data
       thumbnail: true,
       caption:false,
       desc:false,
+      counter:false,
       controls:true,
       hideControlOnEnd:false,
       mobileSrc: false,
