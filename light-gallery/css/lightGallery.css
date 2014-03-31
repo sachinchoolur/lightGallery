@@ -312,6 +312,16 @@
 }
 /*action*/
 
+/*counter*/
+#lightGallery_counter {
+    bottom: 52px;
+    text-align: center;
+    width:100%;
+    position: absolute;
+    z-index: 9;
+    color:#FFFFFF;
+}
+
 /*lightGallery Thumb*/
 #lightGallery-Gallery .thumb_cont {
 	position: absolute;

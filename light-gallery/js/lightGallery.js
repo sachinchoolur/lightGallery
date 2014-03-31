@@ -27,6 +27,7 @@
             caption: false,
             captionLink: false,
             desc: false,
+            counter: false,
             controls: true,
             hideControlOnEnd: false,
             mobileSrc: false,
@@ -101,6 +102,7 @@
                 this.loadContent(index);
                 this.addCaption();
                 this.addDesc(); //description
+                this.counter();
                 this.slideTo();
                 this.buildThumbnail();
                 this.keyPress();
@@ -356,6 +358,12 @@
                     }
                 }
             },
+            counter: function() {
+                if (settings.counter === true) {
+                    var slideCount = $("#lightGallery-slider div").length;
+                    $gallery.append("<div id='lightGallery_counter'><span id='lightGallery_counter_current'></span> / <span id='lightGallery_counter_all'>"+slideCount+"</span></div>");
+                }
+            },
             buildThumbnail: function () {
                 if (settings.thumbnail === true && $children.length > 1) {
                     var $this = this;
@@ -589,6 +597,9 @@
                 lightGalleryOn === false ? settings.onOpen.call(this) : settings.onSlideAfter.call(this);
                 lightGalleryOn = true;
                 usingThumb = false;
+                if (settings.counter) {
+                    $("#lightGallery_counter_current").text(index+1);
+                }
             },
             destroy: function () {
                 settings.onBeforeClose.call(this);
