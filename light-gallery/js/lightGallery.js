@@ -360,7 +360,7 @@
             },
             counter: function() {
                 if (settings.counter === true) {
-                    var slideCount = $("#lightGallery-slider div").length;
+                    var slideCount = $("#lightGallery-slider > div").length;
                     $gallery.append("<div id='lightGallery_counter'><span id='lightGallery_counter_current'></span> / <span id='lightGallery_counter_all'>"+slideCount+"</span></div>");
                 }
             },
