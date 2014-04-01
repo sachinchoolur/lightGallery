@@ -105,6 +105,7 @@
 	top: 0;
 	width: 100%;
 	position: absolute;
+	white-space: nowrap;
 }
 #lightGallery-slider .lightGallery-slide {
 	background: url(../img/loading.gif) no-repeat scroll center center transparent;
@@ -158,6 +159,7 @@
 }
 #lightGallery-slider.fadeM.on .current {
 	opacity: 1;
+	z-index: 9;
 	transition: all 0.5s ease 0s;
 	-moz-transition: all 0.5s ease 0s;
 	-webkit-transition: all 0.5s ease 0s;

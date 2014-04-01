@@ -12,7 +12,7 @@
         var defaults = {
             mode: 'slide',
             useCSS: true,
-            easing: 'ease', //'cubic-bezier(0.25, 0, 0.25, 1)',//
+            easing: 'linear', //'cubic-bezier(0.25, 0, 0.25, 1)',//
             speed: 1000,
             loop: false,
             auto: false,
