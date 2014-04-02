@@ -331,7 +331,7 @@
                                 link = link;
                                 captionlinksUsed = true;
                             } else {
-                                link = '#'
+                                link = '#';
                             }
                             $slide.eq(i).append('<div class="info group"><a href="' + link + '" class="title">' + title + '</a></div>');
                         } else {
@@ -339,11 +339,11 @@
                         }
                     }
                     if (captionlinksUsed) {
-												$("div.info>a.title").bind("touchend touchcancel", function(e) {
-												    e.preventDefault();
-												    window.location.href = this.href;
-												    return false;
-												});
+                        $("div.info>a.title").bind("touchend touchcancel", function(e) {
+                            e.preventDefault();
+                            window.location.href = this.href;
+                            return false;
+                        });
 										}
                 }
             },
