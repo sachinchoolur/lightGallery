@@ -105,6 +105,7 @@
 	top: 0;
 	width: 100%;
 	position: absolute;
+	white-space: nowrap;
 }
 #lightGallery-slider .lightGallery-slide {
 	background: url(../img/loading.gif) no-repeat scroll center center transparent;
@@ -129,6 +130,7 @@
 }
 #lightGallery-slider.fadeM .current {
 	opacity: 1;
+	z-index: 9;
 }
 #lightGallery-Gallery.opacity .lightGallery-slide.current img, #lightGallery-Gallery.opacity .lightGallery-slide.current iframe {
 	transform: scale(1, 1);

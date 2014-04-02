@@ -12,7 +12,7 @@
         var defaults = {
             mode: 'slide',
             useCSS: true,
-            easing: 'ease', //'cubic-bezier(0.25, 0, 0.25, 1)',//
+            easing: 'linear', //'cubic-bezier(0.25, 0, 0.25, 1)',//
             speed: 1000,
             loop: false,
             auto: false,
@@ -169,7 +169,7 @@
                         $(this).addClass('touch');
                         endCoords = e.originalEvent.targetTouches[0];
                         startCoords.pageX = e.originalEvent.targetTouches[0].pageX;
-                        $('.touch').bind('touchmove', function (e) {
+                        $('.touch').bind('touchmove.lightGallery', function (e) {
                             e.preventDefault();
                             e.stopPropagation();
                             endCoords = e.originalEvent.targetTouches[0];
@@ -186,7 +186,7 @@
                             $this.nextSlide();
                             clearInterval(interval);
                         }
-                        $('.touch').off('touchmove').removeClass('touch');
+                        $('.touch').off('touchmove.lightGallery').removeClass('touch');
                     });
                 }
             },
@@ -620,5 +620,6 @@
             }
         };
         lightGallery.init();
+        return this;
     };
 }(jQuery));
