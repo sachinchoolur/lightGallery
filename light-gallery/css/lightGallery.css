@@ -130,6 +130,7 @@
 }
 #lightGallery-slider.fadeM .current {
 	opacity: 1;
+	z-index: 9;
 }
 #lightGallery-Gallery.opacity .lightGallery-slide.current img, #lightGallery-Gallery.opacity .lightGallery-slide.current iframe {
 	transform: scale(1, 1);
@@ -159,7 +160,6 @@
 }
 #lightGallery-slider.fadeM.on .current {
 	opacity: 1;
-	z-index: 9;
 	transition: all 0.5s ease 0s;
 	-moz-transition: all 0.5s ease 0s;
 	-webkit-transition: all 0.5s ease 0s;
