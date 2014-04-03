@@ -93,6 +93,7 @@
 	height: 100%;
 	opacity: 0;
 	width: 100%;
+	position:relative;
 	transition: all 1s ease 0s;
 	-moz-transition: all 1s ease 0s;
 	-webkit-transition: all 1s ease 0s;
@@ -258,6 +259,7 @@
 	left: 50%;
 	margin-left: -55px;
 	z-index: 9;
+	-webkit-backface-visibility: hidden;
 }
 #lightGallery-action a {
 	margin: 0 3px 0 0 !important;
@@ -518,6 +520,7 @@
 	-o-transition: background-color 0.3s ease;
 	-ms-transition: background-color 0.3s ease;
 	transition: background-color 0.3s ease;
+	-webkit-backface-visibility: hidden;
 }
 #lightGallery-close:after {
     position: absolute;
