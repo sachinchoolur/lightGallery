@@ -93,7 +93,7 @@
             },
             start: function () {
                 this.structure();
-                this.touch();
+                this.getWidth();
                 this.closeSlide();
             },
             build: function () {
@@ -105,8 +105,9 @@
                 this.buildThumbnail();
                 this.keyPress();
                 this.slide(index);
+                this.touch();
                 this.enableTouch();
-                this.getWidth();
+                
                 setTimeout(function () {
                     $gallery.addClass('opacity');
                 }, 50);
