@@ -312,7 +312,6 @@
             },
             addCaption: function () {
                 if (settings.caption === true) {
-                		var captionlinksUsed = false;
                     var i, title = false;
                     for (i = 0; i < $children.length; i++) {
                         if (settings.dynamic == true) {
@@ -326,23 +325,15 @@
                         if (settings.captionLink === true) {
                             var link = $children.eq(i).attr('data-link');
                             if (typeof link !== 'undefined' && link !== '') {
-                                link = link;
-                                captionlinksUsed = true;
+                                link = link
                             } else {
-                                link = '#';
+                                link = '#'
                             }
                             $slide.eq(i).append('<div class="info group"><a href="' + link + '" class="title">' + title + '</a></div>');
                         } else {
                             $slide.eq(i).append('<div class="info group"><span class="title">' + title + '</span></div>');
                         }
                     }
-                    if (captionlinksUsed) {
-                        $("div.info>a.title").bind("touchend touchcancel", function(e) {
-                            e.preventDefault();
-                            window.location.href = this.href;
-                            return false;
-                        });
-										}
                 }
             },
             addDesc: function () {
@@ -425,11 +416,11 @@
                     $gallery.append('<div id="lightGallery-action"><a id="lightGallery-prev"></a><a id="lightGallery-next"></a></div>');
                     $prev = $gallery.find('#lightGallery-prev');
                     $next = $gallery.find('#lightGallery-next');
-                    $prev.bind('click touchend touchcancel', function () {
+                    $prev.bind('click touchend', function () {
                         $this.prevSlide();
                         clearInterval(interval);
                     });
-                    $next.bind('click touchend touchcancel', function () {
+                    $next.bind('click touchend', function () {
                         $this.nextSlide();
                         clearInterval(interval);
                     });
