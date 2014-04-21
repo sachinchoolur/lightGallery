@@ -416,11 +416,11 @@
                     $gallery.append('<div id="lightGallery-action"><a id="lightGallery-prev"></a><a id="lightGallery-next"></a></div>');
                     $prev = $gallery.find('#lightGallery-prev');
                     $next = $gallery.find('#lightGallery-next');
-                    $prev.bind('click touchend', function () {
+                    $prev.bind('click', function () {
                         $this.prevSlide();
                         clearInterval(interval);
                     });
-                    $next.bind('click touchend', function () {
+                    $next.bind('click', function () {
                         $this.nextSlide();
                         clearInterval(interval);
                     });
