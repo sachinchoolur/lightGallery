@@ -3016,3 +3016,14 @@ td.visible-print {
     display: none !important;
   }
 }
+
+
+.share > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+.share {
+    margin-bottom: -20px;
+    margin-top: 20px;
+    text-align: center;
+}
