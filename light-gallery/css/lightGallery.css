@@ -407,7 +407,6 @@
   *zoom: 1;
 	margin-bottom: 4px;
 	margin-left: 4px;
-	height: 50px;
 	width: 50px;
 	opacity: 0.6;
 	filter: alpha(opacity=60);
@@ -424,12 +423,12 @@
 @media (min-width: 800px) {
 #lightGallery-Gallery .thumb_cont .thumb {
 	width: 94px;
-	height: 94px;
 }
 }
 #lightGallery-Gallery .thumb_cont .thumb > img {
 	height: auto;
 	max-width: 100%;
+	display: block;
 }
 #lightGallery-Gallery .thumb_cont .thumb.active, #lightGallery-Gallery .thumb_cont .thumb:hover {
 	opacity: 1;
