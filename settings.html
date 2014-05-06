@@ -59,104 +59,316 @@
                     <h2 class="title">JQuery LightGallery Settings</h2>	 	
                 </section>
                 <section class="options">
-<pre class="prettyprint linenums">mode:'slide'
-// Type of transition 'slide' and 'fade'.
-</pre>	
-<pre class="prettyprint linenums">useCSS : true
-// If true LightGallery will use CSS transitions. if falls jquery animation will be used.</pre>	
-
-<pre class="prettyprint linenums">easing: ''
-// The type of "easing". ex: 'linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'cubic-bezier(n,n,n,n)'.
-// ex = easing:'cubic-bezier(0.25, 0, 0.25, 1)';</pre>	
-
-<pre class="prettyprint linenums">speed: '',
-// Transition duration (in ms). 
-// ex = speed:'1000';</pre>	
-
-<pre class="prettyprint linenums">loop: false,
-// // If false, will disable the ability to loop back to the beginning of the slide when on the last element.</pre>	
-
-<pre class="prettyprint linenums">auto: false,
-// If true, the Slider will automatically start to play.</pre>
-
-<pre class="prettyprint linenums">pause: 4000,
-// The time (in ms) between each auto transition</pre>	
-
-<pre class="prettyprint linenums">escKey:true,
-// Use escape key to close the LightGallery. switch escKey:false, to disable</pre>
-
-<pre class="prettyprint linenums">rel:true,
-// Combine two galleries using data-rel attribute. give same data-rel value for multiple galleries you wish to combine
-<a href="examples.html#relBlock">goTo example →</a>
-</pre>
-
-<pre class="prettyprint linenums">exThumbImage: false,
-// In case if you want to use external image as slider thumbnail add the path of the image inside "data-" attribute &nbsp;&nbsp; and change exThumbImage:'data-yourAttribute';
-// HTML markup = &lt;li data-exthumbimage="externalThumb.jpg" data-src="img/img1.jpg"&gt;&lt;/li&gt;
-// ex = exThumbImage:'data-exthumbimage'; </pre>	
-
-<pre class="prettyprint linenums">thumbnail: true,
-// Enable thumbnails option.</pre>	
-
-<pre class="prettyprint linenums">caption:false,
-// swich captions:true to enable image caption. add Image captions inside "data-title" attribute.
-// HTML markup = &lt;li data-title="Image Title" data-src="img/img1.jpg"&gt;&lt;img src="img/thumb1.jpg" /&gt;&lt;/li&gt;</pre>
-
-<pre class="prettyprint linenums">desc:false,
-// swich desc:true to enable image caption. add Image descriptions inside "data-desc" attribute.
-// HTML markup = &lt;li data-desc="Image Descriptions" data-src="img/img1.jpg"&gt;&lt;img src="img/thumb1.jpg" /&gt;&lt;/li&gt;</pre>
-
-<pre class="prettyprint linenums">controls:true,
-// if controls:false, controls will not be added</pre>
-
-<pre class="prettyprint linenums">hideControlOnEnd:false,
-// if hideControlOnEnd:true, control will be hidden on last slide</pre>
-
-<pre class="prettyprint linenums">mobileSrc: true,
-// To make your website faster in mobile devices you can load separate images (low quality) for Mobile devices. Add &nbsp;&nbsp; the path of the image which you wish to load in mobile devices inside data-responsive-src="" attribute. 
-// switch  mobileSrc: false to disable.
-// HTML markup = &lt;li data-responsive-src="img/img600.jpg" data-src="img/img900.jpg"&gt;&lt;img src="img/thumb1.jpg" /&gt;&lt;/li&gt;</pre>
-
-<pre class="prettyprint linenums">mobileSrcMaxWidth: 640,
-// You can define from which resolution the images for mobile devices should be loaded.
-// ex = mobileSrcMaxWidth: 480</pre>
-
-<pre class="prettyprint linenums">vimeoColor : 'CCCCCC',
-// Set vimeo video player theme color.</pre>
-
-<pre class="prettyprint linenums">videoAutoplay:true,
-// switch videoAutoplay:false to disable video autoplay option</pre>
-
-<pre class="prettyprint linenums">swipeThreshold: 50,,
-// By setting the swipeThreshold you can set how far the user must swipe for the next/prev slide 
-// ex swipeThreshold: 100, (in px);
-</pre>
-
-<pre class="prettyprint linenums">dynamic: true,
-// You can dynamically load lightGallery by passing an array object to the lightGallery.
-<a href="examples.html#dynamicBlock">goTo example →</a>
-</pre>
-
-<pre class="prettyprint linenums">onOpen: function() {},
-// Executes immediately after the slider is loaded</pre>
-
-<pre class="prettyprint linenums">onSlideBefore: function() {},
-// Executes immediately before each slide transition.</pre>
-
-<pre class="prettyprint linenums">onSlideAfter: function() {},
-// Executes immediately after each slide transition.</pre>
-
-<pre class="prettyprint linenums">onSlideNext: function() {},
-// Executes immediately before each "Next" slide transition.</pre>
-
-<pre class="prettyprint linenums">onSlidePrev: function() {},
-// Executes immediately before each "Prev" slide transition. </pre>
-
-<pre class="prettyprint linenums">onBeforeClose: function(){},
-// Executes immediately before the start of the close process.</pre>
-
-<pre class="prettyprint linenums">onCloseAfter: function(){}
-// Executes immediately once Colorbox is closed.</pre>
+                  <h3>Passing settings</h3>
+<pre class="prettyprint linenums">&lt;script type="text/javascript"&gt;
+  $(document).ready(function() {
+    $("#lightGallery").lightGallery({
+      mode:'fade',
+      speed: 500,
+      ...
+    });
+  });
+&lt;/script&gt;</pre>
+                  <h3>Elements</h3>
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Expected</th>
+                      <th>Default</th>
+                      <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>thumbnail</td>
+                      <td>boolean</td>
+                      <td>true</td>
+                      <td>Whether to display a button to show thumbnails.</td>
+                    </tr>
+                    <tr>
+                      <td>caption</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>Set to <code>true</code> to enable image captions. Add captions inside "data-title" attribute. If attribute is missing, "image n" will be displayed, where n = index of the image in the list.</td>
+                    </tr>
+                    <tr>
+                      <td>captionLink</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>You can add a link to image caption by setting this to <code>true</code> and providing a link in the <code>data-link</code> attribute. If attribute is missing, link will point to "#".</td>
+                    </tr>
+                    <tr>
+                      <td>desc</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>Set to <code>true</code> to enable image descriptions. Add descriptions inside "data-desc" attribute. If attribute is missing, "image n" will be displayed, where n = index of the image in the list.</td>
+                    </tr>
+                    <tr>
+                      <td>counter</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>Whether to show total number of images and index number of currently displayed image.</td>
+                    </tr>
+                    <tr>
+                      <td>controls</td>
+                      <td>boolean</td>
+                      <td>true</td>
+                      <td>If <code>false</code>, prev/next buttons will not be displayed.</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <h3>Transitions</h3>
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Expected</th>
+                      <th>Default</th>
+                      <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>mode</td>
+                      <td>'slide' or 'fade'</td>
+                      <td>'slide'</td>
+                      <td>Type of transition between images.</td>
+                    </tr>
+                    <tr>
+                      <td>useCSS</td>
+                      <td>boolean</td>
+                      <td>true</td>
+                      <td>LightGallery will try to use CSS transitions by default and fall back to jQuery animation if they are not supported. You can force exclusive usage of jQuery animation by setting this option to false.</td>
+                    </tr>
+                    <tr>
+                      <td>easing</td>
+                      <td>string</td>
+                      <td>'linear'</td>
+                      <td>Type of easing to be used for animations. Value will be passed unmodified to both <code>transition-timing-function</code> CSS property and jQuery <code>.animate()</code> function.</td>
+                    </tr>
+                    <tr>
+                      <td>speed</td>
+                      <td>number</td>
+                      <td>1000</td>
+                      <td>Transition duration (in ms).</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <h3>Navigation</h3>
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Expected</th>
+                      <th>Default</th>
+                      <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>hideControlOnEnd</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>If <code>true</code>, prev/next button will be hidden on first/last image.</td>
+                    </tr>
+                    <tr>
+                      <td>loop</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>If false, will disable the ability to loop back to the beginning of the gallery when on the last element.</td>
+                    </tr>
+                    <tr>
+                      <td>auto</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>Enables slideshow mode.</td>
+                    </tr>
+                    <tr>
+                      <td>pause</td>
+                      <td>number</td>
+                      <td>4000</td>
+                      <td>The time (in ms) between each auto transition.</td>
+                    </tr>
+                    <tr>
+                      <td>escKey</td>
+                      <td>boolean</td>
+                      <td>true</td>
+                      <td>Whether the LightGallery could be closed by pressing the "Esc" key.</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <h3>Mobile devices</h3>
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Expected</th>
+                      <th>Default</th>
+                      <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>mobileSrc</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>To make your website faster in mobile devices you can load separate images (low quality) for Mobile devices. Add the path of the image which you wish to load in mobile devices inside <code>data-responsive-src</code> attribute.</td>
+                    </tr>
+                    <tr>
+                      <td>mobileSrcMaxWidth</td>
+                      <td>number</td>
+                      <td>640</td>
+                      <td>You can define from which resolution the images for mobile devices should be loaded.</td>
+                    </tr>
+                    <tr>
+                      <td>swipeThreshold</td>
+                      <td>number</td>
+                      <td>50</td>
+                      <td>By setting the swipeThreshold (in px) you can set how far the user must swipe for the next/prev image.</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <h3>Video</h3>
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Expected</th>
+                      <th>Default</th>
+                      <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>vimeoColor</td>
+                      <td>hex color code</td>
+                      <td>'CCCCCC'</td>
+                      <td>Set vimeo video player theme color.</td>
+                    </tr>
+                    <tr>
+                      <td>videoAutoplay</td>
+                      <td>boolean</td>
+                      <td>true</td>
+                      <td>Switch to <code>false</code> to disable video autoplay option.</td>
+                    </tr>
+                    <tr>
+                      <td>videoMaxWidth</td>
+                      <td>number</td>
+                      <td>855</td>
+                      <td>Set limit for video maximal width.</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <h3>i18n</h3>
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Expected</th>
+                      <th>Default</th>
+                      <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>lang</td>
+                      <td>object</td>
+                      <td>{ allPhotos: 'All photos' }</td>
+                      <td>Define text of labels.</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <h3>Callbacks</h3>
+                  <p>All options below expect a function or a pointer to function and does not have any predefined value.</p>
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>onOpen</td>
+                      <td>Executes immediately after the gallery is loaded.</td>
+                    </tr>
+                    <tr>
+                      <td>onSlideBefore</td>
+                      <td>Executes immediately before each transition.</td>
+                    </tr>
+                    <tr>
+                      <td>onSlideAfter</td>
+                      <td>Executes immediately after each transition.</td>
+                    </tr>
+                    <tr>
+                      <td>onSlideNext</td>
+                      <td>Executes immediately before each "Next" transition.</td>
+                    </tr>
+                    <tr>
+                      <td>onSlidePrev</td>
+                      <td>Executes immediately before each "Prev" transition.</td>
+                    </tr>
+                    <tr>
+                      <td>onBeforeClose</td>
+                      <td>Executes immediately before the start of the close process.</td>
+                    </tr>
+                    <tr>
+                      <td>onCloseAfter</td>
+                      <td>Executes immediately once Colorbox is closed.</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <h3>Dynamical load</h3>
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Expected</th>
+                      <th>Default</th>
+                      <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>dynamic</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>LightGallery can be instantiated and launched programmatically by setting this option to <code>true</code> and populating <code>dynamicEl</code> option (see below) with the definitions of images.</td>
+                    </tr>
+                    <tr>
+                      <td>dynamicEl</td>
+                      <td>array of objects</td>
+                      <td>[]</td>
+                      <td>An array of objects (<code>src</code>, <code>thumb</code>, <code>caption</code>, <code>desc</code>, <code>mobileSrc</code>) representing gallery elements. <a href="examples.html#dynamicBlock">See example</a>.</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  <h3>Misc</h3>
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Expected</th>
+                      <th>Default</th>
+                      <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>rel</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>Combine two galleries using data-rel attribute. Give the same data-rel value for multiple galleries you wish to combine. <a href="examples.html#relBlock">See example</a>.</td>
+                    </tr>
+                    <tr>
+                      <td>exThumbImage</td>
+                      <td>string or false</td>
+                      <td>false</td>
+                      <td>If you want to use external image for thumbnail, add the path of that image inside "data-" attribute and set value of this option to the name of your custom attribute.<br><code>// &lt;li data-exthumbimage="externalThumb.jpg" data-src="img/img1.jpg"&gt;&lt;/li&gt;</code><br><code>// exThumbImage: 'data-exthumbimage';</code></td>
+                    </tr>
+                    </tbody>
+                  </table>
                 </section>
             </div>
         </div>
