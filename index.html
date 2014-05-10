@@ -233,7 +233,7 @@
 	
 	$(document).ready(function() {
 		window.prettyPrint && prettyPrint()
-		$('#lightGallery').lightGallery({caption:true,desc:true,mobileSrc:true,hideControlOnEnd:true});   
+		$('#lightGallery').lightGallery({caption:true,desc:true,mobileSrc:true,hideControlOnEnd:true,easing:'cubic-bezier(0.25, 0, 0.25, 1)'});   
 		var clk = true;
         $('.btn-navbar').on('click',function(){
             if(site.hasClass('translate')){
