@@ -179,8 +179,8 @@
             enableTouch: function () {
                 var $this = this;
                 if (isTouch){
-                    var startCoords = {}, 
-                        endCoords = {}; 
+                    var startCoords = {},
+                        endCoords = {};
                     $('body').on('touchstart.lightGallery', function(e) {
                         endCoords = e.originalEvent.targetTouches[0];
                         startCoords.pageX = e.originalEvent.targetTouches[0].pageX;
@@ -552,9 +552,9 @@
                     if (this.doCss() && !$slider.hasClass('slide')) {
                         $slider.addClass('slide');
                     }
-                    /*					if(this.doCss()){
-						$slider.css({ 'transform' : 'translate3d('+(-index*100)+'%, 0px, 0px)' });
-					}*/
+                    /*                  if(this.doCss()){
+                        $slider.css({ 'transform' : 'translate3d('+(-index*100)+'%, 0px, 0px)' });
+                    }*/
                     if (!this.doCss() && !lightGalleryOn) {
                         $slider.css({
                             left: (-index * 100) + '%'
