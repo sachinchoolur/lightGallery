@@ -24,6 +24,7 @@
                 allPhotos: 'All photos'
             },
             exThumbImage: false,
+            index: false,
             thumbnail: true,
             caption: false,
             captionLink: false,
@@ -105,10 +106,15 @@
                 this.slideTo();
                 this.buildThumbnail();
                 this.keyPress();
-                this.slide(index);
+                if(settings.index) {
+                    this.slide(settings.index);
+                }
+                else {
+                    this.slide(index);
+                }
                 this.touch();
                 this.enableTouch();
-                
+
                 setTimeout(function () {
                     $gallery.addClass('opacity');
                 }, 50);
