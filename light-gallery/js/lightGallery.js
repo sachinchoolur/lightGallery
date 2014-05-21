@@ -14,6 +14,7 @@
             useCSS: true,
             easing: 'linear', //'cubic-bezier(0.25, 0, 0.25, 1)',//
             speed: 1000,
+            closable: true,
             loop: false,
             auto: false,
             pause: 4000,
@@ -132,6 +133,16 @@
             },
             closeSlide: function () {
                 var $this = this;
+                if(settings.closable) {
+                    $('.lightGallery-slide')
+                        .on('click', function(event) {
+                            console.log(event.target);
+                            if($(event.target).is('.lightGallery-slide')) {
+                                $this.destroy();
+                            }
+                        })
+                    ;
+                }
                 $('#lightGallery-close').bind('click touchend', function () {
                     $this.destroy();
                 });
