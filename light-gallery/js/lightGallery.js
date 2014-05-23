@@ -14,6 +14,7 @@
             useCSS: true,
             easing: 'linear', //'cubic-bezier(0.25, 0, 0.25, 1)',//
             speed: 1000,
+            closable: true,
             loop: false,
             auto: false,
             pause: 4000,
@@ -23,6 +24,7 @@
                 allPhotos: 'All photos'
             },
             exThumbImage: false,
+            index: false,
             thumbnail: true,
             caption: false,
             captionLink: false,
@@ -104,10 +106,15 @@
                 this.slideTo();
                 this.buildThumbnail();
                 this.keyPress();
-                this.slide(index);
+                if(settings.index) {
+                    this.slide(settings.index);
+                }
+                else {
+                    this.slide(index);
+                }
                 this.touch();
                 this.enableTouch();
-                
+
                 setTimeout(function () {
                     $gallery.addClass('opacity');
                 }, 50);
@@ -132,6 +139,16 @@
             },
             closeSlide: function () {
                 var $this = this;
+                if(settings.closable) {
+                    $('.lightGallery-slide')
+                        .on('click', function(event) {
+                            console.log(event.target);
+                            if($(event.target).is('.lightGallery-slide')) {
+                                $this.destroy();
+                            }
+                        })
+                    ;
+                }
                 $('#lightGallery-close').bind('click touchend', function () {
                     $this.destroy();
                 });
@@ -162,8 +179,8 @@
             enableTouch: function () {
                 var $this = this;
                 if (isTouch){
-                    var startCoords = {}, 
-                        endCoords = {}; 
+                    var startCoords = {},
+                        endCoords = {};
                     $('body').on('touchstart.lightGallery', function(e) {
                         endCoords = e.originalEvent.targetTouches[0];
                         startCoords.pageX = e.originalEvent.targetTouches[0].pageX;
@@ -535,9 +552,9 @@
                     if (this.doCss() && !$slider.hasClass('slide')) {
                         $slider.addClass('slide');
                     }
-                    /*					if(this.doCss()){
-						$slider.css({ 'transform' : 'translate3d('+(-index*100)+'%, 0px, 0px)' });
-					}*/
+                    /*                  if(this.doCss()){
+                        $slider.css({ 'transform' : 'translate3d('+(-index*100)+'%, 0px, 0px)' });
+                    }*/
                     if (!this.doCss() && !lightGalleryOn) {
                         $slider.css({
                             left: (-index * 100) + '%'
