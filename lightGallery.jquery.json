@@ -33,7 +33,7 @@
     "bugs": "https://github.com/sachinchoolur/lightGallery/issues",
     "homepage": "http://sachinchoolur.github.io/lightGallery/",
     "docs": "https://github.com/sachinchoolur/lightGallery",
-    "download": "http://code.jquery.com/#colorhttp://sachinchoolur.github.io/lightGallery/lightGallery.zip",
+    "download": "http://sachinchoolur.github.io/lightGallery/lightGallery.zip",
     "dependencies": {
         "jquery": ">=1.5"
     }
