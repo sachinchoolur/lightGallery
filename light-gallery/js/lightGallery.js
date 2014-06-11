@@ -225,15 +225,15 @@
                 });
             },
             isVideo: function (src) {
-                var youtube = src.match(/youtube\.com\/watch\?v=([a-zA-Z0-9\-_]+)/);
-                var vimeo = src.match(/vimeo\.com\/([0-9]*)/);
+                var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9_\-]+)/i);
+                var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
                 if (youtube || vimeo) {
                     return true;
                 }
             },
             loadVideo: function (src, a, _id) {
-                var youtube = src.match(/watch\?v=([a-zA-Z0-9\-_]+)/);
-                var vimeo = src.match(/vimeo\.com\/([0-9]*)/);
+                var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9_\-]+)/i);
+                var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
                 var video = '';
                 if (youtube) {
                     if (settings.videoAutoplay === true && a === true) {
