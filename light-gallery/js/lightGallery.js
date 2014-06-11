@@ -13,7 +13,7 @@
             mode: 'slide',
             useCSS: true,
             easing: 'linear', //'cubic-bezier(0.25, 0, 0.25, 1)',//
-            speed: 1000,
+            speed: 600,
             loop: false,
             auto: false,
             pause: 4000,
