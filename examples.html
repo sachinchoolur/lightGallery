@@ -157,7 +157,7 @@
     $("#auto-loop").lightGallery({
         loop:true,
         auto:true,
-        pause:1000
+        pause:3000
     }); 
   });
 &lt;/script&gt;</pre>
@@ -383,14 +383,14 @@
     </div>
 </div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
-<script src="light-gallery/js/lightGallery.min.js"></script> 
+<script src="light-gallery/js/lightGallery.js"></script> 
 <script src="js/prettify.js"></script> 
 <script type="text/javascript">
 	var site = $('#site');
 	$(document).ready(function() {
 		window.prettyPrint && prettyPrint()
 		$('#lightGallery').lightGallery({mode:'fade'}); 
-		$('#auto-loop').lightGallery({auto:true,loop:true,pause:1000});
+		$('#auto-loop').lightGallery({auto:true,loop:true,pause:3000});
 		$('#caption').lightGallery({caption:true,desc:true});
 		$('#dynamic').click(function(e){
 			$(this).lightGallery({
@@ -399,8 +399,14 @@
 				desc:true,
 				mobileSrc:true,
 				dynamicEl:[
-					{"src":"img/img1.jpg","thumb":"img/thumb1.jpg", "caption":"caption1", "desc":"Description1","mobileSrc":"img/mobile1.jpg"},
-					{"src":"img/img2.jpg","thumb":"img/thumb2.jpg", "caption":"caption2", "desc":"Description2","mobileSrc":"img/mobile2.jpg"}
+					{"src":"img/img1.jpg","thumb":"img/thumb1.jpg","caption":"caption1","desc":"Description1", "mobileSrc":"img/mobile1.jpg"},
+                {"src":"img/img2.jpg","thumb":"img/thumb2.jpg","caption":"caption2",  "desc":"Description2", "mobileSrc":"img/mobile2.jpg"},
+                {"src":"img/img1.jpg","thumb":"img/thumb3.jpg","caption":"caption1","desc":"Description1", "mobileSrc":"img/mobile1.jpg"},
+                {"src":"img/img2.jpg","thumb":"img/thumb4.jpg","caption":"caption2",  "desc":"Description2", "mobileSrc":"img/mobile2.jpg"},
+                {"src":"img/img1.jpg","thumb":"img/thumb5.jpg","caption":"caption1","desc":"Description1", "mobileSrc":"img/mobile1.jpg"},
+                {"src":"img/img2.jpg","thumb":"img/thumb6.jpg","caption":"caption2",  "desc":"Description2", "mobileSrc":"img/mobile2.jpg"},
+                {"src":"img/img1.jpg","thumb":"img/thumb7.jpg","caption":"caption1","desc":"Description1", "mobileSrc":"img/mobile1.jpg"},
+                {"src":"img/img2.jpg","thumb":"img/thumb8.jpg","caption":"caption2",  "desc":"Description2", "mobileSrc":"img/mobile2.jpg"}
 				]
 			});	
 		})  
