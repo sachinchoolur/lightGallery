@@ -1,8 +1,8 @@
 /** ==========================================================
 
-* jquery lightGallery.js v1.1.0
+* jquery lightGallery.js v1.1.2
 * http://sachinchoolur.github.io/lightGallery/
-* Released under the Apache License - http://opensource.org/licenses/Apache-2.0
+* Released under the Apache License - http://opensource.org/licenses/Apache-2.0  ---- FREE ----
 
 =========================================================/**/
 ;
@@ -12,7 +12,7 @@
         var defaults = {
             mode: 'slide',
             useCSS: true,
-            easing: 'linear', //'cubic-bezier(0.25, 0, 0.25, 1)',//
+            easing: 'ease', //'cubic-bezier(0.25, 0, 0.25, 1)',//
             speed: 1000,
             closable: true,
             loop: false,
@@ -637,10 +637,14 @@
                     $thumb.removeClass('active');
                     $thumb.eq(index).addClass('active');
                 }
-                if (settings.controls && settings.hideControlOnEnd && settings.loop === false) {
+                if (settings.controls && settings.hideControlOnEnd && settings.loop === false && $children.length > 1) {
+                    var l = $children.length;
+                        l = parseInt(l)-1;
                     if (index === 0) {
                         $prev.addClass('disabled');
-                    } else if (index === $children.length - 1) {
+                        $next.removeClass('disabled');
+                    } else if (index === l) {
+                        $prev.removeClass('disabled');
                         $next.addClass('disabled');
                     } else {
                         $prev.add($next).removeClass('disabled');
