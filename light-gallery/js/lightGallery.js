@@ -1,8 +1,8 @@
 /** ==========================================================
 
-* jquery lightGallery.js v1.1.2
+* jquery lightGallery.js v1.1.0
 * http://sachinchoolur.github.io/lightGallery/
-* Released under the Apache License - http://opensource.org/licenses/Apache-2.0  ---- FREE ----
+* Released under the Apache License - http://opensource.org/licenses/Apache-2.0
 
 =========================================================/**/
 ;
@@ -12,7 +12,7 @@
         var defaults = {
             mode: 'slide',
             useCSS: true,
-            easing: 'ease', //'cubic-bezier(0.25, 0, 0.25, 1)',//
+            easing: 'linear', //'cubic-bezier(0.25, 0, 0.25, 1)',//
             speed: 1000,
             closable: true,
             loop: false,
@@ -60,6 +60,7 @@
             $gallery, $galleryCont, $slider, $slide, $prev, $next, prevIndex, $thumb_cont, $thumb, windowWidth, interval, usingThumb = false,
             aTiming = false,
             aSpeed = false;
+            var isiPad = navigator.userAgent.match(/iPad/i) != null;
         var settings = $.extend(true, {}, defaults, options);
         var lightGallery = {
             init: function () {
@@ -587,9 +588,11 @@
                     settings.onSlideBefore.call(this);
                 }
                 if (settings.mode === 'slide') {
-                    if (this.doCss() && !$slider.hasClass('slide')) {
-                        $slider.addClass('slide');
-                    }
+                   // if (this.doCss() && !$slider.hasClass('slide') && !isiPad) {
+                     //   $slider.addClass('slide');
+                  //  }else if(this.doCss() && !$slider.hasClass('useLeft') &&isiPad){
+                        $slider.addClass('useLeft');
+                   // }
                     /*                  if(this.doCss()){
                         $slider.css({ 'transform' : 'translate3d('+(-index*100)+'%, 0px, 0px)' });
                     }*/
@@ -637,14 +640,10 @@
                     $thumb.removeClass('active');
                     $thumb.eq(index).addClass('active');
                 }
-                if (settings.controls && settings.hideControlOnEnd && settings.loop === false && $children.length > 1) {
-                    var l = $children.length;
-                        l = parseInt(l)-1;
+                if (settings.controls && settings.hideControlOnEnd && settings.loop === false) {
                     if (index === 0) {
                         $prev.addClass('disabled');
-                        $next.removeClass('disabled');
-                    } else if (index === l) {
-                        $prev.removeClass('disabled');
+                    } else if (index === $children.length - 1) {
                         $next.addClass('disabled');
                     } else {
                         $prev.add($next).removeClass('disabled');
