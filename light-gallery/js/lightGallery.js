@@ -377,7 +377,12 @@
                             title = 'image ' + i + '';
                         }
                         if (settings.captionLink === true) {
-                            var link = $children.eq(i).attr('data-link');
+                            var link = null;
+                            if (settings.dynamic == true) {
+                                link = settings.dynamicEl[i]['link'];
+                            } else {
+                                link = $children.eq(i).attr('data-link');
+                            }
                             if (typeof link !== 'undefined' && link !== '') {
                                 link = link
                             } else {
