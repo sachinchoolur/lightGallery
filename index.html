@@ -85,15 +85,15 @@
                         <ul class="pdl0">
                             <li>Responsive layout.</li>
                             <li>Touch support for mobile devices.</li>
+                            <li>Animated thumbnails.</li>
                             <li>CSS transitions with jQuery fallback</li>
                             <li>Youtube Vimeo Video Support</li>
                             <li>Slide and Fade Effects</li>
                             <li>Chrome, Safari, Firefox, Opera, IE7+, IOS, Android, windows phone.</li>
-                            <li>Image captions and descriptions</li>
-                            <li>Multiple sliders on the same page</li>
+                            <li>HTML iframe support.</li>
+                            <li>Multiple instances on one page</li>
                             <li>Easily customizable via CSS and Settings</li>
                             <li>Lightweight (7kb) (minified)</li>
-                            <li>Thumbnail support</li>
                             <li>Separate images for mobile devices</li>
                             <li>Can be extended with callbacks</li>
                             <li>Smart image preloading and code optimization</li>
@@ -104,42 +104,18 @@
                 </div>
                 <div class="col-sm-6">
                     <h2>Example <small>Click on any of the images to see lightGallery</small></h2>
-                    <ul id="lightGallery" class="gallery list-unstyled">
-                        <li data-title="Lorem Ipsum is simply dummy text of the printing and typesetting industry." data-desc="Lorem Ipsum has been the industry's standard dummy text ever since the 1500s" data-src="img/img1.jpg" data-responsive-src="img/mobile1.jpg"> <a href="#">
-                            <img src="img/thumb1.jpg" />
+                    <ul id="lightGallery" class="gallery list-unstyled home">
+                        <li data-src="img/img1.jpg" data-responsive-src="img/mobile1.jpg" data-html="#html1"> <a href="#">
+                            <img src="img/thumbb1.jpg" />
                             </a> </li>
-                        <li data-title="What is Lorem Ipsum?" data-desc="Lorem Ipsum is simply dummy text of the printing and typesetting industry." data-src="img/img2.jpg" data-responsive-src="img/mobile2.jpg"> <a href="#">
-                            <img src="img/thumb2.jpg" />
+                        <li data-src="img/img2.jpg" data-responsive-src="img/mobile2.jpg" data-html="#html2"> <a href="#">
+                            <img src="img/thumbb2.jpg" />
                             </a> </li>
-                        <li data-title="Where does it come from?" data-desc="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC" data-src="img/img3.jpg" data-responsive-src="img/mobile3.jpg"> <a href="#">
-                            <img src="img/thumb3.jpg" />
+                        <li data-src="img/img6.jpg" data-responsive-src="img/mobile6.jpg" data-html="#html3"> <a href="#">
+                            <img src="img/thumbb3.jpg" />
                             </a> </li>
-                        <li data-title="Why do we use it?" data-desc="It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout." data-src="img/img4.jpg" data-responsive-src="img/mobile4.jpg"> <a href="#">
-                            <img src="img/thumb4.jpg" />
-                            </a> </li>
-                        <li data-title="Where can I get some?" data-desc="There are many variations of passages of Lorem Ipsum available," data-src="img/img5.jpg" data-responsive-src="img/mobile5.jpg"> <a href="#">
-                            <img src="img/thumb5.jpg" />
-                            </a> </li>
-                        <li data-title="title6" data-desc="desc5" data-src="img/img6.jpg" data-responsive-src="img/mobile6.jpg"> <a href="#">
-                            <img src="img/thumb6.jpg" />
-                            </a> </li>
-                        <li data-desc="desc1" data-src="img/img7.jpg" data-responsive-src="img/mobile7.jpg"> <a href="#">
-                            <img src="img/thumb7.jpg" />
-                            </a> </li>
-                        <li data-title="title" data-desc="desc1" data-src="img/img8.jpg" data-responsive-src="img/mobile8.jpg"> <a href="#">
-                            <img src="img/thumb8.jpg" />
-                            </a> </li>
-                        <li data-title="Lorem Ipsum is simply dummy text of the printing and typesetting industry." data-desc="Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." data-src="http://www.youtube.com/watch?v=eKG08z85DtY" data-responsive-src="http://www.youtube.com/watch?v=eKG08z85DtY"> <a href="#">
-                            <img src="img/Pigloo.jpg" />
-                            </a> </li>
-                        <li data-title="What is Lorem Ipsum?" data-desc="Lorem Ipsum is simply dummy text of the printing and typesetting industry." data-src="http://vimeo.com/1084537" data-responsive-src="http://vimeo.com/1084537"> <a href="#">
-                            <img src="img/Big-Buck-Bunny.jpg" />
-                            </a> </li>
-                        <li data-title="Where does it come from?" data-desc="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC" data-src="http://www.youtube.com/watch?v=c0asJgSyxcY" data-responsive-src="http://www.youtube.com/watch?v=c0asJgSyxcY"> <a href="#">
-                            <img src="img/TuTiTu-Train.jpg" />
-                            </a> </li>
-                        <li data-title="Why do we use it?" data-desc="It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout." data-src="http://vimeo.com/35451452" data-responsive-src="http://vimeo.com/35451452"> <a href="#">
-                            <img src="img/Ninja-vs-Pirate.jpg" />
+                        <li data-src="img/img8.jpg" data-responsive-src="img/mobile8.jpg" data-html="#html4"> <a href="#">
+                            <img src="img/thumbb4.jpg" />
                             </a> </li>
                     </ul>
                 </div>
@@ -174,6 +150,27 @@
   ...
 &lt;/ul&gt;</pre>
                     </div>
+                    <div class="data">
+                        <h2>Data attributes</h2>
+                        <pre class="prettyprint linenums">
+&lt;!-- the image/video source for mobile devices --&gt;
+&lt;li data-responsive-src="mobile1.jpg" &gt; &lt;/li&gt;
+ 
+&lt;!-- the large version of your image/video --&gt;
+&lt;li data-src="img1.jpg" &gt; &lt;/li&gt;
+
+&lt;!-- Custom html (Caption description comments ...) --&gt;
+&lt;li data-html="&lt;h3&gt;My caption&lt;/h3&gt;&lt;p&gt;My description..&lt;/p&gt;" /&gt; &lt;/li&gt;
+&lt;!-- id or class name of an object(div) which contain your html. --&gt;
+&lt;li data-html="#inlineHtml" &gt; &lt;/li&gt;
+
+&lt;!-- Remote URL which you want to load.. --&gt;
+&lt;li data-url="myCustomHtml.html" &gt; &lt;/li&gt;
+
+&lt;!-- If true your url will be displayed in an iframe.. --&gt;
+&lt;li data-iframe="true" &gt; &lt;/li&gt;
+</pre>
+                    </div>
                     <div class="call">
                         <h2>Call lightGallery!</h2>
                         <pre class="prettyprint linenums">
@@ -188,64 +185,72 @@
                         <pre class="prettyprint linenums">&lt;script type="text/javascript"&gt;
   $(document).ready(function() {
     $("#lightGallery").lightGallery({
-      // Elements
-      thumbnail   : true,  // Whether to display a button to show thumbnails.
-      caption     : false, // Enables image captions. Content is taken from "data-title" attribute.
-      captionLink : false, // Makes image caption a link. URL is taken from "data-link" attribute.
-      desc        : false, // Enables image descriptions. Description is taken from "data-desc" attr.
-      counter     : false, // Shows total number of images and index number of current image.
-      controls    : true,  // Whether to display prev/next buttons.
 
-      //preload
-
-      preload     : 1,  //number of preload slides. will exicute only after the current slide is fully loaded. ex:// you clicked on 4th image and if preload = 1 then 3rd slide and 5th slide will be loaded in the background after the 4th slide is fully loaded.. if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.. ... ...
-
-      // Transitions
       mode   : 'slide',  // Type of transition between images. Either 'slide' or 'fade'.
       useCSS : true,     // Whether to always use jQuery animation for transitions or as a fallback.
       easing : 'linear', // Value for CSS "transition-timing-function" prop. and jQuery .animate().
       speed  : 1000,     // Transition duration (in ms).
+      class  : '',       // Add custom class for gallery.
+      
+      preload         : 1,    //number of preload slides. will exicute only after the current slide is fully loaded. ex:// you clicked on 4th image and if preload = 1 then 3rd slide and 5th slide will be loaded in the background after the 4th slide is fully loaded.. if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.. ... ...
+      showAfterLoad   : true,  // Show Content once it is fully loaded.
+      selector        : null,  // Custom selector property insted of just child.
+      index           : false, // Allows to set which image/video should load when using dynamicEl.
+      html            : false,  // Enables custon html. Content is taken from "data-html" / "data-url" attributes.
 
-      // Navigation
+      dynamic   : false, // Set to true to build a gallery based on the data from "dynamicEl" opt.
+      dynamicEl : [],    // Array of objects (src, thumb, caption, desc, mobileSrc) for gallery els.
+
+      thumbnail            : true,     // Whether to display a button to show thumbnails.
+      exThumbImage         : false,    // Name of a "data-" attribute containing the paths to thumbnails.
+      animateThumb         : true,     // Enable thumbnail animation.
+      currentPagerPosition : 'middle', // Position of selected thumbnail.
+      thumbWidth           : 100,      // Width of each thumbnails
+      thumbMargin          : 5,        // Spacing between each thumbnails 
+
+      controls         : true,  // Whether to display prev/next buttons.
       hideControlOnEnd : false, // If true, prev/next button will be hidden on first/last image.
       loop             : false, // Allows to go to the other end of the gallery at first/last img.
       auto             : false, // Enables slideshow mode.
       pause            : 4000,  // Delay (in ms) between transitions in slideshow mode.
       escKey           : true,  // Whether lightGallery should be closed when user presses "Esc".
+      closable         : true,  //allows clicks on dimmer to close gallery
 
-      // Mobile devices
+      counter      : false, // Shows total number of images and index number of current image.
+      lang         : { allPhotos: 'All photos' }, // Text of labels.
+
       mobileSrc         : false, // If "data-responsive-src" attr. should be used for mobiles.
       mobileSrcMaxWidth : 640,   // Max screen resolution for alternative images to be loaded for.
       swipeThreshold    : 50,    // How far user must swipe for the next/prev image (in px).
 
-      // Video
       vimeoColor    : 'CCCCCC', // Vimeo video player theme color (hex color code).
       videoAutoplay : true,     // Set to false to disable video autoplay option.
       videoMaxWidth : 855,      // Limits video maximal width (in px).
 
-      // i18n
-      lang : { allPhotos: 'All photos' }, // Text of labels.
-
-      // Callbacks
-      onOpen        : function() {}, // Executes immediately after the gallery is loaded.
-      onSlideBefore : function() {}, // Executes immediately before each transition.
-      onSlideAfter  : function() {}, // Executes immediately after each transition.
-      onSlideNext   : function() {}, // Executes immediately before each "Next" transition.
-      onSlidePrev   : function() {}, // Executes immediately before each "Prev" transition.
-      onBeforeClose : function() {}, // Executes immediately before the start of the close process.
-      onCloseAfter  : function() {}, // Executes immediately once lightGallery is closed.
-
-      // Dynamical load
-      dynamic   : false, // Set to true to build a gallery based on the data from "dynamicEl" opt.
-      dynamicEl : [],    // Array of objects (src, thumb, caption, desc, mobileSrc) for gallery els.
-
-      // Misc
-      rel          : false, // Combines containers with the same "data-rel" attr. into 1 gallery.
-      exThumbImage : false, // Name of a "data-" attribute containing the paths to thumbnails.
+      // Callbacks plugin = current plugin
+      onOpen        : function(plugin) {}, // Executes immediately after the gallery is loaded.
+      onSlideBefore : function(plugin) {}, // Executes immediately before each transition.
+      onSlideAfter  : function(plugin) {}, // Executes immediately after each transition.
+      onSlideNext   : function(plugin) {}, // Executes immediately before each "Next" transition.
+      onSlidePrev   : function(plugin) {}, // Executes immediately before each "Prev" transition.
+      onBeforeClose : function(plugin) {}, // Executes immediately before the start of the close process.
+      onCloseAfter  : function(plugin) {}, // Executes immediately once lightGallery is closed.
+            
     });
   });
 &lt;/script&gt;</pre>
                       <p>In-depth explanation of settings can be found on a <a href="settings.html">separate page</a>.</p>
+                    </div>
+                    <div class="call">
+                        <h2>Public methods</h2>
+                        <pre class="prettyprint linenums">
+&lt;script type="text/javascript"&gt;
+  $(document).ready(function() {
+    var gallery = $("#lightGallery").lightGallery();
+    gallery.isActive(); //check active state of lightGallery;
+    gallery.destroy();  //to destroy the plugin on the given element.  
+  });
+&lt;/script&gt;</pre>
                     </div>
                 </section>
             </div>
@@ -260,7 +265,12 @@
 	
 	$(document).ready(function() {
 		window.prettyPrint && prettyPrint()
-		$('#lightGallery').lightGallery({caption:true,desc:true,mobileSrc:true,hideControlOnEnd:true,easing:'cubic-bezier(0.25, 0, 0.25, 1)'});   
+		$('#lightGallery').lightGallery({
+      mobileSrc:true,
+      hideControlOnEnd:true,
+      easing:'cubic-bezier(0.25, 0, 0.25, 1)',
+      html:true
+    });   
 		var clk = true;
         $('.btn-navbar').on('click',function(){
             if(site.hasClass('translate')){
@@ -300,5 +310,30 @@
         });
 	});
 </script>
+
+<div id="html1" style="display:none">
+  <div class="customHtml">
+    <h4>Custom HTML</h4>
+    <p>Set html:true. provide custom html inside data-html attribute or just id or class name of an object(div) which contain your html.</p>
+  </div>
+</div>
+<div id="html2" style="display:none">
+  <div class="customHtml">
+    <h4>Remote URL</h4>
+    <p>You can even provide remote url inside data-url attribute.. </p>
+  </div>
+</div>
+<div id="html3" style="display:none">
+  <div class="customHtml">
+    <h4>Iframe Support</h4>
+    <p>Set html:true.  provide remote url inside data-url attribute.. set attribute data-iframe="true" .. Content will be desplayed in an iframe</p>
+  </div>
+</div>
+<div id="html4" style="display:none">
+  <div class="customHtml">
+    <h4>HTML Support</h4>
+    <p>You can even display only html content inside lightGallery..</p>
+  </div>
+</div>
 </body>
 </html>

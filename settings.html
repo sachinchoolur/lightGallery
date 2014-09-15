@@ -79,66 +79,15 @@
     });
   });
 &lt;/script&gt;</pre>
-                  <h3>Elements</h3>
                   <table class="table">
                     <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Expected</th>
-                      <th>Default</th>
-                      <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                      <td>thumbnail</td>
-                      <td>boolean</td>
-                      <td>true</td>
-                      <td>Whether to display a button to show thumbnails.</td>
-                    </tr>
-                    <tr>
-                      <td>caption</td>
-                      <td>boolean</td>
-                      <td>false</td>
-                      <td>Set to <code>true</code> to enable image captions. Add captions inside "data-title" attribute. If attribute is missing, "image n" will be displayed, where n = index of the image in the list.</td>
-                    </tr>
-                    <tr>
-                      <td>captionLink</td>
-                      <td>boolean</td>
-                      <td>false</td>
-                      <td>You can add a link to image caption by setting this to <code>true</code> and providing a link in the <code>data-link</code> attribute. If attribute is missing, link will point to "#".</td>
-                    </tr>
-                    <tr>
-                      <td>desc</td>
-                      <td>boolean</td>
-                      <td>false</td>
-                      <td>Set to <code>true</code> to enable image descriptions. Add descriptions inside "data-desc" attribute. If attribute is missing, "image n" will be displayed, where n = index of the image in the list.</td>
-                    </tr>
-                    <tr>
-                      <td>counter</td>
-                      <td>boolean</td>
-                      <td>false</td>
-                      <td>Whether to show total number of images and index number of currently displayed image.</td>
-                    </tr>
-                    <tr>
-                      <td>controls</td>
-                      <td>boolean</td>
-                      <td>true</td>
-                      <td>If <code>false</code>, prev/next buttons will not be displayed.</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                  <h3>Transitions</h3>
-                  <table class="table">
-                    <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Expected</th>
-                      <th>Default</th>
-                      <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                      <tr>
+                        <th>Name</th>
+                        <th>Expected</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                      </tr>
+                      </thead>
                     <tr>
                       <td>mode</td>
                       <td>'slide' or 'fade'</td>
@@ -163,19 +112,85 @@
                       <td>1000</td>
                       <td>Transition duration (in ms).</td>
                     </tr>
-                    </tbody>
-                  </table>
-                  <h3>Navigation</h3>
-                  <table class="table">
-                    <thead>
                     <tr>
-                      <th>Name</th>
-                      <th>Expected</th>
-                      <th>Default</th>
-                      <th>Description</th>
+                      <td>class</td>
+                      <td>string</td>
+                      <td>''</td>
+                      <td>Add custom class for gallery, can be used to set different style for different gallery</td>
                     </tr>
-                    </thead>
-                    <tbody>
+                    <tr>
+                      <td>preload</td>
+                      <td>number</td>
+                      <td>1</td>
+                      <td>number of preload slides. will exicute only after the current slide is fully loaded. ex:// you clicked on 4th image and if preload = 1 then 3rd slide and 5th slide will be loaded in the background after the 4th slide is fully loaded.. if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded</td>
+                    </tr>
+                    <tr>
+                      <td>showAfterLoad</td>
+                      <td>boolean</td>
+                      <td>true</td>
+                      <td>Show Content once it is fully loaded</td>
+                    </tr>
+                    <tr>
+                      <td>index</td>
+                      <td>number</td>
+                      <td>false</td>
+                      <td>Enables custon html. Content is taken from "data-html" / "data-url" attributes. you can provide inline html or class or id of html object which contain your html inside data-html attribute. your can also provide remote url inside data-url attribute. lightGallery will fetch content from the given url.If you want to open your url inside iframe just set data-iframe="true" this can be different for each slide.</td>
+                    </tr>
+                    <tr>
+                      <td>dynamic</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>LightGallery can be instantiated and launched programmatically by setting this option to <code>true</code> and populating <code>dynamicEl</code> option (see below) with the definitions of images.</td>
+                    </tr>
+                    <tr>
+                      <td>dynamicEl</td>
+                      <td>array of objects</td>
+                      <td>[]</td>
+                      <td>An array of objects (<code>src</code>, <code>mobileSrc</code>, <code>thumb</code>, <code>html</code>, <code>url</code>, <code>iframe</code>) representing gallery elements. <a href="examples.html#dynamicBlock">See example</a>.</td>
+                    </tr>
+                    <tr>
+                      <td>thumbnail</td>
+                      <td>boolean</td>
+                      <td>true</td>
+                      <td>Whether to display a button to show thumbnails.</td>
+                    </tr>
+                    <tr>
+                      <td>exThumbImage</td>
+                      <td>string or false</td>
+                      <td>false</td>
+                      <td>If you want to use external image for thumbnail, add the path of that image inside "data-" attribute and set value of this option to the name of your custom attribute.<br><code>// &lt;li data-exthumbimage="externalThumb.jpg" data-src="img/img1.jpg"&gt;&lt;/li&gt;</code><br><code>// exThumbImage: 'data-exthumbimage';</code></td>
+                    </tr><tr>
+                      <td>animateThumb</td>
+                      <td>boolean</td>
+                      <td>true</td>
+                      <td>Enable thumbnail animation.</td>
+                    </tr><tr>
+                      <td>currentPagerPosition </td>
+                      <td>'left' or 'middle' or 'right'</td>
+                      <td>'middle'</td>
+                      <td>Position of selected thumbnail.</td>
+                    </tr><tr>
+                      <td>thumbWidth</td>
+                      <td>string or false</td>
+                      <td>false</td>
+                      <td>If you want to use external image for thumbnail, add the path of that image inside "data-" attribute and set value of this option to the name of your custom attribute.<br><code>// &lt;li data-exthumbimage="externalThumb.jpg" data-src="img/img1.jpg"&gt;&lt;/li&gt;</code><br><code>// exThumbImage: 'data-exthumbimage';</code></td>
+                    </tr><tr>
+                      <td>exThumbImage</td>
+                      <td>number</td>
+                      <td>100</td>
+                      <td>Width of each thumbnails (in px)</td>
+                    </tr><tr>
+                      <td>thumbMargin</td>
+                      <td>number</td>
+                      <td>5</td>
+                      <td>Spacing between each thumbnails</td>
+                    </tr>
+                    <tr>
+                      <td>controls</td>
+                      <td>boolean</td>
+                      <td>true</td>
+                      <td>If <code>false</code>, prev/next buttons will not be displayed.</td>
+                    </tr>
                     <tr>
                       <td>hideControlOnEnd</td>
                       <td>boolean</td>
@@ -206,19 +221,24 @@
                       <td>true</td>
                       <td>Whether the LightGallery could be closed by pressing the "Esc" key.</td>
                     </tr>
-                    </tbody>
-                  </table>
-                  <h3>Mobile devices</h3>
-                  <table class="table">
-                    <thead>
                     <tr>
-                      <th>Name</th>
-                      <th>Expected</th>
-                      <th>Default</th>
-                      <th>Description</th>
+                      <td>closable</td>
+                      <td>boolean</td>
+                      <td>true</td>
+                      <td>allows clicks on dimmer to close gallery.</td>
                     </tr>
-                    </thead>
-                    <tbody>
+                    <tr>
+                      <td>counter</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>Whether to show total number of images and index number of currently displayed image.</td>
+                    </tr>
+                    <tr>
+                      <td>lang</td>
+                      <td>object</td>
+                      <td>{ allPhotos: 'All photos' }</td>
+                      <td>Define text of labels.</td>
+                    </tr>
                     <tr>
                       <td>mobileSrc</td>
                       <td>boolean</td>
@@ -237,19 +257,6 @@
                       <td>50</td>
                       <td>By setting the swipeThreshold (in px) you can set how far the user must swipe for the next/prev image.</td>
                     </tr>
-                    </tbody>
-                  </table>
-                  <h3>Video</h3>
-                  <table class="table">
-                    <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Expected</th>
-                      <th>Default</th>
-                      <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
                     <tr>
                       <td>vimeoColor</td>
                       <td>hex color code</td>
@@ -267,25 +274,6 @@
                       <td>number</td>
                       <td>855</td>
                       <td>Set limit for video maximal width.</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                  <h3>i18n</h3>
-                  <table class="table">
-                    <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Expected</th>
-                      <th>Default</th>
-                      <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                      <td>lang</td>
-                      <td>object</td>
-                      <td>{ allPhotos: 'All photos' }</td>
-                      <td>Define text of labels.</td>
                     </tr>
                     </tbody>
                   </table>
@@ -326,56 +314,6 @@
                     <tr>
                       <td>onCloseAfter</td>
                       <td>Executes immediately once Colorbox is closed.</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                  <h3>Dynamical load</h3>
-                  <table class="table">
-                    <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Expected</th>
-                      <th>Default</th>
-                      <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                      <td>dynamic</td>
-                      <td>boolean</td>
-                      <td>false</td>
-                      <td>LightGallery can be instantiated and launched programmatically by setting this option to <code>true</code> and populating <code>dynamicEl</code> option (see below) with the definitions of images.</td>
-                    </tr>
-                    <tr>
-                      <td>dynamicEl</td>
-                      <td>array of objects</td>
-                      <td>[]</td>
-                      <td>An array of objects (<code>src</code>, <code>thumb</code>, <code>caption</code>, <code>desc</code>, <code>mobileSrc</code>) representing gallery elements. <a href="examples.html#dynamicBlock">See example</a>.</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                  <h3>Misc</h3>
-                  <table class="table">
-                    <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Expected</th>
-                      <th>Default</th>
-                      <th>Description</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                      <td>rel</td>
-                      <td>boolean</td>
-                      <td>false</td>
-                      <td>Combine two galleries using data-rel attribute. Give the same data-rel value for multiple galleries you wish to combine. <a href="examples.html#relBlock">See example</a>.</td>
-                    </tr>
-                    <tr>
-                      <td>exThumbImage</td>
-                      <td>string or false</td>
-                      <td>false</td>
-                      <td>If you want to use external image for thumbnail, add the path of that image inside "data-" attribute and set value of this option to the name of your custom attribute.<br><code>// &lt;li data-exthumbimage="externalThumb.jpg" data-src="img/img1.jpg"&gt;&lt;/li&gt;</code><br><code>// exThumbImage: 'data-exthumbimage';</code></td>
                     </tr>
                     </tbody>
                   </table>

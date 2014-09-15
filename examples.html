@@ -86,7 +86,6 @@
                         </div>
                         <div class="html">
                             <h2>HTML Structure</h2>
-                            <p>Create ul and li elements and add the path of the image or video inside the data-src attributes which you wish to open within the lightGallery.</p>
                             <pre class="prettyprint linenums">
 &lt;ul id="lightGallery"&gt;
   &lt;li data-src="img/img1.jpg"&gt;
@@ -137,7 +136,6 @@
                     </div>
                     <div class="html">
                         <h2>HTML Structure</h2>
-                        <p>Create ul and li elements and add the path of the image or video inside the data-src attributes which you wish to open within the lightGallery.</p>
                         <pre class="prettyprint linenums">
 &lt;ul id="auto-loop"&gt;
   &lt;li data-src="img/img1.jpg"&gt;
@@ -171,46 +169,43 @@
             <div class="row">
                 <div class="col-xs-12">
                     <section class="install">
-                        <h2>Gallery With Caption and Description </h2>
+                        <h2>Load HTML </h2>
                         <div class="demo container-fluid">
-                            <ul id="caption" class="gallery list-unstyled">
-                                <li data-title="Title1" data-desc="description1" data-src="img/img1.jpg" data-responsive-src="http://farm9.staticflickr.com/8500/8294198039_68a591da58.jpg"> <a href="#">
-                                    <img src="img/thumb1.jpg" />
-                                    </a> </li>
-                                <li data-title="Title2" data-desc="description2" data-src="img/img2.jpg"> <a href="#">
-                                    <img src="img/thumb2.jpg" />
-                                    </a> </li>
-                                <li data-title="Title3" data-desc="description3" data-src="img/img3.jpg"> <a href="#">
-                                    <img src="img/thumb3.jpg" />
-                                    </a> </li>
-                                <li data-title="Title4" data-desc="description4" data-src="img/img4.jpg"> <a href="#">
-                                    <img src="img/thumb4.jpg" />
-                                    </a> </li>
+                            <ul id="htmlCont" class="list-unstyled" style="float:left;margin-right:15px;">
+                                <li data-url="ext/external.html" class="pull-left">
+                                    <button style="margin-right: 15px;" class="btn btn-primary">Html content from url
+                                    </button> </li>
+                                <li data-html="#external" class="pull-left">
+                                    <button class="btn btn-primary">Html content from div
+                                    </button> </li>
                             </ul>
+                                <button id="iframe" data-iframe="true" data-url="http://www.w3schools.com/" style="margin-right: 15px;" class="btn btn-primary">Html content from url</button>
+                                <button id="map" data-iframe="true" data-url="https://www.google.co.in/maps/@12.9539974,77.6309395,11z" style="margin-right: 15px;" class="btn btn-primary">Html content from url
+                                </button>
                         </div>
                         <div class="html">
                             <h2>HTML Structure</h2>
-                            <p>Create ul and li elements and add the path of the image or video inside the data-src attributes which you wish to open within the lightGallery.</p>
                             <pre class="prettyprint linenums">
-&lt;ul id="caption"&gt;
-  &lt;li data-title="title1" data-desc="description1" data-src="img/img1.jpg"&gt;
-      &lt;img src="img/thumb1.jpg" /&gt;
-  &lt;/li&gt;
-  &lt;li data-title="title2" data-desc="description2"  data-src="img/img2.jpg"&gt;
-      &lt;img src="img/thumb2.jpg" /&gt;
-  &lt;/li&gt;
-  ...
-&lt;/ul&gt;</pre>
+&lt;ul id="htmlCont" class="gallery list-unstyled"&gt;
+    &lt;li data-url="ext/external.html"&gt; &lt;
+        &lt;button class="btn btn-primary"&gt;Html Content&lt;/button&gt;
+    &lt;/li&gt;
+    &lt;li data-html="#external"&gt; 
+        &lt;button class="btn btn-primary"&gt; Html Content From Div&lt;/a&gt;&lt;/button&gt; 
+    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;button id="iframe" data-iframe="true" data-url="http://www.w3schools.com/" class="btn btn-primary">Iframe &lt;/button&gt;
+&lt;button id="map" data-iframe="true" data-url="https://www.google.co.in/maps/@12.9539974,77.6309395,11z" class="btn btn-primary"&gt;Google map&lt;/button&gt;
+</pre>
                         </div>
                         <div class="call">
                             <h2>Javascript</h2>
                             <pre class="prettyprint linenums">
 &lt;script type="text/javascript"&gt;
   $(document).ready(function() {
-    $("#caption").lightGallery({
-        caption:true,
-        desc:true
-    }); 
+    $('#htmlCont').lightGallery({html:true,thumbnail:false});
+    $('#iframe').lightGallery({html:true,thumbnail:false,selector:'#iframe'});
+    $('#map').lightGallery({html:true,thumbnail:false,selector:'#map'});
   });
 &lt;/script&gt;</pre>
                         </div>
@@ -233,12 +228,12 @@
     $('#dynamic').click(function(e){
         $(this).lightGallery({
             dynamic:true,
-            caption:true,
-            desc:true,
+            html:true,
             mobileSrc:true,
             dynamicEl:[
-                {"src":"img/img1.jpg","thumb":"img/thumb1.jpg","caption":"caption1","desc":"Description1", "mobileSrc":"img/mobile1.jpg"},
-                {"src":"img/img2.jpg","thumb":"img/thumb2.jpg","caption":"caption2",  "desc":"Description2", "mobileSrc":"img/mobile2.jpg"}
+                {"src":"img/img1.jpg","thumb":"img/thumb1.jpg","html":"&lt;div class='customHtml'&gt;&lt;h4&gt;Custom HTML&lt;/h4&gt;&lt;/div&gt;", "mobileSrc":"img/mobile1.jpg"},
+                {"src":"img/img2.jpg","thumb":"img/thumb2.jpg","html":"#dynamicHtml", "mobileSrc":"img/mobile2.jpg"},
+                {"src":"img/img3.jpg","thumb":"img/thumb3.jpg","url":"ext/ext.html", "mobileSrc":"img/mobile3.jpg"}
             ]
         });	
     }) 
@@ -249,86 +244,12 @@
             </div>
         </div>
     </div>
-    <div class="hero" style="margin-top:20px;border-top:1px solid #F1F1F1" id="relBlock">
+    <div class="hero" style="margin-top:20px;border-top:1px solid #F1F1F1" id="callBack">
         <div class="container-fluid example">
             <div class="row">
                 <div class="row">
                     <div class="col-xs-12">
                         <section class="install">
-                            <h2>Gallery Relation </h2>
-                            <div class="demo">
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <h2>Gallery1</h2>
-                                        <ul id="rel1" data-rel="imageGallery" class="gallery list-unstyled">
-                                            <li data-src="img/img1.jpg"> <a href="#">
-                                                <img src="img/thumb1.jpg" />
-                                                </a> </li>
-                                            <li data-src="img/img2.jpg"> <a href="#">
-                                                <img src="img/thumb2.jpg" />
-                                                </a> </li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <h2>Gallery2</h2>
-                                        <ul id="rel2" data-rel="imageGallery" class="gallery list-unstyled">
-                                            <li data-src="img/img3.jpg"> <a href="#">
-                                                <img src="img/thumb3.jpg" />
-                                                </a> </li>
-                                            <li data-src="img/img4.jpg"> <a href="#">
-                                                <img src="img/thumb4.jpg" />
-                                                </a> </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="html">
-                                <h2>HTML Structure</h2>
-                                <p>Create ul and li elements and add the path of the image or video inside the data-src attributes which you wish to open within the lightGallery.</p>
-                                <pre class="prettyprint linenums">
-&lt;ul id="rel1" data-rel="imageGallery" class="gallery list-unstyled"&gt;
-    &lt;li data-src="img/img1.jpg"&gt; &lt;a href="#"&gt;
-        &lt;img src="img/thumb1.jpg" /&gt;
-        &lt;/a&gt; 
-    &lt;/li&gt;
-    &lt;li data-src="img/img2.jpg"&gt; &lt;a href="#"&gt;
-        &lt;img src="img/thumb2.jpg" /&gt;
-        &lt;/a&gt; 
-    &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;ul id="rel2" data-rel="imageGallery" class="gallery list-unstyled"&gt;
-    &lt;li data-src="img/img3.jpg"&gt; &lt;a href="#"&gt;
-        &lt;img src="img/thumb3.jpg" /&gt;
-        &lt;/a&gt; 
-    &lt;/li&gt;
-    &lt;li data-src="img/img4.jpg"&gt; &lt;a href="#"&gt;
-        &lt;img src="img/thumb4.jpg" /&gt;
-        &lt;/a&gt; 
-    &lt;/li&gt;
-&lt;/ul&gt;
-        </pre>
-                            </div>
-                            <div class="call">
-                                <h2>Javascript</h2>
-                                <pre class="prettyprint linenums">
-&lt;script type="text/javascript"&gt;
-  $(document).ready(function() {
-    $('#rel1').lightGallery({rel:true});
-    $('#rel2').lightGallery({rel:true}); 
-  });
-&lt;/script&gt;</pre>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xs-12">
-                <section class="install">
                     <h2>Gallery With Callbacks </h2>
                     <div class="demo container-fluid">
                         <ul id="callback" class="gallery list-unstyled">
@@ -356,31 +277,40 @@
                 alert('onOpen : Executes immediately once the slider is loaded;');
             },
             onSlideBefore: function() {
-                alert('onSlideBefore : Executes immediately before each slide transition;');	
+                alert('onSlideBefore : Executes immediately before each slide transition;');    
             },
             onSlideAfter: function() {
-                alert('onSlideAfter : Executes immediately after each slide transition;');	
+                alert('onSlideAfter : Executes immediately after each slide transition;');  
             },
             onSlideNext: function() {
-                alert('onSlideNext : Executes immediately before each "Next" slide transition;');	
+                alert('onSlideNext : Executes immediately before each "Next" slide transition;');   
             },
             onSlidePrev: function() {
-                alert('onSlidePrev : Executes immediately before each "Prev" slide transition;');	
+                alert('onSlidePrev : Executes immediately before each "Prev" slide transition;');   
             },
             onBeforeClose: function(){
                 alert('onBeforeClose : Executes immediately before the start of the close process;');
             },
             onCloseAfter: function(){
-                alert('onCloseAfter : Executes immediately once Colorbox is closed;');	
-            }	
+                alert('onCloseAfter : Executes immediately once Colorbox is closed;');  
+            }   
         }); 
     });
 &lt;/script&gt;</pre>
                     </div>
                 </section>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
+<div style="display:none;" id="dynamicHtml">
+    <div class='customHtml'><h4>Custom HTML from div dynamicHtml</h4></div>
+</div>
+<div style="display:none;" id="external">
+    <h4>Html from remote url 1</h4>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies sapien a quam posuere convallis. Duis sit amet accumsan nulla. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean et imperdiet nibh. Interdum et malesuada fames ac ante Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies sapien a quam posuere convallis. Duis sit amet accumsan nulla. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean et imperdiet nibh. Interdum et malesuada fames ac ante Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies sapien a quam posuere convallis. Duis sit amet accumsan nulla. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aenean et imperdiet nibh. Interdum et malesuada fames ac ante 
 </div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
 <script src="light-gallery/js/lightGallery.js"></script> 
@@ -391,17 +321,19 @@
 		window.prettyPrint && prettyPrint()
 		$('#lightGallery').lightGallery({mode:'fade'}); 
 		$('#auto-loop').lightGallery({auto:true,loop:true,pause:3000});
-		$('#caption').lightGallery({caption:true,desc:true});
+        $('#htmlCont').lightGallery({html:true,thumbnail:false});
+        $('#iframe').lightGallery({html:true,thumbnail:false,selector:'#iframe'});
+		$('#map').lightGallery({html:true,thumbnail:false,selector:'#map'});
 		$('#dynamic').click(function(e){
 			$(this).lightGallery({
 				dynamic:true,
-				caption:true,
-				desc:true,
+				html:true,
 				mobileSrc:true,
                 hideControlOnEnd:true,
 				dynamicEl:[
-					{"src":"img/img1.jpg","thumb":"img/thumb1.jpg","caption":"caption1","desc":"Description1", "mobileSrc":"img/mobile1.jpg"},
-                {"src":"img/img2.jpg","thumb":"img/thumb2.jpg","caption":"caption2",  "desc":"Description2", "mobileSrc":"img/mobile2.jpg"}
+					{"src":"img/img1.jpg","thumb":"img/thumb1.jpg","html":"<div class='customHtml'><h4>Custom HTML</h4></div>", "mobileSrc":"img/mobile1.jpg"},
+                    {"src":"img/img2.jpg","thumb":"img/thumb2.jpg","html":"#dynamicHtml", "mobileSrc":"img/mobile2.jpg"},
+                    {"src":"img/img3.jpg","thumb":"img/thumb3.jpg","url":"ext/ext.html", "mobileSrc":"img/mobile3.jpg"}
 				]
 			});	
 		})  

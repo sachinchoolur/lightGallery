@@ -618,6 +618,13 @@ address {
   margin-bottom: 60px;
   padding-bottom: 60px;
 }
+.home.gallery li {
+  width: 205px;
+  height: 175px;
+}
+.home.gallery li a img {
+  max-width: 205px;
+}
 .gallery li {
   width: 100px;
   height: 100px;
@@ -625,10 +632,6 @@ address {
   float: left;
   margin-right: 6px;
   margin-bottom: 6px;
-}
-.gallery li a {
-  width: 100px;
-  height: 100px;
 }
 .gallery li a img {
   max-width: 100px;
