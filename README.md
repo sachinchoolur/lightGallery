@@ -12,7 +12,7 @@ JQuery lightGallery is a lightweight jQuery lightbox gallery for displaying imag
 
 Changelog
 ----------------
-### Added ###
+#### Added ####
 +   Animated thumbnails. 
 +   Custom Html inseted of caption and description.
 +   Custom selector property insted of just child.
@@ -24,7 +24,7 @@ Changelog
 +   HTML support. inline and external.
 +   currentPagerPosition setting to set Position of selected thumbnail.
 
-### Removed ###
+#### Removed ####
 +   Gallery relation. 
 +   captionLink
 +   caption
