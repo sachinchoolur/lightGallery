@@ -422,6 +422,7 @@
                     $gallery.append('<div class="thumb_cont"><div class="thumb_info"><span class="close ib"><i class="bUi-iCn-rMv-16" aria-hidden="true"></i></span></div><div class="thumb_inner"></div></div>');
                     $thumb_cont = $gallery.find('.thumb_cont');
                     $prev.after('<a class="cLthumb"></a>');
+                    $prev.parent().addClass('hasThumb');
                     $gallery.find('.cLthumb').bind('click touchend', function() {
                         $thumb_cont.addClass('open');
                         if ($this.doCss() && settings.mode === 'slide') {
