@@ -582,9 +582,9 @@
                     if (settings.loop) {
                         index = 0;
                         $this.slide(index);
-                    } else if (settings.mode === 'fade' && settings.thumbnail === true && $children.length > 1) {
+                    } else if (settings.thumbnail === true && $children.length > 1) {
                         $thumb_cont.addClass('open');
-                    } else if (settings.mode === 'slide' && settings.thumbnail === true && $children.length > 1) {
+                    } else {
                         $slide.eq(index).find('.object').addClass('rightEnd');
                         setTimeout(function() {
                             $slide.find('.object').removeClass('rightEnd');
@@ -604,9 +604,9 @@
                     if (settings.loop) {
                         index = $children.length - 1;
                         $this.slide(index);
-                    } else if (settings.mode === 'fade' && settings.thumbnail === true && $children.length > 1) {
+                    } else if (settings.thumbnail === true && $children.length > 1) {
                         $thumb_cont.addClass('open');
-                    } else if (settings.mode === 'slide' && settings.thumbnail === true && $children.length > 1) {
+                    } else{
                         $slide.eq(index).find('.object').addClass('leftEnd');
                         setTimeout(function() {
                             $slide.find('.object').removeClass('leftEnd');
@@ -716,7 +716,9 @@
                 }
                 prevIndex = index;
                 lightGalleryOn === false ? settings.onOpen.call(this, plugin) : settings.onSlideAfter.call(this, plugin);
-                lightGalleryOn = true;
+                setTimeout(function() {
+                    lightGalleryOn = true;
+                });
                 usingThumb = false;
                 if (settings.counter) {
                     $("#lightGallery_counter_current").text(index + 1);
