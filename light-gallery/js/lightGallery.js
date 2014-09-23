@@ -104,7 +104,7 @@
                         });
                     }
                 });
-            },
+            }
         };
         var setUp = {
             init: function() {
@@ -565,7 +565,7 @@
                             $thumb_cont.removeClass('open');
                         }
                     } else if (settings.escKey === true && e.keyCode === 27) {
-                        if (settings.thumbnail === true && $thumb_cont.hasClass('open')) {
+                        if (settings.thumbnail === true && $thumb_cont && $thumb_cont.hasClass('open')) {
                             $thumb_cont.removeClass('open');
                         } else {
                             plugin.destroy(false);
