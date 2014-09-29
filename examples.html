@@ -252,29 +252,13 @@
                     <section class="install">
                         <h2>Load HTML </h2>
                         <div class="demo container-fluid">
-                            <ul id="htmlCont" class="list-unstyled" style="float:left;margin-right:15px;">
-                                <li data-url="ext/external.html" class="pull-left">
-                                    <button style="margin-right: 15px;" class="btn btn-primary">Html content from url
-                                    </button> </li>
-                                <li data-html="#external" class="pull-left">
-                                    <button class="btn btn-primary">Html content from div
-                                    </button> </li>
-                            </ul>
-                                <button id="iframe" data-iframe="true" data-src="http://www.w3schools.com/" style="margin-right: 15px;" class="btn btn-primary">Html content from url</button>
-                                <button id="map" data-iframe="true" data-src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d248849.84916296514!2d77.6309395!3d12.9539974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1410805729331" style="margin-right: 15px;" class="btn btn-primary">Html content from url
+                                <button id="iframe" data-iframe="true" data-src="http://www.w3schools.com/" style="margin-right: 15px;" class="btn btn-primary">Iframe</button>
+                                <button id="map" data-iframe="true" data-src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d248849.84916296514!2d77.6309395!3d12.9539974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1410805729331" style="margin-right: 15px;" class="btn btn-primary">Google map
                                 </button>
                         </div>
                         <div class="html">
                             <h2>HTML Structure</h2>
                             <pre class="prettyprint linenums">
-&lt;ul id="htmlCont" class="gallery list-unstyled"&gt;
-    &lt;li data-url="ext/external.html"&gt; &lt;
-        &lt;button class="btn btn-primary"&gt;Html Content&lt;/button&gt;
-    &lt;/li&gt;
-    &lt;li data-html="#external"&gt; 
-        &lt;button class="btn btn-primary"&gt; Html Content From Div&lt;/a&gt;&lt;/button&gt; 
-    &lt;/li&gt;
-&lt;/ul&gt;
 &lt;button id="iframe" data-iframe="true" data-src="http://www.w3schools.com/" class="btn btn-primary">Iframe &lt;/button&gt;
 &lt;button id="map" data-iframe="true" data-src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d248849.84916296514!2d77.6309395!3d12.9539974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1410805729331" class="btn btn-primary"&gt;Google map&lt;/button&gt;
 </pre>
@@ -284,7 +268,6 @@
                             <pre class="prettyprint linenums">
 &lt;script type="text/javascript"&gt;
   $(document).ready(function() {
-    $('#htmlCont').lightGallery({html:true,thumbnail:false});
     $('#iframe').lightGallery({html:true,thumbnail:false,selector:'#iframe'});
     $('#map').lightGallery({html:true,thumbnail:false,selector:'#map'});
   });
@@ -402,7 +385,6 @@
 		window.prettyPrint && prettyPrint()
 		$('#lightGallery').lightGallery({mode:'fade'}); 
 		$('#video').lightGallery({auto:true,loop:true,pause:3000});
-        $('#htmlCont').lightGallery({html:true,thumbnail:false});
         $('#iframe').lightGallery({html:true,thumbnail:false,selector:'#iframe'});
 		$('#map').lightGallery({html:true,thumbnail:false,selector:'#map'});
 		$('#dynamic').click(function(e){
