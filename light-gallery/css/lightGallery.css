@@ -640,6 +640,7 @@ left: 0;
 
 
 .customHtml {
+	background: none repeat scroll 0 0 black;
 	background: none repeat scroll 0 0 rgba(0, 0, 0, 0.75);
 	color: #fff;
 	font-family: Arial, sans-serif;
