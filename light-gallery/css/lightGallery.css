@@ -65,6 +65,9 @@
 	transition: opacity 0.35s ease;
 	background: #0d0d0d;
 }
+#lightGallery-outer .lightGallery-slide{
+	position: relative;
+}
 /*lightGallery starting effects*/
 #lightGallery-Gallery.opacity {
 	opacity: 1;
@@ -100,7 +103,7 @@
 	-o-transition: opacity 1s ease 0s;
 	-ms-transition: opacity 1s ease 0s;
 }
-/** /
+/**/
 #lightGallery-slider {
 	height: 100%;
 	left: 0;
@@ -637,6 +640,7 @@ left: 0;
 
 
 .customHtml {
+	background: none repeat scroll 0 0 black;
 	background: none repeat scroll 0 0 rgba(0, 0, 0, 0.75);
 	color: #fff;
 	font-family: Arial, sans-serif;

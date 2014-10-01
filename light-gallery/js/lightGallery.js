@@ -12,9 +12,10 @@
         var defaults = {
                 mode: 'slide',
                 useCSS: true,
-                easing: 'ease', //'cubic-bezier(0.25, 0, 0.25, 1)',//
-                speed: 1000,
-                class: '',
+                cssEasing: 'ease', //'cubic-bezier(0.25, 0, 0.25, 1)',//
+                easing: 'linear', //'for jquery animation',//
+                speed: 600,
+                addClass: '',
 
                 closable: true,
                 loop: false,
@@ -134,7 +135,7 @@
                 }, 50);
             },
             structure: function() {
-                $('body').append('<div id="lightGallery-outer" class="' + settings.class + '"><div id="lightGallery-Gallery"><div id="lightGallery-slider"></div><a id="lightGallery-close" class="close"></a></div></div>').addClass('lightGallery');
+                $('body').append('<div id="lightGallery-outer" class="' + settings.addClass + '"><div id="lightGallery-Gallery"><div id="lightGallery-slider"></div><a id="lightGallery-close" class="close"></a></div></div>').addClass('lightGallery');
                 $galleryCont = $('#lightGallery-outer');
                 $gallery = $('#lightGallery-Gallery');
                 if (settings.showAfterLoad === true) {
@@ -635,12 +636,12 @@
                             aSpeed = true;
                         }
                     }
-                    if (this.doCss() && settings.easing !== '') {
+                    if (this.doCss() && settings.cssEasing !== '') {
                         if (!$slider.hasClass('timing')) {
                             $slider.addClass('timing');
                         }
                         if (aTiming === false) {
-                            $slider.css('transition-timing-function', settings.easing);
+                            $slider.css('transition-timing-function', settings.cssEasing);
                             aTiming = true;
                         }
                     }
