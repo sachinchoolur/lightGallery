@@ -165,9 +165,7 @@
                             <pre class="prettyprint linenums">
 &lt;script type="text/javascript"&gt;
   $(document).ready(function() {
-    $("#lightGallery").lightGallery({
-        mode:"fade"
-    }); 
+    $("#lightGallery").lightGallery(); 
   });
 &lt;/script&gt;</pre>
                         </div>
@@ -383,7 +381,7 @@
 	var site = $('#site');
 	$(document).ready(function() {
 		window.prettyPrint && prettyPrint()
-		$('#lightGallery').lightGallery({mode:'fade'}); 
+		$('#lightGallery').lightGallery(); 
 		$('#video').lightGallery({auto:true,loop:true,pause:3000});
         $('#iframe').lightGallery({html:true,thumbnail:false,selector:'#iframe'});
 		$('#map').lightGallery({html:true,thumbnail:false,selector:'#map'});
