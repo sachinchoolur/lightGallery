@@ -56,6 +56,22 @@ Main Features
 How to use lightGallery?
 --------------------
 
+### Bower
+
+Install lightgallery using the [Bower](http://bower.io) package manager.
+
+```sh
+$ bower install lightgallery
+```
+
+### npm
+
+You can also find lightgallery on [npm](http://npmjs.org).
+
+```sh
+$ npm install lightgallery
+```
+
 ### The code ###
 add the Following code to the &lt;head&gt; of your document.
 ```html
