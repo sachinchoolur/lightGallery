@@ -3260,3 +3260,9 @@ table th[class*="col-"] {
     margin-top: 20px;
     text-align: center;
 }
+#presets{
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 9999999;
+}
