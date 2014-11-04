@@ -153,14 +153,14 @@
 	width: 1px;
 	margin-right: -1px;
 }
-#lightGallery-Gallery.opacity .lightGallery-slide img, #lightGallery-Gallery.opacity .lightGallery-slide iframe {
+#lightGallery-Gallery.opacity .lightGallery-slide .object{
 	transform: scale3d(1, 1, 1);
 	-moz-transform: scale3d(1, 1, 1);
 	-ms-transform: scale3d(1, 1, 1);
 	-webkit-transform: scale3d(1, 1, 1);
 	-o-transform: scale3d(1, 1, 1);
 }
-.lightGallery-slide img, .lightGallery-slide iframe {
+.lightGallery-slide .object{
 	transform: scale3d(0.5, 0.5, 0.5);
 	-moz-transform: scale3d(0.5, 0.5, 0.5);
 	-ms-transform: scale3d(0.5, 0.5, 0.5);
@@ -172,7 +172,7 @@
 	-ms-transition: -ms-transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.5s ease 0s;
 	transition: transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.5s ease 0s;
 }
-#lightGallery-Gallery.fadeM .lightGallery-slide img, #lightGallery-Gallery.fadeM .lightGallery-slide iframe {
+#lightGallery-Gallery.fadeM .lightGallery-slide .object{
 	transform: scale3d(0.5, 0.5, 0.5);
 	-moz-transform: scale3d(0.5, 0.5, 0.5);
 	-ms-transform: scale3d(0.5, 0.5, 0.5);
@@ -440,7 +440,7 @@ left: 0;
 	max-height: 0;
 	opacity: 0;
 }
-#lightGallery-Gallery .thumb_cont.open {
+#lightGallery-Gallery.open .thumb_cont {
 	max-height: 350px;
 }
 #lightGallery-Gallery .thumb_cont .thumb_inner {
@@ -562,7 +562,7 @@ left: 0;
 	overflow: hidden;
 	position: relative;
 }
-#lightGallery-slider .video iframe {
+#lightGallery-slider .video .object {
 	width: 100%!important;
 	height: 100%!important;
 	position: absolute;
@@ -606,39 +606,6 @@ left: 0;
 	text-decoration: none;
 	background-color: #000;
 }
-/**/
-.external#lightGallery-outer {
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-.external #lightGallery-Gallery {
-	margin: auto;
-	width: 600px;
-	height: auto;
-	background-color: white;
-}
-.external #lightGallery-slider.on .lightGallery-slide {
-	overflow: hidden;
-	background-color: white;
-}
-.external #lightGallery-slider .lightGallery-slide {
-	min-height: 200px !important;
-	background-color: white;
-	margin-top: 60px;
-}
-.external #lightGallery-slider .ext {
-	float: left;
-}
-.external #lightGallery-slider.slide .lightGallery-slide.current {
-	height: auto !important;
-}
-.external #lightGallery-slider.slide .lightGallery-slide {
-	opacity: 0;
-}
-/**/
-
-
-
 .customHtml {
 	background: none repeat scroll 0 0 black;
 	background: none repeat scroll 0 0 rgba(0, 0, 0, 0.75);
