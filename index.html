@@ -153,22 +153,21 @@
                     <div class="data">
                         <h2>Data attributes</h2>
                         <pre class="prettyprint linenums">
-&lt;!-- the image/video source for mobile devices --&gt;
+<!-- the image/video source for mobile devices -->
 &lt;li data-responsive-src="mobile1.jpg" &gt; &lt;/li&gt;
- 
 &lt;!-- the large version of your image/video --&gt;
 &lt;li data-src="img1.jpg" &gt; &lt;/li&gt;
 
-&lt;!-- Custom html (Caption description comments ...) --&gt;
-&lt;li data-html="&lt;h3&gt;My caption&lt;/h3&gt;&lt;p&gt;My description..&lt;/p&gt;" /&gt; &lt;/li&gt;
+&lt;!-- Custom html5 video html (will be inserted same like youtube vimeo videos) --&gt;
+&lt;li data-html="video html" /&gt; &lt;/li&gt;
 &lt;!-- id or class name of an object(div) which contain your html. --&gt;
 &lt;li data-html="#inlineHtml" &gt; &lt;/li&gt;
 
-&lt;!-- Remote URL which you want to load.. --&gt;
-&lt;li data-url="myCustomHtml.html" &gt; &lt;/li&gt;
+&lt;!-- Custom html (Caption description comments ...) --&gt;
+&lt;li data-sub-html="&lt;h3&gt;My caption&lt;/h3&gt;&lt;p&gt;My description..&lt;/p&gt;" /&gt; &lt;/li&gt;
+&lt;!-- id or class name of an object(div) which contain your html. --&gt;
+&lt;li data-sub-html="#inlineSubHtml" &gt; &lt;/li&gt;
 
-&lt;!-- If true your src will be displayed in an iframe.. --&gt;
-&lt;li data-iframe="true" data-src="http://www.w3schools.com/" &gt; &lt;/li&gt;
 </pre>
                     </div>
                     <div class="call">
@@ -186,11 +185,11 @@
   $(document).ready(function() {
     $("#lightGallery").lightGallery({
 
-      mode   : 'slide',  // Type of transition between images. Either 'slide' or 'fade'.
-      useCSS : true,     // Whether to always use jQuery animation for transitions or as a fallback.
-      cssEasing : 'ease', // Value for CSS "transition-timing-function".
-      easing: 'linear', //'for jquery animation',//
-      speed  : 600,     // Transition duration (in ms).
+      mode      : 'slide',  // Type of transition between images. Either 'slide' or 'fade'.
+      useCSS    : true,     // Whether to always use jQuery animation for transitions or as a fallback.
+      cssEasing : 'ease',   // Value for CSS "transition-timing-function".
+      easing    : 'linear', //'for jquery animation',//
+      speed     : 600,      // Transition duration (in ms).
       addClass  : '',       // Add custom class for gallery.
       
       preload         : 1,    //number of preload slides. will exicute only after the current slide is fully loaded. ex:// you clicked on 4th image and if preload = 1 then 3rd slide and 5th slide will be loaded in the background after the 4th slide is fully loaded.. if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.. ... ...
