@@ -10,10 +10,10 @@ Description
 ----------------
 JQuery lightGallery is a lightweight jQuery lightbox gallery for displaying image and video gallery
 
-Changelog
+what's new
 ----------------
-#### Added ####
-+   Animated thumbnails. 
++   Animated thumbnails.
++   Local html5 video support 
 +   Custom Html inseted of caption and description.
 +   Custom selector property insted of just child.
 +   destroy() method.
@@ -23,12 +23,7 @@ Changelog
 +   Callback parameter(plugin).
 +   HTML support. inline and external.
 +   currentPagerPosition setting to set Position of selected thumbnail.
-
-#### Removed ####
-+   Gallery relation. 
-+   captionLink
-+   caption
-+   desc
++   Show Thumbnail by default option.
 
 Main Features
 ----------------
@@ -38,7 +33,7 @@ Main Features
 +    Touch support for mobile devices.
 +    Animated thumbnails.
 +    CSS transitions with jQuery fallback
-+    Youtube Vimeo Video Support
++    Youtube Vimeo Video and html5 videos Support
 +    Slide and Fade Effects
 +    Chrome, Safari, Firefox, Opera, IE7+, IOS, Android, windows phone.
 +    HTML iframe support.
@@ -58,7 +53,7 @@ How to use lightGallery?
 
 ### Bower
 
-Install lightgallery using the [Bower](http://bower.io) package manager.
+You can Install lightgallery using the [Bower](http://bower.io) package manager.
 
 ```sh
 $ bower install lightgallery
@@ -122,59 +117,64 @@ Create ul and li elements and add the path of the image or video inside the data
 ### Play with settings ###
 ```html
     <script type="text/javascript">
-    $(document).ready(function() {
+      $(document).ready(function() {
         $("#lightGallery").lightGallery({
 
-          mode   : 'slide',  // Type of transition between images. Either 'slide' or 'fade'.
-          useCSS : true,     // Whether to always use jQuery animation for transitions or as a fallback.
-          cssEasing : 'ease', // Value for CSS "transition-timing-function".
+          mode: 'slide',
+          useCSS: true,
+          cssEasing: 'ease', //'cubic-bezier(0.25, 0, 0.25, 1)',//
           easing: 'linear', //'for jquery animation',//
-          speed  : 600,     // Transition duration (in ms).
-          addClass  : '',       // Add custom class for gallery.
-          
-          preload         : 1,    //number of preload slides. will exicute only after the current slide is fully loaded. ex:// you clicked on 4th image and if preload = 1 then 3rd slide and 5th slide will be loaded in the background after the 4th slide is fully loaded.. if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.. ... ...
-          showAfterLoad   : true,  // Show Content once it is fully loaded.
-          selector        : null,  // Custom selector property insted of just child.
-          index           : false, // Allows to set which image/video should load when using dynamicEl.
-          html            : false,  // Enables custon html. Content is taken from "data-html" / "data-url" attributes.
+          speed: 600,
+          addClass: '',
 
-          dynamic   : false, // Set to true to build a gallery based on the data from "dynamicEl" opt.
-          dynamicEl : [],    // Array of objects (src, thumb, caption, desc, mobileSrc) for gallery els.
+          closable: true,
+          loop: false,
+          auto: false,
+          pause: 4000,
+          escKey: true,
+          controls: true,
+          hideControlOnEnd: false,
 
-          thumbnail            : true,     // Whether to display a button to show thumbnails.
-          exThumbImage         : false,    // Name of a "data-" attribute containing the paths to thumbnails.
-          animateThumb         : true,     // Enable thumbnail animation.
-          currentPagerPosition : 'middle', // Position of selected thumbnail.
-          thumbWidth           : 100,      // Width of each thumbnails
-          thumbMargin          : 5,        // Spacing between each thumbnails 
+          preload: 1, //number of preload slides. will exicute only after the current slide is fully loaded. ex:// you clicked on 4th image and if preload = 1 then 3rd slide and 5th slide will be loaded in the background after the 4th slide is fully loaded.. if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.. ... ...
+          showAfterLoad: true,
+          selector: null,
+          index: false,
 
-          controls         : true,  // Whether to display prev/next buttons.
-          hideControlOnEnd : false, // If true, prev/next button will be hidden on first/last image.
-          loop             : false, // Allows to go to the other end of the gallery at first/last img.
-          auto             : false, // Enables slideshow mode.
-          pause            : 4000,  // Delay (in ms) between transitions in slideshow mode.
-          escKey           : true,  // Whether lightGallery should be closed when user presses "Esc".
-          closable         : true,  //allows clicks on dimmer to close gallery
+          lang: {
+              allPhotos: 'All photos'
+          },
+          counter: false,
 
-          counter      : false, // Shows total number of images and index number of current image.
-          lang         : { allPhotos: 'All photos' }, // Text of labels.
+          exThumbImage: false,
+          thumbnail: true,
+          showThumbByDefault:false,
+          animateThumb: true,
+          currentPagerPosition: 'middle',
+          thumbWidth: 100,
+          thumbMargin: 5,
 
-          mobileSrc         : false, // If "data-responsive-src" attr. should be used for mobiles.
-          mobileSrcMaxWidth : 640,   // Max screen resolution for alternative images to be loaded for.
-          swipeThreshold    : 50,    // How far user must swipe for the next/prev image (in px).
 
-          vimeoColor    : 'CCCCCC', // Vimeo video player theme color (hex color code).
-          videoAutoplay : true,     // Set to false to disable video autoplay option.
-          videoMaxWidth : 855,      // Limits video maximal width (in px).
+          mobileSrc: false,
+          mobileSrcMaxWidth: 640,
+          swipeThreshold: 50,
+          enableTouch: true,
+          enableDrag: true,
+
+          vimeoColor: 'CCCCCC',
+          videoAutoplay: true,
+          videoMaxWidth: '855px',
+
+          dynamic: false,
+          dynamicEl: [],
 
           // Callbacks plugin = current plugin
-          onOpen        : function(plugin) {}, // Executes immediately after the gallery is loaded.
-          onSlideBefore : function(plugin) {}, // Executes immediately before each transition.
-          onSlideAfter  : function(plugin) {}, // Executes immediately after each transition.
-          onSlideNext   : function(plugin) {}, // Executes immediately before each "Next" transition.
-          onSlidePrev   : function(plugin) {}, // Executes immediately before each "Prev" transition.
-          onBeforeClose : function(plugin) {}, // Executes immediately before the start of the close process.
-          onCloseAfter  : function(plugin) {}, // Executes immediately once lightGallery is closed.
+          onOpen        : function(el) {}, // Executes immediately after the gallery is loaded.
+          onSlideBefore : function(el) {}, // Executes immediately before each transition.
+          onSlideAfter  : function(el) {}, // Executes immediately after each transition.
+          onSlideNext   : function(el) {}, // Executes immediately before each "Next" transition.
+          onSlidePrev   : function(el) {}, // Executes immediately before each "Prev" transition.
+          onBeforeClose : function(el) {}, // Executes immediately before the start of the close process.
+          onCloseAfter  : function(el) {}, // Executes immediately once lightGallery is closed.
                 
         });
     });
