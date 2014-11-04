@@ -95,13 +95,15 @@ Create ul and li elements and add the path of the image or video inside the data
     <!-- the large version of your image/video -->
     <li data-src="img1.jpg" > </li>
      
-    <!-- Custom html (Caption description comments ...) -->
-    <li data-html="<h3>My caption</h3><p>My description..</p>" /> </li>
+    <!-- Custom html5 video html (will be inserted same like youtube vimeo videos) -->
+    <li data-html="video html" /> </li>
     <!-- id or class name of an object(div) which contain your html. -->
     <li data-html="#inlineHtml" > </li>
-     
-    <!-- Remote URL which you want to load.. -->
-    <li data-url="myCustomHtml.html" > </li>
+    
+    <!-- Custom html (Caption description comments ...) -->
+    <li data-sub-html="<h3>My caption</h3><p>My description..</p>" /> </li>
+    <!-- id or class name of an object(div) which contain your html. -->
+    <li data-sub-html="#inlineSubHtml" > </li>
      
     <!-- If true your src will be displayed in an iframe.. -->
     <li data-iframe="true" data-src="http://www.w3schools.com/" > </li>
@@ -167,7 +169,7 @@ Create ul and li elements and add the path of the image or video inside the data
           dynamic: false,
           dynamicEl: [],
 
-          // Callbacks plugin = current plugin
+          // Callbacks el = current plugin
           onOpen        : function(el) {}, // Executes immediately after the gallery is loaded.
           onSlideBefore : function(el) {}, // Executes immediately before each transition.
           onSlideAfter  : function(el) {}, // Executes immediately after each transition.
