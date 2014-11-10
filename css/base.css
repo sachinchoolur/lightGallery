@@ -3266,3 +3266,23 @@ table th[class*="col-"] {
   left: 10px;
   z-index: 9999999;
 }
+
+
+/*article*/
+
+.article h2.heading {
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+.article {
+    margin-bottom: 90px;
+    margin-top: 90px;
+}
+.article > p {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+.article h3 {
+    margin-top: 40px;
+}
