@@ -576,9 +576,9 @@ $(document).ready(function() {
             html:true,
             mobileSrc:true,
             dynamicEl:[
-                {"src":"img/img1.jpg","thumb":"img/thumb1.jpg","html":"&lt;div class='customHtml'&gt;&lt;h4&gt;Custom HTML&lt;/h4&gt;&lt;/div&gt;", "mobileSrc":"img/mobile1.jpg"},
-                {"src":"img/img2.jpg","thumb":"img/thumb2.jpg","html":"#dynamicHtml", "mobileSrc":"img/mobile2.jpg"},
-                {"src":"img/img3.jpg","thumb":"img/thumb3.jpg","url":"ext/ext.html", "mobileSrc":"img/mobile3.jpg"}
+                {"src":"img/img1.jpg","thumb":"img/thumb1.jpg","sub-html":"&lt;div class='customHtml'&gt;&lt;h4&gt;Custom HTML&lt;/h4&gt;&lt;/div&gt;", "mobileSrc":"img/mobile1.jpg"},
+                {"src":"img/img2.jpg","thumb":"img/thumb2.jpg","sub-html":"#dynamicHtml", "mobileSrc":"img/mobile2.jpg"},
+                {"src":"img/img3.jpg","thumb":"img/thumb3.jpg","sub-html":"#dynamicHtml", "mobileSrc":"img/mobile3.jpg"}
             ]
         });	
     }) 
@@ -664,6 +664,18 @@ $(document).ready(function() {
 </div>
 <div style="display:none;" class="subhtml">
     <div class='customHtml'><h4>Pigloo - Papa Pinguin</h4></div>
+</div>
+<div style="display:none;" class="dynamicHtml">
+    <div class='customHtml'>
+        <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h4>
+        <p>Maecenas et libero varius, hendrerit metus sit amet, hendrerit odio. Sed ornare mauris sit amet neque dignissim, vel condimentum est consectetur. </p>
+    </div>
+</div>
+<div style="display:none;" id="dynamicHtml">
+    <div class='customHtml'>
+        <h4>Quisque in libero dolor. Fusce magna lectus, tempus eget mauris. </h4>
+        <p>Suspendisse iaculis nisl ac risus placerat vulputate. Donec vel nunc vitae magna efficitur eleifend. Nunc eget maximus erat.  </p>
+    </div>
 </div>
 <style type="text/css">
     .showThumbByDefault #lightGallery-Gallery.open .lightGallery-slide {
@@ -767,9 +779,9 @@ $(document).ready(function() {
 				mobileSrc:true,
                 hideControlOnEnd:true,
 				dynamicEl:[
-					{"src":"img/img1.jpg","thumb":"img/thumb1.jpg","html":"<div class='customHtml'><h4>Custom HTML</h4></div>", "mobileSrc":"img/mobile1.jpg"},
-                    {"src":"img/img2.jpg","thumb":"img/thumb2.jpg","html":"#dynamicHtml", "mobileSrc":"img/mobile2.jpg"},
-                    {"src":"img/img3.jpg","thumb":"img/thumb3.jpg","url":"ext/ext.html", "mobileSrc":"img/mobile3.jpg"}
+					{"src":"img/img1.jpg","thumb":"img/thumb1.jpg","sub-html":"<div class='customHtml'><h4>Custom HTML</h4></div>", "mobileSrc":"img/mobile1.jpg"},
+                    {"src":"img/img2.jpg","thumb":"img/thumb2.jpg", "sub-html":"#dynamicHtml", "mobileSrc":"img/mobile2.jpg"},
+                    {"src":"img/img3.jpg","thumb":"img/thumb3.jpg", "sub-html":".dynamicHtml", "mobileSrc":"img/mobile3.jpg"}
 				]
 			});	
 		})  
