@@ -43,9 +43,8 @@
                 thumbWidth: 100,
                 thumbMargin: 5,
 
+                zoomScale: [],
 
-                mobileSrc: false,
-                mobileSrcMaxWidth: 640,
                 swipeThreshold: 50,
                 enableTouch: true,
                 enableDrag: true,
@@ -336,29 +335,34 @@
                 if (settings.preload > $children.length) {
                     settings.preload = $children.length;
                 }
-                if (settings.mobileSrc === true && windowWidth <= settings.mobileSrcMaxWidth) {
-                    if (settings.dynamic) {
-                        src = settings.dynamicEl[index].mobileSrc;
-                    } else {
-                        src = $children.eq(index).attr('data-responsive-src');
-                    }
+
+                if (settings.dynamic) {
+                    src = settings.dynamicEl[index].src;
                 } else {
-                    if (settings.dynamic) {
-                        src = settings.dynamicEl[index].src;
-                    } else {
-                        src = $children.eq(index).attr('data-src');
-                    }
+                    src = $children.eq(index).attr('data-src');
                 }
+
                 var time = 0;
                 if (rec === true) {
                     time = settings.speed + 400;
                 }
 
-
-
-
                 if (typeof src !== 'undefined' && src !== '') {
                     if (!$this.isVideo(src, index)) {
+                        if (settings.zoomScale.length > 0 && window.devicePixelRatio > 1) {
+                            var zoom,
+                                zoomScale = settings.zoomScale;
+                            zoomScale.unshift(1);
+                            for (var i = 1; i < zoomScale.length; i++) {
+                                if (window.devicePixelRatio < zoomScale[i]) {
+                                    zoom = zoomScale[i - 1];
+                                    break;
+                                }
+                            }
+                            zoom = zoom || zoomScale[zoomScale.length - 1];
+                            var srcSuffix = src.split('.').slice(-1)[0];
+                            src = src.replace('.' + srcSuffix, '@' + zoom + 'x.' + srcSuffix);
+                        }
                         setTimeout(function() {
                             if (!$slide.eq(index).hasClass('loaded')) {
                                 $slide.eq(index).prepend('<img class="object" src="' + src + '" />');
