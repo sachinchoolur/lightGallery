@@ -195,3 +195,7 @@ In-depth explanation of settings can be found on a [separate page](http://sachin
     });
     </script>
 ```
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/sachinchoolur/lightgallery/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
