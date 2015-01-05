@@ -27,11 +27,13 @@
   "bugs": {
     "url": "https://github.com/sachinchoolur/lightGallery/issues"
   },
-  "license": {
-    "type": "MIT",
-    "url": "http://opensource.org/licenses/MIT"
-  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  ],
   "dependencies": {
-    "jquery": ">= 1.5.0"
+    "jquery": ">=1.5.0"
   }
 }
