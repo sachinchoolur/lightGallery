@@ -20,6 +20,7 @@
     "url": "https://github.com/sachinchoolur"
   },
   "homepage": "https://github.com/sachinchoolur/lightGallery",
+  "main": "light-gallery/js/lightGallery.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/sachinchoolur/lightGallery.git"
