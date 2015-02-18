@@ -195,10 +195,7 @@ In-depth explanation of settings can be found on a [separate page](http://sachin
     });
     </script>
 ```
-### sachi77n@gmail.com ###
-Email me if you have any questions or feedbacks regarding lightGallery or [lightSlider](https://github.com/sachinchoolur/lightslider)
 
-If you like lightGallery support me by staring this repository or tweet about this project.
+If you like lightGallery support me by staring this repository or tweet about this project. 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/sachinchoolur/lightgallery/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
+[@sachinchoolur](twitter.com/sachinchoolur)
