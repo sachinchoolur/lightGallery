@@ -24,6 +24,7 @@
                 escKey: true,
                 controls: true,
                 hideControlOnEnd: false,
+                rtl:false,
 
                 preload: 1, //number of preload slides. will exicute only after the current slide is fully loaded. ex:// you clicked on 4th image and if preload = 1 then 3rd slide and 5th slide will be loaded in the background after the 4th slide is fully loaded.. if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.. ... ...
                 showAfterLoad: true,
@@ -212,10 +213,10 @@
                         var distance = endCoords.pageX - startCoords.pageX,
                             swipeThreshold = settings.swipeThreshold;
                         if (distance >= swipeThreshold) {
-                            $this.prevSlide();
+                            (settings.rtl) ? $this.nextSlide() : $this.prevSlide();
                             clearInterval(interval);
                         } else if (distance <= -swipeThreshold) {
-                            $this.nextSlide();
+                            (settings.rtl) ? $this.prevSlide() : $this.nextSlide();
                             clearInterval(interval);
                         }
                     });
@@ -234,9 +235,9 @@
                     e.preventDefault();
                     xEnd = e.pageX;
                     if (xEnd - xStart > 20) {
-                        $this.prevSlide();
+                         (settings.rtl) ? $this.nextSlide() : $this.prevSlide();
                     } else if (xStart - xEnd > 20) {
-                        $this.nextSlide();
+                         (settings.rtl) ? $this.prevSlide() : $this.nextSlide();
                     }
                 });
             },
@@ -511,11 +512,12 @@
                     if (left < 0) {
                         left = 0;
                     }
+                    left = (settings.rtl) ? left : -left;
                     if (this.doCss()) {
-                        $gallery.find('.thumb_inner').css('transform', 'translate3d(-' + left + 'px, 0px, 0px)');
+                        $gallery.find('.thumb_inner').css('transform', 'translate3d(' + left + 'px, 0px, 0px)');
                     } else {
                         $gallery.find('.thumb_inner').animate({
-                            left: -left + "px"
+                            left: left + "px"
                         }, settings.speed);
                     }
                 }
@@ -556,7 +558,7 @@
                     e.preventDefault();
                     e.stopPropagation();
                     if (e.keyCode === 37) {
-                        $this.prevSlide();
+                        (settings.rtl) ? $this.nextSlide() : $this.prevSlide();
                         clearInterval(interval);
                     }
                     if (e.keyCode === 38 && settings.thumbnail === true && $children.length > 1) {
@@ -568,7 +570,7 @@
                             $gallery.addClass('open');
                         }
                     } else if (e.keyCode === 39) {
-                        $this.nextSlide();
+                        (settings.rtl) ? $this.prevSlide() : $this.nextSlide();
                         clearInterval(interval);
                     }
                     if (e.keyCode === 40 && settings.thumbnail === true && $children.length > 1 && !settings.showThumbByDefault) {
