@@ -51,6 +51,7 @@
                 enableDrag: true,
 
                 vimeoColor: 'CCCCCC',
+                youtubePlayerParams: false,
                 videoAutoplay: true,
                 videoMaxWidth: '855px',
 
@@ -268,6 +269,10 @@
                     } else {
                         a = '?wmode=opaque';
                     }
+
+                    if( settings.youtubePlayerParams )
+                        a = a + settings.youtubePlayerParams;
+
                     video = '<iframe class="object" width="560" height="315" src="//www.youtube.com/embed/' + youtube[1] + a + '" frameborder="0" allowfullscreen></iframe>';
                 } else if (vimeo) {
                     if (settings.videoAutoplay === true && lightGalleryOn === false) {
