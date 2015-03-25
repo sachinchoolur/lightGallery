@@ -28,6 +28,7 @@
                 preload: 1, //number of preload slides. will exicute only after the current slide is fully loaded. ex:// you clicked on 4th image and if preload = 1 then 3rd slide and 5th slide will be loaded in the background after the 4th slide is fully loaded.. if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.. ... ...
                 showAfterLoad: true,
                 selector: null,
+                stopPropagation: true,
                 index: false,
 
                 lang: {
@@ -99,7 +100,9 @@
                                 $children = $this.children();
                             }
                             e.preventDefault();
-                            e.stopPropagation();
+                            if (settings.stopPropagation) {
+                                e.stopPropagation();
+                            }
                             index = $children.index(this);
                             prevIndex = index;
                             setUp.init(index);
@@ -225,12 +228,16 @@
                 var xStart, xEnd;
                 var $this = this;
                 $('.lightGallery').bind('mousedown', function(e) {
-                    e.stopPropagation();
+                    if (settings.stopPropagation) {
+                        e.stopPropagation();
+                    }
                     e.preventDefault();
                     xStart = e.pageX;
                 });
                 $('.lightGallery').bind('mouseup', function(e) {
-                    e.stopPropagation();
+                    if (settings.stopPropagation) {
+                        e.stopPropagation();
+                    }
                     e.preventDefault();
                     xEnd = e.pageX;
                     if (xEnd - xStart > 20) {
@@ -554,7 +561,9 @@
                 var $this = this;
                 $(window).bind('keyup.lightGallery', function(e) {
                     e.preventDefault();
-                    e.stopPropagation();
+                    if (settings.stopPropagation) {
+                        e.stopPropagation();
+                    }
                     if (e.keyCode === 37) {
                         $this.prevSlide();
                         clearInterval(interval);
