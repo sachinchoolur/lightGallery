@@ -342,7 +342,10 @@
                     } else {
                         src = $children.eq(index).attr('data-responsive-src');
                     }
-                } else {
+                }
+
+                // Fall back to use non-responsive source if no responsive source was found
+                if (!src) {
                     if (settings.dynamic) {
                         src = settings.dynamicEl[index].src;
                     } else {
