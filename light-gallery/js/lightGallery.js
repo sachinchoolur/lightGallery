@@ -1,6 +1,6 @@
 /** ==========================================================
 
-* jquery lightGallery.js v1.1.4
+* jquery lightGallery.js v1.1.5 // 3/29/2015
 * http://sachinchoolur.github.io/lightGallery/
 * Released under the MIT License - http://opensource.org/licenses/mit-license.html  ---- FREE ----
 
