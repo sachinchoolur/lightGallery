@@ -138,37 +138,37 @@
                 }, 50);
             },
             structure: function() {
-                $('body').append('<div id="lightGallery-outer" class="' + settings.addClass + '"><div id="lightGallery-Gallery"><div id="lightGallery-slider"></div><a id="lightGallery-close" class="close"></a></div></div>').addClass('lightGallery');
-                $galleryCont = $('#lightGallery-outer');
-                $gallery = $('#lightGallery-Gallery');
+                $('body').append('<div id="lg-outer" class="' + settings.addClass + '"><div id="lg-gallery"><div id="lg-slider"></div><a id="lg-close" class="close"></a></div></div>').addClass('light-gallery');
+                $galleryCont = $('#lg-outer');
+                $gallery = $('#lg-gallery');
                 if (settings.showAfterLoad === true) {
-                    $gallery.addClass('showAfterLoad');
+                    $gallery.addClass('show-after-load');
                 }
-                $slider = $gallery.find('#lightGallery-slider');
+                $slider = $gallery.find('#lg-slider');
                 var slideList = '';
                 if (settings.dynamic) {
                     for (var i = 0; i < settings.dynamicEl.length; i++) {
-                        slideList += '<div class="lightGallery-slide"></div>';
+                        slideList += '<div class="lg-slide"></div>';
                     }
                 } else {
                     $children.each(function() {
-                        slideList += '<div class="lightGallery-slide"></div>';
+                        slideList += '<div class="lg-slide"></div>';
                     });
                 }
                 $slider.append(slideList);
-                $slide = $gallery.find('.lightGallery-slide');
+                $slide = $gallery.find('.lg-slide');
             },
             closeSlide: function() {
                 var $this = this;
                 if (settings.closable) {
-                    $('#lightGallery-outer')
+                    $('#lg-outer')
                         .on('click', function(event) {
-                            if ($(event.target).is('.lightGallery-slide')) {
+                            if ($(event.target).is('.lg-slide')) {
                                 plugin.destroy(false);
                             }
                         });
                 }
-                $('#lightGallery-close').bind('click touchend', function() {
+                $('#lg-close').bind('click touchend', function() {
                     plugin.destroy(false);
                 });
             },
@@ -224,12 +224,12 @@
             touch: function() {
                 var xStart, xEnd;
                 var $this = this;
-                $('.lightGallery').bind('mousedown', function(e) {
+                $('.light-gallery').bind('mousedown', function(e) {
                     e.stopPropagation();
                     e.preventDefault();
                     xStart = e.pageX;
                 });
-                $('.lightGallery').bind('mouseup', function(e) {
+                $('.light-gallery').bind('mouseup', function(e) {
                     e.stopPropagation();
                     e.preventDefault();
                     xEnd = e.pageX;
@@ -279,7 +279,7 @@
                 } else {
                     video = '<iframe class="object" frameborder="0" src="' + src + '"  allowfullscreen="true"></iframe>';
                 }
-                return '<div class="video_cont" style="max-width:' + settings.videoMaxWidth + ' !important;"><div class="video">' + video + '</div></div>';
+                return '<div class="video-cont" style="max-width:' + settings.videoMaxWidth + ' !important;"><div class="video">' + video + '</div></div>';
             },
             addHtml: function(index) {
                 var dataSubHtml = null;
@@ -354,9 +354,6 @@
                     time = settings.speed + 400;
                 }
 
-
-
-
                 if (typeof src !== 'undefined' && src !== '') {
                     if (!$this.isVideo(src, index)) {
                         setTimeout(function() {
@@ -400,7 +397,7 @@
                                 }
                             }
                             if (typeof dataHtml !== 'undefined' && dataHtml !== null) {
-                                $slide.eq(index).append('<div class="video_cont" style="max-width:' + settings.videoMaxWidth + ' !important;"><div class="video">'+dataHtml+'</div></div>');
+                                $slide.eq(index).append('<div class="video-cont" style="max-width:' + settings.videoMaxWidth + ' !important;"><div class="video">'+dataHtml+'</div></div>');
                             }
                             $this.addHtml(index);
                             $slide.eq(index).addClass('loaded complete');
@@ -416,8 +413,8 @@
             },
             counter: function() {
                 if (settings.counter === true) {
-                    var slideCount = $("#lightGallery-slider > div").length;
-                    $gallery.append("<div id='lightGallery_counter'><span id='lightGallery_counter_current'></span> / <span id='lightGallery_counter_all'>" + slideCount + "</span></div>");
+                    var slideCount = $("#lg-slider > div").length;
+                    $gallery.append("<div id='lg-counter'><span id='lg-counter-current'></span> / <span id='lg-counter-all'>" + slideCount + "</span></div>");
                 }
             },
             buildThumbnail: function() {
@@ -427,22 +424,22 @@
                     if (!settings.showThumbByDefault) {
                         $close = '<span class="close ib"><i class="bUi-iCn-rMv-16" aria-hidden="true"></i></span>';
                     }
-                    $gallery.append('<div class="thumb_cont"><div class="thumb_info">'+$close+'</div><div class="thumb_inner"></div></div>');
-                    $thumb_cont = $gallery.find('.thumb_cont');
-                    $prev.after('<a class="cLthumb"></a>');
-                    $prev.parent().addClass('hasThumb');
-                    $gallery.find('.cLthumb').bind('click touchend', function() {
+                    $gallery.append('<div class="thumb-cont"><div class="thumb-info">'+$close+'</div><div class="thumb-inner"></div></div>');
+                    $thumb_cont = $gallery.find('.thumb-cont');
+                    $prev.after('<a class="cl-thumb"></a>');
+                    $prev.parent().addClass('has-thumb');
+                    $gallery.find('.cl-thumb').bind('click touchend', function() {
                         $gallery.addClass('open');
                         if ($this.doCss() && settings.mode === 'slide') {
-                            $slide.eq(index).prevAll().removeClass('nextSlide').addClass('prevSlide');
-                            $slide.eq(index).nextAll().removeClass('prevSlide').addClass('nextSlide');
+                            $slide.eq(index).prevAll().removeClass('next-slide').addClass('prev-slide');
+                            $slide.eq(index).nextAll().removeClass('prev-slide').addClass('next-slide');
                         }
                     });
-                    $gallery.find('.thumb_cont .close').bind('click touchend', function() {
+                    $gallery.find('.thumb-cont .close').bind('click touchend', function() {
                         $gallery.removeClass('open');
                     });
-                    var thumbInfo = $gallery.find('.thumb_info');
-                    var $thumb_inner = $gallery.find('.thumb_inner');
+                    var thumbInfo = $gallery.find('.thumb-info');
+                    var $thumb_inner = $gallery.find('.thumb-inner');
                     var thumbList = '';
                     var thumbImg;
                     if (settings.dynamic) {
@@ -468,7 +465,7 @@
                     });
                     if (settings.animateThumb === true) {
                         var width = ($children.length * (settings.thumbWidth + settings.thumbMargin));
-                        $gallery.find('.thumb_inner').css({
+                        $gallery.find('.thumb-inner').css({
                             'width': width + 'px',
                             'position': 'relative',
                             'transition-duration': settings.speed + 'ms'
@@ -491,7 +488,7 @@
             },
             animateThumb: function(index) {
                 if (settings.animateThumb === true) {
-                    var thumb_contW = $gallery.find('.thumb_cont').width();
+                    var thumb_contW = $gallery.find('.thumb-cont').width();
                     var position;
                     switch (settings.currentPagerPosition) {
                         case 'left':
@@ -512,9 +509,9 @@
                         left = 0;
                     }
                     if (this.doCss()) {
-                        $gallery.find('.thumb_inner').css('transform', 'translate3d(-' + left + 'px, 0px, 0px)');
+                        $gallery.find('.thumb-inner').css('transform', 'translate3d(-' + left + 'px, 0px, 0px)');
                     } else {
-                        $gallery.find('.thumb_inner').animate({
+                        $gallery.find('.thumb-inner').animate({
                             left: -left + "px"
                         }, settings.speed);
                     }
@@ -523,9 +520,9 @@
             slideTo: function() {
                 var $this = this;
                 if (settings.controls === true && $children.length > 1) {
-                    $gallery.append('<div id="lightGallery-action"><a id="lightGallery-prev"></a><a id="lightGallery-next"></a></div>');
-                    $prev = $gallery.find('#lightGallery-prev');
-                    $next = $gallery.find('#lightGallery-next');
+                    $gallery.append('<div id="lg-action"><a id="lg-prev"></a><a id="lg-next"></a></div>');
+                    $prev = $gallery.find('#lg-prev');
+                    $next = $gallery.find('#lg-next');
                     $prev.bind('click', function() {
                         $this.prevSlide();
                         clearInterval(interval);
@@ -562,8 +559,8 @@
                     if (e.keyCode === 38 && settings.thumbnail === true && $children.length > 1) {
                         if (!$gallery.hasClass('open')) {
                             if ($this.doCss() && settings.mode === 'slide') {
-                                $slide.eq(index).prevAll().removeClass('nextSlide').addClass('prevSlide');
-                                $slide.eq(index).nextAll().removeClass('prevSlide').addClass('nextSlide');
+                                $slide.eq(index).prevAll().removeClass('next-slide').addClass('prev-slide');
+                                $slide.eq(index).nextAll().removeClass('prev-slide').addClass('next-slide');
                             }
                             $gallery.addClass('open');
                         }
@@ -597,9 +594,9 @@
                     } else if (settings.thumbnail === true && $children.length > 1 && !settings.showThumbByDefault) {
                         $gallery.addClass('open');
                     } else {
-                        $slide.eq(index).find('.object').addClass('rightEnd');
+                        $slide.eq(index).find('.object').addClass('right-end');
                         setTimeout(function() {
-                            $slide.find('.object').removeClass('rightEnd');
+                            $slide.find('.object').removeClass('right-end');
                         }, 400);
                     }
                 }
@@ -619,9 +616,9 @@
                     } else if (settings.thumbnail === true && $children.length > 1 && !settings.showThumbByDefault) {
                         $gallery.addClass('open');
                     } else{
-                        $slide.eq(index).find('.object').addClass('leftEnd');
+                        $slide.eq(index).find('.object').addClass('left-end');
                         setTimeout(function() {
-                            $slide.find('.object').removeClass('leftEnd');
+                            $slide.find('.object').removeClass('left-end');
                         }, 400);
                     }
                 }
@@ -663,8 +660,8 @@
                     var isiPad = navigator.userAgent.match(/iPad/i) !== null;
                     if (this.doCss() && !$slider.hasClass('slide') && !isiPad) {
                         $slider.addClass('slide');
-                    } else if (this.doCss() && !$slider.hasClass('useLeft') && isiPad) {
-                        $slider.addClass('useLeft');
+                    } else if (this.doCss() && !$slider.hasClass('use-left') && isiPad) {
+                        $slider.addClass('use-left');
                     }
                     /*                  if(this.doCss()){
                         $slider.css({ 'transform' : 'translate3d('+(-index*100)+'%, 0px, 0px)' });
@@ -680,8 +677,8 @@
                         }, settings.speed, settings.easing);
                     }
                 } else if (settings.mode === 'fade') {
-                    if (this.doCss() && !$slider.hasClass('fadeM')) {
-                        $slider.addClass('fadeM');
+                    if (this.doCss() && !$slider.hasClass('fade-m')) {
+                        $slider.addClass('fade-m');
                     } else if (!this.doCss() && !$slider.hasClass('animate')) {
                         $slider.addClass('animate');
                     }
@@ -700,13 +697,13 @@
                 $slide.eq(index).addClass('current');
                 if (this.doCss() && settings.mode === 'slide') {
                     if (usingThumb === false) {
-                        $('.prevSlide').removeClass('prevSlide');
-                        $('.nextSlide').removeClass('nextSlide');
-                        $slide.eq(index - 1).addClass('prevSlide');
-                        $slide.eq(index + 1).addClass('nextSlide');
+                        $('.prev-slide').removeClass('prev-slide');
+                        $('.next-slide').removeClass('next-slide');
+                        $slide.eq(index - 1).addClass('prev-slide');
+                        $slide.eq(index + 1).addClass('next-slide');
                     } else {
-                        $slide.eq(index).prevAll().removeClass('nextSlide').addClass('prevSlide');
-                        $slide.eq(index).nextAll().removeClass('prevSlide').addClass('nextSlide');
+                        $slide.eq(index).prevAll().removeClass('next-slide').addClass('prev-slide');
+                        $slide.eq(index).nextAll().removeClass('prev-slide').addClass('next-slide');
                     }
                 }
                 if (settings.thumbnail === true && $children.length > 1) {
@@ -733,7 +730,7 @@
                 });
                 usingThumb = false;
                 if (settings.counter) {
-                    $("#lightGallery_counter_current").text(index + 1);
+                    $("#lg-counter-current").text(index + 1);
                 }
                 $(window).bind('resize.lightGallery', function() {
                     setTimeout(function() {
@@ -763,14 +760,14 @@
             if (d === true) {
                 $children.off('click touch touchstart');
             }
-            $('.lightGallery').off('mousedown mouseup');
+            $('.light-gallery').off('mousedown mouseup');
             $('body').off('touchstart.lightGallery touchmove.lightGallery touchend.lightGallery');
             $(window).off('resize.lightGallery keyup.lightGallery');
             if (lightGalleryOnT === true) {
-                $gallery.addClass('fadeM');
+                $gallery.addClass('fade-m');
                 setTimeout(function() {
                     $galleryCont.remove();
-                    $('body').removeClass('lightGallery');
+                    $('body').removeClass('light-gallery');
                 }, 500);
             }
             settings.onCloseAfter.call(this, plugin);

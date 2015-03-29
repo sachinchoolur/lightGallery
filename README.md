@@ -13,7 +13,7 @@ JQuery lightGallery is a lightweight jQuery lightbox gallery for displaying imag
 what's new
 ----------------
 +   Animated thumbnails.
-+   Local html5 video support 
++   Local html5 video support
 +   Custom Html inseted of caption and description.
 +   Custom selector property insted of just child.
 +   destroy() method.
@@ -68,17 +68,22 @@ $ npm install lightgallery
 ```
 
 ### The code ###
-add the Following code to the &lt;head&gt; of your document.
+
+Add the Following code to the &lt;head&gt; of your document.
+
 ```html
-<link type="text/css" rel="stylesheet" href="css/lightGallery.css" />           
+<link type="text/css" rel="stylesheet" href="css/lightGallery.css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="js/lightGallery.js"></script>
 // Do not include both lightGallery.js and lightGallery.min.js
 ```
+
 ### HTML Structure ###
+
 Create ul and li elements and add the path of the image or video inside the data-src attributes which you wish to open within the lightGallery.
+
 ```html
-<ul id="lightGallery">
+<ul id="light-gallery">
   <li data-src="img/img1.jpg">
     <img src="img/thumb1.jpg" />
   </li>
@@ -89,38 +94,43 @@ Create ul and li elements and add the path of the image or video inside the data
 </ul>
 ```
 ### Data attributes ###
+
 ```html
     <!-- the image/video source for mobile devices -->
     <li data-responsive-src="mobile1.jpg" > </li>
     <!-- the large version of your image/video -->
     <li data-src="img1.jpg" > </li>
-     
+
     <!-- Custom html5 video html (will be inserted same like youtube vimeo videos) -->
     <li data-html="video html" /> </li>
     <!-- id or class name of an object(div) which contain your html. -->
-    <li data-html="#inlineHtml" > </li>
-    
+    <li data-html="#inline-html" > </li>
+
     <!-- Custom html (Caption description comments ...) -->
     <li data-sub-html="<h3>My caption</h3><p>My description..</p>" /> </li>
     <!-- id or class name of an object(div) which contain your html. -->
-    <li data-sub-html="#inlineSubHtml" > </li>
-     
+    <li data-sub-html="#inline-sub-html" > </li>
+
     <!-- If true your src will be displayed in an iframe.. -->
     <li data-iframe="true" data-src="http://www.w3schools.com/" > </li>
 ```
+
 ### Call lightGallery! ###
+
 ```html
 <script type="text/javascript">
   $(document).ready(function() {
-    $("#lightGallery").lightGallery(); 
+    $("#light-gallery").lightGallery();
   });
 </script>
 ```
+
 ### Play with settings ###
+
 ```html
     <script type="text/javascript">
       $(document).ready(function() {
-        $("#lightGallery").lightGallery({
+        $("#light-gallery").lightGallery({
 
           mode: 'slide',
           useCSS: true,
@@ -177,7 +187,7 @@ Create ul and li elements and add the path of the image or video inside the data
           onSlidePrev   : function(el) {}, // Executes immediately before each "Prev" transition.
           onBeforeClose : function(el) {}, // Executes immediately before the start of the close process.
           onCloseAfter  : function(el) {}, // Executes immediately once lightGallery is closed.
-                
+
         });
     });
     </script>
@@ -186,15 +196,16 @@ Create ul and li elements and add the path of the image or video inside the data
 In-depth explanation of settings can be found on a [separate page](http://sachinchoolur.github.io/lightGallery/settings.html).
 
 ### Public methods ###
+
 ```html
     <script type="text/javascript">
     $(document).ready(function() {
-        var gallery = $("#lightGallery").lightGallery();
+        var gallery = $("#light-gallery").lightGallery();
         gallery.isActive(); //check active state of lightGallery;
         gallery.destroy(); //to destroy the plugin on the given element.
     });
     </script>
 ```
 
-If you like lightGallery support me by staring this repository or tweet about this project. 
+If you like lightGallery support me by staring this repository or tweet about this project.
 [@sachinchoolur](https://twitter.com/sachinchoolur)
