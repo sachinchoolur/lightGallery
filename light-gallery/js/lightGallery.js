@@ -6,9 +6,9 @@
 
 =========================================================/**/
 ;
-(function($) {
+(function ($) {
     "use strict";
-    $.fn.lightGallery = function(options) {
+    $.fn.lightGallery = function (options) {
         var defaults = {
                 mode: 'slide',
                 useCSS: true,
@@ -37,7 +37,7 @@
 
                 exThumbImage: false,
                 thumbnail: true,
-                showThumbByDefault:false,
+                showThumbByDefault: false,
                 animateThumb: true,
                 currentPagerPosition: 'middle',
                 thumbWidth: 100,
@@ -59,13 +59,13 @@
                 dynamicEl: [],
                 //callbacks
 
-                onOpen: function(plugin) {},
-                onSlideBefore: function(plugin) {},
-                onSlideAfter: function(plugin) {},
-                onSlideNext: function(plugin) {},
-                onSlidePrev: function(plugin) {},
-                onBeforeClose: function(plugin) {},
-                onCloseAfter: function(plugin) {}
+                onOpen: function (plugin) {},
+                onSlideBefore: function (plugin) {},
+                onSlideAfter: function (plugin) {},
+                onSlideNext: function (plugin) {},
+                onSlidePrev: function (plugin) {},
+                onBeforeClose: function (plugin) {},
+                onCloseAfter: function (plugin) {}
             },
             el = $(this),
             plugin = this,
@@ -79,8 +79,8 @@
             aSpeed = false;
         var settings = $.extend(true, {}, defaults, options);
         var lightGallery = {
-            init: function() {
-                el.each(function() {
+            init: function () {
+                el.each(function () {
                     var $this = $(this);
                     if (settings.dynamic) {
                         $children = settings.dynamicEl;
@@ -93,7 +93,7 @@
                         } else {
                             $children = $this.children();
                         }
-                        $children.on('click', function(e) {
+                        $children.on('click', function (e) {
                             if (settings.selector !== null) {
                                 $children = $(settings.selector);
                             } else {
@@ -110,7 +110,7 @@
             }
         };
         var setUp = {
-            init: function() {
+            init: function () {
                 isActive = true;
                 this.structure();
                 this.getWidth();
@@ -129,16 +129,16 @@
                 }
                 if (settings.enableDrag) {
                     this.touch();
-                };
+                }
                 if (settings.enableTouch) {
                     this.enableTouch();
                 }
 
-                setTimeout(function() {
+                setTimeout(function () {
                     $gallery.addClass('opacity');
                 }, 50);
             },
-            structure: function() {
+            structure: function () {
                 $('body').append('<div id="lg-outer" class="' + settings.addClass + '"><div id="lg-gallery"><div id="lg-slider"></div><a id="lg-close" class="close"></a></div></div>').addClass('light-gallery');
                 $galleryCont = $('#lg-outer');
                 $gallery = $('#lg-gallery');
@@ -152,35 +152,35 @@
                         slideList += '<div class="lg-slide"></div>';
                     }
                 } else {
-                    $children.each(function() {
+                    $children.each(function () {
                         slideList += '<div class="lg-slide"></div>';
                     });
                 }
                 $slider.append(slideList);
                 $slide = $gallery.find('.lg-slide');
             },
-            closeSlide: function() {
+            closeSlide: function () {
                 var $this = this;
                 if (settings.closable) {
                     $('#lg-outer')
-                        .on('click', function(event) {
+                        .on('click', function (event) {
                             if ($(event.target).is('.lg-slide')) {
                                 plugin.destroy(false);
                             }
                         });
                 }
-                $('#lg-close').bind('click touchend', function() {
+                $('#lg-close').bind('click touchend', function () {
                     plugin.destroy(false);
                 });
             },
-            getWidth: function() {
-                var resizeWindow = function() {
+            getWidth: function () {
+                var resizeWindow = function () {
                     windowWidth = $(window).width();
                 };
                 $(window).bind('resize.lightGallery', resizeWindow());
             },
-            doCss: function() {
-                var support = function() {
+            doCss: function () {
+                var support = function () {
                     var transition = ['transition', 'MozTransition', 'WebkitTransition', 'OTransition', 'msTransition', 'KhtmlTransition'];
                     var root = document.documentElement;
                     for (var i = 0; i < transition.length; i++) {
@@ -194,22 +194,22 @@
                 }
                 return false;
             },
-            enableTouch: function() {
+            enableTouch: function () {
                 var $this = this;
                 if (isTouch) {
                     var startCoords = {},
                         endCoords = {};
-                    $('body').on('touchstart.lightGallery', function(e) {
+                    $('body').on('touchstart.lightGallery', function (e) {
                         endCoords = e.originalEvent.targetTouches[0];
                         startCoords.pageX = e.originalEvent.targetTouches[0].pageX;
                         startCoords.pageY = e.originalEvent.targetTouches[0].pageY;
                     });
-                    $('body').on('touchmove.lightGallery', function(e) {
+                    $('body').on('touchmove.lightGallery', function (e) {
                         var orig = e.originalEvent;
                         endCoords = orig.targetTouches[0];
                         e.preventDefault();
                     });
-                    $('body').on('touchend.lightGallery', function(e) {
+                    $('body').on('touchend.lightGallery', function (e) {
                         var distance = endCoords.pageX - startCoords.pageX,
                             swipeThreshold = settings.swipeThreshold;
                         if (distance >= swipeThreshold) {
@@ -222,15 +222,15 @@
                     });
                 }
             },
-            touch: function() {
+            touch: function () {
                 var xStart, xEnd;
                 var $this = this;
-                $('.light-gallery').bind('mousedown', function(e) {
+                $('.light-gallery').bind('mousedown', function (e) {
                     e.stopPropagation();
                     e.preventDefault();
                     xStart = e.pageX;
                 });
-                $('.light-gallery').bind('mouseup', function(e) {
+                $('.light-gallery').bind('mouseup', function (e) {
                     e.stopPropagation();
                     e.preventDefault();
                     xEnd = e.pageX;
@@ -241,7 +241,7 @@
                     }
                 });
             },
-            isVideo: function(src, index) {
+            isVideo: function (src, index) {
                 var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9_\-]+)/i);
                 var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
                 var iframe = false;
@@ -258,7 +258,7 @@
                     return true;
                 }
             },
-            loadVideo: function(src, _id) {
+            loadVideo: function (src, _id) {
                 var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9_\-]+)/i);
                 var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
                 var video = '';
@@ -270,7 +270,7 @@
                         a = '?wmode=opaque';
                     }
 
-                    if( settings.youtubePlayerParams ) {
+                    if (settings.youtubePlayerParams) {
                         var youtubeParams = $.param(settings.youtubePlayerParams);
                         a = a + '&' + youtubeParams;
                     }
@@ -288,7 +288,7 @@
                 }
                 return '<div class="video-cont" style="max-width:' + settings.videoMaxWidth + ' !important;"><div class="video">' + video + '</div></div>';
             },
-            addHtml: function(index) {
+            addHtml: function (index) {
                 var dataSubHtml = null;
                 if (settings.dynamic) {
                     dataSubHtml = settings.dynamicEl[index]['sub-html'];
@@ -305,7 +305,7 @@
                     $slide.eq(index).append(dataSubHtml);
                 }
             },
-            preload: function(index) {
+            preload: function (index) {
                 var newIndex = index;
                 for (var k = 0; k <= settings.preload; k++) {
                     if (k >= $children.length - index) {
@@ -320,14 +320,14 @@
                     this.loadContent(newIndex - h, true);
                 }
             },
-            loadObj: function(r, index) {
+            loadObj: function (r, index) {
                 var $this = this;
-                $slide.eq(index).find('.object').on('load error', function() {
+                $slide.eq(index).find('.object').on('load error', function () {
                     $slide.eq(index).addClass('complete');
                 });
                 if (r === false) {
                     if (!$slide.eq(index).hasClass('complete')) {
-                        $slide.eq(index).find('.object').on('load error', function() {
+                        $slide.eq(index).find('.object').on('load error', function () {
                             $this.preload(index);
                         });
                     } else {
@@ -335,7 +335,7 @@
                     }
                 }
             },
-            loadContent: function(index, rec) {
+            loadContent: function (index, rec) {
                 var $this = this;
                 var i, j, l = $children.length - index;
                 var src;
@@ -366,7 +366,7 @@
 
                 if (typeof src !== 'undefined' && src !== '') {
                     if (!$this.isVideo(src, index)) {
-                        setTimeout(function() {
+                        setTimeout(function () {
                             if (!$slide.eq(index).hasClass('loaded')) {
                                 $slide.eq(index).prepend('<img class="object" src="' + src + '" />');
                                 $this.addHtml(index);
@@ -375,7 +375,7 @@
                             $this.loadObj(rec, index);
                         }, time);
                     } else {
-                        setTimeout(function() {
+                        setTimeout(function () {
                             if (!$slide.eq(index).hasClass('loaded')) {
                                 $slide.eq(index).prepend($this.loadVideo(src, index));
                                 $this.addHtml(index);
@@ -390,7 +390,7 @@
 
                     }
                 } else {
-                     setTimeout(function() {
+                    setTimeout(function () {
                         if (!$slide.eq(index).hasClass('loaded')) {
                             var dataHtml = null;
                             if (settings.dynamic) {
@@ -407,7 +407,7 @@
                                 }
                             }
                             if (typeof dataHtml !== 'undefined' && dataHtml !== null) {
-                                $slide.eq(index).append('<div class="video-cont" style="max-width:' + settings.videoMaxWidth + ' !important;"><div class="video">'+dataHtml+'</div></div>');
+                                $slide.eq(index).append('<div class="video-cont" style="max-width:' + settings.videoMaxWidth + ' !important;"><div class="video">' + dataHtml + '</div></div>');
                             }
                             $this.addHtml(index);
                             $slide.eq(index).addClass('loaded complete');
@@ -421,31 +421,31 @@
                 }
 
             },
-            counter: function() {
+            counter: function () {
                 if (settings.counter === true) {
                     var slideCount = $("#lg-slider > div").length;
                     $gallery.append("<div id='lg-counter'><span id='lg-counter-current'></span> / <span id='lg-counter-all'>" + slideCount + "</span></div>");
                 }
             },
-            buildThumbnail: function() {
+            buildThumbnail: function () {
                 if (settings.thumbnail === true && $children.length > 1) {
                     var $this = this,
                         $close = '';
                     if (!settings.showThumbByDefault) {
                         $close = '<span class="close ib"><i class="bUi-iCn-rMv-16" aria-hidden="true"></i></span>';
                     }
-                    $gallery.append('<div class="thumb-cont"><div class="thumb-info">'+$close+'</div><div class="thumb-inner"></div></div>');
+                    $gallery.append('<div class="thumb-cont"><div class="thumb-info">' + $close + '</div><div class="thumb-inner"></div></div>');
                     $thumb_cont = $gallery.find('.thumb-cont');
                     $prev.after('<a class="cl-thumb"></a>');
                     $prev.parent().addClass('has-thumb');
-                    $gallery.find('.cl-thumb').bind('click touchend', function() {
+                    $gallery.find('.cl-thumb').bind('click touchend', function () {
                         $gallery.addClass('open');
                         if ($this.doCss() && settings.mode === 'slide') {
                             $slide.eq(index).prevAll().removeClass('next-slide').addClass('prev-slide');
                             $slide.eq(index).nextAll().removeClass('prev-slide').addClass('next-slide');
                         }
                     });
-                    $gallery.find('.thumb-cont .close').bind('click touchend', function() {
+                    $gallery.find('.thumb-cont .close').bind('click touchend', function () {
                         $gallery.removeClass('open');
                     });
                     var thumbInfo = $gallery.find('.thumb-info');
@@ -458,7 +458,7 @@
                             thumbList += '<div class="thumb"><img src="' + thumbImg + '" /></div>';
                         }
                     } else {
-                        $children.each(function() {
+                        $children.each(function () {
                             if (settings.exThumbImage === false || typeof $(this).attr(settings.exThumbImage) == 'undefined' || $(this).attr(settings.exThumbImage) === null) {
                                 thumbImg = $(this).find('img').attr('src');
                             } else {
@@ -481,7 +481,7 @@
                             'transition-duration': settings.speed + 'ms'
                         });
                     }
-                    $thumb.bind('click touchend', function() {
+                    $thumb.bind('click touchend', function () {
                         usingThumb = true;
                         var index = $(this).index();
                         $thumb.removeClass('active');
@@ -496,19 +496,19 @@
                     }
                 }
             },
-            animateThumb: function(index) {
+            animateThumb: function (index) {
                 if (settings.animateThumb === true) {
                     var thumb_contW = $gallery.find('.thumb-cont').width();
                     var position;
                     switch (settings.currentPagerPosition) {
-                        case 'left':
-                            position = 0;
-                            break;
-                        case 'middle':
-                            position = (thumb_contW / 2) - (settings.thumbWidth / 2);
-                            break;
-                        case 'right':
-                            position = thumb_contW - settings.thumbWidth;
+                    case 'left':
+                        position = 0;
+                        break;
+                    case 'middle':
+                        position = (thumb_contW / 2) - (settings.thumbWidth / 2);
+                        break;
+                    case 'right':
+                        position = thumb_contW - settings.thumbWidth;
                     }
                     var left = ((settings.thumbWidth + settings.thumbMargin) * index - 1) - position;
                     var width = ($children.length * (settings.thumbWidth + settings.thumbMargin));
@@ -527,26 +527,26 @@
                     }
                 }
             },
-            slideTo: function() {
+            slideTo: function () {
                 var $this = this;
                 if (settings.controls === true && $children.length > 1) {
                     $gallery.append('<div id="lg-action"><a id="lg-prev"></a><a id="lg-next"></a></div>');
                     $prev = $gallery.find('#lg-prev');
                     $next = $gallery.find('#lg-next');
-                    $prev.bind('click', function() {
+                    $prev.bind('click', function () {
                         $this.prevSlide();
                         clearInterval(interval);
                     });
-                    $next.bind('click', function() {
+                    $next.bind('click', function () {
                         $this.nextSlide();
                         clearInterval(interval);
                     });
                 }
             },
-            autoStart: function() {
+            autoStart: function () {
                 var $this = this;
                 if (settings.auto === true) {
-                    interval = setInterval(function() {
+                    interval = setInterval(function () {
                         if (index + 1 < $children.length) {
                             index = index;
                         } else {
@@ -557,9 +557,9 @@
                     }, settings.pause);
                 }
             },
-            keyPress: function() {
+            keyPress: function () {
                 var $this = this;
-                $(window).bind('keyup.lightGallery', function(e) {
+                $(window).bind('keyup.lightGallery', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     if (e.keyCode === 37) {
@@ -591,7 +591,7 @@
                     }
                 });
             },
-            nextSlide: function() {
+            nextSlide: function () {
                 var $this = this;
                 index = $slide.index($slide.eq(prevIndex));
                 if (index + 1 < $children.length) {
@@ -605,7 +605,7 @@
                         $gallery.addClass('open');
                     } else {
                         $slide.eq(index).find('.object').addClass('right-end');
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $slide.find('.object').removeClass('right-end');
                         }, 400);
                     }
@@ -613,7 +613,7 @@
                 $this.animateThumb(index);
                 settings.onSlideNext.call(this, plugin);
             },
-            prevSlide: function() {
+            prevSlide: function () {
                 var $this = this;
                 index = $slide.index($slide.eq(prevIndex));
                 if (index > 0) {
@@ -625,9 +625,9 @@
                         $this.slide(index);
                     } else if (settings.thumbnail === true && $children.length > 1 && !settings.showThumbByDefault) {
                         $gallery.addClass('open');
-                    } else{
+                    } else {
                         $slide.eq(index).find('.object').addClass('left-end');
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $slide.find('.object').removeClass('left-end');
                         }, 400);
                     }
@@ -635,10 +635,10 @@
                 $this.animateThumb(index);
                 settings.onSlidePrev.call(this, plugin);
             },
-            slide: function(index) {
+            slide: function (index) {
                 var $this = this;
                 if (lightGalleryOn) {
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $this.loadContent(index, false);
                     }, settings.speed + 400);
                     if (!$slider.hasClass('on')) {
@@ -735,21 +735,21 @@
                 }
                 prevIndex = index;
                 lightGalleryOn === false ? settings.onOpen.call(this, plugin) : settings.onSlideAfter.call(this, plugin);
-                setTimeout(function() {
+                setTimeout(function () {
                     lightGalleryOn = true;
                 });
                 usingThumb = false;
                 if (settings.counter) {
                     $("#lg-counter-current").text(index + 1);
                 }
-                $(window).bind('resize.lightGallery', function() {
-                    setTimeout(function() {
+                $(window).bind('resize.lightGallery', function () {
+                    setTimeout(function () {
                         $this.animateThumb(index);
                     }, 200);
                 });
             }
         };
-        plugin.isActive = function() {
+        plugin.isActive = function () {
             if (isActive === true) {
                 return true;
             } else {
@@ -757,7 +757,7 @@
             }
 
         };
-        plugin.destroy = function(d) {
+        plugin.destroy = function (d) {
             isActive = false;
             d = typeof d !== 'undefined' ? false : true;
             settings.onBeforeClose.call(this, plugin);
@@ -775,7 +775,7 @@
             $(window).off('resize.lightGallery keyup.lightGallery');
             if (lightGalleryOnT === true) {
                 $gallery.addClass('fade-m');
-                setTimeout(function() {
+                setTimeout(function () {
                     $galleryCont.remove();
                     $('body').removeClass('light-gallery');
                 }, 500);
