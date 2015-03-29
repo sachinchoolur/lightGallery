@@ -213,6 +213,12 @@ In-depth explanation of settings can be found on a [separate page](http://sachin
     });
     </script>
 ```
+### Report an Issue ###
+If you think you might have found a bug or if you have a feature suggestion please use github [issue tracker](https://github.com/sachinchoolur/lightGallery/issues/new). Also please try to add a jsfiddle that demonstrates your problem 
+
+If you need any help with implementing lightGallery in your project or if you any personal support requests i requset you to please use [stackoverflow](https://stackoverflow.com/)
+
+
 
 If you like lightGallery support me by staring this repository or tweet about this project.
 [@sachinchoolur](https://twitter.com/sachinchoolur)
