@@ -174,12 +174,7 @@ Create ul and li elements and add the path of the image or video inside the data
           enableDrag: true,
 
           vimeoColor: 'CCCCCC',
-          youtubePlayerParams: {
-            modestbranding: 1,
-            showinfo: 0,
-            rel: 0,
-            controls: 0
-          },
+          youtubePlayerParams: false, // See: https://developers.google.com/youtube/player_parameters,
           videoAutoplay: true,
           videoMaxWidth: '855px',
 
