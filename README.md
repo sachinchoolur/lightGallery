@@ -24,6 +24,7 @@ what's new
 +   HTML support. inline and external.
 +   currentPagerPosition setting to set Position of selected thumbnail.
 +   Show Thumbnail by default option.
++   Added support for youtube player parameters to modify player appearance and functionality
 
 Main Features
 ----------------
@@ -173,6 +174,12 @@ Create ul and li elements and add the path of the image or video inside the data
           enableDrag: true,
 
           vimeoColor: 'CCCCCC',
+          youtubePlayerParams: {
+            modestbranding: 1,
+            showinfo: 0,
+            rel: 0,
+            controls: 0
+          },
           videoAutoplay: true,
           videoMaxWidth: '855px',
 
