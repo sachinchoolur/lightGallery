@@ -67,6 +67,17 @@
             <div class="row">
                 <div class="col-xs-12">
                     <section class="install">
+                        <div class="ad">
+                            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                            <!-- lightGallery examples -->
+                            <ins class="adsbygoogle"
+                                 style="display:inline-block;width:728px;height:90px"
+                                 data-ad-client="ca-pub-2888290830590449"
+                                 data-ad-slot="8171058218"></ins>
+                            <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+                        </div>
                         <h2>Gallery with animated thumbnails</h2>
                         <div class="demo container-fluid">
                             <ul id="lightGallery" class="gallery list-unstyled">
@@ -176,17 +187,17 @@
                         <div class="call">
                             <h2>CSS(optional)</h2>
                             <pre class="prettyprint linenums css">
-.showThumbByDefault #lightGallery-Gallery.open .lightGallery-slide {
+.showThumbByDefault #lg-gallery.open .lg-slide {
     padding-bottom: 120px;
 }
-.showThumbByDefault #lightGallery-Gallery .thumb_cont .thumb_info{
+.showThumbByDefault #lg-gallery .thumb-cont .thumb-info{
     display:none;
 }
 /*/ actions */
-.showThumbByDefault #lightGallery-action {
+.showThumbByDefault #lg-action {
     position: static;
 }
-.showThumbByDefault #lightGallery-action a {
+.showThumbByDefault #lg-action a {
     margin-top: -14px !important;
     position: absolute;
     top: 50%;
@@ -194,29 +205,11 @@
     background-color: transparent;
     font-size: 28px;
 }
-.showThumbByDefault #lightGallery-action a#lightGallery-prev {
-        left: 17px;
-    }
-    .showThumbByDefault #lightGallery-action a#lightGallery-next {
-        right: 17px;
-    }
-    .localVideo #lightGallery-action {
-    position: static;
+.showThumbByDefault #lg-action a#lg-prev {
+    left: 17px;
 }
-
-
-
-/*/ remove zoom effect of image */
-.showThumbByDefault #lightGallery-Gallery .lightGallery-slide .object{
-    transform: scale3d(1, 1, 1) !important;
-    -moz-transform: scale3d(1, 1, 1) !important;
-    -ms-transform: scale3d(1, 1, 1) !important;
-    -webkit-transform: scale3d(1, 1, 1) !important;
-    -o-transform: scale3d(1, 1, 1) !important;
-}
-/*/ transparent background */
-.showThumbByDefault#lightGallery-outer{
-    background-color: rgba(0, 0, 0, 0.55);
+.showThumbByDefault #lg-action a#lg-next {
+    right: 17px;
 }
 </pre>
                         </div>
@@ -303,7 +296,7 @@
                         <h2>Local HTML5 videos with captions <small>Supports all HTML5 video formats like MP4, WebM, Ogg ..</small></h2>
                         <div class="demo container-fluid">
                             <ul id="localVideo" class="gallery list-unstyled">
-                                <li data-html="#video1" data-sub-html="<div class='customHtml'><h4>Big Buck Bunny</h4><p>Big Buck Bunny is a short computer-animated comedy film by the Blender Institute, part of the Blender Foundation.</p></div>"> 
+                                <li data-html="#video1" data-sub-html="<div class='custom-html'><h4>Big Buck Bunny</h4><p>Big Buck Bunny is a short computer-animated comedy film by the Blender Institute, part of the Blender Foundation.</p></div>"> 
                                     <a href="#">
                                         <img src="img/Big-Buck-Bunny.jpg" />
                                     </a> 
@@ -318,7 +311,7 @@
                         <div class="html">
                             <h2>HTML Structure</h2>
                             <pre class="prettyprint linenums">
-    &lt;li data-html="#video1" data-sub-html="&lt;div class='customHtml'&gt;&lt;h4&gt;Big Buck Bunny&lt;/h4&gt;&lt;p&gt;Big Buck Bunny is a short computer-animated comedy film by the Blender Institute, part of the Blender Foundation.&lt;/p&gt;&lt;/div&gt;"&gt; 
+    &lt;li data-html="#video1" data-sub-html="&lt;div class='custom-html'&gt;&lt;h4&gt;Big Buck Bunny&lt;/h4&gt;&lt;p&gt;Big Buck Bunny is a short computer-animated comedy film by the Blender Institute, part of the Blender Foundation.&lt;/p&gt;&lt;/div&gt;"&gt; 
         &lt;a href="#"&gt;
             &lt;img src="img/Big-Buck-Bunny.jpg" /&gt;
         &lt;/a&gt; 
@@ -342,7 +335,7 @@
         &lt;/video&gt;
     &lt;/div&gt;
     &lt;div style="display:none;" class="subhtml"&gt;
-        &lt;div class='customHtml'&gt;&lt;h4&gt;Pigloo - Papa Pinguin&lt;/h4&gt;&lt;/div&gt;
+        &lt;div class='custom-html'&gt;&lt;h4&gt;Pigloo - Papa Pinguin&lt;/h4&gt;&lt;/div&gt;
     &lt;/div&gt;</pre>
                         </div>
                         <div class="call">
@@ -362,23 +355,20 @@
                         <div class="call">
                             <h2>CSS(optional)</h2>
                             <pre class="prettyprint linenums">
-    .localVideo #lightGallery-action {
-        position: static;
-    }
-    .localVideo #lightGallery-action a {
-        margin-top: -14px !important;
-        position: absolute;
-        top: 50%;
-        z-index: 9999999;
-        background-color: transparent;
-        font-size: 28px
-    }
-    .localVideo #lightGallery-action a#lightGallery-prev {
-        left: 17px;
-    }
-    .localVideo #lightGallery-action a#lightGallery-next {
-        right: 17px;
-    }</pre>
+.localVideo #lg-action a {
+    margin-top: -14px !important;
+    position: absolute;
+    top: 50%;
+    z-index: 9999999;
+    background-color: transparent;
+    font-size: 28px
+}
+.localVideo #lg-action a#lg-prev {
+    left: 60px;
+}
+.localVideo #lg-action a#lg-next {
+    right: 60px;
+}</pre>
                         </div>
                     </section>
                 </div>
@@ -503,7 +493,7 @@ $(document).ready(function() {
             html:true,
             mobileSrc:true,
             dynamicEl:[
-                {"src":"img/img1.jpg","thumb":"img/thumb1.jpg","sub-html":"&lt;div class='customHtml'&gt;&lt;h4&gt;Custom HTML&lt;/h4&gt;&lt;/div&gt;", "mobileSrc":"img/mobile1.jpg"},
+                {"src":"img/img1.jpg","thumb":"img/thumb1.jpg","sub-html":"&lt;div class='custom-html'&gt;&lt;h4&gt;Custom HTML&lt;/h4&gt;&lt;/div&gt;", "mobileSrc":"img/mobile1.jpg"},
                 {"src":"img/img2.jpg","thumb":"img/thumb2.jpg","sub-html":"#dynamicHtml", "mobileSrc":"img/mobile2.jpg"},
                 {"src":"img/img3.jpg","thumb":"img/thumb3.jpg","sub-html":"#dynamicHtml", "mobileSrc":"img/mobile3.jpg"}
             ]
@@ -570,14 +560,41 @@ $(document).ready(function() {
     });
 &lt;/script&gt;</pre>
                     </div>
+                    <div class="ad">
+                        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                        <!-- lightGallery examples -->
+                        <ins class="adsbygoogle"
+                             style="display:inline-block;width:728px;height:90px"
+                             data-ad-client="ca-pub-2888290830590449"
+                             data-ad-slot="8171058218"></ins>
+                        <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
                 </section>
                 <div class="follow" style="margin-top:60px;">
-                <a href="https://twitter.com/sachinchoolur" class="twitter-follow-button" data-show-count="false">Follow @sachinchoolur</a>
+
+                    <div class="star">
+                            <iframe src="http://ghbtns.com/github-btn.html?user=sachinchoolur&repo=lightGallery&type=watch&count=true" height="30" width="90" frameborder="0" scrolling="0" style="width:90px; height: 30px;" allowTransparency="true"></iframe>
+                          </div>
+                          <div class="fork" style=" width:70px; margin-right: 20px;">
+                            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://sachinchoolur.github.io/lightGallery" data-text="A simple lightweight responsive & touch-friendly #jQuery gallery lightbox plugin" data-hashtags="javascript">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-<!-- Place this tag where you want the button to render. -->
-<a class="github-button" href="https://github.com/sachinchoolur">Follow @sachinchoolur</a>
-<!-- Place this tag right after the last button or just before your close body tag. -->
-<script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+                        </div>
+
+                    <div style="margin-right:8px;">
+                        <a href="https://twitter.com/sachinchoolur" class="twitter-follow-button" data-show-count="false">Follow @sachinchoolur</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>   
+                    </div>
+                    <div>
+                        <!-- Place this tag where you want the button to render. -->
+                        <a class="github-button" href="https://github.com/sachinchoolur">Follow @sachinchoolur</a>
+                        <!-- Place this tag right after the last button or just before your close body tag. -->
+                        <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+                        
+                    </div>
+                
+
                     <h5 style="margin-top: 20px;">Think you can improve this page? <a target="_blank" href="https://github.com/sachinchoolur/lightGallery/fork"> fork me on github</a></h5>
                 </div>
                     </div>
@@ -599,32 +616,32 @@ $(document).ready(function() {
     </video>
 </div>
 <div style="display:none;" class="subhtml">
-    <div class='customHtml'><h4>Pigloo - Papa Pinguin</h4></div>
+    <div class='custom-html'><h4>Pigloo - Papa Pinguin</h4></div>
 </div>
 <div style="display:none;" class="dynamicHtml">
-    <div class='customHtml'>
+    <div class='custom-html'>
         <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h4>
         <p>Maecenas et libero varius, hendrerit metus sit amet, hendrerit odio. Sed ornare mauris sit amet neque dignissim, vel condimentum est consectetur. </p>
     </div>
 </div>
 <div style="display:none;" id="dynamicHtml">
-    <div class='customHtml'>
+    <div class='custom-html'>
         <h4>Quisque in libero dolor. Fusce magna lectus, tempus eget mauris. </h4>
         <p>Suspendisse iaculis nisl ac risus placerat vulputate. Donec vel nunc vitae magna efficitur eleifend. Nunc eget maximus erat.  </p>
     </div>
 </div>
 <style type="text/css">
-    .showThumbByDefault #lightGallery-Gallery.open .lightGallery-slide {
+    .showThumbByDefault #lg-gallery.open .lg-slide {
         padding-bottom: 120px;
     }
-    .showThumbByDefault #lightGallery-Gallery .thumb_cont .thumb_info{
+    .showThumbByDefault #lg-gallery .thumb-cont .thumb-info{
         display:none;
     }
     /*/ actions */
-    .showThumbByDefault #lightGallery-action {
+    .showThumbByDefault #lg-action {
         position: static;
     }
-    .showThumbByDefault #lightGallery-action a {
+    .showThumbByDefault #lg-action a {
         margin-top: -14px !important;
         position: absolute;
         top: 50%;
@@ -632,29 +649,17 @@ $(document).ready(function() {
         background-color: transparent;
         font-size: 28px;
     }
-    .showThumbByDefault #lightGallery-action a#lightGallery-prev {
+    .showThumbByDefault #lg-action a#lg-prev {
             left: 17px;
         }
-        .showThumbByDefault #lightGallery-action a#lightGallery-next {
+        .showThumbByDefault #lg-action a#lg-next {
             right: 17px;
         }
-        .localVideo #lightGallery-action {
+        .localVideo #lg-action {
         position: static;
     }
-    /*/ remove scale effect of image */
-    .showThumbByDefault #lightGallery-Gallery .lightGallery-slide .object{
-        transform: scale3d(1, 1, 1) !important;
-        -moz-transform: scale3d(1, 1, 1) !important;
-        -ms-transform: scale3d(1, 1, 1) !important;
-        -webkit-transform: scale3d(1, 1, 1) !important;
-        -o-transform: scale3d(1, 1, 1) !important;
-    }
-    /*/ transparent background */
-    .showThumbByDefault#lightGallery-outer{
-        background-color: rgba(0, 0, 0, 0.55);
-    }
 
-    .localVideo #lightGallery-action a {
+    .localVideo #lg-action a {
         margin-top: -14px !important;
         position: absolute;
         top: 50%;
@@ -662,21 +667,26 @@ $(document).ready(function() {
         background-color: transparent;
         font-size: 28px
     }
-    .localVideo #lightGallery-action a#lightGallery-prev {
+    .localVideo #lg-action a#lg-prev {
         left: 60px;
     }
-    .localVideo #lightGallery-action a#lightGallery-next {
+    .localVideo #lg-action a#lg-next {
         right: 60px;
     }
-    .cssEasing #lightGallery-slider .lightGallery-slide img{
+    .cssEasing #lg-slider .lg-slide img{
         cursor: default;
     }
-    .cssEasing #lightGallery-slider{
+    .cssEasing #lg-slider{
         transition-timing-function: inherit !important;
         -moz-transition-timing-function: inherit !important;
         -webkit-transition-timing-function: inherit !important;
         -o-transition-timing-function: inherit !important;
         -ms-transition-timing-function: inherit !important
+    }
+    .follow > div {
+        display: inline-block;
+        height: 20px;
+        vertical-align: middle;
     }
 </style>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
@@ -715,7 +725,7 @@ $(document).ready(function() {
 				mobileSrc:true,
                 hideControlOnEnd:true,
 				dynamicEl:[
-					{"src":"img/img1.jpg","thumb":"img/thumb1.jpg","sub-html":"<div class='customHtml'><h4>Custom HTML</h4></div>", "mobileSrc":"img/mobile1.jpg"},
+					{"src":"img/img1.jpg","thumb":"img/thumb1.jpg","sub-html":"<div class='custom-html'><h4>Custom HTML</h4></div>", "mobileSrc":"img/mobile1.jpg"},
                     {"src":"img/img2.jpg","thumb":"img/thumb2.jpg", "sub-html":"#dynamicHtml", "mobileSrc":"img/mobile2.jpg"},
                     {"src":"img/img3.jpg","thumb":"img/thumb3.jpg", "sub-html":".dynamicHtml", "mobileSrc":"img/mobile3.jpg"}
 				]
@@ -765,12 +775,12 @@ $(document).ready(function() {
                         <option selected value="0.680, -0.550, 0.265, 1.550">easeInOutBack</option>\
                     </optgroup>\
                 </select>'
-                $('#lightGallery-Gallery').append($html);
-                $('#lightGallery-Gallery').css('transition-timing-function','cubic-bezier(0.680, -0.550, 0.265, 1.550)');
+                $('#lg-gallery').append($html);
+                $('#lg-gallery').css('transition-timing-function','cubic-bezier(0.680, -0.550, 0.265, 1.550)');
                 $('#presets').on('change',function(){
                     var val = $(this).val();
                     prompt("You can copy cubic-bezier from here",val);
-                    $('#lightGallery-Gallery').css('transition-timing-function','cubic-bezier('+val+')')
+                    $('#lg-gallery').css('transition-timing-function','cubic-bezier('+val+')')
                 });
             }   
         });
