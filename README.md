@@ -211,7 +211,7 @@ In-depth explanation of settings can be found on a [separate page](http://sachin
 ### Report an Issue ###
 If you think you might have found a bug or if you have a feature suggestion please use github [issue tracker](https://github.com/sachinchoolur/lightGallery/issues/new). Also please try to add a jsfiddle that demonstrates your problem 
 
-If you need any help with implementing lightGallery in your project or if you any personal support requests i requset you to please use [stackoverflow](https://stackoverflow.com/) instead of github issue tracker
+If you need any help with implementing lightGallery in your project or if have you any personal support requests i requset you to please use [stackoverflow](https://stackoverflow.com/) instead of github issue tracker
 
 
 
