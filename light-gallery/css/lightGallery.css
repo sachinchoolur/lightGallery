@@ -414,7 +414,7 @@ left: 0;
 /*action*/
 
 /*counter*/
-#lightGallery_counter {
+.lightGallery_counter {
 	bottom: 52px;
 	text-align: center;
 	width: 100%;

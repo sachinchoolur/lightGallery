@@ -33,8 +33,11 @@
                 lang: {
                     allPhotos: 'All photos'
                 },
-                counter: false,
-
+                counter: true,
+                counterEl: $("<div class='lightGallery_counter'><span class='lightGallery_counter_current'></span> / <span class='lightGallery_counter_all'></span></div>"), // Element with the markup for the counter
+                counterAppendToSelector: false,                             // Selector to append the counter to. This way we can move the counter around.
+                counterCurrentSelector: '.lightGallery_counter_current',    // Selector for setting current item index
+                counterAllSelector: '.lightGallery_counter_all',            // Selector for setting total item count
                 exThumbImage: false,
                 thumbnail: true,
                 showThumbByDefault:false,
@@ -424,7 +427,13 @@
             counter: function() {
                 if (settings.counter === true) {
                     var slideCount = $("#lightGallery-slider > div").length;
-                    $gallery.append("<div id='lightGallery_counter'><span id='lightGallery_counter_current'></span> / <span id='lightGallery_counter_all'>" + slideCount + "</span></div>");
+                    var el = settings.counterEl;
+                    el.find(settings.counterAllSelector).text(slideCount);
+
+                    if (settings.counterAppendToSelector)
+                        $(settings.counterAppendToSelector).append(el);
+                    else
+                        $gallery.append(el);
                 }
             },
             buildThumbnail: function() {
@@ -740,7 +749,7 @@
                 });
                 usingThumb = false;
                 if (settings.counter) {
-                    $("#lightGallery_counter_current").text(index + 1);
+                    $(settings.counterCurrentSelector).text(index + 1);
                 }
                 $(window).bind('resize.lightGallery', function() {
                     setTimeout(function() {
