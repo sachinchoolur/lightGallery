@@ -766,6 +766,107 @@
             }
 
         };
+
+        plugin.refresh = function(options) {
+            var self = this;
+            settings.dynamicEl = [];
+            settings.index = 0;
+            settings = $.extend(true, {}, settings, options);
+
+            // remove old slides
+            $gallery.find('.lightGallery-slide').remove();
+
+            // Get new slides from settings and
+            var slideList = '';
+            if (settings.dynamic) {
+                $children = settings.dynamicEl;
+                index = 0;
+                prevIndex = index;
+
+                for (var i = 0; i < settings.dynamicEl.length; i++) {
+                    slideList += '<div class="lightGallery-slide"></div>';
+                }
+            } else {
+                if (settings.selector !== null) {
+                    $children = $(settings.selector);
+                } else {
+                    $children = self.children();
+                }
+                $children.on('click', function(e) {
+                    if (settings.selector !== null) {
+                        $children = $(settings.selector);
+                    } else {
+                        $children = self.children();
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    index = $children.index(this);
+                    prevIndex = index;
+                });
+
+                $children.each(function() {
+                    slideList += '<div class="lightGallery-slide"></div>';
+                });
+            }
+            $slider.append(slideList);
+            $slide = $gallery.find('.lightGallery-slide');
+
+            $thumb_cont = $gallery.find('.thumb_cont');
+            var $thumb_inner = $gallery.find('.thumb_inner');
+            var thumbList = '';
+            var thumbImg;
+
+            $thumb_inner.find('.thumb').remove();
+
+            if (settings.dynamic) {
+                for (var i = 0; i < settings.dynamicEl.length; i++) {
+                    thumbImg = settings.dynamicEl[i].thumb;
+                    thumbList += '<div class="thumb"><img src="' + thumbImg + '" /></div>';
+                }
+            } else {
+                $children.each(function() {
+                    if (settings.exThumbImage === false || typeof $(this).attr(settings.exThumbImage) == 'undefined' || $(this).attr(settings.exThumbImage) === null) {
+                        thumbImg = $(this).find('img').attr('src');
+                    } else {
+                        thumbImg = $(this).attr(settings.exThumbImage);
+                    }
+                    thumbList += '<div class="thumb"><img src="' + thumbImg + '" /></div>';
+                });
+            }
+            $thumb_inner.append(thumbList);
+            $thumb = $thumb_inner.find('.thumb');
+            $thumb.css({
+                'margin-right': settings.thumbMargin + 'px',
+                'width': settings.thumbWidth + 'px'
+            });
+            if (settings.animateThumb === true) {
+                var width = ($children.length * (settings.thumbWidth + settings.thumbMargin));
+                $gallery.find('.thumb_inner').css({
+                    'width': width + 'px',
+                    'position': 'relative',
+                    'transition-duration': settings.speed + 'ms'
+                });
+            }
+            $thumb.bind('click touchend', function() {
+                usingThumb = true;
+                var index = $(this).index();
+                $thumb.removeClass('active');
+                $(this).addClass('active');
+                setUp.slide(index);
+                setUp.animateThumb(index);
+                clearInterval(interval);
+            });
+
+            // Show initial slide
+            if (settings.index) {
+                setUp.slide(settings.index);
+                setUp.animateThumb(settings.index);
+            } else {
+                setUp.slide(index);
+                setUp.animateThumb(index);
+            }
+        };
+
         plugin.destroy = function(d) {
             isActive = false;
             d = typeof d !== 'undefined' ? false : true;
