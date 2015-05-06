@@ -42,6 +42,7 @@
                 currentPagerPosition: 'middle',
                 thumbWidth: 100,
                 thumbMargin: 5,
+                toggleThumbs: '<a href="javascript:;" class="cl-thumb"></a>',
 
 
                 mobileSrc: false,
@@ -429,16 +430,18 @@
             },
             buildThumbnail: function () {
                 if (settings.thumbnail === true && $children.length > 1) {
-                    var $this = this,
+                    var $thumbToggler,
+                        $this = this,
                         $close = '';
                     if (!settings.showThumbByDefault) {
                         $close = '<span class="close ib"><i class="bUi-iCn-rMv-16" aria-hidden="true"></i></span>';
                     }
                     $gallery.append('<div class="thumb-cont"><div class="thumb-info">' + $close + '</div><div class="thumb-inner"></div></div>');
                     $thumb_cont = $gallery.find('.thumb-cont');
-                    $prev.after('<a class="cl-thumb"></a>');
+                    $thumbToggler = $(settings.toggleThumbs);
+                    $prev.after($thumbToggler);
                     $prev.parent().addClass('has-thumb');
-                    $gallery.find('.cl-thumb').bind('click touchend', function () {
+                    $thumbToggler.bind('click touchend', function () {
                         $gallery.addClass('open');
                         if ($this.doCss() && settings.mode === 'slide') {
                             $slide.eq(index).prevAll().removeClass('next-slide').addClass('prev-slide');
@@ -530,7 +533,7 @@
             slideTo: function () {
                 var $this = this;
                 if (settings.controls === true && $children.length > 1) {
-                    $gallery.append('<div id="lg-action"><a id="lg-prev"></a><a id="lg-next"></a></div>');
+                    $gallery.append('<div id="lg-action"><a id="lg-prev" class="nav-buttons"></a><a id="lg-next arrows" class="nav-buttons"></a></div>');
                     $prev = $gallery.find('#lg-prev');
                     $next = $gallery.find('#lg-next');
                     $prev.bind('click', function () {

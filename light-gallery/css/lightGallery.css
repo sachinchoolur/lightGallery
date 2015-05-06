@@ -357,7 +357,7 @@ left: 0;
 	margin-left: -46px;
 }
 
-#lg-action a {
+#lg-action .nav-buttons {
 	margin: 0 3px 0 0 !important;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
