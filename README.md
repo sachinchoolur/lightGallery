@@ -165,6 +165,8 @@ Create ul and li elements and add the path of the image or video inside the data
           currentPagerPosition: 'middle',
           thumbWidth: 100,
           thumbMargin: 5,
+          toggleThumbs: '<a href="javascript:;" class="cl-thumb"></a>',
+
 
 
           mobileSrc: false,
