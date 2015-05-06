@@ -51,6 +51,9 @@
                 enableTouch: true,
                 enableDrag: true,
 
+                mousewheel: false,
+                wheelDelay: 200,
+
                 vimeoColor: 'CCCCCC',
                 youtubePlayerParams: false, // See: https://developers.google.com/youtube/player_parameters
                 videoAutoplay: true,
@@ -120,7 +123,6 @@
                 this.counter();
                 this.slideTo();
                 this.buildThumbnail();
-                this.mousewheel();
                 this.keyPress();
                 if (settings.index) {
                     this.slide(settings.index);
@@ -134,6 +136,9 @@
                 }
                 if (settings.enableTouch) {
                     this.enableTouch();
+                }
+                if (settings.mousewheel) {
+                    this.mousewheel();
                 }
 
                 setTimeout(function () {
@@ -562,14 +567,24 @@
                 }
             },
             mousewheel: function() {
-                var $this = this;
+                var $this = this,
+                    timeout;
 
-                // $(window).on('mousewheel', function (e) {
-                //     e.preventDefault();
-                //     e.stopPropagation();
-
-                //     console.log(e.deltaX);
-                // })
+                $gallery.off('mousewheel');
+                $gallery.on('mousewheel', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    clearTimeout(timeout);
+                    timeout = setTimeout(function() {
+                        if (e.deltaY > 0) {
+                            $this.prevSlide();
+                        } else {
+                            $this.nextSlide();
+                        }
+                        clearInterval(interval);
+                    }, settings.wheelDelay);
+                })
             },
             keyPress: function () {
                 var $this = this;

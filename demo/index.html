@@ -28,10 +28,13 @@
 		}
     </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.12/jquery.mousewheel.min.js"></script>
     <script src="../light-gallery/js/lightGallery.js"></script>
     <script>
     	 $(document).ready(function() {
-			$("#light-gallery").lightGallery();
+			$("#light-gallery").lightGallery({
+                mousewheel: true
+            });
 		});
     </script>
 </head>
@@ -57,5 +60,6 @@
             <img src="thumb4.jpg" />
             </a>
         </li>
+        
     </ul>
 </body>
