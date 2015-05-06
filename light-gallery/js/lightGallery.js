@@ -42,7 +42,7 @@
                 currentPagerPosition: 'middle',
                 thumbWidth: 100,
                 thumbMargin: 5,
-                toggleThumbs: '<a href="javascript:;" class="cl-thumb"></a>',
+                toggleThumbs: '<a href="javascript:;" class="cl-thumb nav-buttons"></a>',
 
 
                 mobileSrc: false,
@@ -120,6 +120,7 @@
                 this.counter();
                 this.slideTo();
                 this.buildThumbnail();
+                this.mousewheel();
                 this.keyPress();
                 if (settings.index) {
                     this.slide(settings.index);
@@ -533,7 +534,7 @@
             slideTo: function () {
                 var $this = this;
                 if (settings.controls === true && $children.length > 1) {
-                    $gallery.append('<div id="lg-action"><a id="lg-prev" class="nav-buttons"></a><a id="lg-next arrows" class="nav-buttons"></a></div>');
+                    $gallery.append('<div id="lg-action"><a id="lg-prev" class="nav-buttons"></a><a id="lg-next" class="nav-buttons"></a></div>');
                     $prev = $gallery.find('#lg-prev');
                     $next = $gallery.find('#lg-next');
                     $prev.bind('click', function () {
@@ -559,6 +560,16 @@
                         $this.slide(index);
                     }, settings.pause);
                 }
+            },
+            mousewheel: function() {
+                var $this = this;
+
+                // $(window).on('mousewheel', function (e) {
+                //     e.preventDefault();
+                //     e.stopPropagation();
+
+                //     console.log(e.deltaX);
+                // })
             },
             keyPress: function () {
                 var $this = this;
