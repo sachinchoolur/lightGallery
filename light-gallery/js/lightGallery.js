@@ -30,6 +30,7 @@
                 selector: null,
                 index: false,
 
+                showImageCounter: true,
                 lang: {
                     allPhotos: 'All photos'
                 },
@@ -44,6 +45,8 @@
                 thumbMargin: 5,
                 toggleThumbs: '<a href="javascript:;" class="cl-thumb nav-buttons"></a>',
 
+                thumbControls: false,
+                hideThumbControlOnEnd: true,
 
                 mobileSrc: false,
                 mobileSrcMaxWidth: 640,
@@ -184,7 +187,7 @@
                 var resizeWindow = function () {
                     windowWidth = $(window).width();
                 };
-                $(window).bind('resize.lightGallery', resizeWindow());
+                $(window).bind('resize.lightGallery', resizeWindow);
             },
             doCss: function () {
                 var support = function () {
@@ -436,17 +439,22 @@
             },
             buildThumbnail: function () {
                 if (settings.thumbnail === true && $children.length > 1) {
-                    var $thumbToggler,
+                    var $thumbToggler, 
+                        $thumbWrapper = $('<div class="thumb-wrapper"></div>'),
                         $this = this,
                         $close = '';
                     if (!settings.showThumbByDefault) {
                         $close = '<span class="close ib"><i class="bUi-iCn-rMv-16" aria-hidden="true"></i></span>';
                     }
-                    $gallery.append('<div class="thumb-cont"><div class="thumb-info">' + $close + '</div><div class="thumb-inner"></div></div>');
+                    $gallery.append($thumbWrapper);
+                    $thumbWrapper.append('<div class="thumb-cont"><div class="thumb-info">' + $close + '</div><div class="thumb-inner"></div></div>');
+                    $this.buildThumbnailControls($thumbWrapper)
                     $thumb_cont = $gallery.find('.thumb-cont');
                     $thumbToggler = $(settings.toggleThumbs);
-                    $prev.after($thumbToggler);
-                    $prev.parent().addClass('has-thumb');
+                    if (settings.controls) {
+                        $prev.after($thumbToggler);
+                        $prev.parent().addClass('has-thumb');
+                    }
                     $thumbToggler.bind('click touchend', function () {
                         $gallery.addClass('open');
                         if ($this.doCss() && settings.mode === 'slide') {
@@ -499,10 +507,28 @@
                         $this.animateThumb(index);
                         clearInterval(interval);
                     });
-                    thumbInfo.prepend('<span class="ib count">' + settings.lang.allPhotos + ' (' + $thumb.length + ')</span>');
+                    if (settings.showImageCounter) {
+                        thumbInfo.prepend('<span class="ib count">' + settings.lang.allPhotos + ' (' + $thumb.length + ')</span>');
+                    }
                     if (settings.showThumbByDefault) {
                         $gallery.addClass('open');
                     }
+                }
+            },
+            buildThumbnailControls: function(wrapper) {
+                var $this = this;
+                if (settings.thumbControls) {
+                    wrapper.append('<div id="thumb-action"><a id="thumb-prev"></a><a id="thumb-next"></a></div>')
+
+                    wrapper.find('#thumb-next').bind('click touchend', function() {
+                        $this.moveThumbRight();
+                    });
+
+                    wrapper.find('#thumb-prev').bind('click touchend', function() {
+                        $this.moveThumbLeft();
+                    });
+                } else {
+                    $gallery.addClass('no-thumb-control');
                 }
             },
             animateThumb: function (index) {
@@ -510,14 +536,14 @@
                     var thumb_contW = $gallery.find('.thumb-cont').width();
                     var position;
                     switch (settings.currentPagerPosition) {
-                    case 'left':
-                        position = 0;
-                        break;
-                    case 'middle':
-                        position = (thumb_contW / 2) - (settings.thumbWidth / 2);
-                        break;
-                    case 'right':
-                        position = thumb_contW - settings.thumbWidth;
+                        case 'left':
+                            position = 0;
+                            break;
+                        case 'middle':
+                            position = (thumb_contW / 2) - (settings.thumbWidth / 2);
+                            break;
+                        case 'right':
+                            position = thumb_contW - settings.thumbWidth;
                     }
                     var left = ((settings.thumbWidth + settings.thumbMargin) * index - 1) - position;
                     var width = ($children.length * (settings.thumbWidth + settings.thumbMargin));
@@ -527,13 +553,63 @@
                     if (left < 0) {
                         left = 0;
                     }
-                    if (this.doCss()) {
-                        $gallery.find('.thumb-inner').css('transform', 'translate3d(-' + left + 'px, 0px, 0px)');
-                    } else {
-                        $gallery.find('.thumb-inner').animate({
-                            left: -left + "px"
-                        }, settings.speed);
-                    }
+                    this.moveTo(left);
+                }
+            },
+            moveThumbLeft: function () {
+                 var $this = this,
+                     thumb_contW = $gallery.find('.thumb-cont').width(),
+                     thumbsWidth = (settings.thumbWidth + settings.thumbMargin),
+                     innerWidth = ($children.length * (settings.thumbWidth + settings.thumbMargin)),
+                     moveValue;
+
+                if ((this.currentPosition - thumbsWidth) < 0) {
+                    moveValue = 0
+                } else  {
+                    moveValue = this.currentPosition - thumbsWidth;
+                }
+
+                this.moveTo(moveValue);
+            },
+            moveThumbRight: function () {
+                 var $this = this,
+                     thumb_contW = $gallery.find('.thumb-cont').width(),
+                     thumbsWidth = (settings.thumbWidth + settings.thumbMargin),
+                     innerWidth = ($children.length * (settings.thumbWidth + settings.thumbMargin)),
+                     moveValue;
+
+                if ((this.currentPosition + thumbsWidth) > (innerWidth - thumb_contW)) {
+                    moveValue = innerWidth - thumb_contW;
+                } else  {
+                    moveValue = this.currentPosition + thumbsWidth;
+                }
+
+                this.moveTo(moveValue);
+            },
+            moveTo: function (value) {
+                if (this.doCss()) {
+                    $gallery.find('.thumb-inner').css('transform', 'translate3d(-' + value + 'px, 0px, 0px)');
+                } else {
+                    $gallery.find('.thumb-inner').animate({
+                        left: -value + "px"
+                    }, settings.speed);
+                }
+                this.currentPosition = value;
+
+                if (settings.hideThumbControlOnEnd) {
+                    this.checkThumbNavigation();
+                }
+            },
+            checkThumbNavigation: function () {
+                var innerWidth = ($children.length * (settings.thumbWidth + settings.thumbMargin)),
+                    thumb_contW = $gallery.find('.thumb-cont').width();
+
+                if (this.currentPosition >= (innerWidth - thumb_contW)) {
+                    $gallery.find('#thumb-next').addClass('disabled');
+                } else if (this.currentPosition === 0) {
+                    $gallery.find('#thumb-prev').addClass('disabled');
+                } else {
+                    $gallery.find('#thumb-action a').removeClass('disabled');
                 }
             },
             slideTo: function () {
@@ -571,6 +647,7 @@
                     timeout;
 
                 $gallery.off('mousewheel');
+
                 $gallery.on('mousewheel', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -665,7 +742,8 @@
                 settings.onSlidePrev.call(this, plugin);
             },
             slide: function (index) {
-                var $this = this;
+                var $this = this,
+                    timeout;
                 if (lightGalleryOn) {
                     setTimeout(function () {
                         $this.loadContent(index, false);
@@ -772,7 +850,8 @@
                     $("#lg-counter-current").text(index + 1);
                 }
                 $(window).bind('resize.lightGallery', function () {
-                    setTimeout(function () {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(function () {
                         $this.animateThumb(index);
                     }, 200);
                 });
