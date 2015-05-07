@@ -25,6 +25,8 @@ what's new
 +   currentPagerPosition setting to set Position of selected thumbnail.
 +   Show Thumbnail by default option.
 +   Added support for youtube player parameters to modify player appearance and functionality
++   Thumbnails navigation
++   Mousewheel support (requires [jQuery.mousewheel](https://github.com/jquery/jquery-mousewheel))
 
 Main Features
 ----------------
@@ -153,6 +155,7 @@ Create ul and li elements and add the path of the image or video inside the data
           selector: null,
           index: false,
 
+          showImageCounter: true,
           lang: {
               allPhotos: 'All photos'
           },
@@ -165,15 +168,19 @@ Create ul and li elements and add the path of the image or video inside the data
           currentPagerPosition: 'middle',
           thumbWidth: 100,
           thumbMargin: 5,
-          toggleThumbs: '<a href="javascript:;" class="cl-thumb"></a>',
+          toggleThumbs: '<a href="javascript:;" class="cl-thumb nav-buttons"></a>',
 
-
+          thumbControls: false,
+          hideThumbControlOnEnd: true,
 
           mobileSrc: false,
           mobileSrcMaxWidth: 640,
           swipeThreshold: 50,
           enableTouch: true,
           enableDrag: true,
+
+          mousewheel: false,
+          wheelDelay: 200,
 
           vimeoColor: 'CCCCCC',
           youtubePlayerParams: false, // See: https://developers.google.com/youtube/player_parameters,
