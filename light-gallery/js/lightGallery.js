@@ -60,6 +60,7 @@
                 //callbacks
 
                 onOpen: function (plugin) {},
+                onLoadComplete: function (plugin) {},
                 onSlideBefore: function (plugin) {},
                 onSlideAfter: function (plugin) {},
                 onSlideNext: function (plugin) {},
@@ -70,7 +71,7 @@
             el = $(this),
             plugin = this,
             $children = null,
-            index = 0,
+            index = 0,onLoadComplete: function (plugin) {},
             isActive = false,
             lightGalleryOn = false,
             isTouch = document.createTouch !== undefined || ('ontouchstart' in window) || ('onmsgesturechange' in window) || navigator.msMaxTouchPoints,
@@ -157,7 +158,7 @@
                     });
                 }
                 $slider.append(slideList);
-                $slide = $gallery.find('.lg-slide');
+                $slide = $gallery.find('.lg-slide');onLoadComplete: function (plugin) {},
             },
             closeSlide: function () {
                 var $this = this;
@@ -322,8 +323,9 @@
             },
             loadObj: function (r, index) {
                 var $this = this;
-                $slide.eq(index).find('.object').on('load error', function () {
+                $slide.eq(index).find('.object').one('load error', function () {
                     $slide.eq(index).addClass('complete');
+                    settings.onLoadComplete.call(this, $(this));
                 });
                 if (r === false) {
                     if (!$slide.eq(index).hasClass('complete')) {

@@ -183,6 +183,7 @@ Create ul and li elements and add the path of the image or video inside the data
 
           // Callbacks el = current plugin
           onOpen        : function(el) {}, // Executes immediately after the gallery is loaded.
+          onLoadComplete: function(el) {}, // Executes immediately after each object loaded is loaded.
           onSlideBefore : function(el) {}, // Executes immediately before each transition.
           onSlideAfter  : function(el) {}, // Executes immediately after each transition.
           onSlideNext   : function(el) {}, // Executes immediately before each "Next" transition.
