@@ -71,7 +71,7 @@
             el = $(this),
             plugin = this,
             $children = null,
-            index = 0,onLoadComplete: function (plugin) {},
+            index = 0,
             isActive = false,
             lightGalleryOn = false,
             isTouch = document.createTouch !== undefined || ('ontouchstart' in window) || ('onmsgesturechange' in window) || navigator.msMaxTouchPoints,
@@ -158,7 +158,7 @@
                     });
                 }
                 $slider.append(slideList);
-                $slide = $gallery.find('.lg-slide');onLoadComplete: function (plugin) {},
+                $slide = $gallery.find('.lg-slide');
             },
             closeSlide: function () {
                 var $this = this;
