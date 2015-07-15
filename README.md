@@ -1,6 +1,10 @@
 jQuery lightGallery
 =============
 
+Announcement.
+----------------
+Here is the first look of [lightgallery1.2](http://sachinchoolur.github.io/lightgallery1.2/). 
+    Watch this space i will be releasing soon!.
 
 Demo
 ----------------
