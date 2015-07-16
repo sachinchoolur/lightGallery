@@ -353,11 +353,15 @@ left: 0;
 	z-index: 9;
 	-webkit-backface-visibility: hidden;
 }
+#thumb-action {
+	position: absolute;
+	top: 50%;
+	width: 100%;	
+}
 #lg-action.has-thumb {
 	margin-left: -46px;
 }
-
-#lg-action a {
+#lg-action .nav-buttons, #thumb-action a {
 	margin: 0 3px 0 0 !important;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
@@ -381,7 +385,7 @@ left: 0;
 	color: #FFF;
 	cursor: pointer;
 }
-#lg-action a.disabled {
+#lg-action a.disabled, #thumb-action a.disabled {
 	opacity: 0.6;
 	filter: alpha(opacity=60);
 	cursor: default;
@@ -392,15 +396,15 @@ left: 0;
 	background-color: #000;
 	background-color: rgba(0, 0, 0, 0.85);
 }
-#lg-action a#lg-prev:before, #lg-action a#lg-next:after {
+#lg-action a#lg-prev:before, #lg-action a#lg-next:after, #thumb-action a#thumb-prev:before, #thumb-action a#thumb-next:after {
 	left: 5px;
 	bottom: 3px;
 	position: absolute;
 }
-#lg-action a#lg-prev:before {
+#lg-action a#lg-prev:before, #thumb-action a#thumb-prev:before {
 	content: "\e01d";
 }
-#lg-action a#lg-next:after {
+#lg-action a#lg-next:after, #thumb-action a#thumb-next:after {
 	content: "\e01b";
 }
 #lg-action a.cl-thumb:after {
@@ -410,6 +414,15 @@ left: 0;
 	bottom: 4px;
 	font-size: 16px;
 	position: absolute;
+}
+#thumb-action a {
+	position: absolute;
+}
+#thumb-action #thumb-prev {
+	left: 20px;
+}
+#thumb-action #thumb-next {
+	right: 20px;
 }
 /*action*/
 
@@ -423,26 +436,38 @@ left: 0;
 	color: #FFFFFF;
 }
 /*lightGallery Thumb*/
-#lg-gallery .thumb-cont {
+#lg-gallery .thumb-wrapper {
+	max-height: 0;
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	background-color: #000000;
 	-webkit-transition: max-height 0.4s ease-in-out;
 	-moz-transition: max-height 0.4s ease-in-out;
 	-o-transition: max-height 0.4s ease-in-out;
 	-ms-transition: max-height 0.4s ease-in-out;
 	transition: max-height 0.4s ease-in-out;
 	z-index: 9;
-	max-height: 0;
-	opacity: 0;
 }
-#lg-gallery.open .thumb-cont {
+
+#lg-gallery .thumb-cont {
+	bottom: 0;
+	width: 86%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	background-color: #000000;
+	opacity: 0;
+	margin: 0 7%;
+	overflow: hidden;
+}
+#lg-gallery.no-thumb-control .thumb-cont {
+	width: 100%;
+	margin: 0;
+}
+#lg-gallery.open .thumb-wrapper {
 	max-height: 350px;
 }
+
 #lg-gallery .thumb-cont .thumb-inner {
 	margin-left: -12px;
 	padding: 12px;
@@ -454,6 +479,7 @@ left: 0;
 }
 #lg-gallery .thumb-cont .thumb-info {
 	background-color: #333;
+	min-height: 18px;
 	padding: 7px 20px;
 }
 #lg-gallery .thumb-cont .thumb-info .count {
