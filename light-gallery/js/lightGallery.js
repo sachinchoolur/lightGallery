@@ -100,7 +100,6 @@
                                 $children = $this.children();
                             }
                             e.preventDefault();
-                            e.stopPropagation();
                             index = $children.index(this);
                             prevIndex = index;
                             setUp.init(index);
@@ -226,12 +225,10 @@
                 var xStart, xEnd;
                 var $this = this;
                 $('.light-gallery').bind('mousedown', function (e) {
-                    e.stopPropagation();
                     e.preventDefault();
                     xStart = e.pageX;
                 });
                 $('.light-gallery').bind('mouseup', function (e) {
-                    e.stopPropagation();
                     e.preventDefault();
                     xEnd = e.pageX;
                     if (xEnd - xStart > 20) {
@@ -561,7 +558,6 @@
                 var $this = this;
                 $(window).bind('keyup.lightGallery', function (e) {
                     e.preventDefault();
-                    e.stopPropagation();
                     if (e.keyCode === 37) {
                         $this.prevSlide();
                         clearInterval(interval);
