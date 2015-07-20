@@ -1,10 +1,10 @@
 /** ==========================================================
 
-* jquery lightGallery.js v1.1.5 // 3/29/2015
-* http://sachinchoolur.github.io/lightGallery/
-* Released under the MIT License - http://opensource.org/licenses/mit-license.html  ---- FREE ----
+ * jquery lightGallery.js v1.1.5 // 3/29/2015
+ * http://sachinchoolur.github.io/lightGallery/
+ * Released under the MIT License - http://opensource.org/licenses/mit-license.html  ---- FREE ----
 
-=========================================================/**/
+ =========================================================/**/
 ;
 (function ($) {
     "use strict";
@@ -43,7 +43,6 @@
                 thumbWidth: 100,
                 thumbMargin: 5,
 
-
                 mobileSrc: false,
                 mobileSrcMaxWidth: 640,
                 swipeThreshold: 50,
@@ -59,13 +58,20 @@
                 dynamicEl: [],
                 //callbacks
 
-                onOpen: function (plugin) {},
-                onSlideBefore: function (plugin) {},
-                onSlideAfter: function (plugin) {},
-                onSlideNext: function (plugin) {},
-                onSlidePrev: function (plugin) {},
-                onBeforeClose: function (plugin) {},
-                onCloseAfter: function (plugin) {}
+                onOpen: function (plugin) {
+                },
+                onSlideBefore: function (plugin) {
+                },
+                onSlideAfter: function (plugin) {
+                },
+                onSlideNext: function (plugin) {
+                },
+                onSlidePrev: function (plugin) {
+                },
+                onBeforeClose: function (plugin) {
+                },
+                onCloseAfter: function (plugin) {
+                }
             },
             el = $(this),
             plugin = this,
@@ -244,6 +250,7 @@
             isVideo: function (src, index) {
                 var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9_\-]+)/i);
                 var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
+                var dailymotion = src.match(/\/\/(?:www\.)?dai\.ly\/([0-9a-z\-_]+)/i);
                 var iframe = false;
                 if (settings.dynamic) {
                     if (settings.dynamicEl[index].iframe == 'true') {
@@ -254,13 +261,14 @@
                         iframe = true;
                     }
                 }
-                if (youtube || vimeo || iframe) {
+                if (youtube || vimeo || dailymotion || iframe) {
                     return true;
                 }
             },
             loadVideo: function (src, _id) {
                 var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9_\-]+)/i);
                 var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
+                var dailymotion = src.match(/\/\/(?:www\.)?dai\.ly\/([0-9a-z\-_]+)/i);
                 var video = '';
                 var a = '';
                 if (youtube) {
@@ -275,7 +283,7 @@
                         a = a + '&' + youtubeParams;
                     }
 
-                    video = '<iframe class="object" width="560" height="315" src="//www.youtube.com/embed/' + youtube[1] + a + '" frameborder="0" allowfullscreen></iframe>';
+                    video = '<iframe class="object" width="560" height="315" src="//www.youtube.com/embed/' + youtube[1] + a + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
                 } else if (vimeo) {
                     if (settings.videoAutoplay === true && lightGalleryOn === false) {
                         a = 'autoplay=1&amp;';
@@ -283,6 +291,13 @@
                         a = '';
                     }
                     video = '<iframe class="object" id="video' + _id + '" width="560" height="315"  src="http://player.vimeo.com/video/' + vimeo[1] + '?' + a + 'byline=0&amp;portrait=0&amp;color=' + settings.vimeoColor + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+                } else if (dailymotion) {
+                    if (settings.videoAutoplay === true && lightGalleryOn === false) {
+                        a = 'autoplay=1&amp;';
+                    } else {
+                        a = '';
+                    }
+                    video = '<iframe class="object" id="video' + _id + '" width="560" height="315"  src="http://www.dailymotion.com/embed/video/' + dailymotion[1] + '?' + a + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
                 } else {
                     video = '<iframe class="object" frameborder="0" src="' + src + '"  allowfullscreen="true"></iframe>';
                 }
@@ -501,14 +516,14 @@
                     var thumb_contW = $gallery.find('.thumb-cont').width();
                     var position;
                     switch (settings.currentPagerPosition) {
-                    case 'left':
-                        position = 0;
-                        break;
-                    case 'middle':
-                        position = (thumb_contW / 2) - (settings.thumbWidth / 2);
-                        break;
-                    case 'right':
-                        position = thumb_contW - settings.thumbWidth;
+                        case 'left':
+                            position = 0;
+                            break;
+                        case 'middle':
+                            position = (thumb_contW / 2) - (settings.thumbWidth / 2);
+                            break;
+                        case 'right':
+                            position = thumb_contW - settings.thumbWidth;
                     }
                     var left = ((settings.thumbWidth + settings.thumbMargin) * index - 1) - position;
                     var width = ($children.length * (settings.thumbWidth + settings.thumbMargin));
@@ -674,8 +689,8 @@
                         $slider.addClass('use-left');
                     }
                     /*                  if(this.doCss()){
-                        $slider.css({ 'transform' : 'translate3d('+(-index*100)+'%, 0px, 0px)' });
-                    }*/
+                     $slider.css({ 'transform' : 'translate3d('+(-index*100)+'%, 0px, 0px)' });
+                     }*/
                     if (!this.doCss() && !lightGalleryOn) {
                         $slider.css({
                             left: (-index * 100) + '%'
