@@ -301,7 +301,7 @@
                 } else {
                     video = '<iframe class="object" frameborder="0" src="' + src + '"  allowfullscreen="true"></iframe>';
                 }
-                return '<div class="video-cont" style="max-width:' + settings.videoMaxWidth + ' !important;"><div class="video">' + video + '</div></div>';
+                return '<div class="video-cont" style="max-width:' + settings.videoMaxWidth + ';"><div class="video">' + video + '</div></div>';
             },
             addHtml: function (index) {
                 var dataSubHtml = null;
@@ -422,7 +422,7 @@
                                 }
                             }
                             if (typeof dataHtml !== 'undefined' && dataHtml !== null) {
-                                $slide.eq(index).append('<div class="video-cont" style="max-width:' + settings.videoMaxWidth + ' !important;"><div class="video">' + dataHtml + '</div></div>');
+                                $slide.eq(index).append('<div class="video-cont" style="max-width:' + settings.videoMaxWidth + ';"><div class="video">' + dataHtml + '</div></div>');
                             }
                             $this.addHtml(index);
                             $slide.eq(index).addClass('loaded complete');
