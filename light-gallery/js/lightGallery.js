@@ -169,7 +169,7 @@
                             }
                         });
                 }
-                $('#lg-close').bind('click touchend', function () {
+                $('#lg-close').on('click touchend', function () {
                     plugin.destroy(false);
                 });
             },
@@ -177,7 +177,7 @@
                 var resizeWindow = function () {
                     windowWidth = $(window).width();
                 };
-                $(window).bind('resize.lightGallery', resizeWindow());
+                $(window).on('resize.lightGallery', resizeWindow());
             },
             doCss: function () {
                 var support = function () {
@@ -225,12 +225,12 @@
             touch: function () {
                 var xStart, xEnd;
                 var $this = this;
-                $('.light-gallery').bind('mousedown', function (e) {
+                $('.light-gallery').on('mousedown', function (e) {
                     e.stopPropagation();
                     e.preventDefault();
                     xStart = e.pageX;
                 });
-                $('.light-gallery').bind('mouseup', function (e) {
+                $('.light-gallery').on('mouseup', function (e) {
                     e.stopPropagation();
                     e.preventDefault();
                     xEnd = e.pageX;
@@ -438,14 +438,14 @@
                     $thumb_cont = $gallery.find('.thumb-cont');
                     $prev.after('<a class="cl-thumb"></a>');
                     $prev.parent().addClass('has-thumb');
-                    $gallery.find('.cl-thumb').bind('click touchend', function () {
+                    $gallery.find('.cl-thumb').on('click touchend', function () {
                         $gallery.addClass('open');
                         if ($this.doCss() && settings.mode === 'slide') {
                             $slide.eq(index).prevAll().removeClass('next-slide').addClass('prev-slide');
                             $slide.eq(index).nextAll().removeClass('prev-slide').addClass('next-slide');
                         }
                     });
-                    $gallery.find('.thumb-cont .close').bind('click touchend', function () {
+                    $gallery.find('.thumb-cont .close').on('click touchend', function () {
                         $gallery.removeClass('open');
                     });
                     var thumbInfo = $gallery.find('.thumb-info');
@@ -481,7 +481,7 @@
                             'transition-duration': settings.speed + 'ms'
                         });
                     }
-                    $thumb.bind('click touchend', function () {
+                    $thumb.on('click touchend', function () {
                         usingThumb = true;
                         var index = $(this).index();
                         $thumb.removeClass('active');
@@ -533,11 +533,11 @@
                     $gallery.append('<div id="lg-action"><a id="lg-prev"></a><a id="lg-next"></a></div>');
                     $prev = $gallery.find('#lg-prev');
                     $next = $gallery.find('#lg-next');
-                    $prev.bind('click', function () {
+                    $prev.on('click', function () {
                         $this.prevSlide();
                         clearInterval(interval);
                     });
-                    $next.bind('click', function () {
+                    $next.on('click', function () {
                         $this.nextSlide();
                         clearInterval(interval);
                     });
@@ -559,7 +559,7 @@
             },
             keyPress: function () {
                 var $this = this;
-                $(window).bind('keyup.lightGallery', function (e) {
+                $(window).on('keyup.lightGallery', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     if (e.keyCode === 37) {
@@ -742,7 +742,7 @@
                 if (settings.counter) {
                     $("#lg-counter-current").text(index + 1);
                 }
-                $(window).bind('resize.lightGallery', function () {
+                $(window).on('resize.lightGallery', function () {
                     setTimeout(function () {
                         $this.animateThumb(index);
                     }, 200);
