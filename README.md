@@ -1,6 +1,10 @@
 jQuery lightGallery
 =============
 
+Announcement.
+----------------
+Here is the first look of [lightgallery1.2](http://sachinchoolur.github.io/lightgallery1.2/). 
+    Watch this space i will be releasing soon!.
 
 Demo
 ----------------
@@ -174,12 +178,7 @@ Create ul and li elements and add the path of the image or video inside the data
           enableDrag: true,
 
           vimeoColor: 'CCCCCC',
-          youtubePlayerParams: {
-            modestbranding: 1,
-            showinfo: 0,
-            rel: 0,
-            controls: 0
-          },
+          youtubePlayerParams: false, // See: https://developers.google.com/youtube/player_parameters,
           videoAutoplay: true,
           videoMaxWidth: '855px',
 
@@ -216,7 +215,7 @@ In-depth explanation of settings can be found on a [separate page](http://sachin
 ### Report an Issue ###
 If you think you might have found a bug or if you have a feature suggestion please use github [issue tracker](https://github.com/sachinchoolur/lightGallery/issues/new). Also please try to add a jsfiddle that demonstrates your problem 
 
-If you need any help with implementing lightGallery in your project or if you any personal support requests i requset you to please use [stackoverflow](https://stackoverflow.com/) instead of github issue tracker
+If you need any help with implementing lightGallery in your project or if have you any personal support requests i requset you to please use [stackoverflow](https://stackoverflow.com/) instead of github issue tracker
 
 
 
