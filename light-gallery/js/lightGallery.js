@@ -1,6 +1,6 @@
 /** ==========================================================
 
-* jquery lightGallery.js v1.1.5 // 3/29/2015
+* jquery lightGallery.js v1.1.6 08/25/2015
 * http://sachinchoolur.github.io/lightGallery/
 * Released under the MIT License - http://opensource.org/licenses/mit-license.html  ---- FREE ----
 
@@ -436,15 +436,17 @@
                     }
                     $gallery.append('<div class="thumb-cont"><div class="thumb-info">' + $close + '</div><div class="thumb-inner"></div></div>');
                     $thumb_cont = $gallery.find('.thumb-cont');
-                    $prev.after('<a class="cl-thumb"></a>');
-                    $prev.parent().addClass('has-thumb');
-                    $gallery.find('.cl-thumb').bind('click touchend', function () {
-                        $gallery.addClass('open');
-                        if ($this.doCss() && settings.mode === 'slide') {
-                            $slide.eq(index).prevAll().removeClass('next-slide').addClass('prev-slide');
-                            $slide.eq(index).nextAll().removeClass('prev-slide').addClass('next-slide');
-                        }
-                    });
+                    if ($prev) {
+                        $prev.after('<a class="cl-thumb"></a>');
+                        $prev.parent().addClass('has-thumb');
+                        $gallery.find('.cl-thumb').bind('click touchend', function () {
+                            $gallery.addClass('open');
+                            if ($this.doCss() && settings.mode === 'slide') {
+                                $slide.eq(index).prevAll().removeClass('next-slide').addClass('prev-slide');
+                                $slide.eq(index).nextAll().removeClass('prev-slide').addClass('next-slide');
+                            }
+                        });
+                    }
                     $gallery.find('.thumb-cont .close').bind('click touchend', function () {
                         $gallery.removeClass('open');
                     });
