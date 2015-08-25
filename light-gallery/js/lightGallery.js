@@ -139,6 +139,8 @@
                 }, 50);
             },
             structure: function () {
+                if ($('#lightGallery-outer').length > 0)
+            		return;
                 $('body').append('<div id="lg-outer" class="' + settings.addClass + '"><div id="lg-gallery"><div id="lg-slider"></div><a id="lg-close" class="close"></a></div></div>').addClass('light-gallery');
                 $galleryCont = $('#lg-outer');
                 $gallery = $('#lg-gallery');
