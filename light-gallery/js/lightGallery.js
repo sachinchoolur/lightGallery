@@ -60,6 +60,7 @@
                 //callbacks
 
                 onOpen: function (plugin) {},
+                onLoadComplete: function (plugin) {},
                 onSlideBefore: function (plugin) {},
                 onSlideAfter: function (plugin) {},
                 onSlideNext: function (plugin) {},
@@ -322,8 +323,9 @@
             },
             loadObj: function (r, index) {
                 var $this = this;
-                $slide.eq(index).find('.object').on('load error', function () {
+                $slide.eq(index).find('.object').one('load error', function () {
                     $slide.eq(index).addClass('complete');
+                    settings.onLoadComplete.call(this, $(this));
                 });
                 if (r === false) {
                     if (!$slide.eq(index).hasClass('complete')) {
