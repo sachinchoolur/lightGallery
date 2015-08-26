@@ -1,3 +1,8 @@
+![license](https://img.shields.io/npm/l/lightGallery.svg)
+![travis](https://travis-ci.org/sachinchoolur/lightslider.svg?branch=master)
+![bower](https://img.shields.io/bower/v/lightGallery.svg)
+![npm](https://img.shields.io/npm/v/lightGallery.svg)
+
 # lightGallery
 A lightweight, customizable , modular, responsive, lightbox gallery plugin for jQuery.
 ![lightgallery](https://github.com/sachinchoolur/lightgallery1.2/blob/master/lib/lg.png?raw=true)
