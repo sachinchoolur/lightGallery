@@ -1,0 +1,47 @@
+.lg-outer {
+    // reset transition duration
+    &.lg-css3.lg-zoom-dragging {
+        .lg-item.lg-complete.lg-zoomable {
+            .lg-img-wrap, .lg-image {
+                @include transition-duration(0s);
+            }
+        }
+    }
+
+    .lg-item.lg-complete.lg-zoomable{
+
+        .lg-img-wrap {
+            @include transitionCustom(transform $zoom-transition-duration ease 0s);
+            @include translate3d(0, 0, 0);
+        }
+
+        .lg-image {
+            // Translate required for zoom
+            @include scale3d(1, 1, 1);
+            @include transitionCustom(transform $zoom-transition-duration ease 0s, opacity 0.15s !important);
+            @include transform-origin(0 0);
+        }
+    }
+
+}
+
+// zoom buttons
+#lg-zoom-in {
+    &:after {
+        content: "\e311";
+    }
+}
+
+#lg-zoom-out {
+    opacity: 0.5;
+    pointer-events: none;
+
+    &:after {
+        content: "\e312";
+    }
+
+    .lg-zoomed & {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}

@@ -1,26 +1,36 @@
 {
-  "name": "lightgallery",
-  "version": "1.1.6",
-  "homepage": "http://sachinchoolur.github.io/lightGallery/",
-  "authors": [
-    "Sachin N <sachi77n@gmail.com>"
-  ],
-  "description": "JQuery lightGallery is a lightweight jQuery lightbox gallery for displaying image and video gallery",
-  "main": [
-    "light-gallery/js/lightGallery.min.js",
-    "light-gallery/css/lightGallery.css",
-    "light-gallery/fonts/*",
-    "light-gallery/img/*"
-  ],
-  "keywords": [
-    "gallery",
-    "lightbox",
-    "image",
-    "youtube",
-    "vimeo"
-  ],
-  "license": "MLT",
-  "ignore": [
-    "README.md"
-  ]
+    "name": "lightgallery",
+    "version": "1.2.0",
+    "description": "A lightweight, customizable, modular, responsive, lightbox gallery plugin for jQuery.",
+    "main": [
+        "dist/js/lightgallery.min.js",
+        "dist/css/lightgallery.css",
+        "dist/fonts/*",
+        "dist/img/*"
+    ],
+    "keywords": [
+        "gallery",
+        "lightbox",
+        "image",
+        "youtube",
+        "vimeo"
+    ],
+    "authors": [
+        "Sachin N <sachi77n@gmail.com>"
+    ],
+    "homepage": "http://sachinchoolur.github.io/lightGallery/",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/sachinchoolur/lightGallery.git"
+    },
+    "license": "Apache-2.0",
+    "ignore": [
+        "README.md"
+    ],
+    "dependencies": {
+        "jquery": "~1.7.0"
+    },
+    "devDependencies": {
+        "qunit": "~1.12.0"
+    }
 }

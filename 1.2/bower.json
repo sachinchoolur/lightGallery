@@ -1,0 +1,26 @@
+{
+  "name": "lightgallery",
+  "version": "1.1.6",
+  "homepage": "http://sachinchoolur.github.io/lightGallery/",
+  "authors": [
+    "Sachin N <sachi77n@gmail.com>"
+  ],
+  "description": "JQuery lightGallery is a lightweight jQuery lightbox gallery for displaying image and video gallery",
+  "main": [
+    "light-gallery/js/lightGallery.min.js",
+    "light-gallery/css/lightGallery.css",
+    "light-gallery/fonts/*",
+    "light-gallery/img/*"
+  ],
+  "keywords": [
+    "gallery",
+    "lightbox",
+    "image",
+    "youtube",
+    "vimeo"
+  ],
+  "license": "MLT",
+  "ignore": [
+    "README.md"
+  ]
+}
