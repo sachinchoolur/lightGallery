@@ -1,0 +1,40 @@
+{
+    "name": "lightGallery",
+    "title": "jQuery lightGallery",
+    "description": "JQuery lightGallery is a lightweight jQuery lightbox gallery for displaying image and video gallery.",
+    "keywords": [
+        "gallery",
+        "lightbox",
+	"image",
+	"responsive",
+	"jQuery",
+	"videos",
+	"CSS3",
+	"touch"
+    ],
+    "version": "1.1.4",
+    "author": {
+        "name": "Sachin N",
+        "url": "https://github.com/sachinchoolur"
+    },
+    "maintainers": [
+        {
+            "name": "Sachin N",
+            "email": "sachi77n@gmail.com",
+            "url": "https://github.com/sachinchoolur"
+        }
+    ],
+    "licenses": [
+        {
+            "type": "MLT License",
+            "url": "http://opensource.org/licenses/mit-license.html"
+        }
+    ],
+    "bugs": "https://github.com/sachinchoolur/lightGallery/issues",
+    "homepage": "http://sachinchoolur.github.io/lightGallery/",
+    "docs": "https://github.com/sachinchoolur/lightGallery",
+    "download": "http://sachinchoolur.github.io/lightGallery/lightGallery.zip",
+    "dependencies": {
+        "jquery": ">=1.5"
+    }
+}
