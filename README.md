@@ -1,4 +1,4 @@
-![travis](https://travis-ci.org/sachinchoolur/lightslider.svg?branch=master)
+![travis](https://travis-ci.org/sachinchoolur/lightGallery.svg?branch=master)
 ![bower](https://img.shields.io/bower/v/lightgallery.svg)
 ![npm](https://img.shields.io/npm/v/lightgallery.svg)
 
@@ -170,7 +170,7 @@ Other Projects
 #####[ladda-angular](https://github.com/sachinchoolur/ladda-angular)
 > Ladda button directive for angularjs
 
-#####[Teamwave](http://www.teamwave.com/)
+#####[Teamwave](http://www.teamwave.com/?kid=676V2)
 > Integrated Suite of Business Applications.. (Not an open source project but free for the first 1,000 Companies!)
 
 
