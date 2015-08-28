@@ -161,21 +161,17 @@ Follow me on twitter [@sachinchoolur](https://twitter.com/sachinchoolur) for the
 
 Other Projects
 ----
-[jQuery lightslider](https://github.com/sachinchoolur/lightslider)
-######
-lightSlider is a lightweight responsive Content slider with carousel thumbnails navigation.
+#####[jQuery lightslider](https://github.com/sachinchoolur/lightslider)
+> lightSlider is a lightweight responsive Content slider with carousel thumbnails navigation.
 
-[Angular flash](https://github.com/sachinchoolur/angular-flash)
-######
-A simple lightweight flash message module for angularjs
+#####[Angular flash](https://github.com/sachinchoolur/angular-flash)
+> A simple lightweight flash message module for angularjs
 
-[ladda-angular](https://github.com/sachinchoolur/ladda-angular)
-######
-Ladda button directive for angularjs
+#####[ladda-angular](https://github.com/sachinchoolur/ladda-angular)
+> Ladda button directive for angularjs
 
-[Teamwave](http://www.teamwave.com/)
-######
-Integrated Suite of Business Applications.. (Not an open source project but free for the first 1,000 Companies!)
+#####[Teamwave](http://www.teamwave.com/)
+> Integrated Suite of Business Applications.. (Not an open source project but free for the first 1,000 Companies!)
 
 
 
