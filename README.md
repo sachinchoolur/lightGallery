@@ -3,7 +3,7 @@
 ![npm](https://img.shields.io/npm/v/lightgallery.svg)
 
 # lightGallery
-A lightweight, customizable , modular, responsive, lightbox gallery plugin for jQuery.
+A customizable, modular, responsive, lightbox gallery plugin for jQuery.
 ![lightgallery](https://github.com/sachinchoolur/lightgallery1.2/blob/master/lib/lg.png?raw=true)
 Demo
 ---
