@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.0 - 2015-08-26
+/*! lightgallery - v1.2.0 - 2015-09-01
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -390,10 +390,10 @@
             };
         }
 
-        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9self\-]+)/i);
-        var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_this]+)/i);
+        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-]+)/i);
+        var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
+        var dailymotion = src.match(/\/\/(?:www\.)?dai.ly\/([0-9a-z\-_]+)/i);
 
-        // return  { youtube  :  ["//www.youtube.com/watch?v=c0asJgSyxcY", "c0asJgSyxcY"] }
         if (youtube) {
             return {
                 youtube: youtube
@@ -401,6 +401,10 @@
         } else if (vimeo) {
             return {
                 vimeo: vimeo
+            };
+        } else if (dailymotion) {
+            return {
+                dailymotion: dailymotion
             };
         }
     };
@@ -1174,7 +1178,7 @@
         /**
          * if d is false or undefined destroy will only close the gallery
          * plugins instance remains with the element
-         
+
          * if d is true destroy will completely remove the plugin
          */
 
@@ -1628,7 +1632,9 @@
         youtubeThumbSize: 1,
 
         loadVimeoThumbnail: true,
-        vimeoThumbSize: 'thumbnail_small'
+        vimeoThumbSize: 'thumbnail_small',
+
+        loadDailymotionThumbnail: true
     };
 
     var Thumbnail = function(element) {
@@ -1682,7 +1688,7 @@
     Thumbnail.prototype.build = function() {
         var _this = this;
         var thumbList = '';
-        var viemoErrorThumbSize = '';
+        var vimeoErrorThumbSize = '';
         var $thumb;
         var html = '<div class="lg-thumb-outer">' +
             '<div class="lg-thumb group">' +
@@ -1691,13 +1697,13 @@
 
         switch (this.core.s.vimeoThumbSize) {
             case 'thumbnail_large':
-                viemoErrorThumbSize = '640';
+                vimeoErrorThumbSize = '640';
                 break;
             case 'thumbnail_medium':
-                viemoErrorThumbSize = '200x150';
+                vimeoErrorThumbSize = '200x150';
                 break;
             case 'thumbnail_small':
-                viemoErrorThumbSize = '100x75';
+                vimeoErrorThumbSize = '100x75';
         }
 
         _this.core.$outer.addClass('lg-has-thumb');
@@ -1723,17 +1729,23 @@
             var thumbImg;
             var vimeoId = '';
 
-            if (isVideo.youtube || isVideo.vimeo) {
+            if (isVideo.youtube || isVideo.vimeo || isVideo.dailymotion) {
                 if (isVideo.youtube) {
                     if (_this.core.s.loadYoutubeThumbnail) {
-                        thumbImg = 'http://img.youtube.com/vi/' + isVideo.youtube[1] + '/' + _this.core.s.youtubeThumbSize + '.jpg';
+                        thumbImg = '//img.youtube.com/vi/' + isVideo.youtube[1] + '/' + _this.core.s.youtubeThumbSize + '.jpg';
                     } else {
                         thumbImg = thumb;
                     }
                 } else if (isVideo.vimeo) {
                     if (_this.core.s.loadVimeoThumbnail) {
-                        thumbImg = 'https://i.vimeocdn.com/video/error_' + viemoErrorThumbSize + '.jpg';
+                        thumbImg = '//i.vimeocdn.com/video/error_' + vimeoErrorThumbSize + '.jpg';
                         vimeoId = isVideo.vimeo[1];
+                    } else {
+                        thumbImg = thumb;
+                    }
+                } else if (isVideo.dailymotion) {
+                    if (_this.core.s.loadDailymotionThumbnail) {
+                        thumbImg = '//www.dailymotion.com/thumbnail/video/' + isVideo.dailymotion[1];
                     } else {
                         thumbImg = thumb;
                     }
@@ -1742,7 +1754,7 @@
                 thumbImg = thumb;
             }
 
-            thumbList += '<div data-vimoe-id="' + vimeoId + '" class="lg-thumb-item" style="width:' + _this.core.s.thumbWidth + 'px; margin-right: ' + _this.core.s.thumbMargin + 'px"><img src="' + thumbImg + '" /></div>';
+            thumbList += '<div data-vimeo-id="' + vimeoId + '" class="lg-thumb-item" style="width:' + _this.core.s.thumbWidth + 'px; margin-right: ' + _this.core.s.thumbMargin + 'px"><img src="' + thumbImg + '" /></div>';
             vimeoId = '';
         }
 
@@ -1769,7 +1781,7 @@
         // Load vimeo thumbnails
         $thumb.each(function() {
             var $this = $(this);
-            var vimeoVideoId = $this.attr('data-vimoe-id');
+            var vimeoVideoId = $this.attr('data-vimeo-id');
 
             if (vimeoVideoId) {
                 $.getJSON('http://www.vimeo.com/api/v2/video/' + vimeoVideoId + '.json?callback=?', {
@@ -2046,6 +2058,7 @@
         videoMaxWidth: '855px',
         youtubePlayerParams: false,
         vimeoPlayerParams: false,
+        dailymotionPlayerParams: false,
         videojs: false
     };
 
@@ -2154,6 +2167,7 @@
 
                     var youtubePlayer = $el.find('.lg-youtube').get(0);
                     var vimeoPlayer = $el.find('.lg-vimeo').get(0);
+                    var dailymotionPlayer = $el.find('.lg-dailymotion').get(0);
                     var html5Player = $el.find('.lg-html5').get(0);
                     if (youtubePlayer) {
                         youtubePlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
@@ -2163,6 +2177,9 @@
                         } catch (e) {
                             console.error('Make sure you have included froogaloop2 js');
                         }
+                    } else if (dailymotionPlayer) {
+                        dailymotionPlayer.contentWindow.postMessage('play', '*');
+
                     } else if (html5Player) {
                         if (_this.core.s.videojs) {
                             try {
@@ -2199,6 +2216,7 @@
             var $videoSlide = _this.core.$slide.eq(prevIndex);
             var youtubePlayer = $videoSlide.find('.lg-youtube').get(0);
             var vimeoPlayer = $videoSlide.find('.lg-vimeo').get(0);
+            var dailymotionPlayer = $videoSlide.find('.lg-dailymotion').get(0);
             var html5Player = $videoSlide.find('.lg-html5').get(0);
             if (youtubePlayer) {
                 youtubePlayer.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
@@ -2208,6 +2226,9 @@
                 } catch (e) {
                     console.error('Make sure you have included froogaloop2 js');
                 }
+            } else if (dailymotionPlayer) {
+                dailymotionPlayer.contentWindow.postMessage('pause', '*');
+
             } else if (html5Player) {
                 if (_this.core.s.videojs) {
                     try {
@@ -2261,6 +2282,15 @@
             }
 
             video = '<iframe class="lg-video-object lg-vimeo ' + addClass + '" width="560" height="315"  src="http://player.vimeo.com/video/' + isVideo.vimeo[1] + a + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+
+        } else if (isVideo.dailymotion) {
+
+            a = '?wmode=opaque&autoplay=' + autoplay + '&api=postMessage';
+            if (this.core.s.dailymotionPlayerParams) {
+                a = a + '&' + $.param(this.core.s.dailymotionPlayerParams);
+            }
+
+            video = '<iframe class="lg-video-object lg-dailymotion ' + addClass + '" width="560" height="315" src="//www.dailymotion.com/embed/video/' + isVideo.dailymotion[1] + a + '" frameborder="0" allowfullscreen></iframe>';
 
         } else if (isVideo.html5) {
             var fL = html.substring(0, 1);
