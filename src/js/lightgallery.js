@@ -220,6 +220,8 @@
 
         _this.closeGallery();
 
+        _this.$el.trigger('onAfterOpen.lg');
+
         // Hide controllers if mouse doesn't move for some period
         _this.$outer.on('mousemove.lg click.lg touchstart.lg', function() {
 
