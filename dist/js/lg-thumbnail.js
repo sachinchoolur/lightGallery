@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.0 - 2015-08-26
+/*! lightgallery - v1.2.0 - 2015-09-01
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -27,7 +27,9 @@
         youtubeThumbSize: 1,
 
         loadVimeoThumbnail: true,
-        vimeoThumbSize: 'thumbnail_small'
+        vimeoThumbSize: 'thumbnail_small',
+
+        loadDailymotionThumbnail: true
     };
 
     var Thumbnail = function(element) {
@@ -81,7 +83,7 @@
     Thumbnail.prototype.build = function() {
         var _this = this;
         var thumbList = '';
-        var viemoErrorThumbSize = '';
+        var vimeoErrorThumbSize = '';
         var $thumb;
         var html = '<div class="lg-thumb-outer">' +
             '<div class="lg-thumb group">' +
@@ -90,13 +92,13 @@
 
         switch (this.core.s.vimeoThumbSize) {
             case 'thumbnail_large':
-                viemoErrorThumbSize = '640';
+                vimeoErrorThumbSize = '640';
                 break;
             case 'thumbnail_medium':
-                viemoErrorThumbSize = '200x150';
+                vimeoErrorThumbSize = '200x150';
                 break;
             case 'thumbnail_small':
-                viemoErrorThumbSize = '100x75';
+                vimeoErrorThumbSize = '100x75';
         }
 
         _this.core.$outer.addClass('lg-has-thumb');
@@ -122,17 +124,23 @@
             var thumbImg;
             var vimeoId = '';
 
-            if (isVideo.youtube || isVideo.vimeo) {
+            if (isVideo.youtube || isVideo.vimeo || isVideo.dailymotion) {
                 if (isVideo.youtube) {
                     if (_this.core.s.loadYoutubeThumbnail) {
-                        thumbImg = 'http://img.youtube.com/vi/' + isVideo.youtube[1] + '/' + _this.core.s.youtubeThumbSize + '.jpg';
+                        thumbImg = '//img.youtube.com/vi/' + isVideo.youtube[1] + '/' + _this.core.s.youtubeThumbSize + '.jpg';
                     } else {
                         thumbImg = thumb;
                     }
                 } else if (isVideo.vimeo) {
                     if (_this.core.s.loadVimeoThumbnail) {
-                        thumbImg = 'https://i.vimeocdn.com/video/error_' + viemoErrorThumbSize + '.jpg';
+                        thumbImg = '//i.vimeocdn.com/video/error_' + vimeoErrorThumbSize + '.jpg';
                         vimeoId = isVideo.vimeo[1];
+                    } else {
+                        thumbImg = thumb;
+                    }
+                } else if (isVideo.dailymotion) {
+                    if (_this.core.s.loadDailymotionThumbnail) {
+                        thumbImg = '//www.dailymotion.com/thumbnail/video/' + isVideo.dailymotion[1];
                     } else {
                         thumbImg = thumb;
                     }
@@ -141,7 +149,7 @@
                 thumbImg = thumb;
             }
 
-            thumbList += '<div data-vimoe-id="' + vimeoId + '" class="lg-thumb-item" style="width:' + _this.core.s.thumbWidth + 'px; margin-right: ' + _this.core.s.thumbMargin + 'px"><img src="' + thumbImg + '" /></div>';
+            thumbList += '<div data-vimeo-id="' + vimeoId + '" class="lg-thumb-item" style="width:' + _this.core.s.thumbWidth + 'px; margin-right: ' + _this.core.s.thumbMargin + 'px"><img src="' + thumbImg + '" /></div>';
             vimeoId = '';
         }
 
@@ -168,7 +176,7 @@
         // Load vimeo thumbnails
         $thumb.each(function() {
             var $this = $(this);
-            var vimeoVideoId = $this.attr('data-vimoe-id');
+            var vimeoVideoId = $this.attr('data-vimeo-id');
 
             if (vimeoVideoId) {
                 $.getJSON('http://www.vimeo.com/api/v2/video/' + vimeoVideoId + '.json?callback=?', {

@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.0 - 2015-08-26
+/*! lightgallery - v1.2.0 - 2015-09-01
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -390,10 +390,10 @@
             };
         }
 
-        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9self\-]+)/i);
-        var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_this]+)/i);
+        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-]+)/i);
+        var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
+        var dailymotion = src.match(/\/\/(?:www\.)?dai.ly\/([0-9a-z\-_]+)/i);
 
-        // return  { youtube  :  ["//www.youtube.com/watch?v=c0asJgSyxcY", "c0asJgSyxcY"] }
         if (youtube) {
             return {
                 youtube: youtube
@@ -401,6 +401,10 @@
         } else if (vimeo) {
             return {
                 vimeo: vimeo
+            };
+        } else if (dailymotion) {
+            return {
+                dailymotion: dailymotion
             };
         }
     };
@@ -1174,7 +1178,7 @@
         /**
          * if d is false or undefined destroy will only close the gallery
          * plugins instance remains with the element
-         
+
          * if d is true destroy will completely remove the plugin
          */
 

@@ -17,7 +17,7 @@ Main features
 * Touch and support for mobile devices.
 * Mouse drag supports for desktops.
 * Animated thumbnails.
-* Youtube Vimeo and html5 videos Support.
+* Youtube Vimeo Dailymotion and html5 videos Support.
 * 20+ Hardware-Accelerated CSS3 transitions.
 * Dynamic mode.
 * Full screen support.
