@@ -6,7 +6,7 @@ $(document).ready(function() {
         thumbnail: false,
         pager: $(window).width() >= 768 ? true : false,
         speed: 300,
-        scale: 2,
+        scale: 1,
         keypress: true
     });
     new WOW().init();
