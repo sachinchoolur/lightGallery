@@ -220,6 +220,8 @@
 
         _this.closeGallery();
 
+        _this.$el.trigger('onAfterOpen.lg');
+
         // Hide controllers if mouse doesn't move for some period
         _this.$outer.on('mousemove.lg click.lg touchstart.lg', function() {
 
@@ -387,10 +389,10 @@
             };
         }
 
-        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9self\-]+)/i);
-        var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_this]+)/i);
+        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-]+)/i);
+        var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
+        var dailymotion = src.match(/\/\/(?:www\.)?dai.ly\/([0-9a-z\-_]+)/i);
 
-        // return  { youtube  :  ["//www.youtube.com/watch?v=c0asJgSyxcY", "c0asJgSyxcY"] }
         if (youtube) {
             return {
                 youtube: youtube
@@ -398,6 +400,10 @@
         } else if (vimeo) {
             return {
                 vimeo: vimeo
+            };
+        } else if (dailymotion) {
+            return {
+                dailymotion: dailymotion
             };
         }
     };
@@ -1171,7 +1177,7 @@
         /**
          * if d is false or undefined destroy will only close the gallery
          * plugins instance remains with the element
-         
+
          * if d is true destroy will completely remove the plugin
          */
 

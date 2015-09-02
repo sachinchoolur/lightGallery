@@ -408,6 +408,12 @@ $('#lightgallery').lightGallery({
                                             <td><code>'thumbnail_small'</code></td>
                                             <td>Thumbnail size for vimeo videos: <code>'thumbnail_large'</code> or <code>'thumbnail_medium'</code> or <code>'thumbnail_small'</code> Here is the detailed <a href="../demos/videos.html#auto-thumb">demo</a></td>
                                         </tr>
+                                        <tr>
+                                            <td>loadDailymotionThumbnail</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>You can automatically load thumbnails for dailymotion videos from dailymotion by setting loadYoutubeThumbnail true.</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                                 <table class="table table-bordered">
@@ -602,6 +608,13 @@ $('#lightgallery').lightGallery({
                                             }</code>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td>dailymotionPlayerParams:</td>
+                                            <td>object</td>
+                                            <td><code>{}</code></td>
+                                            <td>Change dailymotion player parameters. <br />link https://developer.dailymotion.com/player#player-parameters<br />
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </section>
@@ -780,6 +793,11 @@ $lg.on('onBeforeSlide.lg',function(event, index, fromTouch, fromThumb){
                                             <td>onBeforeOpen.lg</td>
                                             <td></td>
                                             <td>Fired immediately before the start opening.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>onAfterOpen.lg</td>
+                                            <td></td>
+                                            <td>Fired immediately after opening the gallery.</td>
                                         </tr>
                                         <tr>
                                             <td>onAferAppendSlide.lg</td>
