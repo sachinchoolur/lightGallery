@@ -679,7 +679,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   display: inline-block;
   height: 50%;
   width: 1px;
-  margin-right: -5px;
 }
 .lg-outer .lg-img-wrap {
   top: 0;
