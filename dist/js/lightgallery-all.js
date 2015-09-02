@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.0 - 2015-09-02
+/*! lightgallery - v1.2.0 - 2015-09-03
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -2338,7 +2338,13 @@
 
         if (this.core.s.zoom && this.core.doCss()) {
             this.init();
+
+            // Store the zoomable timeout value just to clear it while closing
             this.zoomabletimeout = false;
+
+            // Set the initial value center 
+            this.pageX = $(window).width() / 2;
+            this.pageY = ($(window).height() / 2) + $(window).scrollTop();
         }
 
         return this;
@@ -2360,7 +2366,7 @@
             // set _speed value 0 if gallery opened from direct url and if it is first slide
             if ($('body').hasClass('lg-from-hash') && delay) {
 
-                // will execute only one time
+                // will execute only once 
                 _speed = 0;
             } else {
 
@@ -2379,21 +2385,19 @@
          * Translate the wrap and scale the image to get better user experience
          *
          * @param {String} scaleVal - Zoom decrement/increment value
-         * @param {Boolean} db - true if zoom called via doubleclick
-         * @todo Currently zoom origin is center it should work from all the directions
          */
-        var zoom = function(scaleVal, db, pageX, pageY) {
+        var zoom = function(scaleVal) {
 
             var $image = _this.core.$outer.find('.lg-current .lg-image');
             var _x;
             var _y;
-            if (db) {
-                _x = pageX - $image.offset().left;
-                _y = pageY - $image.offset().top;
-            } else {
-                _x = $image.width() / 2;
-                _y = $image.height() / 2;
-            }
+
+            // Find offset manually to avoid issue after zoom
+            var offsetX = ($(window).width() - $image.width()) / 2;
+            var offsetY = (($(window).height() - $image.height()) / 2) + $(window).scrollTop();
+
+            _x = _this.pageX - offsetX;
+            _y = _this.pageY - offsetY;
 
             var x = (scaleVal - 1) * (_x);
             var y = (scaleVal - 1) * (_y);
@@ -2403,18 +2407,18 @@
             $image.parent().css('transform', 'translate3d(-' + x + 'px, -' + y + 'px, 0)').attr('data-x', x).attr('data-y', y);
         };
 
-        var callScale = function(db, pageX, pageY) {
+        var callScale = function() {
             if (scale > 1) {
                 _this.core.$outer.addClass('lg-zoomed');
             } else {
-                _this.core.$outer.removeClass('lg-zoomed');
+                _this.resetZoom();
             }
 
             if (scale < 1) {
                 scale = 1;
             }
 
-            zoom(scale, db, pageX, pageY);
+            zoom(scale);
         };
 
         // event triggered after appending slide content
@@ -2438,7 +2442,9 @@
                     }
                 }
 
-                callScale(true, event.pageX, event.pageY);
+                _this.pageX = event.pageX;
+                _this.pageY = event.pageY;
+                callScale();
                 setTimeout(function() {
                     _this.core.$outer.removeClass('lg-grabbing').addClass('lg-grab');
                 }, 10);
@@ -2447,12 +2453,10 @@
         });
 
         // Update zoom on resize and orientationchange
-        $(window).on('resize.lg.zoom orientationchange.lg.zoom', function() {
-            setTimeout(function() {
-                if (_this.core.$outer.hasClass('lg-zoomed')) {
-                    zoom(scale);
-                }
-            }, 10);
+        $(window).on('resize.lg.zoom scroll.lg.zoom orientationchange.lg.zoom', function() {
+            _this.pageX = $(window).width() / 2;
+            _this.pageY = ($(window).height() / 2) + $(window).scrollTop();
+            zoom(scale);
         });
 
         $('#lg-zoom-out').on('click.lg', function() {
@@ -2490,6 +2494,10 @@
         this.core.$outer.removeClass('lg-zoomed');
         this.core.$slide.find('.lg-img-wrap').removeAttr('style data-x data-y');
         this.core.$slide.find('.lg-image').removeAttr('style data-scale');
+
+        // Reset pagx pagy values to center
+        this.pageX = $(window).width() / 2;
+        this.pageY = ($(window).height() / 2) + $(window).scrollTop();
     };
 
     Zoom.prototype.zoomSwipe = function() {
