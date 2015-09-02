@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.0 - 2015-09-01
+/*! lightgallery - v1.2.0 - 2015-09-02
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -222,6 +222,8 @@
         _this.counter();
 
         _this.closeGallery();
+
+        _this.$el.trigger('onAfterOpen.lg');
 
         // Hide controllers if mouse doesn't move for some period
         _this.$outer.on('mousemove.lg click.lg touchstart.lg', function() {
