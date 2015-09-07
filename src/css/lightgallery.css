@@ -329,6 +329,14 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 .lg-outer.lg-can-toggle .lg-item {
   padding-bottom: 0;
 }
+.lg-outer.lg-cant-toggle .lg-sub-html {
+  -webkit-transition: bottom 0.25s ease;
+  -o-transition: bottom 0.25s ease;
+  transition: bottom 0.25s ease;
+}
+.lg-outer.lg-cant-toggle.lg-thumb-open .lg-sub-html {
+  bottom: 100px;
+}
 .lg-outer .lg-toogle-thumb {
   background-color: #0D0A0A;
   border-radius: 2px 2px 0 0;

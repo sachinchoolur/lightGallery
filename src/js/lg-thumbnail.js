@@ -414,6 +414,10 @@
             _this.core.$outer.find('.lg-toogle-thumb').on('click.lg', function() {
                 _this.core.$outer.toggleClass('lg-thumb-open');
             });
+        } else {
+            if (_this.core.s.animateThumb) {
+                _this.core.$outer.addClass('lg-cant-toggle');
+            }
         }
     };
 

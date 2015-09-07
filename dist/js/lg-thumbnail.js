@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.0 - 2015-09-03
+/*! lightgallery - v1.2.1 - 2015-09-07
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -417,6 +417,10 @@
             _this.core.$outer.find('.lg-toogle-thumb').on('click.lg', function() {
                 _this.core.$outer.toggleClass('lg-thumb-open');
             });
+        } else {
+            if (_this.core.s.animateThumb) {
+                _this.core.$outer.addClass('lg-cant-toggle');
+            }
         }
     };
 
