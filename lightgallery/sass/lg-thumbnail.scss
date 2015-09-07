@@ -73,6 +73,16 @@
             padding-bottom: 0;
         }
     }
+    &.lg-cant-toggle{
+        .lg-sub-html {
+            @include transition(bottom 0.25s ease);
+        }
+        &.lg-thumb-open{
+            .lg-sub-html {
+                bottom: 100px;
+            }
+        }
+    }
 
     .lg-toogle-thumb {
         background-color: $lg-thumb-toggle-bg;

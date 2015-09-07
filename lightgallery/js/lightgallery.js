@@ -901,9 +901,13 @@
         }
 
         $(window).on('keydown.lg', function(e) {
-            if (_this.s.escKey === true && e.keyCode === 27 && !_this.$outer.hasClass('lg-thumb-open')) {
+            if (_this.s.escKey === true && e.keyCode === 27) {
                 e.preventDefault();
-                _this.destroy();
+                if (!_this.$outer.hasClass('lg-thumb-open')) {
+                    _this.destroy();
+                } else {
+                    _this.$outer.removeClass('lg-thumb-open');
+                }
             }
         });
     };
