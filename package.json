@@ -34,7 +34,7 @@
         "url": "https://github.com/sachinchoolur/lightGallery.git"
     },
     "dependencies": {
-        "jquery": ">=1.5.0"
+        "jquery": ">=1.7.0"
     },
     "scripts": {
         "test": "grunt"
