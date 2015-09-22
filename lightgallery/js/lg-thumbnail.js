@@ -15,6 +15,7 @@
         exThumbImage: false,
         showThumbByDefault: true,
         toogleThumb: true,
+        pullCaptionUp: true,
 
         enableThumbDrag: true,
         enableThumbSwipe: true,
@@ -55,6 +56,10 @@
         if (this.core.s.thumbnail && this.core.$items.length > 1) {
             if (this.core.s.showThumbByDefault) {
                 this.core.$outer.addClass('lg-thumb-open');
+            }
+
+            if (this.core.s.pullCaptionUp) {
+                this.core.$outer.addClass('lg-pull-caption-up');
             }
 
             this.build();
@@ -414,10 +419,6 @@
             _this.core.$outer.find('.lg-toogle-thumb').on('click.lg', function() {
                 _this.core.$outer.toggleClass('lg-thumb-open');
             });
-        } else {
-            if (_this.core.s.animateThumb) {
-                _this.core.$outer.addClass('lg-cant-toggle');
-            }
         }
     };
 
