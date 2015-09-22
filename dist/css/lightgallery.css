@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.1 - 2015-09-07
+/*! lightgallery - v1.2.3 - 2015-09-22
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 @font-face {
@@ -332,12 +332,12 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 .lg-outer.lg-can-toggle .lg-item {
   padding-bottom: 0;
 }
-.lg-outer.lg-cant-toggle .lg-sub-html {
+.lg-outer.lg-pull-caption-up .lg-sub-html {
   -webkit-transition: bottom 0.25s ease;
   -o-transition: bottom 0.25s ease;
   transition: bottom 0.25s ease;
 }
-.lg-outer.lg-cant-toggle.lg-thumb-open .lg-sub-html {
+.lg-outer.lg-pull-caption-up.lg-thumb-open .lg-sub-html {
   bottom: 100px;
 }
 .lg-outer .lg-toogle-thumb {

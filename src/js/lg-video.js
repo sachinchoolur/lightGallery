@@ -146,7 +146,7 @@
             }
         };
 
-        if (_this.core.doCss()) {
+        if (_this.core.doCss() && _this.core.$items.length > 1 && ((_this.core.s.enableSwipe && _this.core.isTouch) || (_this.core.s.enableDrag && !_this.core.isTouch))) {
             _this.core.$el.on('onSlideClick.lg.tm', function() {
                 var $el = _this.core.$slide.eq(_this.core.index);
                 loadOnClick($el);
