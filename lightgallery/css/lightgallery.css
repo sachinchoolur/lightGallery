@@ -557,7 +557,8 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
       content: "";
       display: inline-block;
       height: 50%;
-      width: 1px; }
+      width: 1px;
+      margin-right: -1px; }
   .lg-outer .lg-img-wrap {
     top: 0;
     bottom: 0;

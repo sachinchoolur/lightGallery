@@ -92,7 +92,7 @@
 
                     } else {
 
-                        _src = _this.core.$items.eq(_this.core.index).attr('data-src');
+                        _src = _this.core.$items.eq(_this.core.index).attr('href') || _this.core.$items.eq(_this.core.index).attr('data-src');
                         _html = _this.core.$items.eq(_this.core.index).attr('data-html');
 
                         _loadVideo(_src, _html);
