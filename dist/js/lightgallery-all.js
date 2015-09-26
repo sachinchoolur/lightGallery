@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.3 - 2015-09-22
+/*! lightgallery - v1.2.4 - 2015-09-26
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -392,7 +392,7 @@
             };
         }
 
-        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-]+)/i);
+        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)/i);
         var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
         var dailymotion = src.match(/\/\/(?:www\.)?dai.ly\/([0-9a-z\-_]+)/i);
 
@@ -598,7 +598,7 @@
                 _this.$slide.eq(index).prepend('<div class="lg-video-cont "><div class="lg-video"></div></div>');
                 _this.$el.trigger('hasVideo.lg', [index, _src, _html]);
             } else {
-                _this.$slide.eq(index).prepend('<div class="lg-img-wrap"> <img class="lg-object lg-image" src="' + _src + '" /> </div>');
+                _this.$slide.eq(index).prepend('<div class="lg-img-wrap"><img class="lg-object lg-image" src="' + _src + '" /></div>');
             }
 
             _this.$el.trigger('onAferAppendSlide.lg', [index]);
@@ -2155,7 +2155,7 @@
 
                     } else {
 
-                        _src = _this.core.$items.eq(_this.core.index).attr('data-src');
+                        _src = _this.core.$items.eq(_this.core.index).attr('href') || _this.core.$items.eq(_this.core.index).attr('data-src');
                         _html = _this.core.$items.eq(_this.core.index).attr('data-html');
 
                         _loadVideo(_src, _html);
