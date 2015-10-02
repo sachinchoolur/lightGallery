@@ -546,7 +546,12 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
     top: 0;
     white-space: nowrap; }
   .lg-outer .lg-item {
-    background: url(../img/loading.gif) no-repeat scroll center center transparent; }
+    background: url(../img/loading.gif) no-repeat scroll center center transparent;
+    display: none !important; }
+  .lg-outer.lg-css3 .lg-prev-slide, .lg-outer.lg-css3 .lg-current, .lg-outer.lg-css3 .lg-next-slide {
+    display: inline-block !important; }
+  .lg-outer.lg-css .lg-current {
+    display: inline-block !important; }
   .lg-outer .lg-item, .lg-outer .lg-img-wrap {
     display: inline-block;
     text-align: center;

@@ -100,6 +100,17 @@
 
     .lg-item {
         background: url(../img/loading.gif) no-repeat scroll center center transparent;
+        display: none !important; 
+    }
+    &.lg-css3{
+        .lg-prev-slide, .lg-current, .lg-next-slide{
+            display: inline-block !important; 
+        }
+    }
+    &.lg-css{
+        .lg-current{
+            display: inline-block !important; 
+        }
     }
 
     .lg-item, .lg-img-wrap {
