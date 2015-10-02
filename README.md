@@ -105,7 +105,7 @@ Resources
 * [Data Attributes](http://sachinchoolur.github.io/lightGallery/docs/api.html#attributes)
 * [Dynamic variables](http://sachinchoolur.github.io/lightGallery/docs/api.html#dynamic)
 * [Sass variables](http://sachinchoolur.github.io/lightGallery/docs/api.html#sass)
-* [Module API](http://sachinchoolur.github.io/lightgallery1.2/docs/plugin-api.html)
+* [Module API](http://sachinchoolur.github.io/lightGallery/docs/plugin-api.html)
 * [Themes](http://sachinchoolur.github.io/lightGallery/themes/)
 
 Demos 
@@ -151,7 +151,7 @@ Support
 ----
 Please use GitHub [issue tracker](https://github.com/sachinchoolur/lightGallery/issues/new) in the event that you have come across a bug or glitch. It would also be very helpful if you could add a jsFiddle, which would allow you to demonstrate the problem in question.
 
-You can post a comment [here](http://sachinchoolur.github.io/lightgallery1.2/#comments) to leave feedback, and offer any feature suggestions you may have for Lightgallery.
+You can post a comment [here](http://sachinchoolur.github.io/lightGallery/#comments) to leave feedback, and offer any feature suggestions you may have for Lightgallery.
 
 Please use [stackoverflow](https://stackoverflow.com/search?q=lightgallery) instead of github issue tracker if you need any help with implementing lightgallery in your project or if you have any personal support requests. **If you need any special customization, feature or support email me at _sachi77n@gmail.com_. I can do it for reasonable price.**
 
