@@ -283,6 +283,9 @@
 
         if (this.s.useLeft) {
             this.$outer.addClass('lg-use-left');
+
+            // Set mode lg-slide if use left is true;
+            this.s.mode = 'lg-slide';
         } else {
             this.$outer.addClass('lg-use-css3');
         }
@@ -303,6 +306,9 @@
             this.$outer.addClass('lg-css3');
         } else {
             this.$outer.addClass('lg-css');
+
+            // Set speed 0 because no animation will happen if browser doesn't support css3
+            this.s.speed = 0;
         }
 
         this.$outer.addClass(this.s.mode);
@@ -330,6 +336,9 @@
         if (this.s.download) {
             this.$outer.find('.lg-toolbar').append('<a id="lg-download" target="_blank" download class="lg-download lg-icon"></a>');
         }
+
+        // Store the current scroll top value to scroll back after closing the gallery..
+        this.prevScrollTop = $(window).scrollTop();
 
     };
 
@@ -790,22 +799,11 @@
                     _this.$el.trigger('onAfterSlide.lg', [_prevIndex, index, fromTouch, fromThumb]);
                 }, this.s.speed);
 
-                // Support non css3 browser
-                if (!_this.doCss()) {
-                    _this.$slide.fadeOut(_this.s.speed);
-                    _this.$slide.eq(index).fadeIn(_this.s.speed);
-                }
             } else {
                 _this.loadContent(index, true, _this.s.backdropDuration);
 
                 _this.lgBusy = false;
                 _this.$el.trigger('onAfterSlide.lg', [_prevIndex, index, fromTouch, fromThumb]);
-
-                // Support non css3 browser
-                if (!_this.doCss()) {
-                    _this.$slide.fadeOut(50);
-                    _this.$slide.eq(index).fadeIn(50);
-                }
             }
 
             if (this.s.download) {
@@ -1125,6 +1123,11 @@
     Plugin.prototype.mousewheel = function() {
         var _this = this;
         _this.$outer.on('mousewheel.lg', function(e) {
+
+            if (!e.deltaY) {
+                return;
+            }
+
             if (e.deltaY > 0) {
                 _this.goToPrevSlide();
             } else {
@@ -1177,6 +1180,7 @@
         var _this = this;
 
         _this.$el.trigger('onBeforeClose.lg');
+        $(window).scrollTop(_this.prevScrollTop);
 
         /**
          * if d is false or undefined destroy will only close the gallery

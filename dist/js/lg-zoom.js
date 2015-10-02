@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.4 - 2015-09-26
+/*! lightgallery - v1.2.5 - 2015-10-02
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 /**

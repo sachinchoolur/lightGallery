@@ -68,8 +68,9 @@ If you want to include any lightgallery plugin you can include it after lightgal
 
     <!-- jQuery version must be >= 1.8.0; -->
     <script src="jquery.min.js"></script>
-    <!-- A jQuery plugin that adds cross-browser mouse wheel support. -->
-    <script src="js/jquery.mousewheel.min.js"></script>
+
+    <!-- A jQuery plugin that adds cross-browser mouse wheel support. (Optional) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"></script>
 
     <!-- lightgallery plugins -->
     <script src="js/lg-thumbnail.min.js"></script>
