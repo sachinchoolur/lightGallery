@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.5 - 2015-10-02
+/*! lightgallery - v1.2.6 - 2015-10-07
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -436,37 +436,61 @@
      */
     Plugin.prototype.addHtml = function(index) {
         var subHtml = null;
+        var subHtmlUrl;
         if (this.s.dynamic) {
-            subHtml = this.s.dynamicEl[index].subHtml;
-        } else {
-            subHtml = this.$items.eq(index).attr('data-sub-html');
-        }
-
-        if (typeof subHtml !== 'undefined' && subHtml !== null) {
-
-            // get first letter of subhtml
-            // if first letter starts with . or # get the html form the jQuery object
-            var fL = subHtml.substring(0, 1);
-            if (fL === '.' || fL === '#') {
-                subHtml = $(subHtml).html();
+            if (this.s.dynamicEl[index].subHtmlUrl) {
+                subHtmlUrl = this.s.dynamicEl[index].subHtmlUrl;
             } else {
-                subHtml = subHtml;
+                subHtml = this.s.dynamicEl[index].subHtml;
             }
         } else {
-            subHtml = '';
+            if (this.$items.eq(index).attr('data-sub-html-url')) {
+                subHtmlUrl = this.$items.eq(index).attr('data-sub-html-url');
+            } else {
+                subHtml = this.$items.eq(index).attr('data-sub-html');
+            }
+        }
+
+        if (!subHtmlUrl) {
+            if (typeof subHtml !== 'undefined' && subHtml !== null) {
+
+                // get first letter of subhtml
+                // if first letter starts with . or # get the html form the jQuery object
+                var fL = subHtml.substring(0, 1);
+                if (fL === '.' || fL === '#') {
+                    subHtml = $(subHtml).html();
+                } else {
+                    subHtml = subHtml;
+                }
+            } else {
+                subHtml = '';
+            }
         }
 
         if (this.s.appendSubHtmlTo === '.lg-sub-html') {
-            this.$outer.find(this.s.appendSubHtmlTo).html(subHtml);
 
-            // Add lg-empty-html class if title doesn't exist
+            if (subHtmlUrl) {
+                this.$outer.find(this.s.appendSubHtmlTo).load(subHtmlUrl);
+            } else {
+                this.$outer.find(this.s.appendSubHtmlTo).html(subHtml);
+            }
+
+        } else {
+
+            if (subHtmlUrl) {
+                this.$slide.eq(index).load(subHtmlUrl);
+            } else {
+                this.$slide.eq(index).append(subHtml);
+            }
+        }
+
+        // Add lg-empty-html class if title doesn't exist
+        if (typeof subHtml !== 'undefined' && subHtml !== null) {
             if (subHtml === '') {
                 this.$outer.find(this.s.appendSubHtmlTo).addClass('lg-empty-html');
             } else {
                 this.$outer.find(this.s.appendSubHtmlTo).removeClass('lg-empty-html');
             }
-        } else {
-            this.$slide.eq(index).append(subHtml);
         }
 
         this.$el.trigger('onAfterAppendSubHtml.lg', [index]);
