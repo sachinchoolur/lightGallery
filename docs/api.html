@@ -823,27 +823,34 @@ $lg.on('onBeforeSlide.lg',function(event, index, fromTouch, fromThumb){
                                     <tbody>
                                         <tr>
                                             <td>onBeforeOpen.lg</td>
-                                            <td></td>
+                                            <td><p><code>event</code> - jQuery event object</p></td>
                                             <td>Fired immediately before the start opening.</td>
                                         </tr>
                                         <tr>
                                             <td>onAfterOpen.lg</td>
-                                            <td></td>
+                                            <td><p><code>event</code> - jQuery event object</p></td>
                                             <td>Fired immediately after opening the gallery.</td>
                                         </tr>
                                         <tr>
                                             <td>onAferAppendSlide.lg</td>
-                                            <td><code>index</code> - Index of the slide</td>
+                                            <td>
+                                                <p><code>event</code> - jQuery event object</p>
+                                                <p><code>index</code> - Index of the slide</p>
+                                            </td>
                                             <td>This event is fired when the slide content has been inserted into its slide container.</td>
                                         </tr>
                                         <tr>
                                             <td>onAfterAppendSubHtml.lg</td>
-                                            <td><p><code>index</code> - Index of the slide</p></td>
+                                            <td>
+                                                <p><code>event</code> - jQuery event object</p>
+                                                <p><code>index</code> - Index of the slide</p>
+                                            </td>
                                             <td>This event is fired when the sub-html content (ex : title/ description) has been appended into the slide.</td>
                                         </tr>
                                         <tr>
                                             <td>onSlideItemLoad.lg</td>
                                             <td>
+                                                <p><code>event</code> - jQuery event object</p>
                                                 <p><code>index</code> - Index of the slide</p>
                                             </td>
                                             <td>This event is fired once the image inside the slide has been completely loaded .</td>
@@ -851,6 +858,7 @@ $lg.on('onBeforeSlide.lg',function(event, index, fromTouch, fromThumb){
                                         <tr>
                                             <td>onBeforeSlide.lg</td>
                                             <td>
+                                                <p><code>event</code> - jQuery event object</p>
                                                 <p><code>prevIndex</code> - Index of the previous slide</p>
                                                 <p><code>index</code> - Index of the slide</p>
                                                 <p><code>fromTouch</code> - true if slide function called via touch event or mouse drag</p>
@@ -861,6 +869,7 @@ $lg.on('onBeforeSlide.lg',function(event, index, fromTouch, fromThumb){
                                         <tr>
                                             <td>onAfterSlide.lg</td>
                                             <td>
+                                                <p><code>event</code> - jQuery event object</p>
                                                 <p><code>prevIndex</code> - Index of the previous slide</p>
                                                 <p><code>index</code> - Index of the slide</p>
                                                 <p><code>fromTouch</code> - true if slide function called via touch event or mouse drag</p>
@@ -871,6 +880,7 @@ $lg.on('onBeforeSlide.lg',function(event, index, fromTouch, fromThumb){
                                         <tr>
                                             <td>onBeforePrevSlide.lg</td>
                                             <td>
+                                                <p><code>event</code> - jQuery event object</p>
                                                 <p><code>index</code> - Index of the slide</p>
                                                 <p><code>fromTouch</code> - true if slide function called via touch event or mouse drag</p>
                                             </td>
@@ -879,6 +889,7 @@ $lg.on('onBeforeSlide.lg',function(event, index, fromTouch, fromThumb){
                                         <tr>
                                             <td>onBeforeNextSlide.lg</td>
                                             <td>
+                                                <p><code>event</code> - jQuery event object</p>
                                                 <p><code>index</code> - Index of the slide</p>
                                                 <p><code>fromTouch</code> - true if slide function called via touch event or mouse drag</p>
                                             </td>
@@ -886,32 +897,32 @@ $lg.on('onBeforeSlide.lg',function(event, index, fromTouch, fromThumb){
                                         </tr>
                                         <tr>
                                             <td>onDragstart.lg</td>
-                                            <td></td>
+                                            <td><p><code>event</code> - jQuery event object</p></td>
                                             <td>Fired when the user starts to drag the slide</td>
                                         </tr>
                                         <tr>
                                             <td>onDragmove.lg</td>
-                                            <td></td>
+                                            <td><p><code>event</code> - jQuery event object</p></td>
                                             <td>Fired periodically during the drag operation.</td>
                                         </tr>
                                         <tr>
                                             <td>onDragend.lg</td>
-                                            <td></td>
+                                            <td><p><code>event</code> - jQuery event object</p></td>
                                             <td>Fired when the user has finished the drag operation</td>
                                         </tr>
                                         <tr>
                                             <td>onSlideClick.lg</td>
-                                            <td></td>
+                                            <td><p><code>event</code> - jQuery event object</p></td>
                                             <td>Fired when the user clicks on the slide and does not crossed the  swipeThreshold value.</td>
                                         </tr>
                                         <tr>
                                             <td>onBeforeClose.lg</td>
-                                            <td></td>
+                                            <td><p><code>event</code> - jQuery event object</p></td>
                                             <td>Fired immediately before the start of the close process.</td>
                                         </tr>
                                         <tr>
                                             <td>onCloseAfter.lg</td>
-                                            <td></td>
+                                            <td><p><code>event</code> - jQuery event object</p></td>
                                             <td>Fired immediately once lightgallery is closed.</td>
                                         </tr>
                                     </tbody>
