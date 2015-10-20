@@ -80,7 +80,6 @@
         // When using dynamic mode, ensure dynamicEl is an array
         if (this.s.dynamic && this.s.dynamicEl !== 'undefined' && this.s.dynamicEl.constructor === Array &&  !this.s.dynamicEl.length) {
           throw("When using dynamic mode, you must also define dynamicEl as an Array.");
-          return;
         }
 
         // lightGallery modules
