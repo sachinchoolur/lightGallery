@@ -58,6 +58,10 @@ $ npm install lightgallery
 
 You can also directly download lightgallery from github.
 
+#### Cdnjs
+
+If you prefer to use a CDN you can load files via [cdnjs](https://cdnjs.com/libraries/lightgallery)
+
 #### Include CSS and Javascript files
 First of all add lightgallery.css in the &lt;head&gt; of the document.
 ``` html
