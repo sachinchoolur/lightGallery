@@ -1,3 +1,4 @@
+var pageLoaded = false;
 $(document).ready(function() {
     $('#lightgallery').lightGallery({
         loop: true,
@@ -10,9 +11,17 @@ $(document).ready(function() {
         keypress: true
     });
     new WOW().init();
+
+    setTimeout(function() {
+        if (!pageLoaded) {
+            pageLoading();
+            console.log('timeout')
+            pageLoaded = true;
+        }
+    }, 1500);
 });
 
-$(window).on('load', function() {
+var pageLoading = function() {
     $('body').addClass('loaded');
     setTimeout(function() {
         $('body').addClass('in');
@@ -21,6 +30,14 @@ $(window).on('load', function() {
     setTimeout(function() {
         $('.page-loading').remove();
     }, 600);
+};
+
+$(window).on('load', function() {
+    if (!pageLoaded) {
+        pageLoading();
+        pageLoaded = true;
+    }
+
     setTimeout(function() {
         $('#twitter').sharrre({
             share: {
