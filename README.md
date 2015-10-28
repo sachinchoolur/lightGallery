@@ -31,6 +31,11 @@ Main features
 * Keyboard Navigation for desktop.
 * Font icon support.
 * And many more.
+ 
+Browser support
+---
+lightgallery supports all major browsers including IE 8 and above..
+
 
 Installation
 ---
