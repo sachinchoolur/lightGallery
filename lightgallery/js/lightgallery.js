@@ -76,6 +76,11 @@
 
         // lightGallery settings
         this.s = $.extend({}, defaults, options);
+        
+        // When using dynamic mode, ensure dynamicEl is an array
+        if (this.s.dynamic && this.s.dynamicEl !== 'undefined' && this.s.dynamicEl.constructor === Array &&  !this.s.dynamicEl.length) {
+          throw("When using dynamic mode, you must also define dynamicEl as an Array.");
+        }
 
         // lightGallery modules
         this.modules = {};
@@ -1209,12 +1214,15 @@
         /**
          * if d is false or undefined destroy will only close the gallery
          * plugins instance remains with the element
-    
+
          * if d is true destroy will completely remove the plugin
          */
 
         if (d) {
-            this.$items.off('click.lg click.lgcustom');
+            if (!_this.s.dynamic) {
+              // only when not using dynamic mode is $items a jquery collection
+              this.$items.off('click.lg click.lgcustom');
+            }
             $.removeData(_this.el, 'lightGallery');
         }
 
