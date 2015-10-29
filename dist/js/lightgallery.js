@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.6 - 2015-10-17
+/*! lightgallery - v1.2.6 - 2015-10-29
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -79,6 +79,11 @@
 
         // lightGallery settings
         this.s = $.extend({}, defaults, options);
+        
+        // When using dynamic mode, ensure dynamicEl is an array
+        if (this.s.dynamic && this.s.dynamicEl !== 'undefined' && this.s.dynamicEl.constructor === Array &&  !this.s.dynamicEl.length) {
+          throw("When using dynamic mode, you must also define dynamicEl as an Array.");
+        }
 
         // lightGallery modules
         this.modules = {};
@@ -101,8 +106,7 @@
 
         // Gallery items
         if (this.s.dynamic) {
-            // Give dynamicEl array jquery functions by jquery-izing it
-            this.$items = $(this.s.dynamicEl);
+            this.$items = this.s.dynamicEl;
         } else {
             if (this.s.selector === 'this') {
                 this.$items = this.$el;
@@ -391,9 +395,7 @@
 
         var html;
         if (this.s.dynamic) {
-            if (this.s.dynamicEl && this.s.dynamicEl[index]) {
-                html = this.s.dynamicEl[index].html;
-            }
+            html = this.s.dynamicEl[index].html;
         } else {
             html = this.$items.eq(index).attr('data-html');
         }
@@ -441,12 +443,10 @@
         var subHtml = null;
         var subHtmlUrl;
         if (this.s.dynamic) {
-            if (this.s.dynamicEl && this.s.dynamicEl[index]) {
-                if (this.s.dynamicEl[index].subHtmlUrl) {
-                    subHtmlUrl = this.s.dynamicEl[index].subHtmlUrl;
-                } else {
-                    subHtml = this.s.dynamicEl[index].subHtml;
-                }
+            if (this.s.dynamicEl[index].subHtmlUrl) {
+                subHtmlUrl = this.s.dynamicEl[index].subHtmlUrl;
+            } else {
+                subHtml = this.s.dynamicEl[index].subHtml;
             }
         } else {
             if (this.$items.eq(index).attr('data-sub-html-url')) {
@@ -567,23 +567,21 @@
 
         if (_this.s.dynamic) {
 
-            if (_this.s.dynamicEl && _this.s.dynamicEl[index]) {
-                if (_this.s.dynamicEl[index].poster) {
-                    _hasPoster = true;
-                    _poster = _this.s.dynamicEl[index].poster;
-                }
-    
-                _html = _this.s.dynamicEl[index].html;
-                _src = _this.s.dynamicEl[index].src;
-    
-                if (_this.s.dynamicEl[index].responsive) {
-                    var srcDyItms = _this.s.dynamicEl[index].responsive.split(',');
-                    getResponsiveSrc(srcDyItms);
-                }
-    
-                _srcset = _this.s.dynamicEl[index].srcset;
-                _sizes = _this.s.dynamicEl[index].sizes;
+            if (_this.s.dynamicEl[index].poster) {
+                _hasPoster = true;
+                _poster = _this.s.dynamicEl[index].poster;
             }
+
+            _html = _this.s.dynamicEl[index].html;
+            _src = _this.s.dynamicEl[index].src;
+
+            if (_this.s.dynamicEl[index].responsive) {
+                var srcDyItms = _this.s.dynamicEl[index].responsive.split(',');
+                getResponsiveSrc(srcDyItms);
+            }
+
+            _srcset = _this.s.dynamicEl[index].srcset;
+            _sizes = _this.s.dynamicEl[index].sizes;
 
         } else {
 
@@ -609,10 +607,8 @@
 
         var iframe = false;
         if (_this.s.dynamic) {
-            if (_this.s.dynamicEl && _this.s.dynamicEl[index]) {
-                if (_this.s.dynamicEl[index].iframe) {
-                    iframe = true;
-                }
+            if (_this.s.dynamicEl[index].iframe) {
+                iframe = true;
             }
         } else {
             if (_this.$items.eq(index).attr('data-iframe') === 'true') {
@@ -845,9 +841,7 @@
             if (this.s.download) {
                 var _src;
                 if (_this.s.dynamic) {
-                    if (_this.s.dynamicEl && _this.s.dynamicEl[index]) {
-                        _src = _this.s.dynamicEl[index].downloadUrl || _this.s.dynamicEl[index].src;
-                    }
+                    _src = _this.s.dynamicEl[index].downloadUrl || _this.s.dynamicEl[index].src;
                 } else {
                     _src = _this.$items.eq(index).attr('data-download-url') || _this.$items.eq(index).attr('href') || _this.$items.eq(index).attr('data-src');
 
@@ -1228,7 +1222,10 @@
          */
 
         if (d) {
-            this.$items.off('click.lg click.lgcustom');
+            if (!_this.s.dynamic) {
+              // only when not using dynamic mode is $items a jquery collection
+              this.$items.off('click.lg click.lgcustom');
+            }
             $.removeData(_this.el, 'lightGallery');
         }
 
