@@ -54,7 +54,7 @@
 
         var loadOnClick = function($el) {
             // check slide has poster
-            if ($el.find('.lg-object').hasClass('lg-has-poster')) {
+            if ($el.find('.lg-object').hasClass('lg-has-poster') && $el.find('.lg-object').is(':visible')) {
 
                 // chack already video element present
                 if (!$el.hasClass('lg-has-video')) {
