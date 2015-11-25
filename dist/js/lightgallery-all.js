@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.6 - 2015-10-29
+/*! lightgallery - v1.2.7 - 2015-11-26
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -48,6 +48,7 @@
         preload: 1,
         showAfterLoad: true,
         selector: '',
+        selectWithin: '',
         nextHtml: '',
         prevHtml: '',
 
@@ -111,7 +112,11 @@
             if (this.s.selector === 'this') {
                 this.$items = this.$el;
             } else if (this.s.selector !== '') {
-                this.$items = this.$el.find($(this.s.selector));
+                if (this.s.selectWithin) {
+                    this.$items = $(this.s.selectWithin).find(this.s.selector);
+                } else {
+                    this.$items = this.$el.find($(this.s.selector));
+                }
             } else {
                 this.$items = this.$el.children();
             }
@@ -2153,7 +2158,7 @@
 
         var loadOnClick = function($el) {
             // check slide has poster
-            if ($el.find('.lg-object').hasClass('lg-has-poster')) {
+            if ($el.find('.lg-object').hasClass('lg-has-poster') && $el.find('.lg-object').is(':visible')) {
 
                 // chack already video element present
                 if (!$el.hasClass('lg-has-video')) {

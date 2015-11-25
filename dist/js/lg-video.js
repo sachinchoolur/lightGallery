@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.6 - 2015-10-29
+/*! lightgallery - v1.2.7 - 2015-11-26
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -57,7 +57,7 @@
 
         var loadOnClick = function($el) {
             // check slide has poster
-            if ($el.find('.lg-object').hasClass('lg-has-poster')) {
+            if ($el.find('.lg-object').hasClass('lg-has-poster') && $el.find('.lg-object').is(':visible')) {
 
                 // chack already video element present
                 if (!$el.hasClass('lg-has-video')) {

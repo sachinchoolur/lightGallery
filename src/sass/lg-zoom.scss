@@ -13,6 +13,7 @@
         .lg-img-wrap {
             @include transitionCustom(transform $zoom-transition-duration ease 0s);
             @include translate3d(0, 0, 0);
+            @include backface-visibility(hidden);
         }
 
         .lg-image {
@@ -20,6 +21,7 @@
             @include scale3d(1, 1, 1);
             @include transitionCustom(transform $zoom-transition-duration ease 0s, opacity 0.15s !important);
             @include transform-origin(0 0);
+            @include backface-visibility(hidden);
         }
     }
 

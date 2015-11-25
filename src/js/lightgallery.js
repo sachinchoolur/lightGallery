@@ -45,6 +45,7 @@
         preload: 1,
         showAfterLoad: true,
         selector: '',
+        selectWithin: '',
         nextHtml: '',
         prevHtml: '',
 
@@ -108,7 +109,11 @@
             if (this.s.selector === 'this') {
                 this.$items = this.$el;
             } else if (this.s.selector !== '') {
-                this.$items = this.$el.find($(this.s.selector));
+                if (this.s.selectWithin) {
+                    this.$items = $(this.s.selectWithin).find(this.s.selector);
+                } else {
+                    this.$items = this.$el.find($(this.s.selector));
+                }
             } else {
                 this.$items = this.$el.children();
             }

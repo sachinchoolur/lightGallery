@@ -203,13 +203,13 @@
 
     &.lg-use-css3 {
         .lg-item {
-            will-change: transform, opacity;
+            @include backface-visibility(hidden);
         }
     }
 
     &.lg-use-left {
         .lg-item {
-            will-change: left, opacity;
+            @include backface-visibility(hidden);
         }
     }
 
