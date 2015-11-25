@@ -108,6 +108,10 @@ Finally you need to initiate the gallery by adding the following code.
     });
 </script>
 ```
+
+#### Support lightgallery
+If you like lightgallery please support me by starring the repository. That is what gives me energy to keep this project free and alive.
+
 Resources
 ----
 * [API Reference](http://sachinchoolur.github.io/lightGallery/docs/api.html)
