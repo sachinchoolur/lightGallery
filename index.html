@@ -32,6 +32,42 @@
             </div>
         </div>
         <div class="main-cont abs">
+            <section class="promo_bar" id="promoBar">
+                <style>
+                    .promo_bar {
+                        background: #ff5b5d none repeat scroll 0 0;
+                        height: 3.8em;
+                        padding: 1em 1.25em;
+                        position: relative;
+                        transition: height 0.5s ease 0s, padding 0.5s ease 0s;
+                    }
+                    .contain {
+                        margin: 0 auto;
+                        max-width: 77.8125em;
+                        position: relative;
+                    }
+                    .promo_bar p {
+                        color: white;
+                        font-size: 15px;
+                        font-weight: 400;
+                        margin: 0;
+                        text-align: center;
+                    }
+                    .promo_bar .promo_close {
+                        color: #fff;
+                        font-weight: bold;
+                        position: absolute;
+                        right: 20px;
+                        top: 16px;
+                    }
+                </style>
+                <div class="container"><p>TeamWave: A FREE integrated suite of apps to help you run your business @ProductHunt <a style="color:#FFF" target="_blank" href="https://www.producthunt.com/tech/teamwave">https://www.producthunt.com/tech/teamwave</a>
+                </p>
+               <a class="promo_close" href="#">
+                   X
+               </a>
+               </div>
+           </section>
             <section class="hero" id="hero">
                 <nav class="navbar navbar-default" role="navigation">
                     <div class="container-fluid">
@@ -412,5 +448,12 @@
         <script src="lightgallery/js/lg-pager.js"></script>
         <script src="external/jquery.mousewheel.min.js"></script>
         <script src="static/js/main.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('.promo_close').on('click',function(){
+                    $('#promoBar').remove();
+                });
+            });
+        </script>
     </body>
 </html>
