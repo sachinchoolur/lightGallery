@@ -77,7 +77,7 @@
 
         // lightGallery settings
         this.s = $.extend({}, defaults, options);
-        
+
         // When using dynamic mode, ensure dynamicEl is an array
         if (this.s.dynamic && this.s.dynamicEl !== 'undefined' && this.s.dynamicEl.constructor === Array &&  !this.s.dynamicEl.length) {
           throw("When using dynamic mode, you must also define dynamicEl as an Array.");
@@ -97,7 +97,7 @@
         // To determine browser supports for touch events;
         this.isTouch = ('ontouchstart' in document.documentElement);
 
-        // DIsable hideControlOnEnd if sildeEndAnimation is true
+        // Disable hideControlOnEnd if sildeEndAnimation is true
         if (this.s.slideEndAnimatoin) {
             this.s.hideControlOnEnd = false;
         }

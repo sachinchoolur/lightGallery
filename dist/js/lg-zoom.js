@@ -29,7 +29,7 @@
             // Store the zoomable timeout value just to clear it while closing
             this.zoomabletimeout = false;
 
-            // Set the initial value center 
+            // Set the initial value center
             this.pageX = $(window).width() / 2;
             this.pageY = ($(window).height() / 2) + $(window).scrollTop();
         }
@@ -53,7 +53,7 @@
             // set _speed value 0 if gallery opened from direct url and if it is first slide
             if ($('body').hasClass('lg-from-hash') && delay) {
 
-                // will execute only once 
+                // will execute only once
                 _speed = 0;
             } else {
 
@@ -206,7 +206,7 @@
 
                 allowY = $image.outerHeight() * $image.attr('data-scale') > _this.core.$outer.find('.lg').height();
                 allowX = $image.outerWidth() * $image.attr('data-scale') > _this.core.$outer.find('.lg').width();
-                if ((allowX || allowY)) {
+                if (allowX || allowY) {
                     e.preventDefault();
                     startCoords = {
                         x: e.originalEvent.targetTouches[0].pageX,
