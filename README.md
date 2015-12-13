@@ -110,7 +110,7 @@ Finally you need to initiate the gallery by adding the following code.
 ```
 
 #### Support lightgallery
-If you like lightgallery please support me by starring the repository. That is what gives me energy to keep this project free and alive.
+If you like lightgallery please support the project by staring the repository or <a href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&ref_src=twsrc%5Etfw&text=lightGallery%20-%20The%20complete%20%23jQuery%20lightbox%20gallery%20plugin.%20%23javascript&tw_p=tweetbutton&url=http%3A%2F%2Fsachinchoolur.github.io%2FlightGallery%2F" target="_blank">tweet</a> about this project.
 
 Resources
 ----
