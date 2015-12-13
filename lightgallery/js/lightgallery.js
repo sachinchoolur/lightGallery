@@ -77,10 +77,10 @@
 
         // lightGallery settings
         this.s = $.extend({}, defaults, options);
-        
+
         // When using dynamic mode, ensure dynamicEl is an array
-        if (this.s.dynamic && this.s.dynamicEl !== 'undefined' && this.s.dynamicEl.constructor === Array &&  !this.s.dynamicEl.length) {
-          throw("When using dynamic mode, you must also define dynamicEl as an Array.");
+        if (this.s.dynamic && this.s.dynamicEl !== 'undefined' && this.s.dynamicEl.constructor === Array && !this.s.dynamicEl.length) {
+            throw ('When using dynamic mode, you must also define dynamicEl as an Array.');
         }
 
         // lightGallery modules
@@ -97,7 +97,7 @@
         // To determine browser supports for touch events;
         this.isTouch = ('ontouchstart' in document.documentElement);
 
-        // DIsable hideControlOnEnd if sildeEndAnimation is true
+        // Disable hideControlOnEnd if sildeEndAnimation is true
         if (this.s.slideEndAnimatoin) {
             this.s.hideControlOnEnd = false;
         }
@@ -1213,21 +1213,25 @@
 
         var _this = this;
 
-        _this.$el.trigger('onBeforeClose.lg');
+        if (!d) {
+            _this.$el.trigger('onBeforeClose.lg');
+        }
+
         $(window).scrollTop(_this.prevScrollTop);
 
         /**
          * if d is false or undefined destroy will only close the gallery
          * plugins instance remains with the element
-
+         *
          * if d is true destroy will completely remove the plugin
          */
 
         if (d) {
             if (!_this.s.dynamic) {
-              // only when not using dynamic mode is $items a jquery collection
-              this.$items.off('click.lg click.lgcustom');
+                // only when not using dynamic mode is $items a jquery collection
+                this.$items.off('click.lg click.lgcustom');
             }
+
             $.removeData(_this.el, 'lightGallery');
         }
 
@@ -1261,7 +1265,10 @@
 
             $('.lg-backdrop').remove();
 
-            _this.$el.trigger('onCloseAfter.lg');
+            if (!d) {
+                _this.$el.trigger('onCloseAfter.lg');
+            };
+
         }, _this.s.backdropDuration + 50);
     };
 
