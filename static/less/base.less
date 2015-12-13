@@ -545,13 +545,18 @@ h3.anchor-title{
 .sharrre#googleplus{
     background-color: #dd4b39;
 }
-#googleplus.sharrre::after {
-  background-image: url("../img/social/googleplus-icon.svg");
+#googleplus.sharrre::after, #twitter.sharrre::after {
   background-size: contain;
   content: "";
   display: block;
   height: 40px;
   width: 40px;
+}
+#googleplus.sharrre::after{
+  background-image: url("../img/social/googleplus-icon.svg");
+}
+#twitter.sharrre::after{
+  background-image: url("../img/social/twitter-icon.svg");
 }
 
 
