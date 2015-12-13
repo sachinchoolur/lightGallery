@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.7 - 2015-11-26
+/*! lightgallery - v1.2.8 - 2015-12-13
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 /**
@@ -31,7 +31,7 @@
 
         this.$el = $(element);
 
-        // Exicute only if items are above 1
+        // Execute only if items are above 1
         if (this.core.$items.length < 2) {
             return false;
         }
@@ -119,7 +119,7 @@
                 }
             }
 
-            // Remove setinterval if slide is trigered manualy and fourceautoplay is false
+            // Remove setinterval if slide is triggered manually and fourceautoplay is false
             if (!_this.fromAuto && !_this.core.s.fourceAutoplay) {
                 _this.cancelAuto();
             }
@@ -171,7 +171,7 @@
         }, _this.core.s.speed + _this.core.s.pause);
     };
 
-    // cancel  Autostart
+    // cancel Autostart
     Autoplay.prototype.cancelAuto = function() {
         clearInterval(this.interval);
         this.interval = false;

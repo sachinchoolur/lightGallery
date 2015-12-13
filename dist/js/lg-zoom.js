@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.7 - 2015-11-26
+/*! lightgallery - v1.2.8 - 2015-12-13
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 /**
@@ -206,7 +206,7 @@
 
                 allowY = $image.outerHeight() * $image.attr('data-scale') > _this.core.$outer.find('.lg').height();
                 allowX = $image.outerWidth() * $image.attr('data-scale') > _this.core.$outer.find('.lg').width();
-                if (allowX || allowY) {
+                if ((allowX || allowY)) {
                     e.preventDefault();
                     startCoords = {
                         x: e.originalEvent.targetTouches[0].pageX,
@@ -227,7 +227,6 @@
 
                 e.preventDefault();
                 isMoved = true;
-                endCoords = e.originalEvent.targetTouches[0].pageX;
 
                 endCoords = {
                     x: e.originalEvent.targetTouches[0].pageX,

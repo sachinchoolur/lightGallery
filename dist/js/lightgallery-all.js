@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.7 - 2015-11-26
+/*! lightgallery - v1.2.8 - 2015-12-13
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -80,10 +80,10 @@
 
         // lightGallery settings
         this.s = $.extend({}, defaults, options);
-        
+
         // When using dynamic mode, ensure dynamicEl is an array
-        if (this.s.dynamic && this.s.dynamicEl !== 'undefined' && this.s.dynamicEl.constructor === Array &&  !this.s.dynamicEl.length) {
-          throw("When using dynamic mode, you must also define dynamicEl as an Array.");
+        if (this.s.dynamic && this.s.dynamicEl !== 'undefined' && this.s.dynamicEl.constructor === Array && !this.s.dynamicEl.length) {
+            throw ('When using dynamic mode, you must also define dynamicEl as an Array.');
         }
 
         // lightGallery modules
@@ -100,7 +100,7 @@
         // To determine browser supports for touch events;
         this.isTouch = ('ontouchstart' in document.documentElement);
 
-        // DIsable hideControlOnEnd if sildeEndAnimation is true
+        // Disable hideControlOnEnd if sildeEndAnimation is true
         if (this.s.slideEndAnimatoin) {
             this.s.hideControlOnEnd = false;
         }
@@ -1216,21 +1216,25 @@
 
         var _this = this;
 
-        _this.$el.trigger('onBeforeClose.lg');
+        if (!d) {
+            _this.$el.trigger('onBeforeClose.lg');
+        }
+
         $(window).scrollTop(_this.prevScrollTop);
 
         /**
          * if d is false or undefined destroy will only close the gallery
          * plugins instance remains with the element
-
+         *
          * if d is true destroy will completely remove the plugin
          */
 
         if (d) {
             if (!_this.s.dynamic) {
-              // only when not using dynamic mode is $items a jquery collection
-              this.$items.off('click.lg click.lgcustom');
+                // only when not using dynamic mode is $items a jquery collection
+                this.$items.off('click.lg click.lgcustom');
             }
+
             $.removeData(_this.el, 'lightGallery');
         }
 
@@ -1264,7 +1268,10 @@
 
             $('.lg-backdrop').remove();
 
-            _this.$el.trigger('onCloseAfter.lg');
+            if (!d) {
+                _this.$el.trigger('onCloseAfter.lg');
+            }
+
         }, _this.s.backdropDuration + 50);
     };
 
@@ -1316,7 +1323,7 @@
 
         this.$el = $(element);
 
-        // Exicute only if items are above 1
+        // Execute only if items are above 1
         if (this.core.$items.length < 2) {
             return false;
         }
@@ -1404,7 +1411,7 @@
                 }
             }
 
-            // Remove setinterval if slide is trigered manualy and fourceautoplay is false
+            // Remove setinterval if slide is triggered manually and fourceautoplay is false
             if (!_this.fromAuto && !_this.core.s.fourceAutoplay) {
                 _this.cancelAuto();
             }
@@ -1456,7 +1463,7 @@
         }, _this.core.s.speed + _this.core.s.pause);
     };
 
-    // cancel  Autostart
+    // cancel Autostart
     Autoplay.prototype.cancelAuto = function() {
         clearInterval(this.interval);
         this.interval = false;
@@ -1514,7 +1521,7 @@
         }
     };
 
-    Fullscreen.prototype.reuestFullscreen = function() {
+    Fullscreen.prototype.requestFullscreen = function() {
         var el = document.documentElement;
         if (el.requestFullscreen) {
             el.requestFullscreen();
@@ -1550,7 +1557,7 @@
         this.core.$outer.find('.lg-fullscreen').on('click.lg', function() {
             if (!document.fullscreenElement &&
                 !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                _this.reuestFullscreen();
+                _this.requestFullscreen();
             } else {
                 _this.exitFullscreen();
             }
@@ -2392,7 +2399,7 @@
             // Store the zoomable timeout value just to clear it while closing
             this.zoomabletimeout = false;
 
-            // Set the initial value center 
+            // Set the initial value center
             this.pageX = $(window).width() / 2;
             this.pageY = ($(window).height() / 2) + $(window).scrollTop();
         }
@@ -2416,7 +2423,7 @@
             // set _speed value 0 if gallery opened from direct url and if it is first slide
             if ($('body').hasClass('lg-from-hash') && delay) {
 
-                // will execute only once 
+                // will execute only once
                 _speed = 0;
             } else {
 
@@ -2590,7 +2597,6 @@
 
                 e.preventDefault();
                 isMoved = true;
-                endCoords = e.originalEvent.targetTouches[0].pageX;
 
                 endCoords = {
                     x: e.originalEvent.targetTouches[0].pageX,
