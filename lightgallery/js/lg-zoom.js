@@ -26,7 +26,7 @@
             // Store the zoomable timeout value just to clear it while closing
             this.zoomabletimeout = false;
 
-            // Set the initial value center 
+            // Set the initial value center
             this.pageX = $(window).width() / 2;
             this.pageY = ($(window).height() / 2) + $(window).scrollTop();
         }
@@ -50,7 +50,7 @@
             // set _speed value 0 if gallery opened from direct url and if it is first slide
             if ($('body').hasClass('lg-from-hash') && delay) {
 
-                // will execute only once 
+                // will execute only once
                 _speed = 0;
             } else {
 
@@ -114,7 +114,13 @@
             $image.dblclick(function(event) {
 
                 var w = $image.width();
-                var nw = _this.core.$items.eq(index).attr('data-width') || $image[0].naturalWidth || w;
+                var nw;
+                if (_this.core.s.dynamic) {
+                    nw = _this.core.s.dynamicEl[index].width || $image[0].naturalWidth || w;
+                } else {
+                    nw = _this.core.$items.eq(index).attr('data-width') || $image[0].naturalWidth || w;
+                }
+
                 var _scale;
 
                 if (_this.core.$outer.hasClass('lg-zoomed')) {
