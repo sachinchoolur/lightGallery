@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.8 - 2015-12-13
+/*! lightgallery - v1.2.9 - 2015-12-18
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -2487,7 +2487,13 @@
             $image.dblclick(function(event) {
 
                 var w = $image.width();
-                var nw = _this.core.$items.eq(index).attr('data-width') || $image[0].naturalWidth || w;
+                var nw;
+                if (_this.core.s.dynamic) {
+                    nw = _this.core.s.dynamicEl[index].width || $image[0].naturalWidth || w;
+                } else {
+                    nw = _this.core.$items.eq(index).attr('data-width') || $image[0].naturalWidth || w;
+                }
+
                 var _scale;
 
                 if (_this.core.$outer.hasClass('lg-zoomed')) {
