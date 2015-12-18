@@ -1267,7 +1267,7 @@
 
             if (!d) {
                 _this.$el.trigger('onCloseAfter.lg');
-            };
+            }
 
         }, _this.s.backdropDuration + 50);
     };

@@ -230,7 +230,6 @@
 
                 e.preventDefault();
                 isMoved = true;
-                endCoords = e.originalEvent.targetTouches[0].pageX;
 
                 endCoords = {
                     x: e.originalEvent.targetTouches[0].pageX,

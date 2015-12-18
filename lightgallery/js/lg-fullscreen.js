@@ -37,7 +37,7 @@
         }
     };
 
-    Fullscreen.prototype.reuestFullscreen = function() {
+    Fullscreen.prototype.requestFullscreen = function() {
         var el = document.documentElement;
         if (el.requestFullscreen) {
             el.requestFullscreen();
@@ -73,7 +73,7 @@
         this.core.$outer.find('.lg-fullscreen').on('click.lg', function() {
             if (!document.fullscreenElement &&
                 !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                _this.reuestFullscreen();
+                _this.requestFullscreen();
             } else {
                 _this.exitFullscreen();
             }
