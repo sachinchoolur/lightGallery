@@ -99,7 +99,7 @@
     }
 
     .lg-item {
-        background: url(../img/loading.gif) no-repeat scroll center center transparent;
+        background: url("#{$lg-path-images}/loading.gif") no-repeat scroll center center transparent;
         display: none !important; 
     }
     &.lg-css3{
