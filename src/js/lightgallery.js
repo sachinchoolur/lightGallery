@@ -845,8 +845,20 @@
                 if (_this.s.dynamic) {
                     _src = _this.s.dynamicEl[index].downloadUrl || _this.s.dynamicEl[index].src;
                 } else {
-                    _src = _this.$items.eq(index).attr('data-download-url') || _this.$items.eq(index).attr('href') || _this.$items.eq(index).attr('data-src');
 
+                    var _dlUrl = _this.$items.eq(index).attr('data-download-url');
+
+                    // determine the src we need to use
+                    _src = _dlUrl || _this.$items.eq(index).attr('href') || _this.$items.eq(index).attr('data-src');
+
+                    // remove our attr
+                    $('#lg-download').css('display', 'block');
+
+                    // check if we have specified a download URL
+                    if((typeof _dlUrl !== 'undefined' && _dlUrl !== false) && !_dlUrl.length) {
+                        // remove our download button
+                        $('#lg-download').css('display', 'none');
+                    }
                 }
 
                 $('#lg-download').attr('href', _src);
