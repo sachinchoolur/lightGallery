@@ -175,6 +175,12 @@
     .lg-empty-html {
         display: none;
     }
+
+    &.lg-hide-download{
+        #lg-download{
+            display: none;
+        }
+    }
 }
 .lg-backdrop{
     position: fixed;

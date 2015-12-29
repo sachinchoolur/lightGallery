@@ -159,7 +159,7 @@
             });
         }
 
-        _this.core.$el.on('onBeforeSlide.lg.tm', function(event, prevIndex) {
+        _this.core.$el.on('onBeforeSlide.lg.tm', function(event, prevIndex, index) {
 
             var $videoSlide = _this.core.$slide.eq(prevIndex);
             var youtubePlayer = $videoSlide.find('.lg-youtube').get(0);
@@ -188,6 +188,19 @@
                     html5Player.pause();
                 }
             }
+
+            var _src;
+            if (_this.core.s.dynamic) {
+                _src = _this.core.s.dynamicEl[index].src;
+            } else {
+                _src = _this.core.$items.eq(index).attr('href') || _this.core.$items.eq(index).attr('data-src');
+
+            }
+
+            var _isVideo = _this.core.isVideo(_src, index) || {};
+            if (_isVideo.youtube || _isVideo.vimeo || _isVideo.dailymotion) {
+                _this.core.$outer.addClass('lg-hide-download');
+            };
 
             //$videoSlide.addClass('lg-complete');
 

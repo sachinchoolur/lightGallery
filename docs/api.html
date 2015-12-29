@@ -272,7 +272,7 @@ $('#lightgallery').lightGallery({
                                             <td>download</td>
                                             <td>boolean</td>
                                             <td><code>true</code></td>
-                                            <td>Enable download button. By default download url will be taken from data-src/href attribute but it supports only for modern browsers. If you want you can provide another url for download via data-download-url</td>
+                                            <td>Enable download button. By default download url will be taken from data-src/href attribute but it supports only for modern browsers. If you want you can provide another url for download via <code>data-download-url</code>. Pass <code>false</code> in <code>data-download-url</code> if you want to hide download button for the particular slide.</td>
                                         </tr>
                                         <tr>
                                             <td>counter</td>
@@ -1055,7 +1055,7 @@ $lg.data('lightGallery').slide(2);
                                         </tr>
                                         <tr>
                                             <td>data-download-url</td>
-                                            <td>Download url for your image/video</td>
+                                            <td>Download url for your image/video. Pass <code>false</code> if you want to hide the download button.</td>
                                         </tr>
                                         <tr>
                                             <td>data-width</td>
@@ -1126,7 +1126,7 @@ $lg.data('lightGallery').slide(2);
                                         </tr>
                                         <tr>
                                             <td>downloadUrl</td>
-                                            <td>Download url for your image/video</td>
+                                            <td>Download url for your image/video. Pass <code>false</code> if you want to hide the download button.</td>
                                         </tr>
                                         <tr>
                                             <td>width</td>
