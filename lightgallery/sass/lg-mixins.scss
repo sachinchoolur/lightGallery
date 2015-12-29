@@ -286,8 +286,10 @@
         $prop-opts: ();
         $length: length($declaration);
 
-        @for $i from 2 through $length {
-            $prop-opts: append($prop-opts, nth($declaration, $i));
+        @if $length >= 2 {
+            @for $i from 2 through $length {
+                $prop-opts: append($prop-opts, nth($declaration, $i));
+            }
         }
         $trans: $prop, $prop-opts;
         $transitions: append($transitions, $trans, comma);

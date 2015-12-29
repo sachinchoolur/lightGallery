@@ -1,8 +1,8 @@
 // font icons support
 @font-face {
     font-family: 'lg';
-    src: url("../fonts/lg.eot?n1z373");
-    src: url("../fonts/lg.eot?#iefixn1z373") format("embedded-opentype"), url("../fonts/lg.woff?n1z373") format("woff"), url("../fonts/lg.ttf?n1z373") format("truetype"), url("../fonts/lg.svg?n1z373#lg") format("svg");
+    src: url("#{$lg-path-fonts}/lg.eot?n1z373");
+    src: url("#{$lg-path-fonts}/lg.eot?#iefixn1z373") format("embedded-opentype"), url("#{$lg-path-fonts}/lg.woff?n1z373") format("woff"), url("#{$lg-path-fonts}/lg.ttf?n1z373") format("truetype"), url("#{$lg-path-fonts}/lg.svg?n1z373#lg") format("svg");
     font-weight: normal;
     font-style: normal;
 }
