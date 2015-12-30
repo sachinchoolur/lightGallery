@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.9 - 2015-12-18
+/*! lightgallery - v1.2.11 - 2015-12-30
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -743,6 +743,23 @@
 
         if (!_this.lgBusy) {
 
+            if (this.s.download) {
+                var _src;
+                if (_this.s.dynamic) {
+                    _src = _this.s.dynamicEl[index].downloadUrl !== false && (_this.s.dynamicEl[index].downloadUrl || _this.s.dynamicEl[index].src);
+                } else {
+                    _src = _this.$items.eq(index).attr('data-download-url') !== 'false' && (_this.$items.eq(index).attr('data-download-url') || _this.$items.eq(index).attr('href') || _this.$items.eq(index).attr('data-src'));
+
+                }
+
+                if (_src) {
+                    $('#lg-download').attr('href', _src);
+                    _this.$outer.removeClass('lg-hide-download');
+                } else {
+                    _this.$outer.addClass('lg-hide-download');
+                }
+            }
+
             this.$el.trigger('onBeforeSlide.lg', [_prevIndex, index, fromTouch, fromThumb]);
 
             _this.lgBusy = true;
@@ -841,18 +858,6 @@
 
                 _this.lgBusy = false;
                 _this.$el.trigger('onAfterSlide.lg', [_prevIndex, index, fromTouch, fromThumb]);
-            }
-
-            if (this.s.download) {
-                var _src;
-                if (_this.s.dynamic) {
-                    _src = _this.s.dynamicEl[index].downloadUrl || _this.s.dynamicEl[index].src;
-                } else {
-                    _src = _this.$items.eq(index).attr('data-download-url') || _this.$items.eq(index).attr('href') || _this.$items.eq(index).attr('data-src');
-
-                }
-
-                $('#lg-download').attr('href', _src);
             }
 
             _this.lGalleryOn = true;

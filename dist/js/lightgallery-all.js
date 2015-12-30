@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.9 - 2015-12-18
+/*! lightgallery - v1.2.11 - 2015-12-30
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -743,6 +743,23 @@
 
         if (!_this.lgBusy) {
 
+            if (this.s.download) {
+                var _src;
+                if (_this.s.dynamic) {
+                    _src = _this.s.dynamicEl[index].downloadUrl !== false && (_this.s.dynamicEl[index].downloadUrl || _this.s.dynamicEl[index].src);
+                } else {
+                    _src = _this.$items.eq(index).attr('data-download-url') !== 'false' && (_this.$items.eq(index).attr('data-download-url') || _this.$items.eq(index).attr('href') || _this.$items.eq(index).attr('data-src'));
+
+                }
+
+                if (_src) {
+                    $('#lg-download').attr('href', _src);
+                    _this.$outer.removeClass('lg-hide-download');
+                } else {
+                    _this.$outer.addClass('lg-hide-download');
+                }
+            }
+
             this.$el.trigger('onBeforeSlide.lg', [_prevIndex, index, fromTouch, fromThumb]);
 
             _this.lgBusy = true;
@@ -841,18 +858,6 @@
 
                 _this.lgBusy = false;
                 _this.$el.trigger('onAfterSlide.lg', [_prevIndex, index, fromTouch, fromThumb]);
-            }
-
-            if (this.s.download) {
-                var _src;
-                if (_this.s.dynamic) {
-                    _src = _this.s.dynamicEl[index].downloadUrl || _this.s.dynamicEl[index].src;
-                } else {
-                    _src = _this.$items.eq(index).attr('data-download-url') || _this.$items.eq(index).attr('href') || _this.$items.eq(index).attr('data-src');
-
-                }
-
-                $('#lg-download').attr('href', _src);
             }
 
             _this.lGalleryOn = true;
@@ -1715,9 +1720,12 @@
     };
 
     Thumbnail.prototype.init = function() {
+        var _this = this;
         if (this.core.s.thumbnail && this.core.$items.length > 1) {
             if (this.core.s.showThumbByDefault) {
-                this.core.$outer.addClass('lg-thumb-open');
+                setTimeout(function(){
+                    _this.core.$outer.addClass('lg-thumb-open');
+                }, 700);
             }
 
             if (this.core.s.pullCaptionUp) {
@@ -2270,7 +2278,7 @@
             });
         }
 
-        _this.core.$el.on('onBeforeSlide.lg.tm', function(event, prevIndex) {
+        _this.core.$el.on('onBeforeSlide.lg.tm', function(event, prevIndex, index) {
 
             var $videoSlide = _this.core.$slide.eq(prevIndex);
             var youtubePlayer = $videoSlide.find('.lg-youtube').get(0);
@@ -2298,6 +2306,19 @@
                 } else {
                     html5Player.pause();
                 }
+            }
+
+            var _src;
+            if (_this.core.s.dynamic) {
+                _src = _this.core.s.dynamicEl[index].src;
+            } else {
+                _src = _this.core.$items.eq(index).attr('href') || _this.core.$items.eq(index).attr('data-src');
+
+            }
+
+            var _isVideo = _this.core.isVideo(_src, index) || {};
+            if (_isVideo.youtube || _isVideo.vimeo || _isVideo.dailymotion) {
+                _this.core.$outer.addClass('lg-hide-download');
             }
 
             //$videoSlide.addClass('lg-complete');
