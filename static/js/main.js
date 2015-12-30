@@ -8,7 +8,7 @@ $(document).ready(function() {
             autoplay: false,
             thumbnail: false,
             pager: $(window).width() >= 768 ? true : false,
-            speed: 300,
+            speed: 700,
             scale: 1,
             keypress: true,
             mode: trans,
