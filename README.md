@@ -16,6 +16,7 @@ Main features
 * Modular architecture with built in plugins.
 * Touch and support for mobile devices.
 * Mouse drag supports for desktops.
+* Double-click/Double-tap to see actual size of the image.
 * Animated thumbnails.
 * Youtube Vimeo Dailymotion and html5 videos Support.
 * 20+ Hardware-Accelerated CSS3 transitions.
