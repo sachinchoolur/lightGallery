@@ -1,6 +1,6 @@
-/*! lightgallery - v1.2.11 - 2015-12-30
+/*! lightgallery - v1.2.12 - 2016-01-03
 * http://sachinchoolur.github.io/lightGallery/
-* Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
+* Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
 
     'use strict';
@@ -10,7 +10,7 @@
         mode: 'lg-slide',
 
         // Ex : 'ease'
-        cssEasing: 'cubic-bezier(0.25, 0, 0.25, 1)',
+        cssEasing: 'ease',
 
         //'for jquery animation'
         easing: 'linear',

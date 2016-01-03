@@ -1,6 +1,6 @@
-/*! lightgallery - v1.2.11 - 2015-12-30
+/*! lightgallery - v1.2.12 - 2016-01-03
 * http://sachinchoolur.github.io/lightGallery/
-* Copyright (c) 2015 Sachin N; Licensed Apache 2.0 */
+* Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
 
     'use strict';
@@ -10,7 +10,7 @@
         mode: 'lg-slide',
 
         // Ex : 'ease'
-        cssEasing: 'cubic-bezier(0.25, 0, 0.25, 1)',
+        cssEasing: 'ease',
 
         //'for jquery animation'
         easing: 'linear',
@@ -2392,12 +2392,6 @@
 
 })(jQuery, window, document);
 
-/**
- * Zoom Plugin
- * @version 1.2.0
- * @author Sachin N - @sachinchoolur
- * @license MIT License (MIT)
- */
 (function($, window, document, undefined) {
 
     'use strict';
@@ -2499,39 +2493,58 @@
             zoom(scale);
         };
 
+        var actualSize = function(event, $image, index) {
+            var w = $image.width();
+            var nw;
+            if (_this.core.s.dynamic) {
+                nw = _this.core.s.dynamicEl[index].width || $image[0].naturalWidth || w;
+            } else {
+                nw = _this.core.$items.eq(index).attr('data-width') || $image[0].naturalWidth || w;
+            }
+
+            var _scale;
+
+            if (_this.core.$outer.hasClass('lg-zoomed')) {
+                scale = 1;
+            } else {
+                if (nw > w) {
+                    _scale = nw / w;
+                    scale = _scale || 2;
+                }
+            }
+
+            _this.pageX = event.pageX;
+            _this.pageY = event.pageY;
+            callScale();
+            setTimeout(function() {
+                _this.core.$outer.removeClass('lg-grabbing').addClass('lg-grab');
+            }, 10);
+        };
+
+        var tapped = false;
+
         // event triggered after appending slide content
         _this.core.$el.on('onAferAppendSlide.lg.tm.zoom', function(event, index) {
 
             // Get the current element
             var $image = _this.core.$slide.eq(index).find('.lg-image');
 
-            $image.dblclick(function(event) {
+            $image.on('dblclick', function(event) {
+                actualSize(event, $image, index);
+            });
 
-                var w = $image.width();
-                var nw;
-                if (_this.core.s.dynamic) {
-                    nw = _this.core.s.dynamicEl[index].width || $image[0].naturalWidth || w;
+            $image.on('touchstart', function(event) {
+                if (!tapped) {
+                    tapped = setTimeout(function() {
+                        tapped = null;
+                    }, 300);
                 } else {
-                    nw = _this.core.$items.eq(index).attr('data-width') || $image[0].naturalWidth || w;
+                    clearTimeout(tapped);
+                    tapped = null;
+                    actualSize(event, $image, index);
                 }
 
-                var _scale;
-
-                if (_this.core.$outer.hasClass('lg-zoomed')) {
-                    scale = 1;
-                } else {
-                    if (nw > w) {
-                        _scale = nw / w;
-                        scale = _scale || 2;
-                    }
-                }
-
-                _this.pageX = event.pageX;
-                _this.pageY = event.pageY;
-                callScale();
-                setTimeout(function() {
-                    _this.core.$outer.removeClass('lg-grabbing').addClass('lg-grab');
-                }, 10);
+                event.preventDefault();
             });
 
         });

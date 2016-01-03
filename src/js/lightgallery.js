@@ -7,7 +7,7 @@
         mode: 'lg-slide',
 
         // Ex : 'ease'
-        cssEasing: 'cubic-bezier(0.25, 0, 0.25, 1)',
+        cssEasing: 'ease',
 
         //'for jquery animation'
         easing: 'linear',
