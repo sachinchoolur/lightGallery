@@ -705,11 +705,25 @@ body.home.in {
 .hero-select-wrap {
     color: #333;
     margin-bottom: 20px;
-    > span {
+    span {
         color: #fff;
         margin-right: 10px;
     }
-    select {
-        margin-right: 40px;
+    @media (min-width: 768px) {
+        .select-mode {
+            float: left;
+        }
     }
+    .select-ease {
+        margin-top: 20px;
+        width: 100%;
+    }
+    @media (min-width: 768px) {
+        .select-ease {
+            float: right;
+            margin-top: 0px;
+            width: auto;
+        }
+    }
+
 }

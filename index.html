@@ -69,80 +69,84 @@
                             <img class="hide" class="img-responsive" src="static/img/1-1600.jpg">
                             <img class="hide" class="img-responsive" src="static/img/2-1600.jpg">
                             <div class="demo-gallery">
-                                <div class="hero-select-wrap">
-                                    <span>Select Mode:</span>
-                                    <select id="select-trans">
-                                        <option selected="selected" value="lg-slide">lg-slide</option>
-                                        <option value="lg-fade">lg-fade</option>
-                                        <option value="lg-zoom-in">lg-zoom-in</option> 
-                                        <option value="lg-zoom-in-big">lg-zoom-in-big</option> 
-                                        <option value="lg-zoom-out">lg-zoom-out</option> 
-                                        <option value="lg-zoom-out-big">lg-zoom-out-big</option> 
-                                        <option value="lg-zoom-out-in">lg-zoom-out-in</option> 
-                                        <option value="lg-zoom-in-out">lg-zoom-in-out</option> 
-                                        <option value="lg-soft-zoom">lg-soft-zoom</option> 
-                                        <option value="lg-scale-up">lg-scale-up</option> 
-                                        <option value="lg-slide-circular">lg-slide-circular</option> 
-                                        <option value="lg-slide-circular-vertical">lg-slide-circular-vertical</option> 
-                                        <option value="lg-slide-vertical">lg-slide-vertical</option> 
-                                        <option value="lg-slide-vertical-growth">lg-slide-vertical-growth</option> 
-                                        <option value="lg-slide-skew-only">lg-slide-skew-only</option> 
-                                        <option value="lg-slide-skew-only-rev">lg-slide-skew-only-rev</option> 
-                                        <option value="lg-slide-skew-only-y">lg-slide-skew-only-y</option> 
-                                        <option value="lg-slide-skew-only-y-rev">lg-slide-skew-only-y-rev</option> 
-                                        <option value="lg-slide-skew">lg-slide-skew</option> 
-                                        <option value="lg-slide-skew-rev">lg-slide-skew-rev</option> 
-                                        <option value="lg-slide-skew-cross">lg-slide-skew-cross</option> 
-                                        <option value="lg-slide-skew-cross-rev">lg-slide-skew-cross-rev</option> 
-                                        <option value="lg-slide-skew-ver">lg-slide-skew-ver</option> 
-                                        <option value="lg-slide-skew-ver-rev">lg-slide-skew-ver-rev</option> 
-                                        <option value="lg-slide-skew-ver-cross">lg-slide-skew-ver-cross</option> 
-                                        <option value="lg-slide-skew-ver-cross-rev">lg-slide-skew-ver-cross-rev</option> 
-                                        <option value="lg-lollipop">lg-lollipop</option> 
-                                        <option value="lg-lollipop-rev">lg-lollipop-rev</option> 
-                                        <option value="lg-rotate">lg-rotate</option> 
-                                        <option value="lg-rotate-rev">lg-rotate-rev</option> 
-                                        <option value="lg-tube">lg-tube</option>
-                                    </select>
-                                    <span>Select Easing:</span>
-                                    <select id="select-ease">
-                                        <optgroup label="defaults">
-                                            <option selected="" value="0.250, 0.250, 0.750, 0.750">linear</option>
-                                            <option value="0.250, 0.100, 0.250, 1.000">ease (default)</option>
-                                            <option value="0.420, 0.000, 1.000, 1.000">ease-in</option>
-                                            <option value="0.000, 0.000, 0.580, 1.000">ease-out</option>
-                                            <option value="0.420, 0.000, 0.580, 1.000">ease-in-out</option>
-                                        </optgroup>
-                                        <optgroup label="Penner Equations (approximated)">
-                                            <option value="0.550, 0.085, 0.680, 0.530">easeInQuad</option>
-                                            <option value="0.550, 0.055, 0.675, 0.190">easeInCubic</option>
-                                            <option value="0.895, 0.030, 0.685, 0.220">easeInQuart</option>
-                                            <option value="0.755, 0.050, 0.855, 0.060">easeInQuint</option>
-                                            <option value="0.470, 0.000, 0.745, 0.715">easeInSine</option>
-                                            <option value="0.950, 0.050, 0.795, 0.035">easeInExpo</option>
-                                            <option value="0.600, 0.040, 0.980, 0.335">easeInCirc</option>
-                                            <option value="0.600, -0.280, 0.735, 0.045">easeInBack</option>
-                                            <option value="0.250, 0.460, 0.450, 0.940">easeOutQuad</option>
-                                            <option value="0.215, 0.610, 0.355, 1.000">easeOutCubic</option>
-                                            <option value="0.165, 0.840, 0.440, 1.000">easeOutQuart</option>
-                                            <option value="0.230, 1.000, 0.320, 1.000">easeOutQuint</option>
-                                            <option value="0.390, 0.575, 0.565, 1.000">easeOutSine</option>
-                                            <option value="0.190, 1.000, 0.220, 1.000">easeOutExpo</option>
-                                            <option value="0.075, 0.820, 0.165, 1.000">easeOutCirc</option>
-                                            <option value="0.175, 0.885, 0.320, 1.275">easeOutBack</option>
-                                            <option value="0.455, 0.030, 0.515, 0.955">easeInOutQuad</option>
-                                            <option value="0.645, 0.045, 0.355, 1.000">easeInOutCubic</option>
-                                            <option value="0.770, 0.000, 0.175, 1.000">easeInOutQuart</option>
-                                            <option value="0.860, 0.000, 0.070, 1.000">easeInOutQuint</option>
-                                            <option value="0.445, 0.050, 0.550, 0.950">easeInOutSine</option>
-                                            <option value="1.000, 0.000, 0.000, 1.000">easeInOutExpo</option>
-                                            <option value="0.785, 0.135, 0.150, 0.860">easeInOutCirc</option>
-                                            <option value="0.680, -0.550, 0.265, 1.550">easeInOutBack</option>
-                                        </optgroup>
-                                    </select>
+                                <div class="hero-select-wrap clearfix">
+                                    <div class="select-mode">
+                                        <span>Select Mode:</span>
+                                        <select id="select-trans">
+                                            <option selected="selected" value="lg-slide">lg-slide</option>
+                                            <option value="lg-fade">lg-fade</option>
+                                            <option value="lg-zoom-in">lg-zoom-in</option> 
+                                            <option value="lg-zoom-in-big">lg-zoom-in-big</option> 
+                                            <option value="lg-zoom-out">lg-zoom-out</option> 
+                                            <option value="lg-zoom-out-big">lg-zoom-out-big</option> 
+                                            <option value="lg-zoom-out-in">lg-zoom-out-in</option> 
+                                            <option value="lg-zoom-in-out">lg-zoom-in-out</option> 
+                                            <option value="lg-soft-zoom">lg-soft-zoom</option> 
+                                            <option value="lg-scale-up">lg-scale-up</option> 
+                                            <option value="lg-slide-circular">lg-slide-circular</option> 
+                                            <option value="lg-slide-circular-vertical">lg-slide-circular-vertical</option> 
+                                            <option value="lg-slide-vertical">lg-slide-vertical</option> 
+                                            <option value="lg-slide-vertical-growth">lg-slide-vertical-growth</option> 
+                                            <option value="lg-slide-skew-only">lg-slide-skew-only</option> 
+                                            <option value="lg-slide-skew-only-rev">lg-slide-skew-only-rev</option> 
+                                            <option value="lg-slide-skew-only-y">lg-slide-skew-only-y</option> 
+                                            <option value="lg-slide-skew-only-y-rev">lg-slide-skew-only-y-rev</option> 
+                                            <option value="lg-slide-skew">lg-slide-skew</option> 
+                                            <option value="lg-slide-skew-rev">lg-slide-skew-rev</option> 
+                                            <option value="lg-slide-skew-cross">lg-slide-skew-cross</option> 
+                                            <option value="lg-slide-skew-cross-rev">lg-slide-skew-cross-rev</option> 
+                                            <option value="lg-slide-skew-ver">lg-slide-skew-ver</option> 
+                                            <option value="lg-slide-skew-ver-rev">lg-slide-skew-ver-rev</option> 
+                                            <option value="lg-slide-skew-ver-cross">lg-slide-skew-ver-cross</option> 
+                                            <option value="lg-slide-skew-ver-cross-rev">lg-slide-skew-ver-cross-rev</option> 
+                                            <option value="lg-lollipop">lg-lollipop</option> 
+                                            <option value="lg-lollipop-rev">lg-lollipop-rev</option> 
+                                            <option value="lg-rotate">lg-rotate</option> 
+                                            <option value="lg-rotate-rev">lg-rotate-rev</option> 
+                                            <option value="lg-tube">lg-tube</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-ease">
+                                        <span>Select Easing:</span>
+                                        <select id="select-ease">
+                                            <optgroup label="defaults">
+                                                <option selected="" value="0.250, 0.100, 0.250, 1.000">ease (default)</option>
+                                                <option value="0.250, 0.250, 0.750, 0.750">linear</option>
+                                                <option value="0.420, 0.000, 1.000, 1.000">ease-in</option>
+                                                <option value="0.000, 0.000, 0.580, 1.000">ease-out</option>
+                                                <option value="0.420, 0.000, 0.580, 1.000">ease-in-out</option>
+                                            </optgroup>
+                                            <optgroup label="Penner Equations (approximated)">
+                                                <option value="0.550, 0.085, 0.680, 0.530">easeInQuad</option>
+                                                <option value="0.550, 0.055, 0.675, 0.190">easeInCubic</option>
+                                                <option value="0.895, 0.030, 0.685, 0.220">easeInQuart</option>
+                                                <option value="0.755, 0.050, 0.855, 0.060">easeInQuint</option>
+                                                <option value="0.470, 0.000, 0.745, 0.715">easeInSine</option>
+                                                <option value="0.950, 0.050, 0.795, 0.035">easeInExpo</option>
+                                                <option value="0.600, 0.040, 0.980, 0.335">easeInCirc</option>
+                                                <option value="0.600, -0.280, 0.735, 0.045">easeInBack</option>
+                                                <option value="0.250, 0.460, 0.450, 0.940">easeOutQuad</option>
+                                                <option value="0.215, 0.610, 0.355, 1.000">easeOutCubic</option>
+                                                <option value="0.165, 0.840, 0.440, 1.000">easeOutQuart</option>
+                                                <option value="0.230, 1.000, 0.320, 1.000">easeOutQuint</option>
+                                                <option value="0.390, 0.575, 0.565, 1.000">easeOutSine</option>
+                                                <option value="0.190, 1.000, 0.220, 1.000">easeOutExpo</option>
+                                                <option value="0.075, 0.820, 0.165, 1.000">easeOutCirc</option>
+                                                <option value="0.175, 0.885, 0.320, 1.275">easeOutBack</option>
+                                                <option value="0.455, 0.030, 0.515, 0.955">easeInOutQuad</option>
+                                                <option value="0.645, 0.045, 0.355, 1.000">easeInOutCubic</option>
+                                                <option value="0.770, 0.000, 0.175, 1.000">easeInOutQuart</option>
+                                                <option value="0.860, 0.000, 0.070, 1.000">easeInOutQuint</option>
+                                                <option value="0.445, 0.050, 0.550, 0.950">easeInOutSine</option>
+                                                <option value="1.000, 0.000, 0.000, 1.000">easeInOutExpo</option>
+                                                <option value="0.785, 0.135, 0.150, 0.860">easeInOutCirc</option>
+                                                <option value="0.680, -0.550, 0.265, 1.550">easeInOutBack</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
                                 </div>
                                 <ul id="lightgallery" class="list-unstyled row">
-                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/1-375.jpg 375, static/img/1-480.jpg 480" data-src="static/img/1.jpg" data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>">
+                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/1-375.jpg 375, static/img/1-480.jpg 480, static/img/1.jpg 800" data-src="static/img/1-1600.jpg" data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>">
                                         <a href="">
                                             <img class="img-responsive" src="static/img/thumb-1.jpg">
                                             <div class="demo-gallery-poster">
@@ -150,7 +154,7 @@
                                             </div>
                                         </a>
                                     </li>
-                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/2-375.jpg 375, static/img/2-480.jpg 480" data-src="static/img/2.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
+                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/2-375.jpg 375, static/img/2-480.jpg 480, static/img/2.jpg 800" data-src="static/img/2-1600.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
                                         <a href="">
                                             <img class="img-responsive" src="static/img/thumb-2.jpg">
                                             <div class="demo-gallery-poster">
@@ -158,7 +162,7 @@
                                             </div>
                                         </a>
                                     </li>
-                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/13-375.jpg 375, static/img/13-480.jpg 480" data-src="static/img/13.jpg" data-sub-html="<h4>Sunset Serenity</h4><p>A gorgeous Sunset tonight captured at Coniston Water....</p>">
+                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/13-375.jpg 375, static/img/13-480.jpg 480, static/img/13.jpg 800" data-src="static/img/13-1600.jpg" data-sub-html="<h4>Sunset Serenity</h4><p>A gorgeous Sunset tonight captured at Coniston Water....</p>">
                                         <a href="">
                                             <img class="img-responsive" src="static/img/thumb-13.jpg">
                                             <div class="demo-gallery-poster">
@@ -166,7 +170,7 @@
                                             </div>
                                         </a>
                                     </li>
-                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/4-375.jpg 375, static/img/4-480.jpg 480" data-src="static/img/4.jpg" data-sub-html="<h4>Coniston Calmness</h4><p>Beautiful morning</p>">
+                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/4-375.jpg 375, static/img/4-480.jpg 480, static/img/4.jpg 800" data-src="static/img/4-1600.jpg" data-sub-html="<h4>Coniston Calmness</h4><p>Beautiful morning</p>">
                                         <a href="">
                                             <img class="img-responsive" src="static/img/thumb-4.jpg">
                                             <div class="demo-gallery-poster">

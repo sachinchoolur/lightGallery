@@ -1,9 +1,3 @@
-/**
- * Zoom Plugin
- * @version 1.2.0
- * @author Sachin N - @sachinchoolur
- * @license MIT License (MIT)
- */
 (function($, window, document, undefined) {
 
     'use strict';
@@ -105,39 +99,58 @@
             zoom(scale);
         };
 
+        var actualSize = function(event, $image, index) {
+            var w = $image.width();
+            var nw;
+            if (_this.core.s.dynamic) {
+                nw = _this.core.s.dynamicEl[index].width || $image[0].naturalWidth || w;
+            } else {
+                nw = _this.core.$items.eq(index).attr('data-width') || $image[0].naturalWidth || w;
+            }
+
+            var _scale;
+
+            if (_this.core.$outer.hasClass('lg-zoomed')) {
+                scale = 1;
+            } else {
+                if (nw > w) {
+                    _scale = nw / w;
+                    scale = _scale || 2;
+                }
+            }
+
+            _this.pageX = event.pageX;
+            _this.pageY = event.pageY;
+            callScale();
+            setTimeout(function() {
+                _this.core.$outer.removeClass('lg-grabbing').addClass('lg-grab');
+            }, 10);
+        }
+
+        var tapped = false;
+
         // event triggered after appending slide content
         _this.core.$el.on('onAferAppendSlide.lg.tm.zoom', function(event, index) {
 
             // Get the current element
             var $image = _this.core.$slide.eq(index).find('.lg-image');
 
-            $image.dblclick(function(event) {
+            $image.on('dblclick', function(event) {
+                actualSize(event, $image, index);
+            });
 
-                var w = $image.width();
-                var nw;
-                if (_this.core.s.dynamic) {
-                    nw = _this.core.s.dynamicEl[index].width || $image[0].naturalWidth || w;
+            $image.on('touchstart', function(event) {
+                if (!tapped) {
+                    tapped = setTimeout(function() {
+                        tapped = null;
+                    }, 300);
                 } else {
-                    nw = _this.core.$items.eq(index).attr('data-width') || $image[0].naturalWidth || w;
+                    clearTimeout(tapped);
+                    tapped = null;
+                    actualSize(event, $image, index);
                 }
 
-                var _scale;
-
-                if (_this.core.$outer.hasClass('lg-zoomed')) {
-                    scale = 1;
-                } else {
-                    if (nw > w) {
-                        _scale = nw / w;
-                        scale = _scale || 2;
-                    }
-                }
-
-                _this.pageX = event.pageX;
-                _this.pageY = event.pageY;
-                callScale();
-                setTimeout(function() {
-                    _this.core.$outer.removeClass('lg-grabbing').addClass('lg-grab');
-                }, 10);
+                e.preventDefault()
             });
 
         });

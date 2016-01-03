@@ -3817,10 +3817,23 @@ body.home.in .main-cont #hero > .navbar {
   color: #333;
   margin-bottom: 20px;
 }
-.hero-select-wrap > span {
+.hero-select-wrap span {
   color: #fff;
   margin-right: 10px;
 }
-.hero-select-wrap select {
-  margin-right: 40px;
+@media (min-width: 768px) {
+  .hero-select-wrap .select-mode {
+    float: left;
+  }
+}
+.hero-select-wrap .select-ease {
+  margin-top: 20px;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .hero-select-wrap .select-ease {
+    float: right;
+    margin-top: 0px;
+    width: auto;
+  }
 }

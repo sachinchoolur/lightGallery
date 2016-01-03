@@ -200,7 +200,7 @@
             var _isVideo = _this.core.isVideo(_src, index) || {};
             if (_isVideo.youtube || _isVideo.vimeo || _isVideo.dailymotion) {
                 _this.core.$outer.addClass('lg-hide-download');
-            };
+            }
 
             //$videoSlide.addClass('lg-complete');
 
