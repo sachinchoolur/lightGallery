@@ -125,7 +125,7 @@
             setTimeout(function() {
                 _this.core.$outer.removeClass('lg-grabbing').addClass('lg-grab');
             }, 10);
-        }
+        };
 
         var tapped = false;
 
@@ -150,7 +150,7 @@
                     actualSize(event, $image, index);
                 }
 
-                e.preventDefault()
+                event.preventDefault();
             });
 
         });
