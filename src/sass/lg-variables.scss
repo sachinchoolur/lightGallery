@@ -28,8 +28,8 @@ $lg-progress-bar-active-bg: $lg-theme-highlight !default;
 $lg-progress-bar-height: 5px !default;
 
 // paths
-$lg-path-fonts: '../fonts';
-$lg-path-images: '../img';
+$lg-path-fonts: '../fonts'!default;
+$lg-path-images: '../img'!default;
 
 // Zoom plugin
 $zoom-transition-duration: 0.3s !default;
