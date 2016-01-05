@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.12 - 2016-01-03
+/*! lightgallery - v1.2.13 - 2016-01-05
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -996,15 +996,17 @@
 
         var distance = endCoords - startCoords;
 
-        // reset opacity and transition duration
-        this.$outer.addClass('lg-dragging');
+        if (Math.abs(distance) > 15) {
+            // reset opacity and transition duration
+            this.$outer.addClass('lg-dragging');
 
-        // move current slide
-        this.setTranslate(this.$slide.eq(this.index), distance, 0);
+            // move current slide
+            this.setTranslate(this.$slide.eq(this.index), distance, 0);
 
-        // move next and prev slide with current slide
-        this.setTranslate($('.lg-prev-slide'), -this.$slide.eq(this.index).width() + distance, 0);
-        this.setTranslate($('.lg-next-slide'), this.$slide.eq(this.index).width() + distance, 0);
+            // move next and prev slide with current slide
+            this.setTranslate($('.lg-prev-slide'), -this.$slide.eq(this.index).width() + distance, 0);
+            this.setTranslate($('.lg-next-slide'), this.$slide.eq(this.index).width() + distance, 0);
+        }
     };
 
     Plugin.prototype.touchEnd = function(distance) {
@@ -2513,8 +2515,8 @@
                 }
             }
 
-            _this.pageX = event.pageX;
-            _this.pageY = event.pageY;
+            _this.pageX = event.pageX || event.originalEvent.targetTouches[0].pageX;
+            _this.pageY = event.pageY || event.originalEvent.targetTouches[0].pageY;
             callScale();
             setTimeout(function() {
                 _this.core.$outer.removeClass('lg-grabbing').addClass('lg-grab');
@@ -2572,6 +2574,7 @@
 
         // Reset zoom on slide change
         _this.core.$el.on('onBeforeSlide.lg.tm', function() {
+            scale = 1;
             _this.resetZoom();
         });
 

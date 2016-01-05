@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.12 - 2016-01-03
+/*! lightgallery - v1.2.13 - 2016-01-05
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -122,8 +122,8 @@
                 }
             }
 
-            _this.pageX = event.pageX;
-            _this.pageY = event.pageY;
+            _this.pageX = event.pageX || event.originalEvent.targetTouches[0].pageX;
+            _this.pageY = event.pageY || event.originalEvent.targetTouches[0].pageY;
             callScale();
             setTimeout(function() {
                 _this.core.$outer.removeClass('lg-grabbing').addClass('lg-grab');
@@ -181,6 +181,7 @@
 
         // Reset zoom on slide change
         _this.core.$el.on('onBeforeSlide.lg.tm', function() {
+            scale = 1;
             _this.resetZoom();
         });
 
