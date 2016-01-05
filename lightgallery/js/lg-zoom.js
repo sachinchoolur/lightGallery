@@ -119,8 +119,8 @@
                 }
             }
 
-            _this.pageX = event.pageX;
-            _this.pageY = event.pageY;
+            _this.pageX = event.pageX || event.originalEvent.targetTouches[0].pageX;
+            _this.pageY = event.pageY || event.originalEvent.targetTouches[0].pageY;
             callScale();
             setTimeout(function() {
                 _this.core.$outer.removeClass('lg-grabbing').addClass('lg-grab');
@@ -178,6 +178,7 @@
 
         // Reset zoom on slide change
         _this.core.$el.on('onBeforeSlide.lg.tm', function() {
+            scale = 1;
             _this.resetZoom();
         });
 

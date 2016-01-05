@@ -993,15 +993,17 @@
 
         var distance = endCoords - startCoords;
 
-        // reset opacity and transition duration
-        this.$outer.addClass('lg-dragging');
+        if (Math.abs(distance) > 15) {
+            // reset opacity and transition duration
+            this.$outer.addClass('lg-dragging');
 
-        // move current slide
-        this.setTranslate(this.$slide.eq(this.index), distance, 0);
+            // move current slide
+            this.setTranslate(this.$slide.eq(this.index), distance, 0);
 
-        // move next and prev slide with current slide
-        this.setTranslate($('.lg-prev-slide'), -this.$slide.eq(this.index).width() + distance, 0);
-        this.setTranslate($('.lg-next-slide'), this.$slide.eq(this.index).width() + distance, 0);
+            // move next and prev slide with current slide
+            this.setTranslate($('.lg-prev-slide'), -this.$slide.eq(this.index).width() + distance, 0);
+            this.setTranslate($('.lg-next-slide'), this.$slide.eq(this.index).width() + distance, 0);
+        }
     };
 
     Plugin.prototype.touchEnd = function(distance) {
