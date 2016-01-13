@@ -42,7 +42,7 @@ Installation
 ---
 #### Install with Bower
 
-You can Install lightGallery using the [Bower](http://bower.io) package manager.
+You can install ```lightgallery``` using the [Bower](http://bower.io) package manager.
 
 ```sh
 $ bower install lightgallery --save
@@ -50,7 +50,7 @@ $ bower install lightgallery --save
 
 #### npm
 
-You can also find ladda-angular on [npm](http://npmjs.org).
+You can also find ```lightgallery``` on [npm](http://npmjs.org).
 
 ```sh
 $ npm install lightgallery
