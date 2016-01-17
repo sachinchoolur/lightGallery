@@ -265,7 +265,9 @@
                     distanceX = -Math.abs(_$el.attr('data-x'));
                 }
 
-                _$el.css('transform', 'translate3d(' + distanceX + 'px, ' + distanceY + 'px, 0)');
+                if ((Math.abs(endCoords.x - startCoords.x) > 15) || (Math.abs(endCoords.y - startCoords.y) > 15)) {
+                    _$el.css('transform', 'translate3d(' + distanceX + 'px, ' + distanceY + 'px, 0)');
+                }
 
             }
 
@@ -392,35 +394,37 @@
         var minX = (_this.core.$outer.find('.lg').width() - $image.outerWidth()) / 2;
         var maxX = Math.abs(($image.outerWidth() * Math.abs($image.attr('data-scale'))) - _this.core.$outer.find('.lg').width() + minX);
 
-        if (allowY) {
-            if (distanceY <= -maxY) {
-                distanceY = -maxY;
-            } else if (distanceY >= -minY) {
-                distanceY = -minY;
+        if ((Math.abs(endCoords.x - startCoords.x) > 15) || (Math.abs(endCoords.y - startCoords.y) > 15)) {
+            if (allowY) {
+                if (distanceY <= -maxY) {
+                    distanceY = -maxY;
+                } else if (distanceY >= -minY) {
+                    distanceY = -minY;
+                }
             }
-        }
 
-        if (allowX) {
-            if (distanceX <= -maxX) {
-                distanceX = -maxX;
-            } else if (distanceX >= -minX) {
-                distanceX = -minX;
+            if (allowX) {
+                if (distanceX <= -maxX) {
+                    distanceX = -maxX;
+                } else if (distanceX >= -minX) {
+                    distanceX = -minX;
+                }
             }
-        }
 
-        if (allowY) {
-            _$el.attr('data-y', Math.abs(distanceY));
-        } else {
-            distanceY = -Math.abs(_$el.attr('data-y'));
-        }
+            if (allowY) {
+                _$el.attr('data-y', Math.abs(distanceY));
+            } else {
+                distanceY = -Math.abs(_$el.attr('data-y'));
+            }
 
-        if (allowX) {
-            _$el.attr('data-x', Math.abs(distanceX));
-        } else {
-            distanceX = -Math.abs(_$el.attr('data-x'));
-        }
+            if (allowX) {
+                _$el.attr('data-x', Math.abs(distanceX));
+            } else {
+                distanceX = -Math.abs(_$el.attr('data-x'));
+            }
 
-        _$el.css('transform', 'translate3d(' + distanceX + 'px, ' + distanceY + 'px, 0)');
+            _$el.css('transform', 'translate3d(' + distanceX + 'px, ' + distanceY + 'px, 0)');
+        }
     };
 
     Zoom.prototype.destroy = function() {
