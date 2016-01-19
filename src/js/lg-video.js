@@ -59,7 +59,7 @@
                 // chack already video element present
                 if (!$el.hasClass('lg-has-video')) {
 
-                    $el.addClass('lg-video-palying lg-has-video');
+                    $el.addClass('lg-video-playing lg-has-video');
 
                     var _src;
                     var _html;
