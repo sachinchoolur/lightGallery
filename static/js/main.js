@@ -16,7 +16,7 @@ $(document).ready(function() {
         });
     }
 
-    customizeGallery('lg-slide', 'ease');
+    customizeGallery('lg-slide', 'cubic-bezier(0.25, 0, 0.25, 1)');
 
     $('#select-trans').on('change', function() {
         $('#lightgallery').data('lightGallery').destroy(true);
