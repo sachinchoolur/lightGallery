@@ -9,11 +9,6 @@ Demo
 ---
 [JQuery lightGallery demo](http://sachinchoolur.github.io/lightGallery/). [Codepen demo](http://codepen.io/sachinchoolur/details/QjLNMM/) 
 
-Need collaborators 
----
-If anyone is interested in becoming a collaborator please drop me an email at sachi77n@gmail.com.
-I have been quite busy lately. Unable to reply to all support and customization requests. Any assistance with this project would be greatly appreciated.
-
 Main features
 ---
 
@@ -117,6 +112,11 @@ Finally you need to initiate the gallery by adding the following code.
 
 #### Support lightgallery
 If you like lightgallery please support the project by staring the repository or <a href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&ref_src=twsrc%5Etfw&text=lightGallery%20-%20The%20complete%20%23jQuery%20lightbox%20gallery%20plugin.%20%23javascript&tw_p=tweetbutton&url=http%3A%2F%2Fsachinchoolur.github.io%2FlightGallery%2F" target="_blank">tweet</a> about this project.
+
+Need collaborators 
+---
+If anyone is interested in becoming a collaborator please drop me an email at sachi77n@gmail.com.
+I have been quite busy lately. Unable to reply to all support and customization requests. Any assistance with this project would be greatly appreciated.
 
 Resources
 ----
