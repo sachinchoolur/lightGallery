@@ -9,6 +9,11 @@ Demo
 ---
 [JQuery lightGallery demo](http://sachinchoolur.github.io/lightGallery/). [Codepen demo](http://codepen.io/sachinchoolur/details/QjLNMM/) 
 
+Need collaborators 
+---
+If anyone is interested in becoming a collaborator please drop me an email at sachi77n@gmail.com.
+I have been quite busy lately. Unable to reply to all support and customization requests. Any assistance with this project would be greatly appreciated.
+
 Main features
 ---
 
