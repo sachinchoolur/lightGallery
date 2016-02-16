@@ -447,7 +447,7 @@
      *  @param {Number} index - index of the slide
      */
     Plugin.prototype.addHtml = function(index) {
-        var subHtml = null;
+        var subHtml = null, subHtmlSelector = true;
         var subHtmlUrl;
         if (this.s.dynamic) {
             if (this.s.dynamicEl[index].subHtmlUrl) {
@@ -460,6 +460,12 @@
                 subHtmlUrl = this.$items.eq(index).attr('data-sub-html-url');
             } else {
                 subHtml = this.$items.eq(index).attr('data-sub-html');
+                if (!subHtml) {
+                    subHtml = this.$items.eq(index).attr('title') || this.$items.eq(index).find('img').attr('alt');
+                    if (subHtml) {
+                        subHtmlSelector = false;
+                    }
+                }
             }
         }
 
@@ -469,7 +475,7 @@
                 // get first letter of subhtml
                 // if first letter starts with . or # get the html form the jQuery object
                 var fL = subHtml.substring(0, 1);
-                if (fL === '.' || fL === '#') {
+                if (subHtmlSelector && fL === '.' || fL === '#') {
                     subHtml = $(subHtml).html();
                 } else {
                     subHtml = subHtml;
