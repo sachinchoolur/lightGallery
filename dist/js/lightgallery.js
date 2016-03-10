@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.14 - 2016-01-20
+/*! lightgallery - v1.2.15 - 2016-03-10
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -414,6 +414,7 @@
         var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)/i);
         var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
         var dailymotion = src.match(/\/\/(?:www\.)?dai.ly\/([0-9a-z\-_]+)/i);
+        var vk = src.match(/\/\/(?:www\.)?(?:vk\.com|vkontakte\.ru)\/(?:video_ext\.php\?)(.*)/i);
 
         if (youtube) {
             return {
@@ -426,6 +427,10 @@
         } else if (dailymotion) {
             return {
                 dailymotion: dailymotion
+            };
+        } else if (vk) {
+            return {
+                vk: vk
             };
         }
     };

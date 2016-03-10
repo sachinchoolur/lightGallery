@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.14 - 2016-01-20
+/*! lightgallery - v1.2.15 - 2016-03-10
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -10,6 +10,7 @@
         youtubePlayerParams: false,
         vimeoPlayerParams: false,
         dailymotionPlayerParams: false,
+        vkPlayerParams: false,
         videojs: false
     };
 
@@ -168,6 +169,7 @@
             var youtubePlayer = $videoSlide.find('.lg-youtube').get(0);
             var vimeoPlayer = $videoSlide.find('.lg-vimeo').get(0);
             var dailymotionPlayer = $videoSlide.find('.lg-dailymotion').get(0);
+            var vkPlayer = $videoSlide.find('.lg-vk').get(0);
             var html5Player = $videoSlide.find('.lg-html5').get(0);
             if (youtubePlayer) {
                 youtubePlayer.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
@@ -190,6 +192,8 @@
                 } else {
                     html5Player.pause();
                 }
+            } if (vkPlayer) {
+                $(vkPlayer).attr('src', $(vkPlayer).attr('src').replace('&autoplay', '&noplay'));
             }
 
             var _src;
@@ -201,7 +205,7 @@
             }
 
             var _isVideo = _this.core.isVideo(_src, index) || {};
-            if (_isVideo.youtube || _isVideo.vimeo || _isVideo.dailymotion) {
+            if (_isVideo.youtube || _isVideo.vimeo || _isVideo.dailymotion || _isVideo.vk) {
                 _this.core.$outer.addClass('lg-hide-download');
             }
 
@@ -263,6 +267,16 @@
             }
 
             video = html;
+
+        } else if (isVideo.vk) {
+
+            a = '&autoplay=' + autoplay;
+            if (this.core.s.vkPlayerParams) {
+                a = a + '&' + $.param(this.core.s.vkPlayerParams);
+            }
+
+            video = '<iframe class="lg-video-object lg-vk ' + addClass + '" width="560" height="315" src="http://vk.com/video_ext.php?' + isVideo.vk[1] + a + '" frameborder="0" allowfullscreen></iframe>';
+
         }
 
         return video;

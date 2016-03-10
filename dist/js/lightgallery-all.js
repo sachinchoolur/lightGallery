@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.14 - 2016-01-20
+/*! lightgallery - v1.2.15 - 2016-03-10
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -414,6 +414,7 @@
         var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)/i);
         var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
         var dailymotion = src.match(/\/\/(?:www\.)?dai.ly\/([0-9a-z\-_]+)/i);
+        var vk = src.match(/\/\/(?:www\.)?(?:vk\.com|vkontakte\.ru)\/(?:video_ext\.php\?)(.*)/i);
 
         if (youtube) {
             return {
@@ -426,6 +427,10 @@
         } else if (dailymotion) {
             return {
                 dailymotion: dailymotion
+            };
+        } else if (vk) {
+            return {
+                vk: vk
             };
         }
     };
@@ -1853,7 +1858,7 @@
             var vimeoVideoId = $this.attr('data-vimeo-id');
 
             if (vimeoVideoId) {
-                $.getJSON('http://www.vimeo.com/api/v2/video/' + vimeoVideoId + '.json?callback=?', {
+                $.getJSON('//www.vimeo.com/api/v2/video/' + vimeoVideoId + '.json?callback=?', {
                     format: 'json'
                 }, function(data) {
                     $this.find('img').attr('src', data[0][_this.core.s.vimeoThumbSize]);
@@ -2128,6 +2133,7 @@
         youtubePlayerParams: false,
         vimeoPlayerParams: false,
         dailymotionPlayerParams: false,
+        vkPlayerParams: false,
         videojs: false
     };
 
@@ -2286,6 +2292,7 @@
             var youtubePlayer = $videoSlide.find('.lg-youtube').get(0);
             var vimeoPlayer = $videoSlide.find('.lg-vimeo').get(0);
             var dailymotionPlayer = $videoSlide.find('.lg-dailymotion').get(0);
+            var vkPlayer = $videoSlide.find('.lg-vk').get(0);
             var html5Player = $videoSlide.find('.lg-html5').get(0);
             if (youtubePlayer) {
                 youtubePlayer.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
@@ -2308,6 +2315,8 @@
                 } else {
                     html5Player.pause();
                 }
+            } if (vkPlayer) {
+                $(vkPlayer).attr('src', $(vkPlayer).attr('src').replace('&autoplay', '&noplay'));
             }
 
             var _src;
@@ -2319,7 +2328,7 @@
             }
 
             var _isVideo = _this.core.isVideo(_src, index) || {};
-            if (_isVideo.youtube || _isVideo.vimeo || _isVideo.dailymotion) {
+            if (_isVideo.youtube || _isVideo.vimeo || _isVideo.dailymotion || _isVideo.vk) {
                 _this.core.$outer.addClass('lg-hide-download');
             }
 
@@ -2381,6 +2390,16 @@
             }
 
             video = html;
+
+        } else if (isVideo.vk) {
+
+            a = '&autoplay=' + autoplay;
+            if (this.core.s.vkPlayerParams) {
+                a = a + '&' + $.param(this.core.s.vkPlayerParams);
+            }
+
+            video = '<iframe class="lg-video-object lg-vk ' + addClass + '" width="560" height="315" src="http://vk.com/video_ext.php?' + isVideo.vk[1] + a + '" frameborder="0" allowfullscreen></iframe>';
+
         }
 
         return video;
