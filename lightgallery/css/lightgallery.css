@@ -703,10 +703,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   margin-right: -1px;
 }
 .lg-outer .lg-img-wrap {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: static;
   padding: 0 5px;
 }
 .lg-outer .lg-item.lg-complete {
@@ -827,5 +824,3 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   -o-transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
   transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
 }
-
-/*# sourceMappingURL=lightgallery.css.map */
