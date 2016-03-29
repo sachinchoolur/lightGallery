@@ -49,6 +49,8 @@
 
     Hash.prototype.destroy = function() {
 
+        if (this.core.s.hash != true) return;
+
         // Reset to old hash value
         if (this.oldHash && this.oldHash.indexOf('lg=' + this.core.s.galleryId) < 0) {
             window.location.hash = this.oldHash;
