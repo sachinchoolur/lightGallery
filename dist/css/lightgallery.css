@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.15 - 2016-03-10
+/*! lightgallery - v1.2.16 - 2016-03-29
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 @font-face {
@@ -429,10 +429,10 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 .lg-outer .lg-has-video .lg-video-object {
   visibility: hidden;
 }
-.lg-outer .lg-has-video.lg-video-palying .lg-object, .lg-outer .lg-has-video.lg-video-palying .lg-video-play {
+.lg-outer .lg-has-video.lg-video-playing .lg-object, .lg-outer .lg-has-video.lg-video-playing .lg-video-play {
   display: none;
 }
-.lg-outer .lg-has-video.lg-video-palying .lg-video-object {
+.lg-outer .lg-has-video.lg-video-playing .lg-video-object {
   visibility: visible;
 }
 
@@ -827,3 +827,5 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   -o-transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
   transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
 }
+
+/*# sourceMappingURL=lightgallery.css.map */
