@@ -426,10 +426,10 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 .lg-outer .lg-has-video .lg-video-object {
   visibility: hidden;
 }
-.lg-outer .lg-has-video.lg-video-palying .lg-object, .lg-outer .lg-has-video.lg-video-palying .lg-video-play {
+.lg-outer .lg-has-video.lg-video-playing .lg-object, .lg-outer .lg-has-video.lg-video-playing .lg-video-play {
   display: none;
 }
-.lg-outer .lg-has-video.lg-video-palying .lg-video-object {
+.lg-outer .lg-has-video.lg-video-playing .lg-video-object {
   visibility: visible;
 }
 
