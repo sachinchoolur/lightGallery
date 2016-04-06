@@ -5,6 +5,7 @@
     var defaults = {
         scale: 1,
         zoom: true,
+        actualSize: true,
         enableZoomAfter: 300
     };
 
@@ -32,6 +33,10 @@
 
         var _this = this;
         var zoomIcons = '<span id="lg-zoom-in" class="lg-icon"></span><span id="lg-zoom-out" class="lg-icon"></span>';
+
+        if (_this.core.s.actualSize) {
+            zoomIcons += '<span id="lg-actual-size" class="lg-icon"></span>';
+        }
 
         this.core.$outer.find('.lg-toolbar').append(zoomIcons);
 
@@ -99,7 +104,7 @@
             zoom(scale);
         };
 
-        var actualSize = function(event, $image, index) {
+        var actualSize = function(event, $image, index, fromIcon) {
             var w = $image.width();
             var nw;
             if (_this.core.s.dynamic) {
@@ -119,8 +124,14 @@
                 }
             }
 
-            _this.pageX = event.pageX || event.originalEvent.targetTouches[0].pageX;
-            _this.pageY = event.pageY || event.originalEvent.targetTouches[0].pageY;
+            if (fromIcon) {
+                _this.pageX = $(window).width() / 2;
+                _this.pageY = ($(window).height() / 2) + $(window).scrollTop();
+            } else {
+                _this.pageX = event.pageX || event.originalEvent.targetTouches[0].pageX;
+                _this.pageY = event.pageY || event.originalEvent.targetTouches[0].pageY;
+            }
+
             callScale();
             setTimeout(function() {
                 _this.core.$outer.removeClass('lg-grabbing').addClass('lg-grab');
@@ -174,6 +185,10 @@
                 scale += _this.core.s.scale;
                 callScale();
             }
+        });
+
+        $('#lg-actual-size').on('click.lg', function(event) {
+            actualSize(event, _this.core.$slide.eq(_this.core.index).find('.lg-image'), _this.core.index, true);
         });
 
         // Reset zoom on slide change

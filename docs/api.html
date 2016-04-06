@@ -634,10 +634,31 @@ $('#lightgallery').lightGallery({
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>dailymotionPlayerParams:</td>
+                                            <td>dailymotionPlayerParams</td>
                                             <td>object</td>
                                             <td><code>{}</code></td>
                                             <td>Change dailymotion player parameters. <br />link https://developer.dailymotion.com/player#player-parameters<br />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>vkPlayerParams</td>
+                                            <td>object</td>
+                                            <td><code>{}</code></td>
+                                            <td>Change vk player parameters.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>videojs</td>
+                                            <td>boolean</td>
+                                            <td><code>false</code></td>
+                                            <td>Enbale videojs custom video player
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>videojsOptions</td>
+                                            <td>object</td>
+                                            <td><code>{}</code></td>
+                                            <td>Videojs player options
                                             </td>
                                         </tr>
                                     </tbody>
@@ -745,6 +766,12 @@ $('#lightgallery').lightGallery({
                                             <td>number in ms</td>
                                             <td><code>50</code></td>
                                             <td>Some css styles will be added to the images if zoom is enabled. So it might conflict if you add some custom styles to the images such as the initial transition while opening the gallery. So you can delay adding zoom related styles to the images by changing the value of <code>enableZoomAfter</code>.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>actualSize</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable actual pixel icon.</td>
                                         </tr>
                                     </tbody>
                                 </table>

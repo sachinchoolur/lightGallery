@@ -501,6 +501,13 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   content: "\e311";
 }
 
+#lg-actual-size {
+  font-size: 20px;
+}
+#lg-actual-size:after {
+  content: "\e033";
+}
+
 #lg-zoom-out {
   opacity: 0.5;
   pointer-events: none;
