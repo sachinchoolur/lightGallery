@@ -34,6 +34,13 @@
     }
 }
 
+#lg-actual-size {
+    font-size: 20px;
+    &:after {
+        content: "\e033";
+    }
+}
+
 #lg-zoom-out {
     opacity: 0.5;
     pointer-events: none;

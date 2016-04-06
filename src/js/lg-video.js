@@ -8,7 +8,8 @@
         vimeoPlayerParams: false,
         dailymotionPlayerParams: false,
         vkPlayerParams: false,
-        videojs: false
+        videojs: false,
+        videojsOptions: {}
     };
 
     var Video = function(element) {
@@ -33,7 +34,7 @@
             if (html) {
                 if (_this.core.s.videojs) {
                     try {
-                        videojs(_this.core.$slide.eq(index).find('.lg-html5').get(0), {}, function() {
+                        videojs(_this.core.$slide.eq(index).find('.lg-html5').get(0), _this.core.s.videojsOptions, function() {
                             if (!_this.videoLoaded) {
                                 this.play();
                             }
@@ -71,7 +72,7 @@
                         if (_html) {
                             if (_this.core.s.videojs) {
                                 try {
-                                    videojs(_this.core.$slide.eq(_this.core.index).find('.lg-html5').get(0), {}, function() {
+                                    videojs(_this.core.$slide.eq(_this.core.index).find('.lg-html5').get(0), _this.core.s.videojsOptions, function() {
                                         this.play();
                                     });
                                 } catch (e) {

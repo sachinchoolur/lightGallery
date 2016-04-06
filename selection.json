@@ -21,15 +21,15 @@
 			],
 			"properties": {
 				"order": 18,
-				"id": 26,
+				"id": 0,
 				"prevSize": 24,
 				"code": 57370,
 				"name": "pause_circle_outline",
 				"ligatures": "pause_circle_outline"
 			},
-			"setIdx": 0,
-			"setId": 7,
-			"iconIdx": 26
+			"setIdx": 1,
+			"setId": 4,
+			"iconIdx": 0
 		},
 		{
 			"icon": {
@@ -51,15 +51,15 @@
 			],
 			"properties": {
 				"order": 20,
-				"id": 29,
+				"id": 1,
 				"prevSize": 24,
 				"code": 57373,
 				"name": "play_circle_outline",
 				"ligatures": "play_circle_outline"
 			},
-			"setIdx": 0,
-			"setId": 7,
-			"iconIdx": 29
+			"setIdx": 1,
+			"setId": 4,
+			"iconIdx": 1
 		},
 		{
 			"icon": {
@@ -81,15 +81,15 @@
 			],
 			"properties": {
 				"order": 14,
-				"id": 112,
+				"id": 2,
 				"prevSize": 24,
 				"code": 57456,
 				"name": "clear",
 				"ligatures": "clear"
 			},
-			"setIdx": 0,
-			"setId": 7,
-			"iconIdx": 112
+			"setIdx": 1,
+			"setId": 4,
+			"iconIdx": 2
 		},
 		{
 			"icon": {
@@ -111,15 +111,15 @@
 			],
 			"properties": {
 				"order": 21,
-				"id": 242,
+				"id": 3,
 				"prevSize": 24,
 				"code": 57586,
 				"name": "vertical_align_bottom",
 				"ligatures": "vertical_align_bottom"
 			},
-			"setIdx": 0,
-			"setId": 7,
-			"iconIdx": 242
+			"setIdx": 1,
+			"setId": 4,
+			"iconIdx": 3
 		},
 		{
 			"icon": {
@@ -141,15 +141,15 @@
 			],
 			"properties": {
 				"order": 28,
-				"id": 511,
+				"id": 4,
 				"prevSize": 24,
 				"code": 57855,
 				"name": "apps",
 				"ligatures": "apps"
 			},
-			"setIdx": 0,
-			"setId": 7,
-			"iconIdx": 511
+			"setIdx": 1,
+			"setId": 4,
+			"iconIdx": 4
 		},
 		{
 			"icon": {
@@ -171,15 +171,15 @@
 			],
 			"properties": {
 				"order": 32,
-				"id": 524,
+				"id": 5,
 				"prevSize": 24,
 				"code": 57868,
 				"name": "fullscreen",
 				"ligatures": "fullscreen"
 			},
-			"setIdx": 0,
-			"setId": 7,
-			"iconIdx": 524
+			"setIdx": 1,
+			"setId": 4,
+			"iconIdx": 5
 		},
 		{
 			"icon": {
@@ -201,15 +201,15 @@
 			],
 			"properties": {
 				"order": 31,
-				"id": 525,
+				"id": 6,
 				"prevSize": 24,
 				"code": 57869,
 				"name": "fullscreen_exit",
 				"ligatures": "fullscreen_exit"
 			},
-			"setIdx": 0,
-			"setId": 7,
-			"iconIdx": 525
+			"setIdx": 1,
+			"setId": 4,
+			"iconIdx": 6
 		},
 		{
 			"icon": {
@@ -231,15 +231,15 @@
 			],
 			"properties": {
 				"order": 35,
-				"id": 785,
+				"id": 7,
 				"prevSize": 24,
 				"code": 58129,
 				"name": "zoom_in",
 				"ligatures": "zoom_in"
 			},
-			"setIdx": 0,
-			"setId": 7,
-			"iconIdx": 785
+			"setIdx": 1,
+			"setId": 4,
+			"iconIdx": 7
 		},
 		{
 			"icon": {
@@ -261,15 +261,15 @@
 			],
 			"properties": {
 				"order": 36,
-				"id": 786,
+				"id": 8,
 				"prevSize": 24,
 				"code": 58130,
 				"name": "zoom_out",
 				"ligatures": "zoom_out"
 			},
-			"setIdx": 0,
-			"setId": 7,
-			"iconIdx": 786
+			"setIdx": 1,
+			"setId": 4,
+			"iconIdx": 8
 		},
 		{
 			"icon": {
@@ -286,15 +286,15 @@
 			},
 			"attrs": [],
 			"properties": {
-				"id": 94,
+				"id": 9,
 				"order": 6,
 				"prevSize": 24,
 				"code": 57492,
 				"name": "arrow-left"
 			},
-			"setIdx": 2,
-			"setId": 5,
-			"iconIdx": 94
+			"setIdx": 1,
+			"setId": 4,
+			"iconIdx": 9
 		},
 		{
 			"icon": {
@@ -311,15 +311,40 @@
 			},
 			"attrs": [],
 			"properties": {
-				"id": 95,
+				"id": 10,
 				"order": 5,
 				"prevSize": 24,
 				"code": 57493,
 				"name": "arrow-right"
 			},
+			"setIdx": 1,
+			"setId": 4,
+			"iconIdx": 10
+		},
+		{
+			"icon": {
+				"paths": [
+					"M384 85.333h426.667q53 0 90.5 37.5t37.5 90.5v426.667q0 53-37.5 90.5t-90.5 37.5h-426.667q-53 0-90.5-37.5t-37.5-90.5v-426.667q0-53 37.5-90.5t90.5-37.5zM170.667 263.333v547.333q0 17.667 12.5 30.167t30.167 12.5h547.333q-13.333 37.667-46.333 61.5t-74.333 23.833h-426.667q-53 0-90.5-37.5t-37.5-90.5v-426.667q0-41.333 23.833-74.333t61.5-46.333zM810.667 170.667h-426.667q-17.667 0-30.167 12.5t-12.5 30.167v426.667q0 17.667 12.5 30.167t30.167 12.5h426.667q17.667 0 30.167-12.5t12.5-30.167v-426.667q0-17.667-12.5-30.167t-30.167-12.5z"
+				],
+				"attrs": [],
+				"isMulticolor": false,
+				"tags": [
+					"stack-2"
+				],
+				"defaultCode": 57395,
+				"grid": 24
+			},
+			"attrs": [],
+			"properties": {
+				"id": 33,
+				"order": 18,
+				"prevSize": 24,
+				"code": 57395,
+				"name": "stack-2"
+			},
 			"setIdx": 2,
-			"setId": 5,
-			"iconIdx": 95
+			"setId": 3,
+			"iconIdx": 33
 		}
 	],
 	"height": 1024,
@@ -377,7 +402,6 @@
 		"showLiga": false,
 		"quickUsageToken": {
 			"UntitledProject": "Y2Q2M2U4MWIyMWQ0NDQ4MDYyMzk4NTJmYzFlYmIyMjkjMSMxNDMyMDU3NDgwIyMj"
-		},
-		"fontHostingName": false
+		}
 	}
 }
