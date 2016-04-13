@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.17 - 2016-04-06
+/*! lightgallery - v1.2.18 - 2016-04-13
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -32,6 +32,8 @@
         slideEndAnimatoin: true,
         hideControlOnEnd: false,
         mousewheel: true,
+
+        getCaptionFromTitleOrAlt: true,
 
         // .lg-item || '.lg-sub-html'
         appendSubHtmlTo: '.lg-sub-html',
@@ -462,7 +464,11 @@
             if (this.$items.eq(index).attr('data-sub-html-url')) {
                 subHtmlUrl = this.$items.eq(index).attr('data-sub-html-url');
             } else {
+
                 subHtml = this.$items.eq(index).attr('data-sub-html');
+                if (this.s.getCaptionFromTitleOrAlt && !subHtml) {
+                    subHtml = this.$items.eq(index).attr('title') || this.$items.eq(index).find('img').first().attr('alt');
+                }
             }
         }
 
@@ -474,8 +480,6 @@
                 var fL = subHtml.substring(0, 1);
                 if (fL === '.' || fL === '#') {
                     subHtml = $(subHtml).html();
-                } else {
-                    subHtml = subHtml;
                 }
             } else {
                 subHtml = '';
@@ -2908,13 +2912,13 @@
         });
 
         // Listen hash change and change the slide according to slide value
-        $(window).on('hashchange', function() {
+        $(window).on('hashchange.lg.hash', function() {
             _hash = window.location.hash;
             var _idx = parseInt(_hash.split('&slide=')[1], 10);
 
             // it galleryId doesn't exist in the url close the gallery
             if ((_hash.indexOf('lg=' + _this.core.s.galleryId) > -1)) {
-                _this.core.slide(_idx);
+                _this.core.slide(_idx, false, false);
             } else if (_this.core.lGalleryOn) {
                 _this.core.destroy();
             }
@@ -2938,6 +2942,8 @@
                 window.location.hash = '';
             }
         }
+
+        this.core.$el.off('.lg.hash');
 
     };
 
