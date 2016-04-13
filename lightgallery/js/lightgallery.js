@@ -30,6 +30,8 @@
         hideControlOnEnd: false,
         mousewheel: true,
 
+        getCaptionFromTitleOrAlt: true,
+
         // .lg-item || '.lg-sub-html'
         appendSubHtmlTo: '.lg-sub-html',
 
@@ -459,7 +461,11 @@
             if (this.$items.eq(index).attr('data-sub-html-url')) {
                 subHtmlUrl = this.$items.eq(index).attr('data-sub-html-url');
             } else {
+
                 subHtml = this.$items.eq(index).attr('data-sub-html');
+                if (this.s.getCaptionFromTitleOrAlt && !subHtml) {
+                    subHtml = this.$items.eq(index).attr('title') || this.$items.eq(index).find('img').first().attr('alt');
+                }
             }
         }
 
@@ -471,8 +477,6 @@
                 var fL = subHtml.substring(0, 1);
                 if (fL === '.' || fL === '#') {
                     subHtml = $(subHtml).html();
-                } else {
-                    subHtml = subHtml;
                 }
             } else {
                 subHtml = '';
