@@ -476,10 +476,10 @@
                 // get first letter of subhtml
                 // if first letter starts with . or # get the html form the jQuery object
                 var fL = subHtml.substring(0, 1);
-                if (fL === '.' || fL === '#' ) {
-                    subHtml = $(subHtml).html();
-                } else if( this.s.subHtmlSelectorRelative === true ) {
+                if( this.s.subHtmlSelectorRelative === true ) {
                     subHtml = this.$items.eq(index).find(subHtml).html();
+                } else if (fL === '.' || fL === '#' ) {
+                    subHtml = $(subHtml).html();
                 }
             } else {
                 subHtml = '';
