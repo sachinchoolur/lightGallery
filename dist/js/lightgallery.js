@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.18 - 2016-04-13
+/*! lightgallery - v1.2.18 - 2016-04-14
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -37,6 +37,7 @@
 
         // .lg-item || '.lg-sub-html'
         appendSubHtmlTo: '.lg-sub-html',
+        subHtmlSelectorRelative: false,
 
         /**
          * @desc number of preload slides
@@ -478,8 +479,10 @@
                 // get first letter of subhtml
                 // if first letter starts with . or # get the html form the jQuery object
                 var fL = subHtml.substring(0, 1);
-                if (fL === '.' || fL === '#') {
+                if (fL === '.' || fL === '#' ) {
                     subHtml = $(subHtml).html();
+                } else if( this.s.subHtmlSelectorRelative === true ) {
+                    subHtml = this.$items.eq(index).find(subHtml).html();
                 }
             } else {
                 subHtml = '';
