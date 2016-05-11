@@ -5,8 +5,14 @@
     "main": [
         "dist/js/lightgallery.min.js",
         "dist/css/lightgallery.css",
-        "dist/fonts/*",
-        "dist/img/*"
+        "dist/fonts/lg.eot",
+        "dist/fonts/lg.svg",
+        "dist/fonts/lg.ttf",
+        "dist/fonts/lg.woff",
+        "dist/img/loading.gif",
+        "dist/img/video-play.png",
+        "dist/img/vimeo-play.png",
+        "dist/img/youtube-play.png"
     ],
     "keywords": [
         "gallery",
