@@ -11,7 +11,7 @@
     .lg-item.lg-complete.lg-zoomable{
 
         .lg-img-wrap {
-            @include transitionCustom(transform $zoom-transition-duration cubic-bezier(0, 0, 0.25, 1) 0s);
+            @include transitionCustom(left $zoom-transition-duration cubic-bezier(0, 0, 0.25, 1) 0s, top $zoom-transition-duration cubic-bezier(0, 0, 0.25, 1) 0s);
             @include translate3d(0, 0, 0);
             @include backface-visibility(hidden);
         }
