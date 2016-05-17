@@ -87,7 +87,10 @@
 
             $image.css('transform', 'scale3d(' + scaleVal + ', ' + scaleVal + ', 1)').attr('data-scale', scaleVal);
 
-            $image.parent().css('transform', 'translate3d(-' + x + 'px, -' + y + 'px, 0)').attr('data-x', x).attr('data-y', y);
+            $image.parent().css({
+                left: -x + 'px',
+                top: -y + 'px'
+            }).attr('data-x', x).attr('data-y', y);
         };
 
         var callScale = function() {
@@ -281,7 +284,10 @@
                 }
 
                 if ((Math.abs(endCoords.x - startCoords.x) > 15) || (Math.abs(endCoords.y - startCoords.y) > 15)) {
-                    _$el.css('transform', 'translate3d(' + distanceX + 'px, ' + distanceY + 'px, 0)');
+                    _$el.css({
+                        left: distanceX + 'px',
+                        top: distanceY + 'px'
+                    });
                 }
 
             }
@@ -369,7 +375,10 @@
                     distanceX = -Math.abs(_$el.attr('data-x'));
                 }
 
-                _$el.css('transform', 'translate3d(' + distanceX + 'px, ' + distanceY + 'px, 0)');
+                _$el.css({
+                    left: distanceX + 'px',
+                    top: distanceY + 'px'
+                });
             }
         });
 
@@ -438,7 +447,11 @@
                 distanceX = -Math.abs(_$el.attr('data-x'));
             }
 
-            _$el.css('transform', 'translate3d(' + distanceX + 'px, ' + distanceY + 'px, 0)');
+            _$el.css({
+                left: distanceX + 'px',
+                top: distanceY + 'px'
+            });
+
         }
     };
 
