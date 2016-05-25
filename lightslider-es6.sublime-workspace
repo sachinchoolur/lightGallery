@@ -1,0 +1,1373 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"abs",
+				"absolute"
+			],
+			[
+				"share",
+				"shareHtml"
+			],
+			[
+				"al",
+				"alt	Attr"
+			],
+			[
+				"cons",
+				"console"
+			],
+			[
+				"po",
+				"position"
+			],
+			[
+				"trans",
+				"transform"
+			],
+			[
+				"paddi",
+				"padding-right"
+			],
+			[
+				"bl",
+				"block"
+			],
+			[
+				"card",
+				"card-content"
+			],
+			[
+				"ipo",
+				"important"
+			],
+			[
+				"ca",
+				"card"
+			],
+			[
+				"doug",
+				"doughnutOptions"
+			],
+			[
+				"pad",
+				"padding"
+			],
+			[
+				"pa",
+				"padding"
+			],
+			[
+				"ba",
+				"background-color"
+			],
+			[
+				"margin",
+				"margin-bottom"
+			],
+			[
+				"ma",
+				"margin-left"
+			],
+			[
+				"be",
+				"before"
+			],
+			[
+				"border",
+				"border-radius"
+			],
+			[
+				"max-",
+				"max-width"
+			],
+			[
+				"fon",
+				"font"
+			],
+			[
+				"cur",
+				"cursor"
+			],
+			[
+				"impo",
+				"important"
+			],
+			[
+				"scree",
+				"screen-sm"
+			],
+			[
+				"padd",
+				"padding-bottom"
+			],
+			[
+				"margi",
+				"margin-bottom"
+			],
+			[
+				"ce",
+				"center"
+			],
+			[
+				"margin-",
+				"margin-bottom"
+			],
+			[
+				"medi",
+				"media	@media"
+			],
+			[
+				"backg",
+				"background-color"
+			],
+			[
+				"over",
+				"overflow-y"
+			],
+			[
+				"margni",
+				"margin-top"
+			],
+			[
+				"border-col",
+				"border-color"
+			],
+			[
+				"sectio",
+				"section-title"
+			],
+			[
+				"brand",
+				"brand-danger"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"dro",
+				"dropdown-menu"
+			],
+			[
+				"font",
+				"font	@font-face"
+			],
+			[
+				"tran",
+				"transparent"
+			],
+			[
+				"media",
+				"media-18"
+			],
+			[
+				"in",
+				"include	@include"
+			],
+			[
+				"opa",
+				"opacity"
+			],
+			[
+				"marig",
+				"margin-bottom"
+			],
+			[
+				"inclu",
+				"include	@include"
+			],
+			[
+				"incl",
+				"include	@include"
+			],
+			[
+				"bra",
+				"brand-primary"
+			],
+			[
+				"gra",
+				"gray-base"
+			],
+			[
+				"list-",
+				"list-group-item"
+			],
+			[
+				"no",
+				"normal"
+			],
+			[
+				"tex",
+				"text-decoration"
+			],
+			[
+				"exp",
+				"expense-summary"
+			],
+			[
+				"colo",
+				"border-color"
+			],
+			[
+				"inv",
+				"invoice"
+			],
+			[
+				"ex",
+				"extend	@extend"
+			],
+			[
+				"proto",
+				"prototype"
+			],
+			[
+				"pro",
+				"proto	Prototype"
+			],
+			[
+				"sell",
+				"sellMedia"
+			],
+			[
+				"im",
+				"important"
+			],
+			[
+				"con",
+				"console"
+			],
+			[
+				"list-sty",
+				"list-style-type"
+			],
+			[
+				"bac",
+				"background-color"
+			],
+			[
+				"di",
+				"div	Tag"
+			],
+			[
+				"che",
+				"checked"
+			],
+			[
+				"it",
+				"items"
+			],
+			[
+				"tra",
+				"transparent"
+			],
+			[
+				"page",
+				"pageX"
+			],
+			[
+				"hi",
+				"height"
+			],
+			[
+				"_d",
+				"_diff"
+			],
+			[
+				"aja",
+				"ajaxUrl"
+			],
+			[
+				"fot",
+				"font-size"
+			],
+			[
+				"paddin",
+				"padding-left"
+			],
+			[
+				"mar",
+				"margin-bottom"
+			],
+			[
+				"ov",
+				"overflow"
+			],
+			[
+				"m",
+				"margin-bottom"
+			],
+			[
+				"e",
+				"events"
+			],
+			[
+				"h",
+				"href	Attr"
+			],
+			[
+				"tars",
+				"transition"
+			],
+			[
+				"scrol",
+				"scrollTop"
+			],
+			[
+				"heigh",
+				"outerHeight"
+			],
+			[
+				"i",
+				"icon"
+			],
+			[
+				"tema",
+				"team-list"
+			],
+			[
+				"font-",
+				"font-size"
+			],
+			[
+				"point",
+				"pointA"
+			],
+			[
+				"gray-light",
+				"gray-lighter"
+			],
+			[
+				"call",
+				"callsheet-details"
+			],
+			[
+				"loca",
+				"location-no"
+			],
+			[
+				"min",
+				"min-width"
+			],
+			[
+				"font-s",
+				"font-size"
+			],
+			[
+				"bord",
+				"border"
+			],
+			[
+				"noti",
+				"notification-details"
+			],
+			[
+				"d",
+				"div	Tag"
+			],
+			[
+				"_dat",
+				"_dataHeight"
+			],
+			[
+				"_data",
+				"_dataHeight"
+			],
+			[
+				"tue",
+				"true"
+			],
+			[
+				"scro",
+				"scrollTop"
+			],
+			[
+				"ab",
+				"absolute"
+			],
+			[
+				"col",
+				"color"
+			],
+			[
+				"rgb",
+				"rgba	rgba()"
+			],
+			[
+				"foc",
+				"focus"
+			],
+			[
+				"remove",
+				"removeClass"
+			],
+			[
+				"light",
+				"lightSlider"
+			],
+			[
+				"angu",
+				"angular"
+			],
+			[
+				"max",
+				"max-width"
+			],
+			[
+				"span",
+				"span-6"
+			],
+			[
+				"mxa",
+				"max-width"
+			],
+			[
+				"inlin",
+				"inline-block"
+			],
+			[
+				"sub",
+				"subHtml"
+			],
+			[
+				"el",
+				"else"
+			],
+			[
+				"remo",
+				"remove"
+			],
+			[
+				"ad",
+				"addClassOnMob"
+			],
+			[
+				"css",
+				"cssEasing"
+			],
+			[
+				"comm",
+				"commentBox"
+			],
+			[
+				"lG",
+				"lGalleryOn"
+			],
+			[
+				"thi",
+				"this"
+			],
+			[
+				"ou",
+				"outer"
+			],
+			[
+				"sca",
+				"scale"
+			],
+			[
+				"scal",
+				"scale"
+			],
+			[
+				"add",
+				"addClass"
+			],
+			[
+				"set",
+				"setTimeout"
+			],
+			[
+				"padding",
+				"padding-bottom"
+			],
+			[
+				"text",
+				"text-decoration"
+			],
+			[
+				"src",
+				"srcItms"
+			],
+			[
+				"_sr",
+				"_src"
+			],
+			[
+				"wi",
+				"window"
+			],
+			[
+				"for",
+				"for	for (…) {…}"
+			],
+			[
+				"us",
+				"lg-use-left"
+			],
+			[
+				"use",
+				"useLeft"
+			],
+			[
+				"wid",
+				"width"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/C/wamp/www/lightslider-prvt-es6/src/app.js",
+			"settings":
+			{
+				"buffer_size": 7020,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Package Control Messages\n========================\n\nPackage Control:\n---------------\n\n  Version 3.1 Release Notes\n  \n  Package Control continues its focus on polish and fixing edge-case bugs. Some\n  of the changes in this version include:\n  \n   - quick panel for Install Package now stays open on Windows with recent\n     versions of ST3, even when focus is lost\n   - new \"downloader_precedence\" setting to allow users to use specific HTTP\n     backend due to network proxy or SSL issues\n   - added Install Local Dependency command for package developers to more\n     easily deal with dependencies during development\n   - improved handling of git/hg package upgrade errors\n   - better handling of locked .sublime-package files on Windows\n   - performance improvements for users with a large number of open windows\n  \n  For package developers, the list of available dependencies has been growing:\n  https://github.com/wbond/package_control_channel/blob/master/repository/dependencies.json\n  \n  Enjoy!\n  \n\n  Version 3.0 Release Notes\n  \n  \n  **** Windows Sublime Text 3 Users ****\n  \n  Due to a bug in Package Control 2.0, Windows ST3 users will need to open the\n  Sublime Text console (ctrl+`) and execute the following Python to properly\n  upgrade. All other users may ignore this part of the message.\n  \n  Make sure NOT to copy the leading two spaces, or an \"unexpected indent\" error\n  will occur.\n  \n  import urllib.request,os,sys; exec(\"if sys.version_info < (3,) or os.name != 'nt': raise OSError('This code is for Windows ST3 only!')\"); pr='Preferences.sublime-settings'; ip='ignored_packages'; n='Package Control'; s=sublime.load_settings(pr); ig=s.get(ip); ig.append(n); s.set(ip,ig); sublime.save_settings('Preferences.sublime-settings'); pf=n+'.sublime-package'; urllib.request.install_opener(urllib.request.build_opener(urllib.request.ProxyHandler())); by=urllib.request.urlopen('https://packagecontrol.io/'+pf.replace(' ','%20')).read(); open(os.path.join(sublime.installed_packages_path(),pf),'wb').write(by); ig.remove(n); s.set(ip,ig); sublime.save_settings(pr); print('Package Control: 3.0.0 upgrade successful!')\n  \n  ********\n  \n  \n  Package Control 3.0 adds a bunch of polish, improving the Sublime Text\n  experience for users and package developers:\n  \n   - improved upgrades of themes, color schemes and syntaxes\n   - dependency support\n   - SSL for Linux\n   - new secondary Windows HTTP backend\n   - patches for Python in Sublime Text 2 on Windows\n   - commands to easily remove channels and repositories\n   - an events API for packages\n   - improved documentation\n  \n  \n  As of July 2014, I now work for myself. This has allowed me to spend more time\n  working on open source software, including Package Control. If you appreciate\n  the work I've done, please consider a small donation. If even 5% of regular\n  users donated the price of a coffee or beer, that would cover quite a bit of\n  my development time! See https://packagecontrol.io/about for options.\n  \n  \n  Some recent Package Control stats:\n  \n   - every weekday over 1M JSON requests hit the channel server\n   - in December, the channel server will transmit 4TB+ of compressed JSON\n   - users have installed, upgraded or removed 85M+ packages since late 2011\n  \n  \n  Read more about the release at:\n  \n  https://packagecontrol.io/news#2014-12-23-Package_Control_30_Released\n  \n",
+			"settings":
+			{
+				"buffer_size": 3361,
+				"line_ending": "Windows",
+				"name": "Package Control Messages",
+				"scratch": true
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 127.0,
+		"last_filter": "install",
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"insa",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"setse",
+				"Set Syntax: Java Server Page (JSP)"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Remove Package"
+			],
+			[
+				"set syntax:java",
+				"Set Syntax: JavaScript"
+			]
+		],
+		"width": 416.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/wamp/www/lightslider-prvt-es6"
+	],
+	"file_history":
+	[
+		"/C/wamp/www/lightgallery-desktop/electron-gallery/app/app.js",
+		"/C/wamp/www/lightgallery-desktop/electron-gallery/app/background.js",
+		"/C/wamp/www/lightslider-prvt-es6/dist/app.js",
+		"/C/wamp/www/lightgallery-github/lightGallery/lightgallery/sass/lg-zoom.scss",
+		"/C/wamp/www/lightgallery-github/lightGallery/lightgallery/sass/lightgallery.scss",
+		"/C/wamp/www/lightgallery-github/lightGallery/lightgallery/sass/lg-theme-default.scss",
+		"/C/wamp/www/lightgallery-github/lightGallery/index.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/lightgallery/js/lightgallery.js",
+		"/C/wamp/www/lightgallery-github/lightGallery/lightgallery/js/lg-zoom.js",
+		"/C/wamp/www/lg-customization-works/Ben/lightGallery/index.html",
+		"/C/wamp/www/lg-customization-works/Ben/lightGallery/lightgallery/js/lg-hash.js",
+		"/C/wamp/www/lightgallery-github/lightGallery/lightgallery/sass/lg-variables.scss",
+		"/C/wamp/www/lightgallery-github/lightGallery/static/js/main.js",
+		"/C/wamp/www/lightgallery-github/lightGallery/lightgallery/sass/lg-autoplay.scss",
+		"/C/wamp/www/lightgallery-github/lightGallery/lightgallery/sass/lg-social.scss",
+		"/C/wamp/www/lightgallery-github/lightGallery/lightgallery/js/lg-social.js",
+		"/C/wamp/www/work/optaset/assets/less/global.less",
+		"/C/wamp/www/lg-customization-works/Ben/lightGallery/lightgallery/js/lg-social.js",
+		"/C/wamp/www/lightgallery-github/lightGallery/lightGallery.jquery.json",
+		"/C/wamp/www/lightgallery-github/lightGallery/package.json",
+		"/C/wamp/www/lightgallery-github/lightGallery/bower.json",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/videos.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/docs/api.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/lightgallery/js/lg-hash.js",
+		"/C/wamp/www/work/trial.io/index.html",
+		"/C/wamp/www/work/trial.io/environments.html",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_forms.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_button-groups.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_navbar.scss",
+		"/C/wamp/www/work/trial.io/home.html",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/application.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_icons.scss",
+		"/C/wamp/www/work/trial.io/assets/js/app.js",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_dropdowns.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_variables.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_global.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_list-group.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_navs.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_tables.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_fonts.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_labels.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/mixins/_size.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_forms.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_dock.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_buttons.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/mixins/_buttons.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/mixins/_forms.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_button-groups.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_buttons.scss",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_type.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_list-group.scss",
+		"/C/Users/sachin/Downloads/transfonter.org-20160303-031250/stylesheet.css",
+		"/C/Users/sachin/Downloads/webfontkit-20160302-221239/stylesheet.css",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/mixins/_grid.scss",
+		"/C/wamp/www/work/trial.io/assets/javascripts/app.js",
+		"/C/wamp/www/work/trial.io/assets/stylesheets/bootstrap/_ie-viewport-workaround.scss",
+		"/C/Users/sachin/Downloads/bootstrap-3.3.6 (1)/bootstrap-3.3.6/docs/examples/dashboard/index.html",
+		"/C/Users/sachin/Downloads/bootstrap-3.3.6 (1)/bootstrap-3.3.6/docs/examples/dashboard/dashboard.css",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_expense-chart.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_tags.scss",
+		"/C/wamp/www/work/staple/assets/css/application.css",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_expense.scss",
+		"/C/wamp/www/work/staple/assets/scripts/app.js",
+		"/C/wamp/www/work/staple/style-guide.html",
+		"/C/wamp/www/work/optaset/callsheet-home.html",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_icons.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_style-guide.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_modals.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_popovers.scss",
+		"/C/wamp/www/work/staple/expenses.html",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_global.scss",
+		"/C/Users/sachin/Desktop/css-toggle-switch-source/css-toggle-switch-source/css/style.css",
+		"/C/Users/sachin/Desktop/css-toggle-switch-source/css-toggle-switch-source/css/base.css",
+		"/C/wamp/www/work/optaset/callsheet-team.html",
+		"/C/wamp/www/work/optaset/assets/less/forms.less",
+		"/C/wamp/www/ngclipboard/index.html",
+		"/C/wamp/www/work/staple/index.html",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_navbar.scss",
+		"/C/wamp/www/work/staple/assets/scss/application.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_navs.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_media.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_variables.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_toolbar-header.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_theme.css",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_dock.scss",
+		"/C/wamp/www/work/staple/settings-users.html",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_user-settings.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_expense-list.scss",
+		"/C/wamp/www/lg-customization-works/thad/lightGallery/lightgallery-sub-html.html",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_dropdowns.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/mixins/_buttons.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_fonts.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_type.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/mixins/_forms.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/mixins/_nav-vertical-align.scss",
+		"/C/Users/sachin/Desktop/staple/assets/scss/bootstrap/mixins/_buttons.scss",
+		"/C/Users/sachin/Desktop/staple/assets/scss/bootstrap/_variables.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/_labels.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/mixins/_size.scss",
+		"/C/wamp/www/work/staple/assets/scss/bootstrap/mixins/_tab-focus.scss",
+		"/C/Users/sachin/Downloads/font/demo.html",
+		"/C/wamp/www/work/optaset/assets/less/dock.less",
+		"/C/Users/sachin/Downloads/font/stylesheet.css",
+		"/C/wamp/www/work/staple/assets/scss/_bootstrap-mincer.scss",
+		"/C/wamp/www/work/staple/assets/scss/_bootstrap-compass.scss",
+		"/C/wamp/www/work/staple/assets/scss/_bootstrap-sprockets.scss",
+		"/C/wamp/www/angular-flash-pr/angular-flash/dist/angular-flash.js",
+		"/C/wamp/www/angular-flash-pr/angular-flash/demo/javascripts/main.js",
+		"/C/wamp/www/angular-flash-pr/angular-flash/demo/index.html",
+		"/C/wamp/www/angular-flash-pr/angular-flash/src/angular-flash.js",
+		"/C/wamp/www/lightgallery-github/lightGallery/static/less/base.less",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/captions.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/comment-box.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/dynamic.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/easing.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/events.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/fixed-size.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/hash.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/html-markup.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/html5-videos.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/iframe.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/index.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/methods.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/responsive.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/demos/transitions.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/docs/index.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/docs/plugin-api.html",
+		"/C/wamp/www/lightgallery-github/lightGallery/docs/support.html"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			"C:\\wamp\\www\\lg-customization-works\\Ben\\lightGallery",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery\\lightgallery",
+			"C:\\wamp\\www\\work\\staple\\assets\\scss",
+			"C:\\wamp\\www\\work\\trial.io\\assets\\stylesheets",
+			"C:\\wamp\\www\\work\\staple\\assets\\scss",
+			"C:\\wamp\\www\\work\\trial.io\\assets\\stylesheets",
+			"C:\\wamp\\www\\work\\staple\\assets\\scss",
+			"C:\\wamp\\www\\work\\trial.io\\assets\\stylesheets",
+			"C:\\wamp\\www\\work\\optaset",
+			"C:\\wamp\\www\\work\\optaset\\assets",
+			"C:\\wamp\\www\\work\\staple\\assets\\scss",
+			"C:\\wamp\\www\\work\\staple",
+			"C:\\wamp\\www\\work\\staple\\assets\\scss",
+			"C:\\wamp\\www\\work\\staple",
+			"C:\\wamp\\www\\work\\staple\\assets\\scss",
+			"C:\\wamp\\www\\work\\staple",
+			"C:\\wamp\\www\\work\\staple\\",
+			"C:\\wamp\\www\\work\\staple\\assets\\scss",
+			"C:\\wamp\\www\\work\\optaset\\assets\\less",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery",
+			"C:\\wamp\\www\\lightgallery-desktop-github-prvt\\lightGallery\\static\\less",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery\\docs, C:\\wamp\\www\\lightgallery-github\\lightGallery\\demos",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery\\docs",
+			"C:\\wamp\\www\\electron-prvt\\lightgallery\\electron-boilerplate",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery\\",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery\\static\\less",
+			"C:\\wamp\\www\\angular-trix-github\\angular-trix",
+			"C:\\Users\\sachin\\Downloads\\motor\\motor",
+			"C:\\wamp\\www\\work\\optaset",
+			"C:\\wamp\\www\\work\\optaset\\assets\\less",
+			"C:\\wamp\\www\\work\\optaset",
+			"C:\\wamp\\www\\work\\optaset\\assets\\less",
+			"C:\\wamp\\www\\lightgallery-github-1\\lightGallery\\lightgallery\\js",
+			"C:\\wamp\\www\\lightgallery-github-1\\lightGallery\\lightgallery\\sass",
+			"C:\\wamp\\www\\lightgallery-github-1\\lightGallery\\lightgallery\\js",
+			"C:\\wamp\\www\\lightgallery-github-1\\lightGallery\\lightgallery\\sass",
+			"C:\\wamp\\www\\lightgallery-github-1\\lightGallery\\lightgallery",
+			"C:\\wamp\\www\\work\\optaset",
+			"C:\\wamp\\www\\work\\optaset\\assets\\less",
+			"C:\\wamp\\www\\work\\optset",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery\\lightgallery\\sass",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery\\lightgallery\\js",
+			"C:\\wamp\\www\\angular-clipboard.js",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery\\lightgallery",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery\\static",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery\\lightgallery",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery",
+			"C:\\wamp\\www\\lightgallery-github\\lightGallery\\docs",
+			"C:\\wamp\\www\\lightgallery1.2\\",
+			"C:\\wamp\\www\\lightgallery1.2\\lightgallery\\",
+			"C:\\wamp\\www\\lightgallery1.2\\lightgallery\\sass",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery\\sass",
+			"C:\\wamp\\www\\lightGallery1.2\\sass",
+			"C:\\wamp\\www\\lightGallery1.2",
+			"C:\\wamp\\www\\lightGallery1.2\\static\\less",
+			"C:\\wamp\\www\\lightGallery1.2",
+			"C:\\wamp\\www\\lightGallery1.2/demos",
+			"C:\\wamp\\www\\lightGallery1.2",
+			"C:\\wamp\\www\\lightGallery1.2/lightgallery/sass",
+			"C:\\wamp\\www\\lightGallery1.2/sass",
+			"C:\\wamp\\www\\lightGallery1.2",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery\\js",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery\\sass",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery\\js\\sass",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery\\js",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery/js",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery",
+			"C:\\wamp\\www\\lightGallery1.2",
+			"C:\\wamp\\www\\lightGallery1.2/lightgallery",
+			"C:\\wamp\\www\\lightGallery1.2",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery\\",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery\\sass",
+			"",
+			"C:\\wamp\\www\\lightgallery1.2\\lightgallery",
+			"C:\\wamp\\www\\lightgallery\\src\\js",
+			"C:\\wamp\\www\\lightgallery1.2\\static\\js",
+			"C:\\wamp\\www\\lightgallery1.2\\static\\less",
+			"C:\\wamp\\www\\lightgallery\\src",
+			"C:\\wamp\\www\\lightgallery\\src\\sass",
+			"C:\\Users\\sachin\\Downloads\\bootstrap-master\\bootstrap-master\\less",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery1.2\\static\\less",
+			"C:\\wamp\\www\\lightgallery\\src\\sass",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery1.2\\static\\less",
+			"C:\\wamp\\www\\lightGallery1.2\\lightgallery1.2\\static",
+			"C:\\wamp\\www\\lightgallery\\src\\sass",
+			"C:\\wamp\\www\\lightgallery\\src\\less",
+			"C:\\wamp\\www\\lightgallery\\src\\js",
+			"C:\\wamp\\www\\lightgallery\\src\\sass",
+			"C:\\wamp\\www\\lightGallery-beta-home\\sachinchoolur.github.io\\static\\less",
+			"C:\\wamp\\www\\lightgallery\\src\\sass",
+			"C:\\wamp\\www\\lightgallery\\src\\less",
+			"C:\\wamp\\www\\lightgallery\\src",
+			"C:\\wamp\\www\\lightgallery\\src\\js",
+			"C:\\wamp\\www\\lightgallery\\src",
+			"C:\\wamp\\www\\lightgallery\\src\\js",
+			"C:\\wamp\\www\\lightGallery-beta-home\\sachinchoolur.github.io\\static\\less",
+			"C:\\wamp\\www\\lightgallery\\src\\js",
+			"C:\\wamp\\www\\lightgallery\\src\\sass",
+			"C:\\wamp\\www\\lightgallery\\src",
+			"C:\\wamp\\www\\lightgallery\\src\\sass",
+			"C:\\wamp\\www\\lightgallery\\src",
+			"C:\\wamp\\www\\lightgallery",
+			"C:\\wamp\\www\\ngplugins\\ui\\static\\less",
+			"C:\\wamp\\www\\ngplugins\\ui\\static",
+			"C:\\wamp\\www\\lightgallery",
+			"C:\\wamp\\www\\angular-flash ^((?!hede).)*$",
+			"C:\\wamp\\www\\angular-flash",
+			"C:\\wamp\\www\\ladda-angular",
+			"C:\\wamp\\www\\plugin-test",
+			"C:\\wamp\\www\\lightgallery\\src",
+			"E:\\ds",
+			"C:\\wamp\\www\\lightgallery",
+			"C:\\wamp\\www\\angular-flash",
+			"C:\\wamp\\www\\",
+			"C:\\wamp\\www\\plugins\\static\\less",
+			"C:\\wamp\\www\\lightGallery"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"remo",
+			"addC",
+			"+",
+			"'",
+			"_this",
+			"transla",
+			"cubic-bezier(0, 0, 0.25, 1)",
+			"transform",
+			"scaleVal",
+			"1",
+			"lg-image",
+			"not",
+			"translate3d",
+			"scale3d",
+			"translate3d",
+			"transfo",
+			"cubic-bezier(0, 0, 0.25, 1)",
+			"off",
+			"ease",
+			"0.12",
+			"translate",
+			"transform",
+			"display: none;",
+			"lg-toolbar",
+			"</a></li>",
+			"<span class=\"lg-icon\"></span>",
+			"{\n        \n    }",
+			"target=\"_blank\">'",
+			"pinterestDropdownText",
+			"facebook",
+			"twitter",
+			">'",
+			"Pager",
+			"data-tweet-text",
+			"sub-html",
+			"data-sub",
+			".tm",
+			"lg.zoom",
+			"slide(",
+			"build",
+			"slide(",
+			"preload",
+			"slide(",
+			"lGalleryOn",
+			"items",
+			"loadContent",
+			"_src",
+			"data-src",
+			"loadContent",
+			"preload",
+			"items",
+			"modules",
+			".lg-img-wrap",
+			"0",
+			"1.0",
+			"@include translate3d(0, 0, 0);",
+			"opacity:",
+			"//",
+			"opacity:",
+			"}",
+			"opacity:",
+			"opacity",
+			"lg-from-hash",
+			"hidden",
+			"backfa",
+			"sucess",
+			"STARTED",
+			"environement-details",
+			"options-right",
+			"<div class=\"options-right\">\n                                                    <div class=\"action-wrapper\">\n                                                        <div class=\"action-triger\">\n                                                            <span class=\"ib media-16 icon-dots-hor-16\"></span>\n                                                            <div role=\"group\" class=\"btn-group\">\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-stop-44\"></span></button>\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-clock-44\"></span></button>\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-replay-44\"></span></button>\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-delete-44\"></span></button>\n                                                            </div>\n                                                        </div>\n                                                    </div>\n                                                </div>",
+			"options-right",
+			"rgba(151,187,205,0.5)",
+			"class=\"list\"",
+			"list",
+			"number",
+			"status-numbers",
+			"h4",
+			"div",
+			"line",
+			"navbar-form",
+			"navbar",
+			"<--",
+			"<div class=\"action-wrapper\">\n                                                        <div class=\"dropdown\">\n                                                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"true\"><span class=\"ib media-16 icon-dots-hor-16\"></span></a>\n                                                            <ul class=\"dropdown-menu pull-right\">\n                                                                <li><a href=\"#\"><span class=\"ib media-16 media-icon icon-stop-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-16 media-icon icon-clock-44\"></span> <span class=\"ib\">Schedule</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-16 media-icon icon-replay-44\"></span> <span class=\"ib\">Share</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-16 media-icon icon-delete-44\"></span> <span class=\"ib\">Delete</span></a></li>\n                                                            </ul>\n                                                        </div>\n                                                    </div>",
+			"<ul class=\"dropdown-menu pull-right\">\n                                                                <li><a href=\"#\"><span class=\"ib media-16 media-icon icon-stop-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-16 media-icon icon-clock-44\"></span> <span class=\"ib\">Schedule</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-16 media-icon icon-replay-44\"></span> <span class=\"ib\">Share</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-16 media-icon icon-delete-44\"></span> <span class=\"ib\">Delete</span></a></li>\n                                                            </ul>",
+			"checkbox-wrap",
+			"box-s",
+			"checkbox-wrap",
+			"caret",
+			"margin",
+			"caret",
+			"icon-arrow-down-12-light.svg",
+			"new ",
+			"caret",
+			">\n",
+			"<div class=\"dropdown\">\n                                                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"true\"><span class=\"ib media-16 icon-dots-hor-16\"></span></a>\n                                                            <ul class=\"dropdown-menu pull-right\">\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-stop-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-clock-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-replay-44\"></span> <span class=\"ib\">Share</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-delete-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                            </ul>\n                                                        </div>",
+			"<ul class=\"dropdown-menu pull-right\">\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-stop-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-clock-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-replay-44\"></span> <span class=\"ib\">Share</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-delete-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                            </ul>",
+			"5",
+			"ib media-16",
+			"22",
+			"drop",
+			"table-status",
+			"ib media-10 icon-sort-20\" style=\"opacity: 0.4;\"",
+			"col-title",
+			"</a></div>",
+			"barnd",
+			"barnd-success",
+			"success",
+			"#26d3b2",
+			"250",
+			"230",
+			"26d3b2",
+			".sidenav ",
+			"open",
+			"all",
+			"<div class=\"col-xs-2\">\n                                                <div class=\"options-right\">\n                                                    <div class=\"action-wrapper\">\n                                                        <div class=\"dropdown\">\n                                                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"true\"><span class=\"ib media-16 icon-dots-hor-16\"></span></a>\n                                                            <ul class=\"dropdown-menu pull-right\">\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-stop-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-clock-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-replay-44\"></span> <span class=\"ib\">Share</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-delete-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                            </ul>\n                                                        </div>\n                                                    </div>\n                                                </div>\n                                            </div>",
+			"<div class=\"col-xs-1\">\n                                                <span class=\"content\">\n                                                    Bryce Duffy\n                                                </span>\n                                            </div>",
+			"<div class=\"action-wrapper\">\n                                                        <div class=\"action-triger\">\n                                                            <span class=\"ib media-16 icon-dots-hor-16\"></span>\n                                                            <div role=\"group\" class=\"btn-group\">\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-stop-44\"></span></button>\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-clock-44\"></span></button>\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-replay-44\"></span></button>\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-delete-44\"></span></button>\n                                                            </div>\n                                                        </div>\n                                                    </div>",
+			"<div class=\"dropdown\">\n                                                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"true\"><span class=\"ib media-16 icon-dots-hor-16\"></span></a>\n                                                            <ul class=\"dropdown-menu pull-right\">\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-stop-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-clock-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-replay-44\"></span> <span class=\"ib\">Share</span></a></li>\n                                                                <li><a href=\"#\"><span class=\"ib media-22 icon-delete-44\"></span> <span class=\"ib\">Stop</span></a></li>\n                                                            </ul>\n                                                        </div>",
+			"<div class=\"action-triger\">\n                                                            <span class=\"ib media-16 icon-dots-hor-16\"></span>\n                                                            <div role=\"group\" class=\"btn-group\">\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-stop-44\"></span></button>\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-clock-44\"></span></button>\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-replay-44\"></span></button>\n                                                                <button class=\"btn btn-sm btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-22 icon-delete-44\"></span></button>\n                                                            </div>\n                                                        </div>",
+			"<span class=\"btn-icon media-18 icon-share-36\"></span>",
+			"<span class=\"btn-icon media-18 icon-new-cards-36\"></span>",
+			"class=\"btn-icon media-18 icon-new-card-36\"",
+			"\n                                            <button class=\"btn btn-default btn-transparent\" type=\"button\"><span class=\"btn-icon media-18 icon-cards-36\"></span></button>",
+			"<ul class=\"dropdown-menu dropdown-menu-right\">\n                                                    <li><a href=\"#\">Dropdown link</a></li>",
+			"<li><a href=\"#\">Dropdown link</a></li>",
+			"<button type=\"button\" class=\"btn btn-default btn-sm\">",
+			"data-toggle=\"dropdown\"",
+			"tooltip"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"$brand-warning",
+			"$brand-info",
+			"$brand-success",
+			"$brand-primary",
+			"$brand-primary-darker",
+			"$gray-base",
+			"<a target=\"_blank\" href=\"https://twitter.com/sachinchoolur\"><img src=\"../static/img/social/twitter.png\"></a>\n            <a target=\"_blank\" href=\"https://in.linkedin.com/in/sachinchoolur\"><img src=\"../static/img/social/linked-in.png\"></a>",
+			"",
+			"Support<span class=\"border\">",
+			"http://sachinchoolur.github.io/lightGallery/docs/support.html#support",
+			"var _winNm = (parseFloat(_this.core.$slide.eq(index).find('.lg-input').val() / (_this.core.$slide.eq(index).find('.lg-line').width() / 2 - _this.core.s.pointSize), 10));",
+			"<li><a href=\"http://sachinchoolur.github.io/lightGallery/docs/support.html#donate\" onClick=\"ga('send', 'event', 'link', 'click', 'Donate');\">Donate<span class=\"border\"></span></a></li>",
+			"class=\"app-main no-trans\"",
+			"app-container",
+			"<script src=\"assets/js/app.js\"></script>",
+			"linear",
+			"<nav class=\"sidenav\">\n                        <ul class=\"sidenav list-unstyled\">\n                            <li class=\"sidenav-menu active\">\n                                <a href=\"index.html\">\n                                    <span class=\"sidenav-menu-container\">\n                                        <span class=\"sidenav-menu-icon sidenav-menu-icon-projects\"></span>\n                                        <span class=\"sidenav-menu-name\">Projects</span>\n                                    </span>\n                                </a>\n                            </li>\n                            <li class=\"sidenav-menu\">\n                                <a href=\"documents.html\">\n                                    <span class=\"sidenav-menu-container\">\n                                        <span class=\"sidenav-menu-icon sidenav-menu-icon-documents\"></span>\n                                        <span class=\"sidenav-menu-name\">Documents</span>\n                                    </span>\n                                </a>\n                            </li>\n                            <li class=\"sidenav-menu\">\n                                <a href=\"admin.html\">\n                                    <span class=\"sidenav-menu-container\">\n                                        <span class=\"sidenav-menu-icon sidenav-menu-icon-admin\"></span>\n                                        <span class=\"sidenav-menu-name\">Admin</span>\n                                    </span>\n                                </a>\n                            </li>\n                            <li class=\"sidenav-menu\">\n                                <a href=\"departments.html\">\n                                    <span class=\"sidenav-menu-container\">\n                                        <span class=\"sidenav-menu-icon sidenav-menu-icon-departments\"></span>\n                                        <span class=\"sidenav-menu-name\">Departments</span>\n                                    </span>\n                                </a>\n                            </li>\n                        </ul>\n                    </nav>",
+			"<li><a target=\"_blank\" href=\"http://www.teamwave.com/?kid=676V2\">Teamwave<span class=\"border\"></span></a></li>",
+			"<a class=\"navbar-brand\" href=\"http://sachinchoolur.github.io/lightGallery/\">lg</a>",
+			"index.html",
+			"captions.html",
+			"lg-fullscreen-on",
+			"lg",
+			"_this",
+			"lg-thumb-item",
+			"lg-has-thumb",
+			"lg-thumb",
+			"lg-thumb-outer",
+			"lg-fullscreen",
+			"lg-grabbing",
+			"lg-dragging",
+			"lg-left-end",
+			"lg-right-end",
+			"lg-next-slide",
+			"lg-prev-slide",
+			"lg-no-trans",
+			"lg-complete",
+			"lg-has-mask",
+			"lg-object",
+			"lg-loaded",
+			"data-sub-html",
+			"lg-show-after-load",
+			"lg-grab",
+			"lg-fade",
+			"lg-slide",
+			"lg-css3",
+			"lg-current",
+			"lg-close",
+			"lg-toolbar",
+			"lg-inner",
+			"lg-outer",
+			"lg-next",
+			"lg-prev",
+			"lg-actions",
+			"lg-item",
+			"lg-on",
+			"lg-sub-html",
+			"slideEndAnimation",
+			"this",
+			"self",
+			"href=\"http://re.lunarservers.com/~fluid21/",
+			"src=\"http://re.lunarservers.com/~fluid21/",
+			"&lt;",
+			"&gt;",
+			"&lt;",
+			"_s",
+			"lSSlide",
+			"lSpg",
+			"lSGallery",
+			"lSPager",
+			"lSFade",
+			"lSSlideWrapper",
+			"lSSlideOuter",
+			"lSNext",
+			"lSPrev",
+			"lSAction",
+			"video",
+			"href=\"javascript:void(0)\"",
+			"lightSlider"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/C/wamp/www/lightslider-prvt-es6/src/app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7020,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4967,
+								4967
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 297.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3361,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								115,
+								115
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"word_wrap": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 161.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 24.0
+	},
+	"pinned_build_system": "Packages/C++/C++ Single File.sublime-build",
+	"project": "lightslider-es6.sublime-project",
+	"replace":
+	{
+		"height": 40.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"navbar",
+				"assets\\stylesheets\\bootstrap\\_navbar.scss"
+			],
+			[
+				"nav",
+				"assets\\stylesheets\\bootstrap\\_navbar.scss"
+			],
+			[
+				"buttons",
+				"assets\\stylesheets\\bootstrap\\_buttons.scss"
+			],
+			[
+				"dock",
+				"assets\\stylesheets\\bootstrap\\_dock.scss"
+			],
+			[
+				"varia",
+				"assets\\stylesheets\\bootstrap\\_variables.scss"
+			],
+			[
+				"variable",
+				"assets\\stylesheets\\bootstrap\\_variables.scss"
+			],
+			[
+				"icon",
+				"assets\\stylesheets\\bootstrap\\_icons.scss"
+			],
+			[
+				"fonts",
+				"assets\\stylesheets\\bootstrap\\_fonts.scss"
+			],
+			[
+				"expense",
+				"assets\\scss\\bootstrap\\_expense-list.scss"
+			],
+			[
+				"globa",
+				"assets\\scss\\bootstrap\\_global.scss"
+			],
+			[
+				"doc",
+				"assets\\scss\\bootstrap\\_dock.scss"
+			],
+			[
+				"variabl",
+				"assets\\scss\\bootstrap\\_variables.scss"
+			],
+			[
+				"varial",
+				"assets\\scss\\bootstrap\\_variables.scss"
+			],
+			[
+				"app.js",
+				"assets\\scripts\\app.js"
+			],
+			[
+				"inde",
+				"index.html"
+			],
+			[
+				"icons",
+				"assets\\scss\\bootstrap\\_icons.scss"
+			],
+			[
+				"exm",
+				"expenses.html"
+			],
+			[
+				"expn",
+				"assets\\scss\\bootstrap\\_expense-list.scss"
+			],
+			[
+				"forms",
+				"assets\\scss\\bootstrap\\_forms.scss"
+			],
+			[
+				"list-",
+				"assets\\scss\\bootstrap\\_list-group.scss"
+			],
+			[
+				"docs",
+				"assets\\scss\\bootstrap\\_dock.scss"
+			],
+			[
+				"vari",
+				"assets\\scss\\bootstrap\\_variables.scss"
+			],
+			[
+				"expe",
+				"assets\\scss\\bootstrap\\_expense-list.scss"
+			],
+			[
+				"expens",
+				"expenses.html"
+			],
+			[
+				"list",
+				"assets\\scss\\bootstrap\\_list-group.scss"
+			],
+			[
+				"toolba",
+				"assets\\scss\\bootstrap\\_toolbar-header.scss"
+			],
+			[
+				"glob",
+				"assets\\scss\\bootstrap\\_global.scss"
+			],
+			[
+				"appli",
+				"assets\\scss\\application.scss"
+			],
+			[
+				"button",
+				"assets\\scss\\bootstrap\\_buttons.scss"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"C:\\Users\\sachin\\Downloads\\bootstrap-3.3.6 (1)\\bootstrap-3.3.6\\docs\\examples\\dashboard\\trial.io.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 224.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
