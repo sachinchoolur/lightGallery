@@ -29,6 +29,18 @@ $(document).ready(function() {
         customizeGallery($('#select-trans').val(), 'cubic-bezier(' + $('#select-ease').val() + ')');
     });
 
+    $('#lg-download-btn').on('click', function(){
+        setTimeout(function(){
+            $( "#promoBar" ).slideDown( 'fast', function() {
+                $('html, body').animate({scrollTop:0}, 'fast');
+            });
+        }, 2000);
+    });
+
+    $('#promo_close').on('click', function(){
+        $( '#promoBar' ).slideUp( 'fast');
+    });
+
     new WOW().init();
 
     setTimeout(function() {

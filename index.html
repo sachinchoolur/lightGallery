@@ -14,6 +14,33 @@ v1<!DOCTYPE html>
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <meta name="google-site-verification" content="U0us1UCMQlFMWkKW8ix6UQfCg3qhrHhFjzwlODnx5G0" />
+        <style type="text/css">
+            .promo_bar {
+                background: #ff5b5d none repeat scroll 0 0;
+                height: 3.8em;
+                padding: 1em 1.25em;
+                position: relative;
+            }
+            .contain {
+                margin: 0 auto;
+                max-width: 77.8125em;
+                position: relative;
+            }
+            .promo_bar p {
+                color: white;
+                font-size: 15px;
+                font-weight: 400;
+                margin: 0;
+                text-align: center;
+            }
+            .promo_bar .promo_close {
+                color: #fff;
+                font-weight: bold;
+                position: absolute;
+                right: 20px;
+                top: 16px;
+            }
+        </style>
         <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -33,6 +60,12 @@ v1<!DOCTYPE html>
             </div>
         </div>
         <div class="main-cont abs">
+            <section class="promo_bar" id="promoBar" style="display:none">
+                <div class="container">
+                    <p>Please support the project by starring it on <a onclick="ga('send', 'event', 'star', 'star');" href="https://github.com/sachinchoolur/lightGallery/" target="_blank" style="color: rgb(255, 255, 255); text-decoration: underline;">GitHub</a></p>
+                    <a href="javascript:void(0)" id="promo_close" class="promo_close"> X </a>
+               </div>
+           </section>
             <section class="hero" id="hero">
                 <nav class="navbar navbar-default" role="navigation">
                     <div class="container-fluid">
@@ -64,7 +97,7 @@ v1<!DOCTYPE html>
                             <div class="page-head">
                                 <h1>jQuery lightgallery <span class="version">V1.2.17</span></h1>
                                 <p class="lead">A customizable, modular, responsive, lightbox gallery plugin for jQuery.</p>
-                                <a style="margin-right:10px;" class="btn btn-primary btn-lg" href="https://github.com/sachinchoolur/lightGallery">View on github</a>
+                                <a id="lg-download-btn" onclick="ga('send', 'event', 'download', 'download');" style="margin-right:10px; min-width: 170px;" class="btn btn-primary btn-lg" href="https://github.com/sachinchoolur/lightGallery/archive/master.zip">Download ZIP</a>
                             </div>
                             <img class="hide" class="img-responsive" src="static/img/1-1600.jpg">
                             <img class="hide" class="img-responsive" src="static/img/2-1600.jpg">
