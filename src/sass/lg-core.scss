@@ -87,7 +87,9 @@
     }
 
     .lg-item {
-        background: url("#{$lg-path-images}/loading.gif") no-repeat scroll center center transparent;
+        @if $lg-preloader != false {
+            background: url("#{$lg-path-images}/#{$lg-preloader}") no-repeat scroll center center transparent;
+        }
         display: none !important;
     }
     &.lg-css3 {
