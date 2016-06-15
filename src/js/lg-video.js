@@ -3,7 +3,6 @@
     'use strict';
 
     var defaults = {
-        videoMaxWidth: '855px',
         youtubePlayerParams: false,
         vimeoPlayerParams: false,
         dailymotionPlayerParams: false,
@@ -48,9 +47,7 @@
             }
         });
 
-        // Set max width for video
-        _this.core.$el.on('onAferAppendSlide.lg.tm', function(event, index) {
-            _this.core.$slide.eq(index).find('.lg-video-cont').css('max-width', _this.core.s.videoMaxWidth);
+        _this.core.$el.on('onAferAppendSlide.lg.tm', function() {
             _this.videoLoaded = true;
         });
 
