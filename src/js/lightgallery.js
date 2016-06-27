@@ -142,7 +142,7 @@
         }
 
         // if dynamic option is enabled execute immediately
-        var _hash = window.location.hash;
+        var _hash = this.s.get ? window.location.search : window.location.hash;
         if (_hash.indexOf('lg=' + this.s.galleryId) > 0) {
 
             _this.index = parseInt(_hash.split('&slide=')[1], 10);
