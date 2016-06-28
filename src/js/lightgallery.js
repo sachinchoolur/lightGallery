@@ -35,6 +35,8 @@
         // .lg-item || '.lg-sub-html'
         appendSubHtmlTo: '.lg-sub-html',
 
+        subHtmlSelectorRelative: false,
+
         /**
          * @desc number of preload slides
          * will exicute only after the current slide is fully loaded.
@@ -449,10 +451,9 @@
      *  @param {Number} index - index of the slide
      */
     Plugin.prototype.addHtml = function(index) {
-        var subHtml = null,
-            subHtmlSelf,
-            subHtmlUrl,
-            $currentEle = this.$items.eq(index);
+        var subHtml = null;
+        var subHtmlUrl;
+        var $currentEle = this.$items.eq(index);
         if (this.s.dynamic) {
             if (this.s.dynamicEl[index].subHtmlUrl) {
                 subHtmlUrl = this.s.dynamicEl[index].subHtmlUrl;
@@ -463,9 +464,7 @@
             if ($currentEle.attr('data-sub-html-url')) {
                 subHtmlUrl = $currentEle.attr('data-sub-html-url');
             } else {
-
                 subHtml = $currentEle.attr('data-sub-html');
-                subHtmlSelf = $currentEle.attr('data-sub-html-self');
                 if (this.s.getCaptionFromTitleOrAlt && !subHtml) {
                     subHtml = $currentEle.attr('title') || $currentEle.find('img').first().attr('alt');
                 }
@@ -479,10 +478,10 @@
                 // if first letter starts with . or # get the html form the jQuery object
                 var fL = subHtml.substring(0, 1);
                 if (fL === '.' || fL === '#') {
-                    if (subHtmlSelf) {
-                        subHtml = $currentEle.find(subHtml).html();     
+                    if (this.s.subHtmlSelectorRelative) {
+                        subHtml = $currentEle.find(subHtml).html(); 
                     } else {
-                        subHtml = $(subHtml).html();                        
+                        subHtml = $(subHtml).html();         
                     }
                 }
             } else {

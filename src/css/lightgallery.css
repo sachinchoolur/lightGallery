@@ -444,7 +444,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 1080;
+  z-index: 1083;
   opacity: 0;
   -webkit-transition: opacity 0.08s ease 0s;
   -moz-transition: opacity 0.08s ease 0s;
