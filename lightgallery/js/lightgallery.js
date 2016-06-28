@@ -35,6 +35,8 @@
         // .lg-item || '.lg-sub-html'
         appendSubHtmlTo: '.lg-sub-html',
 
+        subHtmlSelectorRelative: false,
+
         /**
          * @desc number of preload slides
          * will exicute only after the current slide is fully loaded.
@@ -451,6 +453,7 @@
     Plugin.prototype.addHtml = function(index) {
         var subHtml = null;
         var subHtmlUrl;
+        var $currentEle = this.$items.eq(index);
         if (this.s.dynamic) {
             if (this.s.dynamicEl[index].subHtmlUrl) {
                 subHtmlUrl = this.s.dynamicEl[index].subHtmlUrl;
@@ -458,13 +461,12 @@
                 subHtml = this.s.dynamicEl[index].subHtml;
             }
         } else {
-            if (this.$items.eq(index).attr('data-sub-html-url')) {
-                subHtmlUrl = this.$items.eq(index).attr('data-sub-html-url');
+            if ($currentEle.attr('data-sub-html-url')) {
+                subHtmlUrl = $currentEle.attr('data-sub-html-url');
             } else {
-
-                subHtml = this.$items.eq(index).attr('data-sub-html');
+                subHtml = $currentEle.attr('data-sub-html');
                 if (this.s.getCaptionFromTitleOrAlt && !subHtml) {
-                    subHtml = this.$items.eq(index).attr('title') || this.$items.eq(index).find('img').first().attr('alt');
+                    subHtml = $currentEle.attr('title') || $currentEle.find('img').first().attr('alt');
                 }
             }
         }
@@ -476,7 +478,11 @@
                 // if first letter starts with . or # get the html form the jQuery object
                 var fL = subHtml.substring(0, 1);
                 if (fL === '.' || fL === '#') {
-                    subHtml = $(subHtml).html();
+                    if (this.s.subHtmlSelectorRelative) {
+                        subHtml = $currentEle.find(subHtml).html(); 
+                    } else {
+                        subHtml = $(subHtml).html();         
+                    }
                 }
             } else {
                 subHtml = '';

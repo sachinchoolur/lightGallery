@@ -325,6 +325,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 .lg-outer .lg-thumb-item img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 .lg-outer.lg-has-thumb .lg-item {
   padding-bottom: 120px;
@@ -443,7 +444,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 1080;
+  z-index: 1083;
   opacity: 0;
   -webkit-transition: opacity 0.08s ease 0s;
   -moz-transition: opacity 0.08s ease 0s;

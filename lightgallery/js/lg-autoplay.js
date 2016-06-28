@@ -157,12 +157,11 @@
 
         _this.interval = setInterval(function() {
             if (_this.core.index + 1 < _this.core.$items.length) {
-                _this.core.index = _this.core.index;
+                _this.core.index++;
             } else {
-                _this.core.index = -1;
+                _this.core.index = 0;
             }
 
-            _this.core.index++;
             _this.fromAuto = true;
             _this.core.slide(_this.core.index, false, false);
         }, _this.core.s.speed + _this.core.s.pause);

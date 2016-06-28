@@ -142,6 +142,110 @@ $('#captions').lightGallery(); </pre>
                 </div>
             </div>
         </section>
+        <section class="section pdb0 highlight">
+            <div class="container-fluid">
+                <h2 id="relativeCaption" class="anchor-title mrb35">
+                    <a href="#relativeCaption">Caption relative to current element.</a>
+                    <span class="border"></span>
+                </h2>
+                <div class="demo-gallery dark mrb35">
+                    <ul id="relative-caption" class="list-unstyled row">
+                        <li class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/1.jpg" data-sub-html=".caption">
+                            <a href="">
+                                <img class="img-responsive" src="../static/img/thumb-1.jpg">
+                                <div class="demo-gallery-poster">
+                                    <img src="../static/img/zoom.png">
+                                </div>
+                            </a>
+                            <div class="caption">
+                                <h4>Caption1</h4><p>Desc1</p>
+                            </div>
+                        </li>
+                        <li class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/2.jpg" data-sub-html=".caption">
+                            <a href="">
+                                <img class="img-responsive" src="../static/img/thumb-2.jpg">
+                                <div class="demo-gallery-poster">
+                                    <img src="../static/img/zoom.png">
+                                </div>
+                            </a>
+                            <div class="caption">
+                                <h4>Caption2</h4><p>Desc2</p>
+                            </div>
+                        </li>
+                        <li class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/13.jpg" data-sub-html=".caption">
+                            <a href="">
+                                <img class="img-responsive" src="../static/img/thumb-13.jpg">
+                                <div class="demo-gallery-poster">
+                                    <img src="../static/img/zoom.png">
+                                </div>
+                            </a>
+                            <div class="caption">
+                                <h4>Caption3</h4><p>Desc3</p>
+                            </div>
+                        </li>
+                        <li class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/4.jpg" data-sub-html=".caption">
+                            <a href="">
+                                <img class="img-responsive" src="../static/img/thumb-4.jpg">
+                                <div class="demo-gallery-poster">
+                                    <img src="../static/img/zoom.png">
+                                </div>
+                            </a>
+                            <div class="caption">
+                                <h4>Caption4</h4><p>Desc4</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="docs-ad">
+                    <div class="lg-ad light">
+                        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- lg1.2demo -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-2888290830590449"
+     data-ad-slot="5565545012"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+                    </div>
+                </div>
+                <div class="code-demo mrb50">
+                    <div class="section-header">
+                        <h4 class="section-title mrb15">HTML structure</h4>
+                    </div>
+                    <div class="sample-code html">
+                        <pre class="prettyprint linenums lang-html">   
+                  
+&lt;ul id="relative-caption"&gt;
+  &lt;a href="img/img1.jpg" data-sub-html=".caption"&gt;
+      &lt;img src="img/thumb1.jpg" /&gt;
+      &lt;div class="caption"&gt;
+        &lt;h4>Caption1&lt;/h4&gt;&lt;p>Desc1&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/a&gt;
+  &lt;a href="img/img2.jpg" data-sub-html=".caption"&gt;
+      &lt;img src="img/thumb2.jpg" /&gt;
+      &lt;div class="caption"&gt;
+        &lt;h4>Caption1&lt;/h4&gt;&lt;p>Desc1&lt;/p&gt;
+      &lt;/div&gt;
+  &lt;/a&gt;
+  ...
+&lt;/ul&gt;</pre>
+                    </div>
+                </div>
+                <div class="code-demo mrb50">
+                    <div class="section-header">
+                        <h4 class="section-title mrb15">Javascript</h4>
+                    </div>
+                    <div class="sample-code js">
+                        <pre class="prettyprint linenums lang-js">
+$('#relative-caption').lightGallery({
+    subHtmlSelectorRelative: true
+}); </pre>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section class="demo-links section">
             <div class="container-fluid">
                 <h2 id="more-demo" class="anchor-title mrb50">
@@ -206,6 +310,21 @@ $('#captions').lightGallery(); </pre>
             <a target="_blank" href="https://twitter.com/sachinchoolur"><img src="../static/img/social/twitter.png"></a>
             <a target="_blank" href="https://in.linkedin.com/in/sachinchoolur"><img src="../static/img/social/linked-in.png"></a>
         </footer>
+        <style type="text/css">
+            .caption {
+                float: left;
+                width: 100%;
+            }
+            .caption p {
+                color: #888;
+                font-size: 12px;
+                margin: 0;
+            }
+            .caption h4 {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+        </style>
         <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

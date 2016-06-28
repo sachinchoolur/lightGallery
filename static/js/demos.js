@@ -169,6 +169,9 @@ $(document).ready(function() {
     });
 
     $('#captions').lightGallery();
+    $('#relative-caption').lightGallery({
+        subHtmlSelectorRelative: true
+    });
     $('#hash').lightGallery();
 
     var $commentBox = $('#comment-box');
