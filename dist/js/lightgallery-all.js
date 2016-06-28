@@ -1,4 +1,4 @@
-/*! lightgallery - v1.2.20 - 2016-06-28
+/*! lightgallery - v1.2.21 - 2016-06-28
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 (function($, window, document, undefined) {
@@ -456,7 +456,7 @@
     Plugin.prototype.addHtml = function(index) {
         var subHtml = null;
         var subHtmlUrl;
-        var $currentEle = this.$items.eq(index);
+        var $currentEle;
         if (this.s.dynamic) {
             if (this.s.dynamicEl[index].subHtmlUrl) {
                 subHtmlUrl = this.s.dynamicEl[index].subHtmlUrl;
@@ -464,6 +464,7 @@
                 subHtml = this.s.dynamicEl[index].subHtml;
             }
         } else {
+            $currentEle = this.$items.eq(index);
             if ($currentEle.attr('data-sub-html-url')) {
                 subHtmlUrl = $currentEle.attr('data-sub-html-url');
             } else {
@@ -481,10 +482,10 @@
                 // if first letter starts with . or # get the html form the jQuery object
                 var fL = subHtml.substring(0, 1);
                 if (fL === '.' || fL === '#') {
-                    if (this.s.subHtmlSelectorRelative) {
-                        subHtml = $currentEle.find(subHtml).html(); 
+                    if (this.s.subHtmlSelectorRelative && !this.s.dynamic) {
+                        subHtml = $currentEle.find(subHtml).html();
                     } else {
-                        subHtml = $(subHtml).html();         
+                        subHtml = $(subHtml).html();
                     }
                 }
             } else {
