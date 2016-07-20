@@ -151,10 +151,10 @@
 
             $('body').addClass('lg-from-hash');
             if (!$('body').hasClass('lg-on')) {
-                $('body').addClass('lg-on');
                 setTimeout(function() {
                     _this.build(_this.index);
                 });
+                $('body').addClass('lg-on');
             }
         }
 
