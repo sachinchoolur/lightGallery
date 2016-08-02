@@ -17,6 +17,7 @@
         addClass: '',
         startClass: 'lg-start-zoom',
         backdropDuration: 150,
+        hideBars: true,
         hideBarsDelay: 6000,
 
         useLeft: false,
@@ -236,19 +237,21 @@
 
         _this.$el.trigger('onAfterOpen.lg');
 
-        // Hide controllers if mouse doesn't move for some period
-        _this.$outer.on('mousemove.lg click.lg touchstart.lg', function() {
+        if (_this.s.hideBars) {
+	        // Hide controllers if mouse doesn't move for some period
+	        _this.$outer.on('mousemove.lg click.lg touchstart.lg', function() {
 
-            _this.$outer.removeClass('lg-hide-items');
+	            _this.$outer.removeClass('lg-hide-items');
 
-            clearTimeout(_this.hideBartimeout);
+	            clearTimeout(_this.hideBartimeout);
 
-            // Timeout will be cleared on each slide movement also
-            _this.hideBartimeout = setTimeout(function() {
-                _this.$outer.addClass('lg-hide-items');
-            }, _this.s.hideBarsDelay);
+	            // Timeout will be cleared on each slide movement also
+	            _this.hideBartimeout = setTimeout(function() {
+	                _this.$outer.addClass('lg-hide-items');
+	            }, _this.s.hideBarsDelay);
 
-        });
+	        });
+        }
 
     };
 
