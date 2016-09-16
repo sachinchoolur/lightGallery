@@ -21,7 +21,7 @@
 .lg-actions .lg-next, .lg-actions .lg-prev {
   background-color: rgba(0, 0, 0, 0.45);
   border-radius: 2px;
-  color: #999;
+  color: #999999;
   cursor: pointer;
   display: block;
   font-size: 22px;
@@ -36,7 +36,7 @@
   opacity: 0.5;
 }
 .lg-actions .lg-next:hover, .lg-actions .lg-prev:hover {
-  color: #FFF;
+  color: white;
 }
 .lg-actions .lg-next {
   right: 20px;
@@ -55,9 +55,11 @@
   0% {
     left: 0;
   }
+
   50% {
     left: -30px;
   }
+
   100% {
     left: 0;
   }
@@ -66,9 +68,11 @@
   0% {
     left: 0;
   }
+
   50% {
     left: -30px;
   }
+
   100% {
     left: 0;
   }
@@ -77,9 +81,11 @@
   0% {
     left: 0;
   }
+
   50% {
     left: -30px;
   }
+
   100% {
     left: 0;
   }
@@ -88,9 +94,11 @@
   0% {
     left: 0;
   }
+
   50% {
     left: -30px;
   }
+
   100% {
     left: 0;
   }
@@ -99,9 +107,11 @@
   0% {
     left: 0;
   }
+
   50% {
     left: 30px;
   }
+
   100% {
     left: 0;
   }
@@ -110,9 +120,11 @@
   0% {
     left: 0;
   }
+
   50% {
     left: 30px;
   }
+
   100% {
     left: 0;
   }
@@ -121,9 +133,11 @@
   0% {
     left: 0;
   }
+
   50% {
     left: 30px;
   }
+
   100% {
     left: 0;
   }
@@ -132,9 +146,11 @@
   0% {
     left: 0;
   }
+
   50% {
     left: 30px;
   }
+
   100% {
     left: 0;
   }
@@ -161,7 +177,7 @@
   background-color: rgba(0, 0, 0, 0.45);
 }
 .lg-toolbar .lg-icon {
-  color: #999;
+  color: #999999;
   cursor: pointer;
   float: right;
   font-size: 24px;
@@ -177,7 +193,7 @@
   transition: color 0.2s linear;
 }
 .lg-toolbar .lg-icon:hover {
-  color: #FFF;
+  color: white;
 }
 .lg-toolbar .lg-close:after {
   content: "\e070";
@@ -189,7 +205,7 @@
 .lg-sub-html {
   background-color: rgba(0, 0, 0, 0.45);
   bottom: 0;
-  color: #EEE;
+  color: #eeeeee;
   font-size: 16px;
   left: 0;
   padding: 10px 40px;
@@ -209,7 +225,7 @@
 }
 
 #lg-counter {
-  color: #999;
+  color: #999999;
   display: inline-block;
   font-size: 16px;
   padding-left: 20px;
@@ -261,7 +277,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 }
 
 .lg-outer .lg-thumb-outer {
-  background-color: #0D0A0A;
+  background-color: #0d0a0a;
   bottom: 0;
   position: absolute;
   width: 100%;
@@ -342,9 +358,9 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   bottom: 100px;
 }
 .lg-outer .lg-toogle-thumb {
-  background-color: #0D0A0A;
+  background-color: #0d0a0a;
   border-radius: 2px 2px 0 0;
-  color: #999;
+  color: #999999;
   cursor: pointer;
   font-size: 24px;
   height: 39px;
@@ -360,7 +376,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   content: "\e1ff";
 }
 .lg-outer .lg-toogle-thumb:hover {
-  color: #FFF;
+  color: white;
 }
 
 .lg-outer .lg-video-cont {
@@ -438,7 +454,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 }
 
 .lg-progress-bar {
-  background-color: #333;
+  background-color: #333333;
   height: 5px;
   left: 0;
   position: absolute;
@@ -839,5 +855,3 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   -o-transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
   transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
 }
-
-/*# sourceMappingURL=lightgallery.css.map */

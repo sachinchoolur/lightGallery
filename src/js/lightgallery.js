@@ -107,6 +107,21 @@
         }
 
         // Gallery items
+        this.setItems();
+
+        // .lg-item
+        this.$slide = '';
+
+        // .lg-outer
+        this.$outer = '';
+
+        this.init();
+
+        return this;
+    }
+
+    Plugin.prototype.setItems = function() {
+
         if (this.s.dynamic) {
             this.$items = this.s.dynamicEl;
         } else {
@@ -122,15 +137,12 @@
                 this.$items = this.$el.children();
             }
         }
+    }
 
-        // .lg-item
-        this.$slide = '';
+    Plugin.prototype.refresh = function() {
 
-        // .lg-outer
-        this.$outer = '';
-
+        this.setItems();
         this.init();
-
         return this;
     }
 
