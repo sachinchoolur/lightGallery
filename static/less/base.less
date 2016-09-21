@@ -730,3 +730,67 @@ body.home.in {
     }
 
 }
+
+
+// License
+.license-outer {
+    @hovercolor: #ff7878;
+    border: 2px solid #152836;
+    border-radius: 4px;
+    margin-top: 10px;
+    cursor: pointer;
+    .transition(border-color 0.15s ease 0s);
+    &:hover {
+        border-color: @hovercolor;
+        .price {
+            background-color: @hovercolor !important;
+        }
+        .license {
+            color: @hovercolor;
+        }
+    }
+    .license {
+        padding: 20px 20px 0;
+        color: #333;
+        text-align: center;
+        .transition(color 0.15s ease 0s);
+        &:hover {
+            text-decoration: none;
+        }
+        small {
+            display: block;
+            font-size: 13px;
+        }
+        > h2 {
+            margin: 4px;
+            line-height: 1;
+            text-align: center !important;
+        }
+        .price {
+            background-color: #152836;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: -26px;
+            margin-top: 20px;
+            padding: 7px 0;
+            .transition(background-color 0.15s ease 0s);
+        }
+        .plan {
+            font-size: 16px;
+            margin-top: 15px;
+        }
+    }
+}
+.select-plugin {
+    padding: 40px 0 20px;
+    text-align: center;
+    > select {
+        min-width: 200px;
+        padding: 5px;
+    }
+    .label {
+        margin-right: 20px;
+    }
+}
+
