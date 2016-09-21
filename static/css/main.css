@@ -3850,13 +3850,13 @@ body.home.in .main-cont #hero > .navbar {
   transition: border-color 0.15s ease 0s;
 }
 .license-outer:hover {
-  border-color: #ff7878;
+  border-color: #e02c2c;
 }
 .license-outer:hover .price {
-  background-color: #ff7878 !important;
+  background-color: #e02c2c !important;
 }
 .license-outer:hover .license {
-  color: #ff7878;
+  color: #e02c2c;
 }
 .license-outer .license {
   padding: 20px 20px 0;
