@@ -1,6 +1,23 @@
-/*! lightgallery - v1.2.22 - 2016-07-20
+/*! lightgallery - v1.2.22 - 2016-09-21
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
+
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module unless amdModuleId is set
+    define([], function () {
+      return (factory());
+    });
+  } else if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else {
+    factory();
+  }
+}(this, function () {
+
 (function($, window, document, undefined) {
 
     'use strict';
@@ -1315,3 +1332,6 @@
     $.fn.lightGallery.modules = {};
 
 })(jQuery, window, document);
+
+
+}));

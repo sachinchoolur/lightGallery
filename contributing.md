@@ -1,5 +1,7 @@
 # Contributing
 
+You're more than welcome to contribute to this project. Please note: your code may be used as part of a commercial product if merged.
+
 ## Important notes
 Please don't edit files in the `dist` subdirectory as they are generated via Grunt. You'll find source code in the `src` subdirectory!
 

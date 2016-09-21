@@ -6,6 +6,9 @@ module.exports = function(grunt) {
     // Show elapsed time at the end
     require('time-grunt')(grunt);
 
+    grunt.loadNpmTasks('grunt-umd');
+    grunt.loadNpmTasks('grunt-banner');
+
     // Project configuration.
     grunt.initConfig({
         // Metadata.
@@ -30,7 +33,7 @@ module.exports = function(grunt) {
                 files: {
                     'dist/css/<%= pkg.name %>.css': ['src/css/<%= pkg.name %>.css'],
                     'dist/css/lg-fb-comment-box.css': ['src/css/lg-fb-comment-box.css'],
-                    'dist/css/lg-transitions.css': ['src/css/lg-transitions.css'],
+                    'dist/css/lg-transitions.css': ['src/css/lg-transitions.css']/*,
                     'dist/js/<%= pkg.name %>.js': ['src/js/<%= pkg.name %>.js'],
                     'dist/js/<%= pkg.name %>-all.js': ['src/js/<%= pkg.name %>.js', 'src/js/lg-autoplay.js', 'src/js/lg-fullscreen.js', 'src/js/lg-pager.js', 'src/js/lg-thumbnail.js', 'src/js/lg-video.js', 'src/js/lg-zoom.js', 'src/js/lg-hash.js'],
                     'dist/js/lg-autoplay.js': ['src/js/lg-autoplay.js'],
@@ -39,7 +42,7 @@ module.exports = function(grunt) {
                     'dist/js/lg-thumbnail.js': ['src/js/lg-thumbnail.js'],
                     'dist/js/lg-video.js': ['src/js/lg-video.js'],
                     'dist/js/lg-zoom.js': ['src/js/lg-zoom.js'],
-                    'dist/js/lg-hash.js': ['src/js/lg-hash.js']
+                    'dist/js/lg-hash.js': ['src/js/lg-hash.js']*/
                 }
             }
         },
@@ -50,9 +53,9 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: [{
-                    src: 'src/js/<%= pkg.name %>.js',
+                    src: 'dist/js/<%= pkg.name %>.js',
                     dest: 'dist/js/<%= pkg.name %>.min.js'
-                }, {
+                }/*, {
                     src: ['src/js/<%= pkg.name %>.js', 'src/js/lg-autoplay.js', 'src/js/lg-fullscreen.js', 'src/js/lg-pager.js', 'src/js/lg-thumbnail.js', 'src/js/lg-video.js', 'src/js/lg-zoom.js', 'src/js/lg-hash.js'],
                     dest: 'dist/js/<%= pkg.name %>-all.min.js'
                 }, {
@@ -76,7 +79,28 @@ module.exports = function(grunt) {
                 }, {
                     src: 'src/js/lg-hash.js',
                     dest: 'dist/js/lg-hash.min.js'
-                }]
+                }*/]
+            }
+        },
+        umd: {
+            all: {
+                options: {
+                    src: 'src/js/<%= pkg.name %>.js',
+                    dest: 'dist/js/<%= pkg.name %>.js'
+                }
+            }
+        },
+
+        usebanner: {
+            taskName: {
+                options: {
+                    position: 'top',
+                    banner: '<%= banner %>',
+                    linebreak: true
+                },
+                files: {
+                    src: ['dist/js/<%= pkg.name %>.js']
+                }
             }
         },
         cssmin: {
@@ -174,7 +198,7 @@ module.exports = function(grunt) {
     });
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'connect', 'qunit', 'clean', 'concat', 'uglify', 'sass', 'cssmin', 'copy'/*, 'watch'*/]);
+    grunt.registerTask('default', ['clean', 'jshint', 'connect', 'qunit', 'concat', 'umd:all', 'uglify', 'sass', 'cssmin', 'copy', 'usebanner'/*, 'watch'*/]);
     grunt.registerTask('server', function() {
         grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
         grunt.task.run(['serve']);

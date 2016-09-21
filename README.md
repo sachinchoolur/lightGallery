@@ -170,31 +170,15 @@ Built in modules
 4. [Zoom](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-zoom)
 4. [Hash](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-hash)
 
-Support
-----
-Please use GitHub [issue tracker](https://github.com/sachinchoolur/lightGallery/issues/new) in the event that you have come across a bug or glitch. It would also be very helpful if you could add a jsFiddle, which would allow you to demonstrate the problem in question.
+License
+---
 
-You can post a comment [here](http://sachinchoolur.github.io/lightGallery/#comments) to leave feedback, and offer any feature suggestions you may have for Lightgallery.
+#### Commercial license
+If you want to use lightGallery to develop commercial sites, themes, projects, and applications, the Commercial license is the appropriate license. With this option, your source code is kept proprietary. Purchase a lightGallery Commercial License at uplabs.com/posts/lightgallery
 
-Please use [stackoverflow](https://stackoverflow.com/search?q=lightgallery) instead of github issue tracker if you need any help with implementing lightgallery in your project or if you have any personal support requests. **If you need any special customization, feature or support email me at _sachi77n@gmail.com_. I can do it for reasonable price.**
+#### Open source license
 
-Do you like lightgallery? You can support the project by staring the github repository or [tweet](https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&ref_src=twsrc%5Etfw&text=lightGallery%20-%20The%20complete%20%23jQuery%20lightbox%20gallery%20plugin.%20%23javascript&tw_p=tweetbutton&url=http%3A%2F%2Fsachinchoolur.github.io%2FlightGallery%2F) about this project.
-
-Follow me on twitter [@sachinchoolur](https://twitter.com/sachinchoolur) for the latest news, updates about this project.
-
-Other Projects
-----
-#####[jQuery lightslider](https://github.com/sachinchoolur/lightslider)
-> lightSlider is a lightweight responsive Content slider with carousel thumbnails navigation.
-
-#####[Angular flash](https://github.com/sachinchoolur/angular-flash)
-> A simple lightweight flash message module for angularjs
-
-#####[ladda-angular](https://github.com/sachinchoolur/ladda-angular)
-> Ladda button directive for angularjs
-
-#####[Teamwave](http://www.teamwave.com/?kid=676V2)
-> Integrated Suite of Business Applications.. (Not an open source project but free for the first 1,000 Companies!)
+If you are creating an open source application under a license compatible with the GNU GPL license v3, you may use this project under the terms of the GPLv3.
 
 
 
