@@ -77,7 +77,7 @@
                                     <div class="row">
                                         <div class="col-sm-5 col-sm-offset-1">
                                             <div class="license-outer">
-                                                <a href="" class="license">
+                                                <a href="https://site.uplabs.com/posts/lightgallery-plugin" target="_blank" class="license">
                                                     <small>Commercial</small>
                                                     <h2>Developer</h2>
                                                     <small>License</small>
@@ -88,7 +88,7 @@
                                         </div>
                                         <div class="col-sm-5">
                                             <div class="license-outer">
-                                                <a class="license" href="">
+                                                <a class="license" href="https://site.uplabs.com/posts/lightgallery-plugin" target="_blank">
                                                     <small>Commercial</small>
                                                     <h2>Team</h2>
                                                     <small>License</small>
@@ -169,47 +169,56 @@
                 var price = {
                     lightgallery: {
                         developer: 10,
-                        team: 40
+                        team: 40,
+                        url: 'https://site.uplabs.com/posts/lightgallery-plugin'
                     },
                     thumbnails: {
                         developer: 8,
-                        team: 32
+                        team: 40,
+                        url: 'https://site.uplabs.com/posts/lg-thumbnail'
                     },
                     videos: {
                         developer: 8,
-                        team: 32
+                        team: 40,
+                        url: 'https://site.uplabs.com/posts/lg-video'
                     },
                     zoom: {
                         developer: 8,
-                        team: 32
+                        team: 40,
+                        url: 'https://site.uplabs.com/posts/lg-zoom'
                     },
                     hash: {
                         developer: 5,
-                        team: 20
+                        team: 25,
+                        url: 'https://site.uplabs.com/posts/lg-hash'
                     },
                     autoplay: {
                         developer: 5,
-                        team: 20
+                        team: 25,
+                        url: 'https://site.uplabs.com/posts/lg-autoplay'
                     },
                     fullscreen: {
                         developer: 5,
-                        team: 20
+                        team: 25,
+                        url: 'https://site.uplabs.com/posts/lg-fullscreen'
                     },
                     share: {
                         developer: 5,
-                        team: 20
+                        team: 25,
+                        url: 'https://site.uplabs.com/posts/lg-share'
                     },
                     pager: {
                         developer: 5,
-                        team: 20
+                        team: 25,
+                        url: 'https://site.uplabs.com/posts/lg-pager'
                     }
                 };
 
                 $('#select-plugin').on('change', function() {
                     var value = $(this).val();
-                    console.log(value)
                     $('#developer-price').html('$' + price[value].developer);
                     $('#team-price').html('$' + price[value].team);
+                    $('.license-outer > a').attr('href', price[value].url);
                 });
             });
 
