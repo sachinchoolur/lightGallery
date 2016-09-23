@@ -86,7 +86,10 @@ module.exports = function(grunt) {
             all: {
                 options: {
                     src: 'src/js/<%= pkg.name %>.js',
-                    dest: 'dist/js/<%= pkg.name %>.js'
+                    dest: 'dist/js/<%= pkg.name %>.js',
+                    deps: {
+                        default: ['jquery']
+                    }
                 }
             }
         },
