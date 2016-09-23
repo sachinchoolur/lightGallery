@@ -88,7 +88,8 @@ module.exports = function(grunt) {
                     src: 'src/js/<%= pkg.name %>.js',
                     dest: 'dist/js/<%= pkg.name %>.js',
                     deps: {
-                        default: ['jquery']
+                        default: ['jquery'],
+                        global: ['jQuery']
                     }
                 }
             }
