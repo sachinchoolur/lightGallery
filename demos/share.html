@@ -4,8 +4,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-        <title>lightGallery: Fixed size</title>
-        <meta name="description" content="lightGallery with fixed sizes demo" />
+        <title>lightGallery: Share</title>
+        <meta name="description" content="lightGallery hash plugin lets you to provide unique url for each gallery images. lightGallery will record slide history and allows you to travel to previous slides via browser close button." />
         <link href="../static/css/main.css" rel="stylesheet">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
         <link href="../lightgallery/css/lightgallery.css" rel="stylesheet">
@@ -34,11 +34,10 @@
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="../">Home<span class="border"></span></a></li>
-                        <li><a href="../docs/license.html">License<span class="border"></span></a></li>
                         <li><a href="../docs/">Docs<span class="border"></span></a></li>
                         <li class="active"><a href="../demos/">Demos<span class="border"></span></a></li>
                         <li><a target="_blank" href="https://github.com/sachinchoolur/lightGallery">Github<span class="border"></span></a></li>
-                        <li><a target="_blank" href="http://sachinchoolur.github.io/lightgallery-desktop/">Desktop<span class="border"></span></a></li><li><a target="_blank" href="https://github.com/sachinchoolur/lightslider">lightSlider<span class="border"></span></a></li>
+                        <li><a target="_blank" href="https://github.com/sachinchoolur/lightslider">lightSlider<span class="border"></span></a></li>
                         
                     </ul>
                 </div>
@@ -47,12 +46,16 @@
         <section class="section pdb0">
             <div class="container-fluid">
                 <div class="section-header has-desc mrb50">
-                    <h1 class="page-header mrb15">Gallery with fixed size.</h1>
-                    <p>By default lightgallery opens in a fullscreen window. But if you want tranditional fixed size gallery you can specify width and hight by passing values to <code>width</code> <code>height</code> settings.</p>
+                    <h1 class="page-header mrb15">Lightgallery Share plugin</h1>
+                    <p>Share plugin allows you to share your images to Twitter, Facebook, Pinterest and Google plus.</p>
+                </div>
+                <div class="bs-callout bs-callout-danger mrb20">
+                    <h4>Plugin dependency<a class="anchorjs-link"><span class="anchorjs-icon"></span></a></h4>
+                    <p>Lightgallery require the hash and lg-share plugins to be included in your document.</p>
                 </div>
                 <div class="demo-gallery dark mrb35">
-                    <ul id="fixed-size" class="list-unstyled row">
-                        <li class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/1.jpg" data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>">
+                    <ul id="lg-share-demo" class="list-unstyled row">
+                        <li data-pinterest-text="Pin it1" data-tweet-text="share on twitter 1" class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/1.jpg" data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>">
                             <a href="">
                                 <img class="img-responsive" src="../static/img/thumb-1.jpg">
                                 <div class="demo-gallery-poster">
@@ -60,7 +63,7 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/2.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
+                        <li data-pinterest-text="Pin it2" data-tweet-text="share on twitter 2" class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/2.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
                             <a href="">
                                 <img class="img-responsive" src="../static/img/thumb-2.jpg">
                                 <div class="demo-gallery-poster">
@@ -68,7 +71,7 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/13.jpg" data-sub-html="<h4>Sunset Serenity</h4><p>A gorgeous Sunset tonight captured at Coniston Water....</p>">
+                        <li data-pinterest-text="Pin it3" data-tweet-text="share on twitter 3" class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/13.jpg" data-sub-html="<h4>Sunset Serenity</h4><p>A gorgeous Sunset tonight captured at Coniston Water....</p>">
                             <a href="">
                                 <img class="img-responsive" src="../static/img/thumb-13.jpg">
                                 <div class="demo-gallery-poster">
@@ -76,7 +79,7 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/4.jpg" data-sub-html="<h4>Coniston Calmness</h4><p>Beautiful morning</p>">
+                        <li data-pinterest-text="Pin it4" data-tweet-text="share on twitter 4" class="col-xs-6 col-sm-4 col-md-3" data-src="../static/img/4.jpg" data-sub-html="<h4>Coniston Calmness</h4><p>Beautiful morning</p>">
                             <a href="">
                                 <img class="img-responsive" src="../static/img/thumb-4.jpg">
                                 <div class="demo-gallery-poster">
@@ -104,17 +107,29 @@
                         <h4 class="section-title mrb15">HTML structure</h4>
                     </div>
                     <div class="sample-code html">
-<pre class="prettyprint linenums lang-html">
-&lt;div id="fixed-size"&gt;
-  &lt;a href="img/img1.jpg"&gt;
+                        <pre class="prettyprint linenums lang-html">
+&lt;div id="lg-share"&gt;
+  &lt;a data-pinterest-text="Pin it1" data-tweet-text="share on twitter 1" href="img/img1.jpg"&gt;
       &lt;img src="img/thumb1.jpg" /&gt;
   &lt;/a&gt;
-  &lt;a href="img/img2.jpg"&gt;
+  &lt;a data-pinterest-text="Pin it2" data-tweet-text="share on twitter 2" href="img/img2.jpg"&gt;
       &lt;img src="img/thumb2.jpg" /&gt;
   &lt;/a&gt;
   ...
-&lt;/div&gt;
-</pre>
+&lt;/div&gt;</pre>
+                    </div>
+                    <p>Optionally you can pass separate url for each images instead of current browser url.</p>
+                    <div class="sample-code html">
+                        <pre class="prettyprint linenums lang-html">
+&lt;div id="lg-share"&gt;
+  &lt;a data-pinterest-text="Pin it1" data-tweet-text="share on twitter 1" data-facebook-share-url="facebook-share.html" data-twitter-share-url="twitter-share.html" data-googleplus-share-url="googleplus-share.html" data-pinterest-share-url="pinterest-share.html" href="img/img1.jpg"&gt;
+      &lt;img src="img/thumb1.jpg" /&gt;
+  &lt;/a&gt;
+  &lt;a data-pinterest-text="Pin it1" data-tweet-text="share on twitter 1" data-facebook-share-url="facebook-share.html" data-twitter-share-url="twitter-share.html" data-googleplus-share-url="googleplus-share.html" data-pinterest-share-url="pinterest-share.html" href="img/img2.jpg"&gt;
+      &lt;img src="img/thumb2.jpg" /&gt;
+  &lt;/a&gt;
+  ...
+&lt;/div&gt;</pre>
                     </div>
                 </div>
                 <div class="code-demo mrb50">
@@ -122,49 +137,8 @@
                         <h4 class="section-title mrb15">Javascript</h4>
                     </div>
                     <div class="sample-code js">
-<pre class="prettyprint linenums lang-js">
-$('#fixed-size').lightGallery({
-    width: '700px',
-    height: '470px',
-    mode: 'lg-fade',
-    addClass: 'fixed-size',
-    counter: false,
-    download: false,
-    startClass: '',
-    enableSwipe: false,
-    enableDrag: false,
-    speed: 500
-});
-</pre>
-                    </div>
-                </div>
-
-                <div class="code-demo mrb50">
-                    <div class="section-header mrb15">
-                        <h4 class="section-title">Css (optional)</h4>
-                    </div>
-                    <div class="sample-code css">
-<pre class="prettyprint linenums lang-css">
-.lg-backdrop.in {
-    opacity: 0.85;
-}
-.fixed-size.lg-outer .lg-inner {
-  background-color: #FFF;
-}
-.fixed-size.lg-outer .lg-sub-html {
-  position: absolute;
-  text-align: left;
-}
-.fixed-size.lg-outer .lg-toolbar {
-  background-color: transparent;
-  height: 0;
-}
-.fixed-size.lg-outer .lg-toolbar .lg-icon {
-  color: #FFF;
-}
-.fixed-size.lg-outer .lg-img-wrap {
-  padding: 12px;
-}
+                        <pre class="prettyprint linenums lang-js">
+$('#lg-share-demo').lightGallery();
 </pre>
                     </div>
                 </div>
@@ -229,7 +203,6 @@ $('#fixed-size').lightGallery({
                 </div>
             </div>
         </section>
-        
         <footer>
             <a target="_blank" href="https://twitter.com/sachinchoolur"><img src="../static/img/social/twitter.png"></a>
             <a target="_blank" href="https://in.linkedin.com/in/sachinchoolur"><img src="../static/img/social/linked-in.png"></a>
@@ -247,11 +220,8 @@ $('#fixed-size').lightGallery({
         <script src="../static/js/transition.js"></script>
         <script src="../static/js/collapse.js"></script>
         <script src="../lightgallery/js/lightgallery.js"></script>
+        <script src="../lightgallery/js/lg-hash.js"></script>
+        <script src="../lightgallery/js/lg-share.js"></script>
         <script src="../static/js/demos.js"></script>
-        <style type="text/css">
-            .lg-backdrop.in {
-                opacity: 0.85;
-            }
-        </style>
     </body>
 </html>

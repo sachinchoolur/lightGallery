@@ -174,6 +174,8 @@ $(document).ready(function() {
     });
     $('#hash').lightGallery();
 
+    $('#lg-share-demo').lightGallery();
+
     var $commentBox = $('#comment-box');
     $commentBox.lightGallery({
         appendSubHtmlTo: '.lg-item',
