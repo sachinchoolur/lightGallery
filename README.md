@@ -89,6 +89,14 @@ If you want to include any lightgallery plugin you can include it after lightgal
     <script src="js/lg-fullscreen.min.js"></script>
 </body>  
 ```
+lightGallery also supports AMD, CommonJS and ES6 modules.
+When you use AMD make sure that lightgallery.js is loaded before lightgallery modules.
+```js
+require(['./lightgallery.js'], function() {
+    require(["./lg-zoom.js", "./lg-thumbnail.js"], function(){
+        $("#lightgallery").lightGallery(); 
+    });
+});
 ##### The markup
 lightgallery does not force you to use any kind of markup. you can use whatever markup you want. But i suggest you to use the following markup. [Here](http://sachinchoolur.github.io/lightGallery/demos/html-markup.html) you can find the detailed examples of deferent kind of markups.
 ``` html
@@ -111,14 +119,6 @@ Finally you need to initiate the gallery by adding the following code.
     });
 </script>
 ```
-
-#### Support lightgallery
-If you like lightgallery please support the project by staring the repository or <a href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&ref_src=twsrc%5Etfw&text=lightGallery%20-%20The%20complete%20%23jQuery%20lightbox%20gallery%20plugin.%20%23javascript&tw_p=tweetbutton&url=http%3A%2F%2Fsachinchoolur.github.io%2FlightGallery%2F" target="_blank">tweet</a> about this project.
-
-Need collaborators 
----
-If anyone is interested in becoming a collaborator please drop me an email at sachi77n@gmail.com.
-I have been quite busy lately. Unable to reply to all support and customization requests. Any assistance with this project would be greatly appreciated.
 
 Resources
 ----
@@ -162,13 +162,14 @@ Demos
 
 Built in modules
 ----
-1. [Thumbnail](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-thumbnial)
-2. [Autoplay](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-autoplay)
-3. [Video](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-video)
-4. [Fullscreen](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-fullscreen)
-4. [Pager](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-pager)
-4. [Zoom](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-zoom)
-4. [Hash](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-hash)
+1. Thumbnail - [GItHub](https://github.com/sachinchoolur/lg-thumbnail) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-thumbnial)
+2. Autoplay - [GItHub](https://github.com/sachinchoolur/lg-autoplay) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-autoplay)
+3. Video - [GItHub](https://github.com/sachinchoolur/lg-video) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-video)
+4. Fullscreen - [GItHub](https://github.com/sachinchoolur/lg-fullscreen) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-fullscreen)
+5. Pager - [GItHub](https://github.com/sachinchoolur/lg-pager) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-pager)
+6. Zoom - [GItHub](https://github.com/sachinchoolur/lg-zoom) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-zoom)
+7. Hash - [GItHub](https://github.com/sachinchoolur/lg-hash) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-hash)
+8. Share - [GItHub](https://github.com/sachinchoolur/lg-share) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-share)
 
 License
 ---
@@ -179,6 +180,3 @@ If you want to use lightGallery to develop commercial sites, themes, projects, a
 #### Open source license
 
 If you are creating an open source application under a license compatible with the GNU GPL license v3, you may use this project under the terms of the GPLv3.
-
-
-
