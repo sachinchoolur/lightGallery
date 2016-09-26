@@ -99,7 +99,7 @@ require(['./lightgallery.js'], function() {
     });
 });
 ```
-##### The markup
+#### The markup
 lightgallery does not force you to use any kind of markup. you can use whatever markup you want. But i suggest you to use the following markup. [Here](http://sachinchoolur.github.io/lightGallery/demos/html-markup.html) you can find the detailed examples of deferent kind of markups.
 ``` html
 <div id="lightgallery">
