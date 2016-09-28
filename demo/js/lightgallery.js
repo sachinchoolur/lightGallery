@@ -1,25 +1,25 @@
-/*! lightgallery - v1.3.2 - 2016-09-23
+/*! lightgallery - v1.3.4 - 2016-09-28
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module unless amdModuleId is set
-    define(["jquery"], function (a0) {
+    define(['jquery'], function (a0) {
       return (factory(a0));
     });
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory(require("jquery"));
+    module.exports = factory(require('jquery'));
   } else {
     factory(jQuery);
   }
-}(this, function (jquery) {
+}(this, function ($) {
 
 
-(function(){
+(function($, window, document, undefined) {
     'use strict';
 
     var defaults = {
@@ -361,7 +361,10 @@
             $inner.css('transition-duration', this.s.speed + 'ms');
         }
 
-        $('.lg-backdrop').addClass('in');
+
+        setTimeout(function() {
+            $('.lg-backdrop').addClass('in');
+        });
 
         setTimeout(function() {
             _this.$outer.addClass('lg-visible');
@@ -1331,7 +1334,7 @@
 
     $.fn.lightGallery.modules = {};
 
-})();
+})(jQuery, window, document);
 
 
 }));
