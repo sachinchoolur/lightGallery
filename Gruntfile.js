@@ -88,8 +88,31 @@ module.exports = function(grunt) {
                     src: 'src/js/<%= pkg.name %>.js',
                     dest: 'dist/js/<%= pkg.name %>.js',
                     deps: {
-                        default: ['jquery'],
-                        global: ['jQuery']
+                        args : ['$'],
+                        'default': ['$'],
+                        amd: {
+                            indent: 6,
+                            items: ['jquery'],
+                            prefix: '\'',
+                            separator: ',\n',
+                            suffix: '\''
+                        },
+                        cjs: {
+                            indent: 6,
+                            items: ['jquery'],
+                            prefix: 'require(\'',
+                            separator: ',\n',
+                            suffix: '\')'
+                        },
+                        global: {
+                            items: ['jQuery'],
+                        },
+                        pipeline: {
+                            indent: 0,
+                            items : ['jquery'],
+                            prefix: '//= require ',
+                            separator: '\n',
+                        }
                     }
                 }
             }

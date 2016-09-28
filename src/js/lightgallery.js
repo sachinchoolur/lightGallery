@@ -1,5 +1,5 @@
 
-(function(){
+(function($, window, document, undefined) {
     'use strict';
 
     var defaults = {
@@ -341,7 +341,10 @@
             $inner.css('transition-duration', this.s.speed + 'ms');
         }
 
-        $('.lg-backdrop').addClass('in');
+
+        setTimeout(function() {
+            $('.lg-backdrop').addClass('in');
+        });
 
         setTimeout(function() {
             _this.$outer.addClass('lg-visible');
@@ -1311,4 +1314,4 @@
 
     $.fn.lightGallery.modules = {};
 
-})();
+})(jQuery, window, document);
