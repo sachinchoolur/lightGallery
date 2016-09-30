@@ -1,6 +1,6 @@
 {
     "name": "lightgallery",
-    "version": "1.3.4",
+    "version": "1.3.5",
     "description": "A lightweight, customizable, modular, responsive, lightbox gallery plugin for jQuery.",
     "main": [
         "dist/js/lightgallery.min.js",
