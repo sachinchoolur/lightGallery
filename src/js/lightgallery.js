@@ -1,5 +1,5 @@
 
-(function($, window, document, undefined) {
+(function() {
     'use strict';
 
     var defaults = {
@@ -1314,4 +1314,4 @@
 
     $.fn.lightGallery.modules = {};
 
-})(jQuery, window, document);
+})();
