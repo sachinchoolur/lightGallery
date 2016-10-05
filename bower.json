@@ -4,7 +4,7 @@
     "description": "A lightweight, customizable, modular, responsive, lightbox gallery plugin for jQuery.",
     "main": [
         "dist/js/lightgallery.min.js",
-        "dist/css/lightgallery.css",
+        "src/sass/lightgallery.scss",
         "dist/fonts/lg.eot",
         "dist/fonts/lg.svg",
         "dist/fonts/lg.ttf",
