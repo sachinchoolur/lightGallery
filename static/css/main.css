@@ -3866,8 +3866,11 @@ body.home.in .main-cont #hero > .navbar {
   -o-transition: color 0.15s ease 0s;
   transition: color 0.15s ease 0s;
 }
-.license-outer .license:hover {
+.license-outer .license:hover,
+.license-outer .license:active,
+.license-outer .license:focus {
   text-decoration: none;
+  outline: none;
 }
 .license-outer .license small {
   display: block;

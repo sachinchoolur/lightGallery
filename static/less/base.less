@@ -754,8 +754,9 @@ body.home.in {
         color: #333;
         text-align: center;
         .transition(color 0.15s ease 0s);
-        &:hover {
+        &:hover, &:active, &:focus {
             text-decoration: none;
+            outline: none;
         }
         small {
             display: block;
