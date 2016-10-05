@@ -2,7 +2,7 @@
 
 ### Commercial License
 
-If you want to use lightGallery for business, commercial sites, themes, projects, and applications, the Commercial license is the appropriate license. With this option, your source code is kept proprietary. Purchase a lightGallery Commercial License at https://site.uplabs.com/posts/lightgallery
+If you want to use lightGallery for business, commercial sites, themes, projects, and applications, the Commercial license is the appropriate license. With this option, your source code is kept proprietary. Purchase a lightGallery Commercial License at https://site.uplabs.com/posts/lightgallery-plugin
 
 ### Open-source License
 
