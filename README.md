@@ -43,10 +43,14 @@ Installation
 ---
 #### Install with Bower
 
-You can install ```lightgallery``` using the [Bower](http://bower.io) package manager.
+You can Install  ```lightgallery``` and its modules using the [Bower](http://bower.io) package manager.
 
 ```sh
 $ bower install lightgallery --save
+```
+Or Install all modules together
+``` sh
+$ bower install lightgallery lg-thumbnail lg-autoplay lg-video lg-fullscreen lg-pager lg-zoom lg-hash lg-share
 ```
 
 #### npm
@@ -54,15 +58,16 @@ $ bower install lightgallery --save
 You can also find ```lightgallery``` on [npm](http://npmjs.org).
 
 ```sh
-$ npm install lightgallery
+$ npm install lightgallery lg-thumbnail lg-autoplay lg-video lg-fullscreen lg-pager lg-zoom lg-hash lg-share
 ```
 #### Download from Github
 
 You can also directly download lightgallery from github.
 
-#### Cdnjs
+#### CDN
+If you prefer to use a CDN you can load files via [jsdelivr](https://www.jsdelivr.com/projects/lightgallery)
 
-If you prefer to use a CDN you can load files via [cdnjs](https://cdnjs.com/libraries/lightgallery)
+Here is the [jsdelivr collection](https://cdn.jsdelivr.net/g/lightgallery,lg-autoplay,lg-fullscreen,lg-hash,lg-pager,lg-share,lg-thumbnail,lg-video,lg-zoom) of lightGallery and its modules.
 
 #### Include CSS and Javascript files
 First of all add lightgallery.css in the &lt;head&gt; of the document.
