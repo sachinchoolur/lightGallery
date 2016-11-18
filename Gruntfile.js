@@ -17,7 +17,7 @@ module.exports = function(grunt) {
             '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
             '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
             '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-            ' Licensed Apache 2.0 */\n',
+            ' Licensed GPLv3 */\n',
 
         // Task configuration.
         clean: {

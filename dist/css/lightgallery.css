@@ -1,6 +1,6 @@
-/*! lightgallery - v1.3.5 - 2016-09-30
+/*! lightgallery - v1.3.6 - 2016-11-18
 * http://sachinchoolur.github.io/lightGallery/
-* Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
+* Copyright (c) 2016 Sachin N; Licensed GPLv3 */
 @font-face {
   font-family: 'lg';
   src: url("../fonts/lg.eot?n1z373");
@@ -743,17 +743,9 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   content: "\e903";
 }
 
-.group {
-  *zoom: 1;
-}
-
-.group:before, .group:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-
 .group:after {
+  content: "";
+  display: table;
   clear: both;
 }
 

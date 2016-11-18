@@ -1,6 +1,6 @@
-/*! lightgallery - v1.3.5 - 2016-09-30
+/*! lightgallery - v1.3.6 - 2016-11-18
 * http://sachinchoolur.github.io/lightGallery/
-* Copyright (c) 2016 Sachin N; Licensed Apache 2.0 */
+* Copyright (c) 2016 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -14,7 +14,7 @@
     // like Node.
     module.exports = factory(require('jquery'));
   } else {
-    factory(jQuery);
+    factory(root["jQuery"]);
   }
 }(this, function ($) {
 
