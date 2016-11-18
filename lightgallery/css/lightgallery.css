@@ -740,17 +740,9 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   content: "\e903";
 }
 
-.group {
-  *zoom: 1;
-}
-
-.group:before, .group:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-
 .group:after {
+  content: "";
+  display: table;
   clear: both;
 }
 

@@ -181,15 +181,18 @@
     position:relative; 
     display: inline-block;
     .version{
-        bottom: 0;
-        color: #ddd;
-        font-size: 11px;
-        font-style: italic;
+        border-radius: 2px;
+        bottom: 6px;
+        overflow: hidden;
         position: absolute;
-        width: 58px;
-        right: -58px;
+        right: -86px;
         @media (max-width: 480px) {
             right: 0;
+        }
+        img {
+            left: -36px;
+            max-width: 85%;
+            position: relative;
         }
     }
 }
