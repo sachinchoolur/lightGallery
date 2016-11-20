@@ -1,4 +1,24 @@
-(function($, window, document, undefined) {
+/*! lg-zoom - v1.0.2 - 2016-11-20
+* http://sachinchoolur.github.io/lightGallery
+* Copyright (c) 2016 Sachin N; Licensed GPLv3 */
+
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module unless amdModuleId is set
+    define(['jquery'], function (a0) {
+      return (factory(a0));
+    });
+  } else if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory(require('jquery'));
+  } else {
+    factory(jQuery);
+  }
+}(this, function ($) {
+
+(function() {
 
     'use strict';
 
@@ -76,8 +96,8 @@
             var _y;
 
             // Find offset manually to avoid issue after zoom
-            var offsetX = ($(window).width() - $image.width()) / 2;
-            var offsetY = (($(window).height() - $image.height()) / 2) + $(window).scrollTop();
+            var offsetX = ($(window).width() - $image.prop('offsetWidth')) / 2;
+            var offsetY = (($(window).height() - $image.prop('offsetHeight')) / 2) + $(window).scrollTop();
 
             _x = _this.pageX - offsetX;
             _y = _this.pageY - offsetY;
@@ -108,7 +128,7 @@
         };
 
         var actualSize = function(event, $image, index, fromIcon) {
-            var w = $image.width();
+            var w = $image.prop('offsetWidth');
             var nw;
             if (_this.core.s.dynamic) {
                 nw = _this.core.s.dynamicEl[index].width || $image[0].naturalWidth || w;
@@ -239,8 +259,8 @@
             if (_this.core.$outer.hasClass('lg-zoomed')) {
                 var $image = _this.core.$slide.eq(_this.core.index).find('.lg-object');
 
-                allowY = $image.outerHeight() * $image.attr('data-scale') > _this.core.$outer.find('.lg').height();
-                allowX = $image.outerWidth() * $image.attr('data-scale') > _this.core.$outer.find('.lg').width();
+                allowY = $image.prop('offsetHeight') * $image.attr('data-scale') > _this.core.$outer.find('.lg').height();
+                allowX = $image.prop('offsetWidth') * $image.attr('data-scale') > _this.core.$outer.find('.lg').width();
                 if ((allowX || allowY)) {
                     e.preventDefault();
                     startCoords = {
@@ -326,8 +346,8 @@
             // execute only on .lg-object
             var $image = _this.core.$slide.eq(_this.core.index).find('.lg-object');
 
-            allowY = $image.outerHeight() * $image.attr('data-scale') > _this.core.$outer.find('.lg').height();
-            allowX = $image.outerWidth() * $image.attr('data-scale') > _this.core.$outer.find('.lg').width();
+            allowY = $image.prop('offsetHeight') * $image.attr('data-scale') > _this.core.$outer.find('.lg').height();
+            allowX = $image.prop('offsetWidth') * $image.attr('data-scale') > _this.core.$outer.find('.lg').width();
 
             if (_this.core.$outer.hasClass('lg-zoomed')) {
                 if ($(e.target).hasClass('lg-object') && (allowX || allowY)) {
@@ -413,10 +433,10 @@
         var $image = _this.core.$slide.eq(_this.core.index).find('.lg-object');
         var distanceX = (-Math.abs(_$el.attr('data-x'))) + (endCoords.x - startCoords.x);
         var distanceY = (-Math.abs(_$el.attr('data-y'))) + (endCoords.y - startCoords.y);
-        var minY = (_this.core.$outer.find('.lg').height() - $image.outerHeight()) / 2;
-        var maxY = Math.abs(($image.outerHeight() * Math.abs($image.attr('data-scale'))) - _this.core.$outer.find('.lg').height() + minY);
-        var minX = (_this.core.$outer.find('.lg').width() - $image.outerWidth()) / 2;
-        var maxX = Math.abs(($image.outerWidth() * Math.abs($image.attr('data-scale'))) - _this.core.$outer.find('.lg').width() + minX);
+        var minY = (_this.core.$outer.find('.lg').height() - $image.prop('offsetHeight')) / 2;
+        var maxY = Math.abs(($image.prop('offsetHeight') * Math.abs($image.attr('data-scale'))) - _this.core.$outer.find('.lg').height() + minY);
+        var minX = (_this.core.$outer.find('.lg').width() - $image.prop('offsetWidth')) / 2;
+        var maxX = Math.abs(($image.prop('offsetWidth') * Math.abs($image.attr('data-scale'))) - _this.core.$outer.find('.lg').width() + minX);
 
         if ((Math.abs(endCoords.x - startCoords.x) > 15) || (Math.abs(endCoords.y - startCoords.y) > 15)) {
             if (allowY) {
@@ -470,5 +490,8 @@
     };
 
     $.fn.lightGallery.modules.zoom = Zoom;
+    
+})();
 
-})(jQuery, window, document);
+
+}));
