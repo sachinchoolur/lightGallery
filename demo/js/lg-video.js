@@ -255,7 +255,8 @@
 
             a = '?wmode=opaque&autoplay=' + autoplay + '&enablejsapi=1';
             if (this.core.s.youtubePlayerParams) {
-                a = a + '&' + $.param(this.core.s.youtubePlayerParams);
+                this.setAutoPlay(this.core.s.youtubePlayerParams, autoplay);
+                a = '?wmode=opaque&enablejsapi=1&' + $.param(this.core.s.youtubePlayerParams);
             }
 
             video = '<iframe class="lg-video-object lg-youtube ' + addClass + '" width="560" height="315" src="//www.youtube.com/embed/' + isVideo.youtube[1] + a + '" frameborder="0" allowfullscreen></iframe>';
@@ -264,7 +265,8 @@
 
             a = '?autoplay=' + autoplay + '&api=1';
             if (this.core.s.vimeoPlayerParams) {
-                a = a + '&' + $.param(this.core.s.vimeoPlayerParams);
+                this.setAutoPlay(this.core.s.vimeoPlayerParams, autoplay);
+                a = '?api=1&' + $.param(this.core.s.vimeoPlayerParams);
             }
 
             video = '<iframe class="lg-video-object lg-vimeo ' + addClass + '" width="560" height="315"  src="//player.vimeo.com/video/' + isVideo.vimeo[1] + a + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
@@ -273,7 +275,8 @@
 
             a = '?wmode=opaque&autoplay=' + autoplay + '&api=postMessage';
             if (this.core.s.dailymotionPlayerParams) {
-                a = a + '&' + $.param(this.core.s.dailymotionPlayerParams);
+                this.setAutoPlay(this.core.s.dailymotionPlayerParams, autoplay);
+                a = '?wmode=opaque&api=postMessage&' + $.param(this.core.s.dailymotionPlayerParams);
             }
 
             video = '<iframe class="lg-video-object lg-dailymotion ' + addClass + '" width="560" height="315" src="//www.dailymotion.com/embed/video/' + isVideo.dailymotion[1] + a + '" frameborder="0" allowfullscreen></iframe>';
@@ -290,7 +293,8 @@
 
             a = '&autoplay=' + autoplay;
             if (this.core.s.vkPlayerParams) {
-                a = a + '&' + $.param(this.core.s.vkPlayerParams);
+                this.setAutoPlay(this.core.s.vkPlayerParams, autoplay);
+                a = '&' + $.param(this.core.s.vkPlayerParams);
             }
 
             video = '<iframe class="lg-video-object lg-vk ' + addClass + '" width="560" height="315" src="http://vk.com/video_ext.php?' + isVideo.vk[1] + a + '" frameborder="0" allowfullscreen></iframe>';
@@ -302,6 +306,10 @@
 
     Video.prototype.destroy = function() {
         this.videoLoaded = false;
+    };
+
+    Video.prototype.setAutoPlay = function(videoParams, autoplay){
+        if (videoParams.autoplay === undefined) { videoParams.autoplay = autoplay; }
     };
 
     $.fn.lightGallery.modules.video = Video;
