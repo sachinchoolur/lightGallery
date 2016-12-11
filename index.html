@@ -13,6 +13,14 @@ v1<!DOCTYPE html>
         <link href="lightgallery/css/lg-transitions.css" rel="stylesheet">
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+        <meta name="author" content="Sachin N">
+
+        <meta property="og:url" content="http://sachinchoolur.github.io/lightGallery/">
+        <meta property="og:title" content="jQuery lightgallery">
+        <meta property="og:description" content="lightGallery: A customizable, modular, responsive, lightbox gallery plugin for jQuery.">
+        <meta property="og:image" content="https://raw.githubusercontent.com/sachinchoolur/lightGallery/master/lib/lg.png">
+
         <meta name="google-site-verification" content="U0us1UCMQlFMWkKW8ix6UQfCg3qhrHhFjzwlODnx5G0" />
         <style type="text/css">
             .promo_bar {
@@ -109,7 +117,7 @@ v1<!DOCTYPE html>
                             <img class="hide" class="img-responsive" src="static/img/2-1600.jpg">
                             <div class="demo-gallery">
                                 <ul id="lightgallery" class="list-unstyled row">
-                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/1-375.jpg 375, static/img/1-480.jpg 480, static/img/1.jpg 800" data-src="static/img/1-1600.jpg" data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>">
+                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/1-375.jpg 375, static/img/1-480.jpg 480, static/img/1.jpg 800" data-src="static/img/1-1600.jpg" data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>" data-pinterest-text="Pin it1" data-tweet-text="share on twitter 1">
                                         <a href="">
                                             <img class="img-responsive" src="static/img/thumb-1.jpg">
                                             <div class="demo-gallery-poster">
@@ -117,7 +125,7 @@ v1<!DOCTYPE html>
                                             </div>
                                         </a>
                                     </li>
-                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/2-375.jpg 375, static/img/2-480.jpg 480, static/img/2.jpg 800" data-src="static/img/2-1600.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
+                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/2-375.jpg 375, static/img/2-480.jpg 480, static/img/2.jpg 800" data-src="static/img/2-1600.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>" data-pinterest-text="Pin it2" data-tweet-text="share on twitter 2">
                                         <a href="">
                                             <img class="img-responsive" src="static/img/thumb-2.jpg">
                                             <div class="demo-gallery-poster">
@@ -125,7 +133,7 @@ v1<!DOCTYPE html>
                                             </div>
                                         </a>
                                     </li>
-                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/13-375.jpg 375, static/img/13-480.jpg 480, static/img/13.jpg 800" data-src="static/img/13-1600.jpg" data-sub-html="<h4>Sunset Serenity</h4><p>A gorgeous Sunset tonight captured at Coniston Water....</p>">
+                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/13-375.jpg 375, static/img/13-480.jpg 480, static/img/13.jpg 800" data-src="static/img/13-1600.jpg" data-sub-html="<h4>Sunset Serenity</h4><p>A gorgeous Sunset tonight captured at Coniston Water....</p>" data-pinterest-text="Pin it3" data-tweet-text="share on twitter 3">
                                         <a href="">
                                             <img class="img-responsive" src="static/img/thumb-13.jpg">
                                             <div class="demo-gallery-poster">
@@ -133,7 +141,7 @@ v1<!DOCTYPE html>
                                             </div>
                                         </a>
                                     </li>
-                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/4-375.jpg 375, static/img/4-480.jpg 480, static/img/4.jpg 800" data-src="static/img/4-1600.jpg" data-sub-html="<h4>Coniston Calmness</h4><p>Beautiful morning</p>">
+                                    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="static/img/4-375.jpg 375, static/img/4-480.jpg 480, static/img/4.jpg 800" data-src="static/img/4-1600.jpg" data-sub-html="<h4>Coniston Calmness</h4><p>Beautiful morning</p>" data-pinterest-text="Pin it4" data-tweet-text="share on twitter 4">
                                         <a href="">
                                             <img class="img-responsive" src="static/img/thumb-4.jpg">
                                             <div class="demo-gallery-poster">
@@ -446,7 +454,7 @@ v1<!DOCTYPE html>
         ga('create', 'UA-49767543-2', 'sachinchoolur.github.io');
         ga('send', 'pageview');
         </script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <script src="static/js/transition.js"></script>
         <script src="static/js/wow.js"></script>
         <script src="static/js/collapse.js"></script>
@@ -457,6 +465,7 @@ v1<!DOCTYPE html>
         <script src="lightgallery/js/lg-thumbnail.js"></script>
         <script src="lightgallery/js/lg-video.js"></script>
         <script src="lightgallery/js/lg-autoplay.js"></script>
+        <script src="lightgallery/js/lg-share.js"></script>
         <script src="lightgallery/js/lg-zoom.js"></script>
         <script src="lightgallery/js/lg-hash.js"></script>
         <script src="lightgallery/js/lg-pager.js"></script>
