@@ -1,4 +1,4 @@
-/*! lg-zoom - v1.0.3 - 2016-12-11
+/*! lg-zoom - v1.0.4 - 2016-12-20
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2016 Sachin N; Licensed GPLv3 */
 
@@ -26,7 +26,7 @@
         var useLeft = false;
         var isChrome = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
         if (isChrome && parseInt(isChrome[2], 10) < 54) {
-            useLeft =  true;
+            useLeft = true;
         }
 
         return useLeft;
@@ -325,7 +325,7 @@
                 }
 
                 if ((Math.abs(endCoords.x - startCoords.x) > 15) || (Math.abs(endCoords.y - startCoords.y) > 15)) {
-                    
+
                     if (_this.core.s.useLeftForZoom) {
                         _$el.css({
                             left: distanceX + 'px',
@@ -497,7 +497,7 @@
                 distanceX = -Math.abs(_$el.attr('data-x'));
             }
 
-            if (_this.s.core.useLeftForZoom) {
+            if (_this.core.s.useLeftForZoom) {
                 _$el.css({
                     left: distanceX + 'px',
                     top: distanceY + 'px'
@@ -524,7 +524,7 @@
     };
 
     $.fn.lightGallery.modules.zoom = Zoom;
-    
+
 })();
 
 
