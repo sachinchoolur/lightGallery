@@ -20,12 +20,14 @@
 
 .lg-actions .lg-next, .lg-actions .lg-prev {
   background-color: rgba(0, 0, 0, 0.45);
+  border: none;
   border-radius: 2px;
   color: #999;
   cursor: pointer;
   display: block;
   font-size: 22px;
   margin-top: -10px;
+  outline: none;
   padding: 8px 10px 9px;
   position: absolute;
   top: 50%;
