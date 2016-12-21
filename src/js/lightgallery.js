@@ -754,8 +754,6 @@
 
         var _length = this.$slide.length;
         var _time = _this.lGalleryOn ? this.s.speed : 0;
-        var _next = false;
-        var _prev = false;
 
         if (!_this.lgBusy) {
 
@@ -801,25 +799,11 @@
                 this.$slide.removeClass('lg-prev-slide lg-next-slide');
 
                 if (index < _prevIndex) {
-                    _prev = true;
-                    if ((index === 0) && (_prevIndex === _length - 1) && !fromThumb) {
-                        _prev = false;
-                        _next = true;
-                    }
-                } else if (index > _prevIndex) {
-                    _next = true;
-                    if ((index === _length - 1) && (_prevIndex === 0) && !fromThumb) {
-                        _prev = true;
-                        _next = false;
-                    }
-                }
-
-                if (_prev) {
 
                     //prevslide
                     this.$slide.eq(index).addClass('lg-prev-slide');
                     this.$slide.eq(_prevIndex).addClass('lg-next-slide');
-                } else if (_next) {
+                } else if (index > _prevIndex) {
 
                     // next slide
                     this.$slide.eq(index).addClass('lg-next-slide');
@@ -838,20 +822,8 @@
                 }, 50);
             } else {
 
-                var touchPrev = index - 1;
-                var touchNext = index + 1;
-
-                if ((index === 0) && (_prevIndex === _length - 1)) {
-
-                    // next slide
-                    touchNext = 0;
-                    touchPrev = _length - 1;
-                } else if ((index === _length - 1) && (_prevIndex === 0)) {
-
-                    // prev slide
-                    touchNext = 0;
-                    touchPrev = _length - 1;
-                }
+                var touchPrev = (index === 0) ? index : index - 1;
+                var touchNext = (index === _length - 1) ? index : index + 1;
 
                 this.$slide.removeClass('lg-prev-slide lg-current lg-next-slide');
                 _this.$slide.eq(touchPrev).addClass('lg-prev-slide');
@@ -891,6 +863,8 @@
      *  @param {Boolean} fromTouch - true if slide function called via touch event
      */
     Plugin.prototype.goToNextSlide = function(fromTouch) {
+        fromTouch = (typeof fromTouch === 'boolean') ? fromTouch : false;
+
         var _this = this;
         if (!_this.lgBusy) {
             if ((_this.index + 1) < _this.$slide.length) {
@@ -917,6 +891,8 @@
      *  @param {Boolean} fromTouch - true if slide function called via touch event
      */
     Plugin.prototype.goToPrevSlide = function(fromTouch) {
+        fromTouch = (typeof fromTouch === 'boolean') ? fromTouch : false;
+
         var _this = this;
         if (!_this.lgBusy) {
             if (_this.index > 0) {
