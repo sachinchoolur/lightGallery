@@ -1,6 +1,6 @@
-/*! lightgallery - v1.3.7 - 2016-12-11
+/*! lightgallery - v1.3.8 - 2017-01-22
 * http://sachinchoolur.github.io/lightGallery/
-* Copyright (c) 2016 Sachin N; Licensed GPLv3 */
+* Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -17,7 +17,6 @@
     factory(root["jQuery"]);
   }
 }(this, function ($) {
-
 
 (function() {
     'use strict';
@@ -174,6 +173,7 @@
                 setTimeout(function() {
                     _this.build(_this.index);
                 });
+
                 $('body').addClass('lg-on');
             }
         }
@@ -230,7 +230,7 @@
         });
 
         // initiate slide function
-        _this.slide(index, false, false);
+        _this.slide(index, false, false, false);
 
         if (_this.s.keyPress) {
             _this.keyPress();
@@ -360,7 +360,6 @@
             $inner.css('transition-timing-function', this.s.cssEasing);
             $inner.css('transition-duration', this.s.speed + 'ms');
         }
-
 
         setTimeout(function() {
             $('.lg-backdrop').addClass('in');
@@ -760,8 +759,9 @@
     *   @param {Number} index - index of the slide
     *   @param {Boolean} fromTouch - true if slide function called via touch event or mouse drag
     *   @param {Boolean} fromThumb - true if slide function called via thumbnail click
+    *   @param {String} direction - Direction of the slide(next/prev)
     */
-    Plugin.prototype.slide = function(index, fromTouch, fromThumb) {
+    Plugin.prototype.slide = function(index, fromTouch, fromThumb, direction) {
 
         var _prevIndex = this.$outer.find('.lg-current').index();
         var _this = this;
@@ -774,8 +774,6 @@
 
         var _length = this.$slide.length;
         var _time = _this.lGalleryOn ? this.s.speed : 0;
-        var _next = false;
-        var _prev = false;
 
         if (!_this.lgBusy) {
 
@@ -813,6 +811,14 @@
 
             this.arrowDisable(index);
 
+            if (!direction) {
+                if (index < _prevIndex) {
+                    direction = 'prev';
+                } else if (index > _prevIndex) {
+                    direction = 'next';
+                }
+            }
+
             if (!fromTouch) {
 
                 // remove all transitions
@@ -820,26 +826,12 @@
 
                 this.$slide.removeClass('lg-prev-slide lg-next-slide');
 
-                if (index < _prevIndex) {
-                    _prev = true;
-                    if ((index === 0) && (_prevIndex === _length - 1) && !fromThumb) {
-                        _prev = false;
-                        _next = true;
-                    }
-                } else if (index > _prevIndex) {
-                    _next = true;
-                    if ((index === _length - 1) && (_prevIndex === 0) && !fromThumb) {
-                        _prev = true;
-                        _next = false;
-                    }
-                }
-
-                if (_prev) {
+                if (direction === 'prev') {
 
                     //prevslide
                     this.$slide.eq(index).addClass('lg-prev-slide');
                     this.$slide.eq(_prevIndex).addClass('lg-next-slide');
-                } else if (_next) {
+                } else {
 
                     // next slide
                     this.$slide.eq(index).addClass('lg-next-slide');
@@ -858,24 +850,36 @@
                 }, 50);
             } else {
 
-                var touchPrev = index - 1;
-                var touchNext = index + 1;
+                this.$slide.removeClass('lg-prev-slide lg-current lg-next-slide');
+                var touchPrev;
+                var touchNext;
+                if (_length > 2) {
+                    touchPrev = index - 1;
+                    touchNext = index + 1;
 
-                if ((index === 0) && (_prevIndex === _length - 1)) {
+                    if ((index === 0) && (_prevIndex === _length - 1)) {
 
-                    // next slide
-                    touchNext = 0;
-                    touchPrev = _length - 1;
-                } else if ((index === _length - 1) && (_prevIndex === 0)) {
+                        // next slide
+                        touchNext = 0;
+                        touchPrev = _length - 1;
+                    } else if ((index === _length - 1) && (_prevIndex === 0)) {
 
-                    // prev slide
-                    touchNext = 0;
-                    touchPrev = _length - 1;
+                        // prev slide
+                        touchNext = 0;
+                        touchPrev = _length - 1;
+                    }
+
+                } else {
+                    touchPrev = 0;
+                    touchNext = 1;
                 }
 
-                this.$slide.removeClass('lg-prev-slide lg-current lg-next-slide');
-                _this.$slide.eq(touchPrev).addClass('lg-prev-slide');
-                _this.$slide.eq(touchNext).addClass('lg-next-slide');
+                if (direction === 'prev') {
+                    _this.$slide.eq(touchNext).addClass('lg-next-slide');
+                } else {
+                    _this.$slide.eq(touchPrev).addClass('lg-prev-slide');
+                }
+
                 _this.$slide.eq(index).addClass('lg-current');
             }
 
@@ -912,17 +916,22 @@
      */
     Plugin.prototype.goToNextSlide = function(fromTouch) {
         var _this = this;
+        var _loop = _this.s.loop;
+        if (fromTouch && _this.$slide.length < 3) {
+            _loop = false;
+        }
+
         if (!_this.lgBusy) {
             if ((_this.index + 1) < _this.$slide.length) {
                 _this.index++;
                 _this.$el.trigger('onBeforeNextSlide.lg', [_this.index]);
-                _this.slide(_this.index, fromTouch, false);
+                _this.slide(_this.index, fromTouch, false, 'next');
             } else {
-                if (_this.s.loop) {
+                if (_loop) {
                     _this.index = 0;
                     _this.$el.trigger('onBeforeNextSlide.lg', [_this.index]);
-                    _this.slide(_this.index, fromTouch, false);
-                } else if (_this.s.slideEndAnimatoin) {
+                    _this.slide(_this.index, fromTouch, false, 'next');
+                } else if (_this.s.slideEndAnimatoin && !fromTouch) {
                     _this.$outer.addClass('lg-right-end');
                     setTimeout(function() {
                         _this.$outer.removeClass('lg-right-end');
@@ -938,17 +947,22 @@
      */
     Plugin.prototype.goToPrevSlide = function(fromTouch) {
         var _this = this;
+        var _loop = _this.s.loop;
+        if (fromTouch && _this.$slide.length < 3) {
+            _loop = false;
+        }
+
         if (!_this.lgBusy) {
             if (_this.index > 0) {
                 _this.index--;
                 _this.$el.trigger('onBeforePrevSlide.lg', [_this.index, fromTouch]);
-                _this.slide(_this.index, fromTouch, false);
+                _this.slide(_this.index, fromTouch, false, 'prev');
             } else {
-                if (_this.s.loop) {
+                if (_loop) {
                     _this.index = _this.$items.length - 1;
                     _this.$el.trigger('onBeforePrevSlide.lg', [_this.index, fromTouch]);
-                    _this.slide(_this.index, fromTouch, false);
-                } else if (_this.s.slideEndAnimatoin) {
+                    _this.slide(_this.index, fromTouch, false, 'prev');
+                } else if (_this.s.slideEndAnimatoin && !fromTouch) {
                     _this.$outer.addClass('lg-left-end');
                     setTimeout(function() {
                         _this.$outer.removeClass('lg-left-end');
@@ -1181,23 +1195,22 @@
     };
 
     Plugin.prototype.manageSwipeClass = function() {
-        var touchNext = this.index + 1;
-        var touchPrev = this.index - 1;
-        var length = this.$slide.length;
-        if (this.s.loop) {
+        var _touchNext = this.index + 1;
+        var _touchPrev = this.index - 1;
+        if (this.s.loop && this.$slide.length > 2) {
             if (this.index === 0) {
-                touchPrev = length - 1;
-            } else if (this.index === length - 1) {
-                touchNext = 0;
+                _touchPrev = this.$slide.length - 1;
+            } else if (this.index === this.$slide.length - 1) {
+                _touchNext = 0;
             }
         }
 
         this.$slide.removeClass('lg-next-slide lg-prev-slide');
-        if (touchPrev > -1) {
-            this.$slide.eq(touchPrev).addClass('lg-prev-slide');
+        if (_touchPrev > -1) {
+            this.$slide.eq(_touchPrev).addClass('lg-prev-slide');
         }
 
-        this.$slide.eq(touchNext).addClass('lg-next-slide');
+        this.$slide.eq(_touchNext).addClass('lg-next-slide');
     };
 
     Plugin.prototype.mousewheel = function() {

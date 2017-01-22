@@ -1,24 +1,24 @@
-/*! lg-thumbnail - v1.0.0 - 2016-09-20
+/*! lg-thumbnail - v1.0.2 - 2017-01-22
 * http://sachinchoolur.github.io/lightGallery
-* Copyright (c) 2016 Sachin N; Licensed GPLv3 */
+* Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module unless amdModuleId is set
-    define([], function () {
-      return (factory());
+    define(['jquery'], function (a0) {
+      return (factory(a0));
     });
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory();
+    module.exports = factory(require('jquery'));
   } else {
-    factory();
+    factory(jQuery);
   }
-}(this, function () {
+}(this, function ($) {
 
-(function($, window, document, undefined) {
+(function() {
 
     'use strict';
 
@@ -227,7 +227,7 @@
                 // Go to slide if browser does not support css transitions
                 if ((_this.thumbClickable && !_this.core.lgBusy) || !_this.core.doCss()) {
                     _this.core.index = _$this.index();
-                    _this.core.slide(_this.core.index, false, true);
+                    _this.core.slide(_this.core.index, false, true, false);
                 }
             }, 50);
         });
@@ -468,6 +468,6 @@
 
     $.fn.lightGallery.modules.Thumbnail = Thumbnail;
 
-})(jQuery, window, document);
+})();
 
 }));

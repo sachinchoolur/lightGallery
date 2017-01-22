@@ -1,25 +1,25 @@
-/*! lg-autoplay - v1.0.0 - 2016-09-20
+/*! lg-autoplay - v1.0.2 - 2017-01-22
 * http://sachinchoolur.github.io/lightGallery
-* Copyright (c) 2016 Sachin N; Licensed GPLv3 */
+* Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module unless amdModuleId is set
-    define([], function () {
-      return (factory());
+    define(['jquery'], function (a0) {
+      return (factory(a0));
     });
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory();
+    module.exports = factory(require('jquery'));
   } else {
-    factory();
+    factory(jQuery);
   }
-}(this, function () {
+}(this, function ($) {
 
 
-(function($, window, document, undefined) {
+(function() {
 
     'use strict';
 
@@ -177,7 +177,7 @@
             }
 
             _this.fromAuto = true;
-            _this.core.slide(_this.core.index, false, false);
+            _this.core.slide(_this.core.index, false, false, 'next');
         }, _this.core.s.speed + _this.core.s.pause);
     };
 
@@ -198,7 +198,7 @@
 
     $.fn.lightGallery.modules.autoplay = Autoplay;
 
-})(jQuery, window, document);
+})();
 
 
 }));
