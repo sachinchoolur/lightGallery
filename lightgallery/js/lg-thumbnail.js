@@ -1,4 +1,4 @@
-(function($, window, document, undefined) {
+(function() {
 
     'use strict';
 
@@ -207,7 +207,7 @@
                 // Go to slide if browser does not support css transitions
                 if ((_this.thumbClickable && !_this.core.lgBusy) || !_this.core.doCss()) {
                     _this.core.index = _$this.index();
-                    _this.core.slide(_this.core.index, false, true);
+                    _this.core.slide(_this.core.index, false, true, false);
                 }
             }, 50);
         });
@@ -448,4 +448,4 @@
 
     $.fn.lightGallery.modules.Thumbnail = Thumbnail;
 
-})(jQuery, window, document);
+})();

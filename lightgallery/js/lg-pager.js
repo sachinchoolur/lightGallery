@@ -52,7 +52,7 @@
         $pagerCont.on('click.lg touchend.lg', function() {
             var _$this = $(this);
             _this.core.index = _$this.index();
-            _this.core.slide(_this.core.index, false, false);
+            _this.core.slide(_this.core.index, false, true, false);
         });
 
         $pagerOuter.on('mouseover.lg', function() {
