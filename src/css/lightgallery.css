@@ -748,7 +748,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   content: "\e903";
 }
 
-.group:after {
+.lg-group:after {
   content: "";
   display: table;
   clear: both;
