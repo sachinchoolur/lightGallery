@@ -250,6 +250,8 @@
 
         });
 
+        _this.$outer.trigger('mousemove.lg');
+
     };
 
     Plugin.prototype.structure = function() {
@@ -1254,9 +1256,9 @@
 
         if (!d) {
             _this.$el.trigger('onBeforeClose.lg');
+            $(window).scrollTop(_this.prevScrollTop);
         }
 
-        $(window).scrollTop(_this.prevScrollTop);
 
         /**
          * if d is false or undefined destroy will only close the gallery
