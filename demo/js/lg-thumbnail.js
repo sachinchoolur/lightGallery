@@ -1,4 +1,4 @@
-/*! lg-thumbnail - v1.0.2 - 2017-01-22
+/*! lg-thumbnail - v1.0.3 - 2017-02-05
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
@@ -111,7 +111,7 @@
         var vimeoErrorThumbSize = '';
         var $thumb;
         var html = '<div class="lg-thumb-outer">' +
-            '<div class="lg-thumb group">' +
+            '<div class="lg-thumb lg-group">' +
             '</div>' +
             '</div>';
 
