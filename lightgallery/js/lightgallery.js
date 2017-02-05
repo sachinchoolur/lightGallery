@@ -285,7 +285,7 @@
         template = '<div class="lg-outer ' + this.s.addClass + ' ' + this.s.startClass + '">' +
             '<div class="lg" style="width:' + this.s.width + '; height:' + this.s.height + '">' +
             '<div class="lg-inner">' + list + '</div>' +
-            '<div class="lg-toolbar group">' +
+            '<div class="lg-toolbar lg-group">' +
             '<span class="lg-close lg-icon"></span>' +
             '</div>' +
             controls +
