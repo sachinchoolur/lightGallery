@@ -82,13 +82,13 @@
         background: url("#{$lg-path-images}/loading.gif") no-repeat scroll center center transparent;
         display: none !important;
     }
-    &.lg-css3{
-        .lg-prev-slide, .lg-current, .lg-next-slide{
+    &.lg-css3 {
+        .lg-prev-slide, .lg-current, .lg-next-slide {
             display: inline-block !important;
         }
     }
-    &.lg-css{
-        .lg-current{
+    &.lg-css {
+        .lg-current {
             display: inline-block !important;
         }
     }
@@ -157,13 +157,14 @@
         display: none;
     }
 
-    &.lg-hide-download{
-        #lg-download{
+    &.lg-hide-download {
+        #lg-download {
             display: none;
         }
     }
 }
-.lg-backdrop{
+
+.lg-backdrop {
     position: fixed;
     top: 0;
     left: 0;
@@ -173,7 +174,7 @@
     background-color: #000;
     opacity: 0;
     @include transition(opacity 0.15s ease 0s);
-    &.in{
+    &.in {
         opacity: $backdrop-opacity;
     }
 }
