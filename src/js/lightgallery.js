@@ -1086,7 +1086,7 @@
         if (_this.s.enableSwipe && _this.isTouch && _this.doCss()) {
 
             _this.$slide.on('touchstart.lg', function(e) {
-                if(e.originalEvent.touches.length == 2) {
+                if(e.originalEvent.touches.length === 2) {
                     isPinch = true;
                     _this.modules.zoom.pinchStart(e.originalEvent);
                 } else if (!_this.$outer.hasClass('lg-zoomed') && !_this.lgBusy) {
@@ -1097,7 +1097,7 @@
             });
 
             _this.$slide.on('touchmove.lg', function(e) {
-                if(isPinch && e.originalEvent.touches.length == 2) {
+                if(isPinch && e.originalEvent.touches.length === 2) {
                     _this.modules.zoom.pinchMove(e.originalEvent);
                 } else if (!_this.$outer.hasClass('lg-zoomed')) {
                     e.preventDefault();
