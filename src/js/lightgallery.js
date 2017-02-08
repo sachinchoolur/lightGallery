@@ -1081,11 +1081,15 @@
         var startCoords = 0;
         var endCoords = 0;
         var isMoved = false;
+        var isPinch = false;
 
         if (_this.s.enableSwipe && _this.isTouch && _this.doCss()) {
 
             _this.$slide.on('touchstart.lg', function(e) {
-                if (!_this.$outer.hasClass('lg-zoomed') && !_this.lgBusy) {
+                if(e.originalEvent.touches.length == 2) {
+                    isPinch = true;
+                    _this.modules.zoom.pinchStart(e.originalEvent);
+                } else if (!_this.$outer.hasClass('lg-zoomed') && !_this.lgBusy) {
                     e.preventDefault();
                     _this.manageSwipeClass();
                     startCoords = e.originalEvent.targetTouches[0].pageX;
@@ -1093,7 +1097,9 @@
             });
 
             _this.$slide.on('touchmove.lg', function(e) {
-                if (!_this.$outer.hasClass('lg-zoomed')) {
+                if(isPinch && e.originalEvent.touches.length == 2) {
+                    _this.modules.zoom.pinchMove(e.originalEvent);
+                } else if (!_this.$outer.hasClass('lg-zoomed')) {
                     e.preventDefault();
                     endCoords = e.originalEvent.targetTouches[0].pageX;
                     _this.touchMove(startCoords, endCoords);
@@ -1102,7 +1108,9 @@
             });
 
             _this.$slide.on('touchend.lg', function() {
-                if (!_this.$outer.hasClass('lg-zoomed')) {
+                if(isPinch) {
+                    isPinch = false;
+                } else if (!_this.$outer.hasClass('lg-zoomed')) {
                     if (isMoved) {
                         isMoved = false;
                         _this.touchEnd(endCoords - startCoords);
