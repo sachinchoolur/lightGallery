@@ -675,7 +675,7 @@
                         elements: [_$img[0]]
                     });
                 } catch (e) {
-                    console.error('Make sure you have included Picturefill version 2');
+                    console.warn('lightGallery :- If you want srcset to be supported for older browser please include picturefil version 2 javascript library in your document.');
                 }
             }
 

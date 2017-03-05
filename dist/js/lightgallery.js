@@ -1,4 +1,4 @@
-/*! lightgallery - v1.3.9 - 2017-02-05
+/*! lightgallery - v1.3.9 - 2017-03-05
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
@@ -695,7 +695,7 @@
                         elements: [_$img[0]]
                     });
                 } catch (e) {
-                    console.error('Make sure you have included Picturefill version 2');
+                    console.warn('lightGallery :- If you want srcset to be supported for older browser please include picturefil version 2 javascript library in your document.');
                 }
             }
 
