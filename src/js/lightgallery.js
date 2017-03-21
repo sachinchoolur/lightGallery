@@ -67,7 +67,14 @@
 
         dynamic: false,
         dynamicEl: [],
-        galleryId: 1
+        galleryId: 1,
+
+        // the title that appears when hovering the close icon
+        closeTitle: 'Close',
+
+        // the title that appears when hovering the download icon
+        downloadTitle: 'Download',
+
     };
 
     function Plugin(element, options) {
@@ -286,7 +293,7 @@
             '<div class="lg" style="width:' + this.s.width + '; height:' + this.s.height + '">' +
             '<div class="lg-inner">' + list + '</div>' +
             '<div class="lg-toolbar lg-group">' +
-            '<span class="lg-close lg-icon"></span>' +
+            '<span class="lg-close lg-icon" title="' +  this.s.closeTitle + '"></span>' +
             '</div>' +
             controls +
             subHtmlCont +
@@ -352,7 +359,7 @@
         }, this.s.backdropDuration);
 
         if (this.s.download) {
-            this.$outer.find('.lg-toolbar').append('<a id="lg-download" target="_blank" download class="lg-download lg-icon"></a>');
+            this.$outer.find('.lg-toolbar').append('<a id="lg-download" target="_blank" download class="lg-download lg-icon" title="' + this.s.downloadTitle + '"></a>');
         }
 
         // Store the current scroll top value to scroll back after closing the gallery..
