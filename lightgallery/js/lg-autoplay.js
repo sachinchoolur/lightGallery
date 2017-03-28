@@ -1,11 +1,25 @@
-/**
- * Autoplay Plugin
- * @version 1.2.0
- * @author Sachin N - @sachinchoolur
- * @license MIT License (MIT)
- */
+/*! lg-autoplay - v1.0.4 - 2017-03-28
+* http://sachinchoolur.github.io/lightGallery
+* Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
-(function($, window, document, undefined) {
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module unless amdModuleId is set
+    define(['jquery'], function (a0) {
+      return (factory(a0));
+    });
+  } else if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory(require('jquery'));
+  } else {
+    factory(jQuery);
+  }
+}(this, function ($) {
+
+
+(function() {
 
     'use strict';
 
@@ -73,7 +87,9 @@
 
         // Start autoplay
         if (_this.core.s.autoplay) {
-            _this.startlAuto();
+            _this.$el.one('onSlideItemLoad.lg.tm', function() {
+                _this.startlAuto();
+            });
         }
 
         // cancel interval on touchstart and dragstart
@@ -184,4 +200,7 @@
 
     $.fn.lightGallery.modules.autoplay = Autoplay;
 
-})(jQuery, window, document);
+})();
+
+
+}));
