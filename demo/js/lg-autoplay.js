@@ -1,4 +1,4 @@
-/*! lg-autoplay - v1.0.2 - 2017-01-22
+/*! lg-autoplay - v1.0.4 - 2017-03-28
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
@@ -87,7 +87,9 @@
 
         // Start autoplay
         if (_this.core.s.autoplay) {
-            _this.startlAuto();
+            _this.$el.one('onSlideItemLoad.lg.tm', function() {
+                _this.startlAuto();
+            });
         }
 
         // cancel interval on touchstart and dragstart
