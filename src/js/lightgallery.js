@@ -98,7 +98,8 @@
         this.hideBartimeout = false;
 
         // To determine browser supports for touch events;
-        this.isTouch = ('ontouchstart' in document.documentElement);
+        // Use Modernizr if available for better feature detection
+        this.isTouch = (typeof Modernizr != 'undefined') ? Modernizr.touch : ('ontouchstart' in document.documentElement);
 
         // Disable hideControlOnEnd if sildeEndAnimation is true
         if (this.s.slideEndAnimatoin) {
