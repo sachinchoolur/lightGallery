@@ -403,6 +403,11 @@
      */
     Plugin.prototype.isVideo = function(src, index) {
 
+        if (!src) {
+            console.error('lightGallery :- data-src is not pvovided on slide item ' + (index + 1) + '. Please make sure the selector property is properly configured. More info - http://sachinchoolur.github.io/lightGallery/demos/html-markup.html');
+            return false;
+        }
+
         var html;
         if (this.s.dynamic) {
             html = this.s.dynamicEl[index].html;
