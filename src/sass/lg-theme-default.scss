@@ -12,6 +12,8 @@
         position: absolute;
         top: 50%;
         z-index: $zindex-controls;
+        border: none;
+        outline: none;
 
         &.disabled {
             pointer-events: none;
