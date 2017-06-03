@@ -30,6 +30,8 @@
   position: absolute;
   top: 50%;
   z-index: 1080;
+  border: none;
+  outline: none;
 }
 .lg-actions .lg-next.disabled, .lg-actions .lg-prev.disabled {
   pointer-events: none;
@@ -968,5 +970,3 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   -o-transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
   transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
 }
-
-/*# sourceMappingURL=lightgallery.css.map */
