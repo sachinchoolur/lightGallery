@@ -228,6 +228,10 @@
             if (_this.s.mousewheel) {
                 _this.mousewheel();
             }
+        } else {
+            _this.$slide.on('click.lg', function() {
+                _this.$el.trigger('onSlideClick.lg');
+            });
         }
 
         _this.counter();
