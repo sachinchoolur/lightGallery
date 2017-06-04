@@ -1,24 +1,24 @@
-/*! lg-video - v1.0.0 - 2016-09-20
+/*! lg-video - v1.0.2 - 2017-06-04
 * http://sachinchoolur.github.io/lightGallery
-* Copyright (c) 2016 Sachin N; Licensed GPLv3 */
+* Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module unless amdModuleId is set
-    define([], function () {
-      return (factory());
+    define(['jquery'], function (a0) {
+      return (factory(a0));
     });
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory();
+    module.exports = factory(require('jquery'));
   } else {
-    factory();
+    factory(jQuery);
   }
-}(this, function () {
+}(this, function ($) {
 
-(function($, window, document, undefined) {
+(function() {
 
     'use strict';
 
@@ -63,15 +63,20 @@
                         console.error('Make sure you have included videojs');
                     }
                 } else {
-                    _this.core.$slide.eq(index).find('.lg-html5').get(0).play();
+                    if(!_this.videoLoaded) {
+                        _this.core.$slide.eq(index).find('.lg-html5').get(0).play();
+                    }
                 }
             }
         });
 
         // Set max width for video
         _this.core.$el.on('onAferAppendSlide.lg.tm', function(event, index) {
-            _this.core.$slide.eq(index).find('.lg-video-cont').css('max-width', _this.core.s.videoMaxWidth);
-            _this.videoLoaded = true;
+            var $videoCont = _this.core.$slide.eq(index).find('.lg-video-cont');
+            if (!$videoCont.hasClass('lg-has-iframe')) {
+                $videoCont.css('max-width', _this.core.s.videoMaxWidth);
+                _this.videoLoaded = true;
+            }
         });
 
         var loadOnClick = function($el) {
@@ -306,7 +311,7 @@
 
     $.fn.lightGallery.modules.video = Video;
 
-})(jQuery, window, document);
+})();
 
 
 }));
