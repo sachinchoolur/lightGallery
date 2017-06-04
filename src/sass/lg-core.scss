@@ -13,6 +13,7 @@
     top: 0;
     left: 0;
     z-index: $zindex-outer;
+    text-align: left;
     opacity: 0;
     // For start/end transition
     @include transition(opacity 0.15s ease 0s);
