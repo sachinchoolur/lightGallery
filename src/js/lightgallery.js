@@ -109,7 +109,7 @@
         if (this.s.dynamic) {
             this.$items = this.s.dynamicEl;
         } else {
-            if (this.s.selector === 'this') {
+            if (this.s.selector === 'this' || typeof this.$el.attr('data-lightbox') !== 'undefined') {
                 this.$items = this.$el;
             } else if (this.s.selector !== '') {
                 if (this.s.selectWithin) {
