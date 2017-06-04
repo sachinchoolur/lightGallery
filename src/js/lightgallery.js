@@ -622,7 +622,7 @@
             }
 
             _html = _this.$items.eq(index).attr('data-html');
-            _src = _this.$items.eq(index).attr('href') || _this.$items.eq(index).attr('data-src');
+            _src = _this.$items.eq(index).attr('href') || _this.$items.eq(index).attr('data-src') || _this.$items.eq(index).attr('src');
 
             if (_this.$items.eq(index).attr('data-responsive')) {
                 var srcItms = _this.$items.eq(index).attr('data-responsive').split(',');
