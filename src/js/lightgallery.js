@@ -403,11 +403,6 @@
      */
     Plugin.prototype.isVideo = function(src, index) {
 
-        if (!src) {
-            console.error('lightGallery :- data-src is not pvovided on slide item ' + (index + 1) + '. Please make sure the selector property is properly configured. More info - http://sachinchoolur.github.io/lightGallery/demos/html-markup.html');
-            return false;
-        }
-
         var html;
         if (this.s.dynamic) {
             html = this.s.dynamicEl[index].html;
@@ -415,10 +410,15 @@
             html = this.$items.eq(index).attr('data-html');
         }
 
-        if (!src && html) {
-            return {
-                html5: true
-            };
+        if (!src) {
+            if(html) {
+                return {
+                    html5: true
+                };
+            } else {
+                console.error('lightGallery :- data-src is not pvovided on slide item ' + (index + 1) + '. Please make sure the selector property is properly configured. More info - http://sachinchoolur.github.io/lightGallery/demos/html-markup.html');
+                return false;
+            }
         }
 
         var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)/i);
