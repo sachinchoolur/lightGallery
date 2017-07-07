@@ -105,7 +105,7 @@ require(['./lightgallery.js'], function() {
 });
 ```
 #### The markup
-lightgallery does not force you to use any kind of markup. you can use whatever markup you want. But i suggest you to use the following markup. [Here](http://sachinchoolur.github.io/lightGallery/demos/html-markup.html) you can find the detailed examples of deferent kind of markups.
+lightgallery does not force you to use any kind of markup. you can use whatever markup you want. But I suggest you to use the following markup. [Here](http://sachinchoolur.github.io/lightGallery/demos/html-markup.html) you can find the detailed examples of different kind of markups.
 ``` html
 <div id="lightgallery">
   <a href="img/img1.jpg">
