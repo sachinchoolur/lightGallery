@@ -1,7 +1,6 @@
-/*! lightgallery - v1.4.0 - 2017-06-04
+/*! lightgallery - v1.5.0 - 2017-07-16
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
-
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module unless amdModuleId is set

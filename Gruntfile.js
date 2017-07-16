@@ -33,16 +33,9 @@ module.exports = function(grunt) {
                 files: {
                     'dist/css/<%= pkg.name %>.css': ['src/css/<%= pkg.name %>.css'],
                     'dist/css/lg-fb-comment-box.css': ['src/css/lg-fb-comment-box.css'],
-                    'dist/css/lg-transitions.css': ['src/css/lg-transitions.css']/*,
-                    'dist/js/<%= pkg.name %>.js': ['src/js/<%= pkg.name %>.js'],
-                    'dist/js/<%= pkg.name %>-all.js': ['src/js/<%= pkg.name %>.js', 'src/js/lg-autoplay.js', 'src/js/lg-fullscreen.js', 'src/js/lg-pager.js', 'src/js/lg-thumbnail.js', 'src/js/lg-video.js', 'src/js/lg-zoom.js', 'src/js/lg-hash.js'],
-                    'dist/js/lg-autoplay.js': ['src/js/lg-autoplay.js'],
-                    'dist/js/lg-fullscreen.js': ['src/js/lg-fullscreen.js'],
-                    'dist/js/lg-pager.js': ['src/js/lg-pager.js'],
-                    'dist/js/lg-thumbnail.js': ['src/js/lg-thumbnail.js'],
-                    'dist/js/lg-video.js': ['src/js/lg-video.js'],
-                    'dist/js/lg-zoom.js': ['src/js/lg-zoom.js'],
-                    'dist/js/lg-hash.js': ['src/js/lg-hash.js']*/
+                    'dist/css/lg-transitions.css': ['src/css/lg-transitions.css'],
+                    'dist/js/<%= pkg.name %>.js': ['dist/js/<%= pkg.name %>.js'],
+                    'dist/js/<%= pkg.name %>-all.js': ['dist/js/<%= pkg.name %>.js', 'modules/lg-autoplay.js', 'modules/lg-fullscreen.js', 'modules/lg-pager.js', 'modules/lg-thumbnail.js', 'modules/lg-video.js', 'modules/lg-zoom.js', 'modules/lg-hash.js', 'modules/lg-share.js']
                 }
             }
         },
@@ -55,31 +48,10 @@ module.exports = function(grunt) {
                 files: [{
                     src: 'dist/js/<%= pkg.name %>.js',
                     dest: 'dist/js/<%= pkg.name %>.min.js'
-                }/*, {
-                    src: ['src/js/<%= pkg.name %>.js', 'src/js/lg-autoplay.js', 'src/js/lg-fullscreen.js', 'src/js/lg-pager.js', 'src/js/lg-thumbnail.js', 'src/js/lg-video.js', 'src/js/lg-zoom.js', 'src/js/lg-hash.js'],
+                }, {
+                    src: ['dist/js/<%= pkg.name %>.js', 'modules/lg-autoplay.js', 'modules/lg-fullscreen.js', 'modules/lg-pager.js', 'modules/lg-thumbnail.js', 'modules/lg-video.js', 'modules/lg-zoom.js', 'modules/lg-hash.js', 'modules/lg-share.js'],
                     dest: 'dist/js/<%= pkg.name %>-all.min.js'
-                }, {
-                    src: 'src/js/lg-autoplay.js',
-                    dest: 'dist/js/lg-autoplay.min.js'
-                }, {
-                    src: 'src/js/lg-fullscreen.js',
-                    dest: 'dist/js/lg-fullscreen.min.js'
-                }, {
-                    src: 'src/js/lg-pager.js',
-                    dest: 'dist/js/lg-pager.min.js'
-                }, {
-                    src: 'src/js/lg-thumbnail.js',
-                    dest: 'dist/js/lg-thumbnail.min.js'
-                }, {
-                    src: 'src/js/lg-video.js',
-                    dest: 'dist/js/lg-video.min.js'
-                }, {
-                    src: 'src/js/lg-zoom.js',
-                    dest: 'dist/js/lg-zoom.min.js'
-                }, {
-                    src: 'src/js/lg-hash.js',
-                    dest: 'dist/js/lg-hash.min.js'
-                }*/]
+                }]
             }
         },
         umd: {
@@ -225,7 +197,7 @@ module.exports = function(grunt) {
     });
 
     // Default task.
-    grunt.registerTask('default', ['clean', 'jshint', 'connect', 'qunit', 'concat', 'umd:all', 'uglify', 'sass', 'cssmin', 'copy', 'usebanner'/*, 'watch'*/]);
+    grunt.registerTask('default', ['clean', 'jshint', 'connect', 'qunit', 'umd:all', 'concat','uglify', 'sass', 'cssmin', 'copy', /*'usebanner', 'watch'*/]);
     grunt.registerTask('server', function() {
         grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
         grunt.task.run(['serve']);
