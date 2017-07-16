@@ -78,6 +78,7 @@ First of all add lightgallery.css in the &lt;head&gt; of the document.
 ```
 Then include jQuery and lightgallery.min.js into your document.
 If you want to include any lightgallery plugin you can include it after lightgallery.min.js.
+lightGallery and it's plugins are available in lightgallery-all.js
 ``` html
 <body>
     ....
