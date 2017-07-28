@@ -58,6 +58,9 @@
     };
 
     Fullscreen.prototype.requestFullscreen = function() {
+        // trigger onBeforeFullscreen.lg event
+        this.$el.trigger('onBeforeFullscreen.lg');
+
         var el = document.documentElement;
         if (el.requestFullscreen) {
             el.requestFullscreen();
@@ -68,9 +71,15 @@
         } else if (el.webkitRequestFullscreen) {
             el.webkitRequestFullscreen();
         }
+
+        // trigger onAfterFullscreen.lg event
+        this.$el.trigger('onAfterFullscreen.lg');
     };
 
     Fullscreen.prototype.exitFullscreen = function() {
+        // trigger onBeforeExifFullscreen.lg event
+        this.$el.trigger('onBeforeExifFullscreen.lg');
+
         if (document.exitFullscreen) {
             document.exitFullscreen();
         } else if (document.msExitFullscreen) {
@@ -80,6 +89,9 @@
         } else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
         }
+
+        // trigger onAfterExifFullscreen.lg event
+        this.$el.trigger('onAfterExifFullscreen.lg');
     };
 
     // https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode
