@@ -1,3 +1,23 @@
+/*! lg-video - v1.1.0 - 2017-08-08
+* http://sachinchoolur.github.io/lightGallery
+* Copyright (c) 2017 Sachin N; Licensed GPLv3 */
+
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module unless amdModuleId is set
+    define(['jquery'], function (a0) {
+      return (factory(a0));
+    });
+  } else if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory(require('jquery'));
+  } else {
+    factory(jQuery);
+  }
+}(this, function ($) {
+
 (function() {
 
     'use strict';
@@ -153,7 +173,7 @@
             }
         };
 
-        if (_this.core.doCss() && _this.core.$items.length > 1 && ((_this.core.s.enableSwipe && _this.core.isTouch) || (_this.core.s.enableDrag && !_this.core.isTouch))) {
+        if (_this.core.doCss() && (_this.core.$items.length > 1) && (_this.core.s.enableSwipe || _this.core.s.enableDrag)) {
             _this.core.$el.on('onSlideClick.lg.tm', function() {
                 var $el = _this.core.$slide.eq(_this.core.index);
                 loadOnClick($el);
@@ -292,3 +312,6 @@
     $.fn.lightGallery.modules.video = Video;
 
 })();
+
+
+}));
