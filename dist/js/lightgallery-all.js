@@ -1,7 +1,7 @@
-/*! lightgallery - v1.5.0 - 2017-07-16
+/*! lightgallery - v1.6.0 - 2017-08-08
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
-/*! lightgallery - v1.5.0 - 2017-07-16
+/*! lightgallery - v1.6.0 - 2017-08-08
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 (function (root, factory) {
@@ -1113,7 +1113,7 @@
         var endCoords = 0;
         var isMoved = false;
 
-        if (_this.s.enableSwipe && _this.isTouch && _this.doCss()) {
+        if (_this.s.enableSwipe && _this.doCss()) {
 
             _this.$slide.on('touchstart.lg', function(e) {
                 if (!_this.$outer.hasClass('lg-zoomed') && !_this.lgBusy) {
@@ -1152,7 +1152,7 @@
         var endCoords = 0;
         var isDraging = false;
         var isMoved = false;
-        if (_this.s.enableDrag && !_this.isTouch && _this.doCss()) {
+        if (_this.s.enableDrag && _this.doCss()) {
             _this.$slide.on('mousedown.lg', function(e) {
                 // execute only on .lg-object
                 if (!_this.$outer.hasClass('lg-zoomed')) {
@@ -1795,7 +1795,7 @@
 
 }));
 
-/*! lg-thumbnail - v1.0.3 - 2017-02-05
+/*! lg-thumbnail - v1.1.0 - 2017-08-08
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
@@ -1826,6 +1826,7 @@
         currentPagerPosition: 'middle',
 
         thumbWidth: 100,
+        thumbHeight: '80px',
         thumbContHeight: 100,
         thumbMargin: 5,
 
@@ -1861,6 +1862,10 @@
         this.thumbTotalWidth = (this.core.$items.length * (this.core.s.thumbWidth + this.core.s.thumbMargin));
         this.thumbIndex = this.core.index;
 
+        if (this.core.s.animateThumb) {
+            this.core.s.thumbHeight = '100%';
+        }
+
         // Thumbnail animation value
         this.left = 0;
 
@@ -1883,12 +1888,12 @@
             }
 
             this.build();
-            if (this.core.s.animateThumb) {
-                if (this.core.s.enableThumbDrag && !this.core.isTouch && this.core.doCss()) {
+            if (this.core.s.animateThumb && this.core.doCss()) {
+                if (this.core.s.enableThumbDrag) {
                     this.enableThumbDrag();
                 }
 
-                if (this.core.s.enableThumbSwipe && this.core.isTouch && this.core.doCss()) {
+                if (this.core.s.enableThumbSwipe) {
                     this.enableThumbSwipe();
                 }
 
@@ -1971,7 +1976,7 @@
                 thumbImg = thumb;
             }
 
-            thumbList += '<div data-vimeo-id="' + vimeoId + '" class="lg-thumb-item" style="width:' + _this.core.s.thumbWidth + 'px; margin-right: ' + _this.core.s.thumbMargin + 'px"><img src="' + thumbImg + '" /></div>';
+            thumbList += '<div data-vimeo-id="' + vimeoId + '" class="lg-thumb-item" style="width:' + _this.core.s.thumbWidth + 'px; height: ' + _this.core.s.thumbHeight + '; margin-right: ' + _this.core.s.thumbMargin + 'px"><img src="' + thumbImg + '" /></div>';
             vimeoId = '';
         }
 
@@ -2269,7 +2274,7 @@
 
 }));
 
-/*! lg-video - v1.0.2 - 2017-06-04
+/*! lg-video - v1.1.0 - 2017-08-08
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
@@ -2444,7 +2449,7 @@
             }
         };
 
-        if (_this.core.doCss() && _this.core.$items.length > 1 && ((_this.core.s.enableSwipe && _this.core.isTouch) || (_this.core.s.enableDrag && !_this.core.isTouch))) {
+        if (_this.core.doCss() && (_this.core.$items.length > 1) && (_this.core.s.enableSwipe || _this.core.s.enableDrag)) {
             _this.core.$el.on('onSlideClick.lg.tm', function() {
                 var $el = _this.core.$slide.eq(_this.core.index);
                 loadOnClick($el);
@@ -2587,9 +2592,9 @@
 
 }));
 
-/*! lg-zoom - v1.0.4 - 2016-12-20
+/*! lg-zoom - v1.1.0 - 2017-08-08
 * http://sachinchoolur.github.io/lightGallery
-* Copyright (c) 2016 Sachin N; Licensed GPLv3 */
+* Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -2831,13 +2836,9 @@
         });
 
         // Drag option after zoom
-        if (!_this.core.isTouch) {
-            _this.zoomDrag();
-        }
+        _this.zoomDrag();
 
-        if (_this.core.isTouch) {
-            _this.zoomSwipe();
-        }
+        _this.zoomSwipe();
 
     };
 

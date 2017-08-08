@@ -1,4 +1,4 @@
-/*! lg-video - v1.0.2 - 2017-06-04
+/*! lg-video - v1.1.0 - 2017-08-08
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
@@ -173,7 +173,7 @@
             }
         };
 
-        if (_this.core.doCss() && _this.core.$items.length > 1 && ((_this.core.s.enableSwipe && _this.core.isTouch) || (_this.core.s.enableDrag && !_this.core.isTouch))) {
+        if (_this.core.doCss() && (_this.core.$items.length > 1) && (_this.core.s.enableSwipe || _this.core.s.enableDrag)) {
             _this.core.$el.on('onSlideClick.lg.tm', function() {
                 var $el = _this.core.$slide.eq(_this.core.index);
                 loadOnClick($el);
