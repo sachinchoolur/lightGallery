@@ -51,6 +51,7 @@
         selectWithin: '',
         nextHtml: '',
         prevHtml: '',
+        closeHtml: '',
 
         // 0, 1
         index: false,
@@ -290,7 +291,7 @@
             '<div class="lg" style="width:' + this.s.width + '; height:' + this.s.height + '">' +
             '<div class="lg-inner">' + list + '</div>' +
             '<div class="lg-toolbar lg-group">' +
-            '<span class="lg-close lg-icon"></span>' +
+            '<span class="lg-close lg-icon">' + this.s.closeHtml + '</span>' +
             '</div>' +
             controls +
             subHtmlCont +
