@@ -67,7 +67,7 @@ You can also directly download lightgallery from github.
 #### CDN
 If you prefer to use a CDN you can load files via [jsdelivr](https://www.jsdelivr.com/projects/lightgallery)
 
-Here is the [jsdelivr collection](https://cdn.jsdelivr.net/g/lightgallery,lg-autoplay,lg-fullscreen,lg-hash,lg-pager,lg-share,lg-thumbnail,lg-video,lg-zoom) of lightGallery and its modules.
+Here is the [jsdelivr collection](https://cdn.jsdelivr.net/combine/npm/lightgallery,npm/lg-autoplay,npm/lg-fullscreen,npm/lg-hash,npm/lg-pager,npm/lg-share,npm/lg-thumbnail,npm/lg-video,npm/lg-zoom) of lightGallery and its modules.
 
 #### Include CSS and Javascript files
 First of all add lightgallery.css in the &lt;head&gt; of the document.
