@@ -89,7 +89,10 @@
 
         dynamic: false,
         dynamicEl: [],
-        galleryId: 1
+        galleryId: 1,
+        // UDey
+        urlType: 'hash',
+        galleryPath: 'gallery'
     };
 
     function Plugin(element, options) {
@@ -158,6 +161,9 @@
     Plugin.prototype.init = function() {
 
         var _this = this;
+        // UDey
+        var hashedUrl = false;
+        var imgId = 0;
 
         // s.preload should not be more than $item.length
         if (_this.s.preload > _this.$items.length) {
@@ -165,11 +171,33 @@
         }
 
         // if dynamic option is enabled execute immediately
-        var _hash = window.location.hash;
-        if (_hash.indexOf('lg=' + this.s.galleryId) > 0) {
+        // UDey
+        if (this.s.urlType == 'hash') {
+            var _hash = window.location.hash;
+            if (_hash.indexOf('lg=' + this.s.galleryId) > 0) {
+                _this.index = parseInt(_hash.split('&slide=')[1], 10);
+                hashedUrl = true;
+            }
+        } else if (this.s.urlType == 'slash') {
+            var _url = window.location.href;
+            var appName = this.s.galleryPath;
+            var path = _url.substring(_url.indexOf(appName) + appName.length, _url.length);
 
-            _this.index = parseInt(_hash.split('&slide=')[1], 10);
+            if (path.split('/').length == 3) {
+                imgId = path.split('/')[2]
 
+                for (var i = 0; i < $('#' + this.el.id).children().length; i++) {
+                    var href = $('#' + this.el.id).children()[i].href;
+                    if (href.substring(href.lastIndexOf('/') + 1, href.length - 4) == imgId) {
+                        _this.index = i;
+                        hashedUrl = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (hashedUrl) {
             $('body').addClass('lg-from-hash');
             if (!$('body').hasClass('lg-on')) {
                 setTimeout(function() {
@@ -220,6 +248,7 @@
 
     };
 
+    // UDey
     Plugin.prototype.build = function(index) {
 
         var _this = this;
@@ -1290,6 +1319,18 @@
             $(window).scrollTop(_this.prevScrollTop);
         }
 
+        // UDey
+        var url = window.location.href;
+        var appName = this.s.galleryPath;
+        var pos = url.indexOf(appName);
+        var _url = url;
+
+        if (pos >= 0) {
+            _url = url.substring(0, pos + appName.length);
+        }
+
+        _url = url.substring(0, url.lastIndexOf('/'));
+        history.replaceState(null, null, _url);
 
         /**
          * if d is false or undefined destroy will only close the gallery
@@ -3145,7 +3186,10 @@
     'use strict';
 
     var defaults = {
-        hash: true
+        hash: true,
+        // UDey
+        urlType: 'hash',
+        galleryPath: 'gallery'
     };
 
     var Hash = function(element) {
@@ -3166,12 +3210,38 @@
         var _this = this;
         var _hash;
 
+        // UDEY        
+        var url = String(window.location.href);
+        var appName = this.core.s.galleryPath;
+        var pos = url.indexOf(appName);
+        var _url = url;
+        var _path;
+
+        if (pos >= 0) {
+            _url = url.substring(0, pos + appName.length)
+            _path = url.substring(pos + appName.length + 1, url.length);
+        }
+
+        var urlType = _this.core.s.urlType;
+
         // Change hash value on after each slide transition
         _this.core.$el.on('onAfterSlide.lg.tm', function(event, prevIndex, index) {
-            if (history.replaceState) {
-                history.replaceState(null, null, '#lg=' + _this.core.s.galleryId + '&slide=' + index);
-            } else {
-                window.location.hash = 'lg=' + _this.core.s.galleryId + '&slide=' + index;
+            // UDEY
+            if (urlType == 'hash') {
+                if (history.replaceState) {
+                    history.replaceState(null, null, '#lg=' + _this.core.s.galleryId + '&slide=' + index);
+                } else {
+                    window.location.hash = 'lg=' + _this.core.s.galleryId + '&slide=' + index;
+                }
+            } else if (urlType == 'slash') {
+                if (history.replaceState) {
+                    var href = $('#lightgallery').children()[index].href.split( '/' );
+                    var imgId = href[href.length - 1].split('.')[0];
+                    var galleryId = _path.split('/')[0];
+                    _this.core.s.galleryId = galleryId
+
+                    history.replaceState(null, null, _url + '/' + galleryId + '/' + imgId);
+                }
             }
         });
 
