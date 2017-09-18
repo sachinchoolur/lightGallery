@@ -898,6 +898,7 @@
             }
 
         }
+        _this.index = index;
 
     };
 
