@@ -1,5 +1,5 @@
 /*! lg-video - v1.1.0 - 2017-08-08
-* http://sachinchoolur.github.io/lightGallery
+* https://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {
@@ -298,7 +298,7 @@
                 a = a + '&' + $.param(this.core.s.vkPlayerParams);
             }
 
-            video = '<iframe class="lg-video-object lg-vk ' + addClass + '" width="560" height="315" src="http://vk.com/video_ext.php?' + isVideo.vk[1] + a + '" frameborder="0" allowfullscreen></iframe>';
+            video = '<iframe class="lg-video-object lg-vk ' + addClass + '" width="560" height="315" src="https://vk.com/video_ext.php?' + isVideo.vk[1] + a + '" frameborder="0" allowfullscreen></iframe>';
 
         }
 

@@ -1,8 +1,8 @@
 /** ==========================================================
 
 * jquery lightGallery.js v1.1.6 08/25/2015
-* http://sachinchoolur.github.io/lightGallery/
-* Released under the MIT License - http://opensource.org/licenses/mit-license.html  ---- FREE ----
+* https://sachinchoolur.github.io/lightGallery/
+* Released under the MIT License - https://opensource.org/licenses/mit-license.html  ---- FREE ----
 
 =========================================================/**/
 ;
@@ -282,7 +282,7 @@
                     } else {
                         a = '';
                     }
-                    video = '<iframe class="object" id="video' + _id + '" width="560" height="315"  src="http://player.vimeo.com/video/' + vimeo[1] + '?' + a + 'byline=0&amp;portrait=0&amp;color=' + settings.vimeoColor + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+                    video = '<iframe class="object" id="video' + _id + '" width="560" height="315"  src="https://player.vimeo.com/video/' + vimeo[1] + '?' + a + 'byline=0&amp;portrait=0&amp;color=' + settings.vimeoColor + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
                 } else {
                     video = '<iframe class="object" frameborder="0" src="' + src + '"  allowfullscreen="true"></iframe>';
                 }

@@ -7,7 +7,7 @@ A customizable, modular, responsive, lightbox gallery plugin for jQuery.
 ![lightgallery](https://raw.githubusercontent.com/sachinchoolur/lightGallery/master/lib/lg.png)
 Demo
 ---
-[JQuery lightGallery demo](http://sachinchoolur.github.io/lightGallery/). [Codepen demo](http://codepen.io/sachinchoolur/details/QjLNMM/) 
+[JQuery lightGallery demo](https://sachinchoolur.github.io/lightGallery/). [Codepen demo](https://codepen.io/sachinchoolur/details/QjLNMM/) 
 
 Main features
 ---
@@ -41,7 +41,7 @@ Installation
 ---
 #### Install with Bower
 
-You can Install lightGallery using the [Bower](http://bower.io) package manager.
+You can Install lightGallery using the [Bower](https://bower.io) package manager.
 
 ```sh
 $ bower install lightgallery --save
@@ -49,7 +49,7 @@ $ bower install lightgallery --save
 
 #### npm
 
-You can also find ladda-angular on [npm](http://npmjs.org).
+You can also find ladda-angular on [npm](https://npmjs.org).
 
 ```sh
 $ npm install lightgallery
@@ -87,7 +87,7 @@ If you want to include any lightgallery plugin you can include it after lightgal
 </body>  
 ```
 ##### The markup
-lightgallery does not force you to use any kind of markup. you can use whatever markup you want. But i suggest you to use the following markup. [Here](http://sachinchoolur.github.io/lightGallery/demos/html-markup.html) you can find the detailed examples of deferent kind of markups.
+lightgallery does not force you to use any kind of markup. you can use whatever markup you want. But i suggest you to use the following markup. [Here](https://sachinchoolur.github.io/lightGallery/demos/html-markup.html) you can find the detailed examples of deferent kind of markups.
 ``` html
 <div id="lightgallery">
   <a href="img/img1.jpg">
@@ -110,59 +110,59 @@ Finally you need to initiate the gallery by adding the following code.
 ```
 Resources
 ----
-* [API Reference](http://sachinchoolur.github.io/lightGallery/docs/api.html)
-* [Events](http://sachinchoolur.github.io/lightGallery/docs/api.html#events)
-* [Methods](http://sachinchoolur.github.io/lightGallery/docs/api.html#methods)
-* [Data Attributes](http://sachinchoolur.github.io/lightGallery/docs/api.html#attributes)
-* [Dynamic variables](http://sachinchoolur.github.io/lightGallery/docs/api.html#dynamic)
-* [Sass variables](http://sachinchoolur.github.io/lightGallery/docs/api.html#sass)
-* [Module API](http://sachinchoolur.github.io/lightGallery/docs/plugin-api.html)
-* [Themes](http://sachinchoolur.github.io/lightGallery/themes/)
+* [API Reference](https://sachinchoolur.github.io/lightGallery/docs/api.html)
+* [Events](https://sachinchoolur.github.io/lightGallery/docs/api.html#events)
+* [Methods](https://sachinchoolur.github.io/lightGallery/docs/api.html#methods)
+* [Data Attributes](https://sachinchoolur.github.io/lightGallery/docs/api.html#attributes)
+* [Dynamic variables](https://sachinchoolur.github.io/lightGallery/docs/api.html#dynamic)
+* [Sass variables](https://sachinchoolur.github.io/lightGallery/docs/api.html#sass)
+* [Module API](https://sachinchoolur.github.io/lightGallery/docs/plugin-api.html)
+* [Themes](https://sachinchoolur.github.io/lightGallery/themes/)
 
 Demos 
 ----
 * Thumbnails
-  * [Gallery with animated thumbnails](http://sachinchoolur.github.io/lightGallery/demos/) 
-  * [Gallery without animated thumbnails](http://sachinchoolur.github.io/lightGallery/demos/#normal-thumb) 
+  * [Gallery with animated thumbnails](https://sachinchoolur.github.io/lightGallery/demos/) 
+  * [Gallery without animated thumbnails](https://sachinchoolur.github.io/lightGallery/demos/#normal-thumb) 
 * Youtube, Vimeo Video Gallery
-  * [Youtube, Vimeo Video Gallery](http://sachinchoolur.github.io/lightGallery/demos/videos.html)
-  * [Video Gallery Without Poster](http://sachinchoolur.github.io/lightGallery/demos/videos.html#video-without-poster)
-  * [Video Player Parameters](http://sachinchoolur.github.io/lightGallery/demos/videos.html#video-player-param)
-  * [Automatically load thumbnails](http://sachinchoolur.github.io/lightGallery/demos/videos.html#auto-thumb)
+  * [Youtube, Vimeo Video Gallery](https://sachinchoolur.github.io/lightGallery/demos/videos.html)
+  * [Video Gallery Without Poster](https://sachinchoolur.github.io/lightGallery/demos/videos.html#video-without-poster)
+  * [Video Player Parameters](https://sachinchoolur.github.io/lightGallery/demos/videos.html#video-player-param)
+  * [Automatically load thumbnails](https://sachinchoolur.github.io/lightGallery/demos/videos.html#auto-thumb)
 * Html5 Video Gallery
-  * [Html5 Video Gallery](http://sachinchoolur.github.io/lightGallery/demos/html5-videos.html)
-  * [Html5 video gallery with videojs](http://sachinchoolur.github.io/lightGallery/demos/html5-videos.html#video-without-poster)
-* [Transitions](http://sachinchoolur.github.io/lightGallery/demos/transitions.html)
-* [Dynamic](http://sachinchoolur.github.io/lightGallery/demos/dynamic.html)
-* [Events](http://sachinchoolur.github.io/lightGallery/demos/events.html)
-* [Methods](http://sachinchoolur.github.io/lightGallery/demos/methods.html)
-* [Iframe. External websites, Google map etc..](http://sachinchoolur.github.io/lightGallery/demos/iframe.html)
-* [Captions](http://sachinchoolur.github.io/lightGallery/demos/captions.html)
+  * [Html5 Video Gallery](https://sachinchoolur.github.io/lightGallery/demos/html5-videos.html)
+  * [Html5 video gallery with videojs](https://sachinchoolur.github.io/lightGallery/demos/html5-videos.html#video-without-poster)
+* [Transitions](https://sachinchoolur.github.io/lightGallery/demos/transitions.html)
+* [Dynamic](https://sachinchoolur.github.io/lightGallery/demos/dynamic.html)
+* [Events](https://sachinchoolur.github.io/lightGallery/demos/events.html)
+* [Methods](https://sachinchoolur.github.io/lightGallery/demos/methods.html)
+* [Iframe. External websites, Google map etc..](https://sachinchoolur.github.io/lightGallery/demos/iframe.html)
+* [Captions](https://sachinchoolur.github.io/lightGallery/demos/captions.html)
 * Responsive images
-  * [Responsive images](http://sachinchoolur.github.io/lightGallery/demos/responsive.html)
-  * [Responsive images with html5 srcset](http://sachinchoolur.github.io/lightGallery/demos/responsive.html#srcset-demo)
-* [Gallery with fixed size](http://sachinchoolur.github.io/lightGallery/demos/fixed-size.html)
-* [Html Markup](http://sachinchoolur.github.io/lightGallery/demos/html-markup.html)
-* [Facebook comments](http://sachinchoolur.github.io/lightGallery/demos/comment-box.html)
-* [Easing](http://sachinchoolur.github.io/lightGallery/demos/easing.html)
-* [History/hash plugin](http://sachinchoolur.github.io/lightGallery/demos/hash.html)
-* [Angularjs directive](http://sachinchoolur.github.io/lightGallery/demos/angularjs.html)
+  * [Responsive images](https://sachinchoolur.github.io/lightGallery/demos/responsive.html)
+  * [Responsive images with html5 srcset](https://sachinchoolur.github.io/lightGallery/demos/responsive.html#srcset-demo)
+* [Gallery with fixed size](https://sachinchoolur.github.io/lightGallery/demos/fixed-size.html)
+* [Html Markup](https://sachinchoolur.github.io/lightGallery/demos/html-markup.html)
+* [Facebook comments](https://sachinchoolur.github.io/lightGallery/demos/comment-box.html)
+* [Easing](https://sachinchoolur.github.io/lightGallery/demos/easing.html)
+* [History/hash plugin](https://sachinchoolur.github.io/lightGallery/demos/hash.html)
+* [Angularjs directive](https://sachinchoolur.github.io/lightGallery/demos/angularjs.html)
 
 Built in modules
 ----
-1. [Thumbnail](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-thumbnial)
-2. [Autoplay](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-autoplay)
-3. [Video](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-video)
-4. [Fullscreen](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-fullscreen)
-4. [Pager](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-pager)
-4. [Zoom](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-zoom)
-4. [Hash](http://sachinchoolur.github.io/lightGallery/docs/api.html#lg-hash)
+1. [Thumbnail](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-thumbnial)
+2. [Autoplay](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-autoplay)
+3. [Video](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-video)
+4. [Fullscreen](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-fullscreen)
+4. [Pager](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-pager)
+4. [Zoom](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-zoom)
+4. [Hash](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-hash)
 
 Support
 ----
 Please use GitHub [issue tracker](https://github.com/sachinchoolur/lightGallery/issues/new) in the event that you have come across a bug or glitch. It would also be very helpful if you could add a jsFiddle, which would allow you to demonstrate the problem in question.
 
-You can post a comment [here](http://sachinchoolur.github.io/lightGallery/#comments) to leave feedback, and offer any feature suggestions you may have for Lightgallery.
+You can post a comment [here](https://sachinchoolur.github.io/lightGallery/#comments) to leave feedback, and offer any feature suggestions you may have for Lightgallery.
 
 Please use [stackoverflow](https://stackoverflow.com/search?q=lightgallery) instead of github issue tracker if you need any help with implementing lightgallery in your project or if you have any personal support requests. **If you need any special customization, feature or support email me at _sachi77n@gmail.com_. I can do it for reasonable price.**
 

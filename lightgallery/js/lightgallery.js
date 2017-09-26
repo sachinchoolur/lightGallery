@@ -1,5 +1,5 @@
 /*! lightgallery - v1.6.0 - 2017-08-08
-* http://sachinchoolur.github.io/lightGallery/
+* https://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -439,7 +439,7 @@
                     html5: true
                 };
             } else {
-                console.error('lightGallery :- data-src is not pvovided on slide item ' + (index + 1) + '. Please make sure the selector property is properly configured. More info - http://sachinchoolur.github.io/lightGallery/demos/html-markup.html');
+                console.error('lightGallery :- data-src is not pvovided on slide item ' + (index + 1) + '. Please make sure the selector property is properly configured. More info - https://sachinchoolur.github.io/lightGallery/demos/html-markup.html');
                 return false;
             }
         }

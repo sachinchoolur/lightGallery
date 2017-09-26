@@ -4,7 +4,7 @@ jQuery lightGallery
 
 Demo
 ----------------
-[JQuery lightGallery demo](http://sachinchoolur.github.io/lightGallery/)
+[JQuery lightGallery demo](https://sachinchoolur.github.io/lightGallery/)
 
 Description
 ----------------
@@ -56,7 +56,7 @@ How to use lightGallery?
 add the Following code to the &lt;head&gt; of your document.
 ```html
 <link type="text/css" rel="stylesheet" href="css/lightGallery.css" />           
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="js/lightGallery.js"></script>
 // Do not include both lightGallery.js and lightGallery.min.js
 ```
@@ -89,7 +89,7 @@ Create ul and li elements and add the path of the image or video inside the data
     <li data-url="myCustomHtml.html" > </li>
      
     <!-- If true your src will be displayed in an iframe.. -->
-    <li data-iframe="true" data-src="http://www.w3schools.com/" > </li>
+    <li data-iframe="true" data-src="https://www.w3schools.com/" > </li>
 ```
 ### Call lightGallery! ###
 ```html
@@ -161,7 +161,7 @@ Create ul and li elements and add the path of the image or video inside the data
     </script>
 ```
 
-In-depth explanation of settings can be found on a [separate page](http://sachinchoolur.github.io/lightGallery/settings.html).
+In-depth explanation of settings can be found on a [separate page](https://sachinchoolur.github.io/lightGallery/settings.html).
 
 ### Public methods ###
 ```html

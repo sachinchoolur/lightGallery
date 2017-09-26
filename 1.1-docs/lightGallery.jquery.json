@@ -27,13 +27,13 @@
     "licenses": [
         {
             "type": "MLT License",
-            "url": "http://opensource.org/licenses/mit-license.html"
+            "url": "https://opensource.org/licenses/mit-license.html"
         }
     ],
     "bugs": "https://github.com/sachinchoolur/lightGallery/issues",
-    "homepage": "http://sachinchoolur.github.io/lightGallery/",
+    "homepage": "https://sachinchoolur.github.io/lightGallery/",
     "docs": "https://github.com/sachinchoolur/lightGallery",
-    "download": "http://sachinchoolur.github.io/lightGallery/lightGallery.zip",
+    "download": "https://sachinchoolur.github.io/lightGallery/lightGallery.zip",
     "dependencies": {
         "jquery": ">=1.5"
     }

@@ -1,5 +1,5 @@
 /*! lg-autoplay - v1.0.4 - 2017-03-28
-* http://sachinchoolur.github.io/lightGallery
+* https://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {

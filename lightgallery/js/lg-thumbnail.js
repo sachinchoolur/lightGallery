@@ -1,5 +1,5 @@
 /*! lg-thumbnail - v1.1.0 - 2017-08-08
-* http://sachinchoolur.github.io/lightGallery
+* https://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {
