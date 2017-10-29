@@ -3170,7 +3170,7 @@
         // Change hash value on after each slide transition
         _this.core.$el.on('onAfterSlide.lg.tm', function(event, prevIndex, index) {
             if (history.replaceState) {
-                history.replaceState(null, null, '#lg=' + _this.core.s.galleryId + '&slide=' + index);
+                history.replaceState(null, null, window.location.pathname + '#lg=' + _this.core.s.galleryId + '&slide=' + index);
             } else {
                 window.location.hash = 'lg=' + _this.core.s.galleryId + '&slide=' + index;
             }
