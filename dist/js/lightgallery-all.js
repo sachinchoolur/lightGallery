@@ -1,7 +1,7 @@
-/*! lightgallery - v1.6.2 - 2017-10-03
+/*! lightgallery - v1.6.4 - 2017-10-29
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
-/*! lightgallery - v1.6.2 - 2017-10-03
+/*! lightgallery - v1.6.4 - 2017-10-29
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 (function (root, factory) {
@@ -3121,7 +3121,7 @@
 
 }));
 
-/*! lg-hash - v1.0.2 - 2017-06-03
+/*! lg-hash - v1.0.3 - 2017-10-19
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
@@ -3219,6 +3219,7 @@
     $.fn.lightGallery.modules.hash = Hash;
 
 })();
+
 
 }));
 
