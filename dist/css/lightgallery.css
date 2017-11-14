@@ -52,7 +52,7 @@
 .lg-actions .lg-prev {
   left: 20px;
 }
-.lg-actions .lg-prev:after {
+.lg-actions .lg-prev:before {
   content: "\e094";
 }
 
