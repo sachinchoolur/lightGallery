@@ -1,4 +1,4 @@
-/*! lg-video - v1.1.0 - 2017-08-08
+/*! lg-video - v1.2.0 - 2017-11-16
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
@@ -19,67 +19,132 @@
 }(this, function ($) {
 
 (function() {
+    
+        'use strict';
+    
+        var defaults = {
+            videoMaxWidth: '855px',
 
-    'use strict';
+            autoplayFirstVideo: true,
 
-    var defaults = {
-        videoMaxWidth: '855px',
-        youtubePlayerParams: false,
-        vimeoPlayerParams: false,
-        dailymotionPlayerParams: false,
-        vkPlayerParams: false,
-        videojs: false,
-        videojsOptions: {}
-    };
+            youtubePlayerParams: false,
+            vimeoPlayerParams: false,
+            dailymotionPlayerParams: false,
+            vkPlayerParams: false,
 
-    var Video = function(element) {
-
-        this.core = $(element).data('lightGallery');
-
-        this.$el = $(element);
-        this.core.s = $.extend({}, defaults, this.core.s);
-        this.videoLoaded = false;
-
-        this.init();
-
-        return this;
-    };
-
-    Video.prototype.init = function() {
-        var _this = this;
-
-        // Event triggered when video url found without poster
-        _this.core.$el.on('hasVideo.lg.tm', function(event, index, src, html) {
-            _this.core.$slide.eq(index).find('.lg-video').append(_this.loadVideo(src, 'lg-object', true, index, html));
-            if (html) {
-                if (_this.core.s.videojs) {
-                    try {
-                        videojs(_this.core.$slide.eq(index).find('.lg-html5').get(0), _this.core.s.videojsOptions, function() {
-                            if (!_this.videoLoaded) {
-                                this.play();
-                            }
-                        });
-                    } catch (e) {
-                        console.error('Make sure you have included videojs');
-                    }
+            videojs: false,
+            videojsOptions: {}
+        };
+    
+        var Video = function(element) {
+    
+            this.core = $(element).data('lightGallery');
+    
+            this.$el = $(element);
+            this.core.s = $.extend({}, defaults, this.core.s);
+            this.videoLoaded = false;
+    
+            this.init();
+    
+            return this;
+        };
+    
+        Video.prototype.init = function() {
+            var _this = this;
+    
+            // Event triggered when video url found without poster
+            _this.core.$el.on('hasVideo.lg.tm', onHasVideo.bind(this));
+    
+            // Set max width for video
+            _this.core.$el.on('onAferAppendSlide.lg.tm', onAferAppendSlide.bind(this));
+    
+            if (_this.core.doCss() && (_this.core.$items.length > 1) && (_this.core.s.enableSwipe || _this.core.s.enableDrag)) {
+                _this.core.$el.on('onSlideClick.lg.tm', function() {
+                    var $el = _this.core.$slide.eq(_this.core.index);
+                    _this.loadVideoOnclick($el);
+                });
+            } else {
+    
+                // For IE 9 and bellow
+                _this.core.$slide.on('click.lg', function() {
+                    _this.loadVideoOnclick($(this));
+                });
+            }
+    
+            _this.core.$el.on('onBeforeSlide.lg.tm', onBeforeSlide.bind(this));
+    
+            _this.core.$el.on('onAfterSlide.lg.tm', function(event, prevIndex) {
+                _this.core.$slide.eq(prevIndex).removeClass('lg-video-playing');
+            });
+        };
+    
+        Video.prototype.loadVideo = function(src, addClass, noPoster, index, html) {
+            var video = '';
+            var autoplay = 1;
+            var a = '';
+            var isVideo = this.core.isVideo(src, index) || {};
+    
+            // Enable autoplay based on setting for first video if poster doesn't exist
+            if (noPoster) {
+                if (this.videoLoaded) {
+                    autoplay = 0;
                 } else {
-                    if(!_this.videoLoaded) {
-                        _this.core.$slide.eq(index).find('.lg-html5').get(0).play();
-                    }
+                    autoplay = this.core.s.autoplayFirstVideo ? 1 : 0;
                 }
             }
-        });
-
-        // Set max width for video
-        _this.core.$el.on('onAferAppendSlide.lg.tm', function(event, index) {
-            var $videoCont = _this.core.$slide.eq(index).find('.lg-video-cont');
-            if (!$videoCont.hasClass('lg-has-iframe')) {
-                $videoCont.css('max-width', _this.core.s.videoMaxWidth);
-                _this.videoLoaded = true;
+    
+            if (isVideo.youtube) {
+    
+                a = '?wmode=opaque&autoplay=' + autoplay + '&enablejsapi=1';
+                if (this.core.s.youtubePlayerParams) {
+                    a = a + '&' + $.param(this.core.s.youtubePlayerParams);
+                }
+    
+                video = '<iframe class="lg-video-object lg-youtube ' + addClass + '" width="560" height="315" src="//www.youtube.com/embed/' + isVideo.youtube[1] + a + '" frameborder="0" allowfullscreen></iframe>';
+    
+            } else if (isVideo.vimeo) {
+    
+                a = '?autoplay=' + autoplay + '&api=1';
+                if (this.core.s.vimeoPlayerParams) {
+                    a = a + '&' + $.param(this.core.s.vimeoPlayerParams);
+                }
+    
+                video = '<iframe class="lg-video-object lg-vimeo ' + addClass + '" width="560" height="315"  src="//player.vimeo.com/video/' + isVideo.vimeo[1] + a + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+    
+            } else if (isVideo.dailymotion) {
+    
+                a = '?wmode=opaque&autoplay=' + autoplay + '&api=postMessage';
+                if (this.core.s.dailymotionPlayerParams) {
+                    a = a + '&' + $.param(this.core.s.dailymotionPlayerParams);
+                }
+    
+                video = '<iframe class="lg-video-object lg-dailymotion ' + addClass + '" width="560" height="315" src="//www.dailymotion.com/embed/video/' + isVideo.dailymotion[1] + a + '" frameborder="0" allowfullscreen></iframe>';
+    
+            } else if (isVideo.html5) {
+                var fL = html.substring(0, 1);
+                if (fL === '.' || fL === '#') {
+                    html = $(html).html();
+                }
+    
+                video = html;
+    
+            } else if (isVideo.vk) {
+    
+                a = '&autoplay=' + autoplay;
+                if (this.core.s.vkPlayerParams) {
+                    a = a + '&' + $.param(this.core.s.vkPlayerParams);
+                }
+    
+                video = '<iframe class="lg-video-object lg-vk ' + addClass + '" width="560" height="315" src="http://vk.com/video_ext.php?' + isVideo.vk[1] + a + '" frameborder="0" allowfullscreen></iframe>';
+    
             }
-        });
+    
+            return video;
+        };
 
-        var loadOnClick = function($el) {
+        Video.prototype.loadVideoOnclick = function($el){
+
+            var _this = this;
             // check slide has poster
             if ($el.find('.lg-object').hasClass('lg-has-poster') && $el.find('.lg-object').is(':visible')) {
 
@@ -172,21 +237,46 @@
                 }
             }
         };
+    
+        Video.prototype.destroy = function() {
+            this.videoLoaded = false;
+        };
 
-        if (_this.core.doCss() && (_this.core.$items.length > 1) && (_this.core.s.enableSwipe || _this.core.s.enableDrag)) {
-            _this.core.$el.on('onSlideClick.lg.tm', function() {
-                var $el = _this.core.$slide.eq(_this.core.index);
-                loadOnClick($el);
-            });
-        } else {
-
-            // For IE 9 and bellow
-            _this.core.$slide.on('click.lg', function() {
-                loadOnClick($(this));
-            });
+        function onHasVideo(event, index, src, html) {
+            /*jshint validthis:true */
+            var _this = this;
+            _this.core.$slide.eq(index).find('.lg-video').append(_this.loadVideo(src, 'lg-object', true, index, html));
+            if (html) {
+                if (_this.core.s.videojs) {
+                    try {
+                        videojs(_this.core.$slide.eq(index).find('.lg-html5').get(0), _this.core.s.videojsOptions, function() {
+                            if (!_this.videoLoaded && _this.core.s.autoplayFirstVideo) {
+                                this.play();
+                            }
+                        });
+                    } catch (e) {
+                        console.error('Make sure you have included videojs');
+                    }
+                } else {
+                    if(!_this.videoLoaded && _this.core.s.autoplayFirstVideo) {
+                        _this.core.$slide.eq(index).find('.lg-html5').get(0).play();
+                    }
+                }
+            }
         }
 
-        _this.core.$el.on('onBeforeSlide.lg.tm', function(event, prevIndex, index) {
+        function onAferAppendSlide(event, index) {
+            /*jshint validthis:true */
+            var $videoCont = this.core.$slide.eq(index).find('.lg-video-cont');
+            if (!$videoCont.hasClass('lg-has-iframe')) {
+                $videoCont.css('max-width', this.core.s.videoMaxWidth);
+                this.videoLoaded = true;
+            }
+        }
+
+        function onBeforeSlide(event, prevIndex, index) {
+            /*jshint validthis:true */
+            var _this = this;
 
             var $videoSlide = _this.core.$slide.eq(prevIndex);
             var youtubePlayer = $videoSlide.find('.lg-youtube').get(0);
@@ -232,86 +322,10 @@
                 _this.core.$outer.addClass('lg-hide-download');
             }
 
-            //$videoSlide.addClass('lg-complete');
-
-        });
-
-        _this.core.$el.on('onAfterSlide.lg.tm', function(event, prevIndex) {
-            _this.core.$slide.eq(prevIndex).removeClass('lg-video-playing');
-        });
-    };
-
-    Video.prototype.loadVideo = function(src, addClass, noposter, index, html) {
-        var video = '';
-        var autoplay = 1;
-        var a = '';
-        var isVideo = this.core.isVideo(src, index) || {};
-
-        // Enable autoplay for first video if poster doesn't exist
-        if (noposter) {
-            if (this.videoLoaded) {
-                autoplay = 0;
-            } else {
-                autoplay = 1;
-            }
         }
-
-        if (isVideo.youtube) {
-
-            a = '?wmode=opaque&autoplay=' + autoplay + '&enablejsapi=1';
-            if (this.core.s.youtubePlayerParams) {
-                a = a + '&' + $.param(this.core.s.youtubePlayerParams);
-            }
-
-            video = '<iframe class="lg-video-object lg-youtube ' + addClass + '" width="560" height="315" src="//www.youtube.com/embed/' + isVideo.youtube[1] + a + '" frameborder="0" allowfullscreen></iframe>';
-
-        } else if (isVideo.vimeo) {
-
-            a = '?autoplay=' + autoplay + '&api=1';
-            if (this.core.s.vimeoPlayerParams) {
-                a = a + '&' + $.param(this.core.s.vimeoPlayerParams);
-            }
-
-            video = '<iframe class="lg-video-object lg-vimeo ' + addClass + '" width="560" height="315"  src="//player.vimeo.com/video/' + isVideo.vimeo[1] + a + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
-
-        } else if (isVideo.dailymotion) {
-
-            a = '?wmode=opaque&autoplay=' + autoplay + '&api=postMessage';
-            if (this.core.s.dailymotionPlayerParams) {
-                a = a + '&' + $.param(this.core.s.dailymotionPlayerParams);
-            }
-
-            video = '<iframe class="lg-video-object lg-dailymotion ' + addClass + '" width="560" height="315" src="//www.dailymotion.com/embed/video/' + isVideo.dailymotion[1] + a + '" frameborder="0" allowfullscreen></iframe>';
-
-        } else if (isVideo.html5) {
-            var fL = html.substring(0, 1);
-            if (fL === '.' || fL === '#') {
-                html = $(html).html();
-            }
-
-            video = html;
-
-        } else if (isVideo.vk) {
-
-            a = '&autoplay=' + autoplay;
-            if (this.core.s.vkPlayerParams) {
-                a = a + '&' + $.param(this.core.s.vkPlayerParams);
-            }
-
-            video = '<iframe class="lg-video-object lg-vk ' + addClass + '" width="560" height="315" src="http://vk.com/video_ext.php?' + isVideo.vk[1] + a + '" frameborder="0" allowfullscreen></iframe>';
-
-        }
-
-        return video;
-    };
-
-    Video.prototype.destroy = function() {
-        this.videoLoaded = false;
-    };
-
-    $.fn.lightGallery.modules.video = Video;
-
-})();
-
+    
+        $.fn.lightGallery.modules.video = Video;
+    
+    })();
 
 }));
