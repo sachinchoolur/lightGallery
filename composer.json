@@ -1,0 +1,31 @@
+{
+  "name": "sachinchoolur/lightgallery",
+  "description": "JQuery lightGallery is a lightweight jQuery lightbox gallery for displaying image and video gallery",
+  "license": "GPLv3",
+  "homepage": "http://sachinchoolur.github.io/lightGallery/",
+  "authors": [
+    {
+      "name": "Sachin N",
+      "email": "sachi77n@gmail.com",
+      "homepage": "https://github.com/sachinchoolur"
+    }
+  ],
+  "type": "jquery-plugin",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "support": {
+    "docs": "https://sachinchoolur.github.io/lightGallery/docs/",
+    "email": "sachi77n@gmail.com",
+    "source": "https://github.com/sachinchoolur/lightGallery/releases",
+    "issues": "https://github.com/sachinchoolur/lightGallery/issues"
+  },
+  "keywords": [
+    "jquery-plugin",
+    "lightgallery"
+  ],
+  "require": {
+    "php": ">=5.3",
+    "composer/installers": "~1.0",
+    "components/jquery": ">=1.7.0"
+  }
+}
