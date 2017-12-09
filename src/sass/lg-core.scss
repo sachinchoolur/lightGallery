@@ -22,6 +22,10 @@
         @include box-sizing(border-box);
     }
 
+    &.lg-zoom-from-image {
+        opacity: 1;
+    }
+
     &.lg-visible {
         opacity: 1;
     }
@@ -104,9 +108,10 @@
         &:before {
             content: "";
             display: inline-block;
-            height: 50%;
+            height: 100%;
             width: 1px;
             margin-right: -1px;
+            vertical-align: middle;
         }
     }
 
@@ -161,6 +166,35 @@
     &.lg-hide-download {
         #lg-download {
             display: none;
+        }
+    }
+
+    // Zoom from image 
+    .lg-dummy-img {
+        @include transition(opacity 0.15s !important);
+        & + {
+            .lg-image {
+                opacity: 0 !important;
+            }
+        }
+    }
+    .lg-complete {
+        .lg-dummy-img {
+            & + {
+                .lg-image {
+                    opacity: 1 !important;
+                    z-index: 1;
+                }
+            }
+        }
+    }
+    
+    .lg-first-slide {
+        .lg-image, .lg-dummy-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) !important;
         }
     }
 }
