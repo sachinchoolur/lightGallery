@@ -1,4 +1,4 @@
-/*! lg-hash - v1.0.3 - 2017-10-19
+/*! lg-hash - v1.0.4 - 2017-12-20
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2017 Sachin N; Licensed GPLv3 */
 
@@ -47,7 +47,7 @@
         // Change hash value on after each slide transition
         _this.core.$el.on('onAfterSlide.lg.tm', function(event, prevIndex, index) {
             if (history.replaceState) {
-                history.replaceState(null, null, window.location.pathname + '#lg=' + _this.core.s.galleryId + '&slide=' + index);
+                history.replaceState(null, null, window.location.pathname + window.location.search + '#lg=' + _this.core.s.galleryId + '&slide=' + index);
             } else {
                 window.location.hash = 'lg=' + _this.core.s.galleryId + '&slide=' + index;
             }
