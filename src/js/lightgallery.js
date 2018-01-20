@@ -779,6 +779,16 @@
 
                 if (_src) {
                     $('#lg-download').attr('href', _src);
+                    
+                    var _downloadName;
+                    if (_this.s.dynamic) {
+                        _downloadName = _this.s.dynamicEl[index].downloadName || '';
+                    } else {
+                        _downloadName = _this.$items.eq(index).attr('data-download-name');	
+                    }                    
+                    if (_downloadName) {
+                        $('#lg-download').attr('download', _downloadName);
+                    }                    
                     _this.$outer.removeClass('lg-hide-download');
                 } else {
                     _this.$outer.addClass('lg-hide-download');
