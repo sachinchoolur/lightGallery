@@ -3,3 +3,4 @@
 .sass-cache
 .idea
 .vagrant
+.DS_Store
