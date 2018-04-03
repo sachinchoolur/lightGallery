@@ -1132,8 +1132,8 @@
         var isDraging = false;
         var isMoved = false;
         if (_this.s.enableDrag && _this.doCss()) {
-            _this.$outer.on('mousedown.lg', function(e) {
-                if (!_this.$outer.hasClass('lg-zoomed') && !_this.lgBusy && !$(e.target).text()) {
+            _this.$slide.on('mousedown.lg', function(e) {
+                if (!_this.$outer.hasClass('lg-zoomed') && !_this.lgBusy && !$(e.target).text().trim()) {
                     e.preventDefault();
                     _this.manageSwipeClass();
                     startCoords = e.pageX;
