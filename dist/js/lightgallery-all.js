@@ -1,7 +1,7 @@
-/*! lightgallery - v1.6.9 - 2018-04-03
+/*! lightgallery - v1.6.10 - 2018-05-01
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2018 Sachin N; Licensed GPLv3 */
-/*! lightgallery - v1.6.9 - 2018-04-03
+/*! lightgallery - v1.6.10 - 2018-05-01
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2018 Sachin N; Licensed GPLv3 */
 (function (root, factory) {
@@ -2272,7 +2272,7 @@
 
 }));
 
-/*! lg-video - v1.2.1 - 2018-03-08
+/*! lg-video - v1.2.2 - 2018-05-01
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2018 Sachin N; Licensed GPLv3 */
 
@@ -2350,6 +2350,17 @@
             _this.core.$el.on('onAfterSlide.lg.tm', function(event, prevIndex) {
                 _this.core.$slide.eq(prevIndex).removeClass('lg-video-playing');
             });
+            
+            if (_this.core.s.autoplayFirstVideo) {
+                _this.core.$el.on('onAferAppendSlide.lg.tm', function (e, index) {
+                    if (!_this.core.lGalleryOn) {
+                        var $el = _this.core.$slide.eq(index);
+                        setTimeout(function () {
+                            _this.loadVideoOnclick($el);
+                        }, 100);
+                    }
+                });
+            }
         };
     
         Video.prototype.loadVideo = function(src, addClass, noPoster, index, html) {
