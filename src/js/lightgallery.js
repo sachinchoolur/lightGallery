@@ -20,6 +20,7 @@
 
         useLeft: false,
 
+        closebutton: true,
         closable: true,
         loop: true,
         escKey: true,
@@ -264,6 +265,7 @@
         var i = 0;
         var subHtmlCont = '';
         var template;
+        var closebutton = '';
         var _this = this;
 
         $('body').append('<div class="lg-backdrop"></div>');
@@ -286,11 +288,15 @@
             subHtmlCont = '<div class="lg-sub-html"></div>';
         }
 
+        if (this.s.closebutton){
+            closebutton = '<span class="lg-close lg-icon"></span>';
+        }
+
         template = '<div class="lg-outer ' + this.s.addClass + ' ' + this.s.startClass + '">' +
             '<div class="lg" style="width:' + this.s.width + '; height:' + this.s.height + '">' +
             '<div class="lg-inner">' + list + '</div>' +
             '<div class="lg-toolbar lg-group">' +
-            '<span class="lg-close lg-icon"></span>' +
+            closebutton +
             '</div>' +
             controls +
             subHtmlCont +
