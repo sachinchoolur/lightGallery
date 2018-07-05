@@ -1,7 +1,7 @@
 @import "lg-variables";
 @import "lg-mixins";
 .lg-outer.fb-comments{
-    .lg-img-wrap {
+    .lg-img-wrap, .lg-video-cont {
         padding-right: 400px !important;
     }
     .fb-comments {
@@ -30,17 +30,23 @@
     .lg-item {
         background-image: none;
         &.lg-complete{
-            .lg-img-wrap{
+            .lg-img-wrap, .lg-video-cont{
                 background-image: none;
             }
         } 
     }
-    .lg-img-wrap {
-        background: url("#{$lg-path-images}/loading.gif") no-repeat scroll center center transparent;
+    .lg-img-wrap, .lg-video-cont {
+        background: url("#{$lg-path-images}/loading.gif") no-repeat scroll transparent;
+        background-position: center center;
+        background-position: calc((100% - 400px) / 2) center;
     }
 
     .lg-sub-html {
         padding: 0;
         position: static;
+    }
+
+    .lg-video-cont {
+        max-width: 1250px !important;
     }
 }

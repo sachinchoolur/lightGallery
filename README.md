@@ -1,6 +1,7 @@
 ![travis](https://travis-ci.org/sachinchoolur/lightGallery.svg?branch=master)
 ![bower](https://img.shields.io/bower/v/lightgallery.svg)
 ![npm](https://img.shields.io/npm/v/lightgallery.svg)
+[![](https://data.jsdelivr.com/v1/package/npm/lightgallery/badge)](https://www.jsdelivr.com/package/npm/lightgallery)
 
 # lightGallery
 A customizable, modular, responsive, lightbox gallery plugin for jQuery.
@@ -36,17 +37,21 @@ Main features
  
 Browser support
 ---
-lightgallery supports all major browsers including IE 8 and above..
+lightgallery supports all major browsers including IE 8 and above.
 
 
 Installation
 ---
 #### Install with Bower
 
-You can install ```lightgallery``` using the [Bower](http://bower.io) package manager.
+You can Install  ```lightgallery``` and its modules using the [Bower](http://bower.io) package manager.
 
 ```sh
 $ bower install lightgallery --save
+```
+Or Install all modules together
+``` sh
+$ bower install lightgallery lg-thumbnail lg-autoplay lg-video lg-fullscreen lg-pager lg-zoom lg-hash lg-share
 ```
 
 #### npm
@@ -54,15 +59,16 @@ $ bower install lightgallery --save
 You can also find ```lightgallery``` on [npm](http://npmjs.org).
 
 ```sh
-$ npm install lightgallery
+$ npm install lightgallery lg-thumbnail lg-autoplay lg-video lg-fullscreen lg-pager lg-zoom lg-hash lg-share
 ```
 #### Download from Github
 
 You can also directly download lightgallery from github.
 
-#### Cdnjs
+#### CDN
+If you prefer to use a CDN you can load files via [jsdelivr](https://www.jsdelivr.com/projects/lightgallery) or [cdnjs](https://cdnjs.com/libraries/lightgallery)
 
-If you prefer to use a CDN you can load files via [cdnjs](https://cdnjs.com/libraries/lightgallery)
+Here is the [jsdelivr collection](https://cdn.jsdelivr.net/combine/npm/lightgallery,npm/lg-autoplay,npm/lg-fullscreen,npm/lg-hash,npm/lg-pager,npm/lg-share,npm/lg-thumbnail,npm/lg-video,npm/lg-zoom) of lightGallery and its modules.
 
 #### Include CSS and Javascript files
 First of all add lightgallery.css in the &lt;head&gt; of the document.
@@ -73,6 +79,7 @@ First of all add lightgallery.css in the &lt;head&gt; of the document.
 ```
 Then include jQuery and lightgallery.min.js into your document.
 If you want to include any lightgallery plugin you can include it after lightgallery.min.js.
+lightGallery and it's plugins are available in lightgallery-all.js
 ``` html
 <body>
     ....
@@ -100,7 +107,7 @@ require(['./lightgallery.js'], function() {
 });
 ```
 #### The markup
-lightgallery does not force you to use any kind of markup. you can use whatever markup you want. But i suggest you to use the following markup. [Here](http://sachinchoolur.github.io/lightGallery/demos/html-markup.html) you can find the detailed examples of deferent kind of markups.
+lightgallery does not force you to use any kind of markup. you can use whatever markup you want. But I suggest you to use the following markup. [Here](http://sachinchoolur.github.io/lightGallery/demos/html-markup.html) you can find the detailed examples of different kind of markups.
 ``` html
 <div id="lightgallery">
   <a href="img/img1.jpg">

@@ -37,6 +37,13 @@
         }
     }
 
+    .lg-has-iframe {
+        .lg-video {
+            -webkit-overflow-scrolling: touch;
+            overflow: auto;
+        }
+    }
+
     .lg-has-vimeo{
         .lg-video-play{
             background: url("#{$lg-path-images}/vimeo-play.png") no-repeat scroll 0 0 transparent;
