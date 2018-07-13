@@ -1,4 +1,4 @@
-/*! lightgallery - v1.6.9 - 2018-04-03
+/*! lightgallery - v1.6.11 - 2018-05-22
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2018 Sachin N; Licensed GPLv3 */
 (function (root, factory) {
@@ -444,7 +444,7 @@
             }
         }
 
-        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)/i);
+        var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com|be-nocookie\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)/i);
         var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
         var dailymotion = src.match(/\/\/(?:www\.)?dai.ly\/([0-9a-z\-_]+)/i);
         var vk = src.match(/\/\/(?:www\.)?(?:vk\.com|vkontakte\.ru)\/(?:video_ext\.php\?)(.*)/i);
@@ -2279,7 +2279,7 @@
 
 }));
 
-/*! lg-video - v1.2.1 - 2018-03-08
+/*! lg-video - v1.2.2 - 2018-05-01
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2018 Sachin N; Licensed GPLv3 */
 
@@ -2357,6 +2357,17 @@
             _this.core.$el.on('onAfterSlide.lg.tm', function(event, prevIndex) {
                 _this.core.$slide.eq(prevIndex).removeClass('lg-video-playing');
             });
+            
+            if (_this.core.s.autoplayFirstVideo) {
+                _this.core.$el.on('onAferAppendSlide.lg.tm', function (e, index) {
+                    if (!_this.core.lGalleryOn) {
+                        var $el = _this.core.$slide.eq(index);
+                        setTimeout(function () {
+                            _this.loadVideoOnclick($el);
+                        }, 100);
+                    }
+                });
+            }
         };
     
         Video.prototype.loadVideo = function(src, addClass, noPoster, index, html) {
