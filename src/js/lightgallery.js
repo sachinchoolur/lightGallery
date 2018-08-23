@@ -670,7 +670,7 @@
                 _this.$slide.eq(index).prepend('<div class="lg-img-wrap"><img class="lg-object lg-image" src="' + _src + '" /></div>');
             }
 
-            _this.$el.trigger('onAferAppendSlide.lg', [index]);
+            _this.$el.trigger('onAfterAppendSlide.lg', [index]);
 
             _$img = _this.$slide.eq(index).find('.lg-object');
             if (_sizes) {

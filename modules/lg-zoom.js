@@ -185,7 +185,7 @@
         var tapped = false;
 
         // event triggered after appending slide content
-        _this.core.$el.on('onAferAppendSlide.lg.tm.zoom', function(event, index) {
+        _this.core.$el.on('onAfterAppendSlide.lg.tm.zoom', function(event, index) {
 
             // Get the current element
             var $image = _this.core.$slide.eq(index).find('.lg-image');
