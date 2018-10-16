@@ -169,7 +169,7 @@ Demos
 * [History/hash plugin](http://sachinchoolur.github.io/lightGallery/demos/hash.html)
 * [Angularjs directive](http://sachinchoolur.github.io/lightGallery/demos/angularjs.html)
 
-Built in modules
+Modules
 ----
 1. Thumbnail - [GItHub](https://github.com/sachinchoolur/lg-thumbnail) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-thumbnial)
 2. Autoplay - [GItHub](https://github.com/sachinchoolur/lg-autoplay) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-autoplay)
@@ -179,6 +179,9 @@ Built in modules
 6. Zoom - [GItHub](https://github.com/sachinchoolur/lg-zoom) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-zoom)
 7. Hash - [GItHub](https://github.com/sachinchoolur/lg-hash) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-hash)
 8. Share - [GItHub](https://github.com/sachinchoolur/lg-share) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-share)
+
+9. exif - [GitHub](https://github.com/amcolash/lg-exif) - Author - [Andrew McOlash
+](https://github.com/amcolash)
 
 License
 ---
