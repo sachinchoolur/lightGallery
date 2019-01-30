@@ -8,7 +8,7 @@
         equal($(elem).attr('class'), 'testing', 'class was added correctly from chaining');
     });*/
 
-    test('$item should take corrent value', function() {
+    test('$item should take current value', function() {
         ok($.fn.lightGallery, 'options set up correctly');
     });
 
