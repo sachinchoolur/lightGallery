@@ -1202,11 +1202,14 @@
         var _this = this;
         _this.$outer.on('mousewheel.lg', function(e) {
 
-            if (!e.deltaY) {
+            // Support mousewheel event on IE11
+            var deltaY = (!!window.MSInputMethodContext && !!document.documentMode) ? e.wheelDelta : e.deltaY;
+            
+            if (!deltaY) {
                 return;
             }
 
-            if (e.deltaY > 0) {
+            if (deltaY > 0) {
                 _this.goToPrevSlide();
             } else {
                 _this.goToNextSlide();
