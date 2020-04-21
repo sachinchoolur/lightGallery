@@ -1,9 +1,9 @@
-/*! lightgallery - v1.6.12 - 2019-02-19
+/*! lightgallery - v1.6.12 - 2020-04-21
 * http://sachinchoolur.github.io/lightGallery/
-* Copyright (c) 2019 Sachin N; Licensed GPLv3 */
-/*! lightgallery - v1.6.12 - 2019-02-19
+* Copyright (c) 2020 Sachin N; Licensed GPLv3 */
+/*! lightgallery - v1.6.12 - 2020-04-21
 * http://sachinchoolur.github.io/lightGallery/
-* Copyright (c) 2019 Sachin N; Licensed GPLv3 */
+* Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module unless amdModuleId is set
@@ -442,7 +442,7 @@
                     html5: true
                 };
             } else {
-                console.error('lightGallery :- data-src is not pvovided on slide item ' + (index + 1) + '. Please make sure the selector property is properly configured. More info - http://sachinchoolur.github.io/lightGallery/demos/html-markup.html');
+                console.error('lightGallery :- data-src is not provided on slide item ' + (index + 1) + '. Please make sure the selector property is properly configured. More info - http://sachinchoolur.github.io/lightGallery/demos/html-markup.html');
                 return false;
             }
         }
@@ -1570,9 +1570,9 @@
 
 }));
 
-/*! lg-fullscreen - v1.1.0 - 2019-02-19
+/*! lg-fullscreen - v1.1.0 - 2020-04-21
 * http://sachinchoolur.github.io/lightGallery
-* Copyright (c) 2019 Sachin N; Licensed GPLv3 */
+* Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {

@@ -1,6 +1,6 @@
-/*! lg-fullscreen - v1.1.0 - 2019-02-19
+/*! lg-fullscreen - v1.1.0 - 2020-04-21
 * http://sachinchoolur.github.io/lightGallery
-* Copyright (c) 2019 Sachin N; Licensed GPLv3 */
+* Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
