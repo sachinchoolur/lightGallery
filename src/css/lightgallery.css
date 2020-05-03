@@ -360,6 +360,8 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   text-align: center;
   top: -39px;
   width: 50px;
+  outline: medium none;
+  border: none;
 }
 .lg-outer .lg-toogle-thumb:after {
   content: "\e1ff";
