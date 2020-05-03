@@ -109,6 +109,9 @@
         width: 50px;
         text-decoration: none !important;
         outline: medium none;
+        background: none;
+        border: none;
+        box-shadow: none;
         @include transition(color 0.2s linear);
 
         &:hover {
