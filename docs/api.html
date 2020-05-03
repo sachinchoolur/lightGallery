@@ -234,10 +234,22 @@ $('#lightgallery').lightGallery({
                                             <td>Set to true if the selector in "data-sub-html" should use the current item as its origin.</td>
                                         </tr>
                                         <tr>
+                                            <td>ariaLabelledby</td>
+                                            <td>string</td>
+                                            <td><code>''</code></td>
+                                            <td>aria-labelledby attribute for gallery</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ariaDescribedby</td>
+                                            <td>string</td>
+                                            <td><code>''</code></td>
+                                            <td>aria-describedby attribute for gallery</td>
+                                        </tr>
+                                        <tr>
                                             <td>preload</td>
                                             <td>number</td>
                                             <td><code>1</code></td>
-                                            <td>Number of preload slides. will exicute only after the current slide is fully loaded. ex:// you clicked on 4th image and if preload = 1 then 3rd slide and 5th slide will be loaded in the background after the 4th slide is fully loaded.. if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded</td>
+                                            <td>Number of preload slides. will execute only after the current slide is fully loaded. ex:// you clicked on 4th image and if preload = 1 then 3rd slide and 5th slide will be loaded in the background after the 4th slide is fully loaded.. if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded</td>
                                         </tr>
                                         <tr>
                                             <td>showAfterLoad</td>
@@ -1261,6 +1273,14 @@ $lg.data('lightGallery').slide(2);
                                         <tr>
                                             <td>html</td>
                                             <td>id or class name of an object(div) which contain your html. used for inserting html5 videos</td>
+                                        </tr>
+                                        <tr>
+                                            <td>alt</td>
+                                            <td>alt attribute for the image displayed in the gallery</td>
+                                        </tr>
+                                        <tr>
+                                            <td>title</td>
+                                            <td>title attribute for the video. pass only for video slides</td>
                                         </tr>
                                         <tr>
                                             <td>poster</td>

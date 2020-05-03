@@ -1,6 +1,6 @@
-/*! lg-share - v1.1.0 - 2017-10-03
+/*! lg-share - v1.1.0 - 2020-05-03
 * http://sachinchoolur.github.io/lightGallery
-* Copyright (c) 2017 Sachin N; Licensed GPLv3 */
+* Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -8,13 +8,13 @@
     define(['jquery'], function (a0) {
       return (factory(a0));
     });
-  } else if (typeof exports === 'object') {
+  } else if (typeof module === 'object' && module.exports) {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
     module.exports = factory(require('jquery'));
   } else {
-    factory(jQuery);
+    factory(root["jQuery"]);
   }
 }(this, function ($) {
 
@@ -48,22 +48,26 @@
 
     Share.prototype.init = function() {
         var _this = this;
-        var shareHtml = '<span id="lg-share" class="lg-icon">' +
+
+        var shareHtml = '<button aria-label="Share" id="lg-share" class="lg-icon" aria-haspopup="true" aria-expanded="false">' +
             '<ul class="lg-dropdown" style="position: absolute;">';
         shareHtml += _this.core.s.facebook ? '<li><a id="lg-share-facebook" target="_blank"><span class="lg-icon"></span><span class="lg-dropdown-text">' + this.core.s.facebookDropdownText + '</span></a></li>' : '';
         shareHtml += _this.core.s.twitter ? '<li><a id="lg-share-twitter" target="_blank"><span class="lg-icon"></span><span class="lg-dropdown-text">' + this.core.s.twitterDropdownText + '</span></a></li>' : '';
         shareHtml += _this.core.s.googlePlus ? '<li><a id="lg-share-googleplus" target="_blank"><span class="lg-icon"></span><span class="lg-dropdown-text">' + this.core.s.googlePlusDropdownText + '</span></a></li>' : '';
         shareHtml += _this.core.s.pinterest ? '<li><a id="lg-share-pinterest" target="_blank"><span class="lg-icon"></span><span class="lg-dropdown-text">' + this.core.s.pinterestDropdownText + '</span></a></li>' : '';
-        shareHtml += '</ul></span>';
+        shareHtml += '</ul></button>';
 
         this.core.$outer.find('.lg-toolbar').append(shareHtml);
         this.core.$outer.find('.lg').append('<div id="lg-dropdown-overlay"></div>');
         $('#lg-share').on('click.lg', function(){
             _this.core.$outer.toggleClass('lg-dropdown-active');
+            var ariaExpanded = $('#lg-share').attr('aria-expanded');
+            $('#lg-share').attr('aria-expanded', ariaExpanded === 'true' ? false: true);
         });
 
         $('#lg-dropdown-overlay').on('click.lg', function(){
             _this.core.$outer.removeClass('lg-dropdown-active');
+            $('#lg-share').attr('aria-expanded', false);
         });
 
         _this.core.$el.on('onAfterSlide.lg.tm', function(event, prevIndex, index) {
