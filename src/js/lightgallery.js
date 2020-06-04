@@ -283,8 +283,8 @@
         // Create controlls
         if (this.s.controls && this.$items.length > 1) {
             controls = '<div class="lg-actions">' +
-                '<button aria-label="Previous slide" class="lg-prev lg-icon">' + this.s.prevHtml + '</button>' +
-                '<button aria-label="Next slide" class="lg-next lg-icon">' + this.s.nextHtml + '</button>' +
+                '<button type="button" aria-label="Previous slide" class="lg-prev lg-icon">' + this.s.prevHtml + '</button>' +
+                '<button type="button" aria-label="Next slide" class="lg-next lg-icon">' + this.s.nextHtml + '</button>' +
                 '</div>';
         }
 
@@ -301,7 +301,7 @@
             '<div class="lg" style="width:' + this.s.width + '; height:' + this.s.height + '">' +
             '<div class="lg-inner">' + list + '</div>' +
             '<div class="lg-toolbar lg-group">' +
-            '<button aria-label="Close gallery" class="lg-close lg-icon"></button>' +
+            '<button type="button" aria-label="Close gallery" class="lg-close lg-icon"></button>' +
             '</div>' +
             controls +
             subHtmlCont +
