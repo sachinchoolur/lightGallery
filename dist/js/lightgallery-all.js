@@ -1,7 +1,7 @@
-/*! lightgallery - v1.7.0 - 2020-05-03
+/*! lightgallery - v1.7.1 - 2020-06-13
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
-/*! lightgallery - v1.7.0 - 2020-05-03
+/*! lightgallery - v1.7.1 - 2020-06-13
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 (function (root, factory) {
@@ -305,8 +305,8 @@
         // Create controlls
         if (this.s.controls && this.$items.length > 1) {
             controls = '<div class="lg-actions">' +
-                '<button aria-label="Previous slide" class="lg-prev lg-icon">' + this.s.prevHtml + '</button>' +
-                '<button aria-label="Next slide" class="lg-next lg-icon">' + this.s.nextHtml + '</button>' +
+                '<button type="button" aria-label="Previous slide" class="lg-prev lg-icon">' + this.s.prevHtml + '</button>' +
+                '<button type="button" aria-label="Next slide" class="lg-next lg-icon">' + this.s.nextHtml + '</button>' +
                 '</div>';
         }
 
@@ -323,7 +323,7 @@
             '<div class="lg" style="width:' + this.s.width + '; height:' + this.s.height + '">' +
             '<div class="lg-inner">' + list + '</div>' +
             '<div class="lg-toolbar lg-group">' +
-            '<button aria-label="Close gallery" class="lg-close lg-icon"></button>' +
+            '<button type="button" aria-label="Close gallery" class="lg-close lg-icon"></button>' +
             '</div>' +
             controls +
             subHtmlCont +
@@ -1380,7 +1380,7 @@
 
 }));
 
-/*! lg-autoplay - v1.2.0 - 2020-05-03
+/*! lg-autoplay - v1.2.1 - 2020-06-13
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 
@@ -1527,7 +1527,7 @@
     // Manage autoplay via play/stop buttons
     Autoplay.prototype.controls = function() {
         var _this = this;
-        var _html = '<button aria-label="Toggle autoplay" class="lg-autoplay-button lg-icon"></button>';
+        var _html = '<button type="button" aria-label="Toggle autoplay" class="lg-autoplay-button lg-icon"></button>';
 
         // Append autoplay controls
         $(this.core.s.appendAutoplayControlsTo).append(_html);
@@ -1587,7 +1587,7 @@
 
 }));
 
-/*! lg-fullscreen - v1.2.0 - 2020-05-03
+/*! lg-fullscreen - v1.2.1 - 2020-06-13
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 
@@ -1648,7 +1648,7 @@
                 !document.mozFullScreenEnabled && !document.msFullscreenEnabled) {
                 return;
             } else {
-                fullScreen = '<button aria-label="Toggle fullscreen" class="lg-fullscreen lg-icon"></button>';
+                fullScreen = '<button type="button" aria-label="Toggle fullscreen" class="lg-fullscreen lg-icon"></button>';
                 this.core.$outer.find('.lg-toolbar').append(fullScreen);
                 this.fullScreen();
             }
@@ -1820,7 +1820,7 @@
 
 }));
 
-/*! lg-thumbnail - v1.2.0 - 2020-05-03
+/*! lg-thumbnail - v1.2.1 - 2020-06-13
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 
@@ -2265,7 +2265,7 @@
         var _this = this;
         if (_this.core.s.toogleThumb) {
             _this.core.$outer.addClass('lg-can-toggle');
-            _this.$thumbOuter.append('<button aria-label="Toggle thumbnails" class="lg-toogle-thumb lg-icon"></button>');
+            _this.$thumbOuter.append('<button type="button" aria-label="Toggle thumbnails" class="lg-toogle-thumb lg-icon"></button>');
             _this.core.$outer.find('.lg-toogle-thumb').on('click.lg', function() {
                 _this.core.$outer.toggleClass('lg-thumb-open');
             });
@@ -2653,7 +2653,7 @@
 
 }));
 
-/*! lg-zoom - v1.2.0 - 2020-05-03
+/*! lg-zoom - v1.2.1 - 2020-06-13
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 
@@ -2718,10 +2718,10 @@
     Zoom.prototype.init = function() {
 
         var _this = this;
-        var zoomIcons = '<button aria-label="Zoom in" id="lg-zoom-in" class="lg-icon"></button><button aria-label="Zoom out" id="lg-zoom-out" class="lg-icon"></button>';
+        var zoomIcons = '<button type="button" aria-label="Zoom in" id="lg-zoom-in" class="lg-icon"></button><button type="button" aria-label="Zoom out" id="lg-zoom-out" class="lg-icon"></button>';
 
         if (_this.core.s.actualSize) {
-            zoomIcons += '<button aria-label="Actual size" id="lg-actual-size" class="lg-icon"></button>';
+            zoomIcons += '<button type="button" aria-label="Actual size" id="lg-actual-size" class="lg-icon"></button>';
         }
 
         if (_this.core.s.useLeftForZoom) {
@@ -3283,7 +3283,7 @@
 
 }));
 
-/*! lg-share - v1.1.0 - 2020-05-03
+/*! lg-share - v1.2.1 - 2020-06-13
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 
@@ -3334,7 +3334,7 @@
     Share.prototype.init = function() {
         var _this = this;
 
-        var shareHtml = '<button aria-label="Share" id="lg-share" class="lg-icon" aria-haspopup="true" aria-expanded="false">' +
+        var shareHtml = '<button type="button" aria-label="Share" id="lg-share" class="lg-icon" aria-haspopup="true" aria-expanded="false">' +
             '<ul class="lg-dropdown" style="position: absolute;">';
         shareHtml += _this.core.s.facebook ? '<li><a id="lg-share-facebook" target="_blank"><span class="lg-icon"></span><span class="lg-dropdown-text">' + this.core.s.facebookDropdownText + '</span></a></li>' : '';
         shareHtml += _this.core.s.twitter ? '<li><a id="lg-share-twitter" target="_blank"><span class="lg-icon"></span><span class="lg-dropdown-text">' + this.core.s.twitterDropdownText + '</span></a></li>' : '';

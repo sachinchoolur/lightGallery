@@ -1,4 +1,4 @@
-/*! lg-share - v1.1.0 - 2020-05-03
+/*! lg-share - v1.2.1 - 2020-06-13
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 
@@ -49,7 +49,7 @@
     Share.prototype.init = function() {
         var _this = this;
 
-        var shareHtml = '<button aria-label="Share" id="lg-share" class="lg-icon" aria-haspopup="true" aria-expanded="false">' +
+        var shareHtml = '<button type="button" aria-label="Share" id="lg-share" class="lg-icon" aria-haspopup="true" aria-expanded="false">' +
             '<ul class="lg-dropdown" style="position: absolute;">';
         shareHtml += _this.core.s.facebook ? '<li><a id="lg-share-facebook" target="_blank"><span class="lg-icon"></span><span class="lg-dropdown-text">' + this.core.s.facebookDropdownText + '</span></a></li>' : '';
         shareHtml += _this.core.s.twitter ? '<li><a id="lg-share-twitter" target="_blank"><span class="lg-icon"></span><span class="lg-dropdown-text">' + this.core.s.twitterDropdownText + '</span></a></li>' : '';
