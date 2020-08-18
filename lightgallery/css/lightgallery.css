@@ -1,4 +1,4 @@
-/*! lightgallery - v1.7.0 - 2020-05-03
+/*! lightgallery - v1.7.3 - 2020-08-18
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 @font-face {
@@ -777,6 +777,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   z-index: 1050;
   text-align: left;
   opacity: 0;
+  outline: none;
   -webkit-transition: opacity 0.15s ease 0s;
   -o-transition: opacity 0.15s ease 0s;
   transition: opacity 0.15s ease 0s;
@@ -984,4 +985,4 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
 }
 
-/*# sourceMappingURL=lightgallery.css.map */
+
