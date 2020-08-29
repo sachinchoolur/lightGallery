@@ -35,7 +35,7 @@ module.exports = function(grunt) {
                     'dist/css/lg-fb-comment-box.css': ['src/css/lg-fb-comment-box.css'],
                     'dist/css/lg-transitions.css': ['src/css/lg-transitions.css'],
                     'dist/js/<%= pkg.name %>.js': ['dist/js/<%= pkg.name %>.js'],
-                    'dist/js/<%= pkg.name %>-all.js': ['dist/js/<%= pkg.name %>.js', 'modules/lg-autoplay.js', 'modules/lg-fullscreen.js', 'modules/lg-pager.js', 'modules/lg-thumbnail.js', 'modules/lg-video.js', 'modules/lg-zoom.js', 'modules/lg-hash.js', 'modules/lg-share.js']
+                    'dist/js/<%= pkg.name %>-all.js': ['dist/js/<%= pkg.name %>.js', 'modules/lg-autoplay.js', 'modules/lg-fullscreen.js', 'modules/lg-pager.js', 'modules/lg-thumbnail.js', 'modules/lg-video.js', 'modules/lg-zoom.js', 'modules/lg-hash.js', 'modules/lg-share.js', 'modules/lg-rotate.js']
                 }
             }
         },
@@ -49,7 +49,7 @@ module.exports = function(grunt) {
                     src: 'dist/js/<%= pkg.name %>.js',
                     dest: 'dist/js/<%= pkg.name %>.min.js'
                 }, {
-                    src: ['dist/js/<%= pkg.name %>.js', 'modules/lg-autoplay.js', 'modules/lg-fullscreen.js', 'modules/lg-pager.js', 'modules/lg-thumbnail.js', 'modules/lg-video.js', 'modules/lg-zoom.js', 'modules/lg-hash.js', 'modules/lg-share.js'],
+                    src: ['dist/js/<%= pkg.name %>.js', 'modules/lg-autoplay.js', 'modules/lg-fullscreen.js', 'modules/lg-pager.js', 'modules/lg-thumbnail.js', 'modules/lg-video.js', 'modules/lg-zoom.js', 'modules/lg-hash.js', 'modules/lg-share.js', 'modules/lg-rotate.js'],
                     dest: 'dist/js/<%= pkg.name %>-all.min.js'
                 }]
             }
