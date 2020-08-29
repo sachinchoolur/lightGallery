@@ -1,4 +1,4 @@
-/*! lightgallery - v1.7.3 - 2020-08-18
+/*! lightgallery - v1.8.0 - 2020-08-29
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 @font-face {
@@ -741,25 +741,58 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   color: #3b5998;
 }
 .lg-outer #lg-share-facebook .lg-icon:after {
-  content: "\e901";
+  content: "\e904";
 }
 .lg-outer #lg-share-twitter .lg-icon {
   color: #00aced;
 }
 .lg-outer #lg-share-twitter .lg-icon:after {
-  content: "\e904";
+  content: "\e907";
 }
 .lg-outer #lg-share-googleplus .lg-icon {
   color: #dd4b39;
 }
 .lg-outer #lg-share-googleplus .lg-icon:after {
-  content: "\e902";
+  content: "\e905";
 }
 .lg-outer #lg-share-pinterest .lg-icon {
   color: #cb2027;
 }
 .lg-outer #lg-share-pinterest .lg-icon:after {
+  content: "\e906";
+}
+
+.lg-outer .lg-img-rotate {
+  position: absolute;
+  padding: 0 5px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.32, 0, 0.67, 0) 0s;
+  -moz-transition: -moz-transform 0.3s cubic-bezier(0.32, 0, 0.67, 0) 0s;
+  -o-transition: -o-transform 0.3s cubic-bezier(0.32, 0, 0.67, 0) 0s;
+  transition: transform 0.3s cubic-bezier(0.32, 0, 0.67, 0) 0s;
+}
+
+.lg-rotate-left:after {
+  content: "\e900";
+}
+
+.lg-rotate-right:after {
+  content: "\e901";
+}
+
+.lg-icon.lg-flip-hor, .lg-icon.lg-flip-ver {
+  font-size: 26px;
+}
+
+.lg-flip-hor:after {
   content: "\e903";
+}
+
+.lg-flip-ver:after {
+  content: "\e902";
 }
 
 .lg-group:after {
@@ -985,4 +1018,4 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
 }
 
-
+/*# sourceMappingURL=lightgallery.css.map */
