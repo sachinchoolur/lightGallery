@@ -33,6 +33,8 @@ Main features
 * Smart image preloading and code optimization.
 * Keyboard Navigation for desktop.
 * Font icon support.
+* Accessibility support.
+* Rotate, flip images.
 * And many more.
  
 Browser support
@@ -179,6 +181,7 @@ Modules
 6. Zoom - [GItHub](https://github.com/sachinchoolur/lg-zoom) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-zoom)
 7. Hash - [GItHub](https://github.com/sachinchoolur/lg-hash) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-hash)
 8. Share - [GItHub](https://github.com/sachinchoolur/lg-share) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-share)
+8. Rotate - [GItHub](https://github.com/sachinchoolur/lg-rotate) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-rotate)
 
 9. exif - [GitHub](https://github.com/amcolash/lg-exif) - Author - [Andrew McOlash
 ](https://github.com/amcolash)
