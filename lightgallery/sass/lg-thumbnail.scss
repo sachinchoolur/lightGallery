@@ -99,6 +99,8 @@
         text-align: center;
         top: -39px;
         width: 50px;
+        outline: medium none;
+        border: none;
 
         &:after {
             content: "\e1ff";
