@@ -1,4 +1,4 @@
-/*! lightgallery - v1.8.2 - 2020-09-01
+/*! lightgallery - v1.8.3 - 2020-09-19
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 (function (root, factory) {

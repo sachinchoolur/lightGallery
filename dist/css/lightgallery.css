@@ -1,4 +1,4 @@
-/*! lightgallery - v1.8.2 - 2020-09-01
+/*! lightgallery - v1.8.3 - 2020-09-19
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 @font-face {
@@ -788,11 +788,11 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   font-size: 26px;
 }
 
-.lg-flip-hor:after {
+.lg-flip-ver:after {
   content: "\e903";
 }
 
-.lg-flip-ver:after {
+.lg-flip-hor:after {
   content: "\e902";
 }
 
