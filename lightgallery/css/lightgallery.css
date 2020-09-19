@@ -1,9 +1,8 @@
-/*! lightgallery - v1.8.0 - 2020-08-31
+/*! lightgallery - v1.8.3 - 2020-09-19
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
-@charset "UTF-8";
 @font-face {
-  font-family: "lg";
+  font-family: 'lg';
   src: url("../fonts/lg.ttf?22t19m") format("truetype"), url("../fonts/lg.woff?22t19m") format("woff"), url("../fonts/lg.svg?22t19m#lg") format("svg");
   font-weight: normal;
   font-style: normal;
@@ -11,7 +10,7 @@
 }
 .lg-icon {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: "lg" !important;
+  font-family: 'lg' !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
@@ -49,13 +48,13 @@
   right: 20px;
 }
 .lg-actions .lg-next:before {
-  content: "";
+  content: "\e095";
 }
 .lg-actions .lg-prev {
   left: 20px;
 }
 .lg-actions .lg-prev:after {
-  content: "";
+  content: "\e094";
 }
 
 @-webkit-keyframes lg-right-end {
@@ -190,10 +189,10 @@
   color: #FFF;
 }
 .lg-toolbar .lg-close:after {
-  content: "";
+  content: "\e070";
 }
 .lg-toolbar .lg-download:after {
-  content: "";
+  content: "\e0f2";
 }
 
 .lg-sub-html {
@@ -369,7 +368,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   border: none;
 }
 .lg-outer .lg-toogle-thumb:after {
-  content: "";
+  content: "\e1ff";
 }
 .lg-outer .lg-toogle-thumb:hover {
   color: #FFF;
@@ -480,10 +479,10 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 }
 
 .lg-autoplay-button:after {
-  content: "";
+  content: "\e01d";
 }
 .lg-show-autoplay .lg-autoplay-button:after {
-  content: "";
+  content: "\e01a";
 }
 
 .lg-outer.lg-css3.lg-zoom-dragging .lg-item.lg-complete.lg-zoomable .lg-img-wrap, .lg-outer.lg-css3.lg-zoom-dragging .lg-item.lg-complete.lg-zoomable .lg-image {
@@ -526,14 +525,14 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 }
 
 #lg-zoom-in:after {
-  content: "";
+  content: "\e311";
 }
 
 #lg-actual-size {
   font-size: 20px;
 }
 #lg-actual-size:after {
-  content: "";
+  content: "\e033";
 }
 
 #lg-zoom-out {
@@ -541,7 +540,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   pointer-events: none;
 }
 #lg-zoom-out:after {
-  content: "";
+  content: "\e312";
 }
 .lg-zoomed #lg-zoom-out {
   opacity: 1;
@@ -629,10 +628,10 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 }
 
 .lg-fullscreen:after {
-  content: "";
+  content: "\e20c";
 }
 .lg-fullscreen-on .lg-fullscreen:after {
-  content: "";
+  content: "\e20d";
 }
 
 .lg-outer #lg-dropdown-overlay {
@@ -709,7 +708,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   display: block;
   white-space: pre;
   padding: 4px 12px;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 12px;
 }
 .lg-outer .lg-dropdown a:hover {
@@ -737,31 +736,31 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   position: relative;
 }
 .lg-outer #lg-share:after {
-  content: "";
+  content: "\e80d";
 }
 .lg-outer #lg-share-facebook .lg-icon {
   color: #3b5998;
 }
 .lg-outer #lg-share-facebook .lg-icon:after {
-  content: "";
+  content: "\e904";
 }
 .lg-outer #lg-share-twitter .lg-icon {
   color: #00aced;
 }
 .lg-outer #lg-share-twitter .lg-icon:after {
-  content: "";
+  content: "\e907";
 }
 .lg-outer #lg-share-googleplus .lg-icon {
   color: #dd4b39;
 }
 .lg-outer #lg-share-googleplus .lg-icon:after {
-  content: "";
+  content: "\e905";
 }
 .lg-outer #lg-share-pinterest .lg-icon {
   color: #cb2027;
 }
 .lg-outer #lg-share-pinterest .lg-icon:after {
-  content: "";
+  content: "\e906";
 }
 
 .lg-outer .lg-img-rotate {
@@ -778,23 +777,23 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 }
 
 .lg-rotate-left:after {
-  content: "";
+  content: "\e900";
 }
 
 .lg-rotate-right:after {
-  content: "";
+  content: "\e901";
 }
 
 .lg-icon.lg-flip-hor, .lg-icon.lg-flip-ver {
   font-size: 26px;
 }
 
-.lg-flip-hor:after {
-  content: "";
+.lg-flip-ver:after {
+  content: "\e903";
 }
 
-.lg-flip-ver:after {
-  content: "";
+.lg-flip-hor:after {
+  content: "\e902";
 }
 
 .lg-group:after {
@@ -1019,3 +1018,5 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   -o-transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
   transition: left 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s;
 }
+
+/*# sourceMappingURL=lightgallery.css.map */
