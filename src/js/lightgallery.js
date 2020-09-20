@@ -73,7 +73,10 @@
 
         dynamic: false,
         dynamicEl: [],
-        galleryId: 1
+        galleryId: 1,
+        
+        backdropEl: false,
+        containerEl: false,
     };
 
     function Plugin(element, options) {
@@ -90,6 +93,15 @@
         // When using dynamic mode, ensure dynamicEl is an array
         if (this.s.dynamic && this.s.dynamicEl !== 'undefined' && this.s.dynamicEl.constructor === Array && !this.s.dynamicEl.length) {
             throw ('When using dynamic mode, you must also define dynamicEl as an Array.');
+        }
+        
+        // Set default containers
+        if (!this.s.backdropEl) {
+            this.s.backdropEl = $('body');
+        }
+        
+        if (!this.s.containerEl) {
+            this.s.containerEl = $('body');
         }
 
         // lightGallery modules
@@ -272,7 +284,8 @@
         var template;
         var _this = this;
 
-        $('body').append('<div class="lg-backdrop"></div>');
+        this.s.backdropEl.append('<div class="lg-backdrop"></div>');
+
         $('.lg-backdrop').css('transition-duration', this.s.backdropDuration + 'ms');
 
         // Create gallery items
@@ -308,7 +321,7 @@
             '</div>' +
             '</div>';
 
-        $('body').append(template);
+        this.s.containerEl.append(template);
         this.$outer = $('.lg-outer');
         this.$outer.focus();
         this.$slide = this.$outer.find('.lg-item');
