@@ -76,7 +76,7 @@
         galleryId: 1,
         
         backdropEl: false,
-        containerEl: false,
+        containerEl: false
     };
 
     function Plugin(element, options) {
