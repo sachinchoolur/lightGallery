@@ -1347,7 +1347,11 @@
             if (!$.data(this, 'lightGallery')) {
                 $.data(this, 'lightGallery', new Plugin(this, options));
             } else {
-                $(this).data('lightGallery').init();
+                try {
+                    $(this).data('lightGallery').init();	
+                } catch (err) {	
+                    console.error('lightGallery has not initiated properly', err);	
+                }
             }
         });
     };
