@@ -16,6 +16,8 @@
         addClass: '',
         startClass: 'lg-start-zoom',
         backdropDuration: 150,
+
+        // Set 0, if u don't want to hide the controls 
         hideBarsDelay: 6000,
 
         useLeft: false,
@@ -101,7 +103,7 @@
         this.lgBusy = false;
 
         // Timeout function for hiding controls;
-        this.hideBartimeout = false;
+        this.hideBarTimeout = false;
 
         // To determine browser supports for touch events;
         this.isTouch = ('ontouchstart' in document.documentElement);
@@ -247,18 +249,21 @@
         _this.$el.trigger('onAfterOpen.lg');
 
         // Hide controllers if mouse doesn't move for some period
-        _this.$outer.on('mousemove.lg click.lg touchstart.lg', function() {
+        if (_this.s.hideBarsDelay > 0) {
 
-            _this.$outer.removeClass('lg-hide-items');
+            // Hide controllers if mouse doesn't move for some period
+            _this.$outer.on('mousemove.lg click.lg touchstart.lg', function () {
+                _this.$outer.removeClass('lg-hide-items');
 
-            clearTimeout(_this.hideBartimeout);
+                clearTimeout(_this.hideBarTimeout);
 
-            // Timeout will be cleared on each slide movement also
-            _this.hideBartimeout = setTimeout(function() {
-                _this.$outer.addClass('lg-hide-items');
-            }, _this.s.hideBarsDelay);
+                // Timeout will be cleared on each slide movement also
+                _this.hideBarTimeout = setTimeout(function () {
+                    _this.$outer.addClass('lg-hide-items');
+                }, _this.s.hideBarsDelay);
 
-        });
+            });
+        }
 
         _this.$outer.trigger('mousemove.lg');
 
@@ -805,7 +810,7 @@
 
             _this.lgBusy = true;
 
-            clearTimeout(_this.hideBartimeout);
+            clearTimeout(_this.hideBarTimeout);
 
             // Add title if this.s.appendSubHtmlTo === lg-sub-html
             if (this.s.appendSubHtmlTo === '.lg-sub-html') {
@@ -1311,8 +1316,8 @@
 
         this.lGalleryOn = false;
 
-        clearTimeout(_this.hideBartimeout);
-        this.hideBartimeout = false;
+        clearTimeout(_this.hideBarTimeout);
+        this.hideBarTimeout = false;
         $(window).off('.lg');
         $('body').removeClass('lg-on lg-from-hash');
 
