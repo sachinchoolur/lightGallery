@@ -130,6 +130,20 @@ Finally you need to initiate the gallery by adding the following code.
     });
 </script>
 ```
+### Reload Gallery with ajax call
+If you want to update or reload gallery after ajax success call with JQuery, use load function of ajax.
+``` jquery
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url:.......
+            data:........
+            type:......
+            success: function() {
+                $('lightgallery).load('current_page_url #lightgallery');
+        });
+    }
+</script>
 
 Resources
 ----
