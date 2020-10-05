@@ -1,4 +1,4 @@
-/*! lg-rotate - v1.2.0 - 2020-09-19
+/*! lg-rotate - v1.2.1-beta.0 - 2020-10-05
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 
@@ -106,9 +106,30 @@
         $image.css(
             'transform',
             'rotate(' + this.rotateValuesList[this.core.index].rotate + 'deg)' +
-            ' scale3d(' + this.rotateValuesList[this.core.index].flipVertical +
-            ', ' + this.rotateValuesList[this.core.index].flipHorizontal + ', 1)'
+            ' scale3d(' + this.rotateValuesList[this.core.index].flipHorizontal +
+            ', ' + this.rotateValuesList[this.core.index].flipVertical + ', 1)'
         );
+    };
+
+    Rotate.prototype.getCurrentRotation = function (el) {
+        if (!el) {
+            return 0;
+        }
+        var st = window.getComputedStyle(el, null);
+        var tm = st.getPropertyValue('-webkit-transform') ||
+            st.getPropertyValue('-moz-transform') ||
+            st.getPropertyValue('-ms-transform') ||
+            st.getPropertyValue('-o-transform') ||
+            st.getPropertyValue('transform') ||
+            'none';
+        if (tm !== 'none') {
+            var values = tm.split('(')[1].split(')')[0].split(',');
+            if (values) {
+                var angle = Math.round(Math.atan2(values[1], values[0]) * (180 / Math.PI));
+                return (angle < 0 ? angle + 360 : angle);
+            }
+        }
+        return 0;
     };
 
     Rotate.prototype.rotateLeft = function () {
@@ -122,12 +143,24 @@
     };
 
     Rotate.prototype.flipHorizontal = function () {
-        this.rotateValuesList[this.core.index].flipVertical *= -1;
+        var $image = this.core.$slide.eq(this.core.index).find('.lg-img-rotate')[0];
+        var currentRotation = this.getCurrentRotation($image);
+        var rotateAxis = 'flipHorizontal';
+        if (currentRotation === 90 || currentRotation === 270) {
+            rotateAxis = 'flipVertical';
+        }
+        this.rotateValuesList[this.core.index][rotateAxis] *= -1;
         this.applyStyles();
     };
-    
+
     Rotate.prototype.flipVertical = function () {
-        this.rotateValuesList[this.core.index].flipHorizontal *= -1;
+        var $image = this.core.$slide.eq(this.core.index).find('.lg-img-rotate')[0];
+        var currentRotation = this.getCurrentRotation($image);
+        var rotateAxis = 'flipVertical';
+        if (currentRotation === 90 || currentRotation === 270) {
+            rotateAxis = 'flipHorizontal';
+        }
+        this.rotateValuesList[this.core.index][rotateAxis] *= -1;
         this.applyStyles();
     };
 
