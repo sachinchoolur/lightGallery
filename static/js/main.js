@@ -11,6 +11,9 @@ $(document).ready(function() {
             speed: 400,
             scale: 1,
             keypress: true,
+            rotateLeft: false,
+            flipHorizontal: false,
+            flipVertical: false,
             mode: trans,
             cssEasing: ease
         });
