@@ -81,8 +81,9 @@ $(document).ready(function() {
                 thumb: '../static/img/thumb-1.jpg',
                 subHtml: '<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>'
             }, {
-                src: '../static/img/2.jpg',
-                thumb: '../static/img/thumb-2.jpg',
+                src: 'https://www.youtube.com/watch?v=Pq9yPrLWMyU',
+                thumb: '../static/img/thumb-v-y-2.jpg',
+                poster: '../static/img/videos/y-video2-cover.jpg',
                 subHtml: '<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I\'m extremely happy I was passing the right place at the right time....</p>'
             }, {
                 src: '../static/img/13.jpg',
