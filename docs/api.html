@@ -149,7 +149,8 @@ $('#lightgallery').lightGallery({
                                             <td>hideBarsDelay</td>
                                             <td>number</td>
                                             <td><code>6000</code></td>
-                                            <td>Delay for hiding gallery controls in ms</td>
+                                            <td>Delay for hiding gallery controls in ms. Set 0, if you don't want to hide the controls.
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>useLeft</td>
@@ -330,6 +331,12 @@ $('#lightgallery').lightGallery({
                                             <td>array</td>
                                             <td>[]</td>
                                             <td>An array of objects (<code>src</code>, <code>iframe</code>, <code>subHtml</code>, <code>thumb</code>, <code>poster</code>, <code>responsive</code>, <code>srcset</code> <code>sizes</code>) representing gallery elements. <a href="examples.html#dynamicBlock">See example</a>.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>supportLegacyBrowser</td>
+                                            <td>boolean</td>
+                                            <td>true</td>
+                                            <td>Make usage of picturefill library optional as the <code>srcset</code> is supported by all modern browsers.</td>
                                         </tr>
                                     </tbody>
                                 </table>
