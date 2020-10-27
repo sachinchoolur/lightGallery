@@ -120,6 +120,9 @@
                 if (this.core.s.youtubePlayerParams) {
                     a = a + '&' + $.param(this.core.s.youtubePlayerParams);
                 }
+                if (isVideo.youtube[2]) {
+                    a = a + isVideo.youtube[2].replace('?','&');
+                }
 
                 video = '<iframe class="lg-video-object lg-youtube ' + addClass + '" ' + videoTitle + ' width="560" height="315" src="//www.youtube.com/embed/' + isVideo.youtube[1] + a + '" frameborder="0" allowfullscreen></iframe>';
 
