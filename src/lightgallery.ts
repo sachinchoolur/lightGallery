@@ -564,7 +564,7 @@ class LightGallery {
             if (subHtmlUrl) {
                 this.outer.find('.lg-sub-html').load(subHtmlUrl);
             } else {
-                this.outer.find('.lg-sub-html').html(subHtml);
+                this.outer.find('.lg-sub-html').html(subHtml as string);
             }
         } else {
             const currentSlide = LG(this.getSlideItemId(index));
@@ -773,8 +773,7 @@ class LightGallery {
         }
 
         const _html5Video =
-            currentDynamicItem.video &&
-            jQuery.parseJSON(currentDynamicItem.video);
+            currentDynamicItem.video && JSON.parse(currentDynamicItem.video);
         _src = currentDynamicItem.src;
 
         if (currentDynamicItem.responsive) {
@@ -1056,12 +1055,11 @@ class LightGallery {
     ) {
         let _prevIndex = 0;
         try {
-            _prevIndex =
-                this.outer
-                    .find('.lg-current')
-                    .first()
-                    .attr('id')
-                    .split('-')[3] || 0;
+            const currentItemId = this.outer
+                .find('.lg-current')
+                .first()
+                .attr('id');
+            _prevIndex = parseInt(currentItemId.split('-')[3]) || 0;
         } catch (error) {
             _prevIndex = 0;
         }

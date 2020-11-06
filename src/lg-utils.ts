@@ -136,7 +136,7 @@ const utils = {
     },
 
     // Convert html data-attribute to camalcase
-    convertToData(attr: string) {
+    convertToData(attr: string): string | undefined {
         // FInd a way for lgsize
         if (attr === 'href') {
             return 'src';
@@ -150,7 +150,7 @@ const utils = {
         }
     },
 
-    getIframeMarkup(src: string, iframeMaxWidth: number | string) {
+    getIframeMarkup(src: string, iframeMaxWidth: number | string): string {
         return `<div class="lg-video-cont lg-has-iframe" style="max-width:${iframeMaxWidth}">
                     <div class="lg-video">
                         <iframe class="lg-object" frameborder="0" src="${src}"  allowfullscreen="true"></iframe>
@@ -159,10 +159,10 @@ const utils = {
     },
 
     // Get src from responsive src
-    getResponsiveSrc(srcItms: string[]) {
+    getResponsiveSrc(srcItms: string[]): string {
         const rsWidth = [];
         const rsSrc = [];
-        let src;
+        let src = '';
         for (let i = 0; i < srcItms.length; i++) {
             const _src = srcItms[i].split(' ');
 
@@ -185,7 +185,7 @@ const utils = {
         return src;
     },
 
-    getVideoPosterMarkup(_poster: string, _isVideo?: VideoInfo) {
+    getVideoPosterMarkup(_poster: string, _isVideo?: VideoInfo): string {
         let videoClass = '';
         if (_isVideo && _isVideo.youtube) {
             videoClass = 'lg-has-youtube';
@@ -205,9 +205,12 @@ const utils = {
      *
      * @returns {Array} dynamicEl
      */
-    getDynamicOptions(items: any, getCaptionFromTitleOrAlt: boolean) {
+    getDynamicOptions(
+        items: any,
+        getCaptionFromTitleOrAlt: boolean,
+    ): DynamicItem[] {
         const dynamicElements: DynamicItem[] = [];
-        [].forEach.call(items, (item: HTMLElement, index) => {
+        [].forEach.call(items, (item: HTMLElement) => {
             const dynamicEl: DynamicItem = {} as DynamicItem;
             for (let i = 0; i < item.attributes.length; i++) {
                 const attr = item.attributes[i];

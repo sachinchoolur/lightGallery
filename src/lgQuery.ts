@@ -1,3 +1,8 @@
+interface Offset {
+    left: number;
+    top: number;
+}
+
 (function () {
     if (typeof window.CustomEvent === 'function') return false;
 
@@ -50,7 +55,7 @@ export class lgQuery {
             elements: Element | NodeListOf<Element> | null,
             index: number,
         ) => void,
-    ) {
+    ): this {
         if (!this.selector) {
             return this;
         }
@@ -62,7 +67,11 @@ export class lgQuery {
         return this;
     }
 
-    _setCssVendorPrefix(el: any, cssProperty: string, value?: string | number) {
+    _setCssVendorPrefix(
+        el: any,
+        cssProperty: string,
+        value?: string | number,
+    ): void {
         const property = cssProperty.replace(/-([a-z])/gi, function (
             s,
             group1,
@@ -82,7 +91,9 @@ export class lgQuery {
         }
     }
 
-    attr(attr: string, value?: string) {
+    attr(attr: string): string;
+    attr(attr: string, value: string): this;
+    attr(attr: string, value?: string): string | this {
         if (value === undefined) {
             if (!this.selector) {
                 return '';
@@ -95,11 +106,11 @@ export class lgQuery {
         return this;
     }
 
-    find(selector: any) {
+    find(selector: any): lgQuery {
         return LG(this._getSelector(selector, this.selector));
     }
 
-    first() {
+    first(): lgQuery {
         if (this.selector.length !== undefined) {
             return LG(this.selector[0]);
         } else {
@@ -107,7 +118,7 @@ export class lgQuery {
         }
     }
 
-    eq(index: number) {
+    eq(index: number): lgQuery {
         return LG(this.selector[index]);
     }
 
@@ -115,14 +126,14 @@ export class lgQuery {
         return this.selector;
     }
 
-    removeAttr(attr: string) {
+    removeAttr(attr: string): this {
         this._each((el: any) => {
             el.removeAttribute(attr);
         });
         return this;
     }
 
-    wrap(className: string) {
+    wrap(className: string): this {
         if (!this.selector) {
             return this;
         }
@@ -131,9 +142,10 @@ export class lgQuery {
         this.selector.parentNode.insertBefore(wrapper, this.selector);
         this.selector.parentNode.removeChild(this.selector);
         wrapper.appendChild(this.selector);
+        return this;
     }
 
-    addClass(classNames = '') {
+    addClass(classNames = ''): this {
         this._each((el: any) => {
             // IE doesn't support multiple arguments
             classNames.split(' ').forEach((className) => {
@@ -143,7 +155,7 @@ export class lgQuery {
         return this;
     }
 
-    removeClass(classNames: string) {
+    removeClass(classNames: string): this {
         this._each((el: any) => {
             // IE doesn't support multiple arguments
             classNames.split(' ').forEach((className) => {
@@ -153,21 +165,21 @@ export class lgQuery {
         return this;
     }
 
-    hasClass(className: string) {
+    hasClass(className: string): boolean {
         if (!this.selector) {
             return false;
         }
         return this.selector.classList.contains(className);
     }
 
-    css(property: string, value?: string | number) {
+    css(property: string, value?: string | number): this {
         this._each((el: any) => {
             this._setCssVendorPrefix(el, property, value);
         });
         return this;
     }
     // Need to pass separate namespaces for separate elements
-    on(events: string, listener: (e: any) => void) {
+    on(events: string, listener: (e: any) => void): this {
         if (!this.selector) {
             return this;
         }
@@ -181,7 +193,7 @@ export class lgQuery {
 
         return this;
     }
-    off(event: string) {
+    off(event: string): this {
         if (!this.selector || !Array.isArray(lgQuery.eventListeners[event])) {
             return this;
         }
@@ -191,7 +203,7 @@ export class lgQuery {
         lgQuery.eventListeners[event] = [];
         return this;
     }
-    trigger(event: string, detail?: any) {
+    trigger(event: string, detail?: any): this {
         if (!this.selector) {
             return this;
         }
@@ -204,14 +216,16 @@ export class lgQuery {
     }
 
     // Does not support IE
-    load(url: string) {
+    load(url: string): this {
         fetch(url).then((res) => {
             this.selector.innerHTML = res;
         });
         return this;
     }
 
-    html(html?: string) {
+    html(): string;
+    html(html: string): this;
+    html(html?: string): string | this {
         if (html === undefined) {
             if (!this.selector) {
                 return '';
@@ -223,34 +237,34 @@ export class lgQuery {
         });
         return this;
     }
-    append(html: string) {
+    append(html: string): this {
         this._each((el: any) => {
             el.insertAdjacentHTML('beforeend', html);
         });
         return this;
     }
-    prepend(html: string) {
+    prepend(html: string): this {
         this._each((el: any) => {
             el.insertAdjacentHTML('afterbegin', html);
         });
         return this;
     }
-    remove() {
+    remove(): this {
         this._each((el: any) => {
             el.parentNode.removeChild(el);
         });
         return this;
     }
-    empty() {
+    empty(): this {
         this._each((el: any) => {
             el.innerHTML = '';
         });
         return this;
     }
     // Supports only window
-    scrollTop(scrollTop?: number): number;
-    scrollTop(scrollTop?: number): this;
-    scrollTop(scrollTop?: number) {
+    scrollTop(): number;
+    scrollTop(scrollTop: number): this;
+    scrollTop(scrollTop?: number): number | this {
         if (scrollTop !== undefined) {
             document.body.scrollTop = scrollTop;
             document.documentElement.scrollTop = scrollTop;
@@ -265,7 +279,9 @@ export class lgQuery {
         }
     }
     // Supports only window
-    scrollLeft(scrollLeft?: number) {
+    scrollLeft(): number;
+    scrollLeft(scrollLeft?: number): this;
+    scrollLeft(scrollLeft?: number): number | this {
         if (scrollLeft !== undefined) {
             document.body.scrollLeft = scrollLeft;
             document.documentElement.scrollLeft = scrollLeft;
@@ -279,7 +295,7 @@ export class lgQuery {
             );
         }
     }
-    offset() {
+    offset(): Offset {
         if (!this.selector) {
             return {
                 left: 0,
@@ -292,16 +308,16 @@ export class lgQuery {
             top: rect.top + this.scrollTop(),
         };
     }
-    style() {
+    style(): CSSStyleDeclaration {
         if (!this.selector) {
-            return {};
+            return {} as CSSStyleDeclaration;
         }
         return (
             this.selector.currentStyle || window.getComputedStyle(this.selector)
         );
     }
     // Width without padding and border even if box-sizing is used.
-    width() {
+    width(): number {
         const style = this.style();
         return (
             this.selector.clientWidth -
@@ -310,7 +326,7 @@ export class lgQuery {
         );
     }
     // Height without padding and border even if box-sizing is used.
-    height() {
+    height(): number {
         const style = this.style();
         return (
             this.selector.clientHeight -
@@ -320,6 +336,6 @@ export class lgQuery {
     }
 }
 
-export function LG(selector: any) {
+export function LG(selector: any): lgQuery {
     return new lgQuery(selector);
 }
