@@ -1,7 +1,7 @@
-/*! lightgallery - v1.9.1-beta-0 - 2020-10-29
+/*! lightgallery - v1.10.0 - 2020-11-07
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
-/*! lightgallery - v1.9.1-beta-0 - 2020-10-29
+/*! lightgallery - v1.10.0 - 2020-11-07
 * http://sachinchoolur.github.io/lightGallery/
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 (function (root, factory) {
@@ -2307,7 +2307,7 @@
 
 }));
 
-/*! lg-video - v1.3.0 - 2020-05-03
+/*! lg-video - v1.4.0 - November-07-2020
 * http://sachinchoolur.github.io/lightGallery
 * Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 
@@ -2430,16 +2430,16 @@
                     a = a + '&' + $.param(this.core.s.youtubePlayerParams);
                 }
 
-                video = '<iframe class="lg-video-object lg-youtube ' + addClass + '" ' + videoTitle + ' width="560" height="315" src="//www.youtube.com/embed/' + isVideo.youtube[1] + a + '" frameborder="0" allowfullscreen></iframe>';
+                video = '<iframe allow="autoplay" class="lg-video-object lg-youtube ' + addClass + '" ' + videoTitle + ' width="560" height="315" src="//www.youtube.com/embed/' + isVideo.youtube[1] + a + '" frameborder="0" allowfullscreen></iframe>';
 
             } else if (isVideo.vimeo) {
 
-                a = '?autoplay=' + autoplay + '&api=1';
+                a = '?autoplay=' + autoplay;
                 if (this.core.s.vimeoPlayerParams) {
                     a = a + '&' + $.param(this.core.s.vimeoPlayerParams);
                 }
 
-                video = '<iframe class="lg-video-object lg-vimeo ' + addClass + '" ' + videoTitle + ' width="560" height="315"  src="//player.vimeo.com/video/' + isVideo.vimeo[1] + a + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+                video = '<iframe allow="autoplay" class="lg-video-object lg-vimeo ' + addClass + '" ' + videoTitle + ' width="560" height="315"  src="//player.vimeo.com/video/' + isVideo.vimeo[1] + a + '" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
 
             } else if (isVideo.dailymotion) {
 
@@ -2448,7 +2448,7 @@
                     a = a + '&' + $.param(this.core.s.dailymotionPlayerParams);
                 }
 
-                video = '<iframe class="lg-video-object lg-dailymotion ' + addClass + '" ' + videoTitle + ' width="560" height="315" src="//www.dailymotion.com/embed/video/' + isVideo.dailymotion[1] + a + '" frameborder="0" allowfullscreen></iframe>';
+                video = '<iframe allow="autoplay" class="lg-video-object lg-dailymotion ' + addClass + '" ' + videoTitle + ' width="560" height="315" src="//www.dailymotion.com/embed/video/' + isVideo.dailymotion[1] + a + '" frameborder="0" allowfullscreen></iframe>';
 
             } else if (isVideo.html5) {
                 var fL = html.substring(0, 1);
@@ -2465,7 +2465,7 @@
                     a = a + '&' + $.param(this.core.s.vkPlayerParams);
                 }
 
-                video = '<iframe class="lg-video-object lg-vk ' + addClass + '" ' + videoTitle + ' width="560" height="315" src="//vk.com/video_ext.php?' + isVideo.vk[1] + a + '" frameborder="0" allowfullscreen></iframe>';
+                video = '<iframe allow="autoplay" class="lg-video-object lg-vk ' + addClass + '" ' + videoTitle + ' width="560" height="315" src="//vk.com/video_ext.php?' + isVideo.vk[1] + a + '" frameborder="0" allowfullscreen></iframe>';
 
             }
 
@@ -2496,7 +2496,7 @@
                                         this.play();
                                     });
                                 } catch (e) {
-                                    console.error('Make sure you have included videojs');
+                                    console.error('lightGallery:- Make sure you have included videojs');
                                 }
                             } else {
                                 _this.core.$slide.eq(_this.core.index).find('.lg-html5').get(0).play();
@@ -2543,9 +2543,11 @@
                         youtubePlayer.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                     } else if (vimeoPlayer) {
                         try {
-                            $f(vimeoPlayer).api('play');
+                            new Vimeo.Player(vimeoPlayer).play().catch(function(error) {
+                                console.error('error playing the video:', error.name);
+                            });
                         } catch (e) {
-                            console.error('Make sure you have included froogaloop2 js');
+                            console.warn('lightGallery:- Make sure you have included https://github.com/vimeo/player.js');
                         }
                     } else if (dailymotionPlayer) {
                         dailymotionPlayer.contentWindow.postMessage('play', '*');
@@ -2555,7 +2557,7 @@
                             try {
                                 videojs(html5Player).play();
                             } catch (e) {
-                                console.error('Make sure you have included videojs');
+                                console.error('lightGallery:- Make sure you have included videojs');
                             }
                         } else {
                             html5Player.play();
@@ -2585,7 +2587,7 @@
                             }
                         });
                     } catch (e) {
-                        console.error('Make sure you have included videojs');
+                        console.error('lightGallery:- Make sure you have included videojs');
                     }
                 } else {
                     if(!_this.videoLoaded && _this.core.s.autoplayFirstVideo) {
@@ -2618,9 +2620,11 @@
                 youtubePlayer.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
             } else if (vimeoPlayer) {
                 try {
-                    $f(vimeoPlayer).api('pause');
+                    new Vimeo.Player(vimeoPlayer).pause().catch(function(error) {
+                        console.error('Unable to pause the video:', error.name);
+                    });
                 } catch (e) {
-                    console.error('Make sure you have included froogaloop2 js');
+                    console.warn('lightGallery:- Make sure you have included https://github.com/vimeo/player.js');
                 }
             } else if (dailymotionPlayer) {
                 dailymotionPlayer.contentWindow.postMessage('pause', '*');
@@ -2630,7 +2634,7 @@
                     try {
                         videojs(html5Player).pause();
                     } catch (e) {
-                        console.error('Make sure you have included videojs');
+                        console.error('lightGallery:- Make sure you have included videojs');
                     }
                 } else {
                     html5Player.pause();
