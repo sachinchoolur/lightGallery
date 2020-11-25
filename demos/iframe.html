@@ -50,6 +50,7 @@
                     <h1 class="page-header mrb15">Gallery With Iframe.</h1>
                 </div>
                 <button class="btn btn-success btn-lg mrb50" data-iframe="true" id="open-website" data-src="https://en.wikipedia.org/wiki/Main_Page">Open website</button>
+                <button class="btn btn-success btn-lg mrb50" data-iframe="true" id="open-pdf" data-src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf">Open PDF</button>
 
                 <button class="btn btn-success btn-lg mrb50" data-iframe="true" id="google-map" data-src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d248849.84916296514!2d77.6309395!3d12.9539974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1410805729331">Google map</button>
 
@@ -60,6 +61,8 @@
                     <div class="sample-code html">
                         <pre class="prettyprint linenums lang-html">
 &lt;button class="btn btn-success btn-lg mrb50" data-iframe="true" id="open-website" data-src="https://en.wikipedia.org/wiki/Main_Page">Open website&lt;/button&gt;
+
+&lt;button class="btn btn-success btn-lg mrb50" data-iframe="true" id="open-pdf" data-src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"&gt;Open PDF&lt;/button&gt;
 
 &lt;button class="btn btn-success btn-lg mrb50" data-iframe="true" id="google-map" data-src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d248849.84916296514!2d77.6309395!3d12.9539974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1410805729331"&gt;Google map&lt;/button&gt;
 </pre>
@@ -81,11 +84,30 @@ $('#open-website').lightGallery({
     selector: 'this'
 });
 
+// pdf
+$("#open-pdf").lightGallery({
+    selector: "this",
+    addClass: "pdf-viewer",
+});
+
 // Google map
 $('#google-map').lightGallery({
     selector: 'this',
     iframeMaxWidth: '80%'
 });</pre>
+                    </div>
+                </div>
+                <div class="code-demo mrb50">
+                    <div class="section-header">
+                        <h4 class="section-title mrb15">CSS</h4>
+                    </div>
+                    <div class="sample-code js">
+<pre class="prettyprint linenums lang-css">
+.pdf-viewer .lg-object {
+    // Height of the toolbar
+    padding-top: 47px;
+}
+</pre>
                     </div>
                 </div>
                 
@@ -155,6 +177,15 @@ $('#google-map').lightGallery({
             <a target="_blank" href="https://twitter.com/sachinchoolur"><img src="../static/img/social/twitter.png"></a>
             <a target="_blank" href="https://in.linkedin.com/in/sachinchoolur"><img src="../static/img/social/linked-in.png"></a>
         </footer>
+        <style>
+            .pdf-viewer .lg-object {
+                padding-top: 47px;
+            }
+            .btn {
+                outline: none !important;
+                box-shadow: none !important;
+            }
+        </style>
         <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
