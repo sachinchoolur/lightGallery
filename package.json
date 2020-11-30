@@ -10,12 +10,20 @@
   "files": [
     "dist"
   ],
-  "author": "Sachin Neravath <sachi77n@gmail.com>",
   "repository": {
     "type": "git",
     "url": ""
   },
-  "license": "MIT",
+  "homepage": "http://sachinchoolur.github.io/lightGallery/",
+  "bugs": {
+      "url": "https://github.com/sachinchoolur/lightGallery/issues"
+  },
+  "license": "GPLv3",
+  "author": {
+      "name": "Sachin Neravath",
+      "email": "sachi77n@gmail.com",
+      "url": "https://github.com/sachinchoolur"
+  },
   "engines": {
     "node": ">=6.0.0"
   },
