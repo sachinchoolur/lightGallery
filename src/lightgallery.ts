@@ -14,6 +14,7 @@ import { LG, lgQuery } from './lgQuery';
 // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
 import { Defaults, defaults } from './lg-defaults';
 import picturefill from 'picturefill';
+import {Thumbnail} from './plugins/thumbnail/lg-thumbnail';
 
 type SlideDirection = 'next' | 'prev';
 interface Coords {
@@ -30,40 +31,39 @@ export interface VideoInfo {
 let lgId = 0;
 window.lgModules = {};
 
-class LightGallery {
-    private lgId: number;
-    private el: HTMLElement;
-    private LGel: lgQuery;
-    private lgOpened = false;
-    private s: Defaults;
+export class LightGallery {
+    public s: Defaults;
+    public galleryItems: DynamicItem[];
+    public lgId: number;
+    public el: HTMLElement;
+    public LGel: lgQuery;
+    public lgOpened = false;
 
-    private index = 0;
+    public index = 0;
 
     // lightGallery modules
-    private modules: any = {};
+    public modules: any = {};
 
     // false when lightGallery load first slide content;
-    private lGalleryOn = false;
+    public lGalleryOn = false;
 
     // True when a slide animation is in progress
-    private lgBusy = false;
+    public lgBusy = false;
 
     // Type of touch action - {swipe, zoomSwipe, pinch}
-    private touchAction?: 'swipe' | 'zoomSwipe' | 'pinch';
+    public touchAction?: 'swipe' | 'zoomSwipe' | 'pinch';
 
     // Direction of swipe/drag - {horizontal, vertical}
-    private swipeDirection?: 'horizontal' | 'vertical';
+    public swipeDirection?: 'horizontal' | 'vertical';
 
     // Timeout function for hiding controls;
-    private hideBarTimeout: any;
+    public hideBarTimeout: any;
 
-    private currentItemsInDom: string[] = [];
+    public currentItemsInDom: string[] = [];    
 
-    private galleryItems: DynamicItem[];
+    public outer: lgQuery = (undefined as unknown) as lgQuery;
 
-    private outer: lgQuery = (undefined as unknown) as lgQuery;
-
-    private items: any;
+    public items: any;
 
     // Scroll top value before lightGallery is opened
     private prevScrollTop = 0;
@@ -90,6 +90,8 @@ class LightGallery {
         if (this.s.slideEndAnimatoin) {
             this.s.hideControlOnEnd = false;
         }
+
+        console.log(Thumbnail)
 
         // Gallery items
         this.galleryItems = this.getItems();
@@ -156,7 +158,6 @@ class LightGallery {
         // Gallery should be opened only once all the modules are initialized.
         // use moduleBuildTimeout to make sure this
         let numberOfModules = 0;
-
         for (const key in window.lgModules) {
             numberOfModules++;
             ((num) => {
@@ -1806,7 +1807,7 @@ class LightGallery {
                     }
                 }
             }
-            LG(window).off('.lg');
+            LG(window).off('lg');
         }
 
         this.lGalleryOn = false;
