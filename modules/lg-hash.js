@@ -77,7 +77,7 @@
         // Reset to old hash value
         if (this.oldHash && this.oldHash.indexOf('lg=' + this.core.s.galleryId) < 0) {
             if (history.replaceState) {
-                history.replaceState(null, null, this.oldHash);
+                history.replaceState(null, null, window.location.pathname + window.location.search + this.oldHash);
             } else {
                 window.location.hash = this.oldHash;
             }
