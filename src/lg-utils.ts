@@ -26,9 +26,10 @@ export interface DynamicItem {
     pinterestShareUrl: string;
     pinterestText: string;
     __slideVideoInfo?: VideoInfo;
+    [key: string]: any;
 }
 
-const availableDynamicOptions = [
+const defaultDynamicOptions = [
     'src',
     'subHtml',
     'subHtmlUrl',
@@ -49,6 +50,19 @@ const availableDynamicOptions = [
     'pinterestShareUrl',
     'pinterestText',
 ];
+
+// Convert html data-attribute to camalcase
+export function convertToData(attr: string): string {
+    // FInd a way for lgsize
+    if (attr === 'href') {
+        return 'src';
+    }
+    attr = attr.replace('data-', '');
+    attr = attr.charAt(0).toLowerCase() + attr.slice(1);
+    attr = attr.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+
+    return attr;
+}
 
 const utils = {
     /**
@@ -135,21 +149,6 @@ const utils = {
         );
     },
 
-    // Convert html data-attribute to camalcase
-    convertToData(attr: string): string | undefined {
-        // FInd a way for lgsize
-        if (attr === 'href') {
-            return 'src';
-        }
-        attr = attr.replace('data-', '');
-        attr = attr.charAt(0).toLowerCase() + attr.slice(1);
-        attr = attr.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-
-        if (availableDynamicOptions.indexOf(attr) > -1) {
-            return attr;
-        }
-    },
-
     getIframeMarkup(src: string, iframeMaxWidth: number | string): string {
         return `<div class="lg-video-cont lg-has-iframe" style="max-width:${iframeMaxWidth}">
                     <div class="lg-video">
@@ -207,15 +206,24 @@ const utils = {
      */
     getDynamicOptions(
         items: any,
+        extraProps: string[],
         getCaptionFromTitleOrAlt: boolean,
     ): DynamicItem[] {
         const dynamicElements: DynamicItem[] = [];
+        const availableDynamicOptions = [
+            ...defaultDynamicOptions,
+            ...extraProps,
+        ];
         [].forEach.call(items, (item: HTMLElement) => {
             const dynamicEl: DynamicItem = {} as DynamicItem;
             for (let i = 0; i < item.attributes.length; i++) {
                 const attr = item.attributes[i];
                 if (attr.specified) {
-                    const label = utils.convertToData(attr.name);
+                    const dynamicAttr = convertToData(attr.name);
+                    let label = '';
+                    if (availableDynamicOptions.indexOf(dynamicAttr) > -1) {
+                        label = dynamicAttr;
+                    }
                     if (label) {
                         (dynamicEl as any)[label] = attr.value;
                     }

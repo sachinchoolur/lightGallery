@@ -115,6 +115,8 @@ export interface Defaults {
     dynamic: false;
     dynamicEl: DynamicItem[];
 
+    extraProps: string[];
+
     galleryId: number;
     customSlideName: boolean;
 
@@ -205,6 +207,7 @@ export const defaults: Defaults = {
 
     dynamic: false,
     dynamicEl: [],
+    extraProps: [],
 
     galleryId: 1,
     customSlideName: true,
