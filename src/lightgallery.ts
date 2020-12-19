@@ -8,16 +8,26 @@ declare global {
     }
 }
 
+declare let picturefill: any;
+
 import utils, { DynamicItem, ImageSize } from './lg-utils';
 import { LG, lgQuery } from './lgQuery';
 
 // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
+// @ref - https://2ality.com/2017/04/setting-up-multi-platform-packages.html
 import { Defaults, defaults } from './lg-defaults';
-import picturefill from 'picturefill';
-import {Thumbnail} from './plugins/thumbnail/lg-thumbnail';
+import { Thumbnail } from './plugins/thumbnail/lg-thumbnail';
+import { Zoom } from './plugins/zoom/lg-zoom';
+import { Video } from './plugins/video/lg-video';
+import { CommentBox } from './plugins/comment/lg-comment';
+import { FullScreen } from './plugins/fullscreen/lg-fullscreen';
+import { Hash } from './plugins/hash/lg-hash';
+import { Pager } from './plugins/pager/lg-pager';
+import { Share } from './plugins/share/lg-share';
+import { Rotate } from './plugins/rotate/lg-rotate';
 
 type SlideDirection = 'next' | 'prev';
-interface Coords {
+export interface Coords {
     pageX: number;
     pageY: number;
 }
@@ -26,10 +36,11 @@ export interface VideoInfo {
     youtube?: string[];
     vimeo?: string[];
     wistia?: string[];
+    dailymotion?: string[];
 }
 
 let lgId = 0;
-window.lgModules = {};
+window.lgModules = window.lgModules || {};
 
 export class LightGallery {
     public s: Defaults;
@@ -59,14 +70,15 @@ export class LightGallery {
     // Timeout function for hiding controls;
     public hideBarTimeout: any;
 
-    public currentItemsInDom: string[] = [];    
+    public currentItemsInDom: string[] = [];
 
-    public outer: lgQuery = (undefined as unknown) as lgQuery;
+    public outer!: lgQuery;
 
     public items: any;
 
     // Scroll top value before lightGallery is opened
     private prevScrollTop = 0;
+    $items: any;
 
     constructor(element: HTMLElement, options: Partial<Defaults>) {
         lgId++;
@@ -91,7 +103,15 @@ export class LightGallery {
             this.s.hideControlOnEnd = false;
         }
 
-        console.log(Thumbnail)
+        console.log(Thumbnail);
+        console.log(Zoom);
+        console.log(Video);
+        console.log(CommentBox);
+        console.log(FullScreen);
+        console.log(Hash);
+        console.log(Pager);
+        console.log(Share);
+        console.log(Rotate);
 
         // Gallery items
         this.galleryItems = this.getItems();
@@ -115,7 +135,7 @@ export class LightGallery {
         return this;
     }
 
-    init() {
+    init(): void {
         this.addSlideVideoInfo(this.galleryItems);
         const fromHash = this.buildFromHash();
 
@@ -152,7 +172,7 @@ export class LightGallery {
         }
     }
 
-    buildModules() {
+    buildModules(): number {
         // module constructor
         // Modules are build incrementally.
         // Gallery should be opened only once all the modules are initialized.
@@ -170,17 +190,17 @@ export class LightGallery {
         return numberOfModules * 10;
     }
 
-    getSlideItem(index: number) {
+    getSlideItem(index: number): lgQuery {
         return LG(this.getSlideItemId(index));
     }
-    getSlideItemId(index: number) {
+    getSlideItemId(index: number): string {
         return `#lg-item-${this.lgId}-${index}`;
     }
-    getById(id: string) {
+    getById(id: string): string {
         return `${id}-${this.lgId}`;
     }
 
-    buildStructure() {
+    buildStructure(): number {
         const container = LG(`#${this.getById('lg-container')}`).get();
         if (container && container.length) {
             return 0;
@@ -306,7 +326,7 @@ export class LightGallery {
 
     // Append new slides dynamically while gallery is open
     // Items has to in the form of an array of dynamicEl
-    appendSlides(items: DynamicItem) {
+    appendSlides(items: DynamicItem): void {
         this.galleryItems = this.galleryItems.concat(items);
         LG(`#${this.getById('lg-counter-all')}`).html(
             this.galleryItems.length + '',
@@ -316,7 +336,7 @@ export class LightGallery {
 
     // Get gallery items based on multiple conditions
     // @todo - remove this.$items
-    getItems() {
+    getItems(): DynamicItem[] {
         // Gallery items
         this.items = [];
         if (!this.s.dynamic) {
@@ -334,6 +354,7 @@ export class LightGallery {
             }
             return utils.getDynamicOptions(
                 this.items,
+                this.s.extraProps,
                 this.s.getCaptionFromTitleOrAlt,
             );
         } else {
@@ -346,7 +367,7 @@ export class LightGallery {
      * @param {Number} index  - index of the slide
      * @param {String} transform - Css transform value when zoomFromImage is enabled
      */
-    openGallery(index: number, transform?: string) {
+    openGallery(index: number, transform?: string): void {
         // prevent accidental double execution
         if (this.lgOpened) return;
 
@@ -449,7 +470,7 @@ export class LightGallery {
     }
 
     // Build Gallery if gallery id exist in the URL
-    buildFromHash() {
+    buildFromHash(): boolean | undefined {
         // if dynamic option is enabled execute immediately
         const _hash = window.location.hash;
         if (_hash.indexOf('lg=' + this.s.galleryId) > 0) {
@@ -467,7 +488,7 @@ export class LightGallery {
         }
     }
 
-    hideBars() {
+    hideBars(): void {
         // Hide controllers if mouse doesn't move for some period
         setTimeout(() => {
             this.outer.removeClass('lg-hide-items');
@@ -488,7 +509,7 @@ export class LightGallery {
     }
 
     // Find css3 support
-    doCss() {
+    doCss(): boolean {
         let supported = false;
         const transition = [
             'transition',
@@ -512,7 +533,7 @@ export class LightGallery {
      *  @desc Create image counter
      *  Ex: 1/10
      */
-    counter() {
+    counter(): void {
         if (this.s.counter) {
             const counterHtml = `<div class="lg-counter">
                 <span id="${this.getById(
@@ -531,7 +552,7 @@ export class LightGallery {
      *  @desc add sub-html into the slide
      *  @param {Number} index - index of the slide
      */
-    addHtml(index: number) {
+    addHtml(index: number): void {
         let subHtml;
         let subHtmlUrl;
         if (this.galleryItems[index].subHtmlUrl) {
@@ -599,7 +620,7 @@ export class LightGallery {
      *  @param {Number} index - index of the slide
      * @todo preload not working for the first slide, Also, should work for the first and last slide as well
      */
-    preload(index: number) {
+    preload(index: number): void {
         for (let i = 1; i <= this.s.preload; i++) {
             if (i >= this.galleryItems.length - index) {
                 break;
@@ -617,7 +638,7 @@ export class LightGallery {
         }
     }
 
-    getDummyImgStyles(imageSize?: ImageSize) {
+    getDummyImgStyles(imageSize?: ImageSize): string {
         imageSize =
             imageSize || utils.getSize(LG(this.items).eq(this.index).get());
         if (!imageSize) return '';
@@ -627,7 +648,7 @@ export class LightGallery {
                 height:${imageSize.height}px`;
     }
 
-    setImgMarkup(src: string, $currentSlide: lgQuery, index: number) {
+    setImgMarkup(src: string, $currentSlide: lgQuery, index: number): void {
         // Use the thumbnail as dummy image which will be resized to actual image size and
         // displayed on top of actual image
         let _dummyImgSrc;
@@ -665,7 +686,7 @@ export class LightGallery {
         delay: number,
         speed: number,
         dummyImageLoaded: boolean,
-    ) {
+    ): void {
         if (dummyImageLoaded) {
             this.LGel.trigger('onSlideItemLoad.lg', {
                 index,
@@ -690,7 +711,7 @@ export class LightGallery {
         delay: number,
         speed: number,
         dummyImageLoaded: boolean,
-    ) {
+    ): void {
         setTimeout(() => {
             $el.addClass('lg-complete lg-complete_');
             if (!dummyImageLoaded) {
@@ -750,7 +771,7 @@ export class LightGallery {
     }
 
     // Add video slideInfo
-    addSlideVideoInfo(items: DynamicItem[]) {
+    addSlideVideoInfo(items: DynamicItem[]): void {
         items.forEach((element, index) => {
             element.__slideVideoInfo = this.isVideo(element.src, index);
         });
@@ -762,7 +783,7 @@ export class LightGallery {
      *  @param {Boolean} rec - if true call loadcontent() function again.
      *  @param {Boolean} firstSlide - For setting the delay.
      */
-    loadContent(index: number, rec: boolean, firstSlide: boolean) {
+    loadContent(index: number, rec: boolean, firstSlide: boolean): void {
         let _$img;
         let _src: string;
         let _poster;
@@ -945,7 +966,11 @@ export class LightGallery {
         }
     }
 
-    loadContentOnLoad(index: number, $currentSlide: lgQuery, speed: number) {
+    loadContentOnLoad(
+        index: number,
+        $currentSlide: lgQuery,
+        speed: number,
+    ): void {
         setTimeout(() => {
             $currentSlide.find('.lg-dummy-img').remove();
             $currentSlide.removeClass('lg-first-slide');
@@ -957,7 +982,7 @@ export class LightGallery {
         index: number,
         prevIndex: number,
         numberOfItems = 0,
-    ) {
+    ): string[] {
         const itemsToBeInsertedToDom: string[] = [];
         // Minimum 2 items should be there
         let possibleNumberOfItems = Math.max(numberOfItems, 3);
@@ -1052,8 +1077,8 @@ export class LightGallery {
         index: number,
         fromTouch: boolean,
         fromThumb: boolean,
-        direction: SlideDirection | false,
-    ) {
+        direction?: SlideDirection | false,
+    ): void {
         let _prevIndex = 0;
         try {
             const currentItemId = this.outer
@@ -1238,7 +1263,7 @@ export class LightGallery {
         this.index = index;
     }
 
-    touchMove(startCoords: Coords, endCoords: Coords) {
+    touchMove(startCoords: Coords, endCoords: Coords): void {
         const distanceX = endCoords.pageX - startCoords.pageX;
         const distanceY = endCoords.pageY - startCoords.pageY;
         let allowSwipe = false;
@@ -1293,7 +1318,7 @@ export class LightGallery {
         }
     }
 
-    touchEnd(endCoords: Coords, startCoords: Coords) {
+    touchEnd(endCoords: Coords, startCoords: Coords): void {
         let distance;
 
         // keep slide animation for any mode while dragg/swipe
@@ -1359,7 +1384,7 @@ export class LightGallery {
         }, this.s.speed + 100);
     }
 
-    enableSwipe() {
+    enableSwipe(): void {
         let startCoords: Coords = {} as Coords;
         let endCoords: Coords = {} as Coords;
         let isMoved = false;
@@ -1418,7 +1443,7 @@ export class LightGallery {
         }
     }
 
-    enableDrag() {
+    enableDrag(): void {
         let startCoords: Coords = {} as Coords;
         let endCoords: Coords = {} as Coords;
         let isDraging = false;
@@ -1490,7 +1515,7 @@ export class LightGallery {
         }
     }
 
-    manageSwipeClass() {
+    manageSwipeClass(): void {
         let _touchNext = this.index + 1;
         let _touchPrev = this.index - 1;
         if (this.s.loop && this.galleryItems.length > 2) {
@@ -1513,7 +1538,7 @@ export class LightGallery {
      *  @desc Go to next slide
      *  @param {Boolean} fromTouch - true if slide function called via touch event
      */
-    goToNextSlide(fromTouch?: boolean) {
+    goToNextSlide(fromTouch?: boolean): void {
         let _loop = this.s.loop;
         if (fromTouch && this.galleryItems.length < 3) {
             _loop = false;
@@ -1547,7 +1572,7 @@ export class LightGallery {
      *  @desc Go to previous slide
      *  @param {Boolean} fromTouch - true if slide function called via touch event
      */
-    goToPrevSlide(fromTouch?: boolean) {
+    goToPrevSlide(fromTouch?: boolean): void {
         let _loop = this.s.loop;
         if (fromTouch && this.galleryItems.length < 3) {
             _loop = false;
@@ -1579,7 +1604,7 @@ export class LightGallery {
         }
     }
 
-    keyPress() {
+    keyPress(): void {
         if (this.galleryItems.length > 1) {
             LG(window).on('keyup.lg.window', (e) => {
                 if (this.galleryItems.length > 1) {
@@ -1608,17 +1633,18 @@ export class LightGallery {
         });
     }
 
-    arrow() {
+    arrow(): void {
         LG(`#${this.getById('lg-prev')}`).on('click.lg', () => {
             this.goToPrevSlide();
         });
-
+        console.log(LG(`#${this.getById('lg-next')}`));
         LG(`#${this.getById('lg-next')}`).on('click.lg', () => {
+            console.log('calling');
             this.goToNextSlide();
         });
     }
 
-    arrowDisable(index: number) {
+    arrowDisable(index: number): void {
         // Disable arrows if s.hideControlOnEnd is true
         if (!this.s.loop && this.s.hideControlOnEnd) {
             const $prev = LG(`#${this.getById('lg-prev')}`);
@@ -1667,7 +1693,7 @@ export class LightGallery {
         yValue: number,
         scaleX = 1,
         scaleY = 1,
-    ) {
+    ): void {
         // jQuery supports Automatic CSS prefixing since version 1.8.0
         if (this.s.useLeft) {
             $el.css('left', xValue + '');
@@ -1687,7 +1713,7 @@ export class LightGallery {
         }
     }
 
-    mousewheel() {
+    mousewheel(): void {
         this.outer.on('mousewheel.lg', (e) => {
             if (!e.deltaY) {
                 return;
@@ -1703,7 +1729,7 @@ export class LightGallery {
         });
     }
 
-    closeGallery() {
+    closeGallery(): void {
         let mousedown = false;
         LG(`#${this.getById('lg-close')}`).on('click.lg', () => {
             this.destroy();
@@ -1744,7 +1770,7 @@ export class LightGallery {
         }
     }
 
-    destroy(d?: boolean) {
+    destroy(d?: boolean): void {
         if (!d) {
             this.LGel.trigger('onBeforeClose.lg');
             LG(window).scrollTop(this.prevScrollTop);
