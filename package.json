@@ -16,13 +16,13 @@
   },
   "homepage": "http://sachinchoolur.github.io/lightGallery/",
   "bugs": {
-      "url": "https://github.com/sachinchoolur/lightGallery/issues"
+    "url": "https://github.com/sachinchoolur/lightGallery/issues"
   },
   "license": "GPLv3",
   "author": {
-      "name": "Sachin Neravath",
-      "email": "sachi77n@gmail.com",
-      "url": "https://github.com/sachinchoolur"
+    "name": "Sachin Neravath",
+    "email": "sachi77n@gmail.com",
+    "url": "https://github.com/sachinchoolur"
   },
   "engines": {
     "node": ">=6.0.0"
@@ -134,6 +134,9 @@
     "typescript": "^3.0.3"
   },
   "dependencies": {
-    "@types/picturefill": "^3.0.0"
+    "@types/picturefill": "^3.0.0",
+    "i": "^0.3.6",
+    "npm": "^6.14.8",
+    "video.js": "^7.0.3"
   }
 }
