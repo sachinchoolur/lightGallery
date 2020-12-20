@@ -34,7 +34,7 @@
     "build-scss": "node-sass --include-path scss src/scss/lightgallery.scss dist/css/lightgallery.css --output-style expanded",
     "watch-css": "nodemon -e scss -x \"npm run build-scss\"",
     "minify-css": "cleancss -o dist/css/lightgallery.min.css dist/css/lightgallery.css",
-    "start": "concurrently \"rollup -c rollup.config.ts -w\" \"npm run watch-css \"",
+    "start": "concurrently \"rollup -c rollup-dev.config.ts -w\" \"npm run watch-css \"",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache",
