@@ -9,11 +9,19 @@
  *
  */
 
-import { LG } from '../../lgQuery';
+import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { commentDefaults } from './lg-comment-settings';
 declare let FB: any;
 declare let DISQUS: any;
+
+declare global {
+    interface Window {
+        LG: (selector: any) => lgQuery;
+    }
+}
+
+const LG = window.LG;
 export class CommentBox {
     core: LightGallery;
     s: commentDefaults;

@@ -1,6 +1,14 @@
 import { DynamicItem } from '../../lg-utils';
-import { LG } from '../../lgQuery';
+import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
+
+declare global {
+    interface Window {
+        LG: (selector: any) => lgQuery;
+    }
+}
+
+const LG = window.LG;
 
 const defaults = {
     pager: true,

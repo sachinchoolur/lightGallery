@@ -31,6 +31,20 @@ declare global {
     }
 }
 
+declare global {
+    interface Window {
+        LG: (selector: any) => lgQuery;
+    }
+}
+
+function param(obj: { [x: string]: string | number | boolean }): string {
+    return Object.keys(obj)
+        .map(function (k) {
+            return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]);
+        })
+        .join('&');
+}
+
 export class Video {
     private core: LightGallery;
     private s: VideoDefaults;
@@ -224,23 +238,21 @@ export class Video {
             const youtubePlayerParams = `?wmode=opaque&autoplay=0&enablejsapi=1`;
 
             const playerParams =
-                youtubePlayerParams +
-                '&' +
-                lgQuery.param(this.s.youtubePlayerParams);
+                youtubePlayerParams + '&' + param(this.s.youtubePlayerParams);
 
             video = `<iframe id=${videoId} class="lg-video-object lg-youtube ${addClass}" src="//www.youtube.com/embed/${
                 videoInfo.youtube[1] + playerParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.vimeo) {
             const videoId = 'lg-vimeo' + index;
-            const playerParams = lgQuery.param(this.s.vimeoPlayerParams);
+            const playerParams = param(this.s.vimeoPlayerParams);
 
             video = `<iframe id=${videoId} class="lg-video-object lg-vimeo ${addClass}" src="//player.vimeo.com/video/${
                 videoInfo.vimeo[1] + playerParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.wistia) {
             const wistiaId = 'lg-wistia' + index;
-            const playerParams = lgQuery.param(this.s.wistiaPlayerParams);
+            const playerParams = param(this.s.wistiaPlayerParams);
             video = `<iframe id="${wistiaId}" src="//fast.wistia.net/embed/iframe/${
                 videoInfo.wistia[4] + playerParams
             }" class="wistia_embed lg-video-object lg-wistia ${addClass}" name="wistia_embed" ${commonIframeProps}></iframe>`;

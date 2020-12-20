@@ -12,19 +12,16 @@ declare let picturefill: any;
 
 import utils, { DynamicItem, ImageSize } from './lg-utils';
 import { LG, lgQuery } from './lgQuery';
+declare global {
+    interface Window {
+        LG: typeof LG;
+    }
+}
+window.LG = LG;
 
 // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
 // @ref - https://2ality.com/2017/04/setting-up-multi-platform-packages.html
 import { Defaults, defaults } from './lg-defaults';
-import { Thumbnail } from './plugins/thumbnail/lg-thumbnail';
-import { Zoom } from './plugins/zoom/lg-zoom';
-import { Video } from './plugins/video/lg-video';
-import { CommentBox } from './plugins/comment/lg-comment';
-import { FullScreen } from './plugins/fullscreen/lg-fullscreen';
-import { Hash } from './plugins/hash/lg-hash';
-import { Pager } from './plugins/pager/lg-pager';
-import { Share } from './plugins/share/lg-share';
-import { Rotate } from './plugins/rotate/lg-rotate';
 
 type SlideDirection = 'next' | 'prev';
 export interface Coords {
@@ -102,16 +99,6 @@ export class LightGallery {
         if (this.s.slideEndAnimatoin) {
             this.s.hideControlOnEnd = false;
         }
-
-        console.log(Thumbnail);
-        console.log(Zoom);
-        console.log(Video);
-        console.log(CommentBox);
-        console.log(FullScreen);
-        console.log(Hash);
-        console.log(Pager);
-        console.log(Share);
-        console.log(Rotate);
 
         // Gallery items
         this.galleryItems = this.getItems();

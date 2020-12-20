@@ -1,4 +1,4 @@
-import { LG } from '../../lgQuery';
+import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 
 declare let document: any;
@@ -6,6 +6,14 @@ declare let document: any;
 const defaults = {
     fullScreen: true,
 };
+
+declare global {
+    interface Window {
+        LG: (selector: any) => lgQuery;
+    }
+}
+
+const LG = window.LG;
 
 export class FullScreen {
     core: LightGallery;

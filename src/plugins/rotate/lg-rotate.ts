@@ -1,6 +1,14 @@
-import { LG } from '../../lgQuery';
+import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { RotateSettings } from './lg-rotate-settings';
+
+declare global {
+    interface Window {
+        LG: (selector: any) => lgQuery;
+    }
+}
+
+const LG = window.LG;
 
 const rotateSettings = {
     rotate: true,

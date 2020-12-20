@@ -43,14 +43,6 @@ export class lgQuery {
         return this;
     }
 
-    static param(obj: { [x: string]: string | number | boolean }): string {
-        return Object.keys(obj)
-            .map(function (k) {
-                return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]);
-            })
-            .join('&');
-    }
-
     private _getSelector(
         selector: string | Element,
         context: Element | Document = document,

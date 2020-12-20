@@ -1,6 +1,14 @@
 import { ZoomDefaults, zoomDefaults } from './lg-zoom-settings';
-import { LG, lgQuery } from '../../lgQuery';
+import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
+
+declare global {
+    interface Window {
+        LG: (selector: any) => lgQuery;
+    }
+}
+
+const LG = window.LG;
 interface Coords {
     x: number;
     y: number;

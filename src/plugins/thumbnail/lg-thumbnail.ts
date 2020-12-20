@@ -2,7 +2,7 @@ import {
     ThumbnailsDefaults,
     thumbnailsDefaults,
 } from './lg-thumbnail-settings';
-import { LG, lgQuery } from '../../lgQuery';
+import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { DynamicItem } from '../../lg-utils';
 interface ThumbDragUtils {
@@ -16,6 +16,13 @@ interface ThumbDragUtils {
     endTime: Date;
     touchMoveTime: number;
 }
+declare global {
+    interface Window {
+        LG: (selector: any) => lgQuery;
+    }
+}
+
+const LG = window.LG;
 
 interface ThumbnailDynamicItem extends DynamicItem {
     thumb: string;
