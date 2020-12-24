@@ -109,8 +109,8 @@ export class lgQuery {
     }
 
     attr(attr: string): string;
-    attr(attr: string, value: string | number): this;
-    attr(attr: string, value?: string | number): string | this {
+    attr(attr: string, value: string | number | boolean): this;
+    attr(attr: string, value?: string | number | boolean): string | this {
         if (value === undefined) {
             if (!this.firstElement) {
                 return '';
