@@ -216,13 +216,16 @@ export class Video {
     getVideoHtml(
         src: any,
         addClass: any,
-        index: string,
+        index: number,
         html5video: { source: string | any[]; [key: string]: any },
     ) {
         let video = '';
         const videoInfo =
             this.core.galleryItems[(index as unknown) as number]
                 .__slideVideoInfo || {};
+        const currentDynamicItem = this.core.galleryItems[index];
+        let videoTitle = currentDynamicItem.title || currentDynamicItem.alt;
+        videoTitle = videoTitle ? 'title="' + videoTitle + '"' : '';
         const commonIframeProps = `allowtransparency="true" 
             frameborder="0" 
             scrolling="no" 
@@ -240,14 +243,14 @@ export class Video {
             const playerParams =
                 youtubePlayerParams + '&' + param(this.s.youtubePlayerParams);
 
-            video = `<iframe id=${videoId} class="lg-video-object lg-youtube ${addClass}" src="//www.youtube.com/embed/${
+            video = `<iframe id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="//www.youtube.com/embed/${
                 videoInfo.youtube[1] + playerParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.vimeo) {
             const videoId = 'lg-vimeo' + index;
             const playerParams = param(this.s.vimeoPlayerParams);
 
-            video = `<iframe id=${videoId} class="lg-video-object lg-vimeo ${addClass}" src="//player.vimeo.com/video/${
+            video = `<iframe id=${videoId} class="lg-video-object lg-vimeo ${addClass}" ${videoTitle} src="//player.vimeo.com/video/${
                 videoInfo.vimeo[1] + playerParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.wistia) {
@@ -255,7 +258,7 @@ export class Video {
             const playerParams = param(this.s.wistiaPlayerParams);
             video = `<iframe id="${wistiaId}" src="//fast.wistia.net/embed/iframe/${
                 videoInfo.wistia[4] + playerParams
-            }" class="wistia_embed lg-video-object lg-wistia ${addClass}" name="wistia_embed" ${commonIframeProps}></iframe>`;
+            }" ${videoTitle} class="wistia_embed lg-video-object lg-wistia ${addClass}" name="wistia_embed" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.html5) {
             let html5VideoMarkup = '';
             for (let i = 0; i < html5video.source.length; i++) {
