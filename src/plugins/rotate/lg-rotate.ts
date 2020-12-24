@@ -40,19 +40,19 @@ export class Rotate {
         let rotateIcons = '';
         if (this.s.flipVertical) {
             rotateIcons +=
-                '<button id="lg-flip-ver" aria-label="flip vertical" class="lg-flip-ver lg-icon"></button>';
+                '<button type="button" id="lg-flip-ver" aria-label="flip vertical" class="lg-flip-ver lg-icon"></button>';
         }
         if (this.s.flipHorizontal) {
             rotateIcons +=
-                '<button id="lg-flip-hor" aria-label="Flip horizontal" class="lg-flip-hor lg-icon"></button>';
+                '<button type="button" id="lg-flip-hor" aria-label="Flip horizontal" class="lg-flip-hor lg-icon"></button>';
         }
         if (this.s.rotateLeft) {
             rotateIcons +=
-                '<button id="lg-rotate-left" aria-label="Rotate left" class="lg-rotate-left lg-icon"></button>';
+                '<button type="button" id="lg-rotate-left" aria-label="Rotate left" class="lg-rotate-left lg-icon"></button>';
         }
         if (this.s.rotateRight) {
             rotateIcons +=
-                '<button id="lg-rotate-right" aria-label="Rotate right" class="lg-rotate-right lg-icon"></button>';
+                '<button type="button" id="lg-rotate-right" aria-label="Rotate right" class="lg-rotate-right lg-icon"></button>';
         }
         this.core.outer.find('.lg-toolbar').append(rotateIcons);
     }
