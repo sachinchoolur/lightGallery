@@ -11,7 +11,7 @@ export interface ThumbnailsDefaults {
 
     exThumbImage: false;
     showThumbByDefault: boolean;
-    toogleThumb: boolean;
+    toggleThumb: boolean;
     pullCaptionUp: boolean;
 
     enableThumbDrag: boolean;
@@ -40,7 +40,7 @@ export const thumbnailsDefaults: ThumbnailsDefaults = {
 
     exThumbImage: false,
     showThumbByDefault: true,
-    toogleThumb: true,
+    toggleThumb: true,
     pullCaptionUp: true,
 
     enableThumbDrag: true,
