@@ -551,10 +551,10 @@ export class Thumbnail {
 
     // Toggle thumbnail bar
     toggleThumbBar(): void {
-        if (this.s.toogleThumb) {
+        if (this.s.toggleThumb) {
             this.core.outer.addClass('lg-can-toggle');
             this.$thumbOuter.append(
-                '<span class="lg-toogle-thumb lg-icon"></span>',
+                '<button type="button aria-label="Toggle thumbnails" class="lg-toggle-thumb lg-icon"></button>',
             );
             this.core.outer
                 .find('.lg-toogle-thumb')
