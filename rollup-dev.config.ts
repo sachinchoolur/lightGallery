@@ -10,65 +10,9 @@ import { uglify } from 'rollup-plugin-uglify';
 import pkg from './package.json';
 
 import path from 'path';
+import pluginConfigs from './plugins-config-rollup.json';
 
 const libraryName = 'lightgallery';
-
-const pluginConfigs = [
-    {
-        name: 'thumbnail',
-        src: 'src/plugins/thumbnail/',
-        dist: 'dist/plugins/',
-        fileName: 'lg-thumbnail',
-    },
-    {
-        name: 'video',
-        src: 'src/plugins/video/',
-        dist: 'dist/plugins/',
-        fileName: 'lg-video',
-    },
-    {
-        name: 'zoom',
-        src: 'src/plugins/zoom/',
-        dist: 'dist/plugins/',
-        fileName: 'lg-zoom',
-    },
-    {
-        name: 'share',
-        src: 'src/plugins/share/',
-        dist: 'dist/plugins/',
-        fileName: 'lg-share',
-    },
-    {
-        name: 'rotate',
-        src: 'src/plugins/rotate/',
-        dist: 'dist/plugins/',
-        fileName: 'lg-rotate',
-    },
-    {
-        name: 'pager',
-        src: 'src/plugins/pager/',
-        dist: 'dist/plugins/',
-        fileName: 'lg-pager',
-    },
-    {
-        name: 'hash',
-        src: 'src/plugins/hash/',
-        dist: 'dist/plugins/',
-        fileName: 'lg-hash',
-    },
-    {
-        name: 'fullscreen',
-        src: 'src/plugins/fullscreen/',
-        dist: 'dist/plugins/',
-        fileName: 'lg-fullscreen',
-    },
-    {
-        name: 'comment',
-        src: 'src/plugins/comment/',
-        dist: 'dist/plugins/',
-        fileName: 'lg-comment',
-    },
-];
 
 const umdConfigs = pluginConfigs.map((config) => {
     return {
