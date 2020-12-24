@@ -7,6 +7,9 @@ export interface ImageSize {
 
 export interface DynamicItem {
     src: string;
+    alt: string;
+    // @desc Video title
+    title: string;
     subHtml: string;
     subHtmlUrl: string;
     html: string;
@@ -229,11 +232,13 @@ const utils = {
                     }
                 }
             }
+            const currentItem = LG(item);
+            const alt = currentItem.find('img').first().attr('alt');
+            const title = currentItem.attr('title');
             if (getCaptionFromTitleOrAlt && !dynamicEl.subHtml) {
-                dynamicEl.subHtml =
-                    LG(item).attr('title') ||
-                    LG(item).find('img').first().attr('alt');
+                dynamicEl.subHtml = title || alt || '';
             }
+            dynamicEl.alt = alt || title || '';
             dynamicElements.push(dynamicEl);
         });
         return dynamicElements;

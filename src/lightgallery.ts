@@ -198,17 +198,22 @@ export class LightGallery {
         // Create controls
         if (this.s.controls && this.galleryItems.length > 1) {
             controls = `<div class="lg-actions">
-                <button id="${this.getById(
+                <button type="button" id="${this.getById(
                     'lg-prev',
-                )}" class="lg-prev lg-icon"> ${this.s.prevHtml} </button>
-                <button id="${this.getById(
+                )}" aria-label="Previous slide" class="lg-prev lg-icon"> ${
+                this.s.prevHtml
+            } </button>
+                <button type="button" id="${this.getById(
                     'lg-next',
-                )}" class="lg-next lg-icon"> ${this.s.nextHtml} </button>
+                )}" aria-label="Next slide" class="lg-next lg-icon"> ${
+                this.s.nextHtml
+            } </button>
                 </div>`;
         }
 
         if (this.s.appendSubHtmlTo === '.lg-sub-html') {
-            subHtmlCont = '<div class="lg-sub-html"></div>';
+            subHtmlCont =
+                '<div class="lg-sub-html" role="status" aria-live="polite"></div>';
         }
 
         let addClasses = '';
@@ -218,9 +223,20 @@ export class LightGallery {
             addClasses += 'lg-hide-sub-html ';
         }
 
+        const ariaLabelledby = this.s.ariaLabelledby
+            ? 'aria-labelledby="' + this.s.ariaLabelledby + '"'
+            : '';
+        const ariaDescribedby = this.s.ariaDescribedby
+            ? 'aria-describedby="' + this.s.ariaDescribedby + '"'
+            : '';
+
         const template = `
-        <div class="lg-container" id="${this.getById('lg-container')}">
+        <div class="lg-container" id="${this.getById(
+            'lg-container',
+        )}" tabindex="-1" aria-modal="true" ${ariaLabelledby} ${ariaDescribedby} role="dialog"
+        >
             <div id="${this.getById('lg-backdrop')}" class="lg-backdrop"></div>
+
             <div id="${this.getById(
                 'lg-outer',
             )}" class="lg-outer lg-hide-items ${this.s.addClass} ${addClasses}">
@@ -233,9 +249,9 @@ export class LightGallery {
                         <div id="${this.getById(
                             'lg-toolbar',
                         )}" class="lg-toolbar lg-group">
-                        <span id="${this.getById(
+                        <button type="button" aria-label="Close gallery" id="${this.getById(
                             'lg-close',
-                        )}" class="lg-close lg-icon"></span>
+                        )}" class="lg-close lg-icon"></button>
                     </div>
                     ${controls}
                     ${subHtmlCont}
@@ -246,6 +262,7 @@ export class LightGallery {
 
         LG(document.body).append(template);
         this.outer = LG(`#${this.getById('lg-outer')}`);
+        this.outer.get().focus();
 
         if (this.s.useLeft) {
             this.outer.addClass('lg-use-left');
@@ -288,7 +305,7 @@ export class LightGallery {
                 .append(
                     `<a id="${this.getById(
                         'lg-download',
-                    )}" target="_blank" download class="lg-download lg-icon"></a>`,
+                    )}" target="_blank" aria-label="Download" download class="lg-download lg-icon"></a>`,
                 );
         }
 
@@ -522,7 +539,7 @@ export class LightGallery {
      */
     counter(): void {
         if (this.s.counter) {
-            const counterHtml = `<div class="lg-counter">
+            const counterHtml = `<div class="lg-counter" role="status" aria-live="polite">
                 <span id="${this.getById(
                     'lg-counter-current',
                 )}" class="lg-counter-current">${this.index + 1} </span> / 
@@ -646,6 +663,11 @@ export class LightGallery {
             $currentItem = LG(this.items).eq(index);
             imageSize = utils.getSize($currentItem.get());
         }
+        const currentDynamicItem = this.galleryItems[index];
+        const alt = currentDynamicItem.alt
+            ? 'alt="' + currentDynamicItem.alt + '"'
+            : '';
+
         if (!this.lGalleryOn && this.s.zoomFromImage && imageSize) {
             if (imageSize && $currentItem) {
                 if (!this.s.exThumbImage) {
@@ -654,14 +676,14 @@ export class LightGallery {
                     _dummyImgSrc = $currentItem.attr(this.s.exThumbImage);
                 }
                 const imgStyle = this.getDummyImgStyles(imageSize);
-                const dummyImgContent = `<img style="${imgStyle}" class="lg-dummy-img" src="${_dummyImgSrc}" />`;
+                const dummyImgContent = `<img ${alt} style="${imgStyle}" class="lg-dummy-img" src="${_dummyImgSrc}" />`;
 
                 $currentSlide.addClass('lg-first-slide');
 
                 imgContnet = dummyImgContent;
             }
         } else {
-            imgContnet = ` <img class="lg-object lg-image" data-index="${index}" src="${src}" /> `;
+            imgContnet = ` <img ${alt} class="lg-object lg-image" data-index="${index}" src="${src}" /> `;
         }
         const imgMarkup = `<div class="lg-img-wrap"> ${imgContnet}</div>`;
         $currentSlide.prepend(imgMarkup);
@@ -1866,6 +1888,7 @@ export class LightGallery {
             if (!d) {
                 this.LGel.trigger('onCloseAfter.lg');
             }
+            this.LGel.get().focus();
 
             this.lgOpened = false;
         }, removeTimeout + 100);

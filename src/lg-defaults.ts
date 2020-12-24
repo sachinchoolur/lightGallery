@@ -66,6 +66,12 @@ export interface Defaults {
 
     useLeft: boolean;
 
+    // aria-labelledby attribute fot gallery
+    ariaLabelledby: string;
+
+    //aria-describedby attribute for gallery
+    ariaDescribedby: string;
+
     closable: boolean;
     loop: boolean;
     escKey: boolean;
@@ -158,6 +164,12 @@ export const defaults: Defaults = {
     hideSubHtml: true,
 
     useLeft: false,
+
+    // aria-labelledby attribute fot gallery
+    ariaLabelledby: '',
+
+    //aria-describedby attribute for gallery
+    ariaDescribedby: '',
 
     closable: true,
     loop: true,
