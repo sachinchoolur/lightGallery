@@ -231,6 +231,14 @@ export class lgQuery {
 
         return this;
     }
+    // @todo - test this
+    once(event: string, listener: (e: any) => void): this {
+        this.on(event, () => {
+            this.off(event);
+            listener(event);
+        });
+        return this;
+    }
     off(event: string): this {
         if (!this.selector || !Array.isArray(lgQuery.eventListeners[event])) {
             return this;
