@@ -1816,6 +1816,22 @@ export class LightGallery {
          * if d is true destroy will completely remove the plugin
          */
 
+        // Unbind all events added by lightGallery
+        // @todo
+        //this.$el.off('.lg.tm');
+
+        for (const key in this.modules) {
+            if (this.modules[key]) {
+                try {
+                    this.modules[key].destroy(d);
+                } catch (err) {
+                    console.warn(
+                        `lightGallery:- make sure lightGallery ${key} module is properly destroyed`,
+                    );
+                }
+            }
+        }
+
         if (d) {
             if (!this.s.dynamic) {
                 // only when not using dynamic mode is $items a jquery collection
@@ -1826,22 +1842,6 @@ export class LightGallery {
                     LG(element).off(
                         `click.lg-item-${index} click.lgcustom-item-${index}`,
                     );
-                }
-            }
-
-            // Unbind all events added by lightGallery
-            // @todo
-            //this.$el.off('.lg.tm');
-
-            for (const key in this.modules) {
-                if (this.modules[key]) {
-                    try {
-                        this.modules[key].destroy();
-                    } catch (err) {
-                        console.warn(
-                            `lightGallery:- make sure lightGallery ${key} module is properly destroyed`,
-                        );
-                    }
                 }
             }
             LG(window).off('lg');
