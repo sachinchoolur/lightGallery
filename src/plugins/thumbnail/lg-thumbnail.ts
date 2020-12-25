@@ -554,10 +554,10 @@ export class Thumbnail {
         if (this.s.toggleThumb) {
             this.core.outer.addClass('lg-can-toggle');
             this.$thumbOuter.append(
-                '<button type="button aria-label="Toggle thumbnails" class="lg-toggle-thumb lg-icon"></button>',
+                '<button type="button" aria-label="Toggle thumbnails" class="lg-toggle-thumb lg-icon"></button>',
             );
             this.core.outer
-                .find('.lg-toogle-thumb')
+                .find('.lg-toggle-thumb')
                 .first()
                 .on('click.lg', () => {
                     this.core.outer.toggleClass('lg-thumb-open');
