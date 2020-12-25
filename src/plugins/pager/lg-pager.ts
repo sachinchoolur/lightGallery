@@ -89,7 +89,7 @@ export class Pager {
         $pagerCont.eq(index).addClass('lg-pager-active');
     }
 
-    addNewPagers(items: DynamicItem[]) {
+    addNewPagers(items: DynamicItem[]): void {
         this.core.outer
             .find('.lg-pager-outer')
             .append(this.getPagerHtml(items));
