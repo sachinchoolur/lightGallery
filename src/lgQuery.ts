@@ -143,8 +143,8 @@ export class lgQuery {
         return LG(this.selector.parentElement);
     }
 
-    get() {
-        return this.selector;
+    get(): HTMLElement {
+        return this._getFirstEl();
     }
 
     removeAttr(attr: string): this {
