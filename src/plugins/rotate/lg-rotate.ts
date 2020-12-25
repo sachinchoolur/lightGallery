@@ -87,7 +87,7 @@ export class Rotate {
         this.core.outer
             .find('#lg-flip-hor')
             .first()
-            .on('click.lg', this.rotateRight.bind(this));
+            .on('click.lg', this.flipHorizontal.bind(this));
 
         this.core.outer
             .find('#lg-flip-ver')
