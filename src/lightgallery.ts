@@ -878,15 +878,16 @@ export class LightGallery {
 
             if (_srcset) {
                 _$img.attr('srcset', _srcset);
-                console.log(_$img.get());
-                try {
-                    picturefill({
-                        elements: [_$img.get()],
-                    });
-                } catch (e) {
-                    console.warn(
-                        'lightGallery :- If you want srcset to be supported for older browser please include picturefil version 2 javascript library in your document.',
-                    );
+                if (this.s.supportLegacyBrowser) {
+                    try {
+                        picturefill({
+                            elements: [_$img.get()],
+                        });
+                    } catch (e) {
+                        console.warn(
+                            'lightGallery :- If you want srcset to be supported for older browser please include picturefil javascript library in your document.',
+                        );
+                    }
                 }
             }
 

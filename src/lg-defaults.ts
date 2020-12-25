@@ -61,6 +61,8 @@ export interface Defaults {
     hideBarsDelay: number;
     showBarsAfter: number;
 
+    supportLegacyBrowser: boolean;
+
     // If true sub-html will also be hidden along with controls and toolbar if hideBarDelay is more than 0
     hideSubHtml: boolean;
 
@@ -159,6 +161,8 @@ export const defaults: Defaults = {
     // Set 0, if u don't want to hide the controls
     hideBarsDelay: 2000,
     showBarsAfter: 0,
+
+    supportLegacyBrowser: true,
 
     // If true sub-html will also be hidden along with controls and toolbar if hideBarDelay is more than 0
     hideSubHtml: true,
