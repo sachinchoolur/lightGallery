@@ -190,10 +190,13 @@ export class Rotate {
         this.applyStyles();
     }
 
-    destroy(): void {
-        // Unbind all events added by lightGallery rotate plugin
-        this.core.LGel.off('.lgtmrotate');
+    destroy(clear?: boolean): void {
         this.rotateValuesList = {};
+
+        if (clear) {
+            // Unbind all events added by lightGallery rotate plugin
+            this.core.LGel.off('.lgtmrotate');
+        }
     }
 }
 
