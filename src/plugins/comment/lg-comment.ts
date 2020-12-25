@@ -61,26 +61,26 @@ export class CommentBox {
     }
 
     toggleCommentBox() {
-        LG('#lg-comment-toggle').on('click.lg', () => {
+        LG('#lg-comment-toggle').on('click.lg.comment', () => {
             this.core.outer.toggleClass('lg-comment-active');
         });
 
-        LG('#lg-comment-overlay').on('click.lg', () => {
+        LG('#lg-comment-overlay').on('click.lg.comment', () => {
             this.core.outer.removeClass('lg-comment-active');
         });
-        LG('#lg-comment-close').on('click.lg', () => {
+        LG('#lg-comment-close').on('click.lg.comment', () => {
             this.core.outer.removeClass('lg-comment-active');
         });
     }
 
     addFbComments() {
-        this.core.LGel.on('onBeforeSlide.lg.tm', (event) => {
+        this.core.LGel.on('onBeforeSlide.lg.comment', (event) => {
             const { index } = event.detail;
             LG('#lg-comment-body').html(
                 LG(this.core.items).eq(index).attr('data-fb-html'),
             );
         });
-        this.core.LGel.on('onAfterSlide.lg.tm', function () {
+        this.core.LGel.on('onAfterSlide.lg.comment', function () {
             try {
                 FB.XFBML.parse();
             } catch (err) {
@@ -98,11 +98,11 @@ export class CommentBox {
         $disqusThread.remove();
         LG('#lg-comment-body').append('<div id="disqus_thread"></div>');
 
-        this.core.LGel.on('onBeforeSlide.lg.tm', () => {
+        this.core.LGel.on('onBeforeSlide.lg.comment', () => {
             $disqusThread.html('');
         });
 
-        this.core.LGel.on('onAfterSlide.lg.tm', (event) => {
+        this.core.LGel.on('onAfterSlide.lg.comment', (event) => {
             const { index } = event.detail;
             // DISQUS needs sometime to intialize when lightGallery is opened from direct url(hash plugin).
             setTimeout(
@@ -132,8 +132,10 @@ export class CommentBox {
         });
     }
 
-    destroy() {
-        this.core.LGel.off('.lg.comment');
+    destroy(clear?: boolean): void {
+        if (clear) {
+            this.core.LGel.off('.lg.comment');
+        }
     }
 }
 
