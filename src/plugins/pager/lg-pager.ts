@@ -94,6 +94,11 @@ export class Pager {
             .find('.lg-pager-outer')
             .append(this.getPagerHtml(items));
     }
+    destroy(clear?: boolean): void {
+        if (clear) {
+            this.core.outer.find('.lg-pager-outer').remove();
+        }
+    }
 }
 
 window.lgModules = window.lgModules || {};
