@@ -175,9 +175,11 @@ export class Autoplay {
         this.core.outer.find('.lg-progress-bar').removeClass('lg-start');
     }
 
-    destroy() {
+    destroy(clear?: boolean): void {
         this.cancelAuto();
-        this.core.outer.find('.lg-progress-bar').remove();
+        if (clear) {
+            this.core.outer.find('.lg-progress-bar').remove();
+        }
     }
 }
 
