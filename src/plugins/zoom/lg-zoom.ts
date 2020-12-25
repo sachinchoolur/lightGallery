@@ -1111,15 +1111,16 @@ export class Zoom {
         });
     }
 
-    destroy(): void {
-        // Unbind all events added by lightGallery zoom plugin
-        this.core.LGel.off('.lg.zoom');
-        LG(window).off('.lg.zoom');
-        this.core.outer.find('.lg-item').first().off('.lg.zoom');
-        this.core.LGel.off('.lg.tm.zoom');
+    destroy(clear?: boolean): void {
         this.resetZoom();
-        clearTimeout(this.zoomableTimeout);
-        this.zoomableTimeout = false;
+        if (clear) {
+            // Unbind all events added by lightGallery zoom plugin
+            this.core.LGel.off('.lg.zoom');
+            LG(window).off('.lg.zoom');
+            this.core.LGel.off('.lg.tm.zoom');
+            clearTimeout(this.zoomableTimeout);
+            this.zoomableTimeout = false;
+        }
     }
 }
 
