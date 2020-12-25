@@ -98,12 +98,13 @@ export class Hash {
         }
     }
 
-    destroy() {
+    destroy(clear?: boolean): void {
         if (!this.s.hash) {
             return;
         }
-
-        this.core.LGel.off('.lg.hash');
+        if (clear) {
+            this.core.LGel.off('.lg.hash');
+        }
     }
 }
 
