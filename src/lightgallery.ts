@@ -188,8 +188,10 @@ export class LightGallery {
     }
 
     buildStructure(): number {
-        const container = LG(`#${this.getById('lg-container')}`).get();
-        if (container && container.length) {
+        const container = (LG(
+            `#${this.getById('lg-container')}`,
+        ).get() as unknown) as HTMLElement;
+        if (container) {
             return 0;
         }
         let controls = '';
