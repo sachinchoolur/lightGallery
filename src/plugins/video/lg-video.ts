@@ -111,7 +111,6 @@ export class Video {
      */
     onHasVideo(event: CustomEvent) {
         const { index, src, html, hasPoster } = event.detail;
-        console.log('calling has video');
         if (!hasPoster) {
             // All functions are called separately if poster exist in loadVideoOnPosterClick function
 
@@ -340,7 +339,7 @@ export class Video {
                     });
                 } catch (e) {
                     console.error(
-                        'lightGallery:- Make sure you have included https://www.youtube.com/iframe_api',
+                        'lightGallery:- Make sure you have included //www.youtube.com/iframe_api',
                     );
                 }
             } else if (videoInfo.vimeo) {
@@ -351,7 +350,7 @@ export class Video {
                     });
                 } catch (e) {
                     console.error(
-                        'lightGallery:- Make sure you have included https://github.com/vimeo/player.js',
+                        'lightGallery:- Make sure you have included //github.com/vimeo/player.js',
                     );
                 }
             } else if (videoInfo.wistia) {
@@ -385,7 +384,7 @@ export class Video {
             .first();
         const videoInfo = this.core.galleryItems[index].__slideVideoInfo || {};
 
-        if (!$videoElement) return;
+        if (!$videoElement.get()) return;
 
         if (videoInfo.youtube) {
             try {
@@ -400,7 +399,7 @@ export class Video {
                 });
             } catch (e) {
                 console.error(
-                    'lightGallery:- Make sure you have included https://www.youtube.com/iframe_api',
+                    'lightGallery:- Make sure you have included //www.youtube.com/iframe_api',
                 );
             }
         } else if (videoInfo.vimeo) {
@@ -408,7 +407,7 @@ export class Video {
                 new Vimeo.Player($videoElement.get())[action]();
             } catch (e) {
                 console.error(
-                    'lightGallery:- Make sure you have included https://github.com/vimeo/player.js',
+                    'lightGallery:- Make sure you have included //github.com/vimeo/player.js',
                 );
             }
         } else if (videoInfo.html5) {
@@ -421,7 +420,7 @@ export class Video {
                     );
                 }
             } else {
-                $videoElement.get()[action]();
+                ($videoElement.get() as any)[action]();
             }
         } else if (videoInfo.wistia) {
             try {
