@@ -66,6 +66,12 @@ export class Share {
             );
         }, 100);
     }
+    destroy(clear?: boolean): void {
+        if (clear) {
+            this.core.outer.find('.lg-dropdown-overlay').remove();
+            this.core.outer.find('.lg-share').remove();
+        }
+    }
 }
 
 window.lgModules = window.lgModules || {};
