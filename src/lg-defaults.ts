@@ -226,7 +226,7 @@ export const defaults: Defaults = {
     extraProps: [],
 
     galleryId: 1,
-    customSlideName: true,
+    customSlideName: false,
 
     exThumbImage: '',
 };
