@@ -20,6 +20,7 @@
 import { VideoDefaults, videoDefaults } from './lg-video-settings';
 import { LightGallery } from '../../lightgallery';
 import { lgQuery } from '../../lgQuery';
+import { CustomEventHasVideo } from '../../types';
 declare let YT: any;
 declare let Vimeo: any;
 declare let videojs: any;
@@ -109,16 +110,16 @@ export class Video {
      * @param {string} src - src of the video
      * @param {string} html - HTML5 video
      */
-    onHasVideo(event: CustomEvent) {
-        const { index, src, html, hasPoster } = event.detail;
+    onHasVideo(event: CustomEventHasVideo): void {
+        const { index, src, html5Video, hasPoster } = event.detail;
         if (!hasPoster) {
             // All functions are called separately if poster exist in loadVideoOnPosterClick function
 
             this.appendVideos(this.core.getSlideItem(index), {
-                src: src,
+                src,
                 addClass: 'lg-object',
-                index: index,
-                html5video: html,
+                index,
+                html5Video,
             });
 
             // Automatically navigate to next slide once video reaches the end.
@@ -216,7 +217,7 @@ export class Video {
         src: any,
         addClass: any,
         index: number,
-        html5video: { source: string | any[]; [key: string]: any },
+        html5Video: { source: string | any[]; [key: string]: any },
     ) {
         let video = '';
         const videoInfo =
@@ -260,15 +261,15 @@ export class Video {
             }" ${videoTitle} class="wistia_embed lg-video-object lg-wistia ${addClass}" name="wistia_embed" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.html5) {
             let html5VideoMarkup = '';
-            for (let i = 0; i < html5video.source.length; i++) {
-                html5VideoMarkup += `<source src="${html5video.source[i].src}" type="${html5video.source[i].type}">`;
+            for (let i = 0; i < html5Video.source.length; i++) {
+                html5VideoMarkup += `<source src="${html5Video.source[i].src}" type="${html5Video.source[i].type}">`;
             }
 
             let html5VideoAttrs = '';
 
-            Object.keys(html5video).forEach(function (key) {
+            Object.keys(html5Video).forEach(function (key) {
                 if (key !== 'source') {
-                    html5VideoAttrs += `${key}="${html5video[key]}" `;
+                    html5VideoAttrs += `${key}="${html5Video[key]}" `;
                 }
             });
             video = `<video class="lg-video-object lg-html5 ${
@@ -290,13 +291,13 @@ export class Video {
      */
     appendVideos(
         el: lgQuery,
-        videoParams: { src: any; addClass: any; index: any; html5video: any },
+        videoParams: { src: any; addClass: any; index: any; html5Video: any },
     ) {
         const videoHtml = this.getVideoHtml(
             videoParams.src,
             videoParams.addClass,
             videoParams.index,
-            videoParams.html5video,
+            videoParams.html5Video,
         );
         el.find('.lg-video').append(videoHtml);
         const $videoElement = el.find('.lg-video-object').first();
@@ -464,7 +465,7 @@ export class Video {
                     src: _src,
                     addClass: '',
                     index: this.core.index,
-                    html5video: _html,
+                    html5Video: _html,
                 });
 
                 this.gotoNextSlideOnVideoEnd(_src, this.core.index);
