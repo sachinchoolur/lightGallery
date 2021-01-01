@@ -8,7 +8,7 @@ A customizable, modular, responsive, lightbox gallery plugin for jQuery.
 ![lightgallery](https://raw.githubusercontent.com/sachinchoolur/lightGallery/master/lib/lg.png)
 Demo
 ---
-[JQuery lightGallery demo](http://sachinchoolur.github.io/lightGallery/). [Codepen demo](http://codepen.io/sachinchoolur/details/QjLNMM/) 
+[JQuery lightGallery demo](https://sachinchoolur.github.io/lightGallery/). [Codepen demo](https://codepen.io/sachinchoolur/details/QjLNMM/) 
 
 
 --- 
@@ -133,7 +133,7 @@ Or Install all modules together
 $ npm install lightgallery lg-thumbnail lg-autoplay lg-video lg-fullscreen lg-pager lg-zoom lg-hash lg-share lg-rotate
 ```
 
-You can also find `lightgallery` on [Yarn](https://yarnpkg.com/) and [Bower](http://bower.io).
+You can also find `lightgallery` on [Yarn](https://yarnpkg.com/) and [Bower](https://bower.io).
 ### Yarn
 ```sh
 yarn add lightgallery
