@@ -353,8 +353,11 @@ export class lgQuery {
             };
         }
         const rect = this.firstElement.getBoundingClientRect();
+        const bodyMarginLeft = LG('body').style().marginLeft;
+
+        // Minus body margin - https://stackoverflow.com/questions/30711548/is-getboundingclientrect-left-returning-a-wrong-value
         return {
-            left: rect.left + this.scrollLeft(),
+            left: rect.left - parseFloat(bodyMarginLeft) + this.scrollLeft(),
             top: rect.top + this.scrollTop(),
         };
     }
