@@ -1871,7 +1871,10 @@ export class LightGallery {
 
         const removeTimeout =
             this.zoomFromImage && transform
-                ? this.s.startAnimationDuration
+                ? Math.max(
+                      this.s.startAnimationDuration,
+                      this.s.backdropDuration,
+                  )
                 : this.s.backdropDuration;
         LG(`#${this.getById('lg-container')}`).removeClass('lg-show-in');
 
