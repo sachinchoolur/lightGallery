@@ -75,6 +75,8 @@ export class LightGallery {
 
     // Scroll top value before lightGallery is opened
     private prevScrollTop = 0;
+
+    private zoomFromImage!: boolean;
     $items: any;
 
     constructor(element: HTMLElement, options: Partial<Defaults>) {
@@ -100,13 +102,17 @@ export class LightGallery {
             this.s.hideControlOnEnd = false;
         }
 
+        // Need to disable zoomFromImage if gallery is opened from url (Hash plugin)
+        // And reset it on close to get the correct value next time
+        this.zoomFromImage = this.s.zoomFromImage;
+
         // Gallery items
         this.galleryItems = this.getItems();
 
         // At the moement, Zoom from image doesn't support dynamic options
         // @todo add zoomFromImage support for dynamic images
         if (this.s.dynamic) {
-            this.s.zoomFromImage = false;
+            this.zoomFromImage = false;
         }
 
         // s.preload should not be grater than $item.length
@@ -149,7 +155,7 @@ export class LightGallery {
                     e.preventDefault();
                     const currentItemIndex = this.s.index || index;
                     let transform;
-                    if (this.s.zoomFromImage) {
+                    if (this.zoomFromImage) {
                         const imageSize = utils.getSize(element);
                         transform = utils.getTransform(element, imageSize);
                     }
@@ -314,7 +320,7 @@ export class LightGallery {
         this.counter();
 
         LG(window).on('resize.lg orientationchange.lg', () => {
-            if (this.s.zoomFromImage && !this.s.dynamic) {
+            if (this.zoomFromImage && !this.s.dynamic) {
                 const imgStyle = this.getDummyImgStyles();
                 this.outer
                     .find('.lg-current .lg-dummy-img')
@@ -383,9 +389,9 @@ export class LightGallery {
         const container = LG(`#${this.getById('lg-container')}`);
         this.outer.removeClass('lg-hide-items');
 
-        if (!this.s.zoomFromImage || !transform) {
+        if (!this.zoomFromImage || !transform) {
             this.outer.addClass(this.s.startClass);
-        } else if (this.s.zoomFromImage && transform) {
+        } else if (this.zoomFromImage && transform) {
             this.outer.addClass('lg-zoom-from-image');
         }
 
@@ -403,7 +409,7 @@ export class LightGallery {
         });
 
         LG(`#${this.getById('lg-inner')}`).append(items);
-        if (!this.s.zoomFromImage || !transform) {
+        if (!this.zoomFromImage || !transform) {
             this.getSlideItem(index).removeClass('lg-complete');
         }
         this.LGel.trigger('onBeforeOpen.lg');
@@ -420,7 +426,7 @@ export class LightGallery {
 
             // Need to check both zoomFromImage and transform values as we need to set set the
             // default opening animation if user missed to add the lg-size attribute
-            if (this.s.zoomFromImage && transform) {
+            if (this.zoomFromImage && transform) {
                 this.getSlideItem(index)
                     .addClass('start-end-progress')
                     .css('transform', transform)
@@ -443,7 +449,7 @@ export class LightGallery {
             }, 10);
 
             // lg-visible class resets gallery opacity to 1
-            if (!this.s.zoomFromImage || !transform) {
+            if (!this.zoomFromImage || !transform) {
                 setTimeout(() => {
                     this.outer.addClass('lg-visible');
                 }, this.s.backdropDuration);
@@ -482,6 +488,7 @@ export class LightGallery {
         if (_hash.indexOf('lg=' + this.s.galleryId) > 0) {
             // This class is used to remove the initial animation if galleryId present in the URL
             LG(document.body).addClass('lg-from-hash');
+            this.zoomFromImage = false;
 
             const index = this.getIndexFromUrl(_hash);
 
@@ -670,7 +677,7 @@ export class LightGallery {
             ? 'alt="' + currentDynamicItem.alt + '"'
             : '';
 
-        if (!this.lGalleryOn && this.s.zoomFromImage && imageSize) {
+        if (!this.lGalleryOn && this.zoomFromImage && imageSize) {
             if (imageSize && $currentItem) {
                 if (!this.s.exThumbImage) {
                     _dummyImgSrc = $currentItem.find('img').first().attr('src');
@@ -833,7 +840,7 @@ export class LightGallery {
         // delay for adding complete class. it is 0 except first time.
         let delay = 0;
         if (firstSlide) {
-            if (this.s.zoomFromImage && imageSize) {
+            if (this.zoomFromImage && imageSize) {
                 delay = this.s.startAnimationDuration + 10;
             } else {
                 delay = this.s.backdropDuration + 10;
@@ -908,7 +915,7 @@ export class LightGallery {
         }
 
         // Only for first slide
-        if (!this.lGalleryOn && this.s.zoomFromImage && imageSize) {
+        if (!this.lGalleryOn && this.zoomFromImage && imageSize) {
             setTimeout(() => {
                 $currentSlide
                     .removeClass('start-end-progress')
@@ -953,7 +960,7 @@ export class LightGallery {
 
         // When gallery is opened once content is loaded (second time) need to add lg-complete class for css styling
         if (
-            (!this.s.zoomFromImage || !imageSize) &&
+            (!this.zoomFromImage || !imageSize) &&
             $currentSlide.hasClass('lg-complete_') &&
             firstSlide
         ) {
@@ -1797,7 +1804,7 @@ export class LightGallery {
             const imageSize = utils.getSize(this.items[this.index]);
             transform = utils.getTransform(this.items[this.index], imageSize);
         }
-        if (this.s.zoomFromImage && transform) {
+        if (this.zoomFromImage && transform) {
             this.outer.addClass('lg-closing lg-zoom-from-image');
             this.getSlideItem(this.index)
                 .addClass('start-end-progress')
@@ -1851,6 +1858,7 @@ export class LightGallery {
         }
 
         this.lGalleryOn = false;
+        this.zoomFromImage = this.s.zoomFromImage;
 
         clearTimeout(this.hideBarTimeout);
         this.hideBarTimeout = false;
@@ -1862,7 +1870,7 @@ export class LightGallery {
         $backdrop.removeClass('in').css('opacity', 0);
 
         const removeTimeout =
-            this.s.zoomFromImage && transform
+            this.zoomFromImage && transform
                 ? this.s.startAnimationDuration
                 : this.s.backdropDuration;
         LG(`#${this.getById('lg-container')}`).removeClass('lg-show-in');
@@ -1872,7 +1880,7 @@ export class LightGallery {
 
         // Once the closign animation is completed and gallery is invisible
         setTimeout(() => {
-            if (this.s.zoomFromImage && transform) {
+            if (this.zoomFromImage && transform) {
                 this.outer.removeClass('lg-zoom-from-image');
             }
             LG(`#${this.getById('lg-container')}`).removeClass('lg-show');
