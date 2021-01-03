@@ -203,15 +203,15 @@ export class Zoom {
         }
     }
 
-    getDragAllowedAxises($image: HTMLImageElement, rotateValue: number) {
+    getDragAllowedAxises($image: lgQuery, rotateValue: number) {
         const $lg = this.core.outer.find('.lg').get();
-        const scale =
-            parseFloat($image.getAttribute('data-scale') as string) || 1;
+        const scale = parseFloat($image.attr('data-scale') as string) || 1;
+        const imgEl = $image.get() as HTMLImageElement;
         const allowY =
-            this.getImageSize($image, rotateValue, 'y') * scale >
+            this.getImageSize(imgEl, rotateValue, 'y') * scale >
             $lg.clientHeight;
         const allowX =
-            this.getImageSize($image, rotateValue, 'x') * scale >
+            this.getImageSize(imgEl, rotateValue, 'x') * scale >
             $lg.clientWidth;
         if (rotateValue === 90) {
             return {
@@ -915,7 +915,7 @@ export class Zoom {
                 rotateValue = this.getCurrentRotation(rotateEl);
 
                 const dragAllowedAxises = this.getDragAllowedAxises(
-                    $image.get() as HTMLImageElement,
+                    $image,
                     Math.abs(rotateValue),
                 );
 
@@ -1055,7 +1055,7 @@ export class Zoom {
                 rotateValue = this.getCurrentRotation(rotateEl);
 
                 const dragAllowedAxises = this.getDragAllowedAxises(
-                    $image.get() as HTMLImageElement,
+                    $image,
                     Math.abs(rotateValue),
                 );
 
