@@ -145,7 +145,7 @@ export const defaults: Defaults = {
     width: '100%',
     addClass: '',
     startClass: 'lg-start-zoom',
-    backdropDuration: 350,
+    backdropDuration: 150,
 
     // Zoom from image animation duration
     startAnimationDuration: 350,
