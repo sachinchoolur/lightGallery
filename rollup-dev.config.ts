@@ -12,9 +12,13 @@ import pkg from './package.json';
 import path from 'path';
 import pluginConfigs from './plugins-config-rollup.json';
 
+// Usage - LG_PLUGINS=['thumbnails','pager'] npm start
 const libraryName = 'lightgallery';
-
-const umdConfigs = pluginConfigs.map((config) => {
+const lgPluginsNames = process.argv[5] || [];
+const pluginsToCompile = pluginConfigs.filter(
+    (config) => lgPluginsNames.indexOf(config.name) !== -1,
+);
+const umdConfigs = pluginsToCompile.map((config) => {
     return {
         input: `${config.src}${config.fileName}.ts`,
         output: [
