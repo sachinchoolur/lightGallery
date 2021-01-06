@@ -108,6 +108,16 @@ export class lgQuery {
         }
     }
 
+    private isEventMatched(event: string, eventName: string): boolean {
+        const eventNamespace = eventName.split('.');
+        return event
+            .split('.')
+            .filter((e) => e)
+            .every((e) => {
+                return eventNamespace.indexOf(e) !== -1;
+            });
+    }
+
     attr(attr: string): string;
     attr(attr: string, value: string | number | boolean): this;
     attr(attr: string, value?: string | number | boolean): string | this {
@@ -240,13 +250,21 @@ export class lgQuery {
         return this;
     }
     off(event: string): this {
-        if (!this.selector || !Array.isArray(lgQuery.eventListeners[event])) {
+        if (!this.selector) {
             return this;
         }
-        lgQuery.eventListeners[event].forEach((listener) => {
-            this.selector.removeEventListener(event.split('.')[0], listener);
+        Object.keys(lgQuery.eventListeners).forEach((eventName) => {
+            if (this.isEventMatched(event, eventName)) {
+                lgQuery.eventListeners[eventName].forEach((listener) => {
+                    this.selector.removeEventListener(
+                        eventName.split('.')[0],
+                        listener,
+                    );
+                });
+                lgQuery.eventListeners[eventName] = [];
+            }
         });
-        lgQuery.eventListeners[event] = [];
+
         return this;
     }
     trigger(event: string, detail?: any): this {
