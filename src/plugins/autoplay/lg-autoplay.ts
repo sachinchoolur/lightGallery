@@ -10,8 +10,8 @@ export class Autoplay {
     s: AutoplaySettings;
     interval!: any;
     fromAuto!: boolean;
-    canceledOnTouch!: boolean;
-    fourceAutoplayTemp!: boolean;
+    pausedOnTouchDrag!: boolean;
+    pausedOnSlideChange!: boolean;
 
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
@@ -29,10 +29,9 @@ export class Autoplay {
         this.fromAuto = true;
 
         // Identify if autoplay canceled from touch/drag
-        this.canceledOnTouch = false;
+        this.pausedOnTouchDrag = false;
 
-        // save fourceautoplay value
-        this.fourceAutoplayTemp = this.s.fourceAutoplay;
+        this.pausedOnSlideChange = false;
 
         // do not allow progress bar if browser does not support css3 transitions
         if (!this.core.doCss()) {
@@ -59,64 +58,80 @@ export class Autoplay {
                 );
         }
 
-        // set progress
-        this.progress();
-
         // Start autoplay
         if (this.s.autoplay) {
-            this.core.LGel.once('onSlideItemLoad.lg.tm', () => {
+            this.core.LGel.once('onSlideItemLoad.lg.autoplay', () => {
                 this.startAuto();
             });
         }
 
         // cancel interval on touchstart and dragstart
-        this.core.LGel.on('onDragstart.lg.tm touchstart.lg.tm', () => {
-            if (this.interval) {
-                this.cancelAuto();
-                this.canceledOnTouch = true;
-            }
-        });
-
-        // restore autoplay if autoplay canceled from touchstart / dragstart
         this.core.LGel.on(
-            'onDragend.lg.tm touchend.lg.tm onSlideClick.lg.tm',
+            'onDragstart.lg.autoplay touchstart.lg.autoplay',
             () => {
-                if (!this.interval && this.canceledOnTouch) {
-                    this.startAuto();
-                    this.canceledOnTouch = false;
+                if (this.interval) {
+                    this.cancelAuto();
+                    this.pausedOnTouchDrag = true;
                 }
             },
         );
-    }
 
-    progress() {
-        this.core.LGel.on('onBeforeSlide.lg.tm', () => {
-            // start progress bar animation
-            if (this.s.progressBar && this.fromAuto) {
-                const _$progressBar = this.core.outer.find('.lg-progress-bar');
-                const _$progress = this.core.outer.find('.lg-progress');
-                if (this.interval) {
-                    _$progress.removeAttr('style');
-                    _$progressBar.removeClass('lg-start');
-                    setTimeout(() => {
-                        _$progress.css(
-                            'transition',
-                            'width ' +
-                                (this.core.s.speed + this.s.pause) +
-                                'ms ease 0s',
-                        );
-                        _$progressBar.addClass('lg-start');
-                    }, 20);
+        // restore autoplay if autoplay canceled from touchstart / dragstart
+        this.core.LGel.on(
+            'onDragend.lg.autoplay touchend.lg.autoplay onSlideClick.lg.autoplay',
+            () => {
+                if (!this.interval && this.pausedOnTouchDrag) {
+                    this.startAuto();
+                    this.pausedOnTouchDrag = false;
                 }
-            }
+            },
+        );
 
-            // Remove setinterval if slide is triggered manually and fourceautoplay is false
-            if (!this.fromAuto && !this.s.fourceAutoplay) {
+        this.core.LGel.on('onBeforeSlide.lg.autoplay', () => {
+            this.showProgressBar();
+            if (!this.fromAuto && this.interval) {
                 this.cancelAuto();
+                this.pausedOnSlideChange = true;
+            } else {
+                this.pausedOnSlideChange = false;
             }
-
             this.fromAuto = false;
         });
+
+        // restore autoplay if autoplay canceled from touchstart / dragstart
+        this.core.LGel.on('onAfterSlide.lg.autoplay', () => {
+            if (
+                this.pausedOnSlideChange &&
+                !this.interval &&
+                this.s.forceAutoplay
+            ) {
+                this.startAuto();
+                this.pausedOnSlideChange = false;
+            }
+        });
+
+        // set progress
+        this.showProgressBar();
+    }
+
+    showProgressBar() {
+        if (this.s.progressBar && this.fromAuto) {
+            const _$progressBar = this.core.outer.find('.lg-progress-bar');
+            const _$progress = this.core.outer.find('.lg-progress');
+            if (this.interval) {
+                _$progress.removeAttr('style');
+                _$progressBar.removeClass('lg-start');
+                setTimeout(() => {
+                    _$progress.css(
+                        'transition',
+                        'width ' +
+                            (this.core.s.speed + this.s.pause) +
+                            'ms ease 0s',
+                    );
+                    _$progressBar.addClass('lg-start');
+                }, 20);
+            }
+        }
     }
 
     // Manage autoplay via play/stop buttons
@@ -130,14 +145,12 @@ export class Autoplay {
         this.core.outer
             .find('.lg-autoplay-button')
             .first()
-            .on('click.lg', () => {
+            .on('click.lg.autoplay', () => {
                 if (this.core.outer.hasClass('lg-show-autoplay')) {
                     this.cancelAuto();
-                    this.s.fourceAutoplay = false;
                 } else {
                     if (!this.interval) {
                         this.startAuto();
-                        this.s.fourceAutoplay = this.fourceAutoplayTemp;
                     }
                 }
             });
@@ -168,17 +181,21 @@ export class Autoplay {
 
     // cancel Autostart
     cancelAuto() {
+        if (this.interval) {
+            this.core.outer.find('.lg-progress').removeAttr('style');
+            this.core.outer.removeClass('lg-show-autoplay');
+            this.core.outer.find('.lg-progress-bar').removeClass('lg-start');
+        }
         clearInterval(this.interval);
         this.interval = false;
-        this.core.outer.find('.lg-progress').removeAttr('style');
-        this.core.outer.removeClass('lg-show-autoplay');
-        this.core.outer.find('.lg-progress-bar').removeClass('lg-start');
     }
 
     destroy(clear?: boolean): void {
         this.cancelAuto();
         if (clear) {
             this.core.outer.find('.lg-progress-bar').remove();
+            // Remove all event listeners added by autoplay plugin
+            this.core.LGel.off('.lg.autoplay');
         }
     }
 }
