@@ -63,22 +63,20 @@ export class Video {
          * Append video HTML
          * Play if autoplayFirstVideo is true
          */
-        this.core.LGel.on('hasVideo.lg.tm', this.onHasVideo.bind(this));
+        this.core.LGel.on('hasVideo.lg.video', this.onHasVideo.bind(this));
 
         // Set max width for video
         this.core.LGel.on(
-            'onAferAppendSlide.lg.tm',
+            'onAferAppendSlide.lg.video',
             this.onAferAppendSlide.bind(this),
         );
 
-        console.log('calling video');
         if (
             this.core.doCss() &&
             this.core.galleryItems.length > 1 &&
             (this.core.s.enableSwipe || this.core.s.enableDrag)
         ) {
-            this.core.LGel.on('onSlideClick.lg.tm', () => {
-                console.log('calling');
+            this.core.LGel.on('onSlideClick.lg.video', () => {
                 const $el = this.core.getSlideItem(this.core.index);
                 this.loadVideoOnPosterClick($el);
             });
@@ -94,10 +92,16 @@ export class Video {
         }
 
         // @desc fired immediately before each slide transition.
-        this.core.LGel.on('onBeforeSlide.lg.tm', this.onBeforeSlide.bind(this));
+        this.core.LGel.on(
+            'onBeforeSlide.lg.video',
+            this.onBeforeSlide.bind(this),
+        );
 
         // @desc fired immediately after each slide transition.
-        this.core.LGel.on('onAfterSlide.lg.tm', this.onAfterSlide.bind(this));
+        this.core.LGel.on(
+            'onAfterSlide.lg.video',
+            this.onAfterSlide.bind(this),
+        );
     }
 
     /**
@@ -493,6 +497,11 @@ export class Video {
 
                 $el.addClass('lg-video-playing');
             }
+        }
+    }
+    destroy(clear?: boolean): void {
+        if (clear) {
+            this.core.LGel.off('.lg.video');
         }
     }
 }

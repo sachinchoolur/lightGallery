@@ -117,22 +117,25 @@ export class Thumbnail {
             }, 50);
         });
 
-        LG(this.core.el).on('onBeforeSlide.lg-tm', (e) => {
+        this.core.LGel.on('onBeforeSlide.lg.thumb', (e) => {
             console.log(e, e.detail);
             this.animateThumb(this.core.index);
         });
 
-        this.core.LGel.on('appendSlides.lg-tm', (e) => {
+        this.core.LGel.on('appendSlides.lg.thumb', (e) => {
             this.addNewThumbnails(e.detail.items);
         });
 
-        LG(window).on('resize.lg.thumb orientationchange.lg.thumb', () => {
-            if (!this.core.lgOpened) return;
-            setTimeout(() => {
-                this.animateThumb(this.core.index);
-                this.thumbOuterWidth = window.innerWidth;
-            }, 200);
-        });
+        LG(window).on(
+            `resize.lg.thumb.global${this.core.lgId} orientationchange.lg.thumb.global${this.core.lgId}`,
+            () => {
+                if (!this.core.lgOpened) return;
+                setTimeout(() => {
+                    this.animateThumb(this.core.index);
+                    this.thumbOuterWidth = window.innerWidth;
+                }, 200);
+            },
+        );
     }
 
     setThumbMarkup(): void {
@@ -205,7 +208,8 @@ export class Thumbnail {
                 }
             });
 
-        LG(window).on('mousemove.lg.thumb', (e) => {
+        LG(window).on(`mousemove.lg.thumb.global${this.core.lgId}`, (e) => {
+            if (!this.core.lgOpened) return;
             if (isDragging) {
                 thumbDragUtils.cords.endX = e.pageX;
 
@@ -213,7 +217,8 @@ export class Thumbnail {
             }
         });
 
-        LG(window).on('mouseup.lg.thumb', () => {
+        LG(window).on(`mouseup.lg.thumb.global${this.core.lgId}`, () => {
+            if (!this.core.lgOpened) return;
             if (thumbDragUtils.isMoved) {
                 thumbDragUtils = this.onThumbTouchEnd(thumbDragUtils);
             } else {
@@ -543,7 +548,7 @@ export class Thumbnail {
 
         // manage active class for thumbnail
         $thumb.eq(this.core.index).addClass('active');
-        this.core.LGel.on('onBeforeSlide.lg.tm', () => {
+        this.core.LGel.on('onBeforeSlide.lg.thumb', () => {
             $thumb.removeClass('active');
             $thumb.eq(this.core.index).addClass('active');
         });
@@ -566,7 +571,7 @@ export class Thumbnail {
     }
 
     thumbKeyPress(): void {
-        LG(window).on('keydown.lg.thumb', (e) => {
+        LG(window).on(`keydown.lg.thumb.global${this.core.lgId}`, (e) => {
             if (!this.core.lgOpened) return;
 
             if (e.keyCode === 38) {
@@ -581,7 +586,8 @@ export class Thumbnail {
 
     destroy(clear?: boolean): void {
         if (clear && this.s.thumbnail && this.core.galleryItems.length > 1) {
-            LG(window).off('lg.thumb');
+            LG(window).off(`.lg.thumb.global${this.core.lgId}`);
+            this.core.LGel.off('.lg.thumb');
             this.$thumbOuter.remove();
             this.core.outer.removeClass('lg-has-thumb');
         }

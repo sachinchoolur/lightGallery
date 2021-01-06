@@ -32,11 +32,14 @@ export class Hash {
 
     init() {
         // Change hash value on after each slide transition
-        this.core.LGel.on('onAfterSlide.lg', this.onAfterSlide.bind(this));
-        this.core.LGel.on('onCloseAfter.lg', this.onCloseAfter.bind(this));
+        this.core.LGel.on('onAfterSlide.lg.hash', this.onAfterSlide.bind(this));
+        this.core.LGel.on('onCloseAfter.lg.hash', this.onCloseAfter.bind(this));
 
         // Listen hash change and change the slide according to slide value
-        LG(window).on('hashchange.lg.hash', this.onHashchange.bind(this));
+        LG(window).on(
+            `hashchange.lg.hash.global${this.core.lgId}`,
+            this.onHashchange.bind(this),
+        );
     }
 
     onAfterSlide(event: CustomEvent) {
@@ -104,6 +107,7 @@ export class Hash {
         }
         if (clear) {
             this.core.LGel.off('.lg.hash');
+            LG(window).off(`hashchange.lg.hash.global${this.core.lgId}`);
         }
     }
 }

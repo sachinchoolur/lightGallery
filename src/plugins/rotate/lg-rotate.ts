@@ -65,7 +65,7 @@ export class Rotate {
         this.rotateValuesList = {};
 
         // event triggered after appending slide content
-        this.core.LGel.on('onAferAppendSlide.lgtmrotate', () => {
+        this.core.LGel.on('onAferAppendSlide.lg.rotate', () => {
             const imageWrap = this.core
                 .getSlideItem(this.core.index)
                 .find('.lg-img-wrap')
@@ -95,7 +95,7 @@ export class Rotate {
             .on('click.lg', this.flipVertical.bind(this));
 
         // Reset rotate on slide change
-        this.core.LGel.on('onBeforeSlide.lgtmrotate', (event) => {
+        this.core.LGel.on('onBeforeSlide.lg.rotate', (event) => {
             if (!this.rotateValuesList[event.detail.index]) {
                 this.rotateValuesList[event.detail.index] = {
                     rotate: 0,
@@ -195,7 +195,7 @@ export class Rotate {
 
         if (clear) {
             // Unbind all events added by lightGallery rotate plugin
-            this.core.LGel.off('.lgtmrotate');
+            this.core.LGel.off('.lg.rotate');
         }
     }
 }

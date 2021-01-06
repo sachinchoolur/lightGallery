@@ -29,7 +29,10 @@ export class Share {
             .find('.lg-share .lg-dropdown')
             .append(this.getShareListHtml());
 
-        this.core.LGel.on('onAfterSlide.lg.tm', this.onAfterSlide.bind(this));
+        this.core.LGel.on(
+            'onAfterSlide.lg.share',
+            this.onAfterSlide.bind(this),
+        );
     }
 
     getShareListHtml() {
@@ -70,6 +73,7 @@ export class Share {
         if (clear) {
             this.core.outer.find('.lg-dropdown-overlay').remove();
             this.core.outer.find('.lg-share').remove();
+            this.core.LGel.off('.lg.share');
         }
     }
 }

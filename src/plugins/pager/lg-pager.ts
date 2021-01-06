@@ -72,12 +72,12 @@ export class Pager {
             });
         });
 
-        this.core.LGel.on('onBeforeSlide.lg.tm', (event) => {
+        this.core.LGel.on('onBeforeSlide.lg.pager', (event) => {
             const { index } = event.detail;
             this.manageActiveClass.call(this, index);
         });
 
-        this.core.LGel.on('appendSlides.lg.tm', (event) => {
+        this.core.LGel.on('appendSlides.lg.pager', (event) => {
             const { items } = event.detail;
             this.addNewPagers.call(this, items);
         });
@@ -97,6 +97,7 @@ export class Pager {
     destroy(clear?: boolean): void {
         if (clear) {
             this.core.outer.find('.lg-pager-outer').remove();
+            this.core.LGel.off('.lg.pager');
         }
     }
 }

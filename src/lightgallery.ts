@@ -138,6 +138,23 @@ export class LightGallery {
             openGalleryAfter = this.buildStructure();
         }
 
+        if (this.s.keyPress) {
+            this.keyPress();
+        }
+
+        setTimeout(() => {
+            this.enableDrag();
+            this.enableSwipe();
+        }, 50);
+
+        if (this.galleryItems.length > 1) {
+            this.arrow();
+
+            if (this.s.mousewheel) {
+                this.mousewheel();
+            }
+        }
+
         if (this.s.dynamic) {
             const index = this.s.index || 0;
 
@@ -319,15 +336,18 @@ export class LightGallery {
 
         this.counter();
 
-        LG(window).on('resize.lg orientationchange.lg', () => {
-            if (this.zoomFromImage && !this.s.dynamic) {
-                const imgStyle = this.getDummyImgStyles();
-                this.outer
-                    .find('.lg-current .lg-dummy-img')
-                    .first()
-                    .attr('style', imgStyle);
-            }
-        });
+        LG(window).on(
+            `resize.lg.global${this.lgId} orientationchange.lg.global${this.lgId}`,
+            () => {
+                if (this.zoomFromImage && !this.s.dynamic && this.lgOpened) {
+                    const imgStyle = this.getDummyImgStyles();
+                    this.outer
+                        .find('.lg-current .lg-dummy-img')
+                        .first()
+                        .attr('style', imgStyle);
+                }
+            },
+        );
 
         this.hideBars();
 
@@ -459,23 +479,6 @@ export class LightGallery {
             this.slide(index, false, false, false);
 
             this.LGel.trigger('onAfterOpen.lg');
-
-            if (this.s.keyPress) {
-                this.keyPress();
-            }
-
-            setTimeout(() => {
-                this.enableDrag();
-                this.enableSwipe();
-            }, 50);
-
-            if (this.galleryItems.length > 1) {
-                this.arrow();
-
-                if (this.s.mousewheel) {
-                    this.mousewheel();
-                }
-            }
         });
 
         LG(document.body).addClass('lg-on');
@@ -1502,8 +1505,8 @@ export class LightGallery {
                 }
             });
 
-            LG(window).on('mousemove.lg', (e) => {
-                if (isDraging) {
+            LG(window).on(`mousemove.lg.global${this.lgId}`, (e) => {
+                if (isDraging && this.lgOpened) {
                     isMoved = true;
                     endCoords = {
                         pageX: e.pageX,
@@ -1514,7 +1517,10 @@ export class LightGallery {
                 }
             });
 
-            LG(window).on('mouseup.lg', (e) => {
+            LG(window).on(`mouseup.lg.global${this.lgId}`, (e) => {
+                if (!this.lgOpened) {
+                    return;
+                }
                 const target = LG(e.target);
                 if (isMoved) {
                     isMoved = false;
@@ -1627,8 +1633,8 @@ export class LightGallery {
 
     keyPress(): void {
         if (this.galleryItems.length > 1) {
-            LG(window).on('keyup.lg.window', (e) => {
-                if (this.galleryItems.length > 1) {
+            LG(window).on(`keyup.lg.global${this.lgId}`, (e) => {
+                if (this.lgOpened && this.galleryItems.length > 1) {
                     if (e.keyCode === 37) {
                         e.preventDefault();
                         this.goToPrevSlide();
@@ -1642,8 +1648,8 @@ export class LightGallery {
             });
         }
 
-        LG(window).on('keydown.lg', (e) => {
-            if (this.s.escKey === true && e.keyCode === 27) {
+        LG(window).on(`keydown.lg.global${this.lgId}`, (e) => {
+            if (this.lgOpened && this.s.escKey === true && e.keyCode === 27) {
                 e.preventDefault();
                 if (!this.outer.hasClass('lg-thumb-open')) {
                     this.destroy();
@@ -1849,12 +1855,11 @@ export class LightGallery {
                     const element = this.items[index];
 
                     // Using different namespace for click because click event should not unbind if selector is same object('this')
-                    LG(element).off(
-                        `click.lg-item-${index} click.lgcustom-item-${index}`,
-                    );
+                    LG(element).off(`click.lgcustom-item-${index}`);
                 }
             }
-            LG(window).off('lg');
+            LG(window).off(`.lg.global${this.lgId}`);
+            this.LGel.off('.lg');
         }
 
         this.lGalleryOn = false;
@@ -1877,9 +1882,6 @@ export class LightGallery {
                   )
                 : this.s.backdropDuration;
         LG(`#${this.getById('lg-container')}`).removeClass('lg-show-in');
-
-        LG(window).off('keyup.lg.window');
-        LG(window).off('keydown.lg');
 
         // Once the closign animation is completed and gallery is invisible
         setTimeout(() => {

@@ -110,7 +110,7 @@ export class Zoom {
     enableZoomOnSlideItemLoad(): void {
         // Add zoomable class
         this.core.LGel.on(
-            'onSlideItemLoad.lg.tm.zoom',
+            'onSlideItemLoad.lg.zoom',
             this.enableZoom.bind(this),
         );
     }
@@ -469,14 +469,14 @@ export class Zoom {
 
         let tapped: ReturnType<typeof setTimeout> | null = null;
 
-        this.core.outer.on('dblclick', (event) => {
+        this.core.outer.on('dblclick.lg', (event) => {
             if (!LG(event.target).hasClass('lg-image')) {
                 return;
             }
             this.setActualSize(this.core.index, event);
         });
 
-        this.core.outer.on('touchstart', (event) => {
+        this.core.outer.on('touchstart.lg', (event) => {
             const $target = LG(event.target);
             if (
                 event.targetTouches.length === 1 &&
@@ -497,11 +497,15 @@ export class Zoom {
         });
 
         // Update zoom on resize and orientationchange
-        LG(window).on('resize.lg.zoom orientationchange.lg.zoom', () => {
-            if (!this.core.lgOpened) return;
-            this.setPageCords();
-            this.zoomImage(this.scale);
-        });
+        LG(window).on(
+            `resize.lg.zoom.global${this.core.lgId} orientationchange.lg.zoom.global${this.core.lgId}`,
+            () => {
+                console.log('calling');
+                if (!this.core.lgOpened) return;
+                this.setPageCords();
+                this.zoomImage(this.scale);
+            },
+        );
 
         LG(`#${this.core.getById('lg-zoom-out')}`).on('click.lg', () => {
             if (this.core.outer.find('.lg-current .lg-image').first()) {
@@ -521,12 +525,12 @@ export class Zoom {
             this.setActualSize(this.core.index);
         });
 
-        this.core.LGel.on('onBeforeOpen.lg.tm', () => {
+        this.core.LGel.on('onBeforeOpen.lg.zoom', () => {
             this.core.outer.find('.lg-item').first().removeClass('lg-zoomable');
         });
 
         // Reset zoom on slide change
-        this.core.LGel.on('onBeforeSlide.lg', () => {
+        this.core.LGel.on('onBeforeSlide.lg.zoom', () => {
             this.scale = 1;
             this.resetZoom();
         });
@@ -1067,7 +1071,6 @@ export class Zoom {
                         LG(e.target).hasClass('lg-object') &&
                         (allowX || allowY)
                     ) {
-                        console.log(allowX, allowY);
                         e.preventDefault();
                         startCoords = this.getDragCords(
                             e,
@@ -1099,7 +1102,7 @@ export class Zoom {
             }
         });
 
-        LG(window).on('mousemove.lg.zoom', (e) => {
+        LG(window).on(`mousemove.lg.zoom.global${this.core.lgId}`, (e) => {
             if (isDragging) {
                 isMoved = true;
                 endCoords = this.getDragCords(e, Math.abs(rotateValue));
@@ -1120,7 +1123,7 @@ export class Zoom {
             }
         });
 
-        LG(window).on('mouseup.lg.zoom', (e) => {
+        LG(window).on(`mouseup.lg.zoom.global${this.core.lgId}`, (e) => {
             if (isDragging) {
                 endTime = new Date();
                 isDragging = false;
@@ -1157,9 +1160,8 @@ export class Zoom {
         this.resetZoom();
         if (clear) {
             // Unbind all events added by lightGallery zoom plugin
+            LG(window).off(`.lg.zoom.global${this.core.lgId}`);
             this.core.LGel.off('.lg.zoom');
-            LG(window).off('.lg.zoom');
-            this.core.LGel.off('.lg.tm.zoom');
             clearTimeout(this.zoomableTimeout);
             this.zoomableTimeout = false;
         }

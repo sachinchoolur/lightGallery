@@ -86,7 +86,10 @@ export class FullScreen {
     // https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode
     fullScreen(): void {
         LG(document).on(
-            'fullscreenchange.lg webkitfullscreenchange.lg mozfullscreenchange.lg MSFullscreenChange.lg',
+            `fullscreenchange.lg.global${this.core.lgId} 
+            webkitfullscreenchange.lg.global${this.core.lgId} 
+            mozfullscreenchange.lg.global${this.core.lgId} 
+            MSFullscreenChange.lg.global${this.core.lgId}`,
             () => {
                 if (!this.core.lgOpened) return;
                 this.core.outer.toggleClass('lg-fullscreen-on');
@@ -112,7 +115,10 @@ export class FullScreen {
         }
         if (clear) {
             LG(document).off(
-                'fullscreenchange.lg webkitfullscreenchange.lg mozfullscreenchange.lg MSFullscreenChange.lg',
+                `fullscreenchange.lg.global${this.core.lgId} 
+                webkitfullscreenchange.lg.global${this.core.lgId} 
+                mozfullscreenchange.lg.global${this.core.lgId} 
+                MSFullscreenChange.lg.global${this.core.lgId}`,
             );
         }
     }
