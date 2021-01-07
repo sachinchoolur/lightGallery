@@ -255,8 +255,11 @@ export class LightGallery {
             ? 'aria-describedby="' + this.s.ariaDescribedby + '"'
             : '';
 
+        const containerClassName = `lg-container ${
+            document.body !== this.s.container ? 'lg-inline' : ''
+        }`;
         const template = `
-        <div class="lg-container" id="${this.getById(
+        <div class="${containerClassName}" id="${this.getById(
             'lg-container',
         )}" tabindex="-1" aria-modal="true" ${ariaLabelledby} ${ariaDescribedby} role="dialog"
         >
@@ -285,7 +288,7 @@ export class LightGallery {
         </div>
         `;
 
-        LG(document.body).append(template);
+        LG(this.s.container).css('position', 'relative').append(template);
         this.outer = LG(`#${this.getById('lg-outer')}`);
         this.outer.get().focus();
 

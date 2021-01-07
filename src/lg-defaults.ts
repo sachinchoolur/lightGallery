@@ -46,6 +46,8 @@ export interface Defaults {
     startClass: string;
     backdropDuration: number;
 
+    container: HTMLElement;
+
     // Zoom from image animation duration
     startAnimationDuration: number;
 
@@ -75,6 +77,7 @@ export interface Defaults {
     ariaDescribedby: string;
 
     closable: boolean;
+    closeOnTap: boolean;
     loop: boolean;
     escKey: boolean;
     keyPress: boolean;
@@ -147,6 +150,8 @@ export const defaults: Defaults = {
     startClass: 'lg-start-zoom',
     backdropDuration: 150,
 
+    container: document.body,
+
     // Zoom from image animation duration
     startAnimationDuration: 350,
 
@@ -176,6 +181,7 @@ export const defaults: Defaults = {
     ariaDescribedby: '',
 
     closable: true,
+    closeOnTap: true,
     loop: true,
     escKey: true,
     keyPress: true,

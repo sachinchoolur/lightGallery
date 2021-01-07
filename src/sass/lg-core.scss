@@ -390,3 +390,12 @@
         }
     }
 }
+
+// Inline Gallery
+
+.lg-inline {
+    .lg-backdrop,
+    .lg-outer {
+        position: absolute;
+    }
+}
