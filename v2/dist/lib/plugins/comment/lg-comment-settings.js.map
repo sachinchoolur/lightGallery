@@ -1,0 +1,1 @@
+{"version":3,"file":"lg-comment-settings.js","sourceRoot":"","sources":["../../../../src/plugins/comment/lg-comment-settings.ts"],"names":[],"mappings":";;;AAWa,QAAA,eAAe,GAAoB;IAC5C,UAAU,EAAE,IAAI;IAChB,UAAU,EAAE,KAAK;IACjB,cAAc,EAAE,IAAI;IACpB,YAAY,EAAE;QACV,KAAK,EAAE,SAAS;QAChB,QAAQ,EAAE,IAAI;KACjB;IACD,gBAAgB,EACZ,qPAAqP;CAC5P,CAAC"}
