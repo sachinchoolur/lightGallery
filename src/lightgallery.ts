@@ -1380,7 +1380,7 @@ export class LightGallery {
                 }
             } else if (this.swipeDirection === 'vertical') {
                 distance = Math.abs(endCoords.pageY - startCoords.pageY);
-                if (distance > 100) {
+                if (this.s.closable && distance > 100) {
                     this.destroy();
                     return;
                 } else {
@@ -1760,12 +1760,13 @@ export class LightGallery {
     }
 
     closeGallery(): void {
+        if (!this.s.closable) return;
         let mousedown = false;
         LG(`#${this.getById('lg-close')}`).on('click.lg', () => {
             this.destroy();
         });
 
-        if (this.s.closable) {
+        if (this.s.closeOnTap) {
             // If you drag the slide and release outside gallery gets close on chrome
             // for preventing this check mousedown and mouseup happened on .lg-item or lg-outer
             this.outer.on('mousedown.lg', (e) => {
@@ -1800,8 +1801,11 @@ export class LightGallery {
         }
     }
 
-    destroy(d?: boolean): void {
-        if (!d) {
+    destroy(clear?: boolean): void {
+        if (!clear && !this.s.closable) {
+            return;
+        }
+        if (!clear) {
             this.LGel.trigger('onBeforeClose.lg');
             LG(window).scrollTop(this.prevScrollTop);
         }
@@ -1842,7 +1846,7 @@ export class LightGallery {
         for (const key in this.modules) {
             if (this.modules[key]) {
                 try {
-                    this.modules[key].destroy(d);
+                    this.modules[key].destroy(clear);
                 } catch (err) {
                     console.warn(
                         `lightGallery:- make sure lightGallery ${key} module is properly destroyed`,
@@ -1851,7 +1855,7 @@ export class LightGallery {
             }
         }
 
-        if (d) {
+        if (clear) {
             if (!this.s.dynamic) {
                 // only when not using dynamic mode is $items a jquery collection
                 for (let index = 0; index < this.items.length; index++) {
@@ -1899,14 +1903,14 @@ export class LightGallery {
             this.getSlideItem(this.index).removeClass('start-end-progress');
             LG(`#${this.getById('lg-inner')}`).empty();
 
-            if (d) {
+            if (clear) {
                 if (this.outer) {
                     this.outer.remove();
                 }
 
                 $backdrop.remove();
             }
-            if (!d) {
+            if (!clear) {
                 this.LGel.trigger('onCloseAfter.lg');
             }
             this.LGel.get().focus();
