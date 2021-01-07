@@ -61,12 +61,6 @@ export class Thumbnail {
         this.setAnimateThumbStyles();
 
         if (this.s.thumbnail && this.core.galleryItems.length > 1) {
-            if (this.s.showThumbByDefault) {
-                setTimeout(() => {
-                    this.core.outer.addClass('lg-thumb-open');
-                }, 700);
-            }
-
             if (this.s.pullCaptionUp) {
                 this.core.outer.addClass('lg-pull-caption-up');
             }
@@ -120,6 +114,19 @@ export class Thumbnail {
         this.core.LGel.on('onBeforeSlide.lg.thumb', (e) => {
             console.log(e, e.detail);
             this.animateThumb(this.core.index);
+        });
+        this.core.LGel.on('onAfterOpen.lg.thumb', (e) => {
+            if (this.s.showThumbByDefault) {
+                const timeout = this.core.s.zoomFromImage
+                    ? this.core.s.startAnimationDuration
+                    : this.core.s.backdropDuration;
+                setTimeout(() => {
+                    this.core.outer.addClass('lg-thumb-open');
+                }, timeout + 200);
+            }
+        });
+        this.core.LGel.on('onBeforeClose.lg.thumb', (e) => {
+            this.core.outer.removeClass('lg-thumb-open');
         });
 
         this.core.LGel.on('appendSlides.lg.thumb', (e) => {
