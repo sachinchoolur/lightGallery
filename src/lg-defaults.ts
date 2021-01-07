@@ -188,7 +188,7 @@ export const defaults: Defaults = {
     controls: true,
     slideEndAnimatoin: true,
     hideControlOnEnd: false,
-    mousewheel: true,
+    mousewheel: false,
 
     getCaptionFromTitleOrAlt: true,
 
