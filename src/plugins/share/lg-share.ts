@@ -15,7 +15,7 @@ export class Share {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, shareSettings);
+        this.s = Object.assign({}, shareSettings, this.core.s);
 
         this.init();
 

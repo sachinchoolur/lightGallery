@@ -28,7 +28,7 @@ export class Rotate {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, rotateSettings);
+        this.s = Object.assign({}, rotateSettings, this.core.s);
 
         if (this.s.rotate && this.core.doCss()) {
             this.init();

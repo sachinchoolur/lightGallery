@@ -51,7 +51,7 @@ export class Video {
     private s: VideoDefaults;
     constructor(instance: LightGallery) {
         this.core = instance;
-        this.s = Object.assign({}, videoDefaults);
+        this.s = Object.assign({}, videoDefaults, this.core.s);
 
         this.init();
 

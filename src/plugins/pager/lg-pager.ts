@@ -21,7 +21,7 @@ export class Pager {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, defaults);
+        this.s = Object.assign({}, defaults, this.core.s);
 
         if (this.s.pager && this.core.galleryItems.length > 1) {
             this.init();

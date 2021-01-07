@@ -35,7 +35,7 @@ export class Zoom {
     constructor(instance: LightGallery) {
         this.core = instance;
 
-        this.s = Object.assign({}, zoomDefaults);
+        this.s = Object.assign({}, zoomDefaults, this.core.s);
 
         if (this.s.zoom && this.core.doCss()) {
             this.init();

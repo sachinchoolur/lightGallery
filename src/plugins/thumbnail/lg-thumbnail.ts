@@ -40,7 +40,7 @@ export class Thumbnail {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, thumbnailsDefaults);
+        this.s = Object.assign({}, thumbnailsDefaults, this.core.s);
 
         this.init();
 

@@ -17,7 +17,7 @@ export class Autoplay {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, autoplaySettings);
+        this.s = Object.assign({}, autoplaySettings, this.core.s);
 
         // Execute only if items are above 1
         if (this.core.items.length < 2) {

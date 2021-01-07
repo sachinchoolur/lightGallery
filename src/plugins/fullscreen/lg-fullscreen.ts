@@ -22,7 +22,7 @@ export class FullScreen {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, defaults);
+        this.s = Object.assign({}, defaults, this.core.s);
 
         this.init();
 
