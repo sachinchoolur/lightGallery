@@ -88,6 +88,14 @@ export class LightGallery {
 
         // lightGallery settings
         this.s = Object.assign({}, defaults, options);
+        if (this.s.isMobile()) {
+            const mobileSettings = Object.assign(
+                {},
+                this.s.mobileSettings,
+                options.mobileSettings,
+            );
+            this.s = Object.assign(this.s, mobileSettings);
+        }
 
         // When using dynamic mode, ensure dynamicEl is an array
         if (
