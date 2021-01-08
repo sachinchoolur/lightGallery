@@ -1635,22 +1635,6 @@ export class LightGallery {
     }
 
     keyPress(): void {
-        if (this.galleryItems.length > 1) {
-            LG(window).on(`keyup.lg.global${this.lgId}`, (e) => {
-                if (this.lgOpened && this.galleryItems.length > 1) {
-                    if (e.keyCode === 37) {
-                        e.preventDefault();
-                        this.goToPrevSlide();
-                    }
-
-                    if (e.keyCode === 39) {
-                        e.preventDefault();
-                        this.goToNextSlide();
-                    }
-                }
-            });
-        }
-
         LG(window).on(`keydown.lg.global${this.lgId}`, (e) => {
             if (this.lgOpened && this.s.escKey === true && e.keyCode === 27) {
                 e.preventDefault();
@@ -1658,6 +1642,17 @@ export class LightGallery {
                     this.destroy();
                 } else {
                     this.outer.removeClass('lg-thumb-open');
+                }
+            }
+            if (this.lgOpened && this.galleryItems.length > 1) {
+                if (e.keyCode === 37) {
+                    e.preventDefault();
+                    this.goToPrevSlide();
+                }
+
+                if (e.keyCode === 39) {
+                    e.preventDefault();
+                    this.goToNextSlide();
                 }
             }
         });
