@@ -1326,14 +1326,17 @@ export class LightGallery {
 
             // move next and prev slide with current slide
             const width = $currentSlide.get().offsetWidth;
+            const slideWidthAmount = (width * 15) / 100;
+            const gutter = slideWidthAmount - Math.abs((distanceX * 10) / 100);
             this.setTranslate(
                 this.outer.find('.lg-prev-slide').first(),
-                -width + distanceX,
+                -width + distanceX - gutter,
                 0,
             );
+
             this.setTranslate(
                 this.outer.find('.lg-next-slide').first(),
-                width + distanceX,
+                width + distanceX + gutter,
                 0,
             );
         } else if (this.swipeDirection === 'vertical') {
