@@ -256,6 +256,11 @@ export class LightGallery {
         const containerClassName = `lg-container ${
             document.body !== this.s.container ? 'lg-inline' : ''
         }`;
+        const closeIcon = this.s.showCloseIcon
+            ? `<button type="button" aria-label="Close gallery" id="${this.getById(
+                  'lg-close',
+              )}" class="lg-close lg-icon"></button>`
+            : '';
         const template = `
         <div class="${containerClassName}" id="${this.getById(
             'lg-container',
@@ -275,9 +280,7 @@ export class LightGallery {
                         <div id="${this.getById(
                             'lg-toolbar',
                         )}" class="lg-toolbar lg-group">
-                        <button type="button" aria-label="Close gallery" id="${this.getById(
-                            'lg-close',
-                        )}" class="lg-close lg-icon"></button>
+                        ${closeIcon}
                     </div>
                     ${controls}
                     ${subHtmlCont}
