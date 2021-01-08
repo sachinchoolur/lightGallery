@@ -77,6 +77,7 @@ export interface Defaults {
     ariaDescribedby: string;
 
     closable: boolean;
+    swipeToClose: boolean;
     closeOnTap: boolean;
     loop: boolean;
     escKey: boolean;
@@ -181,6 +182,7 @@ export const defaults: Defaults = {
     ariaDescribedby: '',
 
     closable: true,
+    swipeToClose: true,
     closeOnTap: true,
     loop: true,
     escKey: true,

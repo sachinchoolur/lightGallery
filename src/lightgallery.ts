@@ -1333,15 +1333,17 @@ export class LightGallery {
                 0,
             );
         } else if (this.swipeDirection === 'vertical') {
-            const container = LG(`#${this.getById('lg-container')}`);
-            container.addClass('lg-dragging-vertical');
+            if (this.s.swipeToClose) {
+                const container = LG(`#${this.getById('lg-container')}`);
+                container.addClass('lg-dragging-vertical');
 
-            const opacity = 1 - Math.abs(distanceY) / window.innerHeight;
-            const backdrop = LG(`#${this.getById('lg-backdrop')}`);
-            backdrop.css('opacity', opacity);
+                const opacity = 1 - Math.abs(distanceY) / window.innerHeight;
+                const backdrop = LG(`#${this.getById('lg-backdrop')}`);
+                backdrop.css('opacity', opacity);
 
-            const scale = 1 - Math.abs(distanceY) / (window.innerWidth * 2);
-            this.setTranslate($currentSlide, 0, distanceY, scale, scale);
+                const scale = 1 - Math.abs(distanceY) / (window.innerWidth * 2);
+                this.setTranslate($currentSlide, 0, distanceY, scale, scale);
+            }
         }
     }
 
@@ -1380,7 +1382,7 @@ export class LightGallery {
                 }
             } else if (this.swipeDirection === 'vertical') {
                 distance = Math.abs(endCoords.pageY - startCoords.pageY);
-                if (this.s.closable && distance > 100) {
+                if (this.s.closable && this.s.swipeToClose && distance > 100) {
                     this.destroy();
                     return;
                 } else {
