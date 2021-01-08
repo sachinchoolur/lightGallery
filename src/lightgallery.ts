@@ -222,18 +222,16 @@ export class LightGallery {
 
         // Create controls
         if (this.s.controls && this.galleryItems.length > 1) {
-            controls = `<div class="lg-actions">
-                <button type="button" id="${this.getById(
-                    'lg-prev',
-                )}" aria-label="Previous slide" class="lg-prev lg-icon"> ${
+            controls = `<button type="button" id="${this.getById(
+                'lg-prev',
+            )}" aria-label="Previous slide" class="lg-prev lg-icon"> ${
                 this.s.prevHtml
             } </button>
                 <button type="button" id="${this.getById(
                     'lg-next',
                 )}" aria-label="Next slide" class="lg-next lg-icon"> ${
                 this.s.nextHtml
-            } </button>
-                </div>`;
+            } </button>`;
         }
 
         if (this.s.appendSubHtmlTo === '.lg-sub-html') {

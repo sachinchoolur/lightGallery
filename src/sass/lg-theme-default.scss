@@ -4,47 +4,45 @@
         'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 // default theme
-.lg-actions {
-    .lg-next,
-    .lg-prev {
-        background-color: $lg-next-prev-bg;
-        border-radius: $lg-border-radius-base;
-        color: $lg-next-prev-color;
-        cursor: pointer;
-        display: block;
-        font-size: 22px;
-        margin-top: -10px;
-        padding: 8px 10px 9px;
-        position: absolute;
-        top: 50%;
-        z-index: $zindex-controls;
-        outline: none;
-        border: none;
+.lg-next,
+.lg-prev {
+    background-color: $lg-next-prev-bg;
+    border-radius: $lg-border-radius-base;
+    color: $lg-next-prev-color;
+    cursor: pointer;
+    display: block;
+    font-size: 22px;
+    margin-top: -10px;
+    padding: 8px 10px 9px;
+    position: absolute;
+    top: 50%;
+    z-index: $zindex-controls;
+    outline: none;
+    border: none;
 
-        &.disabled {
-            pointer-events: none;
-            opacity: 0.5;
-        }
-
-        &:hover {
-            color: $lg-next-prev-hover-color;
-        }
+    &.disabled {
+        pointer-events: none;
+        opacity: 0.5;
     }
 
-    .lg-next {
-        right: 20px;
-
-        &:before {
-            content: '\e095';
-        }
+    &:hover {
+        color: $lg-next-prev-hover-color;
     }
+}
 
-    .lg-prev {
-        left: 20px;
+.lg-next {
+    right: 20px;
 
-        &:after {
-            content: '\e094';
-        }
+    &:before {
+        content: '\e095';
+    }
+}
+
+.lg-prev {
+    left: 20px;
+
+    &:after {
+        content: '\e094';
     }
 }
 
