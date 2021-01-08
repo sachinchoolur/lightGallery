@@ -65,9 +65,10 @@ export class Rotate {
         this.rotateValuesList = {};
 
         // event triggered after appending slide content
-        this.core.LGel.on('onAferAppendSlide.lg.rotate', () => {
+        this.core.LGel.on('onAferAppendSlide.lg.rotate', (event) => {
+            const { index } = event.detail;
             const imageWrap = this.core
-                .getSlideItem(this.core.index)
+                .getSlideItem(index)
                 .find('.lg-img-wrap')
                 .first();
 
