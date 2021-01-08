@@ -599,6 +599,7 @@ export class Zoom {
 
         inner.on('touchstart.lg', (e) => {
             $item = this.core.getSlideItem(this.core.index);
+            e.preventDefault();
             if (
                 e.targetTouches.length === 2 &&
                 (LG(e.target).hasClass('lg-item') ||
@@ -616,6 +617,7 @@ export class Zoom {
         });
 
         inner.on('touchmove.lg', (e) => {
+            e.preventDefault();
             if (
                 e.targetTouches.length === 2 &&
                 this.core.touchAction === 'pinch' &&
@@ -887,6 +889,7 @@ export class Zoom {
         let $item = this.core.getSlideItem(this.core.index);
 
         inner.on('touchstart.lg', (e) => {
+            e.preventDefault();
             const currentItem = this.core.galleryItems[this.core.index];
             // Allow zoom only on image
             if (!currentItem.src) {
@@ -926,7 +929,6 @@ export class Zoom {
                 allowY = dragAllowedAxises.allowY;
                 allowX = dragAllowedAxises.allowX;
                 if (allowX || allowY) {
-                    e.preventDefault();
                     startCoords = this.getSwipeCords(e, Math.abs(rotateValue));
                 }
 
@@ -946,6 +948,7 @@ export class Zoom {
         });
 
         inner.on('touchmove.lg', (e) => {
+            e.preventDefault();
             if (
                 e.targetTouches.length === 1 &&
                 this.core.touchAction === 'zoomSwipe' &&
@@ -953,8 +956,6 @@ export class Zoom {
                     $item.get().contains(e.target))
             ) {
                 this.core.touchAction = 'zoomSwipe';
-
-                e.preventDefault();
 
                 endCoords = this.getSwipeCords(e, Math.abs(rotateValue));
 

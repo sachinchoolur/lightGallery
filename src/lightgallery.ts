@@ -1422,6 +1422,7 @@ export class LightGallery {
 
         if (this.s.enableSwipe && this.doCss()) {
             inner.on('touchstart.lg', (e) => {
+                e.preventDefault();
                 const $item = this.getSlideItem(this.index);
                 if (
                     (LG(e.target).hasClass('lg-item') ||
@@ -1432,7 +1433,6 @@ export class LightGallery {
                 ) {
                     isSwiping = true;
                     this.touchAction = 'swipe';
-                    e.preventDefault();
                     this.manageSwipeClass();
                     startCoords = {
                         pageX: e.targetTouches[0].pageX,
@@ -1442,12 +1442,12 @@ export class LightGallery {
             });
 
             inner.on('touchmove.lg', (e) => {
+                e.preventDefault();
                 if (
                     isSwiping &&
                     this.touchAction === 'swipe' &&
                     e.targetTouches.length === 1
                 ) {
-                    e.preventDefault();
                     endCoords = {
                         pageX: e.targetTouches[0].pageX,
                         pageY: e.targetTouches[0].pageY,
