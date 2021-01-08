@@ -208,8 +208,8 @@ export const defaults: Defaults = {
      * if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.. ... ...
      *
      */
-    preload: 1,
-    numberOfSlideItemsInDom: 3,
+    preload: 3,
+    numberOfSlideItemsInDom: 10,
     showAfterLoad: true,
     selector: '',
     selectWithin: '',
