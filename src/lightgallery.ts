@@ -116,12 +116,7 @@ export class LightGallery {
         }
 
         // s.preload should not be grater than $item.length
-        if (
-            this.s.preload &&
-            this.s.preload > (this.s.dynamicEl || []).length
-        ) {
-            this.s.preload = (this.s.dynamicEl || []).length;
-        }
+        this.s.preload = Math.min(this.s.preload, this.galleryItems.length);
 
         this.init();
 
