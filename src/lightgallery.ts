@@ -395,6 +395,7 @@ export class LightGallery {
                 this.items,
                 this.s.extraProps,
                 this.s.getCaptionFromTitleOrAlt,
+                this.s.exThumbImage,
             );
         } else {
             return this.s.dynamicEl || [];

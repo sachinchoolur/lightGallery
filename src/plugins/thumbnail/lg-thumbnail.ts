@@ -48,8 +48,6 @@ export class Thumbnail {
     }
 
     init(): void {
-        this.getThumbnails();
-
         this.thumbOuterWidth = 0;
         this.thumbTotalWidth =
             this.core.galleryItems.length *
@@ -507,16 +505,6 @@ export class Thumbnail {
         }
 
         this.$lgThumb.append(thumbList);
-    }
-
-    getThumbnails(): void {
-        for (let i = 0; i < this.core.items.length; i++) {
-            const element = this.core.items[i];
-            const thumb = this.s.exThumbImage
-                ? LG(element).attr(this.s.exThumbImage)
-                : LG(element).find('img').first().attr('src');
-            this.core.galleryItems[i].thumb = thumb;
-        }
     }
 
     // @todo - convert to js and ts

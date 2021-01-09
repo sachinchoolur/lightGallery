@@ -7,6 +7,7 @@ export interface ImageSize {
 
 export interface DynamicItem {
     src: string;
+    thumb: string;
     alt: string;
     // @desc Video title
     title: string;
@@ -212,6 +213,7 @@ const utils = {
         items: any,
         extraProps: string[],
         getCaptionFromTitleOrAlt: boolean,
+        exThumbImage: string,
     ): DynamicItem[] {
         const dynamicElements: DynamicItem[] = [];
         const availableDynamicOptions = [
@@ -236,6 +238,12 @@ const utils = {
             const currentItem = LG(item);
             const alt = currentItem.find('img').first().attr('alt');
             const title = currentItem.attr('title');
+
+            const thumb = exThumbImage
+                ? currentItem.attr(exThumbImage)
+                : currentItem.find('img').first().attr('src');
+            dynamicEl.thumb = thumb;
+
             if (getCaptionFromTitleOrAlt && !dynamicEl.subHtml) {
                 dynamicEl.subHtml = title || alt || '';
             }

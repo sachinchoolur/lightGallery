@@ -83,7 +83,7 @@ export class Pager {
         });
     }
 
-    manageActiveClass(index: number) {
+    manageActiveClass(index: number): void {
         const $pagerCont = this.core.outer.find('.lg-pager-cont');
         $pagerCont.removeClass('lg-pager-active');
         $pagerCont.eq(index).addClass('lg-pager-active');
