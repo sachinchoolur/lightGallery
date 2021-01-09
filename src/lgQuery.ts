@@ -157,9 +157,10 @@ export class lgQuery {
         return this._getFirstEl();
     }
 
-    removeAttr(attr: string): this {
+    removeAttr(attributes: string): this {
+        const attrs = attributes.split(' ');
         this._each((el: any) => {
-            el.removeAttribute(attr);
+            attrs.forEach((attr: string) => el.removeAttribute(attr));
         });
         return this;
     }
