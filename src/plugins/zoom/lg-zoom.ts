@@ -530,9 +530,10 @@ export class Zoom {
         });
 
         // Reset zoom on slide change
-        this.core.LGel.on('onBeforeSlide.lg.zoom', () => {
+        this.core.LGel.on('onAfterSlide.lg.zoom', (event: CustomEvent) => {
+            const { prevIndex } = event.detail;
             this.scale = 1;
-            this.resetZoom();
+            this.resetZoom(prevIndex);
         });
 
         // Drag option after zoom
@@ -561,20 +562,17 @@ export class Zoom {
     }
 
     // Reset zoom effect
-    resetZoom(): void {
+    resetZoom(index?: number): void {
         this.core.outer.removeClass('lg-zoomed lg-zoom-drag-transition');
         const $actualSize = LG(`#${this.core.getById('lg-actual-size')}`);
+        const $item = this.core.getSlideItem(
+            index !== undefined ? index : this.core.index,
+        );
         $actualSize
             .removeClass(this.s.actualSizeIcons.zoomOut)
             .addClass(this.s.actualSizeIcons.zoomIn);
-        this.core.outer
-            .find('.lg-img-wrap')
-            .first()
-            .removeAttr('style data-x data-y');
-        this.core.outer
-            .find('.lg-image')
-            .first()
-            .removeAttr('style data-scale');
+        $item.find('.lg-img-wrap').first().removeAttr('style data-x data-y');
+        $item.find('.lg-image').first().removeAttr('style data-scale');
 
         // Reset pagx pagy values to center
         this.setPageCords();
