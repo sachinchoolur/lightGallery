@@ -1350,6 +1350,7 @@ export class LightGallery {
 
                 const scale = 1 - Math.abs(distanceY) / (window.innerWidth * 2);
                 this.setTranslate($currentSlide, 0, distanceY, scale, scale);
+                this.outer.addClass('lg-hide-items lg-swipe-closing');
             }
         }
     }
@@ -1368,7 +1369,9 @@ export class LightGallery {
             const backdrop = LG(`#${this.getById('lg-backdrop')}`);
 
             container.removeClass('lg-dragging-vertical');
-            this.outer.removeClass('lg-dragging');
+            this.outer.removeClass(
+                'lg-dragging lg-hide-items lg-swipe-closing',
+            );
 
             let triggerClick = true;
 

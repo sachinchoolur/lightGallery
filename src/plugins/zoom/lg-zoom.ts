@@ -316,7 +316,7 @@ export class Zoom {
         this.setZoomStyles({
             x: x,
             y: y,
-            scale: scale,
+            scale,
         });
     }
 

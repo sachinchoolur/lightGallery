@@ -18,12 +18,12 @@
 .lg-toolbar,
 .lg-prev,
 .lg-next,
+.lg-pager-outer,
 .lg-sub-html {
     opacity: 0;
     @include transitionCustom(
-        transform 0.35s cubic-bezier(0, 0, 0.25, 1) 0s,
-        opacity 0.35s cubic-bezier(0, 0, 0.25, 1) 0s,
-        color 0.2s linear
+        transform 0.25s cubic-bezier(0, 0, 0.25, 1) 0s,
+        opacity 0.25s cubic-bezier(0, 0, 0.25, 1) 0s
     );
 }
 // for idle state
@@ -31,6 +31,7 @@
     .lg-toolbar,
     .lg-prev,
     .lg-next,
+    .lg-pager-outer,
     .lg-sub-html {
         opacity: 1;
     }
@@ -248,6 +249,28 @@
             left: 50%;
         }
     }
+
+    &.lg-swipe-closing {
+        .lg-thumb-outer {
+            @include translate3d(0, 100%, 0);
+        }
+        .lg-sub-html {
+            opacity: 0;
+            @include translate3d(0, 0, 0);
+        }
+        &.lg-pull-caption-up {
+            .lg-sub-html {
+                @include translate3d(0, 0, 0);
+            }
+        }
+        .lg-pager-outer {
+            opacity: 0;
+            @include translate3d(0px, 0, 0px);
+        }
+        .lg-toggle-thumb {
+            opacity: 0;
+        }
+    }
 }
 
 .lg-backdrop {
@@ -397,5 +420,11 @@
     .lg-backdrop,
     .lg-outer {
         position: absolute;
+    }
+}
+.lg-zoomed {
+    .lg-sub-html,
+    .lg-pager-outer {
+        opacity: 0;
     }
 }

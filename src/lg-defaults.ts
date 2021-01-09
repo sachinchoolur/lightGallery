@@ -174,7 +174,7 @@ export const defaults: Defaults = {
     supportLegacyBrowser: true,
 
     // If true sub-html will also be hidden along with controls and toolbar if hideBarDelay is more than 0
-    hideSubHtml: true,
+    hideSubHtml: false,
 
     useLeft: false,
 
@@ -187,7 +187,7 @@ export const defaults: Defaults = {
     closable: true,
     swipeToClose: true,
     closeOnTap: true,
-    showCloseIcon: false,
+    showCloseIcon: true,
     loop: true,
     escKey: true,
     keyPress: true,

@@ -14,6 +14,16 @@
             }
         }
     }
+    &.lg-thumb-open {
+        .lg-pager-outer {
+            @include translate3d(0px, -($lg-thumb-container-height), 0px);
+        }
+        &.lg-zoomed {
+            .lg-pager-outer {
+                @include translate3d(0px, 0, 0px);
+            }
+        }
+    }
 
     .lg-pager-cont {
         cursor: pointer;
@@ -39,7 +49,7 @@
 
     .lg-pager-thumb-cont {
         background-color: #fff;
-        color: #FFF;
+        color: #fff;
         bottom: 100%;
         height: 83px;
         left: 0;
@@ -50,7 +60,10 @@
         position: absolute;
         width: 120px;
         border-radius: 3px;
-        @include transitionCustom(opacity 0.15s ease 0s, transform 0.15s ease 0s);
+        @include transitionCustom(
+            opacity 0.15s ease 0s,
+            transform 0.15s ease 0s
+        );
         @include translate3d(0, 5px, 0);
 
         img {
@@ -68,7 +81,8 @@
         @include transition(box-shadow 0.3s ease 0s);
         width: 12px;
 
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
             box-shadow: 0 0 0 8px white inset;
         }
     }

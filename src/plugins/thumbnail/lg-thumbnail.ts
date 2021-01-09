@@ -165,7 +165,6 @@ export class Thumbnail {
                 .css('transition-duration', this.core.s.speed + 'ms')
                 .css('width', this.thumbTotalWidth + 'px')
                 .css('position', 'relative');
-            this.$thumbOuter.css('height', this.s.thumbContHeight + 'px');
         }
 
         this.setThumbItemHtml(

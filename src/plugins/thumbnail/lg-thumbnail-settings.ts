@@ -6,7 +6,6 @@ export interface ThumbnailsDefaults {
 
     thumbWidth: number;
     thumbHeight: string;
-    thumbContHeight: number;
     thumbMargin: number;
 
     exThumbImage: false;
@@ -35,12 +34,13 @@ export const thumbnailsDefaults: ThumbnailsDefaults = {
 
     thumbWidth: 100,
     thumbHeight: '80px',
-    thumbContHeight: 100,
     thumbMargin: 5,
 
     exThumbImage: false,
     showThumbByDefault: true,
     toggleThumb: true,
+
+    // Only works with animated thumbnails
     pullCaptionUp: true,
 
     enableThumbDrag: true,
