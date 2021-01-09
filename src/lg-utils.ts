@@ -128,7 +128,8 @@ const utils = {
             (wWidth - elWidth) / 2 -
             (LGel.offset().left +
                 parseFloat(elStyle.paddingLeft) +
-                parseFloat(elStyle.borderLeft));
+                parseFloat(elStyle.borderLeft)) +
+            LG(window).scrollLeft();
         let y =
             (wHeight - elHeight) / 2 -
             (LGel.offset().top +
