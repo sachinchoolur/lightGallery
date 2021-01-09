@@ -103,14 +103,12 @@ export class Thumbnail {
                     !this.core.doCss()
                 ) {
                     const index = parseInt($target.attr('data-lg-item-id'));
-                    console.log(index, $target.attr('data-lg-item-id'));
                     this.core.slide(index, false, true, false);
                 }
             }, 50);
         });
 
         this.core.LGel.on('onBeforeSlide.lg.thumb', (e) => {
-            console.log(e, e.detail);
             this.animateThumb(this.core.index);
         });
         this.core.LGel.on('onAfterOpen.lg.thumb', (e) => {
@@ -542,9 +540,10 @@ export class Thumbnail {
 
         // manage active class for thumbnail
         $thumb.eq(this.core.index).addClass('active');
-        this.core.LGel.on('onBeforeSlide.lg.thumb', () => {
+        this.core.LGel.on('onBeforeSlide.lg.thumb', (event: CustomEvent) => {
+            const { index } = event.detail;
             $thumb.removeClass('active');
-            $thumb.eq(this.core.index).addClass('active');
+            $thumb.eq(index).addClass('active');
         });
     }
 
