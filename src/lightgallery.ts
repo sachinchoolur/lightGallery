@@ -327,7 +327,7 @@ export class LightGallery {
 
         if (this.doCss()) {
             const $inner = LG(`#${this.getById('lg-inner')}`);
-            $inner.css('transition-timing-function', this.s.cssEasing);
+            $inner.css('transition-timing-function', this.s.easing);
             $inner.css('transition-duration', this.s.speed + 'ms');
         }
 
