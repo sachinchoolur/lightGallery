@@ -30,22 +30,25 @@
   "scripts": {
     "lint": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet --fix",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src && npm run minify-css",
+    "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css",
     "build-scss": "node-sass --include-path scss src/sass/lightgallery.scss dist/css/lightgallery.css --output-style expanded",
     "watch-css": "nodemon -e scss -x \"npm run build-scss\"",
+    "watch-site-content": "nodemon --watch dist -x \"npm run copyToSite\"",
     "minify-css": "cleancss -o dist/css/lightgallery.min.css dist/css/lightgallery.css",
-    "start": "concurrently \"rollup -c rollup-dev.config.ts -w $LG_PLUGINS\" \"npm run watch-css \"",
+    "start": "concurrently \"rollup -c rollup-dev.config.ts -w $LG_PLUGINS\" \"npm run watch-site-content \" \"npm run watch-css \" ",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache",
     "deploy-docs": "ts-node tools/gh-pages-publish",
+    "docs": "typedoc --json site/data/doc.json --target es6 --theme default --mode file src",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "precommit": "lint-staged",
     "travis-deploy-once": "travis-deploy-once",
-    "copyAssets": "copyfiles -u 1 src/fonts/** dist && copyfiles -u 1 src/img/** dist"
+    "copyAssets": "copyfiles -u 1 src/fonts/** dist && copyfiles -u 1 src/img/** dist",
+    "copyToSite": "copyfiles -u 1 dist/lightgallery.umd.js dist/lightgallery.umd.js.map dist/plugins/*.umd.js dist/plugins/*.umd.js.map site/static/js && copyfiles -f dist/img/** site/static/images && copyfiles -f dist/fonts/** site/static/fonts && copyfiles -f dist/css/** site/static/css"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
