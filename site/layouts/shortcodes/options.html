@@ -1,0 +1,45 @@
+<table style="width:100%">
+    
+    {{$interface := dict}}
+    {{$variable := dict}}
+    {{$interfaceName := .Get "interface"}}
+    {{$variableName := .Get "variable"}}
+    {{ range .Site.Data.doc.children -}}
+        {{ if eq .name $interfaceName}}
+            {{$interface = .children}}
+        {{ else if eq .name $variableName }}
+            {{$variable = .children}}
+        {{ end }}
+    {{ end -}}
+
+
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Default</th>
+        <th>Description</th>
+    </tr>
+
+
+    {{range $index, $element := $interface}}
+
+        {{$defaultValue := (index $variable $index).defaultValue}}
+        
+        <tr>
+            <th>{{$element.name}}</th>
+            <th>{{$element.type.name}}</th>
+            <th>{{$defaultValue}}</th>
+            <th>
+                <th>
+                    {{.comment.shortText}}
+                    {{ range .comment.tags -}}
+                        {{ if eq .tag "description"}}
+                            <p>
+                                {{.text}}
+                            </p>
+                        {{ end}}
+                    {{ end -}}
+            </th>
+        </tr>
+    {{ end }}
+  </table>

@@ -1,0 +1,3 @@
+{{ $image := .Page.Resources.GetMatch (printf "*%s*" (.Get "src")) -}}
+{{ $lqip := $image.Resize $.Site.Params.lqipWidth -}}
+<img class="img-simple border rounded p-1 img-fluid lazyload blur-up{{ with .Get "class" }} {{ . | safeHTML }}{{ end }}" src="{{ $lqip.Permalink }}" data-src="{{ $image.Permalink }}" width="{{ $image.Width }}" height="{{ $image.Height }}" {{ with .Get "alt" }}alt="{{.}}"{{ end }}>

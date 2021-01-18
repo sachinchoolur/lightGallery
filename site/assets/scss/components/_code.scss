@@ -1,0 +1,33 @@
+pre,
+code,
+kbd,
+samp {
+  font-family: $font-family-monospace;
+  font-size: $font-size-sm;
+}
+
+pre {
+  background: $gray-200;
+  color: $gray-900;
+  line-height: $line-height-lg;
+  margin: 1.5rem 0;
+  overflow: auto;
+  padding: 1.1rem 1.5rem;
+  tab-size: 4;
+}
+
+code {
+  background: $gray-200;
+  color: $gray-900;
+  padding: 0.25rem 0.5rem;
+}
+
+pre code {
+  background: none;
+  font-size: inherit;
+  padding: 0;
+}
+
+code a {
+  border-bottom-color: $gray-200;
+}

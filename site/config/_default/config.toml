@@ -1,0 +1,87 @@
+baseurl = "/"
+disableAliases = true
+disableHugoGeneratorInject = true
+disableKinds = ["taxonomy", "taxonomyTerm"]
+enableEmoji = true
+enableGitInfo = false
+enableRobotsTXT = true
+languageCode = "en-US"
+paginate = 7
+rssLimit = 10
+
+# add redirects/headers
+[outputs]
+home = ["HTML", "RSS", "REDIRECTS", "HEADERS"]
+
+# remove .{ext} from text/netlify
+[mediaTypes."text/netlify"]
+suffixes = [""]
+delimiter = ""
+
+# add output format for netlify _redirects
+[outputFormats.REDIRECTS]
+mediatype = "text/netlify"
+baseName = "_redirects"
+isPlainText = true
+notAlternative = true
+
+# add output format for netlify _headers
+[outputFormats.HEADERS]
+mediatype = "text/netlify"
+baseName = "_headers"
+isPlainText = true
+notAlternative = true
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ""
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = false
+    style = "dracula"
+    tabWidth = 4
+
+[sitemap]
+  changefreq = "monthly"
+  filename = "sitemap.xml"
+  priority = 0.5
+
+[taxonomies]
+  category = "categories"
+
+[permalinks]
+  blog = "/:title/"
+
+[related]
+threshold = 80
+includeNewer = true
+toLower = false
+  [[related.indices]]
+  name = "categories"
+  weight = 100
+  [[related.indices]]
+  name = "date"
+  weight = 10
+
+[module]
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  [[module.mounts]]
+    source = "static"
+    target = "static"
+  [[module.mounts]]
+    source = "node_modules/lazysizes"
+    target = "assets/js/vendor/lazysizes"
+  [[module.mounts]]
+    source = "node_modules/instant.page"
+    target = "assets/js/vendor/instant.page"
+  [[module.mounts]]
+    source = "node_modules/bootstrap"
+    target = "assets/js/vendor/bootstrap"

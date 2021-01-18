@@ -1,0 +1,23 @@
+{{ $image := .Page.Resources.GetMatch (printf "*%s*" (.Get "src")) -}}
+{{ $lqip := $image.Resize $.Site.Params.lqipWidth -}}
+
+{{ $imgSrc := "" -}}
+{{ $imgSrcSet := slice -}}
+
+{{ $widths := $.Site.Params.landscapePhotoWidths -}}
+{{ if gt $image.Height $image.Width -}}
+  {{ $widths = $.Site.Params.portraitPhotoWidths -}}
+{{ end -}}
+
+{{ range $widths -}}
+  {{ $srcUrl := (printf "%dx" . | $image.Resize).Permalink -}}
+  {{ if eq $imgSrc "" -}}{{ $imgSrc = $srcUrl -}}{{ end -}}
+  {{ $imgSrcSet = $imgSrcSet | append (printf "%s %dw" $srcUrl .) -}}
+{{ end -}}
+{{ $imgSrcSet = (delimit $imgSrcSet ",") -}}
+
+<figure{{ with .Get "class" }} class="{{.}}"{{ end }}>
+  <img class="img-fluid lazyload blur-up" data-sizes="auto" src="{{ $lqip.Permalink }}" data-srcset="{{ $imgSrcSet }}" width="{{ $image.Width }}" height="{{ $image.Height }}" {{ with .Get "alt" }}alt="{{.}}"{{ end }}>
+  <noscript><img class="img-fluid" sizes="100vw" srcset="{{ $imgSrcSet }}" src="{{ $image.Permalink }}" width="{{ $image.Width }}" height="{{ $image.Height }}" {{ with .Get "alt" }}alt="{{.}}"{{ end }}></noscript>
+  {{ with .Get "caption" }}<figcaption class="figure-caption">{{ . | safeHTML }}</figcaption>{{ end }}
+</figure>

@@ -1,0 +1,30 @@
+[[main]]
+  name = "Docs"
+  url = "/docs/getting-started/"
+  weight = 10
+
+[[main]]
+  name = "License"
+  url = "/themes/doks/"
+  weight = 20
+
+[[main]]
+  name = "Demos"
+  url = "/showcase/validate/"
+  weight = 30
+
+  [[main]]
+  name = "GitHub"
+  url = "https://github.com/sachinchoolur/lightGallery"
+  weight = 10
+
+
+[[main]]
+  name = "Blog"
+  url = "/blog/"
+  weight = 40
+
+[[social]]
+  name = "Twitter"
+  url = "https://twitter.com/sachinchoolur"
+  weight = 20

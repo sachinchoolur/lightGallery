@@ -1,0 +1,28 @@
+.banner .nav li {
+  @extend .nav-item;
+}
+
+.banner .nav a {
+  @extend .nav-link;
+}
+
+.navbar-text {
+  margin-left: 1rem;
+}
+
+@include media-breakpoint-down(sm) {
+  .navbar .container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .navbar-brand {
+    font-size: $font-size-xl;
+  }
+
+  .navbar-text {
+    margin-left: 1.25rem;
+  }
+}

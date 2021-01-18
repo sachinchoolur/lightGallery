@@ -1,0 +1,101 @@
+// Color system
+
+$blue:        #0366d6;
+$white:       #fff;
+$black:       #333;
+$gray-darker: #586069;
+$gray-dark:   #6a737d;
+$gray:        #dfe2e5;
+$gray-200: #f6f8fa;
+$gray-light:  #fafbfc;
+$blue-dark:   #038;
+
+$primary:   $blue;
+
+/** Bootstrap navbar fix (https://git.io/fADqW) */
+$navbar-dark-toggler-icon-bg: none;
+$navbar-light-toggler-icon-bg: none;
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+
+$enable-responsive-font-sizes: true;
+
+// Grid columns
+//
+// Set the number of columns and specify the width of the gutters.
+
+$grid-columns:                12;
+$grid-gutter-width:           48px;
+$grid-row-columns:            6;
+
+// Prefix for :root CSS variables
+
+$variable-prefix:             bs-;
+
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+
+// stylelint-disable value-keyword-case
+$font-family-sans-serif:      system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+// stylelint-enable value-keyword-case
+$font-family-base:            var(--#{$variable-prefix}font-sans-serif);
+$font-family-code:            var(--#{$variable-prefix}font-monospace);
+
+$font-size-base:              1rem; // Assumes the browser default, typically `16px`
+$font-size-xl:                $font-size-base * 1.375;
+$font-size-lg:                $font-size-base * 1.25;
+$font-size-md:                $font-size-base * 1.125;
+$font-size-sm:                $font-size-base * 0.875;
+
+$font-weight-bold:            500;
+
+$line-height-base:            1.5;
+
+$headings-font-family:        "Inter", $font-family-sans-serif;
+$headings-font-weight:        500;
+$headings-line-height:        1.3;
+
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$spacer: 1rem;
+
+// Navbar
+
+$navbar-padding-y:                  $spacer * 1.5;
+$navbar-padding-x:                  $spacer;
+
+// Alerts
+//
+// Define alert colors, border radius, and padding.
+
+$alert-padding-y:                   0.75rem;
+$alert-padding-x:                   1.5rem;
+$alert-margin-bottom:               0;
+$alert-border-radius:               0;
+$alert-link-font-weight:            $headings-font-weight;
+$alert-border-width:                0;
+
+$alert-bg-level:                    0;
+$alert-border-level:                0;
+$alert-color-level:                 0;
+
+// Links
+//
+// Style anchor elements.
+
+$link-color:                              $primary;
+$link-decoration:                         none;
+$link-shade-percentage:                   20%;
+$link-hover-color:                        shift-color($link-color, $link-shade-percentage);
+$link-hover-decoration:                   underline;
+
+$stretched-link-pseudo-element:           after;
+$stretched-link-z-index:                  1;

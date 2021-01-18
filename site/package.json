@@ -1,0 +1,42 @@
+{
+  "name": "lightgallery",
+  "version": "1.2.8",
+  "private": true,
+  "browserslist": [
+    "defaults"
+  ],
+  "scripts": {
+    "init": "rimraf .git && git init -b main",
+    "start": "hugo server --disableFastRender",
+    "build": "hugo --gc --minify && npm run build:functions",
+    "build:functions": "netlify-lambda build assets/lambda",
+    "build:preview": "npm run build -D -F",
+    "clean": "rimraf public resources functions",
+    "lint": "npm run -s lint:scripts && npm run -s lint:styles && npm run -s lint:markdown",
+    "lint:scripts": "eslint assets/js assets/lambda config",
+    "lint:styles": "stylelint \"assets/scss/**/*.{css,sass,scss,sss,less}\"",
+    "lint:markdown": "markdownlint *.md content/**/*.md",
+    "release": "standard-version",
+    "test": "npm run -s lint"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12",
+    "@babel/core": "^7.11",
+    "@babel/preset-env": "^7.12",
+    "@fullhuman/postcss-purgecss": "^3.1",
+    "autoprefixer": "^10.2",
+    "bootstrap": "^5.0.0-beta1",
+    "eslint": "^7.17",
+    "instant.page": "^5.1",
+    "lazysizes": "^5.3",
+    "markdownlint-cli": "^0.26",
+    "netlify-lambda": "^2.0",
+    "postcss": "^8.2",
+    "postcss-cli": "^8.3",
+    "purgecss-whitelister": "^2.4",
+    "rimraf": "^3.0",
+    "standard-version": "^9.1",
+    "stylelint": "^13.7",
+    "stylelint-config-standard": "^20.0"
+  }
+}

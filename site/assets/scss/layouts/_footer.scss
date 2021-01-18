@@ -1,0 +1,14 @@
+.footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.footer p {
+  font-size: $font-size-sm;
+}
+
+@include media-breakpoint-up(md) {
+  .footer p {
+    font-size: $font-size-base;
+  }
+}
