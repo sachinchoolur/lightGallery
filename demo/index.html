@@ -5,149 +5,146 @@
         <link href="../dist/css/lightgallery.css" rel="stylesheet">
         <style type="text/css">
             body{
-                background-color: #152836
+                background-color: #152836;
+                margin: 0;
+                padding: 0;
             }
             .demo-gallery > ul {
               margin-bottom: 0;
             }
-            .demo-gallery > ul > li {
-                float: left;
-                margin-bottom: 15px;
-                margin-right: 20px;
-                width: 200px;
-            }
-            .demo-gallery > ul > li a {
-              border: 3px solid #FFF;
-              border-radius: 3px;
+              .demo-gallery a, .demo-gallery li {
+              list-style-type: none;
               display: block;
-              overflow: hidden;
-              position: relative;
               float: left;
+              margin: 0;
+              width: 171px;
+              line-height: 0;
             }
-            .demo-gallery > ul > li a > img {
-              -webkit-transition: -webkit-transform 0.15s ease 0s;
-              -moz-transition: -moz-transform 0.15s ease 0s;
-              -o-transition: -o-transform 0.15s ease 0s;
-              transition: transform 0.15s ease 0s;
-              -webkit-transform: scale3d(1, 1, 1);
-              transform: scale3d(1, 1, 1);
-              height: 100%;
+            .demo-gallery img{
+              width: auto;
+              max-width: 100%;
+              height: auto;
+              border: 0;
+            }
+            .gallery-container {
+              display: flex;
               width: 100%;
+              background-color: #000;
+              position: relative;
+              z-index: 1;
             }
-            .demo-gallery > ul > li a:hover > img {
-              -webkit-transform: scale3d(1.1, 1.1, 1.1);
-              transform: scale3d(1.1, 1.1, 1.1);
-            }
-            .demo-gallery > ul > li a:hover .demo-gallery-poster > img {
-              opacity: 1;
-            }
-            .demo-gallery > ul > li a .demo-gallery-poster {
-              background-color: rgba(0, 0, 0, 0.1);
-              bottom: 0;
-              left: 0;
-              position: absolute;
-              right: 0;
-              top: 0;
-              -webkit-transition: background-color 0.15s ease 0s;
-              -o-transition: background-color 0.15s ease 0s;
-              transition: background-color 0.15s ease 0s;
-            }
-            .demo-gallery > ul > li a .demo-gallery-poster > img {
-              left: 50%;
-              margin-left: -10px;
-              margin-top: -10px;
-              opacity: 0;
-              position: absolute;
-              top: 50%;
-              -webkit-transition: opacity 0.3s ease 0s;
-              -o-transition: opacity 0.3s ease 0s;
-              transition: opacity 0.3s ease 0s;
-            }
-            .demo-gallery > ul > li a:hover .demo-gallery-poster {
-              background-color: rgba(0, 0, 0, 0.5);
-            }
-            .demo-gallery .justified-gallery > a > img {
-              -webkit-transition: -webkit-transform 0.15s ease 0s;
-              -moz-transition: -moz-transform 0.15s ease 0s;
-              -o-transition: -o-transform 0.15s ease 0s;
-              transition: transform 0.15s ease 0s;
-              -webkit-transform: scale3d(1, 1, 1);
-              transform: scale3d(1, 1, 1);
-              height: 100%;
-              width: 100%;
-            }
-            .demo-gallery .justified-gallery > a:hover > img {
-              -webkit-transform: scale3d(1.1, 1.1, 1.1);
-              transform: scale3d(1.1, 1.1, 1.1);
-            }
-            .demo-gallery .justified-gallery > a:hover .demo-gallery-poster > img {
-              opacity: 1;
-            }
-            .demo-gallery .justified-gallery > a .demo-gallery-poster {
-              background-color: rgba(0, 0, 0, 0.1);
-              bottom: 0;
-              left: 0;
-              position: absolute;
-              right: 0;
-              top: 0;
-              -webkit-transition: background-color 0.15s ease 0s;
-              -o-transition: background-color 0.15s ease 0s;
-              transition: background-color 0.15s ease 0s;
-            }
-            .demo-gallery .justified-gallery > a .demo-gallery-poster > img {
-              left: 50%;
-              margin-left: -10px;
-              margin-top: -10px;
-              opacity: 0;
-              position: absolute;
-              top: 50%;
-              -webkit-transition: opacity 0.3s ease 0s;
-              -o-transition: opacity 0.3s ease 0s;
-              transition: opacity 0.3s ease 0s;
-            }
-            .demo-gallery .justified-gallery > a:hover .demo-gallery-poster {
-              background-color: rgba(0, 0, 0, 0.5);
-            }
-            .demo-gallery .video .demo-gallery-poster img {
-              height: 48px;
-              margin-left: -24px;
-              margin-top: -24px;
-              opacity: 0.8;
-              width: 48px;
-            }
-            .demo-gallery.dark > ul > li a {
-              border: 3px solid #04070a;
-            }
-            .home .demo-gallery {
-              padding-bottom: 80px;
+            .title-wrap {
+                display: block;
+                float: left;
+                margin: 20px;
+                width: 100%;
+                color: #FFF;
+                font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
             }
         </style>
     </head>
     <body class="home">
 
-        <div class="demo-gallery">
-            <ul id="lightgallery" class="list-unstyled row">
-                <li title="new title1" class="col-xs-6 col-sm-4 col-md-3" data-responsive="img/1-375.jpg 375, img/1-480.jpg 480, img/1.jpg 800" data-src="img/1-1600.jpg" data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>">
-                    <a href="">
-                        <img class="img-responsive" src="img/thumb-1.jpg">
-                    </a>
-                </li>
-                <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="img/2-375.jpg 375, img/2-480.jpg 480, img/2.jpg 800" data-src="img/2-1600.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
-                    <a href="">
-                        <img alt="xys" class="img-responsive" src="img/thumb-2.jpg">
-                    </a>
-                </li>
-                <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="img/13-375.jpg 375, img/13-480.jpg 480, img/13.jpg 800" data-src="img/13-1600.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
-                    <a href="">
-                        <img class="img-responsive" src="img/thumb-13.jpg">
-                    </a>
-                </li>
-                <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="img/4-375.jpg 375, img/4-480.jpg 480, img/4.jpg 800" data-src="img/4-1600.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
-                    <a href="">
-                        <img class="img-responsive" src="img/thumb-4.jpg">
-                    </a>
-                </li>
-            </ul>
+        <div class="demo-gallery" style="width:2000px">
+            
+            <!-- <ul id="html5-videos" class="list-unstyled row">
+              <li title="new title1" class="col-xs-6 col-sm-4 col-md-3" data-responsive="img/1-375.jpg 375, img/1-480.jpg 480, img/1.jpg 800" data-src="img/1-1600.jpg" data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>">
+                
+                    <img class="img-responsive" src="img/thumb-1.jpg">
+                
+            </li>
+              <li class="col-xs-6 col-sm-4 col-md-3 video" dddata-poster="videos/h-video1-poster.jpg" data-sub-html="<h4>CGI Animated Short HD: Student Academy Award Winning 'PeckPocketed' by Kevin Herron</h4>" data-video='{"source": [{"src":"videos/video1.mp4", "type":"video/mp4"}], "preload": false, "controls": true}'
+                 >
+                 
+                     <img class="img-responsive" src="../static/img/thumb-v-y-2.jpg">
+                     <div class="demo-gallery-poster">
+                         <img src="../static/img/play-button.png">
+                     </div>
+                 
+             </li>
+             <li class="col-xs-6 col-sm-4 col-md-3 video" data-video='{"source": [{"src":"videos/video1.mp4", "type":"video/mp4"}], "preload": false, "controls": true}' dddata-poster="videos/h-video2-poster.jpg" data-sub-html="<h4>Rollin`Wild - Short Funny Animated Clips - Film Academy BW</h4>">
+                 
+                     <img class="img-responsive" src="../static/img/thumb-v-y-1.jpg">
+                     <div class="demo-gallery-poster">
+                         <img src="../static/img/play-button.png">
+                     </div>
+                 
+             </li>
+             <li class="col-xs-6 col-sm-4 col-md-3 video" data-video='{"source": [{"src":"videos/video1.mp4", "type":"video/mp4"}], "preload": false, "controls": true}' dddata-poster="videos/h-video3-poster.jpg" data-sub-html="<h4>Big Buck Bunny</h4>">
+                 
+                     <img class="img-responsive" src="../static/img/thumb-v-v-1.jpg">
+                     <div class="demo-gallery-poster">
+                         <img src="../static/img/play-button.png">
+                     </div>
+                 
+             </li>
+             <li class="col-xs-6 col-sm-4 col-md-3 video" data-video='{"source": [{"src":"videos/video1.mp4", "type":"video/mp4"}], "preload": false, "controls": true}' dddata-poster="videos/h-video4-poster.jpg" data-sub-html="<h4>Ninja vs Pirate</h4>">
+                 
+                     <img class="img-responsive" src="../static/img/thumb-v-v-2.jpg">
+                     <div class="demo-gallery-poster">
+                         <img src="../static/img/play-button.png">
+                     </div>
+                 
+             </li>
+         </ul> -->
+         <div class="title-wrap"><h2>Zoom from Image</h2></div>
+         <ul id="lg-share-demo" class="list-unstyled">
+         
+                                              
+      
+      <li style="width: 240px;" class="col-xs-6 col-sm-4 col-md-3" data-lg-size="1920-1280" data-pinterest-text="Pin it1" data-tweet-text="share on twitter 1" data-src="img/image-1.jpg" data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>">
+          
+              <img class="img-responsive" src="img/image-1-thumb.jpg">
+              
+          
+      </li>
+      <li style="width: 240px;" data-lg-size="1920-1276" data-pinterest-text="Pin it2" data-tweet-text="share on twitter 2" class="col-xs-6 col-sm-4 col-md-3" data-src="img/image-2.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
+          
+              <img class="img-responsive" src="img/image-2-thumb.jpg">
+              
+          
+      </li>
+      <li style="width: 240px;" data-lg-size="1920-2880" data-pinterest-text="Pin it3" data-tweet-text="share on twitter 3" class="col-xs-6 col-sm-4 col-md-3" data-src="img/image-3.jpg" data-sub-html="<h4>Sunset Serenity</h4><p>A gorgeous Sunset tonight captured at Coniston Water....</p>">
+          
+              <img class="img-responsive" src="img/image-3-thumb.jpg">
+              
+          
+      </li>
+      <li style="width: 240px;" data-lg-size="1920-2880" data-pinterest-text="Pin it3" data-tweet-text="share on twitter 4" class="col-xs-6 col-sm-4 col-md-3" data-src="img/image-4.jpg" data-sub-html="<h4>Sunset Serenity</h4><p>A gorgeous Sunset tonight captured at Coniston Water....</p>">
+          
+              <img class="img-responsive" src="img/image-4-thumb.jpg">
+              
+          
+      </li>
+  </ul>
+  <div class="title-wrap"><h2>Gallery</h2></div>
+  <ul id="lightgallery" class="list-unstyled row">
+    <li title="new title1" class="col-xs-6 col-sm-4 col-md-3" data-responsive="img/1-375.jpg 375, img/1-480.jpg 480, img/1.jpg 800" data-src="img/1-1600.jpg" data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>">
+        
+            <img class="img-responsive" src="img/thumb-1.jpg">
+        
+    </li>
+    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="img/2-375.jpg 375, img/2-480.jpg 480, img/2.jpg 800" data-src="img/2-1600.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
+        
+            <img alt="xys" class="img-responsive" src="img/thumb-2.jpg">
+        
+    </li>
+    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="img/13-375.jpg 375, img/13-480.jpg 480, img/13.jpg 800" data-src="img/13-1600.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
+        
+            <img class="img-responsive" src="img/thumb-13.jpg">
+        
+    </li>
+    <li class="col-xs-6 col-sm-4 col-md-3" data-responsive="img/4-375.jpg 375, img/4-480.jpg 480, img/4.jpg 800" data-src="img/4-1600.jpg" data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>">
+        
+            <img class="img-responsive" src="img/thumb-4.jpg">
+        
+    </li>
+</ul>
+<div class="title-wrap"><h2>Inline Gallery</h2></div>
+<div id="gallery-container" class="gallery-container">
+
+</div>
+</div>
         </div>
         <script src="../dist/lightgallery.umd.js"></script>
         <script src="../dist/plugins/lg-comment.umd.js"></script>
@@ -161,7 +158,54 @@
         <script src="../dist/plugins/lg-share.umd.js"></script>
         <script src="../dist/plugins/lg-autoplay.umd.js"></script>
         <script type="text/javascript">
-            lightGallery(document.getElementById('lightgallery'));
+            lightGallery(document.getElementById('lightgallery'), {
+              galleryId: 1,
+              pager: false
+            });
+            const lgCont = document.getElementById('gallery-container');
+            console.log(window.innerHeight)
+            lgCont.style.height =  window.innerHeight + 'px'
+            lightGallery(document.getElementById('gallery-container'), {
+              galleryId: 4,
+              container: document.getElementById('gallery-container'),
+              dynamic: true,
+              thumbnail: true,
+              swipeToClose: false,
+              hash: false,
+              pager: false,
+              closable: false,
+              mobileSettings: {
+                showCloseIcon: false
+              },
+              dynamicEl: [{
+                  "src": 'img/image-5.jpg',
+                  "thumb": 'img/image-1-thumb.jpg',
+              },
+              {
+                "src": 'img/image-6.jpg',
+                "thumb": 'img/image-2-thumb.jpg',
+              },
+              {
+                "src": 'img/image-7.jpg',
+                "thumb": 'img/image-3-thumb.jpg',
+              },
+              {
+                "src": 'img/image-8.jpg',
+                "thumb": 'img/image-4-thumb.jpg',
+              },
+              {
+                "src": 'img/image-9.jpg',
+                "thumb": 'img/image-5-thumb.jpg',
+              },
+            ]
+            });
+            // lightGallery(document.getElementById('html5-videos'), {
+            //   galleryId: 2
+            // });
+            lightGallery(document.getElementById('lg-share-demo'), {
+              galleryId: 3,
+              //pager: false
+            });
         </script>
     </body>
 </html>
