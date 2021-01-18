@@ -3,7 +3,7 @@ declare global {
         lgModules: any;
         lightGallery: (
             el: HTMLElement,
-            options: Partial<Defaults>,
+            options: Partial<LightGallerySettings>,
         ) => LightGallery | undefined;
     }
 }
@@ -21,7 +21,7 @@ window.LG = LG;
 
 // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
 // @ref - https://2ality.com/2017/04/setting-up-multi-platform-packages.html
-import { Defaults, defaults } from './lg-defaults';
+import { LightGallerySettings, lightGallerySettings } from './lg-settings';
 
 type SlideDirection = 'next' | 'prev';
 export interface Coords {
@@ -40,7 +40,7 @@ let lgId = 0;
 window.lgModules = window.lgModules || {};
 
 export class LightGallery {
-    public s: Defaults;
+    public s: LightGallerySettings;
     public galleryItems: DynamicItem[];
     public lgId: number;
     public el: HTMLElement;
@@ -79,7 +79,7 @@ export class LightGallery {
     private zoomFromImage!: boolean;
     $items: any;
 
-    constructor(element: HTMLElement, options: Partial<Defaults>) {
+    constructor(element: HTMLElement, options: Partial<LightGallerySettings>) {
         lgId++;
         this.lgId = lgId;
 
@@ -87,8 +87,12 @@ export class LightGallery {
         this.LGel = LG(element);
 
         // lightGallery settings
-        this.s = Object.assign({}, defaults, options);
-        if (this.s.isMobile()) {
+        this.s = Object.assign({}, lightGallerySettings, options);
+        if (
+            this.s.isMobile && typeof this.s.isMobile
+                ? this.s.isMobile()
+                : utils.isMobile()
+        ) {
             const mobileSettings = Object.assign(
                 {},
                 this.s.mobileSettings,
