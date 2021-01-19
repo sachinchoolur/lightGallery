@@ -3,8 +3,8 @@
 {{ if eq (hugo.Environment) "development" -}}
   {{ $app := resources.Get "js/app.js" | babel -}}
   {{ $js := slice $lazysizes $bootstrap $app | resources.Concat "main.js" -}}
+  <script src="/js/lightgallery.umd.js"></script>
   <script src="{{ $js.Permalink }}" defer></script>
-  <script src="js/lightgallery.umd.js"></script>
 {{ else -}}
   {{ $instantPage := resources.Get "js/vendor/instant.page/instantpage.js" | minify -}}
   {{ $app := resources.Get "js/app.js" | babel | minify -}}
