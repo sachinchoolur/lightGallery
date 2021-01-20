@@ -79,7 +79,10 @@ export class LightGallery {
     private zoomFromImage!: boolean;
     $items: any;
 
-    constructor(element: HTMLElement, options: Partial<LightGallerySettings>) {
+    constructor(
+        element: HTMLElement,
+        options: Partial<LightGallerySettings> = {},
+    ) {
         lgId++;
         this.lgId = lgId;
 
