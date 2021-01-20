@@ -6,7 +6,7 @@
     top: 0;
     bottom: 0;
     z-index: 9999;
-    background-color: #FFF;
+    background-color: #fff;
     @include transform(translate3d(100%, 0, 0));
     @include transitionCustom(transform 0.4s cubic-bezier(0, 0, 0.25, 1) 0s);
 
@@ -30,14 +30,15 @@
         padding-top: 43px !important;
         width: 100% !important;
     }
-    
+
     .fb-comments {
         height: 100%;
         width: 100%;
-        background: url(../img/loading.gif) no-repeat scroll center center #FFF;
+        background: url(../images/loading.gif) no-repeat scroll center center
+            #fff;
         overflow-y: auto;
         display: inline-block;
-        &[fb-xfbml-state="rendered"] {
+        &[fb-xfbml-state='rendered'] {
             background-image: none;
         }
         > span {
@@ -54,16 +55,16 @@
         color: #999;
         @include transition(color 0.2s linear);
         &:hover {
-            color: #FFF; 
+            color: #fff;
         }
         &:after {
-            content: "\e070";
+            content: '\e070';
         }
     }
 
     iframe {
         max-width: 100% !important;
-        width: 100% !important;;
+        width: 100% !important;
     }
 
     #disqus_thread {
@@ -82,11 +83,14 @@
         z-index: $zindex-toolbar - 1;
         opacity: 0;
         visibility: hidden;
-        @include transition(visibility 0s linear 0.18s, opacity 0.18s linear 0s);
+        @include transition(
+            visibility 0s linear 0.18s,
+            opacity 0.18s linear 0s
+        );
     }
     #lg-comment-toggle {
         &:after {
-            content: "\e900";
+            content: '\e900';
         }
     }
     &.lg-comment-active {
@@ -97,7 +101,7 @@
             visibility: visible;
         }
         #lg-comment-toggle {
-            color: #FFF;
+            color: #fff;
         }
         .lg-comment-box {
             @include transform(translate3d(0, 0, 0));
