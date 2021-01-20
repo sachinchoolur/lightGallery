@@ -1,10 +1,3 @@
-/*!
- * lightgallery | 0.0.0 | January 16th 2021
- * http://sachinchoolur.github.io/lightGallery/
- * Copyright (c) 2020 Sachin Neravath;
- * @license GPLv3
- */
-
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
@@ -12,7 +5,7 @@
 }(this, (function (exports) { 'use strict';
 
     var videoDefaults = {
-        videoMaxWidth: '855px',
+        videoMaxWidth: '1200px',
         autoplayFirstVideo: true,
         youtubePlayerParams: false,
         vimeoPlayerParams: false,
@@ -22,6 +15,7 @@
         videojs: false,
         videojsOptions: {},
     };
+    //# sourceMappingURL=lg-video-settings.js.map
 
     /**
      * Video module for lightGallery
@@ -422,6 +416,7 @@
         return Video;
     }());
     window.lgModules.video = Video;
+    //# sourceMappingURL=lg-video.js.map
 
     exports.Video = Video;
 

@@ -48,7 +48,7 @@
     "precommit": "lint-staged",
     "travis-deploy-once": "travis-deploy-once",
     "copyAssets": "copyfiles -u 1 src/fonts/** dist && copyfiles -u 1 src/img/** dist",
-    "copyToSite": "copyfiles -u 1 dist/lightgallery.umd.js dist/lightgallery.umd.js.map dist/plugins/*.umd.js dist/plugins/*.umd.js.map site/static/js && copyfiles -f dist/img/** site/static/images && copyfiles -f dist/fonts/** site/static/fonts && copyfiles -f dist/css/** site/static/css"
+    "copyToSite": "copyfiles -u 1 dist/lightgallery.umd.js dist/lightgallery.umd.js.map dist/plugins/*.umd.js dist/plugins/*.umd.js.map site/assets/js && copyfiles -f dist/img/** site/static/images && copyfiles -f dist/fonts/** site/static/fonts && copyfiles -f dist/css/** site/static/css"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [

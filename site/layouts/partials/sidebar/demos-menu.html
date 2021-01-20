@@ -6,7 +6,7 @@
     {{ range .Children -}}
       {{- $active := or ($currentPage.IsMenuCurrent "demos" .) ($currentPage.HasMenuCurrent "demos" .) -}}
       {{- $active = or $active (eq .Name $currentPage.Title) -}}
-      <li><a class="demos-link{{ if $active }} active{{ end }}" href="{{ .URL | absURL }}">{{ .Name }}</a></li>
+      <li><a class="docs-link{{ if $active }} active{{ end }}" href="{{ .URL | absURL }}">{{ .Name }}</a></li>
     {{ end -}}
   </ul>
   {{ end -}}

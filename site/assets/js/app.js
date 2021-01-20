@@ -2,7 +2,8 @@
  * Inline Gallery
  */
 const lgCont = document.getElementById('gallery-container');
-lgCont.style.height = window.innerHeight + 'px';
+const LG = window.LG;
+LG(lgCont).css('height', window.innerHeight + 'px');
 window.lightGallery(document.getElementById('gallery-container'), {
     container: document.getElementById('gallery-container'),
     dynamic: true,
@@ -37,3 +38,5 @@ window.lightGallery(document.getElementById('gallery-container'), {
         },
     ],
 });
+
+window.lightGallery(document.getElementById('lightGallery-videos'));

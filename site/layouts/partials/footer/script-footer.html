@@ -1,14 +1,17 @@
 {{ $lazysizes := resources.Get "js/vendor/lazysizes/lazysizes.min.js" -}}
 {{ $bootstrap := resources.Get "js/vendor/bootstrap/dist/js/bootstrap.min.js" -}}
+{{ $lightGallery := resources.Get "js/lightgallery.umd.js" -}}
+{{ $lightGalleryVideo := resources.Get "js/plugins/lg-video.umd.js" -}}
 {{ if eq (hugo.Environment) "development" -}}
   {{ $app := resources.Get "js/app.js" | babel -}}
   {{ $js := slice $lazysizes $bootstrap $app | resources.Concat "main.js" -}}
-  <script src="/js/lightgallery.umd.js"></script>
   <script src="{{ $js.Permalink }}" defer></script>
+  <script src="{{$lightGallery.Permalink}}"></script>
+  <script src="{{$lightGalleryVideo.Permalink}}"></script>
 {{ else -}}
   {{ $instantPage := resources.Get "js/vendor/instant.page/instantpage.js" | minify -}}
   {{ $app := resources.Get "js/app.js" | babel | minify -}}
-  {{ $js := slice $lazysizes $bootstrap $instantPage $app | resources.Concat "main.js" -}}
+  {{ $js := slice $lazysizes $bootstrap $instantPage $lightGallery $lightGalleryVideo $app | resources.Concat "main.js" -}}
   {{ $secureJS := $js | resources.Fingerprint "sha512" -}}
   <script src="{{ $secureJS.Permalink }}" integrity="{{ $secureJS.Data.Integrity }}" crossorigin="anonymous" defer></script>
 {{ end -}}
