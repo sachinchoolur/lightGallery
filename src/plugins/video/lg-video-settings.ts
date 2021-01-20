@@ -10,7 +10,7 @@ export interface VideoDefaults {
     videojsOptions: any;
 }
 export const videoDefaults: VideoDefaults = {
-    videoMaxWidth: '855px',
+    videoMaxWidth: '1200px',
 
     autoplayFirstVideo: true,
 
