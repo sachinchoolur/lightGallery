@@ -385,7 +385,7 @@ export const lightGallerySettings: LightGallerySettings = {
     backdropDuration: 150,
     container: document.body,
     startAnimationDuration: 350,
-    zoomFromImage: true,
+    zoomFromImage: false,
     hideBarsDelay: 2000,
     showBarsAfter: 0,
     supportLegacyBrowser: true,
