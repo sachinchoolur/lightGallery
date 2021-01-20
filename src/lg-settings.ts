@@ -407,7 +407,7 @@ export const lightGallerySettings: LightGallerySettings = {
     getCaptionFromTitleOrAlt: true,
     appendSubHtmlTo: '.lg-sub-html',
     subHtmlSelectorRelative: false,
-    preload: 3,
+    preload: 1,
     numberOfSlideItemsInDom: 10,
     showAfterLoad: true,
     selector: '',
