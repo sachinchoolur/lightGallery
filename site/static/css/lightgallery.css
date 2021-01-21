@@ -1181,8 +1181,11 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 }
 
 .lg-outer .lg-item {
-  background: url("../images/loading.gif") no-repeat scroll center center transparent;
   display: none !important;
+}
+
+.lg-outer .lg-item:not(.start-end-progress) {
+  background: url("../images/loading.gif") no-repeat scroll center center transparent;
 }
 
 .lg-outer.lg-css3 .lg-prev-slide,
