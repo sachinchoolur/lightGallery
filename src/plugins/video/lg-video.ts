@@ -10,6 +10,8 @@
  * https://wistia.com/support/developers/construct-an-embed-code
  * http://jsfiddle.net/xvnm7xLm/
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+ * https://wistia.com/support/embed-and-share/sharing-videos
+ * https://private-sharing.wistia.com/medias/mwhrulrucj
  *
  * @ref Youtube
  * https://developers.google.com/youtube/player_parameters#enablejsapi
@@ -24,16 +26,20 @@ import { CustomEventHasVideo } from '../../types';
 declare let YT: any;
 declare let Vimeo: any;
 declare let videojs: any;
+interface VideoSource {
+    source: [
+        {
+            src: string;
+            type: string;
+        },
+    ];
+    attributes: HTMLVideoElement;
+}
 
 declare global {
     interface Window {
         _wq: any;
         Vimeo: any;
-    }
-}
-
-declare global {
-    interface Window {
         LG: (selector: any) => lgQuery;
     }
 }
@@ -221,7 +227,7 @@ export class Video {
         src: any,
         addClass: any,
         index: number,
-        html5Video: { source: string | any[]; [key: string]: any },
+        html5Video: VideoSource,
     ) {
         let video = '';
         const videoInfo =
@@ -270,11 +276,9 @@ export class Video {
             }
 
             let html5VideoAttrs = '';
-
-            Object.keys(html5Video).forEach(function (key) {
-                if (key !== 'source') {
-                    html5VideoAttrs += `${key}="${html5Video[key]}" `;
-                }
+            const videoAttributes = html5Video.attributes || {};
+            Object.keys(videoAttributes || {}).forEach(function (key) {
+                html5VideoAttrs += `${key}="${(videoAttributes as any)[key]}" `;
             });
             video = `<video class="lg-video-object lg-html5 ${
                 this.s.videojs ? 'video-js' : ''
