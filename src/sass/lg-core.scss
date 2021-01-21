@@ -143,8 +143,10 @@
     }
 
     .lg-item {
-        background: url('#{$lg-path-images}/loading.gif') no-repeat scroll
-            center center transparent;
+        &:not(.start-end-progress) {
+            background: url('#{$lg-path-images}/loading.gif') no-repeat scroll
+                center center transparent;
+        }
         display: none !important;
     }
     &.lg-css3 {
