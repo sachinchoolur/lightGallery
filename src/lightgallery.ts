@@ -77,6 +77,7 @@ export class LightGallery {
     private prevScrollTop = 0;
 
     private zoomFromImage!: boolean;
+    private $backdrop!: lgQuery;
     $items: any;
 
     constructor(
@@ -175,7 +176,6 @@ export class LightGallery {
             // Using for loop instead of using bubbling as the items can be any html element.
             for (let index = 0; index < this.items.length; index++) {
                 const element = this.items[index];
-
                 // Using different namespace for click because click event should not unbind if selector is same object('this')
                 // @todo manage all event listners - should have namespace that represent element
                 LG(element).on(`click.lgcustom-item-${index}`, (e) => {
@@ -301,7 +301,12 @@ export class LightGallery {
 
         LG(this.s.container).css('position', 'relative').append(template);
         this.outer = LG(`#${this.getById('lg-outer')}`);
-        this.outer.get().focus();
+        this.$backdrop = LG(`#${this.getById('lg-backdrop')}`);
+
+        this.$backdrop.css(
+            'transition-duration',
+            this.s.backdropDuration + 'ms',
+        );
 
         if (this.s.useLeft) {
             this.outer.addClass('lg-use-left');
@@ -419,9 +424,8 @@ export class LightGallery {
         if (this.lgOpened) return;
 
         this.lgOpened = true;
-
-        const backdrop = LG(`#${this.getById('lg-backdrop')}`);
         const container = LG(`#${this.getById('lg-container')}`);
+        this.outer.get().focus();
         this.outer.removeClass('lg-hide-items');
 
         if (!this.zoomFromImage || !transform) {
@@ -429,8 +433,6 @@ export class LightGallery {
         } else if (this.zoomFromImage && transform) {
             this.outer.addClass('lg-zoom-from-image');
         }
-
-        backdrop.css('transition-duration', this.s.backdropDuration + 'ms');
 
         const itemsToBeInsertedToDom = this.getItemsToBeInsertedToDom(
             index,
@@ -478,8 +480,8 @@ export class LightGallery {
             }
 
             container.addClass('lg-show');
-            setTimeout(function () {
-                backdrop.addClass('in');
+            setTimeout(() => {
+                this.$backdrop.addClass('in');
                 container.addClass('lg-show-in');
             }, 10);
 
@@ -822,32 +824,22 @@ export class LightGallery {
      *  @param {Boolean} firstSlide - For setting the delay.
      */
     loadContent(index: number, rec: boolean, firstSlide: boolean): void {
-        let _$img;
-        let _src: string;
-        let _poster;
+        let $img;
         const currentDynamicItem = this.galleryItems[index];
         const $currentSlide = LG(this.getSlideItemId(index));
 
-        if (currentDynamicItem.poster) {
-            _poster = currentDynamicItem.poster;
-        }
+        const { poster, srcset, sizes } = currentDynamicItem;
+        let { src } = currentDynamicItem;
 
         const _html5Video =
             currentDynamicItem.video && JSON.parse(currentDynamicItem.video);
-        _src = currentDynamicItem.src;
 
         if (currentDynamicItem.responsive) {
             const srcDyItms = currentDynamicItem.responsive.split(',');
-            _src = utils.getResponsiveSrc(srcDyItms) || _src;
+            src = utils.getResponsiveSrc(srcDyItms) || src;
         }
 
-        const _srcset = currentDynamicItem.srcset;
-        const _sizes = currentDynamicItem.sizes;
-
-        let iframe = false;
-        if (this.galleryItems[index].iframe) {
-            iframe = true;
-        }
+        const iframe = !!currentDynamicItem.iframe;
 
         let imageSize;
         if (!this.s.dynamic) {
@@ -855,30 +847,21 @@ export class LightGallery {
             imageSize = utils.getSize($currentItem);
         }
 
-        // delay for adding complete class. it is 0 except first time.
-        let delay = 0;
-        if (firstSlide) {
-            if (this.zoomFromImage && imageSize) {
-                delay = this.s.startAnimationDuration + 10;
-            } else {
-                delay = this.s.backdropDuration + 10;
-            }
-        }
-
         const videoInfo = currentDynamicItem.__slideVideoInfo;
+
         if (!$currentSlide.hasClass('lg-loaded')) {
             if (iframe) {
                 const markup = utils.getIframeMarkup(
-                    _src,
+                    src,
                     this.s.iframeMaxWidth,
                 );
                 $currentSlide.prepend(markup);
-            } else if (_poster) {
-                const markup = utils.getVideoPosterMarkup(_poster, videoInfo);
+            } else if (poster) {
+                const markup = utils.getVideoPosterMarkup(poster, videoInfo);
                 $currentSlide.prepend(markup);
                 this.LGel.trigger('hasVideo.lg', {
                     index,
-                    src: _src,
+                    src: src,
                     html5Video: _html5Video,
                     hasPoster: true,
                 });
@@ -888,27 +871,27 @@ export class LightGallery {
                 $currentSlide.prepend(markup);
                 this.LGel.trigger('hasVideo.lg', {
                     index,
-                    src: _src,
+                    src: src,
                     html5Video: _html5Video,
                     hasPoster: false,
                 });
             } else {
-                this.setImgMarkup(_src, $currentSlide, index);
+                this.setImgMarkup(src, $currentSlide, index);
             }
 
             this.LGel.trigger('onAferAppendSlide.lg', { index });
 
-            _$img = $currentSlide.find('.lg-object');
-            if (_sizes) {
-                _$img.attr('sizes', _sizes);
+            $img = $currentSlide.find('.lg-object');
+            if (sizes) {
+                $img.attr('sizes', sizes);
             }
 
-            if (_srcset) {
-                _$img.attr('srcset', _srcset);
+            if (srcset) {
+                $img.attr('srcset', srcset);
                 if (this.s.supportLegacyBrowser) {
                     try {
                         picturefill({
-                            elements: [_$img.get()],
+                            elements: [$img.get()],
                         });
                     } catch (e) {
                         console.warn(
@@ -925,6 +908,16 @@ export class LightGallery {
 
         // For first time add some delay for displaying the start animation.
         let _speed = 0;
+
+        // delay for adding complete class. it is 0 except first time.
+        let delay = 0;
+        if (firstSlide) {
+            if (this.zoomFromImage && imageSize) {
+                delay = this.s.startAnimationDuration + 10;
+            } else {
+                delay = this.s.backdropDuration + 10;
+            }
+        }
 
         // Do not change the delay value because it is required for zoom plugin.
         // If gallery opened from direct url (hash) speed value should be 0
@@ -944,7 +937,7 @@ export class LightGallery {
                     $currentSlide
                         .find('.lg-img-wrap')
                         .append(
-                            `<img class="lg-object lg-image" data-index="${index}" src="${_src}" />`,
+                            `<img class="lg-object lg-image" data-index="${index}" src="${src}" />`,
                         );
                     this.onLgObjectLoad(
                         $currentSlide,
@@ -967,12 +960,12 @@ export class LightGallery {
             }
         }
 
+        // SLide content has been added to dom
         $currentSlide.addClass('lg-loaded');
-
         this.onLgObjectLoad($currentSlide, index, delay, _speed, false);
 
         // @todo check load state for html5 videos
-        if (videoInfo && videoInfo.html5 && !_poster) {
+        if (videoInfo && videoInfo.html5 && !poster) {
             $currentSlide.addClass('lg-complete lg-complete_');
         }
 
@@ -1091,6 +1084,93 @@ export class LightGallery {
         return itemsToBeInsertedToDom;
     }
 
+    organizeSlideItems(index: number, prevIndex: number): string[] {
+        const itemsToBeInsertedToDom = this.getItemsToBeInsertedToDom(
+            index,
+            prevIndex,
+            this.s.numberOfSlideItemsInDom,
+        );
+
+        itemsToBeInsertedToDom.forEach((item) => {
+            if (this.currentItemsInDom.indexOf(item) === -1) {
+                LG(`#${this.getById('lg-inner')}`).append(
+                    `<div id="${item}" class="lg-item"></div>`,
+                );
+            }
+        });
+
+        this.currentItemsInDom.forEach((item) => {
+            if (itemsToBeInsertedToDom.indexOf(item) === -1) {
+                LG(`#${item}`).remove();
+            }
+        });
+        return itemsToBeInsertedToDom;
+    }
+
+    /**
+     * Get previous index of the slide
+     */
+    getPreviousSlideIndex(): number {
+        let prevIndex = 0;
+        try {
+            const currentItemId = this.outer
+                .find('.lg-current')
+                .first()
+                .attr('id');
+            prevIndex = parseInt(currentItemId.split('-')[3]) || 0;
+        } catch (error) {
+            prevIndex = 0;
+        }
+        return prevIndex;
+    }
+
+    setDownloadValue(index: number): void {
+        if (this.s.download) {
+            const currentGalleryItem = this.galleryItems[index];
+            const src =
+                currentGalleryItem.downloadUrl !== false &&
+                (currentGalleryItem.downloadUrl || currentGalleryItem.src);
+
+            if (src) {
+                LG(`#${this.getById('lg-download')}`).attr('href', src);
+                this.outer.removeClass('lg-hide-download');
+            } else {
+                this.outer.addClass('lg-hide-download');
+            }
+        }
+    }
+
+    makeSlideAnimation(
+        direction: 'next' | 'prev',
+        currentSlideItem: lgQuery,
+        previousSlideItem: lgQuery,
+    ): void {
+        // remove all transitions
+        this.outer.addClass('lg-no-trans');
+
+        this.outer.find('.lg-item').removeClass('lg-prev-slide lg-next-slide');
+
+        if (direction === 'prev') {
+            //prevslide
+            currentSlideItem.addClass('lg-prev-slide');
+            previousSlideItem.addClass('lg-next-slide');
+        } else {
+            // next slide
+            currentSlideItem.addClass('lg-next-slide');
+            previousSlideItem.addClass('lg-prev-slide');
+        }
+
+        // give 50 ms for browser to add/remove class
+        setTimeout(() => {
+            this.outer.find('.lg-item').removeClass('lg-current');
+
+            currentSlideItem.addClass('lg-current');
+
+            // reset all transitions
+            this.outer.removeClass('lg-no-trans');
+        }, 50);
+    }
+
     /**
     *   @desc slide function for lightgallery
         ** Slide() gets call on start
@@ -1118,67 +1198,21 @@ export class LightGallery {
         fromThumb: boolean,
         direction?: SlideDirection | false,
     ): void {
-        let _prevIndex = 0;
-        try {
-            const currentItemId = this.outer
-                .find('.lg-current')
-                .first()
-                .attr('id');
-            _prevIndex = parseInt(currentItemId.split('-')[3]) || 0;
-        } catch (error) {
-            _prevIndex = 0;
-        }
+        const prevIndex = this.getPreviousSlideIndex();
+        this.currentItemsInDom = this.organizeSlideItems(index, prevIndex);
 
-        const itemsToBeInsertedToDom = this.getItemsToBeInsertedToDom(
-            index,
-            _prevIndex,
-            this.s.numberOfSlideItemsInDom,
-        );
-
-        itemsToBeInsertedToDom.forEach((item) => {
-            if (this.currentItemsInDom.indexOf(item) === -1) {
-                LG(`#${this.getById('lg-inner')}`).append(
-                    `<div id="${item}" class="lg-item"></div>`,
-                );
-            }
-        });
-
-        this.currentItemsInDom.forEach((item) => {
-            if (itemsToBeInsertedToDom.indexOf(item) === -1) {
-                LG(`#${item}`).remove();
-            }
-        });
-        this.currentItemsInDom = itemsToBeInsertedToDom;
-
-        // Prevent if multiple call
-        // Required for hsh plugin
-        if (this.lGalleryOn && _prevIndex === index) {
+        // Prevent multiple call, Required for hsh plugin
+        if (this.lGalleryOn && prevIndex === index) {
             return;
         }
 
-        const _length = this.galleryItems.length;
-        const _time = this.lGalleryOn ? this.s.speed : 0;
+        const numberOfGalleryItems = this.galleryItems.length;
 
         if (!this.lgBusy) {
-            if (this.s.download) {
-                const _src =
-                    this.galleryItems[index].downloadUrl !== false &&
-                    (this.galleryItems[index].downloadUrl ||
-                        this.galleryItems[index].src);
-
-                if (_src) {
-                    LG(`#${this.getById('lg-download')}`).attr(
-                        'href',
-                        _src as string,
-                    );
-                    this.outer.removeClass('lg-hide-download');
-                } else {
-                    this.outer.addClass('lg-hide-download');
-                }
-            }
+            this.setDownloadValue(index);
 
             LG(this.el).trigger('onBeforeSlide.lg', {
-                prevIndex: _prevIndex,
+                prevIndex,
                 index,
                 fromTouch,
                 fromThumb,
@@ -1191,67 +1225,60 @@ export class LightGallery {
             // Add title if this.s.appendSubHtmlTo === lg-sub-html
             if (this.s.appendSubHtmlTo === '.lg-sub-html') {
                 // wait for slide animation to complete
-                setTimeout(() => {
-                    this.addHtml(index);
-                }, _time);
+                setTimeout(
+                    () => {
+                        this.addHtml(index);
+                    },
+                    this.lGalleryOn ? this.s.speed + 50 : 50,
+                );
+            }
+
+            if (this.s.counter) {
+                LG(`#${this.getById('lg-counter-current')}`).html(
+                    index + 1 + '',
+                );
             }
 
             this.arrowDisable(index);
 
             if (!direction) {
-                if (index < _prevIndex) {
+                if (index < prevIndex) {
                     direction = 'prev';
-                } else if (index > _prevIndex) {
+                } else if (index > prevIndex) {
                     direction = 'next';
                 }
             }
 
+            const currentSlideItem = this.getSlideItem(index);
+            const previousSlideItem = this.getSlideItem(prevIndex);
+
             if (!fromTouch) {
-                // remove all transitions
-                this.outer.addClass('lg-no-trans');
-
-                this.outer
-                    .find('.lg-item')
-                    .removeClass('lg-prev-slide lg-next-slide');
-
-                if (direction === 'prev') {
-                    //prevslide
-                    this.getSlideItem(index).addClass('lg-prev-slide');
-                    this.getSlideItem(_prevIndex).addClass('lg-next-slide');
-                } else {
-                    // next slide
-                    this.getSlideItem(index).addClass('lg-next-slide');
-                    this.getSlideItem(_prevIndex).addClass('lg-prev-slide');
-                }
-
-                // give 50 ms for browser to add/remove class
-                setTimeout(() => {
-                    this.outer.find('.lg-item').removeClass('lg-current');
-
-                    //this.getSlideItem(_prevIndex).removeClass('lg-current');
-                    this.getSlideItem(index).addClass('lg-current');
-
-                    // reset all transitions
-                    this.outer.removeClass('lg-no-trans');
-                }, 50);
+                this.makeSlideAnimation(
+                    direction as SlideDirection,
+                    currentSlideItem,
+                    previousSlideItem,
+                );
             } else {
                 this.outer
                     .find('.lg-item')
                     .removeClass('lg-prev-slide lg-current lg-next-slide');
                 let touchPrev;
                 let touchNext;
-                if (_length > 2) {
+                if (numberOfGalleryItems > 2) {
                     touchPrev = index - 1;
                     touchNext = index + 1;
 
-                    if (index === 0 && _prevIndex === _length - 1) {
+                    if (index === 0 && prevIndex === numberOfGalleryItems - 1) {
                         // next slide
                         touchNext = 0;
-                        touchPrev = _length - 1;
-                    } else if (index === _length - 1 && _prevIndex === 0) {
+                        touchPrev = numberOfGalleryItems - 1;
+                    } else if (
+                        index === numberOfGalleryItems - 1 &&
+                        prevIndex === 0
+                    ) {
                         // prev slide
                         touchNext = 0;
-                        touchPrev = _length - 1;
+                        touchPrev = numberOfGalleryItems - 1;
                     }
                 } else {
                     touchPrev = 0;
@@ -1264,39 +1291,27 @@ export class LightGallery {
                     this.getSlideItem(touchPrev).addClass('lg-prev-slide');
                 }
 
-                this.getSlideItem(index).addClass('lg-current');
+                currentSlideItem.addClass('lg-current');
             }
-            if (this.lGalleryOn) {
-                setTimeout(() => {
-                    this.loadContent(index, true, false);
-                }, this.s.speed + 50);
 
-                setTimeout(() => {
+            setTimeout(
+                () => {
+                    this.loadContent(index, true, false);
+                },
+                this.lGalleryOn ? this.s.speed + 50 : 50,
+            );
+            setTimeout(
+                () => {
                     this.lgBusy = false;
                     this.LGel.trigger('onAfterSlide.lg', {
-                        prevIndex: _prevIndex,
+                        prevIndex: prevIndex,
                         index,
                         fromTouch,
                         fromThumb,
                     });
-                }, this.s.speed);
-            } else {
-                this.loadContent(index, true, true);
-
-                this.lgBusy = false;
-                this.LGel.trigger('onAfterSlide.lg', {
-                    prevIndex: _prevIndex,
-                    index,
-                    fromTouch,
-                    fromThumb,
-                });
-            }
-
-            if (this.s.counter) {
-                LG(`#${this.getById('lg-counter-current')}`).html(
-                    index + 1 + '',
-                );
-            }
+                },
+                this.lGalleryOn ? this.s.speed + 100 : 100,
+            );
         }
 
         this.index = index;
@@ -1353,8 +1368,7 @@ export class LightGallery {
                 container.addClass('lg-dragging-vertical');
 
                 const opacity = 1 - Math.abs(distanceY) / window.innerHeight;
-                const backdrop = LG(`#${this.getById('lg-backdrop')}`);
-                backdrop.css('opacity', opacity);
+                this.$backdrop.css('opacity', opacity);
 
                 const scale = 1 - Math.abs(distanceY) / (window.innerWidth * 2);
                 this.setTranslate($currentSlide, 0, distanceY, scale, scale);
@@ -1374,7 +1388,6 @@ export class LightGallery {
         // set transition duration
         setTimeout(() => {
             const container = LG(`#${this.getById('lg-container')}`);
-            const backdrop = LG(`#${this.getById('lg-backdrop')}`);
 
             container.removeClass('lg-dragging-vertical');
             this.outer.removeClass(
@@ -1404,7 +1417,7 @@ export class LightGallery {
                     this.destroy();
                     return;
                 } else {
-                    backdrop.css('opacity', 1);
+                    this.$backdrop.css('opacity', 1);
                 }
             }
             this.outer.find('.lg-item').removeAttr('style');
@@ -1682,9 +1695,7 @@ export class LightGallery {
         LG(`#${this.getById('lg-prev')}`).on('click.lg', () => {
             this.goToPrevSlide();
         });
-        console.log(LG(`#${this.getById('lg-next')}`));
         LG(`#${this.getById('lg-next')}`).on('click.lg', () => {
-            console.log('calling');
             this.goToNextSlide();
         });
     }
@@ -1825,8 +1836,6 @@ export class LightGallery {
             LG(window).scrollTop(this.prevScrollTop);
         }
 
-        const $backdrop = LG(`#${this.getById('lg-backdrop')}`);
-
         let transform: string | undefined;
         if (!this.s.dynamic) {
             const imageSize = utils.getSize(this.items[this.index]);
@@ -1894,7 +1903,7 @@ export class LightGallery {
         this.outer.removeClass('lg-visible');
 
         // Resetting opacity to 0 isd required as  vertical swipe to close function adds inline opacity.
-        $backdrop.removeClass('in').css('opacity', 0);
+        this.$backdrop.removeClass('in').css('opacity', 0);
 
         const removeTimeout =
             this.zoomFromImage && transform
@@ -1911,7 +1920,11 @@ export class LightGallery {
                 this.outer.removeClass('lg-zoom-from-image');
             }
             LG(`#${this.getById('lg-container')}`).removeClass('lg-show');
-            $backdrop.removeAttr('style');
+
+            // Need to remove inline opacity as it is used in the stylesheet as well
+            this.$backdrop
+                .removeAttr('style')
+                .css('transition-duration', this.s.backdropDuration + 'ms');
 
             this.outer.removeClass(`lg-closing ${this.s.startClass}`);
 
@@ -1919,11 +1932,7 @@ export class LightGallery {
             LG(`#${this.getById('lg-inner')}`).empty();
 
             if (clear) {
-                if (this.outer) {
-                    this.outer.remove();
-                }
-
-                $backdrop.remove();
+                LG(`#${this.getById('lg-container')}`).remove();
             }
             if (!clear) {
                 this.LGel.trigger('onCloseAfter.lg');
