@@ -134,23 +134,23 @@ export class lgQuery {
     }
 
     find(selector: any): lgQuery {
-        return LG(this._getSelector(selector, this.selector));
+        return $LG(this._getSelector(selector, this.selector));
     }
 
     first(): lgQuery {
         if (this.selector.length !== undefined) {
-            return LG(this.selector[0]);
+            return $LG(this.selector[0]);
         } else {
-            return LG(this.selector);
+            return $LG(this.selector);
         }
     }
 
     eq(index: number): lgQuery {
-        return LG(this.selector[index]);
+        return $LG(this.selector[index]);
     }
 
     parent(): lgQuery {
-        return LG(this.selector.parentElement);
+        return $LG(this.selector.parentElement);
     }
 
     get(): HTMLElement {
@@ -372,7 +372,7 @@ export class lgQuery {
             };
         }
         const rect = this.firstElement.getBoundingClientRect();
-        const bodyMarginLeft = LG('body').style().marginLeft;
+        const bodyMarginLeft = $LG('body').style().marginLeft;
 
         // Minus body margin - https://stackoverflow.com/questions/30711548/is-getboundingclientrect-left-returning-a-wrong-value
         return {
@@ -409,6 +409,6 @@ export class lgQuery {
     }
 }
 
-export function LG(selector: any): lgQuery {
+export function $LG(selector: any): lgQuery {
     return new lgQuery(selector);
 }

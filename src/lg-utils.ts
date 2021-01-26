@@ -1,4 +1,4 @@
-import { LG } from './lgQuery';
+import { $LG } from './lgQuery';
 import { VideoInfo } from './types';
 export interface ImageSize {
     width: number;
@@ -75,7 +75,7 @@ const utils = {
      * @returns {Object} Computed Width and Computed Height
      */
     getSize(el: HTMLElement): ImageSize | undefined {
-        const LGel = LG(el);
+        const LGel = $LG(el);
         const lgSize = LGel.attr('data-lg-size');
 
         if (!lgSize) {
@@ -113,7 +113,7 @@ const utils = {
         if (!imageSize) {
             return;
         }
-        const LGel = LG(el);
+        const LGel = $LG(el);
 
         const wWidth = document.body.clientWidth;
 
@@ -130,13 +130,13 @@ const utils = {
             (LGel.offset().left +
                 parseFloat(elStyle.paddingLeft) +
                 parseFloat(elStyle.borderLeft)) +
-            LG(window).scrollLeft();
+            $LG(window).scrollLeft();
         let y =
             (wHeight - elHeight) / 2 -
             (LGel.offset().top +
                 parseFloat(elStyle.paddingTop) +
                 parseFloat(elStyle.borderTop)) +
-            LG(window).scrollTop();
+            $LG(window).scrollTop();
 
         const scX = elWidth / imageSize.width;
         const scY = elHeight / imageSize.height;
@@ -235,7 +235,7 @@ const utils = {
                     }
                 }
             }
-            const currentItem = LG(item);
+            const currentItem = $LG(item);
             const alt = currentItem.find('img').first().attr('alt');
             const title = currentItem.attr('title');
 

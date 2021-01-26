@@ -40,7 +40,7 @@ declare global {
     interface Window {
         _wq: any;
         Vimeo: any;
-        LG: (selector: any) => lgQuery;
+        $LG: (selector: any) => lgQuery;
     }
 }
 

@@ -9,11 +9,11 @@ const defaults = {
 
 declare global {
     interface Window {
-        LG: (selector: any) => lgQuery;
+        $LG: (selector: any) => lgQuery;
     }
 }
 
-const LG = window.LG;
+const $LG = window.$LG;
 
 export class FullScreen {
     core: LightGallery;
@@ -85,7 +85,7 @@ export class FullScreen {
 
     // https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode
     fullScreen(): void {
-        LG(document).on(
+        $LG(document).on(
             `fullscreenchange.lg.global${this.core.lgId} 
             webkitfullscreenchange.lg.global${this.core.lgId} 
             mozfullscreenchange.lg.global${this.core.lgId} 
@@ -114,7 +114,7 @@ export class FullScreen {
             this.exitFullscreen();
         }
         if (clear) {
-            LG(document).off(
+            $LG(document).off(
                 `fullscreenchange.lg.global${this.core.lgId} 
                 webkitfullscreenchange.lg.global${this.core.lgId} 
                 mozfullscreenchange.lg.global${this.core.lgId} 

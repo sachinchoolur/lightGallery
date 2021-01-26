@@ -1,9 +1,9 @@
 import utils, { DynamicItem, ImageSize } from './lg-utils';
-import { LG, lgQuery } from './lgQuery';
+import { $LG, lgQuery } from './lgQuery';
 import { LightGallerySettings, lightGallerySettings } from './lg-settings';
 import { Coords, SlideDirection, VideoInfo } from './types';
 
-window.LG = LG;
+window.$LG = $LG;
 declare let picturefill: any;
 
 // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
@@ -65,7 +65,7 @@ export class LightGallery {
         this.lgId = lgId;
 
         this.el = element;
-        this.LGel = LG(element);
+        this.LGel = $LG(element);
 
         // lightGallery settings
         this.settings = Object.assign({}, lightGallerySettings, options);
@@ -158,7 +158,7 @@ export class LightGallery {
                 const element = this.items[index];
                 // Using different namespace for click because click event should not unbind if selector is same object('this')
                 // @todo manage all event listners - should have namespace that represent element
-                LG(element).on(`click.lgcustom-item-${index}`, (e) => {
+                $LG(element).on(`click.lgcustom-item-${index}`, (e) => {
                     e.preventDefault();
                     const currentItemIndex = this.settings.index || index;
                     let transform;
@@ -191,7 +191,7 @@ export class LightGallery {
     }
 
     getSlideItem(index: number): lgQuery {
-        return LG(this.getSlideItemId(index));
+        return $LG(this.getSlideItemId(index));
     }
     getSlideItemId(index: number): string {
         return `#lg-item-${this.lgId}-${index}`;
@@ -201,7 +201,7 @@ export class LightGallery {
     }
 
     buildStructure(): number {
-        const container = (LG(
+        const container = ($LG(
             `#${this.getById('lg-container')}`,
         ).get() as unknown) as HTMLElement;
         if (container) {
@@ -282,11 +282,11 @@ export class LightGallery {
         </div>
         `;
 
-        LG(this.settings.container)
+        $LG(this.settings.container)
             .css('position', 'relative')
             .append(template);
-        this.outer = LG(`#${this.getById('lg-outer')}`);
-        this.$backdrop = LG(`#${this.getById('lg-backdrop')}`);
+        this.outer = $LG(`#${this.getById('lg-outer')}`);
+        this.$backdrop = $LG(`#${this.getById('lg-backdrop')}`);
 
         this.$backdrop.css(
             'transition-duration',
@@ -323,7 +323,7 @@ export class LightGallery {
         }
 
         if (this.doCss()) {
-            const $inner = LG(`#${this.getById('lg-inner')}`);
+            const $inner = $LG(`#${this.getById('lg-inner')}`);
             $inner.css('transition-timing-function', this.settings.easing);
             $inner.css('transition-duration', this.settings.speed + 'ms');
         }
@@ -340,7 +340,7 @@ export class LightGallery {
 
         this.counter();
 
-        LG(window).on(
+        $LG(window).on(
             `resize.lg.global${this.lgId} orientationchange.lg.global${this.lgId}`,
             () => {
                 if (
@@ -368,7 +368,7 @@ export class LightGallery {
     // Items has to in the form of an array of dynamicEl
     appendSlides(items: DynamicItem): void {
         this.galleryItems = this.galleryItems.concat(items);
-        LG(`#${this.getById('lg-counter-all')}`).html(
+        $LG(`#${this.getById('lg-counter-all')}`).html(
             this.galleryItems.length + '',
         );
         this.LGel.trigger('appendSlides.lg', { items });
@@ -384,7 +384,7 @@ export class LightGallery {
                 this.items.push(this.el);
             } else if (this.settings.selector) {
                 if (this.settings.selectWithin) {
-                    const selectWithin = LG(this.settings.selectWithin);
+                    const selectWithin = $LG(this.settings.selectWithin);
                     this.items = selectWithin
                         .find(this.settings.selector)
                         .get();
@@ -417,7 +417,7 @@ export class LightGallery {
         if (this.lgOpened) return;
 
         this.lgOpened = true;
-        const container = LG(`#${this.getById('lg-container')}`);
+        const container = $LG(`#${this.getById('lg-container')}`);
         this.outer.get().focus();
         this.outer.removeClass('lg-hide-items');
 
@@ -438,7 +438,7 @@ export class LightGallery {
             items = items + `<div id="${item}" class="lg-item"></div>`;
         });
 
-        LG(`#${this.getById('lg-inner')}`).append(items);
+        $LG(`#${this.getById('lg-inner')}`).append(items);
         if (!this.zoomFromImage || !transform) {
             this.getSlideItem(index).removeClass('lg-complete');
         }
@@ -450,7 +450,7 @@ export class LightGallery {
         this.lGalleryOn = false;
         setTimeout(() => {
             // Store the current scroll top value to scroll back after closing the gallery..
-            this.prevScrollTop = LG(window).scrollTop();
+            this.prevScrollTop = $LG(window).scrollTop();
 
             this.index = index;
 
@@ -491,7 +491,7 @@ export class LightGallery {
             this.LGel.trigger('onAfterOpen.lg');
         });
 
-        LG(document.body).addClass('lg-on');
+        $LG(document.body).addClass('lg-on');
     }
 
     // Build Gallery if gallery id exist in the URL
@@ -500,7 +500,7 @@ export class LightGallery {
         const _hash = window.location.hash;
         if (_hash.indexOf('lg=' + this.settings.galleryId) > 0) {
             // This class is used to remove the initial animation if galleryId present in the URL
-            LG(document.body).addClass('lg-from-hash');
+            $LG(document.body).addClass('lg-from-hash');
             this.zoomFromImage = false;
 
             const index = this.getIndexFromUrl(_hash);
@@ -597,13 +597,13 @@ export class LightGallery {
                         this.settings.subHtmlSelectorRelative &&
                         !this.settings.dynamic
                     ) {
-                        subHtml = LG(this.items)
+                        subHtml = $LG(this.items)
                             .eq(index)
                             .find(subHtml)
                             .first()
                             .html();
                     } else {
-                        subHtml = LG(subHtml).first().html();
+                        subHtml = $LG(subHtml).first().html();
                     }
                 }
             } else {
@@ -618,7 +618,7 @@ export class LightGallery {
                 this.outer.find('.lg-sub-html').html(subHtml as string);
             }
         } else {
-            const currentSlide = LG(this.getSlideItemId(index));
+            const currentSlide = $LG(this.getSlideItemId(index));
             if (subHtmlUrl) {
                 currentSlide.load(subHtmlUrl);
             } else {
@@ -669,7 +669,7 @@ export class LightGallery {
 
     getDummyImgStyles(imageSize?: ImageSize): string {
         imageSize =
-            imageSize || utils.getSize(LG(this.items).eq(this.index).get());
+            imageSize || utils.getSize($LG(this.items).eq(this.index).get());
         if (!imageSize) return '';
         return `width:${imageSize.width}px; 
                 margin-left: -${imageSize.width / 2}px;
@@ -685,7 +685,7 @@ export class LightGallery {
         let imageSize;
         let $currentItem;
         if (!this.settings.dynamic) {
-            $currentItem = LG(this.items).eq(index);
+            $currentItem = $LG(this.items).eq(index);
             imageSize = utils.getSize($currentItem.get());
         }
         const currentDynamicItem = this.galleryItems[index];
@@ -824,7 +824,7 @@ export class LightGallery {
     loadContent(index: number, rec: boolean, firstSlide: boolean): void {
         let $img;
         const currentDynamicItem = this.galleryItems[index];
-        const $currentSlide = LG(this.getSlideItemId(index));
+        const $currentSlide = $LG(this.getSlideItemId(index));
 
         const { poster, srcset, sizes } = currentDynamicItem;
         let { src } = currentDynamicItem;
@@ -919,7 +919,7 @@ export class LightGallery {
 
         // Do not change the delay value because it is required for zoom plugin.
         // If gallery opened from direct url (hash) speed value should be 0
-        if (delay && !LG(document.body).hasClass('lg-from-hash')) {
+        if (delay && !$LG(document.body).hasClass('lg-from-hash')) {
             _speed = delay;
         }
 
@@ -1091,7 +1091,7 @@ export class LightGallery {
 
         itemsToBeInsertedToDom.forEach((item) => {
             if (this.currentItemsInDom.indexOf(item) === -1) {
-                LG(`#${this.getById('lg-inner')}`).append(
+                $LG(`#${this.getById('lg-inner')}`).append(
                     `<div id="${item}" class="lg-item"></div>`,
                 );
             }
@@ -1099,7 +1099,7 @@ export class LightGallery {
 
         this.currentItemsInDom.forEach((item) => {
             if (itemsToBeInsertedToDom.indexOf(item) === -1) {
-                LG(`#${item}`).remove();
+                $LG(`#${item}`).remove();
             }
         });
         return itemsToBeInsertedToDom;
@@ -1130,7 +1130,7 @@ export class LightGallery {
                 (currentGalleryItem.downloadUrl || currentGalleryItem.src);
 
             if (src) {
-                LG(`#${this.getById('lg-download')}`).attr('href', src);
+                $LG(`#${this.getById('lg-download')}`).attr('href', src);
                 this.outer.removeClass('lg-hide-download');
             } else {
                 this.outer.addClass('lg-hide-download');
@@ -1290,7 +1290,7 @@ export class LightGallery {
                     this.loadContent(index, true, false);
                 }
                 if (this.settings.counter) {
-                    LG(`#${this.getById('lg-counter-current')}`).html(
+                    $LG(`#${this.getById('lg-counter-current')}`).html(
                         index + 1 + '',
                     );
                 }
@@ -1362,7 +1362,7 @@ export class LightGallery {
             );
         } else if (this.swipeDirection === 'vertical') {
             if (this.settings.swipeToClose) {
-                const container = LG(`#${this.getById('lg-container')}`);
+                const container = $LG(`#${this.getById('lg-container')}`);
                 container.addClass('lg-dragging-vertical');
 
                 const opacity = 1 - Math.abs(distanceY) / window.innerHeight;
@@ -1385,7 +1385,7 @@ export class LightGallery {
 
         // set transition duration
         setTimeout(() => {
-            const container = LG(`#${this.getById('lg-container')}`);
+            const container = $LG(`#${this.getById('lg-container')}`);
 
             container.removeClass('lg-dragging-vertical');
             this.outer.removeClass(
@@ -1454,14 +1454,14 @@ export class LightGallery {
         let endCoords: Coords = {} as Coords;
         let isMoved = false;
         let isSwiping = false;
-        const inner = LG(`#${this.getById('lg-inner')}`);
+        const inner = $LG(`#${this.getById('lg-inner')}`);
 
         if (this.settings.enableSwipe && this.doCss()) {
             inner.on('touchstart.lg', (e) => {
                 e.preventDefault();
                 const $item = this.getSlideItem(this.index);
                 if (
-                    (LG(e.target).hasClass('lg-item') ||
+                    ($LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target)) &&
                     !this.outer.hasClass('lg-zoomed') &&
                     !this.lgBusy &&
@@ -1517,7 +1517,7 @@ export class LightGallery {
             this.outer.on('mousedown.lg', (e) => {
                 const $item = this.getSlideItem(this.index);
                 if (
-                    LG(e.target).hasClass('lg-item') ||
+                    $LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target)
                 ) {
                     if (!this.outer.hasClass('lg-zoomed') && !this.lgBusy) {
@@ -1546,7 +1546,7 @@ export class LightGallery {
                 }
             });
 
-            LG(window).on(`mousemove.lg.global${this.lgId}`, (e) => {
+            $LG(window).on(`mousemove.lg.global${this.lgId}`, (e) => {
                 if (isDraging && this.lgOpened) {
                     isMoved = true;
                     endCoords = {
@@ -1558,11 +1558,11 @@ export class LightGallery {
                 }
             });
 
-            LG(window).on(`mouseup.lg.global${this.lgId}`, (e) => {
+            $LG(window).on(`mouseup.lg.global${this.lgId}`, (e) => {
                 if (!this.lgOpened) {
                     return;
                 }
-                const target = LG(e.target);
+                const target = $LG(e.target);
                 if (isMoved) {
                     isMoved = false;
                     this.touchEnd(endCoords, startCoords);
@@ -1673,7 +1673,7 @@ export class LightGallery {
     }
 
     keyPress(): void {
-        LG(window).on(`keydown.lg.global${this.lgId}`, (e) => {
+        $LG(window).on(`keydown.lg.global${this.lgId}`, (e) => {
             if (
                 this.lgOpened &&
                 this.settings.escKey === true &&
@@ -1701,10 +1701,10 @@ export class LightGallery {
     }
 
     arrow(): void {
-        LG(`#${this.getById('lg-prev')}`).on('click.lg', () => {
+        $LG(`#${this.getById('lg-prev')}`).on('click.lg', () => {
             this.goToPrevSlide();
         });
-        LG(`#${this.getById('lg-next')}`).on('click.lg', () => {
+        $LG(`#${this.getById('lg-next')}`).on('click.lg', () => {
             this.goToNextSlide();
         });
     }
@@ -1712,8 +1712,8 @@ export class LightGallery {
     arrowDisable(index: number): void {
         // Disable arrows if settings.hideControlOnEnd is true
         if (!this.settings.loop && this.settings.hideControlOnEnd) {
-            const $prev = LG(`#${this.getById('lg-prev')}`);
-            const $next = LG(`#${this.getById('lg-next')}`);
+            const $prev = $LG(`#${this.getById('lg-prev')}`);
+            const $next = $LG(`#${this.getById('lg-next')}`);
             if (index + 1 < this.galleryItems.length) {
                 $prev.removeAttr('disabled').removeClass('disabled');
             } else {
@@ -1797,7 +1797,7 @@ export class LightGallery {
     closeGallery(): void {
         if (!this.settings.closable) return;
         let mousedown = false;
-        LG(`#${this.getById('lg-close')}`).on('click.lg', () => {
+        $LG(`#${this.getById('lg-close')}`).on('click.lg', () => {
             this.destroy();
         });
 
@@ -1805,7 +1805,7 @@ export class LightGallery {
             // If you drag the slide and release outside gallery gets close on chrome
             // for preventing this check mousedown and mouseup happened on .lg-item or lg-outer
             this.outer.on('mousedown.lg', (e) => {
-                const target = LG(e.target);
+                const target = $LG(e.target);
                 if (
                     target.hasClass('lg-outer') ||
                     target.hasClass('lg-item') ||
@@ -1822,7 +1822,7 @@ export class LightGallery {
             });
 
             this.outer.on('mouseup.lg', (e) => {
-                const target = LG(e.target);
+                const target = $LG(e.target);
                 if (
                     target.hasClass('lg-outer') ||
                     target.hasClass('lg-item') ||
@@ -1842,7 +1842,7 @@ export class LightGallery {
         }
         if (!clear) {
             this.LGel.trigger('onBeforeClose.lg');
-            LG(window).scrollTop(this.prevScrollTop);
+            $LG(window).scrollTop(this.prevScrollTop);
         }
 
         let transform: string | undefined;
@@ -1895,10 +1895,10 @@ export class LightGallery {
                     const element = this.items[index];
 
                     // Using different namespace for click because click event should not unbind if selector is same object('this')
-                    LG(element).off(`click.lgcustom-item-${index}`);
+                    $LG(element).off(`click.lgcustom-item-${index}`);
                 }
             }
-            LG(window).off(`.lg.global${this.lgId}`);
+            $LG(window).off(`.lg.global${this.lgId}`);
             this.LGel.off('.lg');
         }
 
@@ -1907,7 +1907,7 @@ export class LightGallery {
 
         clearTimeout(this.hideBarTimeout);
         this.hideBarTimeout = false;
-        LG(document.body).removeClass('lg-on lg-from-hash');
+        $LG(document.body).removeClass('lg-on lg-from-hash');
 
         this.outer.removeClass('lg-visible');
 
@@ -1921,14 +1921,14 @@ export class LightGallery {
                       this.settings.backdropDuration,
                   )
                 : this.settings.backdropDuration;
-        LG(`#${this.getById('lg-container')}`).removeClass('lg-show-in');
+        $LG(`#${this.getById('lg-container')}`).removeClass('lg-show-in');
 
         // Once the closign animation is completed and gallery is invisible
         setTimeout(() => {
             if (this.zoomFromImage && transform) {
                 this.outer.removeClass('lg-zoom-from-image');
             }
-            LG(`#${this.getById('lg-container')}`).removeClass('lg-show');
+            $LG(`#${this.getById('lg-container')}`).removeClass('lg-show');
 
             // Need to remove inline opacity as it is used in the stylesheet as well
             this.$backdrop
@@ -1941,10 +1941,10 @@ export class LightGallery {
             this.outer.removeClass(`lg-closing ${this.settings.startClass}`);
 
             this.getSlideItem(this.index).removeClass('start-end-progress');
-            LG(`#${this.getById('lg-inner')}`).empty();
+            $LG(`#${this.getById('lg-inner')}`).empty();
 
             if (clear) {
-                LG(`#${this.getById('lg-container')}`).remove();
+                $LG(`#${this.getById('lg-container')}`).remove();
             }
             if (!clear) {
                 this.LGel.trigger('onCloseAfter.lg');

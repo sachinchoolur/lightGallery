@@ -1,11 +1,11 @@
 import { LightGallerySettings } from './lg-settings';
-import { LG } from './lgQuery';
+import { $LG } from './lgQuery';
 import { LightGallery } from './lightgallery';
 
 declare global {
     interface Window {
         lgModules: any;
-        LG: typeof LG;
+        $LG: typeof $LG;
         lightGallery: (
             el: HTMLElement,
             options: Partial<LightGallerySettings>,

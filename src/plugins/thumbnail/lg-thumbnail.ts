@@ -18,11 +18,11 @@ interface ThumbDragUtils {
 }
 declare global {
     interface Window {
-        LG: (selector: any) => lgQuery;
+        $LG: (selector: any) => lgQuery;
     }
 }
 
-const LG = window.LG;
+const $LG = window.$LG;
 
 interface ThumbnailDynamicItem extends DynamicItem {
     thumb: string;
@@ -95,7 +95,7 @@ export class Thumbnail {
         this.loadVimeoThumbs($thumb, this.settings.vimeoThumbSize);
         this.manageActiveClas();
         this.$lgThumb.first().on('click.lg touchend.lg', (e: CustomEvent) => {
-            const $target = LG(e.target);
+            const $target = $LG(e.target);
             if (!$target.hasAttribute('data-lg-item-id')) {
                 return;
             }
@@ -133,7 +133,7 @@ export class Thumbnail {
             this.addNewThumbnails(e.detail.items);
         });
 
-        LG(window).on(
+        $LG(window).on(
             `resize.lg.thumb.global${this.core.lgId} orientationchange.lg.thumb.global${this.core.lgId}`,
             () => {
                 if (!this.core.lgOpened) return;
@@ -214,7 +214,7 @@ export class Thumbnail {
                 }
             });
 
-        LG(window).on(`mousemove.lg.thumb.global${this.core.lgId}`, (e) => {
+        $LG(window).on(`mousemove.lg.thumb.global${this.core.lgId}`, (e) => {
             if (!this.core.lgOpened) return;
             if (isDragging) {
                 thumbDragUtils.cords.endX = e.pageX;
@@ -223,7 +223,7 @@ export class Thumbnail {
             }
         });
 
-        LG(window).on(`mouseup.lg.thumb.global${this.core.lgId}`, () => {
+        $LG(window).on(`mouseup.lg.thumb.global${this.core.lgId}`, () => {
             if (!this.core.lgOpened) return;
             if (thumbDragUtils.isMoved) {
                 thumbDragUtils = this.onThumbTouchEnd(thumbDragUtils);
@@ -519,7 +519,7 @@ export class Thumbnail {
     loadVimeoThumbs($thumb: lgQuery, size: string) {
         // Load vimeo thumbnails
         // $thumb.each(function () {
-        //     var $this = LG(this);
+        //     var $this = $LG(this);
         //     var vimeoVideoId = $this.attr("data-vimeo-id");
         //     if (vimeoVideoId) {
         //         $.getJSON(
@@ -574,7 +574,7 @@ export class Thumbnail {
     }
 
     thumbKeyPress(): void {
-        LG(window).on(`keydown.lg.thumb.global${this.core.lgId}`, (e) => {
+        $LG(window).on(`keydown.lg.thumb.global${this.core.lgId}`, (e) => {
             if (!this.core.lgOpened) return;
 
             if (e.keyCode === 38) {
@@ -593,7 +593,7 @@ export class Thumbnail {
             this.settings.thumbnail &&
             this.core.galleryItems.length > 1
         ) {
-            LG(window).off(`.lg.thumb.global${this.core.lgId}`);
+            $LG(window).off(`.lg.thumb.global${this.core.lgId}`);
             this.core.LGel.off('.lg.thumb');
             this.$thumbOuter.remove();
             this.core.outer.removeClass('lg-has-thumb');

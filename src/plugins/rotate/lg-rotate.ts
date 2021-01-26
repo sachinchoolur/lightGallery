@@ -4,11 +4,11 @@ import { RotateSettings } from './lg-rotate-settings';
 
 declare global {
     interface Window {
-        LG: (selector: any) => lgQuery;
+        $LG: (selector: any) => lgQuery;
     }
 }
 
-const LG = window.LG;
+const $LG = window.$LG;
 
 const rotateSettings = {
     rotate: true,
@@ -140,7 +140,7 @@ export class Rotate {
         if (!el) {
             return 0;
         }
-        const st = LG(el).style();
+        const st = $LG(el).style();
         const tm =
             st.getPropertyValue('-webkit-transform') ||
             st.getPropertyValue('-moz-transform') ||

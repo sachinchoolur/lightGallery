@@ -2,13 +2,7 @@ import { ZoomDefaults, zoomDefaults } from './lg-zoom-settings';
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 
-declare global {
-    interface Window {
-        LG: (selector: any) => lgQuery;
-    }
-}
-
-const LG = window.LG;
+const $LG = window.$LG;
 interface Coords {
     x: number;
     y: number;
@@ -46,7 +40,7 @@ export class Zoom {
 
             // Set the initial value center
             this.pageX = this.core.outer.width() / 2;
-            this.pageY = this.core.outer.height() / 2 + LG(window).scrollTop();
+            this.pageY = this.core.outer.height() / 2 + $LG(window).scrollTop();
 
             this.scale = 1;
         }
@@ -94,12 +88,15 @@ export class Zoom {
         let _speed = this.settings.enableZoomAfter + event.detail.delay;
 
         // set _speed value 0 if gallery opened from direct url and if it is first slide
-        if (LG('body').first().hasClass('lg-from-hash') && event.detail.delay) {
+        if (
+            $LG('body').first().hasClass('lg-from-hash') &&
+            event.detail.delay
+        ) {
             // will execute only once
             _speed = 0;
         } else {
             // Remove lg-from-hash to enable starting animation.
-            LG('body').first().removeClass('lg-from-hash');
+            $LG('body').first().removeClass('lg-from-hash');
         }
 
         this.zoomableTimeout = setTimeout(() => {
@@ -284,7 +281,7 @@ export class Zoom {
         const offsetX = (this.core.outer.width() - imageNode.offsetWidth) / 2;
         const offsetY =
             (this.core.outer.height() - imageNode.offsetHeight) / 2 +
-            LG(window).scrollTop();
+            $LG(window).scrollTop();
 
         let originalX;
         let originalY;
@@ -392,7 +389,7 @@ export class Zoom {
         if (this.core.settings.dynamic) {
             naturalWidth = this.core.settings.dynamicEl[index].width;
         } else {
-            naturalWidth = LG(this.core.items).eq(index).attr('data-width');
+            naturalWidth = $LG(this.core.items).eq(index).attr('data-width');
         }
         return naturalWidth || ($image.get() as any).naturalWidth;
     }
@@ -426,7 +423,7 @@ export class Zoom {
             cords.y = event.pageY || event.targetTouches[0].pageY;
         } else {
             cords.x = this.core.outer.width() / 2;
-            cords.y = this.core.outer.height() / 2 + LG(window).scrollTop();
+            cords.y = this.core.outer.height() / 2 + $LG(window).scrollTop();
         }
         return cords;
     }
@@ -443,7 +440,7 @@ export class Zoom {
         this.core.outer.removeClass('lg-zoom-drag-transition');
         if (scale > 1) {
             this.core.outer.addClass('lg-zoomed');
-            const $actualSize = LG(`#${this.core.getById('lg-actual-size')}`);
+            const $actualSize = $LG(`#${this.core.getById('lg-actual-size')}`);
             $actualSize
                 .removeClass(this.settings.actualSizeIcons.zoomIn)
                 .addClass(this.settings.actualSizeIcons.zoomOut);
@@ -470,14 +467,14 @@ export class Zoom {
         let tapped: ReturnType<typeof setTimeout> | null = null;
 
         this.core.outer.on('dblclick.lg', (event) => {
-            if (!LG(event.target).hasClass('lg-image')) {
+            if (!$LG(event.target).hasClass('lg-image')) {
                 return;
             }
             this.setActualSize(this.core.index, event);
         });
 
         this.core.outer.on('touchstart.lg', (event) => {
-            const $target = LG(event.target);
+            const $target = $LG(event.target);
             if (
                 event.targetTouches.length === 1 &&
                 $target.hasClass('lg-image')
@@ -497,7 +494,7 @@ export class Zoom {
         });
 
         // Update zoom on resize and orientationchange
-        LG(window).on(
+        $LG(window).on(
             `resize.lg.zoom.global${this.core.lgId} orientationchange.lg.zoom.global${this.core.lgId}`,
             () => {
                 console.log('calling');
@@ -507,7 +504,7 @@ export class Zoom {
             },
         );
 
-        LG(`#${this.core.getById('lg-zoom-out')}`).on('click.lg', () => {
+        $LG(`#${this.core.getById('lg-zoom-out')}`).on('click.lg', () => {
             if (this.core.outer.find('.lg-current .lg-image').first()) {
                 this.scale -= this.settings.scale;
 
@@ -517,11 +514,11 @@ export class Zoom {
             }
         });
 
-        LG(`#${this.core.getById('lg-zoom-in')}`).on('click.lg', () => {
+        $LG(`#${this.core.getById('lg-zoom-in')}`).on('click.lg', () => {
             this.zoomIn();
         });
 
-        LG(`#${this.core.getById('lg-actual-size')}`).on('click.lg', () => {
+        $LG(`#${this.core.getById('lg-actual-size')}`).on('click.lg', () => {
             this.setActualSize(this.core.index);
         });
 
@@ -564,7 +561,7 @@ export class Zoom {
     // Reset zoom effect
     resetZoom(index?: number): void {
         this.core.outer.removeClass('lg-zoomed lg-zoom-drag-transition');
-        const $actualSize = LG(`#${this.core.getById('lg-actual-size')}`);
+        const $actualSize = $LG(`#${this.core.getById('lg-actual-size')}`);
         const $item = this.core.getSlideItem(
             index !== undefined ? index : this.core.index,
         );
@@ -592,7 +589,7 @@ export class Zoom {
         let pinchStarted = false;
         let initScale = 1;
 
-        const inner = LG(`#${this.core.getById('lg-inner')}`);
+        const inner = $LG(`#${this.core.getById('lg-inner')}`);
         let $item = this.core.getSlideItem(this.core.index);
 
         inner.on('touchstart.lg', (e) => {
@@ -600,7 +597,7 @@ export class Zoom {
             e.preventDefault();
             if (
                 e.targetTouches.length === 2 &&
-                (LG(e.target).hasClass('lg-item') ||
+                ($LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
                 initScale = this.scale || 1;
@@ -619,7 +616,7 @@ export class Zoom {
             if (
                 e.targetTouches.length === 2 &&
                 this.core.touchAction === 'pinch' &&
-                (LG(e.target).hasClass('lg-item') ||
+                ($LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
                 const endDist = this.getTouchDistance(e);
@@ -639,7 +636,7 @@ export class Zoom {
         inner.on('touchend.lg', (e) => {
             if (
                 this.core.touchAction === 'pinch' &&
-                (LG(e.target).hasClass('lg-item') ||
+                ($LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
                 pinchStarted = false;
@@ -883,7 +880,7 @@ export class Zoom {
         let rotateEl = (null as unknown) as HTMLElement;
         let rotateValue = 0;
 
-        const inner = LG(`#${this.core.getById('lg-inner')}`);
+        const inner = $LG(`#${this.core.getById('lg-inner')}`);
         let $item = this.core.getSlideItem(this.core.index);
 
         inner.on('touchstart.lg', (e) => {
@@ -895,7 +892,7 @@ export class Zoom {
             }
             $item = this.core.getSlideItem(this.core.index);
             if (
-                (LG(e.target).hasClass('lg-item') ||
+                ($LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target)) &&
                 e.targetTouches.length === 1 &&
                 this.core.outer.hasClass('lg-zoomed')
@@ -950,7 +947,7 @@ export class Zoom {
             if (
                 e.targetTouches.length === 1 &&
                 this.core.touchAction === 'zoomSwipe' &&
-                (LG(e.target).hasClass('lg-item') ||
+                ($LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
                 this.core.touchAction = 'zoomSwipe';
@@ -982,7 +979,7 @@ export class Zoom {
         inner.on('touchend.lg', (e) => {
             if (
                 this.core.touchAction === 'zoomSwipe' &&
-                (LG(e.target).hasClass('lg-item') ||
+                ($LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
                 this.core.touchAction = undefined;
@@ -1037,7 +1034,7 @@ export class Zoom {
             }
             const $item = this.core.getSlideItem(this.core.index);
             if (
-                LG(e.target).hasClass('lg-item') ||
+                $LG(e.target).hasClass('lg-item') ||
                 $item.get().contains(e.target)
             ) {
                 startTime = new Date();
@@ -1067,7 +1064,7 @@ export class Zoom {
 
                 if (this.core.outer.hasClass('lg-zoomed')) {
                     if (
-                        LG(e.target).hasClass('lg-object') &&
+                        $LG(e.target).hasClass('lg-object') &&
                         (allowX || allowY)
                     ) {
                         e.preventDefault();
@@ -1101,7 +1098,7 @@ export class Zoom {
             }
         });
 
-        LG(window).on(`mousemove.lg.zoom.global${this.core.lgId}`, (e) => {
+        $LG(window).on(`mousemove.lg.zoom.global${this.core.lgId}`, (e) => {
             if (isDragging) {
                 isMoved = true;
                 endCoords = this.getDragCords(e, Math.abs(rotateValue));
@@ -1122,7 +1119,7 @@ export class Zoom {
             }
         });
 
-        LG(window).on(`mouseup.lg.zoom.global${this.core.lgId}`, (e) => {
+        $LG(window).on(`mouseup.lg.zoom.global${this.core.lgId}`, (e) => {
             if (isDragging) {
                 endTime = new Date();
                 isDragging = false;
@@ -1159,7 +1156,7 @@ export class Zoom {
         this.resetZoom();
         if (clear) {
             // Unbind all events added by lightGallery zoom plugin
-            LG(window).off(`.lg.zoom.global${this.core.lgId}`);
+            $LG(window).off(`.lg.zoom.global${this.core.lgId}`);
             this.core.LGel.off('.lg.zoom');
             clearTimeout(this.zoomableTimeout);
             this.zoomableTimeout = false;

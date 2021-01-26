@@ -17,11 +17,11 @@ declare let DISQUS: any;
 
 declare global {
     interface Window {
-        LG: (selector: any) => lgQuery;
+        $LG: (selector: any) => lgQuery;
     }
 }
 
-const LG = window.LG;
+const $LG = window.$LG;
 export class CommentBox {
     core: LightGallery;
     settings: commentDefaults;
@@ -62,14 +62,14 @@ export class CommentBox {
     }
 
     toggleCommentBox() {
-        LG('#lg-comment-toggle').on('click.lg.comment', () => {
+        $LG('#lg-comment-toggle').on('click.lg.comment', () => {
             this.core.outer.toggleClass('lg-comment-active');
         });
 
-        LG('#lg-comment-overlay').on('click.lg.comment', () => {
+        $LG('#lg-comment-overlay').on('click.lg.comment', () => {
             this.core.outer.removeClass('lg-comment-active');
         });
-        LG('#lg-comment-close').on('click.lg.comment', () => {
+        $LG('#lg-comment-close').on('click.lg.comment', () => {
             this.core.outer.removeClass('lg-comment-active');
         });
     }
@@ -77,15 +77,15 @@ export class CommentBox {
     addFbComments() {
         this.core.LGel.on('onBeforeSlide.lg.comment', (event) => {
             const { index } = event.detail;
-            LG('#lg-comment-body').html(
-                LG(this.core.items).eq(index).attr('data-fb-html'),
+            $LG('#lg-comment-body').html(
+                $LG(this.core.items).eq(index).attr('data-fb-html'),
             );
         });
         this.core.LGel.on('onAfterSlide.lg.comment', function () {
             try {
                 FB.XFBML.parse();
             } catch (err) {
-                LG(window).on('fbAsyncInit', function () {
+                $LG(window).on('fbAsyncInit', function () {
                     FB.XFBML.parse();
                 });
             }
@@ -95,9 +95,9 @@ export class CommentBox {
     addDisqusComments() {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const _this = this;
-        const $disqusThread = LG('#disqus_thread');
+        const $disqusThread = $LG('#disqus_thread');
         $disqusThread.remove();
-        LG('#lg-comment-body').append('<div id="disqus_thread"></div>');
+        $LG('#lg-comment-body').append('<div id="disqus_thread"></div>');
 
         this.core.LGel.on('onBeforeSlide.lg.comment', () => {
             $disqusThread.html('');
@@ -112,10 +112,10 @@ export class CommentBox {
                         DISQUS.reset({
                             reload: true,
                             config: function () {
-                                this.page.identifier = LG(_this.core.items)
+                                this.page.identifier = $LG(_this.core.items)
                                     .eq(index)
                                     .attr('data-disqus-identifier');
-                                this.page.url = LG(_this.core.items)
+                                this.page.url = $LG(_this.core.items)
                                     .eq(index)
                                     .attr('data-disqus-url');
                                 this.page.title = this.settings.disqusConfig.title;

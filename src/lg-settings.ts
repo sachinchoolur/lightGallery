@@ -397,7 +397,7 @@ export const lightGallerySettings: LightGallerySettings = {
     zoomFromImage: false,
     hideBarsDelay: 0,
     showBarsAfter: 10000,
-    slideDelay: 3000,
+    slideDelay: 0,
     supportLegacyBrowser: true,
     hideSubHtml: false,
     useLeft: false,

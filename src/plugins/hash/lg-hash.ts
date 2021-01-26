@@ -3,11 +3,11 @@ import { LightGallery } from '../../lightgallery';
 
 declare global {
     interface Window {
-        LG: (selector: any) => lgQuery;
+        $LG: (selector: any) => lgQuery;
     }
 }
 
-const LG = window.LG;
+const $LG = window.$LG;
 
 const defaults = {
     hash: true,
@@ -36,7 +36,7 @@ export class Hash {
         this.core.LGel.on('onCloseAfter.lg.hash', this.onCloseAfter.bind(this));
 
         // Listen hash change and change the slide according to slide value
-        LG(window).on(
+        $LG(window).on(
             `hashchange.lg.hash.global${this.core.lgId}`,
             this.onHashchange.bind(this),
         );
@@ -107,7 +107,7 @@ export class Hash {
         }
         if (clear) {
             this.core.LGel.off('.lg.hash');
-            LG(window).off(`hashchange.lg.hash.global${this.core.lgId}`);
+            $LG(window).off(`hashchange.lg.hash.global${this.core.lgId}`);
         }
     }
 }

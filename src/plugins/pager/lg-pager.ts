@@ -4,11 +4,11 @@ import { LightGallery } from '../../lightgallery';
 
 declare global {
     interface Window {
-        LG: (selector: any) => lgQuery;
+        $LG: (selector: any) => lgQuery;
     }
 }
 
-const LG = window.LG;
+const $LG = window.$LG;
 
 const defaults = {
     pager: true,
@@ -53,7 +53,7 @@ export class Pager {
 
         // @todo enable click
         $pagerOuter.first().on('click.lg touchend.lg', (event: MouseEvent) => {
-            const $target = LG(event.target);
+            const $target = $LG(event.target);
             if (!$target.hasAttribute('data-lg-item-id')) {
                 return;
             }
