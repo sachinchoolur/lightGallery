@@ -70,7 +70,7 @@ export interface LightGallerySettings {
      * Start animation class for the gallery.
      * @description This can be used to change the zoom effect when the image is loaded
      * This is also applied when navigating to new slides
-     * Note -  if startClass will be empty zoomFromImage is true.
+     * Note -  if startClass will be empty zoomFromOrigin is true.
      */
     startClass: string;
 
@@ -79,9 +79,9 @@ export interface LightGallerySettings {
      * @description You need to know the original image size upfront and provide it via data-lg-size attribute as data-lg-size="1920-1280"
      * Supports only images.
      * Will be false if dynamic option is enabled or galleryID found in the URL.
-     * startClass will be empty if zoomFromImage is true to avoid css conflicts.
+     * startClass will be empty if zoomFromOrigin is true to avoid css conflicts.
      */
-    zoomFromImage: boolean;
+    zoomFromOrigin: boolean;
 
     /**
      * Zoom from image animation duration
@@ -191,7 +191,7 @@ export interface LightGallerySettings {
     /**
      * Enable slideEnd animation
      */
-    slideEndAnimatoin: boolean;
+    slideEndAnimation: boolean;
 
     /**
      * If true, prev/next button will be hidden on first/last image.
@@ -394,7 +394,7 @@ export const lightGallerySettings: LightGallerySettings = {
     backdropDuration: 150,
     container: document.body,
     startAnimationDuration: 350,
-    zoomFromImage: false,
+    zoomFromOrigin: false,
     hideBarsDelay: 0,
     showBarsAfter: 10000,
     slideDelay: 0,
@@ -411,7 +411,7 @@ export const lightGallerySettings: LightGallerySettings = {
     escKey: true,
     keyPress: true,
     controls: true,
-    slideEndAnimatoin: true,
+    slideEndAnimation: true,
     hideControlOnEnd: false,
     mousewheel: false,
     getCaptionFromTitleOrAlt: true,

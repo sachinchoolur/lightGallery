@@ -51,15 +51,15 @@ export class Zoom {
     // Append Zoom controls. Actual size, Zoom-in, Zoom-out
     buildTemplates(): void {
         let zoomIcons = this.settings.showZoomInOutIcons
-            ? `<button id="${this.core.getById(
+            ? `<button id="${this.core.getIdName(
                   'lg-zoom-in',
-              )}" type="button" class="lg-zoom-in lg-icon"></button><button id="${this.core.getById(
+              )}" type="button" class="lg-zoom-in lg-icon"></button><button id="${this.core.getIdName(
                   'lg-zoom-out',
               )}" type="button" class="lg-zoom-out lg-icon"></button>`
             : '';
 
         if (this.settings.actualSize) {
-            zoomIcons += `<button id="${this.core.getById(
+            zoomIcons += `<button id="${this.core.getIdName(
                 'lg-actual-size',
             )}" type="button" class="${
                 this.settings.actualSizeIcons.zoomIn
@@ -79,7 +79,7 @@ export class Zoom {
 
     /**
      * @desc Enable zoom option only once the image is completely loaded
-     * If zoomFromImage is true, Zoom is enabled once the dummy image has been inserted
+     * If zoomFromOrigin is true, Zoom is enabled once the dummy image has been inserted
      *
      * Zoom styles are defined under lg-zoomable CSS class.
      */
@@ -440,7 +440,7 @@ export class Zoom {
         this.core.outer.removeClass('lg-zoom-drag-transition');
         if (scale > 1) {
             this.core.outer.addClass('lg-zoomed');
-            const $actualSize = $LG(`#${this.core.getById('lg-actual-size')}`);
+            const $actualSize = this.core.getElementById('lg-actual-size');
             $actualSize
                 .removeClass(this.settings.actualSizeIcons.zoomIn)
                 .addClass(this.settings.actualSizeIcons.zoomOut);
@@ -504,7 +504,7 @@ export class Zoom {
             },
         );
 
-        $LG(`#${this.core.getById('lg-zoom-out')}`).on('click.lg', () => {
+        this.core.getElementById('lg-zoom-out').on('click.lg', () => {
             if (this.core.outer.find('.lg-current .lg-image').first()) {
                 this.scale -= this.settings.scale;
 
@@ -514,11 +514,11 @@ export class Zoom {
             }
         });
 
-        $LG(`#${this.core.getById('lg-zoom-in')}`).on('click.lg', () => {
+        this.core.getElementById('lg-zoom-in').on('click.lg', () => {
             this.zoomIn();
         });
 
-        $LG(`#${this.core.getById('lg-actual-size')}`).on('click.lg', () => {
+        this.core.getElementById('lg-actual-size').on('click.lg', () => {
             this.setActualSize(this.core.index);
         });
 
@@ -561,7 +561,7 @@ export class Zoom {
     // Reset zoom effect
     resetZoom(index?: number): void {
         this.core.outer.removeClass('lg-zoomed lg-zoom-drag-transition');
-        const $actualSize = $LG(`#${this.core.getById('lg-actual-size')}`);
+        const $actualSize = this.core.getElementById('lg-actual-size');
         const $item = this.core.getSlideItem(
             index !== undefined ? index : this.core.index,
         );
@@ -589,10 +589,9 @@ export class Zoom {
         let pinchStarted = false;
         let initScale = 1;
 
-        const inner = $LG(`#${this.core.getById('lg-inner')}`);
         let $item = this.core.getSlideItem(this.core.index);
 
-        inner.on('touchstart.lg', (e) => {
+        this.core.$inner.on('touchstart.lg', (e) => {
             $item = this.core.getSlideItem(this.core.index);
             e.preventDefault();
             if (
@@ -611,7 +610,7 @@ export class Zoom {
             }
         });
 
-        inner.on('touchmove.lg', (e) => {
+        this.core.$inner.on('touchmove.lg', (e) => {
             e.preventDefault();
             if (
                 e.targetTouches.length === 2 &&
@@ -633,7 +632,7 @@ export class Zoom {
             }
         });
 
-        inner.on('touchend.lg', (e) => {
+        this.core.$inner.on('touchend.lg', (e) => {
             if (
                 this.core.touchAction === 'pinch' &&
                 ($LG(e.target).hasClass('lg-item') ||
@@ -880,10 +879,9 @@ export class Zoom {
         let rotateEl = (null as unknown) as HTMLElement;
         let rotateValue = 0;
 
-        const inner = $LG(`#${this.core.getById('lg-inner')}`);
         let $item = this.core.getSlideItem(this.core.index);
 
-        inner.on('touchstart.lg', (e) => {
+        this.core.$inner.on('touchstart.lg', (e) => {
             e.preventDefault();
             const currentItem = this.core.galleryItems[this.core.index];
             // Allow zoom only on image
@@ -942,7 +940,7 @@ export class Zoom {
             }
         });
 
-        inner.on('touchmove.lg', (e) => {
+        this.core.$inner.on('touchmove.lg', (e) => {
             e.preventDefault();
             if (
                 e.targetTouches.length === 1 &&
@@ -976,7 +974,7 @@ export class Zoom {
             }
         });
 
-        inner.on('touchend.lg', (e) => {
+        this.core.$inner.on('touchend.lg', (e) => {
             if (
                 this.core.touchAction === 'zoomSwipe' &&
                 ($LG(e.target).hasClass('lg-item') ||

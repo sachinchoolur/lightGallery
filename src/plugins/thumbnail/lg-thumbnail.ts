@@ -117,7 +117,7 @@ export class Thumbnail {
         });
         this.core.LGel.on('onAfterOpen.lg.thumb', (e) => {
             if (this.settings.showThumbByDefault) {
-                const timeout = this.core.settings.zoomFromImage
+                const timeout = this.core.settings.zoomFromOrigin
                     ? this.core.settings.startAnimationDuration
                     : this.core.settings.backdropDuration;
                 setTimeout(() => {
