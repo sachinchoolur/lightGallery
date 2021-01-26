@@ -112,6 +112,15 @@ export interface LightGallerySettings {
     showBarsAfter: number;
 
     /**
+     * Delay slide transitions.
+     * @description This is useful if you want to do any action in the current slide before moving to next slide.
+     * For example, fading out the captions before going to next slide.
+     * .lg-slide-progress class name is added to the current slide immediately after calling the slide method.
+     * But transition begins only after the delay
+     */
+    slideDelay: number;
+
+    /**
      * Support legacy browsers
      * @description Currently this is used only for adding support to srcset attribute via picturefill library
      * If true lightGallery will show warning message to include picturefill library
@@ -386,8 +395,9 @@ export const lightGallerySettings: LightGallerySettings = {
     container: document.body,
     startAnimationDuration: 350,
     zoomFromImage: false,
-    hideBarsDelay: 2000,
-    showBarsAfter: 0,
+    hideBarsDelay: 0,
+    showBarsAfter: 10000,
+    slideDelay: 3000,
     supportLegacyBrowser: true,
     hideSubHtml: false,
     useLeft: false,
@@ -407,7 +417,7 @@ export const lightGallerySettings: LightGallerySettings = {
     getCaptionFromTitleOrAlt: true,
     appendSubHtmlTo: '.lg-sub-html',
     subHtmlSelectorRelative: false,
-    preload: 1,
+    preload: 2,
     numberOfSlideItemsInDom: 10,
     showAfterLoad: true,
     selector: '',

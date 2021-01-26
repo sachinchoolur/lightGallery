@@ -1146,30 +1146,35 @@ export class LightGallery {
         currentSlideItem: lgQuery,
         previousSlideItem: lgQuery,
     ): void {
-        // remove all transitions
-        this.outer.addClass('lg-no-trans');
-
-        this.outer.find('.lg-item').removeClass('lg-prev-slide lg-next-slide');
-
-        if (direction === 'prev') {
-            //prevslide
-            currentSlideItem.addClass('lg-prev-slide');
-            previousSlideItem.addClass('lg-next-slide');
-        } else {
-            // next slide
-            currentSlideItem.addClass('lg-next-slide');
-            previousSlideItem.addClass('lg-prev-slide');
-        }
-
-        // give 50 ms for browser to add/remove class
+        previousSlideItem.addClass('lg-slide-progress');
         setTimeout(() => {
-            this.outer.find('.lg-item').removeClass('lg-current');
+            // remove all transitions
+            this.outer.addClass('lg-no-trans');
 
-            currentSlideItem.addClass('lg-current');
+            this.outer
+                .find('.lg-item')
+                .removeClass('lg-prev-slide lg-next-slide');
 
-            // reset all transitions
-            this.outer.removeClass('lg-no-trans');
-        }, 50);
+            if (direction === 'prev') {
+                //prevslide
+                currentSlideItem.addClass('lg-prev-slide');
+                previousSlideItem.addClass('lg-next-slide');
+            } else {
+                // next slide
+                currentSlideItem.addClass('lg-next-slide');
+                previousSlideItem.addClass('lg-prev-slide');
+            }
+
+            // give 50 ms for browser to add/remove class
+            setTimeout(() => {
+                this.outer.find('.lg-item').removeClass('lg-current');
+
+                currentSlideItem.addClass('lg-current');
+
+                // reset all transitions
+                this.outer.removeClass('lg-no-trans');
+            }, 50);
+        }, this.s.slideDelay);
     }
 
     /**
@@ -1222,23 +1227,6 @@ export class LightGallery {
             this.lgBusy = true;
 
             clearTimeout(this.hideBarTimeout);
-
-            // Add title if this.s.appendSubHtmlTo === lg-sub-html
-            if (this.s.appendSubHtmlTo === '.lg-sub-html') {
-                // wait for slide animation to complete
-                setTimeout(
-                    () => {
-                        this.addHtml(index);
-                    },
-                    this.lGalleryOn ? this.s.speed + 50 : 50,
-                );
-            }
-
-            if (this.s.counter) {
-                LG(`#${this.getById('lg-counter-current')}`).html(
-                    index + 1 + '',
-                );
-            }
 
             this.arrowDisable(index);
 
@@ -1295,24 +1283,29 @@ export class LightGallery {
                 currentSlideItem.addClass('lg-current');
             }
 
-            setTimeout(
-                () => {
-                    this.loadContent(index, true, false);
-                },
-                this.lGalleryOn ? this.s.speed + 50 : 50,
-            );
-            setTimeout(
-                () => {
-                    this.lgBusy = false;
-                    this.LGel.trigger('onAfterSlide.lg', {
-                        prevIndex: prevIndex,
-                        index,
-                        fromTouch,
-                        fromThumb,
-                    });
-                },
-                this.lGalleryOn ? this.s.speed + 100 : 100,
-            );
+            setTimeout(() => {
+                this.loadContent(index, true, false);
+                if (this.s.counter) {
+                    LG(`#${this.getById('lg-counter-current')}`).html(
+                        index + 1 + '',
+                    );
+                }
+                // Add title if this.s.appendSubHtmlTo === lg-sub-html
+                if (this.s.appendSubHtmlTo === '.lg-sub-html') {
+                    this.addHtml(index);
+                }
+            }, (this.lGalleryOn ? this.s.speed + 50 : 50) + (fromTouch ? 0 : this.s.slideDelay));
+
+            setTimeout(() => {
+                this.lgBusy = false;
+                previousSlideItem.removeClass('lg-slide-progress');
+                this.LGel.trigger('onAfterSlide.lg', {
+                    prevIndex: prevIndex,
+                    index,
+                    fromTouch,
+                    fromThumb,
+                });
+            }, (this.lGalleryOn ? this.s.speed + 100 : 100) + (fromTouch ? 0 : this.s.slideDelay));
         }
 
         this.index = index;
