@@ -266,11 +266,12 @@ export class LightGallery {
         const containerClassName = `lg-container ${
             document.body !== this.s.container ? 'lg-inline' : ''
         }`;
-        const closeIcon = this.s.showCloseIcon
-            ? `<button type="button" aria-label="Close gallery" id="${this.getById(
-                  'lg-close',
-              )}" class="lg-close lg-icon"></button>`
-            : '';
+        const closeIcon =
+            this.s.closable && this.s.showCloseIcon
+                ? `<button type="button" aria-label="Close gallery" id="${this.getById(
+                      'lg-close',
+                  )}" class="lg-close lg-icon"></button>`
+                : '';
         const template = `
         <div class="${containerClassName}" id="${this.getById(
             'lg-container',
