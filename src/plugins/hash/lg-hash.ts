@@ -14,15 +14,15 @@ const defaults = {
 };
 export class Hash {
     core: LightGallery;
-    s: { hash: boolean };
+    settings: { hash: boolean };
     oldHash!: string;
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, defaults, this.core.s);
+        this.settings = Object.assign({}, defaults, this.core.settings);
 
-        if (this.s.hash) {
+        if (this.settings.hash) {
             this.oldHash = window.location.hash;
             this.init();
         }
@@ -44,7 +44,7 @@ export class Hash {
 
     onAfterSlide(event: CustomEvent) {
         let slideName = this.core.galleryItems[event.detail.index].slideName;
-        slideName = this.core.s.customSlideName
+        slideName = this.core.settings.customSlideName
             ? slideName || event.detail.index
             : event.detail.index;
         if (history.replaceState) {
@@ -54,13 +54,13 @@ export class Hash {
                 window.location.pathname +
                     window.location.search +
                     '#lg=' +
-                    this.core.s.galleryId +
+                    this.core.settings.galleryId +
                     '&slide=' +
                     slideName,
             );
         } else {
             window.location.hash =
-                'lg=' + this.core.s.galleryId + '&slide=' + slideName;
+                'lg=' + this.core.settings.galleryId + '&slide=' + slideName;
         }
     }
 
@@ -68,7 +68,7 @@ export class Hash {
         // Reset to old hash value
         if (
             this.oldHash &&
-            this.oldHash.indexOf('lg=' + this.core.s.galleryId) < 0
+            this.oldHash.indexOf('lg=' + this.core.settings.galleryId) < 0
         ) {
             if (history.replaceState) {
                 history.replaceState(null, '', this.oldHash);
@@ -94,7 +94,7 @@ export class Hash {
         const index = this.core.getIndexFromUrl(_hash);
 
         // it galleryId doesn't exist in the url close the gallery
-        if (_hash.indexOf('lg=' + this.core.s.galleryId) > -1) {
+        if (_hash.indexOf('lg=' + this.core.settings.galleryId) > -1) {
             this.core.slide(index, false, false);
         } else if (this.core.lGalleryOn) {
             this.core.destroy();
@@ -102,7 +102,7 @@ export class Hash {
     }
 
     destroy(clear?: boolean): void {
-        if (!this.s.hash) {
+        if (!this.settings.hash) {
             return;
         }
         if (clear) {

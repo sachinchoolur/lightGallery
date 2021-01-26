@@ -1,5 +1,5 @@
 import { LG } from './lgQuery';
-import { VideoInfo } from './lightgallery';
+import { VideoInfo } from './types';
 export interface ImageSize {
     width: number;
     height: number;

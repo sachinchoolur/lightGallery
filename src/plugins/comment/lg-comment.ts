@@ -24,14 +24,14 @@ declare global {
 const LG = window.LG;
 export class CommentBox {
     core: LightGallery;
-    s: commentDefaults;
+    settings: commentDefaults;
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, commentDefaults, this.core.s);
+        this.settings = Object.assign({}, commentDefaults, this.core.settings);
 
-        if (this.s.commentBox) {
+        if (this.settings.commentBox) {
             this.init();
         }
 
@@ -41,9 +41,9 @@ export class CommentBox {
     init() {
         this.setMarkup();
         this.toggleCommentBox();
-        if (this.s.fbComments) {
+        if (this.settings.fbComments) {
             this.addFbComments();
-        } else if (this.s.disqusComments) {
+        } else if (this.settings.disqusComments) {
             this.addDisqusComments();
         }
     }
@@ -52,7 +52,8 @@ export class CommentBox {
         this.core.outer
             .find('.lg')
             .append(
-                this.s.fbCommentsMarkup + '<div id="lg-comment-overlay"></div>',
+                this.settings.fbCommentsMarkup +
+                    '<div id="lg-comment-overlay"></div>',
             );
 
         const commentToggleBtn =
@@ -117,8 +118,8 @@ export class CommentBox {
                                 this.page.url = LG(_this.core.items)
                                     .eq(index)
                                     .attr('data-disqus-url');
-                                this.page.title = this.s.disqusConfig.title;
-                                this.language = this.s.disqusConfig.language;
+                                this.page.title = this.settings.disqusConfig.title;
+                                this.language = this.settings.disqusConfig.language;
                             },
                         });
                     } catch (err) {

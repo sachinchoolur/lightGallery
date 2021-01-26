@@ -16,14 +16,14 @@ const defaults = {
 
 export class Pager {
     core: LightGallery;
-    s: { pager: boolean };
+    settings: { pager: boolean };
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, defaults, this.core.s);
+        this.settings = Object.assign({}, defaults, this.core.settings);
 
-        if (this.s.pager && this.core.galleryItems.length > 1) {
+        if (this.settings.pager && this.core.galleryItems.length > 1) {
             this.init();
         }
 

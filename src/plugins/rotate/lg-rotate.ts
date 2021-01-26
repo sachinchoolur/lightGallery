@@ -20,7 +20,7 @@ const rotateSettings = {
 
 export class Rotate {
     core: LightGallery;
-    s: RotateSettings;
+    settings: RotateSettings;
     rotateValuesList!: {
         [key: string]: any;
     };
@@ -28,9 +28,9 @@ export class Rotate {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, rotateSettings, this.core.s);
+        this.settings = Object.assign({}, rotateSettings, this.core.settings);
 
-        if (this.s.rotate && this.core.doCss()) {
+        if (this.settings.rotate && this.core.doCss()) {
             this.init();
         }
 
@@ -38,19 +38,19 @@ export class Rotate {
     }
     buildTemplates(): void {
         let rotateIcons = '';
-        if (this.s.flipVertical) {
+        if (this.settings.flipVertical) {
             rotateIcons +=
                 '<button type="button" id="lg-flip-ver" aria-label="flip vertical" class="lg-flip-ver lg-icon"></button>';
         }
-        if (this.s.flipHorizontal) {
+        if (this.settings.flipHorizontal) {
             rotateIcons +=
                 '<button type="button" id="lg-flip-hor" aria-label="Flip horizontal" class="lg-flip-hor lg-icon"></button>';
         }
-        if (this.s.rotateLeft) {
+        if (this.settings.rotateLeft) {
             rotateIcons +=
                 '<button type="button" id="lg-rotate-left" aria-label="Rotate left" class="lg-rotate-left lg-icon"></button>';
         }
-        if (this.s.rotateRight) {
+        if (this.settings.rotateRight) {
             rotateIcons +=
                 '<button type="button" id="lg-rotate-right" aria-label="Rotate right" class="lg-rotate-right lg-icon"></button>';
         }

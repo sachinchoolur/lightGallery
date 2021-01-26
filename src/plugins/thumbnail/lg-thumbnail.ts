@@ -35,12 +35,16 @@ export class Thumbnail {
     private thumbTotalWidth = 0;
     private translateX = 0;
     private thumbClickable = false;
-    private s: ThumbnailsDefaults;
+    private settings: ThumbnailsDefaults;
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, thumbnailsDefaults, this.core.s);
+        this.settings = Object.assign(
+            {},
+            thumbnailsDefaults,
+            this.core.settings,
+        );
 
         this.init();
 
@@ -51,25 +55,25 @@ export class Thumbnail {
         this.thumbOuterWidth = 0;
         this.thumbTotalWidth =
             this.core.galleryItems.length *
-            (this.s.thumbWidth + this.s.thumbMargin);
+            (this.settings.thumbWidth + this.settings.thumbMargin);
 
         // Thumbnail animation value
         this.translateX = 0;
 
         this.setAnimateThumbStyles();
 
-        if (this.s.thumbnail && this.core.galleryItems.length > 1) {
-            if (this.s.pullCaptionUp) {
+        if (this.settings.thumbnail && this.core.galleryItems.length > 1) {
+            if (this.settings.pullCaptionUp) {
                 this.core.outer.addClass('lg-pull-caption-up');
             }
 
             this.build();
-            if (this.s.animateThumb && this.core.doCss()) {
-                if (this.s.enableThumbDrag) {
+            if (this.settings.animateThumb && this.core.doCss()) {
+                if (this.settings.enableThumbDrag) {
                     this.enableThumbDrag();
                 }
 
-                if (this.s.enableThumbSwipe) {
+                if (this.settings.enableThumbSwipe) {
                     this.enableThumbSwipe();
                 }
 
@@ -88,7 +92,7 @@ export class Thumbnail {
 
         const $thumb = this.core.outer.find('.lg-thumb-item');
 
-        this.loadVimeoThumbs($thumb, this.s.vimeoThumbSize);
+        this.loadVimeoThumbs($thumb, this.settings.vimeoThumbSize);
         this.manageActiveClas();
         this.$lgThumb.first().on('click.lg touchend.lg', (e: CustomEvent) => {
             const $target = LG(e.target);
@@ -112,10 +116,10 @@ export class Thumbnail {
             this.animateThumb(this.core.index);
         });
         this.core.LGel.on('onAfterOpen.lg.thumb', (e) => {
-            if (this.s.showThumbByDefault) {
-                const timeout = this.core.s.zoomFromImage
-                    ? this.core.s.startAnimationDuration
-                    : this.core.s.backdropDuration;
+            if (this.settings.showThumbByDefault) {
+                const timeout = this.core.settings.zoomFromImage
+                    ? this.core.settings.startAnimationDuration
+                    : this.core.settings.backdropDuration;
                 setTimeout(() => {
                     this.core.outer.addClass('lg-thumb-open');
                 }, timeout + 200);
@@ -155,10 +159,10 @@ export class Thumbnail {
         this.$lgThumb = this.core.outer.find('.lg-thumb').first();
         this.thumbOuterWidth = window.innerWidth;
 
-        if (this.s.animateThumb) {
+        if (this.settings.animateThumb) {
             this.core.outer
                 .find('.lg-thumb')
-                .css('transition-duration', this.core.s.speed + 'ms')
+                .css('transition-duration', this.core.settings.speed + 'ms')
                 .css('width', this.thumbTotalWidth + 'px')
                 .css('position', 'relative');
         }
@@ -277,7 +281,7 @@ export class Thumbnail {
         this.appendThumbItems(items);
         this.thumbTotalWidth =
             this.core.galleryItems.length *
-            (this.s.thumbWidth + this.s.thumbMargin);
+            (this.settings.thumbWidth + this.settings.thumbMargin);
         this.$lgThumb.css('width', this.thumbTotalWidth + 'px');
         this.manageActiveClas();
         this.animateThumb(this.core.index);
@@ -309,21 +313,27 @@ export class Thumbnail {
     }
 
     animateThumb(index: number): void {
-        this.$lgThumb.css('transition-duration', this.core.s.speed + 'ms');
-        if (this.s.animateThumb) {
+        this.$lgThumb.css(
+            'transition-duration',
+            this.core.settings.speed + 'ms',
+        );
+        if (this.settings.animateThumb) {
             let position = 0;
-            switch (this.s.currentPagerPosition) {
+            switch (this.settings.currentPagerPosition) {
                 case 'left':
                     position = 0;
                     break;
                 case 'middle':
-                    position = this.thumbOuterWidth / 2 - this.s.thumbWidth / 2;
+                    position =
+                        this.thumbOuterWidth / 2 - this.settings.thumbWidth / 2;
                     break;
                 case 'right':
-                    position = this.thumbOuterWidth - this.s.thumbWidth;
+                    position = this.thumbOuterWidth - this.settings.thumbWidth;
             }
             this.translateX =
-                (this.s.thumbWidth + this.s.thumbMargin) * index - 1 - position;
+                (this.settings.thumbWidth + this.settings.thumbMargin) * index -
+                1 -
+                position;
             if (this.translateX > this.thumbTotalWidth - this.thumbOuterWidth) {
                 this.translateX = this.thumbTotalWidth - this.thumbOuterWidth;
             }
@@ -338,7 +348,7 @@ export class Thumbnail {
                         {
                             left: -this.translateX + 'px',
                         },
-                        this.core.s.speed,
+                        this.core.settings.speed,
                     );
                 }
             } else {
@@ -401,7 +411,7 @@ export class Thumbnail {
                 speedX * (Math.abs(distanceXnew) / this.thumbOuterWidth);
             this.$lgThumb.css(
                 'transition-duration',
-                Math.min(speedX - 1, 2) + 's',
+                Math.min(speedX - 1, 2) + 'settings',
             );
 
             distanceXnew = distanceXnew * speedX;
@@ -415,7 +425,7 @@ export class Thumbnail {
         }
         if (
             Math.abs(thumbDragUtils.cords.endX - thumbDragUtils.cords.startX) <
-            this.s.swipeThreshold
+            this.settings.swipeThreshold
         ) {
             this.thumbClickable = true;
         }
@@ -450,20 +460,20 @@ export class Thumbnail {
             slideVideoInfo.dailymotion
         ) {
             if (slideVideoInfo.youtube) {
-                if (this.s.loadYoutubeThumbnail) {
+                if (this.settings.loadYoutubeThumbnail) {
                     thumbImg =
                         '//img.youtube.com/vi/' +
                         slideVideoInfo.youtube[1] +
                         '/' +
-                        this.s.youtubeThumbSize +
+                        this.settings.youtubeThumbSize +
                         '.jpg';
                 } else {
                     thumbImg = thumb;
                 }
             } else if (slideVideoInfo.vimeo) {
-                if (this.s.loadVimeoThumbnail) {
+                if (this.settings.loadVimeoThumbnail) {
                     const vimeoErrorThumbSize = this.getVimeoErrorThumbSize(
-                        this.s.vimeoThumbSize,
+                        this.settings.vimeoThumbSize,
                     );
                     thumbImg =
                         '//i.vimeocdn.com/video/error_' +
@@ -474,7 +484,7 @@ export class Thumbnail {
                     thumbImg = thumb;
                 }
             } else if (slideVideoInfo.dailymotion) {
-                if (this.s.loadDailymotionThumbnail) {
+                if (this.settings.loadDailymotionThumbnail) {
                     thumbImg =
                         '//www.dailymotion.com/thumbnail/video/' +
                         slideVideoInfo.dailymotion[1];
@@ -489,9 +499,9 @@ export class Thumbnail {
         return `<div ${
             vimeoId ? 'data-vimeo-id="${vimeoId}"' : ''
         } data-lg-item-id="${index}" class="lg-thumb-item" 
-        style="width:${this.s.thumbWidth}px; 
-            height: ${this.s.thumbHeight}; 
-            margin-right: ${this.s.thumbMargin}px">
+        style="width:${this.settings.thumbWidth}px; 
+            height: ${this.settings.thumbHeight}; 
+            margin-right: ${this.settings.thumbMargin}px">
             <img data-lg-item-id="${index}" src="${thumbImg}" />
         </div>`;
     }
@@ -528,8 +538,8 @@ export class Thumbnail {
     }
 
     setAnimateThumbStyles(): void {
-        if (this.s.animateThumb) {
-            this.s.thumbHeight = '100%';
+        if (this.settings.animateThumb) {
+            this.settings.thumbHeight = '100%';
             this.core.outer.addClass('lg-animate-thumb');
         }
     }
@@ -549,7 +559,7 @@ export class Thumbnail {
 
     // Toggle thumbnail bar
     toggleThumbBar(): void {
-        if (this.s.toggleThumb) {
+        if (this.settings.toggleThumb) {
             this.core.outer.addClass('lg-can-toggle');
             this.$thumbOuter.append(
                 '<button type="button" aria-label="Toggle thumbnails" class="lg-toggle-thumb lg-icon"></button>',
@@ -578,7 +588,11 @@ export class Thumbnail {
     }
 
     destroy(clear?: boolean): void {
-        if (clear && this.s.thumbnail && this.core.galleryItems.length > 1) {
+        if (
+            clear &&
+            this.settings.thumbnail &&
+            this.core.galleryItems.length > 1
+        ) {
             LG(window).off(`.lg.thumb.global${this.core.lgId}`);
             this.core.LGel.off('.lg.thumb');
             this.$thumbOuter.remove();

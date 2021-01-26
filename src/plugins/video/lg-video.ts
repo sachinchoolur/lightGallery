@@ -54,10 +54,10 @@ function param(obj: { [x: string]: string | number | boolean }): string {
 
 export class Video {
     private core: LightGallery;
-    private s: VideoDefaults;
+    private settings: VideoDefaults;
     constructor(instance: LightGallery) {
         this.core = instance;
-        this.s = Object.assign({}, videoDefaults, this.core.s);
+        this.settings = Object.assign({}, videoDefaults, this.core.settings);
 
         this.init();
 
@@ -80,7 +80,7 @@ export class Video {
         if (
             this.core.doCss() &&
             this.core.galleryItems.length > 1 &&
-            (this.core.s.enableSwipe || this.core.s.enableDrag)
+            (this.core.settings.enableSwipe || this.core.settings.enableDrag)
         ) {
             this.core.LGel.on('onSlideClick.lg.video', () => {
                 const $el = this.core.getSlideItem(this.core.index);
@@ -136,7 +136,7 @@ export class Video {
             this.gotoNextSlideOnVideoEnd(src, index);
         }
 
-        if (this.s.autoplayFirstVideo && !this.core.lGalleryOn) {
+        if (this.settings.autoplayFirstVideo && !this.core.lGalleryOn) {
             if (hasPoster) {
                 const $slide = this.core.getSlideItem(index);
                 this.loadVideoOnPosterClick($slide);
@@ -159,7 +159,7 @@ export class Video {
             .find('.lg-video-cont')
             .first();
         if (!$videoCont.hasClass('lg-has-iframe')) {
-            $videoCont.css('max-width', this.s.videoMaxWidth);
+            $videoCont.css('max-width', this.settings.videoMaxWidth);
         }
     }
 
@@ -192,7 +192,7 @@ export class Video {
      */
     onAfterSlide(event: CustomEvent) {
         const { prevIndex, index } = event.detail;
-        if (this.s.autoplayVideoOnSlide && this.core.lGalleryOn) {
+        if (this.settings.autoplayVideoOnSlide && this.core.lGalleryOn) {
             this.core.getSlideItem(prevIndex).removeClass('lg-video-playing');
             setTimeout(() => {
                 const $slide = this.core.getSlideItem(index);
@@ -251,21 +251,23 @@ export class Video {
             const youtubePlayerParams = `?wmode=opaque&autoplay=0&enablejsapi=1`;
 
             const playerParams =
-                youtubePlayerParams + '&' + param(this.s.youtubePlayerParams);
+                youtubePlayerParams +
+                '&' +
+                param(this.settings.youtubePlayerParams);
 
             video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="//www.youtube.com/embed/${
                 videoInfo.youtube[1] + playerParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.vimeo) {
             const videoId = 'lg-vimeo' + index;
-            const playerParams = param(this.s.vimeoPlayerParams);
+            const playerParams = param(this.settings.vimeoPlayerParams);
 
             video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-vimeo ${addClass}" ${videoTitle} src="//player.vimeo.com/video/${
                 videoInfo.vimeo[1] + playerParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.wistia) {
             const wistiaId = 'lg-wistia' + index;
-            const playerParams = param(this.s.wistiaPlayerParams);
+            const playerParams = param(this.settings.wistiaPlayerParams);
             video = `<iframe allow="autoplay" id="${wistiaId}" src="//fast.wistia.net/embed/iframe/${
                 videoInfo.wistia[4] + playerParams
             }" ${videoTitle} class="wistia_embed lg-video-object lg-wistia ${addClass}" name="wistia_embed" ${commonIframeProps}></iframe>`;
@@ -281,7 +283,7 @@ export class Video {
                 html5VideoAttrs += `${key}="${(videoAttributes as any)[key]}" `;
             });
             video = `<video class="lg-video-object lg-html5 ${
-                this.s.videojs ? 'video-js' : ''
+                this.settings.videojs ? 'video-js' : ''
             }" ${html5VideoAttrs}>
                 ${html5VideoMarkup}
                 Your browser does not support HTML5 video.
@@ -309,9 +311,9 @@ export class Video {
         );
         el.find('.lg-video').append(videoHtml);
         const $videoElement = el.find('.lg-video-object').first();
-        if (this.s.videojs) {
+        if (this.settings.videojs) {
             try {
-                videojs($videoElement.get(), this.s.videojsOptions);
+                videojs($videoElement.get(), this.settings.videojsOptions);
             } catch (e) {
                 console.error(
                     'lightGallery:- Make sure you have included videojs',
@@ -330,7 +332,7 @@ export class Video {
             .find('.lg-video-object')
             .first();
         const videoInfo = this.core.galleryItems[index].__slideVideoInfo || {};
-        if (this.s.gotoNextSlideOnVideoEnd) {
+        if (this.settings.gotoNextSlideOnVideoEnd) {
             if (videoInfo.html5) {
                 $videoElement.on('ended', () => {
                     this.core.goToNextSlide();
@@ -420,7 +422,7 @@ export class Video {
                 );
             }
         } else if (videoInfo.html5) {
-            if (this.s.videojs) {
+            if (this.settings.videojs) {
                 try {
                     (videojs($videoElement.get()) as any)[action as any]();
                 } catch (e) {

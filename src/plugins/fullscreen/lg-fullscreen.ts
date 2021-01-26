@@ -17,12 +17,12 @@ const LG = window.LG;
 
 export class FullScreen {
     core: LightGallery;
-    s: { fullScreen: boolean };
+    settings: { fullScreen: boolean };
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, defaults, this.core.s);
+        this.settings = Object.assign({}, defaults, this.core.settings);
 
         this.init();
 
@@ -31,7 +31,7 @@ export class FullScreen {
 
     init(): void {
         let fullScreen = '';
-        if (this.s.fullScreen) {
+        if (this.settings.fullScreen) {
             // check for fullscreen browser support
             if (
                 !document.fullscreenEnabled &&

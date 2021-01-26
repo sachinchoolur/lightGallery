@@ -1,48 +1,25 @@
-declare global {
-    interface Window {
-        lgModules: any;
-        lightGallery: (
-            el: HTMLElement,
-            options: Partial<LightGallerySettings>,
-        ) => LightGallery | undefined;
-    }
-}
-
-declare let picturefill: any;
-
 import utils, { DynamicItem, ImageSize } from './lg-utils';
 import { LG, lgQuery } from './lgQuery';
-declare global {
-    interface Window {
-        LG: typeof LG;
-    }
-}
+import { LightGallerySettings, lightGallerySettings } from './lg-settings';
+import { Coords, SlideDirection, VideoInfo } from './types';
+
 window.LG = LG;
+declare let picturefill: any;
 
 // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
 // @ref - https://2ality.com/2017/04/setting-up-multi-platform-packages.html
-import { LightGallerySettings, lightGallerySettings } from './lg-settings';
 
-type SlideDirection = 'next' | 'prev';
-export interface Coords {
-    pageX: number;
-    pageY: number;
-}
-export interface VideoInfo {
-    html5?: boolean;
-    youtube?: string[];
-    vimeo?: string[];
-    wistia?: string[];
-    dailymotion?: string[];
-}
-
+// Unique id for each gallery
 let lgId = 0;
 window.lgModules = window.lgModules || {};
 
 export class LightGallery {
-    public s: LightGallerySettings;
+    public settings: LightGallerySettings;
     public galleryItems: DynamicItem[];
+
+    // Current gallery item
     public lgId: number;
+
     public el: HTMLElement;
     public LGel: lgQuery;
     public lgOpened = false;
@@ -91,48 +68,51 @@ export class LightGallery {
         this.LGel = LG(element);
 
         // lightGallery settings
-        this.s = Object.assign({}, lightGallerySettings, options);
+        this.settings = Object.assign({}, lightGallerySettings, options);
         if (
-            this.s.isMobile && typeof this.s.isMobile
-                ? this.s.isMobile()
+            this.settings.isMobile && typeof this.settings.isMobile
+                ? this.settings.isMobile()
                 : utils.isMobile()
         ) {
             const mobileSettings = Object.assign(
                 {},
-                this.s.mobileSettings,
+                this.settings.mobileSettings,
                 options.mobileSettings,
             );
-            this.s = Object.assign(this.s, mobileSettings);
+            this.settings = Object.assign(this.settings, mobileSettings);
         }
 
         // When using dynamic mode, ensure dynamicEl is an array
         if (
-            this.s.dynamic &&
-            this.s.dynamicEl !== undefined &&
-            !Array.isArray(this.s.dynamicEl)
+            this.settings.dynamic &&
+            this.settings.dynamicEl !== undefined &&
+            !Array.isArray(this.settings.dynamicEl)
         ) {
             throw 'When using dynamic mode, you must also define dynamicEl as an Array.';
         }
 
-        if (this.s.slideEndAnimatoin) {
-            this.s.hideControlOnEnd = false;
+        if (this.settings.slideEndAnimatoin) {
+            this.settings.hideControlOnEnd = false;
         }
 
         // Need to disable zoomFromImage if gallery is opened from url (Hash plugin)
         // And reset it on close to get the correct value next time
-        this.zoomFromImage = this.s.zoomFromImage;
+        this.zoomFromImage = this.settings.zoomFromImage;
 
         // Gallery items
         this.galleryItems = this.getItems();
 
         // At the moement, Zoom from image doesn't support dynamic options
         // @todo add zoomFromImage support for dynamic images
-        if (this.s.dynamic) {
+        if (this.settings.dynamic) {
             this.zoomFromImage = false;
         }
 
-        // s.preload should not be grater than $item.length
-        this.s.preload = Math.min(this.s.preload, this.galleryItems.length);
+        // settings.preload should not be grater than $item.length
+        this.settings.preload = Math.min(
+            this.settings.preload,
+            this.galleryItems.length,
+        );
 
         this.init();
 
@@ -149,7 +129,7 @@ export class LightGallery {
             openGalleryAfter = this.buildStructure();
         }
 
-        if (this.s.keyPress) {
+        if (this.settings.keyPress) {
             this.keyPress();
         }
 
@@ -161,13 +141,13 @@ export class LightGallery {
         if (this.galleryItems.length > 1) {
             this.arrow();
 
-            if (this.s.mousewheel) {
+            if (this.settings.mousewheel) {
                 this.mousewheel();
             }
         }
 
-        if (this.s.dynamic) {
-            const index = this.s.index || 0;
+        if (this.settings.dynamic) {
+            const index = this.settings.index || 0;
 
             setTimeout(() => {
                 this.openGallery(index);
@@ -180,7 +160,7 @@ export class LightGallery {
                 // @todo manage all event listners - should have namespace that represent element
                 LG(element).on(`click.lgcustom-item-${index}`, (e) => {
                     e.preventDefault();
-                    const currentItemIndex = this.s.index || index;
+                    const currentItemIndex = this.settings.index || index;
                     let transform;
                     if (this.zoomFromImage) {
                         const imageSize = utils.getSize(element);
@@ -231,43 +211,43 @@ export class LightGallery {
         let subHtmlCont = '';
 
         // Create controls
-        if (this.s.controls && this.galleryItems.length > 1) {
+        if (this.settings.controls && this.galleryItems.length > 1) {
             controls = `<button type="button" id="${this.getById(
                 'lg-prev',
             )}" aria-label="Previous slide" class="lg-prev lg-icon"> ${
-                this.s.prevHtml
+                this.settings.prevHtml
             } </button>
                 <button type="button" id="${this.getById(
                     'lg-next',
                 )}" aria-label="Next slide" class="lg-next lg-icon"> ${
-                this.s.nextHtml
+                this.settings.nextHtml
             } </button>`;
         }
 
-        if (this.s.appendSubHtmlTo === '.lg-sub-html') {
+        if (this.settings.appendSubHtmlTo === '.lg-sub-html') {
             subHtmlCont =
                 '<div class="lg-sub-html" role="status" aria-live="polite"></div>';
         }
 
         let addClasses = '';
 
-        if (this.s.hideSubHtml) {
+        if (this.settings.hideSubHtml) {
             // Do not remove space before last single quote
             addClasses += 'lg-hide-sub-html ';
         }
 
-        const ariaLabelledby = this.s.ariaLabelledby
-            ? 'aria-labelledby="' + this.s.ariaLabelledby + '"'
+        const ariaLabelledby = this.settings.ariaLabelledby
+            ? 'aria-labelledby="' + this.settings.ariaLabelledby + '"'
             : '';
-        const ariaDescribedby = this.s.ariaDescribedby
-            ? 'aria-describedby="' + this.s.ariaDescribedby + '"'
+        const ariaDescribedby = this.settings.ariaDescribedby
+            ? 'aria-describedby="' + this.settings.ariaDescribedby + '"'
             : '';
 
         const containerClassName = `lg-container ${
-            document.body !== this.s.container ? 'lg-inline' : ''
+            document.body !== this.settings.container ? 'lg-inline' : ''
         }`;
         const closeIcon =
-            this.s.closable && this.s.showCloseIcon
+            this.settings.closable && this.settings.showCloseIcon
                 ? `<button type="button" aria-label="Close gallery" id="${this.getById(
                       'lg-close',
                   )}" class="lg-close lg-icon"></button>`
@@ -281,10 +261,12 @@ export class LightGallery {
 
             <div id="${this.getById(
                 'lg-outer',
-            )}" class="lg-outer lg-hide-items ${this.s.addClass} ${addClasses}">
-                    <div class="lg" style="width: ${this.s.width}; height:${
-            this.s.height
-        }">
+            )}" class="lg-outer lg-hide-items ${
+            this.settings.addClass
+        } ${addClasses}">
+                    <div class="lg" style="width: ${
+                        this.settings.width
+                    }; height:${this.settings.height}">
                         <div id="${this.getById(
                             'lg-inner',
                         )}" class="lg-inner"></div>
@@ -300,20 +282,22 @@ export class LightGallery {
         </div>
         `;
 
-        LG(this.s.container).css('position', 'relative').append(template);
+        LG(this.settings.container)
+            .css('position', 'relative')
+            .append(template);
         this.outer = LG(`#${this.getById('lg-outer')}`);
         this.$backdrop = LG(`#${this.getById('lg-backdrop')}`);
 
         this.$backdrop.css(
             'transition-duration',
-            this.s.backdropDuration + 'ms',
+            this.settings.backdropDuration + 'ms',
         );
 
-        if (this.s.useLeft) {
+        if (this.settings.useLeft) {
             this.outer.addClass('lg-use-left');
 
             // Set mode lg-slide if use left is true;
-            this.s.mode = 'lg-slide';
+            this.settings.mode = 'lg-slide';
         } else {
             this.outer.addClass('lg-use-css3');
         }
@@ -325,26 +309,26 @@ export class LightGallery {
             this.outer.addClass('lg-css');
 
             // Set speed 0 because no animation will happen if browser doesn't support css3
-            this.s.speed = 0;
+            this.settings.speed = 0;
         }
 
-        this.outer.addClass(this.s.mode);
+        this.outer.addClass(this.settings.mode);
 
-        if (this.s.enableDrag && this.galleryItems.length > 1) {
+        if (this.settings.enableDrag && this.galleryItems.length > 1) {
             this.outer.addClass('lg-grab');
         }
 
-        if (this.s.showAfterLoad) {
+        if (this.settings.showAfterLoad) {
             this.outer.addClass('lg-show-after-load');
         }
 
         if (this.doCss()) {
             const $inner = LG(`#${this.getById('lg-inner')}`);
-            $inner.css('transition-timing-function', this.s.easing);
-            $inner.css('transition-duration', this.s.speed + 'ms');
+            $inner.css('transition-timing-function', this.settings.easing);
+            $inner.css('transition-duration', this.settings.speed + 'ms');
         }
 
-        if (this.s.download) {
+        if (this.settings.download) {
             this.outer
                 .find('.lg-toolbar')
                 .append(
@@ -359,7 +343,11 @@ export class LightGallery {
         LG(window).on(
             `resize.lg.global${this.lgId} orientationchange.lg.global${this.lgId}`,
             () => {
-                if (this.zoomFromImage && !this.s.dynamic && this.lgOpened) {
+                if (
+                    this.zoomFromImage &&
+                    !this.settings.dynamic &&
+                    this.lgOpened
+                ) {
                     const imgStyle = this.getDummyImgStyles();
                     this.outer
                         .find('.lg-current .lg-dummy-img')
@@ -391,27 +379,31 @@ export class LightGallery {
     getItems(): DynamicItem[] {
         // Gallery items
         this.items = [];
-        if (!this.s.dynamic) {
-            if (this.s.selector === 'this') {
+        if (!this.settings.dynamic) {
+            if (this.settings.selector === 'this') {
                 this.items.push(this.el);
-            } else if (this.s.selector) {
-                if (this.s.selectWithin) {
-                    const selectWithin = LG(this.s.selectWithin);
-                    this.items = selectWithin.find(this.s.selector).get();
+            } else if (this.settings.selector) {
+                if (this.settings.selectWithin) {
+                    const selectWithin = LG(this.settings.selectWithin);
+                    this.items = selectWithin
+                        .find(this.settings.selector)
+                        .get();
                 } else {
-                    this.items = this.el.querySelectorAll(this.s.selector);
+                    this.items = this.el.querySelectorAll(
+                        this.settings.selector,
+                    );
                 }
             } else {
                 this.items = this.el.children;
             }
             return utils.getDynamicOptions(
                 this.items,
-                this.s.extraProps,
-                this.s.getCaptionFromTitleOrAlt,
-                this.s.exThumbImage,
+                this.settings.extraProps,
+                this.settings.getCaptionFromTitleOrAlt,
+                this.settings.exThumbImage,
             );
         } else {
-            return this.s.dynamicEl || [];
+            return this.settings.dynamicEl || [];
         }
     }
 
@@ -430,7 +422,7 @@ export class LightGallery {
         this.outer.removeClass('lg-hide-items');
 
         if (!this.zoomFromImage || !transform) {
-            this.outer.addClass(this.s.startClass);
+            this.outer.addClass(this.settings.startClass);
         } else if (this.zoomFromImage && transform) {
             this.outer.addClass('lg-zoom-from-image');
         }
@@ -470,7 +462,7 @@ export class LightGallery {
                     .css('transform', transform)
                     .css(
                         'transition-duration',
-                        this.s.startAnimationDuration + 'ms',
+                        this.settings.startAnimationDuration + 'ms',
                     );
                 setTimeout(() => {
                     this.getSlideItem(index).css(
@@ -490,7 +482,7 @@ export class LightGallery {
             if (!this.zoomFromImage || !transform) {
                 setTimeout(() => {
                     this.outer.addClass('lg-visible');
-                }, this.s.backdropDuration);
+                }, this.settings.backdropDuration);
             }
 
             // initiate slide function
@@ -506,7 +498,7 @@ export class LightGallery {
     buildFromHash(): boolean | undefined {
         // if dynamic option is enabled execute immediately
         const _hash = window.location.hash;
-        if (_hash.indexOf('lg=' + this.s.galleryId) > 0) {
+        if (_hash.indexOf('lg=' + this.settings.galleryId) > 0) {
             // This class is used to remove the initial animation if galleryId present in the URL
             LG(document.body).addClass('lg-from-hash');
             this.zoomFromImage = false;
@@ -526,7 +518,7 @@ export class LightGallery {
         // Hide controllers if mouse doesn't move for some period
         setTimeout(() => {
             this.outer.removeClass('lg-hide-items');
-            if (this.s.hideBarsDelay > 0) {
+            if (this.settings.hideBarsDelay > 0) {
                 this.outer.on('mousemove.lg click.lg touchstart.lg', () => {
                     this.outer.removeClass('lg-hide-items');
 
@@ -535,11 +527,11 @@ export class LightGallery {
                     // Timeout will be cleared on each slide movement also
                     this.hideBarTimeout = setTimeout(() => {
                         this.outer.addClass('lg-hide-items');
-                    }, this.s.hideBarsDelay);
+                    }, this.settings.hideBarsDelay);
                 });
                 this.outer.trigger('mousemove.lg');
             }
-        }, this.s.showBarsAfter);
+        }, this.settings.showBarsAfter);
     }
 
     // Find css3 support
@@ -568,7 +560,7 @@ export class LightGallery {
      *  Ex: 1/10
      */
     counter(): void {
-        if (this.s.counter) {
+        if (this.settings.counter) {
             const counterHtml = `<div class="lg-counter" role="status" aria-live="polite">
                 <span id="${this.getById(
                     'lg-counter-current',
@@ -578,7 +570,7 @@ export class LightGallery {
                 )}" class="lg-counter-all">${
                 this.galleryItems.length
             } </span></div>`;
-            this.outer.find(this.s.appendCounterTo).append(counterHtml);
+            this.outer.find(this.settings.appendCounterTo).append(counterHtml);
         }
     }
 
@@ -601,7 +593,10 @@ export class LightGallery {
                 // if first letter starts with . or # get the html form the jQuery object
                 const fL = subHtml.substring(0, 1);
                 if (fL === '.' || fL === '#') {
-                    if (this.s.subHtmlSelectorRelative && !this.s.dynamic) {
+                    if (
+                        this.settings.subHtmlSelectorRelative &&
+                        !this.settings.dynamic
+                    ) {
                         subHtml = LG(this.items)
                             .eq(index)
                             .find(subHtml)
@@ -616,7 +611,7 @@ export class LightGallery {
             }
         }
 
-        if (this.s.appendSubHtmlTo === '.lg-sub-html') {
+        if (this.settings.appendSubHtmlTo === '.lg-sub-html') {
             if (subHtmlUrl) {
                 this.outer.find('.lg-sub-html').load(subHtmlUrl);
             } else {
@@ -637,11 +632,11 @@ export class LightGallery {
         if (typeof subHtml !== 'undefined' && subHtml !== null) {
             if (subHtml === '') {
                 this.outer
-                    .find(this.s.appendSubHtmlTo)
+                    .find(this.settings.appendSubHtmlTo)
                     .addClass('lg-empty-html');
             } else {
                 this.outer
-                    .find(this.s.appendSubHtmlTo)
+                    .find(this.settings.appendSubHtmlTo)
                     .removeClass('lg-empty-html');
             }
         }
@@ -655,7 +650,7 @@ export class LightGallery {
      * @todo preload not working for the first slide, Also, should work for the first and last slide as well
      */
     preload(index: number): void {
-        for (let i = 1; i <= this.s.preload; i++) {
+        for (let i = 1; i <= this.settings.preload; i++) {
             if (i >= this.galleryItems.length - index) {
                 break;
             }
@@ -663,7 +658,7 @@ export class LightGallery {
             this.loadContent(index + i, false, false);
         }
 
-        for (let j = 1; j <= this.s.preload; j++) {
+        for (let j = 1; j <= this.settings.preload; j++) {
             if (index - j < 0) {
                 break;
             }
@@ -689,7 +684,7 @@ export class LightGallery {
         let imgContnet = '';
         let imageSize;
         let $currentItem;
-        if (!this.s.dynamic) {
+        if (!this.settings.dynamic) {
             $currentItem = LG(this.items).eq(index);
             imageSize = utils.getSize($currentItem.get());
         }
@@ -700,10 +695,12 @@ export class LightGallery {
 
         if (!this.lGalleryOn && this.zoomFromImage && imageSize) {
             if (imageSize && $currentItem) {
-                if (!this.s.exThumbImage) {
+                if (!this.settings.exThumbImage) {
                     _dummyImgSrc = $currentItem.find('img').first().attr('src');
                 } else {
-                    _dummyImgSrc = $currentItem.attr(this.s.exThumbImage);
+                    _dummyImgSrc = $currentItem.attr(
+                        this.settings.exThumbImage,
+                    );
                 }
                 const imgStyle = this.getDummyImgStyles(imageSize);
                 const dummyImgContent = `<img ${alt} style="${imgStyle}" class="lg-dummy-img" src="${_dummyImgSrc}" />`;
@@ -843,7 +840,7 @@ export class LightGallery {
         const iframe = !!currentDynamicItem.iframe;
 
         let imageSize;
-        if (!this.s.dynamic) {
+        if (!this.settings.dynamic) {
             const $currentItem = this.items[index];
             imageSize = utils.getSize($currentItem);
         }
@@ -854,7 +851,7 @@ export class LightGallery {
             if (iframe) {
                 const markup = utils.getIframeMarkup(
                     src,
-                    this.s.iframeMaxWidth,
+                    this.settings.iframeMaxWidth,
                 );
                 $currentSlide.prepend(markup);
             } else if (poster) {
@@ -889,7 +886,7 @@ export class LightGallery {
 
             if (srcset) {
                 $img.attr('srcset', srcset);
-                if (this.s.supportLegacyBrowser) {
+                if (this.settings.supportLegacyBrowser) {
                     try {
                         picturefill({
                             elements: [$img.get()],
@@ -902,7 +899,7 @@ export class LightGallery {
                 }
             }
 
-            if (this.s.appendSubHtmlTo !== '.lg-sub-html') {
+            if (this.settings.appendSubHtmlTo !== '.lg-sub-html') {
                 this.addHtml(index);
             }
         }
@@ -914,9 +911,9 @@ export class LightGallery {
         let delay = 0;
         if (firstSlide) {
             if (this.zoomFromImage && imageSize) {
-                delay = this.s.startAnimationDuration + 10;
+                delay = this.settings.startAnimationDuration + 10;
             } else {
-                delay = this.s.backdropDuration + 10;
+                delay = this.settings.backdropDuration + 10;
             }
         }
 
@@ -932,7 +929,7 @@ export class LightGallery {
                 $currentSlide
                     .removeClass('start-end-progress')
                     .removeAttr('style');
-            }, this.s.startAnimationDuration + 100);
+            }, this.settings.startAnimationDuration + 100);
             if (!$currentSlide.hasClass('lg-loaded')) {
                 setTimeout(() => {
                     $currentSlide
@@ -957,7 +954,7 @@ export class LightGallery {
                                 _speed,
                             );
                         });
-                }, this.s.startAnimationDuration + 100);
+                }, this.settings.startAnimationDuration + 100);
             }
         }
 
@@ -978,7 +975,7 @@ export class LightGallery {
         ) {
             setTimeout(() => {
                 $currentSlide.addClass('lg-complete');
-            }, this.s.backdropDuration);
+            }, this.settings.backdropDuration);
         }
 
         // Content loaded
@@ -1069,7 +1066,7 @@ export class LightGallery {
                 );
             }
         }
-        if (this.s.loop) {
+        if (this.settings.loop) {
             if (index === this.galleryItems.length - 1) {
                 itemsToBeInsertedToDom.push(`lg-item-${this.lgId}-${0}`);
             } else if (index === 0) {
@@ -1089,7 +1086,7 @@ export class LightGallery {
         const itemsToBeInsertedToDom = this.getItemsToBeInsertedToDom(
             index,
             prevIndex,
-            this.s.numberOfSlideItemsInDom,
+            this.settings.numberOfSlideItemsInDom,
         );
 
         itemsToBeInsertedToDom.forEach((item) => {
@@ -1126,7 +1123,7 @@ export class LightGallery {
     }
 
     setDownloadValue(index: number): void {
-        if (this.s.download) {
+        if (this.settings.download) {
             const currentGalleryItem = this.galleryItems[index];
             const src =
                 currentGalleryItem.downloadUrl !== false &&
@@ -1174,7 +1171,7 @@ export class LightGallery {
                 // reset all transitions
                 this.outer.removeClass('lg-no-trans');
             }, 50);
-        }, this.s.slideDelay);
+        }, this.settings.slideDelay);
     }
 
     /**
@@ -1185,12 +1182,12 @@ export class LightGallery {
         ** ** On first slide we do not want any animation like slide of fade
         ** ** So on first slide( if lg.on if false that is first slide) loadContent() should start loading immediately
         ** ** Else loadContent() should wait for the transition to complete.
-        ** ** So set timeout s.speed + 50
+        ** ** So set timeout settings.speed + 50
     <=> ** loadContent() will load slide content in to the particular slide
         ** ** It has recursion (rec) parameter. if rec === true loadContent() will call preload() function.
         ** ** preload will execute only when the previous slide is fully loaded (images iframe)
         ** ** avoid simultaneous image load
-    <=> ** Preload() will check for s.preload value and call loadContent() again accoring to preload value
+    <=> ** Preload() will check for settings.preload value and call loadContent() again accoring to preload value
         ** loadContent()  <====> Preload();
     
     *   @param {Number} index - index of the slide
@@ -1217,7 +1214,7 @@ export class LightGallery {
         if (!this.lgBusy) {
             this.setDownloadValue(index);
 
-            LG(this.el).trigger('onBeforeSlide.lg', {
+            this.LGel.trigger('onBeforeSlide.lg', {
                 prevIndex,
                 index,
                 fromTouch,
@@ -1283,18 +1280,25 @@ export class LightGallery {
                 currentSlideItem.addClass('lg-current');
             }
 
-            setTimeout(() => {
+            // Do not put load content in set timeout as it needs to load immediately when the gallery is opened
+            if (!this.lGalleryOn) {
                 this.loadContent(index, true, false);
-                if (this.s.counter) {
+            }
+
+            setTimeout(() => {
+                if (!this.lGalleryOn) {
+                    this.loadContent(index, true, false);
+                }
+                if (this.settings.counter) {
                     LG(`#${this.getById('lg-counter-current')}`).html(
                         index + 1 + '',
                     );
                 }
-                // Add title if this.s.appendSubHtmlTo === lg-sub-html
-                if (this.s.appendSubHtmlTo === '.lg-sub-html') {
+                // Add title if this.settings.appendSubHtmlTo === lg-sub-html
+                if (this.settings.appendSubHtmlTo === '.lg-sub-html') {
                     this.addHtml(index);
                 }
-            }, (this.lGalleryOn ? this.s.speed + 50 : 50) + (fromTouch ? 0 : this.s.slideDelay));
+            }, (this.lGalleryOn ? this.settings.speed + 50 : 50) + (fromTouch ? 0 : this.settings.slideDelay));
 
             setTimeout(() => {
                 this.lgBusy = false;
@@ -1305,7 +1309,7 @@ export class LightGallery {
                     fromTouch,
                     fromThumb,
                 });
-            }, (this.lGalleryOn ? this.s.speed + 100 : 100) + (fromTouch ? 0 : this.s.slideDelay));
+            }, (this.lGalleryOn ? this.settings.speed + 100 : 100) + (fromTouch ? 0 : this.settings.slideDelay));
         }
 
         this.index = index;
@@ -1357,7 +1361,7 @@ export class LightGallery {
                 0,
             );
         } else if (this.swipeDirection === 'vertical') {
-            if (this.s.swipeToClose) {
+            if (this.settings.swipeToClose) {
                 const container = LG(`#${this.getById('lg-container')}`);
                 container.addClass('lg-dragging-vertical');
 
@@ -1375,7 +1379,7 @@ export class LightGallery {
         let distance;
 
         // keep slide animation for any mode while dragg/swipe
-        if (this.s.mode !== 'lg-slide') {
+        if (this.settings.mode !== 'lg-slide') {
             this.outer.addClass('lg-slide');
         }
 
@@ -1395,19 +1399,26 @@ export class LightGallery {
                 const distanceAbs = Math.abs(
                     endCoords.pageX - startCoords.pageX,
                 );
-                if (distance < 0 && distanceAbs > this.s.swipeThreshold) {
+                if (
+                    distance < 0 &&
+                    distanceAbs > this.settings.swipeThreshold
+                ) {
                     this.goToNextSlide(true);
                     triggerClick = false;
                 } else if (
                     distance > 0 &&
-                    distanceAbs > this.s.swipeThreshold
+                    distanceAbs > this.settings.swipeThreshold
                 ) {
                     this.goToPrevSlide(true);
                     triggerClick = false;
                 }
             } else if (this.swipeDirection === 'vertical') {
                 distance = Math.abs(endCoords.pageY - startCoords.pageY);
-                if (this.s.closable && this.s.swipeToClose && distance > 100) {
+                if (
+                    this.settings.closable &&
+                    this.settings.swipeToClose &&
+                    distance > 100
+                ) {
                     this.destroy();
                     return;
                 } else {
@@ -1431,11 +1442,11 @@ export class LightGallery {
         setTimeout(() => {
             if (
                 !this.outer.hasClass('lg-dragging') &&
-                this.s.mode !== 'lg-slide'
+                this.settings.mode !== 'lg-slide'
             ) {
                 this.outer.removeClass('lg-slide');
             }
-        }, this.s.speed + 100);
+        }, this.settings.speed + 100);
     }
 
     enableSwipe(): void {
@@ -1445,7 +1456,7 @@ export class LightGallery {
         let isSwiping = false;
         const inner = LG(`#${this.getById('lg-inner')}`);
 
-        if (this.s.enableSwipe && this.doCss()) {
+        if (this.settings.enableSwipe && this.doCss()) {
             inner.on('touchstart.lg', (e) => {
                 e.preventDefault();
                 const $item = this.getSlideItem(this.index);
@@ -1502,7 +1513,7 @@ export class LightGallery {
         let endCoords: Coords = {} as Coords;
         let isDraging = false;
         let isMoved = false;
-        if (this.s.enableDrag && this.doCss()) {
+        if (this.settings.enableDrag && this.doCss()) {
             this.outer.on('mousedown.lg', (e) => {
                 const $item = this.getSlideItem(this.index);
                 if (
@@ -1575,7 +1586,7 @@ export class LightGallery {
     manageSwipeClass(): void {
         let _touchNext = this.index + 1;
         let _touchPrev = this.index - 1;
-        if (this.s.loop && this.galleryItems.length > 2) {
+        if (this.settings.loop && this.galleryItems.length > 2) {
             if (this.index === 0) {
                 _touchPrev = this.galleryItems.length - 1;
             } else if (this.index === this.galleryItems.length - 1) {
@@ -1596,7 +1607,7 @@ export class LightGallery {
      *  @param {Boolean} fromTouch - true if slide function called via touch event
      */
     goToNextSlide(fromTouch?: boolean): void {
-        let _loop = this.s.loop;
+        let _loop = this.settings.loop;
         if (fromTouch && this.galleryItems.length < 3) {
             _loop = false;
         }
@@ -1615,7 +1626,7 @@ export class LightGallery {
                         index: this.index,
                     });
                     this.slide(this.index, !!fromTouch, false, 'next');
-                } else if (this.s.slideEndAnimatoin && !fromTouch) {
+                } else if (this.settings.slideEndAnimatoin && !fromTouch) {
                     this.outer.addClass('lg-right-end');
                     setTimeout(() => {
                         this.outer.removeClass('lg-right-end');
@@ -1630,7 +1641,7 @@ export class LightGallery {
      *  @param {Boolean} fromTouch - true if slide function called via touch event
      */
     goToPrevSlide(fromTouch?: boolean): void {
-        let _loop = this.s.loop;
+        let _loop = this.settings.loop;
         if (fromTouch && this.galleryItems.length < 3) {
             _loop = false;
         }
@@ -1651,7 +1662,7 @@ export class LightGallery {
                         fromTouch,
                     });
                     this.slide(this.index, !!fromTouch, false, 'prev');
-                } else if (this.s.slideEndAnimatoin && !fromTouch) {
+                } else if (this.settings.slideEndAnimatoin && !fromTouch) {
                     this.outer.addClass('lg-left-end');
                     setTimeout(() => {
                         this.outer.removeClass('lg-left-end');
@@ -1663,7 +1674,11 @@ export class LightGallery {
 
     keyPress(): void {
         LG(window).on(`keydown.lg.global${this.lgId}`, (e) => {
-            if (this.lgOpened && this.s.escKey === true && e.keyCode === 27) {
+            if (
+                this.lgOpened &&
+                this.settings.escKey === true &&
+                e.keyCode === 27
+            ) {
                 e.preventDefault();
                 if (!this.outer.hasClass('lg-thumb-open')) {
                     this.destroy();
@@ -1695,8 +1710,8 @@ export class LightGallery {
     }
 
     arrowDisable(index: number): void {
-        // Disable arrows if s.hideControlOnEnd is true
-        if (!this.s.loop && this.s.hideControlOnEnd) {
+        // Disable arrows if settings.hideControlOnEnd is true
+        if (!this.settings.loop && this.settings.hideControlOnEnd) {
             const $prev = LG(`#${this.getById('lg-prev')}`);
             const $next = LG(`#${this.getById('lg-next')}`);
             if (index + 1 < this.galleryItems.length) {
@@ -1722,7 +1737,7 @@ export class LightGallery {
         const slideName = hash.split('&slide=')[1];
         let _idx = 0;
 
-        if (this.s.customSlideName) {
+        if (this.settings.customSlideName) {
             for (let index = 0; index < this.galleryItems.length; index++) {
                 const dynamicEl = this.galleryItems[index];
                 if (dynamicEl.slideName === slideName) {
@@ -1745,7 +1760,7 @@ export class LightGallery {
         scaleY = 1,
     ): void {
         // jQuery supports Automatic CSS prefixing since version 1.8.0
-        if (this.s.useLeft) {
+        if (this.settings.useLeft) {
             $el.css('left', xValue + '');
         } else {
             $el.css(
@@ -1780,13 +1795,13 @@ export class LightGallery {
     }
 
     closeGallery(): void {
-        if (!this.s.closable) return;
+        if (!this.settings.closable) return;
         let mousedown = false;
         LG(`#${this.getById('lg-close')}`).on('click.lg', () => {
             this.destroy();
         });
 
-        if (this.s.closeOnTap) {
+        if (this.settings.closeOnTap) {
             // If you drag the slide and release outside gallery gets close on chrome
             // for preventing this check mousedown and mouseup happened on .lg-item or lg-outer
             this.outer.on('mousedown.lg', (e) => {
@@ -1822,7 +1837,7 @@ export class LightGallery {
     }
 
     destroy(clear?: boolean): void {
-        if (!clear && !this.s.closable) {
+        if (!clear && !this.settings.closable) {
             return;
         }
         if (!clear) {
@@ -1831,7 +1846,7 @@ export class LightGallery {
         }
 
         let transform: string | undefined;
-        if (!this.s.dynamic) {
+        if (!this.settings.dynamic) {
             const imageSize = utils.getSize(this.items[this.index]);
             transform = utils.getTransform(this.items[this.index], imageSize);
         }
@@ -1841,7 +1856,7 @@ export class LightGallery {
                 .addClass('start-end-progress')
                 .css(
                     'transition-duration',
-                    this.s.startAnimationDuration + 'ms',
+                    this.settings.startAnimationDuration + 'ms',
                 )
                 .css('transform', transform);
         } else {
@@ -1874,7 +1889,7 @@ export class LightGallery {
         }
 
         if (clear) {
-            if (!this.s.dynamic) {
+            if (!this.settings.dynamic) {
                 // only when not using dynamic mode is $items a jquery collection
                 for (let index = 0; index < this.items.length; index++) {
                     const element = this.items[index];
@@ -1888,7 +1903,7 @@ export class LightGallery {
         }
 
         this.lGalleryOn = false;
-        this.zoomFromImage = this.s.zoomFromImage;
+        this.zoomFromImage = this.settings.zoomFromImage;
 
         clearTimeout(this.hideBarTimeout);
         this.hideBarTimeout = false;
@@ -1902,10 +1917,10 @@ export class LightGallery {
         const removeTimeout =
             this.zoomFromImage && transform
                 ? Math.max(
-                      this.s.startAnimationDuration,
-                      this.s.backdropDuration,
+                      this.settings.startAnimationDuration,
+                      this.settings.backdropDuration,
                   )
-                : this.s.backdropDuration;
+                : this.settings.backdropDuration;
         LG(`#${this.getById('lg-container')}`).removeClass('lg-show-in');
 
         // Once the closign animation is completed and gallery is invisible
@@ -1918,9 +1933,12 @@ export class LightGallery {
             // Need to remove inline opacity as it is used in the stylesheet as well
             this.$backdrop
                 .removeAttr('style')
-                .css('transition-duration', this.s.backdropDuration + 'ms');
+                .css(
+                    'transition-duration',
+                    this.settings.backdropDuration + 'ms',
+                );
 
-            this.outer.removeClass(`lg-closing ${this.s.startClass}`);
+            this.outer.removeClass(`lg-closing ${this.settings.startClass}`);
 
             this.getSlideItem(this.index).removeClass('start-end-progress');
             LG(`#${this.getById('lg-inner')}`).empty();

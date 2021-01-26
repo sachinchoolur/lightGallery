@@ -10,12 +10,12 @@ import { LightGallery } from '../../lightgallery';
 
 export class Share {
     core: LightGallery;
-    s: ShareSettings;
+    settings: ShareSettings;
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, shareSettings, this.core.s);
+        this.settings = Object.assign({}, shareSettings, this.core.settings);
 
         this.init();
 
@@ -37,14 +37,14 @@ export class Share {
 
     getShareListHtml() {
         let shareHtml = '';
-        shareHtml += this.s.facebook
-            ? getShareListHTML('facebook', this.s.facebookDropdownText)
+        shareHtml += this.settings.facebook
+            ? getShareListHTML('facebook', this.settings.facebookDropdownText)
             : '';
-        shareHtml += this.s.twitter
-            ? getShareListHTML('twitter', this.s.twitterDropdownText)
+        shareHtml += this.settings.twitter
+            ? getShareListHTML('twitter', this.settings.twitterDropdownText)
             : '';
-        shareHtml += this.s.pinterest
-            ? getShareListHTML('pinterest', this.s.pinterestDropdownText)
+        shareHtml += this.settings.pinterest
+            ? getShareListHTML('pinterest', this.settings.pinterestDropdownText)
             : '';
         return shareHtml;
     }

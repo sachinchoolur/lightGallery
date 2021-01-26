@@ -7,7 +7,7 @@ import { AutoplaySettings, autoplaySettings } from './lg-autoplay-settings';
  */
 export class Autoplay {
     core: LightGallery;
-    s: AutoplaySettings;
+    settings: AutoplaySettings;
     interval!: any;
     fromAuto!: boolean;
     pausedOnTouchDrag!: boolean;
@@ -17,7 +17,7 @@ export class Autoplay {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.s = Object.assign({}, autoplaySettings, this.core.s);
+        this.settings = Object.assign({}, autoplaySettings, this.core.settings);
 
         // Execute only if items are above 1
         if (this.core.items.length < 2) {
@@ -35,7 +35,7 @@ export class Autoplay {
 
         // do not allow progress bar if browser does not support css3 transitions
         if (!this.core.doCss()) {
-            this.s.progressBar = false;
+            this.settings.progressBar = false;
         }
 
         this.init();
@@ -45,12 +45,12 @@ export class Autoplay {
 
     init() {
         // append autoplay controls
-        if (this.s.autoplayControls) {
+        if (this.settings.autoplayControls) {
             this.controls();
         }
 
         // Create progress bar
-        if (this.s.progressBar) {
+        if (this.settings.progressBar) {
             this.core.outer
                 .find('.lg')
                 .append(
@@ -59,7 +59,7 @@ export class Autoplay {
         }
 
         // Start autoplay
-        if (this.s.autoplay) {
+        if (this.settings.autoplay) {
             this.core.LGel.once('onSlideItemLoad.lg.autoplay', () => {
                 this.startAuto();
             });
@@ -103,7 +103,7 @@ export class Autoplay {
             if (
                 this.pausedOnSlideChange &&
                 !this.interval &&
-                this.s.forceAutoplay
+                this.settings.forceAutoplay
             ) {
                 this.startAuto();
                 this.pausedOnSlideChange = false;
@@ -115,7 +115,7 @@ export class Autoplay {
     }
 
     showProgressBar() {
-        if (this.s.progressBar && this.fromAuto) {
+        if (this.settings.progressBar && this.fromAuto) {
             const _$progressBar = this.core.outer.find('.lg-progress-bar');
             const _$progress = this.core.outer.find('.lg-progress');
             if (this.interval) {
@@ -125,7 +125,7 @@ export class Autoplay {
                     _$progress.css(
                         'transition',
                         'width ' +
-                            (this.core.s.speed + this.s.pause) +
+                            (this.core.settings.speed + this.settings.pause) +
                             'ms ease 0s',
                     );
                     _$progressBar.addClass('lg-start');
@@ -140,7 +140,9 @@ export class Autoplay {
             '<button type="button" class="lg-autoplay-button lg-icon"></button>';
 
         // Append autoplay controls
-        this.core.outer.find(this.s.appendAutoplayControlsTo).append(_html);
+        this.core.outer
+            .find(this.settings.appendAutoplayControlsTo)
+            .append(_html);
 
         this.core.outer
             .find('.lg-autoplay-button')
@@ -162,7 +164,9 @@ export class Autoplay {
             .find('.lg-progress')
             .css(
                 'transition',
-                'width ' + (this.core.s.speed + this.s.pause) + 'ms ease 0s',
+                'width ' +
+                    (this.core.settings.speed + this.settings.pause) +
+                    'ms ease 0s',
             );
         this.core.outer.addClass('lg-show-autoplay');
         this.core.outer.find('.lg-progress-bar').addClass('lg-start');
@@ -176,7 +180,7 @@ export class Autoplay {
 
             this.fromAuto = true;
             this.core.slide(this.core.index, false, false, 'next');
-        }, this.core.s.speed + this.s.pause);
+        }, this.core.settings.speed + this.settings.pause);
     }
 
     // cancel Autostart

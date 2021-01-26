@@ -26,7 +26,7 @@ interface PossibleCords {
 }
 export class Zoom {
     private core: LightGallery;
-    private s: ZoomDefaults;
+    private settings: ZoomDefaults;
     zoomableTimeout: any;
     positionChanged!: boolean;
     pageX!: number;
@@ -35,9 +35,9 @@ export class Zoom {
     constructor(instance: LightGallery) {
         this.core = instance;
 
-        this.s = Object.assign({}, zoomDefaults, this.core.s);
+        this.settings = Object.assign({}, zoomDefaults, this.core.settings);
 
-        if (this.s.zoom && this.core.doCss()) {
+        if (this.settings.zoom && this.core.doCss()) {
             this.init();
 
             // Store the zoomable timeout value just to clear it while closing
@@ -56,7 +56,7 @@ export class Zoom {
 
     // Append Zoom controls. Actual size, Zoom-in, Zoom-out
     buildTemplates(): void {
-        let zoomIcons = this.s.showZoomInOutIcons
+        let zoomIcons = this.settings.showZoomInOutIcons
             ? `<button id="${this.core.getById(
                   'lg-zoom-in',
               )}" type="button" class="lg-zoom-in lg-icon"></button><button id="${this.core.getById(
@@ -64,17 +64,17 @@ export class Zoom {
               )}" type="button" class="lg-zoom-out lg-icon"></button>`
             : '';
 
-        if (this.s.actualSize) {
+        if (this.settings.actualSize) {
             zoomIcons += `<button id="${this.core.getById(
                 'lg-actual-size',
             )}" type="button" class="${
-                this.s.actualSizeIcons.zoomIn
+                this.settings.actualSizeIcons.zoomIn
             } lg-icon"></button>`;
         }
 
         // CSS transition performace is poor in Chrome version < 54
         // So use CSS left property for zoom transition.
-        if (this.s.useLeftForZoom) {
+        if (this.settings.useLeftForZoom) {
             this.core.outer.addClass('lg-use-left-for-zoom');
         } else {
             this.core.outer.addClass('lg-use-transition-for-zoom');
@@ -91,7 +91,7 @@ export class Zoom {
      */
     enableZoom(event: CustomEvent): void {
         // delay will be 0 except first time
-        let _speed = this.s.enableZoomAfter + event.detail.delay;
+        let _speed = this.settings.enableZoomAfter + event.detail.delay;
 
         // set _speed value 0 if gallery opened from direct url and if it is first slide
         if (LG('body').first().hasClass('lg-from-hash') && event.detail.delay) {
@@ -346,7 +346,7 @@ export class Zoom {
             'scale3d(' + style.scale + ', ' + style.scale + ', 1)',
         );
 
-        if (this.s.useLeftForZoom) {
+        if (this.settings.useLeftForZoom) {
             $imageWrap.css('left', -style.x + 'px');
             $imageWrap.css('top', -style.y + 'px');
         } else {
@@ -389,8 +389,8 @@ export class Zoom {
         let naturalWidth;
 
         // @todo if possible remove dynamic check
-        if (this.core.s.dynamic) {
-            naturalWidth = this.core.s.dynamicEl[index].width;
+        if (this.core.settings.dynamic) {
+            naturalWidth = this.core.settings.dynamicEl[index].width;
         } else {
             naturalWidth = LG(this.core.items).eq(index).attr('data-width');
         }
@@ -445,8 +445,8 @@ export class Zoom {
             this.core.outer.addClass('lg-zoomed');
             const $actualSize = LG(`#${this.core.getById('lg-actual-size')}`);
             $actualSize
-                .removeClass(this.s.actualSizeIcons.zoomIn)
-                .addClass(this.s.actualSizeIcons.zoomOut);
+                .removeClass(this.settings.actualSizeIcons.zoomIn)
+                .addClass(this.settings.actualSizeIcons.zoomOut);
         } else {
             this.resetZoom();
         }
@@ -509,7 +509,7 @@ export class Zoom {
 
         LG(`#${this.core.getById('lg-zoom-out')}`).on('click.lg', () => {
             if (this.core.outer.find('.lg-current .lg-image').first()) {
-                this.scale -= this.s.scale;
+                this.scale -= this.settings.scale;
 
                 this.scale = this.getScale(this.scale);
                 this.beginZoom(this.scale);
@@ -553,7 +553,7 @@ export class Zoom {
         if (scale) {
             this.scale = scale;
         } else {
-            this.scale += this.s.scale;
+            this.scale += this.settings.scale;
         }
 
         this.scale = this.getScale(this.scale);
@@ -569,8 +569,8 @@ export class Zoom {
             index !== undefined ? index : this.core.index,
         );
         $actualSize
-            .removeClass(this.s.actualSizeIcons.zoomOut)
-            .addClass(this.s.actualSizeIcons.zoomIn);
+            .removeClass(this.settings.actualSizeIcons.zoomOut)
+            .addClass(this.settings.actualSizeIcons.zoomIn);
         $item.find('.lg-img-wrap').first().removeAttr('style data-x data-y');
         $item.find('.lg-image').first().removeAttr('style data-scale');
 
@@ -849,7 +849,7 @@ export class Zoom {
         LGel: lgQuery,
         distance: { x: number; y: number },
     ): void {
-        if (this.s.useLeftForZoom) {
+        if (this.settings.useLeftForZoom) {
             LGel.css('left', distance.x + 'px');
             LGel.css('top', distance.y + 'px');
         } else {
