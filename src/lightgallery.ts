@@ -210,7 +210,7 @@ export class LightGallery {
     }
 
     buildStructure(): number {
-        const container = this.$container.get();
+        const container = this.$container && this.$container.get();
         if (container) {
             return 0;
         }

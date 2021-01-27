@@ -70,7 +70,7 @@ export function convertToData(attr: string): string {
 
 const utils = {
     /**
-     * @desc get possible width and height from the lgSize attribute. Used for ZoomFromImage option
+     * @desc get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
      * @param {jQuery Element} $el
      * @returns {Object} Computed Width and Computed Height
      */
@@ -93,19 +93,25 @@ const utils = {
         const maxWidth = Math.min(wWidth, width);
         const maxHeight = Math.min(wHeight, height);
 
-        const srcWidth = LGel.width();
-        const srcHeight = LGel.height();
-
-        const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
-
-        return {
-            width: srcWidth * ratio,
-            height: srcHeight * ratio,
-        };
+        if (height > maxHeight) {
+            const heightRatio = maxHeight / height;
+            const newWidth = width * heightRatio;
+            return {
+                width: newWidth,
+                height: maxHeight,
+            };
+        } else if (width > maxWidth) {
+            const widthRatio = maxWidth / width;
+            const newHeight = height * widthRatio;
+            return {
+                width: maxWidth,
+                height: newHeight,
+            };
+        }
     },
 
     /**
-     * @desc Get transform value based on the imageSize. Used for ZoomFromImage option
+     * @desc Get transform value based on the imageSize. Used for ZoomFromOrigin option
      * @param {jQuery Element}
      * @returns {String} Transform CSS string
      */
@@ -113,7 +119,7 @@ const utils = {
         if (!imageSize) {
             return;
         }
-        const LGel = $LG(el);
+        const LGel = $LG(el).find('img').first();
 
         const wWidth = document.body.clientWidth;
 
