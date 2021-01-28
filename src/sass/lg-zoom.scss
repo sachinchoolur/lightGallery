@@ -2,7 +2,8 @@
     // reset transition duration
     &.lg-css3.lg-zoom-dragging {
         .lg-item.lg-complete.lg-zoomable {
-            .lg-img-wrap, .lg-image {
+            .lg-img-wrap,
+            .lg-image {
                 @include transition-duration(0ms !important);
             }
         }
@@ -10,7 +11,10 @@
     &.lg-use-transition-for-zoom {
         .lg-item.lg-complete.lg-zoomable {
             .lg-img-wrap {
-                @include transitionCustom(transform $zoom-transition-duration cubic-bezier(0, 0, 0.25, 1) 0s);
+                @include transitionCustom(
+                    transform $zoom-transition-duration
+                        cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s
+                );
             }
         }
         &.lg-zoom-drag-transition {
@@ -24,40 +28,48 @@
     &.lg-use-left-for-zoom {
         .lg-item.lg-complete.lg-zoomable {
             .lg-img-wrap {
-                @include transitionCustom(left $zoom-transition-duration cubic-bezier(0, 0, 0.25, 1) 0s, top $zoom-transition-duration cubic-bezier(0, 0, 0.25, 1) 0s);
+                @include transitionCustom(
+                    left $zoom-transition-duration
+                        cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s,
+                    top $zoom-transition-duration
+                        cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s
+                );
             }
         }
     }
 
     .lg-item.lg-complete.lg-zoomable {
-
         .lg-img-wrap {
             @include translate3d(0, 0, 0);
             @include backface-visibility(hidden);
         }
 
-        .lg-image, .lg-dummy-img {
+        .lg-image,
+        .lg-dummy-img {
             // Translate required for zoom
             @include scale3d(1, 1, 1);
-            @include transitionCustom(transform $zoom-transition-duration cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.15s !important);
+            @include transitionCustom(
+                transform $zoom-transition-duration
+                    cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s,
+                opacity 0.15s !important
+            );
             @include transform-origin(0 0);
             @include backface-visibility(hidden);
         }
     }
-
 }
 
 // zoom buttons
 .lg-zoom-in {
     &:after {
-        content: "\e311";
+        content: '\e311';
     }
 }
 
 .lg-actual-size {
     font-size: 20px;
     &:after {
-        content: "\e033";
+        content: '\e033';
     }
 }
 
@@ -66,7 +78,7 @@
     pointer-events: none;
 
     &:after {
-        content: "\e312";
+        content: '\e312';
     }
 
     .lg-zoomed & {
