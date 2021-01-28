@@ -467,7 +467,7 @@ export class LightGallery {
             // default opening animation if user missed to add the lg-size attribute
             if (this.zoomFromOrigin && transform) {
                 this.getSlideItem(index)
-                    .addClass('start-end-progress')
+                    .addClass('lg-start-progress lg-start-end-progress')
                     .css('transform', transform)
                     .css(
                         'transition-duration',
@@ -936,7 +936,7 @@ export class LightGallery {
         if (!this.lGalleryOn && this.zoomFromOrigin && imageSize) {
             setTimeout(() => {
                 $currentSlide
-                    .removeClass('start-end-progress')
+                    .removeClass('lg-start-end-progress lg-start-progress')
                     .removeAttr('style');
             }, this.settings.startAnimationDuration + 100);
             if (!$currentSlide.hasClass('lg-loaded')) {
@@ -1856,7 +1856,7 @@ export class LightGallery {
         if (this.zoomFromOrigin && transform) {
             this.outer.addClass('lg-closing lg-zoom-from-image');
             this.getSlideItem(this.index)
-                .addClass('start-end-progress')
+                .addClass('lg-start-end-progress')
                 .css(
                     'transition-duration',
                     this.settings.startAnimationDuration + 'ms',
@@ -1943,7 +1943,7 @@ export class LightGallery {
 
             this.outer.removeClass(`lg-closing ${this.settings.startClass}`);
 
-            this.getSlideItem(this.index).removeClass('start-end-progress');
+            this.getSlideItem(this.index).removeClass('lg-start-end-progress');
             this.$inner.empty();
 
             if (clear) {
