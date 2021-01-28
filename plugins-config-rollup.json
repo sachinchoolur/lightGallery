@@ -2,61 +2,61 @@
     {
         "name": "thumbnail",
         "src": "src/plugins/thumbnail/",
-        "dist": "dist/plugins/",
+        "folder": "plugins/",
         "fileName": "lg-thumbnail"
     },
     {
         "name": "video",
         "src": "src/plugins/video/",
-        "dist": "dist/plugins/",
+        "folder": "plugins/",
         "fileName": "lg-video"
     },
     {
         "name": "zoom",
         "src": "src/plugins/zoom/",
-        "dist": "dist/plugins/",
+        "folder": "plugins/",
         "fileName": "lg-zoom"
     },
     {
         "name": "share",
         "src": "src/plugins/share/",
-        "dist": "dist/plugins/",
+        "folder": "plugins/",
         "fileName": "lg-share"
     },
     {
         "name": "rotate",
         "src": "src/plugins/rotate/",
-        "dist": "dist/plugins/",
+        "folder": "plugins/",
         "fileName": "lg-rotate"
     },
     {
         "name": "pager",
         "src": "src/plugins/pager/",
-        "dist": "dist/plugins/",
+        "folder": "plugins/",
         "fileName": "lg-pager"
     },
     {
         "name": "hash",
         "src": "src/plugins/hash/",
-        "dist": "dist/plugins/",
+        "folder": "plugins/",
         "fileName": "lg-hash"
     },
     {
         "name": "fullscreen",
         "src": "src/plugins/fullscreen/",
-        "dist": "dist/plugins/",
+        "folder": "plugins/",
         "fileName": "lg-fullscreen"
     },
     {
         "name": "comment",
         "src": "src/plugins/comment/",
-        "dist": "dist/plugins/",
+        "folder": "plugins/",
         "fileName": "lg-comment"
     },
     {
         "name": "autoplay",
         "src": "src/plugins/autoplay/",
-        "dist": "dist/plugins/",
+        "folder": "plugins/",
         "fileName": "lg-autoplay"
     }
 ]

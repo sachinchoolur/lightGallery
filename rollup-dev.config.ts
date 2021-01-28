@@ -4,12 +4,6 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
-import license from 'rollup-plugin-license';
-import { uglify } from 'rollup-plugin-uglify';
-
-import pkg from './package.json';
-
-import path from 'path';
 import pluginConfigs from './plugins-config-rollup.json';
 
 // Usage - LG_PLUGINS=['thumbnails','pager'] npm start
@@ -27,14 +21,9 @@ const umdConfigs = pluginsToCompile.map((config) => {
         input: `${config.src}${config.fileName}.ts`,
         output: [
             {
-                file: `${config.dist}${config.fileName}.umd.js`,
+                file: `site/assets/js/${config.folder}${config.fileName}.umd.js`,
                 name: camelCase(config.fileName),
                 format: 'umd',
-                sourcemap: true,
-            },
-            {
-                file: `${config.dist}${config.fileName}.es5.js`,
-                format: 'es',
                 sourcemap: true,
             },
         ],
@@ -61,12 +50,11 @@ export default [
         input: `src/${libraryName}.ts`,
         output: [
             {
-                file: pkg.main,
+                file: 'site/assets/js/lightgallery.umd.js',
                 name: camelCase(libraryName),
                 format: 'umd',
                 sourcemap: true,
             },
-            { file: pkg.module, format: 'es', sourcemap: true },
         ],
         // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
         external: [],

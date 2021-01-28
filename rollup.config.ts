@@ -19,13 +19,13 @@ const umdConfigs = pluginConfigs.map((config) => {
         input: `${config.src}${config.fileName}.ts`,
         output: [
             {
-                file: `${config.dist}${config.fileName}.umd.js`,
+                file: `dist/${config.folder}${config.fileName}.umd.js`,
                 name: camelCase(config.fileName),
                 format: 'umd',
                 sourcemap: true,
             },
             {
-                file: `${config.dist}${config.fileName}.es5.js`,
+                file: `dist/${config.folder}${config.fileName}.es5.js`,
                 format: 'es',
                 sourcemap: true,
             },
@@ -63,7 +63,7 @@ const minConfigs = pluginConfigs.map((config) => {
         input: `${config.src}${config.fileName}.ts`,
         output: [
             {
-                file: `${config.dist}${config.fileName}.min.js`,
+                file: `dist/${config.folder}${config.fileName}.min.js`,
                 name: camelCase(config.fileName),
                 format: 'umd',
             },

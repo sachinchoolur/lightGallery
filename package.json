@@ -32,7 +32,8 @@
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css",
     "build-scss": "node-sass --include-path scss src/sass/lightgallery.scss dist/css/lightgallery.css --output-style expanded",
-    "watch-css": "nodemon -e scss -x \"npm run build-scss\"",
+    "build-scss-dev": "node-sass --include-path scss src/sass/lightgallery.scss site/static/css/lightgallery.css --output-style expanded",
+    "watch-css": "nodemon -e scss -x \"npm run build-scss-dev\"",
     "watch-site-content": "nodemon --watch dist -x \"npm run copyToSite\"",
     "minify-css": "cleancss -o dist/css/lightgallery.min.css dist/css/lightgallery.css",
     "start": "concurrently \"rollup -c rollup-dev.config.ts -w $LG_PLUGINS\" \"npm run watch-site-content \" \"npm run watch-css \" ",
@@ -48,7 +49,7 @@
     "precommit": "lint-staged",
     "travis-deploy-once": "travis-deploy-once",
     "copyAssets": "copyfiles -u 1 src/fonts/** dist && copyfiles -u 1 src/img/** dist",
-    "copyToSite": "copyfiles -u 1 dist/lightgallery.umd.js dist/lightgallery.umd.js.map dist/plugins/*.umd.js dist/plugins/*.umd.js.map site/assets/js && copyfiles -f dist/img/** site/static/images && copyfiles -f dist/fonts/** site/static/fonts && copyfiles -f dist/css/** site/static/css"
+    "copyToSite": "copyfiles -f dist/img/** site/static/images && copyfiles -f dist/fonts/** site/static/fonts"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
