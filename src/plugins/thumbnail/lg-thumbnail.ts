@@ -1,6 +1,6 @@
 import {
-    ThumbnailsDefaults,
-    thumbnailsDefaults,
+    ThumbnailsSettings,
+    thumbnailsSettings,
 } from './lg-thumbnail-settings';
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
@@ -35,14 +35,14 @@ export class Thumbnail {
     private thumbTotalWidth = 0;
     private translateX = 0;
     private thumbClickable = false;
-    private settings: ThumbnailsDefaults;
+    private settings: ThumbnailsSettings;
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
         this.settings = Object.assign(
             {},
-            thumbnailsDefaults,
+            thumbnailsSettings,
             this.core.settings,
         );
 
@@ -460,12 +460,12 @@ export class Thumbnail {
             slideVideoInfo.dailymotion
         ) {
             if (slideVideoInfo.youtube) {
-                if (this.settings.loadYoutubeThumbnail) {
+                if (this.settings.loadYouTubeThumbnail) {
                     thumbImg =
                         '//img.youtube.com/vi/' +
                         slideVideoInfo.youtube[1] +
                         '/' +
-                        this.settings.youtubeThumbSize +
+                        this.settings.youTubeThumbSize +
                         '.jpg';
                 } else {
                     thumbImg = thumb;
@@ -480,14 +480,6 @@ export class Thumbnail {
                         vimeoErrorThumbSize +
                         '.jpg';
                     vimeoId = slideVideoInfo.vimeo[1];
-                } else {
-                    thumbImg = thumb;
-                }
-            } else if (slideVideoInfo.dailymotion) {
-                if (this.settings.loadDailymotionThumbnail) {
-                    thumbImg =
-                        '//www.dailymotion.com/thumbnail/video/' +
-                        slideVideoInfo.dailymotion[1];
                 } else {
                     thumbImg = thumb;
                 }

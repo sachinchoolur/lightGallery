@@ -1,11 +1,11 @@
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
+import {
+    FullscreenSettings,
+    fullscreenSettings,
+} from './lg-fullscreen-settings';
 
 declare let document: any;
-
-const defaults = {
-    fullScreen: true,
-};
 
 declare global {
     interface Window {
@@ -17,19 +17,23 @@ const $LG = window.$LG;
 
 export class FullScreen {
     core: LightGallery;
-    settings: { fullScreen: boolean };
+    settings: FullscreenSettings;
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.settings = Object.assign({}, defaults, this.core.settings);
+        this.settings = Object.assign(
+            {},
+            fullscreenSettings,
+            this.core.settings,
+        );
 
         this.init();
 
         return this;
     }
 
-    init(): void {
+    private init(): void {
         let fullScreen = '';
         if (this.settings.fullScreen) {
             // check for fullscreen browser support
@@ -49,7 +53,7 @@ export class FullScreen {
         }
     }
 
-    isFullScreen(): boolean {
+    private isFullScreen(): boolean {
         return (
             document.fullscreenElement ||
             document.mozFullScreenElement ||
@@ -58,7 +62,7 @@ export class FullScreen {
         );
     }
 
-    requestFullscreen(): void {
+    private requestFullscreen(): void {
         const el = document.documentElement;
         if (el.requestFullscreen) {
             el.requestFullscreen();
@@ -71,7 +75,7 @@ export class FullScreen {
         }
     }
 
-    exitFullscreen(): void {
+    private exitFullscreen(): void {
         if (document.exitFullscreen) {
             document.exitFullscreen();
         } else if (document.msExitFullscreen) {
@@ -84,7 +88,7 @@ export class FullScreen {
     }
 
     // https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode
-    fullScreen(): void {
+    private fullScreen(): void {
         $LG(document).on(
             `fullscreenchange.lg.global${this.core.lgId} 
             webkitfullscreenchange.lg.global${this.core.lgId} 

@@ -248,12 +248,12 @@ export class Video {
         if (videoInfo.youtube) {
             const videoId = 'lg-youtube' + index;
 
-            const youtubePlayerParams = `?wmode=opaque&autoplay=0&enablejsapi=1`;
+            const youTubePlayerParams = `?wmode=opaque&autoplay=0&enablejsapi=1`;
 
             const playerParams =
-                youtubePlayerParams +
+                youTubePlayerParams +
                 '&' +
-                param(this.settings.youtubePlayerParams);
+                param(this.settings.youTubePlayerParams);
 
             video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="//www.youtube.com/embed/${
                 videoInfo.youtube[1] + playerParams

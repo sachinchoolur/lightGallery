@@ -1,15 +1,32 @@
-export interface commentDefaults {
+export interface commentSettings {
+    /**
+     * Enable comment box
+     */
     commentBox: boolean;
+    /**
+     * Enable facebook comment box
+     */
     fbComments: boolean;
+    /**
+     * Enable disqus comment box
+     */
     disqusComments: boolean;
+
+    /**
+     * Disqus comment config
+     */
     disqusConfig: {
-        title: undefined | string;
+        title?: string;
         language: string;
     };
+
+    /**
+     * Facebook comments default markup
+     */
     fbCommentsMarkup: string;
 }
 
-export const commentDefaults: commentDefaults = {
+export const commentSettings: commentSettings = {
     commentBox: true,
     fbComments: false,
     disqusComments: true,

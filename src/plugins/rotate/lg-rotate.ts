@@ -1,6 +1,6 @@
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
-import { RotateSettings } from './lg-rotate-settings';
+import { rotateSettings, RotateSettings } from './lg-rotate-settings';
 
 declare global {
     interface Window {
@@ -9,14 +9,6 @@ declare global {
 }
 
 const $LG = window.$LG;
-
-const rotateSettings = {
-    rotate: true,
-    rotateLeft: true,
-    rotateRight: true,
-    flipHorizontal: true,
-    flipVertical: true,
-};
 
 export class Rotate {
     core: LightGallery;

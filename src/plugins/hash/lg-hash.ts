@@ -1,5 +1,6 @@
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
+import { hashSettings, HashSettings } from './lg-hash-settings';
 
 declare global {
     interface Window {
@@ -9,18 +10,15 @@ declare global {
 
 const $LG = window.$LG;
 
-const defaults = {
-    hash: true,
-};
 export class Hash {
     core: LightGallery;
-    settings: { hash: boolean };
+    settings: HashSettings;
     oldHash!: string;
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.settings = Object.assign({}, defaults, this.core.settings);
+        this.settings = Object.assign({}, hashSettings, this.core.settings);
 
         if (this.settings.hash) {
             this.oldHash = window.location.hash;
@@ -30,7 +28,7 @@ export class Hash {
         return this;
     }
 
-    init() {
+    private init() {
         // Change hash value on after each slide transition
         this.core.LGel.on('onAfterSlide.lg.hash', this.onAfterSlide.bind(this));
         this.core.LGel.on('onCloseAfter.lg.hash', this.onCloseAfter.bind(this));
@@ -42,7 +40,7 @@ export class Hash {
         );
     }
 
-    onAfterSlide(event: CustomEvent) {
+    private onAfterSlide(event: CustomEvent) {
         let slideName = this.core.galleryItems[event.detail.index].slideName;
         slideName = this.core.settings.customSlideName
             ? slideName || event.detail.index
@@ -64,7 +62,7 @@ export class Hash {
         }
     }
 
-    onCloseAfter() {
+    private onCloseAfter() {
         // Reset to old hash value
         if (
             this.oldHash &&
@@ -88,7 +86,7 @@ export class Hash {
         }
     }
 
-    onHashchange() {
+    private onHashchange() {
         if (!this.core.lgOpened) return;
         const _hash = window.location.hash;
         const index = this.core.getIndexFromUrl(_hash);

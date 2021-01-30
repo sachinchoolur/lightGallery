@@ -11,7 +11,7 @@
 
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
-import { commentDefaults } from './lg-comment-settings';
+import { commentSettings } from './lg-comment-settings';
 declare let FB: any;
 declare let DISQUS: any;
 
@@ -24,12 +24,12 @@ declare global {
 const $LG = window.$LG;
 export class CommentBox {
     core: LightGallery;
-    settings: commentDefaults;
+    settings: commentSettings;
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.settings = Object.assign({}, commentDefaults, this.core.settings);
+        this.settings = Object.assign({}, commentSettings, this.core.settings);
 
         if (this.settings.commentBox) {
             this.init();

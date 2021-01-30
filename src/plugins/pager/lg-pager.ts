@@ -1,6 +1,7 @@
 import { DynamicItem } from '../../lg-utils';
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
+import { PagerSettings, pagerSettings } from './lg-pager-settings';
 
 declare global {
     interface Window {
@@ -10,18 +11,14 @@ declare global {
 
 const $LG = window.$LG;
 
-const defaults = {
-    pager: true,
-};
-
 export class Pager {
     core: LightGallery;
-    settings: { pager: boolean };
+    settings: PagerSettings;
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.settings = Object.assign({}, defaults, this.core.settings);
+        this.settings = Object.assign({}, pagerSettings, this.core.settings);
 
         if (this.settings.pager && this.core.galleryItems.length > 1) {
             this.init();
@@ -30,7 +27,7 @@ export class Pager {
         return this;
     }
 
-    getPagerHtml(items: DynamicItem[]): string {
+    private getPagerHtml(items: DynamicItem[]): string {
         let pagerList = '';
         for (let i = 0; i < items.length; i++) {
             pagerList += `<span  data-lg-item-id="${i}" class="lg-pager-cont"> 
@@ -41,7 +38,7 @@ export class Pager {
         return pagerList;
     }
 
-    init() {
+    private init() {
         let timeout: any;
         this.core.outer
             .find('.lg')
@@ -83,13 +80,13 @@ export class Pager {
         });
     }
 
-    manageActiveClass(index: number): void {
+    private manageActiveClass(index: number): void {
         const $pagerCont = this.core.outer.find('.lg-pager-cont');
         $pagerCont.removeClass('lg-pager-active');
         $pagerCont.eq(index).addClass('lg-pager-active');
     }
 
-    addNewPagers(items: DynamicItem[]): void {
+    private addNewPagers(items: DynamicItem[]): void {
         this.core.outer
             .find('.lg-pager-outer')
             .append(this.getPagerHtml(items));

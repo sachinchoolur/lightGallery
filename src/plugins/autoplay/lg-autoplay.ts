@@ -59,7 +59,7 @@ export class Autoplay {
         }
 
         // Start autoplay
-        if (this.settings.autoplay) {
+        if (this.settings.slideShowAutoplay) {
             this.core.LGel.once('onSlideItemLoad.lg.autoplay', () => {
                 this.startAuto();
             });
@@ -103,7 +103,7 @@ export class Autoplay {
             if (
                 this.pausedOnSlideChange &&
                 !this.interval &&
-                this.settings.forceAutoplay
+                this.settings.forceSlideShowAutoplay
             ) {
                 this.startAuto();
                 this.pausedOnSlideChange = false;
@@ -125,7 +125,8 @@ export class Autoplay {
                     _$progress.css(
                         'transition',
                         'width ' +
-                            (this.core.settings.speed + this.settings.pause) +
+                            (this.core.settings.speed +
+                                this.settings.slideShowInterval) +
                             'ms ease 0s',
                     );
                     _$progressBar.addClass('lg-start');
@@ -165,7 +166,8 @@ export class Autoplay {
             .css(
                 'transition',
                 'width ' +
-                    (this.core.settings.speed + this.settings.pause) +
+                    (this.core.settings.speed +
+                        this.settings.slideShowInterval) +
                     'ms ease 0s',
             );
         this.core.outer.addClass('lg-show-autoplay');
@@ -180,7 +182,7 @@ export class Autoplay {
 
             this.fromAuto = true;
             this.core.slide(this.core.index, false, false, 'next');
-        }, this.core.settings.speed + this.settings.pause);
+        }, this.core.settings.speed + this.settings.slideShowInterval);
     }
 
     // cancel Autostart
