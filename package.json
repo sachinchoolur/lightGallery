@@ -1,6 +1,6 @@
 {
     "name": "lightgallery",
-    "version": "1.6.11",
+    "version": "1.10.0",
     "description": "A lightweight, customizable, modular, responsive, lightbox gallery plugin for jQuery.",
     "keywords": [
         "jquery-plugin",
@@ -18,7 +18,7 @@
         "touch",
         "drag"
     ],
-    "homepage": "http://sachinchoolur.github.io/lightGallery/",
+    "homepage": "https://sachinchoolur.github.io/lightGallery/",
     "bugs": {
         "url": "https://github.com/sachinchoolur/lightGallery/issues"
     },

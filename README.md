@@ -33,6 +33,8 @@ Main features
 * Smart image preloading and code optimization.
 * Keyboard Navigation for desktop.
 * Font icon support.
+* Accessibility support.
+* Rotate, flip images.
 * And many more.
  
 Browser support
@@ -42,24 +44,30 @@ lightgallery supports all major browsers including IE 8 and above.
 
 Installation
 ---
-#### Install with Bower
 
-You can Install  ```lightgallery``` and its modules using the [Bower](http://bower.io) package manager.
+### Install with NPM
+
+You can install `lightgallery` using the [npm](https://www.npmjs.com/) package manager.
 
 ```sh
-$ bower install lightgallery --save
+npm install lightgallery
 ```
+
 Or Install all modules together
-``` sh
-$ bower install lightgallery lg-thumbnail lg-autoplay lg-video lg-fullscreen lg-pager lg-zoom lg-hash lg-share
-```
-
-#### npm
-
-You can also find ```lightgallery``` on [npm](http://npmjs.org).
 
 ```sh
-$ npm install lightgallery lg-thumbnail lg-autoplay lg-video lg-fullscreen lg-pager lg-zoom lg-hash lg-share
+$ npm install lightgallery lg-thumbnail lg-autoplay lg-video lg-fullscreen lg-pager lg-zoom lg-hash lg-share lg-rotate
+```
+
+You can also find `lightgallery` on [Yarn](https://yarnpkg.com/) and [Bower](http://bower.io).
+### Yarn
+```sh
+yarn add lightgallery
+```
+### Bower
+
+```sh
+bower install lightgallery --save
 ```
 #### Download from Github
 
@@ -169,7 +177,7 @@ Demos
 * [History/hash plugin](http://sachinchoolur.github.io/lightGallery/demos/hash.html)
 * [Angularjs directive](http://sachinchoolur.github.io/lightGallery/demos/angularjs.html)
 
-Built in modules
+Modules
 ----
 1. Thumbnail - [GItHub](https://github.com/sachinchoolur/lg-thumbnail) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-thumbnial)
 2. Autoplay - [GItHub](https://github.com/sachinchoolur/lg-autoplay) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-autoplay)
@@ -179,12 +187,16 @@ Built in modules
 6. Zoom - [GItHub](https://github.com/sachinchoolur/lg-zoom) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-zoom)
 7. Hash - [GItHub](https://github.com/sachinchoolur/lg-hash) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-hash)
 8. Share - [GItHub](https://github.com/sachinchoolur/lg-share) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-share)
+8. Rotate - [GItHub](https://github.com/sachinchoolur/lg-rotate) - [Docs](https://sachinchoolur.github.io/lightGallery/docs/api.html#lg-rotate)
+
+9. exif - [GitHub](https://github.com/amcolash/lg-exif) - Author - [Andrew McOlash
+](https://github.com/amcolash)
 
 License
 ---
 
 #### Commercial license
-If you want to use lightGallery to develop commercial sites, themes, projects, and applications, the Commercial license is the appropriate license. With this option, your source code is kept proprietary. Purchase a lightGallery Commercial License at [uplabs.com/posts/lightgallery-plugin](https://www.uplabs.com/posts/lightgallery-plugin)
+If you want to use lightGallery to develop commercial sites, themes, projects, and applications, the Commercial license is the appropriate license. With this option, your source code is kept proprietary. [Read more about the commercial license](http://sachinchoolur.github.io/lightGallery/docs/license.html)
 
 #### Open source license
 

@@ -1,16 +1,17 @@
-/*! lightgallery - v1.6.11 - 2018-05-22
+/*! lightgallery - v1.10.0 - 2020-11-07
 * http://sachinchoolur.github.io/lightGallery/
-* Copyright (c) 2018 Sachin N; Licensed GPLv3 */
+* Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 @font-face {
   font-family: 'lg';
-  src: url("../fonts/lg.eot?n1z373");
-  src: url("../fonts/lg.eot?#iefixn1z373") format("embedded-opentype"), url("../fonts/lg.woff?n1z373") format("woff"), url("../fonts/lg.ttf?n1z373") format("truetype"), url("../fonts/lg.svg?n1z373#lg") format("svg");
+  src: url("../fonts/lg.ttf?22t19m") format("truetype"), url("../fonts/lg.woff?22t19m") format("woff"), url("../fonts/lg.svg?22t19m#lg") format("svg");
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 .lg-icon {
-  font-family: 'lg';
-  speak: none;
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'lg' !important;
+  speak: never;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -177,6 +178,9 @@
   width: 50px;
   text-decoration: none !important;
   outline: medium none;
+  background: none;
+  border: none;
+  box-shadow: none;
   -webkit-transition: color 0.2s linear;
   -o-transition: color 0.2s linear;
   transition: color 0.2s linear;
@@ -360,6 +364,8 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   text-align: center;
   top: -39px;
   width: 50px;
+  outline: medium none;
+  border: none;
 }
 .lg-outer .lg-toogle-thumb:after {
   content: "\e1ff";
@@ -736,25 +742,58 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   color: #3b5998;
 }
 .lg-outer #lg-share-facebook .lg-icon:after {
-  content: "\e901";
+  content: "\e904";
 }
 .lg-outer #lg-share-twitter .lg-icon {
   color: #00aced;
 }
 .lg-outer #lg-share-twitter .lg-icon:after {
-  content: "\e904";
+  content: "\e907";
 }
 .lg-outer #lg-share-googleplus .lg-icon {
   color: #dd4b39;
 }
 .lg-outer #lg-share-googleplus .lg-icon:after {
-  content: "\e902";
+  content: "\e905";
 }
 .lg-outer #lg-share-pinterest .lg-icon {
   color: #cb2027;
 }
 .lg-outer #lg-share-pinterest .lg-icon:after {
+  content: "\e906";
+}
+
+.lg-outer .lg-img-rotate {
+  position: absolute;
+  padding: 0 5px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.32, 0, 0.67, 0) 0s;
+  -moz-transition: -moz-transform 0.3s cubic-bezier(0.32, 0, 0.67, 0) 0s;
+  -o-transition: -o-transform 0.3s cubic-bezier(0.32, 0, 0.67, 0) 0s;
+  transition: transform 0.3s cubic-bezier(0.32, 0, 0.67, 0) 0s;
+}
+
+.lg-rotate-left:after {
+  content: "\e900";
+}
+
+.lg-rotate-right:after {
+  content: "\e901";
+}
+
+.lg-icon.lg-flip-hor, .lg-icon.lg-flip-ver {
+  font-size: 26px;
+}
+
+.lg-flip-ver:after {
   content: "\e903";
+}
+
+.lg-flip-hor:after {
+  content: "\e902";
 }
 
 .lg-group:after {
@@ -772,6 +811,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   z-index: 1050;
   text-align: left;
   opacity: 0;
+  outline: none;
   -webkit-transition: opacity 0.15s ease 0s;
   -o-transition: opacity 0.15s ease 0s;
   transition: opacity 0.15s ease 0s;

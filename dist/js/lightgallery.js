@@ -1,6 +1,6 @@
-/*! lightgallery - v1.6.11 - 2018-05-22
+/*! lightgallery - v1.10.0 - 2020-11-07
 * http://sachinchoolur.github.io/lightGallery/
-* Copyright (c) 2018 Sachin N; Licensed GPLv3 */
+* Copyright (c) 2020 Sachin N; Licensed GPLv3 */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module unless amdModuleId is set
@@ -35,9 +35,17 @@
         addClass: '',
         startClass: 'lg-start-zoom',
         backdropDuration: 150,
+
+        // Set 0, if u don't want to hide the controls 
         hideBarsDelay: 6000,
 
         useLeft: false,
+
+        // aria-labelledby attribute fot gallery
+        ariaLabelledby: '',
+        
+        //aria-describedby attribute for gallery
+        ariaDescribedby: '',
 
         closable: true,
         loop: true,
@@ -57,7 +65,7 @@
 
         /**
          * @desc number of preload slides
-         * will exicute only after the current slide is fully loaded.
+         * will execute only after the current slide is fully loaded.
          *
          * @ex you clicked on 4th image and if preload = 1 then 3rd slide and 5th
          * slide will be loaded in the background after the 4th slide is fully loaded..
@@ -86,7 +94,8 @@
 
         dynamic: false,
         dynamicEl: [],
-        galleryId: 1
+        galleryId: 1,
+        supportLegacyBrowser: true
     };
 
     function Plugin(element, options) {
@@ -114,7 +123,7 @@
         this.lgBusy = false;
 
         // Timeout function for hiding controls;
-        this.hideBartimeout = false;
+        this.hideBarTimeout = false;
 
         // To determine browser supports for touch events;
         this.isTouch = ('ontouchstart' in document.documentElement);
@@ -260,18 +269,21 @@
         _this.$el.trigger('onAfterOpen.lg');
 
         // Hide controllers if mouse doesn't move for some period
-        _this.$outer.on('mousemove.lg click.lg touchstart.lg', function() {
+        if (_this.s.hideBarsDelay > 0) {
 
-            _this.$outer.removeClass('lg-hide-items');
+            // Hide controllers if mouse doesn't move for some period
+            _this.$outer.on('mousemove.lg click.lg touchstart.lg', function () {
+                _this.$outer.removeClass('lg-hide-items');
 
-            clearTimeout(_this.hideBartimeout);
+                clearTimeout(_this.hideBarTimeout);
 
-            // Timeout will be cleared on each slide movement also
-            _this.hideBartimeout = setTimeout(function() {
-                _this.$outer.addClass('lg-hide-items');
-            }, _this.s.hideBarsDelay);
+                // Timeout will be cleared on each slide movement also
+                _this.hideBarTimeout = setTimeout(function () {
+                    _this.$outer.addClass('lg-hide-items');
+                }, _this.s.hideBarsDelay);
 
-        });
+            });
+        }
 
         _this.$outer.trigger('mousemove.lg');
 
@@ -296,20 +308,25 @@
         // Create controlls
         if (this.s.controls && this.$items.length > 1) {
             controls = '<div class="lg-actions">' +
-                '<button class="lg-prev lg-icon">' + this.s.prevHtml + '</button>' +
-                '<button class="lg-next lg-icon">' + this.s.nextHtml + '</button>' +
+                '<button type="button" aria-label="Previous slide" class="lg-prev lg-icon">' + this.s.prevHtml + '</button>' +
+                '<button type="button" aria-label="Next slide" class="lg-next lg-icon">' + this.s.nextHtml + '</button>' +
                 '</div>';
         }
 
         if (this.s.appendSubHtmlTo === '.lg-sub-html') {
-            subHtmlCont = '<div class="lg-sub-html"></div>';
+            subHtmlCont = '<div role="status" aria-live="polite" class="lg-sub-html"></div>';
         }
 
-        template = '<div class="lg-outer ' + this.s.addClass + ' ' + this.s.startClass + '">' +
+        var ariaLabelledby = this.s.ariaLabelledby ?
+            'aria-labelledby="' + this.s.ariaLabelledby + '"' : '';
+        var ariaDescribedby = this.s.ariaDescribedby ?
+            'aria-describedby="' + this.s.ariaDescribedby + '"' : '';
+
+        template = '<div tabindex="-1" aria-modal="true" ' + ariaLabelledby + ' ' + ariaDescribedby + ' role="dialog" class="lg-outer ' + this.s.addClass + ' ' + this.s.startClass + '">' +
             '<div class="lg" style="width:' + this.s.width + '; height:' + this.s.height + '">' +
             '<div class="lg-inner">' + list + '</div>' +
             '<div class="lg-toolbar lg-group">' +
-            '<span class="lg-close lg-icon"></span>' +
+            '<button type="button" aria-label="Close gallery" class="lg-close lg-icon"></button>' +
             '</div>' +
             controls +
             subHtmlCont +
@@ -318,6 +335,7 @@
 
         $('body').append(template);
         this.$outer = $('.lg-outer');
+        this.$outer.focus();
         this.$slide = this.$outer.find('.lg-item');
 
         if (this.s.useLeft) {
@@ -375,7 +393,7 @@
         }, this.s.backdropDuration);
 
         if (this.s.download) {
-            this.$outer.find('.lg-toolbar').append('<a id="lg-download" target="_blank" download class="lg-download lg-icon"></a>');
+            this.$outer.find('.lg-toolbar').append('<a id="lg-download" aria-label="Download" target="_blank" download class="lg-download lg-icon"></a>');
         }
 
         // Store the current scroll top value to scroll back after closing the gallery..
@@ -434,18 +452,18 @@
         }
 
         if (!src) {
-            if(html) {
+            if (html) {
                 return {
                     html5: true
                 };
             } else {
-                console.error('lightGallery :- data-src is not pvovided on slide item ' + (index + 1) + '. Please make sure the selector property is properly configured. More info - http://sachinchoolur.github.io/lightGallery/demos/html-markup.html');
+                console.error('lightGallery :- data-src is not provided on slide item ' + (index + 1) + '. Please make sure the selector property is properly configured. More info - http://sachinchoolur.github.io/lightGallery/demos/html-markup.html');
                 return false;
             }
         }
 
         var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com|be-nocookie\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)/i);
-        var vimeo = src.match(/\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i);
+        var vimeo = src.match(/\/\/(?:www\.)?(?:player\.)?vimeo.com\/(?:video\/)?([0-9a-z\-_]+)/i);
         var dailymotion = src.match(/\/\/(?:www\.)?dai.ly\/([0-9a-z\-_]+)/i);
         var vk = src.match(/\/\/(?:www\.)?(?:vk\.com|vkontakte\.ru)\/(?:video_ext\.php\?)(.*)/i);
 
@@ -474,7 +492,7 @@
      */
     Plugin.prototype.counter = function() {
         if (this.s.counter) {
-            $(this.s.appendCounterTo).append('<div id="lg-counter"><span id="lg-counter-current">' + (parseInt(this.index, 10) + 1) + '</span> / <span id="lg-counter-all">' + this.$items.length + '</span></div>');
+            $(this.s.appendCounterTo).append('<div id="lg-counter" role="status" aria-live="polite"><span id="lg-counter-current">' + (parseInt(this.index, 10) + 1) + '</span> / <span id="lg-counter-all">' + this.$items.length + '</span></div>');
         }
     };
 
@@ -591,6 +609,7 @@
         var _srcset;
         var _sizes;
         var _html;
+        var _alt;
         var getResponsiveSrc = function(srcItms) {
             var rsWidth = [];
             var rsSrc = [];
@@ -624,6 +643,7 @@
 
             _html = _this.s.dynamicEl[index].html;
             _src = _this.s.dynamicEl[index].src;
+            _alt = _this.s.dynamicEl[index].alt;
 
             if (_this.s.dynamicEl[index].responsive) {
                 var srcDyItms = _this.s.dynamicEl[index].responsive.split(',');
@@ -634,22 +654,23 @@
             _sizes = _this.s.dynamicEl[index].sizes;
 
         } else {
-
-            if (_this.$items.eq(index).attr('data-poster')) {
+            var $currentEle = _this.$items.eq(index);
+            if ($currentEle.attr('data-poster')) {
                 _hasPoster = true;
-                _poster = _this.$items.eq(index).attr('data-poster');
+                _poster = $currentEle.attr('data-poster');
             }
 
-            _html = _this.$items.eq(index).attr('data-html');
-            _src = _this.$items.eq(index).attr('href') || _this.$items.eq(index).attr('data-src');
+            _html = $currentEle.attr('data-html');
+            _src = $currentEle.attr('href') || $currentEle.attr('data-src');
+            _alt = $currentEle.attr('title') || $currentEle.find('img').first().attr('alt');
 
-            if (_this.$items.eq(index).attr('data-responsive')) {
-                var srcItms = _this.$items.eq(index).attr('data-responsive').split(',');
+            if ($currentEle.attr('data-responsive')) {
+                var srcItms = $currentEle.attr('data-responsive').split(',');
                 getResponsiveSrc(srcItms);
             }
 
-            _srcset = _this.$items.eq(index).attr('data-srcset');
-            _sizes = _this.$items.eq(index).attr('data-sizes');
+            _srcset = $currentEle.attr('data-srcset');
+            _sizes = $currentEle.attr('data-sizes');
 
         }
 
@@ -686,7 +707,8 @@
                 _this.$slide.eq(index).prepend('<div class="lg-video-cont "><div class="lg-video"></div></div>');
                 _this.$el.trigger('hasVideo.lg', [index, _src, _html]);
             } else {
-                _this.$slide.eq(index).prepend('<div class="lg-img-wrap"><img class="lg-object lg-image" src="' + _src + '" /></div>');
+                _alt = _alt ? 'alt="' + _alt + '"' : '';
+                _this.$slide.eq(index).prepend('<div class="lg-img-wrap"><img class="lg-object lg-image" ' + _alt + ' src="' + _src + '" /></div>');
             }
 
             _this.$el.trigger('onAferAppendSlide.lg', [index]);
@@ -698,12 +720,14 @@
 
             if (_srcset) {
                 _$img.attr('srcset', _srcset);
-                try {
-                    picturefill({
-                        elements: [_$img[0]]
-                    });
-                } catch (e) {
-                    console.warn('lightGallery :- If you want srcset to be supported for older browser please include picturefil version 2 javascript library in your document.');
+                if (this.s.supportLegacyBrowser) {
+                    try {
+                        picturefill({
+                            elements: [_$img[0]]
+                        });
+                    } catch (e) {
+                        console.warn('lightGallery :- If you want srcset to be supported for older browser please include picturefil version 2 javascript library in your document.');
+                    }
                 }
             }
 
@@ -808,7 +832,7 @@
 
             _this.lgBusy = true;
 
-            clearTimeout(_this.hideBartimeout);
+            clearTimeout(_this.hideBarTimeout);
 
             // Add title if this.s.appendSubHtmlTo === lg-sub-html
             if (this.s.appendSubHtmlTo === '.lg-sub-html') {
@@ -1257,7 +1281,7 @@
                 }
 
             });
-            
+
             _this.$outer.on('mousemove.lg', function() {
                 mousedown = false;
             });
@@ -1305,7 +1329,7 @@
         // Unbind all events added by lightGallery
         this.$el.off('.lg.tm');
 
-        // Distroy all lightGallery modules
+        // destroy all lightGallery modules
         $.each($.fn.lightGallery.modules, function(key) {
             if (_this.modules[key]) {
                 _this.modules[key].destroy();
@@ -1314,8 +1338,8 @@
 
         this.lGalleryOn = false;
 
-        clearTimeout(_this.hideBartimeout);
-        this.hideBartimeout = false;
+        clearTimeout(_this.hideBarTimeout);
+        this.hideBarTimeout = false;
         $(window).off('.lg');
         $('body').removeClass('lg-on lg-from-hash');
 
@@ -1335,6 +1359,7 @@
             if (!d) {
                 _this.$el.trigger('onCloseAfter.lg');
             }
+            _this.$el.focus();
 
         }, _this.s.backdropDuration + 50);
     };
@@ -1347,7 +1372,7 @@
                 try {
                     $(this).data('lightGallery').init();
                 } catch (err) {
-                    console.error('lightGallery has not initiated properly');
+                    console.error('lightGallery has not initiated properly', err);
                 }
             }
         });
