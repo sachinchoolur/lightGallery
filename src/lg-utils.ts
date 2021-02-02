@@ -93,14 +93,14 @@ const utils = {
         const maxWidth = Math.min(wWidth, width);
         const maxHeight = Math.min(wHeight, height);
 
-        if (height > maxHeight) {
+        if (height >= maxHeight) {
             const heightRatio = maxHeight / height;
             const newWidth = width * heightRatio;
             return {
                 width: newWidth,
                 height: maxHeight,
             };
-        } else if (width > maxWidth) {
+        } else if (width >= maxWidth) {
             const widthRatio = maxWidth / width;
             const newHeight = height * widthRatio;
             return {
