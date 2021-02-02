@@ -1293,7 +1293,7 @@ export class LightGallery {
             }
 
             setTimeout(() => {
-                if (!this.lGalleryOn) {
+                if (this.lGalleryOn) {
                     this.loadContent(index, true, false);
                 }
                 if (this.settings.counter) {
