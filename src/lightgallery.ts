@@ -848,8 +848,10 @@ export class LightGallery {
         const { poster, srcset, sizes } = currentDynamicItem;
         let { src } = currentDynamicItem;
 
+        const video = currentDynamicItem.video;
+
         const _html5Video =
-            currentDynamicItem.video && JSON.parse(currentDynamicItem.video);
+            video && typeof video === 'string' ? JSON.parse(video) : video;
 
         if (currentDynamicItem.responsive) {
             const srcDyItms = currentDynamicItem.responsive.split(',');

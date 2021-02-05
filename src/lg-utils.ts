@@ -1,4 +1,5 @@
 import { $LG } from './lgQuery';
+import { VideoSource } from './plugins/video/lg-video';
 import { VideoInfo } from './types';
 export interface ImageSize {
     width: number;
@@ -6,29 +7,114 @@ export interface ImageSize {
 }
 
 export interface DynamicItem {
+    /**
+     * url of the media
+     */
     src: string;
+
+    /**
+     * Thumbnail url
+     */
     thumb: string;
+
+    /**
+     * alt attribute for the image
+     */
     alt: string;
-    // @desc Video title
+
+    /**
+     * Title attribute for the video
+     */
     title: string;
+
+    /**
+     * Caption for the slide
+     * @description You can either pass the HTML markup or the ID or class name of the element which contains the captions
+     */
     subHtml: string;
+
+    /**
+     * url of the file which contain the sub html.
+     * @description Note - Does not support Internet Explorer browser
+     */
     subHtmlUrl: string;
-    html: string;
-    video: string;
+
+    /**
+     * Video source
+     */
+    video: VideoSource;
+
+    /**
+     * Poster url
+     */
     poster: string;
+
+    /**
+     * Custom slide name to use in the url when hash plugin is enabled
+     */
     slideName: string;
+
+    /**
+     * List of images and viewport's max width separated by comma.
+     * @description Ex: img/1-375.jpg 375, img/1-480.jpg 480, img/1-757.jpg 757.
+     */
     responsive: string;
+
+    /**
+     * srcset attribute values for the main image
+     */
     srcset: string;
+
+    /**
+     * srcset sizes attribute for the main image
+     */
     sizes: string;
-    iframe: string;
+
+    /**
+     * Set true is you want to open your url in an iframe
+     */
+    iframe: boolean;
+
+    /**
+     * Download url for your image/video.
+     * @description Pass false if you want to hide the download button.
+     */
     downloadUrl: string | boolean;
+
+    /**
+     * Actual size of the image in px.
+     * @description This is used in zoom plugin to see the actual size of the image when double taped on the image.
+     */
     width: string;
+
+    /**
+     * Facebook share URL.
+     * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL is taken.
+     */
     facebookShareUrl: string;
+
+    /**
+     * Tweet text
+     */
     tweetText: string;
-    witterShareUrl: string;
-    googleplusUhareUrl: string;
+
+    /**
+     * Twitter share URL.
+     * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL will be taken.
+     */
+    twitterShareUrl: string;
+
+    /**
+     * Pinterest share URL.
+     * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL will be taken.
+     * Note: Pinterest requires absolute URL
+     */
     pinterestShareUrl: string;
+    /**
+     * Description for Pinterest post.
+     */
     pinterestText: string;
+
     __slideVideoInfo?: VideoInfo;
     [key: string]: any;
 }
@@ -49,8 +135,7 @@ const defaultDynamicOptions = [
     'width',
     'facebookShareUrl',
     'tweetText',
-    'witterShareUrl',
-    'googleplusUhareUrl',
+    'twitterShareUrl',
     'pinterestShareUrl',
     'pinterestText',
 ];
@@ -88,7 +173,7 @@ const utils = {
         const height = parseInt(size[1], 10);
 
         const wWidth = document.body.clientWidth;
-        const wHeight = window.innerHeight;
+        const wHeight = window.innerHeight - 200;
 
         const maxWidth = Math.min(wWidth, width);
         const maxHeight = Math.min(wHeight, height);
@@ -124,7 +209,7 @@ const utils = {
         const wWidth = document.body.clientWidth;
 
         // using innerWidth to include mobile safari bottom bar
-        const wHeight = window.innerHeight;
+        const wHeight = window.innerHeight - 200;
 
         const elWidth = LGel.width();
         const elHeight = LGel.height();
@@ -142,7 +227,8 @@ const utils = {
             (LGel.offset().top +
                 parseFloat(elStyle.paddingTop) +
                 parseFloat(elStyle.borderTop)) +
-            $LG(window).scrollTop();
+            $LG(window).scrollTop() +
+            50;
 
         const scX = elWidth / imageSize.width;
         const scY = elHeight / imageSize.height;

@@ -3,7 +3,7 @@ const getUseLeft = function () {
     return !!(isChrome && parseInt(isChrome[2], 10) < 54);
 };
 
-export interface ZoomDefaults {
+export interface ZoomSettings {
     /**
      * Value of zoom should be incremented/decremented
      */
@@ -46,7 +46,7 @@ export interface ZoomDefaults {
     useLeftForZoom: boolean;
 }
 
-export const zoomDefaults: ZoomDefaults = {
+export const zoomSettings: ZoomSettings = {
     scale: 1,
     zoom: true,
     actualSize: true,

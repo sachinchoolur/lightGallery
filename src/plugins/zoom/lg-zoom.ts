@@ -1,4 +1,4 @@
-import { ZoomDefaults, zoomDefaults } from './lg-zoom-settings';
+import { ZoomSettings, zoomSettings } from './lg-zoom-settings';
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 
@@ -20,7 +20,7 @@ interface PossibleCords {
 }
 export class Zoom {
     private core: LightGallery;
-    private settings: ZoomDefaults;
+    private settings: ZoomSettings;
     zoomableTimeout: any;
     positionChanged!: boolean;
     pageX!: number;
@@ -29,7 +29,7 @@ export class Zoom {
     constructor(instance: LightGallery) {
         this.core = instance;
 
-        this.settings = Object.assign({}, zoomDefaults, this.core.settings);
+        this.settings = Object.assign({}, zoomSettings, this.core.settings);
 
         if (this.settings.zoom && this.core.doCss()) {
             this.init();

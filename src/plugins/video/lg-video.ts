@@ -19,20 +19,18 @@
  *
  */
 
-import { VideoDefaults, videoDefaults } from './lg-video-settings';
+import { VideoSettings, videoSettings } from './lg-video-settings';
 import { LightGallery } from '../../lightgallery';
 import { lgQuery } from '../../lgQuery';
 import { CustomEventHasVideo } from '../../types';
 declare let YT: any;
 declare let Vimeo: any;
 declare let videojs: any;
-interface VideoSource {
-    source: [
-        {
-            src: string;
-            type: string;
-        },
-    ];
+export interface VideoSource {
+    source: {
+        src: string;
+        type: string;
+    }[];
     attributes: HTMLVideoElement;
 }
 
@@ -54,10 +52,10 @@ function param(obj: { [x: string]: string | number | boolean }): string {
 
 export class Video {
     private core: LightGallery;
-    private settings: VideoDefaults;
+    private settings: VideoSettings;
     constructor(instance: LightGallery) {
         this.core = instance;
-        this.settings = Object.assign({}, videoDefaults, this.core.settings);
+        this.settings = Object.assign({}, videoSettings, this.core.settings);
 
         this.init();
 
@@ -465,10 +463,10 @@ export class Video {
                 let _html;
 
                 const _src = this.core.galleryItems[this.core.index].src;
-                if (this.core.galleryItems[this.core.index].video) {
-                    _html = JSON.parse(
-                        this.core.galleryItems[this.core.index].video,
-                    );
+                const video = this.core.galleryItems[this.core.index].video;
+                if (video) {
+                    _html =
+                        typeof video === 'string' ? JSON.parse(video) : video;
                 }
 
                 this.appendVideos($el, {

@@ -1,4 +1,4 @@
-export interface commentSettings {
+export interface CommentSettings {
     /**
      * Enable comment box
      */
@@ -26,7 +26,7 @@ export interface commentSettings {
     fbCommentsMarkup: string;
 }
 
-export const commentSettings: commentSettings = {
+export const commentSettings: CommentSettings = {
     commentBox: true,
     fbComments: false,
     disqusComments: true,

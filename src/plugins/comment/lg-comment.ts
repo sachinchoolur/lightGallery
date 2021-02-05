@@ -2,7 +2,6 @@
  * @desc lightGallery comments module
  * Supports facebook and disqus comments
  *
- * @ref - https://paulund.co.uk/add-google-comments-to-your-site
  * @ref - https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables
  * @ref - https://github.com/disqus/DISQUS-API-Recipes/blob/master/snippets/js/disqus-reset/disqus_reset.html
  * @ref - https://css-tricks.com/lazy-loading-disqus-comments/
@@ -11,7 +10,7 @@
 
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
-import { commentSettings } from './lg-comment-settings';
+import { commentSettings, CommentSettings } from './lg-comment-settings';
 declare let FB: any;
 declare let DISQUS: any;
 
@@ -24,7 +23,7 @@ declare global {
 const $LG = window.$LG;
 export class CommentBox {
     core: LightGallery;
-    settings: commentSettings;
+    settings: CommentSettings;
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;

@@ -1,4 +1,4 @@
-export interface VideoDefaults {
+export interface VideoSettings {
     /**
      * Set limit for video maximal width.
      */
@@ -70,7 +70,7 @@ export interface VideoDefaults {
      */
     videojsOptions: any;
 }
-export const videoDefaults: VideoDefaults = {
+export const videoSettings: VideoSettings = {
     videoMaxWidth: '1200px',
     autoplayFirstVideo: true,
     youTubePlayerParams: false,
