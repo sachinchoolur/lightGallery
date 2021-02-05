@@ -740,7 +740,7 @@ export class LightGallery {
         }
         $el.find('.lg-object')
             .first()
-            .on('load.lg error.lg', () => {
+            .on('load.lg', () => {
                 this.handleLgObjectLoad(
                     $el,
                     index,
@@ -749,6 +749,16 @@ export class LightGallery {
                     dummyImageLoaded,
                 );
             });
+        setTimeout(() => {
+            $el.find('.lg-object')
+                .first()
+                .on('error.lg', () => {
+                    $el.addClass('lg-complete lg-complete_');
+                    $el.html(
+                        '<span class="lg-error-msg">Oops... Failed to load content...</span>',
+                    );
+                });
+        }, speed);
     }
     handleLgObjectLoad(
         $el: lgQuery,
