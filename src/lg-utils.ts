@@ -173,7 +173,7 @@ const utils = {
         const height = parseInt(size[1], 10);
 
         const wWidth = document.body.clientWidth;
-        const wHeight = window.innerHeight - 200;
+        const wHeight = window.innerHeight - 47 * 2;
 
         const maxWidth = Math.min(wWidth, width);
         const maxHeight = Math.min(wHeight, height);
@@ -209,7 +209,7 @@ const utils = {
         const wWidth = document.body.clientWidth;
 
         // using innerWidth to include mobile safari bottom bar
-        const wHeight = window.innerHeight - 200;
+        const wHeight = window.innerHeight;
 
         const elWidth = LGel.width();
         const elHeight = LGel.height();
@@ -227,8 +227,7 @@ const utils = {
             (LGel.offset().top +
                 parseFloat(elStyle.paddingTop) +
                 parseFloat(elStyle.borderTop)) +
-            $LG(window).scrollTop() +
-            50;
+            $LG(window).scrollTop();
 
         const scX = elWidth / imageSize.width;
         const scY = elHeight / imageSize.height;
