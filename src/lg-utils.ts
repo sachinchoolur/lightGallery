@@ -1,4 +1,4 @@
-import { $LG } from './lgQuery';
+import { $LG, lgQuery } from './lgQuery';
 import { VideoSource } from './plugins/video/lg-video';
 import { VideoInfo } from './types';
 export interface ImageSize {
@@ -159,7 +159,11 @@ const utils = {
      * @param {jQuery Element} $el
      * @returns {Object} Computed Width and Computed Height
      */
-    getSize(el: HTMLElement): ImageSize | undefined {
+    getSize(
+        el: HTMLElement,
+        container: lgQuery,
+        spacing = 0,
+    ): ImageSize | undefined {
         const LGel = $LG(el);
         const lgSize = LGel.attr('data-lg-size');
 
@@ -172,27 +176,15 @@ const utils = {
         const width = parseInt(size[0], 10);
         const height = parseInt(size[1], 10);
 
-        const wWidth = document.body.clientWidth;
-        const wHeight = window.innerHeight - 47 * 2;
+        const wWidth = container.width();
+        const wHeight = window.innerHeight - spacing;
 
         const maxWidth = Math.min(wWidth, width);
         const maxHeight = Math.min(wHeight, height);
 
-        if (height >= maxHeight) {
-            const heightRatio = maxHeight / height;
-            const newWidth = width * heightRatio;
-            return {
-                width: newWidth,
-                height: maxHeight,
-            };
-        } else if (width >= maxWidth) {
-            const widthRatio = maxWidth / width;
-            const newHeight = height * widthRatio;
-            return {
-                width: maxWidth,
-                height: newHeight,
-            };
-        }
+        const ratio = Math.min(maxWidth / width, maxHeight / height);
+
+        return { width: width * ratio, height: height * ratio };
     },
 
     /**
@@ -200,16 +192,24 @@ const utils = {
      * @param {jQuery Element}
      * @returns {String} Transform CSS string
      */
-    getTransform(el: HTMLElement, imageSize?: ImageSize): string | undefined {
+    getTransform(
+        el: HTMLElement,
+        container: lgQuery,
+        top: number,
+        bottom: number,
+        imageSize?: ImageSize,
+    ): string | undefined {
         if (!imageSize) {
             return;
         }
         const LGel = $LG(el).find('img').first();
 
-        const wWidth = document.body.clientWidth;
+        const containerRect = container.get().getBoundingClientRect();
+
+        const wWidth = containerRect.width;
 
         // using innerWidth to include mobile safari bottom bar
-        const wHeight = window.innerHeight;
+        const wHeight = window.innerHeight - (top + bottom);
 
         const elWidth = LGel.width();
         const elHeight = LGel.height();
@@ -221,18 +221,20 @@ const utils = {
             (LGel.offset().left +
                 parseFloat(elStyle.paddingLeft) +
                 parseFloat(elStyle.borderLeft)) +
-            $LG(window).scrollLeft();
+            $LG(window).scrollLeft() +
+            containerRect.left;
         let y =
             (wHeight - elHeight) / 2 -
             (LGel.offset().top +
                 parseFloat(elStyle.paddingTop) +
                 parseFloat(elStyle.borderTop)) +
-            $LG(window).scrollTop();
+            $LG(window).scrollTop() +
+            top;
 
         const scX = elWidth / imageSize.width;
         const scY = elHeight / imageSize.height;
 
-        return (
+        const transform =
             'translate3d(' +
             (x *= -1) +
             'px, ' +
@@ -241,8 +243,8 @@ const utils = {
             scX +
             ', ' +
             scY +
-            ', 1)'
-        );
+            ', 1)';
+        return transform;
     },
 
     getIframeMarkup(src: string, iframeMaxWidth: number | string): string {
