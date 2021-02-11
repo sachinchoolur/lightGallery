@@ -57,6 +57,7 @@ export interface ThumbnailsSettings {
 
     /**
      * Whether to display thumbnail toggle button.
+     * @description not applicable if allowMediaOverlap is false
      */
     toggleThumb: boolean;
 
