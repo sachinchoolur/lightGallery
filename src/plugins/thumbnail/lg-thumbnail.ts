@@ -62,6 +62,9 @@ export class Thumbnail {
 
         this.setAnimateThumbStyles();
 
+        if (!this.settings.animateThumb) {
+            this.settings.pullCaptionUp = false;
+        }
         if (this.settings.thumbnail && this.core.galleryItems.length > 1) {
             if (this.settings.pullCaptionUp) {
                 this.core.outer.addClass('lg-pull-caption-up');
