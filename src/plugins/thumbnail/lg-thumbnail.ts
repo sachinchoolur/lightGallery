@@ -62,9 +62,13 @@ export class Thumbnail {
 
         this.setAnimateThumbStyles();
 
+        if (!this.core.settings.allowMediaOverlap) {
+            this.settings.toggleThumb = false;
+        }
         if (!this.settings.animateThumb) {
             this.settings.pullCaptionUp = false;
         }
+
         if (this.settings.thumbnail && this.core.galleryItems.length > 1) {
             if (this.settings.pullCaptionUp) {
                 this.core.outer.addClass('lg-pull-caption-up');
@@ -118,14 +122,14 @@ export class Thumbnail {
         this.core.LGel.on('onBeforeSlide.lg.thumb', (e) => {
             this.animateThumb(this.core.index);
         });
-        this.core.LGel.on('onAfterOpen.lg.thumb', (e) => {
+        this.core.LGel.on('onBeforeOpen.lg.thumb', (e) => {
             if (this.settings.showThumbByDefault) {
                 const timeout = this.core.settings.zoomFromOrigin
-                    ? this.core.settings.startAnimationDuration
+                    ? 100
                     : this.core.settings.backdropDuration;
                 setTimeout(() => {
                     this.core.outer.addClass('lg-thumb-open');
-                }, timeout + 200);
+                }, timeout);
             }
         });
         this.core.LGel.on('onBeforeClose.lg.thumb', (e) => {
@@ -494,8 +498,9 @@ export class Thumbnail {
         return `<div ${
             vimeoId ? 'data-vimeo-id="${vimeoId}"' : ''
         } data-lg-item-id="${index}" class="lg-thumb-item" 
-        style="width:${this.settings.thumbWidth}px; 
-            height: ${this.settings.thumbHeight}; 
+        style="width:${this.settings.thumbWidth}px; height: ${
+            this.settings.thumbHeight
+        };
             margin-right: ${this.settings.thumbMargin}px">
             <img data-lg-item-id="${index}" src="${thumbImg}" />
         </div>`;
@@ -534,7 +539,6 @@ export class Thumbnail {
 
     setAnimateThumbStyles(): void {
         if (this.settings.animateThumb) {
-            this.settings.thumbHeight = '100%';
             this.core.outer.addClass('lg-animate-thumb');
         }
     }
@@ -570,7 +574,7 @@ export class Thumbnail {
 
     thumbKeyPress(): void {
         $LG(window).on(`keydown.lg.thumb.global${this.core.lgId}`, (e) => {
-            if (!this.core.lgOpened) return;
+            if (!this.core.lgOpened || !this.settings.toggleThumb) return;
 
             if (e.keyCode === 38) {
                 e.preventDefault();

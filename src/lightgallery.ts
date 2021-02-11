@@ -50,14 +50,19 @@ export class LightGallery {
 
     public items: any;
 
+    public $backdrop!: lgQuery;
+    public $lgContent!: lgQuery;
+
+    public $container!: lgQuery;
+
+    public $inner!: lgQuery;
+
     // Scroll top value before lightGallery is opened
     private prevScrollTop = 0;
 
     private zoomFromOrigin!: boolean;
-    public $backdrop!: lgQuery;
-    public $container!: lgQuery;
-    public $inner!: lgQuery;
-    $items: any;
+
+    private currentImageSize?: ImageSize;
 
     constructor(
         element: HTMLElement,
@@ -163,12 +168,7 @@ export class LightGallery {
                 $LG(element).on(`click.lgcustom-item-${index}`, (e) => {
                     e.preventDefault();
                     const currentItemIndex = this.settings.index || index;
-                    let transform;
-                    if (this.zoomFromOrigin) {
-                        const imageSize = utils.getSize(element);
-                        transform = utils.getTransform(element, imageSize);
-                    }
-                    this.openGallery(currentItemIndex, transform);
+                    this.openGallery(currentItemIndex, element);
                 });
             }
         }
@@ -273,9 +273,11 @@ export class LightGallery {
             )}" class="lg-outer lg-hide-items ${
             this.settings.addClass
         } ${addClasses}">
-                    <div class="lg" style="width: ${
-                        this.settings.width
-                    }; height:${this.settings.height}">
+                    <div id="${this.getIdName(
+                        'lg-content',
+                    )}" class="lg" style="width: ${
+            this.settings.width
+        }; height:${this.settings.height}">
                         <div id="${this.getIdName(
                             'lg-inner',
                         )}" class="lg-inner"></div>
@@ -295,6 +297,7 @@ export class LightGallery {
             .css('position', 'relative')
             .append(template);
         this.outer = this.getElementById('lg-outer');
+        this.$lgContent = this.getElementById('lg-content');
         this.$backdrop = this.getElementById('lg-backdrop');
         this.$container = this.getElementById('lg-container');
         this.$inner = this.getElementById('lg-inner');
@@ -353,12 +356,10 @@ export class LightGallery {
         $LG(window).on(
             `resize.lg.global${this.lgId} orientationchange.lg.global${this.lgId}`,
             () => {
-                if (
-                    this.zoomFromOrigin &&
-                    !this.settings.dynamic &&
-                    this.lgOpened
-                ) {
-                    const imgStyle = this.getDummyImgStyles();
+                if (this.zoomFromOrigin && this.lgOpened) {
+                    const imgStyle = this.getDummyImgStyles(
+                        this.currentImageSize,
+                    );
                     this.outer
                         .find('.lg-current .lg-dummy-img')
                         .first()
@@ -385,7 +386,6 @@ export class LightGallery {
     }
 
     // Get gallery items based on multiple conditions
-    // @todo - remove this.$items
     getItems(): DynamicItem[] {
         // Gallery items
         this.items = [];
@@ -422,7 +422,7 @@ export class LightGallery {
      * @param {Number} index  - index of the slide
      * @param {String} transform - Css transform value when zoomFromOrigin is enabled
      */
-    openGallery(index: number, transform?: string): void {
+    openGallery(index: number, element?: HTMLElement): void {
         // prevent accidental double execution
         if (this.lgOpened) return;
 
@@ -430,11 +430,8 @@ export class LightGallery {
         this.outer.get().focus();
         this.outer.removeClass('lg-hide-items');
 
-        if (!this.zoomFromOrigin || !transform) {
-            this.outer.addClass(this.settings.startClass);
-        } else if (this.zoomFromOrigin && transform) {
-            this.outer.addClass('lg-zoom-from-image');
-        }
+        // Add display block, but still has opacity 0
+        this.$container.addClass('lg-show');
 
         const itemsToBeInsertedToDom = this.getItemsToBeInsertedToDom(
             index,
@@ -448,7 +445,28 @@ export class LightGallery {
         });
 
         this.$inner.append(items);
+        this.addHtml(index);
+        let transform: string | undefined = '';
+        const { top, bottom } = this.getMediaContainerPosition();
+        if (!this.settings.allowMediaOverlap) {
+            this.setMediaContainerPosition(top, bottom);
+        }
+        if (this.zoomFromOrigin && element) {
+            this.currentImageSize = utils.getSize(
+                element,
+                this.$lgContent,
+                top + bottom,
+            );
+            transform = utils.getTransform(
+                element,
+                this.$lgContent,
+                top,
+                bottom,
+                this.currentImageSize,
+            );
+        }
         if (!this.zoomFromOrigin || !transform) {
+            this.outer.addClass(this.settings.startClass);
             this.getSlideItem(index).removeClass('lg-complete');
         }
         this.LGel.trigger('onBeforeOpen.lg');
@@ -457,14 +475,14 @@ export class LightGallery {
         this.getSlideItem(index).addClass('lg-current');
 
         this.lGalleryOn = false;
+        this.index = index;
+        // Store the current scroll top value to scroll back after closing the gallery..
+        this.prevScrollTop = $LG(window).scrollTop();
+
         setTimeout(() => {
-            // Store the current scroll top value to scroll back after closing the gallery..
-            this.prevScrollTop = $LG(window).scrollTop();
-
-            this.index = index;
-
             // Need to check both zoomFromOrigin and transform values as we need to set set the
             // default opening animation if user missed to add the lg-size attribute
+
             if (this.zoomFromOrigin && transform) {
                 this.getSlideItem(index)
                     .addClass('lg-start-progress lg-start-end-progress')
@@ -473,6 +491,7 @@ export class LightGallery {
                         'transition-duration',
                         this.settings.startAnimationDuration + 'ms',
                     );
+                this.outer.addClass('lg-zoom-from-image');
                 setTimeout(() => {
                     this.getSlideItem(index).css(
                         'transform',
@@ -481,7 +500,6 @@ export class LightGallery {
                 }, 100);
             }
 
-            this.$container.addClass('lg-show');
             setTimeout(() => {
                 this.$backdrop.addClass('in');
                 this.$container.addClass('lg-show-in');
@@ -501,6 +519,30 @@ export class LightGallery {
         });
 
         $LG(document.body).addClass('lg-on');
+    }
+
+    private getMediaContainerPosition() {
+        if (this.settings.allowMediaOverlap) {
+            return {
+                top: 0,
+                bottom: 0,
+            };
+        }
+        const top = this.outer.find('.lg-toolbar').get().clientHeight || 0;
+        const captionHeight =
+            this.settings.defaultCaptionHeight ||
+            this.outer.find('.lg-sub-html').get().clientHeight;
+        const thumbHeight =
+            this.outer.find('.lg-thumb-outer').get().clientHeight || 0;
+        const bottom = thumbHeight + captionHeight;
+        return {
+            top,
+            bottom,
+        };
+    }
+
+    private setMediaContainerPosition(top = 0, bottom = 0) {
+        this.$inner.css('top', top + 'px').css('bottom', bottom + 'px');
     }
 
     // Build Gallery if gallery id exist in the URL
@@ -664,7 +706,7 @@ export class LightGallery {
                 break;
             }
 
-            this.loadContent(index + i, false, false);
+            this.loadContent(index + i, false);
         }
 
         for (let j = 1; j <= this.settings.preload; j++) {
@@ -672,13 +714,11 @@ export class LightGallery {
                 break;
             }
 
-            this.loadContent(index - j, false, false);
+            this.loadContent(index - j, false);
         }
     }
 
     getDummyImgStyles(imageSize?: ImageSize): string {
-        imageSize =
-            imageSize || utils.getSize($LG(this.items).eq(this.index).get());
         if (!imageSize) return '';
         return `width:${imageSize.width}px; 
                 margin-left: -${imageSize.width / 2}px;
@@ -691,19 +731,17 @@ export class LightGallery {
         // displayed on top of actual image
         let _dummyImgSrc;
         let imgContnet = '';
-        let imageSize;
         let $currentItem;
         if (!this.settings.dynamic) {
             $currentItem = $LG(this.items).eq(index);
-            imageSize = utils.getSize($currentItem.get());
         }
         const currentDynamicItem = this.galleryItems[index];
         const alt = currentDynamicItem.alt
             ? 'alt="' + currentDynamicItem.alt + '"'
             : '';
 
-        if (!this.lGalleryOn && this.zoomFromOrigin && imageSize) {
-            if (imageSize && $currentItem) {
+        if (!this.lGalleryOn && this.zoomFromOrigin && this.currentImageSize) {
+            if ($currentItem) {
                 if (!this.settings.exThumbImage) {
                     _dummyImgSrc = $currentItem.find('img').first().attr('src');
                 } else {
@@ -711,7 +749,7 @@ export class LightGallery {
                         this.settings.exThumbImage,
                     );
                 }
-                const imgStyle = this.getDummyImgStyles(imageSize);
+                const imgStyle = this.getDummyImgStyles(this.currentImageSize);
                 const dummyImgContent = `<img ${alt} style="${imgStyle}" class="lg-dummy-img" src="${_dummyImgSrc}" />`;
 
                 $currentSlide.addClass('lg-first-slide');
@@ -838,9 +876,8 @@ export class LightGallery {
      *  @desc Load slide content into slide.
      *  @param {Number} index - index of the slide.
      *  @param {Boolean} rec - if true call loadcontent() function again.
-     *  @param {Boolean} firstSlide - For setting the delay.
      */
-    loadContent(index: number, rec: boolean, firstSlide: boolean): void {
+    loadContent(index: number, rec: boolean): void {
         let $img;
         const currentDynamicItem = this.galleryItems[index];
         const $currentSlide = $LG(this.getSlideItemId(index));
@@ -859,12 +896,6 @@ export class LightGallery {
         }
 
         const iframe = !!currentDynamicItem.iframe;
-
-        let imageSize;
-        if (!this.settings.dynamic) {
-            const $currentItem = this.items[index];
-            imageSize = utils.getSize($currentItem);
-        }
 
         const videoInfo = currentDynamicItem.__slideVideoInfo;
 
@@ -930,8 +961,8 @@ export class LightGallery {
 
         // delay for adding complete class. it is 0 except first time.
         let delay = 0;
-        if (firstSlide) {
-            if (this.zoomFromOrigin && imageSize) {
+        if (!this.lGalleryOn) {
+            if (this.zoomFromOrigin && this.currentImageSize) {
                 delay = this.settings.startAnimationDuration + 10;
             } else {
                 delay = this.settings.backdropDuration + 10;
@@ -945,7 +976,7 @@ export class LightGallery {
         }
 
         // Only for first slide
-        if (!this.lGalleryOn && this.zoomFromOrigin && imageSize) {
+        if (!this.lGalleryOn && this.zoomFromOrigin && this.currentImageSize) {
             setTimeout(() => {
                 $currentSlide
                     .removeClass('lg-start-end-progress lg-start-progress')
@@ -990,9 +1021,9 @@ export class LightGallery {
 
         // When gallery is opened once content is loaded (second time) need to add lg-complete class for css styling
         if (
-            (!this.zoomFromOrigin || !imageSize) &&
+            (!this.zoomFromOrigin || !this.currentImageSize) &&
             $currentSlide.hasClass('lg-complete_') &&
-            firstSlide
+            !this.lGalleryOn
         ) {
             setTimeout(() => {
                 $currentSlide.addClass('lg-complete');
@@ -1301,12 +1332,12 @@ export class LightGallery {
 
             // Do not put load content in set timeout as it needs to load immediately when the gallery is opened
             if (!this.lGalleryOn) {
-                this.loadContent(index, true, false);
+                this.loadContent(index, true);
             }
 
             setTimeout(() => {
                 if (this.lGalleryOn) {
-                    this.loadContent(index, true, false);
+                    this.loadContent(index, true);
                 }
                 if (this.settings.counter) {
                     this.getElementById('lg-counter-current').html(
@@ -1695,10 +1726,14 @@ export class LightGallery {
                 e.keyCode === 27
             ) {
                 e.preventDefault();
-                if (!this.outer.hasClass('lg-thumb-open')) {
-                    this.destroy();
-                } else {
+                if (
+                    this.settings.allowMediaOverlap &&
+                    this.outer.hasClass('lg-can-toggle') &&
+                    this.outer.hasClass('lg-thumb-open')
+                ) {
                     this.outer.removeClass('lg-thumb-open');
+                } else {
+                    this.destroy();
                 }
             }
             if (this.lgOpened && this.galleryItems.length > 1) {
@@ -1861,9 +1896,20 @@ export class LightGallery {
         }
 
         let transform: string | undefined;
-        if (!this.settings.dynamic) {
-            const imageSize = utils.getSize(this.items[this.index]);
-            transform = utils.getTransform(this.items[this.index], imageSize);
+        if (this.zoomFromOrigin) {
+            const { top, bottom } = this.getMediaContainerPosition();
+            const imageSize = utils.getSize(
+                this.items[this.index],
+                this.$lgContent,
+                top + bottom,
+            );
+            transform = utils.getTransform(
+                this.items[this.index],
+                this.$lgContent,
+                top,
+                bottom,
+                imageSize,
+            );
         }
         if (this.zoomFromOrigin && transform) {
             this.outer.addClass('lg-closing lg-zoom-from-image');
@@ -1905,7 +1951,6 @@ export class LightGallery {
 
         if (clear) {
             if (!this.settings.dynamic) {
-                // only when not using dynamic mode is $items a jquery collection
                 for (let index = 0; index < this.items.length; index++) {
                     const element = this.items[index];
 

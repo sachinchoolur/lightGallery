@@ -138,6 +138,25 @@ export interface LightGallerySettings {
     useLeft: boolean;
 
     /**
+     * If true, toolbar, captions and thumbnails will not overlap with media element
+     * @description This will not effect thumbnails if animateThumb is false
+     * Also, toggle thumbnails button is not displayed if allowMediaOverlap is false
+     * Note - Changing the position of the media on every slide transition creates a flickering effect.
+     * Therefore, The height of the caption is calculated dynamically, only once based on the first slide caption.
+     * if you have dynamic captions for each media,
+     * you can provide an appropriate height for the captions via allowMediaOverlap option
+     */
+    allowMediaOverlap: boolean;
+
+    /**
+     * Height of the caption for calculating allowMediaOverlap positions
+     * Note - this is only used to find the position of media item if allowMediaOverlap is true.
+     * Not for setting height of the captions
+     * Set 0 if you want to calculate the height of captions dynamically
+     */
+    defaultCaptionHeight: number;
+
+    /**
      * aria-labelledby attribute fot gallery
      */
     ariaLabelledby: string;
@@ -394,13 +413,15 @@ export const lightGallerySettings: LightGallerySettings = {
     backdropDuration: 300,
     container: document.body,
     startAnimationDuration: 400,
-    zoomFromOrigin: false,
+    zoomFromOrigin: true,
     hideBarsDelay: 0,
     showBarsAfter: 10000,
     slideDelay: 0,
     supportLegacyBrowser: true,
     hideSubHtml: false,
     useLeft: false,
+    allowMediaOverlap: false,
+    defaultCaptionHeight: 0,
     ariaLabelledby: '',
     ariaDescribedby: '',
     closable: true,
