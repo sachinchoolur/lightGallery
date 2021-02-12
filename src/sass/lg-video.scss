@@ -5,7 +5,6 @@
         max-width: 1140px;
         max-height: 100%;
         width: 100%;
-        padding: 0 5px;
     }
 
     .lg-video {
@@ -44,45 +43,47 @@
         }
     }
 
-    .lg-has-vimeo{
-        .lg-video-play{
-            background: url("#{$lg-path-images}/vimeo-play.png") no-repeat scroll 0 0 transparent;
+    .lg-has-vimeo {
+        .lg-video-play {
+            background: url('#{$lg-path-images}/vimeo-play.png') no-repeat
+                scroll 0 0 transparent;
         }
-        &:hover{
-            .lg-video-play{
-                background: url("#{$lg-path-images}/vimeo-play.png") no-repeat scroll 0 -58px transparent;
-            } 
-
-        }  
+        &:hover {
+            .lg-video-play {
+                background: url('#{$lg-path-images}/vimeo-play.png') no-repeat
+                    scroll 0 -58px transparent;
+            }
+        }
     }
 
-    .lg-has-html5{
-        .lg-video-play{
-            background: transparent url("#{$lg-path-images}/video-play.png") no-repeat scroll 0 0;
+    .lg-has-html5 {
+        .lg-video-play {
+            background: transparent url('#{$lg-path-images}/video-play.png')
+                no-repeat scroll 0 0;
             height: 64px;
             margin-left: -32px;
             margin-top: -32px;
             width: 64px;
             opacity: 0.8;
-        }  
-        &:hover{
-            .lg-video-play{
-                opacity: 1
-            } 
-
-        } 
+        }
+        &:hover {
+            .lg-video-play {
+                opacity: 1;
+            }
+        }
     }
 
-    .lg-has-youtube{
-        .lg-video-play{
-            background: url("#{$lg-path-images}/youtube-play.png") no-repeat scroll 0 0 transparent;
+    .lg-has-youtube {
+        .lg-video-play {
+            background: url('#{$lg-path-images}/youtube-play.png') no-repeat
+                scroll 0 0 transparent;
         }
-        &:hover{
-            .lg-video-play{
-                background: url("#{$lg-path-images}/youtube-play.png") no-repeat scroll 0 -60px transparent;
-            } 
-
-        }  
+        &:hover {
+            .lg-video-play {
+                background: url('#{$lg-path-images}/youtube-play.png') no-repeat
+                    scroll 0 -60px transparent;
+            }
+        }
     }
     .lg-video-object {
         width: 100% !important;
@@ -98,7 +99,8 @@
         }
 
         &.lg-video-playing {
-            .lg-object, .lg-video-play {
+            .lg-object,
+            .lg-video-play {
                 display: none;
             }
 

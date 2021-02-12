@@ -282,7 +282,30 @@ const utils = {
         return src;
     },
 
-    getVideoPosterMarkup(_poster: string, _isVideo?: VideoInfo): string {
+    isImageLoaded(img: HTMLImageElement): boolean {
+        // During the onload event, IE correctly identifies any images that
+        // weren’t downloaded as not complete. Others should too. Gecko-based
+        // browsers act like NS4 in that they report this incorrectly.
+        if (!img.complete) {
+            return false;
+        }
+
+        // However, they do have two very useful properties: naturalWidth and
+        // naturalHeight. These give the true size of the image. If it failed
+        // to load, either of these should be zero.
+        if (img.naturalWidth === 0) {
+            return false;
+        }
+
+        // No other way of checking: assume it’s ok.
+        return true;
+    },
+
+    getVideoPosterMarkup(
+        _poster: string,
+        dummyImg: string,
+        _isVideo?: VideoInfo,
+    ): string {
         let videoClass = '';
         if (_isVideo && _isVideo.youtube) {
             videoClass = 'lg-has-youtube';
@@ -292,7 +315,13 @@ const utils = {
             videoClass = 'lg-has-html5';
         }
 
-        return `<div class="lg-video-cont ${videoClass}"><div class="lg-video"><span class="lg-video-play"></span><img class="lg-object lg-has-poster" src="${_poster}" /></div></div>`;
+        return `<div class="lg-video-cont ${videoClass}">
+            <div class="lg-video">
+                <span class="lg-video-play"></span>
+                ${dummyImg || ''}
+                <img class="lg-object lg-has-poster" src="${_poster}" />
+            </div>
+        </div>`;
     },
 
     /**

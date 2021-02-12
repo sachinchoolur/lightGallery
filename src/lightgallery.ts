@@ -484,16 +484,19 @@ export class LightGallery {
             // default opening animation if user missed to add the lg-size attribute
 
             if (this.zoomFromOrigin && transform) {
-                this.getSlideItem(index)
-                    .addClass('lg-start-progress lg-start-end-progress')
-                    .css('transform', transform)
-                    .css(
-                        'transition-duration',
-                        this.settings.startAnimationDuration + 'ms',
-                    );
-                this.outer.addClass('lg-zoom-from-image');
+                const currentSlide = this.getSlideItem(index);
+                currentSlide.css('transform', transform);
                 setTimeout(() => {
-                    this.getSlideItem(index).css(
+                    currentSlide
+                        .addClass('lg-start-progress lg-start-end-progress')
+                        .css(
+                            'transition-duration',
+                            this.settings.startAnimationDuration + 'ms',
+                        );
+                    this.outer.addClass('lg-zoom-from-image');
+                });
+                setTimeout(() => {
+                    currentSlide.css(
                         'transform',
                         'translate3d(0, 0, 0) translate3d(0, 0, 0)',
                     );
@@ -726,36 +729,43 @@ export class LightGallery {
                 height:${imageSize.height}px`;
     }
 
-    setImgMarkup(src: string, $currentSlide: lgQuery, index: number): void {
-        // Use the thumbnail as dummy image which will be resized to actual image size and
-        // displayed on top of actual image
-        let _dummyImgSrc;
-        let imgContnet = '';
+    getDummyImageContent(
+        $currentSlide: lgQuery,
+        index: number,
+        alt: string,
+    ): string {
         let $currentItem;
         if (!this.settings.dynamic) {
             $currentItem = $LG(this.items).eq(index);
         }
+        if ($currentItem) {
+            let _dummyImgSrc;
+            if (!this.settings.exThumbImage) {
+                _dummyImgSrc = $currentItem.find('img').first().attr('src');
+            } else {
+                _dummyImgSrc = $currentItem.attr(this.settings.exThumbImage);
+            }
+            const imgStyle = this.getDummyImgStyles(this.currentImageSize);
+            const dummyImgContent = `<img ${alt} style="${imgStyle}" class="lg-dummy-img" src="${_dummyImgSrc}" />`;
+
+            $currentSlide.addClass('lg-first-slide');
+
+            return dummyImgContent;
+        }
+        return '';
+    }
+
+    setImgMarkup(src: string, $currentSlide: lgQuery, index: number): void {
+        // Use the thumbnail as dummy image which will be resized to actual image size and
+        // displayed on top of actual image
+        let imgContnet = '';
         const currentDynamicItem = this.galleryItems[index];
         const alt = currentDynamicItem.alt
             ? 'alt="' + currentDynamicItem.alt + '"'
             : '';
 
         if (!this.lGalleryOn && this.zoomFromOrigin && this.currentImageSize) {
-            if ($currentItem) {
-                if (!this.settings.exThumbImage) {
-                    _dummyImgSrc = $currentItem.find('img').first().attr('src');
-                } else {
-                    _dummyImgSrc = $currentItem.attr(
-                        this.settings.exThumbImage,
-                    );
-                }
-                const imgStyle = this.getDummyImgStyles(this.currentImageSize);
-                const dummyImgContent = `<img ${alt} style="${imgStyle}" class="lg-dummy-img" src="${_dummyImgSrc}" />`;
-
-                $currentSlide.addClass('lg-first-slide');
-
-                imgContnet = dummyImgContent;
-            }
+            imgContnet = this.getDummyImageContent($currentSlide, index, alt);
         } else {
             imgContnet = ` <img ${alt} class="lg-object lg-image" data-index="${index}" src="${src}" /> `;
         }
@@ -907,7 +917,16 @@ export class LightGallery {
                 );
                 $currentSlide.prepend(markup);
             } else if (poster) {
-                const markup = utils.getVideoPosterMarkup(poster, videoInfo);
+                const dummyImg = this.getDummyImageContent(
+                    $currentSlide,
+                    index,
+                    '',
+                );
+                const markup = utils.getVideoPosterMarkup(
+                    poster,
+                    dummyImg,
+                    videoInfo,
+                );
                 $currentSlide.prepend(markup);
                 this.LGel.trigger('hasVideo.lg', {
                     index,
@@ -996,16 +1015,24 @@ export class LightGallery {
                         _speed,
                         true,
                     );
-                    $currentSlide
+                    const mediaObject = $currentSlide
                         .find('.lg-object')
-                        .first()
-                        .on('load.lg error.lg', () => {
+                        .first();
+                    if (
+                        utils.isImageLoaded(
+                            mediaObject.get() as HTMLImageElement,
+                        )
+                    ) {
+                        this.loadContentOnLoad(index, $currentSlide, _speed);
+                    } else {
+                        mediaObject.on('load.lg error.lg', () => {
                             this.loadContentOnLoad(
                                 index,
                                 $currentSlide,
                                 _speed,
                             );
                         });
+                    }
                 }, this.settings.startAnimationDuration + 100);
             }
         }

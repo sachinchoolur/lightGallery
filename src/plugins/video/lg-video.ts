@@ -188,7 +188,7 @@ export class Video {
      * @param {number} prevIndex - Previous index of the slide.
      * @param {number} index - Current index of the slide
      */
-    onAfterSlide(event: CustomEvent) {
+    onAfterSlide(event: CustomEvent): void {
         const { prevIndex, index } = event.detail;
         if (this.settings.autoplayVideoOnSlide && this.core.lGalleryOn) {
             this.core.getSlideItem(prevIndex).removeClass('lg-video-playing');
