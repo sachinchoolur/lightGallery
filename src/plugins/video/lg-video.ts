@@ -80,7 +80,7 @@ export class Video {
             this.core.galleryItems.length > 1 &&
             (this.core.settings.enableSwipe || this.core.settings.enableDrag)
         ) {
-            this.core.LGel.on('onSlideClick.lg.video', () => {
+            this.core.LGel.on('onMediaClick.lg.video', () => {
                 const $el = this.core.getSlideItem(this.core.index);
                 this.loadVideoOnPosterClick($el);
             });

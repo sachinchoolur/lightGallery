@@ -1451,7 +1451,7 @@ export class LightGallery {
         }
     }
 
-    touchEnd(endCoords: Coords, startCoords: Coords): void {
+    touchEnd(endCoords: Coords, startCoords: Coords, event: any): void {
         let distance;
 
         // keep slide animation for any mode while dragg/swipe
@@ -1506,7 +1506,10 @@ export class LightGallery {
                 Math.abs(endCoords.pageX - startCoords.pageX) < 5
             ) {
                 // Trigger click if distance is less than 5 pix
-                this.LGel.trigger('onSlideClick.lg');
+                const target = $LG(event.target);
+                if (!this.isSlideElement(target)) {
+                    this.LGel.trigger('onMediaClick.lg');
+                }
             }
 
             this.swipeDirection = undefined;
@@ -1566,13 +1569,16 @@ export class LightGallery {
                 }
             });
 
-            this.$inner.on('touchend.lg', () => {
+            this.$inner.on('touchend.lg', (event: TouchEvent) => {
                 if (this.touchAction === 'swipe') {
                     if (isMoved) {
                         isMoved = false;
-                        this.touchEnd(endCoords, startCoords);
+                        this.touchEnd(endCoords, startCoords, event);
                     } else if (isSwiping) {
-                        this.LGel.trigger('onSlideClick.lg');
+                        const target = $LG(event.target);
+                        if (!this.isSlideElement(target)) {
+                            this.LGel.trigger('onMediaClick.lg');
+                        }
                     }
                     this.touchAction = undefined;
                     isSwiping = false;
@@ -1631,20 +1637,17 @@ export class LightGallery {
                 }
             });
 
-            $LG(window).on(`mouseup.lg.global${this.lgId}`, (e) => {
+            $LG(window).on(`mouseup.lg.global${this.lgId}`, (event) => {
                 if (!this.lgOpened) {
                     return;
                 }
-                const target = $LG(e.target);
+                const target = $LG(event.target);
                 if (isMoved) {
                     isMoved = false;
-                    this.touchEnd(endCoords, startCoords);
+                    this.touchEnd(endCoords, startCoords, event);
                     this.LGel.trigger('onDragend.lg');
-                } else if (
-                    target.hasClass('lg-object') ||
-                    target.hasClass('lg-video-play')
-                ) {
-                    this.LGel.trigger('onSlideClick.lg');
+                } else if (!this.isSlideElement(target)) {
+                    this.LGel.trigger('onMediaClick.lg');
                 }
 
                 // Prevent execution on click
@@ -1871,6 +1874,14 @@ export class LightGallery {
         });
     }
 
+    isSlideElement(target: lgQuery): boolean {
+        return (
+            target.hasClass('lg-outer') ||
+            target.hasClass('lg-item') ||
+            target.hasClass('lg-img-wrap')
+        );
+    }
+
     closeGallery(): void {
         if (!this.settings.closable) return;
         let mousedown = false;
@@ -1883,11 +1894,7 @@ export class LightGallery {
             // for preventing this check mousedown and mouseup happened on .lg-item or lg-outer
             this.outer.on('mousedown.lg', (e) => {
                 const target = $LG(e.target);
-                if (
-                    target.hasClass('lg-outer') ||
-                    target.hasClass('lg-item') ||
-                    target.hasClass('lg-img-wrap')
-                ) {
+                if (this.isSlideElement(target)) {
                     mousedown = true;
                 } else {
                     mousedown = false;
@@ -1900,11 +1907,7 @@ export class LightGallery {
 
             this.outer.on('mouseup.lg', (e) => {
                 const target = $LG(e.target);
-                if (
-                    target.hasClass('lg-outer') ||
-                    target.hasClass('lg-item') ||
-                    (target.hasClass('lg-img-wrap') && mousedown)
-                ) {
+                if (this.isSlideElement(target) && mousedown) {
                     if (!this.outer.hasClass('lg-dragging')) {
                         this.destroy();
                     }

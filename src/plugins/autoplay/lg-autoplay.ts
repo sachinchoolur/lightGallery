@@ -77,15 +77,12 @@ export class Autoplay {
         );
 
         // restore autoplay if autoplay canceled from touchstart / dragstart
-        this.core.LGel.on(
-            'onDragend.lg.autoplay touchend.lg.autoplay onSlideClick.lg.autoplay',
-            () => {
-                if (!this.interval && this.pausedOnTouchDrag) {
-                    this.startAuto();
-                    this.pausedOnTouchDrag = false;
-                }
-            },
-        );
+        this.core.LGel.on('onDragend.lg.autoplay touchend.lg.autoplay', () => {
+            if (!this.interval && this.pausedOnTouchDrag) {
+                this.startAuto();
+                this.pausedOnTouchDrag = false;
+            }
+        });
 
         this.core.LGel.on('onBeforeSlide.lg.autoplay', () => {
             this.showProgressBar();
