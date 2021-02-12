@@ -1507,8 +1507,8 @@ export class LightGallery {
             ) {
                 // Trigger click if distance is less than 5 pix
                 const target = $LG(event.target);
-                if (!this.isSlideElement(target)) {
-                    this.LGel.trigger('onMediaClick.lg');
+                if (this.isPosterElement(target)) {
+                    this.LGel.trigger('onPosterClick');
                 }
             }
 
@@ -1576,8 +1576,8 @@ export class LightGallery {
                         this.touchEnd(endCoords, startCoords, event);
                     } else if (isSwiping) {
                         const target = $LG(event.target);
-                        if (!this.isSlideElement(target)) {
-                            this.LGel.trigger('onMediaClick.lg');
+                        if (this.isPosterElement(target)) {
+                            this.LGel.trigger('onPosterClick');
                         }
                     }
                     this.touchAction = undefined;
@@ -1646,8 +1646,8 @@ export class LightGallery {
                     isMoved = false;
                     this.touchEnd(endCoords, startCoords, event);
                     this.LGel.trigger('onDragend.lg');
-                } else if (!this.isSlideElement(target)) {
-                    this.LGel.trigger('onMediaClick.lg');
+                } else if (this.isPosterElement(target)) {
+                    this.LGel.trigger('onPosterClick');
                 }
 
                 // Prevent execution on click
@@ -1879,6 +1879,12 @@ export class LightGallery {
             target.hasClass('lg-outer') ||
             target.hasClass('lg-item') ||
             target.hasClass('lg-img-wrap')
+        );
+    }
+
+    isPosterElement(target: lgQuery): boolean {
+        return (
+            target.hasClass('lg-has-poster') || target.hasClass('lg-video-play')
         );
     }
 
