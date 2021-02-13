@@ -64,6 +64,8 @@ export class LightGallery {
 
     private currentImageSize?: ImageSize;
 
+    private isDummyImageRemoved = false;
+
     constructor(
         element: HTMLElement,
         options: Partial<LightGallerySettings> = {},
@@ -356,7 +358,17 @@ export class LightGallery {
         $LG(window).on(
             `resize.lg.global${this.lgId} orientationchange.lg.global${this.lgId}`,
             () => {
-                if (this.zoomFromOrigin && this.lgOpened) {
+                if (
+                    this.zoomFromOrigin &&
+                    this.lgOpened &&
+                    !this.isDummyImageRemoved
+                ) {
+                    const { top, bottom } = this.getMediaContainerPosition();
+                    this.currentImageSize = utils.getSize(
+                        this.items[this.index],
+                        this.$lgContent,
+                        top + bottom,
+                    );
                     const imgStyle = this.getDummyImgStyles(
                         this.currentImageSize,
                     );
@@ -1083,6 +1095,7 @@ export class LightGallery {
         setTimeout(() => {
             $currentSlide.find('.lg-dummy-img').remove();
             $currentSlide.removeClass('lg-first-slide');
+            this.isDummyImageRemoved = true;
             this.preload(index);
         }, speed + 300);
     }
@@ -1999,6 +2012,7 @@ export class LightGallery {
         }
 
         this.lGalleryOn = false;
+        this.isDummyImageRemoved = false;
         this.zoomFromOrigin = this.settings.zoomFromOrigin;
 
         clearTimeout(this.hideBarTimeout);
