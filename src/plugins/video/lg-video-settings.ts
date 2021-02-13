@@ -1,10 +1,5 @@
 export interface VideoSettings {
     /**
-     * Set limit for video maximal width.
-     */
-    videoMaxWidth: string;
-
-    /**
      * Enable/DIsable first video autoplay.
      * @description Autoplay has to be managed using this setting.
      * Autoplay in PlayerParams doesn't have any effect.
@@ -71,7 +66,6 @@ export interface VideoSettings {
     videojsOptions: any;
 }
 export const videoSettings: VideoSettings = {
-    videoMaxWidth: '1200px',
     autoplayFirstVideo: true,
     youTubePlayerParams: false,
     vimeoPlayerParams: false,

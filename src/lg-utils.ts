@@ -155,17 +155,16 @@ export function convertToData(attr: string): string {
 
 const utils = {
     /**
-     * @desc get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
-     * @param {jQuery Element} $el
-     * @returns {Object} Computed Width and Computed Height
+     * get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
      */
     getSize(
         el: HTMLElement,
         container: lgQuery,
         spacing = 0,
+        defaultLgSize?: string,
     ): ImageSize | undefined {
         const LGel = $LG(el);
-        const lgSize = LGel.attr('data-lg-size');
+        const lgSize = LGel.attr('data-lg-size') || defaultLgSize;
 
         if (!lgSize) {
             return;
@@ -177,7 +176,7 @@ const utils = {
         const height = parseInt(size[1], 10);
 
         const wWidth = container.width();
-        const wHeight = window.innerHeight - spacing;
+        const wHeight = container.height() - spacing;
 
         const maxWidth = Math.min(wWidth, width);
         const maxHeight = Math.min(wHeight, height);
@@ -209,7 +208,7 @@ const utils = {
         const wWidth = containerRect.width;
 
         // using innerWidth to include mobile safari bottom bar
-        const wHeight = window.innerHeight - (top + bottom);
+        const wHeight = container.height() - (top + bottom);
 
         const elWidth = LGel.width();
         const elHeight = LGel.height();
@@ -249,9 +248,7 @@ const utils = {
 
     getIframeMarkup(src: string, iframeMaxWidth: number | string): string {
         return `<div class="lg-video-cont lg-has-iframe" style="max-width:${iframeMaxWidth}">
-                    <div class="lg-video">
-                        <iframe class="lg-object" frameborder="0" src="${src}"  allowfullscreen="true"></iframe>
-                    </div>
+                    <iframe class="lg-object" frameborder="0" src="${src}"  allowfullscreen="true"></iframe>
                 </div>`;
     },
 
@@ -304,6 +301,7 @@ const utils = {
     getVideoPosterMarkup(
         _poster: string,
         dummyImg: string,
+        videoContStyle: string,
         _isVideo?: VideoInfo,
     ): string {
         let videoClass = '';
@@ -315,12 +313,10 @@ const utils = {
             videoClass = 'lg-has-html5';
         }
 
-        return `<div class="lg-video-cont ${videoClass}">
-            <div class="lg-video">
-                <span class="lg-video-play"></span>
-                ${dummyImg || ''}
-                <img class="lg-object lg-has-poster" src="${_poster}" />
-            </div>
+        return `<div class="lg-video-cont ${videoClass}" style="${videoContStyle}">
+            <span class="lg-video-play"></span>
+            ${dummyImg || ''}
+            <img class="lg-object lg-has-poster" src="${_poster}" />
         </div>`;
     },
 

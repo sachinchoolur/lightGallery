@@ -69,12 +69,6 @@ export class Video {
          */
         this.core.LGel.on('hasVideo.lg.video', this.onHasVideo.bind(this));
 
-        // Set max width for video
-        this.core.LGel.on(
-            'onAferAppendSlide.lg.video',
-            this.onAferAppendSlide.bind(this),
-        );
-
         if (
             this.core.doCss() &&
             this.core.galleryItems.length > 1 &&
@@ -141,23 +135,6 @@ export class Video {
             } else {
                 this.playVideo(index);
             }
-        }
-    }
-
-    /**
-     * @desc Fired when the slide content has been inserted into its slide container.
-     * Set max width for video
-     *
-     * @param {Event} event - Javascript Event object.
-     * @param {number} index - Current index of the slide
-     */
-    onAferAppendSlide(event: CustomEvent) {
-        const $videoCont = this.core
-            .getSlideItem(event.detail.index)
-            .find('.lg-video-cont')
-            .first();
-        if (!$videoCont.hasClass('lg-has-iframe')) {
-            $videoCont.css('max-width', this.settings.videoMaxWidth);
         }
     }
 
@@ -307,7 +284,7 @@ export class Video {
             videoParams.index,
             videoParams.html5Video,
         );
-        el.find('.lg-video').append(videoHtml);
+        el.find('.lg-video-cont').append(videoHtml);
         const $videoElement = el.find('.lg-video-object').first();
         if (this.settings.videojs) {
             try {
@@ -482,7 +459,7 @@ export class Video {
                 const $tempImg = $el.find('.lg-object').first().get();
 
                 // @todo make sure it is working
-                $el.find('.lg-video').first().append($tempImg);
+                $el.find('.lg-video-cont').first().append($tempImg);
 
                 // @todo loading icon for html5 videos also
                 // for showing the loading indicator while loading video

@@ -1,24 +1,8 @@
 .lg-outer {
     .lg-video-cont {
+        text-align: center;
         display: inline-block;
-        vertical-align: middle;
-        max-width: 1140px;
-        max-height: 100%;
-        width: 100%;
-    }
-
-    .lg-video {
-        width: 100%;
-        height: 0;
-        padding-bottom: 56.25%;
-        overflow: hidden;
-        position: relative;
-
         .lg-object {
-            display: inline-block;
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100% !important;
             height: 100% !important;
         }
@@ -37,7 +21,7 @@
     }
 
     .lg-has-iframe {
-        .lg-video {
+        .lg-video-cont {
             -webkit-overflow-scrolling: touch;
             overflow: auto;
         }
@@ -86,11 +70,8 @@
         }
     }
     .lg-video-object {
-        width: 100% !important;
-        height: 100% !important;
-        position: absolute;
-        top: 0;
-        left: 0;
+        width: inherit !important;
+        height: inherit !important;
     }
 
     .lg-has-video {

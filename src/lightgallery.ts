@@ -66,6 +66,11 @@ export class LightGallery {
 
     private isDummyImageRemoved = false;
 
+    private mediaContainerPosition = {
+        top: 0,
+        bottom: 0,
+    };
+
     constructor(
         element: HTMLElement,
         options: Partial<LightGallerySettings> = {},
@@ -358,24 +363,32 @@ export class LightGallery {
         $LG(window).on(
             `resize.lg.global${this.lgId} orientationchange.lg.global${this.lgId}`,
             () => {
-                if (
-                    this.zoomFromOrigin &&
-                    this.lgOpened &&
-                    !this.isDummyImageRemoved
-                ) {
+                if (this.lgOpened) {
+                    const currentDynamicItem = this.galleryItems[this.index];
+                    const videoInfo = currentDynamicItem.__slideVideoInfo;
+
                     const { top, bottom } = this.getMediaContainerPosition();
                     this.currentImageSize = utils.getSize(
                         this.items[this.index],
                         this.$lgContent,
                         top + bottom,
+                        videoInfo && this.settings.videoMaxSize,
                     );
-                    const imgStyle = this.getDummyImgStyles(
-                        this.currentImageSize,
-                    );
-                    this.outer
-                        .find('.lg-current .lg-dummy-img')
-                        .first()
-                        .attr('style', imgStyle);
+                    if (videoInfo) {
+                        this.resizeVideoSlide(
+                            this.index,
+                            this.currentImageSize,
+                        );
+                    }
+                    if (this.zoomFromOrigin && !this.isDummyImageRemoved) {
+                        const imgStyle = this.getDummyImgStyles(
+                            this.currentImageSize,
+                        );
+                        this.outer
+                            .find('.lg-current .lg-dummy-img')
+                            .first()
+                            .attr('style', imgStyle);
+                    }
                 }
             },
         );
@@ -385,6 +398,12 @@ export class LightGallery {
         this.closeGallery();
 
         return this.buildModules();
+    }
+
+    resizeVideoSlide(index: number, imageSize?: ImageSize): void {
+        const lgVideoStyle = this.getVideoContStyle(imageSize);
+        const currentSlide = this.getSlideItem(index);
+        currentSlide.find('.lg-video-cont').attr('style', lgVideoStyle);
     }
 
     // Append new slides dynamically while gallery is open
@@ -459,7 +478,8 @@ export class LightGallery {
         this.$inner.append(items);
         this.addHtml(index);
         let transform: string | undefined = '';
-        const { top, bottom } = this.getMediaContainerPosition();
+        this.mediaContainerPosition = this.getMediaContainerPosition();
+        const { top, bottom } = this.mediaContainerPosition;
         if (!this.settings.allowMediaOverlap) {
             this.setMediaContainerPosition(top, bottom);
         }
@@ -468,6 +488,8 @@ export class LightGallery {
                 element,
                 this.$lgContent,
                 top + bottom,
+                this.galleryItems[this.index].__slideVideoInfo &&
+                    this.settings.videoMaxSize,
             );
             transform = utils.getTransform(
                 element,
@@ -536,6 +558,12 @@ export class LightGallery {
         $LG(document.body).addClass('lg-on');
     }
 
+    /**
+     * Note - Changing the position of the media on every slide transition creates a flickering effect.
+     * Therefore, The height of the caption is calculated dynamically, only once based on the first slide caption.
+     * if you have dynamic captions for each media,
+     * you can provide an appropriate height for the captions via allowMediaOverlap option
+     */
     private getMediaContainerPosition() {
         if (this.settings.allowMediaOverlap) {
             return {
@@ -740,6 +768,11 @@ export class LightGallery {
                 margin-top: -${imageSize.height / 2}px; 
                 height:${imageSize.height}px`;
     }
+    getVideoContStyle(imageSize?: ImageSize): string {
+        if (!imageSize) return '';
+        return `width:${imageSize.width}px; 
+                height:${imageSize.height}px`;
+    }
 
     getDummyImageContent(
         $currentSlide: lgQuery,
@@ -895,7 +928,8 @@ export class LightGallery {
     }
 
     /**
-     *  @desc Load slide content into slide.
+     *  Load slide content into slide.
+     *  This is used to load content into slides that is not visible too
      *  @param {Number} index - index of the slide.
      *  @param {Boolean} rec - if true call loadcontent() function again.
      */
@@ -917,11 +951,22 @@ export class LightGallery {
             src = utils.getResponsiveSrc(srcDyItms) || src;
         }
 
+        const videoInfo = currentDynamicItem.__slideVideoInfo;
+        let lgVideoStyle = '';
+
         const iframe = !!currentDynamicItem.iframe;
 
-        const videoInfo = currentDynamicItem.__slideVideoInfo;
-
         if (!$currentSlide.hasClass('lg-loaded')) {
+            if (videoInfo) {
+                const { top, bottom } = this.mediaContainerPosition;
+                const videoSize = utils.getSize(
+                    this.items[index],
+                    this.$lgContent,
+                    top + bottom,
+                    videoInfo && this.settings.videoMaxSize,
+                );
+                lgVideoStyle = this.getVideoContStyle(videoSize);
+            }
             if (iframe) {
                 const markup = utils.getIframeMarkup(
                     src,
@@ -929,14 +974,23 @@ export class LightGallery {
                 );
                 $currentSlide.prepend(markup);
             } else if (poster) {
-                const dummyImg = this.getDummyImageContent(
-                    $currentSlide,
-                    index,
-                    '',
-                );
+                let dummyImg = '';
+                if (
+                    !this.lGalleryOn &&
+                    this.zoomFromOrigin &&
+                    this.currentImageSize
+                ) {
+                    dummyImg = this.getDummyImageContent(
+                        $currentSlide,
+                        index,
+                        '',
+                    );
+                }
+
                 const markup = utils.getVideoPosterMarkup(
                     poster,
-                    dummyImg,
+                    dummyImg || '',
+                    lgVideoStyle,
                     videoInfo,
                 );
                 $currentSlide.prepend(markup);
@@ -947,8 +1001,7 @@ export class LightGallery {
                     hasPoster: true,
                 });
             } else if (videoInfo) {
-                const markup =
-                    '<div class="lg-video-cont "><div class="lg-video"></div></div>';
+                const markup = `<div class="lg-video-cont " style="${lgVideoStyle}"></div>`;
                 $currentSlide.prepend(markup);
                 this.LGel.trigger('hasVideo.lg', {
                     index,
@@ -1304,6 +1357,23 @@ export class LightGallery {
         if (!this.lgBusy) {
             this.setDownloadValue(index);
 
+            const currentSlideItem = this.getSlideItem(index);
+            const previousSlideItem = this.getSlideItem(prevIndex);
+
+            const currentDynamicItem = this.galleryItems[index];
+            const videoInfo = currentDynamicItem.__slideVideoInfo;
+
+            if (videoInfo) {
+                const { top, bottom } = this.mediaContainerPosition;
+                const videoSize = utils.getSize(
+                    this.items[index],
+                    this.$lgContent,
+                    top + bottom,
+                    videoInfo && this.settings.videoMaxSize,
+                );
+                this.resizeVideoSlide(index, videoSize);
+            }
+
             this.LGel.trigger('onBeforeSlide.lg', {
                 prevIndex,
                 index,
@@ -1324,9 +1394,6 @@ export class LightGallery {
                     direction = 'next';
                 }
             }
-
-            const currentSlideItem = this.getSlideItem(index);
-            const previousSlideItem = this.getSlideItem(prevIndex);
 
             if (!fromTouch) {
                 this.makeSlideAnimation(
@@ -1946,11 +2013,13 @@ export class LightGallery {
 
         let transform: string | undefined;
         if (this.zoomFromOrigin) {
-            const { top, bottom } = this.getMediaContainerPosition();
+            const { top, bottom } = this.mediaContainerPosition;
             const imageSize = utils.getSize(
                 this.items[this.index],
                 this.$lgContent,
                 top + bottom,
+                this.galleryItems[this.index].__slideVideoInfo &&
+                    this.settings.videoMaxSize,
             );
             transform = utils.getTransform(
                 this.items[this.index],

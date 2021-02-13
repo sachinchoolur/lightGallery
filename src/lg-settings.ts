@@ -149,6 +149,13 @@ export interface LightGallerySettings {
     allowMediaOverlap: boolean;
 
     /**
+     * Video max size.
+     * @description This can be over-written by passing specific size via data-lg-size attribute
+     * Recommended video resolution and & aspect ratios https://support.google.com/youtube/answer/6375112
+     */
+    videoMaxSize: string;
+
+    /**
      * Height of the caption for calculating allowMediaOverlap positions
      * Note - this is only used to find the position of media item if allowMediaOverlap is true.
      * Not for setting height of the captions
@@ -421,6 +428,7 @@ export const lightGallerySettings: LightGallerySettings = {
     hideSubHtml: false,
     useLeft: false,
     allowMediaOverlap: false,
+    videoMaxSize: '1280-720',
     defaultCaptionHeight: 0,
     ariaLabelledby: '',
     ariaDescribedby: '',
