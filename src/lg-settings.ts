@@ -181,6 +181,7 @@ export interface LightGallerySettings {
 
     /**
      * allows vertical drag/swipe to close gallery
+     * @description false if closable is false
      */
     swipeToClose: boolean;
     /**

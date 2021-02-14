@@ -108,6 +108,9 @@ export class LightGallery {
         if (this.settings.slideEndAnimation) {
             this.settings.hideControlOnEnd = false;
         }
+        if (!this.settings.closable) {
+            this.settings.swipeToClose = false;
+        }
 
         // Need to disable zoomFromOrigin if gallery is opened from url (Hash plugin)
         // And reset it on close to get the correct value next time
