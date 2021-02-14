@@ -65,7 +65,10 @@ export class Thumbnail {
         if (!this.core.settings.allowMediaOverlap) {
             this.settings.toggleThumb = false;
         }
-        if (!this.settings.animateThumb) {
+        if (
+            !this.settings.animateThumb ||
+            this.core.settings.appendSubHtmlTo !== '.lg-sub-html'
+        ) {
             this.settings.pullCaptionUp = false;
         }
 
