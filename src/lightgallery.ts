@@ -269,6 +269,11 @@ export class LightGallery {
                       'lg-close',
                   )}" class="lg-close lg-icon"></button>`
                 : '';
+        const maximizeIcon = this.settings.showMaximizeIcon
+            ? `<button type="button" aria-label="Toggle maximize" id="${this.getIdName(
+                  'lg-maximize',
+              )}" class="lg-maximize lg-icon"></button>`
+            : '';
         const template = `
         <div class="${containerClassName}" id="${this.getIdName(
             'lg-container',
@@ -294,6 +299,7 @@ export class LightGallery {
                         <div id="${this.getIdName(
                             'lg-toolbar',
                         )}" class="lg-toolbar lg-group">
+                        ${maximizeIcon}
                         ${closeIcon}
                     </div>
                     ${controls}
@@ -366,41 +372,42 @@ export class LightGallery {
         $LG(window).on(
             `resize.lg.global${this.lgId} orientationchange.lg.global${this.lgId}`,
             () => {
-                if (this.lgOpened) {
-                    const currentDynamicItem = this.galleryItems[this.index];
-                    const videoInfo = currentDynamicItem.__slideVideoInfo;
-
-                    const { top, bottom } = this.getMediaContainerPosition();
-                    this.currentImageSize = utils.getSize(
-                        this.items[this.index],
-                        this.$lgContent,
-                        top + bottom,
-                        videoInfo && this.settings.videoMaxSize,
-                    );
-                    if (videoInfo) {
-                        this.resizeVideoSlide(
-                            this.index,
-                            this.currentImageSize,
-                        );
-                    }
-                    if (this.zoomFromOrigin && !this.isDummyImageRemoved) {
-                        const imgStyle = this.getDummyImgStyles(
-                            this.currentImageSize,
-                        );
-                        this.outer
-                            .find('.lg-current .lg-dummy-img')
-                            .first()
-                            .attr('style', imgStyle);
-                    }
-                }
+                this.refreshOnResize();
             },
         );
 
         this.hideBars();
 
         this.closeGallery();
+        this.toggleMaximize();
 
         return this.buildModules();
+    }
+
+    refreshOnResize(): void {
+        if (this.lgOpened) {
+            const currentDynamicItem = this.galleryItems[this.index];
+            const videoInfo = currentDynamicItem.__slideVideoInfo;
+
+            const { top, bottom } = this.getMediaContainerPosition();
+            this.currentImageSize = utils.getSize(
+                this.items[this.index],
+                this.$lgContent,
+                top + bottom,
+                videoInfo && this.settings.videoMaxSize,
+            );
+            if (videoInfo) {
+                this.resizeVideoSlide(this.index, this.currentImageSize);
+            }
+            if (this.zoomFromOrigin && !this.isDummyImageRemoved) {
+                const imgStyle = this.getDummyImgStyles(this.currentImageSize);
+                this.outer
+                    .find('.lg-current .lg-dummy-img')
+                    .first()
+                    .attr('style', imgStyle);
+            }
+            this.LGel.trigger('container-resize.lg');
+        }
     }
 
     resizeVideoSlide(index: number, imageSize?: ImageSize): void {
@@ -1289,7 +1296,9 @@ export class LightGallery {
         currentSlideItem: lgQuery,
         previousSlideItem: lgQuery,
     ): void {
-        previousSlideItem.addClass('lg-slide-progress');
+        if (this.lGalleryOn) {
+            previousSlideItem.addClass('lg-slide-progress');
+        }
         setTimeout(() => {
             // remove all transitions
             this.outer.addClass('lg-no-trans');
@@ -1969,6 +1978,13 @@ export class LightGallery {
         return (
             target.hasClass('lg-has-poster') || target.hasClass('lg-video-play')
         );
+    }
+
+    toggleMaximize(): void {
+        this.getElementById('lg-maximize').on('click.lg', () => {
+            this.$container.toggleClass('lg-inline');
+            this.refreshOnResize();
+        });
     }
 
     closeGallery(): void {

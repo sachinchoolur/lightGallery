@@ -280,6 +280,7 @@ const utils = {
     },
 
     isImageLoaded(img: HTMLImageElement): boolean {
+        if (!img) return false;
         // During the onload event, IE correctly identifies any images that
         // weren’t downloaded as not complete. Others should too. Gecko-based
         // browsers act like NS4 in that they report this incorrectly.

@@ -430,6 +430,11 @@
     .lg-outer {
         position: absolute;
     }
+    .lg-maximize {
+        &:after {
+            content: '\e909';
+        }
+    }
 }
 .lg-zoomed {
     .lg-sub-html,

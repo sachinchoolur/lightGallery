@@ -142,17 +142,13 @@ export class Thumbnail {
         this.core.LGel.on('appendSlides.lg.thumb', (e) => {
             this.addNewThumbnails(e.detail.items);
         });
-
-        $LG(window).on(
-            `resize.lg.thumb.global${this.core.lgId} orientationchange.lg.thumb.global${this.core.lgId}`,
-            () => {
-                if (!this.core.lgOpened) return;
-                setTimeout(() => {
-                    this.animateThumb(this.core.index);
-                    this.thumbOuterWidth = window.innerWidth;
-                }, 200);
-            },
-        );
+        this.core.LGel.on('container-resize.lg.thumb', () => {
+            if (!this.core.lgOpened) return;
+            setTimeout(() => {
+                this.animateThumb(this.core.index);
+                this.thumbOuterWidth = window.innerWidth;
+            }, 200);
+        });
     }
 
     setThumbMarkup(): void {

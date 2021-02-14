@@ -129,7 +129,13 @@
 
     .lg-close {
         &:after {
-            content: '\e070';
+            content: '\e90a';
+        }
+    }
+    .lg-maximize {
+        font-size: 22px;
+        &:after {
+            content: '\e90a';
         }
     }
 

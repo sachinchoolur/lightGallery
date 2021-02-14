@@ -494,15 +494,11 @@ export class Zoom {
         });
 
         // Update zoom on resize and orientationchange
-        $LG(window).on(
-            `resize.lg.zoom.global${this.core.lgId} orientationchange.lg.zoom.global${this.core.lgId}`,
-            () => {
-                console.log('calling');
-                if (!this.core.lgOpened) return;
-                this.setPageCords();
-                this.zoomImage(this.scale);
-            },
-        );
+        this.core.LGel.on('container-resize.lg.zoom', () => {
+            if (!this.core.lgOpened) return;
+            this.setPageCords();
+            this.zoomImage(this.scale);
+        });
 
         this.core.getElementById('lg-zoom-out').on('click.lg', () => {
             if (this.core.outer.find('.lg-current .lg-image').first()) {

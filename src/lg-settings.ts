@@ -196,6 +196,12 @@ export interface LightGallerySettings {
     showCloseIcon: boolean;
 
     /**
+     * Show maximize icon.
+     * @description Useful for creating inline galleries.
+     */
+    showMaximizeIcon: boolean;
+
+    /**
      * If false, will disable the ability to loop back to the beginning of the gallery from the last slide.
      */
     loop: boolean;
@@ -437,6 +443,7 @@ export const lightGallerySettings: LightGallerySettings = {
     swipeToClose: true,
     closeOnTap: true,
     showCloseIcon: true,
+    showMaximizeIcon: false,
     loop: true,
     escKey: true,
     keyPress: true,
