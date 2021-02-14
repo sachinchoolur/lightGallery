@@ -64,6 +64,9 @@ export interface ThumbnailsSettings {
     /**
      * Whether to display thumbnail toggle button.
      * @description Only works with animated thumbnails
+     * Also, appendSubHtmlTo should be set as `.lg-sub-html`.
+     * Otherwise the captions are appended to the '.lg-item' div and the position of the caption is depended on the position of '.lg-item' div
+     * But still if you want you can place the captions wherever you want by updating the css
      */
     pullCaptionUp: boolean;
 
