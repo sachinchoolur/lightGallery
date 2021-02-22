@@ -330,6 +330,21 @@
             }
         }
     }
+    &.lg-use-css3 {
+        .lg-item {
+            &.lg-start-progress {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s
+                        //transform 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0s,
+                );
+            }
+            &.lg-start-end-progress {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s
+                );
+            }
+        }
+    }
 
     &.lg-slide {
         &.lg-use-css3 {
@@ -355,13 +370,6 @@
                 &.lg-current {
                     @include transitionCustom(
                         transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
-                        opacity 0.1s ease 0s
-                    );
-                }
-                &.lg-start-progress {
-                    @include transitionCustom(
-                        transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s,
-                        //transform 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0s,
                         opacity 0.1s ease 0s
                     );
                 }
