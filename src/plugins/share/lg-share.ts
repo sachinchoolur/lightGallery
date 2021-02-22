@@ -7,6 +7,7 @@ import { setFacebookShareLink } from './lg-fb-share-utils';
 import { setTwitterShareLink } from './lg-twitter-share-utils';
 import { setPinterestShareLink } from './lg-pinterest-share-utils';
 import { LightGallery } from '../../lightgallery';
+import { lGEvents } from '../../lg-events';
 
 export class Share {
     core: LightGallery;
@@ -30,7 +31,7 @@ export class Share {
             .append(this.getShareListHtml());
 
         this.core.LGel.on(
-            'onAfterSlide.lg.share',
+            `${lGEvents.afterSlide}.share`,
             this.onAfterSlide.bind(this),
         );
     }

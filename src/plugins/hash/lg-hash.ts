@@ -1,3 +1,4 @@
+import { lGEvents } from '../../lg-events';
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { hashSettings, HashSettings } from './lg-hash-settings';
@@ -30,8 +31,14 @@ export class Hash {
 
     private init() {
         // Change hash value on after each slide transition
-        this.core.LGel.on('onAfterSlide.lg.hash', this.onAfterSlide.bind(this));
-        this.core.LGel.on('onCloseAfter.lg.hash', this.onCloseAfter.bind(this));
+        this.core.LGel.on(
+            `${lGEvents.afterSlide}.hash`,
+            this.onAfterSlide.bind(this),
+        );
+        this.core.LGel.on(
+            `${lGEvents.afterClose}.hash`,
+            this.onCloseAfter.bind(this),
+        );
 
         // Listen hash change and change the slide according to slide value
         $LG(window).on(

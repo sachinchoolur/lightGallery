@@ -1,3 +1,4 @@
+import { HasVideoDetail } from './lg-events';
 import { LightGallerySettings } from './lg-settings';
 import { $LG } from './lgQuery';
 import { LightGallery } from './lightgallery';
@@ -18,12 +19,7 @@ export interface Coordinates {
     pageY: number;
 }
 export interface CustomEventHasVideo extends CustomEvent {
-    detail: {
-        index: number;
-        src: string;
-        html5Video?: string;
-        hasPoster: boolean;
-    };
+    detail: HasVideoDetail;
 }
 
 export type SlideDirection = 'next' | 'prev';

@@ -8,6 +8,7 @@
  *
  */
 
+import { lGEvents } from '../../lg-events';
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { commentSettings, CommentSettings } from './lg-comment-settings';
@@ -74,13 +75,13 @@ export class CommentBox {
     }
 
     addFbComments() {
-        this.core.LGel.on('onBeforeSlide.lg.comment', (event) => {
+        this.core.LGel.on(`${lGEvents.beforeSlide}.comment`, (event) => {
             const { index } = event.detail;
             $LG('#lg-comment-body').html(
                 $LG(this.core.items).eq(index).attr('data-fb-html'),
             );
         });
-        this.core.LGel.on('onAfterSlide.lg.comment', function () {
+        this.core.LGel.on(`${lGEvents.afterSlide}.comment`, function () {
             try {
                 FB.XFBML.parse();
             } catch (err) {
@@ -98,11 +99,11 @@ export class CommentBox {
         $disqusThread.remove();
         $LG('#lg-comment-body').append('<div id="disqus_thread"></div>');
 
-        this.core.LGel.on('onBeforeSlide.lg.comment', () => {
+        this.core.LGel.on(`${lGEvents.beforeSlide}.comment`, () => {
             $disqusThread.html('');
         });
 
-        this.core.LGel.on('onAfterSlide.lg.comment', (event) => {
+        this.core.LGel.on(`${lGEvents.afterSlide}.comment`, (event) => {
             const { index } = event.detail;
             // DISQUS needs sometime to intialize when lightGallery is opened from direct url(hash plugin).
             setTimeout(

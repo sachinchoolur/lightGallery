@@ -23,6 +23,7 @@ import { VideoSettings, videoSettings } from './lg-video-settings';
 import { LightGallery } from '../../lightgallery';
 import { lgQuery } from '../../lgQuery';
 import { CustomEventHasVideo } from '../../types';
+import { lGEvents } from '../../lg-events';
 declare let YT: any;
 declare let Vimeo: any;
 declare let videojs: any;
@@ -67,14 +68,17 @@ export class Video {
          * Append video HTML
          * Play if autoplayFirstVideo is true
          */
-        this.core.LGel.on('hasVideo.lg.video', this.onHasVideo.bind(this));
+        this.core.LGel.on(
+            `${lGEvents.hasVideo}.video`,
+            this.onHasVideo.bind(this),
+        );
 
         if (
             this.core.doCss() &&
             this.core.galleryItems.length > 1 &&
             (this.core.settings.enableSwipe || this.core.settings.enableDrag)
         ) {
-            this.core.LGel.on('onPosterClick.video', () => {
+            this.core.LGel.on(`${lGEvents.posterClick}.video`, () => {
                 const $el = this.core.getSlideItem(this.core.index);
                 this.loadVideoOnPosterClick($el);
             });
@@ -91,13 +95,13 @@ export class Video {
 
         // @desc fired immediately before each slide transition.
         this.core.LGel.on(
-            'onBeforeSlide.lg.video',
+            `${lGEvents.beforeSlide}.video`,
             this.onBeforeSlide.bind(this),
         );
 
         // @desc fired immediately after each slide transition.
         this.core.LGel.on(
-            'onAfterSlide.lg.video',
+            `${lGEvents.afterSlide}.video`,
             this.onAfterSlide.bind(this),
         );
     }
@@ -108,9 +112,6 @@ export class Video {
      * Play if autoplayFirstVideo is true
      *
      * @param {Event} event - Javascript Event object.
-     * @param {number} index - Current index of the slide
-     * @param {string} src - src of the video
-     * @param {string} html - HTML5 video
      */
     onHasVideo(event: CustomEventHasVideo): void {
         const { index, src, html5Video, hasPoster } = event.detail;
@@ -295,10 +296,6 @@ export class Video {
                 );
             }
         }
-        this.core.LGel.trigger('onAppendVideo.lg', [
-            $videoElement,
-            videoParams.index,
-        ]);
     }
 
     gotoNextSlideOnVideoEnd(src: any, index: number) {

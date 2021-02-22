@@ -5,6 +5,7 @@ import {
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { DynamicItem } from '../../lg-utils';
+import { lGEvents } from '../../lg-events';
 interface ThumbDragUtils {
     cords: {
         startX: number;
@@ -122,10 +123,10 @@ export class Thumbnail {
             }, 50);
         });
 
-        this.core.LGel.on('onBeforeSlide.lg.thumb', (e) => {
+        this.core.LGel.on(`${lGEvents.beforeSlide}.thumb`, () => {
             this.animateThumb(this.core.index);
         });
-        this.core.LGel.on('onBeforeOpen.lg.thumb', (e) => {
+        this.core.LGel.on(`${lGEvents.beforeOpen}.thumb`, () => {
             if (this.settings.showThumbByDefault) {
                 const timeout = this.core.settings.zoomFromOrigin
                     ? 100
@@ -135,14 +136,14 @@ export class Thumbnail {
                 }, timeout);
             }
         });
-        this.core.LGel.on('onBeforeClose.lg.thumb', (e) => {
+        this.core.LGel.on(`${lGEvents.beforeClose}.thumb`, (e) => {
             this.core.outer.removeClass('lg-thumb-open');
         });
 
-        this.core.LGel.on('appendSlides.lg.thumb', (e) => {
+        this.core.LGel.on(`${lGEvents.appendSlides}.thumb`, (e) => {
             this.addNewThumbnails(e.detail.items);
         });
-        this.core.LGel.on('container-resize.lg.thumb', () => {
+        this.core.LGel.on(`${lGEvents.containerResize}.thumb`, () => {
             if (!this.core.lgOpened) return;
             setTimeout(() => {
                 this.animateThumb(this.core.index);
@@ -548,11 +549,14 @@ export class Thumbnail {
 
         // manage active class for thumbnail
         $thumb.eq(this.core.index).addClass('active');
-        this.core.LGel.on('onBeforeSlide.lg.thumb', (event: CustomEvent) => {
-            const { index } = event.detail;
-            $thumb.removeClass('active');
-            $thumb.eq(index).addClass('active');
-        });
+        this.core.LGel.on(
+            `${lGEvents.beforeSlide}.thumb`,
+            (event: CustomEvent) => {
+                const { index } = event.detail;
+                $thumb.removeClass('active');
+                $thumb.eq(index).addClass('active');
+            },
+        );
     }
 
     // Toggle thumbnail bar

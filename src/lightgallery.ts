@@ -2,6 +2,13 @@ import utils, { DynamicItem, ImageSize } from './lg-utils';
 import { $LG, lgQuery } from './lgQuery';
 import { LightGallerySettings, lightGallerySettings } from './lg-settings';
 import { Coords, SlideDirection, VideoInfo } from './types';
+import {
+    AfterAppendSlideEventDetail,
+    AfterAppendSubHtmlDetail,
+    BeforeSlideDetail,
+    lGEvents,
+    SlideItemLoadDetail,
+} from './lg-events';
 
 window.$LG = $LG;
 declare let picturefill: any;
@@ -404,7 +411,7 @@ export class LightGallery {
                     .first()
                     .attr('style', imgStyle);
             }
-            this.LGel.trigger('container-resize.lg');
+            this.LGel.trigger(lGEvents.containerResize);
         }
     }
 
@@ -421,7 +428,7 @@ export class LightGallery {
         this.getElementById('lg-counter-all').html(
             this.galleryItems.length + '',
         );
-        this.LGel.trigger('appendSlides.lg', { items });
+        this.LGel.trigger(lGEvents.appendSlides, { items });
     }
 
     // Get gallery items based on multiple conditions
@@ -511,7 +518,7 @@ export class LightGallery {
             this.outer.addClass(this.settings.startClass);
             this.getSlideItem(index).removeClass('lg-complete');
         }
-        this.LGel.trigger('onBeforeOpen.lg');
+        this.LGel.trigger(lGEvents.beforeOpen);
 
         // add class lg-current to remove initial transition
         this.getSlideItem(index).addClass('lg-current');
@@ -560,7 +567,7 @@ export class LightGallery {
             // initiate slide function
             this.slide(index, false, false, false);
 
-            this.LGel.trigger('onAfterOpen.lg');
+            this.LGel.trigger(lGEvents.afterOpen);
         });
 
         $LG(document.body).addClass('lg-on');
@@ -743,7 +750,12 @@ export class LightGallery {
             }
         }
 
-        this.LGel.trigger('onAfterAppendSubHtml.lg', { index });
+        this.LGel.trigger<AfterAppendSubHtmlDetail>(
+            lGEvents.afterAppendSubHtml,
+            {
+                index,
+            },
+        );
     }
 
     /**
@@ -834,9 +846,8 @@ export class LightGallery {
         dummyImageLoaded: boolean,
     ): void {
         if (dummyImageLoaded) {
-            this.LGel.trigger('onSlideItemLoad.lg', {
+            this.LGel.trigger<SlideItemLoadDetail>(lGEvents.slideItemLoad, {
                 index,
-                delay: delay || 0,
             });
         }
         $el.find('.lg-object')
@@ -871,9 +882,8 @@ export class LightGallery {
         setTimeout(() => {
             $el.addClass('lg-complete lg-complete_');
             if (!dummyImageLoaded) {
-                this.LGel.trigger('onSlideItemLoad.lg', {
+                this.LGel.trigger<SlideItemLoadDetail>(lGEvents.slideItemLoad, {
                     index,
-                    delay: delay || 0,
                 });
             }
         }, speed);
@@ -1002,7 +1012,7 @@ export class LightGallery {
                     videoInfo,
                 );
                 $currentSlide.prepend(markup);
-                this.LGel.trigger('hasVideo.lg', {
+                this.LGel.trigger(lGEvents.hasVideo, {
                     index,
                     src: src,
                     html5Video: _html5Video,
@@ -1011,7 +1021,7 @@ export class LightGallery {
             } else if (videoInfo) {
                 const markup = `<div class="lg-video-cont " style="${lgVideoStyle}"></div>`;
                 $currentSlide.prepend(markup);
-                this.LGel.trigger('hasVideo.lg', {
+                this.LGel.trigger(lGEvents.hasVideo, {
                     index,
                     src: src,
                     html5Video: _html5Video,
@@ -1021,7 +1031,10 @@ export class LightGallery {
                 this.setImgMarkup(src, $currentSlide, index);
             }
 
-            this.LGel.trigger('onAferAppendSlide.lg', { index });
+            this.LGel.trigger<AfterAppendSlideEventDetail>(
+                lGEvents.afterAppendSlide,
+                { index },
+            );
 
             $img = $currentSlide.find('.lg-object');
             if (sizes) {
@@ -1384,7 +1397,7 @@ export class LightGallery {
                 this.resizeVideoSlide(index, videoSize);
             }
 
-            this.LGel.trigger('onBeforeSlide.lg', {
+            this.LGel.trigger<BeforeSlideDetail>(lGEvents.beforeSlide, {
                 prevIndex,
                 index,
                 fromTouch,
@@ -1470,7 +1483,7 @@ export class LightGallery {
             setTimeout(() => {
                 this.lgBusy = false;
                 previousSlideItem.removeClass('lg-slide-progress');
-                this.LGel.trigger('onAfterSlide.lg', {
+                this.LGel.trigger(lGEvents.afterSlide, {
                     prevIndex: prevIndex,
                     index,
                     fromTouch,
@@ -1598,7 +1611,7 @@ export class LightGallery {
                 // Trigger click if distance is less than 5 pix
                 const target = $LG(event.target);
                 if (this.isPosterElement(target)) {
-                    this.LGel.trigger('onPosterClick');
+                    this.LGel.trigger(lGEvents.posterClick);
                 }
             }
 
@@ -1667,7 +1680,7 @@ export class LightGallery {
                     } else if (isSwiping) {
                         const target = $LG(event.target);
                         if (this.isPosterElement(target)) {
-                            this.LGel.trigger('onPosterClick');
+                            this.LGel.trigger(lGEvents.posterClick);
                         }
                     }
                     this.touchAction = undefined;
@@ -1709,7 +1722,7 @@ export class LightGallery {
                                 .removeClass('lg-grab')
                                 .addClass('lg-grabbing');
 
-                            this.LGel.trigger('onDragstart.lg');
+                            this.LGel.trigger(lGEvents.dragStart);
                         }
                     }
                 }
@@ -1723,7 +1736,7 @@ export class LightGallery {
                         pageY: e.pageY,
                     };
                     this.touchMove(startCoords, endCoords);
-                    this.LGel.trigger('onDragmove.lg');
+                    this.LGel.trigger(lGEvents.dragMove);
                 }
             });
 
@@ -1735,9 +1748,9 @@ export class LightGallery {
                 if (isMoved) {
                     isMoved = false;
                     this.touchEnd(endCoords, startCoords, event);
-                    this.LGel.trigger('onDragend.lg');
+                    this.LGel.trigger(lGEvents.dragEnd);
                 } else if (this.isPosterElement(target)) {
-                    this.LGel.trigger('onPosterClick');
+                    this.LGel.trigger(lGEvents.posterClick);
                 }
 
                 // Prevent execution on click
@@ -1781,14 +1794,14 @@ export class LightGallery {
         if (!this.lgBusy) {
             if (this.index + 1 < this.galleryItems.length) {
                 this.index++;
-                this.LGel.trigger('onBeforeNextSlide.lg', {
+                this.LGel.trigger(lGEvents.beforeNextSlide, {
                     index: this.index,
                 });
                 this.slide(this.index, !!fromTouch, false, 'next');
             } else {
                 if (_loop) {
                     this.index = 0;
-                    this.LGel.trigger('onBeforeNextSlide.lg', {
+                    this.LGel.trigger(lGEvents.beforeNextSlide, {
                         index: this.index,
                     });
                     this.slide(this.index, !!fromTouch, false, 'next');
@@ -1815,7 +1828,7 @@ export class LightGallery {
         if (!this.lgBusy) {
             if (this.index > 0) {
                 this.index--;
-                this.LGel.trigger('onBeforePrevSlide.lg', {
+                this.LGel.trigger(lGEvents.beforePrevSlide, {
                     index: this.index,
                     fromTouch,
                 });
@@ -1823,7 +1836,7 @@ export class LightGallery {
             } else {
                 if (_loop) {
                     this.index = this.galleryItems.length - 1;
-                    this.LGel.trigger('onBeforePrevSlide.lg', {
+                    this.LGel.trigger(lGEvents.beforePrevSlide, {
                         index: this.index,
                         fromTouch,
                     });
@@ -2024,7 +2037,7 @@ export class LightGallery {
             return;
         }
         if (!clear) {
-            this.LGel.trigger('onBeforeClose.lg');
+            this.LGel.trigger(lGEvents.beforeClose);
             $LG(window).scrollTop(this.prevScrollTop);
         }
 
@@ -2143,7 +2156,7 @@ export class LightGallery {
                 this.$container.remove();
             }
             if (!clear) {
-                this.LGel.trigger('onCloseAfter.lg');
+                this.LGel.trigger(lGEvents.afterClose);
             }
             this.LGel.get().focus();
 
@@ -2152,19 +2165,6 @@ export class LightGallery {
     }
 }
 
-// $.fn.lightGallery = function (options) {
-//     return this.each(function () {
-//         if (!$.data(this, 'lightGallery')) {
-//             $.data(this, 'lightGallery', new LightGallery(this, options));
-//         } else {
-//             try {
-//                 $(this).data('lightGallery').init();
-//             } catch (err) {
-//                 console.error('lightGallery has not initiated properly');
-//             }
-//         }
-//     });
-// };
 window.lightGallery = function (el, options) {
     if (!el) {
         return;

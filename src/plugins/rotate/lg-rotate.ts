@@ -1,3 +1,4 @@
+import { lGEvents } from '../../lg-events';
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { rotateSettings, RotateSettings } from './lg-rotate-settings';
@@ -57,7 +58,7 @@ export class Rotate {
         this.rotateValuesList = {};
 
         // event triggered after appending slide content
-        this.core.LGel.on('onAferAppendSlide.lg.rotate', (event) => {
+        this.core.LGel.on(`${lGEvents.afterAppendSlide}.rotate`, (event) => {
             const { index } = event.detail;
             const imageWrap = this.core
                 .getSlideItem(index)
@@ -88,7 +89,7 @@ export class Rotate {
             .on('click.lg', this.flipVertical.bind(this));
 
         // Reset rotate on slide change
-        this.core.LGel.on('onBeforeSlide.lg.rotate', (event) => {
+        this.core.LGel.on(`${lGEvents.beforeSlide}.rotate`, (event) => {
             if (!this.rotateValuesList[event.detail.index]) {
                 this.rotateValuesList[event.detail.index] = {
                     rotate: 0,

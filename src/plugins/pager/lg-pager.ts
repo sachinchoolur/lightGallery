@@ -1,3 +1,4 @@
+import { lGEvents } from '../../lg-events';
 import { DynamicItem } from '../../lg-utils';
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
@@ -69,12 +70,12 @@ export class Pager {
             });
         });
 
-        this.core.LGel.on('onBeforeSlide.lg.pager', (event) => {
+        this.core.LGel.on(`${lGEvents.beforeSlide}.pager`, (event) => {
             const { index } = event.detail;
             this.manageActiveClass.call(this, index);
         });
 
-        this.core.LGel.on('appendSlides.lg.pager', (event) => {
+        this.core.LGel.on(`${lGEvents.appendSlides}.pager`, (event) => {
             const { items } = event.detail;
             this.addNewPagers.call(this, items);
         });

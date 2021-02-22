@@ -1,3 +1,4 @@
+import { lGEvents } from '../../lg-events';
 import { LightGallery } from '../../lightgallery';
 import { AutoplaySettings, autoplaySettings } from './lg-autoplay-settings';
 
@@ -60,14 +61,14 @@ export class Autoplay {
 
         // Start autoplay
         if (this.settings.slideShowAutoplay) {
-            this.core.LGel.once('onSlideItemLoad.lg.autoplay', () => {
+            this.core.LGel.once(`${lGEvents.slideItemLoad}.autoplay`, () => {
                 this.startAuto();
             });
         }
 
         // cancel interval on touchstart and dragstart
         this.core.LGel.on(
-            'onDragstart.lg.autoplay touchstart.lg.autoplay',
+            `${lGEvents.dragStart}.autoplay touchstart.lg.autoplay`,
             () => {
                 if (this.interval) {
                     this.cancelAuto();
@@ -77,14 +78,17 @@ export class Autoplay {
         );
 
         // restore autoplay if autoplay canceled from touchstart / dragstart
-        this.core.LGel.on('onDragend.lg.autoplay touchend.lg.autoplay', () => {
-            if (!this.interval && this.pausedOnTouchDrag) {
-                this.startAuto();
-                this.pausedOnTouchDrag = false;
-            }
-        });
+        this.core.LGel.on(
+            `${lGEvents.dragEnd}.autoplay touchend.lg.autoplay`,
+            () => {
+                if (!this.interval && this.pausedOnTouchDrag) {
+                    this.startAuto();
+                    this.pausedOnTouchDrag = false;
+                }
+            },
+        );
 
-        this.core.LGel.on('onBeforeSlide.lg.autoplay', () => {
+        this.core.LGel.on(`${lGEvents.beforeSlide}.autoplay`, () => {
             this.showProgressBar();
             if (!this.fromAuto && this.interval) {
                 this.cancelAuto();
@@ -96,7 +100,7 @@ export class Autoplay {
         });
 
         // restore autoplay if autoplay canceled from touchstart / dragstart
-        this.core.LGel.on('onAfterSlide.lg.autoplay', () => {
+        this.core.LGel.on(`${lGEvents.afterSlide}.autoplay`, () => {
             if (
                 this.pausedOnSlideChange &&
                 !this.interval &&

@@ -268,7 +268,7 @@ export class lgQuery {
 
         return this;
     }
-    trigger(event: string, detail?: any): this {
+    trigger<Detail>(event: string, detail?: Detail): this {
         if (!this.firstElement) {
             return this;
         }

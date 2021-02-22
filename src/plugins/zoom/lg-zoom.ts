@@ -1,6 +1,7 @@
 import { ZoomSettings, zoomSettings } from './lg-zoom-settings';
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
+import { lGEvents } from '../../lg-events';
 
 const $LG = window.$LG;
 interface Coords {
@@ -107,7 +108,7 @@ export class Zoom {
     enableZoomOnSlideItemLoad(): void {
         // Add zoomable class
         this.core.LGel.on(
-            'onSlideItemLoad.lg.zoom',
+            `${lGEvents.slideItemLoad}.zoom`,
             this.enableZoom.bind(this),
         );
     }
@@ -494,7 +495,7 @@ export class Zoom {
         });
 
         // Update zoom on resize and orientationchange
-        this.core.LGel.on('container-resize.lg.zoom', () => {
+        this.core.LGel.on(`${lGEvents.containerResize}.zoom`, () => {
             if (!this.core.lgOpened) return;
             this.setPageCords();
             this.zoomImage(this.scale);
@@ -518,16 +519,19 @@ export class Zoom {
             this.setActualSize(this.core.index);
         });
 
-        this.core.LGel.on('onBeforeOpen.lg.zoom', () => {
+        this.core.LGel.on(`${lGEvents.beforeOpen}.zoom`, () => {
             this.core.outer.find('.lg-item').first().removeClass('lg-zoomable');
         });
 
         // Reset zoom on slide change
-        this.core.LGel.on('onAfterSlide.lg.zoom', (event: CustomEvent) => {
-            const { prevIndex } = event.detail;
-            this.scale = 1;
-            this.resetZoom(prevIndex);
-        });
+        this.core.LGel.on(
+            `${lGEvents.afterSlide}.zoom`,
+            (event: CustomEvent) => {
+                const { prevIndex } = event.detail;
+                this.scale = 1;
+                this.resetZoom(prevIndex);
+            },
+        );
 
         // Drag option after zoom
         this.zoomDrag();
