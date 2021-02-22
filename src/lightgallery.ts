@@ -260,7 +260,7 @@ export class LightGallery {
             ? 'aria-describedby="' + this.settings.ariaDescribedby + '"'
             : '';
 
-        const containerClassName = `lg-container ${
+        const containerClassName = `lg-container ${this.settings.addClass} ${
             document.body !== this.settings.container ? 'lg-inline' : ''
         }`;
         const closeIcon =
@@ -285,9 +285,7 @@ export class LightGallery {
 
             <div id="${this.getIdName(
                 'lg-outer',
-            )}" class="lg-outer lg-hide-items ${
-            this.settings.addClass
-        } ${addClasses}">
+            )}" class="lg-outer lg-hide-items ${addClasses}">
                     <div id="${this.getIdName(
                         'lg-content',
                     )}" class="lg" style="width: ${
