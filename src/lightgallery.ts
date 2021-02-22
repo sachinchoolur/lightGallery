@@ -583,8 +583,8 @@ export class LightGallery {
         const captionHeight =
             this.settings.defaultCaptionHeight ||
             this.outer.find('.lg-sub-html').get().clientHeight;
-        const thumbHeight =
-            this.outer.find('.lg-thumb-outer').get().clientHeight || 0;
+        const thumbContainer = this.outer.find('.lg-thumb-outer').get();
+        const thumbHeight = thumbContainer ? thumbContainer.clientHeight : 0;
         const bottom = thumbHeight + captionHeight;
         return {
             top,
