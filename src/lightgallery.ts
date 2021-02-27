@@ -153,6 +153,10 @@ export class LightGallery {
             openGalleryAfter = this.buildStructure();
         }
 
+        this.LGel.trigger(lGEvents.init, {
+            instance: this,
+        });
+
         if (this.settings.keyPress) {
             this.keyPress();
         }
@@ -182,7 +186,7 @@ export class LightGallery {
                 const element = this.items[index];
                 // Using different namespace for click because click event should not unbind if selector is same object('this')
                 // @todo manage all event listners - should have namespace that represent element
-                $LG(element).on(`click.lgcustom-item-${index}`, (e) => {
+                $LG(element).on(`click.lgcustom-item`, (e) => {
                     e.preventDefault();
                     const currentItemIndex = this.settings.index || index;
                     this.openGallery(currentItemIndex, element);
@@ -421,14 +425,82 @@ export class LightGallery {
         currentSlide.find('.lg-video-cont').attr('style', lgVideoStyle);
     }
 
-    // Append new slides dynamically while gallery is open
-    // Items has to in the form of an array of dynamicEl
-    appendSlides(items: DynamicItem): void {
-        this.galleryItems = this.galleryItems.concat(items);
-        this.getElementById('lg-counter-all').html(
-            this.galleryItems.length + '',
-        );
-        this.LGel.trigger(lGEvents.appendSlides, { items });
+    /**
+     * Update slides dynamically.
+     * Add, edit or delete slides dynamically when lightGallery is opened.
+     * Modify the current gallery items and pass it via updateSlides method
+     * @note
+     * - Do not mutate existing lightGallery items directly.
+     * - Always pass new list of gallery items
+     * - You need to take care of thumbnails outside the gallery if any
+     * @param items Gallery items
+     * @param index After the update operation, which slide gallery should navigate to
+     * @category lGPublicMethods
+     * @example
+     * const plugin = lightGallery();
+     *
+     * // Adding slides dynamically
+     * let galleryItems = [
+     * // Access existing lightGallery items
+     * // galleryItems are automatically generated internally from the gallery HTML markup
+     * // or directly from dynamicItems when dynamic gallery is used
+     *   ...plugin.galleryItems,
+     *     ...[
+     *       {
+     *         src: 'img/img-1.png',
+     *           thumb: 'img/thumb1.png',
+     *         },
+     *     ],
+     *   ];
+     *   plugin.updateSlides(
+     *     galleryItems,
+     *     plugin.index,
+     *   );
+     *
+     *
+     * // Remove slides dynamically
+     * galleryItems = JSON.parse(
+     *   JSON.stringify(updateSlideInstance.galleryItems),
+     * );
+     * galleryItems.shift();
+     * updateSlideInstance.updateSlides(galleryItems, 1);
+     *
+     */
+    updateSlides(items: DynamicItem[], index: number): void {
+        if (this.index > items.length - 1) {
+            this.index = items.length - 1;
+        }
+        if (items.length === 1) {
+            this.index = 0;
+        }
+        if (!items.length) {
+            this.destroy();
+            return;
+        }
+        const currentSrc = this.galleryItems[index].src;
+        this.addSlideVideoInfo(items);
+        this.galleryItems = items;
+        this.$inner.empty();
+        this.currentItemsInDom = [];
+
+        let _index = 0;
+        // Find the current index based on source value of the slide
+        this.galleryItems.some((galleryItem, itemIndex) => {
+            if (galleryItem.src === currentSrc) {
+                _index = itemIndex;
+                return true;
+            }
+            return false;
+        });
+
+        this.currentItemsInDom = this.organizeSlideItems(_index, -1);
+        this.loadContent(_index, true);
+        this.getSlideItem(_index).addClass('lg-current');
+
+        this.index = _index;
+        this.updateCurrentCounter(_index);
+        this.updateCounterTotal();
+        this.LGel.trigger(lGEvents.updateSlides);
     }
 
     // Get gallery items based on multiple conditions
@@ -848,6 +920,7 @@ export class LightGallery {
         if (dummyImageLoaded) {
             this.LGel.trigger<SlideItemLoadDetail>(lGEvents.slideItemLoad, {
                 index,
+                delay: delay || 0,
             });
         }
         $el.find('.lg-object')
@@ -884,6 +957,7 @@ export class LightGallery {
             if (!dummyImageLoaded) {
                 this.LGel.trigger<SlideItemLoadDetail>(lGEvents.slideItemLoad, {
                     index,
+                    delay: delay || 0,
                 });
             }
         }, speed);
@@ -1341,30 +1415,22 @@ export class LightGallery {
     }
 
     /**
-    *   @desc slide function for lightgallery
-        ** Slide() gets call on start
-        ** ** Set lg.on true once slide() function gets called.
-        ** Call loadContent() on slide() function inside setTimeout
-        ** ** On first slide we do not want any animation like slide of fade
-        ** ** So on first slide( if lg.on if false that is first slide) loadContent() should start loading immediately
-        ** ** Else loadContent() should wait for the transition to complete.
-        ** ** So set timeout settings.speed + 50
-    <=> ** loadContent() will load slide content in to the particular slide
-        ** ** It has recursion (rec) parameter. if rec === true loadContent() will call preload() function.
-        ** ** preload will execute only when the previous slide is fully loaded (images iframe)
-        ** ** avoid simultaneous image load
-    <=> ** Preload() will check for settings.preload value and call loadContent() again accoring to preload value
-        ** loadContent()  <====> Preload();
-    
-    *   @param {Number} index - index of the slide
-    *   @param {Boolean} fromTouch - true if slide function called via touch event or mouse drag
-    *   @param {Boolean} fromThumb - true if slide function called via thumbnail click
-    *   @param {String} direction - Direction of the slide(next/prev)
-    */
+     * Goto a specific slide.
+     * @param {Number} index - index of the slide
+     * @param {Boolean} fromTouch - true if slide function called via touch event or mouse drag
+     * @param {Boolean} fromThumb - true if slide function called via thumbnail click
+     * @param {String} direction - Direction of the slide(next/prev)
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery();
+     *  // to go to 3rd slide
+     *  plugin.slide(2);
+     *
+     */
     slide(
         index: number,
-        fromTouch: boolean,
-        fromThumb: boolean,
+        fromTouch?: boolean,
+        fromThumb?: boolean,
         direction?: SlideDirection | false,
     ): void {
         const prevIndex = this.getPreviousSlideIndex();
@@ -1400,8 +1466,8 @@ export class LightGallery {
             this.LGel.trigger<BeforeSlideDetail>(lGEvents.beforeSlide, {
                 prevIndex,
                 index,
-                fromTouch,
-                fromThumb,
+                fromTouch: !!fromTouch,
+                fromThumb: !!fromThumb,
             });
 
             this.lgBusy = true;
@@ -1470,9 +1536,7 @@ export class LightGallery {
                     this.loadContent(index, true);
                 }
                 if (this.settings.counter) {
-                    this.getElementById('lg-counter-current').html(
-                        index + 1 + '',
-                    );
+                    this.updateCurrentCounter(index);
                 }
                 // Add title if this.settings.appendSubHtmlTo === lg-sub-html
                 if (this.settings.appendSubHtmlTo === '.lg-sub-html') {
@@ -1493,6 +1557,16 @@ export class LightGallery {
         }
 
         this.index = index;
+    }
+
+    updateCurrentCounter(index: number): void {
+        this.getElementById('lg-counter-current').html(index + 1 + '');
+    }
+
+    updateCounterTotal(): void {
+        this.getElementById('lg-counter-all').html(
+            this.galleryItems.length + '',
+        );
     }
 
     touchMove(startCoords: Coords, endCoords: Coords): void {
@@ -1782,8 +1856,13 @@ export class LightGallery {
     }
 
     /**
-     *  @desc Go to next slide
-     *  @param {Boolean} fromTouch - true if slide function called via touch event
+     * Go to next slide
+     * @param {Boolean} fromTouch - true if slide function called via touch event
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery();
+     *  plugin.goToNextSlide();
+     *
      */
     goToNextSlide(fromTouch?: boolean): void {
         let _loop = this.settings.loop;
@@ -1816,8 +1895,13 @@ export class LightGallery {
     }
 
     /**
-     *  @desc Go to previous slide
-     *  @param {Boolean} fromTouch - true if slide function called via touch event
+     * Go to previous slides
+     * @param {Boolean} fromTouch - true if slide function called via touch event
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery({});
+     *  plugin.goToPrevSlide();
+     *
      */
     goToPrevSlide(fromTouch?: boolean): void {
         let _loop = this.settings.loop;
@@ -2032,6 +2116,17 @@ export class LightGallery {
         }
     }
 
+    /**
+     * Destroy lightGallery.
+     *
+     * If true is passed as a parameter, destroy method will destroy the gallery completely.
+     * If parameter is undefined or false destroy will only close the gallery and plugins instance remains with the element.
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery();
+     *  plugin.destroy(true);
+     *
+     */
     destroy(clear?: boolean): void {
         if (!clear && !this.settings.closable) {
             return;
@@ -2041,18 +2136,19 @@ export class LightGallery {
             $LG(window).scrollTop(this.prevScrollTop);
         }
 
+        const currentItem = this.items[this.index];
         let transform: string | undefined;
-        if (this.zoomFromOrigin) {
+        if (this.zoomFromOrigin && currentItem) {
             const { top, bottom } = this.mediaContainerPosition;
             const imageSize = utils.getSize(
-                this.items[this.index],
+                currentItem,
                 this.$lgContent,
                 top + bottom,
                 this.galleryItems[this.index].__slideVideoInfo &&
                     this.settings.videoMaxSize,
             );
             transform = utils.getTransform(
-                this.items[this.index],
+                currentItem,
                 this.$lgContent,
                 top,
                 bottom,
@@ -2102,8 +2198,7 @@ export class LightGallery {
                 for (let index = 0; index < this.items.length; index++) {
                     const element = this.items[index];
 
-                    // Using different namespace for click because click event should not unbind if selector is same object('this')
-                    $LG(element).off(`click.lgcustom-item-${index}`);
+                    $LG(element).off(`click.lgcustom-item`);
                 }
             }
             $LG(window).off(`.lg.global${this.lgId}`);
@@ -2156,7 +2251,9 @@ export class LightGallery {
                 this.$container.remove();
             }
             if (!clear) {
-                this.LGel.trigger(lGEvents.afterClose);
+                this.LGel.trigger(lGEvents.afterClose, {
+                    instance: this,
+                });
             }
             this.LGel.get().focus();
 

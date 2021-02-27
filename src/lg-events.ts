@@ -11,7 +11,7 @@ export const lGEvents = {
     init: 'init.lg',
     hasVideo: 'hasVideo.lg',
     containerResize: 'containerResize.lg',
-    appendSlides: 'appendSlides.lg',
+    updateSlides: 'updateSlides.lg',
     afterAppendSubHtml: 'afterAppendSubHtml.lg',
     beforeOpen: 'beforeOpen.lg',
     afterOpen: 'afterOpen.lg',
@@ -33,6 +33,9 @@ export const lGEvents = {
  * @name init.lg
  */
 export interface InitEventDetail {
+    /**
+     * lightGallery plugin instance
+     */
     instance: LightGallery;
 }
 
@@ -157,6 +160,9 @@ export interface BeforeCloseDetail {}
  * @name afterClose
  */
 export interface AfterCloseDetail {
+    /**
+     * lightGallery plugin instance
+     */
     instance: LightGallery;
 }
 

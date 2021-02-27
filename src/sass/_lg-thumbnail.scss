@@ -28,6 +28,11 @@
                 @include transition-duration(0s !important);
             }
         }
+        &.lg-rebuilding-thumbnails {
+            .lg-thumb {
+                @include transition-duration(0s !important);
+            }
+        }
     }
     &.lg-thumb-open {
         .lg-thumb-outer {

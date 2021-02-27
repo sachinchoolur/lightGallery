@@ -520,7 +520,7 @@ export class Zoom {
         });
 
         this.core.LGel.on(`${lGEvents.beforeOpen}.zoom`, () => {
-            this.core.outer.find('.lg-item').first().removeClass('lg-zoomable');
+            this.core.outer.find('.lg-item').removeClass('lg-zoomable');
         });
 
         // Reset zoom on slide change

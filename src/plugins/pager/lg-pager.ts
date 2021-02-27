@@ -75,9 +75,10 @@ export class Pager {
             this.manageActiveClass.call(this, index);
         });
 
-        this.core.LGel.on(`${lGEvents.appendSlides}.pager`, (event) => {
-            const { items } = event.detail;
-            this.addNewPagers.call(this, items);
+        this.core.LGel.on(`${lGEvents.updateSlides}.pager`, () => {
+            $pagerOuter.empty();
+            $pagerOuter.html(this.getPagerHtml(this.core.galleryItems));
+            this.manageActiveClass(this.core.index);
         });
     }
 
@@ -87,11 +88,6 @@ export class Pager {
         $pagerCont.eq(index).addClass('lg-pager-active');
     }
 
-    private addNewPagers(items: DynamicItem[]): void {
-        this.core.outer
-            .find('.lg-pager-outer')
-            .append(this.getPagerHtml(items));
-    }
     destroy(clear?: boolean): void {
         if (clear) {
             this.core.outer.find('.lg-pager-outer').remove();

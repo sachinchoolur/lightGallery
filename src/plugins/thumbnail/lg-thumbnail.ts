@@ -104,7 +104,7 @@ export class Thumbnail {
         const $thumb = this.core.outer.find('.lg-thumb-item');
 
         this.loadVimeoThumbs($thumb, this.settings.vimeoThumbSize);
-        this.manageActiveClas();
+        this.manageActiveClassOnSlideChange();
         this.$lgThumb.first().on('click.lg touchend.lg', (e: CustomEvent) => {
             const $target = $LG(e.target);
             if (!$target.hasAttribute('data-lg-item-id')) {
@@ -140,8 +140,8 @@ export class Thumbnail {
             this.core.outer.removeClass('lg-thumb-open');
         });
 
-        this.core.LGel.on(`${lGEvents.appendSlides}.thumb`, (e) => {
-            this.addNewThumbnails(e.detail.items);
+        this.core.LGel.on(`${lGEvents.updateSlides}.thumb`, (e) => {
+            this.rebuildThumbnails();
         });
         this.core.LGel.on(`${lGEvents.containerResize}.thumb`, () => {
             if (!this.core.lgOpened) return;
@@ -284,24 +284,29 @@ export class Thumbnail {
         });
     }
 
-    addNewThumbnails(items: ThumbnailDynamicItem[]): void {
-        this.appendThumbItems(items);
-        this.thumbTotalWidth =
-            this.core.galleryItems.length *
-            (this.settings.thumbWidth + this.settings.thumbMargin);
-        this.$lgThumb.css('width', this.thumbTotalWidth + 'px');
-        this.manageActiveClas();
-        this.animateThumb(this.core.index);
-    }
-
-    appendThumbItems(items: ThumbnailDynamicItem[]): void {
-        this.setThumbItemHtml(items);
+    // Rebuild thumbnails
+    rebuildThumbnails(): void {
+        // Remove transitions
+        this.$thumbOuter.addClass('lg-rebuilding-thumbnails');
+        setTimeout(() => {
+            this.thumbTotalWidth =
+                this.core.galleryItems.length *
+                (this.settings.thumbWidth + this.settings.thumbMargin);
+            this.$lgThumb.css('width', this.thumbTotalWidth + 'px');
+            this.$lgThumb.empty();
+            this.setThumbItemHtml(
+                (this.core.galleryItems as unknown) as ThumbnailDynamicItem[],
+            );
+            this.animateThumb(this.core.index);
+        }, 50);
+        setTimeout(() => {
+            this.$thumbOuter.removeClass('lg-rebuilding-thumbnails');
+        }, 200);
     }
 
     // @ts-check
 
     setTranslate(value: number): void {
-        // jQuery supports Automatic CSS prefixing since jQuery 1.8.0
         this.$lgThumb.css(
             'transform',
             'translate3d(-' + value + 'px, 0px, 0px)',
@@ -497,7 +502,9 @@ export class Thumbnail {
 
         return `<div ${
             vimeoId ? 'data-vimeo-id="${vimeoId}"' : ''
-        } data-lg-item-id="${index}" class="lg-thumb-item" 
+        } data-lg-item-id="${index}" class="lg-thumb-item ${
+            index === this.core.index ? ' active' : ''
+        }" 
         style="width:${this.settings.thumbWidth}px; height: ${
             this.settings.thumbHeight
         };
@@ -506,13 +513,18 @@ export class Thumbnail {
         </div>`;
     }
 
-    setThumbItemHtml(items: ThumbnailDynamicItem[]): void {
+    getThumbItemHtml(items: ThumbnailDynamicItem[]): string {
         let thumbList = '';
         for (let i = 0; i < items.length; i++) {
             thumbList += this.getThumbHtml(items[i].thumb, i);
         }
 
-        this.$lgThumb.append(thumbList);
+        return thumbList;
+    }
+
+    setThumbItemHtml(items: ThumbnailDynamicItem[]): void {
+        const thumbList = this.getThumbItemHtml(items);
+        this.$lgThumb.html(thumbList);
     }
 
     // @todo - convert to js and ts
@@ -544,14 +556,12 @@ export class Thumbnail {
     }
 
     // Manage thumbnail active calss
-    manageActiveClas(): void {
-        const $thumb = this.core.outer.find('.lg-thumb-item');
-
+    manageActiveClassOnSlideChange(): void {
         // manage active class for thumbnail
-        $thumb.eq(this.core.index).addClass('active');
         this.core.LGel.on(
             `${lGEvents.beforeSlide}.thumb`,
             (event: CustomEvent) => {
+                const $thumb = this.core.outer.find('.lg-thumb-item');
                 const { index } = event.detail;
                 $thumb.removeClass('active');
                 $thumb.eq(index).addClass('active');
