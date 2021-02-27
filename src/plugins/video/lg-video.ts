@@ -477,10 +477,8 @@ export class Video {
             }
         }
     }
-    destroy(clear?: boolean): void {
-        if (clear) {
-            this.core.LGel.off('.lg.video');
-        }
+    destroy(): void {
+        this.core.LGel.off('.lg.video');
     }
 }
 

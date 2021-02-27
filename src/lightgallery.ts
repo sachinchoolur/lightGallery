@@ -184,13 +184,17 @@ export class LightGallery {
             // Using for loop instead of using bubbling as the items can be any html element.
             for (let index = 0; index < this.items.length; index++) {
                 const element = this.items[index];
+                const $element = $LG(element);
                 // Using different namespace for click because click event should not unbind if selector is same object('this')
                 // @todo manage all event listners - should have namespace that represent element
-                $LG(element).on(`click.lgcustom-item`, (e) => {
-                    e.preventDefault();
-                    const currentItemIndex = this.settings.index || index;
-                    this.openGallery(currentItemIndex, element);
-                });
+                const uuid = lgQuery.generateUUID();
+                $element
+                    .attr('data-lg-id', uuid)
+                    .on(`click.lgcustom-item-${uuid}`, (e) => {
+                        e.preventDefault();
+                        const currentItemIndex = this.settings.index || index;
+                        this.openGallery(currentItemIndex, element);
+                    });
             }
         }
     }
@@ -387,7 +391,7 @@ export class LightGallery {
 
         this.hideBars();
 
-        this.closeGallery();
+        this.manageCloseGallery();
         this.toggleMaximize();
 
         return this.buildModules();
@@ -474,7 +478,7 @@ export class LightGallery {
             this.index = 0;
         }
         if (!items.length) {
-            this.destroy();
+            this.closeGallery();
             return;
         }
         const currentSrc = this.galleryItems[index].src;
@@ -1670,7 +1674,7 @@ export class LightGallery {
                     this.settings.swipeToClose &&
                     distance > 100
                 ) {
-                    this.destroy();
+                    this.closeGallery();
                     return;
                 } else {
                     this.$backdrop.css('opacity', 1);
@@ -1950,7 +1954,7 @@ export class LightGallery {
                 ) {
                     this.outer.removeClass('lg-thumb-open');
                 } else {
-                    this.destroy();
+                    this.closeGallery();
                 }
             }
             if (this.lgOpened && this.galleryItems.length > 1) {
@@ -2082,11 +2086,11 @@ export class LightGallery {
         });
     }
 
-    closeGallery(): void {
+    manageCloseGallery(): void {
         if (!this.settings.closable) return;
         let mousedown = false;
         this.getElementById('lg-close').on('click.lg', () => {
-            this.destroy();
+            this.closeGallery();
         });
 
         if (this.settings.closeOnTap) {
@@ -2109,7 +2113,7 @@ export class LightGallery {
                 const target = $LG(e.target);
                 if (this.isSlideElement(target) && mousedown) {
                     if (!this.outer.hasClass('lg-dragging')) {
-                        this.destroy();
+                        this.closeGallery();
                     }
                 }
             });
@@ -2117,24 +2121,24 @@ export class LightGallery {
     }
 
     /**
-     * Destroy lightGallery.
+     * Close lightGallery.
      *
-     * If true is passed as a parameter, destroy method will destroy the gallery completely.
-     * If parameter is undefined or false destroy will only close the gallery and plugins instance remains with the element.
+     * Close lightGallery if it is opened
+     *
+     * @description If closable is false in the settings, you need to pass true via closeGallery method to force close gallery
+     * @return returns the estimated time to close gallery completely including the close animation duration
      * @category lGPublicMethods
      * @example
      *  const plugin = lightGallery();
-     *  plugin.destroy(true);
+     *  plugin.closeGallery();
      *
      */
-    destroy(clear?: boolean): void {
-        if (!clear && !this.settings.closable) {
-            return;
+    closeGallery(force?: boolean): number {
+        if (!this.lgOpened || (!this.settings.closable && !force)) {
+            return 0;
         }
-        if (!clear) {
-            this.LGel.trigger(lGEvents.beforeClose);
-            $LG(window).scrollTop(this.prevScrollTop);
-        }
+        this.LGel.trigger(lGEvents.beforeClose);
+        $LG(window).scrollTop(this.prevScrollTop);
 
         const currentItem = this.items[this.index];
         let transform: string | undefined;
@@ -2170,40 +2174,12 @@ export class LightGallery {
             // If the closing item doesn't have the lg-size attribute, remove this class to avoid the closing css conflicts
             this.outer.removeClass('lg-zoom-from-image');
         }
-        /**
-         * if d is false or undefined destroy will only close the gallery
-         * plugins instance remains with the element
-         *
-         * if d is true destroy will completely remove the plugin
-         */
 
         // Unbind all events added by lightGallery
         // @todo
         //this.$el.off('.lg.tm');
 
-        for (const key in this.modules) {
-            if (this.modules[key]) {
-                try {
-                    this.modules[key].destroy(clear);
-                } catch (err) {
-                    console.warn(
-                        `lightGallery:- make sure lightGallery ${key} module is properly destroyed`,
-                    );
-                }
-            }
-        }
-
-        if (clear) {
-            if (!this.settings.dynamic) {
-                for (let index = 0; index < this.items.length; index++) {
-                    const element = this.items[index];
-
-                    $LG(element).off(`click.lgcustom-item`);
-                }
-            }
-            $LG(window).off(`.lg.global${this.lgId}`);
-            this.LGel.off('.lg');
-        }
+        this.destroyModules();
 
         this.lGalleryOn = false;
         this.isDummyImageRemoved = false;
@@ -2246,11 +2222,7 @@ export class LightGallery {
 
             this.getSlideItem(this.index).removeClass('lg-start-end-progress');
             this.$inner.empty();
-
-            if (clear) {
-                this.$container.remove();
-            }
-            if (!clear) {
+            if (this.lgOpened) {
                 this.LGel.trigger(lGEvents.afterClose, {
                     instance: this,
                 });
@@ -2259,6 +2231,55 @@ export class LightGallery {
 
             this.lgOpened = false;
         }, removeTimeout + 100);
+        return removeTimeout + 100;
+    }
+
+    destroyModules(destroy?: true): void {
+        for (const key in this.modules) {
+            if (this.modules[key]) {
+                try {
+                    if (destroy) {
+                        this.modules[key].destroy();
+                    } else {
+                        this.modules[key].closeGallery();
+                    }
+                } catch (err) {
+                    console.warn(
+                        `lightGallery:- make sure lightGallery ${key} module is properly destroyed`,
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * Destroy lightGallery.
+     * Destroy lightGallery and its plugin instances completely
+     *
+     * @description This method also calls CloseGallery function internally
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery();
+     *  plugin.destroy();
+     *
+     */
+    destroy(): void {
+        const closeTimeout = this.closeGallery(true);
+        setTimeout(() => {
+            this.destroyModules(true);
+            if (!this.settings.dynamic) {
+                for (let index = 0; index < this.items.length; index++) {
+                    const element = this.items[index];
+                    const $element = $LG(element);
+                    $element.off(
+                        `click.lgcustom-item-${$element.attr('data-lg-id')}`,
+                    );
+                }
+            }
+            $LG(window).off(`.lg.global${this.lgId}`);
+            this.LGel.off('.lg');
+            this.$container.remove();
+        }, closeTimeout);
     }
 }
 

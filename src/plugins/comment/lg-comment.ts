@@ -133,10 +133,8 @@ export class CommentBox {
         });
     }
 
-    destroy(clear?: boolean): void {
-        if (clear) {
-            this.core.LGel.off('.lg.comment');
-        }
+    destroy(): void {
+        this.core.LGel.off('.lg.comment');
     }
 }
 

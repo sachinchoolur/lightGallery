@@ -1,5 +1,10 @@
 export interface AutoplaySettings {
     /**
+     * Enable autoplay plugin
+     */
+    autoplay: boolean;
+
+    /**
      * Enable slideshow autoplay
      */
     slideShowAutoplay: boolean;
@@ -30,6 +35,7 @@ export interface AutoplaySettings {
     appendAutoplayControlsTo: string;
 }
 export const autoplaySettings: AutoplaySettings = {
+    autoplay: true,
     slideShowAutoplay: false,
     slideShowInterval: 5000,
     progressBar: true,

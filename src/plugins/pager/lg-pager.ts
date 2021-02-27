@@ -88,11 +88,9 @@ export class Pager {
         $pagerCont.eq(index).addClass('lg-pager-active');
     }
 
-    destroy(clear?: boolean): void {
-        if (clear) {
-            this.core.outer.find('.lg-pager-outer').remove();
-            this.core.LGel.off('.lg.pager');
-        }
+    destroy(): void {
+        this.core.outer.find('.lg-pager-outer').remove();
+        this.core.LGel.off('.lg.pager');
     }
 }
 

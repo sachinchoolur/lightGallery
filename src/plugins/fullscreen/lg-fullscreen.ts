@@ -112,19 +112,20 @@ export class FullScreen {
             });
     }
 
-    destroy(clear?: boolean): void {
+    closeGallery(): void {
         // exit from fullscreen if activated
         if (this.isFullScreen()) {
             this.exitFullscreen();
         }
-        if (clear) {
-            $LG(document).off(
-                `fullscreenchange.lg.global${this.core.lgId} 
-                webkitfullscreenchange.lg.global${this.core.lgId} 
-                mozfullscreenchange.lg.global${this.core.lgId} 
-                MSFullscreenChange.lg.global${this.core.lgId}`,
-            );
-        }
+    }
+
+    destroy(): void {
+        $LG(document).off(
+            `fullscreenchange.lg.global${this.core.lgId} 
+            webkitfullscreenchange.lg.global${this.core.lgId} 
+            mozfullscreenchange.lg.global${this.core.lgId} 
+            MSFullscreenChange.lg.global${this.core.lgId}`,
+        );
     }
 }
 

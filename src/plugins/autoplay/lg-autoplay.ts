@@ -39,7 +39,9 @@ export class Autoplay {
             this.settings.progressBar = false;
         }
 
-        this.init();
+        if (this.settings.autoplay) {
+            this.init();
+        }
 
         return this;
     }
@@ -197,13 +199,15 @@ export class Autoplay {
         this.interval = false;
     }
 
-    destroy(clear?: boolean): void {
+    closeGallery(): void {
         this.cancelAuto();
-        if (clear) {
+    }
+    destroy(): void {
+        if (this.settings.autoplay) {
             this.core.outer.find('.lg-progress-bar').remove();
-            // Remove all event listeners added by autoplay plugin
-            this.core.LGel.off('.lg.autoplay');
         }
+        // Remove all event listeners added by autoplay plugin
+        this.core.LGel.off('.lg.autoplay');
     }
 }
 

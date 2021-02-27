@@ -70,12 +70,10 @@ export class Share {
             );
         }, 100);
     }
-    destroy(clear?: boolean): void {
-        if (clear) {
-            this.core.outer.find('.lg-dropdown-overlay').remove();
-            this.core.outer.find('.lg-share').remove();
-            this.core.LGel.off('.lg.share');
-        }
+    destroy(): void {
+        this.core.outer.find('.lg-dropdown-overlay').remove();
+        this.core.outer.find('.lg-share').remove();
+        this.core.LGel.off('.lg.share');
     }
 }
 

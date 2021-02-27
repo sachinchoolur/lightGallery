@@ -1150,15 +1150,16 @@ export class Zoom {
         });
     }
 
-    destroy(clear?: boolean): void {
+    closeGallery(): void {
         this.resetZoom();
-        if (clear) {
-            // Unbind all events added by lightGallery zoom plugin
-            $LG(window).off(`.lg.zoom.global${this.core.lgId}`);
-            this.core.LGel.off('.lg.zoom');
-            clearTimeout(this.zoomableTimeout);
-            this.zoomableTimeout = false;
-        }
+    }
+
+    destroy(): void {
+        // Unbind all events added by lightGallery zoom plugin
+        $LG(window).off(`.lg.zoom.global${this.core.lgId}`);
+        this.core.LGel.off('.lg.zoom');
+        clearTimeout(this.zoomableTimeout);
+        this.zoomableTimeout = false;
     }
 }
 

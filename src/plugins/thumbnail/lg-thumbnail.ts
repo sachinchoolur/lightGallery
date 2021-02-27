@@ -599,12 +599,8 @@ export class Thumbnail {
         });
     }
 
-    destroy(clear?: boolean): void {
-        if (
-            clear &&
-            this.settings.thumbnail &&
-            this.core.galleryItems.length > 1
-        ) {
+    destroy(): void {
+        if (this.settings.thumbnail && this.core.galleryItems.length > 1) {
             $LG(window).off(`.lg.thumb.global${this.core.lgId}`);
             this.core.LGel.off('.lg.thumb');
             this.$thumbOuter.remove();

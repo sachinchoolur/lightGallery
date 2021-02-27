@@ -184,13 +184,13 @@ export class Rotate {
         this.applyStyles();
     }
 
-    destroy(clear?: boolean): void {
+    closeGallery(): void {
         this.rotateValuesList = {};
+    }
 
-        if (clear) {
-            // Unbind all events added by lightGallery rotate plugin
-            this.core.LGel.off('.lg.rotate');
-        }
+    destroy(): void {
+        // Unbind all events added by lightGallery rotate plugin
+        this.core.LGel.off('.lg.rotate');
     }
 }
 

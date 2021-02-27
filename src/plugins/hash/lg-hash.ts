@@ -102,18 +102,19 @@ export class Hash {
         if (_hash.indexOf('lg=' + this.core.settings.galleryId) > -1) {
             this.core.slide(index, false, false);
         } else if (this.core.lGalleryOn) {
-            this.core.destroy();
+            this.core.closeGallery();
         }
     }
 
-    destroy(clear?: boolean): void {
+    closeGallery(): void {
         if (!this.settings.hash) {
             return;
         }
-        if (clear) {
-            this.core.LGel.off('.lg.hash');
-            $LG(window).off(`hashchange.lg.hash.global${this.core.lgId}`);
-        }
+    }
+
+    destroy(): void {
+        this.core.LGel.off('.lg.hash');
+        $LG(window).off(`hashchange.lg.hash.global${this.core.lgId}`);
     }
 }
 

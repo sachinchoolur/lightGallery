@@ -32,7 +32,7 @@ export const lGEvents = {
  * Fired only once when lightGallery is initialized
  * @name init.lg
  */
-export interface InitEventDetail {
+export interface InitDetail {
     /**
      * lightGallery plugin instance
      */
