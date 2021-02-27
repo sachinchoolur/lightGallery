@@ -68,6 +68,12 @@ export interface SlideItemLoadDetail {
      * Index of the slide
      */
     index: number;
+    /**
+     * First time when an item is loaded lightGallery adds some delay for showing the completed item
+     * to show transition effect on item load
+     * Respect the delay when you use this event
+     */
+    delay: number;
 }
 
 /**
