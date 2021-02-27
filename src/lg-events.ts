@@ -156,7 +156,9 @@ export interface BeforeCloseDetail {}
  * Fired immediately once lightGallery is closed.
  * @name afterClose
  */
-export interface AfterCloseDetail {}
+export interface AfterCloseDetail {
+    instance: LightGallery;
+}
 
 /**
  * Fired immediately before each "next" slide transition
