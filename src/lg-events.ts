@@ -1,3 +1,4 @@
+import { LightGallery } from './lightgallery';
 import { VideoSource } from './plugins/video/lg-video';
 
 /**
@@ -7,6 +8,7 @@ import { VideoSource } from './plugins/video/lg-video';
  * */
 export const lGEvents = {
     afterAppendSlide: 'afterAppendSlide.lg',
+    init: 'init.lg',
     hasVideo: 'hasVideo.lg',
     containerResize: 'containerResize.lg',
     appendSlides: 'appendSlides.lg',
@@ -25,6 +27,14 @@ export const lGEvents = {
     beforeClose: 'beforeClose.lg',
     afterClose: 'afterClose.lg',
 };
+
+/**
+ * Fired only once when lightGallery is initialized
+ * @name init.lg
+ */
+export interface InitEventDetail {
+    instance: LightGallery;
+}
 
 /**
  * Fired when the slide content has been inserted into it's slide container.
