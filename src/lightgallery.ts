@@ -1066,7 +1066,9 @@ export class LightGallery {
             if (iframe) {
                 const markup = utils.getIframeMarkup(
                     src,
-                    this.settings.iframeMaxWidth,
+                    this.settings.iframeWidth,
+                    this.settings.iframeHeight,
+                    currentDynamicItem.iframeTitle,
                 );
                 $currentSlide.prepend(markup);
             } else if (poster) {

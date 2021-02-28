@@ -28,6 +28,11 @@ export interface DynamicItem {
     title: string;
 
     /**
+     * Title for iframe
+     */
+    iframeTitle: string;
+
+    /**
      * Caption for the slide
      * @description You can either pass the HTML markup or the ID or class name of the element which contains the captions
      */
@@ -110,6 +115,7 @@ export interface DynamicItem {
      * Note: Pinterest requires absolute URL
      */
     pinterestShareUrl: string;
+
     /**
      * Description for Pinterest post.
      */
@@ -135,6 +141,7 @@ const defaultDynamicOptions = [
     'width',
     'facebookShareUrl',
     'tweetText',
+    'iframeTitle',
     'twitterShareUrl',
     'pinterestShareUrl',
     'pinterestText',
@@ -246,9 +253,15 @@ const utils = {
         return transform;
     },
 
-    getIframeMarkup(src: string, iframeMaxWidth: number | string): string {
-        return `<div class="lg-video-cont lg-has-iframe" style="max-width:${iframeMaxWidth}">
-                    <iframe class="lg-object" frameborder="0" src="${src}"  allowfullscreen="true"></iframe>
+    getIframeMarkup(
+        src: string,
+        iframeWidth: string,
+        iframeHeight: string,
+        iframeTitle?: string,
+    ): string {
+        const title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
+        return `<div class="lg-video-cont lg-has-iframe" style="width:${iframeWidth}; height: ${iframeHeight}">
+                    <iframe class="lg-object" frameborder="0" ${title} src="${src}"  allowfullscreen="true"></iframe>
                 </div>`;
     },
 

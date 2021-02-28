@@ -305,9 +305,14 @@ export interface LightGallerySettings {
     index: false | number;
 
     /**
-     * Set maximum width for iframe.
+     * Set width for iframe.
      */
-    iframeMaxWidth: string;
+    iframeWidth: string;
+
+    /**
+     * Set width for iframe.
+     */
+    iframeHeight: string;
 
     /**
      * Enable download button.
@@ -462,7 +467,8 @@ export const lightGallerySettings: LightGallerySettings = {
     nextHtml: '',
     prevHtml: '',
     index: false,
-    iframeMaxWidth: '100%',
+    iframeWidth: '100%',
+    iframeHeight: '100%',
     download: true,
     counter: true,
     appendCounterTo: '.lg-toolbar',
