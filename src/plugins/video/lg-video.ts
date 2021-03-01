@@ -114,7 +114,13 @@ export class Video {
      * @param {Event} event - Javascript Event object.
      */
     onHasVideo(event: CustomEventHasVideo): void {
-        const { index, src, html5Video, hasPoster } = event.detail;
+        const {
+            index,
+            src,
+            html5Video,
+            hasPoster,
+            isFirstSlide,
+        } = event.detail;
         if (!hasPoster) {
             // All functions are called separately if poster exist in loadVideoOnPosterClick function
 
@@ -129,7 +135,7 @@ export class Video {
             this.gotoNextSlideOnVideoEnd(src, index);
         }
 
-        if (this.settings.autoplayFirstVideo && !this.core.lGalleryOn) {
+        if (this.settings.autoplayFirstVideo && isFirstSlide) {
             if (hasPoster) {
                 const $slide = this.core.getSlideItem(index);
                 this.loadVideoOnPosterClick($slide);
@@ -167,14 +173,11 @@ export class Video {
      * @param {number} index - Current index of the slide
      */
     onAfterSlide(event: CustomEvent): void {
-        const { prevIndex, index } = event.detail;
+        const { index } = event.detail;
         if (this.settings.autoplayVideoOnSlide && this.core.lGalleryOn) {
-            this.core.getSlideItem(prevIndex).removeClass('lg-video-playing');
             setTimeout(() => {
                 const $slide = this.core.getSlideItem(index);
-                if (
-                    $slide.find('.lg-object').first().hasClass('lg-has-poster')
-                ) {
+                if (!$slide.hasClass('lg-video-loaded')) {
                     this.loadVideoOnPosterClick($slide);
                 } else {
                     this.playVideo(index);
@@ -204,7 +207,7 @@ export class Video {
         addClass: any,
         index: number,
         html5Video: VideoSource,
-    ) {
+    ): string {
         let video = '';
         const videoInfo =
             this.core.galleryItems[(index as unknown) as number]
@@ -278,7 +281,7 @@ export class Video {
     appendVideos(
         el: lgQuery,
         videoParams: { src: any; addClass: any; index: any; html5Video: any },
-    ) {
+    ): void {
         const videoHtml = this.getVideoHtml(
             videoParams.src,
             videoParams.addClass,
@@ -426,13 +429,10 @@ export class Video {
 
     loadVideoOnPosterClick($el: lgQuery) {
         // check slide has poster
-        if (
-            $el.find('.lg-object').first().hasClass('lg-has-poster') &&
-            $el.find('.lg-object').first().style().display !== 'none'
-        ) {
+        if (!$el.hasClass('lg-video-loaded')) {
             // check already video element present
             if (!$el.hasClass('lg-has-video')) {
-                $el.addClass('lg-video-playing lg-has-video');
+                $el.addClass('lg-has-video');
 
                 let _html;
 
@@ -451,29 +451,23 @@ export class Video {
                 });
 
                 this.gotoNextSlideOnVideoEnd(_src, this.core.index);
-                this.playVideo(this.core.index);
 
                 const $tempImg = $el.find('.lg-object').first().get();
 
                 // @todo make sure it is working
                 $el.find('.lg-video-cont').first().append($tempImg);
+                $el.addClass('lg-video-loading');
 
-                // @todo loading icon for html5 videos also
-                // for showing the loading indicator while loading video
-                if (
-                    !$el.find('.lg-video-object').first().hasClass('lg-html5')
-                ) {
-                    $el.removeClass('lg-complete');
-                    $el.find('.lg-video-object')
-                        .first()
-                        .on('load.lg error.lg', () => {
-                            $el.addClass('lg-complete');
-                        });
-                }
+                $el.find('.lg-video-object')
+                    .first()
+                    .on('load.lg error.lg loadeddata.lg', () => {
+                        setTimeout(() => {
+                            $el.addClass('lg-video-loaded');
+                            this.playVideo(this.core.index);
+                        }, 50);
+                    });
             } else {
                 this.playVideo(this.core.index);
-
-                $el.addClass('lg-video-playing');
             }
         }
     }

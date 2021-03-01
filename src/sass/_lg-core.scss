@@ -213,20 +213,20 @@
     &.lg-show-after-load {
         .lg-item {
             .lg-object,
-            .lg-video-play {
+            .lg-video-play-button {
                 opacity: 0;
                 @include transition(opacity 0.15s ease 0s);
             }
             &.lg-zoom-from-image {
                 .lg-object,
-                .lg-video-play {
+                .lg-video-play-button {
                     opacity: 1;
                 }
             }
 
             &.lg-complete {
                 .lg-object,
-                .lg-video-play {
+                .lg-video-play-button {
                     opacity: 1;
                 }
             }

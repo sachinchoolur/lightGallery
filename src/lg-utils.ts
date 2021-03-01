@@ -328,9 +328,26 @@ const utils = {
         }
 
         return `<div class="lg-video-cont ${videoClass}" style="${videoContStyle}">
-            <span class="lg-video-play"></span>
+                <div class="lg-video-play-button">
+                <svg
+                    viewBox="0 0 20 20"
+                    preserveAspectRatio="xMidYMid"
+                    focusable="false"
+                    aria-labelledby="Play video"
+                    role="img"
+                    class="lg-video-play-icon"
+                >
+                    <title>Play video</title>
+                    <polygon class="lg-video-play-icon-inner" points="1,0 20,10 1,20"></polygon>
+                </svg>
+                <svg class="lg-video-play-icon-bg" viewBox="0 0 50 50" focusable="false">
+                    <circle cx="50%" cy="50%" r="20"></circle></svg>
+                <svg class="lg-video-play-icon-circle" viewBox="0 0 50 50" focusable="false">
+                    <circle cx="50%" cy="50%" r="20"></circle>
+                </svg>
+            </div>
             ${dummyImg || ''}
-            <img class="lg-object lg-has-poster" src="${_poster}" />
+            <img class="lg-object lg-video-poster" src="${_poster}" />
         </div>`;
     },
 

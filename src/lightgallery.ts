@@ -1073,11 +1073,12 @@ export class LightGallery {
                 $currentSlide.prepend(markup);
             } else if (poster) {
                 let dummyImg = '';
-                if (
+                const isFirstSlide = !this.lGalleryOn;
+                const hasStartAnimation =
                     !this.lGalleryOn &&
                     this.zoomFromOrigin &&
-                    this.currentImageSize
-                ) {
+                    this.currentImageSize;
+                if (hasStartAnimation) {
                     dummyImg = this.getDummyImageContent(
                         $currentSlide,
                         index,
@@ -1092,12 +1093,19 @@ export class LightGallery {
                     videoInfo,
                 );
                 $currentSlide.prepend(markup);
-                this.LGel.trigger(lGEvents.hasVideo, {
-                    index,
-                    src: src,
-                    html5Video: _html5Video,
-                    hasPoster: true,
-                });
+                const delay =
+                    (hasStartAnimation
+                        ? this.settings.startAnimationDuration
+                        : this.settings.backdropDuration) + 100;
+                setTimeout(() => {
+                    this.LGel.trigger(lGEvents.hasVideo, {
+                        index,
+                        src: src,
+                        html5Video: _html5Video,
+                        hasPoster: true,
+                        isFirstSlide,
+                    });
+                }, delay);
             } else if (videoInfo) {
                 const markup = `<div class="lg-video-cont " style="${lgVideoStyle}"></div>`;
                 $currentSlide.prepend(markup);
@@ -2076,8 +2084,13 @@ export class LightGallery {
     }
 
     isPosterElement(target: lgQuery): boolean {
+        const playButton = this.getSlideItem(this.index)
+            .find('.lg-video-play-button')
+            .get();
         return (
-            target.hasClass('lg-has-poster') || target.hasClass('lg-video-play')
+            target.hasClass('lg-video-poster') ||
+            target.hasClass('lg-video-play-button') ||
+            (playButton && playButton.contains(target.get()))
         );
     }
 
@@ -2243,7 +2256,8 @@ export class LightGallery {
                     if (destroy) {
                         this.modules[key].destroy();
                     } else {
-                        this.modules[key].closeGallery();
+                        this.modules[key].closeGallery &&
+                            this.modules[key].closeGallery();
                     }
                 } catch (err) {
                     console.warn(
