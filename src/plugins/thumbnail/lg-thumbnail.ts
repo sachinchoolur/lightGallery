@@ -123,8 +123,9 @@ export class Thumbnail {
             }, 50);
         });
 
-        this.core.LGel.on(`${lGEvents.beforeSlide}.thumb`, () => {
-            this.animateThumb(this.core.index);
+        this.core.LGel.on(`${lGEvents.beforeSlide}.thumb`, (event) => {
+            const { index } = event.detail;
+            this.animateThumb(index);
         });
         this.core.LGel.on(`${lGEvents.beforeOpen}.thumb`, () => {
             if (this.settings.showThumbByDefault) {
