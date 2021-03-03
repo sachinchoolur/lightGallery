@@ -234,7 +234,7 @@ export class Video {
                     ? '&' + param(this.settings.youTubePlayerParams)
                     : '');
 
-            video = `<iframe enablejsapi="true" allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="//www.youtube.com/embed/${
+            video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="//www.youtube.com/embed/${
                 videoInfo.youtube[1] + playerParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.vimeo) {
@@ -280,8 +280,13 @@ export class Video {
      */
     appendVideos(
         el: lgQuery,
-        videoParams: { src: any; addClass: any; index: any; html5Video: any },
-    ): void {
+        videoParams: {
+            src: string;
+            addClass: string;
+            index: number;
+            html5Video: any;
+        },
+    ): any {
         const videoHtml = this.getVideoHtml(
             videoParams.src,
             videoParams.addClass,
@@ -290,9 +295,15 @@ export class Video {
         );
         el.find('.lg-video-cont').append(videoHtml);
         const $videoElement = el.find('.lg-video-object').first();
-        if (this.settings.videojs) {
+        if (
+            this.settings.videojs &&
+            this.core.galleryItems[videoParams.index].__slideVideoInfo?.html5
+        ) {
             try {
-                videojs($videoElement.get(), this.settings.videojsOptions);
+                return videojs(
+                    $videoElement.get(),
+                    this.settings.videojsOptions,
+                );
             } catch (e) {
                 console.error(
                     'lightGallery:- Make sure you have included videojs',
@@ -420,7 +431,7 @@ export class Video {
                         typeof video === 'string' ? JSON.parse(video) : video;
                 }
 
-                this.appendVideos($el, {
+                const videoJsPlayer = this.appendVideos($el, {
                     src: _src,
                     addClass: '',
                     index: this.core.index,
@@ -435,18 +446,34 @@ export class Video {
                 $el.find('.lg-video-cont').first().append($tempImg);
                 $el.addClass('lg-video-loading');
 
+                videoJsPlayer &&
+                    videoJsPlayer.ready(() => {
+                        videoJsPlayer.on('loadedmetadata', () => {
+                            this.onVideoLoadAfterPosterClick(
+                                $el,
+                                this.core.index,
+                            );
+                        });
+                    });
+
                 $el.find('.lg-video-object')
                     .first()
                     .on('load.lg error.lg loadeddata.lg', () => {
                         setTimeout(() => {
-                            $el.addClass('lg-video-loaded');
-                            this.playVideo(this.core.index);
+                            this.onVideoLoadAfterPosterClick(
+                                $el,
+                                this.core.index,
+                            );
                         }, 50);
                     });
             } else {
                 this.playVideo(this.core.index);
             }
         }
+    }
+    onVideoLoadAfterPosterClick($el: lgQuery, index: number): void {
+        $el.addClass('lg-video-loaded');
+        this.playVideo(index);
     }
     destroy(): void {
         this.core.LGel.off('.lg.video');
