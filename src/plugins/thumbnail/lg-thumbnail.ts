@@ -100,10 +100,6 @@ export class Thumbnail {
 
     build(): void {
         this.setThumbMarkup();
-
-        const $thumb = this.core.outer.find('.lg-thumb-item');
-
-        this.loadVimeoThumbs($thumb, this.settings.vimeoThumbSize);
         this.manageActiveClassOnSlideChange();
         this.$lgThumb.first().on('click.lg touchend.lg', (e: CustomEvent) => {
             const $target = $LG(e.target);
@@ -446,64 +442,27 @@ export class Thumbnail {
         return thumbDragUtils;
     }
 
-    getVimeoErrorThumbSize(size: string): string {
-        let vimeoErrorThumbSize = '';
-        switch (size) {
-            case 'thumbnail_large':
-                vimeoErrorThumbSize = '640';
-                break;
-            case 'thumbnail_medium':
-                vimeoErrorThumbSize = '200x150';
-                break;
-            case 'thumbnail_small':
-                vimeoErrorThumbSize = '100x75';
-        }
-        return vimeoErrorThumbSize;
-    }
-
     getThumbHtml(thumb: any, index: number): string {
         const slideVideoInfo =
             this.core.galleryItems[index].__slideVideoInfo || {};
         let thumbImg;
-        let vimeoId = '';
 
-        if (
-            slideVideoInfo.youtube ||
-            slideVideoInfo.vimeo ||
-            slideVideoInfo.dailymotion
-        ) {
-            if (slideVideoInfo.youtube) {
-                if (this.settings.loadYouTubeThumbnail) {
-                    thumbImg =
-                        '//img.youtube.com/vi/' +
-                        slideVideoInfo.youtube[1] +
-                        '/' +
-                        this.settings.youTubeThumbSize +
-                        '.jpg';
-                } else {
-                    thumbImg = thumb;
-                }
-            } else if (slideVideoInfo.vimeo) {
-                if (this.settings.loadVimeoThumbnail) {
-                    const vimeoErrorThumbSize = this.getVimeoErrorThumbSize(
-                        this.settings.vimeoThumbSize,
-                    );
-                    thumbImg =
-                        '//i.vimeocdn.com/video/error_' +
-                        vimeoErrorThumbSize +
-                        '.jpg';
-                    vimeoId = slideVideoInfo.vimeo[1];
-                } else {
-                    thumbImg = thumb;
-                }
+        if (slideVideoInfo.youtube) {
+            if (this.settings.loadYouTubeThumbnail) {
+                thumbImg =
+                    '//img.youtube.com/vi/' +
+                    slideVideoInfo.youtube[1] +
+                    '/' +
+                    this.settings.youTubeThumbSize +
+                    '.jpg';
+            } else {
+                thumbImg = thumb;
             }
         } else {
             thumbImg = thumb;
         }
 
-        return `<div ${
-            vimeoId ? 'data-vimeo-id="${vimeoId}"' : ''
-        } data-lg-item-id="${index}" class="lg-thumb-item ${
+        return `<div data-lg-item-id="${index}" class="lg-thumb-item ${
             index === this.core.index ? ' active' : ''
         }" 
         style="width:${this.settings.thumbWidth}px; height: ${
@@ -526,28 +485,6 @@ export class Thumbnail {
     setThumbItemHtml(items: ThumbnailDynamicItem[]): void {
         const thumbList = this.getThumbItemHtml(items);
         this.$lgThumb.html(thumbList);
-    }
-
-    // @todo - convert to js and ts
-    loadVimeoThumbs($thumb: lgQuery, size: string) {
-        // Load vimeo thumbnails
-        // $thumb.each(function () {
-        //     var $this = $LG(this);
-        //     var vimeoVideoId = $this.attr("data-vimeo-id");
-        //     if (vimeoVideoId) {
-        //         $.getJSON(
-        //             "//www.vimeo.com/api/v2/video/" +
-        //                 vimeoVideoId +
-        //                 ".json?callback=?",
-        //             {
-        //                 format: "json",
-        //             },
-        //             function (data) {
-        //                 $this.find("img").attr("src", data[0][size]);
-        //             }
-        //         );
-        //     }
-        // });
     }
 
     setAnimateThumbStyles(): void {

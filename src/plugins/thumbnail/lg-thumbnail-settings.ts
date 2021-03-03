@@ -95,16 +95,6 @@ export interface ThumbnailsSettings {
      */
     //@todo add demo
     youTubeThumbSize: number;
-
-    /**
-     * You can automatically load thumbnails for vimeo videos from vimeo by setting loadVimeoThumbnail true.
-     */
-    loadVimeoThumbnail: boolean;
-
-    /**
-     * Thumbnail size for vimeo videos
-     */
-    vimeoThumbSize: 'thumbnail_large' | 'thumbnail_medium' | 'thumbnail_small';
 }
 
 export const thumbnailsSettings: ThumbnailsSettings = {
@@ -129,7 +119,4 @@ export const thumbnailsSettings: ThumbnailsSettings = {
 
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
-
-    loadVimeoThumbnail: true,
-    vimeoThumbSize: 'thumbnail_small',
 };
