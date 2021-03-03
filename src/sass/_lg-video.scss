@@ -115,7 +115,8 @@
 
 .lg-video-play-icon {
     position: absolute;
-    width: 32px;
+    width: 25%;
+    max-width: 120px;
     left: 50%;
     top: 50%;
     transform: translate3d(-50%, -50%, 0);
