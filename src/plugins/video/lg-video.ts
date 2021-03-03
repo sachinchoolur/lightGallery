@@ -24,7 +24,6 @@ import { LightGallery } from '../../lightgallery';
 import { lgQuery } from '../../lgQuery';
 import { CustomEventHasVideo } from '../../types';
 import { lGEvents } from '../../lg-events';
-declare let YT: any;
 declare let Vimeo: any;
 declare let videojs: any;
 export interface VideoSource {
@@ -231,10 +230,11 @@ export class Video {
 
             const playerParams =
                 youTubePlayerParams +
-                '&' +
-                param(this.settings.youTubePlayerParams);
+                (this.settings.youTubePlayerParams
+                    ? '&' + param(this.settings.youTubePlayerParams)
+                    : '');
 
-            video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="//www.youtube.com/embed/${
+            video = `<iframe enablejsapi="true" allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="//www.youtube.com/embed/${
                 videoInfo.youtube[1] + playerParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.vimeo) {
@@ -312,22 +312,6 @@ export class Video {
                 $videoElement.on('ended', () => {
                     this.core.goToNextSlide();
                 });
-            } else if (videoInfo.youtube) {
-                try {
-                    new YT.Player($videoElement.attr('id'), {
-                        events: {
-                            onStateChange: (event: { data: any }) => {
-                                if (event.data === YT.PlayerState.ENDED) {
-                                    this.core.goToNextSlide();
-                                }
-                            },
-                        },
-                    });
-                } catch (e) {
-                    console.error(
-                        'lightGallery:- Make sure you have included //www.youtube.com/iframe_api',
-                    );
-                }
             } else if (videoInfo.vimeo) {
                 try {
                     // https://github.com/vimeo/player.js/#ended
@@ -374,19 +358,12 @@ export class Video {
 
         if (videoInfo.youtube) {
             try {
-                // @todo Do not create multiple player instences
-                // Create and store in dynamic array
-                new YT.Player($videoElement.attr('id'), {
-                    events: {
-                        onReady: function (event: any) {
-                            event.target[`${action}Video`]();
-                        },
-                    },
-                });
-            } catch (e) {
-                console.error(
-                    'lightGallery:- Make sure you have included //www.youtube.com/iframe_api',
+                ($videoElement.get() as any).contentWindow.postMessage(
+                    `{"event":"command","func":"${action}Video","args":""}`,
+                    '*',
                 );
+            } catch (e) {
+                console.error(`lightGallery:- ${e}`);
             }
         } else if (videoInfo.vimeo) {
             try {

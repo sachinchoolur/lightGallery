@@ -46,6 +46,7 @@ export interface VideoSettings {
 
     /**
      * Go to next slide when video is ended
+     * Note - this doesn't work with YouTube videos at the moment
      */
     gotoNextSlideOnVideoEnd: boolean;
 
