@@ -8,9 +8,8 @@ export interface VideoSettings {
 
     /**
      * Change YouTube player parameters.
-     * @link https://developers.google.com/youtube/player_parameters
+     * <a href="https://developers.google.com/youtube/player_parameters">YouTube player parameters</a>
      * @example
-     * ```js
      * lightGallery(document.getElementById('lightGallery'), {
      *     youTubePlayerParams: {
      *         modestbranding : 1,
@@ -18,15 +17,13 @@ export interface VideoSettings {
      *         controls : 0
      *     }
      * })
-     * ```
      */
     youTubePlayerParams: any;
 
     /**
      * Change Vimeo player parameters.
-     * @link https://developer.vimeo.com/player/embedding#universal-parameters
+     * <a href="https://developer.vimeo.com/player/embedding#universal-parameters">Vimeo player parameters</a>
      * @example
-     * ```js
      * lightGallery(document.getElementById('lightGallery'), {
      *     vimeoPlayerParams: {
      *         byline : 0,
@@ -34,7 +31,6 @@ export interface VideoSettings {
      *         color : 'CCCCCC'
      *     }
      * })
-     * ```
      */
     vimeoPlayerParams: any;
 

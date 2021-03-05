@@ -375,9 +375,20 @@ export interface LightGallerySettings {
      * ```
      * ```js
      * lightGallery(document.getElementById('lightGallery'), {
-     *     extraProps: ['dataCustomProp']
+     *     extraProps: ['customProp']
      * })
      * ```
+     * Note - If you are using dynamic mode, you can pass any custom prop in the dynamicItem
+     *  * ```js
+     * lightGallery(document.getElementById('lightGallery'), {
+     *     dynamic: true,
+     *     dynamicEl: [{
+     *         src: 'img/img1.jpg',
+     *         customProp:'abc',
+     *     }]
+     * })
+     * ```
+     *
      */
     extraProps: string[];
 

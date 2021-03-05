@@ -1,7 +1,6 @@
 import { DynamicItem } from '../../lg-utils';
-import { lgQuery } from '../../lgQuery';
 
-function getPinterestShareLink(galleryItem: DynamicItem) {
+export function getPinterestShareLink(galleryItem: DynamicItem): string {
     const pinterestBaseUrl = 'http://www.pinterest.com/pin/create/button/?url=';
     const description = galleryItem.pinterestText;
     const media = encodeURIComponent(galleryItem.src);
@@ -16,12 +15,4 @@ function getPinterestShareLink(galleryItem: DynamicItem) {
         '&description=' +
         description
     );
-}
-
-export function setPinterestShareLink(
-    selector: lgQuery,
-    galleryItem: DynamicItem,
-): void {
-    const href = getPinterestShareLink(galleryItem);
-    selector.attr('href', href);
 }

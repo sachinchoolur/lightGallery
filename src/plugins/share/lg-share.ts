@@ -1,31 +1,42 @@
 import { ShareSettings, shareSettings } from './lg-share-settings';
 
-import { getShareListHTML } from './lg-share-utils';
-import setLgShareMarkup from './lg-share-markup';
-
-import { setFacebookShareLink } from './lg-fb-share-utils';
-import { setTwitterShareLink } from './lg-twitter-share-utils';
-import { setPinterestShareLink } from './lg-pinterest-share-utils';
+import { getFacebookShareLink } from './lg-fb-share-utils';
+import { getTwitterShareLink } from './lg-twitter-share-utils';
+import { getPinterestShareLink } from './lg-pinterest-share-utils';
 import { LightGallery } from '../../lightgallery';
 import { lGEvents } from '../../lg-events';
+import { DynamicItem } from '../../lg-utils';
+export interface ShareOption {
+    selector: string;
+    dropdownHTML: string;
+    generateLink: (galleryItem: DynamicItem) => string;
+}
 
+interface DefaultShareOptions extends ShareOption {
+    type: string;
+}
 export class Share {
     core: LightGallery;
     settings: ShareSettings;
+    private shareOptions: ShareOption[] = [];
     constructor(instance: LightGallery) {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
         this.settings = Object.assign({}, shareSettings, this.core.settings);
-
-        this.init();
+        if (this.settings.share) {
+            this.init();
+        }
 
         return this;
     }
 
-    init() {
-        setLgShareMarkup(this.core.outer);
-
+    private init() {
+        this.shareOptions = [
+            ...this.getDefaultShareOptions(),
+            ...this.settings.additionalShareOptions,
+        ];
+        this.setLgShareMarkup();
         this.core.outer
             .find('.lg-share .lg-dropdown')
             .append(this.getShareListHtml());
@@ -36,41 +47,105 @@ export class Share {
         );
     }
 
-    getShareListHtml() {
+    private getShareListHtml() {
         let shareHtml = '';
-        shareHtml += this.settings.facebook
-            ? getShareListHTML('facebook', this.settings.facebookDropdownText)
-            : '';
-        shareHtml += this.settings.twitter
-            ? getShareListHTML('twitter', this.settings.twitterDropdownText)
-            : '';
-        shareHtml += this.settings.pinterest
-            ? getShareListHTML('pinterest', this.settings.pinterestDropdownText)
-            : '';
+        this.shareOptions.forEach((shareOption) => {
+            shareHtml += shareOption.dropdownHTML;
+        });
+
         return shareHtml;
     }
 
-    onAfterSlide(event: CustomEvent) {
+    setLgShareMarkup(): void {
+        this.core.outer.find('.lg-toolbar').append(
+            `<button type="button aria-label="Share" aria-haspopup="true" aria-expanded="false" class="lg-share lg-icon">
+                <ul class="lg-dropdown" style="position: absolute;"></ul></button>`,
+        );
+
+        this.core.outer
+            .find('.lg')
+            .append('<div class="lg-dropdown-overlay"></div>');
+        const $shareButton = this.core.outer.find('.lg-share');
+        $shareButton.first().on('click.lg', () => {
+            this.core.outer.toggleClass('lg-dropdown-active');
+            if (this.core.outer.hasClass('lg-dropdown-active')) {
+                this.core.outer.attr('aria-expanded', true);
+            } else {
+                this.core.outer.attr('aria-expanded', false);
+            }
+        });
+
+        this.core.outer
+            .find('.lg-dropdown-overlay')
+            .first()
+            .on('click.lg', () => {
+                this.core.outer.removeClass('lg-dropdown-active');
+                this.core.outer.attr('aria-expanded', false);
+            });
+    }
+
+    private onAfterSlide(event: CustomEvent) {
         const { index } = event.detail;
-        console.log('calling');
+        const currentItem = this.core.galleryItems[index];
         setTimeout(() => {
-            setFacebookShareLink(
-                this.core.outer.find('.lg-share-facebook'),
-                this.core.galleryItems[index],
-            );
-
-            setTwitterShareLink(
-                this.core.outer.find('.lg-share-twitter'),
-                this.core.galleryItems[index],
-            );
-
-            setPinterestShareLink(
-                this.core.outer.find('.lg-share-pinterest'),
-                this.core.galleryItems[index],
-            );
+            this.shareOptions.forEach((shareOption) => {
+                const selector = shareOption.selector;
+                this.core.outer
+                    .find(selector)
+                    .attr('href', shareOption.generateLink(currentItem));
+            });
         }, 100);
     }
-    destroy(): void {
+
+    private getShareListItemHTML(type: string, text: string): string {
+        return `<li><a class="lg-share-${type}" target="_blank"><span class="lg-icon"></span><span class="lg-dropdown-text">${text}</span></a></li>`;
+    }
+
+    private getDefaultShareOptions(): DefaultShareOptions[] {
+        return [
+            ...(this.settings.facebook
+                ? [
+                      {
+                          type: 'facebook',
+                          generateLink: getFacebookShareLink,
+                          dropdownHTML: this.getShareListItemHTML(
+                              'facebook',
+                              this.settings.facebookDropdownText,
+                          ),
+                          selector: '.lg-share-facebook',
+                      },
+                  ]
+                : []),
+            ...(this.settings.twitter
+                ? [
+                      {
+                          type: 'twitter',
+                          generateLink: getTwitterShareLink,
+                          dropdownHTML: this.getShareListItemHTML(
+                              'twitter',
+                              this.settings.twitterDropdownText,
+                          ),
+                          selector: '.lg-share-twitter',
+                      },
+                  ]
+                : []),
+            ...(this.settings.pinterest
+                ? [
+                      {
+                          type: 'pinterest',
+                          generateLink: getPinterestShareLink,
+                          dropdownHTML: this.getShareListItemHTML(
+                              'pinterest',
+                              this.settings.pinterestDropdownText,
+                          ),
+                          selector: '.lg-share-pinterest',
+                      },
+                  ]
+                : []),
+        ];
+    }
+
+    public destroy(): void {
         this.core.outer.find('.lg-dropdown-overlay').remove();
         this.core.outer.find('.lg-share').remove();
         this.core.LGel.off('.lg.share');

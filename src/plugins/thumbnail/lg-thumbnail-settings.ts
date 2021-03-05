@@ -36,17 +36,13 @@ export interface ThumbnailsSettings {
      * and set value of this option to the name of your custom attribute.
      *
      * @example
-     * HTML:
-     * ```html
      * <div id="lightGallery">
      *     <a href="a.jpg" data-external-thumb-image="images/externalThumb.jpg" ><img src="thumb.jpg" /></a>
      * </div>
-     * ```
-     * ```js
+     *
      * lightGallery(document.getElementById('lightGallery'), {
      *     exThumbImage: 'data-external-thumb-image'
      * })
-     * ```
      */
     exThumbImage: false;
 

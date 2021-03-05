@@ -1,3 +1,5 @@
+import { ShareOption } from './lg-share';
+
 export interface ShareSettings {
     /**
      * Enable/Disable share options
@@ -34,6 +36,14 @@ export interface ShareSettings {
 
      */
     pinterestDropdownText: string;
+
+    /**
+     * Array of additional share options
+     *
+     * This can be used to build additional share options.
+     * <a href="/demos/share/">Demo</a>
+     */
+    additionalShareOptions: ShareOption[];
 }
 
 export const shareSettings = {
@@ -44,4 +54,5 @@ export const shareSettings = {
     twitterDropdownText: 'Twitter',
     pinterest: true,
     pinterestDropdownText: 'Pinterest',
+    additionalShareOptions: [],
 };
