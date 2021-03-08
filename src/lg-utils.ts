@@ -235,19 +235,18 @@ const utils = {
         const elHeight = LGel.height();
 
         const elStyle = LGel.style();
-
         let x =
             (wWidth - elWidth) / 2 -
-            (LGel.offset().left +
-                parseFloat(elStyle.paddingLeft) +
-                parseFloat(elStyle.borderLeft)) +
+            LGel.offset().left +
+            (parseFloat(elStyle.paddingLeft) || 0) +
+            (parseFloat(elStyle.borderLeft) || 0) +
             $LG(window).scrollLeft() +
             containerRect.left;
         let y =
             (wHeight - elHeight) / 2 -
-            (LGel.offset().top +
-                parseFloat(elStyle.paddingTop) +
-                parseFloat(elStyle.borderTop)) +
+            LGel.offset().top +
+            (parseFloat(elStyle.paddingTop) || 0) +
+            (parseFloat(elStyle.borderTop) || 0) +
             $LG(window).scrollTop() +
             top;
 
