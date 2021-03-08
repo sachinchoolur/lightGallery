@@ -68,7 +68,7 @@
     left: 0;
     z-index: $zindex-outer;
     text-align: left;
-    opacity: 0;
+    opacity: 0.001;
     outline: none;
     // For start/end transition
     @include transition(opacity 0.15s ease 0s);

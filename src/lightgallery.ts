@@ -899,18 +899,23 @@ export class LightGallery {
     setImgMarkup(src: string, $currentSlide: lgQuery, index: number): void {
         // Use the thumbnail as dummy image which will be resized to actual image size and
         // displayed on top of actual image
-        let imgContnet = '';
+        let imgContent = '';
         const currentDynamicItem = this.galleryItems[index];
         const alt = currentDynamicItem.alt
             ? 'alt="' + currentDynamicItem.alt + '"'
             : '';
 
         if (!this.lGalleryOn && this.zoomFromOrigin && this.currentImageSize) {
-            imgContnet = this.getDummyImageContent($currentSlide, index, alt);
+            imgContent = this.getDummyImageContent($currentSlide, index, alt);
         } else {
-            imgContnet = ` <img ${alt} class="lg-object lg-image" data-index="${index}" src="${src}" /> `;
+            imgContent = utils.getImgMarkup(
+                index,
+                src,
+                alt,
+                currentDynamicItem.sources,
+            );
         }
-        const imgMarkup = `<div class="lg-img-wrap"> ${imgContnet}</div>`;
+        const imgMarkup = `<picture class="lg-img-wrap"> ${imgContent}</picture>`;
         $currentSlide.prepend(imgMarkup);
     }
 
@@ -1180,7 +1185,12 @@ export class LightGallery {
                     $currentSlide
                         .find('.lg-img-wrap')
                         .append(
-                            `<img class="lg-object lg-image" data-index="${index}" src="${src}" />`,
+                            utils.getImgMarkup(
+                                index,
+                                src,
+                                '',
+                                currentDynamicItem.sources,
+                            ),
                         );
                     this.onLgObjectLoad(
                         $currentSlide,

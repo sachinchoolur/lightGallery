@@ -6,11 +6,24 @@ export interface ImageSize {
     height: number;
 }
 
+export interface ImageSources {
+    media?: string;
+    srcset: string;
+    sizes?: string;
+    type?: string;
+}
+
 export interface DynamicItem {
     /**
      * url of the media
      */
     src: string;
+
+    /**
+     * Source attributes for the picture element
+     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source#attributes
+     */
+    sources: ImageSources[];
 
     /**
      * Thumbnail url
@@ -127,6 +140,7 @@ export interface DynamicItem {
 
 const defaultDynamicOptions = [
     'src',
+    'sources',
     'subHtml',
     'subHtmlUrl',
     'html',
@@ -263,6 +277,30 @@ const utils = {
         return `<div class="lg-video-cont lg-has-iframe" style="width:${iframeWidth}; height: ${iframeHeight}">
                     <iframe class="lg-object" frameborder="0" ${title} src="${src}"  allowfullscreen="true"></iframe>
                 </div>`;
+    },
+
+    getImgMarkup(
+        index: number,
+        src: string,
+        alt: string,
+        sources?: ImageSources[],
+    ): string {
+        const imgMarkup = `<img ${alt} class="lg-object lg-image" data-index="${index}" src="${src}" />`;
+        let sourceTag = '';
+        if (sources) {
+            const sourceObj =
+                typeof sources === 'string' ? JSON.parse(sources) : sources;
+
+            sourceTag = sourceObj.map((source: any) => {
+                let attrs = '';
+                Object.keys(source).forEach((key) => {
+                    // Do not remove the first space as it is required to separate the attributes
+                    attrs += ` ${key}="${source[key]}"`;
+                });
+                return `<source ${attrs}></source>`;
+            });
+        }
+        return `${sourceTag}${imgMarkup}`;
     },
 
     // Get src from responsive src
