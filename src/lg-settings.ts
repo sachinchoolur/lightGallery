@@ -75,8 +75,19 @@ export interface LightGallerySettings {
     startClass: string;
 
     /**
-     * enable zoom from image effect.
+     * Enable zoom from origin effect.
      * @description You need to know the original image size upfront and provide it via data-lg-size attribute as data-lg-size="1920-1280"
+     * If you are using responsive images,
+     * If you don't know, the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides,
+     * lightGallery will show the default animation if data-lg-size is not available
+     * you can pass a comma separated list of sizes combined with a max-width (up to what size the particular image should be used)
+     * example -
+     * data-lg-size="240-160-375, 400-267-480, 1600-1067"
+     * data-responsive="img-240.jpg 375, img-400.jpg 480"
+     * data-src="img-1600.jpg"
+     * In the above example, upto 375 width img.240.jpg and lg-size 240-160 will be used.
+     * Similarly, upto 480 pixel width size 400-267 and img-400.jpg will be used
+     * And above 480, lg-size 1600-1067 and img-1600.jpg will be used
      * Supports only images.
      * Will be false if dynamic option is enabled or galleryID found in the URL.
      * startClass will be empty if zoomFromOrigin is true to avoid css conflicts.

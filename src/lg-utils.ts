@@ -185,10 +185,29 @@ const utils = {
         defaultLgSize?: string,
     ): ImageSize | undefined {
         const LGel = $LG(el);
-        const lgSize = LGel.attr('data-lg-size') || defaultLgSize;
+        let lgSize = LGel.attr('data-lg-size') || defaultLgSize;
 
         if (!lgSize) {
             return;
+        }
+
+        const isResponsiveSizes = lgSize.split(',');
+        // if at-least two viewport sizes are available
+        if (isResponsiveSizes[1]) {
+            const wWidth = window.innerWidth;
+            for (let i = 0; i < isResponsiveSizes.length; i++) {
+                const size = isResponsiveSizes[i];
+                const responsiveWidth = parseInt(size.split('-')[2], 10);
+                if (responsiveWidth > wWidth) {
+                    lgSize = size;
+                    break;
+                }
+
+                // take last item as last option
+                if (i === isResponsiveSizes.length - 1) {
+                    lgSize = size;
+                }
+            }
         }
 
         const size = lgSize.split('-');
@@ -196,11 +215,11 @@ const utils = {
         const width = parseInt(size[0], 10);
         const height = parseInt(size[1], 10);
 
-        const wWidth = container.width();
-        const wHeight = container.height() - spacing;
+        const cWidth = container.width();
+        const cHeight = container.height() - spacing;
 
-        const maxWidth = Math.min(wWidth, width);
-        const maxHeight = Math.min(wHeight, height);
+        const maxWidth = Math.min(cWidth, width);
+        const maxHeight = Math.min(cHeight, height);
 
         const ratio = Math.min(maxWidth / width, maxHeight / height);
 
