@@ -211,8 +211,8 @@ export class Video {
         const videoInfo =
             this.core.galleryItems[(index as unknown) as number]
                 .__slideVideoInfo || {};
-        const currentDynamicItem = this.core.galleryItems[index];
-        let videoTitle = currentDynamicItem.title || currentDynamicItem.alt;
+        const currentGalleryItem = this.core.galleryItems[index];
+        let videoTitle = currentGalleryItem.title || currentGalleryItem.alt;
         videoTitle = videoTitle ? 'title="' + videoTitle + '"' : '';
         const commonIframeProps = `allowtransparency="true" 
             frameborder="0" 

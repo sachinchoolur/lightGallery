@@ -1,4 +1,4 @@
-import utils, { DynamicItem, ImageSize } from './lg-utils';
+import utils, { GalleryItem, ImageSize } from './lg-utils';
 import { $LG, lgQuery } from './lgQuery';
 import { LightGallerySettings, lightGallerySettings } from './lg-settings';
 import { Coords, SlideDirection, VideoInfo } from './types';
@@ -22,7 +22,7 @@ window.lgModules = window.lgModules || {};
 
 export class LightGallery {
     public settings: LightGallerySettings;
-    public galleryItems: DynamicItem[];
+    public galleryItems: GalleryItem[];
 
     // Current gallery item
     public lgId: number;
@@ -399,8 +399,8 @@ export class LightGallery {
 
     refreshOnResize(): void {
         if (this.lgOpened) {
-            const currentDynamicItem = this.galleryItems[this.index];
-            const videoInfo = currentDynamicItem.__slideVideoInfo;
+            const currentGalleryItem = this.galleryItems[this.index];
+            const videoInfo = currentGalleryItem.__slideVideoInfo;
 
             const { top, bottom } = this.getMediaContainerPosition();
             this.currentImageSize = utils.getSize(
@@ -447,7 +447,7 @@ export class LightGallery {
      * let galleryItems = [
      * // Access existing lightGallery items
      * // galleryItems are automatically generated internally from the gallery HTML markup
-     * // or directly from dynamicItems when dynamic gallery is used
+     * // or directly from galleryItems when dynamic gallery is used
      *   ...plugin.galleryItems,
      *     ...[
      *       {
@@ -470,7 +470,7 @@ export class LightGallery {
      * updateSlideInstance.updateSlides(galleryItems, 1);
      *
      */
-    updateSlides(items: DynamicItem[], index: number): void {
+    updateSlides(items: GalleryItem[], index: number): void {
         if (this.index > items.length - 1) {
             this.index = items.length - 1;
         }
@@ -508,7 +508,7 @@ export class LightGallery {
     }
 
     // Get gallery items based on multiple conditions
-    getItems(): DynamicItem[] {
+    getItems(): GalleryItem[] {
         // Gallery items
         this.items = [];
         if (!this.settings.dynamic) {
@@ -911,8 +911,8 @@ export class LightGallery {
     }
 
     setImgMarkup(src: string, $currentSlide: lgQuery, index: number): void {
-        const currentDynamicItem = this.galleryItems[index];
-        const { alt, srcset, sizes, sources } = currentDynamicItem;
+        const currentGalleryItem = this.galleryItems[index];
+        const { alt, srcset, sizes, sources } = currentGalleryItem;
 
         // Use the thumbnail as dummy image which will be resized to actual image size and
         // displayed on top of actual image
@@ -1042,7 +1042,7 @@ export class LightGallery {
     }
 
     // Add video slideInfo
-    addSlideVideoInfo(items: DynamicItem[]): void {
+    addSlideVideoInfo(items: GalleryItem[]): void {
         items.forEach((element, index) => {
             element.__slideVideoInfo = this.isVideo(element.src, index);
         });
@@ -1055,26 +1055,26 @@ export class LightGallery {
      *  @param {Boolean} rec - if true call loadcontent() function again.
      */
     loadContent(index: number, rec: boolean): void {
-        const currentDynamicItem = this.galleryItems[index];
+        const currentGalleryItem = this.galleryItems[index];
         const $currentSlide = $LG(this.getSlideItemId(index));
 
-        const { poster, srcset, sizes, sources } = currentDynamicItem;
-        let { src } = currentDynamicItem;
+        const { poster, srcset, sizes, sources } = currentGalleryItem;
+        let { src } = currentGalleryItem;
 
-        const video = currentDynamicItem.video;
+        const video = currentGalleryItem.video;
 
         const _html5Video =
             video && typeof video === 'string' ? JSON.parse(video) : video;
 
-        if (currentDynamicItem.responsive) {
-            const srcDyItms = currentDynamicItem.responsive.split(',');
+        if (currentGalleryItem.responsive) {
+            const srcDyItms = currentGalleryItem.responsive.split(',');
             src = utils.getResponsiveSrc(srcDyItms) || src;
         }
 
-        const videoInfo = currentDynamicItem.__slideVideoInfo;
+        const videoInfo = currentGalleryItem.__slideVideoInfo;
         let lgVideoStyle = '';
 
-        const iframe = !!currentDynamicItem.iframe;
+        const iframe = !!currentGalleryItem.iframe;
 
         if (!$currentSlide.hasClass('lg-loaded')) {
             if (videoInfo) {
@@ -1092,7 +1092,7 @@ export class LightGallery {
                     src,
                     this.settings.iframeWidth,
                     this.settings.iframeHeight,
-                    currentDynamicItem.iframeTitle,
+                    currentGalleryItem.iframeTitle,
                 );
                 $currentSlide.prepend(markup);
             } else if (poster) {
@@ -1194,7 +1194,7 @@ export class LightGallery {
                                 '',
                                 srcset,
                                 sizes,
-                                currentDynamicItem.sources,
+                                currentGalleryItem.sources,
                             ),
                         );
                     if (srcset || sources) {
@@ -1482,8 +1482,8 @@ export class LightGallery {
             const currentSlideItem = this.getSlideItem(index);
             const previousSlideItem = this.getSlideItem(prevIndex);
 
-            const currentDynamicItem = this.galleryItems[index];
-            const videoInfo = currentDynamicItem.__slideVideoInfo;
+            const currentGalleryItem = this.galleryItems[index];
+            const videoInfo = currentGalleryItem.__slideVideoInfo;
 
             if (videoInfo) {
                 const { top, bottom } = this.mediaContainerPosition;

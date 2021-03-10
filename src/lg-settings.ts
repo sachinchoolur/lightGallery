@@ -1,4 +1,4 @@
-import { DynamicItem } from './lg-utils';
+import { GalleryItem } from './lg-utils';
 
 export type MobileSettings = Exclude<LightGallerySettings, 'mobileSettings'>;
 export interface LightGallerySettings {
@@ -366,7 +366,7 @@ export interface LightGallerySettings {
     /**
      * An array of objects (src, iframe, subHtml, thumb, poster, responsive, srcset sizes) representing gallery elements.
      */
-    dynamicEl: DynamicItem[];
+    dynamicEl: GalleryItem[];
 
     /**
      * Fetch custom properties from the selector
@@ -389,7 +389,7 @@ export interface LightGallerySettings {
      *     extraProps: ['customProp']
      * })
      * ```
-     * Note - If you are using dynamic mode, you can pass any custom prop in the dynamicItem
+     * Note - If you are using dynamic mode, you can pass any custom prop in the galleryItem
      *  * ```js
      * lightGallery(document.getElementById('lightGallery'), {
      *     dynamic: true,

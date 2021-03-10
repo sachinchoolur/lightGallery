@@ -1,6 +1,6 @@
-import { DynamicItem } from '../../lg-utils';
+import { GalleryItem } from '../../lg-utils';
 
-export function getTwitterShareLink(galleryItem: DynamicItem): string {
+export function getTwitterShareLink(galleryItem: GalleryItem): string {
     const twitterBaseUrl = '//twitter.com/intent/tweet?text=';
     const url = encodeURIComponent(
         galleryItem.twitterShareUrl || window.location.href,

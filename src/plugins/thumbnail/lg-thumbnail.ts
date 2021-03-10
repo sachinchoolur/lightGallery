@@ -4,7 +4,7 @@ import {
 } from './lg-thumbnail-settings';
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
-import { DynamicItem } from '../../lg-utils';
+import { GalleryItem } from '../../lg-utils';
 import { lGEvents } from '../../lg-events';
 interface ThumbDragUtils {
     cords: {
@@ -25,7 +25,7 @@ declare global {
 
 const $LG = window.$LG;
 
-interface ThumbnailDynamicItem extends DynamicItem {
+interface ThumbnailGalleryItem extends GalleryItem {
     thumb: string;
 }
 export class Thumbnail {
@@ -172,7 +172,7 @@ export class Thumbnail {
         }
 
         this.setThumbItemHtml(
-            (this.core.galleryItems as unknown) as ThumbnailDynamicItem[],
+            (this.core.galleryItems as unknown) as ThumbnailGalleryItem[],
         );
     }
 
@@ -292,7 +292,7 @@ export class Thumbnail {
             this.$lgThumb.css('width', this.thumbTotalWidth + 'px');
             this.$lgThumb.empty();
             this.setThumbItemHtml(
-                (this.core.galleryItems as unknown) as ThumbnailDynamicItem[],
+                (this.core.galleryItems as unknown) as ThumbnailGalleryItem[],
             );
             this.animateThumb(this.core.index);
         }, 50);
@@ -473,7 +473,7 @@ export class Thumbnail {
         </div>`;
     }
 
-    getThumbItemHtml(items: ThumbnailDynamicItem[]): string {
+    getThumbItemHtml(items: ThumbnailGalleryItem[]): string {
         let thumbList = '';
         for (let i = 0; i < items.length; i++) {
             thumbList += this.getThumbHtml(items[i].thumb, i);
@@ -482,7 +482,7 @@ export class Thumbnail {
         return thumbList;
     }
 
-    setThumbItemHtml(items: ThumbnailDynamicItem[]): void {
+    setThumbItemHtml(items: ThumbnailGalleryItem[]): void {
         const thumbList = this.getThumbItemHtml(items);
         this.$lgThumb.html(thumbList);
     }

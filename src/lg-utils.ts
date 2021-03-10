@@ -13,7 +13,7 @@ export interface ImageSources {
     type?: string;
 }
 
-export interface DynamicItem {
+export interface GalleryItem {
     /**
      * url of the media
      */
@@ -423,14 +423,14 @@ const utils = {
         extraProps: string[],
         getCaptionFromTitleOrAlt: boolean,
         exThumbImage: string,
-    ): DynamicItem[] {
-        const dynamicElements: DynamicItem[] = [];
+    ): GalleryItem[] {
+        const dynamicElements: GalleryItem[] = [];
         const availableDynamicOptions = [
             ...defaultDynamicOptions,
             ...extraProps,
         ];
         [].forEach.call(items, (item: HTMLElement) => {
-            const dynamicEl: DynamicItem = {} as DynamicItem;
+            const dynamicEl: GalleryItem = {} as GalleryItem;
             for (let i = 0; i < item.attributes.length; i++) {
                 const attr = item.attributes[i];
                 if (attr.specified) {

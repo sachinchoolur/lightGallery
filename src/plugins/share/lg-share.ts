@@ -5,11 +5,11 @@ import { getTwitterShareLink } from './lg-twitter-share-utils';
 import { getPinterestShareLink } from './lg-pinterest-share-utils';
 import { LightGallery } from '../../lightgallery';
 import { lGEvents } from '../../lg-events';
-import { DynamicItem } from '../../lg-utils';
+import { GalleryItem } from '../../lg-utils';
 export interface ShareOption {
     selector: string;
     dropdownHTML: string;
-    generateLink: (galleryItem: DynamicItem) => string;
+    generateLink: (galleryItem: GalleryItem) => string;
 }
 
 interface DefaultShareOptions extends ShareOption {

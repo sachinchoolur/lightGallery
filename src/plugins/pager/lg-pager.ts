@@ -1,5 +1,5 @@
 import { lGEvents } from '../../lg-events';
-import { DynamicItem } from '../../lg-utils';
+import { GalleryItem } from '../../lg-utils';
 import { lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { PagerSettings, pagerSettings } from './lg-pager-settings';
@@ -28,7 +28,7 @@ export class Pager {
         return this;
     }
 
-    private getPagerHtml(items: DynamicItem[]): string {
+    private getPagerHtml(items: GalleryItem[]): string {
         let pagerList = '';
         for (let i = 0; i < items.length; i++) {
             pagerList += `<span  data-lg-item-id="${i}" class="lg-pager-cont"> 
