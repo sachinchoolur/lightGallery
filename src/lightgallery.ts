@@ -719,6 +719,20 @@ export class LightGallery {
         }, this.settings.showBarsAfter);
     }
 
+    initPictureFill($img: lgQuery): void {
+        if (this.settings.supportLegacyBrowser) {
+            try {
+                picturefill({
+                    elements: [$img.get()],
+                });
+            } catch (e) {
+                console.warn(
+                    'lightGallery :- If you want srcset or picture tag to be supported for older browser please include picturefil javascript library in your document.',
+                );
+            }
+        }
+    }
+
     // Find css3 support
     doCss(): boolean {
         let supported = false;
@@ -897,22 +911,28 @@ export class LightGallery {
     }
 
     setImgMarkup(src: string, $currentSlide: lgQuery, index: number): void {
+        const currentDynamicItem = this.galleryItems[index];
+        const { alt, srcset, sizes, sources } = currentDynamicItem;
+
         // Use the thumbnail as dummy image which will be resized to actual image size and
         // displayed on top of actual image
         let imgContent = '';
-        const currentDynamicItem = this.galleryItems[index];
-        const alt = currentDynamicItem.alt
-            ? 'alt="' + currentDynamicItem.alt + '"'
-            : '';
+        const altAttr = alt ? 'alt="' + alt + '"' : '';
 
         if (!this.lGalleryOn && this.zoomFromOrigin && this.currentImageSize) {
-            imgContent = this.getDummyImageContent($currentSlide, index, alt);
+            imgContent = this.getDummyImageContent(
+                $currentSlide,
+                index,
+                altAttr,
+            );
         } else {
             imgContent = utils.getImgMarkup(
                 index,
                 src,
-                alt,
-                currentDynamicItem.sources,
+                altAttr,
+                srcset,
+                sizes,
+                sources,
             );
         }
         const imgMarkup = `<picture class="lg-img-wrap"> ${imgContent}</picture>`;
@@ -1035,11 +1055,10 @@ export class LightGallery {
      *  @param {Boolean} rec - if true call loadcontent() function again.
      */
     loadContent(index: number, rec: boolean): void {
-        let $img;
         const currentDynamicItem = this.galleryItems[index];
         const $currentSlide = $LG(this.getSlideItemId(index));
 
-        const { poster, srcset, sizes } = currentDynamicItem;
+        const { poster, srcset, sizes, sources } = currentDynamicItem;
         let { src } = currentDynamicItem;
 
         const video = currentDynamicItem.video;
@@ -1122,32 +1141,16 @@ export class LightGallery {
                 });
             } else {
                 this.setImgMarkup(src, $currentSlide, index);
+                if (srcset || sources) {
+                    const $img = $currentSlide.find('.lg-object');
+                    this.initPictureFill($img);
+                }
             }
 
             this.LGel.trigger<AfterAppendSlideEventDetail>(
                 lGEvents.afterAppendSlide,
                 { index },
             );
-
-            $img = $currentSlide.find('.lg-object');
-            if (sizes) {
-                $img.attr('sizes', sizes);
-            }
-
-            if (srcset) {
-                $img.attr('srcset', srcset);
-                if (this.settings.supportLegacyBrowser) {
-                    try {
-                        picturefill({
-                            elements: [$img.get()],
-                        });
-                    } catch (e) {
-                        console.warn(
-                            'lightGallery :- If you want srcset to be supported for older browser please include picturefil javascript library in your document.',
-                        );
-                    }
-                }
-            }
 
             if (this.settings.appendSubHtmlTo !== '.lg-sub-html') {
                 this.addHtml(index);
@@ -1189,9 +1192,15 @@ export class LightGallery {
                                 index,
                                 src,
                                 '',
+                                srcset,
+                                sizes,
                                 currentDynamicItem.sources,
                             ),
                         );
+                    if (srcset || sources) {
+                        const $img = $currentSlide.find('.lg-object');
+                        this.initPictureFill($img);
+                    }
                     this.onLgObjectLoad(
                         $currentSlide,
                         index,

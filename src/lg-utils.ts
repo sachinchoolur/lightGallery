@@ -281,10 +281,14 @@ const utils = {
     getImgMarkup(
         index: number,
         src: string,
-        alt: string,
+        altAttr: string,
+        srcset: string,
+        sizes: string,
         sources?: ImageSources[],
     ): string {
-        const imgMarkup = `<img ${alt} class="lg-object lg-image" data-index="${index}" src="${src}" />`;
+        const srcsetAttr = srcset ? `srcset=${srcset}` : '';
+        const sizesAttr = sizes ? `sizes=${sizes}` : '';
+        const imgMarkup = `<img ${altAttr} ${srcsetAttr}  ${sizesAttr} class="lg-object lg-image" data-index="${index}" src="${src}" />`;
         let sourceTag = '';
         if (sources) {
             const sourceObj =
