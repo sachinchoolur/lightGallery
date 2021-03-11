@@ -30,8 +30,8 @@ interface ThumbnailGalleryItem extends GalleryItem {
 }
 export class Thumbnail {
     private core: LightGallery;
-    private $thumbOuter: any;
-    private $lgThumb: any;
+    private $thumbOuter!: lgQuery;
+    private $lgThumb!: lgQuery;
     private thumbOuterWidth = 0;
     private thumbTotalWidth = 0;
     private translateX = 0;
@@ -79,7 +79,7 @@ export class Thumbnail {
             }
 
             this.build();
-            if (this.settings.animateThumb && this.core.doCss()) {
+            if (this.settings.animateThumb) {
                 if (this.settings.enableThumbDrag) {
                     this.enableThumbDrag();
                 }
@@ -109,10 +109,7 @@ export class Thumbnail {
             setTimeout(() => {
                 // In IE9 and bellow touch does not support
                 // Go to slide if browser does not support css transitions
-                if (
-                    (this.thumbClickable && !this.core.lgBusy) ||
-                    !this.core.doCss()
-                ) {
+                if (this.thumbClickable && !this.core.lgBusy) {
                     const index = parseInt($target.attr('data-lg-item-id'));
                     this.core.slide(index, false, true, false);
                 }
@@ -133,11 +130,11 @@ export class Thumbnail {
                 }, timeout);
             }
         });
-        this.core.LGel.on(`${lGEvents.beforeClose}.thumb`, (e) => {
+        this.core.LGel.on(`${lGEvents.beforeClose}.thumb`, () => {
             this.core.outer.removeClass('lg-thumb-open');
         });
 
-        this.core.LGel.on(`${lGEvents.updateSlides}.thumb`, (e) => {
+        this.core.LGel.on(`${lGEvents.updateSlides}.thumb`, () => {
             this.rebuildThumbnails();
         });
         this.core.LGel.on(`${lGEvents.containerResize}.thumb`, () => {
@@ -351,21 +348,6 @@ export class Thumbnail {
                 this.translateX = 0;
             }
 
-            if (this.core.lGalleryOn) {
-                if (!this.core.doCss()) {
-                    this.$lgThumb.animate(
-                        {
-                            left: -this.translateX + 'px',
-                        },
-                        this.core.settings.speed,
-                    );
-                }
-            } else {
-                if (!this.core.doCss()) {
-                    this.$lgThumb.css('left', -this.translateX + 'px');
-                }
-            }
-
             this.setTranslate(this.translateX);
         }
     }
@@ -407,9 +389,6 @@ export class Thumbnail {
             speedX > 0.15 &&
             thumbDragUtils.endTime.valueOf() - thumbDragUtils.touchMoveTime < 30
         ) {
-            let transitionDuration = speedX;
-            transitionDuration = Math.max(0.9, transitionDuration);
-
             speedX += 1;
 
             if (speedX > 2) {
@@ -442,7 +421,7 @@ export class Thumbnail {
         return thumbDragUtils;
     }
 
-    getThumbHtml(thumb: any, index: number): string {
+    getThumbHtml(thumb: string, index: number): string {
         const slideVideoInfo =
             this.core.galleryItems[index].__slideVideoInfo || {};
         let thumbImg;

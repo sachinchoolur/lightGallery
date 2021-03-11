@@ -34,11 +34,6 @@ export class Autoplay {
 
         this.pausedOnSlideChange = false;
 
-        // do not allow progress bar if browser does not support css3 transitions
-        if (!this.core.doCss()) {
-            this.settings.progressBar = false;
-        }
-
         if (this.settings.autoplay) {
             this.init();
         }
@@ -46,7 +41,7 @@ export class Autoplay {
         return this;
     }
 
-    init() {
+    private init() {
         // append autoplay controls
         if (this.settings.autoplayControls) {
             this.controls();
@@ -117,7 +112,7 @@ export class Autoplay {
         this.showProgressBar();
     }
 
-    showProgressBar() {
+    private showProgressBar() {
         if (this.settings.progressBar && this.fromAuto) {
             const _$progressBar = this.core.outer.find('.lg-progress-bar');
             const _$progress = this.core.outer.find('.lg-progress');
@@ -139,7 +134,7 @@ export class Autoplay {
     }
 
     // Manage autoplay via play/stop buttons
-    controls() {
+    private controls() {
         const _html =
             '<button type="button" class="lg-autoplay-button lg-icon"></button>';
 
@@ -163,7 +158,7 @@ export class Autoplay {
     }
 
     // Autostart gallery
-    startAuto() {
+    public startAuto(): void {
         this.core.outer
             .find('.lg-progress')
             .css(
@@ -189,7 +184,7 @@ export class Autoplay {
     }
 
     // cancel Autostart
-    cancelAuto() {
+    public cancelAuto(): void {
         if (this.interval) {
             this.core.outer.find('.lg-progress').removeAttr('style');
             this.core.outer.removeClass('lg-show-autoplay');
@@ -199,10 +194,10 @@ export class Autoplay {
         this.interval = false;
     }
 
-    closeGallery(): void {
+    public closeGallery(): void {
         this.cancelAuto();
     }
-    destroy(): void {
+    public destroy(): void {
         if (this.settings.autoplay) {
             this.core.outer.find('.lg-progress-bar').remove();
         }

@@ -73,7 +73,6 @@ export class Video {
         );
 
         if (
-            this.core.doCss() &&
             this.core.galleryItems.length > 1 &&
             (this.core.settings.enableSwipe || this.core.settings.enableDrag)
         ) {

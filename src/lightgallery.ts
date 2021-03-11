@@ -346,14 +346,7 @@ export class LightGallery {
         }
 
         // add Class for css support and transition mode
-        if (this.doCss()) {
-            this.outer.addClass('lg-css3');
-        } else {
-            this.outer.addClass('lg-css');
-
-            // Set speed 0 because no animation will happen if browser doesn't support css3
-            this.settings.speed = 0;
-        }
+        this.outer.addClass('lg-css3');
 
         this.outer.addClass(this.settings.mode);
 
@@ -365,10 +358,8 @@ export class LightGallery {
             this.outer.addClass('lg-show-after-load');
         }
 
-        if (this.doCss()) {
-            this.$inner.css('transition-timing-function', this.settings.easing);
-            this.$inner.css('transition-duration', this.settings.speed + 'ms');
-        }
+        this.$inner.css('transition-timing-function', this.settings.easing);
+        this.$inner.css('transition-duration', this.settings.speed + 'ms');
 
         if (this.settings.download) {
             this.outer
@@ -731,27 +722,6 @@ export class LightGallery {
                 );
             }
         }
-    }
-
-    // Find css3 support
-    doCss(): boolean {
-        let supported = false;
-        const transition = [
-            'transition',
-            'MozTransition',
-            'WebkitTransition',
-            'OTransition',
-            'msTransition',
-            'KhtmlTransition',
-        ];
-        const root = document.documentElement;
-        for (let i = 0; i < transition.length; i++) {
-            if (transition[i] in root.style) {
-                supported = true;
-                break;
-            }
-        }
-        return supported;
     }
 
     /**
@@ -1742,7 +1712,7 @@ export class LightGallery {
         let isMoved = false;
         let isSwiping = false;
 
-        if (this.settings.enableSwipe && this.doCss()) {
+        if (this.settings.enableSwipe) {
             this.$inner.on('touchstart.lg', (e) => {
                 e.preventDefault();
                 const $item = this.getSlideItem(this.index);
@@ -1802,7 +1772,7 @@ export class LightGallery {
         let endCoords: Coords = {} as Coords;
         let isDraging = false;
         let isMoved = false;
-        if (this.settings.enableDrag && this.doCss()) {
+        if (this.settings.enableDrag) {
             this.outer.on('mousedown.lg', (e) => {
                 const $item = this.getSlideItem(this.index);
                 if (

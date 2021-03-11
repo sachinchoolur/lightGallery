@@ -32,7 +32,7 @@ export class Zoom {
 
         this.settings = Object.assign({}, zoomSettings, this.core.settings);
 
-        if (this.settings.zoom && this.core.doCss()) {
+        if (this.settings.zoom) {
             this.init();
 
             // Store the zoomable timeout value just to clear it while closing
