@@ -144,11 +144,6 @@ export interface LightGallerySettings {
     hideSubHtml: boolean;
 
     /**
-     * force lightGallery to use css left property instead of transform.
-     */
-    useLeft: boolean;
-
-    /**
      * If true, toolbar, captions and thumbnails will not overlap with media element
      * @description This will not effect thumbnails if animateThumb is false
      * Also, toggle thumbnails button is not displayed if allowMediaOverlap is false
@@ -460,7 +455,6 @@ export const lightGallerySettings: LightGallerySettings = {
     slideDelay: 0,
     supportLegacyBrowser: true,
     hideSubHtml: false,
-    useLeft: false,
     allowMediaOverlap: false,
     videoMaxSize: '1280-720',
     defaultCaptionHeight: 0,

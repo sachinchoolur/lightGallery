@@ -1,8 +1,3 @@
-const getUseLeft = function () {
-    const isChrome = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
-    return !!(isChrome && parseInt(isChrome[2], 10) < 54);
-};
-
 export interface ZoomSettings {
     /**
      * Value of zoom should be incremented/decremented
@@ -39,11 +34,6 @@ export interface ZoomSettings {
         zoomIn: 'lg-zoom-in' | 'lg-actual-size';
         zoomOut: 'lg-zoom-out' | 'lg-actual-size';
     };
-
-    /**
-     * Use css left property instead of transform
-     */
-    useLeftForZoom: boolean;
 }
 
 export const zoomSettings: ZoomSettings = {
@@ -56,5 +46,4 @@ export const zoomSettings: ZoomSettings = {
         zoomOut: 'lg-zoom-out',
     },
     enableZoomAfter: 300,
-    useLeftForZoom: getUseLeft(),
 };

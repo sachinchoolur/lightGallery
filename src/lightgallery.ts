@@ -336,14 +336,7 @@ export class LightGallery {
             this.settings.backdropDuration + 'ms',
         );
 
-        if (this.settings.useLeft) {
-            this.outer.addClass('lg-use-left');
-
-            // Set mode lg-slide if use left is true;
-            this.settings.mode = 'lg-slide';
-        } else {
-            this.outer.addClass('lg-use-css3');
-        }
+        this.outer.addClass('lg-use-css3');
 
         // add Class for css support and transition mode
         this.outer.addClass('lg-css3');
@@ -2029,23 +2022,18 @@ export class LightGallery {
         scaleX = 1,
         scaleY = 1,
     ): void {
-        // jQuery supports Automatic CSS prefixing since version 1.8.0
-        if (this.settings.useLeft) {
-            $el.css('left', xValue + '');
-        } else {
-            $el.css(
-                'transform',
-                'translate3d(' +
-                    xValue +
-                    'px, ' +
-                    yValue +
-                    'px, 0px) scale3d(' +
-                    scaleX +
-                    ', ' +
-                    scaleY +
-                    ', 1)',
-            );
-        }
+        $el.css(
+            'transform',
+            'translate3d(' +
+                xValue +
+                'px, ' +
+                yValue +
+                'px, 0px) scale3d(' +
+                scaleX +
+                ', ' +
+                scaleY +
+                ', 1)',
+        );
     }
 
     mousewheel(): void {

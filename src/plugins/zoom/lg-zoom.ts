@@ -67,13 +67,7 @@ export class Zoom {
             } lg-icon"></button>`;
         }
 
-        // CSS transition performace is poor in Chrome version < 54
-        // So use CSS left property for zoom transition.
-        if (this.settings.useLeftForZoom) {
-            this.core.outer.addClass('lg-use-left-for-zoom');
-        } else {
-            this.core.outer.addClass('lg-use-transition-for-zoom');
-        }
+        this.core.outer.addClass('lg-use-transition-for-zoom');
 
         this.core.outer.find('.lg-toolbar').first().append(zoomIcons);
     }
@@ -344,14 +338,9 @@ export class Zoom {
             'scale3d(' + style.scale + ', ' + style.scale + ', 1)',
         );
 
-        if (this.settings.useLeftForZoom) {
-            $imageWrap.css('left', -style.x + 'px');
-            $imageWrap.css('top', -style.y + 'px');
-        } else {
-            const transform =
-                'translate3d(-' + style.x + 'px, -' + style.y + 'px, 0)';
-            $imageWrap.css('transform', transform);
-        }
+        const transform =
+            'translate3d(-' + style.x + 'px, -' + style.y + 'px, 0)';
+        $imageWrap.css('transform', transform);
 
         $imageWrap.attr('data-x', style.x).attr('data-y', style.y);
     }
@@ -845,15 +834,10 @@ export class Zoom {
         LGel: lgQuery,
         distance: { x: number; y: number },
     ): void {
-        if (this.settings.useLeftForZoom) {
-            LGel.css('left', distance.x + 'px');
-            LGel.css('top', distance.y + 'px');
-        } else {
-            LGel.css(
-                'transform',
-                'translate3d(' + distance.x + 'px, ' + distance.y + 'px, 0)',
-            );
-        }
+        LGel.css(
+            'transform',
+            'translate3d(' + distance.x + 'px, ' + distance.y + 'px, 0)',
+        );
     }
 
     zoomSwipe(): void {
