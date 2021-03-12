@@ -1,0 +1,63 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><link rel=preload as=font href=/fonts/vendor/inter/inter-v2-latin-500.woff2 type=font/woff2 crossorigin><link rel=stylesheet href=/main.947e5767b09996380756fff7ed3afaf353bec97afa0be6fab15e755058b98e895bfec5eacbaafe93f5d977a3c2c0d8f293162c03b1ea01c1f5613711df195f3b.css integrity="sha512-lH5XZ7CZljgHVv/37Tr681O+yXr6C+b6sV51UFi5jolb/sXqy6r+k/XZd6PCwNjykxYsA7HqAcH1YTcR3xlfOw==" crossorigin=anonymous><noscript><style>img.lazyload{display:none}</style></noscript><meta name=robots content="index, follow"><meta name=googlebot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name=bingbot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>Methods - lightGallery</title><meta name=description content="lightGallery instance methods documentation."><link rel=canonical href=/docs/methods/><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="/lightgallery.png"><meta name=twitter:title content="Methods"><meta name=twitter:description content="lightGallery instance methods documentation."><meta name=twitter:site content="@sachinchoolur"><meta name=twitter:creator content="@sachinchoolur"><meta property="og:title" content="Methods"><meta property="og:description" content="lightGallery instance methods documentation."><meta property="og:type" content="article"><meta property="og:url" content="/docs/methods/"><meta property="og:image" content="/lightgallery.png"><meta property="article:published_time" content="2020-10-06T08:48:57+00:00"><meta property="article:modified_time" content="2020-10-06T08:48:57+00:00"><meta property="og:site_name" content="lightGallery"><meta property="article:publisher" content="https://www.facebook.com/sachinchoolur"><meta property="article:author" content="https://www.facebook.com/sachinchoolur"><meta property="og:locale" content="en_US"><script type=application/ld+json>{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"\/"},{"@type":"ListItem","position":2,"name":"Docsmethods","item":"\/docsmethods\/"}]}</script><meta name=theme-color content="#fff"><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest></head><body class="docs single"><header class="navbar fixed-top navbar-expand-lg navbar-light bg-light"><div class=container><a class="navbar-brand monospace" href=/>lightGallery</a>
+<button class=navbar-toggler type=button data-bs-toggle=collapse data-bs-target=#navbarSupportedContent aria-controls=navbarSupportedContent aria-expanded=false aria-label="Toggle navigation">
+<span class=navbar-toggler-icon></span></button><div class="collapse navbar-collapse" id=navbarSupportedContent><ul class="navbar-nav ms-auto mb-2 mb-lg-0"><li class=nav-item><a class=nav-link href=/docs/getting-started/>Docs</a></li><li class=nav-item><a class=nav-link href=/demos/inline/>Demos</a></li><li class=nav-item><a class=nav-link href=https://github.com/sachinchoolur/lightGallery>GitHub</a></li></ul></div></div></header><div class="wrap container" role=document><div class=content><div class="row flex-xl-nowrap"><div class="col-lg-2 col-xl-2 docs-sidebar"><nav class=docs-links aria-label="Main navigation"><h3>Getting started</h3><ul class=list-unstyled><li><a class=docs-link href=/docs/getting-started/>Introduction</a></li><li><a class=docs-link href=/docs/options/>Options</a></li><li><a class=docs-link href=/docs/events/>Events</a></li><li><a class="docs-link active" href=/docs/methods/>Methods</a></li><li><a class=docs-link href=/docs/dynamic-variables/>Dynamic variables</a></li><li><a class=docs-link href=/docs/lg-query/>lgQuery.</a></li></ul></nav></div><nav class="docs-toc d-none d-xl-block col-xl-2" aria-label="Secondary navigation"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=#access-plugin-instance>Access plugin instance</a></li></ul></nav></div></nav><main class="docs-content col-lg-10 col-xl-8"><h1>Methods</h1><p class=lead>You can use lightGallery plugin instance public methods to trigger specific lightGallery actions. lightGallery provides several useful methods which can be used to customize the gallery or to build your own features. <a href=/docs/methods/>Demo</a></p><h2 id=access-plugin-instance>Access plugin instance<a href=#access-plugin-instance class=anchor aria-hidden=true>#</a></h2><div class=highlight><pre class=chroma><code class=language-javascript data-lang=javascript><span class=kr>const</span> <span class=nx>lg</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s1>&#39;lg-method-demo&#39;</span><span class=p>);</span>
+
+<span class=kr>const</span> <span class=nx>plugin</span> <span class=o>=</span> <span class=nx>lightGallery</span><span class=p>(</span><span class=nx>lg</span><span class=p>);</span>
+
+<span class=c1>// Go to third slide
+</span><span class=c1>// Index starts from 0
+</span><span class=c1></span><span class=nx>plugin</span><span class=p>.</span><span class=nx>slide</span><span class=p>(</span><span class=mi>2</span><span class=p>);</span>
+</code></pre></div><div class=docs-methods-section><b>closeGallery</b><p>Close lightGallery.</p><p>Close lightGallery if it is opened</p><p class=docs-example>Example</p><p class=docs-example>Example</p><div class=highlight><pre class=chroma><code class=language-js data-lang=js>
+ <span class=kr>const</span> <span class=nx>plugin</span> <span class=o>=</span> <span class=nx>lightGallery</span><span class=p>();</span>
+ <span class=nx>plugin</span><span class=p>.</span><span class=nx>closeGallery</span><span class=p>();</span>
+
+</code></pre></div><b>destroy</b><p>Destroy lightGallery.
+Destroy lightGallery and its plugin instances completely</p><p></p><p class=docs-example>Example</p><p class=docs-example>Example</p><div class=highlight><pre class=chroma><code class=language-js data-lang=js>
+ <span class=kr>const</span> <span class=nx>plugin</span> <span class=o>=</span> <span class=nx>lightGallery</span><span class=p>();</span>
+ <span class=nx>plugin</span><span class=p>.</span><span class=nx>destroy</span><span class=p>();</span>
+
+</code></pre></div><b>goToNextSlide</b><p>Go to next slide</p><p></p><p class=docs-example>Example</p><div class=highlight><pre class=chroma><code class=language-js data-lang=js>
+ <span class=kr>const</span> <span class=nx>plugin</span> <span class=o>=</span> <span class=nx>lightGallery</span><span class=p>();</span>
+ <span class=nx>plugin</span><span class=p>.</span><span class=nx>goToNextSlide</span><span class=p>();</span>
+
+</code></pre></div><b>goToPrevSlide</b><p>Go to previous slides</p><p></p><p class=docs-example>Example</p><div class=highlight><pre class=chroma><code class=language-js data-lang=js>
+ <span class=kr>const</span> <span class=nx>plugin</span> <span class=o>=</span> <span class=nx>lightGallery</span><span class=p>({});</span>
+ <span class=nx>plugin</span><span class=p>.</span><span class=nx>goToPrevSlide</span><span class=p>();</span>
+
+</code></pre></div><b>slide</b><p>Goto a specific slide.</p><p></p><p class=docs-example>Example</p><div class=highlight><pre class=chroma><code class=language-js data-lang=js>
+ <span class=kr>const</span> <span class=nx>plugin</span> <span class=o>=</span> <span class=nx>lightGallery</span><span class=p>();</span>
+ <span class=c1>// to go to 3rd slide
+</span><span class=c1></span> <span class=nx>plugin</span><span class=p>.</span><span class=nx>slide</span><span class=p>(</span><span class=mi>2</span><span class=p>);</span>
+
+</code></pre></div><b>updateSlides</b><p>Update slides dynamically.
+Add, edit or delete slides dynamically when lightGallery is opened.
+Modify the current gallery items and pass it via updateSlides method</p><p></p><p class=docs-example>Example</p><span>Note :</span><ul><li>Do not mutate existing lightGallery items directly.</li><li>Always pass new list of gallery items</li><li>You need to take care of thumbnails outside the gallery if any</li></ul><p class=docs-example>Example</p><div class=highlight><pre class=chroma><code class=language-js data-lang=js>
+<span class=kr>const</span> <span class=nx>plugin</span> <span class=o>=</span> <span class=nx>lightGallery</span><span class=p>();</span>
+
+<span class=c1>// Adding slides dynamically
+</span><span class=c1></span><span class=kd>let</span> <span class=nx>galleryItems</span> <span class=o>=</span> <span class=p>[</span>
+<span class=c1>// Access existing lightGallery items
+</span><span class=c1>// galleryItems are automatically generated internally from the gallery HTML markup
+</span><span class=c1>// or directly from dynamicItems when dynamic gallery is used
+</span><span class=c1></span>  <span class=p>...</span><span class=nx>plugin</span><span class=p>.</span><span class=nx>galleryItems</span><span class=p>,</span>
+    <span class=p>...[</span>
+      <span class=p>{</span>
+        <span class=nx>src</span><span class=o>:</span> <span class=s1>&#39;img/img-1.png&#39;</span><span class=p>,</span>
+          <span class=nx>thumb</span><span class=o>:</span> <span class=s1>&#39;img/thumb1.png&#39;</span><span class=p>,</span>
+        <span class=p>},</span>
+    <span class=p>],</span>
+  <span class=p>];</span>
+  <span class=nx>plugin</span><span class=p>.</span><span class=nx>updateSlides</span><span class=p>(</span>
+    <span class=nx>galleryItems</span><span class=p>,</span>
+    <span class=nx>plugin</span><span class=p>.</span><span class=nx>index</span><span class=p>,</span>
+  <span class=p>);</span>
+
+
+<span class=c1>// Remove slides dynamically
+</span><span class=c1></span><span class=nx>galleryItems</span> <span class=o>=</span> <span class=nx>JSON</span><span class=p>.</span><span class=nx>parse</span><span class=p>(</span>
+  <span class=nx>JSON</span><span class=p>.</span><span class=nx>stringify</span><span class=p>(</span><span class=nx>updateSlideInstance</span><span class=p>.</span><span class=nx>galleryItems</span><span class=p>),</span>
+<span class=p>);</span>
+<span class=nx>galleryItems</span><span class=p>.</span><span class=nx>shift</span><span class=p>();</span>
+<span class=nx>updateSlideInstance</span><span class=p>.</span><span class=nx>updateSlides</span><span class=p>(</span><span class=nx>galleryItems</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+
+</code></pre></div></div><p class=edit-page><a href=blob/master/content/docs/methods.md><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828.0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>Edit this page on GitHub</a></p><div class="docs-navigation d-flex justify-content-between"><a href=/docs/events/><div class="card my-1"><div class="card-body py-2">&larr; Events</div></div></a><a class=ms-auto href=/docs/dynamic-variables/><div class="card my-1"><div class="card-body py-2">Dynamic variables &rarr;</div></div></a></div></main></div></div></div><footer class="footer text-muted"><div class=container><p class="m-0 text-center">From <a href=https://www.tack.one/>tack.one</a></p></div></footer><script src=/main.ae0f85b77d1cdcd79c0ed0dc13448155bd898a911e76b9a678c1f763aaada73ab82f75bdd847a3ad4346e7191335ddfd9ed85ceaa5bd5e747a5d4815b1b708b6.js integrity="sha512-rg+Ft30c3NecDtDcE0SBVb2JipEedrmmeMH3Y6qtpzq4L3W92EejrUNG5xkTNd39nthc6qW9XnR6XUgVsbcItg==" crossorigin=anonymous defer></script></body></html>
