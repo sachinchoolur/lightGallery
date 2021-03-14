@@ -1,10 +1,11 @@
 /**
- * @desc lightGallery comments module
+ * lightGallery comments module
  * Supports facebook and disqus comments
  *
  * @ref - https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables
  * @ref - https://github.com/disqus/DISQUS-API-Recipes/blob/master/snippets/js/disqus-reset/disqus_reset.html
  * @ref - https://css-tricks.com/lazy-loading-disqus-comments/
+ * @ref - https://developers.facebook.com/docs/plugins/comments/#comments-plugin
  *
  */
 
@@ -38,7 +39,7 @@ export class CommentBox {
         return this;
     }
 
-    init() {
+    private init(): void {
         this.setMarkup();
         this.toggleCommentBox();
         if (this.settings.fbComments) {
@@ -48,38 +49,43 @@ export class CommentBox {
         }
     }
 
-    setMarkup() {
-        this.core.outer
-            .find('.lg')
-            .append(
-                this.settings.fbCommentsMarkup +
-                    '<div id="lg-comment-overlay"></div>',
-            );
+    private setMarkup() {
+        this.core.$lgContent.append(
+            this.settings.commentsMarkup +
+                '<div class="lg-comment-overlay"></div>',
+        );
 
         const commentToggleBtn =
-            '<span id="lg-comment-toggle" class="lg-icon"></span>';
-        this.core.outer.find('.lg-toolbar').append(commentToggleBtn);
+            '<button type="button" aria-label="Toggle comments" class="lg-comment-toggle lg-icon"></button>';
+        this.core.$toolbar.append(commentToggleBtn);
     }
 
-    toggleCommentBox() {
-        $LG('#lg-comment-toggle').on('click.lg.comment', () => {
-            this.core.outer.toggleClass('lg-comment-active');
-        });
+    toggleCommentBox(): void {
+        this.core.outer
+            .find('.lg-comment-toggle')
+            .first()
+            .on('click.lg.comment', () => {
+                this.core.outer.toggleClass('lg-comment-active');
+            });
 
-        $LG('#lg-comment-overlay').on('click.lg.comment', () => {
-            this.core.outer.removeClass('lg-comment-active');
-        });
-        $LG('#lg-comment-close').on('click.lg.comment', () => {
-            this.core.outer.removeClass('lg-comment-active');
-        });
+        this.core.outer
+            .find('.lg-comment-overlay')
+            .first()
+            .on('click.lg.comment', () => {
+                this.core.outer.removeClass('lg-comment-active');
+            });
+        this.core.outer
+            .find('.lg-comment-close')
+            .first()
+            .on('click.lg.comment', () => {
+                this.core.outer.removeClass('lg-comment-active');
+            });
     }
 
     addFbComments() {
         this.core.LGel.on(`${lGEvents.beforeSlide}.comment`, (event) => {
-            const { index } = event.detail;
-            $LG('#lg-comment-body').html(
-                $LG(this.core.items).eq(index).attr('data-fb-html'),
-            );
+            const html = this.core.galleryItems[event.detail.index].fbHtml;
+            this.core.outer.find('.lg-comment-body').html(html);
         });
         this.core.LGel.on(`${lGEvents.afterSlide}.comment`, function () {
             try {
@@ -92,12 +98,14 @@ export class CommentBox {
         });
     }
 
-    addDisqusComments() {
+    addDisqusComments(): void {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const _this = this;
         const $disqusThread = $LG('#disqus_thread');
         $disqusThread.remove();
-        $LG('#lg-comment-body').append('<div id="disqus_thread"></div>');
+        this.core.outer
+            .find('.lg-comment-body')
+            .append('<div id="disqus_thread"></div>');
 
         this.core.LGel.on(`${lGEvents.beforeSlide}.comment`, () => {
             $disqusThread.html('');
@@ -105,6 +113,8 @@ export class CommentBox {
 
         this.core.LGel.on(`${lGEvents.afterSlide}.comment`, (event) => {
             const { index } = event.detail;
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
+            const _this = this;
             // DISQUS needs sometime to intialize when lightGallery is opened from direct url(hash plugin).
             setTimeout(
                 function () {
@@ -112,14 +122,16 @@ export class CommentBox {
                         DISQUS.reset({
                             reload: true,
                             config: function () {
-                                this.page.identifier = $LG(_this.core.items)
-                                    .eq(index)
-                                    .attr('data-disqus-identifier');
-                                this.page.url = $LG(_this.core.items)
-                                    .eq(index)
-                                    .attr('data-disqus-url');
-                                this.page.title = this.settings.disqusConfig.title;
-                                this.language = this.settings.disqusConfig.language;
+                                this.page.identifier =
+                                    _this.core.galleryItems[
+                                        index
+                                    ].disqusIdentifier;
+                                this.page.url =
+                                    _this.core.galleryItems[index].disqusURL;
+                                this.page.title =
+                                    _this.settings.disqusConfig.title;
+                                this.language =
+                                    _this.settings.disqusConfig.language;
                             },
                         });
                     } catch (err) {

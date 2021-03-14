@@ -23,17 +23,17 @@ export interface CommentSettings {
     /**
      * Facebook comments default markup
      */
-    fbCommentsMarkup: string;
+    commentsMarkup: string;
 }
 
 export const commentSettings: CommentSettings = {
-    commentBox: true,
+    commentBox: false,
     fbComments: false,
-    disqusComments: true,
+    disqusComments: false,
     disqusConfig: {
         title: undefined,
         language: 'en',
     },
-    fbCommentsMarkup:
-        '<div id="lg-comment-box" class="lg-comment-box lg-fb-comment-box"><div class="lg-comment-header"><h3 class="lg-comment-title">Leave a comment.</h3><span id="lg-comment-close"  class="lg-icon"></span></div><div id="lg-comment-body"></div></div>',
+    commentsMarkup:
+        '<div id="lg-comment-box" class="lg-comment-box lg-fb-comment-box"><div class="lg-comment-header"><h3 class="lg-comment-title">Leave a comment.</h3><span class="lg-comment-close"  class="lg-icon"></span></div><div class="lg-comment-body"></div></div>',
 };

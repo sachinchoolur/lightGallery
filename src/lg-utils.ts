@@ -20,8 +20,7 @@ export interface GalleryItem {
     src: string;
 
     /**
-     * Source attributes for the picture element
-     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source#attributes
+     * Source attributes for the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source#attributes">picture</a> element
      */
     sources: ImageSources[];
 
@@ -134,6 +133,31 @@ export interface GalleryItem {
      */
     pinterestText: string;
 
+    /**
+     * Facebook comments body html
+     * @description Please refer <a href="https://developers.facebook.com/docs/plugins/comments/#comments-plugin">facebook official documentation</a> for generating the HTML markup
+     * @example
+     * <div
+     *      class="fb-comments"
+     *      data-href="http://sachinchoolur.github.io/lightgallery.js/demos/comment-box.html#lg=1&slide=0"
+     *      data-width="400"
+     *      data-numposts="5">
+     * </div>
+     */
+    fbHtml: string;
+
+    /**
+     * Disqus page identifier
+     * @description Please refer official <a href="https://help.disqus.com/en/articles/1717084-javascript-configuration-variables">disqus documentation</a> for more info
+     */
+    disqusIdentifier: string;
+
+    /**
+     * Disqus page url
+     * @description Please refer official <a href="https://help.disqus.com/en/articles/1717084-javascript-configuration-variables">disqus documentation</a> for more info
+     */
+    disqusUrl: string;
+
     __slideVideoInfo?: VideoInfo;
     [key: string]: any;
 }
@@ -159,6 +183,9 @@ const defaultDynamicOptions = [
     'twitterShareUrl',
     'pinterestShareUrl',
     'pinterestText',
+    'fbHtml',
+    'disqusIdentifier',
+    'disqusUrl',
 ];
 
 // Convert html data-attribute to camalcase
