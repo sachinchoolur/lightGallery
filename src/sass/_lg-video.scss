@@ -34,7 +34,7 @@
         .lg-video-object {
             opacity: 0;
             will-change: opacity;
-            transition: opacity 0.3s ease-in;
+            @include transition(opacity 0.3s ease-in);
         }
 
         &.lg-video-loaded {
@@ -84,8 +84,10 @@
     cursor: pointer;
     transform: translate(-50%, -50%) scale(1);
     will-change: opacity, transform;
-    transition: opacity 0.1s,
-        transform 0.25s cubic-bezier(0.17, 0.88, 0.32, 1.28);
+    @include transitionCustom(
+        transform 0.25s cubic-bezier(0.17, 0.88, 0.32, 1.28),
+        opacity 0.1s
+    );
     &:hover {
         .lg-video-play-icon-bg,
         .lg-video-play-icon {
@@ -99,7 +101,7 @@
     stroke: #fcfcfc;
     opacity: 0.6;
     will-change: opacity;
-    transition: opacity 0.12s ease-in;
+    @include transition(opacity 0.12s ease-in);
 }
 .lg-video-play-icon-circle {
     position: absolute;
@@ -125,7 +127,7 @@
     transform: translate3d(-50%, -50%, 0);
     opacity: 0.6;
     will-change: opacity;
-    transition: opacity 0.12s ease-in;
+    @include transition(opacity 0.12s ease-in);
     .lg-video-play-icon-inner {
         fill: #fcfcfc;
     }
