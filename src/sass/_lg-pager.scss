@@ -60,6 +60,7 @@
         position: absolute;
         width: 120px;
         border-radius: 3px;
+        will-change: transform, opacity;
         @include transitionCustom(
             opacity 0.15s ease 0s,
             transform 0.15s ease 0s

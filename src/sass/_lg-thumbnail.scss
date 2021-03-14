@@ -7,6 +7,7 @@
         z-index: $zindex-thumbnail;
         max-height: 350px;
         @include translate3d(0, 100%, 0);
+        will-change: transform;
         @include transitionCustom(
             transform 0.25s cubic-bezier(0, 0, 0.25, 1) 0s
         );
@@ -63,6 +64,7 @@
         border: 2px solid #fff;
         border-radius: 4px;
         margin-bottom: 5px;
+        will-change: border-color;
         @media (min-width: 1025px) {
             @include transition(border-color 0.25s ease);
         }
@@ -113,6 +115,7 @@
         width: 50px;
         outline: medium none;
         border: none;
+        will-change: opacity;
         @include transition(opacity 0.25s cubic-bezier(0, 0, 0.25, 1) 0s);
 
         &:after {

@@ -21,6 +21,7 @@
 .lg-pager-outer,
 .lg-sub-html {
     opacity: 0;
+    will-change: transform, opacity;
     @include transitionCustom(
         transform 0.25s cubic-bezier(0, 0, 0.25, 1) 0s,
         opacity 0.25s cubic-bezier(0, 0, 0.25, 1) 0s
@@ -70,6 +71,7 @@
     text-align: left;
     opacity: 0.001;
     outline: none;
+    will-change: opacity;
     // For start/end transition
     @include transition(opacity 0.15s ease 0s);
 
@@ -148,6 +150,7 @@
             background: url('#{$lg-path-images}/loading.gif') no-repeat scroll
                 center center transparent;
         }
+        will-change: transform, opacity;
         display: none !important;
     }
     &.lg-css3 {
@@ -215,6 +218,7 @@
             .lg-object,
             .lg-video-play-button {
                 opacity: 0;
+                will-change: opacity;
                 @include transition(opacity 0.15s ease 0s);
             }
             &.lg-zoom-from-image {
@@ -284,6 +288,7 @@
     z-index: $zindex-backdrop;
     background-color: #000;
     opacity: 0;
+    will-change: opacity;
     @include transition(opacity 333ms ease-in 0s);
     &.in {
         opacity: $backdrop-opacity;
@@ -302,12 +307,6 @@
     }
 
     &.lg-use-css3 {
-        .lg-item {
-            @include backface-visibility(hidden);
-        }
-    }
-
-    &.lg-use-left {
         .lg-item {
             @include backface-visibility(hidden);
         }
@@ -370,37 +369,6 @@
                 &.lg-current {
                     @include transitionCustom(
                         transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
-                        opacity 0.1s ease 0s
-                    );
-                }
-            }
-        }
-
-        &.lg-use-left {
-            .lg-item {
-                opacity: 0;
-                position: absolute;
-                left: 0;
-
-                &.lg-prev-slide {
-                    left: -100%;
-                }
-
-                &.lg-next-slide {
-                    left: 100%;
-                }
-
-                &.lg-current {
-                    left: 0;
-                    opacity: 1;
-                }
-
-                // transition timing property and duration will be over written from javascript
-                &.lg-prev-slide,
-                &.lg-next-slide,
-                &.lg-current {
-                    @include transitionCustom(
-                        left 1s cubic-bezier(0, 0, 0.25, 1) 0s,
                         opacity 0.1s ease 0s
                     );
                 }

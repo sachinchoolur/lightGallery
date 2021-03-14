@@ -115,6 +115,7 @@
         width: 50px;
         text-decoration: none !important;
         outline: medium none;
+        will-change: color;
         @include transition(color 0.2s linear);
         background: none;
         border: none;
@@ -207,6 +208,7 @@ body:not(.lg-from-hash) {
             .lg-object {
                 @include scale3d(0.5, 0.5, 0.5);
                 opacity: 0;
+                will-change: opacity, transform;
                 @include transitionCustom(
                     transform 250ms cubic-bezier(0, 0, 0.25, 1) 0s,
                     opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important

@@ -1,5 +1,5 @@
-@import "lg-variables";
-@import "lg-mixins";
+@import 'lg-variables';
+@import 'lg-mixins';
 
 .lg-css3 {
     &.lg-zoom-in {
@@ -19,8 +19,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -42,8 +47,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -65,8 +75,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -87,8 +102,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -110,8 +130,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -133,8 +158,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -156,8 +186,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -167,11 +202,15 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(scale3d(0.8, 0.8, 0.8) translate3d(0%, 10%, 0));
+                @include transform(
+                    scale3d(0.8, 0.8, 0.8) translate3d(0%, 10%, 0)
+                );
             }
 
             &.lg-next-slide {
-                @include transform(scale3d(0.8, 0.8, 0.8) translate3d(0%, 10%, 0));
+                @include transform(
+                    scale3d(0.8, 0.8, 0.8) translate3d(0%, 10%, 0)
+                );
             }
 
             &.lg-current {
@@ -179,8 +218,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -202,8 +246,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -214,11 +263,15 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(scale3d(0, 0, 0) translate3d(-100%, -100%, 0));
+                @include transform(
+                    scale3d(0, 0, 0) translate3d(-100%, -100%, 0)
+                );
             }
 
             &.lg-next-slide {
-                @include transform(scale3d(0, 0, 0) translate3d(100%, -100%, 0));
+                @include transform(
+                    scale3d(0, 0, 0) translate3d(100%, -100%, 0)
+                );
             }
 
             &.lg-current {
@@ -226,8 +279,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -238,7 +296,9 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(scale3d(0, 0, 0) translate3d(-100%, 100%, 0));
+                @include transform(
+                    scale3d(0, 0, 0) translate3d(-100%, 100%, 0)
+                );
             }
 
             &.lg-next-slide {
@@ -250,8 +310,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -273,8 +338,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -285,11 +355,15 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(scale3d(0, 0, 0) translate3d(-100%, -100%, 0));
+                @include transform(
+                    scale3d(0, 0, 0) translate3d(-100%, -100%, 0)
+                );
             }
 
             &.lg-next-slide {
-                @include transform(scale3d(0, 0, 0) translate3d(-100%, 100%, 0));
+                @include transform(
+                    scale3d(0, 0, 0) translate3d(-100%, 100%, 0)
+                );
             }
 
             &.lg-current {
@@ -297,8 +371,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -309,7 +388,9 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(scale3d(0, 0, 0) translate3d(100%, -100%, 0));
+                @include transform(
+                    scale3d(0, 0, 0) translate3d(100%, -100%, 0)
+                );
             }
 
             &.lg-next-slide {
@@ -321,8 +402,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
             }
         }
     }
@@ -344,8 +430,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -355,11 +446,15 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(scale3d(0.5, 0.5, 0.5) translate3d(0, -150%, 0));
+                @include transform(
+                    scale3d(0.5, 0.5, 0.5) translate3d(0, -150%, 0)
+                );
             }
 
             &.lg-next-slide {
-                @include transform(scale3d(0.5, 0.5, 0.5) translate3d(0, 150%, 0));
+                @include transform(
+                    scale3d(0.5, 0.5, 0.5) translate3d(0, 150%, 0)
+                );
             }
 
             &.lg-current {
@@ -367,8 +462,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -390,8 +490,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -413,8 +518,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -436,8 +546,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -459,8 +574,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -470,11 +590,15 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(skew(20deg, 0deg) translate3d(-100%, 0%, 0px));
+                @include transform(
+                    skew(20deg, 0deg) translate3d(-100%, 0%, 0px)
+                );
             }
 
             &.lg-next-slide {
-                @include transform(skew(20deg, 0deg) translate3d(100%, 0%, 0px));
+                @include transform(
+                    skew(20deg, 0deg) translate3d(100%, 0%, 0px)
+                );
             }
 
             &.lg-current {
@@ -482,8 +606,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -493,11 +622,15 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(skew(-20deg, 0deg) translate3d(-100%, 0%, 0px));
+                @include transform(
+                    skew(-20deg, 0deg) translate3d(-100%, 0%, 0px)
+                );
             }
 
             &.lg-next-slide {
-                @include transform(skew(-20deg, 0deg) translate3d(100%, 0%, 0px));
+                @include transform(
+                    skew(-20deg, 0deg) translate3d(100%, 0%, 0px)
+                );
             }
 
             &.lg-current {
@@ -505,8 +638,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -516,11 +654,15 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(skew(0deg, 60deg) translate3d(-100%, 0%, 0px));
+                @include transform(
+                    skew(0deg, 60deg) translate3d(-100%, 0%, 0px)
+                );
             }
 
             &.lg-next-slide {
-                @include transform(skew(0deg, 60deg) translate3d(100%, 0%, 0px));
+                @include transform(
+                    skew(0deg, 60deg) translate3d(100%, 0%, 0px)
+                );
             }
 
             &.lg-current {
@@ -528,8 +670,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -539,11 +686,15 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(skew(0deg, -60deg) translate3d(-100%, 0%, 0px));
+                @include transform(
+                    skew(0deg, -60deg) translate3d(-100%, 0%, 0px)
+                );
             }
 
             &.lg-next-slide {
-                @include transform(skew(0deg, -60deg) translate3d(100%, 0%, 0px));
+                @include transform(
+                    skew(0deg, -60deg) translate3d(100%, 0%, 0px)
+                );
             }
 
             &.lg-current {
@@ -551,8 +702,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -562,7 +718,9 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(skew(60deg, 0deg) translate3d(0, -100%, 0px));
+                @include transform(
+                    skew(60deg, 0deg) translate3d(0, -100%, 0px)
+                );
             }
 
             &.lg-next-slide {
@@ -574,8 +732,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -585,11 +748,15 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(skew(-60deg, 0deg) translate3d(0, -100%, 0px));
+                @include transform(
+                    skew(-60deg, 0deg) translate3d(0, -100%, 0px)
+                );
             }
 
             &.lg-next-slide {
-                @include transform(skew(-60deg, 0deg) translate3d(0, 100%, 0px));
+                @include transform(
+                    skew(-60deg, 0deg) translate3d(0, 100%, 0px)
+                );
             }
 
             &.lg-current {
@@ -597,8 +764,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -608,7 +780,9 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(skew(0deg, 20deg) translate3d(0, -100%, 0px));
+                @include transform(
+                    skew(0deg, 20deg) translate3d(0, -100%, 0px)
+                );
             }
 
             &.lg-next-slide {
@@ -620,8 +794,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -631,11 +810,15 @@
             opacity: 0;
 
             &.lg-prev-slide {
-                @include transform(skew(0deg, -20deg) translate3d(0, -100%, 0px));
+                @include transform(
+                    skew(0deg, -20deg) translate3d(0, -100%, 0px)
+                );
             }
 
             &.lg-next-slide {
-                @include transform(skew(0deg, -20deg) translate3d(0, 100%, 0px));
+                @include transform(
+                    skew(0deg, -20deg) translate3d(0, 100%, 0px)
+                );
             }
 
             &.lg-current {
@@ -643,8 +826,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -666,8 +854,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -689,8 +882,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -712,8 +910,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -735,8 +938,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }
@@ -758,8 +966,13 @@
                 opacity: 1;
             }
 
-            &.lg-prev-slide, &.lg-next-slide, &.lg-current {
-                @include transitionCustom(transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.1s ease 0s);
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 0.1s ease 0s
+                );
             }
         }
     }

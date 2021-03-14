@@ -7,6 +7,7 @@
     width: 100%;
     z-index: $zindex-progressbar;
     opacity: 0;
+    will-change: opacity;
     @include transitionCustom(opacity 0.08s ease 0s);
 
     .lg-progress {
@@ -29,8 +30,8 @@
 .lg-autoplay-button {
     &:after {
         .lg-show-autoplay & {
-            content: "\e01a";
+            content: '\e01a';
         }
-        content: "\e01d";
+        content: '\e01d';
     }
 }

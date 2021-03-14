@@ -11,6 +11,7 @@
     &.lg-use-transition-for-zoom {
         .lg-item.lg-complete.lg-zoomable {
             .lg-img-wrap {
+                will-change: transform;
                 @include transitionCustom(
                     transform $zoom-transition-duration
                         cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s
@@ -20,22 +21,11 @@
         &.lg-zoom-drag-transition {
             .lg-item.lg-complete.lg-zoomable {
                 .lg-img-wrap {
+                    will-change: transform;
                     @include transitionCustom(
                         transform 0.8s cubic-bezier(0, 0, 0.25, 1) 0s
                     );
                 }
-            }
-        }
-    }
-    &.lg-use-left-for-zoom {
-        .lg-item.lg-complete.lg-zoomable {
-            .lg-img-wrap {
-                @include transitionCustom(
-                    left $zoom-transition-duration
-                        cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s,
-                    top $zoom-transition-duration
-                        cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s
-                );
             }
         }
     }
@@ -50,6 +40,7 @@
         .lg-dummy-img {
             // Translate required for zoom
             @include scale3d(1, 1, 1);
+            will-change: opacity, transform;
             @include transitionCustom(
                 transform $zoom-transition-duration
                     cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s,

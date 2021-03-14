@@ -12,6 +12,7 @@
         z-index: $zindex-toolbar - 1;
         opacity: 0;
         visibility: hidden;
+        will-change: visibility, opacity;
         @include transition(
             visibility 0s linear 0.18s,
             opacity 0.18s linear 0s
@@ -43,6 +44,7 @@
         opacity: 0;
         visibility: hidden;
         @include transform(translate3d(0, 5px, 0));
+        will-change: visibility, opacity, transform;
         @include transitionCustom(
             transform 0.18s linear 0s,
             visibility 0s linear 0.5s,
