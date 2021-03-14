@@ -41,9 +41,7 @@ export class Pager {
 
     private init() {
         let timeout: any;
-        this.core.outer
-            .find('.lg')
-            .append('<div class="lg-pager-outer"></div>');
+        this.core.$lgContent.append('<div class="lg-pager-outer"></div>');
 
         const $pagerOuter = this.core.outer.find('.lg-pager-outer');
 

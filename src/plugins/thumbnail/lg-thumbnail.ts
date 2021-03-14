@@ -154,7 +154,7 @@ export class Thumbnail {
 
         this.core.outer.addClass('lg-has-thumb');
 
-        this.core.outer.find('.lg').append(html);
+        this.core.$lgContent.append(html);
 
         this.$thumbOuter = this.core.outer.find('.lg-thumb-outer').first();
         this.$lgThumb = this.core.outer.find('.lg-thumb').first();

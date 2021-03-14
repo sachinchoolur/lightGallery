@@ -57,14 +57,12 @@ export class Share {
     }
 
     setLgShareMarkup(): void {
-        this.core.outer.find('.lg-toolbar').append(
+        this.core.$toolbar.append(
             `<button type="button aria-label="Share" aria-haspopup="true" aria-expanded="false" class="lg-share lg-icon">
                 <ul class="lg-dropdown" style="position: absolute;"></ul></button>`,
         );
 
-        this.core.outer
-            .find('.lg')
-            .append('<div class="lg-dropdown-overlay"></div>');
+        this.core.$lgContent.append('<div class="lg-dropdown-overlay"></div>');
         const $shareButton = this.core.outer.find('.lg-share');
         $shareButton.first().on('click.lg', () => {
             this.core.outer.toggleClass('lg-dropdown-active');

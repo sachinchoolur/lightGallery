@@ -63,6 +63,7 @@ export class LightGallery {
     public $container!: lgQuery;
 
     public $inner!: lgQuery;
+    public $toolbar!: lgQuery;
 
     // Scroll top value before lightGallery is opened
     private prevScrollTop = 0;
@@ -330,6 +331,7 @@ export class LightGallery {
         this.$backdrop = this.getElementById('lg-backdrop');
         this.$container = this.getElementById('lg-container');
         this.$inner = this.getElementById('lg-inner');
+        this.$toolbar = this.getElementById('lg-toolbar');
 
         this.$backdrop.css(
             'transition-duration',
@@ -355,13 +357,11 @@ export class LightGallery {
         this.$inner.css('transition-duration', this.settings.speed + 'ms');
 
         if (this.settings.download) {
-            this.outer
-                .find('.lg-toolbar')
-                .append(
-                    `<a id="${this.getIdName(
-                        'lg-download',
-                    )}" target="_blank" aria-label="Download" download class="lg-download lg-icon"></a>`,
-                );
+            this.$toolbar.append(
+                `<a id="${this.getIdName(
+                    'lg-download',
+                )}" target="_blank" aria-label="Download" download class="lg-download lg-icon"></a>`,
+            );
         }
 
         this.counter();
@@ -646,7 +646,7 @@ export class LightGallery {
                 bottom: 0,
             };
         }
-        const top = this.outer.find('.lg-toolbar').get().clientHeight || 0;
+        const top = this.$toolbar.get().clientHeight || 0;
         const captionHeight =
             this.settings.defaultCaptionHeight ||
             this.outer.find('.lg-sub-html').get().clientHeight;

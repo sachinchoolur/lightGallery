@@ -49,11 +49,9 @@ export class Autoplay {
 
         // Create progress bar
         if (this.settings.progressBar) {
-            this.core.outer
-                .find('.lg')
-                .append(
-                    '<div class="lg-progress-bar"><div class="lg-progress"></div></div>',
-                );
+            this.core.$lgContent.append(
+                '<div class="lg-progress-bar"><div class="lg-progress"></div></div>',
+            );
         }
 
         // Start autoplay

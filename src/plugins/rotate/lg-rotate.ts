@@ -47,7 +47,7 @@ export class Rotate {
             rotateIcons +=
                 '<button type="button" id="lg-rotate-right" aria-label="Rotate right" class="lg-rotate-right lg-icon"></button>';
         }
-        this.core.outer.find('.lg-toolbar').append(rotateIcons);
+        this.core.$toolbar.append(rotateIcons);
     }
 
     init(): void {
