@@ -69,7 +69,7 @@ export class Zoom {
 
         this.core.outer.addClass('lg-use-transition-for-zoom');
 
-        this.core.outer.find('.lg-toolbar').first().append(zoomIcons);
+        this.core.$toolbar.first().append(zoomIcons);
     }
 
     /**
@@ -196,7 +196,7 @@ export class Zoom {
     }
 
     getDragAllowedAxises($image: lgQuery, rotateValue: number) {
-        const $lg = this.core.outer.find('.lg').get();
+        const $lg = this.core.$lgContent.get();
         const scale = parseFloat($image.attr('data-scale') as string) || 1;
         const imgEl = $image.get() as HTMLImageElement;
         const allowY =
@@ -272,12 +272,15 @@ export class Zoom {
         const imageNode = $image.get();
         if (!imageNode) return;
 
+        const containerRect = this.core.outer.get().getBoundingClientRect();
         // Find offset manually to avoid issue after zoom
-        const offsetX = (this.core.outer.width() - imageNode.offsetWidth) / 2;
+        const offsetX =
+            (containerRect.width - imageNode.offsetWidth) / 2 +
+            containerRect.left;
         const offsetY =
-            (this.core.outer.height() - imageNode.offsetHeight) / 2 +
-            $LG(window).scrollTop();
-
+            (containerRect.height - imageNode.offsetHeight) / 2 +
+            $LG(window).scrollTop() +
+            containerRect.top;
         let originalX;
         let originalY;
 
@@ -412,8 +415,12 @@ export class Zoom {
             cords.x = event.pageX || event.targetTouches[0].pageX;
             cords.y = event.pageY || event.targetTouches[0].pageY;
         } else {
-            cords.x = this.core.outer.width() / 2;
-            cords.y = this.core.outer.height() / 2 + $LG(window).scrollTop();
+            const containerRect = this.core.outer.get().getBoundingClientRect();
+            cords.x = containerRect.width / 2 + containerRect.left;
+            cords.y =
+                containerRect.height / 2 +
+                $LG(window).scrollTop() +
+                containerRect.top;
         }
         return cords;
     }
@@ -491,7 +498,7 @@ export class Zoom {
         });
 
         this.core.getElementById('lg-zoom-out').on('click.lg', () => {
-            if (this.core.outer.find('.lg-current .lg-image').first()) {
+            if (this.core.outer.find('.lg-current .lg-image').get()) {
                 this.scale -= this.settings.scale;
 
                 this.scale = this.getScale(this.scale);
@@ -788,7 +795,7 @@ export class Zoom {
         $image: lgQuery,
         rotateValue: number,
     ): PossibleCords {
-        const $cont = this.core.outer.find('.lg');
+        const $cont = this.core.$lgContent;
 
         const contHeight = $cont.height();
         const contWidth = $cont.width();
