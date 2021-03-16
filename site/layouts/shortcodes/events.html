@@ -1,0 +1,51 @@
+{{$interface := dict}}
+{{$interfaceName := .Get "interface"}}
+{{ range .Site.Data.doc.children -}}
+{{ if eq .name $interfaceName}}
+{{$interface = .children}}
+{{ end }}
+{{ end -}}
+<div class="docs-event-section">
+
+{{ range .Site.Data.doc.children -}}
+    {{ if eq .name $interfaceName}}
+        {{ range .comment.tags -}}
+            {{ if eq .tag "name"}}
+                <span class="doc-events-name">Name</span><b>{{.text}}</b>
+            {{ end}}
+        {{ end -}}
+        <span class="doc-events-description">Description</span>
+        <p>{{.comment.shortText}}</p>
+    {{ end }}
+{{ end }}
+    {{if $interface }} 
+<span class="doc-event-object">Event object</span>
+<table class="options" style="width:100%">
+
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+
+
+    {{range $index, $element := $interface}}
+    <tr>
+        <td>{{$element.name}}</td>
+        <td>{{$element.type.name}}</td>
+
+            <td>
+                {{.comment.shortText  | safeHTML}}
+                {{ range .comment.tags -}}
+                    {{ if eq .tag "description"}}
+                        <p>
+                            {{.text}}
+                        </p>
+                    {{ end}}
+                {{ end -}}
+            </td>
+        </tr>
+    {{ end }}
+  </table>
+{{ end }}
+</div>
