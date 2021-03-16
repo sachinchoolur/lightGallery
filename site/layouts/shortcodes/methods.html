@@ -1,0 +1,70 @@
+{{$interface := dict}}
+{{$categoryId := int 0}}
+{{ $categoryIds := slice }}
+{{$interfaceName := .Get "interface"}}
+{{ range .Site.Data.doc.children -}}
+{{ if eq .name $interfaceName}}
+{{$interface = .children}}
+{{ end }}
+{{ end -}}
+<div class="docs-methods-section">
+
+    {{ range .Site.Data.doc.children -}}
+    {{ if eq .name "LightGallery"}}
+            {{ range .groups -}}
+            {{ if eq .title "Methods"}}
+                
+                    {{ range .categories -}}
+                        {{ if eq .title "lGPublicMethods"}}
+                            {{$categoryIds = .children}}
+                        {{ end }}
+                        {{.name}}
+                        {{.comment.shortText}}
+                    {{end -}}
+                {{ end}}
+            {{ end -}}
+        {{ end }}
+    {{ end }}
+
+
+
+
+    {{$method := dict}}
+    {{$categoryId := int 0}}
+
+    {{ range .Site.Data.doc.children -}}
+    {{ if eq .name "LightGallery"}}
+            {{ range .children -}}
+                {{$method := .}}
+                {{range $categoryIds -}}
+                        {{$categoryId = .}}
+                        {{ with $method }}
+                        {{ if eq (int .id) (int $categoryId)}}
+
+                            {{ range .signatures -}}
+                            
+                            <b>{{.name}}</b> 
+                            
+                                <p>{{.comment.shortText}}</p> 
+                                <p>{{.comment.text}}</p>
+
+                                {{ range .comment.tags -}}
+                                    <p class="docs-example">Example</p>
+                                    {{ if eq .tag "example"}}
+                                        {{ highlight .text "js" "" }}
+                                    {{ end}}
+                                    {{ if eq .tag "note"}}
+                                        <span>Note : </span>
+                                        {{.text | markdownify}}
+                                    {{ end}}
+                                {{ end -}}
+
+                            {{end -}}
+                        {{ end}}
+                    {{ end }}
+                {{end -}}
+            {{ end -}}
+        {{ end }}
+    {{ end }}
+
+</div>
