@@ -1,0 +1,17 @@
+.options-table {
+    width: 100%;
+    table-layout: fixed;
+    .options-table-tr-head {
+        background-color: #fafafa;
+    }
+
+    .options-table-description {
+        td {
+            padding-bottom: 30px;
+            padding-top: 12px;
+        }
+        p {
+            margin-bottom: 3px;
+        }
+    }
+}

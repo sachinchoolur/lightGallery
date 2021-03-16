@@ -1,0 +1,9 @@
+.lg-methods-demo {
+    .lg-next,
+    .lg-prev {
+        &:after,
+        &:before {
+            content: '';
+        }
+    }
+}

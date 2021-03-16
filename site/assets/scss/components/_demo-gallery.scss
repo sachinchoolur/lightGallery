@@ -1,0 +1,67 @@
+.lightGallery-captions {
+    h4 {
+        transform: translate3d(60px, 0, 0px);
+    }
+    p {
+        transform: translate3d(-60px, 0, 0px);
+    }
+    h4,
+    p {
+        opacity: 0;
+    }
+}
+.lg-current {
+    .lightGallery-captions {
+        h4,
+        p {
+            transform: translate3d(0, 0, 0px);
+        }
+        h4,
+        p {
+            opacity: 1;
+        }
+    }
+}
+.lg-slide-progress {
+    .lightGallery-captions {
+        h4 {
+            transform: translate3d(-60px, 0, 0px);
+        }
+        p {
+            transform: translate3d(60px, 0, 0px);
+        }
+        h4,
+        p {
+            opacity: 0;
+        }
+    }
+}
+
+.lightGallery-captions {
+    h4,
+    p {
+        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in;
+    }
+}
+.lg-current {
+    .lightGallery-captions {
+        h4,
+        p {
+            transition-delay: 500ms;
+        }
+    }
+    &.lg-slide-progress {
+        .lightGallery-captions {
+            h4,
+            p {
+                transition-delay: 0ms;
+            }
+        }
+    }
+}
+
+// For inline gallery
+.inline-gallery-container {
+    padding-bottom: 75%;
+    height: 0;
+}

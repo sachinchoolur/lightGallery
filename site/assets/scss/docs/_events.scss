@@ -1,0 +1,22 @@
+.docs-event-section {
+    border-bottom: 2px solid #f1f1f1;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+}
+.doc-events-description {
+    margin-top: 10px;
+}
+
+.doc-events-name,
+.doc-events-description,
+.doc-event-object {
+    font-size: 12px;
+    display: block;
+}
+
+.lg-events-demo-outer {
+    .lg-backdrop {
+        transition: opacity 333ms ease-in 0s, background-color 0s ease 0s,
+            all 333ms ease-in 0s;
+    }
+}
