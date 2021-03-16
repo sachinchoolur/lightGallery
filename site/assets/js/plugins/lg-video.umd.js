@@ -4,10 +4,9 @@
     (factory((global.lgVideo = {})));
 }(this, (function (exports) { 'use strict';
 
-    var videoDefaults = {
-        videoMaxWidth: '1200px',
+    var videoSettings = {
         autoplayFirstVideo: true,
-        youtubePlayerParams: false,
+        youTubePlayerParams: false,
         vimeoPlayerParams: false,
         wistiaPlayerParams: false,
         gotoNextSlideOnVideoEnd: true,
@@ -16,6 +15,34 @@
         videojsOptions: {},
     };
     //# sourceMappingURL=lg-video-settings.js.map
+
+    /**
+     * List of lightGallery events
+     * All events should be documented here
+     * Below interfaces are used to build the website documentations
+     * */
+    var lGEvents = {
+        afterAppendSlide: 'afterAppendSlide.lg',
+        init: 'init.lg',
+        hasVideo: 'hasVideo.lg',
+        containerResize: 'containerResize.lg',
+        updateSlides: 'updateSlides.lg',
+        afterAppendSubHtml: 'afterAppendSubHtml.lg',
+        beforeOpen: 'beforeOpen.lg',
+        afterOpen: 'afterOpen.lg',
+        slideItemLoad: 'slideItemLoad.lg',
+        beforeSlide: 'beforeSlide.lg',
+        afterSlide: 'afterSlide.lg',
+        posterClick: 'posterClick.lg',
+        dragStart: 'dragStart.lg',
+        dragMove: 'dragMove.lg',
+        dragEnd: 'dragEnd.lg',
+        beforeNextSlide: 'beforeNextSlide.lg',
+        beforePrevSlide: 'beforePrevSlide.lg',
+        beforeClose: 'beforeClose.lg',
+        afterClose: 'afterClose.lg',
+    };
+    //# sourceMappingURL=lg-events.js.map
 
     /**
      * Video module for lightGallery
@@ -29,6 +56,8 @@
      * https://wistia.com/support/developers/construct-an-embed-code
      * http://jsfiddle.net/xvnm7xLm/
      * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
+     * https://wistia.com/support/embed-and-share/sharing-videos
+     * https://private-sharing.wistia.com/medias/mwhrulrucj
      *
      * @ref Youtube
      * https://developers.google.com/youtube/player_parameters#enablejsapi
@@ -45,7 +74,7 @@
     var Video = /** @class */ (function () {
         function Video(instance) {
             this.core = instance;
-            this.s = Object.assign({}, videoDefaults, this.core.s);
+            this.settings = Object.assign({}, videoSettings, this.core.settings);
             this.init();
             return this;
         }
@@ -56,13 +85,10 @@
              * Append video HTML
              * Play if autoplayFirstVideo is true
              */
-            this.core.LGel.on('hasVideo.lg.video', this.onHasVideo.bind(this));
-            // Set max width for video
-            this.core.LGel.on('onAferAppendSlide.lg.video', this.onAferAppendSlide.bind(this));
-            if (this.core.doCss() &&
-                this.core.galleryItems.length > 1 &&
-                (this.core.s.enableSwipe || this.core.s.enableDrag)) {
-                this.core.LGel.on('onSlideClick.lg.video', function () {
+            this.core.LGel.on(lGEvents.hasVideo + ".video", this.onHasVideo.bind(this));
+            if (this.core.galleryItems.length > 1 &&
+                (this.core.settings.enableSwipe || this.core.settings.enableDrag)) {
+                this.core.LGel.on(lGEvents.posterClick + ".video", function () {
                     var $el = _this.core.getSlideItem(_this.core.index);
                     _this.loadVideoOnPosterClick($el);
                 });
@@ -78,9 +104,9 @@
                 });
             }
             // @desc fired immediately before each slide transition.
-            this.core.LGel.on('onBeforeSlide.lg.video', this.onBeforeSlide.bind(this));
+            this.core.LGel.on(lGEvents.beforeSlide + ".video", this.onBeforeSlide.bind(this));
             // @desc fired immediately after each slide transition.
-            this.core.LGel.on('onAfterSlide.lg.video', this.onAfterSlide.bind(this));
+            this.core.LGel.on(lGEvents.afterSlide + ".video", this.onAfterSlide.bind(this));
         };
         /**
          * @desc Event triggered when video url or poster found
@@ -88,12 +114,9 @@
          * Play if autoplayFirstVideo is true
          *
          * @param {Event} event - Javascript Event object.
-         * @param {number} index - Current index of the slide
-         * @param {string} src - src of the video
-         * @param {string} html - HTML5 video
          */
         Video.prototype.onHasVideo = function (event) {
-            var _a = event.detail, index = _a.index, src = _a.src, html5Video = _a.html5Video, hasPoster = _a.hasPoster;
+            var _a = event.detail, index = _a.index, src = _a.src, html5Video = _a.html5Video, hasPoster = _a.hasPoster, isFirstSlide = _a.isFirstSlide;
             if (!hasPoster) {
                 // All functions are called separately if poster exist in loadVideoOnPosterClick function
                 this.appendVideos(this.core.getSlideItem(index), {
@@ -105,7 +128,7 @@
                 // Automatically navigate to next slide once video reaches the end.
                 this.gotoNextSlideOnVideoEnd(src, index);
             }
-            if (this.s.autoplayFirstVideo && !this.core.lGalleryOn) {
+            if (this.settings.autoplayFirstVideo && isFirstSlide) {
                 if (hasPoster) {
                     var $slide = this.core.getSlideItem(index);
                     this.loadVideoOnPosterClick($slide);
@@ -113,22 +136,6 @@
                 else {
                     this.playVideo(index);
                 }
-            }
-        };
-        /**
-         * @desc Fired when the slide content has been inserted into its slide container.
-         * Set max width for video
-         *
-         * @param {Event} event - Javascript Event object.
-         * @param {number} index - Current index of the slide
-         */
-        Video.prototype.onAferAppendSlide = function (event) {
-            var $videoCont = this.core
-                .getSlideItem(event.detail.index)
-                .find('.lg-video-cont')
-                .first();
-            if (!$videoCont.hasClass('lg-has-iframe')) {
-                $videoCont.css('max-width', this.s.videoMaxWidth);
             }
         };
         /**
@@ -158,12 +165,11 @@
          */
         Video.prototype.onAfterSlide = function (event) {
             var _this = this;
-            var _a = event.detail, prevIndex = _a.prevIndex, index = _a.index;
-            if (this.s.autoplayVideoOnSlide && this.core.lGalleryOn) {
-                this.core.getSlideItem(prevIndex).removeClass('lg-video-playing');
+            var index = event.detail.index;
+            if (this.settings.autoplayVideoOnSlide && this.core.lGalleryOn) {
                 setTimeout(function () {
                     var $slide = _this.core.getSlideItem(index);
-                    if ($slide.find('.lg-object').first().hasClass('lg-has-poster')) {
+                    if (!$slide.hasClass('lg-video-loaded')) {
                         _this.loadVideoOnPosterClick($slide);
                     }
                     else {
@@ -190,24 +196,27 @@
             var video = '';
             var videoInfo = this.core.galleryItems[index]
                 .__slideVideoInfo || {};
-            var currentDynamicItem = this.core.galleryItems[index];
-            var videoTitle = currentDynamicItem.title || currentDynamicItem.alt;
+            var currentGalleryItem = this.core.galleryItems[index];
+            var videoTitle = currentGalleryItem.title || currentGalleryItem.alt;
             videoTitle = videoTitle ? 'title="' + videoTitle + '"' : '';
             var commonIframeProps = "allowtransparency=\"true\" \n            frameborder=\"0\" \n            scrolling=\"no\" \n            allowfullscreen \n            mozallowfullscreen \n            webkitallowfullscreen \n            oallowfullscreen \n            msallowfullscreen";
             if (videoInfo.youtube) {
                 var videoId = 'lg-youtube' + index;
-                var youtubePlayerParams = "?wmode=opaque&autoplay=0&enablejsapi=1";
-                var playerParams = youtubePlayerParams + '&' + param(this.s.youtubePlayerParams);
+                var youTubePlayerParams = "?wmode=opaque&autoplay=0&enablejsapi=1";
+                var playerParams = youTubePlayerParams +
+                    (this.settings.youTubePlayerParams
+                        ? '&' + param(this.settings.youTubePlayerParams)
+                        : '');
                 video = "<iframe allow=\"autoplay\" id=" + videoId + " class=\"lg-video-object lg-youtube " + addClass + "\" " + videoTitle + " src=\"//www.youtube.com/embed/" + (videoInfo.youtube[1] + playerParams) + "\" " + commonIframeProps + "></iframe>";
             }
             else if (videoInfo.vimeo) {
                 var videoId = 'lg-vimeo' + index;
-                var playerParams = param(this.s.vimeoPlayerParams);
+                var playerParams = param(this.settings.vimeoPlayerParams);
                 video = "<iframe allow=\"autoplay\" id=" + videoId + " class=\"lg-video-object lg-vimeo " + addClass + "\" " + videoTitle + " src=\"//player.vimeo.com/video/" + (videoInfo.vimeo[1] + playerParams) + "\" " + commonIframeProps + "></iframe>";
             }
             else if (videoInfo.wistia) {
                 var wistiaId = 'lg-wistia' + index;
-                var playerParams = param(this.s.wistiaPlayerParams);
+                var playerParams = param(this.settings.wistiaPlayerParams);
                 video = "<iframe allow=\"autoplay\" id=\"" + wistiaId + "\" src=\"//fast.wistia.net/embed/iframe/" + (videoInfo.wistia[4] + playerParams) + "\" " + videoTitle + " class=\"wistia_embed lg-video-object lg-wistia " + addClass + "\" name=\"wistia_embed\" " + commonIframeProps + "></iframe>";
             }
             else if (videoInfo.html5) {
@@ -216,12 +225,11 @@
                     html5VideoMarkup += "<source src=\"" + html5Video.source[i].src + "\" type=\"" + html5Video.source[i].type + "\">";
                 }
                 var html5VideoAttrs_1 = '';
-                Object.keys(html5Video).forEach(function (key) {
-                    if (key !== 'source') {
-                        html5VideoAttrs_1 += key + "=\"" + html5Video[key] + "\" ";
-                    }
+                var videoAttributes_1 = html5Video.attributes || {};
+                Object.keys(videoAttributes_1 || {}).forEach(function (key) {
+                    html5VideoAttrs_1 += key + "=\"" + videoAttributes_1[key] + "\" ";
                 });
-                video = "<video class=\"lg-video-object lg-html5 " + (this.s.videojs ? 'video-js' : '') + "\" " + html5VideoAttrs_1 + ">\n                " + html5VideoMarkup + "\n                Your browser does not support HTML5 video.\n            </video>";
+                video = "<video class=\"lg-video-object lg-html5 " + (this.settings.videojs ? 'video-js' : '') + "\" " + html5VideoAttrs_1 + ">\n                " + html5VideoMarkup + "\n                Your browser does not support HTML5 video.\n            </video>";
             }
             return video;
         };
@@ -232,21 +240,18 @@
          * @param {Object} videoParams - Video parameters, Contains src, class, index, htmlVideo
          */
         Video.prototype.appendVideos = function (el, videoParams) {
+            var _a;
             var videoHtml = this.getVideoHtml(videoParams.src, videoParams.addClass, videoParams.index, videoParams.html5Video);
-            el.find('.lg-video').append(videoHtml);
+            el.find('.lg-video-cont').append(videoHtml);
             var $videoElement = el.find('.lg-video-object').first();
-            if (this.s.videojs) {
+            if (this.settings.videojs && ((_a = this.core.galleryItems[videoParams.index].__slideVideoInfo) === null || _a === void 0 ? void 0 : _a.html5)) {
                 try {
-                    videojs($videoElement.get(), this.s.videojsOptions);
+                    return videojs($videoElement.get(), this.settings.videojsOptions);
                 }
                 catch (e) {
                     console.error('lightGallery:- Make sure you have included videojs');
                 }
             }
-            this.core.LGel.trigger('onAppendVideo.lg', [
-                $videoElement,
-                videoParams.index,
-            ]);
         };
         Video.prototype.gotoNextSlideOnVideoEnd = function (src, index) {
             var _this = this;
@@ -255,27 +260,11 @@
                 .find('.lg-video-object')
                 .first();
             var videoInfo = this.core.galleryItems[index].__slideVideoInfo || {};
-            if (this.s.gotoNextSlideOnVideoEnd) {
+            if (this.settings.gotoNextSlideOnVideoEnd) {
                 if (videoInfo.html5) {
                     $videoElement.on('ended', function () {
                         _this.core.goToNextSlide();
                     });
-                }
-                else if (videoInfo.youtube) {
-                    try {
-                        new YT.Player($videoElement.attr('id'), {
-                            events: {
-                                onStateChange: function (event) {
-                                    if (event.data === YT.PlayerState.ENDED) {
-                                        _this.core.goToNextSlide();
-                                    }
-                                },
-                            },
-                        });
-                    }
-                    catch (e) {
-                        console.error('lightGallery:- Make sure you have included //www.youtube.com/iframe_api');
-                    }
                 }
                 else if (videoInfo.vimeo) {
                     try {
@@ -317,18 +306,10 @@
                 return;
             if (videoInfo.youtube) {
                 try {
-                    // @todo Do not create multiple player instences
-                    // Create and store in dynamic array
-                    new YT.Player($videoElement.attr('id'), {
-                        events: {
-                            onReady: function (event) {
-                                event.target[action + "Video"]();
-                            },
-                        },
-                    });
+                    $videoElement.get().contentWindow.postMessage("{\"event\":\"command\",\"func\":\"" + action + "Video\",\"args\":\"\"}", '*');
                 }
                 catch (e) {
-                    console.error('lightGallery:- Make sure you have included //www.youtube.com/iframe_api');
+                    console.error("lightGallery:- " + e);
                 }
             }
             else if (videoInfo.vimeo) {
@@ -340,7 +321,7 @@
                 }
             }
             else if (videoInfo.html5) {
-                if (this.s.videojs) {
+                if (this.settings.videojs) {
                     try {
                         videojs($videoElement.get())[action]();
                     }
@@ -369,49 +350,55 @@
             }
         };
         Video.prototype.loadVideoOnPosterClick = function ($el) {
+            var _this = this;
             // check slide has poster
-            if ($el.find('.lg-object').first().hasClass('lg-has-poster') &&
-                $el.find('.lg-object').first().style().display !== 'none') {
+            if (!$el.hasClass('lg-video-loaded')) {
                 // check already video element present
                 if (!$el.hasClass('lg-has-video')) {
-                    $el.addClass('lg-video-playing lg-has-video');
+                    $el.addClass('lg-has-video');
                     var _html = void 0;
                     var _src = this.core.galleryItems[this.core.index].src;
-                    if (this.core.galleryItems[this.core.index].video) {
-                        _html = JSON.parse(this.core.galleryItems[this.core.index].video);
+                    var video = this.core.galleryItems[this.core.index].video;
+                    if (video) {
+                        _html =
+                            typeof video === 'string' ? JSON.parse(video) : video;
                     }
-                    this.appendVideos($el, {
+                    var videoJsPlayer_1 = this.appendVideos($el, {
                         src: _src,
                         addClass: '',
                         index: this.core.index,
                         html5Video: _html,
                     });
                     this.gotoNextSlideOnVideoEnd(_src, this.core.index);
-                    this.playVideo(this.core.index);
                     var $tempImg = $el.find('.lg-object').first().get();
                     // @todo make sure it is working
-                    $el.find('.lg-video').first().append($tempImg);
-                    // @todo loading icon for html5 videos also
-                    // for showing the loading indicator while loading video
-                    if (!$el.find('.lg-video-object').first().hasClass('lg-html5')) {
-                        $el.removeClass('lg-complete');
-                        $el.find('.lg-video-object')
-                            .first()
-                            .on('load.lg error.lg', function () {
-                            $el.addClass('lg-complete');
+                    $el.find('.lg-video-cont').first().append($tempImg);
+                    $el.addClass('lg-video-loading');
+                    videoJsPlayer_1 &&
+                        videoJsPlayer_1.ready(function () {
+                            videoJsPlayer_1.on('loadedmetadata', function () {
+                                _this.onVideoLoadAfterPosterClick($el, _this.core.index);
+                            });
                         });
-                    }
+                    $el.find('.lg-video-object')
+                        .first()
+                        .on('load.lg error.lg loadeddata.lg', function () {
+                        setTimeout(function () {
+                            _this.onVideoLoadAfterPosterClick($el, _this.core.index);
+                        }, 50);
+                    });
                 }
                 else {
                     this.playVideo(this.core.index);
-                    $el.addClass('lg-video-playing');
                 }
             }
         };
-        Video.prototype.destroy = function (clear) {
-            if (clear) {
-                this.core.LGel.off('.lg.video');
-            }
+        Video.prototype.onVideoLoadAfterPosterClick = function ($el, index) {
+            $el.addClass('lg-video-loaded');
+            this.playVideo(index);
+        };
+        Video.prototype.destroy = function () {
+            this.core.LGel.off('.lg.video');
         };
         return Video;
     }());

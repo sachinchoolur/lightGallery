@@ -1,45 +1,67 @@
-/*!
- * lightgallery | 0.0.0 | January 16th 2021
- * http://sachinchoolur.github.io/lightGallery/
- * Copyright (c) 2020 Sachin Neravath;
- * @license GPLv3
- */
-
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
     (factory((global.lgComment = {})));
 }(this, (function (exports) { 'use strict';
 
-    var commentDefaults = {
-        commentBox: true,
+    /**
+     * List of lightGallery events
+     * All events should be documented here
+     * Below interfaces are used to build the website documentations
+     * */
+    var lGEvents = {
+        afterAppendSlide: 'afterAppendSlide.lg',
+        init: 'init.lg',
+        hasVideo: 'hasVideo.lg',
+        containerResize: 'containerResize.lg',
+        updateSlides: 'updateSlides.lg',
+        afterAppendSubHtml: 'afterAppendSubHtml.lg',
+        beforeOpen: 'beforeOpen.lg',
+        afterOpen: 'afterOpen.lg',
+        slideItemLoad: 'slideItemLoad.lg',
+        beforeSlide: 'beforeSlide.lg',
+        afterSlide: 'afterSlide.lg',
+        posterClick: 'posterClick.lg',
+        dragStart: 'dragStart.lg',
+        dragMove: 'dragMove.lg',
+        dragEnd: 'dragEnd.lg',
+        beforeNextSlide: 'beforeNextSlide.lg',
+        beforePrevSlide: 'beforePrevSlide.lg',
+        beforeClose: 'beforeClose.lg',
+        afterClose: 'afterClose.lg',
+    };
+    //# sourceMappingURL=lg-events.js.map
+
+    var commentSettings = {
+        commentBox: false,
         fbComments: false,
-        disqusComments: true,
+        disqusComments: false,
         disqusConfig: {
             title: undefined,
             language: 'en',
         },
-        fbCommentsMarkup: '<div id="lg-comment-box" class="lg-comment-box lg-fb-comment-box"><div class="lg-comment-header"><h3 class="lg-comment-title">Leave a comment.</h3><span id="lg-comment-close"  class="lg-icon"></span></div><div id="lg-comment-body"></div></div>',
+        commentsMarkup: '<div id="lg-comment-box" class="lg-comment-box lg-fb-comment-box"><div class="lg-comment-header"><h3 class="lg-comment-title">Leave a comment.</h3><span class="lg-comment-close"  class="lg-icon"></span></div><div class="lg-comment-body"></div></div>',
     };
+    //# sourceMappingURL=lg-comment-settings.js.map
 
     /**
-     * @desc lightGallery comments module
+     * lightGallery comments module
      * Supports facebook and disqus comments
      *
-     * @ref - https://paulund.co.uk/add-google-comments-to-your-site
      * @ref - https://help.disqus.com/customer/portal/articles/472098-javascript-configuration-variables
      * @ref - https://github.com/disqus/DISQUS-API-Recipes/blob/master/snippets/js/disqus-reset/disqus_reset.html
      * @ref - https://css-tricks.com/lazy-loading-disqus-comments/
+     * @ref - https://developers.facebook.com/docs/plugins/comments/#comments-plugin
      *
      */
-    var LG = window.LG;
+    var $LG = window.$LG;
     var CommentBox = /** @class */ (function () {
         function CommentBox(instance) {
             // get lightGallery core plugin data
             this.core = instance;
             // extend module default settings with lightGallery core settings
-            this.s = Object.assign({}, commentDefaults, this.core.s);
-            if (this.s.commentBox) {
+            this.settings = Object.assign({}, commentSettings, this.core.settings);
+            if (this.settings.commentBox) {
                 this.init();
             }
             return this;
@@ -47,74 +69,85 @@
         CommentBox.prototype.init = function () {
             this.setMarkup();
             this.toggleCommentBox();
-            if (this.s.fbComments) {
+            if (this.settings.fbComments) {
                 this.addFbComments();
             }
-            else if (this.s.disqusComments) {
+            else if (this.settings.disqusComments) {
                 this.addDisqusComments();
             }
         };
         CommentBox.prototype.setMarkup = function () {
-            this.core.outer
-                .find('.lg')
-                .append(this.s.fbCommentsMarkup + '<div id="lg-comment-overlay"></div>');
-            var commentToggleBtn = '<span id="lg-comment-toggle" class="lg-icon"></span>';
-            this.core.outer.find('.lg-toolbar').append(commentToggleBtn);
+            this.core.$lgContent.append(this.settings.commentsMarkup +
+                '<div class="lg-comment-overlay"></div>');
+            var commentToggleBtn = '<button type="button" aria-label="Toggle comments" class="lg-comment-toggle lg-icon"></button>';
+            this.core.$toolbar.append(commentToggleBtn);
         };
         CommentBox.prototype.toggleCommentBox = function () {
             var _this_1 = this;
-            LG('#lg-comment-toggle').on('click.lg.comment', function () {
+            this.core.outer
+                .find('.lg-comment-toggle')
+                .first()
+                .on('click.lg.comment', function () {
                 _this_1.core.outer.toggleClass('lg-comment-active');
             });
-            LG('#lg-comment-overlay').on('click.lg.comment', function () {
+            this.core.outer
+                .find('.lg-comment-overlay')
+                .first()
+                .on('click.lg.comment', function () {
                 _this_1.core.outer.removeClass('lg-comment-active');
             });
-            LG('#lg-comment-close').on('click.lg.comment', function () {
+            this.core.outer
+                .find('.lg-comment-close')
+                .first()
+                .on('click.lg.comment', function () {
                 _this_1.core.outer.removeClass('lg-comment-active');
             });
         };
         CommentBox.prototype.addFbComments = function () {
             var _this_1 = this;
-            this.core.LGel.on('onBeforeSlide.lg.comment', function (event) {
-                var index = event.detail.index;
-                LG('#lg-comment-body').html(LG(_this_1.core.items).eq(index).attr('data-fb-html'));
+            this.core.LGel.on(lGEvents.beforeSlide + ".comment", function (event) {
+                var html = _this_1.core.galleryItems[event.detail.index].fbHtml;
+                _this_1.core.outer.find('.lg-comment-body').html(html);
             });
-            this.core.LGel.on('onAfterSlide.lg.comment', function () {
+            this.core.LGel.on(lGEvents.afterSlide + ".comment", function () {
                 try {
                     FB.XFBML.parse();
                 }
                 catch (err) {
-                    LG(window).on('fbAsyncInit', function () {
+                    $LG(window).on('fbAsyncInit', function () {
                         FB.XFBML.parse();
                     });
                 }
             });
         };
         CommentBox.prototype.addDisqusComments = function () {
-            // eslint-disable-next-line @typescript-eslint/no-this-alias
-            var _this = this;
-            var $disqusThread = LG('#disqus_thread');
+            var _this_1 = this;
+            var $disqusThread = $LG('#disqus_thread');
             $disqusThread.remove();
-            LG('#lg-comment-body').append('<div id="disqus_thread"></div>');
-            this.core.LGel.on('onBeforeSlide.lg.comment', function () {
+            this.core.outer
+                .find('.lg-comment-body')
+                .append('<div id="disqus_thread"></div>');
+            this.core.LGel.on(lGEvents.beforeSlide + ".comment", function () {
                 $disqusThread.html('');
             });
-            this.core.LGel.on('onAfterSlide.lg.comment', function (event) {
+            this.core.LGel.on(lGEvents.afterSlide + ".comment", function (event) {
                 var index = event.detail.index;
+                // eslint-disable-next-line @typescript-eslint/no-this-alias
+                var _this = _this_1;
                 // DISQUS needs sometime to intialize when lightGallery is opened from direct url(hash plugin).
                 setTimeout(function () {
                     try {
                         DISQUS.reset({
                             reload: true,
                             config: function () {
-                                this.page.identifier = LG(_this.core.items)
-                                    .eq(index)
-                                    .attr('data-disqus-identifier');
-                                this.page.url = LG(_this.core.items)
-                                    .eq(index)
-                                    .attr('data-disqus-url');
-                                this.page.title = this.s.disqusConfig.title;
-                                this.language = this.s.disqusConfig.language;
+                                this.page.identifier =
+                                    _this.core.galleryItems[index].disqusIdentifier;
+                                this.page.url =
+                                    _this.core.galleryItems[index].disqusURL;
+                                this.page.title =
+                                    _this.settings.disqusConfig.title;
+                                this.language =
+                                    _this.settings.disqusConfig.language;
                             },
                         });
                     }
@@ -124,10 +157,8 @@
                 }, _this.core.lGalleryOn ? 0 : 1000);
             });
         };
-        CommentBox.prototype.destroy = function (clear) {
-            if (clear) {
-                this.core.LGel.off('.lg.comment');
-            }
+        CommentBox.prototype.destroy = function () {
+            this.core.LGel.off('.lg.comment');
         };
         return CommentBox;
     }());

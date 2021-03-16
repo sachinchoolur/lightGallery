@@ -1,17 +1,37 @@
-/*!
- * lightgallery | 0.0.0 | January 16th 2021
- * http://sachinchoolur.github.io/lightGallery/
- * Copyright (c) 2020 Sachin Neravath;
- * @license GPLv3
- */
-
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
     (factory((global.lgRotate = {})));
 }(this, (function (exports) { 'use strict';
 
-    var LG = window.LG;
+    /**
+     * List of lightGallery events
+     * All events should be documented here
+     * Below interfaces are used to build the website documentations
+     * */
+    var lGEvents = {
+        afterAppendSlide: 'afterAppendSlide.lg',
+        init: 'init.lg',
+        hasVideo: 'hasVideo.lg',
+        containerResize: 'containerResize.lg',
+        updateSlides: 'updateSlides.lg',
+        afterAppendSubHtml: 'afterAppendSubHtml.lg',
+        beforeOpen: 'beforeOpen.lg',
+        afterOpen: 'afterOpen.lg',
+        slideItemLoad: 'slideItemLoad.lg',
+        beforeSlide: 'beforeSlide.lg',
+        afterSlide: 'afterSlide.lg',
+        posterClick: 'posterClick.lg',
+        dragStart: 'dragStart.lg',
+        dragMove: 'dragMove.lg',
+        dragEnd: 'dragEnd.lg',
+        beforeNextSlide: 'beforeNextSlide.lg',
+        beforePrevSlide: 'beforePrevSlide.lg',
+        beforeClose: 'beforeClose.lg',
+        afterClose: 'afterClose.lg',
+    };
+    //# sourceMappingURL=lg-events.js.map
+
     var rotateSettings = {
         rotate: true,
         rotateLeft: true,
@@ -19,32 +39,35 @@
         flipHorizontal: true,
         flipVertical: true,
     };
+    //# sourceMappingURL=lg-rotate-settings.js.map
+
+    var $LG = window.$LG;
     var Rotate = /** @class */ (function () {
         function Rotate(instance) {
             // get lightGallery core plugin data
             this.core = instance;
             // extend module default settings with lightGallery core settings
-            this.s = Object.assign({}, rotateSettings, this.core.s);
-            if (this.s.rotate && this.core.doCss()) {
+            this.settings = Object.assign({}, rotateSettings, this.core.settings);
+            if (this.settings.rotate) {
                 this.init();
             }
             return this;
         }
         Rotate.prototype.buildTemplates = function () {
             var rotateIcons = '';
-            if (this.s.flipVertical) {
+            if (this.settings.flipVertical) {
                 rotateIcons +=
                     '<button type="button" id="lg-flip-ver" aria-label="flip vertical" class="lg-flip-ver lg-icon"></button>';
             }
-            if (this.s.flipHorizontal) {
+            if (this.settings.flipHorizontal) {
                 rotateIcons +=
                     '<button type="button" id="lg-flip-hor" aria-label="Flip horizontal" class="lg-flip-hor lg-icon"></button>';
             }
-            if (this.s.rotateLeft) {
+            if (this.settings.rotateLeft) {
                 rotateIcons +=
                     '<button type="button" id="lg-rotate-left" aria-label="Rotate left" class="lg-rotate-left lg-icon"></button>';
             }
-            if (this.s.rotateRight) {
+            if (this.settings.rotateRight) {
                 rotateIcons +=
                     '<button type="button" id="lg-rotate-right" aria-label="Rotate right" class="lg-rotate-right lg-icon"></button>';
             }
@@ -57,7 +80,7 @@
             // even after navigating to diferent slides
             this.rotateValuesList = {};
             // event triggered after appending slide content
-            this.core.LGel.on('onAferAppendSlide.lg.rotate', function (event) {
+            this.core.LGel.on(lGEvents.afterAppendSlide + ".rotate", function (event) {
                 var index = event.detail.index;
                 var imageWrap = _this.core
                     .getSlideItem(index)
@@ -82,7 +105,7 @@
                 .first()
                 .on('click.lg', this.flipVertical.bind(this));
             // Reset rotate on slide change
-            this.core.LGel.on('onBeforeSlide.lg.rotate', function (event) {
+            this.core.LGel.on(lGEvents.beforeSlide + ".rotate", function (event) {
                 if (!_this.rotateValuesList[event.detail.index]) {
                     _this.rotateValuesList[event.detail.index] = {
                         rotate: 0,
@@ -118,7 +141,7 @@
             if (!el) {
                 return 0;
             }
-            var st = LG(el).style();
+            var st = $LG(el).style();
             var tm = st.getPropertyValue('-webkit-transform') ||
                 st.getPropertyValue('-moz-transform') ||
                 st.getPropertyValue('-ms-transform') ||
@@ -162,17 +185,18 @@
             this.rotateValuesList[this.core.index][rotateAxis] *= -1;
             this.applyStyles();
         };
-        Rotate.prototype.destroy = function (clear) {
+        Rotate.prototype.closeGallery = function () {
             this.rotateValuesList = {};
-            if (clear) {
-                // Unbind all events added by lightGallery rotate plugin
-                this.core.LGel.off('.lg.rotate');
-            }
+        };
+        Rotate.prototype.destroy = function () {
+            // Unbind all events added by lightGallery rotate plugin
+            this.core.LGel.off('.lg.rotate');
         };
         return Rotate;
     }());
     window.lgModules = window.lgModules || {};
     window.lgModules.rotate = Rotate;
+    //# sourceMappingURL=lg-rotate.js.map
 
     exports.Rotate = Rotate;
 

@@ -1,21 +1,10 @@
-/*!
- * lightgallery | 0.0.0 | January 16th 2021
- * http://sachinchoolur.github.io/lightGallery/
- * Copyright (c) 2020 Sachin Neravath;
- * @license GPLv3
- */
-
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
     (factory((global.lgZoom = {})));
 }(this, (function (exports) { 'use strict';
 
-    var getUseLeft = function () {
-        var isChrome = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
-        return !!(isChrome && parseInt(isChrome[2], 10) < 54);
-    };
-    var zoomDefaults = {
+    var zoomSettings = {
         scale: 1,
         zoom: true,
         actualSize: true,
@@ -25,62 +14,84 @@
             zoomOut: 'lg-zoom-out',
         },
         enableZoomAfter: 300,
-        useLeftForZoom: getUseLeft(),
     };
+    //# sourceMappingURL=lg-zoom-settings.js.map
 
-    var LG = window.LG;
+    /**
+     * List of lightGallery events
+     * All events should be documented here
+     * Below interfaces are used to build the website documentations
+     * */
+    var lGEvents = {
+        afterAppendSlide: 'afterAppendSlide.lg',
+        init: 'init.lg',
+        hasVideo: 'hasVideo.lg',
+        containerResize: 'containerResize.lg',
+        updateSlides: 'updateSlides.lg',
+        afterAppendSubHtml: 'afterAppendSubHtml.lg',
+        beforeOpen: 'beforeOpen.lg',
+        afterOpen: 'afterOpen.lg',
+        slideItemLoad: 'slideItemLoad.lg',
+        beforeSlide: 'beforeSlide.lg',
+        afterSlide: 'afterSlide.lg',
+        posterClick: 'posterClick.lg',
+        dragStart: 'dragStart.lg',
+        dragMove: 'dragMove.lg',
+        dragEnd: 'dragEnd.lg',
+        beforeNextSlide: 'beforeNextSlide.lg',
+        beforePrevSlide: 'beforePrevSlide.lg',
+        beforeClose: 'beforeClose.lg',
+        afterClose: 'afterClose.lg',
+    };
+    //# sourceMappingURL=lg-events.js.map
+
+    var $LG = window.$LG;
     var Zoom = /** @class */ (function () {
         function Zoom(instance) {
             this.core = instance;
-            this.s = Object.assign({}, zoomDefaults, this.core.s);
-            if (this.s.zoom && this.core.doCss()) {
+            this.settings = Object.assign({}, zoomSettings, this.core.settings);
+            if (this.settings.zoom) {
                 this.init();
                 // Store the zoomable timeout value just to clear it while closing
                 this.zoomableTimeout = false;
                 this.positionChanged = false;
                 // Set the initial value center
                 this.pageX = this.core.outer.width() / 2;
-                this.pageY = this.core.outer.height() / 2 + LG(window).scrollTop();
+                this.pageY = this.core.outer.height() / 2 + $LG(window).scrollTop();
                 this.scale = 1;
             }
             return this;
         }
         // Append Zoom controls. Actual size, Zoom-in, Zoom-out
         Zoom.prototype.buildTemplates = function () {
-            var zoomIcons = this.s.showZoomInOutIcons
-                ? "<button id=\"" + this.core.getById('lg-zoom-in') + "\" type=\"button\" class=\"lg-zoom-in lg-icon\"></button><button id=\"" + this.core.getById('lg-zoom-out') + "\" type=\"button\" class=\"lg-zoom-out lg-icon\"></button>"
+            var zoomIcons = this.settings.showZoomInOutIcons
+                ? "<button id=\"" + this.core.getIdName('lg-zoom-in') + "\" type=\"button\" class=\"lg-zoom-in lg-icon\"></button><button id=\"" + this.core.getIdName('lg-zoom-out') + "\" type=\"button\" class=\"lg-zoom-out lg-icon\"></button>"
                 : '';
-            if (this.s.actualSize) {
-                zoomIcons += "<button id=\"" + this.core.getById('lg-actual-size') + "\" type=\"button\" class=\"" + this.s.actualSizeIcons.zoomIn + " lg-icon\"></button>";
+            if (this.settings.actualSize) {
+                zoomIcons += "<button id=\"" + this.core.getIdName('lg-actual-size') + "\" type=\"button\" class=\"" + this.settings.actualSizeIcons.zoomIn + " lg-icon\"></button>";
             }
-            // CSS transition performace is poor in Chrome version < 54
-            // So use CSS left property for zoom transition.
-            if (this.s.useLeftForZoom) {
-                this.core.outer.addClass('lg-use-left-for-zoom');
-            }
-            else {
-                this.core.outer.addClass('lg-use-transition-for-zoom');
-            }
-            this.core.outer.find('.lg-toolbar').first().append(zoomIcons);
+            this.core.outer.addClass('lg-use-transition-for-zoom');
+            this.core.$toolbar.first().append(zoomIcons);
         };
         /**
          * @desc Enable zoom option only once the image is completely loaded
-         * If zoomFromImage is true, Zoom is enabled once the dummy image has been inserted
+         * If zoomFromOrigin is true, Zoom is enabled once the dummy image has been inserted
          *
          * Zoom styles are defined under lg-zoomable CSS class.
          */
         Zoom.prototype.enableZoom = function (event) {
             var _this = this;
             // delay will be 0 except first time
-            var _speed = this.s.enableZoomAfter + event.detail.delay;
+            var _speed = this.settings.enableZoomAfter + event.detail.delay;
             // set _speed value 0 if gallery opened from direct url and if it is first slide
-            if (LG('body').first().hasClass('lg-from-hash') && event.detail.delay) {
+            if ($LG('body').first().hasClass('lg-from-hash') &&
+                event.detail.delay) {
                 // will execute only once
                 _speed = 0;
             }
             else {
                 // Remove lg-from-hash to enable starting animation.
-                LG('body').first().removeClass('lg-from-hash');
+                $LG('body').first().removeClass('lg-from-hash');
             }
             this.zoomableTimeout = setTimeout(function () {
                 _this.core.getSlideItem(event.detail.index).addClass('lg-zoomable');
@@ -88,7 +99,7 @@
         };
         Zoom.prototype.enableZoomOnSlideItemLoad = function () {
             // Add zoomable class
-            this.core.LGel.on('onSlideItemLoad.lg.zoom', this.enableZoom.bind(this));
+            this.core.LGel.on(lGEvents.slideItemLoad + ".zoom", this.enableZoom.bind(this));
         };
         Zoom.prototype.getModifier = function (rotateValue, axis, el) {
             var originalRotate = rotateValue;
@@ -175,7 +186,7 @@
             }
         };
         Zoom.prototype.getDragAllowedAxises = function ($image, rotateValue) {
-            var $lg = this.core.outer.find('.lg').get();
+            var $lg = this.core.$lgContent.get();
             var scale = parseFloat($image.attr('data-scale')) || 1;
             var imgEl = $image.get();
             var allowY = this.getImageSize(imgEl, rotateValue, 'y') * scale >
@@ -244,10 +255,13 @@
             var imageNode = $image.get();
             if (!imageNode)
                 return;
+            var containerRect = this.core.outer.get().getBoundingClientRect();
             // Find offset manually to avoid issue after zoom
-            var offsetX = (this.core.outer.width() - imageNode.offsetWidth) / 2;
-            var offsetY = (this.core.outer.height() - imageNode.offsetHeight) / 2 +
-                LG(window).scrollTop();
+            var offsetX = (containerRect.width - imageNode.offsetWidth) / 2 +
+                containerRect.left;
+            var offsetY = (containerRect.height - imageNode.offsetHeight) / 2 +
+                $LG(window).scrollTop() +
+                containerRect.top;
             var originalX;
             var originalY;
             if (scale === 1) {
@@ -291,14 +305,8 @@
                 .attr('data-scale', style.scale + '')
                 .css('transform', 'scale3d(' + style.scale + ', ' + style.scale + ', 1)');
             $dummyImage.css('transform', 'scale3d(' + style.scale + ', ' + style.scale + ', 1)');
-            if (this.s.useLeftForZoom) {
-                $imageWrap.css('left', -style.x + 'px');
-                $imageWrap.css('top', -style.y + 'px');
-            }
-            else {
-                var transform = 'translate3d(-' + style.x + 'px, -' + style.y + 'px, 0)';
-                $imageWrap.css('transform', transform);
-            }
+            var transform = 'translate3d(-' + style.x + 'px, -' + style.y + 'px, 0)';
+            $imageWrap.css('transform', transform);
             $imageWrap.attr('data-x', style.x).attr('data-y', style.y);
         };
         /**
@@ -330,11 +338,11 @@
             var $image = this.core.getSlideItem(index).find('.lg-image').first();
             var naturalWidth;
             // @todo if possible remove dynamic check
-            if (this.core.s.dynamic) {
-                naturalWidth = this.core.s.dynamicEl[index].width;
+            if (this.core.settings.dynamic) {
+                naturalWidth = this.core.settings.dynamicEl[index].width;
             }
             else {
-                naturalWidth = LG(this.core.items).eq(index).attr('data-width');
+                naturalWidth = $LG(this.core.items).eq(index).attr('data-width');
             }
             return naturalWidth || $image.get().naturalWidth;
         };
@@ -366,8 +374,12 @@
                 cords.y = event.pageY || event.targetTouches[0].pageY;
             }
             else {
-                cords.x = this.core.outer.width() / 2;
-                cords.y = this.core.outer.height() / 2 + LG(window).scrollTop();
+                var containerRect = this.core.outer.get().getBoundingClientRect();
+                cords.x = containerRect.width / 2 + containerRect.left;
+                cords.y =
+                    containerRect.height / 2 +
+                        $LG(window).scrollTop() +
+                        containerRect.top;
             }
             return cords;
         };
@@ -381,10 +393,10 @@
             this.core.outer.removeClass('lg-zoom-drag-transition');
             if (scale > 1) {
                 this.core.outer.addClass('lg-zoomed');
-                var $actualSize = LG("#" + this.core.getById('lg-actual-size'));
+                var $actualSize = this.core.getElementById('lg-actual-size');
                 $actualSize
-                    .removeClass(this.s.actualSizeIcons.zoomIn)
-                    .addClass(this.s.actualSizeIcons.zoomOut);
+                    .removeClass(this.settings.actualSizeIcons.zoomIn)
+                    .addClass(this.settings.actualSizeIcons.zoomOut);
             }
             else {
                 this.resetZoom();
@@ -407,13 +419,13 @@
             this.enableZoomOnSlideItemLoad();
             var tapped = null;
             this.core.outer.on('dblclick.lg', function (event) {
-                if (!LG(event.target).hasClass('lg-image')) {
+                if (!$LG(event.target).hasClass('lg-image')) {
                     return;
                 }
                 _this.setActualSize(_this.core.index, event);
             });
             this.core.outer.on('touchstart.lg', function (event) {
-                var $target = LG(event.target);
+                var $target = $LG(event.target);
                 if (event.targetTouches.length === 1 &&
                     $target.hasClass('lg-image')) {
                     if (!tapped) {
@@ -430,32 +442,31 @@
                 }
             });
             // Update zoom on resize and orientationchange
-            LG(window).on("resize.lg.zoom.global" + this.core.lgId + " orientationchange.lg.zoom.global" + this.core.lgId, function () {
-                console.log('calling');
+            this.core.LGel.on(lGEvents.containerResize + ".zoom", function () {
                 if (!_this.core.lgOpened)
                     return;
                 _this.setPageCords();
                 _this.zoomImage(_this.scale);
             });
-            LG("#" + this.core.getById('lg-zoom-out')).on('click.lg', function () {
-                if (_this.core.outer.find('.lg-current .lg-image').first()) {
-                    _this.scale -= _this.s.scale;
+            this.core.getElementById('lg-zoom-out').on('click.lg', function () {
+                if (_this.core.outer.find('.lg-current .lg-image').get()) {
+                    _this.scale -= _this.settings.scale;
                     _this.scale = _this.getScale(_this.scale);
                     _this.beginZoom(_this.scale);
                     _this.zoomImage(_this.scale);
                 }
             });
-            LG("#" + this.core.getById('lg-zoom-in')).on('click.lg', function () {
+            this.core.getElementById('lg-zoom-in').on('click.lg', function () {
                 _this.zoomIn();
             });
-            LG("#" + this.core.getById('lg-actual-size')).on('click.lg', function () {
+            this.core.getElementById('lg-actual-size').on('click.lg', function () {
                 _this.setActualSize(_this.core.index);
             });
-            this.core.LGel.on('onBeforeOpen.lg.zoom', function () {
-                _this.core.outer.find('.lg-item').first().removeClass('lg-zoomable');
+            this.core.LGel.on(lGEvents.beforeOpen + ".zoom", function () {
+                _this.core.outer.find('.lg-item').removeClass('lg-zoomable');
             });
             // Reset zoom on slide change
-            this.core.LGel.on('onAfterSlide.lg.zoom', function (event) {
+            this.core.LGel.on(lGEvents.afterSlide + ".zoom", function (event) {
                 var prevIndex = event.detail.prevIndex;
                 _this.scale = 1;
                 _this.resetZoom(prevIndex);
@@ -475,7 +486,7 @@
                 this.scale = scale;
             }
             else {
-                this.scale += this.s.scale;
+                this.scale += this.settings.scale;
             }
             this.scale = this.getScale(this.scale);
             this.beginZoom(this.scale);
@@ -484,11 +495,11 @@
         // Reset zoom effect
         Zoom.prototype.resetZoom = function (index) {
             this.core.outer.removeClass('lg-zoomed lg-zoom-drag-transition');
-            var $actualSize = LG("#" + this.core.getById('lg-actual-size'));
+            var $actualSize = this.core.getElementById('lg-actual-size');
             var $item = this.core.getSlideItem(index !== undefined ? index : this.core.index);
             $actualSize
-                .removeClass(this.s.actualSizeIcons.zoomOut)
-                .addClass(this.s.actualSizeIcons.zoomIn);
+                .removeClass(this.settings.actualSizeIcons.zoomOut)
+                .addClass(this.settings.actualSizeIcons.zoomIn);
             $item.find('.lg-img-wrap').first().removeAttr('style data-x data-y');
             $item.find('.lg-image').first().removeAttr('style data-scale');
             // Reset pagx pagy values to center
@@ -505,13 +516,12 @@
             var startDist = 0;
             var pinchStarted = false;
             var initScale = 1;
-            var inner = LG("#" + this.core.getById('lg-inner'));
             var $item = this.core.getSlideItem(this.core.index);
-            inner.on('touchstart.lg', function (e) {
+            this.core.$inner.on('touchstart.lg', function (e) {
                 $item = _this.core.getSlideItem(_this.core.index);
                 e.preventDefault();
                 if (e.targetTouches.length === 2 &&
-                    (LG(e.target).hasClass('lg-item') ||
+                    ($LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
                     initScale = _this.scale || 1;
                     _this.core.outer.removeClass('lg-zoom-drag-transition lg-zoom-dragging');
@@ -519,11 +529,11 @@
                     startDist = _this.getTouchDistance(e);
                 }
             });
-            inner.on('touchmove.lg', function (e) {
+            this.core.$inner.on('touchmove.lg', function (e) {
                 e.preventDefault();
                 if (e.targetTouches.length === 2 &&
                     _this.core.touchAction === 'pinch' &&
-                    (LG(e.target).hasClass('lg-item') ||
+                    ($LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
                     var endDist = _this.getTouchDistance(e);
                     var distance = startDist - endDist;
@@ -536,9 +546,9 @@
                     }
                 }
             });
-            inner.on('touchend.lg', function (e) {
+            this.core.$inner.on('touchend.lg', function (e) {
                 if (_this.core.touchAction === 'pinch' &&
-                    (LG(e.target).hasClass('lg-item') ||
+                    ($LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
                     pinchStarted = false;
                     startDist = 0;
@@ -664,7 +674,7 @@
             return distance;
         };
         Zoom.prototype.getPossibleSwipeDragCords = function ($image, rotateValue) {
-            var $cont = this.core.outer.find('.lg');
+            var $cont = this.core.$lgContent;
             var contHeight = $cont.height();
             var contWidth = $cont.width();
             var imageYSize = this.getImageSize($image.get(), rotateValue, 'y');
@@ -693,13 +703,7 @@
             }
         };
         Zoom.prototype.setZoomSwipeStyles = function (LGel, distance) {
-            if (this.s.useLeftForZoom) {
-                LGel.css('left', distance.x + 'px');
-                LGel.css('top', distance.y + 'px');
-            }
-            else {
-                LGel.css('transform', 'translate3d(' + distance.x + 'px, ' + distance.y + 'px, 0)');
-            }
+            LGel.css('transform', 'translate3d(' + distance.x + 'px, ' + distance.y + 'px, 0)');
         };
         Zoom.prototype.zoomSwipe = function () {
             var _this = this;
@@ -718,9 +722,8 @@
             var _LGel;
             var rotateEl = null;
             var rotateValue = 0;
-            var inner = LG("#" + this.core.getById('lg-inner'));
             var $item = this.core.getSlideItem(this.core.index);
-            inner.on('touchstart.lg', function (e) {
+            this.core.$inner.on('touchstart.lg', function (e) {
                 e.preventDefault();
                 var currentItem = _this.core.galleryItems[_this.core.index];
                 // Allow zoom only on image
@@ -728,7 +731,7 @@
                     return;
                 }
                 $item = _this.core.getSlideItem(_this.core.index);
-                if ((LG(e.target).hasClass('lg-item') ||
+                if (($LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target)) &&
                     e.targetTouches.length === 1 &&
                     _this.core.outer.hasClass('lg-zoomed')) {
@@ -761,11 +764,11 @@
                     _this.core.outer.addClass('lg-zoom-dragging lg-zoom-drag-transition');
                 }
             });
-            inner.on('touchmove.lg', function (e) {
+            this.core.$inner.on('touchmove.lg', function (e) {
                 e.preventDefault();
                 if (e.targetTouches.length === 1 &&
                     _this.core.touchAction === 'zoomSwipe' &&
-                    (LG(e.target).hasClass('lg-item') ||
+                    ($LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
                     _this.core.touchAction = 'zoomSwipe';
                     endCoords = _this.getSwipeCords(e, Math.abs(rotateValue));
@@ -777,9 +780,9 @@
                     }
                 }
             });
-            inner.on('touchend.lg', function (e) {
+            this.core.$inner.on('touchend.lg', function (e) {
                 if (_this.core.touchAction === 'zoomSwipe' &&
-                    (LG(e.target).hasClass('lg-item') ||
+                    ($LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
                     _this.core.touchAction = undefined;
                     _this.core.outer.removeClass('lg-zoom-dragging');
@@ -818,7 +821,7 @@
                     return;
                 }
                 var $item = _this.core.getSlideItem(_this.core.index);
-                if (LG(e.target).hasClass('lg-item') ||
+                if ($LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target)) {
                     startTime = new Date();
                     // execute only on .lg-object
@@ -839,7 +842,7 @@
                     allowY = dragAllowedAxises.allowY;
                     allowX = dragAllowedAxises.allowX;
                     if (_this.core.outer.hasClass('lg-zoomed')) {
-                        if (LG(e.target).hasClass('lg-object') &&
+                        if ($LG(e.target).hasClass('lg-object') &&
                             (allowX || allowY)) {
                             e.preventDefault();
                             startCoords = _this.getDragCords(e, Math.abs(rotateValue));
@@ -858,7 +861,7 @@
                     }
                 }
             });
-            LG(window).on("mousemove.lg.zoom.global" + this.core.lgId, function (e) {
+            $LG(window).on("mousemove.lg.zoom.global" + this.core.lgId, function (e) {
                 if (isDragging) {
                     isMoved = true;
                     endCoords = _this.getDragCords(e, Math.abs(rotateValue));
@@ -866,7 +869,7 @@
                     _this.setZoomSwipeStyles(_LGel, distance);
                 }
             });
-            LG(window).on("mouseup.lg.zoom.global" + this.core.lgId, function (e) {
+            $LG(window).on("mouseup.lg.zoom.global" + this.core.lgId, function (e) {
                 if (isDragging) {
                     endTime = new Date();
                     isDragging = false;
@@ -884,19 +887,20 @@
                 _this.core.outer.removeClass('lg-grabbing').addClass('lg-grab');
             });
         };
-        Zoom.prototype.destroy = function (clear) {
+        Zoom.prototype.closeGallery = function () {
             this.resetZoom();
-            if (clear) {
-                // Unbind all events added by lightGallery zoom plugin
-                LG(window).off(".lg.zoom.global" + this.core.lgId);
-                this.core.LGel.off('.lg.zoom');
-                clearTimeout(this.zoomableTimeout);
-                this.zoomableTimeout = false;
-            }
+        };
+        Zoom.prototype.destroy = function () {
+            // Unbind all events added by lightGallery zoom plugin
+            $LG(window).off(".lg.zoom.global" + this.core.lgId);
+            this.core.LGel.off('.lg.zoom');
+            clearTimeout(this.zoomableTimeout);
+            this.zoomableTimeout = false;
         };
         return Zoom;
     }());
     window.lgModules.zoom = Zoom;
+    //# sourceMappingURL=lg-zoom.js.map
 
     exports.Zoom = Zoom;
 

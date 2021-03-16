@@ -1,32 +1,27 @@
-/*!
- * lightgallery | 0.0.0 | January 16th 2021
- * http://sachinchoolur.github.io/lightGallery/
- * Copyright (c) 2020 Sachin Neravath;
- * @license GPLv3
- */
-
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
     (factory((global.lgFullscreen = {})));
 }(this, (function (exports) { 'use strict';
 
-    var defaults = {
+    var fullscreenSettings = {
         fullScreen: true,
     };
-    var LG = window.LG;
+    //# sourceMappingURL=lg-fullscreen-settings.js.map
+
+    var $LG = window.$LG;
     var FullScreen = /** @class */ (function () {
         function FullScreen(instance) {
             // get lightGallery core plugin data
             this.core = instance;
             // extend module default settings with lightGallery core settings
-            this.s = Object.assign({}, defaults, this.core.s);
+            this.settings = Object.assign({}, fullscreenSettings, this.core.settings);
             this.init();
             return this;
         }
         FullScreen.prototype.init = function () {
             var fullScreen = '';
-            if (this.s.fullScreen) {
+            if (this.settings.fullScreen) {
                 // check for fullscreen browser support
                 if (!document.fullscreenEnabled &&
                     !document.webkitFullscreenEnabled &&
@@ -80,7 +75,7 @@
         // https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode
         FullScreen.prototype.fullScreen = function () {
             var _this = this;
-            LG(document).on("fullscreenchange.lg.global" + this.core.lgId + " \n            webkitfullscreenchange.lg.global" + this.core.lgId + " \n            mozfullscreenchange.lg.global" + this.core.lgId + " \n            MSFullscreenChange.lg.global" + this.core.lgId, function () {
+            $LG(document).on("fullscreenchange.lg.global" + this.core.lgId + " \n            webkitfullscreenchange.lg.global" + this.core.lgId + " \n            mozfullscreenchange.lg.global" + this.core.lgId + " \n            MSFullscreenChange.lg.global" + this.core.lgId, function () {
                 if (!_this.core.lgOpened)
                     return;
                 _this.core.outer.toggleClass('lg-fullscreen-on');
@@ -97,19 +92,20 @@
                 }
             });
         };
-        FullScreen.prototype.destroy = function (clear) {
+        FullScreen.prototype.closeGallery = function () {
             // exit from fullscreen if activated
             if (this.isFullScreen()) {
                 this.exitFullscreen();
             }
-            if (clear) {
-                LG(document).off("fullscreenchange.lg.global" + this.core.lgId + " \n                webkitfullscreenchange.lg.global" + this.core.lgId + " \n                mozfullscreenchange.lg.global" + this.core.lgId + " \n                MSFullscreenChange.lg.global" + this.core.lgId);
-            }
+        };
+        FullScreen.prototype.destroy = function () {
+            $LG(document).off("fullscreenchange.lg.global" + this.core.lgId + " \n            webkitfullscreenchange.lg.global" + this.core.lgId + " \n            mozfullscreenchange.lg.global" + this.core.lgId + " \n            MSFullscreenChange.lg.global" + this.core.lgId);
         };
         return FullScreen;
     }());
     window.lgModules = window.lgModules || {};
     window.lgModules.fullscreen = FullScreen;
+    //# sourceMappingURL=lg-fullscreen.js.map
 
     exports.FullScreen = FullScreen;
 
