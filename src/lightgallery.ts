@@ -175,13 +175,7 @@ export class LightGallery {
             }
         }
 
-        if (this.settings.dynamic) {
-            const index = this.settings.index || 0;
-
-            setTimeout(() => {
-                this.openGallery(index);
-            }, openGalleryAfter);
-        } else {
+        if (!this.settings.dynamic) {
             // Using for loop instead of using bubbling as the items can be any html element.
             for (let index = 0; index < this.items.length; index++) {
                 const element = this.items[index];
@@ -524,11 +518,12 @@ export class LightGallery {
     }
 
     /**
-     * Build Gallery
+     * @description Open gallery with specific slide.
+     * @category lGPublicMethods
      * @param {Number} index  - index of the slide
-     * @param {String} transform - Css transform value when zoomFromOrigin is enabled
+     * @param {HTMLElement} element - Which image lightGallery should zoom from
      */
-    openGallery(index: number, element?: HTMLElement): void {
+    openGallery(index = this.settings.index, element?: HTMLElement): void {
         // prevent accidental double execution
         if (this.lgOpened) return;
 

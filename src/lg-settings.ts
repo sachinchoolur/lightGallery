@@ -306,9 +306,9 @@ export interface LightGallerySettings {
     prevHtml: string;
 
     /**
-     * specify which image/video should load initially
+     * specify which slide should load initially
      */
-    index: false | number;
+    index: number;
 
     /**
      * Set width for iframe.
@@ -482,7 +482,7 @@ export const lightGallerySettings: LightGallerySettings = {
     selectWithin: '',
     nextHtml: '',
     prevHtml: '',
-    index: false,
+    index: 0,
     iframeWidth: '100%',
     iframeHeight: '100%',
     download: true,
