@@ -1,5 +1,13 @@
-<table style="width:100%">
-    
+{{$pluginName := .Get "pluginName"}}
+
+
+{{ if $pluginName }}
+<div class="alert alert-warning" role="alert">
+    You need to include {{$pluginName}} plugin in the document to use the following options.
+</div>
+{{ end }}
+
+<table class="options-table">
     {{$interface := dict}}
     {{$variable := dict}}
     {{$interfaceName := .Get "interface"}}
@@ -16,30 +24,41 @@
     <tr>
         <th>Name</th>
         <th>Type</th>
-        <th>Default</th>
-        <th>Description</th>
+        {{ if $variableName }}
+            <th>Default</th>
+        {{ end }}
     </tr>
 
 
     {{range $index, $element := $interface}}
-
-        {{$defaultValue := (index $variable $index).defaultValue}}
-        
-        <tr>
-            <th>{{$element.name}}</th>
-            <th>{{$element.type.name}}</th>
-            <th>{{$defaultValue}}</th>
-            <th>
-                <th>
-                    {{.comment.shortText}}
-                    {{ range .comment.tags -}}
-                        {{ if eq .tag "description"}}
-                            <p>
-                                {{.text}}
-                            </p>
-                        {{ end}}
-                    {{ end -}}
-            </th>
+        <tr {{if hasPrefix $element.name "__" }} style='display: none;' {{end}} class="options-table-tr-head">
+            <td>{{$element.name}}</td>
+            <td>{{$element.type.name}}</td>
+                {{ if $variableName }}
+                    {{$defaultValue := (index $variable $index).defaultValue}}
+                    <td>{{$defaultValue}}</td>
+                {{ end }}
+        </tr>
+        <tr class="options-table-description">
+            {{ if $variableName }}
+                <td colspan="3">
+            {{else}}
+                <td colspan="2">
+            {{ end }}
+                <p><b>Description</b></p>
+                {{.comment.shortText | safeHTML}}
+            {{.comment.text | safeHTML}}
+            {{ range .comment.tags -}}
+                {{ if eq .tag "description"}}
+                    <p>
+                        {{.text | safeHTML}}
+                    </p>
+                {{ end}}
+                {{ if eq .tag "example"}}
+                    {{ highlight .text "" "" }}
+                {{ end}}
+            {{ end -}}
+            </td>
         </tr>
     {{ end }}
   </table>
