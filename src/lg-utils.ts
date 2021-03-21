@@ -16,108 +16,128 @@ export interface ImageSources {
 export interface GalleryItem {
     /**
      * url of the media
+     * @data-attr data-src
      */
     src: string;
 
     /**
      * Source attributes for the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source#attributes">picture</a> element
+     * @data-attr data-sources
      */
     sources: ImageSources[];
 
     /**
      * Thumbnail url
+     * @data-attr data-thumb
      */
     thumb: string;
 
     /**
      * alt attribute for the image
+     * @data-attr alt
      */
     alt: string;
 
     /**
      * Title attribute for the video
+     * @data-attr thumb
      */
     title: string;
 
     /**
      * Title for iframe
+     * @data-attr data-iframe-title
      */
     iframeTitle: string;
 
     /**
      * Caption for the slide
      * @description You can either pass the HTML markup or the ID or class name of the element which contains the captions
+     * @data-attr data-sub-html
      */
     subHtml: string;
 
     /**
      * url of the file which contain the sub html.
      * @description Note - Does not support Internet Explorer browser
+     * @data-attr data-sub-html-url
      */
     subHtmlUrl: string;
 
     /**
      * Video source
+     * @data-attr data-video
      */
     video: VideoSource;
 
     /**
      * Poster url
+     * @data-attr data-poster
      */
     poster: string;
 
     /**
      * Custom slide name to use in the url when hash plugin is enabled
+     * @data-attr data-slide-name
      */
     slideName: string;
 
     /**
      * List of images and viewport's max width separated by comma.
      * @description Ex: img/1-375.jpg 375, img/1-480.jpg 480, img/1-757.jpg 757.
+     * @data-attr data-responsive
      */
     responsive: string;
 
     /**
      * srcset attribute values for the main image
+     * @data-attr data-srcset
      */
     srcset: string;
 
     /**
      * srcset sizes attribute for the main image
+     * @data-attr data-sizes
      */
     sizes: string;
 
     /**
      * Set true is you want to open your url in an iframe
+     * @data-attr data-iframe
      */
     iframe: boolean;
 
     /**
      * Download url for your image/video.
      * @description Pass false if you want to hide the download button.
+     * @data-attr data-download-url
      */
     downloadUrl: string | boolean;
 
     /**
      * Actual size of the image in px.
      * @description This is used in zoom plugin to see the actual size of the image when double taped on the image.
+     * @data-attr data-width
      */
     width: string;
 
     /**
      * Facebook share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL is taken.
+     * @data-attr data-facebook-share-url
      */
     facebookShareUrl: string;
 
     /**
      * Tweet text
+     * @data-attr data-tweet-text
      */
     tweetText: string;
 
     /**
      * Twitter share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL will be taken.
+     * @data-attr data-twitter-share-url
      */
     twitterShareUrl: string;
 
@@ -125,11 +145,13 @@ export interface GalleryItem {
      * Pinterest share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL will be taken.
      * Note: Pinterest requires absolute URL
+     * @data-attr data-pinterest-share-url
      */
     pinterestShareUrl: string;
 
     /**
      * Description for Pinterest post.
+     * @data-attr data-pinterest-text
      */
     pinterestText: string;
 
@@ -143,18 +165,21 @@ export interface GalleryItem {
      *      data-width="400"
      *      data-numposts="5">
      * </div>
+     * @data-attr data-fb-html
      */
     fbHtml: string;
 
     /**
      * Disqus page identifier
      * @description Please refer official <a href="https://help.disqus.com/en/articles/1717084-javascript-configuration-variables">disqus documentation</a> for more info
+     * @data-attr data-disqus-identifier
      */
     disqusIdentifier: string;
 
     /**
      * Disqus page url
      * @description Please refer official <a href="https://help.disqus.com/en/articles/1717084-javascript-configuration-variables">disqus documentation</a> for more info
+     * * @data-attr data-disqus-url
      */
     disqusUrl: string;
 
