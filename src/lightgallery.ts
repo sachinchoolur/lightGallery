@@ -518,10 +518,32 @@ export class LightGallery {
     }
 
     /**
-     * @description Open gallery with specific slide.
+     * Open lightGallery.
+     * Open gallery with specific slide by passing index of the slide as parameter.
      * @category lGPublicMethods
      * @param {Number} index  - index of the slide
      * @param {HTMLElement} element - Which image lightGallery should zoom from
+     *
+     * @example
+     * const $dynamicGallery = document.getElementById('dynamic-gallery-demo');
+     * const dynamicGallery = lightGallery($dynamicGallery, {
+     *     dynamic: true,
+     *     dynamicEl: [
+     *         {
+     *              src: 'img/1.jpg',
+     *              thumb: 'img/thumb-1.jpg',
+     *              subHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',
+     *         },
+     *         ...
+     *     ],
+     * });
+     * $dynamicGallery.addEventListener('click', function () {
+     *     // Starts with third item.(Optional).
+     *     // This is useful if you want use dynamic mode with
+     *     // custom thumbnails (thumbnails outside gallery),
+     *     dynamicGallery.openGallery(2);
+     * });
+     *
      */
     openGallery(index = this.settings.index, element?: HTMLElement): void {
         // prevent accidental double execution
@@ -600,10 +622,7 @@ export class LightGallery {
                     this.outer.addClass('lg-zoom-from-image');
                 });
                 setTimeout(() => {
-                    currentSlide.css(
-                        'transform',
-                        'translate3d(0, 0, 0) translate3d(0, 0, 0)',
-                    );
+                    currentSlide.css('transform', 'translate3d(0, 0, 0)');
                 }, 100);
             }
 
