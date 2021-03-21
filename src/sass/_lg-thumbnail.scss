@@ -1,8 +1,11 @@
+$thumbnails-margin: 5px;
+
 .lg-outer {
     .lg-thumb-outer {
         background-color: $lg-thumb-bg;
         bottom: 0;
         position: absolute;
+        display: inline-block;
         width: 100%;
         z-index: $zindex-thumbnail;
         max-height: 350px;
@@ -33,6 +36,16 @@
             .lg-thumb {
                 @include transition-duration(0s !important);
             }
+        }
+
+        &.lg-thumb-align-middle {
+            text-align: center;
+        }
+        &.lg-thumb-align-left {
+            text-align: left;
+        }
+        &.lg-thumb-align-right {
+            text-align: right;
         }
     }
     &.lg-thumb-open {

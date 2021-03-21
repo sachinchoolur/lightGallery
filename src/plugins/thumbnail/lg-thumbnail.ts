@@ -147,7 +147,13 @@ export class Thumbnail {
     }
 
     setThumbMarkup(): void {
-        const html = `<div class="lg-thumb-outer">
+        let thumbOuterClassNames = 'lg-thumb-outer ';
+
+        if (this.settings.alignThumbnails) {
+            thumbOuterClassNames += `lg-thumb-align-${this.settings.alignThumbnails}`;
+        }
+
+        const html = `<div class="${thumbOuterClassNames}">
         <div class="lg-thumb lg-group">
         </div>
         </div>`;
@@ -447,7 +453,7 @@ export class Thumbnail {
         style="width:${this.settings.thumbWidth}px; height: ${
             this.settings.thumbHeight
         };
-            margin-right: ${this.settings.thumbMargin}px">
+            margin-right: ${this.settings.thumbMargin}px;">
             <img data-lg-item-id="${index}" src="${thumbImg}" />
         </div>`;
     }

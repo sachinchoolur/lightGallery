@@ -15,6 +15,11 @@ export interface ThumbnailsSettings {
     currentPagerPosition: 'left' | 'middle' | 'right';
 
     /**
+     * Position of thumbnails.
+     */
+    alignThumbnails: 'left' | 'middle' | 'right';
+
+    /**
      * Width of each thumbnails.
      */
     thumbWidth: number;
@@ -98,6 +103,7 @@ export const thumbnailsSettings: ThumbnailsSettings = {
 
     animateThumb: true,
     currentPagerPosition: 'middle',
+    alignThumbnails: 'middle',
 
     thumbWidth: 100,
     thumbHeight: '80px',
