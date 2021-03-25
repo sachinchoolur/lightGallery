@@ -376,15 +376,11 @@ export class Zoom {
 
     getNaturalWidth(index: number): number {
         const $image = this.core.getSlideItem(index).find('.lg-image').first();
-        let naturalWidth;
 
-        // @todo if possible remove dynamic check
-        if (this.core.settings.dynamic) {
-            naturalWidth = this.core.settings.dynamicEl[index].width;
-        } else {
-            naturalWidth = $LG(this.core.items).eq(index).attr('data-width');
-        }
-        return naturalWidth || ($image.get() as any).naturalWidth;
+        const naturalWidth = this.core.galleryItems[index].width;
+        return naturalWidth
+            ? parseFloat(naturalWidth)
+            : undefined || ($image.get() as any).naturalWidth;
     }
 
     getActualSizeScale(naturalWidth: number, width: number): number {
