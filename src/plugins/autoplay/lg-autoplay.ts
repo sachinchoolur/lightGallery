@@ -21,7 +21,7 @@ export class Autoplay {
         this.settings = Object.assign({}, autoplaySettings, this.core.settings);
 
         // Execute only if items are above 1
-        if (this.core.items.length < 2) {
+        if (this.core.galleryItems.length < 2) {
             return this;
         }
         this.interval = false;
@@ -170,7 +170,7 @@ export class Autoplay {
         this.core.outer.find('.lg-progress-bar').addClass('lg-start');
 
         this.interval = setInterval(() => {
-            if (this.core.index + 1 < this.core.items.length) {
+            if (this.core.index + 1 < this.core.galleryItems.length) {
                 this.core.index++;
             } else {
                 this.core.index = 0;

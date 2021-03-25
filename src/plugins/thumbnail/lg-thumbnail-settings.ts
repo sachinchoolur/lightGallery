@@ -52,24 +52,19 @@ export interface ThumbnailsSettings {
     exThumbImage: false;
 
     /**
-     * Show/Hide thumbnails by default
+     * control where the thumbnails should be appended.
+     * By default, thumbnails are appended to '.lg-components' which has inbuilt open close transitions
+     * If you don't want initial thumbnails transitions, or want to do more customization,
+     * you can append thumbnails to the lightGalley outer div -
+     * <a href="/demos/thumbnails/#static-thumbnails">Demo</a>
      */
-    showThumbByDefault: boolean;
+    appendThumbnailsTo: '.lg-outer' | '.lg-components';
 
     /**
-     * Whether to display thumbnail toggle button.
+     * Enable toggle captions and thumbnails.
      * @description not applicable if allowMediaOverlap is false
      */
     toggleThumb: boolean;
-
-    /**
-     * Whether to display thumbnail toggle button.
-     * @description Only works with animated thumbnails
-     * Also, appendSubHtmlTo should be set as `.lg-sub-html`.
-     * Otherwise the captions are appended to the '.lg-item' div and the position of the caption is depended on the position of '.lg-item' div
-     * But still if you want you can place the captions wherever you want by updating the css
-     */
-    pullCaptionUp: boolean;
 
     /**
      * Enables desktop mouse drag support for thumbnails.
@@ -110,10 +105,8 @@ export const thumbnailsSettings: ThumbnailsSettings = {
     thumbMargin: 5,
 
     exThumbImage: false,
-    showThumbByDefault: true,
-    toggleThumb: true,
-
-    pullCaptionUp: true,
+    appendThumbnailsTo: '.lg-components',
+    toggleThumb: false,
 
     enableThumbDrag: true,
     enableThumbSwipe: true,

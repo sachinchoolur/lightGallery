@@ -3,17 +3,9 @@ $thumbnails-margin: 5px;
 .lg-outer {
     .lg-thumb-outer {
         background-color: $lg-thumb-bg;
-        bottom: 0;
-        position: absolute;
         display: inline-block;
         width: 100%;
-        z-index: $zindex-thumbnail;
         max-height: 350px;
-        @include translate3d(0, 100%, 0);
-        will-change: transform;
-        @include transitionCustom(
-            transform 0.25s cubic-bezier(0, 0, 0.25, 1) 0s
-        );
 
         &.lg-grab {
             .lg-thumb-item {
@@ -46,19 +38,6 @@ $thumbnails-margin: 5px;
         }
         &.lg-thumb-align-right {
             text-align: right;
-        }
-    }
-    &.lg-thumb-open {
-        .lg-thumb-outer {
-            @include translate3d(0, 0%, 0);
-        }
-        &.lg-zoomed {
-            .lg-thumb-outer {
-                @include translate3d(0, 100%, 0);
-            }
-            .lg-toggle-thumb {
-                opacity: 0;
-            }
         }
     }
 
@@ -105,44 +84,10 @@ $thumbnails-margin: 5px;
             padding-bottom: 0;
         }
     }
-    &.lg-pull-caption-up {
-        &.lg-thumb-open {
-            .lg-sub-html {
-                @include translate3d(0, -($lg-thumb-container-height), 0);
-            }
-            &.lg-zoomed {
-                .lg-sub-html {
-                    @include translate3d(0, 0, 0);
-                }
-            }
-        }
-    }
 
     .lg-toggle-thumb {
-        background-color: $lg-thumb-toggle-bg;
-        border-radius: $lg-border-radius-base $lg-border-radius-base 0 0;
-        color: $lg-thumb-toggle-color;
-        cursor: pointer;
-        font-size: 24px;
-        height: 39px;
-        line-height: 27px;
-        padding: 5px 0;
-        position: absolute;
-        right: 20px;
-        text-align: center;
-        top: -39px;
-        width: 50px;
-        outline: medium none;
-        border: none;
-        will-change: opacity;
-        @include transition(opacity 0.25s cubic-bezier(0, 0, 0.25, 1) 0s);
-
         &:after {
             content: '\e1ff';
-        }
-
-        &:hover {
-            color: $lg-thumb-toggle-hover-color;
         }
     }
     &.lg-animate-thumb {

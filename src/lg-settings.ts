@@ -139,11 +139,6 @@ export interface LightGallerySettings {
     supportLegacyBrowser: boolean;
 
     /**
-     * If true sub-html will also be hidden along with controls and toolbar if hideBarDelay is more than 0
-     */
-    hideSubHtml: boolean;
-
-    /**
      * If true, toolbar, captions and thumbnails will not overlap with media element
      * @description This will not effect thumbnails if animateThumb is false
      * Also, toggle thumbnails button is not displayed if allowMediaOverlap is false
@@ -454,7 +449,6 @@ export const lightGallerySettings: LightGallerySettings = {
     showBarsAfter: 10000,
     slideDelay: 0,
     supportLegacyBrowser: true,
-    hideSubHtml: false,
     allowMediaOverlap: false,
     videoMaxSize: '1280-720',
     defaultCaptionHeight: 0,

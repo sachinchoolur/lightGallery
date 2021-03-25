@@ -19,7 +19,7 @@
 .lg-prev,
 .lg-next,
 .lg-pager-outer,
-.lg-sub-html {
+.lg-hide-sub-html .lg-sub-html {
     opacity: 0;
     will-change: transform, opacity;
     @include transitionCustom(
@@ -32,9 +32,13 @@
     .lg-toolbar,
     .lg-prev,
     .lg-next,
-    .lg-pager-outer,
-    .lg-sub-html {
+    .lg-pager-outer {
         opacity: 1;
+    }
+    &.lg-hide-sub-html {
+        .lg-sub-html {
+            opacity: 1;
+        }
     }
     .lg-hide-items {
         .lg-prev {
@@ -256,25 +260,16 @@
         }
     }
 
-    &.lg-swipe-closing {
-        .lg-thumb-outer {
-            @include translate3d(0, 100%, 0);
-        }
-        .lg-sub-html {
-            opacity: 0;
-            @include translate3d(0, 0, 0);
-        }
-        &.lg-pull-caption-up {
-            .lg-sub-html {
-                @include translate3d(0, 0, 0);
+    &.lg-components-open {
+        &:not(.lg-zoomed) {
+            .lg-components {
+                @include translate3d(0, 0%, 0);
+                opacity: 1;
             }
-        }
-        .lg-pager-outer {
-            opacity: 0;
-            @include translate3d(0px, 0, 0px);
-        }
-        .lg-toggle-thumb {
-            opacity: 0;
+            .lg-sub-html {
+                opacity: 1;
+                transition: opacity 0.2s ease-out 0.15s;
+            }
         }
     }
 }
@@ -412,9 +407,15 @@
         }
     }
 }
-.lg-zoomed {
-    .lg-sub-html,
-    .lg-pager-outer {
-        opacity: 0;
-    }
+
+// Components
+.lg-components {
+    @include translate3d(0, 100%, 0);
+    will-change: transform;
+    @include transitionCustom(transform 0.35s ease-out 0s);
+    z-index: $zindex-components;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
 }

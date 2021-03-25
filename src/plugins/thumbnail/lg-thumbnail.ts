@@ -66,18 +66,8 @@ export class Thumbnail {
         if (!this.core.settings.allowMediaOverlap) {
             this.settings.toggleThumb = false;
         }
-        if (
-            !this.settings.animateThumb ||
-            this.core.settings.appendSubHtmlTo !== '.lg-sub-html'
-        ) {
-            this.settings.pullCaptionUp = false;
-        }
 
         if (this.settings.thumbnail && this.core.galleryItems.length > 1) {
-            if (this.settings.pullCaptionUp) {
-                this.core.outer.addClass('lg-pull-caption-up');
-            }
-
             this.build();
             if (this.settings.animateThumb) {
                 if (this.settings.enableThumbDrag) {
@@ -120,19 +110,6 @@ export class Thumbnail {
             const { index } = event.detail;
             this.animateThumb(index);
         });
-        this.core.LGel.on(`${lGEvents.beforeOpen}.thumb`, () => {
-            if (this.settings.showThumbByDefault) {
-                const timeout = this.core.settings.zoomFromOrigin
-                    ? 100
-                    : this.core.settings.backdropDuration;
-                setTimeout(() => {
-                    this.core.outer.addClass('lg-thumb-open');
-                }, timeout);
-            }
-        });
-        this.core.LGel.on(`${lGEvents.beforeClose}.thumb`, () => {
-            this.core.outer.removeClass('lg-thumb-open');
-        });
 
         this.core.LGel.on(`${lGEvents.updateSlides}.thumb`, () => {
             this.rebuildThumbnails();
@@ -160,7 +137,11 @@ export class Thumbnail {
 
         this.core.outer.addClass('lg-has-thumb');
 
-        this.core.$lgContent.append(html);
+        if (this.settings.appendThumbnailsTo === '.lg-components') {
+            this.core.$lgComponents.append(html);
+        } else {
+            this.core.outer.append(html);
+        }
 
         this.$thumbOuter = this.core.outer.find('.lg-thumb-outer').first();
         this.$lgThumb = this.core.outer.find('.lg-thumb').first();
@@ -496,14 +477,14 @@ export class Thumbnail {
     toggleThumbBar(): void {
         if (this.settings.toggleThumb) {
             this.core.outer.addClass('lg-can-toggle');
-            this.$thumbOuter.append(
+            this.core.$toolbar.append(
                 '<button type="button" aria-label="Toggle thumbnails" class="lg-toggle-thumb lg-icon"></button>',
             );
             this.core.outer
                 .find('.lg-toggle-thumb')
                 .first()
                 .on('click.lg', () => {
-                    this.core.outer.toggleClass('lg-thumb-open');
+                    this.core.outer.toggleClass('lg-components-open');
                 });
         }
     }
@@ -514,10 +495,10 @@ export class Thumbnail {
 
             if (e.keyCode === 38) {
                 e.preventDefault();
-                this.core.outer.addClass('lg-thumb-open');
+                this.core.outer.addClass('lg-components-open');
             } else if (e.keyCode === 40) {
                 e.preventDefault();
-                this.core.outer.removeClass('lg-thumb-open');
+                this.core.outer.removeClass('lg-components-open');
             }
         });
     }

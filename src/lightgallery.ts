@@ -18,6 +18,9 @@ declare let picturefill: any;
 
 // Unique id for each gallery
 let lgId = 0;
+
+// lightGallery modules
+// @todo create registerModule function
 window.lgModules = window.lgModules || {};
 
 export class LightGallery {
@@ -59,6 +62,7 @@ export class LightGallery {
 
     public $backdrop!: lgQuery;
     public $lgContent!: lgQuery;
+    public $lgComponents!: lgQuery;
 
     public $container!: lgQuery;
 
@@ -258,9 +262,9 @@ export class LightGallery {
 
         let addClasses = '';
 
-        if (this.settings.hideSubHtml) {
+        if (this.settings.allowMediaOverlap) {
             // Do not remove space before last single quote
-            addClasses += 'lg-hide-sub-html ';
+            addClasses += 'lg-media-overlap ';
         }
 
         const ariaLabelledby = this.settings.ariaLabelledby
@@ -295,7 +299,7 @@ export class LightGallery {
 
             <div id="${this.getIdName(
                 'lg-outer',
-            )}" class="lg-outer lg-hide-items ${addClasses}">
+            )}" class="lg-outer lg-hide-items ${addClasses} ">
                     <div id="${this.getIdName(
                         'lg-content',
                     )}" class="lg" style="width: ${
@@ -311,7 +315,11 @@ export class LightGallery {
                         ${closeIcon}
                     </div>
                     ${controls}
-                    ${subHtmlCont}
+                    <div id="${this.getIdName(
+                        'lg-components',
+                    )}" class="lg-components">
+                        ${subHtmlCont}
+                    </div>
                 </div> 
             </div>
         </div>
@@ -322,6 +330,7 @@ export class LightGallery {
             .append(template);
         this.outer = this.getElementById('lg-outer');
         this.$lgContent = this.getElementById('lg-content');
+        this.$lgComponents = this.getElementById('lg-components');
         this.$backdrop = this.getElementById('lg-backdrop');
         this.$container = this.getElementById('lg-container');
         this.$inner = this.getElementById('lg-inner');
@@ -595,6 +604,12 @@ export class LightGallery {
             this.outer.addClass(this.settings.startClass);
             this.getSlideItem(index).removeClass('lg-complete');
         }
+        const timeout = this.settings.zoomFromOrigin
+            ? 100
+            : this.settings.backdropDuration;
+        setTimeout(() => {
+            this.outer.addClass('lg-components-open');
+        }, timeout);
         this.LGel.trigger(lGEvents.beforeOpen);
 
         // add class lg-current to remove initial transition
@@ -1129,7 +1144,10 @@ export class LightGallery {
                 { index },
             );
 
-            if (this.settings.appendSubHtmlTo !== '.lg-sub-html') {
+            if (
+                this.lGalleryOn &&
+                this.settings.appendSubHtmlTo !== '.lg-sub-html'
+            ) {
                 this.addHtml(index);
             }
         }
@@ -1633,7 +1651,11 @@ export class LightGallery {
 
                 const scale = 1 - Math.abs(distanceY) / (window.innerWidth * 2);
                 this.setTranslate($currentSlide, 0, distanceY, scale, scale);
-                this.outer.addClass('lg-hide-items lg-swipe-closing');
+                if (Math.abs(distanceY) > 100) {
+                    this.outer
+                        .addClass('lg-hide-items')
+                        .removeClass('lg-components-open');
+                }
             }
         }
     }
@@ -1649,9 +1671,9 @@ export class LightGallery {
         // set transition duration
         setTimeout(() => {
             this.$container.removeClass('lg-dragging-vertical');
-            this.outer.removeClass(
-                'lg-dragging lg-hide-items lg-swipe-closing',
-            );
+            this.outer
+                .removeClass('lg-dragging lg-hide-items')
+                .addClass('lg-components-open');
 
             let triggerClick = true;
 
@@ -1956,9 +1978,9 @@ export class LightGallery {
                 if (
                     this.settings.allowMediaOverlap &&
                     this.outer.hasClass('lg-can-toggle') &&
-                    this.outer.hasClass('lg-thumb-open')
+                    this.outer.hasClass('lg-components-open')
                 ) {
-                    this.outer.removeClass('lg-thumb-open');
+                    this.outer.removeClass('lg-components-open');
                 } else {
                     this.closeGallery();
                 }
@@ -2195,7 +2217,7 @@ export class LightGallery {
         this.hideBarTimeout = false;
         $LG(document.body).removeClass('lg-on lg-from-hash');
 
-        this.outer.removeClass('lg-visible');
+        this.outer.removeClass('lg-visible lg-components-open');
 
         // Resetting opacity to 0 isd required as  vertical swipe to close function adds inline opacity.
         this.$backdrop.removeClass('in').css('opacity', 0);

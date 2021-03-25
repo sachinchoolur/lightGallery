@@ -1,26 +1,13 @@
 .lg-outer {
     .lg-pager-outer {
-        bottom: 60px;
-        left: 0;
-        position: absolute;
-        right: 0;
         text-align: center;
         z-index: $zindex-pager;
         height: 10px;
+        margin-bottom: 10px;
 
         &.lg-pager-hover {
             .lg-pager-cont {
                 overflow: visible;
-            }
-        }
-    }
-    &.lg-thumb-open {
-        .lg-pager-outer {
-            @include translate3d(0px, -($lg-thumb-container-height), 0px);
-        }
-        &.lg-zoomed {
-            .lg-pager-outer {
-                @include translate3d(0px, 0, 0px);
             }
         }
     }
