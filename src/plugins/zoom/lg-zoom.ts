@@ -430,7 +430,7 @@ export class Zoom {
 
     // If true, zoomed - in else zoomed out
     beginZoom(scale: number): boolean {
-        this.core.outer.removeClass('lg-zoom-drag-transition');
+        this.core.outer.removeClass('lg-zoom-drag-transition lg-zoom-dragging');
         if (scale > 1) {
             this.core.outer.addClass('lg-zoomed');
             const $actualSize = this.core.getElementById('lg-actual-size');
