@@ -179,7 +179,7 @@ export interface GalleryItem {
     /**
      * Disqus page url
      * @description Please refer official <a href="https://help.disqus.com/en/articles/1717084-javascript-configuration-variables">disqus documentation</a> for more info
-     * * @data-attr data-disqus-url
+     * @data-attr data-disqus-url
      */
     disqusUrl: string;
 

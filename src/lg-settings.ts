@@ -50,47 +50,57 @@ export interface LightGallerySettings {
 
     /**
      * Height of the gallery.
-     * @example '100%' , '300px'
+     * example '100%' , '300px'
      */
     height: string;
 
     /**
      * Width of the gallery.
-     * @example '100%' , '300px'
+     * example '100%' , '300px'
      */
     width: string;
 
     /**
      * Add custom class for gallery container
-     * @description this can be used to set different style for different galleries
+     * This can be used to set different style for different galleries
      */
     addClass: string;
 
     /**
      * Start animation class for the gallery.
-     * @description This can be used to change the zoom effect when the image is loaded
-     * This is also applied when navigating to new slides
-     * Note -  if startClass will be empty zoomFromOrigin is true.
+     * @description
+     * <ul>
+     * <li>This can be used to change the zoom effect when the image is loaded</li>
+     * <li>This is also applied when navigating to new slides</li>
+     * <li>if startClass will be empty zoomFromOrigin is true.</li>
+     * </ul>
      */
     startClass: string;
 
     /**
      * Enable zoom from origin effect.
-     * @description You need to know the original image size upfront and provide it via data-lg-size attribute as data-lg-size="1920-1280"
-     * If you are using responsive images,
+     * @description You need to know the original image size upfront and provide it via data-lg-size attribute as <code> data-lg-size="1920-1280</code>"
+     *
      * If you don't know, the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides,
      * lightGallery will show the default animation if data-lg-size is not available
+     *
+     * If you are using responsive images,
      * you can pass a comma separated list of sizes combined with a max-width (up to what size the particular image should be used)
+     *
      * example -
-     * data-lg-size="240-160-375, 400-267-480, 1600-1067"
+     * <code> data-lg-size="240-160-375, 400-267-480, 1600-1067"
      * data-responsive="img-240.jpg 375, img-400.jpg 480"
-     * data-src="img-1600.jpg"
+     * data-src="img-1600.jpg" </code>
+     *
      * In the above example, upto 375 width img.240.jpg and lg-size 240-160 will be used.
      * Similarly, upto 480 pixel width size 400-267 and img-400.jpg will be used
      * And above 480, lg-size 1600-1067 and img-1600.jpg will be used
-     * Supports only images.
-     * Will be false if dynamic option is enabled or galleryID found in the URL.
-     * startClass will be empty if zoomFromOrigin is true to avoid css conflicts.
+     *
+     * <ul>
+     * <li>At the moment, zoomFromOrigin options is supported only for image slides.</li>
+     * <li>Will be false if dynamic option is enabled or galleryID found in the URL.</li>
+     * <li>startClass will be empty if zoomFromOrigin is true to avoid css conflicts.</li>
+     * </ul>
      */
     zoomFromOrigin: boolean;
 
@@ -101,19 +111,19 @@ export interface LightGallerySettings {
 
     /**
      * Backdrop transition duration.
-     * @description Note - Do not change the value of backdrop via css.
+     * Note - Do not change the value of backdrop via css.
      */
     backdropDuration: number;
 
     /**
      * Configure where the gallery should be appended.
-     * @description Useful to create inline galleries and more
+     * Useful to create inline galleries and more
      */
     container: HTMLElement;
 
     /**
      * Delay for hiding gallery controls in ms.
-     * @description Pass 0 if you don't want to hide the controls
+     * Pass <code>0</code> if you don't want to hide the controls
      */
     hideBarsDelay: number;
 
@@ -125,9 +135,11 @@ export interface LightGallerySettings {
     /**
      * Delay slide transitions.
      * @description This is useful if you want to do any action in the current slide before moving to next slide.
+     * <section>
      * For example, fading out the captions before going to next slide.
-     * .lg-slide-progress class name is added to the current slide immediately after calling the slide method.
+     * <code>.lg-slide-progress</code> class name is added to the current slide immediately after calling the slide method.
      * But transition begins only after the delay
+     * </section>
      */
     slideDelay: number;
 
@@ -140,19 +152,23 @@ export interface LightGallerySettings {
 
     /**
      * If true, toolbar, captions and thumbnails will not overlap with media element
-     * @description This will not effect thumbnails if animateThumb is false
+     * This will not effect thumbnails if animateThumb is false
      * Also, toggle thumbnails button is not displayed if allowMediaOverlap is false
+     * <section>
      * Note - Changing the position of the media on every slide transition creates a flickering effect.
      * Therefore, The height of the caption is calculated dynamically, only once based on the first slide caption.
+     * </section>
+     * <section>
      * if you have dynamic captions for each media,
      * you can provide an appropriate height for the captions via allowMediaOverlap option
+     * </section>
      */
     allowMediaOverlap: boolean;
 
     /**
      * Video max size.
      * @description This can be over-written by passing specific size via data-lg-size attribute
-     * Recommended video resolution and & aspect ratios https://support.google.com/youtube/answer/6375112
+     * Recommended video resolution and & aspect ratios <a href="https://support.google.com/youtube/answer/6375112">https://support.google.com/youtube/answer/6375112</a>
      */
     videoMaxSize: string;
 
@@ -176,13 +192,13 @@ export interface LightGallerySettings {
 
     /**
      * If false user won't be abel to close the gallery at all
-     * @description This is useful for creating inline galleries.
+     * This is useful for creating inline galleries.
      */
     closable: boolean;
 
     /**
      * allows vertical drag/swipe to close gallery
-     * @description false if closable is false
+     * <code>false</code> if option <code>closable</code> is <code>false</code>
      */
     swipeToClose: boolean;
     /**
@@ -192,13 +208,13 @@ export interface LightGallerySettings {
 
     /**
      * If false, close button won't be displayed.
-     * @description Useful for creating inline galleries.
+     * Useful for creating inline galleries.
      */
     showCloseIcon: boolean;
 
     /**
      * Show maximize icon.
-     * @description Useful for creating inline galleries.
+     * Useful for creating inline galleries.
      */
     showMaximizeIcon: boolean;
 
@@ -255,7 +271,7 @@ export interface LightGallerySettings {
     /**
      * number of preload slides
      * @description will exicute only after the current slide is fully loaded.
-     * for example you click on 4th image and if preload = 1 then 3rd slide and 5th
+     * for example, if you click on 4th image and if preload = 1 then 3rd slide and 5th
      * slide will be loaded in the background after the 4th slide is fully loaded..
      * if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.
      */
@@ -368,19 +384,15 @@ export interface LightGallerySettings {
      * you can do this just by passing the prop names via extraProps
      * @example
      * HTML:
-     * ```html
      * <div id="lightGallery">
      *     <a href="a.jpg" data-custom-prop="abc"><img src="thumb.jpg" /></a>
      *     <a href="a.jpg" data-custom-prop="xyz"><img src="thumb.jpg" /></a>
      * </div>
-     * ```
-     * ```js
+     * JS:
      * lightGallery(document.getElementById('lightGallery'), {
      *     extraProps: ['customProp']
      * })
-     * ```
-     * Note - If you are using dynamic mode, you can pass any custom prop in the galleryItem
-     *  * ```js
+     * // Note - If you are using dynamic mode, you can pass any custom prop in the galleryItem
      * lightGallery(document.getElementById('lightGallery'), {
      *     dynamic: true,
      *     dynamicEl: [{
@@ -388,7 +400,6 @@ export interface LightGallerySettings {
      *         customProp:'abc',
      *     }]
      * })
-     * ```
      *
      */
     extraProps: string[];
