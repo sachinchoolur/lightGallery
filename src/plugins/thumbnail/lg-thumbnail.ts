@@ -110,6 +110,9 @@ export class Thumbnail {
             const { index } = event.detail;
             this.animateThumb(index);
         });
+        this.core.LGel.on(`${lGEvents.beforeOpen}.thumb`, () => {
+            this.thumbOuterWidth = this.core.outer.get().offsetWidth;
+        });
 
         this.core.LGel.on(`${lGEvents.updateSlides}.thumb`, () => {
             this.rebuildThumbnails();
@@ -117,9 +120,10 @@ export class Thumbnail {
         this.core.LGel.on(`${lGEvents.containerResize}.thumb`, () => {
             if (!this.core.lgOpened) return;
             setTimeout(() => {
+                this.thumbOuterWidth = this.core.outer.get().offsetWidth;
                 this.animateThumb(this.core.index);
-                this.thumbOuterWidth = window.innerWidth;
-            }, 200);
+                this.thumbOuterWidth = this.core.outer.get().offsetWidth;
+            }, 50);
         });
     }
 
@@ -145,7 +149,6 @@ export class Thumbnail {
 
         this.$thumbOuter = this.core.outer.find('.lg-thumb-outer').first();
         this.$lgThumb = this.core.outer.find('.lg-thumb').first();
-        this.thumbOuterWidth = window.innerWidth;
 
         if (this.settings.animateThumb) {
             this.core.outer
