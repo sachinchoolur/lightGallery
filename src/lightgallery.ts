@@ -1474,6 +1474,10 @@ export class LightGallery {
         if (!this.lgBusy) {
             this.setDownloadValue(index);
 
+            if (this.settings.counter) {
+                this.updateCurrentCounter(index);
+            }
+
             const currentSlideItem = this.getSlideItem(index);
             const previousSlideItem = this.getSlideItem(prevIndex);
 
@@ -1562,9 +1566,6 @@ export class LightGallery {
             setTimeout(() => {
                 if (this.lGalleryOn) {
                     this.loadContent(index, true);
-                }
-                if (this.settings.counter) {
-                    this.updateCurrentCounter(index);
                 }
                 // Add title if this.settings.appendSubHtmlTo === lg-sub-html
                 if (this.settings.appendSubHtmlTo === '.lg-sub-html') {
