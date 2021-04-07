@@ -149,7 +149,7 @@ export class lgQuery {
     }
 
     first(): lgQuery {
-        if (this.selector.length !== undefined) {
+        if (this.selector && this.selector.length !== undefined) {
             return $LG(this.selector[0]);
         } else {
             return $LG(this.selector);
