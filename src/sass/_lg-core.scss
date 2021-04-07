@@ -401,6 +401,12 @@
     .lg-outer {
         position: absolute;
     }
+    .lg-backdrop {
+        z-index: 1;
+    }
+    .lg-outer {
+        z-index: 2;
+    }
     .lg-maximize {
         &:after {
             content: '\e909';
