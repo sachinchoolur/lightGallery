@@ -30,7 +30,7 @@ export const lGEvents = {
 
 /**
  * Fired only once when lightGallery is initialized
- * @name init.lg
+ * @name init
  */
 export interface InitDetail {
     /**
@@ -41,7 +41,7 @@ export interface InitDetail {
 
 /**
  * Fired when the slide content has been inserted into it's slide container.
- * @name afterAppendSlide.lg
+ * @name afterAppendSlide
  */
 export interface AfterAppendSlideEventDetail {
     /**
@@ -52,7 +52,7 @@ export interface AfterAppendSlideEventDetail {
 
 /**
  * Fired immediately before opening the gallery
- * @name beforeOpen.lg
+ * @name beforeOpen
  */
 export interface BeforeOpenDetail {}
 
@@ -209,7 +209,7 @@ export interface AfterAppendSubHtmlDetail {
 
 /**
  * Fired when the sub-html content (ex : title/ description) has been appended into the slide.
- * @name containerResize.lg
+ * @name containerResize
  */
 export interface ContainerResizeDetail {
     /**
@@ -220,7 +220,7 @@ export interface ContainerResizeDetail {
 
 /**
  * Event fired when lightGallery detects video slide
- * @name hasVideo.lg
+ * @name hasVideo
  */
 export interface HasVideoDetail {
     /**
