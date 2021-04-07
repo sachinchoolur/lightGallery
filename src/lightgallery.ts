@@ -94,18 +94,18 @@ export class LightGallery {
         this.LGel = $LG(element);
 
         // lightGallery settings
-        this.settings = Object.assign({}, lightGallerySettings, options);
+        this.settings = { ...lightGallerySettings, ...options };
         if (
-            this.settings.isMobile && typeof this.settings.isMobile
+            this.settings.isMobile &&
+            typeof this.settings.isMobile === 'function'
                 ? this.settings.isMobile()
                 : utils.isMobile()
         ) {
-            const mobileSettings = Object.assign(
-                {},
-                this.settings.mobileSettings,
-                options.mobileSettings,
-            );
-            this.settings = Object.assign(this.settings, mobileSettings);
+            const mobileSettings = {
+                ...this.settings.mobileSettings,
+                ...options.mobileSettings,
+            };
+            this.settings = { ...this.settings, ...mobileSettings };
         }
 
         // When using dynamic mode, ensure dynamicEl is an array

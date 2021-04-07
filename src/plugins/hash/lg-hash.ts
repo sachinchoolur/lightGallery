@@ -19,7 +19,7 @@ export class Hash {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.settings = Object.assign({}, hashSettings, this.core.settings);
+        this.settings = { ...hashSettings, ...this.core.settings };
 
         if (this.settings.hash) {
             this.oldHash = window.location.hash;

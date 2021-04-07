@@ -30,7 +30,7 @@ export class CommentBox {
         // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
-        this.settings = Object.assign({}, commentSettings, this.core.settings);
+        this.settings = { ...commentSettings, ...this.core.settings };
 
         if (this.settings.commentBox) {
             this.init();

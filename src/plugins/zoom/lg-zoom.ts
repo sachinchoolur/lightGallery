@@ -30,7 +30,7 @@ export class Zoom {
     constructor(instance: LightGallery) {
         this.core = instance;
 
-        this.settings = Object.assign({}, zoomSettings, this.core.settings);
+        this.settings = { ...zoomSettings, ...this.core.settings };
 
         if (this.settings.zoom) {
             this.init();
