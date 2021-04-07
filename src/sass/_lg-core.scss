@@ -281,7 +281,7 @@
     right: 0;
     bottom: 0;
     z-index: $zindex-backdrop;
-    background-color: #000;
+    background-color: $lg-theme-color;
     opacity: 0;
     will-change: opacity;
     @include transition(opacity 333ms ease-in 0s);
