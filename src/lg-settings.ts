@@ -1,6 +1,32 @@
 import { GalleryItem } from './lg-utils';
+import { AutoplaySettings } from './plugins/autoplay/lg-autoplay-settings';
+import { CommentSettings } from './plugins/comment/lg-comment-settings';
+import { FullscreenSettings } from './plugins/fullscreen/lg-fullscreen-settings';
+import { HashSettings } from './plugins/hash/lg-hash-settings';
+import { PagerSettings } from './plugins/pager/lg-pager-settings';
+import { RotateSettings } from './plugins/rotate/lg-rotate-settings';
+import { ShareSettings } from './plugins/share/lg-share-settings';
+import { ThumbnailsSettings } from './plugins/thumbnail/lg-thumbnail-settings';
+import { VideoSettings } from './plugins/video/lg-video-settings';
+import { ZoomSettings } from './plugins/zoom/lg-zoom-settings';
+type LightGalleryCoreMobileSettings = Exclude<
+    LightGallerySettings,
+    'mobileSettings'
+>;
 
-export type MobileSettings = Exclude<LightGallerySettings, 'mobileSettings'>;
+// @todo use separate mobile settings for plugins
+export interface MobileSettings
+    extends LightGalleryCoreMobileSettings,
+        ZoomSettings,
+        ThumbnailsSettings,
+        VideoSettings,
+        AutoplaySettings,
+        CommentSettings,
+        FullscreenSettings,
+        HashSettings,
+        PagerSettings,
+        RotateSettings,
+        ShareSettings {}
 export interface LightGallerySettings {
     /**
      * Type of transition between images.
@@ -416,17 +442,19 @@ export interface LightGallerySettings {
     customSlideName: boolean;
 
     /**
-     * If you want to use external image for thumbnail, 
-     * add the path of that image inside "data-" attribute and set value of this option to the name of your custom attribute.
-    @example 
-    ```html
-    <li data-exthumbimage="externalThumb.jpg" data-src="img/img1.jpg"></li>
-    ```
-    ```js
-    {
-        exThumbImage: 'data-exthumbimage'
-    }
-    ```
+     * Option to fetch different thumbnail image other than first image
+     * @description If you want to use external image for thumbnail,
+     * add the path of that image inside "data-" attribute
+     * and set value of this option to the name of your custom attribute.
+     *
+     * @example
+     * <div id="lightGallery">
+     *     <a href="a.jpg" data-external-thumb-image="images/externalThumb.jpg" ><img src="thumb.jpg" /></a>
+     * </div>
+     *
+     * lightGallery(document.getElementById('lightGallery'), {
+     *     exThumbImage: 'data-external-thumb-image'
+     * })
      */
     exThumbImage: string;
 
@@ -441,7 +469,7 @@ export interface LightGallerySettings {
      * by default controls and close buttons are disabled on mobile devices.
      * use this options if you want to enable them or change any other settings for mobile devices
      */
-    mobileSettings: MobileSettings;
+    mobileSettings: Partial<MobileSettings>;
 }
 
 export const lightGallerySettings: LightGallerySettings = {
@@ -506,5 +534,6 @@ export const lightGallerySettings: LightGallerySettings = {
     mobileSettings: {
         controls: false,
         showCloseIcon: false,
-    } as MobileSettings,
+        download: false,
+    },
 };
