@@ -2108,6 +2108,10 @@ export class LightGallery {
         );
     }
 
+    /**
+     * Maximize minimize inline gallery.
+     * @category lGPublicMethods
+     */
     toggleMaximize(): void {
         this.getElementById('lg-maximize').on('click.lg', () => {
             this.$container.toggleClass('lg-inline');
@@ -2150,9 +2154,7 @@ export class LightGallery {
     }
 
     /**
-     * Close lightGallery.
-     *
-     * Close lightGallery if it is opened
+     * Close lightGallery if it is opened.
      *
      * @description If closable is false in the settings, you need to pass true via closeGallery method to force close gallery
      * @return returns the estimated time to close gallery completely including the close animation duration
