@@ -167,6 +167,12 @@
         font-size: 12px;
         margin: 5px 0 0;
     }
+    a {
+        color: inherit;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
     .lg-media-overlap & {
         background-image: $lg-sub-html-bg;
     }
