@@ -35,23 +35,6 @@ export interface ThumbnailsSettings {
     thumbMargin: number;
 
     /**
-     * Option to fetch different thumbnail image other than first image
-     * @description If you want to use external image for thumbnail,
-     * add the path of that image inside "data-" attribute
-     * and set value of this option to the name of your custom attribute.
-     *
-     * @example
-     * <div id="lightGallery">
-     *     <a href="a.jpg" data-external-thumb-image="images/externalThumb.jpg" ><img src="thumb.jpg" /></a>
-     * </div>
-     *
-     * lightGallery(document.getElementById('lightGallery'), {
-     *     exThumbImage: 'data-external-thumb-image'
-     * })
-     */
-    exThumbImage: false;
-
-    /**
      * control where the thumbnails should be appended.
      * By default, thumbnails are appended to '.lg-components' which has inbuilt open close transitions
      * If you don't want initial thumbnails transitions, or want to do more customization,
@@ -104,7 +87,6 @@ export const thumbnailsSettings: ThumbnailsSettings = {
     thumbHeight: '80px',
     thumbMargin: 5,
 
-    exThumbImage: false,
     appendThumbnailsTo: '.lg-components',
     toggleThumb: false,
 
