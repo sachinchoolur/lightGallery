@@ -1,3 +1,12 @@
+:root {
+    --main-bg: transparent;
+}
+hr {
+    background-color: #dae8ff;
+    margin: 4rem 0;
+    opacity: 1;
+}
+
 .contributors .content,
 .blog .content,
 .page .content,
@@ -29,10 +38,14 @@ img {
     height: auto;
 }
 
+body {
+    letter-spacing: 0.2px;
+    line-height: 1.45;
+}
+
 @include media-breakpoint-up(md) {
     body {
         font-size: $font-size-md;
-        padding-top: 4rem !important;
     }
 
     h1,
@@ -49,11 +62,6 @@ img {
     .h6 {
         margin-bottom: 1.125rem;
     }
-}
-
-.home h1 {
-    /* font-size: calc(1.375rem + 1.5vw); */
-    font-size: calc(1.875rem + 1.5vw);
 }
 
 a:hover,
@@ -85,8 +93,8 @@ a:focus {
 }
 */
 
-body {
-    padding-top: 3.5625rem;
+.page-wrap {
+    padding-top: 91px;
 }
 
 .docs-sidebar {

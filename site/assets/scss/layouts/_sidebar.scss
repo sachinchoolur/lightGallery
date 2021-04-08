@@ -42,7 +42,7 @@
   */
     font-size: $font-size-md;
     font-family: $font-family-monospace;
-    color: $gray-dark;
+    color: $blue-dark;
     margin: 1.25rem 0 0.5rem 0;
     padding: 1.5rem 0 0 0;
 }
@@ -60,10 +60,12 @@
 }
 
 a.docs-link {
-    color: $body-color;
+    color: $blue-shade;
     display: block;
-    padding: 0.125rem 0;
+    padding: 8px 0;
     font-size: $font-size-base;
+    font-size: 15px;
+    font-weight: 500;
 }
 
 .page-links li {
@@ -87,7 +89,7 @@ a.docs-link {
 }
 
 .page-links a {
-    color: $body-color;
+    color: $blue-shade;
     display: block;
     padding: 0.125rem 0;
     font-size: $font-size-base * 0.9375;
@@ -97,7 +99,10 @@ a.docs-link {
 .docs-link.active,
 .page-links a:hover {
     text-decoration: none;
-    color: $link-color;
+    color: $blue-light-shade;
+}
+.docs-link.active {
+    color: $blue-light;
 }
 
 .docs-links h3.sidebar-link,

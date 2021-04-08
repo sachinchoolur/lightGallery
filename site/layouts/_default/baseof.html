@@ -17,11 +17,7 @@
       {{ partial "header/alert.html" . }}
     {{ end }}
     {{ partial "header/header.html" . }}
-    <div class="wrap container" role="document">
-      <div class="content">
-        {{ block "main" . }}{{ end }}
-      </div>
-    </div>
+    {{ block "main" . }}{{ end }}
     {{ block "sidebar-footer" . }}{{ end }}
     {{ partial "footer/footer.html" . }}
     {{ partial "footer/script-footer.html" . }}

@@ -59,9 +59,7 @@ You can use native srcset and sizes attributes in lightGallery. Pass srcset and
 sizes via data-srcset and data-sizes attributes respectively. lightGallery will
 automatically create image with srcset and sizes.
 
-<div class="alert alert-info" role="alert">
-    If you want srcset to be supported for older browser please include 
-    <a href="http://caniuse.com/#feat=video" target="_blank">picturefil</a> javascript library in your document.
+<div class="alert alert-info" role="alert">If you want srcset to be supported for older browser please include <a href="http://caniuse.com/#feat=video" target="_blank">picturefil</a> javascript library in your document.
 </div>
 
 lightGallery will automatically call picturefil library if it is available

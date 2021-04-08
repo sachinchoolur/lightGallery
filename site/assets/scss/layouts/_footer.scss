@@ -1,14 +1,21 @@
 .footer {
-  padding-top: 3rem;
-  padding-bottom: 3rem;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.08) inset;
+    background-color: #fbfbfb;
+    margin-top: 3rem;
 }
 
 .footer p {
-  font-size: $font-size-sm;
+    font-size: $font-size-sm;
 }
 
 @include media-breakpoint-up(md) {
-  .footer p {
-    font-size: $font-size-base;
-  }
+    .footer p {
+        font-size: $font-size-base;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: red;
+    }
 }

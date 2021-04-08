@@ -1,6 +1,6 @@
 title = "lightGallery"
 titleSeparator = "-"
-titleAddition = "Full featured javascript gallery"
+titleAddition = "Full featured javascript gallery for web and mobile."
 description = "lightGallery supports features such as, Animated thumbnails, Pinch / double tap to zoom, HTML5 videos, YouTube, VImeo, videos, social media share, Rotate, fullScreen and many more. "
 
 images = ["lightgallery.png"]
@@ -29,7 +29,7 @@ portraitPhotoWidths = [800, 700, 600, 500]
 lqipWidth = "20x"
 
 # Footer
-footer = "From <a href=\"https://www.tack.one/\">tack.one</a>"
+footer = "<span style='margin-right: 5px;font-size: 1.6rem;color: #ea0000;'>♥</span> <a href=\"https://www.tack.one/?ref=lightGallery\">tack.one</a>"
 
 alert = false
 alertText = "Deliver web projects 10x faster. <a class=\"alert-link\" href=\"https://www.netlify.com/whitepaper/\" target=\"_blank\" rel=\"noopener\">Get the free enterprise paper →</a>"

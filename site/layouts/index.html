@@ -1,16 +1,12 @@
 {{ define "main" }}
-<div class="row justify-content-center">
-  <div class="col-lg-7 pb-5 text-center">
-    <h1>{{ .Title }}</h1>
-    <p>{{ .Params.Lead | safeHTML }}</p>
-    <div>Short Description of {{.Site.Data.doc.name}}</p></div>
-    <a class="btn btn-primary px-3" href="{{ "docs/getting-started/" | absURL }}" role="button">Quick Start</a>
+<div class="container-fluid">
+  <div class="row justify-content-center hero-section">
+    <div class="col-lg-6 text-center">
+      <h1 class="main-title">{{ .Title }}</h1>
+      <h4 class="sub-title">{{ .Params.Lead | safeHTML }}</h4>
+      <!-- <a class="btn btn-primary btn-lg get-started-btn" href="{{ "docs/getting-started/" | absURL }}" role="button">Get Started</a> -->
+    </div>
   </div>
 </div>
-{{ end }}
-
-{{ define "section" }}
-<section class="section container-fluid">
-  {{- .Content -}}
-</section>
+{{- .Content -}}
 {{ end }}

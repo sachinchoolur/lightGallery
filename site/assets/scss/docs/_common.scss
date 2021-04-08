@@ -1,0 +1,36 @@
+.docs-common-section {
+    border-bottom: 2px solid #dae8ff;
+    padding-bottom: 40px;
+    margin-bottom: 40px;
+    p,
+    ul {
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+    li {
+        line-height: 1.5rem;
+    }
+    .docs-common-name {
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    .docs-common-desc {
+        margin-bottom: 0;
+    }
+    .docs-common-tag {
+        font-size: 14px;
+        display: block;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        color: $blue-shade;
+        margin-top: 20px;
+    }
+    .docs-common-highlight {
+        .chroma {
+            margin-top: 0;
+        }
+    }
+    .docs-common-notes {
+        margin-top: 1rem;
+    }
+}

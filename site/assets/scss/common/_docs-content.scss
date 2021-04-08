@@ -1,0 +1,16 @@
+.docs-content {
+    .alert {
+        margin-bottom: 1rem;
+    }
+    li {
+        line-height: 2rem;
+    }
+    h2 + h3 {
+        margin-top: 0;
+    }
+    p {
+        &:empty {
+            display: none;
+        }
+    }
+}

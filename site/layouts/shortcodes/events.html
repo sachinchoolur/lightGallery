@@ -5,22 +5,21 @@
 {{$interface = .children}}
 {{ end }}
 {{ end -}}
-<div class="docs-event-section">
+<div class="docs-common-section">
 
 {{ range .Site.Data.doc.children -}}
     {{ if eq .name $interfaceName}}
         {{ range .comment.tags -}}
             {{ if eq .tag "name"}}
-                <span class="doc-events-name">Name</span><b>{{.text}}</b>
+                <p class="docs-common-name">{{.text}}</p>
             {{ end}}
         {{ end -}}
-        <span class="doc-events-description">Description</span>
-        <p>{{.comment.shortText}}</p>
+        <p class="docs-common-desc">{{.comment.shortText}}</p>
     {{ end }}
 {{ end }}
     {{if $interface }} 
-<span class="doc-event-object">Event object</span>
-<table class="options" style="width:100%">
+<b class="docs-common-tag">Event object</b>
+<table class="options table-blue" style="width:100%">
 
     <tr>
         <th>Name</th>

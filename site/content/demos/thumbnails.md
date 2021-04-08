@@ -26,7 +26,7 @@ toc: true
 
 ### Animated thumbnails
 
-{{< justified-gallery id="animated-thumbnails-gallery">}}
+{{< gallery-demo size="xl"  id="animated-thumbnails-gallery">}}
 
 ##### HTML Structure
 
@@ -52,7 +52,9 @@ lightGallery(document.getElementById('animated-thumbnails-gallery'), {
 
 ### Static thumbnails
 
-{{< justified-gallery id="static-thumbnails-gallery">}}
+<div class="lg-masonry-gallery">
+    {{< gallery-demo size="xl"  id="static-thumbnails-gallery">}}
+</div>
 
 ##### HTML Structure
 
@@ -75,6 +77,7 @@ lightGallery(document.getElementById('static-thumbnails'), {
     animateThumb: false,
     zoomFromOrigin: false,
     allowMediaOverlap: true,
+    toggleThumb: true,
 });
 ```
 
@@ -84,7 +87,7 @@ You can customize the look and feel of the thumbnails however you want just by
 updating the css files. Let's see how we can place the thumbnails on the right
 hand side of the slide.
 
-{{< justified-gallery id="customize-thumbnails-gallery">}}
+{{< gallery-demo size="xl"  id="customize-thumbnails-gallery">}}
 
 ##### HTML Structure
 
@@ -106,8 +109,12 @@ hand side of the slide.
 lightGallery(document.getElementById('customize-thumbnails-gallery'), {
     // Add a custom class to apply style only for the particular gallery
     addClass: 'lg-custom-thumbnails',
+
+    // Remove the starting animations.
+    // This can be done by overriding CSS as well
+    appendThumbnailsTo: '.lg-outer',
+
     animateThumb: false,
-    toggleThumb: false,
     allowMediaOverlap: true,
 });
 ```
