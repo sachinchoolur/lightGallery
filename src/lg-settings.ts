@@ -468,6 +468,7 @@ export interface LightGallerySettings {
      * @description Note - this is applied only at the time of loading
      * by default controls and close buttons are disabled on mobile devices.
      * use this options if you want to enable them or change any other settings for mobile devices
+     * Note - mobileSettings does not merge default values, You need to provide all mobileSettings including default values
      */
     mobileSettings: Partial<MobileSettings>;
 }
