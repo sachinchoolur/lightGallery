@@ -13,13 +13,10 @@
     {{ if eq .name "LightGallery"}}
             {{ range .groups -}}
             {{ if eq .title "Methods"}}
-                
                     {{ range .categories -}}
                         {{ if eq .title "lGPublicMethods"}}
                             {{$categoryIds = .children}}
                         {{ end }}
-                        {{.name}}
-                        {{.comment.shortText}}
                     {{end -}}
                 {{ end}}
             {{ end -}}
@@ -42,22 +39,32 @@
                         {{ if eq (int .id) (int $categoryId)}}
 
                             {{ range .signatures -}}
-                            
-                            <b>{{.name}}</b> 
-                            
-                                <p>{{.comment.shortText}}</p> 
-                                <p>{{.comment.text}}</p>
+                            <div class="docs-common-section">
+                                <p class="docs-common-name">{{.name}}</p> 
+                                
+                                <p class="docs-common-desc">{{.comment.shortText}}</p> 
+                                <p class="docs-common-desc">{{.comment.text}}</p>
 
                                 {{ range .comment.tags -}}
-                                    <p class="docs-example">Example</p>
+                                    {{ if eq .tag "description"}}
+                                    <p class="docs-common-desc">{{ .text | safeHTML }}</p>
+                                    {{ end}}
                                     {{ if eq .tag "example"}}
-                                        {{ highlight .text "js" "" }}
+                                        <p class="docs-common-tag">Example</p>
+                                        <div class="docs-common-highlight">
+                                            {{ highlight .text "js" "" }}
+                                        </div>
                                     {{ end}}
                                     {{ if eq .tag "note"}}
-                                        <span>Note : </span>
-                                        {{.text | markdownify}}
+                                    <div class="docs-common-notes">
+                                        <p class="docs-common-desc">
+                                            <span>Note : </span>
+                                            {{.text | markdownify}}
+                                        </p>
+                                    </div>
                                     {{ end}}
                                 {{ end -}}
+                            </div>
 
                             {{end -}}
                         {{ end}}
