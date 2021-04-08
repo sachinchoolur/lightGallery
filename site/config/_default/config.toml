@@ -6,7 +6,7 @@ enableEmoji = true
 enableGitInfo = false
 enableRobotsTXT = true
 languageCode = "en-US"
-paginate = 7
+paginate = 20
 rssLimit = 10
 
 # add redirects/headers
