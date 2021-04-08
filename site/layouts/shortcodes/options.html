@@ -45,17 +45,16 @@
             {{else}}
                 <td colspan="2">
             {{ end }}
-                <p><b>Description</b></p>
-                {{.comment.shortText | safeHTML}}
-            {{.comment.text | safeHTML}}
+            <p>{{.comment.shortText | safeHTML}}</p>
+            {{ if .comment.text}}
+                <p>{{.comment.text | safeHTML}}</p>
+            {{ end}}
             {{ range .comment.tags -}}
                 {{ if eq .tag "description"}}
-                    <p>
-                        {{.text | safeHTML}}
-                    </p>
+                    <p>{{.text | safeHTML}}</p>
                 {{ end}}
                 {{ if eq .tag "example"}}
-                    {{ highlight .text "" "" }}
+                    {{ highlight .text "js" "" }}
                 {{ end}}
             {{ end -}}
             </td>
