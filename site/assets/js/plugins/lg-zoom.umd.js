@@ -4,6 +4,32 @@
     (factory((global.lgZoom = {})));
 }(this, (function (exports) { 'use strict';
 
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
     var zoomSettings = {
         scale: 1,
         zoom: true,
@@ -15,7 +41,6 @@
         },
         enableZoomAfter: 300,
     };
-    //# sourceMappingURL=lg-zoom-settings.js.map
 
     /**
      * List of lightGallery events
@@ -43,13 +68,12 @@
         beforeClose: 'beforeClose.lg',
         afterClose: 'afterClose.lg',
     };
-    //# sourceMappingURL=lg-events.js.map
 
     var $LG = window.$LG;
     var Zoom = /** @class */ (function () {
         function Zoom(instance) {
             this.core = instance;
-            this.settings = Object.assign({}, zoomSettings, this.core.settings);
+            this.settings = __assign(__assign({}, zoomSettings), this.core.settings);
             if (this.settings.zoom) {
                 this.init();
                 // Store the zoomable timeout value just to clear it while closing
@@ -336,15 +360,10 @@
         };
         Zoom.prototype.getNaturalWidth = function (index) {
             var $image = this.core.getSlideItem(index).find('.lg-image').first();
-            var naturalWidth;
-            // @todo if possible remove dynamic check
-            if (this.core.settings.dynamic) {
-                naturalWidth = this.core.settings.dynamicEl[index].width;
-            }
-            else {
-                naturalWidth = $LG(this.core.items).eq(index).attr('data-width');
-            }
-            return naturalWidth || $image.get().naturalWidth;
+            var naturalWidth = this.core.galleryItems[index].width;
+            return naturalWidth
+                ? parseFloat(naturalWidth)
+                : $image.get().naturalWidth;
         };
         Zoom.prototype.getActualSizeScale = function (naturalWidth, width) {
             var _scale;
@@ -390,7 +409,7 @@
         };
         // If true, zoomed - in else zoomed out
         Zoom.prototype.beginZoom = function (scale) {
-            this.core.outer.removeClass('lg-zoom-drag-transition');
+            this.core.outer.removeClass('lg-zoom-drag-transition lg-zoom-dragging');
             if (scale > 1) {
                 this.core.outer.addClass('lg-zoomed');
                 var $actualSize = this.core.getElementById('lg-actual-size');
@@ -900,7 +919,6 @@
         return Zoom;
     }());
     window.lgModules.zoom = Zoom;
-    //# sourceMappingURL=lg-zoom.js.map
 
     exports.Zoom = Zoom;
 

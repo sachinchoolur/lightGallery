@@ -4,6 +4,32 @@
     (factory((global.lgPager = {})));
 }(this, (function (exports) { 'use strict';
 
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
     /**
      * List of lightGallery events
      * All events should be documented here
@@ -30,12 +56,10 @@
         beforeClose: 'beforeClose.lg',
         afterClose: 'afterClose.lg',
     };
-    //# sourceMappingURL=lg-events.js.map
 
     var pagerSettings = {
         pager: true,
     };
-    //# sourceMappingURL=lg-pager-settings.js.map
 
     var $LG = window.$LG;
     var Pager = /** @class */ (function () {
@@ -43,7 +67,7 @@
             // get lightGallery core plugin data
             this.core = instance;
             // extend module default settings with lightGallery core settings
-            this.settings = Object.assign({}, pagerSettings, this.core.settings);
+            this.settings = __assign(__assign({}, pagerSettings), this.core.settings);
             if (this.settings.pager && this.core.galleryItems.length > 1) {
                 this.init();
             }
@@ -59,9 +83,7 @@
         Pager.prototype.init = function () {
             var _this = this;
             var timeout;
-            this.core.outer
-                .find('.lg')
-                .append('<div class="lg-pager-outer"></div>');
+            this.core.$lgComponents.prepend('<div class="lg-pager-outer"></div>');
             var $pagerOuter = this.core.outer.find('.lg-pager-outer');
             $pagerOuter.html(this.getPagerHtml(this.core.galleryItems));
             // @todo enable click
@@ -105,7 +127,6 @@
     }());
     window.lgModules = window.lgModules || {};
     window.lgModules.pager = Pager;
-    //# sourceMappingURL=lg-pager.js.map
 
     exports.Pager = Pager;
 

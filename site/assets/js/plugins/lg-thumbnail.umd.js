@@ -4,17 +4,42 @@
     (factory((global.lgThumbnail = {})));
 }(this, (function (exports) { 'use strict';
 
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
     var thumbnailsSettings = {
         thumbnail: true,
         animateThumb: true,
         currentPagerPosition: 'middle',
+        alignThumbnails: 'middle',
         thumbWidth: 100,
         thumbHeight: '80px',
         thumbMargin: 5,
-        exThumbImage: false,
-        showThumbByDefault: true,
-        toggleThumb: true,
-        pullCaptionUp: true,
+        appendThumbnailsTo: '.lg-components',
+        toggleThumb: false,
         enableThumbDrag: true,
         enableThumbSwipe: true,
         swipeThreshold: 10,
@@ -61,7 +86,7 @@
             // get lightGallery core plugin data
             this.core = instance;
             // extend module default settings with lightGallery core settings
-            this.settings = Object.assign({}, thumbnailsSettings, this.core.settings);
+            this.settings = __assign(__assign({}, thumbnailsSettings), this.core.settings);
             this.init();
             return this;
         }
@@ -76,14 +101,7 @@
             if (!this.core.settings.allowMediaOverlap) {
                 this.settings.toggleThumb = false;
             }
-            if (!this.settings.animateThumb ||
-                this.core.settings.appendSubHtmlTo !== '.lg-sub-html') {
-                this.settings.pullCaptionUp = false;
-            }
             if (this.settings.thumbnail && this.core.galleryItems.length > 1) {
-                if (this.settings.pullCaptionUp) {
-                    this.core.outer.addClass('lg-pull-caption-up');
-                }
                 this.build();
                 if (this.settings.animateThumb) {
                     if (this.settings.enableThumbDrag) {
@@ -124,17 +142,7 @@
                 _this.animateThumb(index);
             });
             this.core.LGel.on(lGEvents.beforeOpen + ".thumb", function () {
-                if (_this.settings.showThumbByDefault) {
-                    var timeout = _this.core.settings.zoomFromOrigin
-                        ? 100
-                        : _this.core.settings.backdropDuration;
-                    setTimeout(function () {
-                        _this.core.outer.addClass('lg-thumb-open');
-                    }, timeout);
-                }
-            });
-            this.core.LGel.on(lGEvents.beforeClose + ".thumb", function () {
-                _this.core.outer.removeClass('lg-thumb-open');
+                _this.thumbOuterWidth = _this.core.outer.get().offsetWidth;
             });
             this.core.LGel.on(lGEvents.updateSlides + ".thumb", function () {
                 _this.rebuildThumbnails();
@@ -143,18 +151,27 @@
                 if (!_this.core.lgOpened)
                     return;
                 setTimeout(function () {
+                    _this.thumbOuterWidth = _this.core.outer.get().offsetWidth;
                     _this.animateThumb(_this.core.index);
-                    _this.thumbOuterWidth = window.innerWidth;
-                }, 200);
+                    _this.thumbOuterWidth = _this.core.outer.get().offsetWidth;
+                }, 50);
             });
         };
         Thumbnail.prototype.setThumbMarkup = function () {
-            var html = "<div class=\"lg-thumb-outer\">\n        <div class=\"lg-thumb lg-group\">\n        </div>\n        </div>";
+            var thumbOuterClassNames = 'lg-thumb-outer ';
+            if (this.settings.alignThumbnails) {
+                thumbOuterClassNames += "lg-thumb-align-" + this.settings.alignThumbnails;
+            }
+            var html = "<div class=\"" + thumbOuterClassNames + "\">\n        <div class=\"lg-thumb lg-group\">\n        </div>\n        </div>";
             this.core.outer.addClass('lg-has-thumb');
-            this.core.outer.find('.lg').append(html);
+            if (this.settings.appendThumbnailsTo === '.lg-components') {
+                this.core.$lgComponents.append(html);
+            }
+            else {
+                this.core.outer.append(html);
+            }
             this.$thumbOuter = this.core.outer.find('.lg-thumb-outer').first();
             this.$lgThumb = this.core.outer.find('.lg-thumb').first();
-            this.thumbOuterWidth = window.innerWidth;
             if (this.settings.animateThumb) {
                 this.core.outer
                     .find('.lg-thumb')
@@ -382,7 +399,7 @@
             else {
                 thumbImg = thumb;
             }
-            return "<div data-lg-item-id=\"" + index + "\" class=\"lg-thumb-item " + (index === this.core.index ? ' active' : '') + "\" \n        style=\"width:" + this.settings.thumbWidth + "px; height: " + this.settings.thumbHeight + ";\n            margin-right: " + this.settings.thumbMargin + "px\">\n            <img data-lg-item-id=\"" + index + "\" src=\"" + thumbImg + "\" />\n        </div>";
+            return "<div data-lg-item-id=\"" + index + "\" class=\"lg-thumb-item " + (index === this.core.index ? ' active' : '') + "\" \n        style=\"width:" + this.settings.thumbWidth + "px; height: " + this.settings.thumbHeight + ";\n            margin-right: " + this.settings.thumbMargin + "px;\">\n            <img data-lg-item-id=\"" + index + "\" src=\"" + thumbImg + "\" />\n        </div>";
         };
         Thumbnail.prototype.getThumbItemHtml = function (items) {
             var thumbList = '';
@@ -416,12 +433,12 @@
             var _this = this;
             if (this.settings.toggleThumb) {
                 this.core.outer.addClass('lg-can-toggle');
-                this.$thumbOuter.append('<button type="button" aria-label="Toggle thumbnails" class="lg-toggle-thumb lg-icon"></button>');
+                this.core.$toolbar.append('<button type="button" aria-label="Toggle thumbnails" class="lg-toggle-thumb lg-icon"></button>');
                 this.core.outer
                     .find('.lg-toggle-thumb')
                     .first()
                     .on('click.lg', function () {
-                    _this.core.outer.toggleClass('lg-thumb-open');
+                    _this.core.outer.toggleClass('lg-components-open');
                 });
             }
         };
@@ -432,11 +449,11 @@
                     return;
                 if (e.keyCode === 38) {
                     e.preventDefault();
-                    _this.core.outer.addClass('lg-thumb-open');
+                    _this.core.outer.addClass('lg-components-open');
                 }
                 else if (e.keyCode === 40) {
                     e.preventDefault();
-                    _this.core.outer.removeClass('lg-thumb-open');
+                    _this.core.outer.removeClass('lg-components-open');
                 }
             });
         };
@@ -452,7 +469,6 @@
     }());
     window.lgModules = window.lgModules || {};
     window.lgModules.thumbnail = Thumbnail;
-    //# sourceMappingURL=lg-thumbnail.js.map
 
     exports.Thumbnail = Thumbnail;
 

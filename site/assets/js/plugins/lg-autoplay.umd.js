@@ -54,7 +54,7 @@
             // extend module default settings with lightGallery core settings
             this.settings = Object.assign({}, autoplaySettings, this.core.settings);
             // Execute only if items are above 1
-            if (this.core.items.length < 2) {
+            if (this.core.galleryItems.length < 2) {
                 return this;
             }
             this.interval = false;
@@ -76,9 +76,7 @@
             }
             // Create progress bar
             if (this.settings.progressBar) {
-                this.core.outer
-                    .find('.lg')
-                    .append('<div class="lg-progress-bar"><div class="lg-progress"></div></div>');
+                this.core.$lgContent.append('<div class="lg-progress-bar"><div class="lg-progress"></div></div>');
             }
             // Start autoplay
             if (this.settings.slideShowAutoplay) {
@@ -175,7 +173,7 @@
             this.core.outer.addClass('lg-show-autoplay');
             this.core.outer.find('.lg-progress-bar').addClass('lg-start');
             this.interval = setInterval(function () {
-                if (_this.core.index + 1 < _this.core.items.length) {
+                if (_this.core.index + 1 < _this.core.galleryItems.length) {
                     _this.core.index++;
                 }
                 else {
@@ -209,7 +207,6 @@
     }());
     window.lgModules = window.lgModules || {};
     window.lgModules.autoplay = Autoplay;
-    //# sourceMappingURL=lg-autoplay.js.map
 
     exports.Autoplay = Autoplay;
 
