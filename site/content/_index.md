@@ -30,7 +30,7 @@ images: []
         <div class="col-lg-4 features-list-grid-item">
             <img class="features-list-grid-img" src="images/vector/modular.svg">
             <h3 class="features-list-grid-title">Modular.</h3>
-            <p class="features-list-grid-desc"> Built with modular architecture. It is easy to create your own modules, as well as detach modules that you don't want to use. lightGallery comes with many built in modules, such as thumbnails, zoom, etc. </p>
+            <p class="features-list-grid-desc"> Built with modular architecture. Easily create your own modules, or detach modules that you don't want to use. lightGallery comes with many built in modules, such as thumbnails, zoom, etc. </p>
         </div>
         <div class="col-lg-4 features-list-grid-item">
             <img class="features-list-grid-img" src="images/vector/mobile-optimized.svg">
