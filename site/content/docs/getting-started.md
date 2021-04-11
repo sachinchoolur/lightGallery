@@ -46,8 +46,7 @@ toc: true
 
 ## Browser support
 
-lightGallery supports all major browsers including IE 10 and above. Basic
-functionalities are supported on IE 8 and 9
+lightGallery supports all major browsers including IE 10 and above.
 
 ## Installation
 
@@ -109,19 +108,19 @@ lightgallery plugin you can include it after lightgallery.umd.js.
 
     <!-- lightgallery plugins -->
     <script src="js/plugins/lg-thumbnail.umd.js"></script>
-    <script src="js/plugins/lg-fullscreen.umd.js"></script>
+    <script src="js/plugins/lg-zoom.umd.js"></script>
 </body>
 ```
 
-lightGallery also supports AMD, CommonJS and ES6 modules. When you use AMD make
-sure that lightgallery.js is loaded before lightgallery modules.
+lightGallery supports AMD, CommonJS and ES6 modules too.
 
 ```JavaScript
-require(['./lightgallery.js'], function () {
-    require(['./lg-zoom.js', './lg-thumbnail.js'], function () {
-        $('#lightgallery').lightGallery();
-    });
-});
+import lightGallery from 'lightgallery';
+
+// Plugins
+import lgThumbnail from 'dist/js/plugins/lg-thumbnail.es5'
+import lgZoom from 'dist/js/plugins/lg-zoom.es5'
+
 ```
 
 #### The markup
@@ -133,27 +132,36 @@ examples of different kind of markups.
 ```HTML
 <div id="lightgallery">
     <a href="img/img1.jpg">
-        <img src="img/thumb1.jpg" />
+        <img alt=".." src="img/thumb1.jpg" />
     </a>
     <a href="img/img2.jpg">
-        <img src="img/thumb2.jpg" />
+        <img alt=".." src="img/thumb2.jpg" />
     </a>
     ...
 </div>
 ```
 
-#### Initialize the plugin
+#### Initialize lightGallery
 
 Finally, you need to initiate the gallery by adding the following code.
 
 ```javascript
 <script type="text/javascript">
     lightGallery(document.getElementById('lightgallery'), {
+        plugins: [lgZoom, lgThumbnail,]
         speed: 500
         ... other settings
     });
 </script>
 ```
+
+#### Plugins
+
+As shown above, you need to pass the plugins via settings if you want to use any
+lightGallery plugins.
+
+If you are using UMD, please use the same plugins names as follows. `lgZoom`,
+`lgAutoplay`,` lgComment`,`lgFullscreen `,`lgHash`,`lgPager`,`lgRotate`,`lgShare`,`lgThumbnail`,`lgVideo`
 
 ## License
 
