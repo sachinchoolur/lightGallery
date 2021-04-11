@@ -1031,7 +1031,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 }
 
 .lg-outer .lg-comment-toggle:after {
-  content: '\e900';
+  content: '\e908';
 }
 
 .lg-outer.lg-comment-active .lg-comment-overlay {
