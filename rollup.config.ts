@@ -12,7 +12,8 @@ import pkg from './package.json';
 import path from 'path';
 import pluginConfigs from './plugins-config-rollup.json';
 
-const libraryName = 'lightgallery';
+const libraryName = 'lightGallery';
+const libraryFileName = 'index';
 
 const umdConfigs = pluginConfigs.map((config) => {
     return {
@@ -102,7 +103,7 @@ export default [
     ...umdConfigs,
     ...minConfigs,
     {
-        input: `src/${libraryName}.ts`,
+        input: `src/${libraryFileName}.ts`,
         output: [
             {
                 file: pkg.main,
@@ -143,7 +144,7 @@ export default [
         ],
     },
     {
-        input: `src/${libraryName}.ts`,
+        input: `src/${libraryFileName}.ts`,
         output: [
             { file: pkg.min, name: camelCase(libraryName), format: 'umd' },
         ],
