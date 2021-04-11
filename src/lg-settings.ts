@@ -474,7 +474,7 @@ export interface LightGallerySettings {
      */
     mobileSettings: Partial<MobileSettings>;
 
-    plugins: ((instance: LightGallery, $LG: LgQuery) => this)[];
+    plugins: (new (instance: LightGallery, $LG: LgQuery) => this)[];
 }
 
 export const lightGallerySettings: LightGallerySettings = {
