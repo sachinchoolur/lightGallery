@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.lightgallery = {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.lightGallery = factory());
+}(this, (function () { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -699,7 +699,7 @@
         dynamic: false,
         dynamicEl: [],
         extraProps: [],
-        galleryId: 1,
+        galleryId: '1',
         customSlideName: false,
         exThumbImage: '',
         isMobile: undefined,
@@ -708,6 +708,7 @@
             showCloseIcon: false,
             download: false,
         },
+        plugins: [],
     };
 
     /**
@@ -738,21 +739,17 @@
     };
     //# sourceMappingURL=lg-events.js.map
 
-    window.$LG = $LG;
     // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
     // @ref - https://2ality.com/2017/04/setting-up-multi-platform-packages.html
     // Unique id for each gallery
     var lgId = 0;
-    // lightGallery modules
-    // @todo create registerModule function
-    window.lgModules = window.lgModules || {};
     var LightGallery = /** @class */ (function () {
         function LightGallery(element, options) {
             if (options === void 0) { options = {}; }
             this.lgOpened = false;
             this.index = 0;
             // lightGallery modules
-            this.modules = {};
+            this.plugins = [];
             // false when lightGallery load first slide content;
             this.lGalleryOn = false;
             // True when a slide animation is in progress
@@ -860,17 +857,14 @@
         LightGallery.prototype.buildModules = function () {
             var _this = this;
             var numberOfModules = 0;
-            var _loop_2 = function (key) {
+            this.settings.plugins.forEach(function (plugin) {
                 numberOfModules++;
                 (function (num) {
                     setTimeout(function () {
-                        _this.modules[key] = new window.lgModules[key](_this);
+                        _this.plugins.push(new plugin(_this, $LG));
                     }, 10 * num);
                 })(numberOfModules);
-            };
-            for (var key in window.lgModules) {
-                _loop_2(key);
-            }
+            });
             return numberOfModules * 10;
         };
         LightGallery.prototype.getSlideItem = function (index) {
@@ -1667,7 +1661,7 @@
             possibleNumberOfItems = Math.min(possibleNumberOfItems, this.galleryItems.length);
             var prevIndexItem = "lg-item-" + this.lgId + "-" + prevIndex;
             if (this.galleryItems.length <= 3) {
-                this.galleryItems.forEach(function (element, index) {
+                this.galleryItems.forEach(function (_element, index) {
                     itemsToBeInsertedToDom.push("lg-item-" + _this.lgId + "-" + index);
                 });
                 return itemsToBeInsertedToDom;
@@ -2470,15 +2464,28 @@
             return removeTimeout + 100;
         };
         LightGallery.prototype.destroyModules = function (destroy) {
-            for (var key in this.modules) {
-                if (this.modules[key]) {
+            this.plugins.forEach(function (module) {
+                try {
+                    if (destroy) {
+                        module.destroy();
+                    }
+                    else {
+                        module.closeGallery && module.closeGallery();
+                    }
+                }
+                catch (err) {
+                    console.warn("lightGallery:- make sure lightGallery module is properly destroyed");
+                }
+            });
+            for (var key in this.plugins) {
+                if (this.plugins[key]) {
                     try {
                         if (destroy) {
-                            this.modules[key].destroy();
+                            this.plugins[key].destroy();
                         }
                         else {
-                            this.modules[key].closeGallery &&
-                                this.modules[key].closeGallery();
+                            this.plugins[key].closeGallery &&
+                                this.plugins[key].closeGallery();
                         }
                     }
                     catch (err) {
@@ -2517,7 +2524,9 @@
         };
         return LightGallery;
     }());
-    window.lightGallery = function (el, options) {
+    //# sourceMappingURL=lightgallery.js.map
+
+    function lightGallery(el, options) {
         if (!el) {
             return;
         }
@@ -2527,12 +2536,10 @@
         catch (err) {
             console.error('lightGallery has not initiated properly', err);
         }
-    };
-    //# sourceMappingURL=lightgallery.js.map
+    }
+    //# sourceMappingURL=index.js.map
 
-    exports.LightGallery = LightGallery;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return lightGallery;
 
 })));
 //# sourceMappingURL=lightgallery.umd.js.map

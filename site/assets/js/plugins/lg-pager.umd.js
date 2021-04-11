@@ -1,8 +1,15 @@
+/*!
+ * lightgallery | 0.0.0 | April 11th 2021
+ * http://sachinchoolur.github.io/lightGallery/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.lgPager = {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.lgPager = factory());
+}(this, (function () { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -61,11 +68,11 @@
         pager: true,
     };
 
-    var $LG = window.$LG;
     var Pager = /** @class */ (function () {
-        function Pager(instance) {
-            // get lightGallery core plugin data
+        function Pager(instance, $LG) {
+            // get lightGallery core plugin instance
             this.core = instance;
+            this.$LG = $LG;
             // extend module default settings with lightGallery core settings
             this.settings = __assign(__assign({}, pagerSettings), this.core.settings);
             if (this.settings.pager && this.core.galleryItems.length > 1) {
@@ -88,7 +95,7 @@
             $pagerOuter.html(this.getPagerHtml(this.core.galleryItems));
             // @todo enable click
             $pagerOuter.first().on('click.lg touchend.lg', function (event) {
-                var $target = $LG(event.target);
+                var $target = _this.$LG(event.target);
                 if (!$target.hasAttribute('data-lg-item-id')) {
                     return;
                 }
@@ -125,12 +132,8 @@
         };
         return Pager;
     }());
-    window.lgModules = window.lgModules || {};
-    window.lgModules.pager = Pager;
 
-    exports.Pager = Pager;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return Pager;
 
 })));
 //# sourceMappingURL=lg-pager.umd.js.map

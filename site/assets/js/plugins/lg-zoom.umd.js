@@ -1,8 +1,15 @@
+/*!
+ * lightgallery | 0.0.0 | April 11th 2021
+ * http://sachinchoolur.github.io/lightGallery/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.lgZoom = {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.lgZoom = factory());
+}(this, (function () { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -69,10 +76,11 @@
         afterClose: 'afterClose.lg',
     };
 
-    var $LG = window.$LG;
     var Zoom = /** @class */ (function () {
-        function Zoom(instance) {
+        function Zoom(instance, $LG) {
+            // get lightGallery core plugin instance
             this.core = instance;
+            this.$LG = $LG;
             this.settings = __assign(__assign({}, zoomSettings), this.core.settings);
             if (this.settings.zoom) {
                 this.init();
@@ -81,7 +89,8 @@
                 this.positionChanged = false;
                 // Set the initial value center
                 this.pageX = this.core.outer.width() / 2;
-                this.pageY = this.core.outer.height() / 2 + $LG(window).scrollTop();
+                this.pageY =
+                    this.core.outer.height() / 2 + this.$LG(window).scrollTop();
                 this.scale = 1;
             }
             return this;
@@ -108,14 +117,14 @@
             // delay will be 0 except first time
             var _speed = this.settings.enableZoomAfter + event.detail.delay;
             // set _speed value 0 if gallery opened from direct url and if it is first slide
-            if ($LG('body').first().hasClass('lg-from-hash') &&
+            if (this.$LG('body').first().hasClass('lg-from-hash') &&
                 event.detail.delay) {
                 // will execute only once
                 _speed = 0;
             }
             else {
                 // Remove lg-from-hash to enable starting animation.
-                $LG('body').first().removeClass('lg-from-hash');
+                this.$LG('body').first().removeClass('lg-from-hash');
             }
             this.zoomableTimeout = setTimeout(function () {
                 _this.core.getSlideItem(event.detail.index).addClass('lg-zoomable');
@@ -284,7 +293,7 @@
             var offsetX = (containerRect.width - imageNode.offsetWidth) / 2 +
                 containerRect.left;
             var offsetY = (containerRect.height - imageNode.offsetHeight) / 2 +
-                $LG(window).scrollTop() +
+                this.$LG(window).scrollTop() +
                 containerRect.top;
             var originalX;
             var originalY;
@@ -397,7 +406,7 @@
                 cords.x = containerRect.width / 2 + containerRect.left;
                 cords.y =
                     containerRect.height / 2 +
-                        $LG(window).scrollTop() +
+                        this.$LG(window).scrollTop() +
                         containerRect.top;
             }
             return cords;
@@ -438,13 +447,13 @@
             this.enableZoomOnSlideItemLoad();
             var tapped = null;
             this.core.outer.on('dblclick.lg', function (event) {
-                if (!$LG(event.target).hasClass('lg-image')) {
+                if (!_this.$LG(event.target).hasClass('lg-image')) {
                     return;
                 }
                 _this.setActualSize(_this.core.index, event);
             });
             this.core.outer.on('touchstart.lg', function (event) {
-                var $target = $LG(event.target);
+                var $target = _this.$LG(event.target);
                 if (event.targetTouches.length === 1 &&
                     $target.hasClass('lg-image')) {
                     if (!tapped) {
@@ -540,7 +549,7 @@
                 $item = _this.core.getSlideItem(_this.core.index);
                 e.preventDefault();
                 if (e.targetTouches.length === 2 &&
-                    ($LG(e.target).hasClass('lg-item') ||
+                    (_this.$LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
                     initScale = _this.scale || 1;
                     _this.core.outer.removeClass('lg-zoom-drag-transition lg-zoom-dragging');
@@ -552,7 +561,7 @@
                 e.preventDefault();
                 if (e.targetTouches.length === 2 &&
                     _this.core.touchAction === 'pinch' &&
-                    ($LG(e.target).hasClass('lg-item') ||
+                    (_this.$LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
                     var endDist = _this.getTouchDistance(e);
                     var distance = startDist - endDist;
@@ -567,7 +576,7 @@
             });
             this.core.$inner.on('touchend.lg', function (e) {
                 if (_this.core.touchAction === 'pinch' &&
-                    ($LG(e.target).hasClass('lg-item') ||
+                    (_this.$LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
                     pinchStarted = false;
                     startDist = 0;
@@ -750,7 +759,7 @@
                     return;
                 }
                 $item = _this.core.getSlideItem(_this.core.index);
-                if (($LG(e.target).hasClass('lg-item') ||
+                if ((_this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target)) &&
                     e.targetTouches.length === 1 &&
                     _this.core.outer.hasClass('lg-zoomed')) {
@@ -787,7 +796,7 @@
                 e.preventDefault();
                 if (e.targetTouches.length === 1 &&
                     _this.core.touchAction === 'zoomSwipe' &&
-                    ($LG(e.target).hasClass('lg-item') ||
+                    (_this.$LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
                     _this.core.touchAction = 'zoomSwipe';
                     endCoords = _this.getSwipeCords(e, Math.abs(rotateValue));
@@ -801,7 +810,7 @@
             });
             this.core.$inner.on('touchend.lg', function (e) {
                 if (_this.core.touchAction === 'zoomSwipe' &&
-                    ($LG(e.target).hasClass('lg-item') ||
+                    (_this.$LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
                     _this.core.touchAction = undefined;
                     _this.core.outer.removeClass('lg-zoom-dragging');
@@ -840,7 +849,7 @@
                     return;
                 }
                 var $item = _this.core.getSlideItem(_this.core.index);
-                if ($LG(e.target).hasClass('lg-item') ||
+                if (_this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target)) {
                     startTime = new Date();
                     // execute only on .lg-object
@@ -861,7 +870,7 @@
                     allowY = dragAllowedAxises.allowY;
                     allowX = dragAllowedAxises.allowX;
                     if (_this.core.outer.hasClass('lg-zoomed')) {
-                        if ($LG(e.target).hasClass('lg-object') &&
+                        if (_this.$LG(e.target).hasClass('lg-object') &&
                             (allowX || allowY)) {
                             e.preventDefault();
                             startCoords = _this.getDragCords(e, Math.abs(rotateValue));
@@ -880,7 +889,7 @@
                     }
                 }
             });
-            $LG(window).on("mousemove.lg.zoom.global" + this.core.lgId, function (e) {
+            this.$LG(window).on("mousemove.lg.zoom.global" + this.core.lgId, function (e) {
                 if (isDragging) {
                     isMoved = true;
                     endCoords = _this.getDragCords(e, Math.abs(rotateValue));
@@ -888,7 +897,7 @@
                     _this.setZoomSwipeStyles(_LGel, distance);
                 }
             });
-            $LG(window).on("mouseup.lg.zoom.global" + this.core.lgId, function (e) {
+            this.$LG(window).on("mouseup.lg.zoom.global" + this.core.lgId, function (e) {
                 if (isDragging) {
                     endTime = new Date();
                     isDragging = false;
@@ -911,18 +920,15 @@
         };
         Zoom.prototype.destroy = function () {
             // Unbind all events added by lightGallery zoom plugin
-            $LG(window).off(".lg.zoom.global" + this.core.lgId);
+            this.$LG(window).off(".lg.zoom.global" + this.core.lgId);
             this.core.LGel.off('.lg.zoom');
             clearTimeout(this.zoomableTimeout);
             this.zoomableTimeout = false;
         };
         return Zoom;
     }());
-    window.lgModules.zoom = Zoom;
 
-    exports.Zoom = Zoom;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return Zoom;
 
 })));
 //# sourceMappingURL=lg-zoom.umd.js.map

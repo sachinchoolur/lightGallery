@@ -1,8 +1,37 @@
-var getUseLeft = function () {
-    var isChrome = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
-    return !!(isChrome && parseInt(isChrome[2], 10) < 54);
+/*!
+ * lightgallery | 0.0.0 | April 11th 2021
+ * http://sachinchoolur.github.io/lightGallery/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
-var zoomDefaults = {
+
+var zoomSettings = {
     scale: 1,
     zoom: true,
     actualSize: true,
@@ -12,23 +41,50 @@ var zoomDefaults = {
         zoomOut: 'lg-zoom-out',
     },
     enableZoomAfter: 300,
-    useLeftForZoom: getUseLeft(),
 };
-//# sourceMappingURL=lg-zoom-settings.js.map
 
-var $LG = window.$LG;
+/**
+ * List of lightGallery events
+ * All events should be documented here
+ * Below interfaces are used to build the website documentations
+ * */
+var lGEvents = {
+    afterAppendSlide: 'afterAppendSlide.lg',
+    init: 'init.lg',
+    hasVideo: 'hasVideo.lg',
+    containerResize: 'containerResize.lg',
+    updateSlides: 'updateSlides.lg',
+    afterAppendSubHtml: 'afterAppendSubHtml.lg',
+    beforeOpen: 'beforeOpen.lg',
+    afterOpen: 'afterOpen.lg',
+    slideItemLoad: 'slideItemLoad.lg',
+    beforeSlide: 'beforeSlide.lg',
+    afterSlide: 'afterSlide.lg',
+    posterClick: 'posterClick.lg',
+    dragStart: 'dragStart.lg',
+    dragMove: 'dragMove.lg',
+    dragEnd: 'dragEnd.lg',
+    beforeNextSlide: 'beforeNextSlide.lg',
+    beforePrevSlide: 'beforePrevSlide.lg',
+    beforeClose: 'beforeClose.lg',
+    afterClose: 'afterClose.lg',
+};
+
 var Zoom = /** @class */ (function () {
-    function Zoom(instance) {
+    function Zoom(instance, $LG) {
+        // get lightGallery core plugin instance
         this.core = instance;
-        this.settings = Object.assign({}, zoomDefaults, this.core.settings);
-        if (this.settings.zoom && this.core.doCss()) {
+        this.$LG = $LG;
+        this.settings = __assign(__assign({}, zoomSettings), this.core.settings);
+        if (this.settings.zoom) {
             this.init();
             // Store the zoomable timeout value just to clear it while closing
             this.zoomableTimeout = false;
             this.positionChanged = false;
             // Set the initial value center
             this.pageX = this.core.outer.width() / 2;
-            this.pageY = this.core.outer.height() / 2 + $LG(window).scrollTop();
+            this.pageY =
+                this.core.outer.height() / 2 + this.$LG(window).scrollTop();
             this.scale = 1;
         }
         return this;
@@ -41,15 +97,8 @@ var Zoom = /** @class */ (function () {
         if (this.settings.actualSize) {
             zoomIcons += "<button id=\"" + this.core.getIdName('lg-actual-size') + "\" type=\"button\" class=\"" + this.settings.actualSizeIcons.zoomIn + " lg-icon\"></button>";
         }
-        // CSS transition performace is poor in Chrome version < 54
-        // So use CSS left property for zoom transition.
-        if (this.settings.useLeftForZoom) {
-            this.core.outer.addClass('lg-use-left-for-zoom');
-        }
-        else {
-            this.core.outer.addClass('lg-use-transition-for-zoom');
-        }
-        this.core.outer.find('.lg-toolbar').first().append(zoomIcons);
+        this.core.outer.addClass('lg-use-transition-for-zoom');
+        this.core.$toolbar.first().append(zoomIcons);
     };
     /**
      * @desc Enable zoom option only once the image is completely loaded
@@ -62,14 +111,14 @@ var Zoom = /** @class */ (function () {
         // delay will be 0 except first time
         var _speed = this.settings.enableZoomAfter + event.detail.delay;
         // set _speed value 0 if gallery opened from direct url and if it is first slide
-        if ($LG('body').first().hasClass('lg-from-hash') &&
+        if (this.$LG('body').first().hasClass('lg-from-hash') &&
             event.detail.delay) {
             // will execute only once
             _speed = 0;
         }
         else {
             // Remove lg-from-hash to enable starting animation.
-            $LG('body').first().removeClass('lg-from-hash');
+            this.$LG('body').first().removeClass('lg-from-hash');
         }
         this.zoomableTimeout = setTimeout(function () {
             _this.core.getSlideItem(event.detail.index).addClass('lg-zoomable');
@@ -77,7 +126,7 @@ var Zoom = /** @class */ (function () {
     };
     Zoom.prototype.enableZoomOnSlideItemLoad = function () {
         // Add zoomable class
-        this.core.LGel.on('onSlideItemLoad.lg.zoom', this.enableZoom.bind(this));
+        this.core.LGel.on(lGEvents.slideItemLoad + ".zoom", this.enableZoom.bind(this));
     };
     Zoom.prototype.getModifier = function (rotateValue, axis, el) {
         var originalRotate = rotateValue;
@@ -164,7 +213,7 @@ var Zoom = /** @class */ (function () {
         }
     };
     Zoom.prototype.getDragAllowedAxises = function ($image, rotateValue) {
-        var $lg = this.core.outer.find('.lg').get();
+        var $lg = this.core.$lgContent.get();
         var scale = parseFloat($image.attr('data-scale')) || 1;
         var imgEl = $image.get();
         var allowY = this.getImageSize(imgEl, rotateValue, 'y') * scale >
@@ -233,10 +282,13 @@ var Zoom = /** @class */ (function () {
         var imageNode = $image.get();
         if (!imageNode)
             return;
+        var containerRect = this.core.outer.get().getBoundingClientRect();
         // Find offset manually to avoid issue after zoom
-        var offsetX = (this.core.outer.width() - imageNode.offsetWidth) / 2;
-        var offsetY = (this.core.outer.height() - imageNode.offsetHeight) / 2 +
-            $LG(window).scrollTop();
+        var offsetX = (containerRect.width - imageNode.offsetWidth) / 2 +
+            containerRect.left;
+        var offsetY = (containerRect.height - imageNode.offsetHeight) / 2 +
+            this.$LG(window).scrollTop() +
+            containerRect.top;
         var originalX;
         var originalY;
         if (scale === 1) {
@@ -280,14 +332,8 @@ var Zoom = /** @class */ (function () {
             .attr('data-scale', style.scale + '')
             .css('transform', 'scale3d(' + style.scale + ', ' + style.scale + ', 1)');
         $dummyImage.css('transform', 'scale3d(' + style.scale + ', ' + style.scale + ', 1)');
-        if (this.settings.useLeftForZoom) {
-            $imageWrap.css('left', -style.x + 'px');
-            $imageWrap.css('top', -style.y + 'px');
-        }
-        else {
-            var transform = 'translate3d(-' + style.x + 'px, -' + style.y + 'px, 0)';
-            $imageWrap.css('transform', transform);
-        }
+        var transform = 'translate3d(-' + style.x + 'px, -' + style.y + 'px, 0)';
+        $imageWrap.css('transform', transform);
         $imageWrap.attr('data-x', style.x).attr('data-y', style.y);
     };
     /**
@@ -317,15 +363,10 @@ var Zoom = /** @class */ (function () {
     };
     Zoom.prototype.getNaturalWidth = function (index) {
         var $image = this.core.getSlideItem(index).find('.lg-image').first();
-        var naturalWidth;
-        // @todo if possible remove dynamic check
-        if (this.core.settings.dynamic) {
-            naturalWidth = this.core.settings.dynamicEl[index].width;
-        }
-        else {
-            naturalWidth = $LG(this.core.items).eq(index).attr('data-width');
-        }
-        return naturalWidth || $image.get().naturalWidth;
+        var naturalWidth = this.core.galleryItems[index].width;
+        return naturalWidth
+            ? parseFloat(naturalWidth)
+            : $image.get().naturalWidth;
     };
     Zoom.prototype.getActualSizeScale = function (naturalWidth, width) {
         var _scale;
@@ -355,8 +396,12 @@ var Zoom = /** @class */ (function () {
             cords.y = event.pageY || event.targetTouches[0].pageY;
         }
         else {
-            cords.x = this.core.outer.width() / 2;
-            cords.y = this.core.outer.height() / 2 + $LG(window).scrollTop();
+            var containerRect = this.core.outer.get().getBoundingClientRect();
+            cords.x = containerRect.width / 2 + containerRect.left;
+            cords.y =
+                containerRect.height / 2 +
+                    this.$LG(window).scrollTop() +
+                    containerRect.top;
         }
         return cords;
     };
@@ -367,7 +412,7 @@ var Zoom = /** @class */ (function () {
     };
     // If true, zoomed - in else zoomed out
     Zoom.prototype.beginZoom = function (scale) {
-        this.core.outer.removeClass('lg-zoom-drag-transition');
+        this.core.outer.removeClass('lg-zoom-drag-transition lg-zoom-dragging');
         if (scale > 1) {
             this.core.outer.addClass('lg-zoomed');
             var $actualSize = this.core.getElementById('lg-actual-size');
@@ -396,13 +441,13 @@ var Zoom = /** @class */ (function () {
         this.enableZoomOnSlideItemLoad();
         var tapped = null;
         this.core.outer.on('dblclick.lg', function (event) {
-            if (!$LG(event.target).hasClass('lg-image')) {
+            if (!_this.$LG(event.target).hasClass('lg-image')) {
                 return;
             }
             _this.setActualSize(_this.core.index, event);
         });
         this.core.outer.on('touchstart.lg', function (event) {
-            var $target = $LG(event.target);
+            var $target = _this.$LG(event.target);
             if (event.targetTouches.length === 1 &&
                 $target.hasClass('lg-image')) {
                 if (!tapped) {
@@ -419,15 +464,14 @@ var Zoom = /** @class */ (function () {
             }
         });
         // Update zoom on resize and orientationchange
-        $LG(window).on("resize.lg.zoom.global" + this.core.lgId + " orientationchange.lg.zoom.global" + this.core.lgId, function () {
-            console.log('calling');
+        this.core.LGel.on(lGEvents.containerResize + ".zoom", function () {
             if (!_this.core.lgOpened)
                 return;
             _this.setPageCords();
             _this.zoomImage(_this.scale);
         });
         this.core.getElementById('lg-zoom-out').on('click.lg', function () {
-            if (_this.core.outer.find('.lg-current .lg-image').first()) {
+            if (_this.core.outer.find('.lg-current .lg-image').get()) {
                 _this.scale -= _this.settings.scale;
                 _this.scale = _this.getScale(_this.scale);
                 _this.beginZoom(_this.scale);
@@ -440,11 +484,11 @@ var Zoom = /** @class */ (function () {
         this.core.getElementById('lg-actual-size').on('click.lg', function () {
             _this.setActualSize(_this.core.index);
         });
-        this.core.LGel.on('onBeforeOpen.lg.zoom', function () {
-            _this.core.outer.find('.lg-item').first().removeClass('lg-zoomable');
+        this.core.LGel.on(lGEvents.beforeOpen + ".zoom", function () {
+            _this.core.outer.find('.lg-item').removeClass('lg-zoomable');
         });
         // Reset zoom on slide change
-        this.core.LGel.on('onAfterSlide.lg.zoom', function (event) {
+        this.core.LGel.on(lGEvents.afterSlide + ".zoom", function (event) {
             var prevIndex = event.detail.prevIndex;
             _this.scale = 1;
             _this.resetZoom(prevIndex);
@@ -499,7 +543,7 @@ var Zoom = /** @class */ (function () {
             $item = _this.core.getSlideItem(_this.core.index);
             e.preventDefault();
             if (e.targetTouches.length === 2 &&
-                ($LG(e.target).hasClass('lg-item') ||
+                (_this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))) {
                 initScale = _this.scale || 1;
                 _this.core.outer.removeClass('lg-zoom-drag-transition lg-zoom-dragging');
@@ -511,7 +555,7 @@ var Zoom = /** @class */ (function () {
             e.preventDefault();
             if (e.targetTouches.length === 2 &&
                 _this.core.touchAction === 'pinch' &&
-                ($LG(e.target).hasClass('lg-item') ||
+                (_this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))) {
                 var endDist = _this.getTouchDistance(e);
                 var distance = startDist - endDist;
@@ -526,7 +570,7 @@ var Zoom = /** @class */ (function () {
         });
         this.core.$inner.on('touchend.lg', function (e) {
             if (_this.core.touchAction === 'pinch' &&
-                ($LG(e.target).hasClass('lg-item') ||
+                (_this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))) {
                 pinchStarted = false;
                 startDist = 0;
@@ -652,7 +696,7 @@ var Zoom = /** @class */ (function () {
         return distance;
     };
     Zoom.prototype.getPossibleSwipeDragCords = function ($image, rotateValue) {
-        var $cont = this.core.outer.find('.lg');
+        var $cont = this.core.$lgContent;
         var contHeight = $cont.height();
         var contWidth = $cont.width();
         var imageYSize = this.getImageSize($image.get(), rotateValue, 'y');
@@ -681,13 +725,7 @@ var Zoom = /** @class */ (function () {
         }
     };
     Zoom.prototype.setZoomSwipeStyles = function (LGel, distance) {
-        if (this.settings.useLeftForZoom) {
-            LGel.css('left', distance.x + 'px');
-            LGel.css('top', distance.y + 'px');
-        }
-        else {
-            LGel.css('transform', 'translate3d(' + distance.x + 'px, ' + distance.y + 'px, 0)');
-        }
+        LGel.css('transform', 'translate3d(' + distance.x + 'px, ' + distance.y + 'px, 0)');
     };
     Zoom.prototype.zoomSwipe = function () {
         var _this = this;
@@ -715,7 +753,7 @@ var Zoom = /** @class */ (function () {
                 return;
             }
             $item = _this.core.getSlideItem(_this.core.index);
-            if (($LG(e.target).hasClass('lg-item') ||
+            if ((_this.$LG(e.target).hasClass('lg-item') ||
                 $item.get().contains(e.target)) &&
                 e.targetTouches.length === 1 &&
                 _this.core.outer.hasClass('lg-zoomed')) {
@@ -752,7 +790,7 @@ var Zoom = /** @class */ (function () {
             e.preventDefault();
             if (e.targetTouches.length === 1 &&
                 _this.core.touchAction === 'zoomSwipe' &&
-                ($LG(e.target).hasClass('lg-item') ||
+                (_this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))) {
                 _this.core.touchAction = 'zoomSwipe';
                 endCoords = _this.getSwipeCords(e, Math.abs(rotateValue));
@@ -766,7 +804,7 @@ var Zoom = /** @class */ (function () {
         });
         this.core.$inner.on('touchend.lg', function (e) {
             if (_this.core.touchAction === 'zoomSwipe' &&
-                ($LG(e.target).hasClass('lg-item') ||
+                (_this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))) {
                 _this.core.touchAction = undefined;
                 _this.core.outer.removeClass('lg-zoom-dragging');
@@ -805,7 +843,7 @@ var Zoom = /** @class */ (function () {
                 return;
             }
             var $item = _this.core.getSlideItem(_this.core.index);
-            if ($LG(e.target).hasClass('lg-item') ||
+            if (_this.$LG(e.target).hasClass('lg-item') ||
                 $item.get().contains(e.target)) {
                 startTime = new Date();
                 // execute only on .lg-object
@@ -826,7 +864,7 @@ var Zoom = /** @class */ (function () {
                 allowY = dragAllowedAxises.allowY;
                 allowX = dragAllowedAxises.allowX;
                 if (_this.core.outer.hasClass('lg-zoomed')) {
-                    if ($LG(e.target).hasClass('lg-object') &&
+                    if (_this.$LG(e.target).hasClass('lg-object') &&
                         (allowX || allowY)) {
                         e.preventDefault();
                         startCoords = _this.getDragCords(e, Math.abs(rotateValue));
@@ -845,7 +883,7 @@ var Zoom = /** @class */ (function () {
                 }
             }
         });
-        $LG(window).on("mousemove.lg.zoom.global" + this.core.lgId, function (e) {
+        this.$LG(window).on("mousemove.lg.zoom.global" + this.core.lgId, function (e) {
             if (isDragging) {
                 isMoved = true;
                 endCoords = _this.getDragCords(e, Math.abs(rotateValue));
@@ -853,7 +891,7 @@ var Zoom = /** @class */ (function () {
                 _this.setZoomSwipeStyles(_LGel, distance);
             }
         });
-        $LG(window).on("mouseup.lg.zoom.global" + this.core.lgId, function (e) {
+        this.$LG(window).on("mouseup.lg.zoom.global" + this.core.lgId, function (e) {
             if (isDragging) {
                 endTime = new Date();
                 isDragging = false;
@@ -871,20 +909,18 @@ var Zoom = /** @class */ (function () {
             _this.core.outer.removeClass('lg-grabbing').addClass('lg-grab');
         });
     };
-    Zoom.prototype.destroy = function (clear) {
+    Zoom.prototype.closeGallery = function () {
         this.resetZoom();
-        if (clear) {
-            // Unbind all events added by lightGallery zoom plugin
-            $LG(window).off(".lg.zoom.global" + this.core.lgId);
-            this.core.LGel.off('.lg.zoom');
-            clearTimeout(this.zoomableTimeout);
-            this.zoomableTimeout = false;
-        }
+    };
+    Zoom.prototype.destroy = function () {
+        // Unbind all events added by lightGallery zoom plugin
+        this.$LG(window).off(".lg.zoom.global" + this.core.lgId);
+        this.core.LGel.off('.lg.zoom');
+        clearTimeout(this.zoomableTimeout);
+        this.zoomableTimeout = false;
     };
     return Zoom;
 }());
-window.lgModules.zoom = Zoom;
-//# sourceMappingURL=lg-zoom.js.map
 
-export { Zoom };
+export default Zoom;
 //# sourceMappingURL=lg-zoom.es5.js.map

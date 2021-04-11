@@ -1,8 +1,15 @@
+/*!
+ * lightgallery | 0.0.0 | April 11th 2021
+ * http://sachinchoolur.github.io/lightGallery/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.lgShare = {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.lgShare = factory());
+}(this, (function () { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -18,6 +25,17 @@
     OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
 
     function __spreadArrays() {
         for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
@@ -37,14 +55,12 @@
         pinterestDropdownText: 'Pinterest',
         additionalShareOptions: [],
     };
-    //# sourceMappingURL=lg-share-settings.js.map
 
     function getFacebookShareLink(galleryItem) {
         var facebookBaseUrl = '//www.facebook.com/sharer/sharer.php?u=';
         return (facebookBaseUrl +
             encodeURIComponent(galleryItem.facebookShareUrl || window.location.href));
     }
-    //# sourceMappingURL=lg-fb-share-utils.js.map
 
     function getTwitterShareLink(galleryItem) {
         var twitterBaseUrl = '//twitter.com/intent/tweet?text=';
@@ -52,7 +68,6 @@
         var text = galleryItem.tweetText;
         return twitterBaseUrl + text + '&url=' + url;
     }
-    //# sourceMappingURL=lg-twitter-share-utils.js.map
 
     function getPinterestShareLink(galleryItem) {
         var pinterestBaseUrl = 'http://www.pinterest.com/pin/create/button/?url=';
@@ -66,7 +81,6 @@
             '&description=' +
             description);
     }
-    //# sourceMappingURL=lg-pinterest-share-utils.js.map
 
     /**
      * List of lightGallery events
@@ -94,15 +108,14 @@
         beforeClose: 'beforeClose.lg',
         afterClose: 'afterClose.lg',
     };
-    //# sourceMappingURL=lg-events.js.map
 
     var Share = /** @class */ (function () {
         function Share(instance) {
             this.shareOptions = [];
-            // get lightGallery core plugin data
+            // get lightGallery core plugin instance
             this.core = instance;
             // extend module default settings with lightGallery core settings
-            this.settings = Object.assign({}, shareSettings, this.core.settings);
+            this.settings = __assign(__assign({}, shareSettings), this.core.settings);
             if (this.settings.share) {
                 this.init();
             }
@@ -125,10 +138,8 @@
         };
         Share.prototype.setLgShareMarkup = function () {
             var _this = this;
-            this.core.outer.find('.lg-toolbar').append("<button type=\"button aria-label=\"Share\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"lg-share lg-icon\">\n                <ul class=\"lg-dropdown\" style=\"position: absolute;\"></ul></button>");
-            this.core.outer
-                .find('.lg')
-                .append('<div class="lg-dropdown-overlay"></div>');
+            this.core.$toolbar.append("<button type=\"button aria-label=\"Share\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"lg-share lg-icon\">\n                <ul class=\"lg-dropdown\" style=\"position: absolute;\"></ul></button>");
+            this.core.$lgContent.append('<div class="lg-dropdown-overlay"></div>');
             var $shareButton = this.core.outer.find('.lg-share');
             $shareButton.first().on('click.lg', function () {
                 _this.core.outer.toggleClass('lg-dropdown-active');
@@ -200,13 +211,8 @@
         };
         return Share;
     }());
-    window.lgModules = window.lgModules || {};
-    window.lgModules.share = Share;
-    //# sourceMappingURL=lg-share.js.map
 
-    exports.Share = Share;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return Share;
 
 })));
 //# sourceMappingURL=lg-share.umd.js.map

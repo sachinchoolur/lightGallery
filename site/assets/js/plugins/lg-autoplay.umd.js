@@ -1,8 +1,41 @@
+/*!
+ * lightgallery | 0.0.0 | April 11th 2021
+ * http://sachinchoolur.github.io/lightGallery/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.lgAutoplay = {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.lgAutoplay = factory());
+}(this, (function () { 'use strict';
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
 
     /**
      * List of lightGallery events
@@ -30,7 +63,6 @@
         beforeClose: 'beforeClose.lg',
         afterClose: 'afterClose.lg',
     };
-    //# sourceMappingURL=lg-events.js.map
 
     var autoplaySettings = {
         autoplay: true,
@@ -41,7 +73,6 @@
         autoplayControls: true,
         appendAutoplayControlsTo: '.lg-toolbar',
     };
-    //# sourceMappingURL=lg-autoplay-settings.js.map
 
     /**
      * Creates the autoplay plugin.
@@ -49,10 +80,9 @@
      */
     var Autoplay = /** @class */ (function () {
         function Autoplay(instance) {
-            // get lightGallery core plugin data
             this.core = instance;
             // extend module default settings with lightGallery core settings
-            this.settings = Object.assign({}, autoplaySettings, this.core.settings);
+            this.settings = __assign(__assign({}, autoplaySettings), this.core.settings);
             // Execute only if items are above 1
             if (this.core.galleryItems.length < 2) {
                 return this;
@@ -205,12 +235,8 @@
         };
         return Autoplay;
     }());
-    window.lgModules = window.lgModules || {};
-    window.lgModules.autoplay = Autoplay;
 
-    exports.Autoplay = Autoplay;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return Autoplay;
 
 })));
 //# sourceMappingURL=lg-autoplay.umd.js.map

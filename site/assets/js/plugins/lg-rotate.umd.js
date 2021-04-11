@@ -1,8 +1,41 @@
+/*!
+ * lightgallery | 0.0.0 | April 11th 2021
+ * http://sachinchoolur.github.io/lightGallery/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.lgRotate = {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.lgRotate = factory());
+}(this, (function () { 'use strict';
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
 
     /**
      * List of lightGallery events
@@ -30,7 +63,6 @@
         beforeClose: 'beforeClose.lg',
         afterClose: 'afterClose.lg',
     };
-    //# sourceMappingURL=lg-events.js.map
 
     var rotateSettings = {
         rotate: true,
@@ -39,15 +71,14 @@
         flipHorizontal: true,
         flipVertical: true,
     };
-    //# sourceMappingURL=lg-rotate-settings.js.map
 
-    var $LG = window.$LG;
     var Rotate = /** @class */ (function () {
-        function Rotate(instance) {
-            // get lightGallery core plugin data
+        function Rotate(instance, $LG) {
+            // get lightGallery core plugin instance
             this.core = instance;
+            this.$LG = $LG;
             // extend module default settings with lightGallery core settings
-            this.settings = Object.assign({}, rotateSettings, this.core.settings);
+            this.settings = __assign(__assign({}, rotateSettings), this.core.settings);
             if (this.settings.rotate) {
                 this.init();
             }
@@ -71,7 +102,7 @@
                 rotateIcons +=
                     '<button type="button" id="lg-rotate-right" aria-label="Rotate right" class="lg-rotate-right lg-icon"></button>';
             }
-            this.core.outer.find('.lg-toolbar').append(rotateIcons);
+            this.core.$toolbar.append(rotateIcons);
         };
         Rotate.prototype.init = function () {
             var _this = this;
@@ -141,7 +172,7 @@
             if (!el) {
                 return 0;
             }
-            var st = $LG(el).style();
+            var st = this.$LG(el).style();
             var tm = st.getPropertyValue('-webkit-transform') ||
                 st.getPropertyValue('-moz-transform') ||
                 st.getPropertyValue('-ms-transform') ||
@@ -194,13 +225,8 @@
         };
         return Rotate;
     }());
-    window.lgModules = window.lgModules || {};
-    window.lgModules.rotate = Rotate;
-    //# sourceMappingURL=lg-rotate.js.map
 
-    exports.Rotate = Rotate;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return Rotate;
 
 })));
 //# sourceMappingURL=lg-rotate.umd.js.map

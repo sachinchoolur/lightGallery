@@ -1,8 +1,15 @@
+/*!
+ * lightgallery | 0.0.0 | April 11th 2021
+ * http://sachinchoolur.github.io/lightGallery/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.lgThumbnail = {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.lgThumbnail = factory());
+}(this, (function () { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -46,7 +53,6 @@
         loadYouTubeThumbnail: true,
         youTubeThumbSize: 1,
     };
-    //# sourceMappingURL=lg-thumbnail-settings.js.map
 
     /**
      * List of lightGallery events
@@ -74,17 +80,16 @@
         beforeClose: 'beforeClose.lg',
         afterClose: 'afterClose.lg',
     };
-    //# sourceMappingURL=lg-events.js.map
 
-    var $LG = window.$LG;
     var Thumbnail = /** @class */ (function () {
-        function Thumbnail(instance) {
+        function Thumbnail(instance, $LG) {
             this.thumbOuterWidth = 0;
             this.thumbTotalWidth = 0;
             this.translateX = 0;
             this.thumbClickable = false;
-            // get lightGallery core plugin data
+            // get lightGallery core plugin instance
             this.core = instance;
+            this.$LG = $LG;
             // extend module default settings with lightGallery core settings
             this.settings = __assign(__assign({}, thumbnailsSettings), this.core.settings);
             this.init();
@@ -124,7 +129,7 @@
             this.setThumbMarkup();
             this.manageActiveClassOnSlideChange();
             this.$lgThumb.first().on('click.lg touchend.lg', function (e) {
-                var $target = $LG(e.target);
+                var $target = _this.$LG(e.target);
                 if (!$target.hasAttribute('data-lg-item-id')) {
                     return;
                 }
@@ -216,7 +221,7 @@
                         .addClass('lg-grabbing');
                 }
             });
-            $LG(window).on("mousemove.lg.thumb.global" + this.core.lgId, function (e) {
+            this.$LG(window).on("mousemove.lg.thumb.global" + this.core.lgId, function (e) {
                 if (!_this.core.lgOpened)
                     return;
                 if (isDragging) {
@@ -224,7 +229,7 @@
                     thumbDragUtils = _this.onThumbTouchMove(thumbDragUtils);
                 }
             });
-            $LG(window).on("mouseup.lg.thumb.global" + this.core.lgId, function () {
+            this.$LG(window).on("mouseup.lg.thumb.global" + this.core.lgId, function () {
                 if (!_this.core.lgOpened)
                     return;
                 if (thumbDragUtils.isMoved) {
@@ -444,7 +449,7 @@
         };
         Thumbnail.prototype.thumbKeyPress = function () {
             var _this = this;
-            $LG(window).on("keydown.lg.thumb.global" + this.core.lgId, function (e) {
+            this.$LG(window).on("keydown.lg.thumb.global" + this.core.lgId, function (e) {
                 if (!_this.core.lgOpened || !_this.settings.toggleThumb)
                     return;
                 if (e.keyCode === 38) {
@@ -459,7 +464,7 @@
         };
         Thumbnail.prototype.destroy = function () {
             if (this.settings.thumbnail && this.core.galleryItems.length > 1) {
-                $LG(window).off(".lg.thumb.global" + this.core.lgId);
+                this.$LG(window).off(".lg.thumb.global" + this.core.lgId);
                 this.core.LGel.off('.lg.thumb');
                 this.$thumbOuter.remove();
                 this.core.outer.removeClass('lg-has-thumb');
@@ -467,12 +472,8 @@
         };
         return Thumbnail;
     }());
-    window.lgModules = window.lgModules || {};
-    window.lgModules.thumbnail = Thumbnail;
 
-    exports.Thumbnail = Thumbnail;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return Thumbnail;
 
 })));
 //# sourceMappingURL=lg-thumbnail.umd.js.map

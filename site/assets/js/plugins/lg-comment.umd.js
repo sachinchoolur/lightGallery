@@ -1,8 +1,34 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.lgComment = {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.lgComment = factory());
+}(this, (function () { 'use strict';
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
 
     /**
      * List of lightGallery events
@@ -30,7 +56,6 @@
         beforeClose: 'beforeClose.lg',
         afterClose: 'afterClose.lg',
     };
-    //# sourceMappingURL=lg-events.js.map
 
     var commentSettings = {
         commentBox: false,
@@ -40,9 +65,8 @@
             title: undefined,
             language: 'en',
         },
-        commentsMarkup: '<div id="lg-comment-box" class="lg-comment-box lg-fb-comment-box"><div class="lg-comment-header"><h3 class="lg-comment-title">Leave a comment.</h3><span class="lg-comment-close"  class="lg-icon"></span></div><div class="lg-comment-body"></div></div>',
+        commentsMarkup: '<div id="lg-comment-box" class="lg-comment-box lg-fb-comment-box"><div class="lg-comment-header"><h3 class="lg-comment-title">Leave a comment.</h3><span class="lg-comment-close lg-icon"></span></div><div class="lg-comment-body"></div></div>',
     };
-    //# sourceMappingURL=lg-comment-settings.js.map
 
     /**
      * lightGallery comments module
@@ -54,13 +78,13 @@
      * @ref - https://developers.facebook.com/docs/plugins/comments/#comments-plugin
      *
      */
-    var $LG = window.$LG;
     var CommentBox = /** @class */ (function () {
-        function CommentBox(instance) {
-            // get lightGallery core plugin data
+        function CommentBox(instance, $LG) {
+            // get lightGallery core plugin instance
             this.core = instance;
+            this.$LG = $LG;
             // extend module default settings with lightGallery core settings
-            this.settings = Object.assign({}, commentSettings, this.core.settings);
+            this.settings = __assign(__assign({}, commentSettings), this.core.settings);
             if (this.settings.commentBox) {
                 this.init();
             }
@@ -105,6 +129,8 @@
         };
         CommentBox.prototype.addFbComments = function () {
             var _this_1 = this;
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
+            var _this = this;
             this.core.LGel.on(lGEvents.beforeSlide + ".comment", function (event) {
                 var html = _this_1.core.galleryItems[event.detail.index].fbHtml;
                 _this_1.core.outer.find('.lg-comment-body').html(html);
@@ -114,7 +140,7 @@
                     FB.XFBML.parse();
                 }
                 catch (err) {
-                    $LG(window).on('fbAsyncInit', function () {
+                    _this.$LG(window).on('fbAsyncInit', function () {
                         FB.XFBML.parse();
                     });
                 }
@@ -122,7 +148,7 @@
         };
         CommentBox.prototype.addDisqusComments = function () {
             var _this_1 = this;
-            var $disqusThread = $LG('#disqus_thread');
+            var $disqusThread = this.$LG('#disqus_thread');
             $disqusThread.remove();
             this.core.outer
                 .find('.lg-comment-body')
@@ -162,12 +188,8 @@
         };
         return CommentBox;
     }());
-    window.lgModules = window.lgModules || {};
-    window.lgModules.commentBox = CommentBox;
 
-    exports.CommentBox = CommentBox;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return CommentBox;
 
 })));
 //# sourceMappingURL=lg-comment.umd.js.map

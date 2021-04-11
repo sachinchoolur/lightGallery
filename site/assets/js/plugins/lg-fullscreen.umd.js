@@ -1,21 +1,53 @@
+/*!
+ * lightgallery | 0.0.0 | April 11th 2021
+ * http://sachinchoolur.github.io/lightGallery/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (factory((global.lgFullscreen = {})));
-}(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global.lgFullscreen = factory());
+}(this, (function () { 'use strict';
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
 
     var fullscreenSettings = {
         fullScreen: true,
     };
-    //# sourceMappingURL=lg-fullscreen-settings.js.map
 
-    var $LG = window.$LG;
     var FullScreen = /** @class */ (function () {
-        function FullScreen(instance) {
-            // get lightGallery core plugin data
+        function FullScreen(instance, $LG) {
+            // get lightGallery core plugin instance
             this.core = instance;
+            this.$LG = $LG;
             // extend module default settings with lightGallery core settings
-            this.settings = Object.assign({}, fullscreenSettings, this.core.settings);
+            this.settings = __assign(__assign({}, fullscreenSettings), this.core.settings);
             this.init();
             return this;
         }
@@ -32,7 +64,7 @@
                 else {
                     fullScreen =
                         '<button type="button aria-label="Toggle fullscreen" class="lg-fullscreen lg-icon"></button>';
-                    this.core.outer.find('.lg-toolbar').append(fullScreen);
+                    this.core.$toolbar.append(fullScreen);
                     this.fullScreen();
                 }
             }
@@ -75,7 +107,7 @@
         // https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode
         FullScreen.prototype.fullScreen = function () {
             var _this = this;
-            $LG(document).on("fullscreenchange.lg.global" + this.core.lgId + " \n            webkitfullscreenchange.lg.global" + this.core.lgId + " \n            mozfullscreenchange.lg.global" + this.core.lgId + " \n            MSFullscreenChange.lg.global" + this.core.lgId, function () {
+            this.$LG(document).on("fullscreenchange.lg.global" + this.core.lgId + " \n            webkitfullscreenchange.lg.global" + this.core.lgId + " \n            mozfullscreenchange.lg.global" + this.core.lgId + " \n            MSFullscreenChange.lg.global" + this.core.lgId, function () {
                 if (!_this.core.lgOpened)
                     return;
                 _this.core.outer.toggleClass('lg-fullscreen-on');
@@ -99,17 +131,12 @@
             }
         };
         FullScreen.prototype.destroy = function () {
-            $LG(document).off("fullscreenchange.lg.global" + this.core.lgId + " \n            webkitfullscreenchange.lg.global" + this.core.lgId + " \n            mozfullscreenchange.lg.global" + this.core.lgId + " \n            MSFullscreenChange.lg.global" + this.core.lgId);
+            this.$LG(document).off("fullscreenchange.lg.global" + this.core.lgId + " \n            webkitfullscreenchange.lg.global" + this.core.lgId + " \n            mozfullscreenchange.lg.global" + this.core.lgId + " \n            MSFullscreenChange.lg.global" + this.core.lgId);
         };
         return FullScreen;
     }());
-    window.lgModules = window.lgModules || {};
-    window.lgModules.fullscreen = FullScreen;
-    //# sourceMappingURL=lg-fullscreen.js.map
 
-    exports.FullScreen = FullScreen;
-
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return FullScreen;
 
 })));
 //# sourceMappingURL=lg-fullscreen.umd.js.map
