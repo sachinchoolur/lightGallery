@@ -10,25 +10,20 @@
  */
 
 import { lGEvents } from '../../lg-events';
-import { lgQuery } from '../../lgQuery';
+import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { commentSettings, CommentSettings } from './lg-comment-settings';
 declare let FB: any;
 declare let DISQUS: any;
 
-declare global {
-    interface Window {
-        $LG: (selector: any) => lgQuery;
-    }
-}
-
-const $LG = window.$LG;
-export class CommentBox {
+export default class CommentBox {
     core: LightGallery;
     settings: CommentSettings;
-    constructor(instance: LightGallery) {
-        // get lightGallery core plugin data
+    private $LG!: LgQuery;
+    constructor(instance: LightGallery, $LG: LgQuery) {
+        // get lightGallery core plugin instance
         this.core = instance;
+        this.$LG = $LG;
         // extend module default settings with lightGallery core settings
         this.settings = { ...commentSettings, ...this.core.settings };
 
@@ -83,6 +78,8 @@ export class CommentBox {
     }
 
     addFbComments() {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const _this = this;
         this.core.LGel.on(`${lGEvents.beforeSlide}.comment`, (event) => {
             const html = this.core.galleryItems[event.detail.index].fbHtml;
             this.core.outer.find('.lg-comment-body').html(html);
@@ -91,7 +88,7 @@ export class CommentBox {
             try {
                 FB.XFBML.parse();
             } catch (err) {
-                $LG(window).on('fbAsyncInit', function () {
+                _this.$LG(window).on('fbAsyncInit', function () {
                     FB.XFBML.parse();
                 });
             }
@@ -101,7 +98,7 @@ export class CommentBox {
     addDisqusComments(): void {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const _this = this;
-        const $disqusThread = $LG('#disqus_thread');
+        const $disqusThread = this.$LG('#disqus_thread');
         $disqusThread.remove();
         this.core.outer
             .find('.lg-comment-body')
@@ -149,6 +146,3 @@ export class CommentBox {
         this.core.LGel.off('.lg.comment');
     }
 }
-
-window.lgModules = window.lgModules || {};
-window.lgModules.commentBox = CommentBox;

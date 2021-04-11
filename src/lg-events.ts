@@ -1,5 +1,5 @@
 import { LightGallery } from './lightgallery';
-import { VideoSource } from './plugins/video/lg-video';
+import { VideoSource } from './plugins/video/types';
 
 /**
  * List of lightGallery events

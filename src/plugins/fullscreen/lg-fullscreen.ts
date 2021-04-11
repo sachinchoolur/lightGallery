@@ -1,4 +1,4 @@
-import { lgQuery } from '../../lgQuery';
+import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import {
     FullscreenSettings,
@@ -7,20 +7,15 @@ import {
 
 declare let document: any;
 
-declare global {
-    interface Window {
-        $LG: (selector: any) => lgQuery;
-    }
-}
-
-const $LG = window.$LG;
-
-export class FullScreen {
+export default class FullScreen {
     core: LightGallery;
     settings: FullscreenSettings;
-    constructor(instance: LightGallery) {
-        // get lightGallery core plugin data
+    private $LG!: LgQuery;
+    constructor(instance: LightGallery, $LG: LgQuery) {
+        // get lightGallery core plugin instance
         this.core = instance;
+        this.$LG = $LG;
+
         // extend module default settings with lightGallery core settings
         this.settings = { ...fullscreenSettings, ...this.core.settings };
 
@@ -85,7 +80,7 @@ export class FullScreen {
 
     // https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode
     private fullScreen(): void {
-        $LG(document).on(
+        this.$LG(document).on(
             `fullscreenchange.lg.global${this.core.lgId} 
             webkitfullscreenchange.lg.global${this.core.lgId} 
             mozfullscreenchange.lg.global${this.core.lgId} 
@@ -116,7 +111,7 @@ export class FullScreen {
     }
 
     destroy(): void {
-        $LG(document).off(
+        this.$LG(document).off(
             `fullscreenchange.lg.global${this.core.lgId} 
             webkitfullscreenchange.lg.global${this.core.lgId} 
             mozfullscreenchange.lg.global${this.core.lgId} 
@@ -124,6 +119,3 @@ export class FullScreen {
         );
     }
 }
-
-window.lgModules = window.lgModules || {};
-window.lgModules.fullscreen = FullScreen;

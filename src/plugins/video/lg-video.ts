@@ -24,21 +24,14 @@ import { LightGallery } from '../../lightgallery';
 import { lgQuery } from '../../lgQuery';
 import { CustomEventHasVideo } from '../../types';
 import { lGEvents } from '../../lg-events';
+import { VideoSource } from './types';
+
 declare let Vimeo: any;
 declare let videojs: any;
-export interface VideoSource {
-    source: {
-        src: string;
-        type: string;
-    }[];
-    attributes: HTMLVideoElement;
-}
-
 declare global {
     interface Window {
         _wq: any;
         Vimeo: any;
-        $LG: (selector: any) => lgQuery;
     }
 }
 
@@ -50,10 +43,11 @@ function param(obj: { [x: string]: string | number | boolean }): string {
         .join('&');
 }
 
-export class Video {
+export default class Video {
     private core: LightGallery;
     private settings: VideoSettings;
     constructor(instance: LightGallery) {
+        // get lightGallery core plugin instance
         this.core = instance;
         this.settings = { ...videoSettings, ...this.core.settings };
 
@@ -478,5 +472,3 @@ export class Video {
         this.core.LGel.off('.lg.video');
     }
 }
-
-window.lgModules.video = Video;

@@ -10,7 +10,6 @@ import {
     SlideItemLoadDetail,
 } from './lg-events';
 
-window.$LG = $LG;
 declare let picturefill: any;
 
 // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
@@ -18,10 +17,6 @@ declare let picturefill: any;
 
 // Unique id for each gallery
 let lgId = 0;
-
-// lightGallery modules
-// @todo create registerModule function
-window.lgModules = window.lgModules || {};
 
 export class LightGallery {
     public settings: LightGallerySettings;
@@ -37,7 +32,7 @@ export class LightGallery {
     public index = 0;
 
     // lightGallery modules
-    public modules: any = {};
+    public plugins: any[] = [];
 
     // false when lightGallery load first slide content;
     public lGalleryOn = false;
@@ -206,14 +201,14 @@ export class LightGallery {
      */
     buildModules(): number {
         let numberOfModules = 0;
-        for (const key in window.lgModules) {
+        this.settings.plugins.forEach((plugin) => {
             numberOfModules++;
             ((num) => {
                 setTimeout(() => {
-                    this.modules[key] = new window.lgModules[key](this);
+                    this.plugins.push(new plugin(this, $LG));
                 }, 10 * num);
             })(numberOfModules);
-        }
+        });
 
         return numberOfModules * 10;
     }
@@ -1290,7 +1285,7 @@ export class LightGallery {
         );
         const prevIndexItem = `lg-item-${this.lgId}-${prevIndex}`;
         if (this.galleryItems.length <= 3) {
-            this.galleryItems.forEach((element, index) => {
+            this.galleryItems.forEach((_element, index) => {
                 itemsToBeInsertedToDom.push(`lg-item-${this.lgId}-${index}`);
             });
             return itemsToBeInsertedToDom;
@@ -2266,14 +2261,27 @@ export class LightGallery {
     }
 
     destroyModules(destroy?: true): void {
-        for (const key in this.modules) {
-            if (this.modules[key]) {
+        this.plugins.forEach((module) => {
+            try {
+                if (destroy) {
+                    module.destroy();
+                } else {
+                    module.closeGallery && module.closeGallery();
+                }
+            } catch (err) {
+                console.warn(
+                    `lightGallery:- make sure lightGallery module is properly destroyed`,
+                );
+            }
+        });
+        for (const key in this.plugins) {
+            if (this.plugins[key]) {
                 try {
                     if (destroy) {
-                        this.modules[key].destroy();
+                        this.plugins[key].destroy();
                     } else {
-                        this.modules[key].closeGallery &&
-                            this.modules[key].closeGallery();
+                        this.plugins[key].closeGallery &&
+                            this.plugins[key].closeGallery();
                     }
                 } catch (err) {
                     console.warn(
@@ -2314,14 +2322,3 @@ export class LightGallery {
         }, closeTimeout);
     }
 }
-
-window.lightGallery = function (el, options) {
-    if (!el) {
-        return;
-    }
-    try {
-        return new LightGallery(el, options);
-    } catch (err) {
-        console.error('lightGallery has not initiated properly', err);
-    }
-};

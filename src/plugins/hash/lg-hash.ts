@@ -1,23 +1,17 @@
 import { lGEvents } from '../../lg-events';
-import { lgQuery } from '../../lgQuery';
+import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { hashSettings, HashSettings } from './lg-hash-settings';
 
-declare global {
-    interface Window {
-        $LG: (selector: any) => lgQuery;
-    }
-}
-
-const $LG = window.$LG;
-
-export class Hash {
+export default class Hash {
     core: LightGallery;
     settings: HashSettings;
     oldHash!: string;
-    constructor(instance: LightGallery) {
-        // get lightGallery core plugin data
+    private $LG!: LgQuery;
+    constructor(instance: LightGallery, $LG: LgQuery) {
+        // get lightGallery core plugin instance
         this.core = instance;
+        this.$LG = $LG;
         // extend module default settings with lightGallery core settings
         this.settings = { ...hashSettings, ...this.core.settings };
 
@@ -41,7 +35,7 @@ export class Hash {
         );
 
         // Listen hash change and change the slide according to slide value
-        $LG(window).on(
+        this.$LG(window).on(
             `hashchange.lg.hash.global${this.core.lgId}`,
             this.onHashchange.bind(this),
         );
@@ -114,9 +108,6 @@ export class Hash {
 
     destroy(): void {
         this.core.LGel.off('.lg.hash');
-        $LG(window).off(`hashchange.lg.hash.global${this.core.lgId}`);
+        this.$LG(window).off(`hashchange.lg.hash.global${this.core.lgId}`);
     }
 }
-
-window.lgModules = window.lgModules || {};
-window.lgModules.hash = Hash;

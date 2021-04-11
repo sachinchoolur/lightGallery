@@ -6,7 +6,7 @@ import { AutoplaySettings, autoplaySettings } from './lg-autoplay-settings';
  * Creates the autoplay plugin.
  * @param {object} element - lightGallery element
  */
-export class Autoplay {
+export default class Autoplay {
     core: LightGallery;
     settings: AutoplaySettings;
     interval!: any;
@@ -15,7 +15,6 @@ export class Autoplay {
     pausedOnSlideChange!: boolean;
 
     constructor(instance: LightGallery) {
-        // get lightGallery core plugin data
         this.core = instance;
         // extend module default settings with lightGallery core settings
         this.settings = { ...autoplaySettings, ...this.core.settings };
@@ -203,6 +202,3 @@ export class Autoplay {
         this.core.LGel.off('.lg.autoplay');
     }
 }
-
-window.lgModules = window.lgModules || {};
-window.lgModules.autoplay = Autoplay;

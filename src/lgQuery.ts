@@ -27,6 +27,8 @@ interface Offset {
             Element.prototype.webkitMatchesSelector;
     }
 })();
+
+export type LgQuery = (selector: any) => lgQuery;
 export class lgQuery {
     static eventListeners: { [key: string]: any[] } = {};
     static generateUUID(): string {

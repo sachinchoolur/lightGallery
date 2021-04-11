@@ -1,5 +1,5 @@
 import { $LG, lgQuery } from './lgQuery';
-import { VideoSource } from './plugins/video/lg-video';
+import { VideoSource } from './plugins/video/types';
 import { VideoInfo } from './types';
 export interface ImageSize {
     width: number;

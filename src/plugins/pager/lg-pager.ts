@@ -1,23 +1,17 @@
 import { lGEvents } from '../../lg-events';
 import { GalleryItem } from '../../lg-utils';
-import { lgQuery } from '../../lgQuery';
+import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { PagerSettings, pagerSettings } from './lg-pager-settings';
 
-declare global {
-    interface Window {
-        $LG: (selector: any) => lgQuery;
-    }
-}
-
-const $LG = window.$LG;
-
-export class Pager {
+export default class Pager {
     core: LightGallery;
     settings: PagerSettings;
-    constructor(instance: LightGallery) {
-        // get lightGallery core plugin data
+    private $LG!: LgQuery;
+    constructor(instance: LightGallery, $LG: LgQuery) {
+        // get lightGallery core plugin instance
         this.core = instance;
+        this.$LG = $LG;
         // extend module default settings with lightGallery core settings
         this.settings = { ...pagerSettings, ...this.core.settings };
 
@@ -49,7 +43,7 @@ export class Pager {
 
         // @todo enable click
         $pagerOuter.first().on('click.lg touchend.lg', (event: MouseEvent) => {
-            const $target = $LG(event.target);
+            const $target = this.$LG(event.target);
             if (!$target.hasAttribute('data-lg-item-id')) {
                 return;
             }
@@ -91,6 +85,3 @@ export class Pager {
         this.core.LGel.off('.lg.pager');
     }
 }
-
-window.lgModules = window.lgModules || {};
-window.lgModules.pager = Pager;

@@ -1,4 +1,6 @@
 import { GalleryItem } from './lg-utils';
+import { LgQuery } from './lgQuery';
+import { LightGallery } from './lightgallery';
 import { AutoplaySettings } from './plugins/autoplay/lg-autoplay-settings';
 import { CommentSettings } from './plugins/comment/lg-comment-settings';
 import { FullscreenSettings } from './plugins/fullscreen/lg-fullscreen-settings';
@@ -471,6 +473,8 @@ export interface LightGallerySettings {
      * Note - mobileSettings does not merge default values, You need to provide all mobileSettings including default values
      */
     mobileSettings: Partial<MobileSettings>;
+
+    plugins: ((instance: LightGallery, $LG: LgQuery) => this)[];
 }
 
 export const lightGallerySettings: LightGallerySettings = {
@@ -537,4 +541,5 @@ export const lightGallerySettings: LightGallerySettings = {
         showCloseIcon: false,
         download: false,
     },
+    plugins: [],
 };

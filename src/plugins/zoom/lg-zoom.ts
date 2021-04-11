@@ -1,9 +1,8 @@
 import { ZoomSettings, zoomSettings } from './lg-zoom-settings';
-import { lgQuery } from '../../lgQuery';
+import { LgQuery, lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { lGEvents } from '../../lg-events';
 
-const $LG = window.$LG;
 interface Coords {
     x: number;
     y: number;
@@ -19,16 +18,19 @@ interface PossibleCords {
     maxX: number;
     maxY: number;
 }
-export class Zoom {
+export default class Zoom {
     private core: LightGallery;
     private settings: ZoomSettings;
+    private $LG!: LgQuery;
     zoomableTimeout: any;
     positionChanged!: boolean;
     pageX!: number;
     pageY!: number;
     scale!: number;
-    constructor(instance: LightGallery) {
+    constructor(instance: LightGallery, $LG: LgQuery) {
+        // get lightGallery core plugin instance
         this.core = instance;
+        this.$LG = $LG;
 
         this.settings = { ...zoomSettings, ...this.core.settings };
 
@@ -41,7 +43,8 @@ export class Zoom {
 
             // Set the initial value center
             this.pageX = this.core.outer.width() / 2;
-            this.pageY = this.core.outer.height() / 2 + $LG(window).scrollTop();
+            this.pageY =
+                this.core.outer.height() / 2 + this.$LG(window).scrollTop();
 
             this.scale = 1;
         }
@@ -84,14 +87,14 @@ export class Zoom {
 
         // set _speed value 0 if gallery opened from direct url and if it is first slide
         if (
-            $LG('body').first().hasClass('lg-from-hash') &&
+            this.$LG('body').first().hasClass('lg-from-hash') &&
             event.detail.delay
         ) {
             // will execute only once
             _speed = 0;
         } else {
             // Remove lg-from-hash to enable starting animation.
-            $LG('body').first().removeClass('lg-from-hash');
+            this.$LG('body').first().removeClass('lg-from-hash');
         }
 
         this.zoomableTimeout = setTimeout(() => {
@@ -279,7 +282,7 @@ export class Zoom {
             containerRect.left;
         const offsetY =
             (containerRect.height - imageNode.offsetHeight) / 2 +
-            $LG(window).scrollTop() +
+            this.$LG(window).scrollTop() +
             containerRect.top;
         let originalX;
         let originalY;
@@ -415,7 +418,7 @@ export class Zoom {
             cords.x = containerRect.width / 2 + containerRect.left;
             cords.y =
                 containerRect.height / 2 +
-                $LG(window).scrollTop() +
+                this.$LG(window).scrollTop() +
                 containerRect.top;
         }
         return cords;
@@ -460,14 +463,14 @@ export class Zoom {
         let tapped: ReturnType<typeof setTimeout> | null = null;
 
         this.core.outer.on('dblclick.lg', (event) => {
-            if (!$LG(event.target).hasClass('lg-image')) {
+            if (!this.$LG(event.target).hasClass('lg-image')) {
                 return;
             }
             this.setActualSize(this.core.index, event);
         });
 
         this.core.outer.on('touchstart.lg', (event) => {
-            const $target = $LG(event.target);
+            const $target = this.$LG(event.target);
             if (
                 event.targetTouches.length === 1 &&
                 $target.hasClass('lg-image')
@@ -588,7 +591,7 @@ export class Zoom {
             e.preventDefault();
             if (
                 e.targetTouches.length === 2 &&
-                ($LG(e.target).hasClass('lg-item') ||
+                (this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
                 initScale = this.scale || 1;
@@ -607,7 +610,7 @@ export class Zoom {
             if (
                 e.targetTouches.length === 2 &&
                 this.core.touchAction === 'pinch' &&
-                ($LG(e.target).hasClass('lg-item') ||
+                (this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
                 const endDist = this.getTouchDistance(e);
@@ -627,7 +630,7 @@ export class Zoom {
         this.core.$inner.on('touchend.lg', (e) => {
             if (
                 this.core.touchAction === 'pinch' &&
-                ($LG(e.target).hasClass('lg-item') ||
+                (this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
                 pinchStarted = false;
@@ -877,7 +880,7 @@ export class Zoom {
             }
             $item = this.core.getSlideItem(this.core.index);
             if (
-                ($LG(e.target).hasClass('lg-item') ||
+                (this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target)) &&
                 e.targetTouches.length === 1 &&
                 this.core.outer.hasClass('lg-zoomed')
@@ -932,7 +935,7 @@ export class Zoom {
             if (
                 e.targetTouches.length === 1 &&
                 this.core.touchAction === 'zoomSwipe' &&
-                ($LG(e.target).hasClass('lg-item') ||
+                (this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
                 this.core.touchAction = 'zoomSwipe';
@@ -964,7 +967,7 @@ export class Zoom {
         this.core.$inner.on('touchend.lg', (e) => {
             if (
                 this.core.touchAction === 'zoomSwipe' &&
-                ($LG(e.target).hasClass('lg-item') ||
+                (this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
                 this.core.touchAction = undefined;
@@ -1019,7 +1022,7 @@ export class Zoom {
             }
             const $item = this.core.getSlideItem(this.core.index);
             if (
-                $LG(e.target).hasClass('lg-item') ||
+                this.$LG(e.target).hasClass('lg-item') ||
                 $item.get().contains(e.target)
             ) {
                 startTime = new Date();
@@ -1049,7 +1052,7 @@ export class Zoom {
 
                 if (this.core.outer.hasClass('lg-zoomed')) {
                     if (
-                        $LG(e.target).hasClass('lg-object') &&
+                        this.$LG(e.target).hasClass('lg-object') &&
                         (allowX || allowY)
                     ) {
                         e.preventDefault();
@@ -1083,28 +1086,31 @@ export class Zoom {
             }
         });
 
-        $LG(window).on(`mousemove.lg.zoom.global${this.core.lgId}`, (e) => {
-            if (isDragging) {
-                isMoved = true;
-                endCoords = this.getDragCords(e, Math.abs(rotateValue));
+        this.$LG(window).on(
+            `mousemove.lg.zoom.global${this.core.lgId}`,
+            (e) => {
+                if (isDragging) {
+                    isMoved = true;
+                    endCoords = this.getDragCords(e, Math.abs(rotateValue));
 
-                const distance = this.getZoomSwipeCords(
-                    startCoords,
-                    endCoords,
-                    allowX,
-                    allowY,
-                    possibleSwipeCords,
-                    dataY,
-                    dataX,
-                    rotateValue,
-                    rotateEl,
-                );
+                    const distance = this.getZoomSwipeCords(
+                        startCoords,
+                        endCoords,
+                        allowX,
+                        allowY,
+                        possibleSwipeCords,
+                        dataY,
+                        dataX,
+                        rotateValue,
+                        rotateEl,
+                    );
 
-                this.setZoomSwipeStyles(_LGel, distance);
-            }
-        });
+                    this.setZoomSwipeStyles(_LGel, distance);
+                }
+            },
+        );
 
-        $LG(window).on(`mouseup.lg.zoom.global${this.core.lgId}`, (e) => {
+        this.$LG(window).on(`mouseup.lg.zoom.global${this.core.lgId}`, (e) => {
             if (isDragging) {
                 endTime = new Date();
                 isDragging = false;
@@ -1143,11 +1149,9 @@ export class Zoom {
 
     destroy(): void {
         // Unbind all events added by lightGallery zoom plugin
-        $LG(window).off(`.lg.zoom.global${this.core.lgId}`);
+        this.$LG(window).off(`.lg.zoom.global${this.core.lgId}`);
         this.core.LGel.off('.lg.zoom');
         clearTimeout(this.zoomableTimeout);
         this.zoomableTimeout = false;
     }
 }
-
-window.lgModules.zoom = Zoom;

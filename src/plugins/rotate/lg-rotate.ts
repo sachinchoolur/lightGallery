@@ -1,25 +1,19 @@
 import { lGEvents } from '../../lg-events';
-import { lgQuery } from '../../lgQuery';
+import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { rotateSettings, RotateSettings } from './lg-rotate-settings';
 
-declare global {
-    interface Window {
-        $LG: (selector: any) => lgQuery;
-    }
-}
-
-const $LG = window.$LG;
-
-export class Rotate {
+export default class Rotate {
     core: LightGallery;
     settings: RotateSettings;
     rotateValuesList!: {
         [key: string]: any;
     };
-    constructor(instance: LightGallery) {
-        // get lightGallery core plugin data
+    private $LG!: LgQuery;
+    constructor(instance: LightGallery, $LG: LgQuery) {
+        // get lightGallery core plugin instance
         this.core = instance;
+        this.$LG = $LG;
         // extend module default settings with lightGallery core settings
         this.settings = { ...rotateSettings, ...this.core.settings };
 
@@ -133,7 +127,7 @@ export class Rotate {
         if (!el) {
             return 0;
         }
-        const st = $LG(el).style();
+        const st = this.$LG(el).style();
         const tm =
             st.getPropertyValue('-webkit-transform') ||
             st.getPropertyValue('-moz-transform') ||
@@ -193,6 +187,3 @@ export class Rotate {
         this.core.LGel.off('.lg.rotate');
     }
 }
-
-window.lgModules = window.lgModules || {};
-window.lgModules.rotate = Rotate;

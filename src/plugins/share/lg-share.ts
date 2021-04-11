@@ -5,22 +5,16 @@ import { getTwitterShareLink } from './lg-twitter-share-utils';
 import { getPinterestShareLink } from './lg-pinterest-share-utils';
 import { LightGallery } from '../../lightgallery';
 import { lGEvents } from '../../lg-events';
-import { GalleryItem } from '../../lg-utils';
-export interface ShareOption {
-    selector: string;
-    dropdownHTML: string;
-    generateLink: (galleryItem: GalleryItem) => string;
-}
-
+import { ShareOption } from './types';
 interface DefaultShareOptions extends ShareOption {
     type: string;
 }
-export class Share {
+export default class Share {
     core: LightGallery;
     settings: ShareSettings;
     private shareOptions: ShareOption[] = [];
     constructor(instance: LightGallery) {
-        // get lightGallery core plugin data
+        // get lightGallery core plugin instance
         this.core = instance;
         // extend module default settings with lightGallery core settings
         this.settings = { ...shareSettings, ...this.core.settings };
@@ -149,6 +143,3 @@ export class Share {
         this.core.LGel.off('.lg.share');
     }
 }
-
-window.lgModules = window.lgModules || {};
-window.lgModules.share = Share;

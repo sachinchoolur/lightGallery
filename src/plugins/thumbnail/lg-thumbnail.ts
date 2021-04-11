@@ -2,7 +2,7 @@ import {
     ThumbnailsSettings,
     thumbnailsSettings,
 } from './lg-thumbnail-settings';
-import { lgQuery } from '../../lgQuery';
+import { LgQuery, lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { GalleryItem } from '../../lg-utils';
 import { lGEvents } from '../../lg-events';
@@ -17,18 +17,10 @@ interface ThumbDragUtils {
     endTime: Date;
     touchMoveTime: number;
 }
-declare global {
-    interface Window {
-        $LG: (selector: any) => lgQuery;
-    }
-}
-
-const $LG = window.$LG;
-
 interface ThumbnailGalleryItem extends GalleryItem {
     thumb: string;
 }
-export class Thumbnail {
+export default class Thumbnail {
     private core: LightGallery;
     private $thumbOuter!: lgQuery;
     private $lgThumb!: lgQuery;
@@ -37,9 +29,11 @@ export class Thumbnail {
     private translateX = 0;
     private thumbClickable = false;
     private settings: ThumbnailsSettings;
-    constructor(instance: LightGallery) {
-        // get lightGallery core plugin data
+    private $LG!: LgQuery;
+    constructor(instance: LightGallery, $LG: LgQuery) {
+        // get lightGallery core plugin instance
         this.core = instance;
+        this.$LG = $LG;
         // extend module default settings with lightGallery core settings
         this.settings = {
             ...thumbnailsSettings,
@@ -91,7 +85,7 @@ export class Thumbnail {
         this.setThumbMarkup();
         this.manageActiveClassOnSlideChange();
         this.$lgThumb.first().on('click.lg touchend.lg', (e: CustomEvent) => {
-            const $target = $LG(e.target);
+            const $target = this.$LG(e.target);
             if (!$target.hasAttribute('data-lg-item-id')) {
                 return;
             }
@@ -204,16 +198,19 @@ export class Thumbnail {
                 }
             });
 
-        $LG(window).on(`mousemove.lg.thumb.global${this.core.lgId}`, (e) => {
-            if (!this.core.lgOpened) return;
-            if (isDragging) {
-                thumbDragUtils.cords.endX = e.pageX;
+        this.$LG(window).on(
+            `mousemove.lg.thumb.global${this.core.lgId}`,
+            (e) => {
+                if (!this.core.lgOpened) return;
+                if (isDragging) {
+                    thumbDragUtils.cords.endX = e.pageX;
 
-                thumbDragUtils = this.onThumbTouchMove(thumbDragUtils);
-            }
-        });
+                    thumbDragUtils = this.onThumbTouchMove(thumbDragUtils);
+                }
+            },
+        );
 
-        $LG(window).on(`mouseup.lg.thumb.global${this.core.lgId}`, () => {
+        this.$LG(window).on(`mouseup.lg.thumb.global${this.core.lgId}`, () => {
             if (!this.core.lgOpened) return;
             if (thumbDragUtils.isMoved) {
                 thumbDragUtils = this.onThumbTouchEnd(thumbDragUtils);
@@ -492,7 +489,7 @@ export class Thumbnail {
     }
 
     thumbKeyPress(): void {
-        $LG(window).on(`keydown.lg.thumb.global${this.core.lgId}`, (e) => {
+        this.$LG(window).on(`keydown.lg.thumb.global${this.core.lgId}`, (e) => {
             if (!this.core.lgOpened || !this.settings.toggleThumb) return;
 
             if (e.keyCode === 38) {
@@ -507,12 +504,10 @@ export class Thumbnail {
 
     destroy(): void {
         if (this.settings.thumbnail && this.core.galleryItems.length > 1) {
-            $LG(window).off(`.lg.thumb.global${this.core.lgId}`);
+            this.$LG(window).off(`.lg.thumb.global${this.core.lgId}`);
             this.core.LGel.off('.lg.thumb');
             this.$thumbOuter.remove();
             this.core.outer.removeClass('lg-has-thumb');
         }
     }
 }
-window.lgModules = window.lgModules || {};
-window.lgModules.thumbnail = Thumbnail;

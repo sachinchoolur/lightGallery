@@ -1,4 +1,4 @@
-import { ShareOption } from './lg-share';
+import { ShareOption } from './types';
 
 export interface ShareSettings {
     /**
