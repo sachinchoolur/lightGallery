@@ -41,6 +41,7 @@ if ($lgInlineContainer) {
         rotate: false,
         download: false,
         slideDelay: 400,
+        plugins: [lgZoom, lgFullscreen, lgShare, lgAutoplay, lgThumbnail],
         appendSubHtmlTo: '.lg-item',
         ...getResponsiveThumbnailsSettings(),
         dynamicEl: [
@@ -200,6 +201,16 @@ window.lightGallery(
     {
         pager: false,
         hash: false,
+        plugins: [
+            lgZoom,
+            lgAutoplay,
+            lgFullscreen,
+            lgPager,
+            lgRotate,
+            lgShare,
+            lgThumbnail,
+            lgVideo,
+        ],
         ...getResponsiveThumbnailsSettings(),
     },
 );
@@ -217,7 +228,18 @@ jQuery('#animated-thumbnails-gallery')
             {
                 autoplayFirstVideo: false,
                 pager: false,
-                hash: false,
+                galleryId: 'nature',
+                plugins: [
+                    lgZoom,
+                    lgAutoplay,
+                    lgHash,
+                    lgFullscreen,
+                    lgPager,
+                    lgRotate,
+                    lgShare,
+                    lgThumbnail,
+                    lgVideo,
+                ],
                 ...getResponsiveThumbnailsSettings(),
                 preload: 3,
                 videoMaxWidth: '1400px',
@@ -244,6 +266,7 @@ if (masonryElMixed) {
             window.lightGallery(masonryElMixed, {
                 animateThumb: false,
                 pager: false,
+                plugins: [lgZoom, lgAutoplay, lgFullscreen, lgThumbnail],
                 hash: false,
                 zoomFromOrigin: false,
                 toggleThumb: true,
@@ -269,6 +292,7 @@ jQuery('#customize-thumbnails-gallery')
                 appendThumbnailsTo: '.lg-outer',
                 pager: false,
                 hash: false,
+                plugins: [lgZoom, lgAutoplay, lgFullscreen, lgThumbnail],
                 allowMediaOverlap: true,
             },
         );
@@ -298,6 +322,7 @@ if (galleryEventsDemo) {
                 addClass: 'lg-events-demo-outer',
                 rotate: false,
                 pager: false,
+                plugins: [],
                 hash: false,
                 fullScreen: false,
                 download: false,
@@ -324,6 +349,7 @@ function customTransitions(trans) {
                     thumbnail: false,
                     rotate: false,
                     pager: false,
+                    plugins: [],
                     hash: false,
                     fullScreen: false,
                     download: false,
@@ -361,6 +387,7 @@ function initCustomEasing(easing) {
                     rotate: false,
                     pager: false,
                     hash: false,
+                    plugins: [],
                     speed: 1000,
                     fullScreen: false,
                     download: false,
@@ -411,6 +438,7 @@ if ($lgGalleryMethodsDemo) {
                 thumbnail: false,
                 rotate: false,
                 fullScreen: false,
+                plugins: [lgZoom],
                 addClass: 'lg-methods-demo',
                 controls: false,
                 download: false,
@@ -451,6 +479,13 @@ if (lgDemoUpdateSlides) {
                             addClass: 'lg-update-slide-demo',
                             controls: false,
                             download: false,
+                            plugins: [
+                                lgZoom,
+                                lgAutoplay,
+                                lgFullscreen,
+                                lgShare,
+                                lgThumbnail,
+                            ],
                             pager: false,
                             hash: false,
                         });
@@ -524,6 +559,7 @@ if (lgDemoUpdateSlides) {
             controls: false,
             pager: false,
             hash: false,
+            plugins: [lgZoom, lgAutoplay, lgFullscreen, lgShare, lgThumbnail],
             download: false,
         });
     });
@@ -537,6 +573,16 @@ const dynamicGallery = window.lightGallery($dynamicGallery[0], {
     pager: false,
     thumbnail: false,
     rotate: false,
+    plugins: [
+        lgZoom,
+        lgAutoplay,
+        lgFullscreen,
+        lgPager,
+        lgRotate,
+        lgShare,
+        lgThumbnail,
+        lgVideo,
+    ],
     dynamicEl: [
         {
             src:
@@ -605,6 +651,7 @@ jQuery('#gallery-videos-demo')
         window.lightGallery(document.getElementById('gallery-videos-demo'), {
             thumbnail: false,
             pager: false,
+            plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
             hash: false,
             preload: 0,
         });
@@ -622,6 +669,7 @@ jQuery('#gallery-videojs-demo')
             pager: false,
             hash: false,
             preload: 0,
+            plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
             videojs: true,
             videojsOptions: {
                 muted: true,
@@ -638,6 +686,7 @@ jQuery('#gallery-hash-demo')
     .on('jg.complete', function () {
         window.lightGallery(document.getElementById('gallery-hash-demo'), {
             thumbnail: false,
+            plugins: [lgHash],
             pager: false,
             galleryId: 1,
             customSlideName: false,
@@ -655,6 +704,17 @@ jQuery('#gallery-custom-hash-demo')
             document.getElementById('gallery-custom-hash-demo'),
             {
                 thumbnail: false,
+                plugins: [
+                    lgZoom,
+                    lgHash,
+                    lgAutoplay,
+                    lgFullscreen,
+                    lgPager,
+                    lgRotate,
+                    lgShare,
+                    lgThumbnail,
+                    lgVideo,
+                ],
                 galleryId: 2,
                 pager: false,
                 customSlideName: true,
@@ -673,6 +733,7 @@ jQuery('#gallery-share-demo')
             thumbnail: false,
             pager: false,
             hash: true,
+            plugins: [lgZoom, lgShare, lgThumbnail],
         });
     });
 jQuery('#gallery-captions-demo')
@@ -685,6 +746,7 @@ jQuery('#gallery-captions-demo')
     .on('jg.complete', function () {
         window.lightGallery(document.getElementById('gallery-captions-demo'), {
             thumbnail: false,
+            plugins: [lgZoom, lgShare],
             pager: true,
             hash: true,
         });
@@ -701,6 +763,7 @@ jQuery('#responsive-images-demo')
             thumbnail: false,
             pager: true,
             hash: true,
+            plugins: [lgAutoplay, lgThumbnail],
         });
     });
 jQuery('#gallery-fb-comments-demo')
@@ -717,6 +780,7 @@ jQuery('#gallery-fb-comments-demo')
                 thumbnail: false,
                 pager: false,
                 hash: true,
+                plugins: [lgZoom, lgComment, lgShare, lgThumbnail],
                 commentBox: true,
                 disqusComments: false,
                 fbComments: true,
@@ -737,6 +801,7 @@ jQuery('#gallery-disqus-comments-demo')
                 thumbnail: false,
                 pager: false,
                 hash: true,
+                plugins: [lgComment, lgRotate],
                 commentBox: true,
                 disqusComments: true,
                 fbComments: false,
@@ -757,6 +822,16 @@ jQuery('#gallery-mixed-content-demo')
                 thumbnail: false,
                 pager: false,
                 hash: true,
+                plugins: [
+                    lgZoom,
+                    lgAutoplay,
+                    lgFullscreen,
+                    lgPager,
+                    lgRotate,
+                    lgShare,
+                    lgThumbnail,
+                    lgVideo,
+                ],
             },
         );
     });
@@ -773,6 +848,16 @@ jQuery('#gallery-mixed-content-all-demo')
                 thumbnail: false,
                 pager: false,
                 hash: true,
+                plugins: [
+                    lgZoom,
+                    lgAutoplay,
+                    lgFullscreen,
+                    lgPager,
+                    lgRotate,
+                    lgShare,
+                    lgThumbnail,
+                    lgVideo,
+                ],
             },
         );
     });
@@ -791,6 +876,13 @@ jQuery('#gallery-share-reddit-demo')
                 pager: false,
                 hash: true,
                 galleryId: 2,
+                plugins: [
+                    lgZoom,
+                    lgAutoplay,
+                    lgFullscreen,
+                    lgShare,
+                    lgThumbnail,
+                ],
                 addClass: 'lg-custom-share-demo',
                 extraProps: ['redditTitle'],
                 additionalShareOptions: [
@@ -822,6 +914,16 @@ lightGallery(document.getElementById('gallery-demo-super-customizable'), {
     mode: 'lg-zoom-in-out',
     selector: '.gallery-item',
     addClass: 'lightGallery-white-theme',
+    plugins: [
+        lgZoom,
+        lgAutoplay,
+        lgFullscreen,
+        lgPager,
+        lgRotate,
+        lgShare,
+        lgThumbnail,
+        lgVideo,
+    ],
     mobileSettings: {
         controls: false,
         showCloseIcon: false,
