@@ -147,10 +147,8 @@ export class LightGallery {
         this.addSlideVideoInfo(this.galleryItems);
         const fromHash = this.buildFromHash();
 
-        let openGalleryAfter = 0;
-
         if (!fromHash) {
-            openGalleryAfter = this.buildStructure();
+            this.buildStructure();
         }
 
         this.LGel.trigger(lGEvents.init, {
@@ -450,7 +448,7 @@ export class LightGallery {
      * );
      * galleryItems.shift();
      * updateSlideInstance.updateSlides(galleryItems, 1);
-     *
+     * @see <a href="/demos/update-slides/">Demo</a>
      */
     updateSlides(items: GalleryItem[], index: number): void {
         if (this.index > items.length - 1) {
@@ -1890,7 +1888,7 @@ export class LightGallery {
      * @example
      *  const plugin = lightGallery();
      *  plugin.goToNextSlide();
-     *
+     * @see <a href="/demos/methods/">Demo</a>
      */
     goToNextSlide(fromTouch?: boolean): void {
         let _loop = this.settings.loop;
@@ -1929,6 +1927,7 @@ export class LightGallery {
      * @example
      *  const plugin = lightGallery({});
      *  plugin.goToPrevSlide();
+     * @see <a href="/demos/methods/">Demo</a>
      *
      */
     goToPrevSlide(fromTouch?: boolean): void {

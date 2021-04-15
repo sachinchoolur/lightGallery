@@ -31,6 +31,16 @@ export const lGEvents = {
 /**
  * Fired only once when lightGallery is initialized
  * @name init
+ * @example
+ *   const lg = document.getElementById('custom-events-demo');
+ *   // Perform any action on lightGallery initialization.
+ *   // Init event returns the plugin instance that can be used to call any lightGalley public method
+ *   let pluginInstance = null;
+ *   lg.addEventListener('init', (event) => {
+ *      pluginInstance = event.detail.instance;
+ *   });
+ *   lightGallery(lg);
+ * @see <a href="/docs/methods">Methods<a>
  */
 export interface InitDetail {
     /**
@@ -82,6 +92,14 @@ export interface SlideItemLoadDetail {
 /**
  * fired immediately before each slide transition.
  * @name beforeSlide
+ * @example
+ *   const lg = document.getElementById('custom-events-demo');
+ *   // Perform any action before each slide transition
+ *   lg.addEventListener('beforeSlide', (event) => {
+ *       const { index, prevIndex } = event.detail;
+ *       alert(index, prevIndex);
+ *   });
+ *   lightGallery(lg);
  */
 export interface BeforeSlideDetail {
     /**
