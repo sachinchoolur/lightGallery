@@ -1,0 +1,7 @@
+{
+    "name": "lightgallery/plugins/fullscreen",
+    "private": true,
+    "main": "lg-fullscreen.umd.js",
+    "module": "lg-fullscreen.es5.js",
+    "typings": "lg-fullscreen.d.ts"
+}

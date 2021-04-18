@@ -1,0 +1,33 @@
+{
+  "name": "lightgallery",
+  "version": "2.0.0-beta.0",
+  "description": "lightGallery is a feature-rich, modular JavaScript gallery plugin for building beautiful image and video galleries for the web and the mobile",
+  "keywords": [
+    "JavaScript",
+    "Gallery",
+    "Video",
+    "slider",
+    "lightBox"
+  ],
+  "main": "lightgallery.umd.js",
+  "min": "lightgallery.min.js",
+  "module": "lightgallery.es5.js",
+  "typings": "lightgallery.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sachinchoolur/lightGallery"
+  },
+  "homepage": "http://sachinchoolur.github.io/lightGallery/",
+  "bugs": {
+    "url": "https://github.com/sachinchoolur/lightGallery/issues"
+  },
+  "license": "GPLv3",
+  "author": {
+    "name": "Sachin Neravath",
+    "email": "sachi77n@gmail.com",
+    "url": "https://github.com/sachinchoolur"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  }
+}

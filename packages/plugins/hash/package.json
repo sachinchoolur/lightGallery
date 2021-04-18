@@ -1,0 +1,7 @@
+{
+    "name": "lightgallery/plugins/hash",
+    "private": true,
+    "main": "lg-hash.umd.js",
+    "module": "lg-hash.es5.js",
+    "typings": "lg-hash.d.ts"
+}
