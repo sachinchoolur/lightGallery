@@ -83,5 +83,6 @@ export default class Pager {
     destroy(): void {
         this.core.outer.find('.lg-pager-outer').remove();
         this.core.LGel.off('.lg.pager');
+        this.core.LGel.off('.pager');
     }
 }

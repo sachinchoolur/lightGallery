@@ -141,5 +141,6 @@ export default class Share {
         this.core.outer.find('.lg-dropdown-overlay').remove();
         this.core.outer.find('.lg-share').remove();
         this.core.LGel.off('.lg.share');
+        this.core.LGel.off('.share');
     }
 }

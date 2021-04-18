@@ -108,6 +108,7 @@ export default class Hash {
 
     destroy(): void {
         this.core.LGel.off('.lg.hash');
+        this.core.LGel.off('.hash');
         this.$LG(window).off(`hashchange.lg.hash.global${this.core.lgId}`);
     }
 }

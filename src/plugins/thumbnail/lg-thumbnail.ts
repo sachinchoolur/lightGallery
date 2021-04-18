@@ -506,6 +506,7 @@ export default class Thumbnail {
         if (this.settings.thumbnail && this.core.galleryItems.length > 1) {
             this.$LG(window).off(`.lg.thumb.global${this.core.lgId}`);
             this.core.LGel.off('.lg.thumb');
+            this.core.LGel.off('.thumb');
             this.$thumbOuter.remove();
             this.core.outer.removeClass('lg-has-thumb');
         }

@@ -1151,6 +1151,7 @@ export default class Zoom {
         // Unbind all events added by lightGallery zoom plugin
         this.$LG(window).off(`.lg.zoom.global${this.core.lgId}`);
         this.core.LGel.off('.lg.zoom');
+        this.core.LGel.off('.zoom');
         clearTimeout(this.zoomableTimeout);
         this.zoomableTimeout = false;
     }

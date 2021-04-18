@@ -470,5 +470,6 @@ export default class Video {
     }
     destroy(): void {
         this.core.LGel.off('.lg.video');
+        this.core.LGel.off('.video');
     }
 }

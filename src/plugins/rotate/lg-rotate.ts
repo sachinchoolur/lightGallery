@@ -185,5 +185,6 @@ export default class Rotate {
     destroy(): void {
         // Unbind all events added by lightGallery rotate plugin
         this.core.LGel.off('.lg.rotate');
+        this.core.LGel.off('.rotate');
     }
 }

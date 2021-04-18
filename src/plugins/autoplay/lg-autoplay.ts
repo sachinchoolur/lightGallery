@@ -200,5 +200,6 @@ export default class Autoplay {
         }
         // Remove all event listeners added by autoplay plugin
         this.core.LGel.off('.lg.autoplay');
+        this.core.LGel.off('.autoplay');
     }
 }

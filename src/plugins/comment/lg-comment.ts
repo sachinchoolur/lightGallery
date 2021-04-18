@@ -144,5 +144,6 @@ export default class CommentBox {
 
     destroy(): void {
         this.core.LGel.off('.lg.comment');
+        this.core.LGel.off('.comment');
     }
 }
