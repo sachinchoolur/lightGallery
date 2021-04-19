@@ -10,6 +10,77 @@ Demo
 ---
 [JQuery lightGallery demo](http://sachinchoolur.github.io/lightGallery/). [Codepen demo](http://codepen.io/sachinchoolur/details/QjLNMM/) 
 
+
+--- 
+--- 
+---
+
+
+## Version [2.0](https://github.com/sachinchoolur/lightGallery/releases/tag/2.0.0-beta.0) update
+
+Version 2.0.0 release is scheduled for May first week. But you can keep using the current version and upgrade whenever you want. 
+The upgrade process is pretty straightforward unless you have a massive modifications made with version 1.x
+
+> [Subscribe](https://www.producthunt.com/upcoming/lightgallery) to get notified on the stable release. - [ProductHunt](https://www.producthunt.com/upcoming/lightgallery)
+
+- Completely re-wrote from scratch in typescript 
+- Removed jQuery dependency 
+- Moved all modules to the main repo for better maintainability.
+- Dropped IE 8 and 9 support. Let me know if you still need support for IE 8 and 9. I’ll consider adding a plugin to add support if there is enough demand.
+- [Website](http://sachinchoolur.github.io/lightGallery/v2/)
+- [Docs](http://sachinchoolur.github.io/lightGallery/v2/docs/getting-started/)
+- [Demos](http://sachinchoolur.github.io/lightGallery/v2/demos/inline/)
+
+### New features
+- Pinch to zoom
+- Virtual slides
+- Swipe to close
+- Zoom from the origin
+- Inline gallery
+- Next-generation image formats support(webp, JPEG XL). etc
+- Better customizability
+- Better performance on mobile devices.
+- Dynamically add, remove slides while the gallery is open
+- Comment interface
+- and much more.
+
+
+### How to upgrade
+
+To make the upgrade seamless, v2 follows the API structure as much as possible. But, few settings are removed and a lot of additional settings are added, the way we use public methods is changed slightly and few events are renamed. 
+
+**Initialization** 
+V2 doesn’t require jQuery as a dependancy.
+```js
+lightGallery(document.getElementById('lightgallery'), {
+  plugins: [lgZoom, lgThumbnail,]
+  speed: 500
+  ... other settings
+});
+```
+
+**Plugins**  To avoid polluting global scope, since v2 plugins has to be passed via settings.
+```js
+lightGallery(document.getElementById(‘’lightgallery), {
+     plugins: [lgZoom, lgAutoplay, lgComment, lgFullscreen , lgHash, lgPager, lgRotate, lgShare, lgThumbnail, lgVideo] 
+});
+```
+- Removed in-built support for Dailymotion VK. We Will be adding separate plugins for DailyMotion and Vimeo support 
+- Added Wistia support 
+- HTML videos - Videos can be passed via data-video attribute instead of passing it via hidden div 
+```HTML
+data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "controls": true}}'
+```
+- Events are renamed - Please take a look at the [documentation](http://sachinchoolur.github.io/lightGallery/v2/docs/events/) 
+- Few settings are added, removed, or renamed. 
+Rather than listing down all the changes here, I’d recommend going through the current settings that you are using and compare them with the new documentation.   
+
+
+--- 
+--- 
+---
+
+
 Main features
 ---
 
