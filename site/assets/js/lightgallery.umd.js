@@ -1,3 +1,10 @@
+/*!
+ * lightgallery | 0.0.0-development | April 20th 2021
+ * http://sachinchoolur.github.io/lightGallery/
+ * Copyright (c) 2020 Sachin Neravath;
+ * @license GPLv3
+ */
+
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
@@ -398,7 +405,6 @@
     function $LG(selector) {
         return new lgQuery(selector);
     }
-    //# sourceMappingURL=lgQuery.js.map
 
     var defaultDynamicOptions = [
         'src',
@@ -642,7 +648,6 @@
             return isMobile;
         },
     };
-    //# sourceMappingURL=lg-utils.js.map
 
     var lightGallerySettings = {
         mode: 'lg-slide',
@@ -717,27 +722,26 @@
      * Below interfaces are used to build the website documentations
      * */
     var lGEvents = {
-        afterAppendSlide: 'afterAppendSlide.lg',
-        init: 'init.lg',
-        hasVideo: 'hasVideo.lg',
-        containerResize: 'containerResize.lg',
-        updateSlides: 'updateSlides.lg',
-        afterAppendSubHtml: 'afterAppendSubHtml.lg',
-        beforeOpen: 'beforeOpen.lg',
-        afterOpen: 'afterOpen.lg',
-        slideItemLoad: 'slideItemLoad.lg',
-        beforeSlide: 'beforeSlide.lg',
-        afterSlide: 'afterSlide.lg',
-        posterClick: 'posterClick.lg',
-        dragStart: 'dragStart.lg',
-        dragMove: 'dragMove.lg',
-        dragEnd: 'dragEnd.lg',
-        beforeNextSlide: 'beforeNextSlide.lg',
-        beforePrevSlide: 'beforePrevSlide.lg',
-        beforeClose: 'beforeClose.lg',
-        afterClose: 'afterClose.lg',
+        afterAppendSlide: 'lgAfterAppendSlide',
+        init: 'lgInit',
+        hasVideo: 'lgHasVideo',
+        containerResize: 'lgContainerResize',
+        updateSlides: 'lgUpdateSlides',
+        afterAppendSubHtml: 'lgAfterAppendSubHtml',
+        beforeOpen: 'lgBeforeOpen',
+        afterOpen: 'lgAfterOpen',
+        slideItemLoad: 'lgSlideItemLoad',
+        beforeSlide: 'lgBeforeSlide',
+        afterSlide: 'lgAfterSlide',
+        posterClick: 'lgPosterClick',
+        dragStart: 'lgDragStart',
+        dragMove: 'lgDragMove',
+        dragEnd: 'lgDragEnd',
+        beforeNextSlide: 'lgBeforeNextSlide',
+        beforePrevSlide: 'lgBeforePrevSlide',
+        beforeClose: 'lgBeforeClose',
+        afterClose: 'lgAfterClose',
     };
-    //# sourceMappingURL=lg-events.js.map
 
     // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
     // @ref - https://2ality.com/2017/04/setting-up-multi-platform-packages.html
@@ -806,9 +810,8 @@
             var _this = this;
             this.addSlideVideoInfo(this.galleryItems);
             var fromHash = this.buildFromHash();
-            var openGalleryAfter = 0;
             if (!fromHash) {
-                openGalleryAfter = this.buildStructure();
+                this.buildStructure();
             }
             this.LGel.trigger(lGEvents.init, {
                 instance: this,
@@ -1012,7 +1015,7 @@
          * );
          * galleryItems.shift();
          * updateSlideInstance.updateSlides(galleryItems, 1);
-         *
+         * @see <a href="/demos/update-slides/">Demo</a>
          */
         LightGallery.prototype.updateSlides = function (items, index) {
             if (this.index > items.length - 1) {
@@ -2145,7 +2148,7 @@
          * @example
          *  const plugin = lightGallery();
          *  plugin.goToNextSlide();
-         *
+         * @see <a href="/demos/methods/">Demo</a>
          */
         LightGallery.prototype.goToNextSlide = function (fromTouch) {
             var _this = this;
@@ -2185,6 +2188,7 @@
          * @example
          *  const plugin = lightGallery({});
          *  plugin.goToPrevSlide();
+         * @see <a href="/demos/methods/">Demo</a>
          *
          */
         LightGallery.prototype.goToPrevSlide = function (fromTouch) {
@@ -2524,20 +2528,19 @@
         };
         return LightGallery;
     }());
-    //# sourceMappingURL=lightgallery.js.map
 
     function lightGallery(el, options) {
         if (!el) {
             return;
         }
         try {
+            console.log('caling lg');
             return new LightGallery(el, options);
         }
         catch (err) {
             console.error('lightGallery has not initiated properly', err);
         }
     }
-    //# sourceMappingURL=index.js.map
 
     return lightGallery;
 
