@@ -42,7 +42,7 @@ change.
 ```js
 const colours = ['#6a7583', '#1e304b', '#315460', '#080607'];
 const galleryEventsDemo = document.getElementById('custom-events-demo');
-galleryEventsDemo.addEventListener('beforeSlide', (event) => {
+galleryEventsDemo.addEventListener('lgBeforeSlide', (event) => {
     const { index } = event.detail;
     document.querySelector('.lg-backdrop').style.backgroundColor =
         colours[index];

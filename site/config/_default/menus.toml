@@ -8,10 +8,15 @@
   url = "/demos/inline/"
   weight = 30
 
-  [[main]]
+[[main]]
   name = "GitHub"
   url = "https://github.com/sachinchoolur/lightGallery"
   weight = 40
+
+[[main]]
+  name = "Notify me"
+  url = "https://www.producthunt.com/upcoming/lightgallery"
+  weight = 50
 
 
 [[social]]

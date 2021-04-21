@@ -7,44 +7,57 @@
 {{ end -}}
 <div class="docs-common-section">
 
-{{ range .Site.Data.doc.children -}}
+    {{ range .Site.Data.doc.children -}}
     {{ if eq .name $interfaceName}}
-        {{ range .comment.tags -}}
-            {{ if eq .tag "name"}}
-                <p class="docs-common-name">{{.text}}</p>
-            {{ end}}
-        {{ end -}}
-        <p class="docs-common-desc">{{.comment.shortText}}</p>
+    {{ range .comment.tags -}}
+    {{ if eq .tag "name"}}
+    <p class="docs-common-desc"><b>Name: </b>{{.text}}</p>
+    {{ end}}
+    {{ end -}}
+    <p class="docs-common-desc"><b>Description: </b>{{.comment.shortText}}</p>
     {{ end }}
-{{ end }}
-    {{if $interface }} 
-<b class="docs-common-tag">Event object</b>
-<table class="options table-blue" style="width:100%">
+    {{ end }}
+    {{if $interface }}
+    <p class="docs-common-desc"><b>Detail:</b></p>
+    <table class="options table-blue" style="width:100%">
 
-    <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-    </tr>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
 
 
-    {{range $index, $element := $interface}}
-    <tr>
-        <td>{{$element.name}}</td>
-        <td>{{$element.type.name}}</td>
+        {{range $index, $element := $interface}}
+        <tr>
+            <td>{{$element.name}}</td>
+            <td>{{$element.type.name}}</td>
 
             <td>
-                {{.comment.shortText  | safeHTML}}
+                {{.comment.shortText | safeHTML}}
                 {{ range .comment.tags -}}
-                    {{ if eq .tag "description"}}
-                        <p>
-                            {{.text}}
-                        </p>
-                    {{ end}}
+                {{ if eq .tag "description"}}
+                <p>
+                    {{.text}}
+                </p>
+                {{ end}}
                 {{ end -}}
             </td>
         </tr>
+        {{ end }}
+    </table>
+    {{ range .Site.Data.doc.children -}}
+    {{ if eq .name $interfaceName}}
+    {{ range .comment.tags -}}
+    {{ if eq .tag "example"}}
+    <p class="docs-common-desc"><b>Example:</b></p>
+    {{ highlight .text "js" "" }}
+    {{ end}}
+    {{ if eq .tag "see"}}
+    <p class="docs-common-desc"><b>See also:</b>{{.text | safeHTML}}</p>
+    {{ end}}
+    {{ end -}}
     {{ end }}
-  </table>
-{{ end }}
+    {{ end }}
+    {{ end }}
 </div>

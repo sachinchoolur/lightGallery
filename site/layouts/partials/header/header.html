@@ -21,7 +21,8 @@
                 {{- $active = or $active (and (eq .Name "Docs") (eq $current.Section "docs")) -}}
                 {{- $active = or $active (and (eq .Name "Demos") (eq $current.Section "demos")) -}}
                 <li class="nav-item">
-                    <a class="nav-link{{ if $active }} active{{ end }}" href="{{ .URL }}">{{- .Name -}}</a>
+                    <a {{ if eq .Name "Notify me" }} target="_blank" {{ end }}
+                        class="nav-link{{ if $active }} active{{ end }}" href="{{ .URL }}">{{- .Name -}}</a>
                 </li>
                 {{ end }}
             </ul>

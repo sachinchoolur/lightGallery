@@ -3,7 +3,7 @@
 
 {{ if $pluginName }}
 <div class="alert alert-warning" role="alert">
-    You need to include {{$pluginName}} plugin in the document to use the following options.
+    <b>Plugin dependency</b> - You need to include {{$pluginName}} plugin in the document to use the following options.
 </div>
 {{ end }}
 
@@ -13,11 +13,11 @@
     {{$interfaceName := .Get "interface"}}
     {{$variableName := .Get "variable"}}
     {{ range .Site.Data.doc.children -}}
-        {{ if eq .name $interfaceName}}
-            {{$interface = .children}}
-        {{ else if eq .name $variableName }}
-            {{$variable = .children}}
-        {{ end }}
+    {{ if eq .name $interfaceName}}
+    {{$interface = .children}}
+    {{ else if eq .name $variableName }}
+    {{$variable = .children}}
+    {{ end }}
     {{ end -}}
 
 
@@ -25,39 +25,39 @@
         <th>Name</th>
         <th>Type</th>
         {{ if $variableName }}
-            <th>Default</th>
+        <th>Default</th>
         {{ end }}
     </tr>
 
 
     {{range $index, $element := $interface}}
-        <tr {{if hasPrefix $element.name "__" }} style='display: none;' {{end}} class="options-table-tr-head">
-            <td>{{$element.name}}</td>
-            <td>{{$element.type.name}}</td>
-                {{ if $variableName }}
-                    {{$defaultValue := (index $variable $index).defaultValue}}
-                    <td>{{$defaultValue}}</td>
-                {{ end }}
-        </tr>
-        <tr class="options-table-description">
-            {{ if $variableName }}
-                <td colspan="3">
+    <tr {{if hasPrefix $element.name "__" }} style='display: none;' {{end}} class="options-table-tr-head">
+        <td>{{$element.name}}</td>
+        <td>{{$element.type.name}}</td>
+        {{ if $variableName }}
+        {{$defaultValue := (index $variable $index).defaultValue}}
+        <td>{{$defaultValue}}</td>
+        {{ end }}
+    </tr>
+    <tr class="options-table-description">
+        {{ if $variableName }}
+        <td colspan="3">
             {{else}}
-                <td colspan="2">
+        <td colspan="2">
             {{ end }}
             <p>{{.comment.shortText | safeHTML}}</p>
             {{ if .comment.text}}
-                <p>{{.comment.text | safeHTML}}</p>
+            <p>{{.comment.text | safeHTML}}</p>
             {{ end}}
             {{ range .comment.tags -}}
-                {{ if eq .tag "description"}}
-                    <p>{{.text | safeHTML}}</p>
-                {{ end}}
-                {{ if eq .tag "example"}}
-                    {{ highlight .text "js" "" }}
-                {{ end}}
+            {{ if eq .tag "description"}}
+            <p>{{.text | safeHTML}}</p>
+            {{ end}}
+            {{ if eq .tag "example"}}
+            {{ highlight .text "js" "" }}
+            {{ end}}
             {{ end -}}
-            </td>
-        </tr>
+        </td>
+    </tr>
     {{ end }}
-  </table>
+</table>

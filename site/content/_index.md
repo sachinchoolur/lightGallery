@@ -417,3 +417,32 @@ images: []
         </div> -->
     </div>
 </div>
+<div class="container-xl available-for">
+    <div class="row justify-content-center available-for-header">
+        <div class="col-lg-7">
+            <h2>Available for</h2>
+            <p>LightGallery is available for React, Vue, and Angular along with vanilla JavaScript and TypeScript. React, Vue and Angular plugins will be available publicly soon.</p>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="contents-list">
+                <div class="contents-list-item">
+                    <img class="content-list-logo" src="images/logos/ts-logo-512.png">
+                </div>
+                <div class="contents-list-item">
+                    <img class="content-list-logo" src="images/logos/javascript.svg">
+                </div>
+                <div class="contents-list-item">
+                    <img class="content-list-logo" src="images/logos/react.svg">
+                </div>
+                <div class="contents-list-item">
+                    <img class="content-list-logo" src="images/logos/vue.png">
+                </div>
+                <div class="contents-list-item">
+                    <img class="content-list-logo content-list-lg" src="images/logos/angular.svg">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

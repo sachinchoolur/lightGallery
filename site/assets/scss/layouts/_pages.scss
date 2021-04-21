@@ -1,12 +1,3 @@
-.docs-content > h2[id]::before,
-.docs-content > h3[id]::before,
-.docs-content > h4[id]::before {
-    display: block;
-    height: 6rem;
-    margin-top: -6rem;
-    content: '';
-}
-
 .anchor {
     visibility: hidden;
     padding-left: 0.5rem;

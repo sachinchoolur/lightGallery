@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "//sachinchoolur.github.io/lightGallery/v2/"
 disableAliases = true
 disableHugoGeneratorInject = true
 disableKinds = ["taxonomy", "taxonomyTerm"]

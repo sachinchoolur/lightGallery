@@ -44,7 +44,7 @@ const $lgDemoUpdateSlides = document.getElementById(
 );
 
 // make use on lightGallery init event to add custom buttons into the toolbar
-$lgDemoUpdateSlides.addEventListener('init', (event) => {
+$lgDemoUpdateSlides.addEventListener('lgInit', (event) => {
     let updateSlideInstance = event.detail.instance;
     const addBtn =
         '<button type="button" aria-label="Add slide" class="lg-icon" id="lg-add"><svg>...</svg></button>';

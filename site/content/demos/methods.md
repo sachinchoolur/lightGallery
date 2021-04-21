@@ -43,7 +43,7 @@ buttons using lightGallery methods.
 ```js
 const $lgGalleryMethodsDemo = document.getElementById('gallery-methods-demo');
 let methodsInstance;
-$lgGalleryMethodsDemo.addEventListener('afterOpen', () => {
+$lgGalleryMethodsDemo.addEventListener('lgAfterOpen', () => {
     const previousBtn =
         '<button type="button" aria-label="Previous slide" class="lg-prev"> Prev Slide </button>';
     const nextBtn =

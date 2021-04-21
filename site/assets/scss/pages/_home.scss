@@ -413,3 +413,26 @@
         max-height: 100px;
     }
 }
+
+.available-for {
+    padding-top: 5.5rem;
+    padding-bottom: 7.5rem;
+    .available-for-header {
+        margin-bottom: 2.5rem;
+        text-align: center;
+        p {
+            font-size: 1.4rem;
+        }
+    }
+    .contents-list-item {
+        padding: 0;
+        box-shadow: none;
+        flex: 1;
+    }
+    img.content-list-logo {
+        &.content-list-lg {
+            max-width: 120px;
+            max-height: 120px;
+        }
+    }
+}

@@ -18,16 +18,21 @@ toc: true
 
 ## Usage example
 
+lightGallery custom events can be attached to the HTML element that you are
+using to initialize the gallery. Every custom event holds useful plugin data
+that can be used to control or customize lightGallery. Make sure that you attach
+event listeners before initializing lightGallery
+
 ```javascript
 const lg = document.getElementById('custom-events-demo');
 
 // Perform any action just before opening the gallery
-lg.addEventListener('beforeOpen', () => {
+lg.addEventListener('lgBeforeOpen', () => {
     alert('onBeforeOpen');
 });
 
-// custom event with extra parameters
-lg.addEventListener('beforeSlide', (event) => {
+// custom event with useful plugin data
+lg.addEventListener('lgBeforeSlide', (event) => {
     const { index, prevIndex } = event.detail;
     alert(index, prevIndex);
 });
@@ -35,21 +40,29 @@ lg.addEventListener('beforeSlide', (event) => {
 lightGallery(lg);
 ```
 
-{{< events interface="InitDetail" >}}
-{{< events interface="BeforeOpenDetail" >}}
-{{< events interface="AfterOpenDetail" >}}
-{{< events interface="AfterAppendSlideEventDetail" >}}
-{{< events interface="AfterAppendSubHtmlDetail" >}}
-{{< events interface="SlideItemLoadDetail" >}}
-{{< events interface="HasVideoDetail" >}}
-{{< events interface="BeforeSlideDetail" >}}
-{{< events interface="AfterSlideDetail" >}}
-{{< events interface="BeforeNextSlideDetail" >}}
-{{< events interface="BeforePrevSlideDetail" >}}
-{{< events interface="PosterClickDetail" >}}
-{{< events interface="DragStartDetail" >}}
-{{< events interface="DragMoveDetail" >}}
-{{< events interface="DragEndDetail" >}}
-{{< events interface="ContainerResizeDetail" >}}
-{{< events interface="BeforeCloseDetail" >}}
-{{< events interface="AfterCloseDetail" >}}
+## Available custom events
+
+Here you can find the list of available custom events. Most of the events
+provide useful lightGallery data via the event detail object. The table in each
+event section represents the event detail object.
+
+<div class="event-docs-list">
+    {{< events interface="InitDetail" >}}
+    {{< events interface="BeforeOpenDetail" >}}
+    {{< events interface="AfterOpenDetail" >}}
+    {{< events interface="AfterAppendSlideEventDetail" >}}
+    {{< events interface="AfterAppendSubHtmlDetail" >}}
+    {{< events interface="SlideItemLoadDetail" >}}
+    {{< events interface="HasVideoDetail" >}}
+    {{< events interface="BeforeSlideDetail" >}}
+    {{< events interface="AfterSlideDetail" >}}
+    {{< events interface="BeforeNextSlideDetail" >}}
+    {{< events interface="BeforePrevSlideDetail" >}}
+    {{< events interface="PosterClickDetail" >}}
+    {{< events interface="DragStartDetail" >}}
+    {{< events interface="DragMoveDetail" >}}
+    {{< events interface="DragEndDetail" >}}
+    {{< events interface="ContainerResizeDetail" >}}
+    {{< events interface="BeforeCloseDetail" >}}
+    {{< events interface="AfterCloseDetail" >}}
+</div>

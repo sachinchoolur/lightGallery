@@ -1,4 +1,12 @@
 .docs-content {
+    h2[id]::before,
+    h3[id]::before,
+    h4[id]::before {
+        display: block;
+        height: 6rem;
+        margin-top: -6rem;
+        content: '';
+    }
     .alert {
         margin-bottom: 1rem;
     }
@@ -12,5 +20,19 @@
         &:empty {
             display: none;
         }
+    }
+    h2 {
+        font-size: 1.5rem;
+        border-bottom: 1px solid #dae8ff;
+        padding-bottom: 1rem;
+        margin: 4rem 0 1rem;
+    }
+    h4 {
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin: 3rem 0 1rem;
+    }
+    .options-table {
+        margin-top: 2rem;
     }
 }

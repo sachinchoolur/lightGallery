@@ -21,6 +21,13 @@
             margin-bottom: 1rem;
             margin-top: 1rem;
         }
+
+        &:last-child {
+            td {
+                padding-bottom: 0;
+                border-bottom-color: transparent;
+            }
+        }
     }
 }
 .options-section {

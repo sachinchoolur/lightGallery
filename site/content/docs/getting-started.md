@@ -1,11 +1,11 @@
 ---
 title: 'Get started'
 description:
-    'lightGallery is a lightweight modular touch friendly gallery, for creating
-    beautiful image & video galleries.'
+    'lightGallery is a lightweight, modular, JavaScript library for creating
+    beautiful image & video galleries for the web and the mobile.'
 lead:
-    'lightGallery is a lightweight modular touch friendly gallery, for creating
-    beautiful image & video galleries.'
+    'lightGallery is a lightweight, modular, JavaScript library for creating
+    beautiful image & video galleries for the web and the mobile.'
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false
@@ -21,7 +21,7 @@ toc: true
 
 -   Fully responsive.
 -   Modular architecture with built in plugins.
--   Touch and support for mobile devices.
+-   Highly optimized for touch devices.
 -   Mouse drag supports for desktops.
 -   Double-click/Double-tap to see actual size of the image.
 -   Animated thumbnails.
@@ -29,6 +29,7 @@ toc: true
 -   YouTube Vimeo Wistia and html5 videos Support.
 -   20+ Hardware-Accelerated CSS3 transitions.
 -   Dynamic mode.
+-   Inline gallery
 -   Full screen support.
 -   Zoom in/out, Pinch to zoom.
 -   Swipe/Drag up/down support to close gallery
@@ -44,50 +45,43 @@ toc: true
 -   Rotate, flip images.
 -   And many more.
 
-## Browser support
-
-lightGallery supports all major browsers including IE 10 and above.
-
 ## Installation
 
-lightGallery is available on NPM, Yarn, Bower, and CDN
+lightGallery is available on NPM, Yarn, Bower, CDNs, and GitHub. You can use any
+of the following method to download lightGallery
 
-### Install with NPM
+-   [NPM](https://www.npmjs.com/) - NPM is a package manager for the JavaScript
+    programming language. You can install `lightgallery` using the following
+    command
 
-You can install `lightgallery` using the [npm](https://www.npmjs.com/) package
-manager.
+    ```sh
+    npm install lightgallery
+    ```
 
-```sh
-npm install lightgallery
-```
+-   [YARN](https://yarnpkg.com/) - Yarn is another popular package manager for
+    the JavaScript programming language. If you prefer you can use Yarn instead
+    of NPM
 
-You can find `lightgallery` on [Yarn](https://yarnpkg.com/) and
-[Bower](http://bower.io) as well.
+    ```sh
+    yarn add lightgallery
+    ```
 
-### Yarn
+-   [Bower](http://bower.io) - You can find lightGallery on Bower package
+    manager as well
 
-```sh
-yarn add lightgallery
-```
+    ```sh
+    bower install lightgallery --save
+    ```
 
-### Bower
+-   [GitHub](https://github.com/sachinchoolur/lightGallery/archive/master.zip) -
+    You can also directly download lightgallery from GitHub
 
-```sh
-bower install lightgallery --save
-```
+-   CDN - If you prefer to use a CDN, you can load files via
+    [jsdelivr](https://www.jsdelivr.com/projects/lightgallery),
+    [cdnjs](https://cdnjs.com/libraries/lightgallery) or
+    [unpkg](https://unpkg.com/browse/lightgallery@latest)
 
-### Download from Github
-
-You can also directly download lightgallery from
-[github](https://github.com/sachinchoolur/lightGallery/archive/master.zip).
-
-#### CDN
-
-If you prefer to use a CDN you can load files via
-[jsdelivr](https://www.jsdelivr.com/projects/lightgallery) or
-[cdnjs](https://cdnjs.com/libraries/lightgallery)
-
-### Include CSS and Javascript files
+#### Include CSS and Javascript files
 
 First of all, include lightgallery.css in the &lt;head&gt; of the document.
 
@@ -118,16 +112,16 @@ lightGallery supports AMD, CommonJS and ES6 modules too.
 import lightGallery from 'lightgallery';
 
 // Plugins
-import lgThumbnail from 'dist/js/plugins/lg-thumbnail.es5'
-import lgZoom from 'dist/js/plugins/lg-zoom.es5'
+import lgThumbnail from 'lightgallery/plugins/lg-thumbnail'
+import lgZoom from 'lightgallery/plugins/lg-zoom'
 
 ```
 
 #### The markup
 
 lightgallery does not force you to use any kind of markup. you can use whatever
-markup you want. <a href="/docs/methods/">Here</a> you can find the detailed
-examples of different kind of markups.
+markup you want. <a href="/demos/html-markup/">Here</a> can find detailed
+examples of different kinds of markups.
 
 ```HTML
 <div id="lightgallery">
@@ -160,8 +154,15 @@ Finally, you need to initiate the gallery by adding the following code.
 As shown above, you need to pass the plugins via settings if you want to use any
 lightGallery plugins.
 
-If you are using UMD, please use the same plugins names as follows. `lgZoom`,
-`lgAutoplay`,` lgComment`,`lgFullscreen `,`lgHash`,`lgPager`,`lgRotate`,`lgShare`,`lgThumbnail`,`lgVideo`
+If you are including lightGallery files via script tag, please use the same
+plugins names as follows.
+
+`lgZoom`, `lgAutoplay`, ` lgComment`, `lgFullscreen `, `lgHash`, `lgPager`,
+`lgRotate`, `lgShare`, `lgThumbnail`, `lgVideo`
+
+## Browser support
+
+lightGallery supports all major browsers including IE 10 and above.
 
 ## License
 
