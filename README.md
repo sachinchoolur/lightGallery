@@ -31,6 +31,9 @@ The upgrade process is pretty straightforward unless you have a massive modifica
 - [Docs](http://sachinchoolur.github.io/lightGallery/v2/docs/getting-started/)
 - [Demos](http://sachinchoolur.github.io/lightGallery/v2/demos/inline/)
 
+
+##### Any questions, ideas, suggestions about v2? please start a [discussion](https://github.com/sachinchoolur/lightGallery/discussions/988).
+
 ### New features
 - Pinch to zoom
 - Virtual slides
