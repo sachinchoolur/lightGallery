@@ -22,9 +22,6 @@ export default [
         ],
         // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
         external: ['react'],
-        watch: {
-            include: 'src/**',
-        },
         plugins: [
             // Allow json resolution
             json(),
