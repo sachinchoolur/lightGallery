@@ -12,7 +12,7 @@
   "main": "lightgallery.umd.js",
   "min": "lightgallery.min.js",
   "module": "lightgallery.es5.js",
-  "typings": "lightgallery.d.ts",
+  "typings": "index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/sachinchoolur/lightGallery"
