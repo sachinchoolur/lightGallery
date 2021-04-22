@@ -94,6 +94,7 @@ export class lgQuery {
         cssProperty: string,
         value?: string | number,
     ): void {
+        // prettier-ignore
         const property = cssProperty.replace(/-([a-z])/gi, function (
             s,
             group1,
