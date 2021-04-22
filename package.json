@@ -1,18 +1,24 @@
 {
   "name": "lightgallery",
-  "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "version": "0.0.0-development",
+  "description": "lightGallery is a feature-rich, modular JavaScript gallery plugin for building beautiful image and video galleries for the web and the mobile",
+  "keywords": [
+    "JavaScript",
+    "Gallery",
+    "Video",
+    "slider",
+    "lightBox"
+  ],
   "main": "dist/lightgallery.umd.js",
   "min": "dist/lightgallery.min.js",
   "module": "dist/lightgallery.es5.js",
-  "typings": "dist/types/lightgallery.d.ts",
+  "typings": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/sachinchoolur/lightGallery"
   },
   "homepage": "http://sachinchoolur.github.io/lightGallery/",
   "bugs": {
@@ -30,11 +36,11 @@
   "scripts": {
     "lint": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet --fix",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css",
+    "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css && npm run copyAssetsToSite && npm run copyJsToSite && npm run copyPackages && npm run buildLibraries",
     "build-scss": "node-sass --include-path scss src/sass/ -o dist/css/ --output-style expanded",
     "build-scss-dev": "node-sass --include-path scss src/sass/ -o site/static/css/ --output-style expanded",
     "watch-css": "nodemon -e scss -x \"npm run build-scss-dev\"",
-    "watch-site-content": "nodemon --watch dist -x \"npm run copyToSite\"",
+    "watch-site-content": "nodemon --watch dist -x \"npm run copyAssetsToSite\"",
     "minify-css": "cleancss -o dist/css/lightgallery.min.css dist/css/lightgallery.css",
     "start": "concurrently \"rollup -c rollup-dev.config.ts -w $LG_PLUGINS\" \"npm run watch-site-content \" \"npm run watch-css \" ",
     "test": "jest --coverage",
@@ -49,7 +55,14 @@
     "precommit": "lint-staged",
     "travis-deploy-once": "travis-deploy-once",
     "copyAssets": "copyfiles -u 1 src/fonts/** dist && copyfiles -u 1 src/images/** dist",
-    "copyToSite": "copyfiles -f dist/images/** site/static/images && copyfiles -f dist/fonts/** site/static/fonts"
+    "copyPackages": "copyfiles -u 1 packages/**/**/* dist && copyfiles -u 1 packages/**/* dist && copyfiles -u 1 packages/* dist",
+    "copyReactBuild": "copyfiles -f -u 1 -e '**/*.d.ts' lightgallery-react/dist/* dist/react && copyfiles -f -u 1 lightgallery-react/dist/Lightgallery.d.ts dist/react",
+    "copyVueBuild": "copyfiles -f -u 1 -e '**/*.html' lightgallery-vue/dist/* dist/vue && copyfiles -f lightgallery-vue/dist/lightgallery-vue/src/components/LightGallery.vue.d.ts dist/vue ",
+    "copyAssetsToSite": "copyfiles -f dist/images/** site/static/images && copyfiles -f dist/fonts/** site/static/fonts",
+    "copyJsToSite": "copyfiles -f dist/*.js site/assets/js && copyfiles -u 1 dist/plugins/**/* site/assets/js",
+    "prepush": "npm run test:prod && npm run build",
+    "commitmsg": "commitlint -E HUSKY_GIT_PARAMS",
+    "buildLibraries": "ts-node tools/build-libraries"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -67,7 +80,7 @@
       ".(ts|tsx)": "ts-jest"
     },
     "testEnvironment": "node",
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "testRegex": "(/__tests__/.*|\\.(test))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -79,10 +92,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 90,
-        "functions": 95,
-        "lines": 95,
-        "statements": 95
+        "branches": 0,
+        "functions": 0,
+        "lines": 0,
+        "statements": 0
       }
     },
     "collectCoverageFrom": [
@@ -99,6 +112,7 @@
     "@commitlint/config-conventional": "^7.1.2",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.11.0",
+    "@types/react": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
     "clean-css-cli": "^4.3.0",
@@ -121,7 +135,7 @@
     "nodemon": "^2.0.4",
     "prettier": "^2.1.2",
     "prompt": "^1.0.0",
-    "replace-in-file": "^3.4.2",
+    "replace-in-file": "^3.4.4",
     "rimraf": "^2.6.2",
     "rollup": "^0.67.0",
     "rollup-plugin-commonjs": "^9.1.8",
@@ -131,7 +145,8 @@
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.27.3",
     "rollup-plugin-uglify": "^6.0.4",
-    "semantic-release": "^15.9.16",
+    "semantic-release": "^17.4.2",
+    "semantic-release-cli": "^5.4.3",
     "shelljs": "^0.8.3",
     "travis-deploy-once": "^5.0.9",
     "ts-jest": "^23.10.2",
@@ -144,5 +159,9 @@
     "i": "^0.3.6",
     "npm": "^6.14.8",
     "video.js": "^7.0.3"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }
