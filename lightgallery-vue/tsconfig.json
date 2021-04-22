@@ -9,6 +9,8 @@
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "declarationDir": "dist",
+    "declaration": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
