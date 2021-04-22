@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 0.0.0-development | April 20th 2021
+ * lightgallery | 0.0.0-development | April 22nd 2021
  * http://sachinchoolur.github.io/lightGallery/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -102,6 +102,7 @@ var lgQuery = /** @class */ (function () {
         return this;
     };
     lgQuery.prototype._setCssVendorPrefix = function (el, cssProperty, value) {
+        // prettier-ignore
         var property = cssProperty.replace(/-([a-z])/gi, function (s, group1) {
             return group1.toUpperCase();
         });
@@ -2528,7 +2529,6 @@ function lightGallery(el, options) {
         return;
     }
     try {
-        console.log('caling lg');
         return new LightGallery(el, options);
     }
     catch (err) {
