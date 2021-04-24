@@ -18,6 +18,9 @@ schemaLinkedIn = "https://www.linkedin.com/in/sachinchoolur/"
 schemaGitHub = "https://github.com/sachinchoolur"
 schemaSection = "blog"
 
+docsRepo = "https://github.com/sachinchoolur/lightGallery/tree/v2/"
+
+
 siteLinksSearchBox = false
 
 themeColor = "#fff"
