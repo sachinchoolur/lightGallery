@@ -1,14 +1,9 @@
 import { NgModule } from '@angular/core';
-import { LightgalleryAngularComponent } from './lightgallery-angular.component';
+import { LightgalleryComponent } from './lightgallery-angular.component';
 
 @NgModule({
-    declarations: [LightgalleryAngularComponent],
+    declarations: [LightgalleryComponent],
     imports: [],
-    exports: [LightgalleryAngularComponent],
+    exports: [LightgalleryComponent],
 })
-export class LightgalleryAngularModule {
-    ngOnInit(): void {
-        // ...
-        console.log('calling angyualr init');
-    }
-}
+export class LightgalleryModule {}

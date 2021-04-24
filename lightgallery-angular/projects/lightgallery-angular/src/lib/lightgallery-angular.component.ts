@@ -43,11 +43,11 @@ const LgMethods = {
 };
 
 @Component({
-    selector: 'lib-lightgallery-angular',
+    selector: 'lightgallery',
     template: '<ng-content></ng-content>',
     styles: [],
 })
-export class LightgalleryAngularComponent implements OnInit {
+export class LightgalleryComponent implements OnInit {
     constructor(private _elementRef: ElementRef) {
         this._elementRef = _elementRef;
     }

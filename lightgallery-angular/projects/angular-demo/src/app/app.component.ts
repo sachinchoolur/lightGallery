@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import lgZoom from 'lightgallery/plugins/zoom';
 import { InitDetail } from 'lightgallery/lg-events';
 
@@ -6,6 +6,7 @@ import { InitDetail } from 'lightgallery/lg-events';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {
     title = 'angular-demo';

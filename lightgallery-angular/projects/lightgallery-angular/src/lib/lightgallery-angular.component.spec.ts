@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LightgalleryAngularComponent } from './lightgallery-angular.component';
+import { LightgalleryComponent } from './lightgallery-angular.component';
 
-describe('LightgalleryAngularComponent', () => {
-    let component: LightgalleryAngularComponent;
-    let fixture: ComponentFixture<LightgalleryAngularComponent>;
+describe('LightgalleryComponent', () => {
+    let component: LightgalleryComponent;
+    let fixture: ComponentFixture<LightgalleryComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [LightgalleryAngularComponent],
+            declarations: [LightgalleryComponent],
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(LightgalleryAngularComponent);
+        fixture = TestBed.createComponent(LightgalleryComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

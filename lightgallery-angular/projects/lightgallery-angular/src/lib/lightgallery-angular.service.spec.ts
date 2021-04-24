@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LightgalleryAngularService } from './lightgallery-angular.service';
+import { LightgalleryService } from './lightgallery-angular.service';
 
-describe('LightgalleryAngularService', () => {
-    let service: LightgalleryAngularService;
+describe('LightgalleryService', () => {
+    let service: LightgalleryService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.inject(LightgalleryAngularService);
+        service = TestBed.inject(LightgalleryService);
     });
 
     it('should be created', () => {

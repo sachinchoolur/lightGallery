@@ -3,11 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 
-import { LightgalleryAngularModule } from 'lightgallery-angular';
+import { LightgalleryModule } from 'lightgallery-angular';
 
 @NgModule({
     declarations: [AppComponent],
-    imports: [BrowserModule, LightgalleryAngularModule],
+    imports: [BrowserModule, LightgalleryModule],
     providers: [],
     bootstrap: [AppComponent],
 })

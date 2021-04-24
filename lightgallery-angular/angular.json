@@ -28,8 +28,7 @@
               "projects/angular-demo/src/assets"
             ],
             "styles": [
-              "projects/angular-demo/src/styles.scss",
-              "./node_modules/lightgallery/css/lightgallery.css"
+              "projects/angular-demo/src/styles.scss"
             ],
             "scripts": [
             ]
@@ -129,7 +128,6 @@
       "projectType": "library",
       "root": "projects/lightgallery-angular",
       "sourceRoot": "projects/lightgallery-angular/src",
-      "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
