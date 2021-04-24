@@ -33,6 +33,7 @@ export const lGEvents: {
 /**
  * Fired only once when lightGallery is initialized
  * @name lgInit
+ * @method onInit
  * @example
  *   const lg = document.getElementById('custom-events-demo');
  *   // Perform any action on lightGallery initialization.
@@ -54,6 +55,7 @@ export interface InitDetail {
 /**
  * Fired when the slide content has been inserted into it's slide container.
  * @name lgAfterAppendSlide
+ * @method onAfterAppendSlide
  */
 export interface AfterAppendSlideEventDetail {
     /**
@@ -65,18 +67,21 @@ export interface AfterAppendSlideEventDetail {
 /**
  * Fired immediately before opening the gallery
  * @name lgBeforeOpen
+ * @method onBeforeOpen
  */
 export interface BeforeOpenDetail {}
 
 /**
  * Fired immediately after opening the gallery
  * @name lgAfterOpen
+ * @method onAfterOpen
  */
 export interface AfterOpenDetail {}
 
 /**
  * Fired once the media inside the slide has been completely loaded .
  * @name lgSlideItemLoad
+ * @method onSlideItemLoad
  */
 export interface SlideItemLoadDetail {
     /**
@@ -92,8 +97,9 @@ export interface SlideItemLoadDetail {
 }
 
 /**
- * fired immediately before each slide transition.
+ * Fired immediately before each slide transition.
  * @name lgBeforeSlide
+ * @method onBeforeSlide
  * @example
  *   const lg = document.getElementById('custom-events-demo');
  *   // Perform any action before each slide transition
@@ -123,8 +129,9 @@ export interface BeforeSlideDetail {
 }
 
 /**
- * fired immediately after each slide transition.
+ * Fired immediately after each slide transition.
  * @name lgAfterSlide
+ * @method onAfterSlide
  */
 export interface AfterSlideDetail {
     /**
@@ -148,36 +155,42 @@ export interface AfterSlideDetail {
 /**
  * Fired when the video poster is clicked.
  * @name lgPosterClick
+ * @method onPosterClick
  */
 export interface PosterClickDetail {}
 
 /**
  * Fired when the drag event to move to different slide starts.
  * @name lgDragStart
+ * @method onDragStart
  */
 export interface DragStartDetail {}
 
 /**
  * Fired periodically during the drag operation.
  * @name lgDragMove
+ * @method onDragMove
  */
 export interface DragMoveDetail {}
 
 /**
  * Fired when the user has finished the drag operation
  * @name lgDragEnd
+ * @method onDragEnd
  */
 export interface DragEndDetail {}
 
 /**
  * Fired immediately before the start of the close process.
  * @name lgBeforeClose
+ * @method onBeforeClose
  */
 export interface BeforeCloseDetail {}
 
 /**
  * Fired immediately once lightGallery is closed.
  * @name lgAfterClose
+ * @method onAfterClose
  */
 export interface AfterCloseDetail {
     /**
@@ -189,6 +202,7 @@ export interface AfterCloseDetail {
 /**
  * Fired immediately before each "next" slide transition
  * @name lgBeforeNextSlide
+ * @method onBeforeNextSlide
  */
 export interface BeforeNextSlideDetail {
     /**
@@ -204,6 +218,7 @@ export interface BeforeNextSlideDetail {
 /**
  * Fired immediately before each "prev" slide transition
  * @name lgBeforePrevSlide
+ * @method onBeforePrevSlide
  */
 export interface BeforePrevSlideDetail {
     /**
@@ -219,6 +234,7 @@ export interface BeforePrevSlideDetail {
 /**
  * Fired when the sub-html content (ex : title/ description) has been appended into the slide.
  * @name lgAfterAppendSubHtml
+ * @method onAfterAppendSubHtml
  */
 export interface AfterAppendSubHtmlDetail {
     /**
@@ -230,6 +246,7 @@ export interface AfterAppendSubHtmlDetail {
 /**
  * Fired when the sub-html content (ex : title/ description) has been appended into the slide.
  * @name lgContainerResize
+ * @method onContainerResize
  */
 export interface ContainerResizeDetail {
     /**
@@ -239,8 +256,9 @@ export interface ContainerResizeDetail {
 }
 
 /**
- * Event fired when lightGallery detects video slide
+ * Fired when lightGallery detects video slide
  * @name lgHasVideo
+ * @method onHasVideo
  */
 export interface HasVideoDetail {
     /**
