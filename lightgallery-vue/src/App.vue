@@ -1,5 +1,5 @@
 <template>
-  <LightGallery 
+  <lightgallery 
     :settings="{counter: false, plugins: plugins}" 
     :onInit="onInit" 
     :onBeforeSlide="onBeforeSlide"
@@ -44,18 +44,18 @@
                             src="https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
                         />
                     </a>
-  </LightGallery>
+  </lightgallery>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import LightGallery from './components/LightGallery.vue';
+import Lightgallery from './components/LightGallery.vue';
 import { LightGallery as LGPlugin } from '../../src/lightgallery';
 import lgZoom from '../../src/plugins/zoom/lg-zoom';
 
 @Options({
   components: {
-    LightGallery,
+    Lightgallery,
   },
   data: () => (
     {

@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, Ref } from 'vue';
+import { PropType } from 'vue';
 import { Options, Vue } from 'vue-class-component';
 import lightGallery from '../../../src';
 import { LightGallery as LGPlugin } from '../../../src/lightgallery';
@@ -89,7 +89,7 @@ import {
         },
     },
 })
-export default class LightGallery extends Vue {
+export default class Lightgallery extends Vue {
 	$refs!: {
 		container: HTMLElement
 	}
