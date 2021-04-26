@@ -1,6 +1,7 @@
 {
-  "name": "lightgallery-angular",
+  "name": "lightgallery/angular",
   "version": "0.0.1",
+  "private": true,
   "peerDependencies": {
     "@angular/common": "^11.2.11",
     "@angular/core": "^11.2.11"
