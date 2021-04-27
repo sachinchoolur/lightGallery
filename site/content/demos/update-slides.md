@@ -20,7 +20,7 @@ Let's see how we can add and delete slides dynamically.
 
 In this demo, we'll be using some of the lightGallery jQuery like utilities for
 dom manipulations such as `append`, `find` or `on`. <a
-    href="/docs/lg-query/">Docs</a>
+    href="../../docs/lg-query/">Docs</a>
 
 ##### HTML Structure
 

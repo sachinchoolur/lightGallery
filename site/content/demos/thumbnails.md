@@ -8,7 +8,7 @@ lead:
     allows users to navigate between slides by clicking on the thumbnails.
     Thumbnails plugin also allows you to load thumbnails automatically for
     YouTube, Vimeo, and other video sources. Find out more options in the <a
-    href="/docs/options/#thumbnails-plugin"> docs </a>'
+    href="../../docs/options/#thumbnails-plugin"> docs </a>'
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false

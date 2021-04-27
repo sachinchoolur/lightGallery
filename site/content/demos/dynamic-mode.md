@@ -5,7 +5,7 @@ lead:
     'LightGallery can be instantiated and launched programmatically by setting
     dynamic option to true and populating dynamicEl option by passing array of
     objects representing the gallery elements. See available dynamic options <a
-    href="/docs/dynamic-variables/">Docs.</a>'
+    href="../../docs/dynamic-variables/">Docs.</a>'
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false

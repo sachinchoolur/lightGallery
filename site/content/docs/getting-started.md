@@ -120,7 +120,7 @@ import lgZoom from 'lightgallery/plugins/lg-zoom'
 #### The markup
 
 lightgallery does not force you to use any kind of markup. you can use whatever
-markup you want. <a href="/demos/html-markup/">Here</a> can find detailed
+markup you want. <a href="../../demos/html-markup/">Here</a> can find detailed
 examples of different kinds of markups.
 
 ```HTML
