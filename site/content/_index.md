@@ -421,27 +421,27 @@ images: []
     <div class="row justify-content-center available-for-header">
         <div class="col-lg-7">
             <h2>Available for</h2>
-            <p>LightGallery is available for React, Vue, and Angular along with vanilla JavaScript and TypeScript. React, Vue and Angular plugins will be available publicly soon.</p>
+            <p>lightGallery is available for React, Vue.js, and Angular along with vanilla JavaScript and TypeScript. </p>
         </div>
     </div>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="contents-list">
-                <div class="contents-list-item">
-                    <img class="content-list-logo" src="images/logos/ts-logo-512.png">
-                </div>
-                <div class="contents-list-item">
-                    <img class="content-list-logo" src="images/logos/javascript.svg">
-                </div>
-                <div class="contents-list-item">
+                <a href="docs/react/" class="contents-list-item">
                     <img class="content-list-logo" src="images/logos/react.svg">
-                </div>
-                <div class="contents-list-item">
+                </a>
+                <a href="docs/vue/" class="contents-list-item">
                     <img class="content-list-logo" src="images/logos/vue.png">
-                </div>
-                <div class="contents-list-item">
+                </a>
+                <a href="docs/angular/" class="contents-list-item">
                     <img class="content-list-logo content-list-lg" src="images/logos/angular.svg">
-                </div>
+                </a>
+                <a href="docs/getting-started/" class="contents-list-item">
+                    <img class="content-list-logo" src="images/logos/ts-logo-512.png">
+                </a>
+                <a href="docs/getting-started/" class="contents-list-item">
+                    <img class="content-list-logo" src="images/logos/javascript.svg">
+                </a>
             </div>
         </div>
     </div>
