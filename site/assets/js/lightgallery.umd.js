@@ -1,10 +1,3 @@
-/*!
- * lightgallery | 0.0.0-development | April 22nd 2021
- * http://sachinchoolur.github.io/lightGallery/
- * Copyright (c) 2020 Sachin Neravath;
- * @license GPLv3
- */
-
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :

@@ -33,7 +33,7 @@ export interface ShareSettings {
      * Array of additional share options
      *
      * This can be used to build additional share options.
-     * <a href="/demos/share/">Demo</a>
+     * <a href="../../demos/share/">Demo</a>
      */
     additionalShareOptions: ShareOption[];
 }
