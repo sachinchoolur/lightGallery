@@ -1,6 +1,5 @@
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import lightGallery from 'lightgallery';
-import 'lightgallery/css/lightgallery.css';
 import {
     AfterAppendSubHtmlDetail,
     AfterCloseDetail,
