@@ -970,7 +970,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 .lg-comment-box .fb-comments {
   height: 100%;
   width: 100%;
-  background: url(../images/loading.gif) no-repeat scroll center center #fff;
+  background: url("../images/loading.gif") no-repeat scroll center center #fff;
   overflow-y: auto;
   display: inline-block;
 }
