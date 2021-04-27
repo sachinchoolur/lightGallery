@@ -8,9 +8,12 @@ process.chdir('lightgallery-react');
 exec('npm run build:library');
 process.chdir('../lightgallery-vue');
 exec('npm run build:library');
+process.chdir('../lightgallery-angular');
+exec('npm run build:library');
 process.chdir('../');
 exec('npm run copyReactBuild');
 exec('npm run copyVueBuild');
+exec('npm run copyAngularBuild');
 try {
     replace.sync({
         files: 'dist/react/Lightgallery.d.ts',
