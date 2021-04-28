@@ -81,3 +81,14 @@
         }
     }
 }
+.lg-outer {
+    &[data-lg-slide-type='video'],
+    &[data-lg-slide-type='iframe'] {
+        .lg-zoom-in,
+        .lg-actual-size,
+        .lg-zoom-ou {
+            opacity: $lg-toolbar-icon-disabled-opacity;
+            pointer-events: none;
+        }
+    }
+}

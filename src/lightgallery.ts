@@ -1388,11 +1388,8 @@ export class LightGallery {
                 currentGalleryItem.downloadUrl !== false &&
                 (currentGalleryItem.downloadUrl || currentGalleryItem.src);
 
-            if (src) {
+            if (src && !currentGalleryItem.iframe) {
                 this.getElementById('lg-download').attr('href', src);
-                this.outer.removeClass('lg-hide-download');
-            } else {
-                this.outer.addClass('lg-hide-download');
             }
         }
     }
@@ -1465,8 +1462,6 @@ export class LightGallery {
         const numberOfGalleryItems = this.galleryItems.length;
 
         if (!this.lgBusy) {
-            this.setDownloadValue(index);
-
             if (this.settings.counter) {
                 this.updateCurrentCounter(index);
             }
@@ -1476,6 +1471,12 @@ export class LightGallery {
 
             const currentGalleryItem = this.galleryItems[index];
             const videoInfo = currentGalleryItem.__slideVideoInfo;
+
+            this.outer.attr(
+                'data-lg-slide-type',
+                this.getSlideType(currentGalleryItem),
+            );
+            this.setDownloadValue(index);
 
             if (videoInfo) {
                 const { top, bottom } = this.mediaContainerPosition;
@@ -1589,6 +1590,16 @@ export class LightGallery {
         this.getElementById('lg-counter-all').html(
             this.galleryItems.length + '',
         );
+    }
+
+    getSlideType(item: GalleryItem): 'video' | 'iframe' | 'image' {
+        if (item.__slideVideoInfo) {
+            return 'video';
+        } else if (item.iframe) {
+            return 'iframe';
+        } else {
+            return 'image';
+        }
     }
 
     touchMove(startCoords: Coords, endCoords: Coords): void {

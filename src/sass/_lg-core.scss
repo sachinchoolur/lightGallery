@@ -246,9 +246,11 @@
         display: none;
     }
 
-    &.lg-hide-download {
+    &[data-lg-slide-type='video'],
+    &[data-lg-slide-type='iframe'] {
         .lg-download {
-            display: none;
+            opacity: $lg-toolbar-icon-disabled-opacity;
+            pointer-events: none;
         }
     }
 
