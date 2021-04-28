@@ -100,7 +100,7 @@ export interface LightGallerySettings {
      * <ul>
      * <li>This can be used to change the zoom effect when the image is loaded</li>
      * <li>This is also applied when navigating to new slides</li>
-     * <li>if startClass will be empty zoomFromOrigin is true.</li>
+     * <li>startClass will be empty zoomFromOrigin is true.</li>
      * </ul>
      */
     startClass: string;
