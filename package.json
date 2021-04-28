@@ -36,7 +36,7 @@
   "scripts": {
     "lint": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet --fix",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css && npm run copyAssetsToSite && npm run copyJsToSite && npm run copyPackages && npm run buildLibraries",
+    "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css && npm run copyAssetsToSite && npm run copyJsToSite && npm run copyPackages && npm run buildLibraries && npm run updatePackageFields",
     "build-scss": "node-sass --include-path scss src/sass/ -o dist/css/ --output-style expanded",
     "build-scss-dev": "node-sass --include-path scss src/sass/ -o site/static/css/ --output-style expanded",
     "watch-css": "nodemon -e scss -x \"npm run build-scss-dev\"",
@@ -55,7 +55,8 @@
     "precommit": "lint-staged",
     "travis-deploy-once": "travis-deploy-once",
     "copyAssets": "copyfiles -u 1 src/fonts/** dist && copyfiles -u 1 src/images/** dist",
-    "copyPackages": "copyfiles -u 1 packages/**/**/* dist && copyfiles -u 1 packages/**/* dist && copyfiles -u 1 packages/* dist",
+    "copyPackages": "copyfiles README.md dist && copyfiles -u 1 packages/**/**/* dist && copyfiles -u 1 packages/**/* dist && copyfiles -u 1 packages/* dist",
+    "updatePackageFields": "ts-node tools/update-packages",
     "copyReactBuild": "copyfiles -f -u 1 -e '**/*.d.ts' lightgallery-react/dist/* dist/react && copyfiles -f -u 1 lightgallery-react/dist/Lightgallery.d.ts dist/react",
     "copyVueBuild": "copyfiles -f -u 1 -e '**/*.html' lightgallery-vue/dist/* dist/vue && copyfiles -f lightgallery-vue/dist/lightgallery-vue/src/components/LightGallery.vue.d.ts dist/vue ",
     "copyAngularBuild": "copyfiles -u 3 lightgallery-angular/dist/lightgallery-angular/**/* dist/angular && copyfiles -f lightgallery-angular/dist/lightgallery-angular/* dist/angular && copyfiles -u 3 lightgallery-angular/dist/lightgallery-angular/**/**/* dist/angular",
