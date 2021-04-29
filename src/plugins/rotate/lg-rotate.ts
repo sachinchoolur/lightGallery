@@ -178,7 +178,18 @@ export default class Rotate {
         this.applyStyles();
     }
 
+    isImageOrientationChanged(): boolean {
+        const rotateValue = this.rotateValuesList[this.core.index];
+        const isRotated = Math.abs(rotateValue.rotate) % 360 !== 0;
+        const ifFlippedHor = rotateValue.flipHorizontal < 0;
+        const ifFlippedVer = rotateValue.flipVertical < 0;
+        return isRotated || ifFlippedHor || ifFlippedVer;
+    }
+
     closeGallery(): void {
+        if (this.isImageOrientationChanged()) {
+            this.core.getSlideItem(this.core.index).css('opacity', 0);
+        }
         this.rotateValuesList = {};
     }
 
