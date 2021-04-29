@@ -41,7 +41,7 @@ if ($lgInlineContainer) {
         rotate: false,
         download: false,
         slideDelay: 400,
-        plugins: [lgZoom, lgFullscreen, lgShare, lgAutoplay, lgThumbnail],
+        plugins: [lgZoom, lgShare, lgAutoplay, lgThumbnail],
         appendSubHtmlTo: '.lg-item',
         ...getResponsiveThumbnailsSettings(),
         dynamicEl: [
