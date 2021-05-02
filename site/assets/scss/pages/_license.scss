@@ -1,0 +1,63 @@
+////// Pricing
+
+.pricing-list-item {
+    width: 260px;
+    padding: 20px;
+    margin: 20px;
+    color: #0e3481;
+    border-radius: 5px;
+}
+
+.pricing-list {
+    display: flex;
+}
+
+.pricing-type {
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.pricing-cost {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.pricing-cost-label {
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+ul.pricing-terms {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 30px;
+}
+
+ul.pricing-terms li {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.pricing-desc {
+    color: #5971a7;
+    margin: 5px 0;
+    font-size: 14px;
+}
+.pricing-btn-wrap {
+    margin: 20px 0;
+}
+.license .hero-section {
+    padding-bottom: 3rem;
+}
+.pricing-section {
+    color: #0e3481;
+    margin-top: 5rem;
+}
+
+.pricing-points-item {
+    text-align: left;
+    h4 {
+        font-size: 1.3rem;
+        margin: 3rem 0 0.5rem;
+    }
+}

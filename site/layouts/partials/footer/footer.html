@@ -1,5 +1,49 @@
 <footer class="footer text-muted">
   <div class="container-xxl">
-    <p class="m-0 text-center">{{ .Site.Params.footer | safeHTML }}</p>
+    <div class="row">
+      <div class="col-sm-3">
+        <h4>Components</h4>
+        <ul class="footer-menu">
+          <li class="footer-menu-item"><a href="{{.Page.Site.BaseURL}}docs/react">React</a></li>
+          <li class="footer-menu-item"><a href="{{.Page.Site.BaseURL}}docs/vue">Vue.js</a></li>
+          <li class="footer-menu-item"><a href="{{.Page.Site.BaseURL}}docs/angular">Angular</a></li>
+        </ul>
+      </div>
+      <div class="col-sm-3">
+        <h4>Docs</h4>
+        <ul class="footer-menu">
+          <li class="footer-menu-item"><a href="{{.Page.Site.BaseURL}}docs/getting-started">Get started</a></li>
+          <li class="footer-menu-item"><a href="{{.Page.Site.BaseURL}}docs/settings">Settings</a></li>
+          <li class="footer-menu-item"><a href="{{.Page.Site.BaseURL}}docs/events">Events</a></li>
+        </ul>
+      </div>
+      <div class="col-sm-3">
+        <h4>Demos</h4>
+        <ul class="footer-menu">
+          <li class="footer-menu-item"><a href="{{.Page.Site.BaseURL}}demos/thumbnails">Thumbnails</a></li>
+          <li class="footer-menu-item"><a href="{{.Page.Site.BaseURL}}demos/dynamic-mode">Dynamic</a></li>
+          <li class="footer-menu-item"><a href="{{.Page.Site.BaseURL}}demos/inline">Inline</a></li>
+        </ul>
+      </div>
+      <div class="col-sm-3">
+        <h4>Social</h4>
+        <ul class="footer-menu">
+          <li class="footer-menu-item"><a href="https://github.com/sachinchoolur/lightGallery">GitHub</a></li>
+          <li class="footer-menu-item"><a target="_blank" href="https://twitter.com/sachinchoolur">Twitter</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-xxl">
+    <div class="tack-banner">
+      <span class="tack-banner-label">Brought to you by</span>
+      <div class="tack-banner-inner">
+        <a href="https://tack.one/?ref=lightgallery" target="_blank">
+          <img class="tack-banner-logo" src="{{.Page.Site.BaseURL}}images/logos/tack-logo-mobile.svg" />
+          All new time tracking. Greater insight.
+        </a>
+      </div>
+    </div>
   </div>
 </footer>
