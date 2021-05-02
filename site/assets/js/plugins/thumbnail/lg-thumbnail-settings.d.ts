@@ -29,7 +29,7 @@ export interface ThumbnailsSettings {
      * By default, thumbnails are appended to '.lg-components' which has inbuilt open close transitions
      * If you don't want initial thumbnails transitions, or want to do more customization,
      * you can append thumbnails to the lightGalley outer div -
-     * <a href="../../demos/thumbnails/#static-thumbnails">Demo</a>
+     * <a href="/demos/thumbnails/#static-thumbnails">Demo</a>
      */
     appendThumbnailsTo: '.lg-outer' | '.lg-components';
     /**

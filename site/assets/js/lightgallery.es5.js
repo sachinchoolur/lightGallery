@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 0.0.0-development | April 26th 2021
+ * lightgallery | 2.0.0-beta.2 | April 29th 2021
  * http://sachinchoolur.github.io/lightGallery/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -1733,12 +1733,8 @@ var LightGallery = /** @class */ (function () {
             var currentGalleryItem = this.galleryItems[index];
             var src = currentGalleryItem.downloadUrl !== false &&
                 (currentGalleryItem.downloadUrl || currentGalleryItem.src);
-            if (src) {
+            if (src && !currentGalleryItem.iframe) {
                 this.getElementById('lg-download').attr('href', src);
-                this.outer.removeClass('lg-hide-download');
-            }
-            else {
-                this.outer.addClass('lg-hide-download');
             }
         }
     };
@@ -1795,7 +1791,6 @@ var LightGallery = /** @class */ (function () {
         }
         var numberOfGalleryItems = this.galleryItems.length;
         if (!this.lgBusy) {
-            this.setDownloadValue(index);
             if (this.settings.counter) {
                 this.updateCurrentCounter(index);
             }
@@ -1803,6 +1798,8 @@ var LightGallery = /** @class */ (function () {
             var previousSlideItem_1 = this.getSlideItem(prevIndex);
             var currentGalleryItem = this.galleryItems[index];
             var videoInfo = currentGalleryItem.__slideVideoInfo;
+            this.outer.attr('data-lg-slide-type', this.getSlideType(currentGalleryItem));
+            this.setDownloadValue(index);
             if (videoInfo) {
                 var _a = this.mediaContainerPosition, top_3 = _a.top, bottom = _a.bottom;
                 var videoSize = utils.getSize(this.items[index], this.$lgContent, top_3 + bottom, videoInfo && this.settings.videoMaxSize);
@@ -1892,6 +1889,17 @@ var LightGallery = /** @class */ (function () {
     };
     LightGallery.prototype.updateCounterTotal = function () {
         this.getElementById('lg-counter-all').html(this.galleryItems.length + '');
+    };
+    LightGallery.prototype.getSlideType = function (item) {
+        if (item.__slideVideoInfo) {
+            return 'video';
+        }
+        else if (item.iframe) {
+            return 'iframe';
+        }
+        else {
+            return 'image';
+        }
     };
     LightGallery.prototype.touchMove = function (startCoords, endCoords) {
         var distanceX = endCoords.pageX - startCoords.pageX;

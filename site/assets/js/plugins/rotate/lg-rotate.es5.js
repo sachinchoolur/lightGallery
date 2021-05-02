@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 0.0.0-development | April 26th 2021
+ * lightgallery | 2.0.0-beta.2 | April 29th 2021
  * http://sachinchoolur.github.io/lightGallery/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -210,7 +210,17 @@ var Rotate = /** @class */ (function () {
         this.rotateValuesList[this.core.index][rotateAxis] *= -1;
         this.applyStyles();
     };
+    Rotate.prototype.isImageOrientationChanged = function () {
+        var rotateValue = this.rotateValuesList[this.core.index];
+        var isRotated = Math.abs(rotateValue.rotate) % 360 !== 0;
+        var ifFlippedHor = rotateValue.flipHorizontal < 0;
+        var ifFlippedVer = rotateValue.flipVertical < 0;
+        return isRotated || ifFlippedHor || ifFlippedVer;
+    };
     Rotate.prototype.closeGallery = function () {
+        if (this.isImageOrientationChanged()) {
+            this.core.getSlideItem(this.core.index).css('opacity', 0);
+        }
         this.rotateValuesList = {};
     };
     Rotate.prototype.destroy = function () {

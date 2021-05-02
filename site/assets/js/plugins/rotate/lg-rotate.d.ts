@@ -17,6 +17,7 @@ export default class Rotate {
     getCurrentRotation(el: HTMLElement): number;
     flipHorizontal(): void;
     flipVertical(): void;
+    isImageOrientationChanged(): boolean;
     closeGallery(): void;
     destroy(): void;
 }
