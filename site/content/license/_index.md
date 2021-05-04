@@ -73,7 +73,7 @@ images: []
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h2 class="align-center">Commercial OEM license</h2>
-            <p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Commercial OEM license. commercial OEM licenses are customized per customer. Contact <a href="mailto:sachi77n@gmail.com">sachi77n@gmail.com</a></p>
+            <p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Commercial OEM license. commercial OEM licenses are customized per customer. Contact <a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a></p>
         </div>
     </div>
 </div>
@@ -90,7 +90,7 @@ images: []
     <div class="row justify-content-center pricing-points">
         <div class="col-md-6">
             <h2 class="align-center">Key Points</h2>
-            <p>Please find the key points of the commercial license below. If you have any more questions, please contact at <a href="mailto:sachi77n@gmail.com">sachi77n@gmail.com</a></p>
+            <p>Please find the key points of the commercial license below. If you have any more questions, please contact at <a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a></p>
             <div class="pricing-points-item">
                 <h4>Team member</h4>
                 <p>Commercial Licenses are priced per team member. A team member is an individual person permitted to use lightGallery and make Modifications for your Applications, whether such person is Your employee or a consultant or contractor providing services to You.</p>
@@ -105,7 +105,7 @@ images: []
             </div>
             <div class="pricing-points-item">
                 <h4>No reselling</h4>
-                <p>lightGallery cannot be used in a product offered for sale or for free, where lightGallery contributes to the core value of the product being sold. If you like to build something based on lightGallery such as a pro WordPress plugin for lightGallery, please reach out to us at <a href="mailto:sachi77n@gmail.com">sachi77n@gmail.com</a></p>
+                <p>lightGallery cannot be used in a product offered for sale or for free, where lightGallery contributes to the core value of the product being sold. If you like to build something based on lightGallery such as a pro WordPress plugin for lightGallery, please reach out to us at <a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a></p>
                 <p>lightGallery may not be used for re-selling, sub-licensing, or sharing purposes, and cannot otherwise be redistributed on its own (even for free).</p>
             </div>
             <div class="pricing-points-item">
