@@ -83,11 +83,28 @@ of the following method to download lightGallery
 
 #### Include CSS and Javascript files
 
-First of all, include lightgallery.css in the &lt;head&gt; of the document.
+First of all, include lightgallery.css in the &lt;head&gt; of the document. If
+you want include any lightGallery plugin such as thumbnails or zoom, you need to
+include respective css files as well.
+
+Alternatively you can include `lightgallery-bundle.css` which contains
+lightGallery and all plugin styles instead of separate stylesheets.
+
+If you like you can also import scss files instead of css files from the `scss`
+folder.
 
 ```HTML
 <head>
-    <link type="text/css" rel="stylesheet" href="css/lightGallery.css" />
+    <link type="text/css" rel="stylesheet" href="css/lightgallery.css" />
+
+    <!-- lightgallery plugins -->
+    <link type="text/css" rel="stylesheet" href="css/lg-zoom.css" />
+    <link type="text/css" rel="stylesheet" href="css/lg-thumbnail.css" />
+
+
+    <!-- OR -->
+
+    <link type="text/css" rel="stylesheet" href="css/lightgallery-bundle.css" />
 </head>
 ```
 

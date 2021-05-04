@@ -8,7 +8,7 @@
   {{ $secureCSS := $css | resources.Fingerprint "sha512" -}}
   <link rel="stylesheet" href="{{ $secureCSS.Permalink }}" integrity="{{ $secureCSS.Data.Integrity }}" crossorigin="anonymous">
   {{ end -}}
-  <link rel="stylesheet" href="{{ "/css/lightgallery.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "/css/lightgallery-bundle.css" | relURL }}">
   <link rel="stylesheet" href="{{ "/css/lg-transitions.css" | relURL }}">
 
 

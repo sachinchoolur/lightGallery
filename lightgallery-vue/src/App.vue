@@ -77,7 +77,7 @@ import lgZoom from '../../src/plugins/zoom/lg-zoom';
 export default class App extends Vue {}
 </script>
 <style lang="css" scoped>
-  @import '../../dist/css/lightgallery.css';
+  @import '../../dist/css/lightgallery-bundle.css';
 </style>
 <style>
 #app {

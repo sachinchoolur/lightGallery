@@ -40,7 +40,7 @@ export class AppModule {}
 -   import styles in styles.scss
 
 ```scss
-@import '~lightgallery/css/lightgallery';
+@import '~lightgallery/scss/lightgallery';
 ```
 
 -   template

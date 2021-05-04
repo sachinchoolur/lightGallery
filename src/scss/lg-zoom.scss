@@ -1,3 +1,5 @@
+@import 'lg-variables';
+@import 'lg-mixins';
 .lg-outer {
     // reset transition duration
     &.lg-css3.lg-zoom-dragging {

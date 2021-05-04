@@ -38,7 +38,9 @@ If you want to include lightGallery as part of software developer kit (SDK), web
 application builder or website builder, downloadable or installable products
 like Wordpress themes, HTML templates,or something that produces copies that
 each use lightGallery, you need to choose the Commercial OEM license. commercial
-OEM licenses are customized per customer. Contact sachi77n@gmail.com
+OEM licenses are customized per customer. Contact contact@lightgalleryjs.com
+
+<a href="../../license">More info</a>
 
 ## Open source license
 

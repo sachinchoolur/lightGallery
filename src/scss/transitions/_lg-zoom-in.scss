@@ -1,0 +1,29 @@
+.lg-css3 {
+    &.lg-zoom-in {
+        .lg-item {
+            opacity: 0;
+
+            &.lg-prev-slide {
+                @include scale3d(1.3, 1.3, 1.3);
+            }
+
+            &.lg-next-slide {
+                @include scale3d(1.3, 1.3, 1.3);
+            }
+
+            &.lg-current {
+                @include scale3d(1, 1, 1);
+                opacity: 1;
+            }
+
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
+            }
+        }
+    }
+}

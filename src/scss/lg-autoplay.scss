@@ -1,3 +1,5 @@
+@import 'lg-variables';
+@import 'lg-mixins';
 .lg-progress-bar {
     background-color: $lg-progress-bar-bg;
     height: $lg-progress-bar-height;

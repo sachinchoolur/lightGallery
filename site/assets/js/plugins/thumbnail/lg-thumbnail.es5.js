@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.0.0-beta.2 | April 29th 2021
+ * lightgallery | 2.0.0-beta.2 | May 4th 2021
  * http://sachinchoolur.github.io/lightGallery/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3

@@ -51,6 +51,9 @@ npm install lightgallery
     import lgThumbnail from 'lightgallery/plugins/lg-thumbnail';
     import lgZoom from 'lightgallery/plugins/lg-zoom';
 
+    // If you are using scss you can skip the css imports below and use scss instead
+    import lgZoom from 'lightgallery/scss/lightgallery.scss';
+
     @Options({
         components: {
             Lightgallery,
@@ -71,6 +74,8 @@ npm install lightgallery
 </script>
 <style lang="css" scoped>
     @import 'lightgallery/css/lightgallery.css';
+    @import 'lightgallery/css/lg-thumbnail.css';
+    @import 'lightgallery/css/lg-zoom.css';
 </style>
 ```
 

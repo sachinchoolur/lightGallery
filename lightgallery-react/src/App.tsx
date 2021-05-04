@@ -2,7 +2,7 @@ import React from 'react';
 
 import LightGallery from './Lightgallery'
 
-import 'lightgallery/css/lightgallery.css'
+import 'lightgallery/css/lightgallery-bundle.css'
 
 function App() {
     const onInit = (detail:any) => {
