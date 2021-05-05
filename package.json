@@ -65,7 +65,8 @@
     "copyScss": "copyfiles -f -u 1 src/scss/** dist/scss && copyfiles -u 2 src/scss/**/* dist/scss",
     "prepush": "npm run test:prod && npm run build",
     "commitmsg": "commitlint -E HUSKY_GIT_PARAMS",
-    "buildLibraries": "ts-node tools/build-libraries"
+    "buildLibraries": "ts-node tools/build-libraries",
+    "publishToNpm": "ts-node tools/npm-publish"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
