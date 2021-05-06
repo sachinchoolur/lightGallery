@@ -2,7 +2,10 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('Should render lightGallery component', () => {
   render(<App />);
-  expect(true).toBeTruthy();
+  expect(screen.getByRole('dialog')).toBeInTheDocument();
+  expect(screen.getByLabelText('Previous slide')).toBeInTheDocument();
+  expect(screen.getByLabelText('Next slide')).toBeInTheDocument();
+  expect(screen.getByLabelText('Close gallery')).toBeInTheDocument();
 });
