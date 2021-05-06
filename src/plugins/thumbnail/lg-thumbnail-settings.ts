@@ -60,9 +60,9 @@ export interface ThumbnailsSettings {
     enableThumbSwipe: boolean;
 
     /**
-     * By setting the swipeThreshold (in px) you can set how far the user must swipe for the next/prev slide.
+     * By setting the thumbnailSwipeThreshold (in px) you can set how far the user must swipe for the next/prev slide.
      */
-    swipeThreshold: number;
+    thumbnailSwipeThreshold: number;
 
     /**
      * You can automatically load thumbnails for YouTube videos from YouTube by setting loadYouTubeThumbnail true
@@ -92,7 +92,7 @@ export const thumbnailsSettings: ThumbnailsSettings = {
 
     enableThumbDrag: true,
     enableThumbSwipe: true,
-    swipeThreshold: 10,
+    thumbnailSwipeThreshold: 10,
 
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,

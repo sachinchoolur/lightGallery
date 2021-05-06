@@ -399,7 +399,7 @@ export default class Thumbnail {
         }
         if (
             Math.abs(thumbDragUtils.cords.endX - thumbDragUtils.cords.startX) <
-            this.settings.swipeThreshold
+            this.settings.thumbnailSwipeThreshold
         ) {
             this.thumbClickable = true;
         }
