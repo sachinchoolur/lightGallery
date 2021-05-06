@@ -38,7 +38,7 @@ additional functionalities such as thumbnails, vide support, zoom, etc. Here you
 can find all lightGallery core settings. If you think something is missing,
 please check the respective plugins settings as well.
 
-{{< options interface="LightGallerySettings" variable="lightGallerySettings">}}
+{{< options interface="LightGalleryCoreSettings" variable="lightGalleryCoreSettings">}}
 
 <div class="options-section">
 
