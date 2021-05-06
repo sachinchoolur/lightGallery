@@ -1,6 +1,6 @@
 import utils, { GalleryItem, ImageSize } from './lg-utils';
 import { $LG, lgQuery } from './lgQuery';
-import { LightGallerySettings, lightGallerySettings } from './lg-settings';
+import { LightGallerySettings, lightGalleryCoreSettings } from './lg-settings';
 import { Coords, SlideDirection, VideoInfo } from './types';
 import {
     AfterAppendSlideEventDetail,
@@ -89,7 +89,7 @@ export class LightGallery {
         this.LGel = $LG(element);
 
         // lightGallery settings
-        this.settings = { ...lightGallerySettings, ...options };
+        this.settings = { ...lightGalleryCoreSettings, ...options };
         if (
             this.settings.isMobile &&
             typeof this.settings.isMobile === 'function'

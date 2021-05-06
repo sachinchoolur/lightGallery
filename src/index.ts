@@ -3,15 +3,15 @@ import { LightGallery } from './lightgallery';
 
 function lightGallery(
     el: undefined,
-    options: Partial<LightGallerySettings>,
+    options?: Partial<LightGallerySettings>,
 ): undefined;
 function lightGallery(
     el: HTMLElement,
-    options: Partial<LightGallerySettings>,
+    options?: Partial<LightGallerySettings>,
 ): LightGallery;
 function lightGallery(
     el: HTMLElement | undefined,
-    options: Partial<LightGallerySettings>,
+    options?: Partial<LightGallerySettings>,
 ): LightGallery | undefined {
     if (!el) {
         return;

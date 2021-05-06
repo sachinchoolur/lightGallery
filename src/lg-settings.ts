@@ -12,24 +12,36 @@ import { ThumbnailsSettings } from './plugins/thumbnail/lg-thumbnail-settings';
 import { VideoSettings } from './plugins/video/lg-video-settings';
 import { ZoomSettings } from './plugins/zoom/lg-zoom-settings';
 type LightGalleryCoreMobileSettings = Exclude<
-    LightGallerySettings,
+    LightGalleryCoreSettings,
     'mobileSettings'
 >;
 
 // @todo use separate mobile settings for plugins
 export interface MobileSettings
     extends LightGalleryCoreMobileSettings,
-        ZoomSettings,
-        ThumbnailsSettings,
-        VideoSettings,
-        AutoplaySettings,
-        CommentSettings,
-        FullscreenSettings,
-        HashSettings,
-        PagerSettings,
-        RotateSettings,
-        ShareSettings {}
-export interface LightGallerySettings {
+        Partial<ZoomSettings>,
+        Partial<ThumbnailsSettings>,
+        Partial<VideoSettings>,
+        Partial<AutoplaySettings>,
+        Partial<CommentSettings>,
+        Partial<FullscreenSettings>,
+        Partial<HashSettings>,
+        Partial<PagerSettings>,
+        Partial<RotateSettings>,
+        Partial<ShareSettings> {}
+export interface LightGallerySettings
+    extends LightGalleryCoreSettings,
+        Partial<ZoomSettings>,
+        Partial<ThumbnailsSettings>,
+        Partial<VideoSettings>,
+        Partial<AutoplaySettings>,
+        Partial<CommentSettings>,
+        Partial<FullscreenSettings>,
+        Partial<HashSettings>,
+        Partial<PagerSettings>,
+        Partial<RotateSettings>,
+        Partial<ShareSettings> {}
+export interface LightGalleryCoreSettings {
     /**
      * Type of transition between images.
      */
@@ -477,7 +489,7 @@ export interface LightGallerySettings {
     plugins: (new (instance: LightGallery, $LG: LgQuery) => any)[];
 }
 
-export const lightGallerySettings: LightGallerySettings = {
+export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     mode: 'lg-slide',
     easing: 'ease',
     speed: 400,
