@@ -83,7 +83,7 @@
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "testRegex": "(/__tests__/.*|\\.(test))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
@@ -114,9 +114,13 @@
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
     "@commitlint/config-conventional": "^7.1.2",
+    "@testing-library/dom": "^7.30.4",
+    "@testing-library/jest-dom": "^5.12.0",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.11.0",
     "@types/react": "^17.0.3",
+    "@types/testing-library__dom": "^7.5.0",
+    "@types/testing-library__jest-dom": "^5.9.5",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
     "clean-css-cli": "^4.3.0",
@@ -131,8 +135,8 @@
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
     "husky": "^1.0.1",
-    "jest": "^23.6.0",
-    "jest-config": "^23.6.0",
+    "jest": "^25.4.0",
+    "jest-config": "^25.4.0",
     "lint-staged": "^8.0.0",
     "lodash.camelcase": "^4.3.0",
     "node-sass": "^4.14.1",
