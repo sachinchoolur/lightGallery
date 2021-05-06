@@ -14,6 +14,10 @@ weight: 8
 toc: true
 ---
 
+<div class="alert alert-danger" role="alert">
+    lightGallery Veu.js component works only with Vue.js version 3 and above
+</div>
+
 ## Installation
 
 Follow the below steps to use lightGallery vue component in your application.
