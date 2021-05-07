@@ -18,6 +18,7 @@ import {
     PosterClickDetail,
     SlideItemLoadDetail,
 } from 'lightgallery/lg-events';
+import { LightGallery } from 'lightgallery/lightgallery';
 
 const LgMethods = {
     onAfterAppendSlide: 'lgAfterAppendSlide',
@@ -47,6 +48,7 @@ const LgMethods = {
     styles: [],
 })
 export class LightgalleryComponent implements OnInit {
+    private LG!: LightGallery;
     constructor(private _elementRef: ElementRef) {
         this._elementRef = _elementRef;
     }
@@ -73,7 +75,14 @@ export class LightgalleryComponent implements OnInit {
 
     ngOnInit(): void {
         this.registerEvents();
-        lightGallery(this._elementRef.nativeElement, this.settings);
+        this.LG = lightGallery(
+            this._elementRef.nativeElement as HTMLElement,
+            this.settings,
+        );
+    }
+
+    ngOnDestroy(): void {
+        this.LG.destroy();
     }
 
     private registerEvents(): void {
