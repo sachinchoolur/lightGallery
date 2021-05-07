@@ -18,7 +18,7 @@ Demo
 
 ## Version [2.0](https://github.com/sachinchoolur/lightGallery/releases/tag/2.0.0-beta.0) update
 
-Version 2.0.0 release is scheduled for May first week. But you can keep using the current version and upgrade whenever you want. 
+Version 2.0.0 release is scheduled for May third week. But you can keep using the current version and upgrade whenever you want. 
 The upgrade process is pretty straightforward unless you have a massive modifications made with version 1.x
 
 > [Subscribe](https://www.producthunt.com/upcoming/lightgallery) to get notified on the stable release. - [ProductHunt](https://www.producthunt.com/upcoming/lightgallery)
@@ -68,7 +68,7 @@ lightGallery(document.getElementById(‘’lightgallery), {
      plugins: [lgZoom, lgAutoplay, lgComment, lgFullscreen , lgHash, lgPager, lgRotate, lgShare, lgThumbnail, lgVideo] 
 });
 ```
-- Removed in-built support for Dailymotion VK. We Will be adding separate plugins for DailyMotion and Vimeo support 
+- Removed in-built support for Dailymotion VK. We Will be adding separate plugins for DailyMotion and VK support 
 - Added Wistia support 
 - HTML videos - Videos can be passed via data-video attribute instead of passing it via hidden div 
 ```HTML
