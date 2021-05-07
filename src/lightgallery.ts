@@ -495,15 +495,19 @@ export class LightGallery {
             if (this.settings.selector === 'this') {
                 this.items.push(this.el);
             } else if (this.settings.selector) {
-                if (this.settings.selectWithin) {
-                    const selectWithin = $LG(this.settings.selectWithin);
-                    this.items = selectWithin
-                        .find(this.settings.selector)
-                        .get();
+                if (typeof this.settings.selector === 'string') {
+                    if (this.settings.selectWithin) {
+                        const selectWithin = $LG(this.settings.selectWithin);
+                        this.items = selectWithin
+                            .find(this.settings.selector)
+                            .get();
+                    } else {
+                        this.items = this.el.querySelectorAll(
+                            this.settings.selector,
+                        );
+                    }
                 } else {
-                    this.items = this.el.querySelectorAll(
-                        this.settings.selector,
-                    );
+                    this.items = this.settings.selector;
                 }
             } else {
                 this.items = this.el.children;
