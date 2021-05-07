@@ -294,6 +294,9 @@ const utils = {
             return;
         }
         const LGel = $LG(el).find('img').first();
+        if (!LGel.get()) {
+            return;
+        }
 
         const containerRect = container.get().getBoundingClientRect();
 

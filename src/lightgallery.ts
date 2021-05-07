@@ -889,6 +889,7 @@ export class LightGallery {
             } else {
                 _dummyImgSrc = $currentItem.attr(this.settings.exThumbImage);
             }
+            if (!_dummyImgSrc) return '';
             const imgStyle = this.getDummyImgStyles(this.currentImageSize);
             const dummyImgContent = `<img ${alt} style="${imgStyle}" class="lg-dummy-img" src="${_dummyImgSrc}" />`;
 
