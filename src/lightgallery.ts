@@ -72,11 +72,14 @@ export class LightGallery {
     private currentImageSize?: ImageSize;
 
     private isDummyImageRemoved = false;
+    private modulesLoaded = false;
 
     private mediaContainerPosition = {
         top: 0,
         bottom: 0,
     };
+
+    private timeToLoadModules = 0;
 
     constructor(
         element: HTMLElement,
@@ -148,7 +151,7 @@ export class LightGallery {
         const fromHash = this.buildFromHash();
 
         if (!fromHash) {
-            this.buildStructure();
+            this.timeToLoadModules = this.buildStructure();
         }
 
         this.LGel.trigger(lGEvents.init, {
@@ -199,11 +202,14 @@ export class LightGallery {
      */
     buildModules(): number {
         let numberOfModules = 0;
-        this.settings.plugins.forEach((plugin) => {
+        this.settings.plugins.forEach((plugin, index) => {
             numberOfModules++;
             ((num) => {
                 setTimeout(() => {
                     this.plugins.push(new plugin(this, $LG));
+                    if (index === this.settings.plugins.length - 1) {
+                        this.modulesLoaded = true;
+                    }
                 }, 10 * num);
             })(numberOfModules);
         });
@@ -554,7 +560,12 @@ export class LightGallery {
     openGallery(index = this.settings.index, element?: HTMLElement): void {
         // prevent accidental double execution
         if (this.lgOpened) return;
-
+        if (!this.modulesLoaded) {
+            setTimeout(() => {
+                this.openGallery(index, element);
+            }, this.timeToLoadModules);
+            return;
+        }
         this.lgOpened = true;
         this.outer.get().focus();
         this.outer.removeClass('lg-hide-items');
