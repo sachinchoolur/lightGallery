@@ -52,7 +52,7 @@ export default class Share {
 
     setLgShareMarkup(): void {
         this.core.$toolbar.append(
-            `<button type="button aria-label="Share" aria-haspopup="true" aria-expanded="false" class="lg-share lg-icon">
+            `<button type="button" aria-label="Share" aria-haspopup="true" aria-expanded="false" class="lg-share lg-icon">
                 <ul class="lg-dropdown" style="position: absolute;"></ul></button>`,
         );
 

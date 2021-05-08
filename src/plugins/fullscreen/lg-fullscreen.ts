@@ -37,7 +37,7 @@ export default class FullScreen {
                 return;
             } else {
                 fullScreen =
-                    '<button type="button aria-label="Toggle fullscreen" class="lg-fullscreen lg-icon"></button>';
+                    '<button type="button" aria-label="Toggle fullscreen" class="lg-fullscreen lg-icon"></button>';
                 this.core.$toolbar.append(fullScreen);
                 this.fullScreen();
             }

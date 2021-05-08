@@ -133,7 +133,7 @@ export default class Autoplay {
     // Manage autoplay via play/stop buttons
     private controls() {
         const _html =
-            '<button type="button" class="lg-autoplay-button lg-icon"></button>';
+            '<button aria-label="Toggle autoplay" type="button" class="lg-autoplay-button lg-icon"></button>';
 
         // Append autoplay controls
         this.core.outer

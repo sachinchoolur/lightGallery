@@ -57,15 +57,15 @@ export default class Zoom {
         let zoomIcons = this.settings.showZoomInOutIcons
             ? `<button id="${this.core.getIdName(
                   'lg-zoom-in',
-              )}" type="button" class="lg-zoom-in lg-icon"></button><button id="${this.core.getIdName(
+              )}" type="button" aria-label="Zoom in" class="lg-zoom-in lg-icon"></button><button id="${this.core.getIdName(
                   'lg-zoom-out',
-              )}" type="button" class="lg-zoom-out lg-icon"></button>`
+              )}" type="button" aria-label="Zoom out" class="lg-zoom-out lg-icon"></button>`
             : '';
 
         if (this.settings.actualSize) {
             zoomIcons += `<button id="${this.core.getIdName(
                 'lg-actual-size',
-            )}" type="button" class="${
+            )}" type="button" aria-label="View actual size" class="${
                 this.settings.actualSizeIcons.zoomIn
             } lg-icon"></button>`;
         }
