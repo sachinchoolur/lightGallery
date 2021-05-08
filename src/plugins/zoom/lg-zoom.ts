@@ -358,7 +358,10 @@ export default class Zoom {
     setActualSize(index: number, event?: ZoomTouchEvent): void {
         const currentItem = this.core.galleryItems[this.core.index];
         // Allow zoom only on image
-        if (!currentItem.src) {
+        if (
+            !currentItem.src ||
+            this.core.outer.hasClass('lg-first-slide-loading')
+        ) {
             return;
         }
         const scale = this.getCurrentImageActualSizeScale();

@@ -85,10 +85,11 @@
 }
 .lg-outer {
     &[data-lg-slide-type='video'],
-    &[data-lg-slide-type='iframe'] {
+    &[data-lg-slide-type='iframe'],
+    &.lg-first-slide-loading {
         .lg-zoom-in,
         .lg-actual-size,
-        .lg-zoom-ou {
+        .lg-zoom-out {
             opacity: $lg-toolbar-icon-disabled-opacity;
             pointer-events: none;
         }

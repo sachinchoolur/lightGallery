@@ -883,6 +883,7 @@ export class LightGallery {
             const dummyImgContent = `<img ${alt} style="${imgStyle}" class="lg-dummy-img" src="${_dummyImgSrc}" />`;
 
             $currentSlide.addClass('lg-first-slide');
+            this.outer.addClass('lg-first-slide-loading');
 
             return dummyImgContent;
         }
@@ -1258,6 +1259,7 @@ export class LightGallery {
         setTimeout(() => {
             $currentSlide.find('.lg-dummy-img').remove();
             $currentSlide.removeClass('lg-first-slide');
+            this.outer.removeClass('lg-first-slide-loading');
             this.isDummyImageRemoved = true;
             this.preload(index);
         }, speed + 300);
