@@ -15,6 +15,9 @@
         display: block;
     }
 }
+.lg-on {
+    scroll-behavior: unset;
+}
 
 // for idle state
 .lg-toolbar,
@@ -139,6 +142,7 @@
         margin-right: auto;
         max-width: 100%;
         max-height: 100%;
+        outline: none;
     }
 
     .lg-inner {

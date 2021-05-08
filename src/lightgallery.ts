@@ -663,7 +663,9 @@ export class LightGallery {
             this.LGel.trigger(lGEvents.afterOpen);
         });
 
-        $LG(document.body).addClass('lg-on');
+        if (document.body === this.settings.container) {
+            $LG('html').addClass('lg-on');
+        }
     }
 
     /**
@@ -2191,7 +2193,7 @@ export class LightGallery {
 
         clearTimeout(this.hideBarTimeout);
         this.hideBarTimeout = false;
-        $LG(document.body).removeClass('lg-on lg-from-hash');
+        $LG('html').removeClass('lg-on');
 
         this.outer.removeClass('lg-visible lg-components-open');
 
