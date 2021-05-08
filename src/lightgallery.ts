@@ -122,7 +122,6 @@ export class LightGallery {
             this.settings.swipeToClose = false;
         }
 
-        // Need to disable zoomFromOrigin if gallery is opened from url (Hash plugin)
         // And reset it on close to get the correct value next time
         this.zoomFromOrigin = this.settings.zoomFromOrigin;
 
@@ -148,11 +147,8 @@ export class LightGallery {
 
     init(): void {
         this.addSlideVideoInfo(this.galleryItems);
-        const fromHash = this.buildFromHash();
 
-        if (!fromHash) {
-            this.timeToLoadModules = this.buildStructure();
-        }
+        this.timeToLoadModules = this.buildStructure();
 
         this.LGel.trigger(lGEvents.init, {
             instance: this,
@@ -698,26 +694,6 @@ export class LightGallery {
 
     private setMediaContainerPosition(top = 0, bottom = 0) {
         this.$inner.css('top', top + 'px').css('bottom', bottom + 'px');
-    }
-
-    // Build Gallery if gallery id exist in the URL
-    buildFromHash(): boolean | undefined {
-        // if dynamic option is enabled execute immediately
-        const _hash = window.location.hash;
-        if (_hash.indexOf('lg=' + this.settings.galleryId) > 0) {
-            // This class is used to remove the initial animation if galleryId present in the URL
-            $LG(document.body).addClass('lg-from-hash');
-            this.zoomFromOrigin = false;
-
-            const index = this.getIndexFromUrl(_hash);
-
-            const openGalleryAfter = this.buildStructure();
-
-            setTimeout(() => {
-                this.openGallery(index);
-            }, openGalleryAfter);
-            return true;
-        }
     }
 
     hideBars(): void {
@@ -2047,30 +2023,6 @@ export class LightGallery {
                 $next.attr('disabled', 'disabled').addClass('disabled');
             }
         }
-    }
-
-    /**
-     * Get index of the slide from custom slideName. Has to be a public method. Used in hash plugin
-     * @param {String} hash
-     * @returns {Number} Index of the slide.
-     */
-    getIndexFromUrl(hash = window.location.hash): number {
-        const slideName = hash.split('&slide=')[1];
-        let _idx = 0;
-
-        if (this.settings.customSlideName) {
-            for (let index = 0; index < this.galleryItems.length; index++) {
-                const dynamicEl = this.galleryItems[index];
-                if (dynamicEl.slideName === slideName) {
-                    _idx = index;
-                    break;
-                }
-            }
-        } else {
-            _idx = parseInt(slideName, 10);
-        }
-
-        return isNaN(_idx) ? 0 : _idx;
     }
 
     setTranslate(

@@ -446,17 +446,6 @@ export interface LightGalleryCoreSettings {
     extraProps: string[];
 
     /**
-     * Unique id for each gallery.
-     * @description It is mandatory when you use hash plugin for multiple galleries on the same page.
-     */
-    galleryId: string;
-
-    /**
-     * Custom slide name to use in the url when hash plugin is enabled
-     */
-    customSlideName: boolean;
-
-    /**
      * Option to fetch different thumbnail image other than first image
      * @description If you want to use external image for thumbnail,
      * add the path of that image inside "data-" attribute
@@ -545,8 +534,6 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     dynamic: false,
     dynamicEl: [],
     extraProps: [],
-    galleryId: '1',
-    customSlideName: false,
     exThumbImage: '',
     isMobile: undefined,
     mobileSettings: {
