@@ -540,6 +540,6 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
         controls: false,
         showCloseIcon: false,
         download: false,
-    },
+    } as MobileSettings,
     plugins: [],
 };
