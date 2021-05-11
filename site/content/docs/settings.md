@@ -70,6 +70,10 @@ external videos, and more.
 Video plugin is required to display videos in lightGallery. Video plugin
 supports, YouTube, Vimeo, Wistia,and HTML5 videos.
 
+<div class="alert alert-info" role="alert">
+    <b>Dependency</b> - You need to include <a href="https://github.com/vimeo/player.js/">player.js</a> for Vimeo videos and <a href="https://wistia.com/support/developers/player-api">Wistia player API</a> for Wistia videos on your docment to enable video player feature like automatic play pause, automatically navigate to next slide when video ended.
+</div>
+
 {{< options pluginName="Video" interface="VideoSettings" variable="videoSettings">}}
 
 </div>

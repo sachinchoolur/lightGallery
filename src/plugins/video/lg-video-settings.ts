@@ -8,6 +8,7 @@ export interface VideoSettings {
 
     /**
      * Change YouTube player parameters.
+     * You can find the list of YouTube player parameters from the following link
      * <a href="https://developers.google.com/youtube/player_parameters">YouTube player parameters</a>
      * @example
      * lightGallery(document.getElementById('lightGallery'), {
@@ -22,6 +23,7 @@ export interface VideoSettings {
 
     /**
      * Change Vimeo player parameters.
+     * You can find the list of vimeo player parameters from the following link
      * <a href="https://developer.vimeo.com/player/embedding#universal-parameters">Vimeo player parameters</a>
      * @example
      * lightGallery(document.getElementById('lightGallery'), {
@@ -35,8 +37,9 @@ export interface VideoSettings {
     vimeoPlayerParams: any;
 
     /**
-     * Change Vimeo player parameters.
-     * @link https://wistia.com/support/developers/embed-options#using-embed-options
+     * Change Wistia player parameters.
+     * You can find the list of Wistia player parameters from the following link
+     * <a href="https://wistia.com/support/developers/embed-options#using-embed-options">Vimeo player parameters</a>
      */
     wistiaPlayerParams: any;
 
@@ -54,6 +57,9 @@ export interface VideoSettings {
 
     /**
      * Enbale videojs custom video player
+     * <div class="alert alert-info" role="alert">
+     *     <b>Dependency</b> - You need to include <a href="https://videojs.com/">videoJs</div> on your document to enable videojs player
+     * </div>
      */
     videojs: boolean;
 
