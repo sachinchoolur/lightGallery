@@ -25,7 +25,7 @@ images: []
         <div class="col-lg-4 features-list-grid-item">
             <img class="features-list-grid-img" src="images/vector/modern.svg">
             <h3 class="features-list-grid-title">Modern</h3>
-            <p class="features-list-grid-desc">Built in 2021 with most modern technologies available to achieve the best performance and quality. lightGallery supports all modern browsers including IE 10 and above.</p>
+            <p class="features-list-grid-desc">lightGallery is built with most modern technologies available to achieve the best performance and quality. It supports all modern browsers including IE 10 and above.</p>
         </div>
         <div class="col-lg-4 features-list-grid-item">
             <img class="features-list-grid-img" src="images/vector/modular.svg">
