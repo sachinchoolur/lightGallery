@@ -191,9 +191,7 @@ if ($lgInlineContainer) {
             },
         ],
     });
-    setTimeout(() => {
-        inlineGallery && inlineGallery.openGallery();
-    }, 130);
+    inlineGallery.openGallery();
 }
 
 window.lightGallery(
