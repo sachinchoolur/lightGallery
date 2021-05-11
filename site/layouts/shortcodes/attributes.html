@@ -28,12 +28,12 @@
                     {{ range .comment.tags -}}
                         {{ if eq .tag "data-attr"}}
                             <p>
-                                {{.text | safeHTML}}
+                                <span class="anchor-id" id="{{.text}}">{{.text | safeHTML}} <a href="#{{.text}}" class="anchor" aria-hidden="true">#</a><span></span>
                             </p>
                         {{ end}}
                     {{ end -}}
                 {{ else -}}
-                    {{$element.name}}
+                    <span class="anchor-id" id="{{$element.name}}">{{$element.name}} <a href="#{{$element.name}}" class="anchor" aria-hidden="true">#</a><span></span>
                 {{ end}}
                 
             </td>

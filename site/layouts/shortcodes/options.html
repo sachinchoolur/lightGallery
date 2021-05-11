@@ -32,7 +32,7 @@
 
     {{range $index, $element := $interface}}
     <tr {{if hasPrefix $element.name "__" }} style='display: none;' {{end}} class="options-table-tr-head">
-        <td>{{$element.name}}</td>
+        <td><span class="anchor-id" id="{{$element.name}}">{{$element.name}} <a href="#{{$element.name}}" class="anchor" aria-hidden="true">#</a><span></span></td>
         <td>{{$element.type.name}}</td>
         {{ if $variableName }}
         {{$defaultValue := (index $variable $index).defaultValue}}

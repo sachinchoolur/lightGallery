@@ -1,11 +1,21 @@
 .docs-content {
     h2[id]::before,
     h3[id]::before,
-    h4[id]::before {
+    h4[id]::before,
+    .anchor-id::before {
         display: block;
         height: 6rem;
         margin-top: -6rem;
         content: '';
+    }
+    .anchor-id {
+        white-space: nowrap;
+        &:hover {
+            a {
+                visibility: visible;
+                text-decoration: none;
+            }
+        }
     }
     .alert {
         margin-bottom: 1rem;

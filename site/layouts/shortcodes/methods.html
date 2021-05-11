@@ -40,7 +40,7 @@
 
     {{ range .signatures -}}
     <div class="docs-common-section">
-        <p class="docs-common-desc"><b>Name: </b>{{.name}}</p>
+        <p class="docs-common-desc"><span class="anchor-id" id="{{.name}}"><b>Name: </b>{{.name}} <a href="#{{.name}}" class="anchor" aria-hidden="true">#</a><span></span></p>
 
         <p class="docs-common-desc"><b>Description: </b> {{.comment.shortText}}</p>
         <p class="docs-common-desc">{{.comment.text}}</p>

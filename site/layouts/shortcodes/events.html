@@ -11,7 +11,7 @@
     {{ if eq .name $interfaceName}}
     {{ range .comment.tags -}}
     {{ if eq .tag "name"}}
-    <p class="docs-common-desc"><b>Name: </b>{{.text}}</p>
+    <p class="docs-common-desc"><span class="anchor-id" id="{{.text}}"><b>Name: </b>{{.text}} <a href="#{{.text}}" class="anchor" aria-hidden="true">#</a><span></span></p>
     {{ end}}
     {{ end -}}
     <p class="docs-common-desc"><b>Description: </b>{{.comment.shortText}}</p>
