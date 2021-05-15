@@ -85,7 +85,7 @@ export class LightGallery {
 
     private timeToLoadModules = 0;
 
-    constructor(element: HTMLElement, options: LightGallerySettings) {
+    constructor(element: HTMLElement, options?: LightGallerySettings) {
         if (!element) {
             return this;
         }
@@ -108,7 +108,7 @@ export class LightGallery {
         ) {
             const mobileSettings = {
                 ...this.settings.mobileSettings,
-                ...options.mobileSettings,
+                ...this.settings.mobileSettings,
             };
             this.settings = { ...this.settings, ...mobileSettings };
         }

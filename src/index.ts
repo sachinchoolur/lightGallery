@@ -3,7 +3,7 @@ import { LightGallery } from './lightgallery';
 
 function lightGallery(
     el: HTMLElement,
-    options: LightGallerySettings,
+    options?: LightGallerySettings,
 ): LightGallery {
     return new LightGallery(el, options);
 }
