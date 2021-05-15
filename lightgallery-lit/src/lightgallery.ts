@@ -19,10 +19,10 @@ export class LightGallery extends LitElement {
             childNodes,
             (node) => node.nodeType == Node.ELEMENT_NODE,
         );
-        const vueSettings = {
+        const litSettings = {
             selector: s as any,
         };
-        const lgSettings = { ...this.settings, ...vueSettings };
+        const lgSettings = { ...this.settings, ...litSettings };
         lightGallery((this as unknown) as HTMLElement, lgSettings);
     }
 
@@ -33,7 +33,7 @@ export class LightGallery extends LitElement {
             return convertedVal;
         },
     })
-    settings: Partial<LightGallerySettings> = {};
+    settings: LightGallerySettings = {} as LightGallerySettings;
 
     render() {
         return html`

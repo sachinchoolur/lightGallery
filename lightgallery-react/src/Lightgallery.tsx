@@ -45,7 +45,7 @@ interface LgEvents {
 
 export interface LightGalleryProps
     extends LgEvents,
-        Partial<LightGallerySettings> {
+        LightGallerySettings {
     children?: any;
 }
 

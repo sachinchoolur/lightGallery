@@ -1,6 +1,10 @@
 import utils, { GalleryItem, ImageSize } from './lg-utils';
 import { $LG, lgQuery } from './lgQuery';
-import { LightGallerySettings, lightGalleryCoreSettings } from './lg-settings';
+import {
+    LightGallerySettings,
+    lightGalleryCoreSettings,
+    LightGalleryAllSettings,
+} from './lg-settings';
 import { Coords, SlideDirection, VideoInfo } from './types';
 import {
     AfterAppendSlideEventDetail,
@@ -19,14 +23,14 @@ declare let picturefill: any;
 let lgId = 0;
 
 export class LightGallery {
-    public settings: LightGallerySettings;
-    public galleryItems: GalleryItem[];
+    public settings!: LightGalleryAllSettings;
+    public galleryItems!: GalleryItem[];
 
     // Current gallery item
-    public lgId: number;
+    public lgId!: number;
 
-    public el: HTMLElement;
-    public LGel: lgQuery;
+    public el!: HTMLElement;
+    public LGel!: lgQuery;
     public lgOpened = false;
 
     public index = 0;
@@ -81,10 +85,10 @@ export class LightGallery {
 
     private timeToLoadModules = 0;
 
-    constructor(
-        element: HTMLElement,
-        options: Partial<LightGallerySettings> = {},
-    ) {
+    constructor(element: HTMLElement, options: LightGallerySettings) {
+        if (!element) {
+            return this;
+        }
         lgId++;
         this.lgId = lgId;
 
@@ -92,7 +96,10 @@ export class LightGallery {
         this.LGel = $LG(element);
 
         // lightGallery settings
-        this.settings = { ...lightGalleryCoreSettings, ...options };
+        this.settings = {
+            ...lightGalleryCoreSettings,
+            ...options,
+        } as LightGalleryAllSettings;
         if (
             this.settings.isMobile &&
             typeof this.settings.isMobile === 'function'

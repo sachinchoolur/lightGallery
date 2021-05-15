@@ -11,6 +11,7 @@ import { ShareSettings } from './plugins/share/lg-share-settings';
 import { ThumbnailsSettings } from './plugins/thumbnail/lg-thumbnail-settings';
 import { VideoSettings } from './plugins/video/lg-video-settings';
 import { ZoomSettings } from './plugins/zoom/lg-zoom-settings';
+
 type LightGalleryCoreMobileSettings = Exclude<
     LightGalleryCoreSettings,
     'mobileSettings'
@@ -29,18 +30,21 @@ export interface MobileSettings
         Partial<PagerSettings>,
         Partial<RotateSettings>,
         Partial<ShareSettings> {}
-export interface LightGallerySettings
-    extends LightGalleryCoreSettings,
-        Partial<ZoomSettings>,
-        Partial<ThumbnailsSettings>,
-        Partial<VideoSettings>,
-        Partial<AutoplaySettings>,
-        Partial<CommentSettings>,
-        Partial<FullscreenSettings>,
-        Partial<HashSettings>,
-        Partial<PagerSettings>,
-        Partial<RotateSettings>,
-        Partial<ShareSettings> {}
+
+export type LightGalleryAllSettings = LightGalleryCoreSettings &
+    ZoomSettings &
+    ThumbnailsSettings &
+    VideoSettings &
+    AutoplaySettings &
+    CommentSettings &
+    FullscreenSettings &
+    HashSettings &
+    PagerSettings &
+    RotateSettings &
+    ShareSettings;
+
+export type LightGallerySettings = Partial<LightGalleryAllSettings>;
+
 export interface LightGalleryCoreSettings {
     /**
      * Type of transition between images.

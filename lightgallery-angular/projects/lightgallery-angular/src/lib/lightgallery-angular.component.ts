@@ -18,6 +18,7 @@ import {
     PosterClickDetail,
     SlideItemLoadDetail,
 } from 'lightgallery/lg-events';
+import { LightGallerySettings } from 'lightgallery/lg-settings';
 import { LightGallery } from 'lightgallery/lightgallery';
 
 const LgMethods = {
@@ -53,7 +54,7 @@ export class LightgalleryComponent implements OnInit {
         this._elementRef = _elementRef;
     }
 
-    @Input() settings!: any;
+    @Input() settings!: LightGallerySettings;
     @Input() onAfterAppendSlide?: (detail: AfterSlideDetail) => void;
     @Input() onInit?: (detail: InitDetail) => void;
     @Input() onHasVideo?: (detail: InitDetail) => void;
