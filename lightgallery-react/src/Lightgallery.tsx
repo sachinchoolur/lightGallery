@@ -94,24 +94,8 @@ const LG: React.FC<LightGalleryProps> = ({
     ...restProps
 }: LightGalleryProps) => {
     const $lg = React.useRef<HTMLDivElement>(null);
-    React.useEffect(() => {
-        registerEvents();
-        const lightGallery = LightGallery(
-            ($lg.current as unknown) as HTMLElement,
-            restProps,
-        );
-        return function cleanup() {
-            lightGallery.destroy();
-        };
-    }, []);
 
-    /* eslint-disable */
-    const getMethodName = (word: string) => {
-        return `on${word.charAt(0).toUpperCase() + word.slice(1)}`;
-    };
-    /* eslint-enable */
-
-    const registerEvents = () => {
+    const registerEvents = React.useCallback(() => {
         if (onAfterAppendSlide && $lg && $lg.current) {
             $lg.current.addEventListener(LgMethods.onAfterAppendSlide, ((event: CustomEvent) => {
                 onAfterAppendSlide(event.detail);
@@ -202,7 +186,37 @@ const LG: React.FC<LightGalleryProps> = ({
                 onAfterClose(event.detail);
             }) as EventListener);
         }
-    };
+    }, [
+        onAfterAppendSlide, 
+        onAfterAppendSubHtml, 
+        onAfterClose, 
+        onAfterOpen, 
+        onAfterSlide, 
+        onBeforeClose, 
+        onBeforeNextSlide, 
+        onBeforeOpen, 
+        onBeforePrevSlide, 
+        onBeforeSlide, 
+        onContainerResize, 
+        onDragEnd, 
+        onDragMove, 
+        onDragStart, 
+        onHasVideo, 
+        onInit, 
+        onPosterClick, 
+        onSlideItemLoad
+    ]);
+
+    React.useEffect(() => {
+        registerEvents();
+        const lightGallery = LightGallery(
+            ($lg.current as unknown) as HTMLElement,
+            restProps,
+        );
+        return function cleanup() {
+            lightGallery.destroy();
+        };
+    }, [registerEvents, restProps]);
 
     return <div ref={$lg}>{children}</div>;
 };
