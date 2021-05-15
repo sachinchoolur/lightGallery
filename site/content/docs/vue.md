@@ -52,8 +52,8 @@ npm install lightgallery
 <script lang="ts">
     import { Options, Vue } from 'vue-class-component';
     import Lightgallery from 'lightgallery/vue';
-    import lgThumbnail from 'lightgallery/plugins/lg-thumbnail';
-    import lgZoom from 'lightgallery/plugins/lg-zoom';
+    import lgThumbnail from 'lightgallery/plugins/thumbnail';
+    import lgZoom from 'lightgallery/plugins/zoom';
 
     // If you are using scss you can skip the css imports below and use scss instead
     import lgZoom from 'lightgallery/scss/lightgallery.scss';

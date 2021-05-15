@@ -117,8 +117,8 @@ lightGallery supports AMD, CommonJS and ES6 modules too.
 import lightGallery from 'lightgallery';
 
 // Plugins
-import lgThumbnail from 'lightgallery/plugins/lg-thumbnail'
-import lgZoom from 'lightgallery/plugins/lg-zoom'
+import lgThumbnail from 'lightgallery/plugins/thumbnail'
+import lgZoom from 'lightgallery/plugins/zoom'
 
 ```
 
@@ -148,11 +148,13 @@ Finally, you need to initiate the gallery by adding the following code.
 <script type="text/javascript">
     lightGallery(document.getElementById('lightgallery'), {
         plugins: [lgZoom, lgThumbnail,]
-        speed: 500
+        speed: 500,
         ... other settings
     });
 </script>
 ```
+
+[CodePen Demo](https://codepen.io/sachinchoolur/pen/abJvKaZ)
 
 #### Plugins
 

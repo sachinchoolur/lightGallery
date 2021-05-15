@@ -129,8 +129,8 @@ lightGallery supports AMD, CommonJS and ES6 modules too.
 import lightGallery from 'lightgallery';
 
 // Plugins
-import lgThumbnail from 'lightgallery/plugins/lg-thumbnail'
-import lgZoom from 'lightgallery/plugins/lg-zoom'
+import lgThumbnail from 'lightgallery/plugins/thumbnail'
+import lgZoom from 'lightgallery/plugins/zoom'
 
 ```
 
@@ -160,11 +160,13 @@ Finally, you need to initiate the gallery by adding the following code.
 <script type="text/javascript">
     lightGallery(document.getElementById('lightgallery'), {
         plugins: [lgZoom, lgThumbnail,]
-        speed: 500
+        speed: 500,
         ... other settings
     });
 </script>
 ```
+
+[CodePen Demo](https://codepen.io/sachinchoolur/pen/abJvKaZ)
 
 #### Plugins
 
@@ -188,7 +190,7 @@ lightGallery supports all major browsers including IE 10 and above.
 If you want to use lightGallery to develop commercial sites, themes, projects,
 and applications, the Commercial license is the appropriate license. With this
 option, your source code is kept proprietary.
-[Read more about the commercial license](http://sachinchoolur.github.io/lightGallery/docs/license.html)
+[Read more about the commercial license](../../license)
 
 #### Open source license
 
