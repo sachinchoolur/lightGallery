@@ -30,7 +30,7 @@ toc: true
 
 ```js
 const lgContainer = document.getElementById('inline-gallery-container');
-lightGallery(lgContainer, {
+const inlineGallery = lightGallery(lgContainer, {
     container: lgContainer,
     dynamic: true,
     // Turn off hash plugin in case if you are using it
@@ -67,4 +67,7 @@ lightGallery(lgContainer, {
         ...
     ],
 });
+
+// Since we are using dynamic mode, we need to programmatically open lightGallery
+inlineGallery.openGallery();
 ```
