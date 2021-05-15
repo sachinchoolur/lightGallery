@@ -149,6 +149,8 @@ export class LightGallery {
 
         this.init();
 
+        this.validateLicense();
+
         return this;
     }
 
@@ -218,6 +220,16 @@ export class LightGallery {
         });
 
         return numberOfModules * 10;
+    }
+
+    validateLicense(): void {
+        if (!this.settings.licenseKey) {
+            console.error('Please provide a valid license key');
+        } else if (this.settings.licenseKey === '0000-0000-000-0000') {
+            console.warn(
+                `lightGallery: ${this.settings.licenseKey} license key is not valid for production use`,
+            );
+        }
     }
 
     getSlideItem(index: number): lgQuery {

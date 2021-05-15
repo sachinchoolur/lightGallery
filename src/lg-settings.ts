@@ -93,6 +93,16 @@ export interface LightGalleryCoreSettings {
     speed: number;
 
     /**
+     * If you are using lightGallery for commercial projects, you need to purchase a commercial license
+     * to get the license key. For projects that are compatible with GPLv3 license,
+     * please contact us for getting a license key at <a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a>.
+     * If you want to test lightGallery before purchasing a commercial license, you can
+     * use `0000-0000-000-0000` as a temporary license key
+     */
+
+    licenseKey: string;
+
+    /**
      * Height of the gallery.
      * example '100%' , '300px'
      */
@@ -487,6 +497,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     mode: 'lg-slide',
     easing: 'ease',
     speed: 400,
+    licenseKey: '0000-0000-000-0000',
     height: '100%',
     width: '100%',
     addClass: '',
