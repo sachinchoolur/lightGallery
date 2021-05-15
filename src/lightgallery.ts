@@ -207,6 +207,10 @@ export class LightGallery {
      */
     buildModules(): number {
         let numberOfModules = 0;
+        if (!this.settings.plugins.length) {
+            this.modulesLoaded = true;
+            return 0;
+        }
         this.settings.plugins.forEach((plugin, index) => {
             numberOfModules++;
             ((num) => {
