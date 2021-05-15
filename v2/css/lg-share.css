@@ -73,8 +73,7 @@
   margin-bottom: 0px;
 }
 
-.lg-outer .lg-dropdown > li:hover a,
-.lg-outer .lg-dropdown > li:hover .lg-icon {
+.lg-outer .lg-dropdown > li:hover a {
   color: #333;
 }
 

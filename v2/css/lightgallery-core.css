@@ -12,6 +12,10 @@
   display: block;
 }
 
+.lg-on {
+  scroll-behavior: unset;
+}
+
 .lg-toolbar,
 .lg-prev,
 .lg-next,
@@ -129,6 +133,7 @@
   margin-right: auto;
   max-width: 100%;
   max-height: 100%;
+  outline: none;
 }
 
 .lg-outer .lg-inner {
