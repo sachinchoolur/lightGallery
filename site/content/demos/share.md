@@ -27,14 +27,14 @@ toc: true
 <div id="lg-share-demo">
     <a
         data-pinterest-text="Pin it1"
-        data-tweet-text="share on twitter 1"
+        data-tweet-text="lightGallery slide  1"
         href="img/img1.jpg"
     >
         <img src="img/thumb1.jpg" />
     </a>
     <a
         data-pinterest-text="Pin it2"
-        data-tweet-text="share on twitter 2"
+        data-tweet-text="lightGallery slide  2"
         href="img/img2.jpg"
     >
         <img src="img/thumb2.jpg" />
@@ -50,7 +50,7 @@ url.
 <div id="gallery-share-demo">
     <a
         data-pinterest-text="Pin it1"
-        data-tweet-text="share on twitter 1"
+        data-tweet-text="lightGallery slide  1"
         data-facebook-share-url="share/facebook-share-url"
         data-twitter-share-url="share/twitter-share-url"
         data-pinterest-share-url="share/pinterest-share-url"
@@ -60,7 +60,7 @@ url.
     </a>
     <a
         data-pinterest-text="Pin it1"
-        data-tweet-text="share on twitter 1"
+        data-tweet-text="lightGallery slide  1"
         data-facebook-share-url="share/facebook-share-url"
         data-twitter-share-url="share/twitter-share-url"
         data-pinterest-share-url="share/pinterest-share-url"

@@ -118,7 +118,7 @@ images: []
                     <a
                         data-lg-size="480-480-480, 800-800-800, 1400-1400"
                         data-pinterest-text="Pin it3"
-                        data-tweet-text="share on twitter 4"
+                        data-tweet-text="lightGallery slide  4"
                         class="gallery-item"
                         data-src="https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
                         data-responsive="https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
@@ -158,7 +158,7 @@ images: []
                     <a
                         data-lg-size="480-480-480, 800-800-800, 1400-1400"
                         data-pinterest-text="Pin it2"
-                        data-tweet-text="share on twitter 2"
+                        data-tweet-text="lightGallery slide  2"
                         class="gallery-item"
                         data-src="https://images.unsplash.com/photo-1605814966843-7b90f1156878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80"
                         data-responsive="https://images.unsplash.com/photo-1605814966843-7b90f1156878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1605814966843-7b90f1156878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800"
@@ -212,7 +212,7 @@ images: []
                     <a
                         data-lg-size="480-480-480, 800-800-800, 1400-1400"
                         data-pinterest-text="Pin it2"
-                        data-tweet-text="share on twitter 2"
+                        data-tweet-text="lightGallery slide  2"
                         class="gallery-item"
                         data-src="https://images.unsplash.com/photo-1588093413519-17cec3f64e40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
                         data-responsive="https://images.unsplash.com/photo-1588093413519-17cec3f64e40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1588093413519-17cec3f64e40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
