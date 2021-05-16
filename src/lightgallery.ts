@@ -2282,22 +2282,6 @@ export class LightGallery {
                 );
             }
         });
-        for (const key in this.plugins) {
-            if (this.plugins[key]) {
-                try {
-                    if (destroy) {
-                        this.plugins[key].destroy();
-                    } else {
-                        this.plugins[key].closeGallery &&
-                            this.plugins[key].closeGallery();
-                    }
-                } catch (err) {
-                    console.warn(
-                        `lightGallery:- make sure lightGallery ${key} module is properly destroyed`,
-                    );
-                }
-            }
-        }
     }
 
     /**
