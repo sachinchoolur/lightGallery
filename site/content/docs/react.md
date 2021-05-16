@@ -14,6 +14,9 @@ weight: 7
 toc: true
 ---
 
+<a class="btn btn-outline-primary" href="https://stackblitz.com/edit/lightgallery-react" target="_blank">StackBlitz
+Demo</a>
+
 ## Installation
 
 Follow the below steps to use lightGallery react component in your application.

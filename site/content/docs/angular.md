@@ -14,6 +14,9 @@ weight: 9
 toc: true
 ---
 
+<a class="btn btn-outline-primary" href="https://stackblitz.com/edit/lightgallery-angular" target="_blank">StackBlitz
+Demo</a>
+
 ## Installation
 
 Follow the below steps to use lightGallery angular component in your
