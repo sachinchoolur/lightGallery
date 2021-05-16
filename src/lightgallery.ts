@@ -1,5 +1,5 @@
 import utils, { GalleryItem, ImageSize } from './lg-utils';
-import { $LG, lgQuery } from './lgQuery';
+import { $LG, LgQuery, lgQuery } from './lgQuery';
 import {
     LightGallerySettings,
     lightGalleryCoreSettings,
@@ -789,7 +789,7 @@ export class LightGallery {
 
         if (!subHtmlUrl) {
             if (subHtml) {
-                // get first letter of subhtml
+                // get first letter of sub-html
                 // if first letter starts with . or # get the html form the jQuery object
                 const fL = subHtml.substring(0, 1);
                 if (fL === '.' || fL === '#') {
@@ -1687,7 +1687,7 @@ export class LightGallery {
         }
     }
 
-    touchEnd(endCoords: Coords, startCoords: Coords, event: any): void {
+    touchEnd(endCoords: Coords, startCoords: Coords, event: TouchEvent): void {
         let distance;
 
         // keep slide animation for any mode while dragg/swipe
