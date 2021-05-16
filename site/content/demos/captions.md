@@ -23,19 +23,6 @@ toc: true
 ##### HTML Structure
 
 ```html
-<div id="caption2" style="display:none">
-    <h4>Bowness Bay</h4>
-    <p>
-        A beautiful Sunrise this morning taken En-route to Keswick not one as
-        planned but I'm extremely happy I was passing the right place at the
-        right time....
-    </p>
-</div>
-<div class="caption3" style="display:none">
-    <h4>Sunset Serenity</h4>
-    <p>A gorgeous Sunset tonight captured at Coniston Water....</p>
-</div>
-
 <div id="gallery-captions-demo">
     <a
         href="img/img1.jpg"
@@ -50,6 +37,19 @@ toc: true
         <img src="img/thumb3.jpg" />
     </a>
     ...
+</div>
+
+<div id="caption2" style="display:none">
+    <h4>Bowness Bay</h4>
+    <p>
+        A beautiful Sunrise this morning taken En-route to Keswick not one as
+        planned but I'm extremely happy I was passing the right place at the
+        right time....
+    </p>
+</div>
+<div class="caption3" style="display:none">
+    <h4>Sunset Serenity</h4>
+    <p>A gorgeous Sunset tonight captured at Coniston Water....</p>
 </div>
 ```
 
@@ -89,4 +89,131 @@ lightGallery to pick up captions from the element within the selector by passing
 lightGallery(document.getElementById('relative-caption'), {
     subHtmlSelectorRelative: true,
 });
+```
+
+### Caption animation
+
+If you like to have animated captions, you can easily create your own animations
+with the help of lightGallery `slideDelay` option
+
+`slideDelay` adds a delay between slide transitions. You can use this time
+interval to animate captions before the next slide transition starts.
+
+{{< image-gallery-captions id="gallery-animated-captions-demo">}}
+
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/poebjrm">View on CodePen</a>
+</div>
+
+##### HTML
+
+```html
+<div id="gallery-animated-captions-demo">
+    <a
+        href="img/img1.jpg"
+        data-sub-html="<div class='lightGallery-captions'><h4>title</h4><p>description</p></div>"
+    >
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a
+        href="img/img2.jpg"
+        data-sub-html="<div class='lightGallery-captions'><h4>title</h4><p>description</p></div>"
+    >
+        <img src="img/thumb2.jpg" />
+    </a>
+    <a
+        href="img/img3.jpg"
+        data-sub-html="<div class='lightGallery-captions'><h4>title</h4><p>description</p></div>"
+    >
+        <img src="img/thumb3.jpg" />
+    </a>
+    ...
+</div>
+```
+
+##### JavaScript
+
+```js
+lightGallery(document.getElementById('gallery-animated-captions-demo'), {
+    speed: 500,
+    // Append caption inside the slide item
+    // This way you can make use of lightGallery active slide class names to add animation
+    appendSubHtmlTo: '.lg-item',
+    // Delay slide transition to complete captions animations
+    // before navigating to different slides (Optional)
+    // You can find caption animation demo on the captions demo page
+    slideDelay: 400,
+});
+```
+
+##### CSS
+
+```scss
+// Add transitions
+.lightGallery-captions {
+    h4,
+    p {
+        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in;
+    }
+}
+.lg-current {
+    .lightGallery-captions {
+        h4,
+        p {
+            transition-delay: 500ms;
+        }
+    }
+    &.lg-slide-progress {
+        .lightGallery-captions {
+            h4,
+            p {
+                transition-delay: 0ms;
+            }
+        }
+    }
+}
+
+// Disappear
+.lightGallery-captions {
+    h4 {
+        transform: translate3d(60px, 0, 0px);
+    }
+    p {
+        transform: translate3d(-60px, 0, 0px);
+    }
+    h4,
+    p {
+        opacity: 0;
+    }
+}
+
+// Active
+.lg-current {
+    .lightGallery-captions {
+        h4,
+        p {
+            transform: translate3d(0, 0, 0px);
+        }
+        h4,
+        p {
+            opacity: 1;
+        }
+    }
+}
+
+// Disappear
+.lg-slide-progress {
+    .lightGallery-captions {
+        h4 {
+            transform: translate3d(-60px, 0, 0px);
+        }
+        p {
+            transform: translate3d(60px, 0, 0px);
+        }
+        h4,
+        p {
+            opacity: 0;
+        }
+    }
+}
 ```

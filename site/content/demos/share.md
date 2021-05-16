@@ -21,6 +21,10 @@ toc: true
 
 {{< image-gallery id="gallery-share-demo">}}
 
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/GRWZbRv">View on CodePen</a>
+</div>
+
 ##### HTML Structure
 
 ```html
@@ -87,6 +91,10 @@ Let's see how we can add
 <a href="https://www.reddit.com/" target="_blank">reddit</a> share button.
 
 {{< image-gallery id="gallery-share-reddit-demo">}}
+
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/mdWPZRq">View on CodePen</a>
+</div>
 
 To share a post on reddit, you need to create the following url structure
 

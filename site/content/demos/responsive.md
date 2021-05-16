@@ -25,6 +25,10 @@ can use native srcset and sizes attributes. Please refer the next demo.
 
 {{< image-gallery id="gallery-captions-demo">}}
 
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/OJpXJda">View on CodePen</a>
+</div>
+
 ##### HTML Structure
 
 ```html
@@ -63,6 +67,12 @@ automatically create image with srcset and sizes.
 </div>
 
 lightGallery will automatically call picturefil library if it is available
+
+{{< image-gallery-srcset id="gallery-srcset-demo">}}
+
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/BaWzyaE">View on CodePen</a>
+</div>
 
 ##### HTML Structure
 
@@ -106,7 +116,7 @@ bellow,
 <picture>
     <source media="(min-width:620px)" srcset="img/image-medium.jpg" />
     <source media="(min-width:480px)" srcset="img/image-small.jpg" />
-    <img src="img/image-large.jpg" alt="images" />
+    <img src="img/image-x-small.jpg" alt="images" />
 </picture>
 ```
 
@@ -116,8 +126,8 @@ shown below.
 ```html
 <div>
     <a
-        data-src="img/image-large.jpg"
-        data-sources='[{"srcset": "img/image-small.jpg", "media":"(min-width:480px)"}, {"srcset": "img/image-medium.jpg", "media":"(min-width:620px)"}]'
+        data-src="img/image-x-small.jpg"
+        data-sources='[{"srcset": "img/image-medium.jpg", "media":"(min-width:620px)"}, {"srcset": "img/image-small.jpg", "media":"(min-width:480px)"}]'
     >
         <img alt="thumb" src="img/thumb.jpg" />
     </a>
@@ -143,6 +153,12 @@ You can use `data-sources` in the following way
     ...
 </div>
 ```
+
+{{< image-gallery-picture id="gallery-picture-demo">}}
+
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/wvJWBOM">View on CodePen</a>
+</div>
 
 ### Using zoomFromOrigin with responsive images
 

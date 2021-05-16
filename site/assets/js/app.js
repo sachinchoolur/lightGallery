@@ -259,7 +259,7 @@ if (masonryElMixed) {
             new Masonry(masonryElMixed, {
                 temSelector: '.gallery-item',
                 percentPosition: true,
-                gutter: 10,
+                gutter: 0,
             });
             window.lightGallery(masonryElMixed, {
                 animateThumb: false,
@@ -745,6 +745,62 @@ jQuery('#gallery-captions-demo')
         window.lightGallery(document.getElementById('gallery-captions-demo'), {
             thumbnail: false,
             plugins: [lgZoom, lgShare],
+            allowMediaOverlap: true,
+            pager: true,
+            hash: true,
+        });
+    });
+jQuery('#gallery-animated-captions-demo')
+    .justifiedGallery({
+        captions: false,
+        lastRow: 'justify',
+        rowHeight: 180,
+        margins: 5,
+    })
+    .on('jg.complete', function () {
+        window.lightGallery(
+            document.getElementById('gallery-animated-captions-demo'),
+            {
+                speed: 500,
+                allowMediaOverlap: true,
+                // Append caption inside the slide item
+                // to apply some animation for the captions (Optional)
+                appendSubHtmlTo: '.lg-item',
+                // Delay slide transition to complete captions animations
+                // before navigating to different slides (Optional)
+                // You can find caption animation demo on the captions demo page
+                slideDelay: 400,
+            },
+        );
+    });
+jQuery('#gallery-srcset-demo')
+    .justifiedGallery({
+        captions: false,
+        lastRow: 'justify',
+        rowHeight: 180,
+        margins: 5,
+    })
+    .on('jg.complete', function () {
+        window.lightGallery(document.getElementById('gallery-srcset-demo'), {
+            thumbnail: false,
+            plugins: [lgZoom, lgShare],
+            allowMediaOverlap: true,
+            pager: true,
+            hash: true,
+        });
+    });
+jQuery('#gallery-picture-demo')
+    .justifiedGallery({
+        captions: false,
+        lastRow: 'justify',
+        rowHeight: 180,
+        margins: 5,
+    })
+    .on('jg.complete', function () {
+        window.lightGallery(document.getElementById('gallery-picture-demo'), {
+            thumbnail: false,
+            plugins: [lgZoom, lgShare],
+            allowMediaOverlap: true,
             pager: true,
             hash: true,
         });

@@ -28,6 +28,10 @@ toc: true
 
 {{< gallery-demo size="xl"  id="animated-thumbnails-gallery">}}
 
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/poebzpV">View on CodePen</a>
+</div>
+
 ##### HTML Structure
 
 ```html

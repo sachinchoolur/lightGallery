@@ -24,6 +24,10 @@ buttons using lightGallery methods.
 
 {{< image-gallery id="gallery-methods-demo">}}
 
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/yLMJYOw">View on CodePen</a>
+</div>
+
 ##### HTML Structure
 
 ```html

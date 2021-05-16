@@ -17,8 +17,17 @@ weight: 9
 toc: true
 ---
 
+<div>
 <button type="button" class="btn btn-success" id="dynamic-gallery-demo">Launch
 Gallery</button>
+
+<div class="codepen-demo" style="
+    display: inline-block;
+    margin: 0 10px 0 10px;
+">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/VwpYagE">View on CodePen</a>
+</div>
+</div>
 
 ##### HTML Structure
 

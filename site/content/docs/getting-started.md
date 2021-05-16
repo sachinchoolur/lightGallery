@@ -140,12 +140,16 @@ lightgallery does not force you to use any kind of markup. you can use whatever
 markup you want. <a href="../../demos/html-markup/">Here</a> can find detailed
 examples of different kinds of markups.
 
+If you know the original size of the media, you can pass it via
+`data-lg-size="${width}-${height}"` attribute for the initial
+[zoom](../settings/#zoomFromOrigin) animation. But, this is completely optional.
+
 ```HTML
-<div id="lightgallery">
+<div id="lightgallery" `data-lg-size="1600-2400"`>
     <a href="img/img1.jpg">
         <img alt=".." src="img/thumb1.jpg" />
     </a>
-    <a href="img/img2.jpg">
+    <a href="img/img2.jpg" `data-lg-size="1024-800"`>
         <img alt=".." src="img/thumb2.jpg" />
     </a>
     ...
@@ -166,7 +170,7 @@ Finally, you need to initiate the gallery by adding the following code.
 </script>
 ```
 
-[CodePen Demo](https://codepen.io/sachinchoolur/pen/abJvKaZ)
+[CodePen Demos](https://codepen.io/collection/BNNjpR)
 
 #### Plugins
 

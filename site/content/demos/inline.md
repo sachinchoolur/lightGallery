@@ -21,6 +21,11 @@ toc: true
 #### Demo
 
 <div id="inline-gallery-container" class="inline-gallery-container"></div>
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/zYZqaGm">View on CodePen</a>
+</div>
+
+##### HTML
 
 ```html
 <div id="inline-gallery-container" class="inline-gallery-container"></div>

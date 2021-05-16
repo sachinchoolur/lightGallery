@@ -128,3 +128,7 @@ updateSlideInstance.outer.find('#lg-add').on('click', () => {
 #### Demo
 
 {{< image-gallery id="gallery-update-slides-demo">}}
+
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/WNpxvXZ">View on CodePen</a>
+</div>
