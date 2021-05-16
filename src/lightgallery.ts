@@ -1421,34 +1421,37 @@ export class LightGallery {
         if (this.lGalleryOn) {
             previousSlideItem.addClass('lg-slide-progress');
         }
-        setTimeout(() => {
-            // remove all transitions
-            this.outer.addClass('lg-no-trans');
+        setTimeout(
+            () => {
+                // remove all transitions
+                this.outer.addClass('lg-no-trans');
 
-            this.outer
-                .find('.lg-item')
-                .removeClass('lg-prev-slide lg-next-slide');
+                this.outer
+                    .find('.lg-item')
+                    .removeClass('lg-prev-slide lg-next-slide');
 
-            if (direction === 'prev') {
-                //prevslide
-                currentSlideItem.addClass('lg-prev-slide');
-                previousSlideItem.addClass('lg-next-slide');
-            } else {
-                // next slide
-                currentSlideItem.addClass('lg-next-slide');
-                previousSlideItem.addClass('lg-prev-slide');
-            }
+                if (direction === 'prev') {
+                    //prevslide
+                    currentSlideItem.addClass('lg-prev-slide');
+                    previousSlideItem.addClass('lg-next-slide');
+                } else {
+                    // next slide
+                    currentSlideItem.addClass('lg-next-slide');
+                    previousSlideItem.addClass('lg-prev-slide');
+                }
 
-            // give 50 ms for browser to add/remove class
-            setTimeout(() => {
-                this.outer.find('.lg-item').removeClass('lg-current');
+                // give 50 ms for browser to add/remove class
+                setTimeout(() => {
+                    this.outer.find('.lg-item').removeClass('lg-current');
 
-                currentSlideItem.addClass('lg-current');
+                    currentSlideItem.addClass('lg-current');
 
-                // reset all transitions
-                this.outer.removeClass('lg-no-trans');
-            }, 50);
-        }, this.settings.slideDelay);
+                    // reset all transitions
+                    this.outer.removeClass('lg-no-trans');
+                }, 50);
+            },
+            this.lGalleryOn ? this.settings.slideDelay : 0,
+        );
     }
 
     /**
