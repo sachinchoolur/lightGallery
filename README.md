@@ -130,13 +130,13 @@ import lgZoom from 'lightgallery/plugins/zoom'
 
 lightgallery does not force you to use any kind of markup. you can use whatever
 markup you want.
-<a href="http://sachinchoolur.github.io/lightGallery/v2/demos/html-markup/">Here</a>
-can find detailed examples of different kinds of markups.
+<a href="https://www.lightgalleryjs.com/demos/html-markup/">Here</a> can find
+detailed examples of different kinds of markups.
 
 If you know the original size of the media, you can pass it via
 `data-lg-size="${width}-${height}"` attribute for the initial
-[zoom](http://sachinchoolur.github.io/lightGallery/v2/docs/settings/#zoomFromOrigin)
-animation. But, this is completely optional.
+[zoom](https://www.lightgalleryjs.com/docs/settings/#zoomFromOrigin) animation.
+But, this is completely optional.
 
 ```HTML
 <div id="lightgallery" `data-lg-size="1600-2400"`>
@@ -188,7 +188,7 @@ lightGallery supports all major browsers including IE 10 and above.
 If you want to use lightGallery to develop commercial sites, themes, projects,
 and applications, the Commercial license is the appropriate license. With this
 option, your source code is kept proprietary.
-[Read more about the commercial license](http://sachinchoolur.github.io/lightGallery/docs/license.html)
+[Read more about the commercial license](https://www.lightgalleryjs.com/license/)
 
 #### Open source license
 

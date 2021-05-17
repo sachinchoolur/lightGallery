@@ -1013,7 +1013,7 @@ export class LightGallery {
                 console.error(
                     'lightGallery :- data-src is not provided on slide item ' +
                         (index + 1) +
-                        '. Please make sure the selector property is properly configured. More info - http://sachinchoolur.github.io/lightGallery/demos/html-markup.html',
+                        '. Please make sure the selector property is properly configured. More info - https://www.lightgalleryjs.com/demos/html-markup/',
                 );
                 return;
             }
