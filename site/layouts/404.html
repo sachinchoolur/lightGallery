@@ -1,10 +1,40 @@
 {{ define "main" }}
-<div class="row justify-content-center">
-  <div class="col-lg-7">
-    <article>
-      <h1>Page not found :(</h1>
-      <p>The page you are looking for doesn't exist or has been moved.</p>
-    </article>
-  </div>
+<div class="wrap container-xxl page-wrap" role="document">
+    <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-10 col-xl-8">
+            <article>
+                <h1 class="text-center">{{ .Title }}</h1>
+                <p class="lead">
+                    We have re-designed the website recently, You can try
+                    finding the page that you are looking for from the below
+                    links.
+                </p>
+                <h3 class="text-center">Docs</h3>
+                <div class="card-list">
+                    {{ range sort .Pages "Dir"}} {{ if eq .Dir "docs/"}}
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <a class="stretched-link" href="{{ .Permalink }}"
+                                >{{ .Params.title | title }} &rarr;</a
+                            >
+                        </div>
+                    </div>
+                    {{end}} {{ end }}
+                </div>
+                <h3 class="text-center">Demos</h3>
+                <div class="card-list">
+                    {{ range sort .Pages "Dir"}} {{ if eq .Dir "demos/"}}
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <a class="stretched-link" href="{{ .Permalink }}"
+                                >{{ .Params.title | title }} &rarr;</a
+                            >
+                        </div>
+                    </div>
+                    {{end}} {{ end }}
+                </div>
+            </article>
+        </div>
+    </div>
 </div>
 {{ end }}

@@ -55,3 +55,17 @@ p.meta a:hover,
 p.meta a:focus {
     color: $primary;
 }
+
+// 404
+
+.error404 {
+    h1 {
+        margin-top: 10rem;
+    }
+    .lead {
+        margin-bottom: 5rem;
+    }
+    h3 {
+        margin-top: 5rem;
+    }
+}
