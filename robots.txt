@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: //www.lightgalleryjs.com/sitemap.xml
+Sitemap: https://www.lightgalleryjs.com/sitemap.xml
