@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: //www.lightgalleryjs.com/v2/sitemap.xml

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>lightGallery: Docs</title>
+        <meta name="description" content="Lightgallery documentation" />
+        <link href="../static/css/main.css" rel="stylesheet" />
+        <link
+            href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body class="docs" data-spy="scroll" data-target="#right-navbar">
+        <!--[if lt IE 7]>
+            <p class="browsehappy">
+                You are using an <strong>outdated</strong> browser. Please
+                <a href="http://browsehappy.com/">upgrade your browser</a> to
+                improve your experience.
+            </p>
+        <![endif]-->
+        <section class="promo_bar" id="promoBar">
+            <div class="container">
+                <p>
+                    lightGallery
+                    <a
+                        href="http://lightgalleryjs.com/"
+                        style="
+                            color: rgb(255, 255, 255);
+                            text-decoration: underline;
+                        "
+                    >
+                        version 2
+                    </a>
+                    has been released. Please upgrade
+                </p>
+            </div>
+        </section>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button
+                        type="button"
+                        class="navbar-toggle collapsed"
+                        data-toggle="collapse"
+                        data-target="#navbar"
+                        aria-expanded="false"
+                        aria-controls="navbar"
+                    >
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a
+                        class="navbar-brand"
+                        href="http://sachinchoolur.github.io/lightGallery/"
+                        >lg</a
+                    >
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="../">Home<span class="border"></span></a>
+                        </li>
+                        <li>
+                            <a href="../docs/license.html"
+                                >License<span class="border"></span
+                            ></a>
+                        </li>
+                        <li class="active">
+                            <a href="">Docs<span class="border"></span></a>
+                        </li>
+                        <li>
+                            <a href="../demos/"
+                                >Demos<span class="border"></span
+                            ></a>
+                        </li>
+                        <li>
+                            <a
+                                target="_blank"
+                                href="https://github.com/sachinchoolur/lightGallery"
+                                >Github<span class="border"></span
+                            ></a>
+                        </li>
+                        <!-- <!--li><a onclick="ga('send', 'event', 'wp', 'wp');" target="_blank" href="https://dzine.io/products/lightgallery-wp-plugin/">wordpress<span class="border"></span></a></li-->
+                        -->
+                        <li>
+                            <a
+                                target="_blank"
+                                href="https://github.com/sachinchoolur/lightGallery#version-20-update"
+                                >V2<span class="border"></span
+                            ></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container demo-container">
+            <div class="row">
+                <div role="main" class="col-md-9">
+                    <section class="section pdt0">
+                        <div class="docs-inner">
+                            <section class="doc mrb50">
+                                <div class="section-header has-desc mrb50">
+                                    <h1 class="page-header mrb15">
+                                        Getting Started
+                                    </h1>
+                                    <p>
+                                        Lightgallery is a lightweight modular
+                                        responsive jquery light box gallery,
+                                        which allows you to create beautiful
+                                        image & video galleries.
+                                    </p>
+                                </div>
+                                <div class="docs-ad">
+                                    <div class="lg-ad light">
+                                        <script
+                                            async
+                                            type="text/javascript"
+                                            src="//cdn.carbonads.com/carbon.js?serve=CE7IV2QM&placement=sachinchoolurgithubio"
+                                            id="_carbonads_js"
+                                        ></script>
+                                    </div>
+                                </div>
+                                <h2
+                                    class="anchor-title mrb20"
+                                    id="main-features"
+                                >
+                                    <a href="#main-features">Main features</a>
+                                    <span class="border"></span>
+                                </h2>
+                                <ul class="mrb50">
+                                    <li>Fully responsive.</li>
+                                    <li>
+                                        Modular architecture with built in
+                                        plugins.
+                                    </li>
+                                    <li>
+                                        Touch and support for mobile devices.
+                                    </li>
+                                    <li>Mouse drag supports for desktops.</li>
+                                    <li>
+                                        Double-click/Double-tap to see actual
+                                        size of the image.
+                                    </li>
+                                    <li>Animated thumbnails.</li>
+                                    <li>
+                                        Youtube, Vimeo, Dailymotion, VK and
+                                        html5 videos Support.
+                                    </li>
+                                    <li>
+                                        20+ Hardware-Accelerated CSS3
+                                        transitions.
+                                    </li>
+                                    <li>Dynamic mode.</li>
+                                    <li>Full screen support.</li>
+                                    <li>Supports zoom.</li>
+                                    <li>Browser history API.</li>
+                                    <li>Responsive images.</li>
+                                    <li>HTML iframe support.</li>
+                                    <li>Multiple instances on one page.</li>
+                                    <li>
+                                        Easily customizable via CSS (SCSS) and
+                                        Settings.
+                                    </li>
+                                    <li>
+                                        Smart image preloading and code
+                                        optimization.
+                                    </li>
+                                    <li>Keyboard Navigation for desktop.</li>
+                                    <li>Font icon support.</li>
+                                    <li>Accessibility support.</li>
+                                    <li>Rotate, flip images.</li>
+                                </ul>
+                                <h2
+                                    class="anchor-title mrb20"
+                                    id="browser-support"
+                                >
+                                    <a href="#browser-support"
+                                        >Browser support</a
+                                    >
+                                    <span class="border"></span>
+                                </h2>
+                                <p>
+                                    lightgallery supports all major browsers
+                                    including IE 8 and above.
+                                </p>
+                            </section>
+
+                            <section class="doc">
+                                <h2
+                                    class="anchor-title mrb30"
+                                    id="installation"
+                                >
+                                    <a href="#installation">Installation</a>
+                                    <span class="border"></span>
+                                </h2>
+                                <section class="sub-doc mrb50">
+                                    <h3
+                                        class="anchor-title mrb15"
+                                        id="install-with-bower"
+                                    >
+                                        <a href="#install-with-bower"
+                                            >Install with Bower</a
+                                        >
+                                    </h3>
+                                    <p>
+                                        You can Install lightgallery and its
+                                        modules using the
+                                        <a
+                                            target="_blank"
+                                            href="http://bower.io/"
+                                            >Bower</a
+                                        >
+                                        package manager.
+                                    </p>
+                                    <div class="code-demo">
+                                        <div class="sample-code bash">
+                                            <pre class="prettyprint lang-bash">
+$ bower install lightgallery
+</pre
+                                            >
+                                        </div>
+                                    </div>
+                                    <p>Or Install all modules together</p>
+                                    <div class="code-demo">
+                                        <div class="sample-code bash">
+                                            <pre class="prettyprint lang-bash">
+$ bower install lightgallery lg-thumbnail lg-autoplay lg-video lg-fullscreen lg-pager lg-zoom lg-hash lg-share
+</pre
+                                            >
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="sub-doc mrb50">
+                                    <h3
+                                        class="anchor-title mrb15"
+                                        id="install-with-npm"
+                                    >
+                                        <a href="#install-with-bower"
+                                            >Install with npm</a
+                                        >
+                                    </h3>
+                                    <p>
+                                        You can also find lightgallery on
+                                        <a
+                                            target="_blank"
+                                            href="https://www.npmjs.com/"
+                                            >npm.</a
+                                        >
+                                    </p>
+                                    <div class="code-demo">
+                                        <div class="sample-code bash">
+                                            <pre class="prettyprint lang-bash">
+$ npm install lightgallery
+</pre
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="code-demo">
+                                        <div class="sample-code bash">
+                                            <pre class="prettyprint lang-bash">
+$ npm install lightgallery lg-thumbnail lg-autoplay lg-video lg-fullscreen lg-pager lg-zoom lg-hash lg-share
+</pre
+                                            >
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="sub-doc mrb50">
+                                    <h3
+                                        class="anchor-title mrb15"
+                                        id="download-from-github"
+                                    >
+                                        <a href="#download-from-github"
+                                            >Download from Github</a
+                                        >
+                                    </h3>
+                                    <p>
+                                        You can also directly download
+                                        lightGallery from
+                                        <a
+                                            target="_blank"
+                                            href="https://github.com/sachinchoolur/lightGallery"
+                                            >github.</a
+                                        >
+                                    </p>
+                                </section>
+
+                                <section class="sub-doc mrb50">
+                                    <h3 class="anchor-title mrb15" id="cdn">
+                                        <a href="#cdn">CDN</a>
+                                    </h3>
+                                    <p>
+                                        If you prefer to use a CDN you can load
+                                        files via
+                                        <a
+                                            target="_blank"
+                                            href="https://www.jsdelivr.com/projects/lightgallery"
+                                            >jsdelivr</a
+                                        >
+                                    </p>
+                                    <p>
+                                        Here is the
+                                        <a
+                                            href="https://cdn.jsdelivr.net/combine/npm/lightgallery,npm/lg-autoplay,npm/lg-fullscreen,npm/lg-hash,npm/lg-pager,npm/lg-share,npm/lg-thumbnail,npm/lg-video,npm/lg-zoom"
+                                            target="_blank"
+                                            >jsdelivr collection</a
+                                        >
+                                        of lightGallery and its modules.
+                                    </p>
+                                </section>
+
+                                <section class="sub-doc mrb50">
+                                    <h3
+                                        class="anchor-title mrb15"
+                                        id="include-files"
+                                    >
+                                        <a href="#include-files"
+                                            >include CSS and Javascript files</a
+                                        >
+                                    </h3>
+                                    <p>
+                                        First of all add lightgallery.css in the
+                                        <code>&lt;head&gt;</code> of the
+                                        document
+                                    </p>
+                                    <div class="code-demo">
+                                        <div class="sample-code html">
+                                            <pre class="prettyprint lang-html">
+&lt;head&gt;
+    &lt;link type="text/css" rel="stylesheet" href="css/lightgallery.css" /&gt; 
+&lt;/head&gt;  
+</pre
+                                            >
+                                        </div>
+                                    </div>
+                                    <p>
+                                        Then include jQuery and
+                                        lightgallery.min.js into your document.
+                                        <br />If you want to include any
+                                        lightgallery plugin you can include it
+                                        after lightgallery.min.js.
+                                    </p>
+                                    <div class="code-demo">
+                                        <div class="sample-code html">
+                                            <pre class="prettyprint lang-html">
+&lt;body&gt;
+    ....
+
+    &lt;!-- jQuery version must be >= 1.8.0; --&gt;
+    &lt;script src="jquery.min.js"&gt;&lt;/script&gt;
+    &lt;script src="js/lightgallery.min.js"&gt;&lt;/script&gt;
+
+    &lt;!-- A jQuery plugin that adds cross-browser mouse wheel support. (Optional) --&gt;
+    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"&gt;&lt;/script&gt;
+
+    &lt;!-- lightgallery plugins --&gt;
+    &lt;script src="js/lg-thumbnail.min.js"&gt;&lt;/script&gt;
+    &lt;script src="js/lg-fullscreen.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;  
+</pre
+                                            >
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="sub-doc mrb50">
+                                    <h3 class="anchor-title mrb15" id="markup">
+                                        <a href="#markup">The markup</a>
+                                    </h3>
+                                    <p>
+                                        lightgallery does not force you to use
+                                        any kind of markup. you can use whatever
+                                        markup you want. But i suggest you to
+                                        use the following markup.
+                                        <a href="../demos/html-markup.html"
+                                            >Here
+                                        </a>
+                                        you can find the detailed examples of
+                                        deferent kind of markups.
+                                    </p>
+                                    <div class="code-demo">
+                                        <div class="sample-code html">
+                                            <pre
+                                                class="prettyprint linenums lang-html"
+                                            >
+&lt;div id="lightgallery"&gt;
+  &lt;a href="img/img1.jpg"&gt;
+      &lt;img src="img/thumb1.jpg" /&gt;
+  &lt;/a&gt;
+  &lt;a href="img/img2.jpg"&gt;
+      &lt;img src="img/thumb2.jpg" /&gt;
+  &lt;/a&gt;
+  ...
+&lt;/div&gt;
+</pre
+                                            >
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="sub-doc mrb50">
+                                    <h3
+                                        class="anchor-title mrb15"
+                                        id="call-the-plugin"
+                                    >
+                                        <a href="#call-the-plugin"
+                                            >Call the plugin</a
+                                        >
+                                    </h3>
+                                    <p>
+                                        Finally you need to initiate the gallery
+                                        by adding the following code.
+                                    </p>
+                                    <div class="code-demo">
+                                        <div class="sample-code html">
+                                            <pre
+                                                class="prettyprint linenums lang-html"
+                                            >
+&lt;script type="text/javascript"&gt;
+    $(document).ready(function() {
+        $("#lightgallery").lightGallery(); 
+    });
+&lt;/script&gt;
+</pre
+                                            >
+                                        </div>
+                                    </div>
+                                </section>
+                                <section class="sub-doc mrb50">
+                                    <h3
+                                        class="anchor-title mrb15"
+                                        id="call-the-plugin"
+                                    >
+                                        <a href="#call-the-plugin"
+                                            >Support lightgallery</a
+                                        >
+                                    </h3>
+                                    <p>
+                                        If you like lightgallery please support
+                                        the project by staring the
+                                        <a
+                                            href="https://github.com/sachinchoolur/lightGallery"
+                                            >github</a
+                                        >
+                                        repository or
+                                        <a
+                                            href="https://twitter.com/intent/tweet?original_referer=https%3A%2F%2Fabout.twitter.com%2Fresources%2Fbuttons&ref_src=twsrc%5Etfw&text=lightGallery%20-%20The%20complete%20%23jQuery%20lightbox%20gallery%20plugin.%20%23javascript&tw_p=tweetbutton&url=http%3A%2F%2Fsachinchoolur.github.io%2FlightGallery%2F"
+                                            target="_blank"
+                                            >tweet</a
+                                        >
+                                        about this project.
+                                    </p>
+                                </section>
+                            </section>
+                        </div>
+                    </section>
+                </div>
+                <div role="complementary" class="col-md-3">
+                    <nav
+                        class="side-nav"
+                        id="right-navbar"
+                        data-spy="affix"
+                        data-offset-top="60"
+                        data-offset-bottom="0"
+                    >
+                        <ul class="nav bs-docs-sidenav">
+                            <li>
+                                <a href="#main-features">Main features</a>
+                            </li>
+                            <li>
+                                <a href="#installation">Installation</a>
+                            </li>
+                            <li>
+                                <a href="../docs/api.html">Options</a>
+                                <ul class="nav">
+                                    <li>
+                                        <a href="#passing-options"
+                                            >Passing options</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a href="#lightgallery-core"
+                                            >lightgallery core</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a href="#lg-thumbnial">Thumbnails</a>
+                                    </li>
+                                    <li><a href="#lg-autoplay">Autoplay</a></li>
+                                    <li><a href="#lg-video">Video</a></li>
+                                    <li>
+                                        <a href="#lg-fullscreen">Fullscreen</a>
+                                    </li>
+                                    <li><a href="#lg-pager">Pager</a></li>
+                                    <li><a href="#lg-zoom">Zoom</a></li>
+                                    <li><a href="#lg-share">Share</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="../docs/api.html#events">Events</a>
+                            </li>
+                            <li>
+                                <a href="../docs/api.html#methods">Methods</a>
+                            </li>
+                            <li>
+                                <a href="../docs/api.html#attributes"
+                                    >Data-attributes</a
+                                >
+                            </li>
+                            <li>
+                                <a href="../docs/api.html#dynamic"
+                                    >Dynamic variables
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../docs/api.html#sass"
+                                    >Sass variables</a
+                                >
+                            </li>
+                            <li>
+                                <a href="../docs/plugin-api.html"
+                                    >Plugin API
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../docs/license.html"
+                                    >Commercial License
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <a target="_blank" href="https://twitter.com/sachinchoolur"
+                ><img src="../static/img/social/twitter.png"
+            /></a>
+            <a target="_blank" href="https://in.linkedin.com/in/sachinchoolur"
+                ><img src="../static/img/social/linked-in.png"
+            /></a>
+        </footer>
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                (i[r] =
+                    i[r] ||
+                    function () {
+                        (i[r].q = i[r].q || []).push(arguments);
+                    }),
+                    (i[r].l = 1 * new Date());
+                (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m);
+            })(
+                window,
+                document,
+                'script',
+                '//www.google-analytics.com/analytics.js',
+                'ga',
+            );
+            ga('create', 'UA-49767543-2', 'sachinchoolur.github.io');
+            ga('send', 'pageview');
+        </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="../static/js/prettify.js"></script>
+        <script src="../static/js/transition.js"></script>
+        <script src="../static/js/collapse.js"></script>
+        <script src="../static/js/docs.js"></script>
+        <script src="../static/js/scrollspy.js"></script>
+        <script src="../static/js/affix.js"></script>
+    </body>
+</html>

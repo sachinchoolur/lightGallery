@@ -1,0 +1,2716 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>lightGallery: API</title>
+        <meta
+            name="description"
+            content="Lightgallery comes with lots of options, events, methods to customize the gallery without touching the core code. "
+        />
+        <link href="../static/css/main.css" rel="stylesheet" />
+        <link
+            href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body class="docs" data-spy="scroll" data-target="#right-navbar">
+        <!--[if lt IE 7]>
+            <p class="browsehappy">
+                You are using an <strong>outdated</strong> browser. Please
+                <a href="http://browsehappy.com/">upgrade your browser</a> to
+                improve your experience.
+            </p>
+        <![endif]-->
+        <section class="promo_bar" id="promoBar">
+            <div class="container">
+                <p>
+                    lightGallery
+                    <a
+                        href="http://lightgalleryjs.com/"
+                        style="
+                            color: rgb(255, 255, 255);
+                            text-decoration: underline;
+                        "
+                    >
+                        version 2
+                    </a>
+                    has been released. Please upgrade
+                </p>
+            </div>
+        </section>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button
+                        type="button"
+                        class="navbar-toggle collapsed"
+                        data-toggle="collapse"
+                        data-target="#navbar"
+                        aria-expanded="false"
+                        aria-controls="navbar"
+                    >
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a
+                        class="navbar-brand"
+                        href="http://sachinchoolur.github.io/lightGallery/"
+                        >lg</a
+                    >
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="../">Home<span class="border"></span></a>
+                        </li>
+                        <li>
+                            <a href="../docs/license.html"
+                                >License<span class="border"></span
+                            ></a>
+                        </li>
+                        <li class="active">
+                            <a href="../docs/"
+                                >Docs<span class="border"></span
+                            ></a>
+                        </li>
+                        <li>
+                            <a href="../demos/"
+                                >Demos<span class="border"></span
+                            ></a>
+                        </li>
+                        <li>
+                            <a
+                                target="_blank"
+                                href="https://github.com/sachinchoolur/lightGallery"
+                                >Github<span class="border"></span
+                            ></a>
+                        </li>
+                        <!--li><a onclick="ga('send', 'event', 'wp', 'wp');" target="_blank" href="https://dzine.io/products/lightgallery-wp-plugin/">wordpress<span class="border"></span></a></li-->
+                        <li>
+                            <a
+                                target="_blank"
+                                href="https://github.com/sachinchoolur/lightGallery#version-20-update"
+                                >V2<span class="border"></span
+                            ></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container demo-container">
+            <div class="row">
+                <div role="main" class="col-md-9">
+                    <section class="section pdt0 pdb0">
+                        <div class="docs-inner">
+                            <section class="doc mrb50" id="options">
+                                <div class="section-header has-desc mrb50">
+                                    <h1 class="page-header mrb15">API</h1>
+                                    <p>
+                                        Lightgallery comes with a lot of
+                                        options, events, and methods to
+                                        customize the gallery without touching
+                                        the core code. You can find both
+                                        Lightgallery core options, and the built
+                                        in plugin options here.
+                                    </p>
+                                </div>
+                                <div class="docs-ad">
+                                    <script
+                                        async
+                                        type="text/javascript"
+                                        src="//cdn.carbonads.com/carbon.js?serve=CE7IV2QM&placement=sachinchoolurgithubio"
+                                        id="_carbonads_js"
+                                    ></script>
+                                </div>
+                                <h2 class="anchor-title mrb30" id="options">
+                                    <a href="#options">Options</a>
+                                    <span class="border"></span>
+                                </h2>
+                                <div class="code-demo">
+                                    <h3
+                                        class="anchor-title mrb15"
+                                        id="passing-options"
+                                    >
+                                        <a href="#passing-options"
+                                            >Passing options</a
+                                        >
+                                    </h3>
+                                    <div class="sample-code html">
+                                        <pre
+                                            class="prettyprint linenums lang-js"
+                                        >
+$('#lightgallery').lightGallery({
+    mode: 'lg-fade',
+    cssEasing : 'cubic-bezier(0.25, 0, 0.25, 1)'
+    ......
+}); 
+</pre
+                                        >
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="doc mrb50">
+                                <h3
+                                    class="anchor-title mrb15"
+                                    id="lightgallery-core"
+                                >
+                                    <a href="#lightgallery-core"
+                                        >lightgallery core</a
+                                    >
+                                </h3>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>type</th>
+                                            <th>default</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>mode</td>
+                                            <td>string</td>
+                                            <td><code>'lg-slide'</code></td>
+                                            <td>
+                                                Type of transition between
+                                                images. lightGallery comes with
+                                                lots of transition effects such
+                                                as <code>'lg-slide'</code
+                                                ><code>'lg-fade'</code
+                                                ><code>'lg-zoom-in'</code
+                                                ><code>'lg-zoom-in-big'</code
+                                                ><code>'lg-zoom-out'</code
+                                                ><code>'lg-zoom-out-big'</code
+                                                ><code>'lg-zoom-out-in'</code
+                                                ><code>'lg-zoom-in-out'</code
+                                                ><code>'lg-soft-zoom'</code
+                                                ><code>'lg-scale-up'</code
+                                                ><code>'lg-slide-circular'</code
+                                                ><code
+                                                    >'lg-slide-circular-vertical'</code
+                                                ><code>'lg-slide-vertical'</code
+                                                ><code
+                                                    >'lg-slide-vertical-growth'</code
+                                                ><code
+                                                    >'lg-slide-skew-only'</code
+                                                ><code
+                                                    >'lg-slide-skew-only-rev'</code
+                                                ><code
+                                                    >'lg-slide-skew-only-y'</code
+                                                ><code
+                                                    >'lg-slide-skew-only-y-rev'</code
+                                                ><code>'lg-slide-skew'</code
+                                                ><code>'lg-slide-skew-rev'</code
+                                                ><code
+                                                    >'lg-slide-skew-cross'</code
+                                                ><code
+                                                    >'lg-slide-skew-cross-rev'</code
+                                                ><code>'lg-slide-skew-ver'</code
+                                                ><code
+                                                    >'lg-slide-skew-ver-rev'</code
+                                                ><code
+                                                    >'lg-slide-skew-ver-cross'</code
+                                                ><code
+                                                    >'lg-slide-skew-ver-cross-rev'</code
+                                                ><code>'lg-lollipop'</code
+                                                ><code>'lg-lollipop-rev'</code
+                                                ><code>'lg-rotate'</code
+                                                ><code>'lg-rotate-rev'</code
+                                                ><code>'lg-tube'</code>. You can
+                                                find detaild demo
+                                                <a
+                                                    href="../demos/transitions.html"
+                                                    >here</a
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>cssEasing</td>
+                                            <td>string</td>
+                                            <td><code>'ease'</code></td>
+                                            <td>
+                                                Type of easing to be used for
+                                                css animations
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>easing</td>
+                                            <td>string</td>
+                                            <td><code>'linear'</code></td>
+                                            <td>
+                                                Type of easing to be used for
+                                                jquery animations
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>speed</td>
+                                            <td>number</td>
+                                            <td><code>600</code></td>
+                                            <td>
+                                                Transition duration (in ms).
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>height</td>
+                                            <td>string</td>
+                                            <td><code>'100%'</code></td>
+                                            <td>
+                                                Height of the gallery. ex:
+                                                <code>'100%'</code> ,
+                                                <code>'300px'</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>width</td>
+                                            <td>string</td>
+                                            <td><code>'100%'</code></td>
+                                            <td>
+                                                Width of the gallery. ex:
+                                                <code>'100%'</code> ,
+                                                <code>'300px'</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>addClass</td>
+                                            <td>string</td>
+                                            <td><code>''</code></td>
+                                            <td>
+                                                Add custom class for gallery,
+                                                can be used to set different
+                                                style for different gallery
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>startClass</td>
+                                            <td>string</td>
+                                            <td>
+                                                <code>'lg-start-zoom'</code>
+                                            </td>
+                                            <td>
+                                                Starting animation class for the
+                                                gallery.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>backdropDuration</td>
+                                            <td>number</td>
+                                            <td><code>150</code></td>
+                                            <td>
+                                                Lightgallery backdrop transtion
+                                                duration. Do not change the
+                                                value of backdrop via css.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>hideBarsDelay</td>
+                                            <td>number</td>
+                                            <td><code>6000</code></td>
+                                            <td>
+                                                Delay for hiding gallery
+                                                controls in ms. Set 0, if you
+                                                don't want to hide the controls.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>useLeft</td>
+                                            <td>boolean</td>
+                                            <td><code>false</code></td>
+                                            <td>
+                                                force lightgallery to use css
+                                                left property instead of
+                                                transform.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>closable</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                allows clicks on dimmer to close
+                                                gallery.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>loop</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                If <code>false</code>, will
+                                                disable the ability to loop back
+                                                to the beginning of the gallery
+                                                when on the last element.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>escKey</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Whether the LightGallery could
+                                                be closed by pressing the "Esc"
+                                                key.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>keyPress</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable keyboard navigation</td>
+                                        </tr>
+                                        <tr>
+                                            <td>controls</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                If <code>false</code>, prev/next
+                                                buttons will not be displayed.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>slideEndAnimatoin</td>
+                                            <td>bolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable slideEnd animation</td>
+                                        </tr>
+                                        <tr>
+                                            <td>hideControlOnEnd</td>
+                                            <td>boolean</td>
+                                            <td><code>false</code></td>
+                                            <td>
+                                                If <code>true</code>, prev/next
+                                                button will be hidden on
+                                                first/last image.
+                                                <code>false</code> if
+                                                <code>slideEndAnimatoin</code>
+                                                or <code>loop</code> is enabled.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>mousewheel</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Change slide on mousewheel</td>
+                                        </tr>
+                                        <tr>
+                                            <td>getCaptionFromTitleOrAlt:</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Option to get captions from alt
+                                                or title tags.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>appendSubHtmlTo</td>
+                                            <td>string</td>
+                                            <td><code>'.lg-sub-html'</code></td>
+                                            <td>
+                                                You can specify where the
+                                                sub-html should be appended.
+                                                <code>'.lg-sub-html'</code> or
+                                                <code>'.lg-item'</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>subHtmlSelectorRelative</td>
+                                            <td>boolean</td>
+                                            <td><code>false</code></td>
+                                            <td>
+                                                Set to true if the selector in
+                                                "data-sub-html" should use the
+                                                current item as its origin.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>ariaLabelledby</td>
+                                            <td>string</td>
+                                            <td><code>''</code></td>
+                                            <td>
+                                                aria-labelledby attribute for
+                                                gallery
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>ariaDescribedby</td>
+                                            <td>string</td>
+                                            <td><code>''</code></td>
+                                            <td>
+                                                aria-describedby attribute for
+                                                gallery
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>preload</td>
+                                            <td>number</td>
+                                            <td><code>1</code></td>
+                                            <td>
+                                                Number of preload slides. will
+                                                execute only after the current
+                                                slide is fully loaded. ex:// you
+                                                clicked on 4th image and if
+                                                preload = 1 then 3rd slide and
+                                                5th slide will be loaded in the
+                                                background after the 4th slide
+                                                is fully loaded.. if preload is
+                                                2 then 2nd 3rd 5th 6th slides
+                                                will be preloaded
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>showAfterLoad</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Show Content once it is fully
+                                                loaded
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>selector</td>
+                                            <td>string</td>
+                                            <td><code>''</code></td>
+                                            <td>
+                                                Custom selector property instead
+                                                of just child. pass
+                                                <code>this</code> to select same
+                                                element ex :
+                                                <code>.class</code>
+                                                <code>#id</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>selectWithin</td>
+                                            <td>string</td>
+                                            <td><code>''</code></td>
+                                            <td>
+                                                By default selectror element is
+                                                taken from only inside the
+                                                gallery element. Instead of that
+                                                you can tell lightgallery to
+                                                select element within a specific
+                                                element. ex :
+                                                <code>.class</code>
+                                                <code>#id</code> <br />
+                                                <code
+                                                    >galleryItems =
+                                                    $(this.s.selectWithin).find(this.s.selector);</code
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>nextHtml</td>
+                                            <td>string</td>
+                                            <td><code>''</code></td>
+                                            <td>
+                                                Custom html for next control
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>prevHtml</td>
+                                            <td>string</td>
+                                            <td><code>''</code></td>
+                                            <td>
+                                                Custom html for prev control
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>index</td>
+                                            <td>number</td>
+                                            <td><code>0</code></td>
+                                            <td>
+                                                Allows to set which image/video
+                                                should load initially
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>iframeMaxWidth</td>
+                                            <td>string</td>
+                                            <td><code>'100%'</code></td>
+                                            <td>
+                                                Set maximum width for iframe.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>download</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Enable download button. By
+                                                default download url will be
+                                                taken from data-src/href
+                                                attribute but it supports only
+                                                for modern browsers. If you want
+                                                you can provide another url for
+                                                download via
+                                                <code>data-download-url</code>.
+                                                Pass <code>false</code> in
+                                                <code>data-download-url</code>
+                                                if you want to hide download
+                                                button for the particular slide.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>counter</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Whether to show total number of
+                                                images and index number of
+                                                currently displayed image.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>appendCounterTo</td>
+                                            <td>string</td>
+                                            <td><code>'.lg-toolbar'</code></td>
+                                            <td>
+                                                Where the counter should be
+                                                appended
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>swipeThreshold</td>
+                                            <td>number</td>
+                                            <td><code>50</code></td>
+                                            <td>
+                                                By setting the swipeThreshold
+                                                (in px) you can set how far the
+                                                user must swipe for the
+                                                next/prev image.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>enableDrag</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Enables desktop mouse drag
+                                                support
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>enableSwipe</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enables swipe support</td>
+                                        </tr>
+                                        <tr>
+                                            <td>dynamic</td>
+                                            <td>boolean</td>
+                                            <td><code>false</code></td>
+                                            <td>
+                                                LightGallery can be instantiated
+                                                and launched programmatically by
+                                                setting this option to
+                                                <code>true</code> and populating
+                                                <code>dynamicEl</code> option
+                                                (see below) with the definitions
+                                                of images.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>dynamicEl</td>
+                                            <td>array</td>
+                                            <td>[]</td>
+                                            <td>
+                                                An array of objects
+                                                (<code>src</code>,
+                                                <code>iframe</code>,
+                                                <code>subHtml</code>,
+                                                <code>thumb</code>,
+                                                <code>poster</code>,
+                                                <code>responsive</code>,
+                                                <code>srcset</code>
+                                                <code>sizes</code>) representing
+                                                gallery elements.
+                                                <a
+                                                    href="examples.html#dynamicBlock"
+                                                    >See example</a
+                                                >.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>supportLegacyBrowser</td>
+                                            <td>boolean</td>
+                                            <td>true</td>
+                                            <td>
+                                                Make usage of picturefill
+                                                library optional as the
+                                                <code>srcset</code> is supported
+                                                by all modern browsers.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section class="doc mrb50">
+                                <h3
+                                    class="anchor-title mrb15"
+                                    id="lg-thumbnial"
+                                >
+                                    <a href="#lg-thumbnial">Thumbnial plugin</a>
+                                </h3>
+                                <div class="bs-callout bs-callout-danger mrb20">
+                                    <h4>Plugin dependency</h4>
+                                    <p>
+                                        You need to include thumbnials plugin
+                                        (lg-thumbnail.js) in your document to
+                                        use the following options.
+                                    </p>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>type</th>
+                                            <th>default</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>thumbnail</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Enable thumbnails for the
+                                                gallery
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>animateThumb</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable thumbnail animation.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>currentPagerPosition</td>
+                                            <td>string</td>
+                                            <td><code>'middle'</code></td>
+                                            <td>
+                                                Position of selected thumbnail.
+                                                <code>'left'</code> or
+                                                <code>'middle'</code> or
+                                                <code>'right'</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>thumbWidth</td>
+                                            <td>number</td>
+                                            <td><code>100</code></td>
+                                            <td>Width of each thumbnails.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>thumbHeight</td>
+                                            <td>string</td>
+                                            <td><code>'80px'</code></td>
+                                            <td>
+                                                Height of each thumbnails.
+                                                Applicable only if
+                                                <code>animateThumb</code> is
+                                                <code>false</code>.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>thumbContHeight</td>
+                                            <td>number</td>
+                                            <td><code>100</code></td>
+                                            <td>
+                                                Height of the thumbnail
+                                                container including padding and
+                                                border. Applicable only if
+                                                <code>animateThumb</code> is
+                                                <code>true</code>.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>thumbMargin</td>
+                                            <td>number</td>
+                                            <td><code>5</code></td>
+                                            <td>
+                                                Spacing between each thumbnails
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>exThumbImage</td>
+                                            <td>string or false</td>
+                                            <td><code>false</code></td>
+                                            <td>
+                                                If you want to use external
+                                                image for thumbnail, add the
+                                                path of that image inside
+                                                "data-" attribute and set value
+                                                of this option to the name of
+                                                your custom attribute.<br /><code>
+                                                    &lt;-- &lt;li
+                                                    data-exthumbimage="externalThumb.jpg"
+                                                    data-src="img/img1.jpg"&gt;&lt;/li--&gt;</code
+                                                ><br /><code
+                                                    >// exThumbImage:
+                                                    'data-exthumbimage';</code
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>showThumbByDefault</td>
+                                            <td>boolean</td>
+                                            <td>true</td>
+                                            <td>
+                                                Show/Hide thumbnails by default
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>toogleThumb</td>
+                                            <td>boolean</td>
+                                            <td>true</td>
+                                            <td>
+                                                Whether to display thumbnail
+                                                toggle button.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>pullCaptionUp</td>
+                                            <td>boolean</td>
+                                            <td>true</td>
+                                            <td>
+                                                Pull captions above thumbnails.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>enableThumbDrag</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Enables desktop mouse drag
+                                                support for thumbnails.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>enableThumbSwipe</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Enables thumbnail touch/swipe
+                                                support for touch devices
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>swipeThreshold</td>
+                                            <td>number</td>
+                                            <td><code>50</code></td>
+                                            <td>
+                                                By setting the swipeThreshold
+                                                (in px) you can set how far the
+                                                user must swipe for the
+                                                next/prev slide.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>loadYoutubeThumbnail</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                You can automatically load
+                                                thumbnails for youtube videos
+                                                from youtube by setting
+                                                loadYoutubeThumbnail true
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>youtubeThumbSize</td>
+                                            <td>number</td>
+                                            <td><code>1</code></td>
+                                            <td>
+                                                You can specify the thumbnail
+                                                size by setting respective
+                                                number. Here is the detailed
+                                                <a
+                                                    href="../demos/videos.html#auto-thumb"
+                                                    >demo</a
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>loadVimeoThumbnail</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                You can automatically load
+                                                thumbnails for vimeo videos from
+                                                vimeo by setting
+                                                loadYoutubeThumbnail true.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>vimeoThumbSize</td>
+                                            <td>string</td>
+                                            <td>
+                                                <code>'thumbnail_small'</code>
+                                            </td>
+                                            <td>
+                                                Thumbnail size for vimeo videos:
+                                                <code>'thumbnail_large'</code>
+                                                or
+                                                <code>'thumbnail_medium'</code>
+                                                or
+                                                <code>'thumbnail_small'</code>
+                                                Here is the detailed
+                                                <a
+                                                    href="../demos/videos.html#auto-thumb"
+                                                    >demo</a
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>loadDailymotionThumbnail</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                You can automatically load
+                                                thumbnails for dailymotion
+                                                videos from dailymotion by
+                                                setting loadYoutubeThumbnail
+                                                true.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>youtubeThumbSize values</th>
+                                            <th>size</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>0</code></td>
+                                            <td>480x360 pixels</td>
+                                            <td>Player Background Thumbnail</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>1</code></td>
+                                            <td>120x90 pixels</td>
+                                            <td>Start Thumbnail</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>2</code></td>
+                                            <td>120x90 pixels</td>
+                                            <td>Middle Thumbnail</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>3</code></td>
+                                            <td>120x90 pixels</td>
+                                            <td>End Thumbnail</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>hqdefault</code></td>
+                                            <td>480x360 pixels</td>
+                                            <td>High Quality Thumbnail</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>mqdefault</code></td>
+                                            <td>320x180 pixels</td>
+                                            <td>Medium Quality Thumbnail</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>default</code></td>
+                                            <td>120x90 pixels</td>
+                                            <td>Normal Quality Thumbnail</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>sddefault</code></td>
+                                            <td>640x480 pixels</td>
+                                            <td>
+                                                Standard Definition Thumbnail
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>maxresdefault</code></td>
+                                            <td>1920x1080 pixels</td>
+                                            <td>
+                                                Maximum Resolution Thumbnail
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div
+                                    class="bs-callout bs-callout-warning mrb20"
+                                >
+                                    <p>
+                                        <code>sddefault</code> and
+                                        <code>maxresdefault</code> are optional.
+                                        which may or may not exist.
+                                    </p>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>loadVimeoThumbnail values</th>
+                                            <th>size</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <code>thumbnail_small</code>
+                                            </td>
+                                            <td>100x75 pixels</td>
+                                            <td>Samll size Thumbnail</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>thumbnail_medium</code>
+                                            </td>
+                                            <td>200x150 pixels</td>
+                                            <td>Medium size Thumbnail</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>thumbnail_large</code>
+                                            </td>
+                                            <td>640x360 pixels</td>
+                                            <td>Large size Thumbnail</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section class="doc mrb50">
+                                <h3 class="anchor-title mrb15" id="lg-autoplay">
+                                    <a href="#lg-autoplay">Autoplay plugin</a>
+                                </h3>
+                                <div class="bs-callout bs-callout-danger mrb20">
+                                    <h4>Plugin dependency</h4>
+                                    <p>
+                                        You need to include autoplay plugin
+                                        (lg-autoplay.js) in your document to use
+                                        the following options.
+                                    </p>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>type</th>
+                                            <th>default</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>autoplay</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable gallery autoplay</td>
+                                        </tr>
+                                        <tr>
+                                            <td>pause</td>
+                                            <td>number</td>
+                                            <td><code>5000</code></td>
+                                            <td>
+                                                The time (in ms) between each
+                                                auto transition.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>progressBar</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Enable autoplay progress bar
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>fourceAutoplay</td>
+                                            <td>boolean</td>
+                                            <td><code>false</code></td>
+                                            <td>
+                                                If <code>false</code> autoplay
+                                                will be stopped after first user
+                                                action
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>autoplayControls</td>
+                                            <td>false</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Show/hide autoplay controls.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>appendAutoplayControlsTo</td>
+                                            <td>string</td>
+                                            <td><code>'.lg-toolbar'</code></td>
+                                            <td>
+                                                Where the autoply controls
+                                                should be appended.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section class="doc mrb50">
+                                <h3 class="anchor-title mrb15" id="lg-video">
+                                    <a href="#lg-video">Video plugin</a>
+                                </h3>
+                                <div class="bs-callout bs-callout-danger mrb20">
+                                    <h4>Plugin dependency</h4>
+                                    <p>
+                                        You need to include
+                                        <a
+                                            href="https://github.com/sachinchoolur/lg-video"
+                                            >video plugin</a
+                                        >
+                                        in the document to use the following
+                                        options.
+                                    </p>
+                                </div>
+                                <div class="bs-callout bs-callout-danger mrb20">
+                                    <h4>API dependency</h4>
+                                    <p>
+                                        Lightgallery require vimeo
+                                        <a
+                                            href="https://github.com/vimeo/player.js"
+                                            >player.js</a
+                                        >
+                                        to be included in the document for
+                                        pausing the vimeo video. (optional)
+                                        <br />
+                                        If you are using the
+                                        <a
+                                            href="https://github.com/sachinchoolur/lg-video"
+                                            >video plugin</a
+                                        >
+                                        version <= 1.3.x, you need to include
+                                        <a
+                                            href="https://f.vimeocdn.com/js/froogaloop2.min.js"
+                                            >froogaloop2</a
+                                        >
+                                        instead of
+                                        <a
+                                            href="https://github.com/vimeo/player.js"
+                                            >player.js</a
+                                        >
+                                    </p>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>type</th>
+                                            <th>default</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>videoMaxWidth</td>
+                                            <td>string</td>
+                                            <td><code>'855px'</code></td>
+                                            <td>
+                                                Set limit for video maximal
+                                                width.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>autoplayFirstVideo</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Enable/DIsable first video
+                                                autoplay. Note: Autoplay has to
+                                                be managed using this setting.
+                                                autoplay in
+                                                <code>PlayerParams</code>
+                                                doens't have any effect.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>youtubePlayerParams</td>
+                                            <td>object</td>
+                                            <td><code>{}</code></td>
+                                            <td>
+                                                Change youtube player
+                                                parameters. <br />link :
+                                                https://developers.google.com/youtube/player_parameters
+                                                <br />
+                                                ex:
+                                                <code>
+                                                    youtubePlayerParams: {
+                                                    modestbranding: 1, showinfo:
+                                                    0, controls: 0 }</code
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>vimeoPlayerParams</td>
+                                            <td>object</td>
+                                            <td><code>{}</code></td>
+                                            <td>
+                                                Change vimeo player parameters.
+                                                <br />link
+                                                https://developer.vimeo.com/player/embedding#universal-parameters
+                                                <br />
+                                                ex:
+                                                <code>
+                                                    vimeoPlayerParams: { byline
+                                                    : 0, portrait : 0, color :
+                                                    'CCCCCC' }</code
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>dailymotionPlayerParams</td>
+                                            <td>object</td>
+                                            <td><code>{}</code></td>
+                                            <td>
+                                                Change dailymotion player
+                                                parameters. <br />link
+                                                https://developer.dailymotion.com/player#player-parameters<br />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>vkPlayerParams</td>
+                                            <td>object</td>
+                                            <td><code>{}</code></td>
+                                            <td>
+                                                Change vk player parameters.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>videojs</td>
+                                            <td>boolean</td>
+                                            <td><code>false</code></td>
+                                            <td>
+                                                Enbale videojs custom video
+                                                player
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>videojsOptions</td>
+                                            <td>object</td>
+                                            <td><code>{}</code></td>
+                                            <td>Videojs player options</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section class="doc mrb50">
+                                <h3
+                                    class="anchor-title mrb15"
+                                    id="lg-fullscreen"
+                                >
+                                    <a href="#lg-fullscreen"
+                                        >Fullscreen plugin</a
+                                    >
+                                </h3>
+                                <div class="bs-callout bs-callout-danger mrb20">
+                                    <h4>Plugin dependency</h4>
+                                    <p>
+                                        You need to include fullscreen plugin
+                                        (lg-fullscreen.js) in your document to
+                                        use the following options.
+                                    </p>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>type</th>
+                                            <th>default</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>fullScreen</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Enable/Disable fullscreen mode
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section class="doc mrb50">
+                                <h3 class="anchor-title mrb15" id="lg-pager">
+                                    <a href="#lg-pager">Pager plugin</a>
+                                </h3>
+                                <div class="bs-callout bs-callout-danger mrb20">
+                                    <h4>Plugin dependency</h4>
+                                    <p>
+                                        You need to include pager plugin
+                                        (lg-pager.js) in your document to use
+                                        the following options.
+                                    </p>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>type</th>
+                                            <th>default</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>pager</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable/Disable pager</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section class="doc mrb50">
+                                <h3 class="anchor-title mrb15" id="lg-zoom">
+                                    <a href="#lg-zoom">Zoom plugin</a>
+                                </h3>
+                                <div class="bs-callout bs-callout-danger mrb20">
+                                    <h4>Plugin dependency</h4>
+                                    <p>
+                                        You need to include zoom plugin
+                                        (lg-zoom.js) in your document to use the
+                                        following options.
+                                    </p>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>type</th>
+                                            <th>default</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>zoom</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable/Disable zoom option</td>
+                                        </tr>
+                                        <tr>
+                                            <td>scale</td>
+                                            <td>number</td>
+                                            <td><code>1</code></td>
+                                            <td>
+                                                Value of zoom should be
+                                                incremented/decremented
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>enableZoomAfter</td>
+                                            <td>number in ms</td>
+                                            <td><code>50</code></td>
+                                            <td>
+                                                Some css styles will be added to
+                                                the images if zoom is enabled.
+                                                So it might conflict if you add
+                                                some custom styles to the images
+                                                such as the initial transition
+                                                while opening the gallery. So
+                                                you can delay adding zoom
+                                                related styles to the images by
+                                                changing the value of
+                                                <code>enableZoomAfter</code>.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>actualSize</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable actual pixel icon.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section class="doc mrb50">
+                                <h3 class="anchor-title mrb15" id="lg-hash">
+                                    <a href="#lg-hash">Hash plugin</a>
+                                </h3>
+                                <div class="bs-callout bs-callout-danger mrb20">
+                                    <h4>Plugin dependency</h4>
+                                    <p>
+                                        You need to include hash plugin
+                                        (lg-hash.js) in your document to use the
+                                        following options.
+                                    </p>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>type</th>
+                                            <th>default</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>hash</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable/Disable hash plugin</td>
+                                        </tr>
+                                        <tr>
+                                            <td>galleryId</td>
+                                            <td>number</td>
+                                            <td><code>1</code></td>
+                                            <td>
+                                                Unique id for each gallery. It
+                                                is mandatory when you use hash
+                                                plugin for multiple galleries on
+                                                the same page.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section class="doc mrb50">
+                                <h3 class="anchor-title mrb15" id="lg-share">
+                                    <a href="#lg-share">Share plugin</a>
+                                </h3>
+                                <div class="bs-callout bs-callout-danger mrb20">
+                                    <h4>Plugin dependency</h4>
+                                    <p>
+                                        You need to include share plugin
+                                        (lg-share) in your document to use the
+                                        following options.
+                                    </p>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>type</th>
+                                            <th>default</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>share</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable/Disable share plugin</td>
+                                        </tr>
+                                        <tr>
+                                            <td>facebook</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable Facebook share.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>facebookDropdownText</td>
+                                            <td>string</td>
+                                            <td><code>Facebook</code></td>
+                                            <td>Facebok dropdown text.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>twitter</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable twitter share.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>twitterDropdownText</td>
+                                            <td>string</td>
+                                            <td><code>Twitter</code></td>
+                                            <td>Twitter dropdown text</td>
+                                        </tr>
+                                        <tr>
+                                            <td>googlePlus</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable googlePlus share.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>googlePlusDropdownText</td>
+                                            <td>string</td>
+                                            <td><code>GooglePlus</code></td>
+                                            <td>GooglePlus dropdown text</td>
+                                        </tr>
+                                        <tr>
+                                            <td>pinterest</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable pinterest share.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>pinterestDropdownText</td>
+                                            <td>string</td>
+                                            <td><code>Pinterest</code></td>
+                                            <td>Pinterest dropdown text</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                            <section class="doc mrb50">
+                                <h3 class="anchor-title mrb15" id="lg-rotate">
+                                    <a href="#lg-rotate">Rotate plugin</a>
+                                </h3>
+                                <div class="bs-callout bs-callout-danger mrb20">
+                                    <h4>Plugin dependency</h4>
+                                    <p>
+                                        You need to include rotate plugin
+                                        (lg-rotate) in your document to use the
+                                        following options.
+                                    </p>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>type</th>
+                                            <th>default</th>
+                                            <th>description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>rotate</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>
+                                                Enable/Disable rotate option
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>rotateLeft</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable rotate left.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>rotateRight</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable rotate right.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>flipHorizontal</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable flip horizontal.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>flipVertical</td>
+                                            <td>boolean</td>
+                                            <td><code>true</code></td>
+                                            <td>Enable flip vertical.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>
+                    </section>
+                    <section class="section pdt0 pdb0">
+                        <div class="docs-inner">
+                            <section class="doc" id="events">
+                                <h2 class="anchor-title mrb30" id="events">
+                                    <a href="#events">Events</a>
+                                    <span class="border"></span>
+                                </h2>
+                                <div class="code-demo mrb20">
+                                    <h3
+                                        class="anchor-title mrb15"
+                                        id="how-to-use-events"
+                                    >
+                                        <a href="#how-to-use-events"
+                                            >How to use lightgallery</a
+                                        ><a
+                                            class="no-content"
+                                            href="https://learn.jquery.com/events/introduction-to-custom-events/"
+                                        >
+                                            custom events</a
+                                        >
+                                    </h3>
+                                    <div class="sample-code html">
+                                        <pre
+                                            class="prettyprint linenums lang-js"
+                                        >
+var $lg = $('#lightgallery');
+
+$lg.lightGallery();
+
+// Perform any action just before opening the gallery
+$lg.on('onBeforeOpen.lg',function(event){
+    alert('onBeforeOpen');
+});
+
+// custom event with extra parameters 
+// index - index of the slide
+// fromTouch - true if slide function called via touch event or mouse drag
+// fromThumb - true if slide function called via thumbnail click
+$lg.on('onBeforeSlide.lg',function(event, index, fromTouch, fromThumb){
+    console.log(index, fromTouch, fromThumb);
+});
+</pre
+                                        >
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="doc mrb50">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Event Type</th>
+                                            <th>parameters</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>onBeforeOpen.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                            </td>
+                                            <td>
+                                                Fired immediately before the
+                                                start opening.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onAfterOpen.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                            </td>
+                                            <td>
+                                                Fired immediately after opening
+                                                the gallery.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onAferAppendSlide.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                                <p>
+                                                    <code>index</code> - Index
+                                                    of the slide
+                                                </p>
+                                            </td>
+                                            <td>
+                                                This event is fired when the
+                                                slide content has been inserted
+                                                into its slide container.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onAfterAppendSubHtml.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                                <p>
+                                                    <code>index</code> - Index
+                                                    of the slide
+                                                </p>
+                                            </td>
+                                            <td>
+                                                This event is fired when the
+                                                sub-html content (ex : title/
+                                                description) has been appended
+                                                into the slide.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onSlideItemLoad.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                                <p>
+                                                    <code>index</code> - Index
+                                                    of the slide
+                                                </p>
+                                            </td>
+                                            <td>
+                                                This event is fired once the
+                                                image inside the slide has been
+                                                completely loaded .
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onBeforeSlide.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                                <p>
+                                                    <code>prevIndex</code> -
+                                                    Index of the previous slide
+                                                </p>
+                                                <p>
+                                                    <code>index</code> - Index
+                                                    of the slide
+                                                </p>
+                                                <p>
+                                                    <code>fromTouch</code> -
+                                                    true if slide function
+                                                    called via touch event or
+                                                    mouse drag
+                                                </p>
+                                                <p>
+                                                    <code>fromThumb</code> -
+                                                    true if slide function
+                                                    called via thumbnail click
+                                                </p>
+                                            </td>
+                                            <td>
+                                                fired immediately before each
+                                                slide transition.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onAfterSlide.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                                <p>
+                                                    <code>prevIndex</code> -
+                                                    Index of the previous slide
+                                                </p>
+                                                <p>
+                                                    <code>index</code> - Index
+                                                    of the slide
+                                                </p>
+                                                <p>
+                                                    <code>fromTouch</code> -
+                                                    true if slide function
+                                                    called via touch event or
+                                                    mouse drag
+                                                </p>
+                                                <p>
+                                                    <code>fromThumb</code> -
+                                                    true if slide function
+                                                    called via thumbnail click
+                                                </p>
+                                            </td>
+                                            <td>
+                                                fired immediately after each
+                                                slide transition.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onBeforePrevSlide.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                                <p>
+                                                    <code>index</code> - Index
+                                                    of the slide
+                                                </p>
+                                                <p>
+                                                    <code>fromTouch</code> -
+                                                    true if slide function
+                                                    called via touch event or
+                                                    mouse drag
+                                                </p>
+                                            </td>
+                                            <td>
+                                                fired immediately before each
+                                                "prev" slide transition
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onBeforeNextSlide.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                                <p>
+                                                    <code>index</code> - Index
+                                                    of the slide
+                                                </p>
+                                                <p>
+                                                    <code>fromTouch</code> -
+                                                    true if slide function
+                                                    called via touch event or
+                                                    mouse drag
+                                                </p>
+                                            </td>
+                                            <td>
+                                                fired immediately before each
+                                                "next" slide transition
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onDragstart.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                            </td>
+                                            <td>
+                                                Fired when the user starts to
+                                                drag the slide
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onDragmove.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                            </td>
+                                            <td>
+                                                Fired periodically during the
+                                                drag operation.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onDragend.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                            </td>
+                                            <td>
+                                                Fired when the user has finished
+                                                the drag operation
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onSlideClick.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                            </td>
+                                            <td>
+                                                Fired when the user clicks on
+                                                the slide and does not crossed
+                                                the swipeThreshold value.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onBeforeClose.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                            </td>
+                                            <td>
+                                                Fired immediately before the
+                                                start of the close process.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>onCloseAfter.lg</td>
+                                            <td>
+                                                <p>
+                                                    <code>event</code> - jQuery
+                                                    event object
+                                                </p>
+                                            </td>
+                                            <td>
+                                                Fired immediately once
+                                                lightgallery is closed.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>
+                    </section>
+                    <section class="section pdt0 pdb0">
+                        <div class="docs-inner">
+                            <section class="doc" id="methods">
+                                <h2 class="anchor-title mrb30" id="methods">
+                                    <a href="#methods">Methods</a>
+                                    <span class="border"></span>
+                                </h2>
+                                <div class="code-demo mrb20">
+                                    <h3
+                                        class="anchor-title mrb15"
+                                        id="how-to-use-methods"
+                                    >
+                                        <a href="#how-to-use-methods"
+                                            >How to use methods</a
+                                        >
+                                    </h3>
+                                    <div class="sample-code html">
+                                        <pre
+                                            class="prettyprint linenums lang-js"
+                                        >
+var $lg = $('#lightgallery');
+
+$lg.lightGallery();
+
+// Go to third slide
+// Index starts from 0
+$lg.data('lightGallery').slide(2);
+</pre
+                                        >
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="doc mrb50">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Parameters</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>slide()</td>
+                                            <td>
+                                                <code>index</code> - index of
+                                                the slide. starts from 0
+                                            </td>
+                                            <td>Goto specific slide.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>goToNextSlide()</td>
+                                            <td></td>
+                                            <td>Go to next slide.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>goToPrevSlide()</td>
+                                            <td></td>
+                                            <td>Go to previous slide.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>destroy()</td>
+                                            <td>
+                                                <code>true</code> - If you pass
+                                                true as a parameter destroy
+                                                method will destroy the gallery
+                                                completely. If parameter is
+                                                undefined or false destroy will
+                                                only close the gallery and
+                                                plugins instance remains with
+                                                the element.
+                                            </td>
+                                            <td>
+                                                close or destroy the gallery
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>
+                    </section>
+                    <section class="section pdt0 pdb0">
+                        <div class="docs-inner">
+                            <section class="doc" id="attributes">
+                                <h2 class="anchor-title mrb30">
+                                    <a href="#attributes">Attributes</a>
+                                    <span class="border"></span>
+                                </h2>
+                            </section>
+                            <section class="doc mrb50">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th width="200">Name</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>data-src</td>
+                                            <td>
+                                                the large version of your
+                                                image/video
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>
+                                                the large version of your
+                                                image/video
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-sub-html</td>
+                                            <td>
+                                                HTML content (captions) which
+                                                displays along with the slide.
+                                                Also, accepts id or class name
+                                                of an object(div) which contain
+                                                your sub html. If data-sub-html
+                                                is not provided captions will be
+                                                taken from the
+                                                <code>alt</code> or
+                                                <code>title</code> attributes of
+                                                the image/selector. this
+                                                behavior can be controlled by
+                                                updating the
+                                                <code
+                                                    >getCaptionFromTitleOrAlt</code
+                                                >
+                                                setting
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-sub-html-url</td>
+                                            <td>
+                                                url of the file which contain
+                                                your sub html.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-html</td>
+                                            <td>
+                                                id or class name of an
+                                                object(div) which contain your
+                                                html. used for inserting html5
+                                                videos
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-poster</td>
+                                            <td>Poster image for your video</td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-responsive</td>
+                                            <td>
+                                                List of images and viewport's
+                                                max width separated by comma.
+                                                <br />Ex:
+                                                <code
+                                                    >img/1-375.jpg 375,
+                                                    img/1-480.jpg 480,
+                                                    img/1-757.jpg 757</code
+                                                >. You can check the demo
+                                                <a
+                                                    href="../demos/responsive.html"
+                                                    >here</a
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-srcset</td>
+                                            <td>srcset values</td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-sizes</td>
+                                            <td>srcset sizes</td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-iframe</td>
+                                            <td>
+                                                Set true is you want to open
+                                                your url in an iframe
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-download-url</td>
+                                            <td>
+                                                Download url for your
+                                                image/video. Pass
+                                                <code>false</code> if you want
+                                                to hide the download button.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-width</td>
+                                            <td>
+                                                Actual size of the image in px.
+                                                used in zoom plugin to see the
+                                                actual size of the image when
+                                                you doubleclick on the image.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-facebook-share-url</td>
+                                            <td>
+                                                Facebook share URL. Specify only
+                                                if you want to provide separate
+                                                share URL for the specific
+                                                slide. By default, current
+                                                browser URL will be taken.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-tweet-text</td>
+                                            <td>Tweet text</td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-twitter-share-url</td>
+                                            <td>
+                                                Twitter share URL. Specify only
+                                                if you want to provide separate
+                                                share URL for the specific
+                                                slide. By default, current
+                                                browser URL will be taken.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-googleplus-share-url</td>
+                                            <td>
+                                                GooglePlus share URL. Specify
+                                                only if you want to provide
+                                                separate share URL for the
+                                                specific slide. By default,
+                                                current browser URL will be
+                                                taken.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-pinterest-share-url</td>
+                                            <td>
+                                                Pinterest share URL. Specify
+                                                only if you want to provide
+                                                separate share URL for the
+                                                specific slide. By default,
+                                                current browser URL will be
+                                                taken. Note: Pinterest requires
+                                                absolute URL
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>data-pinterest-text</td>
+                                            <td>
+                                                Description for Pinterest post
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>
+                    </section>
+                    <section class="section pdt0 pdb0">
+                        <div class="docs-inner">
+                            <section class="doc" id="dynamic">
+                                <h2 class="anchor-title mrb30">
+                                    <a href="#dynamic">Dynamic variables</a>
+                                    <span class="border"></span>
+                                </h2>
+                            </section>
+                            <section class="doc mrb50">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th width="160">Name</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>src</td>
+                                            <td>
+                                                the large version of your
+                                                image/video
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>href</td>
+                                            <td>
+                                                the large version of your
+                                                image/video
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>subHtml</td>
+                                            <td>
+                                                id or class name of an
+                                                object(div) which contain your
+                                                sub html.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>subHtmlUrl</td>
+                                            <td>
+                                                url of the file which contain
+                                                your sub html.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>html</td>
+                                            <td>
+                                                id or class name of an
+                                                object(div) which contain your
+                                                html. used for inserting html5
+                                                videos
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>alt</td>
+                                            <td>
+                                                alt attribute for the image
+                                                displayed in the gallery
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>title</td>
+                                            <td>
+                                                title attribute for the video.
+                                                pass only for video slides
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>poster</td>
+                                            <td>Poster image for your video</td>
+                                        </tr>
+                                        <tr>
+                                            <td>responsive</td>
+                                            <td>
+                                                List of images and viewport's
+                                                max width separated by comma.
+                                                <br />Ex:
+                                                <code
+                                                    >img/1-375.jpg 375,
+                                                    img/1-480.jpg 480,
+                                                    img/1-757.jpg 757</code
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>srcset</td>
+                                            <td>srcset values</td>
+                                        </tr>
+                                        <tr>
+                                            <td>sizes</td>
+                                            <td>srcset sizes</td>
+                                        </tr>
+                                        <tr>
+                                            <td>iframe</td>
+                                            <td>
+                                                Set true is you want to open
+                                                your like in an iframe
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>downloadUrl</td>
+                                            <td>
+                                                Download url for your
+                                                image/video. Pass
+                                                <code>false</code> if you want
+                                                to hide the download button.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>width</td>
+                                            <td>
+                                                Actual size of the image in px.
+                                                used in zoom plugin to see the
+                                                actual size of the image when
+                                                you doubleclick on the image.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>facebookShareUrl</td>
+                                            <td>
+                                                Facebook share URL. Specify only
+                                                if you want to provide separate
+                                                share URL for the specific
+                                                slide. By default, current
+                                                browser URL will be taken.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>tweetText</td>
+                                            <td>Tweet text</td>
+                                        </tr>
+                                        <tr>
+                                            <td>twitterShareUrl</td>
+                                            <td>
+                                                Twitter share URL. Specify only
+                                                if you want to provide separate
+                                                share URL for the specific
+                                                slide. By default, current
+                                                browser URL will be taken.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>googleplusUhareUrl</td>
+                                            <td>
+                                                GooglePlus share URL. Specify
+                                                only if you want to provide
+                                                separate share URL for the
+                                                specific slide. By default,
+                                                current browser URL will be
+                                                taken.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>pinterestShareUrl</td>
+                                            <td>
+                                                Pinterest share URL. Specify
+                                                only if you want to provide
+                                                separate share URL for the
+                                                specific slide. By default,
+                                                current browser URL will be
+                                                taken. Note: Pinterest requires
+                                                absolute URL
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>pinterestText</td>
+                                            <td>
+                                                Description for Pinterest post.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>
+                    </section>
+                    <section class="section pdt0 pdb0">
+                        <div class="docs-inner">
+                            <section class="doc" id="sass">
+                                <h2 class="anchor-title mrb30">
+                                    <a href="#sass">Sass variables</a>
+                                    <span class="border"></span>
+                                </h2>
+                            </section>
+                            <section class="doc mrb50">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>value</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <code>$backdrop-opacity</code>
+                                            </td>
+                                            <td><code>1</code></td>
+                                            <td>Gallery backdrop opacity</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>$lg-toolbar-bg</code></td>
+                                            <td>
+                                                <code>rgba(0, 0, 0, 0.45)</code>
+                                            </td>
+                                            <td>Toolbar background color</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code
+                                                    >$lg-border-radius-base</code
+                                                >
+                                            </td>
+                                            <td><code>2px</code></td>
+                                            <td>
+                                                Base border radius for the
+                                                gallery elements
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$lg-theme-highlight</code>
+                                            </td>
+                                            <td><code>rgb(169, 7, 7)</code></td>
+                                            <td>
+                                                Gallery highlight areas like
+                                                progressbar active bg,
+                                                thumbnails border..
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>$lg-icon-bg</code></td>
+                                            <td>
+                                                <code>rgba(0, 0, 0, 0.45)</code>
+                                            </td>
+                                            <td>
+                                                Gallery icons background color
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>$lg-icon-color</code></td>
+                                            <td><code>#999</code></td>
+                                            <td>Gallery icons color</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$lg-counter-color</code>
+                                            </td>
+                                            <td><code>#e6e6e6</code></td>
+                                            <td>Gallery counter color</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code
+                                                    >$lg-counter-font-size</code
+                                                >
+                                            </td>
+                                            <td><code>16px</code></td>
+                                            <td>Gallery counter font size</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$lg-next-prev-bg</code>
+                                            </td>
+                                            <td><code>$lg-icon-bg</code></td>
+                                            <td>
+                                                Next prev controls background
+                                                color
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$lg-next-prev-color</code>
+                                            </td>
+                                            <td><code>$lg-icon-color</code></td>
+                                            <td>
+                                                Next prev controls icon color
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code
+                                                    >$lg-next-prev-hover-color</code
+                                                >
+                                            </td>
+                                            <td>
+                                                <code
+                                                    >$lg-icon-hover-color</code
+                                                >
+                                            </td>
+                                            <td>
+                                                Next prev controls icon color on
+                                                hover
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$lg-progress-bar-bg</code>
+                                            </td>
+                                            <td><code>#333</code></td>
+                                            <td>
+                                                Progress bar background color
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code
+                                                    >$lg-progress-bar-active-bg</code
+                                                >
+                                            </td>
+                                            <td>
+                                                <code>$lg-theme-highlight</code>
+                                            </td>
+                                            <td>
+                                                Progress bar highlight color
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code
+                                                    >$lg-progress-bar-height</code
+                                                >
+                                            </td>
+                                            <td><code>5px</code></td>
+                                            <td>Height of the progress bar</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code
+                                                    >$zoom-transition-duration</code
+                                                >
+                                            </td>
+                                            <td><code>0.3s</code></td>
+                                            <td>
+                                                Image zoom animation duration..
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$lg-sub-html-bg</code>
+                                            </td>
+                                            <td>
+                                                <code>rgba(0, 0, 0, 0.45)</code>
+                                            </td>
+                                            <td>
+                                                Sub html container background
+                                                color
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$lg-sub-html-color</code>
+                                            </td>
+                                            <td><code>#EEE</code></td>
+                                            <td>Sub html color</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <code>$lg-thumb-toggle-bg</code>
+                                            </td>
+                                            <td><code>#0D0A0A</code></td>
+                                            <td>
+                                                Thumbnail icon toggle icon
+                                                background color
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code
+                                                    >$lg-thumb-toggle-color</code
+                                                >
+                                            </td>
+                                            <td><code>$lg-icon-color</code></td>
+                                            <td>
+                                                Thumbnail icon toggle icon color
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code
+                                                    >$lg-thumb-toggle-hover-color</code
+                                                >
+                                            </td>
+                                            <td>
+                                                <code
+                                                    >$lg-icon-hover-color</code
+                                                >
+                                            </td>
+                                            <td>
+                                                Thumbnail icon toggle icon color
+                                                on hover
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>$lg-thumb-bg</code></td>
+                                            <td><code>#0D0A0A</code></td>
+                                            <td>
+                                                Thumbnail container background
+                                                color
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><code>$zindex-outer</code></td>
+                                            <td><code>1050</code></td>
+                                            <td>Gallery outer div z-index</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$zindex-progressbar</code>
+                                            </td>
+                                            <td><code>1080</code></td>
+                                            <td>
+                                                Gallery autoplay progress bar
+                                                z-index
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$zindex-controls</code>
+                                            </td>
+                                            <td><code>1080</code></td>
+                                            <td>Gallery controls z-index</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$zindex-toolbar</code>
+                                            </td>
+                                            <td><code>1080</code></td>
+                                            <td>Gallery toolbar z-index</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$zindex-subhtml</code>
+                                            </td>
+                                            <td><code>1080</code></td>
+                                            <td>
+                                                Gallery sub html container
+                                                z-index
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$zindex-thumbnail</code>
+                                            </td>
+                                            <td><code>1080</code></td>
+                                            <td>
+                                                Gallery thumbnail container
+                                                z-index
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>$zindex-pager</code></td>
+                                            <td><code>1080</code></td>
+                                            <td>Gallery pager z-index</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$zindex-playbutton</code>
+                                            </td>
+                                            <td><code>1080</code></td>
+                                            <td>Video play button z-index</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>$zindex-item</code></td>
+                                            <td><code>1060</code></td>
+                                            <td>Gallery slide item z-index</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>$zindex-backdrop</code>
+                                            </td>
+                                            <td><code>1040</code></td>
+                                            <td>Gallery backdrop z-index</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>
+                    </section>
+                </div>
+                <div role="complementary" class="col-md-3">
+                    <nav
+                        class="side-nav"
+                        id="right-navbar"
+                        data-spy="affix"
+                        data-offset-top="60"
+                        data-offset-bottom="0"
+                    >
+                        <ul class="nav bs-docs-sidenav">
+                            <li>
+                                <a href="../docs/#main-features"
+                                    >Main features</a
+                                >
+                            </li>
+                            <li>
+                                <a href="../docs/#installation">Installation</a>
+                            </li>
+                            <li>
+                                <a href="#passing-options">Options</a>
+                                <ul class="nav">
+                                    <li>
+                                        <a href="#passing-options"
+                                            >Passing options</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a href="#lightgallery-core"
+                                            >lightgallery core</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a href="#lg-thumbnial">Thumbnails</a>
+                                    </li>
+                                    <li><a href="#lg-autoplay">Autoplay</a></li>
+                                    <li><a href="#lg-video">Video</a></li>
+                                    <li>
+                                        <a href="#lg-fullscreen">Fullscreen</a>
+                                    </li>
+                                    <li><a href="#lg-pager">Pager</a></li>
+                                    <li><a href="#lg-zoom">Zoom</a></li>
+                                    <li><a href="#lg-hash">Hash</a></li>
+                                    <li><a href="#lg-share">Share</a></li>
+                                    <li><a href="#lg-rotate">Rotate</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#events">Events</a>
+                            </li>
+                            <li>
+                                <a href="#methods">Methods</a>
+                            </li>
+                            <li>
+                                <a href="#attributes">Data-attributes</a>
+                            </li>
+                            <li>
+                                <a href="#dynamic">Dynamic variables </a>
+                            </li>
+                            <li>
+                                <a href="#sass">Sass variables</a>
+                            </li>
+                            <li>
+                                <a href="../docs/plugin-api.html"
+                                    >Plugin API
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../docs/license.html"
+                                    >Commercial License
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <a target="_blank" href="https://twitter.com/sachinchoolur"
+                ><img src="../static/img/social/twitter.png"
+            /></a>
+            <a target="_blank" href="https://in.linkedin.com/in/sachinchoolur"
+                ><img src="../static/img/social/linked-in.png"
+            /></a>
+        </footer>
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                (i[r] =
+                    i[r] ||
+                    function () {
+                        (i[r].q = i[r].q || []).push(arguments);
+                    }),
+                    (i[r].l = 1 * new Date());
+                (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m);
+            })(
+                window,
+                document,
+                'script',
+                '//www.google-analytics.com/analytics.js',
+                'ga',
+            );
+            ga('create', 'UA-49767543-2', 'sachinchoolur.github.io');
+            ga('send', 'pageview');
+        </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="../static/js/prettify.js"></script>
+        <script src="../static/js/transition.js"></script>
+        <script src="../static/js/collapse.js"></script>
+        <script src="../static/js/docs.js"></script>
+        <script src="../static/js/scrollspy.js"></script>
+        <script src="../static/js/affix.js"></script>
+    </body>
+</html>
