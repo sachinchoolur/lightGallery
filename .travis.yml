@@ -5,8 +5,6 @@ cache:
 node_js:
   - '10'
   - '11'
-  - '8'
-  - '6'
 script:
   - npm run test:prod && npm run build:travis
 branches:
