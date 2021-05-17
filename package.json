@@ -165,7 +165,7 @@
   "dependencies": {
     "@types/picturefill": "^3.0.0",
     "i": "^0.3.6",
-    "npm": "^6.14.8",
+    "npm": "^7.13.0",
     "video.js": "^7.0.3"
   },
   "peerDependencies": {
