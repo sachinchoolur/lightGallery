@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+        <title>lightGallery: easing</title>
+        <meta
+            name="description"
+            content="You can pass easing property via lightgallery cssEasing setting."
+        />
+        <link href="../static/css/main.css" rel="stylesheet" />
+        <link
+            href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link href="../lightgallery/css/lightgallery.css" rel="stylesheet" />
+        <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body class="demos">
+        <!--[if lt IE 7]>
+            <p class="browsehappy">
+                You are using an <strong>outdated</strong> browser. Please
+                <a href="http://browsehappy.com/">upgrade your browser</a> to
+                improve your experience.
+            </p>
+        <![endif]-->
+        <section class="promo_bar" id="promoBar">
+            <div class="container">
+                <p>
+                    lightGallery
+                    <a
+                        href="http://lightgalleryjs.com/"
+                        style="
+                            color: rgb(255, 255, 255);
+                            text-decoration: underline;
+                        "
+                    >
+                        version 2
+                    </a>
+                    has been released. Please upgrade
+                </p>
+            </div>
+        </section>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button
+                        type="button"
+                        class="navbar-toggle collapsed"
+                        data-toggle="collapse"
+                        data-target="#navbar"
+                        aria-expanded="false"
+                        aria-controls="navbar"
+                    >
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a
+                        class="navbar-brand"
+                        href="http://sachinchoolur.github.io/lightGallery/"
+                        >lg</a
+                    >
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="../">Home<span class="border"></span></a>
+                        </li>
+                        <li>
+                            <a href="../docs/license.html"
+                                >License<span class="border"></span
+                            ></a>
+                        </li>
+                        <li>
+                            <a href="../docs/"
+                                >Docs<span class="border"></span
+                            ></a>
+                        </li>
+                        <li class="active">
+                            <a href="../demos/"
+                                >Demos<span class="border"></span
+                            ></a>
+                        </li>
+                        <li>
+                            <a
+                                target="_blank"
+                                href="https://github.com/sachinchoolur/lightGallery"
+                                >Github<span class="border"></span
+                            ></a>
+                        </li>
+                        <!--li><a onclick="ga('send', 'event', 'wp', 'wp');" target="_blank" href="https://dzine.io/products/lightgallery-wp-plugin/">wordpress<span class="border"></span></a></li-->
+                        <li>
+                            <a
+                                target="_blank"
+                                href="https://github.com/sachinchoolur/lightGallery#version-20-update"
+                                >V2<span class="border"></span
+                            ></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <section class="section pdb0">
+            <div class="container-fluid">
+                <div class="section-header has-desc mrb50">
+                    <h1 class="page-header mrb15">
+                        Gallery with custom easing.
+                    </h1>
+                    <p>
+                        You can pass easing property via lightgallery
+                        <code>cssEasing</code> setting. Bellow you can find some
+                        of the possible values of <code>cssEasing</code>. Demo
+                        values are taken from
+                        <a target="_blank" href="http://twitter.com/matthewlein"
+                            >@matthewlein</a
+                        >'s <a href="http://matthewlein.com/ceaser/">ceaser</a>
+                    </p>
+                </div>
+                <div>
+                    <select id="select-ease" class="mrb30">
+                        <optgroup label="defaults">
+                            <option
+                                selected=""
+                                value="0.250, 0.250, 0.750, 0.750"
+                            >
+                                linear
+                            </option>
+                            <option value="0.250, 0.100, 0.250, 1.000">
+                                ease (default)
+                            </option>
+                            <option value="0.420, 0.000, 1.000, 1.000">
+                                ease-in
+                            </option>
+                            <option value="0.000, 0.000, 0.580, 1.000">
+                                ease-out
+                            </option>
+                            <option value="0.420, 0.000, 0.580, 1.000">
+                                ease-in-out
+                            </option>
+                        </optgroup>
+                        <optgroup label="Penner Equations (approximated)">
+                            <option value="0.550, 0.085, 0.680, 0.530">
+                                easeInQuad
+                            </option>
+                            <option value="0.550, 0.055, 0.675, 0.190">
+                                easeInCubic
+                            </option>
+                            <option value="0.895, 0.030, 0.685, 0.220">
+                                easeInQuart
+                            </option>
+                            <option value="0.755, 0.050, 0.855, 0.060">
+                                easeInQuint
+                            </option>
+                            <option value="0.470, 0.000, 0.745, 0.715">
+                                easeInSine
+                            </option>
+                            <option value="0.950, 0.050, 0.795, 0.035">
+                                easeInExpo
+                            </option>
+                            <option value="0.600, 0.040, 0.980, 0.335">
+                                easeInCirc
+                            </option>
+                            <option value="0.600, -0.280, 0.735, 0.045">
+                                easeInBack
+                            </option>
+                            <option value="0.250, 0.460, 0.450, 0.940">
+                                easeOutQuad
+                            </option>
+                            <option value="0.215, 0.610, 0.355, 1.000">
+                                easeOutCubic
+                            </option>
+                            <option value="0.165, 0.840, 0.440, 1.000">
+                                easeOutQuart
+                            </option>
+                            <option value="0.230, 1.000, 0.320, 1.000">
+                                easeOutQuint
+                            </option>
+                            <option value="0.390, 0.575, 0.565, 1.000">
+                                easeOutSine
+                            </option>
+                            <option value="0.190, 1.000, 0.220, 1.000">
+                                easeOutExpo
+                            </option>
+                            <option value="0.075, 0.820, 0.165, 1.000">
+                                easeOutCirc
+                            </option>
+                            <option value="0.175, 0.885, 0.320, 1.275">
+                                easeOutBack
+                            </option>
+                            <option value="0.455, 0.030, 0.515, 0.955">
+                                easeInOutQuad
+                            </option>
+                            <option value="0.645, 0.045, 0.355, 1.000">
+                                easeInOutCubic
+                            </option>
+                            <option value="0.770, 0.000, 0.175, 1.000">
+                                easeInOutQuart
+                            </option>
+                            <option value="0.860, 0.000, 0.070, 1.000">
+                                easeInOutQuint
+                            </option>
+                            <option value="0.445, 0.050, 0.550, 0.950">
+                                easeInOutSine
+                            </option>
+                            <option value="1.000, 0.000, 0.000, 1.000">
+                                easeInOutExpo
+                            </option>
+                            <option value="0.785, 0.135, 0.150, 0.860">
+                                easeInOutCirc
+                            </option>
+                            <option
+                                value="0.680, -0.550, 0.265, 1.550"
+                                selected=""
+                            >
+                                easeInOutBack
+                            </option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="demo-gallery dark mrb35">
+                    <ul id="custom-easing" class="list-unstyled row">
+                        <li
+                            class="col-xs-6 col-sm-4 col-md-3"
+                            data-src="../static/img/1.jpg"
+                            data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>"
+                        >
+                            <a href="">
+                                <img
+                                    class="img-responsive"
+                                    src="../static/img/thumb-1.jpg"
+                                />
+                                <div class="demo-gallery-poster">
+                                    <img src="../static/img/zoom.png" />
+                                </div>
+                            </a>
+                        </li>
+                        <li
+                            class="col-xs-6 col-sm-4 col-md-3"
+                            data-src="../static/img/2.jpg"
+                            data-sub-html="<h4>Bowness Bay</h4><p>A beautiful Sunrise this morning taken En-route to Keswick not one as planned but I'm extremely happy I was passing the right place at the right time....</p>"
+                        >
+                            <a href="">
+                                <img
+                                    class="img-responsive"
+                                    src="../static/img/thumb-2.jpg"
+                                />
+                                <div class="demo-gallery-poster">
+                                    <img src="../static/img/zoom.png" />
+                                </div>
+                            </a>
+                        </li>
+                        <li
+                            class="col-xs-6 col-sm-4 col-md-3"
+                            data-src="../static/img/13.jpg"
+                            data-sub-html="<h4>Sunset Serenity</h4><p>A gorgeous Sunset tonight captured at Coniston Water....</p>"
+                        >
+                            <a href="">
+                                <img
+                                    class="img-responsive"
+                                    src="../static/img/thumb-13.jpg"
+                                />
+                                <div class="demo-gallery-poster">
+                                    <img src="../static/img/zoom.png" />
+                                </div>
+                            </a>
+                        </li>
+                        <li
+                            class="col-xs-6 col-sm-4 col-md-3"
+                            data-src="../static/img/4.jpg"
+                            data-sub-html="<h4>Coniston Calmness</h4><p>Beautiful morning</p>"
+                        >
+                            <a href="">
+                                <img
+                                    class="img-responsive"
+                                    src="../static/img/thumb-4.jpg"
+                                />
+                                <div class="demo-gallery-poster">
+                                    <img src="../static/img/zoom.png" />
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="docs-ad">
+                    <div class="lg-ad light">
+                        <script
+                            async
+                            type="text/javascript"
+                            src="//cdn.carbonads.com/carbon.js?serve=CE7IV2QM&placement=sachinchoolurgithubio"
+                            id="_carbonads_js"
+                        ></script>
+                    </div>
+                </div>
+                <div class="code-demo mrb50">
+                    <div class="section-header">
+                        <h4 class="section-title mrb15">Javascript</h4>
+                    </div>
+                    <div class="sample-code js">
+                        <pre class="prettyprint linenums lang-js">
+$('#custom-easing').lightGallery({
+    cssEasing: 'cubic-bezier(0.680, -0.550, 0.265, 1.550)'
+})
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="demo-links section">
+            <div class="container-fluid">
+                <h2 id="more-demo" class="anchor-title mrb50">
+                    <a href="#more-demo">More demos</a>
+                    <span class="border"></span>
+                </h2>
+                <div class="row">
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-primary btn-lg" href="index.html"
+                            >Thumbnails</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-primary btn-lg" href="videos.html"
+                            >Youtube/Vimeo Videos</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a
+                            class="btn btn-primary btn-lg"
+                            href="html5-videos.html"
+                            >HTML5 Videos</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a
+                            class="btn btn-primary btn-lg"
+                            href="transitions.html"
+                            >Transitions</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-success btn-lg" href="dynamic.html"
+                            >Dynamic</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-success btn-lg" href="events.html"
+                            >Events</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-success btn-lg" href="methods.html"
+                            >Methods</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-success btn-lg" href="iframe.html"
+                            >Iframe</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-danger btn-lg" href="captions.html"
+                            >Captions</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-danger btn-lg" href="responsive.html"
+                            >Responsive</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-danger btn-lg" href="fixed-size.html"
+                            >fixed Size</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-danger btn-lg" href="html-markup.html"
+                            >Html Markup</a
+                        >
+                    </div>
+
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-danger btn-lg" href="comment-box.html"
+                            >Comment box</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-danger btn-lg" href="easing.html"
+                            >Easing</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-danger btn-lg" href="hash.html"
+                            >Hash plugin</a
+                        >
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3">
+                        <a class="btn btn-danger btn-lg" href="share.html"
+                            >Share</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer>
+            <a target="_blank" href="https://twitter.com/sachinchoolur"
+                ><img src="../static/img/social/twitter.png"
+            /></a>
+            <a target="_blank" href="https://in.linkedin.com/in/sachinchoolur"
+                ><img src="../static/img/social/linked-in.png"
+            /></a>
+        </footer>
+
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                (i[r] =
+                    i[r] ||
+                    function () {
+                        (i[r].q = i[r].q || []).push(arguments);
+                    }),
+                    (i[r].l = 1 * new Date());
+                (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m);
+            })(
+                window,
+                document,
+                'script',
+                '//www.google-analytics.com/analytics.js',
+                'ga',
+            );
+            ga('create', 'UA-49767543-2', 'sachinchoolur.github.io');
+            ga('send', 'pageview');
+        </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="../static/js/prettify.js"></script>
+        <script src="../static/js/transition.js"></script>
+        <script src="../static/js/collapse.js"></script>
+        <script src="../lightgallery/js/lightgallery.js"></script>
+        <script src="../static/js/demos.js"></script>
+    </body>
+</html>
