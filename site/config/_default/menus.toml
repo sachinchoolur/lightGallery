@@ -14,8 +14,8 @@
   weight = 40
 
 [[main]]
-  name = "Notify me"
-  url = "https://www.producthunt.com/upcoming/lightgallery"
+  name = "License"
+  url = "/license/"
   weight = 50
 
 
