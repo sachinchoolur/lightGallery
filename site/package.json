@@ -8,7 +8,8 @@
   "scripts": {
     "init": "rimraf .git && git init -b main",
     "start": "hugo server --disableFastRender",
-    "build": "hugo --gc --minify && npm run build:functions",
+    "build": "hugo --gc --minify && npm run build:functions && npm run copyfiles",
+    "copyfiles": "copyfiles CNAME public",
     "build:functions": "netlify-lambda build assets/lambda",
     "build:preview": "npm run build -D -F",
     "clean": "rimraf public resources functions",
@@ -26,6 +27,7 @@
     "@fullhuman/postcss-purgecss": "^3.1",
     "autoprefixer": "^10.2",
     "bootstrap": "^5.0.0-beta1",
+    "copyfiles": "^2.4.1",
     "eslint": "^7.17",
     "instant.page": "^5.1",
     "lazysizes": "^5.3",
