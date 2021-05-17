@@ -113,7 +113,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
-    "@commitlint/config-conventional": "^7.1.2",
+    "@commitlint/config-conventional": "^12.1.4",
     "@testing-library/dom": "^7.30.4",
     "@testing-library/jest-dom": "^5.12.0",
     "@types/jest": "^26.0.23",
