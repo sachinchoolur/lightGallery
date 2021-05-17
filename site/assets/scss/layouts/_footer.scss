@@ -9,7 +9,10 @@
         list-style-type: none;
         font-size: 1rem;
         line-height: 1.9rem;
-        margin-bottom: 0;
+        margin-bottom: 3rem;
+        @include media-breakpoint-up(sm) {
+            margin-bottom: 0;
+        }
     }
     h4 {
         font-size: 1rem;

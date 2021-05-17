@@ -5,7 +5,7 @@
 
 [[main]]
   name = "Demos"
-  url = "/demos/inline/"
+  url = "/demos/thumbnails/"
   weight = 30
 
 [[main]]
