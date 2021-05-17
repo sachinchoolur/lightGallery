@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: //sachinchoolur.github.io/lightGallery/v2/sitemap.xml
+Sitemap: //www.lightgalleryjs.com/v2/sitemap.xml
