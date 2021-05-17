@@ -1,0 +1,245 @@
+:root {
+    --main-bg: transparent;
+}
+hr {
+    background-color: #dae8ff;
+    margin: 4rem 0;
+    opacity: 1;
+}
+
+.contributors .content,
+.blog .content,
+.page .content,
+.error404 .content,
+.docs.list .content,
+.showcase.list .content,
+.themes.list .content {
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    margin: 2rem 0 1rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+body {
+    letter-spacing: 0.2px;
+    line-height: 1.45;
+}
+
+@include media-breakpoint-up(md) {
+    body {
+        font-size: $font-size-md;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .h1,
+    .h2,
+    .h3,
+    .h4,
+    .h5,
+    .h6 {
+        margin-bottom: 1.125rem;
+    }
+}
+
+a:hover,
+a:focus {
+    text-decoration: underline;
+}
+
+.section {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+.section-md {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+.section-sm {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/*
+.section svg {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  vertical-align: text-top;
+}
+*/
+
+.page-wrap {
+    padding-top: 91px;
+}
+
+.docs-sidebar {
+    order: 2;
+}
+
+@include media-breakpoint-up(lg) {
+    .docs-sidebar {
+        order: 0;
+        border-right: 1px solid $gray-200;
+    }
+
+    @supports ((position: -webkit-sticky) or (position: sticky)) {
+        .docs-sidebar {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 4rem;
+            z-index: 1000;
+            height: calc(100vh - 4rem);
+        }
+    }
+}
+
+@include media-breakpoint-up(xl) {
+    .docs-sidebar {
+        flex: 0 1 320px;
+    }
+}
+
+.docs-links {
+    padding-bottom: 5rem;
+}
+
+@include media-breakpoint-up(lg) {
+    @supports ((position: -webkit-sticky) or (position: sticky)) {
+        .docs-links {
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .docs-links {
+        display: block !important;
+        margin-right: -1.5rem;
+        padding-bottom: 4rem;
+    }
+}
+
+.docs-toc {
+    order: 2;
+}
+
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+    .docs-toc {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 4rem;
+        height: calc(100vh - 4rem);
+        overflow-y: auto;
+    }
+}
+
+.docs-content {
+    padding-bottom: 3rem;
+    order: 1;
+}
+
+.docs-navigation {
+    border-top: 1px solid $gray-200;
+    margin-top: 2rem;
+    margin-bottom: 0;
+    padding-top: 2rem;
+}
+
+.docs-navigation a {
+    font-size: $font-size-base * 0.9;
+}
+
+@include media-breakpoint-up(lg) {
+    .docs-navigation {
+        margin-bottom: -1rem;
+    }
+
+    .docs-navigation a {
+        font-size: $font-size-base;
+    }
+}
+
+.navbar a:hover,
+.navbar a:focus,
+a.btn:hover,
+a.btn:focus,
+.footer a:hover,
+.footer a:focus {
+    text-decoration: none;
+}
+
+#TableOfContents ul {
+    padding-left: 0;
+    list-style: none;
+}
+
+/*
+::selection {
+  background: lighten($primary, 55%);
+}
+*/
+
+.bg-dots {
+    background-image: radial-gradient($gray-300 15%, transparent 15%);
+    background-position: 0 0;
+    background-size: 1rem 1rem;
+    -webkit-mask: linear-gradient(to top, #fff, transparent);
+    mask: linear-gradient(to top, #fff, transparent);
+    width: 100%;
+    height: 9rem;
+    margin-top: -10rem;
+    z-index: -1;
+}
+
+.bg-dots-md {
+    margin-top: -11rem;
+}
+
+.bg-dots-lg {
+    margin-top: -12rem;
+}
+
+h2.monospace,
+p.monospace {
+    font-family: $font-family-code;
+}
+
+table {
+    @extend .table;
+
+    font-size: 1rem;
+}
+
+.navbar {
+    width: 100%;
+}
+
+button:focus {
+    outline: none;
+}

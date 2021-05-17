@@ -1,0 +1,24 @@
+{{ define "main" }}
+<div class="wrap container-xxl page-wrap" role="document">
+	<div class="row justify-content-center">
+	<div class="col-md-12 col-lg-10 col-xl-8">
+		<article>
+		<h1 class="text-center">{{ .Title }}</h1>
+		<div class="text-center">{{ .Content }}</div>
+				<div class="card-list">
+					{{ $currentSection := .CurrentSection }}
+					{{ range where .Site.RegularPages.ByTitle "Section" .Section }}
+						{{ if in (.Permalink | string) $currentSection.RelPermalink }}
+							<div class="card my-3">
+								<div class="card-body">
+									<a class="stretched-link" href="{{ .Permalink }}">{{ .Params.title | title }} &rarr;</a>
+								</div>
+							</div>
+						{{ end }}
+					{{ end }}
+				</div>
+		</article>
+	</div>
+	</div>
+</div>
+{{ end }}

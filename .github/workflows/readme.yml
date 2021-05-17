@@ -1,0 +1,18 @@
+name: Readme
+
+on:
+  schedule:
+    # Once a day at 10 PM
+    - cron: 0 22 * * *
+  push:
+    branches:
+      - master
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: JasonEtco/rss-to-readme@v1
+        with:
+          feed-url: https://gethyas.com/blog/index.xml
+          readme-section: feed

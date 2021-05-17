@@ -1,0 +1,97 @@
+@import 'lg-variables';
+@import 'lg-mixins';
+.lg-outer {
+    // reset transition duration
+    &.lg-css3.lg-zoom-dragging {
+        .lg-item.lg-complete.lg-zoomable {
+            .lg-img-wrap,
+            .lg-image {
+                @include transition-duration(0ms !important);
+            }
+        }
+    }
+    &.lg-use-transition-for-zoom {
+        .lg-item.lg-complete.lg-zoomable {
+            .lg-img-wrap {
+                will-change: transform;
+                @include transitionCustom(
+                    transform $zoom-transition-duration
+                        cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s
+                );
+            }
+        }
+        &.lg-zoom-drag-transition {
+            .lg-item.lg-complete.lg-zoomable {
+                .lg-img-wrap {
+                    will-change: transform;
+                    @include transitionCustom(
+                        transform 0.8s cubic-bezier(0, 0, 0.25, 1) 0s
+                    );
+                }
+            }
+        }
+    }
+
+    .lg-item.lg-complete.lg-zoomable {
+        .lg-img-wrap {
+            @include translate3d(0, 0, 0);
+            @include backface-visibility(hidden);
+        }
+
+        .lg-image,
+        .lg-dummy-img {
+            // Translate required for zoom
+            @include scale3d(1, 1, 1);
+            will-change: opacity, transform;
+            @include transitionCustom(
+                transform $zoom-transition-duration
+                    cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s,
+                opacity 0.15s !important
+            );
+            @include transform-origin(0 0);
+            @include backface-visibility(hidden);
+        }
+    }
+}
+
+.lg-icon {
+    // zoom buttons
+    &.lg-zoom-in {
+        &:after {
+            content: '\e311';
+        }
+    }
+
+    &.lg-actual-size {
+        font-size: 20px;
+        &:after {
+            content: '\e033';
+        }
+    }
+
+    &.lg-zoom-out {
+        opacity: 0.5;
+        pointer-events: none;
+
+        &:after {
+            content: '\e312';
+        }
+
+        .lg-zoomed & {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    }
+}
+.lg-outer {
+    &[data-lg-slide-type='video'],
+    &[data-lg-slide-type='iframe'],
+    &.lg-first-slide-loading {
+        .lg-zoom-in,
+        .lg-actual-size,
+        .lg-zoom-out {
+            opacity: $lg-toolbar-icon-disabled-opacity;
+            pointer-events: none;
+        }
+    }
+}

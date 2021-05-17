@@ -1,0 +1,233 @@
+.lg-container {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+        Arial, 'Noto Sans', 'Liberation Sans', sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+// default theme
+.lg-next,
+.lg-prev {
+    background-color: $lg-next-prev-bg;
+    border-radius: $lg-border-radius-base;
+    color: $lg-next-prev-color;
+    cursor: pointer;
+    display: block;
+    font-size: 22px;
+    margin-top: -10px;
+    padding: 8px 10px 9px;
+    position: absolute;
+    top: 50%;
+    z-index: $zindex-controls;
+    outline: none;
+    border: none;
+
+    &.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    &:hover {
+        color: $lg-next-prev-hover-color;
+    }
+}
+
+.lg-next {
+    right: 20px;
+
+    &:before {
+        content: '\e095';
+    }
+}
+
+.lg-prev {
+    left: 20px;
+
+    &:after {
+        content: '\e094';
+    }
+}
+
+@include keyframes(lg-right-end) {
+    0% {
+        left: 0;
+    }
+
+    50% {
+        left: -30px;
+    }
+
+    100% {
+        left: 0;
+    }
+}
+
+@include keyframes(lg-left-end) {
+    0% {
+        left: 0;
+    }
+
+    50% {
+        left: 30px;
+    }
+
+    100% {
+        left: 0;
+    }
+}
+
+.lg-outer {
+    &.lg-right-end {
+        .lg-object {
+            @include animation(lg-right-end 0.3s);
+            position: relative;
+        }
+    }
+
+    &.lg-left-end {
+        .lg-object {
+            @include animation(lg-left-end 0.3s);
+            position: relative;
+        }
+    }
+}
+
+// lg toolbar
+.lg-toolbar {
+    z-index: $zindex-toolbar;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    .lg-media-overlap & {
+        background-image: $lg-toolbar-bg;
+    }
+
+    .lg-icon {
+        color: $lg-toolbar-icon-color;
+        cursor: pointer;
+        float: right;
+        font-size: 24px;
+        height: 47px;
+        line-height: 27px;
+        padding: 10px 0;
+        text-align: center;
+        width: 50px;
+        text-decoration: none !important;
+        outline: medium none;
+        will-change: color;
+        @include transition(color 0.2s linear);
+        background: none;
+        border: none;
+        box-shadow: none;
+        &.lg-icon-18 {
+            font-size: 18px;
+        }
+        &:hover {
+            color: $lg-toolbar-icon-hover-color;
+        }
+    }
+
+    .lg-close {
+        &:after {
+            content: '\e070';
+        }
+    }
+    .lg-maximize {
+        font-size: 22px;
+        &:after {
+            content: '\e90a';
+        }
+    }
+
+    .lg-download {
+        &:after {
+            content: '\e0f2';
+        }
+    }
+}
+
+// lightGallery title
+.lg-sub-html {
+    color: $lg-sub-html-color;
+    font-size: 16px;
+    padding: 10px 40px;
+    text-align: center;
+    z-index: $zindex-subhtml;
+    opacity: 0;
+    @include transition(opacity 0.2s ease-out 0s);
+
+    h4 {
+        margin: 0;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 12px;
+        margin: 5px 0 0;
+    }
+    a {
+        color: inherit;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    .lg-media-overlap & {
+        background-image: $lg-sub-html-bg;
+    }
+    .lg-item & {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+    }
+}
+
+.lg-error-msg {
+    font-size: 14px;
+    color: #999;
+}
+
+// lg image counter
+.lg-counter {
+    color: $lg-icon-color;
+    display: inline-block;
+    font-size: $lg-counter-font-size;
+    padding-left: 20px;
+    padding-top: 12px;
+    height: 47px;
+    vertical-align: middle;
+}
+
+.lg-closing {
+    .lg-toolbar,
+    .lg-prev,
+    .lg-next,
+    .lg-sub-html {
+        opacity: 0;
+        @include transitionCustom(
+            transform 0.08 cubic-bezier(0, 0, 0.25, 1) 0s,
+            opacity 0.08 cubic-bezier(0, 0, 0.25, 1) 0s,
+            color 0.08 linear
+        );
+    }
+}
+
+// Starting effect
+body:not(.lg-from-hash) {
+    .lg-outer {
+        &.lg-start-zoom {
+            .lg-object {
+                opacity: 0;
+                will-change: opacity;
+                @include transitionCustom(
+                    opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important
+                );
+            }
+            .lg-item.lg-complete {
+                .lg-object {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}

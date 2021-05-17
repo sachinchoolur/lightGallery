@@ -1,0 +1,36 @@
+{{$id := .Get "id"}}
+
+<div class="gallery-demo-videos">
+    <div id="{{$id}}" class="list-unstyled">
+        <a
+            data-lg-size="1280-720"
+            data-pinterest-text="Pin it3"
+            data-tweet-text="lightGallery slide  4"
+            data-video='{"source": [{"src":"{{.Page.Site.BaseURL}}/videos/video1.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "controls": true}}'
+            data-poster="{{.Page.Site.BaseURL}}/images/demo/html5-video-poster.jpg"
+            data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
+        >
+            <img
+                width="300"
+                height="100"
+                class="img-responsive"
+                src="{{.Page.Site.BaseURL}}/images/demo/html5-video-poster.jpg"
+            />
+        </a>
+        <a
+            data-lg-size="1280-720"
+            data-pinterest-text="Pin it3"
+            data-tweet-text="lightGallery slide  4"
+            data-video='{"source": [{"src":"{{.Page.Site.BaseURL}}/videos/video2.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "controls": true}}'
+            data-poster="{{.Page.Site.BaseURL}}/images/demo/html5-video-poster-2.jpg"
+            data-sub-html="<h4>ROLLIN' SAFARI - 'Meerkats' - what if animals were round?</h4>"
+        >
+            <img
+                width="300"
+                height="100"
+                class="img-responsive"
+                src="{{.Page.Site.BaseURL}}/images/demo/html5-video-poster-2.jpg"
+            />
+        </a>
+    </div>
+</div>

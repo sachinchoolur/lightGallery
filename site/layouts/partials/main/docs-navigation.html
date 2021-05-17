@@ -1,0 +1,24 @@
+{{ if or .Prev .Next -}}
+	<div class="docs-navigation d-flex justify-content-between">
+	<!-- https://www.feliciano.tech/blog/custom-sort-hugo-single-pages/ -->
+	{{ $pages := where site.RegularPages "Section" .Section -}}
+	{{ with $pages.Next . -}}
+		<a href="{{ .Permalink }}">
+			<div class="card my-1">
+				<div class="card-body py-2">
+					&larr; {{ .Title }}
+				</div>
+			</div>
+		</a>
+	{{ end -}}
+	{{ with $pages.Prev . -}}
+		<a class="ms-auto" href="{{ .Permalink }}">
+			<div class="card my-1">
+				<div class="card-body py-2">
+					{{ .Title }} &rarr;
+				</div>
+			</div>
+		</a>
+	{{ end -}}
+	</div>
+{{ end -}}

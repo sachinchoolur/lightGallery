@@ -1,0 +1,62 @@
+[
+    {
+        "name": "thumbnail",
+        "src": "src/plugins/thumbnail/",
+        "folder": "plugins/thumbnail/",
+        "fileName": "lg-thumbnail"
+    },
+    {
+        "name": "video",
+        "src": "src/plugins/video/",
+        "folder": "plugins/video/",
+        "fileName": "lg-video"
+    },
+    {
+        "name": "zoom",
+        "src": "src/plugins/zoom/",
+        "folder": "plugins/zoom/",
+        "fileName": "lg-zoom"
+    },
+    {
+        "name": "share",
+        "src": "src/plugins/share/",
+        "folder": "plugins/share/",
+        "fileName": "lg-share"
+    },
+    {
+        "name": "rotate",
+        "src": "src/plugins/rotate/",
+        "folder": "plugins/rotate/",
+        "fileName": "lg-rotate"
+    },
+    {
+        "name": "pager",
+        "src": "src/plugins/pager/",
+        "folder": "plugins/pager/",
+        "fileName": "lg-pager"
+    },
+    {
+        "name": "hash",
+        "src": "src/plugins/hash/",
+        "folder": "plugins/hash/",
+        "fileName": "lg-hash"
+    },
+    {
+        "name": "fullscreen",
+        "src": "src/plugins/fullscreen/",
+        "folder": "plugins/fullscreen/",
+        "fileName": "lg-fullscreen"
+    },
+    {
+        "name": "comment",
+        "src": "src/plugins/comment/",
+        "folder": "plugins/comment/",
+        "fileName": "lg-comment"
+    },
+    {
+        "name": "autoplay",
+        "src": "src/plugins/autoplay/",
+        "folder": "plugins/autoplay/",
+        "fileName": "lg-autoplay"
+    }
+]

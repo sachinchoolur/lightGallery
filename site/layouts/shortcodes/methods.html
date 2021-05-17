@@ -1,0 +1,80 @@
+{{$interface := dict}}
+{{$categoryId := int 0}}
+{{ $categoryIds := slice }}
+{{$interfaceName := .Get "interface"}}
+{{ range .Site.Data.doc.children -}}
+{{ if eq .name $interfaceName}}
+{{$interface = .children}}
+{{ end }}
+{{ end -}}
+<div class="docs-methods-section">
+
+    {{ range .Site.Data.doc.children -}}
+    {{ if eq .name "LightGallery"}}
+    {{ range .groups -}}
+    {{ if eq .title "Methods"}}
+    {{ range .categories -}}
+    {{ if eq .title "lGPublicMethods"}}
+    {{$categoryIds = .children}}
+    {{ end }}
+    {{end -}}
+    {{ end}}
+    {{ end -}}
+    {{ end }}
+    {{ end }}
+
+
+
+
+    {{$method := dict}}
+    {{$categoryId := int 0}}
+
+    {{ range .Site.Data.doc.children -}}
+    {{ if eq .name "LightGallery"}}
+    {{ range .children -}}
+    {{$method := .}}
+    {{range $categoryIds -}}
+    {{$categoryId = .}}
+    {{ with $method }}
+    {{ if eq (int .id) (int $categoryId)}}
+
+    {{ range .signatures -}}
+    <div class="docs-common-section">
+        <p class="docs-common-desc"><span class="anchor-id" id="{{.name}}"><b>Name: </b>{{.name}} <a href="#{{.name}}" class="anchor" aria-hidden="true">#</a><span></span></p>
+
+        <p class="docs-common-desc"><b>Description: </b> {{.comment.shortText}}</p>
+        <p class="docs-common-desc">{{.comment.text}}</p>
+
+        {{ range .comment.tags -}}
+        {{ if eq .tag "description"}}
+        <p class="docs-common-desc">{{ .text | safeHTML }}</p>
+        {{ end}}
+        {{ if eq .tag "example"}}
+        <p class="docs-common-desc"><b>Example: </b></p>
+        <div class="docs-common-highlight">
+            {{ highlight .text "js" "" }}
+        </div>
+        {{ end}}
+        {{ if eq .tag "note"}}
+        <div class="docs-common-notes">
+            <p class="docs-common-desc">
+                <b>Note : </b>
+                {{.text | markdownify}}
+            </p>
+        </div>
+        {{ end}}
+        {{ if eq .tag "see"}}
+        <p class="docs-common-desc"><b>See also:</b>{{.text | safeHTML}}</p>
+        {{ end}}
+        {{ end -}}
+    </div>
+
+    {{end -}}
+    {{ end}}
+    {{ end }}
+    {{end -}}
+    {{ end -}}
+    {{ end }}
+    {{ end }}
+
+</div>

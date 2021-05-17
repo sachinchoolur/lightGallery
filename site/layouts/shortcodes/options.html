@@ -1,0 +1,63 @@
+{{$pluginName := .Get "pluginName"}}
+
+
+{{ if $pluginName }}
+<div class="alert alert-warning" role="alert">
+    <b>Plugin dependency</b> - You need to include {{$pluginName}} plugin in the document to use the following options.
+</div>
+{{ end }}
+
+<table class="options-table">
+    {{$interface := dict}}
+    {{$variable := dict}}
+    {{$interfaceName := .Get "interface"}}
+    {{$variableName := .Get "variable"}}
+    {{ range .Site.Data.doc.children -}}
+    {{ if eq .name $interfaceName}}
+    {{$interface = .children}}
+    {{ else if eq .name $variableName }}
+    {{$variable = .children}}
+    {{ end }}
+    {{ end -}}
+
+
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        {{ if $variableName }}
+        <th>Default</th>
+        {{ end }}
+    </tr>
+
+
+    {{range $index, $element := $interface}}
+    <tr {{if hasPrefix $element.name "__" }} style='display: none;' {{end}} class="options-table-tr-head">
+        <td><span class="anchor-id" id="{{$element.name}}">{{$element.name}} <a href="#{{$element.name}}" class="anchor" aria-hidden="true">#</a><span></span></td>
+        <td>{{$element.type.name}}</td>
+        {{ if $variableName }}
+        {{$defaultValue := (index $variable $index).defaultValue}}
+        <td>{{$defaultValue}}</td>
+        {{ end }}
+    </tr>
+    <tr class="options-table-description">
+        {{ if $variableName }}
+        <td colspan="3">
+            {{else}}
+        <td colspan="2">
+            {{ end }}
+            <p>{{.comment.shortText | safeHTML}}</p>
+            {{ if .comment.text}}
+            <p>{{.comment.text | safeHTML}}</p>
+            {{ end}}
+            {{ range .comment.tags -}}
+            {{ if eq .tag "description"}}
+            <p>{{.text | safeHTML}}</p>
+            {{ end}}
+            {{ if eq .tag "example"}}
+            {{ highlight .text "js" "" }}
+            {{ end}}
+            {{ end -}}
+        </td>
+    </tr>
+    {{ end }}
+</table>

@@ -1,0 +1,63 @@
+{{$interface := dict}}
+{{$interfaceName := .Get "interface"}}
+{{ range .Site.Data.doc.children -}}
+{{ if eq .name $interfaceName}}
+{{$interface = .children}}
+{{ end }}
+{{ end -}}
+<div class="docs-common-section">
+
+    {{ range .Site.Data.doc.children -}}
+    {{ if eq .name $interfaceName}}
+    {{ range .comment.tags -}}
+    {{ if eq .tag "name"}}
+    <p class="docs-common-desc"><span class="anchor-id" id="{{.text}}"><b>Name: </b>{{.text}} <a href="#{{.text}}" class="anchor" aria-hidden="true">#</a><span></span></p>
+    {{ end}}
+    {{ end -}}
+    <p class="docs-common-desc"><b>Description: </b>{{.comment.shortText}}</p>
+    {{ end }}
+    {{ end }}
+    {{if $interface }}
+    <p class="docs-common-desc"><b>Detail:</b></p>
+    <table class="options table-blue" style="width:100%">
+
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+
+
+        {{range $index, $element := $interface}}
+        <tr>
+            <td>{{$element.name}}</td>
+            <td>{{$element.type.name}}</td>
+
+            <td>
+                {{.comment.shortText | safeHTML}}
+                {{ range .comment.tags -}}
+                {{ if eq .tag "description"}}
+                <p>
+                    {{.text}}
+                </p>
+                {{ end}}
+                {{ end -}}
+            </td>
+        </tr>
+        {{ end }}
+    </table>
+    {{ range .Site.Data.doc.children -}}
+    {{ if eq .name $interfaceName}}
+    {{ range .comment.tags -}}
+    {{ if eq .tag "example"}}
+    <p class="docs-common-desc"><b>Example:</b></p>
+    {{ highlight .text "js" "" }}
+    {{ end}}
+    {{ if eq .tag "see"}}
+    <p class="docs-common-desc"><b>See also:</b>{{.text | safeHTML}}</p>
+    {{ end}}
+    {{ end -}}
+    {{ end }}
+    {{ end }}
+    {{ end }}
+</div>

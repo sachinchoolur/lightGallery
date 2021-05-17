@@ -1,0 +1,21 @@
+{{ define "main" }}
+<div class="wrap container-xxl page-wrap" role="document">
+	<div class="row flex-xl-nowrap">
+		<div class="col-lg-2 col-xl-2 docs-sidebar">
+			<nav class="docs-links" aria-label="Main navigation">
+				{{ partial "sidebar/docs-menu.html" . }}
+			</nav>
+		</div>
+		<nav class="docs-toc d-none d-xl-block col-xl-2" aria-label="Secondary navigation">
+			{{ partial "sidebar/docs-toc.html" . }}
+		</nav>
+		<main class="docs-content col-lg-10 col-xl-8">
+			<h1>{{ .Title }}</h1>
+			<p class="lead">{{ .Params.lead | safeHTML }}</p>
+			{{ partial "main/headline-hash.html" .Content }}
+			{{ partial "main/edit-page.html" . }}
+			{{ partial "main/docs-navigation.html" . }}
+		</main>
+	</div>
+</div>
+{{ end }}

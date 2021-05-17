@@ -1,0 +1,56 @@
+{{$data := .Get "data"}}
+
+
+<table class="options-table options-stripe-table">
+    {{$interface := dict}}
+    {{$variable := dict}}
+    {{$interfaceName := .Get "interface"}}
+    {{$variableName := .Get "variable"}}
+    {{ range .Site.Data.doc.children -}}
+        {{ if eq .name $interfaceName}}
+            {{$interface = .children}}
+        {{ else if eq .name $variableName }}
+            {{$variable = .children}}
+        {{ end }}
+    {{ end -}}
+
+
+    <tr>
+        <th style="width:180px">Name</th>
+        <th>Description {{$data}}</th>
+    </tr>
+
+
+    {{range $index, $element := $interface}}
+    <tr {{if hasPrefix $element.name "__" }} style='display: none;' {{end}} class="options-table-tr-head">
+            <td>
+                {{ if eq $data "true"}}
+                    {{ range .comment.tags -}}
+                        {{ if eq .tag "data-attr"}}
+                            <p>
+                                <span class="anchor-id" id="{{.text}}">{{.text | safeHTML}} <a href="#{{.text}}" class="anchor" aria-hidden="true">#</a><span></span>
+                            </p>
+                        {{ end}}
+                    {{ end -}}
+                {{ else -}}
+                    <span class="anchor-id" id="{{$element.name}}">{{$element.name}} <a href="#{{$element.name}}" class="anchor" aria-hidden="true">#</a><span></span>
+                {{ end}}
+                
+            </td>
+            <td>
+                {{.comment.shortText | safeHTML}}
+            {{.comment.text | safeHTML}}
+            {{ range .comment.tags -}}
+                {{ if eq .tag "description"}}
+                    <p>
+                        {{.text | safeHTML}}
+                    </p>
+                {{ end}}
+                {{ if eq .tag "example"}}
+                    {{ highlight .text "" "" }}
+                {{ end}}
+            {{ end -}}
+        </td>
+        </tr>
+    {{ end }}
+  </table>

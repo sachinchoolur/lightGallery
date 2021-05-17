@@ -1,0 +1,101 @@
+:root {
+    --select-border: #777;
+    --select-focus: blue;
+    --select-arrow: var(--select-border);
+}
+
+select {
+    // A reset of styles, including removing the default dropdown arrow
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    padding: 0 10px;
+    margin: 0;
+    width: 100%;
+    font-family: inherit;
+
+    color: #000;
+    font-size: 14px;
+    letter-spacing: -0.21px;
+    box-sizing: border-box;
+    line-height: 17px;
+    height: 40px;
+
+    // Stack above custom arrow
+    z-index: 1;
+
+    // Remove dropdown arrow in IE10 & IE11
+    // @link https://www.filamentgroup.com/lab/select-css.html
+    &::-ms-expand {
+        display: none;
+    }
+
+    // Remove focus outline, will add on alternate element
+    outline: none;
+}
+
+.select {
+    display: grid;
+    grid-template-areas: 'select';
+    align-items: center;
+    position: relative;
+
+    select,
+    &::after {
+        grid-area: select;
+    }
+
+    min-width: 15ch;
+    max-width: 30ch;
+
+    border: 2px solid #d8dbe0;
+    border-radius: 6px;
+    padding: 0 10px;
+
+    cursor: pointer;
+
+    // Optional styles
+    // remove for transparency
+    background-color: #fff;
+
+    // Custom arrow
+    &:not(.select--multiple)::after {
+        content: '';
+        justify-self: end;
+        width: 0.8em;
+        height: 0.5em;
+        background-color: var(--select-arrow);
+        clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+    }
+}
+
+// Interim solution until :focus-within has better support
+select:focus + .focus {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    border: 2px solid var(--select-focus);
+    border-radius: inherit;
+}
+
+select[multiple] {
+    padding-right: 0;
+
+    /*
+   * Safari will not reveal an option
+   * unless the select height has room to 
+   * show all of it
+   * Firefox and Chrome allow showing 
+   * a partial option
+   */
+    height: 6rem;
+
+    option {
+        white-space: normal;
+
+        // Only affects Chrome
+        outline-color: var(--select-focus);
+    }
+}

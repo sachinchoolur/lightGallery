@@ -1,0 +1,7 @@
+{
+    "name": "lightgallery/plugins/comment",
+    "private": true,
+    "main": "lg-comment.umd.js",
+    "module": "lg-comment.es5.js",
+    "typings": "lg-comment.d.ts"
+}

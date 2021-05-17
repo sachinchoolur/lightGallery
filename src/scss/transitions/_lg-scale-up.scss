@@ -1,0 +1,33 @@
+.lg-css3 {
+    &.lg-scale-up {
+        .lg-item {
+            opacity: 0;
+
+            &.lg-prev-slide {
+                @include transform(
+                    scale3d(0.8, 0.8, 0.8) translate3d(0%, 10%, 0)
+                );
+            }
+
+            &.lg-next-slide {
+                @include transform(
+                    scale3d(0.8, 0.8, 0.8) translate3d(0%, 10%, 0)
+                );
+            }
+
+            &.lg-current {
+                @include transform(scale3d(1, 1, 1) translate3d(0, 0, 0));
+                opacity: 1;
+            }
+
+            &.lg-prev-slide,
+            &.lg-next-slide,
+            &.lg-current {
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s ease 0s
+                );
+            }
+        }
+    }
+}

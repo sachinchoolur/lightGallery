@@ -1,0 +1,14 @@
+{{ define "main" }}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <h1>{{ .Title }}</h1>
+    <ul>
+    {{ range .Data.Pages.ByTitle }}
+      <li>
+        <a href="{{ .Permalink }}">{{ .Title }} ({{ len .Data.Pages }})</a>
+      </li>
+    {{ end }}
+    </ul>
+  </div>
+</div>
+{{ end }}

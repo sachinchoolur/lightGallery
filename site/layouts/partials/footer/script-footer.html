@@ -1,0 +1,83 @@
+{{ $lazysizes := resources.Get "js/vendor/lazysizes/lazysizes.min.js" -}}
+{{ $bootstrap := resources.Get "js/vendor/bootstrap/dist/js/bootstrap.min.js" -}}
+{{ $lightGallery := resources.Get "js/lightgallery.umd.js" -}}
+{{ $lightGalleryVideo := resources.Get "js/plugins/video/lg-video.umd.js" -}}
+{{ $lightGalleryFullscreen := resources.Get "js/plugins/fullscreen/lg-fullscreen.umd.js" -}}
+{{ $lightGalleryZoom := resources.Get "js/plugins/zoom/lg-zoom.umd.js" -}}
+{{ $lightGalleryRotate := resources.Get "js/plugins/rotate/lg-rotate.umd.js" -}}
+{{ $lightGalleryThumbnail := resources.Get "js/plugins/thumbnail/lg-thumbnail.umd.js" -}}
+{{ $lightGalleryPager := resources.Get "js/plugins/pager/lg-pager.umd.js" -}}
+{{ $lightGalleryHash := resources.Get "js/plugins/hash/lg-hash.umd.js" -}}
+{{ $lightGalleryShare := resources.Get "js/plugins/share/lg-share.umd.js" -}}
+{{ $lightGalleryComment := resources.Get "js/plugins/comment/lg-comment.umd.js" -}}
+{{ $lightGalleryAutoplay := resources.Get "js/plugins/autoplay/lg-autoplay.umd.js" -}}
+{{ $jQuery := resources.Get "js/vendor/jQuery.js" -}}
+{{ $justifiedGallery := resources.Get "js/vendor/jquery.justifiedGallery.js" -}}
+
+{{ if eq .Title "Video gallery" -}}
+  <script src="//player.vimeo.com/api/player.js"></script>
+  <script src="//fast.wistia.com/assets/external/E-v1.js"></script>
+  <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+{{ end -}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js"></script>
+<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+{{ if eq .Title "Comment box" -}}
+  <div id="fb-root"></div>
+  
+  <script>
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://lg-disqus.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+{{ end -}}
+
+
+{{ if eq (hugo.Environment) "development" -}}
+  {{ $app := resources.Get "js/app.js" | babel -}}
+  {{ $js := slice $lazysizes $bootstrap $app | resources.Concat "main.js" -}}
+  <script src="{{ $jQuery.Permalink }}"></script>
+  <script src="{{$justifiedGallery.Permalink}}"></script>
+  <script src="{{$lightGallery.Permalink}}"></script>
+  <script src="{{$lightGalleryVideo.Permalink}}"></script>
+  <script src="{{$lightGalleryFullscreen.Permalink}}"></script>
+  <script src="{{$lightGalleryZoom.Permalink}}"></script>
+  <script src="{{$lightGalleryRotate.Permalink}}"></script>
+  <script src="{{$lightGalleryThumbnail.Permalink}}"></script>
+  <script src="{{$lightGalleryPager.Permalink}}"></script>
+  <script src="{{$lightGalleryHash.Permalink}}"></script>
+  <script src="{{$lightGalleryShare.Permalink}}"></script>
+  <script src="{{$lightGalleryComment.Permalink}}"></script>
+  <script src="{{$lightGalleryAutoplay.Permalink}}"></script>
+  <script src="{{ $js.Permalink }}"></script>
+{{ else -}}
+  {{ $instantPage := resources.Get "js/vendor/instant.page/instantpage.js" | babel | minify -}}
+  {{ $app := resources.Get "js/app.js" | babel | minify -}}
+  {{ $js := slice $lazysizes $jQuery $justifiedGallery $bootstrap $instantPage $lightGallery $lightGalleryVideo $lightGalleryFullscreen $lightGalleryZoom $lightGalleryRotate $lightGalleryThumbnail $lightGalleryPager $lightGalleryHash $lightGalleryShare $lightGalleryComment $lightGalleryAutoplay $app | resources.Concat "main.js" -}}
+  {{ $secureJS := $js | resources.Fingerprint "sha512" -}}
+  <script src="{{ $secureJS.Permalink }}" integrity="{{ $secureJS.Data.Integrity }}" crossorigin="anonymous" defer></script>
+{{ end -}}

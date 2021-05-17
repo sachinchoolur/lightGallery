@@ -1,0 +1,11 @@
+functions
+node_modules
+public
+assets/js/plugins/**/*
+assets/js/lightgallery.*
+static/css/lg-*.css
+static/css/lightgallery-*.css
+static/css/lightgallery.css
+static/css/lightgallery.min.css
+resources
+yarn-error.log

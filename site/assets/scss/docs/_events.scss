@@ -1,0 +1,9 @@
+.lg-events-demo-outer {
+    .lg-backdrop {
+        transition: opacity 333ms ease-in 0s, background-color 0s ease 0s,
+            all 333ms ease-in 0s;
+    }
+}
+.event-docs-list {
+    margin-top: 2rem;
+}

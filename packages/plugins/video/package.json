@@ -1,0 +1,7 @@
+{
+    "name": "lightgallery/plugins/video",
+    "private": true,
+    "main": "lg-video.umd.js",
+    "module": "lg-video.es5.js",
+    "typings": "lg-video.d.ts"
+}

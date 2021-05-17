@@ -1,0 +1,12 @@
+{{ define "main" }}
+<div class="container-fluid main-page">
+    <div class="row justify-content-center hero-section">
+        <div class="col-lg-6 text-center">
+            <h1 class="main-title">{{ .Title }}</h1>
+            <h4 class="sub-title">{{ .Params.Lead | safeHTML }}</h4>
+            <!-- <a class="btn btn-primary btn-lg get-started-btn" href="{{ "docs/getting-started/" | absURL }}" role="button">Get Started</a> -->
+        </div>
+    </div>
+</div>
+{{- .Content -}}
+{{ end }}

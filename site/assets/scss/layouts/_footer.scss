@@ -1,0 +1,65 @@
+.footer {
+    padding-top: 4rem;
+    padding-bottom: 3rem;
+    background-color: #0e3481;
+    margin-top: 3rem;
+
+    ul.footer-menu {
+        padding-left: 0;
+        list-style-type: none;
+        font-size: 1rem;
+        line-height: 1.9rem;
+        margin-bottom: 0;
+    }
+    h4 {
+        font-size: 1rem;
+        text-transform: uppercase;
+        font-weight: 400;
+        color: #74a0ff;
+        margin: 0 0 15px;
+    }
+    .footer-menu-item a {
+        color: #9abaff;
+        transition: color 0.2s;
+        &:hover {
+            color: #c9daff;
+        }
+    }
+}
+
+img.tack-banner-logo {
+    margin-right: 10px;
+}
+
+.tack-banner-inner {
+    a {
+        display: flex;
+        align-items: center;
+        color: #99bafe;
+        justify-content: center;
+        transition: color 0.2s;
+        &:hover {
+            color: #c9daff;
+        }
+    }
+}
+
+.tack-banner {
+    border-top: 1px solid #8cadf2;
+    padding-top: 3rem;
+    margin-top: 3rem;
+    font-size: 1rem;
+    position: relative;
+}
+
+span.tack-banner-label {
+    position: absolute;
+    top: 0;
+    font-size: 12px;
+    transform: translate3d(-50%, -50%, 0px);
+    left: 50%;
+    background-color: #0e3480;
+    color: #98b9fd69;
+    padding: 0 5px;
+    margin-top: -1px;
+}

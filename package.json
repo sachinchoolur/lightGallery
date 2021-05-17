@@ -1,0 +1,175 @@
+{
+  "name": "lightgallery",
+  "version": "2.0.0-beta.4",
+  "description": "lightGallery is a feature-rich, modular JavaScript gallery plugin for building beautiful image and video galleries for the web and the mobile",
+  "keywords": [
+    "JavaScript",
+    "Gallery",
+    "Video",
+    "slider",
+    "lightBox"
+  ],
+  "main": "dist/lightgallery.umd.js",
+  "min": "dist/lightgallery.min.js",
+  "module": "dist/lightgallery.es5.js",
+  "typings": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sachinchoolur/lightGallery"
+  },
+  "homepage": "http://sachinchoolur.github.io/lightGallery/",
+  "bugs": {
+    "url": "https://github.com/sachinchoolur/lightGallery/issues"
+  },
+  "license": "GPLv3",
+  "author": {
+    "name": "Sachin Neravath",
+    "email": "sachi77n@gmail.com",
+    "url": "https://github.com/sachinchoolur"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "lint": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet --fix",
+    "prebuild": "rimraf dist",
+    "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css && npm run copyScss && npm run copyAssetsToSite && npm run copyJsToSite && npm run copyPackages && npm run buildLibraries && npm run updatePackageFields",
+    "build-scss": "node-sass --include-path scss src/scss/ -o dist/css/ --output-style expanded",
+    "build-scss-dev": "node-sass --include-path scss src/scss/ -o site/static/css/ --output-style expanded",
+    "watch-css": "nodemon --watch 'src/**/*' -e scss -x \"npm run build-scss-dev\"",
+    "watch-site-content": "nodemon --watch dist -x \"npm run copyAssetsToSite\"",
+    "minify-css": "cleancss -o dist/css/lightgallery-bundle.min.css dist/css/lightgallery-bundle.css",
+    "start": "concurrently \"rollup -c rollup-dev.config.ts -w $LG_PLUGINS\" \"npm run watch-site-content \" \"npm run watch-css \" ",
+    "test": "jest --coverage",
+    "test:watch": "jest --coverage --watch",
+    "test:prod": "npm run lint && npm run test -- --no-cache",
+    "deploy-docs": "ts-node tools/gh-pages-publish",
+    "docs": "typedoc --json site/data/doc.json --target es6 --theme default --mode file src",
+    "report-coverage": "cat ./coverage/lcov.info | coveralls",
+    "commit": "git-cz",
+    "semantic-release": "semantic-release",
+    "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
+    "precommit": "lint-staged",
+    "travis-deploy-once": "travis-deploy-once",
+    "copyAssets": "copyfiles -u 1 src/fonts/** dist && copyfiles -u 1 src/images/** dist",
+    "copyPackages": "copyfiles README.md dist && copyfiles -u 1 packages/**/**/* dist && copyfiles -u 1 packages/**/* dist && copyfiles -u 1 packages/* dist",
+    "updatePackageFields": "ts-node tools/update-packages",
+    "copyReactBuild": "copyfiles -f -u 1 -e '**/*.d.ts' lightgallery-react/dist/* dist/react && copyfiles -f -u 1 lightgallery-react/dist/Lightgallery.d.ts dist/react",
+    "copyVueBuild": "copyfiles -f -u 1 -e '**/*.html' lightgallery-vue/dist/* dist/vue && copyfiles -f lightgallery-vue/dist/lightgallery-vue/src/components/LightGallery.vue.d.ts dist/vue ",
+    "copyAngularBuild": "copyfiles -u 3 lightgallery-angular/dist/lightgallery-angular/**/* dist/angular && copyfiles -f lightgallery-angular/dist/lightgallery-angular/* dist/angular && copyfiles -u 3 lightgallery-angular/dist/lightgallery-angular/**/**/* dist/angular",
+    "copyAssetsToSite": "copyfiles -f dist/images/** site/static/images && copyfiles -f dist/fonts/** site/static/fonts",
+    "copyJsToSite": "copyfiles -f dist/*.js site/assets/js && copyfiles -u 1 dist/plugins/**/* site/assets/js",
+    "copyScss": "copyfiles -f -u 1 src/scss/** dist/scss && copyfiles -u 2 src/scss/**/* dist/scss",
+    "prepush": "npm run test:prod && npm run build",
+    "commitmsg": "commitlint -E HUSKY_GIT_PARAMS",
+    "buildLibraries": "ts-node tools/build-libraries",
+    "publishToNpm": "ts-node tools/npm-publish"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "ts-jest"
+    },
+    "testEnvironment": "jsdom",
+    "testRegex": "(/__tests__/.*|\\.(test))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 0,
+        "functions": 0,
+        "lines": 0,
+        "statements": 0
+      }
+    },
+    "collectCoverageFrom": [
+      "src/*.{js,ts}"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.1.2",
+    "@commitlint/config-conventional": "^7.1.2",
+    "@testing-library/dom": "^7.30.4",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^10.11.0",
+    "@types/react": "^17.0.3",
+    "@types/testing-library__dom": "^7.5.0",
+    "@types/testing-library__jest-dom": "^5.9.5",
+    "@typescript-eslint/eslint-plugin": "^4.6.0",
+    "@typescript-eslint/parser": "^4.6.0",
+    "clean-css-cli": "^4.3.0",
+    "colors": "^1.3.2",
+    "commitizen": "^3.0.0",
+    "concurrently": "^5.3.0",
+    "copyfiles": "^2.4.1",
+    "coveralls": "^3.0.2",
+    "cross-env": "^5.2.0",
+    "cz-conventional-changelog": "^2.1.0",
+    "eslint": "^7.12.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^1.0.1",
+    "jest": "^26.6.3",
+    "jest-config": "^26.6.3",
+    "lint-staged": "^8.0.0",
+    "lodash.camelcase": "^4.3.0",
+    "node-sass": "^4.14.1",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.1.2",
+    "prompt": "^1.0.0",
+    "replace-in-file": "^3.4.4",
+    "rimraf": "^2.6.2",
+    "rollup": "^0.67.0",
+    "rollup-plugin-commonjs": "^9.1.8",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-license": "^2.2.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript2": "^0.27.3",
+    "rollup-plugin-uglify": "^6.0.4",
+    "semantic-release": "^17.4.2",
+    "semantic-release-cli": "^5.4.3",
+    "shelljs": "^0.8.3",
+    "travis-deploy-once": "^5.0.9",
+    "ts-jest": "^26.5.6",
+    "ts-node": "^9.1.1",
+    "typedoc": "^0.19.2",
+    "typescript": "^3.0.3"
+  },
+  "dependencies": {
+    "@types/picturefill": "^3.0.0",
+    "i": "^0.3.6",
+    "npm": "^6.14.8",
+    "video.js": "^7.0.3"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}

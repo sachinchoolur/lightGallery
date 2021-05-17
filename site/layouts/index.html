@@ -1,0 +1,15 @@
+{{ define "main" }}
+<div class="container-fluid main-page">
+    <div class="row justify-content-center hero-section">
+        <div class="col-lg-6 text-center">
+            <h1 class="main-title">{{ .Title }}</h1>
+            <h4 class="sub-title">{{ .Params.Lead | safeHTML }}</h4>
+            <a
+                href="https://github.com/sachinchoolur/lightGallery"
+                class="btn btn-lg btn-outline-primary get-started-btn"
+                >View on GitHub</a
+            >
+        </div>
+    </div>
+</div>
+{{- .Content -}} {{ end }}

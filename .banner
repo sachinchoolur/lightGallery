@@ -1,0 +1,4 @@
+<%= pkg.name %> | <%= pkg.version %> | <%= moment().format('MMMM Do YYYY') %>
+<%= pkg.homepage %>
+Copyright (c) 2020 Sachin Neravath; 
+@license GPLv3

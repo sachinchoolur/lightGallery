@@ -1,0 +1,25 @@
+[[main]]
+  name = "Docs"
+  url = "/docs/getting-started/"
+  weight = 10
+
+[[main]]
+  name = "Demos"
+  url = "/demos/inline/"
+  weight = 30
+
+[[main]]
+  name = "GitHub"
+  url = "https://github.com/sachinchoolur/lightGallery"
+  weight = 40
+
+[[main]]
+  name = "Notify me"
+  url = "https://www.producthunt.com/upcoming/lightgallery"
+  weight = 50
+
+
+[[social]]
+  name = "Twitter"
+  url = "https://twitter.com/sachinchoolur"
+  weight = 20

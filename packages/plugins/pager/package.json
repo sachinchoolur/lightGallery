@@ -1,0 +1,7 @@
+{
+    "name": "lightgallery/plugins/pager",
+    "private": true,
+    "main": "lg-pager.umd.js",
+    "module": "lg-pager.es5.js",
+    "typings": "lg-pager.d.ts"
+}

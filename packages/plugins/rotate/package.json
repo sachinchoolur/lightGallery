@@ -1,0 +1,7 @@
+{
+    "name": "lightgallery/plugins/rotate",
+    "private": true,
+    "main": "lg-rotate.umd.js",
+    "module": "lg-rotate.es5.js",
+    "typings": "lg-rotate.d.ts"
+}

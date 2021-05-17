@@ -1,0 +1,13 @@
+{{ $currentPage := . -}}
+{{ range .Site.Menus.demos -}}
+  <h3>{{ .Name }}</h3>
+  {{ if .HasChildren -}}
+  <ul class="list-unstyled">
+    {{ range .Children -}}
+      {{- $active := or ($currentPage.IsMenuCurrent "demos" .) ($currentPage.HasMenuCurrent "demos" .) -}}
+      {{- $active = or $active (eq .Name $currentPage.Title) -}}
+      <li><a class="docs-link{{ if $active }} active{{ end }}" href="{{ .URL | absURL }}">{{ .Name }}</a></li>
+    {{ end -}}
+  </ul>
+  {{ end -}}
+{{ end -}}
