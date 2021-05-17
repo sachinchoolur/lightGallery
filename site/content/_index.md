@@ -428,19 +428,19 @@ images: []
         <div class="col-md-8">
             <div class="contents-list">
                 <a href="docs/react/" class="contents-list-item">
-                    <img class="content-list-logo" src="images/logos/react.svg">
+                    <img alt="lightGallery react component" class="content-list-logo" src="images/logos/react.svg">
                 </a>
                 <a href="docs/vue/" class="contents-list-item">
-                    <img class="content-list-logo" src="images/logos/vue.png">
+                    <img alt="lightGallery vue.js component" class="content-list-logo" src="images/logos/vue.png">
                 </a>
                 <a href="docs/angular/" class="contents-list-item">
-                    <img class="content-list-logo content-list-lg" src="images/logos/angular.svg">
+                    <img alt="lightGallery angular component" class="content-list-logo content-list-lg" src="images/logos/angular.svg">
                 </a>
                 <a href="docs/getting-started/" class="contents-list-item">
-                    <img class="content-list-logo" src="images/logos/ts-logo-512.png">
+                    <img alt="lightGallery typescript version" class="content-list-logo" src="images/logos/ts-logo-512.png">
                 </a>
                 <a href="docs/getting-started/" class="contents-list-item">
-                    <img class="content-list-logo" src="images/logos/javascript.svg">
+                    <img alt="lightGallery javascript version " class="content-list-logo" src="images/logos/javascript.svg">
                 </a>
             </div>
         </div>

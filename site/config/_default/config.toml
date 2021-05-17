@@ -1,4 +1,4 @@
-baseurl = "//www.lightgalleryjs.com/"
+baseurl = "https://www.lightgalleryjs.com/"
 disableAliases = true
 disableHugoGeneratorInject = true
 disableKinds = ["taxonomy", "taxonomyTerm"]
