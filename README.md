@@ -1,6 +1,10 @@
-## lightGallery
+![npm](https://img.shields.io/npm/v/lightgallery.svg)
+![size](https://badgen.net/bundlephobia/minzip/lightgallery?color=cyan)
+![tree-shaking](https://badgen.net/bundlephobia/tree-shaking/lightgallery)
+![types](https://badgen.net/npm/types/lightgallery?color=purple)
+![hits](https://badgen.net/jsdelivr/hits/npm/lightgallery?color=pink)
 
----
+# lightGallery
 
 lightGallery is a lightweight, modular, JavaScript library for creating
 beautiful image & video galleries for the web and the mobile.
