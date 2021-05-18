@@ -37,6 +37,15 @@ beautiful image & video galleries for the web and the mobile.
 -   Rotate, flip images.
 -   And many more.
 
+## Documentation
+- [Getting started](https://www.lightgalleryjs.com/docs/getting-started/)
+- [Settings](https://www.lightgalleryjs.com/docs/settings/)
+- [React](https://www.lightgalleryjs.com/docs/react/)
+- [Vue.js](https://www.lightgalleryjs.com/docs/vue/)
+- [Angular](https://www.lightgalleryjs.com/docs/angular/)
+- [Demos](https://www.lightgalleryjs.com/demos/thumbnails/)
+- [CodePen](https://codepen.io/collection/BNNjpR)
+
 ## Installation
 
 lightGallery is available on NPM, Yarn, Bower, CDNs, and GitHub. You can use any
