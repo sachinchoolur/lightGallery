@@ -1,4 +1,1 @@
-site/**/*.html linguist-vendored
-site/**/*.js linguist-vendored
-site/**/*.less linguist-vendored
-site/**/*.scss linguist-vendored
+site/**/*
