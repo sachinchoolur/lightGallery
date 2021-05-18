@@ -157,7 +157,7 @@ Finally, you need to initiate the gallery by adding the following code.
 ```javascript
 <script type="text/javascript">
     lightGallery(document.getElementById('lightgallery'), {
-        plugins: [lgZoom, lgThumbnail,]
+        plugins: [lgZoom, lgThumbnail],
         speed: 500,
         ... other settings
     });
