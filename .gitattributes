@@ -1,1 +1,6 @@
-site/**/*
+site/**/*.html linguist-vendored
+site/**/*.js linguist-vendored
+site/v1/static/**/*.js linguist-vendored
+site/v1/lightgallery/**/*.js linguist-vendored
+site/**/*.less linguist-vendored
+site/**/*.scss linguist-vendored
