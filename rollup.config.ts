@@ -69,7 +69,6 @@ const minConfigs = pluginConfigs.map((config) => {
                 format: 'umd',
             },
         ],
-        sourcemap: false,
         // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
         external: [],
         plugins: [
@@ -148,7 +147,6 @@ export default [
         output: [
             { file: pkg.min, name: camelCase(libraryName), format: 'umd' },
         ],
-        sourcemap: false,
         // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
         external: [],
         watch: {

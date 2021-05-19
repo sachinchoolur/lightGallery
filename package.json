@@ -37,7 +37,7 @@
     "lint": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet --fix",
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css && npm run copyScss && npm run copyAssetsToSite && npm run copyJsToSite && npm run copyPackages && npm run buildLibraries && npm run updatePackageFields",
-    "build:travis": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css",
+    "build:travis": "tsc --module commonjs && rollup -c rollup.config.ts",
     "build-scss": "node-sass --include-path scss src/scss/ -o dist/css/ --output-style expanded",
     "build-scss-dev": "node-sass --include-path scss src/scss/ -o site/static/css/ --output-style expanded",
     "watch-css": "nodemon --watch 'src/**/*' -e scss -x \"npm run build-scss-dev\"",
