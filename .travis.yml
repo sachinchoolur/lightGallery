@@ -3,8 +3,7 @@ cache:
   directories:
     - ~/.npm
 node_js:
-  - '10'
-  - '11'
+  - '12.18.3'
 script:
   - npm run test:prod && npm run build:travis
 branches:
