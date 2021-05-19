@@ -1,8 +1,9 @@
-![npm](https://img.shields.io/npm/v/lightgallery.svg)
+![npm](https://img.shields.io/npm/v/lightgallery.svg?color=red)
 ![size](https://badgen.net/bundlephobia/minzip/lightgallery?color=cyan)
-![tree-shaking](https://badgen.net/bundlephobia/tree-shaking/lightgallery)
-![types](https://badgen.net/npm/types/lightgallery?color=purple)
+![tree-shaking](https://badgen.net/bundlephobia/tree-shaking/lightgallery?color=purple)
+![types](https://badgen.net/npm/types/lightgallery?color=blue)
 ![hits](https://badgen.net/jsdelivr/hits/npm/lightgallery?color=pink)
+[![Build Status](https://travis-ci.org/sachinchoolur/lightGallery.svg?branch=master)](https://travis-ci.org/sachinchoolur/lightGallery)
 
 # lightGallery
 
