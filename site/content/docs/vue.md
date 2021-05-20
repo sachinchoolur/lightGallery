@@ -15,7 +15,7 @@ toc: true
 ---
 
 <div class="alert alert-danger" role="alert">
-    lightGallery Veu.js component works only with Vue.js version 3 and above
+    lightGallery Vue.js component works only with Vue.js version 3 and above
 </div>
 
 <a class="btn btn-outline-primary" href="https://stackblitz.com/edit/lightgallery-vue" target="_blank">StackBlitz

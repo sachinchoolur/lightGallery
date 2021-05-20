@@ -18,8 +18,14 @@
                 {{ range .Site.Menus.main }}
                 {{- $active := or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) -}}
                 {{- $active = or $active (eq .Name $current.Title) -}}
-                {{- $active = or $active (and (eq .Name "Docs") (eq $current.Section "docs")) -}}
                 {{- $active = or $active (and (eq .Name "Demos") (eq $current.Section "demos")) -}}
+                {{- $active = or $active (and (eq .Name "Docs") (eq $current.Section "docs") (ne $current.Title
+                "lightGallery React") (ne $current.Title
+                "lightGallery Vue") (ne $current.Title
+                "lightGallery Angular") ) -}}
+                {{- $active = or $active (and (eq .Name "React") (eq $current.Title "lightGallery React")) -}}
+                {{- $active = or $active (and (eq .Name "Vue") (eq $current.Title "lightGallery Vue")) -}}
+                {{- $active = or $active (and (eq .Name "Angular") (eq $current.Title "lightGallery Angular")) -}}
                 <li class="nav-item">
                     <a class="nav-link{{ if $active }} active{{ end }}" href="{{ .URL }}">{{- .Name -}}</a>
                 </li>

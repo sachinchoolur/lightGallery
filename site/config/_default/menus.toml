@@ -1,6 +1,7 @@
 [[main]]
   name = "Docs"
   url = "/docs/getting-started/"
+  identifier = "Docs"
   weight = 10
 
 [[main]]
@@ -11,11 +12,24 @@
 [[main]]
   name = "GitHub"
   url = "https://github.com/sachinchoolur/lightGallery"
-  weight = 40
+  weight = 90
 
 [[main]]
-  name = "License"
-  url = "/license/"
+  name = "React"
+  identifier = "React"
+  url = "/docs/react/"
+  weight = 50
+
+[[main]]
+  name = "Vue"
+  identifier = "Vue"
+  url = "/docs/vue/"
+  weight = 50
+
+[[main]]
+  name = "Angular"
+  identifier = "Angular"
+  url = "/docs/angular/"
   weight = 50
 
 

@@ -1,11 +1,11 @@
 ---
 title: 'lightGallery'
 description:
-    'lightGallery is a feature-rich, modular JavaScript gallery plugin for
-    building beautiful image and video galleries for the web and the mobile '
+    'A lightweight, modular, JavaScript image and video lightbox gallery plugin.
+    Available for React.js, Vue.js, Angular, and TypeScript.'
 lead:
-    'lightGallery is a feature-rich, modular JavaScript gallery plugin for
-    building beautiful image and video galleries for the web and the mobile '
+    'A lightweight, modular, JavaScript image and video lightbox gallery plugin.
+    Available for React.js, Vue.js, Angular, and TypeScript.'
 date: 2020-04-17T12:18:10+00:00
 lastmod: 2020-04-17T12:18:10+00:00
 draft: false
