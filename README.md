@@ -7,8 +7,8 @@
 
 # lightGallery
 
-lightGallery is a lightweight, modular, JavaScript library for creating
-beautiful image & video galleries for the web and the mobile.
+A customizable, modular, responsive, lightbox gallery plugin. No dependencies.\
+Available for React.js, Angular, Vue.js, and typescript.
 
 ![lightgallery](https://www.lightgalleryjs.com/lightgallery-demo.png)
 
