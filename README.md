@@ -12,7 +12,6 @@ Available for React.js, Angular, Vue.js, and typescript.
 
 ![lightgallery](https://www.lightgalleryjs.com/lightgallery-demo.png)
 
-
 ## Core features
 
 -   Fully responsive.
@@ -42,13 +41,14 @@ Available for React.js, Angular, Vue.js, and typescript.
 -   And many more.
 
 ## Documentation
-- [Getting started](https://www.lightgalleryjs.com/docs/getting-started/)
-- [Settings](https://www.lightgalleryjs.com/docs/settings/)
-- [React](https://www.lightgalleryjs.com/docs/react/)
-- [Vue.js](https://www.lightgalleryjs.com/docs/vue/)
-- [Angular](https://www.lightgalleryjs.com/docs/angular/)
-- [Demos](https://www.lightgalleryjs.com/demos/thumbnails/)
-- [CodePen](https://codepen.io/collection/BNNjpR)
+
+-   [Getting started](https://www.lightgalleryjs.com/docs/getting-started/)
+-   [Settings](https://www.lightgalleryjs.com/docs/settings/)
+-   [React](https://www.lightgalleryjs.com/docs/react/)
+-   [Vue.js](https://www.lightgalleryjs.com/docs/vue/)
+-   [Angular](https://www.lightgalleryjs.com/docs/angular/)
+-   [Demos](https://www.lightgalleryjs.com/demos/thumbnails/)
+-   [CodePen](https://codepen.io/collection/BNNjpR)
 
 ## Installation
 
@@ -84,7 +84,7 @@ of the following method to download lightGallery
 -   CDN - If you prefer to use a CDN, you can load files via
     [jsdelivr](https://www.jsdelivr.com/projects/lightgallery),
     [cdnjs](https://cdnjs.com/libraries/lightgallery) or
-    [unpkg](https://unpkg.com/browse/lightgallery@latest)
+    [unpkg](https://unpkg.com/browse/lightgallery@latest/)
 
 #### Include CSS and Javascript files
 

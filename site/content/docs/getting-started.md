@@ -79,7 +79,7 @@ of the following method to download lightGallery
 -   CDN - If you prefer to use a CDN, you can load files via
     [jsdelivr](https://www.jsdelivr.com/projects/lightgallery),
     [cdnjs](https://cdnjs.com/libraries/lightgallery) or
-    [unpkg](https://unpkg.com/browse/lightgallery@latest)
+    [unpkg](https://unpkg.com/browse/lightgallery@latest/)
 
 #### Include CSS and Javascript files
 
