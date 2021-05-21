@@ -1,3 +1,7 @@
+export interface ActualSizeIcons {
+    zoomIn: 'lg-zoom-in' | 'lg-actual-size';
+    zoomOut: 'lg-zoom-out' | 'lg-actual-size';
+}
 export interface ZoomSettings {
     /**
      * Value of zoom should be incremented/decremented
@@ -28,12 +32,10 @@ export interface ZoomSettings {
     showZoomInOutIcons: boolean;
 
     /**
-     * Actual size icons
+     * Actual size icons classnames.
+     * Specify classnames for both ZoomIn and ZoomOut states
      */
-    actualSizeIcons: {
-        zoomIn: 'lg-zoom-in' | 'lg-actual-size';
-        zoomOut: 'lg-zoom-out' | 'lg-actual-size';
-    };
+    actualSizeIcons: ActualSizeIcons;
 }
 
 export const zoomSettings: ZoomSettings = {
@@ -44,6 +46,6 @@ export const zoomSettings: ZoomSettings = {
     actualSizeIcons: {
         zoomIn: 'lg-zoom-in',
         zoomOut: 'lg-zoom-out',
-    },
+    } as ActualSizeIcons,
     enableZoomAfter: 300,
 };
