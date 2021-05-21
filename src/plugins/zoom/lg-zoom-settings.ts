@@ -34,6 +34,8 @@ export interface ZoomSettings {
     /**
      * Actual size icons classnames.
      * Specify classnames for both ZoomIn and ZoomOut states
+     * You can use `actualSizeIcons: { zoomIn: 'lg-actual-size', zoomOut: 'lg-zoom-out' }`
+     * to show actual size icons instead of zoom in and zoom out icons.
      */
     actualSizeIcons: ActualSizeIcons;
 }
