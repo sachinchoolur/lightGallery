@@ -25,7 +25,7 @@
 "use strict";var prefetches=new Set,prefetchElement=document.createElement('link'),isSupported=prefetchElement.relList&&prefetchElement.relList.supports&&prefetchElement.relList.supports('prefetch')&&window.IntersectionObserver&&'isIntersecting'in IntersectionObserverEntry.prototype,allowQueryString='instantAllowQueryString'in document.body.dataset,allowExternalLinks='instantAllowExternalLinks'in document.body.dataset,useWhitelist='instantWhitelist'in document.body.dataset,mousedownShortcut='instantMousedownShortcut'in document.body.dataset,DELAY_TO_NOT_BE_CONSIDERED_A_TOUCH_INITIATED_ACTION=1111,delayOnHover=65,useMousedown=!1,useMousedownOnly=!1,useViewport=!1,mouseoverTimer,lastTouchTimestamp,intensity,milliseconds,eventListenersOptions,triggeringFunction;'instantIntensity'in document.body.dataset&&(intensity=document.body.dataset.instantIntensity,intensity.substr(0,'mousedown'.length)=='mousedown'?(useMousedown=!0,intensity=='mousedown-only'&&(useMousedownOnly=!0)):intensity.substr(0,'viewport'.length)=='viewport'?navigator.connection&&(navigator.connection.saveData||navigator.connection.effectiveType&&navigator.connection.effectiveType.includes('2g'))||(intensity=="viewport"?document.documentElement.clientWidth*document.documentElement.clientHeight<45e4&&(useViewport=!0):intensity=="viewport-all"&&(useViewport=!0)):(milliseconds=parseInt(intensity),isNaN(milliseconds)||(delayOnHover=milliseconds))),isSupported&&(eventListenersOptions={capture:!0,passive:!0},useMousedownOnly||document.addEventListener('touchstart',touchstartListener,eventListenersOptions),useMousedown?mousedownShortcut||document.addEventListener('mousedown',mousedownListener,eventListenersOptions):document.addEventListener('mouseover',mouseoverListener,eventListenersOptions),mousedownShortcut&&document.addEventListener('mousedown',mousedownShortcutListener,eventListenersOptions),useViewport&&(window.requestIdleCallback?triggeringFunction=function(a){requestIdleCallback(a,{timeout:1500})}:triggeringFunction=function(a){a()},triggeringFunction(function(){var a=new IntersectionObserver(function(b){b.forEach(function(b){if(b.isIntersecting){var c=b.target;a.unobserve(c),preload(c.href)}})});document.querySelectorAll('a').forEach(function(b){isPreloadable(b)&&a.observe(b)})})));function touchstartListener(b){lastTouchTimestamp=performance.now();var a=b.target.closest('a');if(!isPreloadable(a))return;preload(a.href)}function mouseoverListener(b){if(performance.now()-lastTouchTimestamp<DELAY_TO_NOT_BE_CONSIDERED_A_TOUCH_INITIATED_ACTION)return;var a=b.target.closest('a');if(!isPreloadable(a))return;a.addEventListener('mouseout',mouseoutListener,{passive:!0}),mouseoverTimer=setTimeout(function(){preload(a.href),mouseoverTimer=void 0},delayOnHover)}function mousedownListener(b){var a=b.target.closest('a');if(!isPreloadable(a))return;preload(a.href)}function mouseoutListener(a){if(a.relatedTarget&&a.target.closest('a')==a.relatedTarget.closest('a'))return;mouseoverTimer&&(clearTimeout(mouseoverTimer),mouseoverTimer=void 0)}function mousedownShortcutListener(a){var b,c;if(performance.now()-lastTouchTimestamp<DELAY_TO_NOT_BE_CONSIDERED_A_TOUCH_INITIATED_ACTION)return;if(b=a.target.closest('a'),a.which>1||a.metaKey||a.ctrlKey)return;if(!b)return;b.addEventListener('click',function(a){if(a.detail==1337)return;a.preventDefault()},{capture:!0,passive:!1,once:!0}),c=new MouseEvent('click',{view:window,bubbles:!0,cancelable:!1,detail:1337}),b.dispatchEvent(c)}function isPreloadable(a){if(!a||!a.href)return;if(useWhitelist&&!('instant'in a.dataset))return;if(!allowExternalLinks&&a.origin!=location.origin&&!('instant'in a.dataset))return;if(!['http:','https:'].includes(a.protocol))return;if(a.protocol=='http:'&&location.protocol=='https:')return;if(!allowQueryString&&a.search&&!('instant'in a.dataset))return;if(a.hash&&a.pathname+a.search==location.pathname+location.search)return;if('noInstant'in a.dataset)return;return!0}function preload(a){if(prefetches.has(a))return;var b=document.createElement('link');b.rel='prefetch',b.href=a,document.head.appendChild(b),prefetches.add(a)}
 ;
 /*!
- * lightgallery | 2.0.1 | May 17th 2021
+ * lightgallery | 2.0.1 | May 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -2548,7 +2548,7 @@
 
 ;
 /*!
- * lightgallery | 2.0.1 | May 17th 2021
+ * lightgallery | 2.0.1 | May 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -2992,7 +2992,7 @@
 
 ;
 /*!
- * lightgallery | 2.0.1 | May 17th 2021
+ * lightgallery | 2.0.1 | May 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -3136,7 +3136,7 @@
 
 ;
 /*!
- * lightgallery | 2.0.1 | May 17th 2021
+ * lightgallery | 2.0.1 | May 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -4074,7 +4074,7 @@
 
 ;
 /*!
- * lightgallery | 2.0.1 | May 17th 2021
+ * lightgallery | 2.0.1 | May 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -4319,7 +4319,7 @@
 
 ;
 /*!
- * lightgallery | 2.0.1 | May 17th 2021
+ * lightgallery | 2.0.1 | May 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -4801,7 +4801,7 @@
 
 ;
 /*!
- * lightgallery | 2.0.1 | May 17th 2021
+ * lightgallery | 2.0.1 | May 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -4943,7 +4943,7 @@
 
 ;
 /*!
- * lightgallery | 2.0.1 | May 17th 2021
+ * lightgallery | 2.0.1 | May 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -5141,7 +5141,7 @@
 
 ;
 /*!
- * lightgallery | 2.0.1 | May 17th 2021
+ * lightgallery | 2.0.1 | May 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -5362,7 +5362,7 @@
 
 ;
 /*!
- * lightgallery | 2.0.1 | May 17th 2021
+ * lightgallery | 2.0.1 | May 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -5567,7 +5567,7 @@
 
 ;
 /*!
- * lightgallery | 2.0.1 | May 17th 2021
+ * lightgallery | 2.0.1 | May 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
