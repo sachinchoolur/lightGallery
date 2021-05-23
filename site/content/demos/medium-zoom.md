@@ -24,13 +24,23 @@ outer element and select all images using the selector option.
 ```html
 <div class="medium-zoom-demo">
     <p>Lorem ipsum dolor sit amet......</p>
-    <figure class="blog-images" data-src="image-1.jpg" data-lg-size="1600-1126">
+    <figure
+        lg-background-color="white"
+        class="blog-images"
+        data-src="image-1.jpg"
+        data-lg-size="1600-1126"
+    >
         <img src="thumbnail-1.jpg" />
     </figure>
     <p>Lorem ipsum dolor sit amet......</p>
     <p>Lorem ipsum dolor sit amet......</p>
     <p>Lorem ipsum dolor sit amet......</p>
-    <figure class="blog-images" data-src="image-2.jpg" data-lg-size="1600-1126">
+    <figure
+        lg-background-color="rgb(28 62 74)"
+        class="blog-images"
+        data-src="image-2.jpg"
+        data-lg-size="1600-1126"
+    >
         <img src="thumbnail-2.jpg" />
     </figure>
     <p>Lorem ipsum dolor sit amet......</p>
