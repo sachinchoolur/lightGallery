@@ -48,5 +48,10 @@
         "name": "autoplay",
         "folder": "plugins/autoplay/",
         "fileName": "lg-autoplay"
+    },
+    {
+        "name": "mediumZoom",
+        "folder": "plugins/mediumZoom/",
+        "fileName": "lg-medium-zoom"
     }
 ]
