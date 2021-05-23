@@ -181,7 +181,7 @@ If you are including lightGallery files via script tag, please use the same
 plugins names as follows.
 
 `lgZoom`, `lgAutoplay`, ` lgComment`, `lgFullscreen `, `lgHash`, `lgPager`,
-`lgRotate`, `lgShare`, `lgThumbnail`, `lgVideo`
+`lgRotate`, `lgShare`, `lgThumbnail`, `lgVideo`, `lgMediumZoom`
 
 ## Browser support
 

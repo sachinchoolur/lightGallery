@@ -1049,3 +1049,8 @@ if ($('#infinite-scroll-gallery').length) {
         }
     });
 }
+
+lightGallery(document.querySelector('.medium-zoom-demo'), {
+    selector: '.blog-images',
+    plugins: [lgMediumZoom],
+});

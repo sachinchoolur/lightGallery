@@ -159,3 +159,13 @@ easily add your own comment widget as well.
 {{< options pluginName="Comment box" interface="CommentSettings" variable="commentSettings">}}
 
 </div>
+
+## Medium zoom plugin
+
+MediumZoom plugin helps you create similar zooming experience as seen on medium.
+This is a very basic plugin created just to demonstrate the customizability of
+lightGallery
+
+{{< options pluginName="Medium zoom" interface="MediumZoomSettings" variable="mediumZoomSettings">}}
+
+</div>
