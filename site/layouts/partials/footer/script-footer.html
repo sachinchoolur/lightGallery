@@ -11,6 +11,7 @@
 {{ $lightGalleryShare := resources.Get "js/plugins/share/lg-share.umd.js" -}}
 {{ $lightGalleryComment := resources.Get "js/plugins/comment/lg-comment.umd.js" -}}
 {{ $lightGalleryAutoplay := resources.Get "js/plugins/autoplay/lg-autoplay.umd.js" -}}
+{{ $lightGalleryMediumZoom := resources.Get "js/plugins/mediumZoom/lg-medium-zoom.umd.js" -}}
 {{ $jQuery := resources.Get "js/vendor/jQuery.js" -}}
 {{ $justifiedGallery := resources.Get "js/vendor/jquery.justifiedGallery.js" -}}
 
@@ -83,6 +84,7 @@
   <script src="{{$lightGalleryShare.Permalink}}"></script>
   <script src="{{$lightGalleryComment.Permalink}}"></script>
   <script src="{{$lightGalleryAutoplay.Permalink}}"></script>
+  <script src="{{$lightGalleryMediumZoom.Permalink}}"></script>
   <script src="{{ $js.Permalink }}"></script>
 {{ else -}}
   {{ $instantPage := resources.Get "js/vendor/instant.page/instantpage.js" | babel | minify -}}
