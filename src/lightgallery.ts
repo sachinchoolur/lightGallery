@@ -607,7 +607,7 @@ export class LightGallery {
                 element,
                 this.$lgContent,
                 top + bottom,
-                this.galleryItems[this.index].__slideVideoInfo &&
+                this.galleryItems[index].__slideVideoInfo &&
                     this.settings.videoMaxSize,
             );
             transform = utils.getTransform(
@@ -628,13 +628,13 @@ export class LightGallery {
         setTimeout(() => {
             this.outer.addClass('lg-components-open');
         }, timeout);
+        this.index = index;
         this.LGel.trigger(lGEvents.beforeOpen);
 
         // add class lg-current to remove initial transition
         this.getSlideItem(index).addClass('lg-current');
 
         this.lGalleryOn = false;
-        this.index = index;
         // Store the current scroll top value to scroll back after closing the gallery..
         this.prevScrollTop = $LG(window).scrollTop();
 
