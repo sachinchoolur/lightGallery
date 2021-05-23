@@ -25,7 +25,7 @@ if (lgPluginsNames !== 'all') {
 }
 const umdConfigs = pluginsToCompile.map((config) => {
     return {
-        input: `${config.src}${config.fileName}.ts`,
+        input: `src/${config.folder}${config.fileName}.ts`,
         output: [
             {
                 file: `site/assets/js/${config.folder}${config.fileName}.umd.js`,

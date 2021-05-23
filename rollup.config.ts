@@ -17,7 +17,7 @@ const libraryFileName = 'index';
 
 const umdConfigs = pluginConfigs.map((config) => {
     return {
-        input: `${config.src}${config.fileName}.ts`,
+        input: `src/${config.folder}${config.fileName}.ts`,
         output: [
             {
                 file: `dist/${config.folder}${config.fileName}.umd.js`,
@@ -61,7 +61,7 @@ const umdConfigs = pluginConfigs.map((config) => {
 });
 const minConfigs = pluginConfigs.map((config) => {
     return {
-        input: `${config.src}${config.fileName}.ts`,
+        input: `src/${config.folder}${config.fileName}.ts`,
         output: [
             {
                 file: `dist/${config.folder}${config.fileName}.min.js`,
