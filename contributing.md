@@ -61,7 +61,13 @@ First, ensure that you have the latest [Node.js](http://nodejs.org/) and
 
 1. Fork and clone the repo.
 1. Run `npm install` to get the project's dependencies
-1. Run `npm run build` to generate distribution files.
+1. Run `npm npm start` to start build in watch mode By default only lightGallery
+   core module is compiled and watched If you want to compile any plugins along
+   with the core module, you can run `LG_PLUGINS=['thumbnails','pager']`
+   Alternatively, you can run `LG_PLUGINS='all' npm start` to compile all plugin
+   simultaneously // To tun all plugin - LG_PLUGINS='all' npm start
+1. Navigate to `site/` folder and run npm run start to see preview
+   `cd site && npm run start`
 
 ## Submitting pull requests
 
