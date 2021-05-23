@@ -1,3 +1,4 @@
+import { lGEvents } from '../../lg-events';
 import { LightGallerySettings } from '../../lg-settings';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
@@ -29,6 +30,7 @@ export default class MediumZoom {
             download: false,
             counter: false,
             showCloseIcon: false,
+            extraProps: ['lgBackgroundColor'],
             closeOnTap: false,
             enableSwipe: false,
             enableDrag: false,
@@ -59,6 +61,13 @@ export default class MediumZoom {
         if (!this.settings.mediumZoom) {
             return;
         }
+        this.core.LGel.on(`${lGEvents.beforeOpen}.medium`, () => {
+            this.core.$backdrop.css(
+                'background-color',
+                this.core.galleryItems[this.core.index].lgBackgroundColor ||
+                    this.settings.backgroundColor,
+            );
+        });
         this.toggleItemClass();
 
         this.core.outer.on('click.lg.medium', () => {

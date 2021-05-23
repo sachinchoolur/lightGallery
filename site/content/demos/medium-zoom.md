@@ -67,7 +67,7 @@ mi ut, lobortis metus. Etiam vel pretium ipsum. Vestibulum consequat varius
 odio, sed rutrum purus laoreet id. Mauris vitae urna nec ligula vulputate
 tincidunt.
 
-<figure class="blog-images" data-src="https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"  data-lg-size="1600-1126" >
+<figure lg-background-color="#FFF" class="blog-images" data-src="https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"  data-lg-size="1600-1126" >
 <img src="https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=860&q=80"/>
 </figure>
 
@@ -93,7 +93,7 @@ lectus, ut pulvinar lectus nunc id risus. Nullam porta aliquet ipsum, in iaculis
 diam bibendum non. Aenean at lectus turpis. Fusce nec leo et nisi porta
 consectetur at et metus.
 
-<figure style="float:left" class="blog-images" data-src="https://images.unsplash.com/photo-1465311530779-5241f5a29892?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80"  data-lg-size="1600-1067" >
+<figure lg-background-color="rgb(22 37 44)" style="float:left" class="blog-images" data-src="https://images.unsplash.com/photo-1465311530779-5241f5a29892?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80"  data-lg-size="1600-1067" >
 <img src="https://images.unsplash.com/photo-1465311530779-5241f5a29892?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=860&q=80"/>
 </figure>
 
@@ -120,7 +120,7 @@ tempus erat. Nunc non eros vel eros mollis interdum. Duis porttitor, ante ac
 accumsan molestie, odio nunc venenatis purus, sit amet viverra augue tortor
 tempus turpis. Proin quis vehicula arcu.
 
-<figure class="blog-images" data-src="https://images.unsplash.com/photo-1610448721566-47369c768e70?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80"  data-lg-size="1600-2400" style="float: right; margin-left: 2rem;">
+<figure lg-background-color="rgb(28 62 74)" class="blog-images" data-src="https://images.unsplash.com/photo-1610448721566-47369c768e70?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80"  data-lg-size="1600-2400" style="float: right; margin-left: 2rem;">
 <img src="https://images.unsplash.com/photo-1610448721566-47369c768e70?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=340&q=80"/>
 </figure>
 
