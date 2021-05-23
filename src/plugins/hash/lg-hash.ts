@@ -14,17 +14,17 @@ export default class Hash {
         this.$LG = $LG;
         // extend module default settings with lightGallery core settings
         this.settings = { ...hashSettings, ...this.core.settings };
-
-        if (this.settings.hash) {
-            this.oldHash = window.location.hash;
-            this.init();
-        }
-
         return this;
     }
 
-    private init() {
-        this.buildFromHash();
+    public init(): void {
+        if (!this.settings.hash) {
+            return;
+        }
+        this.oldHash = window.location.hash;
+        setTimeout(() => {
+            this.buildFromHash();
+        }, 100);
         // Change hash value on after each slide transition
         this.core.LGel.on(
             `${lGEvents.afterSlide}.hash`,

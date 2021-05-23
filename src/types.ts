@@ -34,3 +34,7 @@ export interface VideoInfo {
     wistia?: string[];
     dailymotion?: string[];
 }
+export interface MediaContainerPosition {
+    top: number;
+    bottom: number;
+}

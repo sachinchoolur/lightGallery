@@ -19,12 +19,10 @@ export default class FullScreen {
         // extend module default settings with lightGallery core settings
         this.settings = { ...fullscreenSettings, ...this.core.settings };
 
-        this.init();
-
         return this;
     }
 
-    private init(): void {
+    public init(): void {
         let fullScreen = '';
         if (this.settings.fullScreen) {
             // check for fullscreen browser support

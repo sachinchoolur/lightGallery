@@ -19,10 +19,14 @@ export default class Autoplay {
         // extend module default settings with lightGallery core settings
         this.settings = { ...autoplaySettings, ...this.core.settings };
 
-        // Execute only if items are above 1
-        if (this.core.galleryItems.length < 2) {
-            return this;
+        return this;
+    }
+
+    public init(): void {
+        if (!this.settings.autoplay || this.core.galleryItems.length < 2) {
+            return;
         }
+
         this.interval = false;
 
         // Identify if slide happened from autoplay
@@ -33,14 +37,6 @@ export default class Autoplay {
 
         this.pausedOnSlideChange = false;
 
-        if (this.settings.autoplay) {
-            this.init();
-        }
-
-        return this;
-    }
-
-    private init() {
         // append autoplay controls
         if (this.settings.autoplayControls) {
             this.controls();

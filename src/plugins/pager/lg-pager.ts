@@ -15,10 +15,6 @@ export default class Pager {
         // extend module default settings with lightGallery core settings
         this.settings = { ...pagerSettings, ...this.core.settings };
 
-        if (this.settings.pager && this.core.galleryItems.length > 1) {
-            this.init();
-        }
-
         return this;
     }
 
@@ -33,7 +29,10 @@ export default class Pager {
         return pagerList;
     }
 
-    private init() {
+    public init(): void {
+        if (!this.settings.pager || this.core.galleryItems.length <= 1) {
+            return;
+        }
         let timeout: any;
         this.core.$lgComponents.prepend('<div class="lg-pager-outer"></div>');
 

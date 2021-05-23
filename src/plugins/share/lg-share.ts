@@ -18,14 +18,13 @@ export default class Share {
         this.core = instance;
         // extend module default settings with lightGallery core settings
         this.settings = { ...shareSettings, ...this.core.settings };
-        if (this.settings.share) {
-            this.init();
-        }
-
         return this;
     }
 
-    private init() {
+    public init(): void {
+        if (!this.settings.share) {
+            return;
+        }
         this.shareOptions = [
             ...this.getDefaultShareOptions(),
             ...this.settings.additionalShareOptions,
