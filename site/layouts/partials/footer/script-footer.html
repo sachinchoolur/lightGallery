@@ -89,7 +89,7 @@
 {{ else -}}
   {{ $instantPage := resources.Get "js/vendor/instant.page/instantpage.js" | babel | minify -}}
   {{ $app := resources.Get "js/app.js" | babel | minify -}}
-  {{ $js := slice $lazysizes $jQuery $justifiedGallery $bootstrap $instantPage $lightGallery $lightGalleryVideo $lightGalleryFullscreen $lightGalleryZoom $lightGalleryRotate $lightGalleryThumbnail $lightGalleryPager $lightGalleryHash $lightGalleryShare $lightGalleryComment $lightGalleryAutoplay $app | resources.Concat "main.js" -}}
+  {{ $js := slice $lazysizes $jQuery $justifiedGallery $bootstrap $instantPage $lightGallery $lightGalleryVideo $lightGalleryFullscreen $lightGalleryZoom $lightGalleryRotate $lightGalleryThumbnail $lightGalleryPager $lightGalleryHash $lightGalleryShare $lightGalleryComment $lightGalleryAutoplay $lightGalleryMediumZoom $app | resources.Concat "main.js" -}}
   {{ $secureJS := $js | resources.Fingerprint "sha512" -}}
   <script src="{{ $secureJS.Permalink }}" integrity="{{ $secureJS.Data.Integrity }}" crossorigin="anonymous" defer></script>
 {{ end -}}
