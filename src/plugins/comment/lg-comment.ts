@@ -27,14 +27,13 @@ export default class CommentBox {
         // extend module default settings with lightGallery core settings
         this.settings = { ...commentSettings, ...this.core.settings };
 
-        if (this.settings.commentBox) {
-            this.init();
-        }
-
         return this;
     }
 
-    private init(): void {
+    public init(): void {
+        if (!this.settings.commentBox) {
+            return;
+        }
         this.setMarkup();
         this.toggleCommentBox();
         if (this.settings.fbComments) {

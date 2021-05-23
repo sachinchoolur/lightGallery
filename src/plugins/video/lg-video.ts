@@ -51,8 +51,6 @@ export default class Video {
         this.core = instance;
         this.settings = { ...videoSettings, ...this.core.settings };
 
-        this.init();
-
         return this;
     }
     init() {

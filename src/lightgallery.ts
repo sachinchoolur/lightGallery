@@ -5,7 +5,12 @@ import {
     lightGalleryCoreSettings,
     LightGalleryAllSettings,
 } from './lg-settings';
-import { Coords, SlideDirection, VideoInfo } from './types';
+import {
+    Coords,
+    MediaContainerPosition,
+    SlideDirection,
+    VideoInfo,
+} from './types';
 import {
     AfterAppendSlideEventDetail,
     AfterAppendSubHtmlDetail,
@@ -69,21 +74,18 @@ export class LightGallery {
     public $toolbar!: lgQuery;
 
     // Scroll top value before lightGallery is opened
-    private prevScrollTop = 0;
+    public prevScrollTop = 0;
 
     private zoomFromOrigin!: boolean;
 
     private currentImageSize?: ImageSize;
 
     private isDummyImageRemoved = false;
-    private modulesLoaded = false;
 
     private mediaContainerPosition = {
         top: 0,
         bottom: 0,
     };
-
-    private timeToLoadModules = 0;
 
     constructor(element: HTMLElement, options?: LightGallerySettings) {
         if (!element) {
@@ -95,6 +97,32 @@ export class LightGallery {
         this.el = element;
         this.LGel = $LG(element);
 
+        this.generateSettings(options);
+
+        this.buildModules();
+
+        // When using dynamic mode, ensure dynamicEl is an array
+        if (
+            this.settings.dynamic &&
+            this.settings.dynamicEl !== undefined &&
+            !Array.isArray(this.settings.dynamicEl)
+        ) {
+            throw 'When using dynamic mode, you must also define dynamicEl as an Array.';
+        }
+
+        this.galleryItems = this.getItems();
+        this.normalizeSettings();
+
+        // Gallery items
+
+        this.init();
+
+        this.validateLicense();
+
+        return this;
+    }
+
+    private generateSettings(options?: LightGallerySettings) {
         // lightGallery settings
         this.settings = {
             ...lightGalleryCoreSettings,
@@ -112,16 +140,9 @@ export class LightGallery {
             };
             this.settings = { ...this.settings, ...mobileSettings };
         }
+    }
 
-        // When using dynamic mode, ensure dynamicEl is an array
-        if (
-            this.settings.dynamic &&
-            this.settings.dynamicEl !== undefined &&
-            !Array.isArray(this.settings.dynamicEl)
-        ) {
-            throw 'When using dynamic mode, you must also define dynamicEl as an Array.';
-        }
-
+    private normalizeSettings() {
         if (this.settings.slideEndAnimation) {
             this.settings.hideControlOnEnd = false;
         }
@@ -131,9 +152,6 @@ export class LightGallery {
 
         // And reset it on close to get the correct value next time
         this.zoomFromOrigin = this.settings.zoomFromOrigin;
-
-        // Gallery items
-        this.galleryItems = this.getItems();
 
         // At the moment, Zoom from image doesn't support dynamic options
         // @todo add zoomFromOrigin support for dynamic images
@@ -146,18 +164,12 @@ export class LightGallery {
             this.settings.preload,
             this.galleryItems.length,
         );
-
-        this.init();
-
-        this.validateLicense();
-
-        return this;
     }
 
     init(): void {
         this.addSlideVideoInfo(this.galleryItems);
 
-        this.timeToLoadModules = this.buildStructure();
+        this.buildStructure();
 
         this.LGel.trigger(lGEvents.init, {
             instance: this,
@@ -205,25 +217,10 @@ export class LightGallery {
      * Gallery should be opened only once all the modules are initialized.
      * use moduleBuildTimeout to make sure this
      */
-    buildModules(): number {
-        let numberOfModules = 0;
-        if (!this.settings.plugins.length) {
-            this.modulesLoaded = true;
-            return 0;
-        }
-        this.settings.plugins.forEach((plugin, index) => {
-            numberOfModules++;
-            ((num) => {
-                setTimeout(() => {
-                    this.plugins.push(new plugin(this, $LG));
-                    if (index === this.settings.plugins.length - 1) {
-                        this.modulesLoaded = true;
-                    }
-                }, 10 * num);
-            })(numberOfModules);
+    buildModules(): void {
+        this.settings.plugins.forEach((plugin) => {
+            this.plugins.push(new plugin(this, $LG));
         });
-
-        return numberOfModules * 10;
     }
 
     validateLicense(): void {
@@ -251,10 +248,10 @@ export class LightGallery {
         return $LG(`#${this.getIdName(id)}`);
     }
 
-    buildStructure(): number {
+    buildStructure(): void {
         const container = this.$container && this.$container.get();
         if (container) {
-            return 0;
+            return;
         }
         let controls = '';
         let subHtmlCont = '';
@@ -399,7 +396,7 @@ export class LightGallery {
         this.manageCloseGallery();
         this.toggleMaximize();
 
-        return this.buildModules();
+        this.initModules();
     }
 
     refreshOnResize(): void {
@@ -579,12 +576,6 @@ export class LightGallery {
     openGallery(index = this.settings.index, element?: HTMLElement): void {
         // prevent accidental double execution
         if (this.lgOpened) return;
-        if (!this.modulesLoaded) {
-            setTimeout(() => {
-                this.openGallery(index, element);
-            }, this.timeToLoadModules);
-            return;
-        }
         this.lgOpened = true;
         this.outer.get().focus();
         this.outer.removeClass('lg-hide-items');
@@ -697,7 +688,7 @@ export class LightGallery {
      * if you have dynamic captions for each media,
      * you can provide an appropriate height for the captions via allowMediaOverlap option
      */
-    private getMediaContainerPosition() {
+    public getMediaContainerPosition(): MediaContainerPosition {
         if (this.settings.allowMediaOverlap) {
             return {
                 top: 0,
@@ -717,7 +708,7 @@ export class LightGallery {
         };
     }
 
-    private setMediaContainerPosition(top = 0, bottom = 0) {
+    private setMediaContainerPosition(top = 0, bottom = 0): void {
         this.$inner.css('top', top + 'px').css('bottom', bottom + 'px');
     }
 
@@ -2266,6 +2257,18 @@ export class LightGallery {
             this.lgOpened = false;
         }, removeTimeout + 100);
         return removeTimeout + 100;
+    }
+
+    initModules(): void {
+        this.plugins.forEach((module) => {
+            try {
+                module.init();
+            } catch (err) {
+                console.warn(
+                    `lightGallery:- make sure lightGallery module is properly initiated`,
+                );
+            }
+        });
     }
 
     destroyModules(destroy?: true): void {

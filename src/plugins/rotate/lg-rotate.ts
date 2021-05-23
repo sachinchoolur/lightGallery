@@ -17,10 +17,6 @@ export default class Rotate {
         // extend module default settings with lightGallery core settings
         this.settings = { ...rotateSettings, ...this.core.settings };
 
-        if (this.settings.rotate) {
-            this.init();
-        }
-
         return this;
     }
     buildTemplates(): void {
@@ -45,6 +41,9 @@ export default class Rotate {
     }
 
     init(): void {
+        if (!this.settings.rotate) {
+            return;
+        }
         this.buildTemplates();
 
         // Save rotate config for each item to persist its rotate, flip values

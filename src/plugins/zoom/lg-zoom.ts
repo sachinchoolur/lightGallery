@@ -34,21 +34,6 @@ export default class Zoom {
 
         this.settings = { ...zoomSettings, ...this.core.settings };
 
-        if (this.settings.zoom) {
-            this.init();
-
-            // Store the zoomable timeout value just to clear it while closing
-            this.zoomableTimeout = false;
-            this.positionChanged = false;
-
-            // Set the initial value center
-            this.pageX = this.core.outer.width() / 2;
-            this.pageY =
-                this.core.outer.height() / 2 + this.$LG(window).scrollTop();
-
-            this.scale = 1;
-        }
-
         return this;
     }
 
@@ -460,6 +445,9 @@ export default class Zoom {
     }
 
     init(): void {
+        if (!this.settings.zoom) {
+            return;
+        }
         this.buildTemplates();
         this.enableZoomOnSlideItemLoad();
 
@@ -537,6 +525,17 @@ export default class Zoom {
         this.pinchZoom();
 
         this.zoomSwipe();
+
+        // Store the zoomable timeout value just to clear it while closing
+        this.zoomableTimeout = false;
+        this.positionChanged = false;
+
+        // Set the initial value center
+        this.pageX = this.core.outer.width() / 2;
+        this.pageY =
+            this.core.outer.height() / 2 + this.$LG(window).scrollTop();
+
+        this.scale = 1;
     }
 
     zoomIn(scale?: number): void {

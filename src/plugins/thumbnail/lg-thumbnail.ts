@@ -28,24 +28,22 @@ export default class Thumbnail {
     private thumbTotalWidth = 0;
     private translateX = 0;
     private thumbClickable = false;
-    private settings: ThumbnailsSettings;
+    private settings!: ThumbnailsSettings;
     private $LG!: LgQuery;
     constructor(instance: LightGallery, $LG: LgQuery) {
         // get lightGallery core plugin instance
         this.core = instance;
         this.$LG = $LG;
-        // extend module default settings with lightGallery core settings
-        this.settings = {
-            ...thumbnailsSettings,
-            ...this.core.settings,
-        };
-
-        this.init();
 
         return this;
     }
 
     init(): void {
+        // extend module default settings with lightGallery core settings
+        this.settings = {
+            ...thumbnailsSettings,
+            ...this.core.settings,
+        };
         this.thumbOuterWidth = 0;
         this.thumbTotalWidth =
             this.core.galleryItems.length *
