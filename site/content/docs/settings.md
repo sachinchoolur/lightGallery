@@ -165,6 +165,7 @@ easily add your own comment widget as well.
 MediumZoom plugin helps you create similar zooming experience as seen on medium.
 This is a very basic plugin created just to demonstrate the customizability of
 lightGallery
+<span class="badge rounded-pill bg-danger font-12" title="Available since version 2.1.0">v2.1.0</span>
 
 {{< options pluginName="Medium zoom" interface="MediumZoomSettings" variable="mediumZoomSettings">}}
 
