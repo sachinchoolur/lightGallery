@@ -1,0 +1,7 @@
+{
+    "name": "lightgallery/plugins/mediumZoom",
+    "private": true,
+    "main": "lg-medium-zoom.umd.js",
+    "module": "lg-medium-zoom.es5.js",
+    "typings": "lg-medium-zoom.d.ts"
+}

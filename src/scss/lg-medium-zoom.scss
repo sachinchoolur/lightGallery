@@ -1,0 +1,20 @@
+.lg-medium-zoom-item {
+    cursor: zoom-in;
+}
+.lg-medium-zoom {
+    .lg-outer {
+        cursor: zoom-out;
+        // Set cursor grab while dragging
+        &.lg-grab {
+            img.lg-object {
+                cursor: zoom-out;
+            }
+        }
+
+        &.lg-grabbing {
+            img.lg-object {
+                cursor: zoom-out;
+            }
+        }
+    }
+}
