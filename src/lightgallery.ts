@@ -193,21 +193,25 @@ export class LightGallery {
         }
 
         if (!this.settings.dynamic) {
-            // Using for loop instead of using bubbling as the items can be any html element.
-            for (let index = 0; index < this.items.length; index++) {
-                const element = this.items[index];
-                const $element = $LG(element);
-                // Using different namespace for click because click event should not unbind if selector is same object('this')
-                // @todo manage all event listners - should have namespace that represent element
-                const uuid = lgQuery.generateUUID();
-                $element
-                    .attr('data-lg-id', uuid)
-                    .on(`click.lgcustom-item-${uuid}`, (e) => {
-                        e.preventDefault();
-                        const currentItemIndex = this.settings.index || index;
-                        this.openGallery(currentItemIndex, element);
-                    });
-            }
+            this.openGalleryOnItemClick();
+        }
+    }
+
+    openGalleryOnItemClick(): void {
+        // Using for loop instead of using bubbling as the items can be any html element.
+        for (let index = 0; index < this.items.length; index++) {
+            const element = this.items[index];
+            const $element = $LG(element);
+            // Using different namespace for click because click event should not unbind if selector is same object('this')
+            // @todo manage all event listners - should have namespace that represent element
+            const uuid = lgQuery.generateUUID();
+            $element
+                .attr('data-lg-id', uuid)
+                .on(`click.lgcustom-item-${uuid}`, (e) => {
+                    e.preventDefault();
+                    const currentItemIndex = this.settings.index || index;
+                    this.openGallery(currentItemIndex, element);
+                });
         }
     }
 
@@ -2113,6 +2117,14 @@ export class LightGallery {
         });
     }
 
+    invalidateItems(): void {
+        for (let index = 0; index < this.items.length; index++) {
+            const element = this.items[index];
+            const $element = $LG(element);
+            $element.off(`click.lgcustom-item-${$element.attr('data-lg-id')}`);
+        }
+    }
+
     manageCloseGallery(): void {
         if (!this.settings.closable) return;
         let mousedown = false;
@@ -2288,6 +2300,27 @@ export class LightGallery {
     }
 
     /**
+     * Refresh lightGallery with new set of children.
+     *
+     * @description This is useful to update the gallery when the child elements are changed without calling destroy method
+     * @category lGPublicMethods
+     * @example
+     *  const plugin = lightGallery();
+     *  // Delete or add children, then call
+     *  plugin.refresh();
+     *
+     */
+    refresh(): void {
+        if (!this.settings.dynamic) {
+            this.invalidateItems();
+        }
+        this.galleryItems = this.getItems();
+        this.openGalleryOnItemClick();
+        this.updateCounterTotal();
+        this.LGel.trigger(lGEvents.updateSlides);
+    }
+
+    /**
      * Destroy lightGallery.
      * Destroy lightGallery and its plugin instances completely
      *
@@ -2303,13 +2336,7 @@ export class LightGallery {
         setTimeout(() => {
             this.destroyModules(true);
             if (!this.settings.dynamic) {
-                for (let index = 0; index < this.items.length; index++) {
-                    const element = this.items[index];
-                    const $element = $LG(element);
-                    $element.off(
-                        `click.lgcustom-item-${$element.attr('data-lg-id')}`,
-                    );
-                }
+                this.invalidateItems();
             }
             $LG(window).off(`.lg.global${this.lgId}`);
             this.LGel.off('.lg');
