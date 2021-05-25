@@ -422,7 +422,7 @@ export interface LightGalleryCoreSettings {
     /**
      * LightGallery can be instantiated and launched programmatically by setting this option to true and populating dynamicEl option (see below) with the definitions of images.
      */
-    dynamic: false;
+    dynamic: boolean;
 
     /**
      * An array of objects (src, iframe, subHtml, thumb, poster, responsive, srcset sizes) representing gallery elements.
