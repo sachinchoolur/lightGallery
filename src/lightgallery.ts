@@ -2264,7 +2264,9 @@ export class LightGallery {
                     instance: this,
                 });
             }
-            this.LGel.get().focus();
+            if (this.outer.get()) {
+                this.outer.get().blur();
+            }
 
             this.lgOpened = false;
         }, removeTimeout + 100);
