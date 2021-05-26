@@ -56,7 +56,7 @@ $lgDemoUpdateSlides.addEventListener('lgInit', (event) => {
 });
 
 // Initialize lightGallery
-lightGallery($lgDemoUpdateSlides, {
+updateSlideInstance = lightGallery($lgDemoUpdateSlides, {
     addClass: 'lg-update-slide-demo',
 });
 ```
@@ -67,7 +67,10 @@ Note :
 
 -   Do not mutate existing lightGallery items directly.
 -   Always pass new list of gallery items
--   You need to take care of thumbnails outside the gallery if any
+-   You need to take care of thumbnails outside the gallery if any You can use
+    refresh() method to update lightGallery after updating thumbnails -
+    [Docs](../../docs/methods/#refresh) -
+    [Demo](../../demos/infinite-scrolling/)
 
 ```js
 updateSlideInstance.outer.find('#lg-delete').on('click', () => {

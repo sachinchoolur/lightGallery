@@ -87,7 +87,7 @@ That's it. Here the full example
 const $infiniteScrollGallery = document.getElementById(
     'infinite-scroll-gallery',
 );
-let lg = lightGallery($infiniteScrollGallery, {
+let infiniteScrollingGallery = lightGallery($infiniteScrollGallery, {
     speed: 500,
 });
 
@@ -104,19 +104,8 @@ const $window = $(window);
 let shouldReInit = true;
 $window.scroll(function () {
     if ($window.scrollTop() >= $(document).height() - $window.height() - 10) {
-        // User scrolled till the bottom the page
-        if (shouldReInit) {
-            shouldReInit = false;
-            $('#infinite-scroll-gallery').append(images);
-            lg.destroy();
-            // Add 500ms timeout to complete destroy process
-            setTimeout(() => {
-                lg = lightGallery($infiniteScrollGallery, {
-                    speed: 500,
-                });
-                shouldReInit = true;
-            }, 500);
-        }
+        $('#infinite-scroll-gallery').append(images);
+        infiniteScrollingGallery.refresh();
     }
 });
 ```
