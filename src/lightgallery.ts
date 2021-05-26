@@ -2315,7 +2315,7 @@ export class LightGallery {
      *  plugin.refresh();
      *
      */
-    refresh(galleryItems: GalleryItem[]): void {
+    refresh(galleryItems?: GalleryItem[]): void {
         if (!this.settings.dynamic) {
             this.invalidateItems();
         }
