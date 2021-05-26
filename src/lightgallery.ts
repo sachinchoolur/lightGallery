@@ -2304,7 +2304,10 @@ export class LightGallery {
     /**
      * Refresh lightGallery with new set of children.
      *
-     * @description This is useful to update the gallery when the child elements are changed without calling destroy method
+     * @description This is useful to update the gallery when the child elements are changed without calling destroy method.
+     *
+     * If you are using dynamic mode, you can pass the modified array of dynamicEl as the first parameter to refresh the dynamic gallery
+     * @see <a href="/demos/dynamic-mode/">Demo</a>
      * @category lGPublicMethods
      * @example
      *  const plugin = lightGallery();
@@ -2312,11 +2315,15 @@ export class LightGallery {
      *  plugin.refresh();
      *
      */
-    refresh(): void {
+    refresh(galleryItems: GalleryItem[]): void {
         if (!this.settings.dynamic) {
             this.invalidateItems();
         }
-        this.galleryItems = this.getItems();
+        if (galleryItems) {
+            this.galleryItems = galleryItems;
+        } else {
+            this.galleryItems = this.getItems();
+        }
         this.openGalleryOnItemClick();
         this.updateCounterTotal();
         this.LGel.trigger(lGEvents.updateSlides);
