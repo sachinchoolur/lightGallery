@@ -48,8 +48,9 @@ const LgMethods = {
     template: '<ng-content></ng-content>',
     styles: [],
 })
-export class LightgalleryComponent implements OnInit {
+export class LightgalleryComponent {
     private LG!: LightGallery;
+    private lgInitialized = false;
     constructor(private _elementRef: ElementRef) {
         this._elementRef = _elementRef;
     }
@@ -74,16 +75,20 @@ export class LightgalleryComponent implements OnInit {
     @Input() onBeforeClose?: (detail: BeforeCloseDetail) => void;
     @Input() onAfterClose?: (detail: AfterCloseDetail) => void;
 
-    ngOnInit(): void {
-        this.registerEvents();
-        this.LG = lightGallery(
-            this._elementRef.nativeElement as HTMLElement,
-            this.settings,
-        );
+    ngAfterViewChecked(): void {
+        if (!this.lgInitialized) {
+            this.registerEvents();
+            this.LG = lightGallery(
+                this._elementRef.nativeElement as HTMLElement,
+                this.settings,
+            );
+            this.lgInitialized = true;
+        }
     }
 
     ngOnDestroy(): void {
         this.LG.destroy();
+        this.lgInitialized = false;
     }
 
     private registerEvents(): void {
