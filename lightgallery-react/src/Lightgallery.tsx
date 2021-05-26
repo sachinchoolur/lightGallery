@@ -43,10 +43,9 @@ interface LgEvents {
     onAfterClose?: (detail: AfterCloseDetail) => void;
 }
 
-export interface LightGalleryProps
-    extends LgEvents,
-        LightGallerySettings {
+export interface LightGalleryProps extends LgEvents, LightGallerySettings {
     children?: any;
+    elementClassNames?: string;
 }
 
 const LgMethods = {
@@ -73,6 +72,7 @@ const LgMethods = {
 
 const LG: React.FC<LightGalleryProps> = ({
     children,
+    elementClassNames,
     onAfterAppendSlide,
     onInit,
     onHasVideo,
@@ -97,114 +97,150 @@ const LG: React.FC<LightGalleryProps> = ({
 
     const registerEvents = React.useCallback(() => {
         if (onAfterAppendSlide && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onAfterAppendSlide, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onAfterAppendSlide, ((
+                event: CustomEvent,
+            ) => {
                 onAfterAppendSlide(event.detail);
             }) as EventListener);
         }
         if (onInit && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onInit, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onInit, ((
+                event: CustomEvent,
+            ) => {
                 onInit(event.detail);
             }) as EventListener);
         }
         if (onHasVideo && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onHasVideo, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onHasVideo, ((
+                event: CustomEvent,
+            ) => {
                 onHasVideo(event.detail);
             }) as EventListener);
         }
         if (onContainerResize && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onContainerResize, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onContainerResize, ((
+                event: CustomEvent,
+            ) => {
                 onContainerResize(event.detail);
             }) as EventListener);
         }
         if (onAfterAppendSubHtml && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onAfterAppendSubHtml, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onAfterAppendSubHtml, ((
+                event: CustomEvent,
+            ) => {
                 onAfterAppendSubHtml(event.detail);
             }) as EventListener);
         }
         if (onBeforeOpen && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onBeforeOpen, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onBeforeOpen, ((
+                event: CustomEvent,
+            ) => {
                 onBeforeOpen(event.detail);
             }) as EventListener);
         }
         if (onAfterOpen && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onAfterOpen, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onAfterOpen, ((
+                event: CustomEvent,
+            ) => {
                 onAfterOpen(event.detail);
             }) as EventListener);
         }
         if (onSlideItemLoad && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onSlideItemLoad, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onSlideItemLoad, ((
+                event: CustomEvent,
+            ) => {
                 onSlideItemLoad(event.detail);
             }) as EventListener);
         }
         if (onBeforeSlide && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onBeforeSlide, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onBeforeSlide, ((
+                event: CustomEvent,
+            ) => {
                 onBeforeSlide(event.detail);
             }) as EventListener);
         }
         if (onAfterSlide && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onAfterSlide, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onAfterSlide, ((
+                event: CustomEvent,
+            ) => {
                 onAfterSlide(event.detail);
             }) as EventListener);
         }
         if (onPosterClick && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onPosterClick, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onPosterClick, ((
+                event: CustomEvent,
+            ) => {
                 onPosterClick(event.detail);
             }) as EventListener);
         }
         if (onDragStart && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onDragStart, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onDragStart, ((
+                event: CustomEvent,
+            ) => {
                 onDragStart(event.detail);
             }) as EventListener);
         }
         if (onDragMove && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onDragMove, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onDragMove, ((
+                event: CustomEvent,
+            ) => {
                 onDragMove(event.detail);
             }) as EventListener);
         }
         if (onDragEnd && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onDragEnd, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onDragEnd, ((
+                event: CustomEvent,
+            ) => {
                 onDragEnd(event.detail);
             }) as EventListener);
         }
         if (onBeforeNextSlide && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onBeforeNextSlide, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onBeforeNextSlide, ((
+                event: CustomEvent,
+            ) => {
                 onBeforeNextSlide(event.detail);
             }) as EventListener);
         }
         if (onBeforePrevSlide && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onBeforePrevSlide, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onBeforePrevSlide, ((
+                event: CustomEvent,
+            ) => {
                 onBeforePrevSlide(event.detail);
             }) as EventListener);
         }
         if (onBeforeClose && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onBeforeClose, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onBeforeClose, ((
+                event: CustomEvent,
+            ) => {
                 onBeforeClose(event.detail);
             }) as EventListener);
         }
         if (onAfterClose && $lg && $lg.current) {
-            $lg.current.addEventListener(LgMethods.onAfterClose, ((event: CustomEvent) => {
+            $lg.current.addEventListener(LgMethods.onAfterClose, ((
+                event: CustomEvent,
+            ) => {
                 onAfterClose(event.detail);
             }) as EventListener);
         }
     }, [
-        onAfterAppendSlide, 
-        onAfterAppendSubHtml, 
-        onAfterClose, 
-        onAfterOpen, 
-        onAfterSlide, 
-        onBeforeClose, 
-        onBeforeNextSlide, 
-        onBeforeOpen, 
-        onBeforePrevSlide, 
-        onBeforeSlide, 
-        onContainerResize, 
-        onDragEnd, 
-        onDragMove, 
-        onDragStart, 
-        onHasVideo, 
-        onInit, 
-        onPosterClick, 
-        onSlideItemLoad
+        onAfterAppendSlide,
+        onAfterAppendSubHtml,
+        onAfterClose,
+        onAfterOpen,
+        onAfterSlide,
+        onBeforeClose,
+        onBeforeNextSlide,
+        onBeforeOpen,
+        onBeforePrevSlide,
+        onBeforeSlide,
+        onContainerResize,
+        onDragEnd,
+        onDragMove,
+        onDragStart,
+        onHasVideo,
+        onInit,
+        onPosterClick,
+        onSlideItemLoad,
     ]);
 
     React.useEffect(() => {
@@ -216,8 +252,17 @@ const LG: React.FC<LightGalleryProps> = ({
         return function cleanup() {
             lightGallery.destroy();
         };
-    }, [registerEvents, restProps]);
+    }, []);
 
-    return <div ref={$lg}>{children}</div>;
+    return (
+        <div
+            className={`lg-react-element ${
+                elementClassNames ? elementClassNames : ''
+            }`}
+            ref={$lg}
+        >
+            {children}
+        </div>
+    );
 };
 export default LG;
