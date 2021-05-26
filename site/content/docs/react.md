@@ -76,7 +76,8 @@ function Gallery() {
 All lightGallery settings can be passed to react component as props.
 Additionally, you can use lifecycle hook methods listed below to hook into
 lightGalley component lifecycle. Almost every method passes a detail object
-which holds useful plugin data
+which holds useful plugin data. Also, you can pass additional classnames to the
+lightGallery react wrapper element via `elementClassNames` prop
 
 #### usage example
 
@@ -88,7 +89,10 @@ function Gallery() {
     };
     return (
         <div className="App">
-            <LightGallery onBeforeSlide={onBeforeSlide}>
+            <LightGallery
+                elementClassNames="custom-wrapper-class"
+                onBeforeSlide={onBeforeSlide}
+            >
                 <a href="img/img1.jpg">
                     <img alt=".." src="img/thumb1.jpg" />
                 </a>
