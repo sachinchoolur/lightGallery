@@ -15,7 +15,7 @@ toc: true
 ---
 
 <div class="alert alert-danger" role="alert">
-    lightGallery Vue.js component works only with Vue.js version 3 and above
+    lightGallery Vue.js component works only with Vue.js version 3 and above. For vue.js 2 please follow this <a target="_blank" href="https://github.com/sachinchoolur/lightgallery.js/issues/60#issuecomment-422259277">link</a>
 </div>
 
 <a class="btn btn-outline-primary" href="https://stackblitz.com/edit/lightgallery-vue" target="_blank">StackBlitz
@@ -143,3 +143,86 @@ export default class App extends Vue {}
     {{< callbacks interface="BeforeCloseDetail" >}}
     {{< callbacks interface="AfterCloseDetail" >}}
 </div>
+
+## Updating slides
+
+lightGallery does not update slides automatically due to performance reasons.
+But you can easily update slides whenever needed by calling `refresh` method.
+
+<a class="btn btn-outline-primary" href="https://stackblitz.com/edit/lightgallery-vue-update-slides" target="_blank">StackBlitz
+Demo</a>
+
+```ts
+<template>
+    <button v-on:click="updateSlides">Add new image</button>
+    <lightgallery
+        :settings="{ speed: 500, plugins: plugins }"
+        :onInit="onInit"
+        :onBeforeSlide="onBeforeSlide"
+    >
+        <a
+            v-for="item in items"
+            :key="item.id"
+            :data-lg-size="item.size"
+            className="gallery-item"
+            :data-src="item.src"
+        >
+            <img className="img-responsive" :src="item.thumb" />
+        </a>
+    </lightgallery>
+</template>
+
+<script>
+import Lightgallery from 'lightgallery/vue';
+import lgZoom from 'lightgallery/plugins/zoom';
+let lightGallery: any = null;
+export default {
+    name: 'App',
+    components: {
+        Lightgallery,
+    },
+    watch: {
+        items(newVal, oldVal) {
+            this.$nextTick(() => {
+                lightGallery.refresh();
+            });
+        },
+    },
+    data: () => ({
+        plugins: [lgZoom],
+        items: [
+            {
+                id: '1',
+                size: '1400-800',
+                src: 'img-1.jpg',
+                thumb: 'thumb-1.jpg',
+            },
+            {
+                id: '2',
+                size: '1400-800',
+                src: 'img-2.jpg',
+                thumb: 'thumb-2.jpg',
+            },
+        ],
+    }),
+    methods: {
+        onInit: (detail) => {
+            lightGallery = detail.instance;
+        },
+        updateSlides: function () {
+            this.items = [
+                ...this.items,
+                {
+                    id: '5',
+                    size: '1400-800',
+                    src: 'img-5.jpg',
+                    thumb: 'thumb-5.jpg',
+                }
+            ];
+            lightGallery.refresh();
+        },
+    },
+};
+</script>
+
+```

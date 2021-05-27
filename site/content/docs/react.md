@@ -123,3 +123,87 @@ function Gallery() {
     {{< callbacks interface="BeforeCloseDetail" >}}
     {{< callbacks interface="AfterCloseDetail" >}}
 </div>
+
+## Updating slides
+
+lightGallery does not update slides automatically due to performance reasons.
+But you can easily update slides whenever needed by calling `refresh` method.
+
+<a class="btn btn-outline-primary" href="https://stackblitz.com/edit/lightgallery-react-update-slides" target="_blank">StackBlitz
+Demo</a>
+
+```tsx
+function App() {
+    const lightGallery = useRef < any > null;
+    const [items, setItems] = useState([
+        {
+            id: '1',
+            size: '1400-800',
+            src: 'img-1.jpg',
+            thumb: 'thumb-1.jpg',
+        },
+        {
+            id: '2',
+            size: '1400-800',
+            src: 'img-2.jpg',
+            thumb: 'thumb-2.jpg',
+        },
+    ]);
+
+    const addItem = useCallback(() => {
+        setItems([
+            ...items,
+            {
+                id: '5',
+                size: '1400-800',
+                src: 'img-5.jpg',
+                thumb: 'thumb-5.jpg',
+            },
+            {
+                id: '6',
+                size: '1400-800',
+                src: 'img-6.jpg',
+                thumb: 'thumb-6.jpg',
+            },
+        ]);
+    }, []);
+
+    const onInit = useCallback((detail) => {
+        if (detail) {
+            lightGallery.current = detail.instance;
+        }
+    }, []);
+
+    const getItems = useCallback(() => {
+        return items.map((item) => {
+            return (
+                <div
+                    key={item.id}
+                    data-lg-size={item.size}
+                    className="gallery-item"
+                    data-src={item.src}
+                >
+                    <img className="img-responsive" src={item.thumb} />
+                </div>
+            );
+        });
+    }, [items]);
+
+    useEffect(() => {
+        lightGallery.current.refresh();
+    }, [items]);
+
+    return (
+        <div className="App">
+            <button onClick={addItem}>Add new item</button>
+            <LightGallery
+                plugins={[lgZoom]}
+                elementClassNames="custom-class-name"
+                onInit={onInit}
+            >
+                {getItems()}
+            </LightGallery>
+        </div>
+    );
+}
+```

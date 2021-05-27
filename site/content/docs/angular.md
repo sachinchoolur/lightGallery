@@ -114,3 +114,64 @@ export class AppComponent {
     {{< callbacks interface="BeforeCloseDetail" >}}
     {{< callbacks interface="AfterCloseDetail" >}}
 </div>
+
+## Updating slides
+
+lightGallery does not update slides automatically due to performance reasons.
+But you can easily update slides whenever needed by calling `refresh` method.
+
+<a class="btn btn-outline-primary" href="https://stackblitz.com/edit/lightgallery-angular-update-slides" target="_blank">StackBlitz
+Demo</a>
+
+```ts
+@Component({
+    selector: 'my-app',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
+    encapsulation: ViewEncapsulation.None,
+})
+export class AppComponent {
+    private lightGallery!: LightGallery;
+    private needRefresh = false;
+    ngAfterViewChecked(): void {
+        if (this.needRefresh) {
+            this.lightGallery.refresh();
+            this.needRefresh = false;
+        }
+    }
+    title = 'angular-demo';
+    settings = {
+        counter: false,
+        plugins: [lgZoom],
+    };
+    items = [
+        {
+            id: '1',
+            size: '1400-800',
+            src: 'img-1.jpg',
+            thumb: 'thumb-1.jpg',
+        },
+        {
+            id: '2',
+            size: '1400-800',
+            src: 'img-2.jpg',
+            thumb: 'thumb-2.jpg',
+        },
+    ];
+    onInit = (detail: InitDetail): void => {
+        this.lightGallery = detail.instance;
+    };
+    addImage = () => {
+        this.items = [
+            ...this.items,
+            {
+                id: '5',
+                size: '1400-800',
+                src: 'img-5.jpg',
+                thumb: 'thumb-5.jpg',
+            },
+        ];
+        this.needRefresh = true;
+    };
+}
+```
