@@ -167,6 +167,9 @@ export class LightGallery {
     }
 
     init(): void {
+        if ( null === this.settings.container ) {
+            this.settings.container = document.body;
+        }
         this.addSlideVideoInfo(this.galleryItems);
 
         this.buildStructure();
