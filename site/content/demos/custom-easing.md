@@ -7,7 +7,6 @@ lead:
     Demo values are taken from <a target="_blank" href="http://twitter.com/matthewlein">@matthewlein</a>`s <a href="http://matthewlein.com/ceaser/">ceaser</a>
 '
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:

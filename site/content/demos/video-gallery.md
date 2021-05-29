@@ -7,7 +7,6 @@ lead:
     'lightGallery supports YouTube, Vimeo, Wistia and all other types of HTML5
     video formats. Such as MP4, WebM, Ogg, etc.'
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:

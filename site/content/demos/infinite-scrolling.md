@@ -7,7 +7,6 @@ lead:
     pagination. Let`s see how we can implement infinite scrolling with
     lightGallery'
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:

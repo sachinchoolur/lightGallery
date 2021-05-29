@@ -7,7 +7,6 @@ lead:
     'lightGallery is a lightweight, modular, JavaScript library for creating
     beautiful image & video galleries for the web and the mobile.'
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:

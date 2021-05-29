@@ -4,10 +4,9 @@ description: 'LightGallery methods.'
 lead:
     'You can use lightGallery plugin instance public methods to trigger specific
     lightGallery actions. lightGallery provides several useful methods which can
-    be used to customize the gallery or to build your own features. You can find the
-    list of methods in the <a href="../../docs/methods/">docs</a>.'
+    be used to customize the gallery or to build your own features. You can find
+    the list of methods in the <a href="../../docs/methods/">docs</a>.'
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:

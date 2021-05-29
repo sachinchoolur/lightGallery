@@ -5,7 +5,6 @@ lead:
     'LightGallery does not force you to use any specific HTML markup. You can
     use almost any kind of markup with the help of `selector` setting.'
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:

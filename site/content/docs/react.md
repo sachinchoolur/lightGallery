@@ -3,7 +3,6 @@ title: 'lightGallery React'
 description: 'Full featured image and video gallery component for react'
 lead: 'Full featured image and video gallery component for react.'
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:

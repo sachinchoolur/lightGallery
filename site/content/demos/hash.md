@@ -9,7 +9,6 @@ lead:
     multiple galleries on a page, you have to provide unique id for each gallery
     via galleryId setting.'
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:

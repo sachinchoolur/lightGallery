@@ -6,7 +6,6 @@ lead:
     devices. Other than it's own mechanism, lightGallery supports HTML5 picture
     tag, srcset and sizes for responsive images."
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:

@@ -7,7 +7,6 @@ lead:
     automatically display the source in an iframe. This can be used to view PDF
     files, google maps and more.'
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:

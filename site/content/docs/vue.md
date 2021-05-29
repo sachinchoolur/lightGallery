@@ -3,7 +3,6 @@ title: 'lightGallery Vue'
 description: 'Full featured image and video gallery component for Vue.js'
 lead: 'Full featured image and video gallery component for vue.'
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:

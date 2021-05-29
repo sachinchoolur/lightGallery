@@ -5,7 +5,6 @@ lead:
     'LightGallery supports facebook and Disqus comments out of the box with the
     help of lg-comments plugin.'
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu:
