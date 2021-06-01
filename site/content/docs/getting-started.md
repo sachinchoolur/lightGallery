@@ -107,14 +107,16 @@ folder.
 </head>
 ```
 
-Then include lightgallery.umd.js into your document. If you want to include any
-lightgallery plugin you can include it after lightgallery.umd.js.
+Then include `lightgallery.umd.js` into your document. If you want to include
+any lightgallery plugin you can include it after `lightgallery.umd.js`.
 
 ```HTML
 <body>
     ....
 
     <script src="js/lightgallery.umd.js"></script>
+    <!-- Or use the minified version -->
+    <script src="js/lightgallery.min.js"></script>
 
     <!-- lightgallery plugins -->
     <script src="js/plugins/lg-thumbnail.umd.js"></script>
