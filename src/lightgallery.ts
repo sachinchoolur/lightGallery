@@ -159,6 +159,10 @@ export class LightGallery {
             this.zoomFromOrigin = false;
         }
 
+        if (!this.settings.container) {
+            this.settings.container = document.body;
+        }
+
         // settings.preload should not be grater than $item.length
         this.settings.preload = Math.min(
             this.settings.preload,
@@ -167,9 +171,6 @@ export class LightGallery {
     }
 
     init(): void {
-        if ( null === this.settings.container ) {
-            this.settings.container = document.body;
-        }
         this.addSlideVideoInfo(this.galleryItems);
 
         this.buildStructure();
