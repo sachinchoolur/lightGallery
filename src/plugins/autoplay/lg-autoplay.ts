@@ -23,7 +23,7 @@ export default class Autoplay {
     }
 
     public init(): void {
-        if (!this.settings.autoplay || this.core.galleryItems.length < 2) {
+        if (!this.settings.autoplay) {
             return;
         }
 

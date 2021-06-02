@@ -81,8 +81,9 @@ describe('Controls', () => {
             </div>`;
         lightGallery(document.getElementById('lightGallery') as HTMLElement);
         await waitFor(() => {
-            expect(document.querySelector('.lg-next')).not.toBeInTheDocument();
-            expect(document.querySelector('.lg-prev')).not.toBeInTheDocument();
+            expect(
+                document.querySelector('.lg-single-item'),
+            ).toBeInTheDocument();
         });
     });
 });

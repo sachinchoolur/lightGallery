@@ -43,6 +43,12 @@ $thumbnails-margin: 5px;
         }
     }
 
+    &.lg-single-item {
+        .lg-thumb-outer {
+            display: none;
+        }
+    }
+
     .lg-thumb {
         padding: 5px 0;
         height: 100%;

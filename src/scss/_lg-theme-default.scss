@@ -28,6 +28,9 @@
     &:hover {
         color: $lg-next-prev-hover-color;
     }
+    .lg-single-item & {
+        display: none;
+    }
 }
 
 .lg-next {

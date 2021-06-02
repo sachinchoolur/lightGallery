@@ -36,4 +36,8 @@
         }
         content: '\e01d';
     }
+    .lg-single-item & {
+        opacity: $lg-toolbar-icon-disabled-opacity;
+        pointer-events: none;
+    }
 }

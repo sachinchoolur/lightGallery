@@ -58,7 +58,7 @@ export default class Thumbnail {
             this.settings.toggleThumb = false;
         }
 
-        if (this.settings.thumbnail && this.core.galleryItems.length > 1) {
+        if (this.settings.thumbnail) {
             this.build();
             if (this.settings.animateThumb) {
                 if (this.settings.enableThumbDrag) {
@@ -501,7 +501,7 @@ export default class Thumbnail {
     }
 
     destroy(): void {
-        if (this.settings.thumbnail && this.core.galleryItems.length > 1) {
+        if (this.settings.thumbnail) {
             this.$LG(window).off(`.lg.thumb.global${this.core.lgId}`);
             this.core.LGel.off('.lg.thumb');
             this.core.LGel.off('.thumb');

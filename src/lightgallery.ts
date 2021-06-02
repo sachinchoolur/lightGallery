@@ -1,5 +1,5 @@
 import utils, { GalleryItem, ImageSize } from './lg-utils';
-import { $LG, LgQuery, lgQuery } from './lgQuery';
+import { $LG, lgQuery } from './lgQuery';
 import {
     LightGallerySettings,
     lightGalleryCoreSettings,
@@ -184,12 +184,9 @@ export class LightGallery {
             this.enableSwipe();
         }, 50);
 
-        if (this.galleryItems.length > 1) {
-            this.arrow();
-
-            if (this.settings.mousewheel) {
-                this.mousewheel();
-            }
+        this.arrow();
+        if (this.settings.mousewheel) {
+            this.mousewheel();
         }
 
         if (!this.settings.dynamic) {
@@ -252,6 +249,14 @@ export class LightGallery {
         return $LG(`#${this.getIdName(id)}`);
     }
 
+    manageSingleSlideClassName(): void {
+        if (this.galleryItems.length < 2) {
+            this.outer.addClass('lg-single-item');
+        } else {
+            this.outer.removeClass('lg-single-item');
+        }
+    }
+
     buildStructure(): void {
         const container = this.$container && this.$container.get();
         if (container) {
@@ -261,7 +266,7 @@ export class LightGallery {
         let subHtmlCont = '';
 
         // Create controls
-        if (this.settings.controls && this.galleryItems.length > 1) {
+        if (this.settings.controls) {
             controls = `<button type="button" id="${this.getIdName(
                 'lg-prev',
             )}" aria-label="Previous slide" class="lg-prev lg-icon"> ${
@@ -318,7 +323,7 @@ export class LightGallery {
 
             <div id="${this.getIdName(
                 'lg-outer',
-            )}" class="lg-outer lg-hide-items ${addClasses} ">
+            )}" class="lg-outer lg-use-css3 lg-css3 lg-hide-items ${addClasses} ">
                     <div id="${this.getIdName(
                         'lg-content',
                     )}" class="lg" style="width: ${
@@ -360,20 +365,19 @@ export class LightGallery {
             this.settings.backdropDuration + 'ms',
         );
 
-        this.outer.addClass('lg-use-css3');
+        let outerClassNames = `${this.settings.mode} `;
 
-        // add Class for css support and transition mode
-        this.outer.addClass('lg-css3');
+        this.manageSingleSlideClassName();
 
-        this.outer.addClass(this.settings.mode);
-
-        if (this.settings.enableDrag && this.galleryItems.length > 1) {
-            this.outer.addClass('lg-grab');
+        if (this.settings.enableDrag) {
+            outerClassNames += 'lg-grab ';
         }
 
         if (this.settings.showAfterLoad) {
-            this.outer.addClass('lg-show-after-load');
+            outerClassNames += 'lg-show-after-load';
         }
+
+        this.outer.addClass(outerClassNames);
 
         this.$inner.css('transition-timing-function', this.settings.easing);
         this.$inner.css('transition-duration', this.settings.speed + 'ms');
@@ -2073,7 +2077,7 @@ export class LightGallery {
 
     mousewheel(): void {
         this.outer.on('mousewheel.lg', (e) => {
-            if (!e.deltaY) {
+            if (!e.deltaY || this.galleryItems.length < 2) {
                 return;
             }
 
@@ -2326,6 +2330,7 @@ export class LightGallery {
         }
         this.openGalleryOnItemClick();
         this.updateCounterTotal();
+        this.manageSingleSlideClassName();
         this.LGel.trigger(lGEvents.updateSlides);
     }
 

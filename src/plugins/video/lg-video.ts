@@ -64,10 +64,7 @@ export default class Video {
             this.onHasVideo.bind(this),
         );
 
-        if (
-            this.core.galleryItems.length > 1 &&
-            (this.core.settings.enableSwipe || this.core.settings.enableDrag)
-        ) {
+        if (this.core.settings.enableSwipe || this.core.settings.enableDrag) {
             this.core.LGel.on(`${lGEvents.posterClick}.video`, () => {
                 const $el = this.core.getSlideItem(this.core.index);
                 this.loadVideoOnPosterClick($el);

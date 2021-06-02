@@ -30,7 +30,7 @@ export default class Pager {
     }
 
     public init(): void {
-        if (!this.settings.pager || this.core.galleryItems.length <= 1) {
+        if (!this.settings.pager) {
             return;
         }
         let timeout: any;

@@ -14,6 +14,12 @@
         }
     }
 
+    &.lg-single-item {
+        .lg-pager-outer {
+            display: none;
+        }
+    }
+
     .lg-pager-cont {
         cursor: pointer;
         display: inline-block;
