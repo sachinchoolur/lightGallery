@@ -1,5 +1,5 @@
 {
-    "name": "lightgallery/lit",
+    "name": "lightgallery",
     "private": true,
     "version": "0.0.0",
     "description": "Full featured javascript image and video gallery for lit-html",
@@ -8,7 +8,7 @@
     "typings": "lightgallery.d.ts",
     "type": "module",
     "scripts": {
-        "build": "tsc && rollup -c rollup.config.js",
+        "build": "tsc && rollup -c rollup.config.js && npm run analyze",
         "build:watch": "tsc --watch",
         "clean": "rimraf lightgallery.{d.ts,d.ts.map,js,js.map} test/lightgallery.{d.ts,d.ts.map,js,js.map} test/my-element_test.{d.ts,d.ts.map,js,js.map}",
         "lint": "npm run lint:lit-analyzer && npm run lint:eslint",
@@ -22,7 +22,7 @@
         "docs:build": "rollup -c --file docs/lightgallery.esm.js",
         "docs:assets": "cp node_modules/prismjs/themes/prism-okaidia.css docs/",
         "docs:serve": "wds --root-dir=docs --node-resolve --watch",
-        "analyze": "wca analyze \"src/**/*.ts\" --outFile custom-elements.json",
+        "analyze": "wca analyze \"src/**/*.ts\" --outFile dist/custom-elements.json",
         "serve": "wds --watch",
         "test": "wtr",
         "test:watch": "npm run test -- --watch",

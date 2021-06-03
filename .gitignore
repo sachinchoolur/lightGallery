@@ -13,7 +13,9 @@ dist/*.md
 dist/angular/
 dist/react/
 lightgallery-react/dist
+lightgallery-lit/dist
 dist/vue/
+dist/lit/
 dist/package.json
 dist/plugins/**/*.json
 compiled

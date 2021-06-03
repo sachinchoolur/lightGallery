@@ -11,9 +11,9 @@ import replace from '@rollup/plugin-replace';
 
 export default [
     {
-        input: 'lightgallery.js',
+        input: 'dist/lightgallery.js',
         output: {
-            file: 'lightgallery.esm.js',
+            file: 'dist/lightgallery.esm.js',
             format: 'esm',
         },
         onwarn(warning) {
@@ -38,9 +38,9 @@ export default [
         ],
     },
     {
-        input: 'lightgallery.js',
+        input: 'dist/lightgallery.js',
         output: {
-            file: 'lightgallery.umd.js',
+            file: 'dist/lightgallery.umd.js',
             name: 'lightgallery',
             format: 'umd',
         },

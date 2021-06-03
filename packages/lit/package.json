@@ -1,0 +1,8 @@
+{
+    "name": "lightgallery/lit",
+    "private": true,
+    "main": "lightgallery.umd.js",
+    "module": "lightgallery.esm.js",
+    "typings": "lightgallery.d.ts",
+    "customElements": "custom-elements.json"
+}

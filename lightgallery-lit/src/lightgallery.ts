@@ -7,6 +7,7 @@ import { customElement, property } from 'lit/decorators.js';
 
 import lightGallery from 'lightgallery';
 import { LightGallerySettings } from 'lightgallery/lg-settings';
+import { TemplateResult } from 'lit';
 
 @customElement('light-gallery')
 export class LightGallery extends LitElement {
@@ -35,7 +36,7 @@ export class LightGallery extends LitElement {
     })
     settings: LightGallerySettings = {} as LightGallerySettings;
 
-    render() {
+    render(): TemplateResult {
         return html`
             <div id="container">
                 <slot></slot>
