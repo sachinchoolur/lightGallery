@@ -1,7 +1,3 @@
-# LitElement TypeScript starter
-
-This project includes a sample component using LitElement with TypeScript.
-
 ## Setup
 
 Install dependencies:
