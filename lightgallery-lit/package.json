@@ -14,6 +14,7 @@
         "lint": "npm run lint:lit-analyzer && npm run lint:eslint",
         "lint:eslint": "eslint 'src/**/*.ts'",
         "lint:lit-analyzer": "lit-analyzer",
+        "copyTypes": "copyfiles -u 1 lib/lightgallery.d.ts dist",
         "format": "prettier \"**/*.{cjs,html,js,json,md,ts}\" --ignore-path ./.eslintignore --write",
         "docs": "npm run docs:clean && npm run build && npm run analyze && npm run docs:build && npm run docs:assets && npm run docs:gen",
         "docs:clean": "rimraf docs",
