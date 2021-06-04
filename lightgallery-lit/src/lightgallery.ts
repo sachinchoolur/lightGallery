@@ -8,38 +8,64 @@ import { customElement, property } from 'lit/decorators.js';
 import lightGallery from 'lightgallery';
 import { LightGallerySettings } from 'lightgallery/lg-settings';
 import { TemplateResult } from 'lit';
+import { LightGallery } from 'lightgallery/lightgallery';
 
 @customElement('light-gallery')
-export class LightGallery extends LitElement {
-    firstUpdated() {
-        const slot = (this.shadowRoot as ShadowRoot).querySelector('slot');
-        const childNodes = (slot as HTMLSlotElement).assignedNodes({
+export class LightGalleryLit extends LitElement {
+    private galleryInstance?: LightGallery;
+
+    private getSelector(el: HTMLElement): HTMLCollection[] {
+        const childNodes = (el as HTMLSlotElement).assignedNodes({
             flatten: true,
         });
-        const s = Array.prototype.filter.call(
+        const selector = Array.prototype.filter.call(
             childNodes,
             (node) => node.nodeType == Node.ELEMENT_NODE,
         );
+        return selector;
+    }
+    firstUpdated(): void {
+        if (!this.shadowRoot) return;
+        const slot = this.shadowRoot.querySelector('slot');
+        const selector = this.getSelector(slot as HTMLElement);
         const litSettings = {
-            selector: s as any,
+            selector: selector as any,
         };
         const lgSettings = { ...this.settings, ...litSettings };
-        lightGallery((this as unknown) as HTMLElement, lgSettings);
+        this.galleryInstance = lightGallery(
+            (this as unknown) as HTMLElement,
+            lgSettings,
+        );
     }
 
     @property({
         type: Object,
-        converter: (value: string | null) => {
-            const convertedVal = JSON.parse(value as string);
-            return convertedVal;
-        },
     })
     settings: LightGallerySettings = {} as LightGallerySettings;
+
+    handleSlotchange(e: any): void {
+        const selector = this.getSelector(e.target);
+
+        if (!this.galleryInstance) {
+            return;
+        }
+        if (this.galleryInstance?.galleryItems.length !== selector.length) {
+            this.galleryInstance.settings.selector = selector;
+            this.galleryInstance?.refresh();
+        }
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        if (this.galleryInstance) {
+            this.galleryInstance.destroy();
+        }
+    }
 
     render(): TemplateResult {
         return html`
             <div id="container">
-                <slot></slot>
+                <slot @slotchange=${this.handleSlotchange}></slot>
             </div>
         `;
     }
@@ -47,6 +73,6 @@ export class LightGallery extends LitElement {
 
 declare global {
     interface HTMLElementTagNameMap {
-        'light-gallery': LightGallery;
+        'light-gallery': LightGalleryLit;
     }
 }
