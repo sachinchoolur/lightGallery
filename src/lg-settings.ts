@@ -351,7 +351,7 @@ export interface LightGalleryCoreSettings {
      * You can also pass HTMLCollection directly
      * Example - '.my-selector' | '#my-selector' | this | document.querySelectorAll('.my-selector')
      */
-    selector: string | HTMLCollection;
+    selector: string | HTMLCollection[];
 
     /**
      * By default selector element relative to the current gallery.
