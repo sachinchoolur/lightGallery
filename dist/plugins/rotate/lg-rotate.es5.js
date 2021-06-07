@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.1.2 | June 4th 2021
+ * lightgallery | 2.1.3 | June 7th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
