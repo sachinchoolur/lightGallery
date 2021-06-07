@@ -515,6 +515,7 @@ export default class Zoom {
             (event: CustomEvent) => {
                 const { prevIndex } = event.detail;
                 this.scale = 1;
+                this.positionChanged = false;
                 this.resetZoom(prevIndex);
             },
         );
