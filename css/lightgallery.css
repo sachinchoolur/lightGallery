@@ -52,6 +52,11 @@
   color: #fff;
 }
 
+.lg-single-item .lg-next, .lg-single-item
+.lg-prev {
+  display: none;
+}
+
 .lg-next {
   right: 20px;
 }

@@ -9,6 +9,10 @@
   overflow: visible;
 }
 
+.lg-outer.lg-single-item .lg-pager-outer {
+  display: none;
+}
+
 .lg-outer .lg-pager-cont {
   cursor: pointer;
   display: inline-block;

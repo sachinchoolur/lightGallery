@@ -35,3 +35,8 @@
 .lg-show-autoplay .lg-autoplay-button:after {
   content: '\e01a';
 }
+
+.lg-single-item .lg-autoplay-button {
+  opacity: 0.75;
+  pointer-events: none;
+}

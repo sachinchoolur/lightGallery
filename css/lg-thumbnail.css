@@ -44,6 +44,10 @@
   text-align: right;
 }
 
+.lg-outer.lg-single-item .lg-thumb-outer {
+  display: none;
+}
+
 .lg-outer .lg-thumb {
   padding: 5px 0;
   height: 100%;
