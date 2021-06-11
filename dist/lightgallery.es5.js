@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.1.3 | June 7th 2021
+ * lightgallery | 2.1.4 | June 11th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -525,8 +525,8 @@ var utils = {
         return "<div class=\"lg-video-cont lg-has-iframe\" style=\"width:" + iframeWidth + "; height: " + iframeHeight + "\">\n                    <iframe class=\"lg-object\" frameborder=\"0\" " + title + " src=\"" + src + "\"  allowfullscreen=\"true\"></iframe>\n                </div>";
     },
     getImgMarkup: function (index, src, altAttr, srcset, sizes, sources) {
-        var srcsetAttr = srcset ? "srcset=" + srcset : '';
-        var sizesAttr = sizes ? "sizes=" + sizes : '';
+        var srcsetAttr = srcset ? "srcset=\"" + srcset + "\"" : '';
+        var sizesAttr = sizes ? "sizes=\"" + sizes + "\"" : '';
         var imgMarkup = "<img " + altAttr + " " + srcsetAttr + "  " + sizesAttr + " class=\"lg-object lg-image\" data-index=\"" + index + "\" src=\"" + src + "\" />";
         var sourceTag = '';
         if (sources) {
