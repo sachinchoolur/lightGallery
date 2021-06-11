@@ -360,8 +360,8 @@ const utils = {
         sizes: string,
         sources?: ImageSources[],
     ): string {
-        const srcsetAttr = srcset ? `srcset=${srcset}` : '';
-        const sizesAttr = sizes ? `sizes=${sizes}` : '';
+        const srcsetAttr = srcset ? `srcset="${srcset}"` : '';
+        const sizesAttr = sizes ? `sizes="${sizes}"` : '';
         const imgMarkup = `<img ${altAttr} ${srcsetAttr}  ${sizesAttr} class="lg-object lg-image" data-index="${index}" src="${src}" />`;
         let sourceTag = '';
         if (sources) {
