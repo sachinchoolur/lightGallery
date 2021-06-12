@@ -1,0 +1,11 @@
+.lg-relative-caption .lg-outer {
+  cursor: zoom-out;
+}
+
+.lg-relative-caption .lg-outer.lg-grab img.lg-object {
+  cursor: zoom-out;
+}
+
+.lg-relative-caption .lg-outer.lg-grabbing img.lg-object {
+  cursor: zoom-out;
+}
