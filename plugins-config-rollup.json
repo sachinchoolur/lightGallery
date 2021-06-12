@@ -53,5 +53,10 @@
         "name": "mediumZoom",
         "folder": "plugins/mediumZoom/",
         "fileName": "lg-medium-zoom"
+    },
+    {
+        "name": "relativeCaption",
+        "folder": "plugins/relativeCaption/",
+        "fileName": "lg-relative-caption"
     }
 ]
