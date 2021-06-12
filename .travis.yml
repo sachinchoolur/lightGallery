@@ -4,6 +4,8 @@ cache:
     - ~/.npm
 node_js:
   - '12.18.3'
+before_script:
+  - export NODE_OPTIONS=--max_old_space_size=8192
 script:
   - npm run test:prod && npm run build:travis
 branches:
