@@ -146,11 +146,11 @@ If you know the original size of the media, you can pass it via
 [zoom](../settings/#zoomFromOrigin) animation. But, this is completely optional.
 
 ```HTML
-<div id="lightgallery" `data-lg-size="1600-2400"`>
-    <a href="img/img1.jpg">
+<div id="lightgallery">
+    <a href="img/img1.jpg" data-lg-size="1600-2400">
         <img alt=".." src="img/thumb1.jpg" />
     </a>
-    <a href="img/img2.jpg" `data-lg-size="1024-800"`>
+    <a href="img/img2.jpg" data-lg-size="1024-800">
         <img alt=".." src="img/thumb2.jpg" />
     </a>
     ...
