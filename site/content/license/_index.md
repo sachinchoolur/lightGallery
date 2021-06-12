@@ -4,7 +4,7 @@ description: 'lightGallery commercial license options.'
 lead:
     'lightGallery is a free and open-source library, however, if you are using
     the library for business, commercial sites, projects, and applications,
-    choose the commercial license to keep your source proprietary. '
+    choose the commercial license to keep your source proprietary, to yourself. '
 date: 2020-04-17T12:18:10+00:00
 draft: false
 images: []
@@ -15,7 +15,7 @@ images: []
         <div class="pricing-list-item">
             <div class="pricing-type">Personal</div>
             <div class="pricing-cost">
-                $29 <span class="pricing-cost-label">/ lifetime</span>
+                $19 <span class="pricing-cost-label">/ lifetime</span>
             </div>
             <div class="pricing-desc">
                 For personal use.
@@ -25,15 +25,16 @@ images: []
             </div>
             <ul class="pricing-terms">
                 <li>For one developer</li>
+                <li>For one product</li>
+                <li>Can't be used in a product for sale</li>
                 <li>GitHub support only</li>
                 <li>Lifetime free updates</li>
-                <li>Lifetime license</li>
             </ul>
         </div>
         <div class="pricing-list-item">
             <div class="pricing-type">Team</div>
             <div class="pricing-cost">
-                $99 <span class="pricing-cost-label">/ lifetime</span>
+                $78 <span class="pricing-cost-label">/ lifetime</span>
             </div>
             <div class="pricing-desc">
                 For small teams.
@@ -43,15 +44,16 @@ images: []
             </div>
             <ul class="pricing-terms">
                 <li>For upto 8 developers</li>
+                <li>For upto 5 products</li>
+                <li>Can be used in a product for sale</li>
                 <li>GitHub and email support</li>
                 <li>Lifetime free updates</li>
-                <li>Lifetime license</li>
             </ul>
         </div>
         <div class="pricing-list-item">
             <div class="pricing-type">Organization</div>
             <div class="pricing-cost">
-                $199 <span class="pricing-cost-label">/ lifetime</span>
+                $185 <span class="pricing-cost-label">/ lifetime</span>
             </div>
             <div class="pricing-desc">
                 For large teams and organizations
@@ -61,9 +63,10 @@ images: []
             </div>
             <ul class="pricing-terms">
                 <li>For unlimited developers</li>
+                <li>For unlimitted products</li>
+                <li>Can be used in a product for sale</li>
                 <li>GitHub, Email and Skype support</li>
                 <li>Lifetime free updates</li>
-                <li>Lifetime license</li>
             </ul>
         </div>
     </div>
@@ -94,15 +97,20 @@ images: []
             <p>Please find the key points of the commercial license below. If you have any more questions, please contact at <a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a></p>
             <div class="pricing-points-item">
                 <h4>Team member</h4>
-                <p>Commercial Licenses are priced per team member. A team member is an individual person permitted to use lightGallery and make Modifications for your Applications, whether such person is Your employee or a consultant or contractor providing services to You.</p>
+                <p>Commercial licenses are priced per team member. A team member is an individual person permitted to make modifications for your applications that uses lightGallery, whether such person is your employee or a consultant or contractor providing services to you.</p>
             </div>
             <div class="pricing-points-item">
                 <h4>Free updates</h4>
                 <p>You are entitled to receive all updates up to the major version of lightGallery as well as later versions if we authorize. But, if you have a v1 license, that is valid for v2 as well.</p>
             </div>
             <div class="pricing-points-item">
-                <h4>Use in unlimited products</h4>
-                <p>lightGallery may be used as part of an unlimited number commercial applications within the same organization offered for sale or for free.</p>
+                <h4>Usage in saleable products</h4>
+                <p>You need a team or organization license to use lightGallery in a product which end users can be charged for.</p>
+            </div>
+            <div class="pricing-points-item">
+                <h4>Number of products</h4>
+                <p>With the developer license, lightGallery can be used as part of a single product. With the team license, lightGallery can be used as prt of up to 5 products and with the organization license, lightGallery can be used as part of an unlimited number of products. </p>
+                <p>Note: This use is limited within the same company. </p>
             </div>
             <div class="pricing-points-item">
                 <h4>No reselling</h4>
