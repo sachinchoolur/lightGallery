@@ -8,7 +8,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgMediumZoom = factory());
+    (global.lgRelativeCaption = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -64,70 +64,88 @@
         afterClose: 'lgAfterClose',
     };
 
-    var mediumZoomSettings = {
-        margin: 40,
-        mediumZoom: true,
-        backgroundColor: '#000',
+    var relativeCaptionSettings = {
+        relativeCaption: false,
     };
 
-    var MediumZoom = /** @class */ (function () {
-        function MediumZoom(instance, $LG) {
-            var _this = this;
+    /**
+     * lightGallery caption for placing captions relative to the image
+     */
+    var RelativeCaption = /** @class */ (function () {
+        function RelativeCaption(instance) {
             // get lightGallery core plugin instance
             this.core = instance;
-            this.$LG = $LG;
-            // Set margin
-            this.core.getMediaContainerPosition = function () {
-                return {
-                    top: _this.settings.margin,
-                    bottom: _this.settings.margin,
-                };
-            };
             // Override some of lightGallery default settings
             var defaultSettings = {
-                controls: false,
-                download: false,
-                counter: false,
-                showCloseIcon: false,
-                extraProps: ['lgBackgroundColor'],
-                closeOnTap: false,
-                enableSwipe: false,
-                enableDrag: false,
-                swipeToClose: false,
-                addClass: this.core.settings.addClass + ' lg-medium-zoom',
+                addClass: this.core.settings.addClass + ' lg-relative-caption',
             };
             this.core.settings = __assign(__assign({}, this.core.settings), defaultSettings);
             // extend module default settings with lightGallery core settings
-            this.settings = __assign(__assign(__assign({}, mediumZoomSettings), this.core.settings), defaultSettings);
+            this.settings = __assign(__assign(__assign({}, relativeCaptionSettings), this.core.settings), defaultSettings);
             return this;
         }
-        MediumZoom.prototype.toggleItemClass = function () {
-            for (var index = 0; index < this.core.items.length; index++) {
-                var $element = this.$LG(this.core.items[index]);
-                $element.toggleClass('lg-medium-zoom-item');
-            }
-        };
-        MediumZoom.prototype.init = function () {
+        RelativeCaption.prototype.init = function () {
             var _this = this;
-            if (!this.settings.mediumZoom) {
+            if (!this.settings.relativeCaption) {
                 return;
             }
-            this.core.LGel.on(lGEvents.beforeOpen + ".medium", function () {
-                _this.core.$backdrop.css('background-color', _this.core.galleryItems[_this.core.index].lgBackgroundColor ||
-                    _this.settings.backgroundColor);
+            this.core.LGel.on(lGEvents.slideItemLoad + ".caption", function (event) {
+                var _a = event.detail, index = _a.index, delay = _a.delay;
+                setTimeout(function () {
+                    _this.setRelativeCaption(index);
+                }, delay);
             });
-            this.toggleItemClass();
-            this.core.outer.on('click.lg.medium', function () {
-                _this.core.closeGallery();
+            this.core.LGel.on(lGEvents.afterSlide + ".caption", function (event) {
+                var index = event.detail.index;
+                setTimeout(function () {
+                    var slide = _this.core.getSlideItem(index);
+                    if (slide.hasClass('lg-complete')) {
+                        _this.setRelativeCaption(index);
+                    }
+                });
+            });
+            this.core.LGel.on(lGEvents.beforeSlide + ".caption", function (event) {
+                var index = event.detail.index;
+                setTimeout(function () {
+                    var slide = _this.core.getSlideItem(index);
+                    slide.removeClass('lg-show-caption');
+                });
             });
         };
-        MediumZoom.prototype.destroy = function () {
-            this.toggleItemClass();
+        RelativeCaption.prototype.setCaptionStyle = function (index, rect) {
+            var $subHtmlInner = this.core
+                .getSlideItem(index)
+                .find('.lg-relative-caption-item');
+            var $subHtml = this.core.getSlideItem(index).find('.lg-sub-html');
+            var subHtmlRect = $subHtmlInner.get().getBoundingClientRect();
+            var top = rect.bottom;
+            if (rect.height + subHtmlRect.height >= rect.bottom) {
+                top -= subHtmlRect.height;
+            }
+            $subHtml
+                .css('width', rect.width + "px")
+                .css('left', rect.left + "px")
+                .css('top', top + "px");
         };
-        return MediumZoom;
+        RelativeCaption.prototype.setRelativeCaption = function (index) {
+            var slide = this.core.getSlideItem(index);
+            if (slide.hasClass('lg-current')) {
+                var rect = this.core
+                    .getSlideItem(index)
+                    .find('.lg-object')
+                    .get()
+                    .getBoundingClientRect();
+                this.setCaptionStyle(index, rect);
+                slide.addClass('lg-show-caption');
+            }
+        };
+        RelativeCaption.prototype.destroy = function () {
+            this.core.LGel.off('.caption');
+        };
+        return RelativeCaption;
     }());
 
-    return MediumZoom;
+    return RelativeCaption;
 
 })));
-//# sourceMappingURL=lg-medium-zoom.umd.js.map
+//# sourceMappingURL=lg-relative-caption.umd.js.map
