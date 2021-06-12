@@ -72,7 +72,9 @@ images: []
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h2 class="align-center">Commercial OEM license</h2>
-            <p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Commercial OEM license. commercial OEM licenses are customized per customer. Contact <a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a></p>
+            <p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Commercial OEM license.
+            <a href="https://gum.co/lightgallery-oem">More info →</a>
+            </p>
         </div>
     </div>
 </div>

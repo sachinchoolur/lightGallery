@@ -15,6 +15,11 @@
   weight = 90
 
 [[main]]
+  name = "License"
+  url = "/license/"
+  weight = 80
+
+[[main]]
   name = "React"
   identifier = "React"
   url = "/docs/react/"
