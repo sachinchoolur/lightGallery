@@ -4,20 +4,27 @@ const url = require('url');
 const colors = require('colors/safe');
 const replace = require('replace-in-file');
 
-process.chdir('lightgallery-react');
-exec('npm run build:library');
-process.chdir('../lightgallery-vue');
-exec('npm run build:library');
-process.chdir('../lightgallery-angular');
-exec('npm run build:library');
-process.chdir('../lightgallery-lit');
-exec('npm run build');
-process.chdir('../');
-exec('npm run copyReactBuild');
-exec('npm run copyVueBuild');
-exec('npm run copyAngularBuild');
-exec('npm run copyLitBuild');
-try {
+(async function main() {
+    process.chdir('lightgallery-react');
+    exec('npm run build:library');
+    process.chdir('../lightgallery-vue');
+    exec('npm run build:library');
+    process.chdir('../lightgallery-angular/latest');
+    exec('npm run build:library');
+    process.chdir('../11');
+    exec('npm run build');
+    process.chdir('../10');
+    exec('npm run build');
+    process.chdir('../9');
+    exec('npm run build');
+    process.chdir('../../lightgallery-lit');
+    exec('npm run build');
+    process.chdir('../');
+    exec('npm run copyReactBuild');
+    exec('npm run copyVueBuild');
+    exec('npm run copyAngularBuild');
+    exec('npm run copyLitBuild');
+
     replace.sync({
         files: 'dist/react/Lightgallery.d.ts',
         from: /lightgallery\//g,
@@ -29,6 +36,7 @@ try {
         to: '../',
     });
     console.log(colors.green('Successfully created lightGallery build!'));
-} catch (error) {
-    console.error('Error occurred:', error);
-}
+})().catch((error) => {
+    process.exitCode = 1;
+    console.log(colors.red(error));
+});

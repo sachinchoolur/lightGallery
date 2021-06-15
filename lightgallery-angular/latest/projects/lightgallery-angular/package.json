@@ -1,0 +1,12 @@
+{
+  "name": "lightgallery/angular",
+  "version": "0.0.1",
+  "private": true,
+  "peerDependencies": {
+    "@angular/common": "^12.0.4",
+    "@angular/core": "^12.0.4"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}

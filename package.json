@@ -61,7 +61,7 @@
     "copyReactBuild": "copyfiles -f -u 1 -e '**/*.d.ts' lightgallery-react/dist/* dist/react && copyfiles -f -u 1 lightgallery-react/dist/Lightgallery.d.ts dist/react",
     "copyLitBuild": "copyfiles -f -u 1 lightgallery-lit/dist/* dist/lit",
     "copyVueBuild": "copyfiles -f -u 1 -e '**/*.html' lightgallery-vue/dist/* dist/vue && copyfiles -f lightgallery-vue/dist/lightgallery-vue/src/components/LightGallery.vue.d.ts dist/vue ",
-    "copyAngularBuild": "copyfiles -u 3 lightgallery-angular/dist/lightgallery-angular/**/* dist/angular && copyfiles -f lightgallery-angular/dist/lightgallery-angular/* dist/angular && copyfiles -u 3 lightgallery-angular/dist/lightgallery-angular/**/**/* dist/angular",
+    "copyAngularBuild": "ts-node tools/copy-angular-build",
     "copyAssetsToSite": "copyfiles -f dist/images/** site/static/images && copyfiles -f dist/fonts/** site/static/fonts",
     "copyJsToSite": "copyfiles -f dist/*.js site/assets/js && copyfiles -u 1 dist/plugins/**/* site/assets/js",
     "copyScss": "copyfiles -f -u 1 src/scss/** dist/scss && copyfiles -u 2 src/scss/**/* dist/scss",
