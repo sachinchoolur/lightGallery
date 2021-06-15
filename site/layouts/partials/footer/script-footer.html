@@ -68,6 +68,12 @@
 
 {{ end -}}
 
+{{ if eq .Title "Pricing" -}}
+
+<script src='https://cdn.paritybar.com/paritybar.js'></script>
+
+{{ end -}}
+
 
 {{ if eq (hugo.Environment) "development" -}}
   {{ $app := resources.Get "js/app.js" | babel -}}
