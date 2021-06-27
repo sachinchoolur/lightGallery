@@ -2044,16 +2044,16 @@ export class LightGallery {
         if (!this.settings.loop && this.settings.hideControlOnEnd) {
             const $prev = this.getElementById('lg-prev');
             const $next = this.getElementById('lg-next');
-            if (index + 1 < this.galleryItems.length) {
-                $prev.removeAttr('disabled').removeClass('disabled');
+            if (index + 1 === this.galleryItems.length) {
+                $next.attr('disabled', 'disabled').addClass('disabled');
             } else {
-                $prev.attr('disabled', 'disabled').addClass('disabled');
+                $next.removeAttr('disabled').removeClass('disabled');
             }
 
-            if (index > 0) {
-                $next.removeAttr('disabled').removeClass('disabled');
+            if (index === 0) {
+                $prev.attr('disabled', 'disabled').addClass('disabled');
             } else {
-                $next.attr('disabled', 'disabled').addClass('disabled');
+                $prev.removeAttr('disabled').removeClass('disabled');
             }
         }
     }

@@ -21,11 +21,11 @@
     border: none;
 
     &.disabled {
-        pointer-events: none;
         opacity: 0.5;
+        cursor: default;
     }
 
-    &:hover {
+    &:hover:not(.disabled) {
         color: $lg-next-prev-hover-color;
     }
     .lg-single-item & {
