@@ -209,4 +209,50 @@ describe('Plugins', () => {
             expect(document.querySelector('.lg-zoom-in')).toBeTruthy(),
         );
     });
+    it('Should disable the previous arrow', async () => {
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" />
+                </a>
+                <a href="a.png">
+                    <img src="b.png" />
+                </a>
+            </div>`;
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+            {
+                loop: false,
+                slideEndAnimation: false,
+                hideControlOnEnd: true,
+            },
+        );
+        LG.openGallery();
+        await waitFor(() => {
+            expect(document.querySelector('.lg-prev')).toBeDisabled();
+            expect(document.querySelector('.lg-next')).not.toBeDisabled();
+        });
+    });
+    it('Should disable the next arrow', async () => {
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" />
+                </a>
+                <a href="a.png">
+                    <img src="b.png" />
+                </a>
+            </div>`;
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+            {
+                loop: false,
+                slideEndAnimation: false,
+                hideControlOnEnd: true,
+            },
+        );
+        LG.openGallery(1);
+        await waitFor(() => {
+            expect(document.querySelector('.lg-next')).toBeDisabled();
+            expect(document.querySelector('.lg-prev')).not.toBeDisabled();
+        });
+    });
 });
