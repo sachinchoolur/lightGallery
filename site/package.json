@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "init": "rimraf .git && git init -b main",
-    "start": "hugo server --disableFastRender",
+    "start": "hugo server --disableFastRender -p 5000",
     "build": "hugo --gc --minify && npm run build:functions && npm run copyFilesToSite",
     "copyFilesToSite": "ts-node tools/copysitefiles",
     "build:functions": "netlify-lambda build assets/lambda",
