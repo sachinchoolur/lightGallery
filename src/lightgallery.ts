@@ -2342,14 +2342,16 @@ export class LightGallery {
      * Destroy lightGallery.
      * Destroy lightGallery and its plugin instances completely
      *
-     * @description This method also calls CloseGallery function internally
+     * @description This method also calls CloseGallery function internally. Returns the time takes to completely close and destroy the instance.
+     * In case if you want to re-initialize lightGallery right after destroying it, initialize it only once the destroy process is completed.
+     * You can use refresh method most of the times.
      * @category lGPublicMethods
      * @example
      *  const plugin = lightGallery();
      *  plugin.destroy();
      *
      */
-    destroy(): void {
+    destroy(): number {
         const closeTimeout = this.closeGallery(true);
         setTimeout(() => {
             this.destroyModules(true);
@@ -2360,5 +2362,6 @@ export class LightGallery {
             this.LGel.off('.lg');
             this.$container.remove();
         }, closeTimeout);
+        return closeTimeout;
     }
 }
