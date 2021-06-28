@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.1.6 | June 28th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -2278,17 +2278,17 @@ var LightGallery = /** @class */ (function () {
         if (!this.settings.loop && this.settings.hideControlOnEnd) {
             var $prev = this.getElementById('lg-prev');
             var $next = this.getElementById('lg-next');
-            if (index + 1 < this.galleryItems.length) {
-                $prev.removeAttr('disabled').removeClass('disabled');
+            if (index + 1 === this.galleryItems.length) {
+                $next.attr('disabled', 'disabled').addClass('disabled');
             }
             else {
-                $prev.attr('disabled', 'disabled').addClass('disabled');
-            }
-            if (index > 0) {
                 $next.removeAttr('disabled').removeClass('disabled');
             }
+            if (index === 0) {
+                $prev.attr('disabled', 'disabled').addClass('disabled');
+            }
             else {
-                $next.attr('disabled', 'disabled').addClass('disabled');
+                $prev.removeAttr('disabled').removeClass('disabled');
             }
         }
     };

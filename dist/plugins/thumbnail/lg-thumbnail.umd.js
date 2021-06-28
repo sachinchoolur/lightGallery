@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.1.6 | June 28th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -8,7 +8,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgThumbnail = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgThumbnail = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************

@@ -43,12 +43,12 @@
 
 .lg-next.disabled,
 .lg-prev.disabled {
-  pointer-events: none;
   opacity: 0.5;
+  cursor: default;
 }
 
-.lg-next:hover,
-.lg-prev:hover {
+.lg-next:hover:not(.disabled),
+.lg-prev:hover:not(.disabled) {
   color: #fff;
 }
 
