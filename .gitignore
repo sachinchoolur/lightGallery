@@ -1,4 +1,5 @@
 node_modules
+lightGallery.code-workspace
 coverage
 .nyc_output
 .DS_Store
