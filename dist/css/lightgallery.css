@@ -43,7 +43,7 @@
 
 .lg-next.disabled,
 .lg-prev.disabled {
-  opacity: 0.5;
+  opacity: 0 !important;
   cursor: default;
 }
 

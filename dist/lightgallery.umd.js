@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.1.6 | June 28th 2021
+ * lightgallery | 2.1.7 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -1045,8 +1045,8 @@
                 return;
             }
             var currentSrc = this.galleryItems[index].src;
-            this.addSlideVideoInfo(items);
             this.galleryItems = items;
+            this.updateControls();
             this.$inner.empty();
             this.currentItemsInDom = [];
             var _index = 0;
@@ -1063,7 +1063,6 @@
             this.getSlideItem(_index).addClass('lg-current');
             this.index = _index;
             this.updateCurrentCounter(_index);
-            this.updateCounterTotal();
             this.LGel.trigger(lGEvents.updateSlides);
         };
         // Get gallery items based on multiple conditions
@@ -2520,10 +2519,14 @@
             else {
                 this.galleryItems = this.getItems();
             }
+            this.updateControls();
             this.openGalleryOnItemClick();
+            this.LGel.trigger(lGEvents.updateSlides);
+        };
+        LightGallery.prototype.updateControls = function () {
+            this.addSlideVideoInfo(this.galleryItems);
             this.updateCounterTotal();
             this.manageSingleSlideClassName();
-            this.LGel.trigger(lGEvents.updateSlides);
         };
         /**
          * Destroy lightGallery.
