@@ -496,8 +496,8 @@ export class LightGallery {
             return;
         }
         const currentSrc = this.galleryItems[index].src;
-        this.addSlideVideoInfo(items);
         this.galleryItems = items;
+        this.updateControls();
         this.$inner.empty();
         this.currentItemsInDom = [];
 
@@ -517,7 +517,6 @@ export class LightGallery {
 
         this.index = _index;
         this.updateCurrentCounter(_index);
-        this.updateCounterTotal();
         this.LGel.trigger(lGEvents.updateSlides);
     }
 
@@ -2332,10 +2331,15 @@ export class LightGallery {
         } else {
             this.galleryItems = this.getItems();
         }
+        this.updateControls();
         this.openGalleryOnItemClick();
+        this.LGel.trigger(lGEvents.updateSlides);
+    }
+
+    updateControls(): void {
+        this.addSlideVideoInfo(this.galleryItems);
         this.updateCounterTotal();
         this.manageSingleSlideClassName();
-        this.LGel.trigger(lGEvents.updateSlides);
     }
 
     /**
