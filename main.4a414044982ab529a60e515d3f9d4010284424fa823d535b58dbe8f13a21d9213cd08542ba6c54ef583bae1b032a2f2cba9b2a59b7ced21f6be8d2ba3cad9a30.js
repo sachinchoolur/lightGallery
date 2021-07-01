@@ -25,7 +25,7 @@
 "use strict";var prefetches=new Set,prefetchElement=document.createElement('link'),isSupported=prefetchElement.relList&&prefetchElement.relList.supports&&prefetchElement.relList.supports('prefetch')&&window.IntersectionObserver&&'isIntersecting'in IntersectionObserverEntry.prototype,allowQueryString='instantAllowQueryString'in document.body.dataset,allowExternalLinks='instantAllowExternalLinks'in document.body.dataset,useWhitelist='instantWhitelist'in document.body.dataset,mousedownShortcut='instantMousedownShortcut'in document.body.dataset,DELAY_TO_NOT_BE_CONSIDERED_A_TOUCH_INITIATED_ACTION=1111,delayOnHover=65,useMousedown=!1,useMousedownOnly=!1,useViewport=!1,mouseoverTimer,lastTouchTimestamp,intensity,milliseconds,eventListenersOptions,triggeringFunction;'instantIntensity'in document.body.dataset&&(intensity=document.body.dataset.instantIntensity,intensity.substr(0,'mousedown'.length)=='mousedown'?(useMousedown=!0,intensity=='mousedown-only'&&(useMousedownOnly=!0)):intensity.substr(0,'viewport'.length)=='viewport'?navigator.connection&&(navigator.connection.saveData||navigator.connection.effectiveType&&navigator.connection.effectiveType.includes('2g'))||(intensity=="viewport"?document.documentElement.clientWidth*document.documentElement.clientHeight<45e4&&(useViewport=!0):intensity=="viewport-all"&&(useViewport=!0)):(milliseconds=parseInt(intensity),isNaN(milliseconds)||(delayOnHover=milliseconds))),isSupported&&(eventListenersOptions={capture:!0,passive:!0},useMousedownOnly||document.addEventListener('touchstart',touchstartListener,eventListenersOptions),useMousedown?mousedownShortcut||document.addEventListener('mousedown',mousedownListener,eventListenersOptions):document.addEventListener('mouseover',mouseoverListener,eventListenersOptions),mousedownShortcut&&document.addEventListener('mousedown',mousedownShortcutListener,eventListenersOptions),useViewport&&(window.requestIdleCallback?triggeringFunction=function(a){requestIdleCallback(a,{timeout:1500})}:triggeringFunction=function(a){a()},triggeringFunction(function(){var a=new IntersectionObserver(function(b){b.forEach(function(b){if(b.isIntersecting){var c=b.target;a.unobserve(c),preload(c.href)}})});document.querySelectorAll('a').forEach(function(b){isPreloadable(b)&&a.observe(b)})})));function touchstartListener(b){lastTouchTimestamp=performance.now();var a=b.target.closest('a');if(!isPreloadable(a))return;preload(a.href)}function mouseoverListener(b){if(performance.now()-lastTouchTimestamp<DELAY_TO_NOT_BE_CONSIDERED_A_TOUCH_INITIATED_ACTION)return;var a=b.target.closest('a');if(!isPreloadable(a))return;a.addEventListener('mouseout',mouseoutListener,{passive:!0}),mouseoverTimer=setTimeout(function(){preload(a.href),mouseoverTimer=void 0},delayOnHover)}function mousedownListener(b){var a=b.target.closest('a');if(!isPreloadable(a))return;preload(a.href)}function mouseoutListener(a){if(a.relatedTarget&&a.target.closest('a')==a.relatedTarget.closest('a'))return;mouseoverTimer&&(clearTimeout(mouseoverTimer),mouseoverTimer=void 0)}function mousedownShortcutListener(a){var b,c;if(performance.now()-lastTouchTimestamp<DELAY_TO_NOT_BE_CONSIDERED_A_TOUCH_INITIATED_ACTION)return;if(b=a.target.closest('a'),a.which>1||a.metaKey||a.ctrlKey)return;if(!b)return;b.addEventListener('click',function(a){if(a.detail==1337)return;a.preventDefault()},{capture:!0,passive:!1,once:!0}),c=new MouseEvent('click',{view:window,bubbles:!0,cancelable:!1,detail:1337}),b.dispatchEvent(c)}function isPreloadable(a){if(!a||!a.href)return;if(useWhitelist&&!('instant'in a.dataset))return;if(!allowExternalLinks&&a.origin!=location.origin&&!('instant'in a.dataset))return;if(!['http:','https:'].includes(a.protocol))return;if(a.protocol=='http:'&&location.protocol=='https:')return;if(!allowQueryString&&a.search&&!('instant'in a.dataset))return;if(a.hash&&a.pathname+a.search==location.pathname+location.search)return;if('noInstant'in a.dataset)return;return!0}function preload(a){if(prefetches.has(a))return;var b=document.createElement('link');b.rel='prefetch',b.href=a,document.head.appendChild(b),prefetches.add(a)}
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -34,7 +34,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lightGallery = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lightGallery = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -1026,6 +1026,7 @@
          * - Do not mutate existing lightGallery items directly.
          * - Always pass new list of gallery items
          * - You need to take care of thumbnails outside the gallery if any
+         * - user this method only if you want to update slides when the gallery is opened. Otherwise, use `refresh()` method.
          * @param items Gallery items
          * @param index After the update operation, which slide gallery should navigate to
          * @category lGPublicMethods
@@ -2310,17 +2311,17 @@
             if (!this.settings.loop && this.settings.hideControlOnEnd) {
                 var $prev = this.getElementById('lg-prev');
                 var $next = this.getElementById('lg-next');
-                if (index + 1 < this.galleryItems.length) {
-                    $prev.removeAttr('disabled').removeClass('disabled');
+                if (index + 1 === this.galleryItems.length) {
+                    $next.attr('disabled', 'disabled').addClass('disabled');
                 }
                 else {
-                    $prev.attr('disabled', 'disabled').addClass('disabled');
-                }
-                if (index > 0) {
                     $next.removeAttr('disabled').removeClass('disabled');
                 }
+                if (index === 0) {
+                    $prev.attr('disabled', 'disabled').addClass('disabled');
+                }
                 else {
-                    $next.attr('disabled', 'disabled').addClass('disabled');
+                    $prev.removeAttr('disabled').removeClass('disabled');
                 }
             }
         };
@@ -2555,7 +2556,9 @@
          * Destroy lightGallery.
          * Destroy lightGallery and its plugin instances completely
          *
-         * @description This method also calls CloseGallery function internally
+         * @description This method also calls CloseGallery function internally. Returns the time takes to completely close and destroy the instance.
+         * In case if you want to re-initialize lightGallery right after destroying it, initialize it only once the destroy process is completed.
+         * You can use refresh method most of the times.
          * @category lGPublicMethods
          * @example
          *  const plugin = lightGallery();
@@ -2574,6 +2577,7 @@
                 _this.LGel.off('.lg');
                 _this.$container.remove();
             }, closeTimeout);
+            return closeTimeout;
         };
         return LightGallery;
     }());
@@ -2589,7 +2593,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -2598,7 +2602,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgVideo = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgVideo = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -3031,7 +3035,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -3040,7 +3044,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgFullscreen = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgFullscreen = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -3174,7 +3178,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -3183,7 +3187,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgZoom = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgZoom = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -4113,7 +4117,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -4122,7 +4126,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgRotate = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgRotate = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -4358,7 +4362,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -4367,7 +4371,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgThumbnail = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgThumbnail = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -4839,7 +4843,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -4848,7 +4852,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgPager = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgPager = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -4981,7 +4985,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -4990,7 +4994,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgHash = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgHash = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -5182,7 +5186,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -5191,7 +5195,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgShare = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgShare = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -5403,7 +5407,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -5412,7 +5416,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgComment = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgComment = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -5608,7 +5612,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -5617,7 +5621,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgAutoplay = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgAutoplay = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -5849,7 +5853,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -5858,7 +5862,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgRelativeCaption = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgRelativeCaption = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -6002,7 +6006,7 @@
 
 ;
 /*!
- * lightgallery | 2.1.5 | June 12th 2021
+ * lightgallery | 2.2.0-beta.0 | July 1st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -6011,7 +6015,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgMediumZoom = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgMediumZoom = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
