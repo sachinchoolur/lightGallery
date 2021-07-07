@@ -21,7 +21,7 @@ images: []
                 For personal use.
             </div>
             <div class="d-grid pricing-btn-wrap">
-                <a href="https://payhip.com/b/LhET" target="_blank"  class="btn btn-outline-primary">Purchase Now</a>
+                <a href="https://gum.co/lightgallery-developer-license" target="_blank"  class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
                 <li>For one developer</li>
@@ -40,7 +40,7 @@ images: []
                 For small teams.
             </div>
             <div class="d-grid pricing-btn-wrap">
-                <a href="https://payhip.com/b/8hp4" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
+                <a href="https://gum.co/lightgallery-team-license" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
                 <li>For upto 8 developers</li>
@@ -59,7 +59,7 @@ images: []
                 For large teams and organizations
             </div>
             <div class="d-grid pricing-btn-wrap">
-                <a href="https://payhip.com/b/KSxv" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
+                <a href="https://gum.co/lightgallery-organization-license" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
                 <li>For unlimited developers</li>
