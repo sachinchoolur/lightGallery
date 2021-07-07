@@ -451,6 +451,7 @@ export class LightGallery {
      * - Do not mutate existing lightGallery items directly.
      * - Always pass new list of gallery items
      * - You need to take care of thumbnails outside the gallery if any
+     * - user this method only if you want to update slides when the gallery is opened. Otherwise, use `refresh()` method.
      * @param items Gallery items
      * @param index After the update operation, which slide gallery should navigate to
      * @category lGPublicMethods
