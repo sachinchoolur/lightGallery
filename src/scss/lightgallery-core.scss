@@ -151,7 +151,7 @@
         left: 0;
         top: 0;
         bottom: 0;
-        @include transition(none);
+        @include transition(opacity 0s);
         white-space: nowrap;
     }
 
