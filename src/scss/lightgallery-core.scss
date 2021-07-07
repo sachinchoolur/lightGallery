@@ -80,7 +80,7 @@
     text-align: left;
     opacity: 0.001;
     outline: none;
-    will-change: opacity;
+    will-change: auto;
     // For start/end transition
     @include transition(opacity 0.15s ease 0s);
 
@@ -291,7 +291,7 @@
     z-index: $zindex-backdrop;
     background-color: $lg-theme-color;
     opacity: 0;
-    will-change: opacity;
+    will-change: auto;
     @include transition(opacity 333ms ease-in 0s);
     &.in {
         opacity: $backdrop-opacity;
