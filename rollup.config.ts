@@ -5,7 +5,7 @@ import camelCase from 'lodash.camelcase';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 import license from 'rollup-plugin-license';
-import { terser } from "rollup-plugin-terser";
+import { terser } from 'rollup-plugin-terser';
 
 import pkg from './package.json';
 
@@ -85,7 +85,7 @@ const minConfigs = pluginConfigs.map((config) => {
 
             // Resolve source maps to the original source
             sourceMaps(),
-            terser(),
+            terser({ format: { comments: false } }),
             license({
                 banner: {
                     commentStyle: 'regular',
@@ -166,7 +166,7 @@ export default [
 
             // Resolve source maps to the original source
             sourceMaps(),
-            terser(),
+            terser({ format: { comments: false } }),
             license({
                 banner: {
                     commentStyle: 'regular',
