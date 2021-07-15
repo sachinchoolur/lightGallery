@@ -603,6 +603,15 @@ export default class Zoom {
         this.core.LGel.on(`${lGEvents.beforeOpen}.zoom`, () => {
             this.core.outer.find('.lg-item').removeClass('lg-zoomable');
         });
+        this.core.LGel.on(`${lGEvents.afterOpen}.zoom`, () => {
+            this.scrollTop = this.$LG(window).scrollTop();
+
+            // Set the initial value center
+            this.pageX = this.core.outer.width() / 2;
+            this.pageY = this.core.outer.height() / 2 + this.scrollTop;
+
+            this.scale = 1;
+        });
 
         // Reset zoom on slide change
         this.core.LGel.on(
@@ -626,14 +635,6 @@ export default class Zoom {
         // Store the zoomable timeout value just to clear it while closing
         this.zoomableTimeout = false;
         this.positionChanged = false;
-
-        this.scrollTop = this.$LG(window).scrollTop();
-
-        // Set the initial value center
-        this.pageX = this.core.outer.width() / 2;
-        this.pageY = this.core.outer.height() / 2 + this.scrollTop;
-
-        this.scale = 1;
     }
 
     zoomIn(scale?: number): void {
