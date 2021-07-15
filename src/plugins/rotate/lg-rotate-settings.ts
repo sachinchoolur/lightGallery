@@ -5,6 +5,11 @@ export interface RotateSettings {
     rotate: boolean;
 
     /**
+     * Rotate speed in milliseconds
+     */
+    rotateSpeed: number;
+
+    /**
      * Enable rotate left.
      */
     rotateLeft: boolean;
@@ -26,6 +31,7 @@ export interface RotateSettings {
 }
 export const rotateSettings = {
     rotate: true,
+    rotateSpeed: 400,
     rotateLeft: true,
     rotateRight: true,
     flipHorizontal: true,
