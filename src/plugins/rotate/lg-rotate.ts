@@ -59,6 +59,10 @@ export default class Rotate {
                 .first();
 
             imageWrap.wrap('lg-img-rotate');
+            this.core
+                .getSlideItem(this.core.index)
+                .find('.lg-img-rotate')
+                .css('transition-duration', this.settings.rotateSpeed + 'ms');
         });
 
         this.core.outer
