@@ -28,6 +28,10 @@ export const lGEvents: {
     beforePrevSlide: 'lgBeforePrevSlide',
     beforeClose: 'lgBeforeClose',
     afterClose: 'lgAfterClose',
+    rotateLeft: 'lgRotateLeft',
+    rotateRight: 'lgRotateRight',
+    flipHorizontal: 'lgFlipHorizontal',
+    flipVertical: 'lgFlipVertical',
 };
 
 /**
