@@ -119,11 +119,17 @@ export default class Rotate {
     rotateLeft(): void {
         this.rotateValuesList[this.core.index].rotate -= 90;
         this.applyStyles();
+        this.triggerEvents(lGEvents.rotateLeft, {
+            rotate: this.rotateValuesList[this.core.index].rotate,
+        });
     }
 
     rotateRight(): void {
         this.rotateValuesList[this.core.index].rotate += 90;
         this.applyStyles();
+        this.triggerEvents(lGEvents.rotateRight, {
+            rotate: this.rotateValuesList[this.core.index].rotate,
+        });
     }
 
     getCurrentRotation(el: HTMLElement): number {
@@ -163,6 +169,9 @@ export default class Rotate {
         }
         this.rotateValuesList[this.core.index][rotateAxis] *= -1;
         this.applyStyles();
+        this.triggerEvents(lGEvents.flipHorizontal, {
+            flipHorizontal: this.rotateValuesList[this.core.index][rotateAxis],
+        });
     }
 
     flipVertical(): void {
@@ -179,6 +188,16 @@ export default class Rotate {
         this.rotateValuesList[this.core.index][rotateAxis] *= -1;
 
         this.applyStyles();
+
+        this.triggerEvents(lGEvents.flipVertical, {
+            flipVertical: this.rotateValuesList[this.core.index][rotateAxis],
+        });
+    }
+
+    triggerEvents(event: string, detail: any): void {
+        setTimeout(() => {
+            this.core.LGel.trigger(event, detail);
+        }, this.settings.rotateSpeed + 10);
     }
 
     isImageOrientationChanged(): boolean {
