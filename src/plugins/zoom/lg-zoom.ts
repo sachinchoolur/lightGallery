@@ -7,6 +7,11 @@ interface Coords {
     x: number;
     y: number;
 }
+
+interface DragAllowedAxises {
+    allowX: boolean;
+    allowY: boolean;
+}
 interface ZoomTouchEvent {
     pageX: number;
     targetTouches: { pageY: number; pageX: number }[];
@@ -27,6 +32,17 @@ export default class Zoom {
     pageX!: number;
     pageY!: number;
     scale!: number;
+
+    imageYSize!: number;
+    imageXSize!: number;
+    containerRect!: ClientRect;
+    rotateValue!: number;
+    modifierX!: number;
+    modifierY!: number;
+    dragAllowedAxises!: DragAllowedAxises;
+    top!: number;
+    left!: number;
+    scrollTop!: number;
     constructor(instance: LightGallery, $LG: LgQuery) {
         // get lightGallery core plugin instance
         this.core = instance;
@@ -84,6 +100,7 @@ export default class Zoom {
 
         this.zoomableTimeout = setTimeout(() => {
             this.core.getSlideItem(event.detail.index).addClass('lg-zoomable');
+            this.setZoomEssentials();
         }, _speed + 30);
     }
 
@@ -95,7 +112,7 @@ export default class Zoom {
         );
     }
 
-    getModifier(rotateValue: number, axis: string, el: HTMLElement) {
+    getModifier(rotateValue: number, axis: string, el: HTMLElement): number {
         const originalRotate = rotateValue;
         rotateValue = Math.abs(rotateValue);
         const transformValues = this.getCurrentTransform(el);
@@ -136,14 +153,18 @@ export default class Zoom {
         return modifier;
     }
 
-    getImageSize($image: HTMLImageElement, rotateValue: number, axis: string) {
+    getImageSize(
+        $image: HTMLImageElement,
+        rotateValue: number,
+        axis: string,
+    ): number {
         const imageSizes: {
             [key: string]: string;
         } = {
             y: 'offsetHeight',
             x: 'offsetWidth',
         };
-        if (rotateValue === 90) {
+        if (Math.abs(rotateValue) === 90) {
             // Swap axis
             if (axis === 'x') {
                 axis = 'y';
@@ -183,16 +204,13 @@ export default class Zoom {
         }
     }
 
-    getDragAllowedAxises($image: lgQuery, rotateValue: number) {
-        const $lg = this.core.$lgContent.get();
-        const scale = parseFloat($image.attr('data-scale') as string) || 1;
-        const imgEl = $image.get() as HTMLImageElement;
-        const allowY =
-            this.getImageSize(imgEl, rotateValue, 'y') * scale >
-            $lg.clientHeight;
-        const allowX =
-            this.getImageSize(imgEl, rotateValue, 'x') * scale >
-            $lg.clientWidth;
+    getDragAllowedAxises(
+        rotateValue: number,
+        scale?: number,
+    ): DragAllowedAxises {
+        scale = scale || this.scale || 1;
+        const allowY = this.imageYSize * scale > this.containerRect.height;
+        const allowX = this.imageXSize * scale > this.containerRect.width;
         if (rotateValue === 90) {
             return {
                 allowX: allowY,
@@ -246,6 +264,35 @@ export default class Zoom {
         return 0;
     }
 
+    setZoomEssentials(): void {
+        const $image = this.core
+            .getSlideItem(this.core.index)
+            .find('.lg-image')
+            .first();
+
+        const rotateEl = this.core
+            .getSlideItem(this.core.index)
+            .find('.lg-img-rotate')
+            .first()
+            .get();
+        this.rotateValue = this.getCurrentRotation(rotateEl);
+
+        this.imageYSize = this.getImageSize(
+            $image.get() as HTMLImageElement,
+            this.rotateValue,
+            'y',
+        );
+        this.imageXSize = this.getImageSize(
+            $image.get() as HTMLImageElement,
+            this.rotateValue,
+            'x',
+        );
+        this.containerRect = this.core.outer.get().getBoundingClientRect();
+
+        this.modifierX = this.getModifier(this.rotateValue, 'X', rotateEl);
+        this.modifierY = this.getModifier(this.rotateValue, 'Y', rotateEl);
+    }
+
     /**
      * @desc Image zoom
      * Translate the wrap and scale the image to get better user experience
@@ -253,22 +300,22 @@ export default class Zoom {
      * @param {String} scale - Zoom decrement/increment value
      */
     zoomImage(scale: number): void {
-        const $image = this.core
-            .getSlideItem(this.core.index)
-            .find('.lg-image')
-            .first();
-        const imageNode = $image.get();
-        if (!imageNode) return;
-
-        const containerRect = this.core.outer.get().getBoundingClientRect();
         // Find offset manually to avoid issue after zoom
         const offsetX =
-            (containerRect.width - imageNode.offsetWidth) / 2 +
-            containerRect.left;
+            (this.containerRect.width - this.imageXSize) / 2 +
+            this.containerRect.left;
+
+        const { top, bottom } = this.core.mediaContainerPosition;
+        const topBottomSpacing = Math.abs(top - bottom) / 2;
+
         const offsetY =
-            (containerRect.height - imageNode.offsetHeight) / 2 +
-            this.$LG(window).scrollTop() +
-            containerRect.top;
+            (this.containerRect.height -
+                this.imageYSize -
+                topBottomSpacing * this.modifierX) /
+                2 +
+            this.scrollTop +
+            this.containerRect.top;
+
         let originalX;
         let originalY;
 
@@ -276,25 +323,67 @@ export default class Zoom {
             this.positionChanged = false;
         }
 
-        if (this.positionChanged) {
-            originalX =
-                parseFloat($image.parent().attr('data-x')) /
-                (parseFloat($image.attr('data-scale')) - 1);
-            originalY =
-                parseFloat($image.parent().attr('data-y')) /
-                (parseFloat($image.attr('data-scale')) - 1);
+        const dragAllowedAxises = this.getDragAllowedAxises(
+            Math.abs(this.rotateValue),
+            scale,
+        );
 
-            this.pageX = originalX + offsetX;
-            this.pageY = originalY + offsetY;
+        const { allowY, allowX } = dragAllowedAxises;
+        if (this.positionChanged) {
+            originalX = this.left / (this.scale - 1);
+            originalY = this.top / (this.scale - 1);
+            this.pageX = Math.abs(originalX) + offsetX;
+            this.pageY = Math.abs(originalY) + offsetY;
 
             this.positionChanged = false;
         }
 
-        const _x = this.pageX - offsetX;
-        const _y = this.pageY - offsetY;
+        const possibleSwipeCords = this.getPossibleSwipeDragCords(
+            this.rotateValue,
+            scale,
+        );
 
-        const x = (scale - 1) * _x;
-        const y = (scale - 1) * _y;
+        const _x = offsetX - this.pageX;
+        const _y = offsetY - this.pageY;
+
+        let x = (scale - 1) * _x;
+        let y = (scale - 1) * _y;
+
+        if (allowX) {
+            if (this.isBeyondPossibleLeft(x, possibleSwipeCords.minX)) {
+                x = possibleSwipeCords.minX;
+            } else if (this.isBeyondPossibleRight(x, possibleSwipeCords.maxX)) {
+                x = possibleSwipeCords.maxX;
+            }
+        } else {
+            if (scale > 1) {
+                if (x < possibleSwipeCords.minX) {
+                    x = possibleSwipeCords.minX;
+                } else if (x > possibleSwipeCords.maxX) {
+                    x = possibleSwipeCords.maxX;
+                }
+            }
+        }
+
+        if (allowY) {
+            if (this.isBeyondPossibleTop(y, possibleSwipeCords.minY)) {
+                y = possibleSwipeCords.minY;
+            } else if (
+                this.isBeyondPossibleBottom(y, possibleSwipeCords.maxY)
+            ) {
+                y = possibleSwipeCords.maxY;
+            }
+        } else {
+            // If the translate value based on index of beyond the viewport, utilize the available space to prevent image being cut out
+            if (scale > 1) {
+                //If image goes beyond viewport top, use the minim possible translate value
+                if (y < possibleSwipeCords.minY) {
+                    y = possibleSwipeCords.minY;
+                } else if (y > possibleSwipeCords.maxY) {
+                    y = possibleSwipeCords.maxY;
+                }
+            }
+        }
 
         this.setZoomStyles({
             x: x,
@@ -316,13 +405,11 @@ export default class Zoom {
             .find('.lg-current .lg-dummy-img')
             .first();
         const $imageWrap = $image.parent();
-
-        $image
-            .attr('data-scale', style.scale + '')
-            .css(
-                'transform',
-                'scale3d(' + style.scale + ', ' + style.scale + ', 1)',
-            );
+        this.scale = style.scale;
+        $image.css(
+            'transform',
+            'scale3d(' + style.scale + ', ' + style.scale + ', 1)',
+        );
 
         $dummyImage.css(
             'transform',
@@ -330,10 +417,11 @@ export default class Zoom {
         );
 
         const transform =
-            'translate3d(-' + style.x + 'px, -' + style.y + 'px, 0)';
+            'translate3d(' + style.x + 'px, ' + style.y + 'px, 0)';
         $imageWrap.css('transform', transform);
 
-        $imageWrap.attr('data-x', style.x).attr('data-y', style.y);
+        this.left = style.x;
+        this.top = style.y;
     }
 
     /**
@@ -405,9 +493,7 @@ export default class Zoom {
             const containerRect = this.core.outer.get().getBoundingClientRect();
             cords.x = containerRect.width / 2 + containerRect.left;
             cords.y =
-                containerRect.height / 2 +
-                this.$LG(window).scrollTop() +
-                containerRect.top;
+                containerRect.height / 2 + this.scrollTop + containerRect.top;
         }
         return cords;
     }
@@ -481,10 +567,19 @@ export default class Zoom {
         });
 
         // Update zoom on resize and orientationchange
-        this.core.LGel.on(`${lGEvents.containerResize}.zoom`, () => {
+        this.core.LGel.on(
+            `${lGEvents.containerResize}.zoom ${lGEvents.rotateRight}.zoom ${lGEvents.rotateLeft}.zoom ${lGEvents.flipHorizontal}.zoom ${lGEvents.flipVertical}.zoom`,
+            () => {
+                if (!this.core.lgOpened) return;
+                this.setPageCords();
+                this.setZoomEssentials();
+                this.zoomImage(this.scale);
+            },
+        );
+        // Update zoom on resize and orientationchange
+        this.$LG(window).on(`scroll.lg.zoom.global${this.core.lgId}`, () => {
             if (!this.core.lgOpened) return;
-            this.setPageCords();
-            this.zoomImage(this.scale);
+            this.scrollTop = this.$LG(window).scrollTop();
         });
 
         this.core.getElementById('lg-zoom-out').on('click.lg', () => {
@@ -517,6 +612,7 @@ export default class Zoom {
                 this.scale = 1;
                 this.positionChanged = false;
                 this.resetZoom(prevIndex);
+                this.setZoomEssentials();
             },
         );
 
@@ -531,10 +627,11 @@ export default class Zoom {
         this.zoomableTimeout = false;
         this.positionChanged = false;
 
+        this.scrollTop = this.$LG(window).scrollTop();
+
         // Set the initial value center
         this.pageX = this.core.outer.width() / 2;
-        this.pageY =
-            this.core.outer.height() / 2 + this.$LG(window).scrollTop();
+        this.pageY = this.core.outer.height() / 2 + this.scrollTop;
 
         this.scale = 1;
     }
@@ -566,8 +663,11 @@ export default class Zoom {
         $actualSize
             .removeClass(this.settings.actualSizeIcons.zoomOut)
             .addClass(this.settings.actualSizeIcons.zoomIn);
-        $item.find('.lg-img-wrap').first().removeAttr('style data-x data-y');
-        $item.find('.lg-image').first().removeAttr('style data-scale');
+        $item.find('.lg-img-wrap').first().removeAttr('style');
+        $item.find('.lg-image').first().removeAttr('style');
+        this.scale = 1;
+        this.left = 0;
+        this.top = 0;
 
         // Reset pagx pagy values to center
         this.setPageCords();
@@ -594,6 +694,7 @@ export default class Zoom {
             e.preventDefault();
             if (
                 e.targetTouches.length === 2 &&
+                !this.core.outer.hasClass('lg-first-slide-loading') &&
                 (this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
@@ -659,12 +760,6 @@ export default class Zoom {
         touchDuration: number,
         rotateValue: number,
     ): void {
-        const rotateEl = this.core
-            .getSlideItem(this.core.index)
-            .find('.lg-img-rotate')
-            .first()
-            .get();
-
         let distanceXnew = endCoords.x - startCoords.x;
         let distanceYnew = endCoords.y - startCoords.y;
 
@@ -686,56 +781,60 @@ export default class Zoom {
             .getSlideItem(this.core.index)
             .find('.lg-img-wrap')
             .first();
-        const $image = this.core
-            .getSlideItem(this.core.index)
-            .find('.lg-object')
-            .first();
-        const dataX = parseFloat(_LGel.attr('data-x')) || 0;
-        const dataY = parseFloat(_LGel.attr('data-y')) || 0;
         const distance: Coords = {} as Coords;
 
-        distance.x =
-            -Math.abs(dataX) +
-            distanceXnew * this.getModifier(rotateValue, 'X', rotateEl);
-        distance.y =
-            -Math.abs(dataY) +
-            distanceYnew * this.getModifier(rotateValue, 'Y', rotateEl);
+        distance.x = this.left + distanceXnew * this.modifierX;
+        distance.y = this.top + distanceYnew * this.modifierY;
 
-        const possibleSwipeCords = this.getPossibleSwipeDragCords(
-            $image,
-            rotateValue,
-        );
+        const possibleSwipeCords = this.getPossibleSwipeDragCords(rotateValue);
 
         if (Math.abs(distanceXnew) > 15 || Math.abs(distanceYnew) > 15) {
             if (allowY) {
-                if (distance.y <= -possibleSwipeCords.maxY) {
-                    distance.y = -possibleSwipeCords.maxY;
-                } else if (distance.y >= -possibleSwipeCords.minY) {
-                    distance.y = -possibleSwipeCords.minY;
+                if (
+                    this.isBeyondPossibleTop(
+                        distance.y,
+                        possibleSwipeCords.minY,
+                    )
+                ) {
+                    distance.y = possibleSwipeCords.minY;
+                } else if (
+                    this.isBeyondPossibleBottom(
+                        distance.y,
+                        possibleSwipeCords.maxY,
+                    )
+                ) {
+                    distance.y = possibleSwipeCords.maxY;
                 }
             }
 
             if (allowX) {
-                if (distance.x <= -possibleSwipeCords.maxX) {
-                    distance.x = -possibleSwipeCords.maxX;
-                } else if (distance.x >= -possibleSwipeCords.minX) {
-                    distance.x = -possibleSwipeCords.minX;
+                if (
+                    this.isBeyondPossibleLeft(
+                        distance.x,
+                        possibleSwipeCords.minX,
+                    )
+                ) {
+                    distance.x = possibleSwipeCords.minX;
+                } else if (
+                    this.isBeyondPossibleRight(
+                        distance.x,
+                        possibleSwipeCords.maxX,
+                    )
+                ) {
+                    distance.x = possibleSwipeCords.maxX;
                 }
             }
 
             if (allowY) {
-                _LGel.attr('data-y', Math.abs(distance.y));
+                this.top = distance.y;
             } else {
-                const dataY = parseFloat(_LGel.attr('data-y')) || 0;
-
-                distance.y = -Math.abs(dataY);
+                distance.y = this.top;
             }
 
             if (allowX) {
-                _LGel.attr('data-x', Math.abs(distance.x));
+                this.left = distance.x;
             } else {
-                const dataX = parseFloat(_LGel.attr('data-x')) || 0;
-                distance.x = -Math.abs(dataX);
+                distance.x = this.left;
             }
 
             this.setZoomSwipeStyles(_LGel, distance);
@@ -747,96 +846,100 @@ export default class Zoom {
     getZoomSwipeCords(
         startCoords: Coords,
         endCoords: Coords,
-        allowX: any,
-        allowY: any,
+        allowX: boolean,
+        allowY: boolean,
         possibleSwipeCords: PossibleCords,
-        dataY: number,
-        dataX: number,
-        rotateValue: number,
-        rotateEl: HTMLElement,
     ): Coords {
         const distance: Coords = {} as Coords;
         if (allowY) {
             distance.y =
-                -Math.abs(dataY) +
-                (endCoords.y - startCoords.y) *
-                    this.getModifier(rotateValue, 'Y', rotateEl);
-
-            if (distance.y <= -possibleSwipeCords.maxY) {
-                const diffMaxY = -possibleSwipeCords.maxY - distance.y;
-                distance.y = -possibleSwipeCords.maxY - diffMaxY / 6;
-            } else if (distance.y >= -possibleSwipeCords.minY) {
-                const diffMinY = distance.y - -possibleSwipeCords.minY;
-                distance.y = -possibleSwipeCords.minY + diffMinY / 6;
+                this.top + (endCoords.y - startCoords.y) * this.modifierY;
+            if (this.isBeyondPossibleTop(distance.y, possibleSwipeCords.minY)) {
+                const diffMinY = possibleSwipeCords.minY - distance.y;
+                distance.y = possibleSwipeCords.minY - diffMinY / 6;
+            } else if (
+                this.isBeyondPossibleBottom(distance.y, possibleSwipeCords.maxY)
+            ) {
+                const diffMaxY = distance.y - possibleSwipeCords.maxY;
+                distance.y = possibleSwipeCords.maxY + diffMaxY / 6;
             }
         } else {
-            distance.y = -Math.abs(dataY);
+            distance.y = this.top;
         }
 
         if (allowX) {
             distance.x =
-                -Math.abs(dataX) +
-                (endCoords.x - startCoords.x) *
-                    this.getModifier(rotateValue, 'X', rotateEl);
-
-            if (distance.x <= -possibleSwipeCords.maxX) {
-                const diffMaxX = -possibleSwipeCords.maxX - distance.x;
-                distance.x = -possibleSwipeCords.maxX - diffMaxX / 6;
-            } else if (distance.x >= -possibleSwipeCords.minX) {
-                const diffMinX = distance.x - -possibleSwipeCords.minX;
-                distance.x = -possibleSwipeCords.minX + diffMinX / 6;
+                this.left + (endCoords.x - startCoords.x) * this.modifierX;
+            if (
+                this.isBeyondPossibleLeft(distance.x, possibleSwipeCords.minX)
+            ) {
+                const diffMinX = possibleSwipeCords.minX - distance.x;
+                distance.x = possibleSwipeCords.minX - diffMinX / 6;
+            } else if (
+                this.isBeyondPossibleRight(distance.x, possibleSwipeCords.maxX)
+            ) {
+                const difMaxX = distance.x - possibleSwipeCords.maxX;
+                distance.x = possibleSwipeCords.maxX + difMaxX / 6;
             }
         } else {
-            distance.x = -Math.abs(dataX);
+            distance.x = this.left;
         }
 
         return distance;
     }
 
+    private isBeyondPossibleLeft(x: number, minX: number) {
+        return x >= minX;
+    }
+    private isBeyondPossibleRight(x: number, maxX: number) {
+        return x <= maxX;
+    }
+    private isBeyondPossibleTop(y: number, minY: number) {
+        return y >= minY;
+    }
+    private isBeyondPossibleBottom(y: number, maxY: number) {
+        return y <= maxY;
+    }
+
     getPossibleSwipeDragCords(
-        $image: lgQuery,
         rotateValue: number,
+        scale?: number,
     ): PossibleCords {
-        const $cont = this.core.$lgContent;
+        const dataScale = scale || this.scale || 1;
+        const elDataScale = Math.abs(dataScale);
 
-        const contHeight = $cont.height();
-        const contWidth = $cont.width();
+        const { top, bottom } = this.core.mediaContainerPosition;
 
-        const imageYSize = this.getImageSize(
-            $image.get() as HTMLImageElement,
-            rotateValue,
-            'y',
-        );
-        const imageXSize = this.getImageSize(
-            $image.get() as HTMLImageElement,
-            rotateValue,
-            'x',
-        );
-        const dataY = parseFloat($image.attr('data-scale')) || 1;
-        const elDataScale = Math.abs(dataY);
+        const topBottomSpacing = Math.abs(top - bottom) / 2;
 
-        const minY = (contHeight - imageYSize) / 2;
-        const maxY = Math.abs(imageYSize * elDataScale - contHeight + minY);
+        const minY =
+            (this.imageYSize - this.containerRect.height) / 2 +
+            topBottomSpacing * this.modifierX;
+        const maxY =
+            this.containerRect.height - this.imageYSize * elDataScale + minY;
 
-        const minX = (contWidth - imageXSize) / 2;
+        const minX = (this.imageXSize - this.containerRect.width) / 2;
 
-        const maxX = Math.abs(imageXSize * elDataScale - contWidth + minX);
+        const maxX =
+            this.containerRect.width - this.imageXSize * elDataScale + minX;
 
-        if (rotateValue === 90) {
-            return {
+        let possibleSwipeCords = {
+            minY: minY,
+            maxY: maxY,
+            minX: minX,
+            maxX: maxX,
+        };
+
+        if (Math.abs(rotateValue) === 90) {
+            possibleSwipeCords = {
                 minY: minX,
                 maxY: maxX,
                 minX: minY,
                 maxX: maxY,
             };
-        } else {
-            return {
-                minY: minY,
-                maxY: maxY,
-                minX: minX,
-                maxX: maxX,
-            };
         }
+
+        return possibleSwipeCords;
     }
 
     setZoomSwipeStyles(
@@ -862,15 +965,9 @@ export default class Zoom {
 
         let startTime: Date = new Date();
         let endTime: Date = new Date();
-
-        let dataX = 0;
-        let dataY = 0;
         let possibleSwipeCords: PossibleCords;
 
         let _LGel: lgQuery;
-
-        let rotateEl = (null as unknown) as HTMLElement;
-        let rotateValue = 0;
 
         let $item = this.core.getSlideItem(this.core.index);
 
@@ -890,40 +987,26 @@ export default class Zoom {
             ) {
                 startTime = new Date();
                 this.core.touchAction = 'zoomSwipe';
-                const $image = this.core
-                    .getSlideItem(this.core.index)
-                    .find('.lg-object')
-                    .first();
-
                 _LGel = this.core
                     .getSlideItem(this.core.index)
                     .find('.lg-img-wrap')
                     .first();
 
-                rotateEl = this.core
-                    .getSlideItem(this.core.index)
-                    .find('.lg-img-rotate')
-                    .first()
-                    .get();
-                rotateValue = this.getCurrentRotation(rotateEl);
-
                 const dragAllowedAxises = this.getDragAllowedAxises(
-                    $image,
-                    Math.abs(rotateValue),
+                    Math.abs(this.rotateValue),
                 );
 
                 allowY = dragAllowedAxises.allowY;
                 allowX = dragAllowedAxises.allowX;
                 if (allowX || allowY) {
-                    startCoords = this.getSwipeCords(e, Math.abs(rotateValue));
+                    startCoords = this.getSwipeCords(
+                        e,
+                        Math.abs(this.rotateValue),
+                    );
                 }
 
-                dataY = parseFloat(_LGel.attr('data-y'));
-                dataX = parseFloat(_LGel.attr('data-x'));
-
                 possibleSwipeCords = this.getPossibleSwipeDragCords(
-                    $image,
-                    rotateValue,
+                    this.rotateValue,
                 );
 
                 // reset opacity and transition duration
@@ -943,7 +1026,7 @@ export default class Zoom {
             ) {
                 this.core.touchAction = 'zoomSwipe';
 
-                endCoords = this.getSwipeCords(e, Math.abs(rotateValue));
+                endCoords = this.getSwipeCords(e, Math.abs(this.rotateValue));
 
                 const distance = this.getZoomSwipeCords(
                     startCoords,
@@ -951,10 +1034,6 @@ export default class Zoom {
                     allowX,
                     allowY,
                     possibleSwipeCords,
-                    dataY,
-                    dataX,
-                    rotateValue,
-                    rotateEl,
                 );
 
                 if (
@@ -987,7 +1066,7 @@ export default class Zoom {
                     allowX,
                     allowY,
                     touchDuration,
-                    rotateValue,
+                    this.rotateValue,
                 );
             }
         });
@@ -998,9 +1077,6 @@ export default class Zoom {
         let endCoords: Coords = {} as Coords;
         let isDragging = false;
         let isMoved = false;
-
-        let rotateEl = (null as unknown) as HTMLElement;
-        let rotateValue = 0;
 
         // Allow x direction drag
         let allowX = false;
@@ -1013,8 +1089,6 @@ export default class Zoom {
 
         let possibleSwipeCords: PossibleCords;
 
-        let dataY: number;
-        let dataX: number;
         let _LGel: lgQuery;
 
         this.core.outer.on('mousedown.lg.zoom', (e) => {
@@ -1029,25 +1103,13 @@ export default class Zoom {
                 $item.get().contains(e.target)
             ) {
                 startTime = new Date();
-
-                // execute only on .lg-object
-                const $image = this.core
-                    .getSlideItem(this.core.index)
-                    .find('.lg-object')
-                    .first();
                 _LGel = this.core
                     .getSlideItem(this.core.index)
                     .find('.lg-img-wrap')
                     .first();
-                rotateEl = this.core
-                    .getSlideItem(this.core.index)
-                    .find('.lg-img-rotate')
-                    .get();
-                rotateValue = this.getCurrentRotation(rotateEl);
 
                 const dragAllowedAxises = this.getDragAllowedAxises(
-                    $image,
-                    Math.abs(rotateValue),
+                    Math.abs(this.rotateValue),
                 );
 
                 allowY = dragAllowedAxises.allowY;
@@ -1061,18 +1123,14 @@ export default class Zoom {
                         e.preventDefault();
                         startCoords = this.getDragCords(
                             e,
-                            Math.abs(rotateValue),
+                            Math.abs(this.rotateValue),
                         );
 
                         possibleSwipeCords = this.getPossibleSwipeDragCords(
-                            $image,
-                            rotateValue,
+                            this.rotateValue,
                         );
 
                         isDragging = true;
-
-                        dataY = parseFloat(_LGel.attr('data-y'));
-                        dataX = parseFloat(_LGel.attr('data-x'));
 
                         // ** Fix for webkit cursor issue https://code.google.com/p/chromium/issues/detail?id=26723
                         this.core.outer.get().scrollLeft += 1;
@@ -1094,7 +1152,10 @@ export default class Zoom {
             (e) => {
                 if (isDragging) {
                     isMoved = true;
-                    endCoords = this.getDragCords(e, Math.abs(rotateValue));
+                    endCoords = this.getDragCords(
+                        e,
+                        Math.abs(this.rotateValue),
+                    );
 
                     const distance = this.getZoomSwipeCords(
                         startCoords,
@@ -1102,10 +1163,6 @@ export default class Zoom {
                         allowX,
                         allowY,
                         possibleSwipeCords,
-                        dataY,
-                        dataX,
-                        rotateValue,
-                        rotateEl,
                     );
 
                     this.setZoomSwipeStyles(_LGel, distance);
@@ -1125,7 +1182,10 @@ export default class Zoom {
                     (startCoords.x !== endCoords.x ||
                         startCoords.y !== endCoords.y)
                 ) {
-                    endCoords = this.getDragCords(e, Math.abs(rotateValue));
+                    endCoords = this.getDragCords(
+                        e,
+                        Math.abs(this.rotateValue),
+                    );
 
                     const touchDuration =
                         endTime.valueOf() - startTime.valueOf();
@@ -1135,7 +1195,7 @@ export default class Zoom {
                         allowX,
                         allowY,
                         touchDuration,
-                        rotateValue,
+                        this.rotateValue,
                     );
                 }
 

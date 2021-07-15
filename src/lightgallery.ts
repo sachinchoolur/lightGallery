@@ -82,7 +82,7 @@ export class LightGallery {
 
     private isDummyImageRemoved = false;
 
-    private mediaContainerPosition = {
+    public mediaContainerPosition = {
         top: 0,
         bottom: 0,
     };
@@ -416,7 +416,8 @@ export class LightGallery {
             const currentGalleryItem = this.galleryItems[this.index];
             const videoInfo = currentGalleryItem.__slideVideoInfo;
 
-            const { top, bottom } = this.getMediaContainerPosition();
+            this.mediaContainerPosition = this.getMediaContainerPosition();
+            const { top, bottom } = this.mediaContainerPosition;
             this.currentImageSize = utils.getSize(
                 this.items[this.index],
                 this.$lgContent,
