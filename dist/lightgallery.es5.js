@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.0 | June 15th 2021
+ * lightgallery | 2.2.0-beta.1 | July 15th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -732,6 +732,10 @@ var lGEvents = {
     beforePrevSlide: 'lgBeforePrevSlide',
     beforeClose: 'lgBeforeClose',
     afterClose: 'lgAfterClose',
+    rotateLeft: 'lgRotateLeft',
+    rotateRight: 'lgRotateRight',
+    flipHorizontal: 'lgFlipHorizontal',
+    flipVertical: 'lgFlipVertical',
 };
 
 // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
@@ -966,7 +970,8 @@ var LightGallery = /** @class */ (function () {
         if (this.lgOpened) {
             var currentGalleryItem = this.galleryItems[this.index];
             var videoInfo = currentGalleryItem.__slideVideoInfo;
-            var _a = this.getMediaContainerPosition(), top_1 = _a.top, bottom = _a.bottom;
+            this.mediaContainerPosition = this.getMediaContainerPosition();
+            var _a = this.mediaContainerPosition, top_1 = _a.top, bottom = _a.bottom;
             this.currentImageSize = utils.getSize(this.items[this.index], this.$lgContent, top_1 + bottom, videoInfo && this.settings.videoMaxSize);
             if (videoInfo) {
                 this.resizeVideoSlide(this.index, this.currentImageSize);
@@ -994,6 +999,7 @@ var LightGallery = /** @class */ (function () {
      * - Do not mutate existing lightGallery items directly.
      * - Always pass new list of gallery items
      * - You need to take care of thumbnails outside the gallery if any
+     * - user this method only if you want to update slides when the gallery is opened. Otherwise, use `refresh()` method.
      * @param items Gallery items
      * @param index After the update operation, which slide gallery should navigate to
      * @category lGPublicMethods
@@ -1039,8 +1045,8 @@ var LightGallery = /** @class */ (function () {
             return;
         }
         var currentSrc = this.galleryItems[index].src;
-        this.addSlideVideoInfo(items);
         this.galleryItems = items;
+        this.updateControls();
         this.$inner.empty();
         this.currentItemsInDom = [];
         var _index = 0;
@@ -1057,7 +1063,6 @@ var LightGallery = /** @class */ (function () {
         this.getSlideItem(_index).addClass('lg-current');
         this.index = _index;
         this.updateCurrentCounter(_index);
-        this.updateCounterTotal();
         this.LGel.trigger(lGEvents.updateSlides);
     };
     // Get gallery items based on multiple conditions
@@ -2278,17 +2283,17 @@ var LightGallery = /** @class */ (function () {
         if (!this.settings.loop && this.settings.hideControlOnEnd) {
             var $prev = this.getElementById('lg-prev');
             var $next = this.getElementById('lg-next');
-            if (index + 1 < this.galleryItems.length) {
-                $prev.removeAttr('disabled').removeClass('disabled');
+            if (index + 1 === this.galleryItems.length) {
+                $next.attr('disabled', 'disabled').addClass('disabled');
             }
             else {
-                $prev.attr('disabled', 'disabled').addClass('disabled');
-            }
-            if (index > 0) {
                 $next.removeAttr('disabled').removeClass('disabled');
             }
+            if (index === 0) {
+                $prev.attr('disabled', 'disabled').addClass('disabled');
+            }
             else {
-                $next.attr('disabled', 'disabled').addClass('disabled');
+                $prev.removeAttr('disabled').removeClass('disabled');
             }
         }
     };
@@ -2514,16 +2519,22 @@ var LightGallery = /** @class */ (function () {
         else {
             this.galleryItems = this.getItems();
         }
+        this.updateControls();
         this.openGalleryOnItemClick();
+        this.LGel.trigger(lGEvents.updateSlides);
+    };
+    LightGallery.prototype.updateControls = function () {
+        this.addSlideVideoInfo(this.galleryItems);
         this.updateCounterTotal();
         this.manageSingleSlideClassName();
-        this.LGel.trigger(lGEvents.updateSlides);
     };
     /**
      * Destroy lightGallery.
      * Destroy lightGallery and its plugin instances completely
      *
-     * @description This method also calls CloseGallery function internally
+     * @description This method also calls CloseGallery function internally. Returns the time takes to completely close and destroy the instance.
+     * In case if you want to re-initialize lightGallery right after destroying it, initialize it only once the destroy process is completed.
+     * You can use refresh method most of the times.
      * @category lGPublicMethods
      * @example
      *  const plugin = lightGallery();
@@ -2542,6 +2553,7 @@ var LightGallery = /** @class */ (function () {
             _this.LGel.off('.lg');
             _this.$container.remove();
         }, closeTimeout);
+        return closeTimeout;
     };
     return LightGallery;
 }());

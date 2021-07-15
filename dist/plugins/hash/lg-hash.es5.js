@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.0 | June 15th 2021
+ * lightgallery | 2.2.0-beta.1 | July 15th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -56,6 +56,10 @@ var lGEvents = {
     beforePrevSlide: 'lgBeforePrevSlide',
     beforeClose: 'lgBeforeClose',
     afterClose: 'lgAfterClose',
+    rotateLeft: 'lgRotateLeft',
+    rotateRight: 'lgRotateRight',
+    flipHorizontal: 'lgFlipHorizontal',
+    flipVertical: 'lgFlipVertical',
 };
 
 var hashSettings = {

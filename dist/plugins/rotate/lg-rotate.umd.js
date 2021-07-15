@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.0 | June 15th 2021
+ * lightgallery | 2.2.0-beta.1 | July 15th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -8,7 +8,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgRotate = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgRotate = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
@@ -62,10 +62,15 @@
         beforePrevSlide: 'lgBeforePrevSlide',
         beforeClose: 'lgBeforeClose',
         afterClose: 'lgAfterClose',
+        rotateLeft: 'lgRotateLeft',
+        rotateRight: 'lgRotateRight',
+        flipHorizontal: 'lgFlipHorizontal',
+        flipVertical: 'lgFlipVertical',
     };
 
     var rotateSettings = {
         rotate: true,
+        rotateSpeed: 400,
         rotateLeft: true,
         rotateRight: true,
         flipHorizontal: true,
@@ -118,6 +123,10 @@
                     .find('.lg-img-wrap')
                     .first();
                 imageWrap.wrap('lg-img-rotate');
+                _this.core
+                    .getSlideItem(_this.core.index)
+                    .find('.lg-img-rotate')
+                    .css('transition-duration', _this.settings.rotateSpeed + 'ms');
             });
             this.core.outer
                 .find('#lg-rotate-left')
@@ -163,10 +172,16 @@
         Rotate.prototype.rotateLeft = function () {
             this.rotateValuesList[this.core.index].rotate -= 90;
             this.applyStyles();
+            this.triggerEvents(lGEvents.rotateLeft, {
+                rotate: this.rotateValuesList[this.core.index].rotate,
+            });
         };
         Rotate.prototype.rotateRight = function () {
             this.rotateValuesList[this.core.index].rotate += 90;
             this.applyStyles();
+            this.triggerEvents(lGEvents.rotateRight, {
+                rotate: this.rotateValuesList[this.core.index].rotate,
+            });
         };
         Rotate.prototype.getCurrentRotation = function (el) {
             if (!el) {
@@ -201,6 +216,9 @@
             }
             this.rotateValuesList[this.core.index][rotateAxis] *= -1;
             this.applyStyles();
+            this.triggerEvents(lGEvents.flipHorizontal, {
+                flipHorizontal: this.rotateValuesList[this.core.index][rotateAxis],
+            });
         };
         Rotate.prototype.flipVertical = function () {
             var rotateEl = this.core
@@ -215,6 +233,16 @@
             }
             this.rotateValuesList[this.core.index][rotateAxis] *= -1;
             this.applyStyles();
+            this.triggerEvents(lGEvents.flipVertical, {
+                flipVertical: this.rotateValuesList[this.core.index][rotateAxis],
+            });
+        };
+        Rotate.prototype.triggerEvents = function (event, detail) {
+            var _this = this;
+            // 450 is the rotate transition duration
+            setTimeout(function () {
+                _this.core.LGel.trigger(event, detail);
+            }, this.settings.rotateSpeed + 10);
         };
         Rotate.prototype.isImageOrientationChanged = function () {
             var rotateValue = this.rotateValuesList[this.core.index];

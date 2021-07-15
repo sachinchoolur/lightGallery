@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.0 | June 15th 2021
+ * lightgallery | 2.2.0-beta.1 | July 15th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -8,7 +8,7 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
-    (global.lgFullscreen = factory());
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgFullscreen = factory());
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************

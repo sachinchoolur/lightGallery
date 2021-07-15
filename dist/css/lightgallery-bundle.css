@@ -43,12 +43,12 @@
 
 .lg-next.disabled,
 .lg-prev.disabled {
-  pointer-events: none;
-  opacity: 0.5;
+  opacity: 0 !important;
+  cursor: default;
 }
 
-.lg-next:hover,
-.lg-prev:hover {
+.lg-next:hover:not(.disabled),
+.lg-prev:hover:not(.disabled) {
   color: #fff;
 }
 
@@ -1230,7 +1230,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   text-align: left;
   opacity: 0.001;
   outline: none;
-  will-change: opacity;
+  will-change: auto;
   -webkit-transition: opacity 0.15s ease 0s;
   -o-transition: opacity 0.15s ease 0s;
   transition: opacity 0.15s ease 0s;
@@ -1298,9 +1298,9 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   left: 0;
   top: 0;
   bottom: 0;
-  -webkit-transition: none;
-  -o-transition: none;
-  transition: none;
+  -webkit-transition: opacity 0s;
+  -o-transition: opacity 0s;
+  transition: opacity 0s;
   white-space: nowrap;
 }
 
@@ -1422,7 +1422,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   z-index: 1040;
   background-color: #000;
   opacity: 0;
-  will-change: opacity;
+  will-change: auto;
   -webkit-transition: opacity 333ms ease-in 0s;
   -o-transition: opacity 333ms ease-in 0s;
   transition: opacity 333ms ease-in 0s;
