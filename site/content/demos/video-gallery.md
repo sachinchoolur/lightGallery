@@ -38,6 +38,13 @@ Note - data-src should not be provided when you use html5 videos
         },
         ...
     ],
+    // Optional video tracks - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/track
+    tracks : [
+        {
+            src: '/videos/title.txt', 
+            kind:'captions'
+        }
+    ],
     attributes: { preload: false, controls: true },
 };
 ```
@@ -96,7 +103,7 @@ Note - data-src should not be provided when you use html5 videos
     <!-- HTML5 Video --->
     <a
         data-lg-size="1280-720"
-        data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "controls": true}}'
+        data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "tracks": [{"src": "{/videos/title.txt", "kind":"captions", "srclang": "en", "label": "English", "default": "true"}], "attributes": {"preload": false, "controls": true}}'
         data-poster="/images/demo/youtube-video-poster.jpg"
         data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
     >
