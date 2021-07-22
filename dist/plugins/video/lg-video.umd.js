@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.1 | July 15th 2021
+ * lightgallery | 2.2.0-beta.2 | July 22nd 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -258,6 +258,19 @@
                 for (var i = 0; i < html5Video.source.length; i++) {
                     html5VideoMarkup += "<source src=\"" + html5Video.source[i].src + "\" type=\"" + html5Video.source[i].type + "\">";
                 }
+                if (html5Video.tracks) {
+                    var _loop_1 = function (i) {
+                        var trackAttributes = '';
+                        var track = html5Video.tracks[i];
+                        Object.keys(track || {}).forEach(function (key) {
+                            trackAttributes += key + "=\"" + track[key] + "\" ";
+                        });
+                        html5VideoMarkup += "<track " + trackAttributes + ">";
+                    };
+                    for (var i = 0; i < html5Video.tracks.length; i++) {
+                        _loop_1(i);
+                    }
+                }
                 var html5VideoAttrs_1 = '';
                 var videoAttributes_1 = html5Video.attributes || {};
                 Object.keys(videoAttributes_1 || {}).forEach(function (key) {
@@ -278,6 +291,11 @@
             var videoHtml = this.getVideoHtml(videoParams.src, videoParams.addClass, videoParams.index, videoParams.html5Video);
             el.find('.lg-video-cont').append(videoHtml);
             var $videoElement = el.find('.lg-video-object').first();
+            if (videoParams.html5Video) {
+                $videoElement.on('mousedown.lg.video', function (e) {
+                    e.stopPropagation();
+                });
+            }
             if (this.settings.videojs && ((_a = this.core.galleryItems[videoParams.index].__slideVideoInfo) === null || _a === void 0 ? void 0 : _a.html5)) {
                 try {
                     return videojs($videoElement.get(), this.settings.videojsOptions);
