@@ -293,6 +293,11 @@ export default class Video {
         );
         el.find('.lg-video-cont').append(videoHtml);
         const $videoElement = el.find('.lg-video-object').first();
+        if (videoParams.html5Video) {
+            $videoElement.on('mousedown.lg.video', (e) => {
+                e.stopPropagation();
+            });
+        }
         if (
             this.settings.videojs &&
             this.core.galleryItems[videoParams.index].__slideVideoInfo?.html5
