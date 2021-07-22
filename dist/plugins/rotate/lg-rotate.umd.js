@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.1 | July 15th 2021
+ * lightgallery | 2.2.0-beta.2 | July 22nd 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -239,7 +239,6 @@
         };
         Rotate.prototype.triggerEvents = function (event, detail) {
             var _this = this;
-            // 450 is the rotate transition duration
             setTimeout(function () {
                 _this.core.LGel.trigger(event, detail);
             }, this.settings.rotateSpeed + 10);

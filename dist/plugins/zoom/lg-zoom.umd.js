@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.1 | July 15th 2021
+ * lightgallery | 2.2.0-beta.2 | July 22nd 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -543,6 +543,13 @@
             this.core.LGel.on(lGEvents.beforeOpen + ".zoom", function () {
                 _this.core.outer.find('.lg-item').removeClass('lg-zoomable');
             });
+            this.core.LGel.on(lGEvents.afterOpen + ".zoom", function () {
+                _this.scrollTop = _this.$LG(window).scrollTop();
+                // Set the initial value center
+                _this.pageX = _this.core.outer.width() / 2;
+                _this.pageY = _this.core.outer.height() / 2 + _this.scrollTop;
+                _this.scale = 1;
+            });
             // Reset zoom on slide change
             this.core.LGel.on(lGEvents.afterSlide + ".zoom", function (event) {
                 var prevIndex = event.detail.prevIndex;
@@ -558,11 +565,6 @@
             // Store the zoomable timeout value just to clear it while closing
             this.zoomableTimeout = false;
             this.positionChanged = false;
-            this.scrollTop = this.$LG(window).scrollTop();
-            // Set the initial value center
-            this.pageX = this.core.outer.width() / 2;
-            this.pageY = this.core.outer.height() / 2 + this.scrollTop;
-            this.scale = 1;
         };
         Zoom.prototype.zoomIn = function (scale) {
             var currentItem = this.core.galleryItems[this.core.index];
