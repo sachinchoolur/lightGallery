@@ -3,5 +3,6 @@ export interface VideoSource {
         src: string;
         type: string;
     }[];
+    tracks: HTMLTrackElement[];
     attributes: HTMLVideoElement;
 }

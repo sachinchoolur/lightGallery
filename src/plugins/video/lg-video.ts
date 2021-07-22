@@ -243,6 +243,16 @@ export default class Video {
             for (let i = 0; i < html5Video.source.length; i++) {
                 html5VideoMarkup += `<source src="${html5Video.source[i].src}" type="${html5Video.source[i].type}">`;
             }
+            if (html5Video.tracks) {
+                for (let i = 0; i < html5Video.tracks.length; i++) {
+                    let trackAttributes = '';
+                    const track = html5Video.tracks[i];
+                    Object.keys(track || {}).forEach(function (key) {
+                        trackAttributes += `${key}="${(track as any)[key]}" `;
+                    });
+                    html5VideoMarkup += `<track ${trackAttributes}>`;
+                }
+            }
 
             let html5VideoAttrs = '';
             const videoAttributes = html5Video.attributes || {};
