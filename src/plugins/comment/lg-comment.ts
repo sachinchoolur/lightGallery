@@ -44,7 +44,7 @@ export default class CommentBox {
     }
 
     private setMarkup() {
-        this.core.$lgContent.append(
+        this.core.outer.append(
             this.settings.commentsMarkup +
                 '<div class="lg-comment-overlay"></div>',
         );

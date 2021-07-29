@@ -55,7 +55,7 @@ export default class Share {
                 <ul class="lg-dropdown" style="position: absolute;"></ul></button>`,
         );
 
-        this.core.$lgContent.append('<div class="lg-dropdown-overlay"></div>');
+        this.core.outer.append('<div class="lg-dropdown-overlay"></div>');
         const $shareButton = this.core.outer.find('.lg-share');
         $shareButton.first().on('click.lg', () => {
             this.core.outer.toggleClass('lg-dropdown-active');

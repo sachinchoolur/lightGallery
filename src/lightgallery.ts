@@ -65,12 +65,12 @@ export class LightGallery {
     public items: any;
 
     public $backdrop!: lgQuery;
-    public $lgContent!: lgQuery;
     public $lgComponents!: lgQuery;
 
     public $container!: lgQuery;
 
     public $inner!: lgQuery;
+    public $content!: lgQuery;
     public $toolbar!: lgQuery;
 
     // Scroll top value before lightGallery is opened
@@ -331,27 +331,23 @@ export class LightGallery {
             <div id="${this.getIdName(
                 'lg-outer',
             )}" class="lg-outer lg-use-css3 lg-css3 lg-hide-items ${addClasses} ">
-                    <div id="${this.getIdName(
-                        'lg-content',
-                    )}" class="lg" style="width: ${
-            this.settings.width
-        }; height:${this.settings.height}">
-                        <div id="${this.getIdName(
-                            'lg-inner',
-                        )}" class="lg-inner"></div>
-                        <div id="${this.getIdName(
-                            'lg-toolbar',
-                        )}" class="lg-toolbar lg-group">
-                        ${maximizeIcon}
-                        ${closeIcon}
-                    </div>
-                    ${controls}
-                    <div id="${this.getIdName(
-                        'lg-components',
-                    )}" class="lg-components">
-                        ${subHtmlCont}
-                    </div>
-                </div> 
+
+              <div id="${this.getIdName('lg-content')}" class="lg-content">
+                <div id="${this.getIdName('lg-inner')}" class="lg-inner">
+                </div>
+                ${controls}
+              </div>
+                <div id="${this.getIdName(
+                    'lg-toolbar',
+                )}" class="lg-toolbar lg-group">
+                    ${maximizeIcon}
+                    ${closeIcon}
+                </div>
+                <div id="${this.getIdName(
+                    'lg-components',
+                )}" class="lg-components">
+                    ${subHtmlCont}
+                </div>
             </div>
         </div>
         `;
@@ -360,11 +356,11 @@ export class LightGallery {
             .css('position', 'relative')
             .append(template);
         this.outer = this.getElementById('lg-outer');
-        this.$lgContent = this.getElementById('lg-content');
         this.$lgComponents = this.getElementById('lg-components');
         this.$backdrop = this.getElementById('lg-backdrop');
         this.$container = this.getElementById('lg-container');
         this.$inner = this.getElementById('lg-inner');
+        this.$content = this.getElementById('lg-content');
         this.$toolbar = this.getElementById('lg-toolbar');
 
         this.$backdrop.css(
@@ -423,7 +419,7 @@ export class LightGallery {
             const { top, bottom } = this.mediaContainerPosition;
             this.currentImageSize = utils.getSize(
                 this.items[this.index],
-                this.$lgContent,
+                this.outer,
                 top + bottom,
                 videoInfo && this.settings.videoMaxSize,
             );
@@ -621,14 +617,14 @@ export class LightGallery {
         if (this.zoomFromOrigin && element) {
             this.currentImageSize = utils.getSize(
                 element,
-                this.$lgContent,
+                this.outer,
                 top + bottom,
                 this.galleryItems[index].__slideVideoInfo &&
                     this.settings.videoMaxSize,
             );
             transform = utils.getTransform(
                 element,
-                this.$lgContent,
+                this.outer,
                 top,
                 bottom,
                 this.currentImageSize,
@@ -725,7 +721,7 @@ export class LightGallery {
     }
 
     private setMediaContainerPosition(top = 0, bottom = 0): void {
-        this.$inner.css('top', top + 'px').css('bottom', bottom + 'px');
+        this.$content.css('top', top + 'px').css('bottom', bottom + 'px');
     }
 
     hideBars(): void {
@@ -771,7 +767,7 @@ export class LightGallery {
             const counterHtml = `<div class="lg-counter" role="status" aria-live="polite">
                 <span id="${this.getIdName(
                     'lg-counter-current',
-                )}" class="lg-counter-current">${this.index + 1} </span> / 
+                )}" class="lg-counter-current">${this.index + 1} </span> /
                 <span id="${this.getIdName(
                     'lg-counter-all',
                 )}" class="lg-counter-all">${
@@ -881,14 +877,14 @@ export class LightGallery {
 
     getDummyImgStyles(imageSize?: ImageSize): string {
         if (!imageSize) return '';
-        return `width:${imageSize.width}px; 
+        return `width:${imageSize.width}px;
                 margin-left: -${imageSize.width / 2}px;
-                margin-top: -${imageSize.height / 2}px; 
+                margin-top: -${imageSize.height / 2}px;
                 height:${imageSize.height}px`;
     }
     getVideoContStyle(imageSize?: ImageSize): string {
         if (!imageSize) return '';
-        return `width:${imageSize.width}px; 
+        return `width:${imageSize.width}px;
                 height:${imageSize.height}px`;
     }
 
@@ -1091,7 +1087,7 @@ export class LightGallery {
                 const { top, bottom } = this.mediaContainerPosition;
                 const videoSize = utils.getSize(
                     this.items[index],
-                    this.$lgContent,
+                    this.outer,
                     top + bottom,
                     videoInfo && this.settings.videoMaxSize,
                 );
@@ -1511,7 +1507,7 @@ export class LightGallery {
                 const { top, bottom } = this.mediaContainerPosition;
                 const videoSize = utils.getSize(
                     this.items[index],
-                    this.$lgContent,
+                    this.outer,
                     top + bottom,
                     videoInfo && this.settings.videoMaxSize,
                 );
@@ -2208,14 +2204,14 @@ export class LightGallery {
             const { top, bottom } = this.mediaContainerPosition;
             const imageSize = utils.getSize(
                 currentItem,
-                this.$lgContent,
+                this.outer,
                 top + bottom,
                 this.galleryItems[this.index].__slideVideoInfo &&
                     this.settings.videoMaxSize,
             );
             transform = utils.getTransform(
                 currentItem,
-                this.$lgContent,
+                this.outer,
                 top,
                 bottom,
                 imageSize,
