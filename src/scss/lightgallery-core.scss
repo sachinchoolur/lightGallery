@@ -249,7 +249,9 @@
 
     // Hide title div if empty
     .lg-empty-html {
-        display: none;
+      &.lg-sub-html, .lg-sub-html {
+          display: none;
+      }
     }
 
     &[data-lg-slide-type='video'],
