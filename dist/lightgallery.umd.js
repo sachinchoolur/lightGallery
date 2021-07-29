@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.2 | July 22nd 2021
+ * lightgallery | 2.2.0-beta.3 | July 29th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -762,6 +762,7 @@
             // Scroll top value before lightGallery is opened
             this.prevScrollTop = 0;
             this.isDummyImageRemoved = false;
+            this.dragOrSwipeEnabled = false;
             this.mediaContainerPosition = {
                 top: 0,
                 bottom: 0,
@@ -832,6 +833,7 @@
             setTimeout(function () {
                 _this.enableDrag();
                 _this.enableSwipe();
+                _this.triggerPosterClick();
             }, 50);
             this.arrow();
             if (this.settings.mousewheel) {
@@ -937,16 +939,16 @@
             var maximizeIcon = this.settings.showMaximizeIcon
                 ? "<button type=\"button\" aria-label=\"Toggle maximize\" id=\"" + this.getIdName('lg-maximize') + "\" class=\"lg-maximize lg-icon\"></button>"
                 : '';
-            var template = "\n        <div class=\"" + containerClassName + "\" id=\"" + this.getIdName('lg-container') + "\" tabindex=\"-1\" aria-modal=\"true\" " + ariaLabelledby + " " + ariaDescribedby + " role=\"dialog\"\n        >\n            <div id=\"" + this.getIdName('lg-backdrop') + "\" class=\"lg-backdrop\"></div>\n\n            <div id=\"" + this.getIdName('lg-outer') + "\" class=\"lg-outer lg-use-css3 lg-css3 lg-hide-items " + addClasses + " \">\n                    <div id=\"" + this.getIdName('lg-content') + "\" class=\"lg\" style=\"width: " + this.settings.width + "; height:" + this.settings.height + "\">\n                        <div id=\"" + this.getIdName('lg-inner') + "\" class=\"lg-inner\"></div>\n                        <div id=\"" + this.getIdName('lg-toolbar') + "\" class=\"lg-toolbar lg-group\">\n                        " + maximizeIcon + "\n                        " + closeIcon + "\n                    </div>\n                    " + controls + "\n                    <div id=\"" + this.getIdName('lg-components') + "\" class=\"lg-components\">\n                        " + subHtmlCont + "\n                    </div>\n                </div> \n            </div>\n        </div>\n        ";
+            var template = "\n        <div class=\"" + containerClassName + "\" id=\"" + this.getIdName('lg-container') + "\" tabindex=\"-1\" aria-modal=\"true\" " + ariaLabelledby + " " + ariaDescribedby + " role=\"dialog\"\n        >\n            <div id=\"" + this.getIdName('lg-backdrop') + "\" class=\"lg-backdrop\"></div>\n\n            <div id=\"" + this.getIdName('lg-outer') + "\" class=\"lg-outer lg-use-css3 lg-css3 lg-hide-items " + addClasses + " \">\n\n              <div id=\"" + this.getIdName('lg-content') + "\" class=\"lg-content\">\n                <div id=\"" + this.getIdName('lg-inner') + "\" class=\"lg-inner\">\n                </div>\n                " + controls + "\n              </div>\n                <div id=\"" + this.getIdName('lg-toolbar') + "\" class=\"lg-toolbar lg-group\">\n                    " + maximizeIcon + "\n                    " + closeIcon + "\n                </div>\n                <div id=\"" + this.getIdName('lg-components') + "\" class=\"lg-components\">\n                    " + subHtmlCont + "\n                </div>\n            </div>\n        </div>\n        ";
             $LG(this.settings.container)
                 .css('position', 'relative')
                 .append(template);
             this.outer = this.getElementById('lg-outer');
-            this.$lgContent = this.getElementById('lg-content');
             this.$lgComponents = this.getElementById('lg-components');
             this.$backdrop = this.getElementById('lg-backdrop');
             this.$container = this.getElementById('lg-container');
             this.$inner = this.getElementById('lg-inner');
+            this.$content = this.getElementById('lg-content');
             this.$toolbar = this.getElementById('lg-toolbar');
             this.$backdrop.css('transition-duration', this.settings.backdropDuration + 'ms');
             var outerClassNames = this.settings.mode + " ";
@@ -978,7 +980,7 @@
                 var videoInfo = currentGalleryItem.__slideVideoInfo;
                 this.mediaContainerPosition = this.getMediaContainerPosition();
                 var _a = this.mediaContainerPosition, top_1 = _a.top, bottom = _a.bottom;
-                this.currentImageSize = utils.getSize(this.items[this.index], this.$lgContent, top_1 + bottom, videoInfo && this.settings.videoMaxSize);
+                this.currentImageSize = utils.getSize(this.items[this.index], this.outer, top_1 + bottom, videoInfo && this.settings.videoMaxSize);
                 if (videoInfo) {
                     this.resizeVideoSlide(this.index, this.currentImageSize);
                 }
@@ -1158,9 +1160,9 @@
                 this.setMediaContainerPosition(top, bottom);
             }
             if (this.zoomFromOrigin && element) {
-                this.currentImageSize = utils.getSize(element, this.$lgContent, top + bottom, this.galleryItems[index].__slideVideoInfo &&
+                this.currentImageSize = utils.getSize(element, this.outer, top + bottom, this.galleryItems[index].__slideVideoInfo &&
                     this.settings.videoMaxSize);
-                transform = utils.getTransform(element, this.$lgContent, top, bottom, this.currentImageSize);
+                transform = utils.getTransform(element, this.outer, top, bottom, this.currentImageSize);
             }
             if (!this.zoomFromOrigin || !transform) {
                 this.outer.addClass(this.settings.startClass);
@@ -1240,7 +1242,7 @@
         LightGallery.prototype.setMediaContainerPosition = function (top, bottom) {
             if (top === void 0) { top = 0; }
             if (bottom === void 0) { bottom = 0; }
-            this.$inner.css('top', top + 'px').css('bottom', bottom + 'px');
+            this.$content.css('top', top + 'px').css('bottom', bottom + 'px');
         };
         LightGallery.prototype.hideBars = function () {
             var _this = this;
@@ -1278,7 +1280,7 @@
          */
         LightGallery.prototype.counter = function () {
             if (this.settings.counter) {
-                var counterHtml = "<div class=\"lg-counter\" role=\"status\" aria-live=\"polite\">\n                <span id=\"" + this.getIdName('lg-counter-current') + "\" class=\"lg-counter-current\">" + (this.index + 1) + " </span> / \n                <span id=\"" + this.getIdName('lg-counter-all') + "\" class=\"lg-counter-all\">" + this.galleryItems.length + " </span></div>";
+                var counterHtml = "<div class=\"lg-counter\" role=\"status\" aria-live=\"polite\">\n                <span id=\"" + this.getIdName('lg-counter-current') + "\" class=\"lg-counter-current\">" + (this.index + 1) + " </span> /\n                <span id=\"" + this.getIdName('lg-counter-all') + "\" class=\"lg-counter-all\">" + this.galleryItems.length + " </span></div>";
                 this.outer.find(this.settings.appendCounterTo).append(counterHtml);
             }
         };
@@ -1374,12 +1376,12 @@
         LightGallery.prototype.getDummyImgStyles = function (imageSize) {
             if (!imageSize)
                 return '';
-            return "width:" + imageSize.width + "px; \n                margin-left: -" + imageSize.width / 2 + "px;\n                margin-top: -" + imageSize.height / 2 + "px; \n                height:" + imageSize.height + "px";
+            return "width:" + imageSize.width + "px;\n                margin-left: -" + imageSize.width / 2 + "px;\n                margin-top: -" + imageSize.height / 2 + "px;\n                height:" + imageSize.height + "px";
         };
         LightGallery.prototype.getVideoContStyle = function (imageSize) {
             if (!imageSize)
                 return '';
-            return "width:" + imageSize.width + "px; \n                height:" + imageSize.height + "px";
+            return "width:" + imageSize.width + "px;\n                height:" + imageSize.height + "px";
         };
         LightGallery.prototype.getDummyImageContent = function ($currentSlide, index, alt) {
             var $currentItem;
@@ -1526,7 +1528,7 @@
             if (!$currentSlide.hasClass('lg-loaded')) {
                 if (videoInfo) {
                     var _a = this.mediaContainerPosition, top_2 = _a.top, bottom = _a.bottom;
-                    var videoSize = utils.getSize(this.items[index], this.$lgContent, top_2 + bottom, videoInfo && this.settings.videoMaxSize);
+                    var videoSize = utils.getSize(this.items[index], this.outer, top_2 + bottom, videoInfo && this.settings.videoMaxSize);
                     lgVideoStyle = this.getVideoContStyle(videoSize);
                 }
                 if (iframe) {
@@ -1822,7 +1824,7 @@
                 this.setDownloadValue(index);
                 if (videoInfo) {
                     var _a = this.mediaContainerPosition, top_3 = _a.top, bottom = _a.bottom;
-                    var videoSize = utils.getSize(this.items[index], this.$lgContent, top_3 + bottom, videoInfo && this.settings.videoMaxSize);
+                    var videoSize = utils.getSize(this.items[index], this.outer, top_3 + bottom, videoInfo && this.settings.videoMaxSize);
                     this.resizeVideoSlide(index, videoSize);
                 }
                 this.LGel.trigger(lGEvents.beforeSlide, {
@@ -2037,6 +2039,7 @@
             if (this.settings.enableSwipe) {
                 this.$inner.on('touchstart.lg', function (e) {
                     e.preventDefault();
+                    _this.dragOrSwipeEnabled = true;
                     var $item = _this.getSlideItem(_this.index);
                     if (($LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target)) &&
@@ -2091,6 +2094,7 @@
             var isMoved = false;
             if (this.settings.enableDrag) {
                 this.outer.on('mousedown.lg', function (e) {
+                    _this.dragOrSwipeEnabled = true;
                     var $item = _this.getSlideItem(_this.index);
                     if ($LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target)) {
@@ -2146,6 +2150,15 @@
                     }
                 });
             }
+        };
+        LightGallery.prototype.triggerPosterClick = function () {
+            var _this = this;
+            this.$inner.on('click.lg', function (event) {
+                if (!_this.dragOrSwipeEnabled &&
+                    _this.isPosterElement($LG(event.target))) {
+                    _this.LGel.trigger(lGEvents.posterClick);
+                }
+            });
         };
         LightGallery.prototype.manageSwipeClass = function () {
             var _touchNext = this.index + 1;
@@ -2417,9 +2430,9 @@
             var transform;
             if (this.zoomFromOrigin && currentItem) {
                 var _a = this.mediaContainerPosition, top_4 = _a.top, bottom = _a.bottom;
-                var imageSize = utils.getSize(currentItem, this.$lgContent, top_4 + bottom, this.galleryItems[this.index].__slideVideoInfo &&
+                var imageSize = utils.getSize(currentItem, this.outer, top_4 + bottom, this.galleryItems[this.index].__slideVideoInfo &&
                     this.settings.videoMaxSize);
-                transform = utils.getTransform(currentItem, this.$lgContent, top_4, bottom, imageSize);
+                transform = utils.getTransform(currentItem, this.outer, top_4, bottom, imageSize);
             }
             if (this.zoomFromOrigin && transform) {
                 this.outer.addClass('lg-closing lg-zoom-from-image');

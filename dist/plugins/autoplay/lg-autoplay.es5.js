@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.2 | July 22nd 2021
+ * lightgallery | 2.2.0-beta.3 | July 29th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -100,7 +100,7 @@ var Autoplay = /** @class */ (function () {
         }
         // Create progress bar
         if (this.settings.progressBar) {
-            this.core.$lgContent.append('<div class="lg-progress-bar"><div class="lg-progress"></div></div>');
+            this.core.outer.append('<div class="lg-progress-bar"><div class="lg-progress"></div></div>');
         }
         // Start autoplay
         if (this.settings.slideShowAutoplay) {
@@ -231,5 +231,5 @@ var Autoplay = /** @class */ (function () {
     return Autoplay;
 }());
 
-export default Autoplay;
+export { Autoplay as default };
 //# sourceMappingURL=lg-autoplay.es5.js.map

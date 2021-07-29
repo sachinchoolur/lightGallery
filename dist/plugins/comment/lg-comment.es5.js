@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.2 | July 22nd 2021
+ * lightgallery | 2.2.0-beta.3 | July 29th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -106,7 +106,7 @@ var CommentBox = /** @class */ (function () {
         }
     };
     CommentBox.prototype.setMarkup = function () {
-        this.core.$lgContent.append(this.settings.commentsMarkup +
+        this.core.outer.append(this.settings.commentsMarkup +
             '<div class="lg-comment-overlay"></div>');
         var commentToggleBtn = '<button type="button" aria-label="Toggle comments" class="lg-comment-toggle lg-icon"></button>';
         this.core.$toolbar.append(commentToggleBtn);
@@ -195,5 +195,5 @@ var CommentBox = /** @class */ (function () {
     return CommentBox;
 }());
 
-export default CommentBox;
+export { CommentBox as default };
 //# sourceMappingURL=lg-comment.es5.js.map
