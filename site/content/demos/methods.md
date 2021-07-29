@@ -53,7 +53,7 @@ $lgGalleryMethodsDemo.addEventListener('lgAfterOpen', () => {
         '<button type="button" aria-label="Next slide" class="lg-next"> Next Slide </button>';
 
     // Append custom buttons to the lightGallery container
-    const $lgContainer = document.querySelector('.lg');
+    const $lgContainer = document.querySelector('.lg-content');
     $lgContainer.insertAdjacentHTML('beforeend', nextBtn);
     $lgContainer.insertAdjacentHTML('beforeend', previousBtn);
 
