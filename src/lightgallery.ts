@@ -82,6 +82,8 @@ export class LightGallery {
 
     private isDummyImageRemoved = false;
 
+    private dragOrSwipeEnabled = false;
+
     public mediaContainerPosition = {
         top: 0,
         bottom: 0,
@@ -186,6 +188,7 @@ export class LightGallery {
         setTimeout(() => {
             this.enableDrag();
             this.enableSwipe();
+            this.triggerPosterClick();
         }, 50);
 
         this.arrow();
@@ -1775,6 +1778,7 @@ export class LightGallery {
         if (this.settings.enableSwipe) {
             this.$inner.on('touchstart.lg', (e) => {
                 e.preventDefault();
+                this.dragOrSwipeEnabled = true;
                 const $item = this.getSlideItem(this.index);
                 if (
                     ($LG(e.target).hasClass('lg-item') ||
@@ -1834,6 +1838,7 @@ export class LightGallery {
         let isMoved = false;
         if (this.settings.enableDrag) {
             this.outer.on('mousedown.lg', (e) => {
+                this.dragOrSwipeEnabled = true;
                 const $item = this.getSlideItem(this.index);
                 if (
                     $LG(e.target).hasClass('lg-item') ||
@@ -1897,6 +1902,17 @@ export class LightGallery {
                 }
             });
         }
+    }
+
+    triggerPosterClick(): void {
+        this.$inner.on('click.lg', (event) => {
+            if (
+                !this.dragOrSwipeEnabled &&
+                this.isPosterElement($LG(event.target))
+            ) {
+                this.LGel.trigger(lGEvents.posterClick);
+            }
+        });
     }
 
     manageSwipeClass(): void {

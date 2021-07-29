@@ -64,21 +64,10 @@ export default class Video {
             this.onHasVideo.bind(this),
         );
 
-        if (this.core.settings.enableSwipe || this.core.settings.enableDrag) {
-            this.core.LGel.on(`${lGEvents.posterClick}.video`, () => {
-                const $el = this.core.getSlideItem(this.core.index);
-                this.loadVideoOnPosterClick($el);
-            });
-        } else {
-            // For IE 9 and bellow
-            this.core.outer
-                .find('.lg-item')
-                .first()
-                .on('click.lg', () => {
-                    const $el = this.core.getSlideItem(this.core.index);
-                    this.loadVideoOnPosterClick($el);
-                });
-        }
+        this.core.LGel.on(`${lGEvents.posterClick}.video`, () => {
+            const $el = this.core.getSlideItem(this.core.index);
+            this.loadVideoOnPosterClick($el);
+        });
 
         // @desc fired immediately before each slide transition.
         this.core.LGel.on(
@@ -101,13 +90,8 @@ export default class Video {
      * @param {Event} event - Javascript Event object.
      */
     onHasVideo(event: CustomEventHasVideo): void {
-        const {
-            index,
-            src,
-            html5Video,
-            hasPoster,
-            isFirstSlide,
-        } = event.detail;
+        const { index, src, html5Video, hasPoster, isFirstSlide } =
+            event.detail;
         if (!hasPoster) {
             // All functions are called separately if poster exist in loadVideoOnPosterClick function
 
@@ -197,7 +181,7 @@ export default class Video {
     ): string {
         let video = '';
         const videoInfo =
-            this.core.galleryItems[(index as unknown) as number]
+            this.core.galleryItems[index as unknown as number]
                 .__slideVideoInfo || {};
         const currentGalleryItem = this.core.galleryItems[index];
         let videoTitle = currentGalleryItem.title || currentGalleryItem.alt;
@@ -418,7 +402,7 @@ export default class Video {
         }
     }
 
-    loadVideoOnPosterClick($el: lgQuery) {
+    loadVideoOnPosterClick($el: lgQuery): void {
         // check slide has poster
         if (!$el.hasClass('lg-video-loaded')) {
             // check already video element present
