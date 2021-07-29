@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.2 | July 22nd 2021
+ * lightgallery | 2.2.0-beta.3 | July 29th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -137,7 +137,7 @@ var Share = /** @class */ (function () {
     Share.prototype.setLgShareMarkup = function () {
         var _this = this;
         this.core.$toolbar.append("<button type=\"button\" aria-label=\"Share\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"lg-share lg-icon\">\n                <ul class=\"lg-dropdown\" style=\"position: absolute;\"></ul></button>");
-        this.core.$lgContent.append('<div class="lg-dropdown-overlay"></div>');
+        this.core.outer.append('<div class="lg-dropdown-overlay"></div>');
         var $shareButton = this.core.outer.find('.lg-share');
         $shareButton.first().on('click.lg', function () {
             _this.core.outer.toggleClass('lg-dropdown-active');
@@ -211,5 +211,5 @@ var Share = /** @class */ (function () {
     return Share;
 }());
 
-export default Share;
+export { Share as default };
 //# sourceMappingURL=lg-share.es5.js.map

@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.2 | July 22nd 2021
+ * lightgallery | 2.2.0-beta.3 | July 29th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -121,22 +121,10 @@
              * Play if autoplayFirstVideo is true
              */
             this.core.LGel.on(lGEvents.hasVideo + ".video", this.onHasVideo.bind(this));
-            if (this.core.settings.enableSwipe || this.core.settings.enableDrag) {
-                this.core.LGel.on(lGEvents.posterClick + ".video", function () {
-                    var $el = _this.core.getSlideItem(_this.core.index);
-                    _this.loadVideoOnPosterClick($el);
-                });
-            }
-            else {
-                // For IE 9 and bellow
-                this.core.outer
-                    .find('.lg-item')
-                    .first()
-                    .on('click.lg', function () {
-                    var $el = _this.core.getSlideItem(_this.core.index);
-                    _this.loadVideoOnPosterClick($el);
-                });
-            }
+            this.core.LGel.on(lGEvents.posterClick + ".video", function () {
+                var $el = _this.core.getSlideItem(_this.core.index);
+                _this.loadVideoOnPosterClick($el);
+            });
             // @desc fired immediately before each slide transition.
             this.core.LGel.on(lGEvents.beforeSlide + ".video", this.onBeforeSlide.bind(this));
             // @desc fired immediately after each slide transition.
