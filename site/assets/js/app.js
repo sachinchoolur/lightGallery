@@ -413,7 +413,7 @@ if ($lgGalleryMethodsDemo) {
             '<button type="button" aria-label="Previous slide" class="lg-prev"> Prev Slide </button>';
         const nextBtn =
             '<button type="button" aria-label="Next slide" class="lg-next"> Next Slide </button>';
-        const $lgContainer = document.querySelector('.lg');
+        const $lgContainer = document.querySelector('.lg-content');
         $lgContainer.insertAdjacentHTML('beforeend', nextBtn);
         $lgContainer.insertAdjacentHTML('beforeend', previousBtn);
         document.querySelector('.lg-next').addEventListener('click', () => {

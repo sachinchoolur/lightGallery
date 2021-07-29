@@ -1,5 +1,8 @@
 .lg-custom-thumbnails {
     .lg-outer {
+        width: auto;
+        right: 225px;
+        left: 10px;
         .lg-thumb-outer {
             left: auto;
             top: 0;
@@ -41,12 +44,6 @@
 
         .lg-thumb {
             padding: 5px 0;
-        }
-
-        .lg {
-            width: auto !important;
-            margin-right: 225px;
-            margin-left: 10px;
         }
     }
 }

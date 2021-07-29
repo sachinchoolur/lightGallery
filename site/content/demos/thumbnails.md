@@ -127,6 +127,13 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
 ```scss
 .lg-custom-thumbnails {
     &.lg-outer {
+        width: auto;
+        // Set space for the container to occupy thumbnails
+        right: 225px;
+
+        // Add some spacing on the left to match with the right hand side spacing
+        left: 10px;
+
         .lg-thumb-outer {
             // Set the position of the thumbnails
             left: auto;
@@ -166,15 +173,6 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
                 transform: translate3d(0, 0, 0);
                 opacity: 1;
             }
-        }
-
-        .lg {
-            // Set margin for the container to occupy thumbnails
-            margin-right: 225px;
-            width: auto !important;
-
-            // Add some margin on the left to match with the right hand side spacing
-            margin-left: 10px;
         }
 
         // Add hove effect (Optional)
