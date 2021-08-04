@@ -90,8 +90,13 @@ export default class Video {
      * @param {Event} event - Javascript Event object.
      */
     onHasVideo(event: CustomEventHasVideo): void {
-        const { index, src, html5Video, hasPoster, isFirstSlide } =
-            event.detail;
+        const {
+            index,
+            src,
+            html5Video,
+            hasPoster,
+            isFirstSlide,
+        } = event.detail;
         if (!hasPoster) {
             // All functions are called separately if poster exist in loadVideoOnPosterClick function
 
@@ -181,18 +186,18 @@ export default class Video {
     ): string {
         let video = '';
         const videoInfo =
-            this.core.galleryItems[index as unknown as number]
+            this.core.galleryItems[(index as unknown) as number]
                 .__slideVideoInfo || {};
         const currentGalleryItem = this.core.galleryItems[index];
         let videoTitle = currentGalleryItem.title || currentGalleryItem.alt;
         videoTitle = videoTitle ? 'title="' + videoTitle + '"' : '';
-        const commonIframeProps = `allowtransparency="true" 
-            frameborder="0" 
-            scrolling="no" 
-            allowfullscreen 
-            mozallowfullscreen 
-            webkitallowfullscreen 
-            oallowfullscreen 
+        const commonIframeProps = `allowtransparency="true"
+            frameborder="0"
+            scrolling="no"
+            allowfullscreen
+            mozallowfullscreen
+            webkitallowfullscreen
+            oallowfullscreen
             msallowfullscreen`;
 
         if (videoInfo.youtube) {
