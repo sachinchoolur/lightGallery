@@ -1406,12 +1406,17 @@ export class LightGallery {
     setDownloadValue(index: number): void {
         if (this.settings.download) {
             const currentGalleryItem = this.galleryItems[index];
-            const src =
-                currentGalleryItem.downloadUrl !== false &&
-                (currentGalleryItem.downloadUrl || currentGalleryItem.src);
-
-            if (src && !currentGalleryItem.iframe) {
-                this.getElementById('lg-download').attr('href', src);
+            const hideDownloadBtn =
+                currentGalleryItem.downloadUrl === false ||
+                currentGalleryItem.downloadUrl === 'false';
+            if (hideDownloadBtn) {
+                this.outer.addClass('lg-hide-download');
+            } else {
+                this.outer.removeClass('lg-hide-download');
+                this.getElementById('lg-download').attr(
+                    'href',
+                    currentGalleryItem.downloadUrl || currentGalleryItem.src,
+                );
             }
         }
     }

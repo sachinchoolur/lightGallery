@@ -251,13 +251,13 @@
       }
     }
 
-    &[data-lg-slide-type='video'],
-    &[data-lg-slide-type='iframe'] {
+    &.lg-hide-download {
         .lg-download {
             opacity: $lg-toolbar-icon-disabled-opacity;
             pointer-events: none;
         }
     }
+
 
     .lg-first-slide {
         .lg-dummy-img {
