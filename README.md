@@ -1,9 +1,10 @@
+![commit](https://badgen.net/github/last-commit/sachinchoolur/lightGallery/v2.2.0)
 ![npm](https://img.shields.io/npm/v/lightgallery.svg?color=red)
+![npm-tag](https://badgen.net/github/tag/sachinchoolur/lightgallery)
 ![size](https://badgen.net/bundlephobia/minzip/lightgallery?color=cyan)
 ![tree-shaking](https://badgen.net/bundlephobia/tree-shaking/lightgallery?color=purple)
 ![types](https://badgen.net/npm/types/lightgallery?color=blue)
 ![hits](https://badgen.net/jsdelivr/hits/npm/lightgallery?color=pink)
-[![Build Status](https://travis-ci.org/sachinchoolur/lightGallery.svg?branch=master)](https://travis-ci.org/sachinchoolur/lightGallery)
 
 # lightGallery
 
