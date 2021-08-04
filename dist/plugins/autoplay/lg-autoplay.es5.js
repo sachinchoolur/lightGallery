@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.3 | July 29th 2021
+ * lightgallery | 2.2.0-beta.4 | August 4th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -231,5 +231,5 @@ var Autoplay = /** @class */ (function () {
     return Autoplay;
 }());
 
-export { Autoplay as default };
+export default Autoplay;
 //# sourceMappingURL=lg-autoplay.es5.js.map

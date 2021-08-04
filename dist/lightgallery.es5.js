@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.3 | July 29th 2021
+ * lightgallery | 2.2.0-beta.4 | August 4th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -415,6 +415,7 @@ var defaultDynamicOptions = [
     'sizes',
     'iframe',
     'downloadUrl',
+    'download',
     'width',
     'facebookShareUrl',
     'tweetText',
@@ -1747,10 +1748,18 @@ var LightGallery = /** @class */ (function () {
     LightGallery.prototype.setDownloadValue = function (index) {
         if (this.settings.download) {
             var currentGalleryItem = this.galleryItems[index];
-            var src = currentGalleryItem.downloadUrl !== false &&
-                (currentGalleryItem.downloadUrl || currentGalleryItem.src);
-            if (src && !currentGalleryItem.iframe) {
-                this.getElementById('lg-download').attr('href', src);
+            var hideDownloadBtn = currentGalleryItem.downloadUrl === false ||
+                currentGalleryItem.downloadUrl === 'false';
+            if (hideDownloadBtn) {
+                this.outer.addClass('lg-hide-download');
+            }
+            else {
+                var $download = this.getElementById('lg-download');
+                this.outer.removeClass('lg-hide-download');
+                $download.attr('href', currentGalleryItem.downloadUrl || currentGalleryItem.src);
+                if (currentGalleryItem.download) {
+                    $download.attr('download', currentGalleryItem.download);
+                }
             }
         }
     };
@@ -1917,7 +1926,7 @@ var LightGallery = /** @class */ (function () {
             return 'image';
         }
     };
-    LightGallery.prototype.touchMove = function (startCoords, endCoords) {
+    LightGallery.prototype.touchMove = function (startCoords, endCoords, e) {
         var distanceX = endCoords.pageX - startCoords.pageX;
         var distanceY = endCoords.pageY - startCoords.pageY;
         var allowSwipe = false;
@@ -1939,6 +1948,7 @@ var LightGallery = /** @class */ (function () {
         }
         var $currentSlide = this.getSlideItem(this.index);
         if (this.swipeDirection === 'horizontal') {
+            e === null || e === void 0 ? void 0 : e.preventDefault();
             // reset opacity and transition duration
             this.outer.addClass('lg-dragging');
             // move current slide
@@ -1952,6 +1962,7 @@ var LightGallery = /** @class */ (function () {
         }
         else if (this.swipeDirection === 'vertical') {
             if (this.settings.swipeToClose) {
+                e === null || e === void 0 ? void 0 : e.preventDefault();
                 this.$container.addClass('lg-dragging-vertical');
                 var opacity = 1 - Math.abs(distanceY) / window.innerHeight;
                 this.$backdrop.css('opacity', opacity);
@@ -2032,7 +2043,6 @@ var LightGallery = /** @class */ (function () {
         var isSwiping = false;
         if (this.settings.enableSwipe) {
             this.$inner.on('touchstart.lg', function (e) {
-                e.preventDefault();
                 _this.dragOrSwipeEnabled = true;
                 var $item = _this.getSlideItem(_this.index);
                 if (($LG(e.target).hasClass('lg-item') ||
@@ -2050,7 +2060,6 @@ var LightGallery = /** @class */ (function () {
                 }
             });
             this.$inner.on('touchmove.lg', function (e) {
-                e.preventDefault();
                 if (isSwiping &&
                     _this.touchAction === 'swipe' &&
                     e.targetTouches.length === 1) {
@@ -2058,7 +2067,7 @@ var LightGallery = /** @class */ (function () {
                         pageX: e.targetTouches[0].pageX,
                         pageY: e.targetTouches[0].pageY,
                     };
-                    _this.touchMove(startCoords, endCoords);
+                    _this.touchMove(startCoords, endCoords, e);
                     isMoved = true;
                 }
             });
@@ -2575,5 +2584,5 @@ function lightGallery(el, options) {
     return new LightGallery(el, options);
 }
 
-export { lightGallery as default };
+export default lightGallery;
 //# sourceMappingURL=lightgallery.es5.js.map

@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.3 | July 29th 2021
+ * lightgallery | 2.2.0-beta.4 | August 4th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -170,12 +170,8 @@
          * @param {number} index - Current index of the slide
          */
         Video.prototype.onBeforeSlide = function (event) {
-            var _a = event.detail, prevIndex = _a.prevIndex, index = _a.index;
+            var _a = event.detail, prevIndex = _a.prevIndex; _a.index;
             this.pauseVideo(prevIndex);
-            var _videoInfo = this.core.galleryItems[index].__slideVideoInfo || {};
-            if (_videoInfo.youtube || _videoInfo.vimeo || _videoInfo.wistia) {
-                this.core.outer.addClass('lg-hide-download');
-            }
         };
         /**
          * @desc fired immediately after each slide transition.
@@ -221,7 +217,7 @@
             var currentGalleryItem = this.core.galleryItems[index];
             var videoTitle = currentGalleryItem.title || currentGalleryItem.alt;
             videoTitle = videoTitle ? 'title="' + videoTitle + '"' : '';
-            var commonIframeProps = "allowtransparency=\"true\" \n            frameborder=\"0\" \n            scrolling=\"no\" \n            allowfullscreen \n            mozallowfullscreen \n            webkitallowfullscreen \n            oallowfullscreen \n            msallowfullscreen";
+            var commonIframeProps = "allowtransparency=\"true\"\n            frameborder=\"0\"\n            scrolling=\"no\"\n            allowfullscreen\n            mozallowfullscreen\n            webkitallowfullscreen\n            oallowfullscreen\n            msallowfullscreen";
             if (videoInfo.youtube) {
                 var videoId = 'lg-youtube' + index;
                 var youTubePlayerParams = "?wmode=opaque&autoplay=0&enablejsapi=1";

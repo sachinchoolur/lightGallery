@@ -329,6 +329,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 
 .lg-container {
   display: none;
+  outline: none;
 }
 
 .lg-container.lg-show {
@@ -555,7 +556,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   display: none;
 }
 
-.lg-outer[data-lg-slide-type='video'] .lg-download, .lg-outer[data-lg-slide-type='iframe'] .lg-download {
+.lg-outer.lg-hide-download .lg-download {
   opacity: 0.75;
   pointer-events: none;
 }
