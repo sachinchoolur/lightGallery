@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.3 | July 29th 2021
+ * lightgallery | 2.2.0-beta.4 | August 4th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -120,6 +120,9 @@
                 this.$LG('body').first().removeClass('lg-from-hash');
             }
             this.zoomableTimeout = setTimeout(function () {
+                if (!_this.isImageSlide()) {
+                    return;
+                }
                 _this.core.getSlideItem(event.detail.index).addClass('lg-zoomable');
                 _this.setZoomEssentials();
             }, _speed + 30);
@@ -507,14 +510,14 @@
                     else {
                         clearTimeout(tapped);
                         tapped = null;
+                        event.preventDefault();
                         _this.setActualSize(_this.core.index, event);
                     }
-                    event.preventDefault();
                 }
             });
             // Update zoom on resize and orientationchange
             this.core.LGel.on(lGEvents.containerResize + ".zoom " + lGEvents.rotateRight + ".zoom " + lGEvents.rotateLeft + ".zoom " + lGEvents.flipHorizontal + ".zoom " + lGEvents.flipVertical + ".zoom", function () {
-                if (!_this.core.lgOpened)
+                if (!_this.core.lgOpened || !_this.isImageSlide())
                     return;
                 _this.setPageCords();
                 _this.setZoomEssentials();
@@ -556,7 +559,9 @@
                 _this.scale = 1;
                 _this.positionChanged = false;
                 _this.resetZoom(prevIndex);
-                _this.setZoomEssentials();
+                if (_this.isImageSlide()) {
+                    _this.setZoomEssentials();
+                }
             });
             // Drag option after zoom
             this.zoomDrag();
@@ -612,7 +617,6 @@
             var $item = this.core.getSlideItem(this.core.index);
             this.core.$inner.on('touchstart.lg', function (e) {
                 $item = _this.core.getSlideItem(_this.core.index);
-                e.preventDefault();
                 if (e.targetTouches.length === 2 &&
                     !_this.core.outer.hasClass('lg-first-slide-loading') &&
                     (_this.$LG(e.target).hasClass('lg-item') ||
@@ -624,11 +628,11 @@
                 }
             });
             this.core.$inner.on('touchmove.lg', function (e) {
-                e.preventDefault();
                 if (e.targetTouches.length === 2 &&
                     _this.core.touchAction === 'pinch' &&
                     (_this.$LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
+                    e.preventDefault();
                     var endDist = _this.getTouchDistance(e);
                     var distance = startDist - endDist;
                     if (!pinchStarted && Math.abs(distance) > 5) {
@@ -758,6 +762,10 @@
         Zoom.prototype.isBeyondPossibleBottom = function (y, maxY) {
             return y <= maxY;
         };
+        Zoom.prototype.isImageSlide = function () {
+            var currentItem = this.core.galleryItems[this.core.index];
+            return this.core.getSlideType(currentItem) === 'image';
+        };
         Zoom.prototype.getPossibleSwipeDragCords = function (rotateValue, scale) {
             var dataScale = scale || this.scale || 1;
             var elDataScale = Math.abs(dataScale);
@@ -802,7 +810,6 @@
             var _LGel;
             var $item = this.core.getSlideItem(this.core.index);
             this.core.$inner.on('touchstart.lg', function (e) {
-                e.preventDefault();
                 var currentItem = _this.core.galleryItems[_this.core.index];
                 // Allow zoom only on image
                 if (!currentItem.src) {
@@ -813,6 +820,7 @@
                     $item.get().contains(e.target)) &&
                     e.targetTouches.length === 1 &&
                     _this.core.outer.hasClass('lg-zoomed')) {
+                    e.preventDefault();
                     startTime = new Date();
                     _this.core.touchAction = 'zoomSwipe';
                     _LGel = _this.core
@@ -831,11 +839,11 @@
                 }
             });
             this.core.$inner.on('touchmove.lg', function (e) {
-                e.preventDefault();
                 if (e.targetTouches.length === 1 &&
                     _this.core.touchAction === 'zoomSwipe' &&
                     (_this.$LG(e.target).hasClass('lg-item') ||
                         $item.get().contains(e.target))) {
+                    e.preventDefault();
                     _this.core.touchAction = 'zoomSwipe';
                     endCoords = _this.getSwipeCords(e, Math.abs(_this.rotateValue));
                     var distance = _this.getZoomSwipeCords(startCoords, endCoords, allowX, allowY, possibleSwipeCords);

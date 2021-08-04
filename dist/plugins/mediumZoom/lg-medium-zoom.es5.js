@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.3 | July 29th 2021
+ * lightgallery | 2.2.0-beta.4 | August 4th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -125,5 +125,5 @@ var MediumZoom = /** @class */ (function () {
     return MediumZoom;
 }());
 
-export { MediumZoom as default };
+export default MediumZoom;
 //# sourceMappingURL=lg-medium-zoom.es5.js.map

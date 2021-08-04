@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.3 | July 29th 2021
+ * lightgallery | 2.2.0-beta.4 | August 4th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -258,5 +258,5 @@ var Rotate = /** @class */ (function () {
     return Rotate;
 }());
 
-export { Rotate as default };
+export default Rotate;
 //# sourceMappingURL=lg-rotate.es5.js.map
