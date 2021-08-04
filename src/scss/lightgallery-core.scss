@@ -11,6 +11,7 @@
 
 .lg-container {
     display: none;
+    outline: none;
     &.lg-show {
         display: block;
     }
