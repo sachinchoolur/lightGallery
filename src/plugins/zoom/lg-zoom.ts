@@ -562,10 +562,9 @@ export default class Zoom {
                 } else {
                     clearTimeout(tapped);
                     tapped = null;
+                    event.preventDefault();
                     this.setActualSize(this.core.index, event);
                 }
-
-                event.preventDefault();
             }
         });
 
@@ -697,7 +696,6 @@ export default class Zoom {
 
         this.core.$inner.on('touchstart.lg', (e) => {
             $item = this.core.getSlideItem(this.core.index);
-            e.preventDefault();
             if (
                 e.targetTouches.length === 2 &&
                 !this.core.outer.hasClass('lg-first-slide-loading') &&
@@ -716,13 +714,13 @@ export default class Zoom {
         });
 
         this.core.$inner.on('touchmove.lg', (e) => {
-            e.preventDefault();
             if (
                 e.targetTouches.length === 2 &&
                 this.core.touchAction === 'pinch' &&
                 (this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
+                e.preventDefault();
                 const endDist = this.getTouchDistance(e);
 
                 const distance = startDist - endDist;
@@ -983,7 +981,6 @@ export default class Zoom {
         let $item = this.core.getSlideItem(this.core.index);
 
         this.core.$inner.on('touchstart.lg', (e) => {
-            e.preventDefault();
             const currentItem = this.core.galleryItems[this.core.index];
             // Allow zoom only on image
             if (!currentItem.src) {
@@ -996,6 +993,7 @@ export default class Zoom {
                 e.targetTouches.length === 1 &&
                 this.core.outer.hasClass('lg-zoomed')
             ) {
+                e.preventDefault();
                 startTime = new Date();
                 this.core.touchAction = 'zoomSwipe';
                 _LGel = this.core
@@ -1028,13 +1026,13 @@ export default class Zoom {
         });
 
         this.core.$inner.on('touchmove.lg', (e) => {
-            e.preventDefault();
             if (
                 e.targetTouches.length === 1 &&
                 this.core.touchAction === 'zoomSwipe' &&
                 (this.$LG(e.target).hasClass('lg-item') ||
                     $item.get().contains(e.target))
             ) {
+                e.preventDefault();
                 this.core.touchAction = 'zoomSwipe';
 
                 endCoords = this.getSwipeCords(e, Math.abs(this.rotateValue));

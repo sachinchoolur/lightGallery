@@ -1636,7 +1636,7 @@ export class LightGallery {
         }
     }
 
-    touchMove(startCoords: Coords, endCoords: Coords): void {
+    touchMove(startCoords: Coords, endCoords: Coords, e?: TouchEvent): void {
         const distanceX = endCoords.pageX - startCoords.pageX;
         const distanceY = endCoords.pageY - startCoords.pageY;
         let allowSwipe = false;
@@ -1660,6 +1660,7 @@ export class LightGallery {
         const $currentSlide = this.getSlideItem(this.index);
 
         if (this.swipeDirection === 'horizontal') {
+            e?.preventDefault();
             // reset opacity and transition duration
             this.outer.addClass('lg-dragging');
 
@@ -1683,6 +1684,7 @@ export class LightGallery {
             );
         } else if (this.swipeDirection === 'vertical') {
             if (this.settings.swipeToClose) {
+                e?.preventDefault();
                 this.$container.addClass('lg-dragging-vertical');
 
                 const opacity = 1 - Math.abs(distanceY) / window.innerHeight;
@@ -1782,7 +1784,6 @@ export class LightGallery {
 
         if (this.settings.enableSwipe) {
             this.$inner.on('touchstart.lg', (e) => {
-                e.preventDefault();
                 this.dragOrSwipeEnabled = true;
                 const $item = this.getSlideItem(this.index);
                 if (
@@ -1803,7 +1804,6 @@ export class LightGallery {
             });
 
             this.$inner.on('touchmove.lg', (e) => {
-                e.preventDefault();
                 if (
                     isSwiping &&
                     this.touchAction === 'swipe' &&
@@ -1813,7 +1813,7 @@ export class LightGallery {
                         pageX: e.targetTouches[0].pageX,
                         pageY: e.targetTouches[0].pageY,
                     };
-                    this.touchMove(startCoords, endCoords);
+                    this.touchMove(startCoords, endCoords, e);
                     isMoved = true;
                 }
             });
