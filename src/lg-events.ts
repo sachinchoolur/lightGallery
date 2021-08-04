@@ -248,7 +248,7 @@ export interface AfterAppendSubHtmlDetail {
 }
 
 /**
- * Fired when the sub-html content (ex : title/ description) has been appended into the slide.
+ * Fired when the lightGallery container has been resized.
  * @name lgContainerResize
  * @method onContainerResize
  */
