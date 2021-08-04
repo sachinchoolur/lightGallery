@@ -1412,11 +1412,15 @@ export class LightGallery {
             if (hideDownloadBtn) {
                 this.outer.addClass('lg-hide-download');
             } else {
+                const $download = this.getElementById('lg-download');
                 this.outer.removeClass('lg-hide-download');
-                this.getElementById('lg-download').attr(
+                $download.attr(
                     'href',
                     currentGalleryItem.downloadUrl || currentGalleryItem.src,
                 );
+                if (currentGalleryItem.download) {
+                    $download.attr('download', currentGalleryItem.download);
+                }
             }
         }
     }

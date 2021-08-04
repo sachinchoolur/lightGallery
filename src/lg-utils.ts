@@ -109,10 +109,20 @@ export interface GalleryItem {
 
     /**
      * Download url for your image/video.
-     * @description Pass false if you want to hide the download button.
+     * @description Pass false if you want to disable the download button.
      * @data-attr data-download-url
      */
     downloadUrl: string | boolean;
+
+    /**
+     * Name of the file after it is downloaded.
+     * @description The HTML value of the download attribute.
+     * There are no restrictions on allowed values, and the browser will automatically
+     * detect the correct file extension and add it to the file (.img, .pdf, .txt, .html, etc.).
+     * <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attr-download">More info</a>
+     * @data-attr data-download
+     */
+    download: string | boolean;
 
     /**
      * Actual size of the image in px.
@@ -201,6 +211,7 @@ const defaultDynamicOptions = [
     'sizes',
     'iframe',
     'downloadUrl',
+    'download',
     'width',
     'facebookShareUrl',
     'tweetText',
