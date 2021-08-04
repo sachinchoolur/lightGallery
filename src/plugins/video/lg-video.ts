@@ -133,11 +133,6 @@ export default class Video {
     onBeforeSlide(event: CustomEvent) {
         const { prevIndex, index } = event.detail;
         this.pauseVideo(prevIndex);
-
-        const _videoInfo = this.core.galleryItems[index].__slideVideoInfo || {};
-        if (_videoInfo.youtube || _videoInfo.vimeo || _videoInfo.wistia) {
-            this.core.outer.addClass('lg-hide-download');
-        }
     }
 
     /**
