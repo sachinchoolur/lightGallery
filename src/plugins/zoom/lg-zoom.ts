@@ -99,6 +99,9 @@ export default class Zoom {
         }
 
         this.zoomableTimeout = setTimeout(() => {
+            if (!this.isImageSlide()) {
+                return;
+            }
             this.core.getSlideItem(event.detail.index).addClass('lg-zoomable');
             this.setZoomEssentials();
         }, _speed + 30);
@@ -570,7 +573,7 @@ export default class Zoom {
         this.core.LGel.on(
             `${lGEvents.containerResize}.zoom ${lGEvents.rotateRight}.zoom ${lGEvents.rotateLeft}.zoom ${lGEvents.flipHorizontal}.zoom ${lGEvents.flipVertical}.zoom`,
             () => {
-                if (!this.core.lgOpened) return;
+                if (!this.core.lgOpened || !this.isImageSlide()) return;
                 this.setPageCords();
                 this.setZoomEssentials();
                 this.zoomImage(this.scale);
@@ -621,7 +624,9 @@ export default class Zoom {
                 this.scale = 1;
                 this.positionChanged = false;
                 this.resetZoom(prevIndex);
-                this.setZoomEssentials();
+                if (this.isImageSlide()) {
+                    this.setZoomEssentials();
+                }
             },
         );
 
@@ -900,6 +905,11 @@ export default class Zoom {
     }
     private isBeyondPossibleBottom(y: number, maxY: number) {
         return y <= maxY;
+    }
+
+    isImageSlide(): boolean {
+        const currentItem = this.core.galleryItems[this.core.index];
+        return this.core.getSlideType(currentItem) === 'image';
     }
 
     getPossibleSwipeDragCords(
