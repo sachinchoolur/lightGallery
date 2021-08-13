@@ -103,7 +103,9 @@ export default class Zoom {
                 return;
             }
             this.core.getSlideItem(event.detail.index).addClass('lg-zoomable');
-            this.setZoomEssentials();
+            if (event.detail.index === this.core.index) {
+                this.setZoomEssentials();
+            }
         }, _speed + 30);
     }
 
