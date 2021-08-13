@@ -56,3 +56,16 @@
 .font-12 {
     font-size: 12px !important;
 }
+
+.doc-union {
+    > span {
+        &:before {
+            content: '|';
+            margin: 0 5px;
+        }
+        &:first-child:before,
+        &:empty {
+            display: none;
+        }
+    }
+}
