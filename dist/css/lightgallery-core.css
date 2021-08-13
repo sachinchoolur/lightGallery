@@ -229,7 +229,8 @@
   opacity: 1;
 }
 
-.lg-outer .lg-empty-html.lg-sub-html, .lg-outer .lg-empty-html .lg-sub-html {
+.lg-outer .lg-empty-html.lg-sub-html,
+.lg-outer .lg-empty-html .lg-sub-html {
   display: none;
 }
 

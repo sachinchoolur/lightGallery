@@ -1,8 +1,9 @@
 .lg-outer .lg-thumb-outer {
   background-color: #0d0a0a;
-  display: inline-block;
   width: 100%;
   max-height: 350px;
+  overflow: hidden;
+  float: left;
 }
 
 .lg-outer .lg-thumb-outer.lg-grab .lg-thumb-item {

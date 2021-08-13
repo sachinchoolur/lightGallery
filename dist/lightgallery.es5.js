@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.4 | August 4th 2021
+ * lightgallery | 2.2.0-beta.5 | August 13th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -521,7 +521,7 @@ var utils = {
             ', 1)';
         return transform;
     },
-    getIframeMarkup: function (src, iframeWidth, iframeHeight, iframeTitle) {
+    getIframeMarkup: function (iframeWidth, iframeHeight, src, iframeTitle) {
         var title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
         return "<div class=\"lg-video-cont lg-has-iframe\" style=\"width:" + iframeWidth + "; height: " + iframeHeight + "\">\n                    <iframe class=\"lg-object\" frameborder=\"0\" " + title + " src=\"" + src + "\"  allowfullscreen=\"true\"></iframe>\n                </div>";
     },
@@ -912,7 +912,7 @@ var LightGallery = /** @class */ (function () {
         if (this.settings.controls) {
             controls = "<button type=\"button\" id=\"" + this.getIdName('lg-prev') + "\" aria-label=\"Previous slide\" class=\"lg-prev lg-icon\"> " + this.settings.prevHtml + " </button>\n                <button type=\"button\" id=\"" + this.getIdName('lg-next') + "\" aria-label=\"Next slide\" class=\"lg-next lg-icon\"> " + this.settings.nextHtml + " </button>";
         }
-        if (this.settings.appendSubHtmlTo === '.lg-sub-html') {
+        if (this.settings.appendSubHtmlTo !== '.lg-item') {
             subHtmlCont =
                 '<div class="lg-sub-html" role="status" aria-live="polite"></div>';
         }
@@ -934,7 +934,11 @@ var LightGallery = /** @class */ (function () {
         var maximizeIcon = this.settings.showMaximizeIcon
             ? "<button type=\"button\" aria-label=\"Toggle maximize\" id=\"" + this.getIdName('lg-maximize') + "\" class=\"lg-maximize lg-icon\"></button>"
             : '';
-        var template = "\n        <div class=\"" + containerClassName + "\" id=\"" + this.getIdName('lg-container') + "\" tabindex=\"-1\" aria-modal=\"true\" " + ariaLabelledby + " " + ariaDescribedby + " role=\"dialog\"\n        >\n            <div id=\"" + this.getIdName('lg-backdrop') + "\" class=\"lg-backdrop\"></div>\n\n            <div id=\"" + this.getIdName('lg-outer') + "\" class=\"lg-outer lg-use-css3 lg-css3 lg-hide-items " + addClasses + " \">\n\n              <div id=\"" + this.getIdName('lg-content') + "\" class=\"lg-content\">\n                <div id=\"" + this.getIdName('lg-inner') + "\" class=\"lg-inner\">\n                </div>\n                " + controls + "\n              </div>\n                <div id=\"" + this.getIdName('lg-toolbar') + "\" class=\"lg-toolbar lg-group\">\n                    " + maximizeIcon + "\n                    " + closeIcon + "\n                </div>\n                <div id=\"" + this.getIdName('lg-components') + "\" class=\"lg-components\">\n                    " + subHtmlCont + "\n                </div>\n            </div>\n        </div>\n        ";
+        var template = "\n        <div class=\"" + containerClassName + "\" id=\"" + this.getIdName('lg-container') + "\" tabindex=\"-1\" aria-modal=\"true\" " + ariaLabelledby + " " + ariaDescribedby + " role=\"dialog\"\n        >\n            <div id=\"" + this.getIdName('lg-backdrop') + "\" class=\"lg-backdrop\"></div>\n\n            <div id=\"" + this.getIdName('lg-outer') + "\" class=\"lg-outer lg-use-css3 lg-css3 lg-hide-items " + addClasses + " \">\n\n              <div id=\"" + this.getIdName('lg-content') + "\" class=\"lg-content\">\n                <div id=\"" + this.getIdName('lg-inner') + "\" class=\"lg-inner\">\n                </div>\n                " + controls + "\n              </div>\n                <div id=\"" + this.getIdName('lg-toolbar') + "\" class=\"lg-toolbar lg-group\">\n                    " + maximizeIcon + "\n                    " + closeIcon + "\n                    </div>\n                    " + (this.settings.appendSubHtmlTo === '.lg-outer'
+            ? subHtmlCont
+            : '') + "\n                <div id=\"" + this.getIdName('lg-components') + "\" class=\"lg-components\">\n                    " + (this.settings.appendSubHtmlTo === '.lg-sub-html'
+            ? subHtmlCont
+            : '') + "\n                </div>\n            </div>\n        </div>\n        ";
         $LG(this.settings.container)
             .css('position', 'relative')
             .append(template);
@@ -1224,8 +1228,10 @@ var LightGallery = /** @class */ (function () {
             };
         }
         var top = this.$toolbar.get().clientHeight || 0;
+        var subHtml = this.outer.find('.lg-components .lg-sub-html').get();
         var captionHeight = this.settings.defaultCaptionHeight ||
-            this.outer.find('.lg-sub-html').get().clientHeight;
+            (subHtml && subHtml.clientHeight) ||
+            0;
         var thumbContainer = this.outer.find('.lg-thumb-outer').get();
         var thumbHeight = thumbContainer ? thumbContainer.clientHeight : 0;
         var bottom = thumbHeight + captionHeight;
@@ -1315,7 +1321,7 @@ var LightGallery = /** @class */ (function () {
                 subHtml = '';
             }
         }
-        if (this.settings.appendSubHtmlTo === '.lg-sub-html') {
+        if (this.settings.appendSubHtmlTo !== '.lg-item') {
             if (subHtmlUrl) {
                 this.outer.find('.lg-sub-html').load(subHtmlUrl);
             }
@@ -1527,7 +1533,7 @@ var LightGallery = /** @class */ (function () {
                 lgVideoStyle = this.getVideoContStyle(videoSize);
             }
             if (iframe) {
-                var markup = utils.getIframeMarkup(src, this.settings.iframeWidth, this.settings.iframeHeight, currentGalleryItem.iframeTitle);
+                var markup = utils.getIframeMarkup(this.settings.iframeWidth, this.settings.iframeHeight, src, currentGalleryItem.iframeTitle);
                 $currentSlide.prepend(markup);
             }
             else if (poster) {
@@ -1573,7 +1579,7 @@ var LightGallery = /** @class */ (function () {
             }
             this.LGel.trigger(lGEvents.afterAppendSlide, { index: index });
             if (this.lGalleryOn &&
-                this.settings.appendSubHtmlTo !== '.lg-sub-html') {
+                this.settings.appendSubHtmlTo === '.lg-item') {
                 this.addHtml(index);
             }
         }
@@ -1756,7 +1762,8 @@ var LightGallery = /** @class */ (function () {
             else {
                 var $download = this.getElementById('lg-download');
                 this.outer.removeClass('lg-hide-download');
-                $download.attr('href', currentGalleryItem.downloadUrl || currentGalleryItem.src);
+                $download.attr('href', currentGalleryItem.downloadUrl ||
+                    currentGalleryItem.src);
                 if (currentGalleryItem.download) {
                     $download.attr('download', currentGalleryItem.download);
                 }
@@ -1892,7 +1899,7 @@ var LightGallery = /** @class */ (function () {
                     _this.loadContent(index, true);
                 }
                 // Add title if this.settings.appendSubHtmlTo === lg-sub-html
-                if (_this.settings.appendSubHtmlTo === '.lg-sub-html') {
+                if (_this.settings.appendSubHtmlTo !== '.lg-item') {
                     _this.addHtml(index);
                 }
             }, (this.lGalleryOn ? this.settings.speed + 50 : 50) + (fromTouch ? 0 : this.settings.slideDelay));

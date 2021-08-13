@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.4 | August 4th 2021
+ * lightgallery | 2.2.0-beta.5 | August 13th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -176,7 +176,7 @@
             }, 100);
         };
         Share.prototype.getShareListItemHTML = function (type, text) {
-            return "<li><a class=\"lg-share-" + type + "\" target=\"_blank\"><span class=\"lg-icon\"></span><span class=\"lg-dropdown-text\">" + text + "</span></a></li>";
+            return "<li><a class=\"lg-share-" + type + "\" rel=\"noopener\" target=\"_blank\"><span class=\"lg-icon\"></span><span class=\"lg-dropdown-text\">" + text + "</span></a></li>";
         };
         Share.prototype.getDefaultShareOptions = function () {
             return __spreadArrays((this.settings.facebook
