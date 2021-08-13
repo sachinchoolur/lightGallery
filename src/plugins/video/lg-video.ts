@@ -419,7 +419,7 @@ export default class Video {
                 }
 
                 const videoJsPlayer = this.appendVideos($el, {
-                    src: _src,
+                    src: _src as string,
                     addClass: '',
                     index: this.core.index,
                     html5Video: _html,

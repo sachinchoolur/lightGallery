@@ -18,101 +18,101 @@ export interface GalleryItem {
      * url of the media
      * @data-attr data-src
      */
-    src: string;
+    src?: string;
 
     /**
      * Source attributes for the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source#attributes">picture</a> element
      * @data-attr data-sources
      */
-    sources: ImageSources[];
+    sources?: ImageSources[];
 
     /**
      * Thumbnail url
      * @data-attr data-thumb
      */
-    thumb: string;
+    thumb?: string;
 
     /**
      * alt attribute for the image
      * @data-attr alt
      */
-    alt: string;
+    alt?: string;
 
     /**
      * Title attribute for the video
      * @data-attr thumb
      */
-    title: string;
+    title?: string;
 
     /**
      * Title for iframe
      * @data-attr data-iframe-title
      */
-    iframeTitle: string;
+    iframeTitle?: string;
 
     /**
      * Caption for the slide
      * @description You can either pass the HTML markup or the ID or class name of the element which contains the captions
      * @data-attr data-sub-html
      */
-    subHtml: string;
+    subHtml?: string;
 
     /**
      * url of the file which contain the sub html.
      * @description Note - Does not support Internet Explorer browser
      * @data-attr data-sub-html-url
      */
-    subHtmlUrl: string;
+    subHtmlUrl?: string;
 
     /**
      * Video source
      * @data-attr data-video
      */
-    video: VideoSource;
+    video?: VideoSource;
 
     /**
      * Poster url
      * @data-attr data-poster
      */
-    poster: string;
+    poster?: string;
 
     /**
      * Custom slide name to use in the url when hash plugin is enabled
      * @data-attr data-slide-name
      */
-    slideName: string;
+    slideName?: string;
 
     /**
      * List of images and viewport's max width separated by comma.
-     * @description Ex: img/1-375.jpg 375, img/1-480.jpg 480, img/1-757.jpg 757.
+     * @description Ex?: img/1-375.jpg 375, img/1-480.jpg 480, img/1-757.jpg 757.
      * @data-attr data-responsive
      */
-    responsive: string;
+    responsive?: string;
 
     /**
      * srcset attribute values for the main image
      * @data-attr data-srcset
      */
-    srcset: string;
+    srcset?: string;
 
     /**
      * srcset sizes attribute for the main image
      * @data-attr data-sizes
      */
-    sizes: string;
+    sizes?: string;
 
     /**
      * Set true is you want to open your url in an iframe
      * @data-attr data-iframe
      */
-    iframe: boolean;
+    iframe?: boolean;
 
     /**
      * Download url for your image/video.
      * @description Pass false if you want to disable the download button.
      * @data-attr data-download-url
      */
-    downloadUrl: string | boolean;
+    downloadUrl?: string | boolean;
 
     /**
      * Name of the file after it is downloaded.
@@ -122,48 +122,48 @@ export interface GalleryItem {
      * <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attr-download">More info</a>
      * @data-attr data-download
      */
-    download: string | boolean;
+    download?: string | boolean;
 
     /**
      * Actual size of the image in px.
      * @description This is used in zoom plugin to see the actual size of the image when double taped on the image.
      * @data-attr data-width
      */
-    width: string;
+    width?: string;
 
     /**
      * Facebook share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL is taken.
      * @data-attr data-facebook-share-url
      */
-    facebookShareUrl: string;
+    facebookShareUrl?: string;
 
     /**
      * Tweet text
      * @data-attr data-tweet-text
      */
-    tweetText: string;
+    tweetText?: string;
 
     /**
      * Twitter share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL will be taken.
      * @data-attr data-twitter-share-url
      */
-    twitterShareUrl: string;
+    twitterShareUrl?: string;
 
     /**
      * Pinterest share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL will be taken.
-     * Note: Pinterest requires absolute URL
+     * Note?: Pinterest requires absolute URL
      * @data-attr data-pinterest-share-url
      */
-    pinterestShareUrl: string;
+    pinterestShareUrl?: string;
 
     /**
      * Description for Pinterest post.
      * @data-attr data-pinterest-text
      */
-    pinterestText: string;
+    pinterestText?: string;
 
     /**
      * Facebook comments body html
@@ -177,21 +177,21 @@ export interface GalleryItem {
      * </div>
      * @data-attr data-fb-html
      */
-    fbHtml: string;
+    fbHtml?: string;
 
     /**
      * Disqus page identifier
      * @description Please refer official <a href="https://help.disqus.com/en/articles/1717084-javascript-configuration-variables">disqus documentation</a> for more info
      * @data-attr data-disqus-identifier
      */
-    disqusIdentifier: string;
+    disqusIdentifier?: string;
 
     /**
      * Disqus page url
      * @description Please refer official <a href="https://help.disqus.com/en/articles/1717084-javascript-configuration-variables">disqus documentation</a> for more info
      * @data-attr data-disqus-url
      */
-    disqusUrl: string;
+    disqusUrl?: string;
 
     __slideVideoInfo?: VideoInfo;
     [key: string]: any;
@@ -352,9 +352,9 @@ const utils = {
     },
 
     getIframeMarkup(
-        src: string,
         iframeWidth: string,
         iframeHeight: string,
+        src?: string,
         iframeTitle?: string,
     ): string {
         const title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
@@ -367,8 +367,8 @@ const utils = {
         index: number,
         src: string,
         altAttr: string,
-        srcset: string,
-        sizes: string,
+        srcset?: string,
+        sizes?: string,
         sources?: ImageSources[],
     ): string {
         const srcsetAttr = srcset ? `srcset="${srcset}"` : '';
