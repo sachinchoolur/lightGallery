@@ -286,7 +286,7 @@ export class LightGallery {
             } </button>`;
         }
 
-        if (this.settings.appendSubHtmlTo === '.lg-sub-html') {
+        if (this.settings.appendSubHtmlTo !== '.lg-item') {
             subHtmlCont =
                 '<div class="lg-sub-html" role="status" aria-live="polite"></div>';
         }
@@ -342,11 +342,20 @@ export class LightGallery {
                 )}" class="lg-toolbar lg-group">
                     ${maximizeIcon}
                     ${closeIcon}
-                </div>
+                    </div>
+                    ${
+                        this.settings.appendSubHtmlTo === '.lg-outer'
+                            ? subHtmlCont
+                            : ''
+                    }
                 <div id="${this.getIdName(
                     'lg-components',
                 )}" class="lg-components">
-                    ${subHtmlCont}
+                    ${
+                        this.settings.appendSubHtmlTo === '.lg-sub-html'
+                            ? subHtmlCont
+                            : ''
+                    }
                 </div>
             </div>
         </div>
@@ -708,9 +717,11 @@ export class LightGallery {
             };
         }
         const top = this.$toolbar.get().clientHeight || 0;
+        const subHtml = this.outer.find('.lg-components .lg-sub-html').get();
         const captionHeight =
             this.settings.defaultCaptionHeight ||
-            this.outer.find('.lg-sub-html').get().clientHeight;
+            (subHtml && subHtml.clientHeight) ||
+            0;
         const thumbContainer = this.outer.find('.lg-thumb-outer').get();
         const thumbHeight = thumbContainer ? thumbContainer.clientHeight : 0;
         const bottom = thumbHeight + captionHeight;
@@ -814,7 +825,7 @@ export class LightGallery {
             }
         }
 
-        if (this.settings.appendSubHtmlTo === '.lg-sub-html') {
+        if (this.settings.appendSubHtmlTo !== '.lg-item') {
             if (subHtmlUrl) {
                 this.outer.find('.lg-sub-html').load(subHtmlUrl);
             } else {
@@ -1160,7 +1171,7 @@ export class LightGallery {
 
             if (
                 this.lGalleryOn &&
-                this.settings.appendSubHtmlTo !== '.lg-sub-html'
+                this.settings.appendSubHtmlTo === '.lg-item'
             ) {
                 this.addHtml(index);
             }
@@ -1596,7 +1607,7 @@ export class LightGallery {
                     this.loadContent(index, true);
                 }
                 // Add title if this.settings.appendSubHtmlTo === lg-sub-html
-                if (this.settings.appendSubHtmlTo === '.lg-sub-html') {
+                if (this.settings.appendSubHtmlTo !== '.lg-item') {
                     this.addHtml(index);
                 }
             }, (this.lGalleryOn ? this.settings.speed + 50 : 50) + (fromTouch ? 0 : this.settings.slideDelay));
