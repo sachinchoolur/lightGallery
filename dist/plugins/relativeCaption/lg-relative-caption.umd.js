@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.4 | August 4th 2021
+ * lightgallery | 2.2.0-beta.5 | August 13th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -96,7 +96,9 @@
             this.core.LGel.on(lGEvents.slideItemLoad + ".caption", function (event) {
                 var _a = event.detail, index = _a.index, delay = _a.delay;
                 setTimeout(function () {
-                    _this.setRelativeCaption(index);
+                    if (index === _this.core.index) {
+                        _this.setRelativeCaption(index);
+                    }
                 }, delay);
             });
             this.core.LGel.on(lGEvents.afterSlide + ".caption", function (event) {
@@ -115,21 +117,19 @@
                     slide.removeClass('lg-show-caption');
                 });
             });
+            this.core.LGel.on(lGEvents.containerResize + ".caption", function (event) {
+                _this.setRelativeCaption(_this.core.index);
+            });
         };
-        RelativeCaption.prototype.setCaptionStyle = function (index, rect) {
+        RelativeCaption.prototype.setCaptionStyle = function (index, rect, slideWrapRect) {
             var $subHtmlInner = this.core
                 .getSlideItem(index)
                 .find('.lg-relative-caption-item');
             var $subHtml = this.core.getSlideItem(index).find('.lg-sub-html');
+            $subHtml.css('width', rect.width + "px").css('left', rect.left + "px");
             var subHtmlRect = $subHtmlInner.get().getBoundingClientRect();
-            var top = rect.bottom;
-            if (rect.height + subHtmlRect.height >= rect.bottom) {
-                top -= subHtmlRect.height;
-            }
-            $subHtml
-                .css('width', rect.width + "px")
-                .css('left', rect.left + "px")
-                .css('top', top + "px");
+            var bottom = slideWrapRect.bottom - rect.bottom - subHtmlRect.height;
+            $subHtml.css('top', "auto").css('bottom', Math.max(bottom, 0) + "px");
         };
         RelativeCaption.prototype.setRelativeCaption = function (index) {
             var slide = this.core.getSlideItem(index);
@@ -139,7 +139,11 @@
                     .find('.lg-object')
                     .get()
                     .getBoundingClientRect();
-                this.setCaptionStyle(index, rect);
+                var slideWrapRect = this.core
+                    .getSlideItem(index)
+                    .get()
+                    .getBoundingClientRect();
+                this.setCaptionStyle(index, rect, slideWrapRect);
                 slide.addClass('lg-show-caption');
             }
         };

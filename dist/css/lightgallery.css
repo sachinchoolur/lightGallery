@@ -552,7 +552,8 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   opacity: 1;
 }
 
-.lg-outer .lg-empty-html.lg-sub-html, .lg-outer .lg-empty-html .lg-sub-html {
+.lg-outer .lg-empty-html.lg-sub-html,
+.lg-outer .lg-empty-html .lg-sub-html {
   display: none;
 }
 

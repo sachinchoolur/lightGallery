@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.4 | August 4th 2021
+ * lightgallery | 2.2.0-beta.5 | August 13th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -118,7 +118,9 @@ var Zoom = /** @class */ (function () {
                 return;
             }
             _this.core.getSlideItem(event.detail.index).addClass('lg-zoomable');
-            _this.setZoomEssentials();
+            if (event.detail.index === _this.core.index) {
+                _this.setZoomEssentials();
+            }
         }, _speed + 30);
     };
     Zoom.prototype.enableZoomOnSlideItemLoad = function () {
