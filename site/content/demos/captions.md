@@ -1,23 +1,18 @@
 ---
-title: 'Captions'
-description: 'lightGallery captions demo.'
-lead:
-    'You can directly pass image caption html via data-sub-html attribute or
-    just pass id or class name of any html object (div) which contains your
-    cation html.'
-date: 2020-10-06T08:48:57+00:00
+title: Captions
+description: lightGallery captions demo.
+lead: You can directly pass image caption html via data-sub-html attribute or just pass id or class name of any html object (div) which contains your cation html.
+date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu:
-    demos:
-        parent: 'Demos'
+menu: {demos: {parent: Demos}}
 weight: 16
 toc: true
 ---
 
 #### Demo
 
-{{< image-gallery id="gallery-captions-demo">}}
+{{< image-gallery id="gallery-captions-demo" >}}
 
 ##### HTML Structure
 
@@ -98,7 +93,7 @@ with the help of lightGallery `slideDelay` option
 `slideDelay` adds a delay between slide transitions. You can use this time
 interval to animate captions before the next slide transition starts.
 
-{{< image-gallery-captions id="gallery-animated-captions-demo">}}
+{{< image-gallery-captions id="gallery-animated-captions-demo" >}}
 
 <div class="codepen-demo">
     <a target="_blank" href="https://codepen.io/sachinchoolur/pen/poebjrm">View on CodePen</a>
@@ -216,3 +211,7 @@ lightGallery(document.getElementById('gallery-animated-captions-demo'), {
     }
 }
 ```
+
+<!-- ### Caption relative to slide
+
+{{< image-gallery-relative-captions id="gallery-relative-captions-demo" >}} -->

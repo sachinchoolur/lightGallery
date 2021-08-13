@@ -227,6 +227,7 @@ jQuery('#animated-thumbnails-gallery')
                 autoplayFirstVideo: false,
                 pager: false,
                 galleryId: 'nature',
+                appendSubHtmlTo: '.lg-outer',
                 plugins: [
                     lgZoom,
                     lgAutoplay,
@@ -770,6 +771,23 @@ jQuery('#gallery-animated-captions-demo')
                 // before navigating to different slides (Optional)
                 // You can find caption animation demo on the captions demo page
                 slideDelay: 400,
+            },
+        );
+    });
+jQuery('#gallery-relative-captions-demo')
+    .justifiedGallery({
+        captions: false,
+        lastRow: 'justify',
+        rowHeight: 180,
+        margins: 5,
+    })
+    .on('jg.complete', function () {
+        window.lightGallery(
+            document.getElementById('gallery-relative-captions-demo'),
+            {
+                appendSubHtmlTo: '.lg-item',
+                relativeCaption: true,
+                plugins: [lgRelativeCaption],
             },
         );
     });

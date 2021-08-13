@@ -41,7 +41,9 @@ export default class RelativeCaption {
         this.core.LGel.on(`${lGEvents.slideItemLoad}.caption`, (event) => {
             const { index, delay } = event.detail;
             setTimeout(() => {
-                this.setRelativeCaption(index);
+                if (index === this.core.index) {
+                    this.setRelativeCaption(index);
+                }
             }, delay);
         });
         this.core.LGel.on(`${lGEvents.afterSlide}.caption`, (event) => {
@@ -60,22 +62,24 @@ export default class RelativeCaption {
                 slide.removeClass('lg-show-caption');
             });
         });
+        this.core.LGel.on(`${lGEvents.containerResize}.caption`, (event) => {
+            this.setRelativeCaption(this.core.index);
+        });
     }
 
-    private setCaptionStyle(index: number, rect: ClientRect) {
+    private setCaptionStyle(
+        index: number,
+        rect: ClientRect,
+        slideWrapRect: ClientRect,
+    ) {
         const $subHtmlInner = this.core
             .getSlideItem(index)
             .find('.lg-relative-caption-item');
         const $subHtml = this.core.getSlideItem(index).find('.lg-sub-html');
+        $subHtml.css('width', `${rect.width}px`).css('left', `${rect.left}px`);
         const subHtmlRect = $subHtmlInner.get().getBoundingClientRect();
-        let top = rect.bottom;
-        if (rect.height + subHtmlRect.height >= rect.bottom) {
-            top -= subHtmlRect.height;
-        }
-        $subHtml
-            .css('width', `${rect.width}px`)
-            .css('left', `${rect.left}px`)
-            .css('top', `${top}px`);
+        const bottom = slideWrapRect.bottom - rect.bottom - subHtmlRect.height;
+        $subHtml.css('top', `auto`).css('bottom', `${Math.max(bottom, 0)}px`);
     }
 
     private setRelativeCaption(index: number) {
@@ -86,7 +90,11 @@ export default class RelativeCaption {
                 .find('.lg-object')
                 .get()
                 .getBoundingClientRect();
-            this.setCaptionStyle(index, rect);
+            const slideWrapRect = this.core
+                .getSlideItem(index)
+                .get()
+                .getBoundingClientRect();
+            this.setCaptionStyle(index, rect, slideWrapRect);
             slide.addClass('lg-show-caption');
         }
     }
