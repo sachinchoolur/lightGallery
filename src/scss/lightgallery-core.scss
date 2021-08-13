@@ -247,9 +247,10 @@
 
     // Hide title div if empty
     .lg-empty-html {
-      &.lg-sub-html, .lg-sub-html {
-          display: none;
-      }
+        &.lg-sub-html,
+        .lg-sub-html {
+            display: none;
+        }
     }
 
     &.lg-hide-download {
@@ -258,7 +259,6 @@
             pointer-events: none;
         }
     }
-
 
     .lg-first-slide {
         .lg-dummy-img {

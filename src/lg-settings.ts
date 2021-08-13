@@ -314,8 +314,10 @@ export interface LightGalleryCoreSettings {
 
     /**
      * control where the sub-html should be appended.
+     * If you choose '.lg-outer', you are responsible for placing the div at the right position.
+     * '.lg-outer' is useful if you want show custom HTML outside the normal gallery
      */
-    appendSubHtmlTo: '.lg-sub-html' | '.lg-item';
+    appendSubHtmlTo: '.lg-sub-html' | '.lg-item' | '.lg-outer';
 
     /**
      * Set to true if the selector in "data-sub-html" should use the current item as its origin.
