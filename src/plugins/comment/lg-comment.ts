@@ -81,7 +81,7 @@ export default class CommentBox {
         const _this = this;
         this.core.LGel.on(`${lGEvents.beforeSlide}.comment`, (event) => {
             const html = this.core.galleryItems[event.detail.index].fbHtml;
-            this.core.outer.find('.lg-comment-body').html(html);
+            this.core.outer.find('.lg-comment-body').html(html as string);
         });
         this.core.LGel.on(`${lGEvents.afterSlide}.comment`, function () {
             try {

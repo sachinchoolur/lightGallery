@@ -1061,7 +1061,10 @@ export class LightGallery {
     // Add video slideInfo
     addSlideVideoInfo(items: GalleryItem[]): void {
         items.forEach((element, index) => {
-            element.__slideVideoInfo = this.isVideo(element.src, index);
+            element.__slideVideoInfo = this.isVideo(
+                element.src as string,
+                index,
+            );
         });
     }
 
@@ -1106,9 +1109,9 @@ export class LightGallery {
             }
             if (iframe) {
                 const markup = utils.getIframeMarkup(
-                    src,
                     this.settings.iframeWidth,
                     this.settings.iframeHeight,
+                    src,
                     currentGalleryItem.iframeTitle,
                 );
                 $currentSlide.prepend(markup);
@@ -1157,7 +1160,7 @@ export class LightGallery {
                     hasPoster: false,
                 });
             } else {
-                this.setImgMarkup(src, $currentSlide, index);
+                this.setImgMarkup(src as string, $currentSlide, index);
                 if (srcset || sources) {
                     const $img = $currentSlide.find('.lg-object');
                     this.initPictureFill($img);
@@ -1210,7 +1213,7 @@ export class LightGallery {
                         .append(
                             utils.getImgMarkup(
                                 index,
-                                src,
+                                src as string,
                                 '',
                                 srcset,
                                 sizes,
@@ -1427,7 +1430,8 @@ export class LightGallery {
                 this.outer.removeClass('lg-hide-download');
                 $download.attr(
                     'href',
-                    currentGalleryItem.downloadUrl || currentGalleryItem.src,
+                    currentGalleryItem.downloadUrl ||
+                        (currentGalleryItem.src as string),
                 );
                 if (currentGalleryItem.download) {
                     $download.attr('download', currentGalleryItem.download);
