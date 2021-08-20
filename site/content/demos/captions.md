@@ -211,7 +211,3 @@ lightGallery(document.getElementById('gallery-animated-captions-demo'), {
     }
 }
 ```
-
-<!-- ### Caption relative to slide
-
-{{< image-gallery-relative-captions id="gallery-relative-captions-demo" >}} -->
