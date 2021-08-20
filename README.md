@@ -1,4 +1,4 @@
-![commit](https://badgen.net/github/last-commit/sachinchoolur/lightGallery/v2.2.0)
+![commit](https://badgen.net/github/last-commit/sachinchoolur/lightGallery/master)
 ![npm](https://img.shields.io/npm/v/lightgallery.svg?color=red)
 ![npm-tag](https://badgen.net/github/tag/sachinchoolur/lightgallery)
 ![size](https://badgen.net/bundlephobia/minzip/lightgallery?color=cyan)
