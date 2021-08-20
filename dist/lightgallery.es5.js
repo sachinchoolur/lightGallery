@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0-beta.5 | August 13th 2021
+ * lightgallery | 2.2.0 | August 20th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -962,7 +962,7 @@ var LightGallery = /** @class */ (function () {
         this.$inner.css('transition-timing-function', this.settings.easing);
         this.$inner.css('transition-duration', this.settings.speed + 'ms');
         if (this.settings.download) {
-            this.$toolbar.append("<a id=\"" + this.getIdName('lg-download') + "\" target=\"_blank\" aria-label=\"Download\" download class=\"lg-download lg-icon\"></a>");
+            this.$toolbar.append("<a id=\"" + this.getIdName('lg-download') + "\" target=\"_blank\" rel=\"noopener\" aria-label=\"Download\" download class=\"lg-download lg-icon\"></a>");
         }
         this.counter();
         $LG(window).on("resize.lg.global" + this.lgId + " orientationchange.lg.global" + this.lgId, function () {
