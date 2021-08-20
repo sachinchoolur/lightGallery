@@ -398,7 +398,7 @@ export class LightGallery {
             this.$toolbar.append(
                 `<a id="${this.getIdName(
                     'lg-download',
-                )}" target="_blank" aria-label="Download" download class="lg-download lg-icon"></a>`,
+                )}" target="_blank" rel="noopener" aria-label="Download" download class="lg-download lg-icon"></a>`,
             );
         }
 
