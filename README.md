@@ -8,7 +8,7 @@
 
 # lightGallery
 
-A customizable, modular, responsive, lightbox gallery plugin. No dependencies.\
+A customizable, modular, responsive, lightbox gallery plugin. No dependencies.\\
 Available for React.js, Angular, Vue.js, and typescript.
 
 ![lightgallery](https://www.lightgalleryjs.com/lightgallery-demo.png)
@@ -89,7 +89,7 @@ of the following method to download lightGallery
 
 #### Include CSS and Javascript files
 
-First of all, include lightgallery.css in the &lt;head&gt; of the document. If
+First of all, include lightgallery.css in the &lt;head> of the document. If
 you want include any lightGallery plugin such as thumbnails or zoom, you need to
 include respective css files as well.
 
@@ -173,12 +173,17 @@ Finally, you need to initiate the gallery by adding the following code.
     lightGallery(document.getElementById('lightgallery'), {
         plugins: [lgZoom, lgThumbnail],
         speed: 500,
+        licenseKey: 'your_license_key'
         ... other settings
     });
 </script>
 ```
 
 [CodePen Demos](https://codepen.io/collection/BNNjpR)
+
+#### License Key
+
+You'll receive a license key via email one you purchase a license [More info](https://www.lightgalleryjs.com/docs/settings/#licenseKey)
 
 #### Plugins
 

@@ -1,11 +1,8 @@
 ---
-title: 'Pricing'
-description: 'lightGallery commercial license options.'
-lead:
-    'lightGallery is a free and open-source library, however, if you are using
-    the library for business, commercial sites, projects, and applications,
-    choose the commercial license to keep your source proprietary, to yourself. '
-date: 2020-04-17T12:18:10+00:00
+title: Pricing
+description: lightGallery commercial license options.
+lead: 'lightGallery is a free and open-source library, however, if you are using the library for business, commercial sites, projects, and applications, choose the commercial license to keep your source proprietary, to yourself. '
+date: 2020-04-17T12:18:10.000Z
 draft: false
 images: []
 ---
@@ -133,6 +130,14 @@ images: []
                 <h4>All official plugins included</h4>
                 <p>Along with lightGallery, you get access to all lightGallery official plugins listed on the official website</p>
             </div>
+        </div>
+    </div>
+</div>
+<div class="container-xl pricing-section">
+    <div class="row justify-content-center pricing-points">
+        <div class="col-md-6">
+            <h2 class="align-center">Student discount </h2>
+            <p>If you are a student currently enrolled in a College or University, DM me on <a href="https://twitter.com/sachinchoolur">Twitter</a> to get a free license.</p>
         </div>
     </div>
 </div>
