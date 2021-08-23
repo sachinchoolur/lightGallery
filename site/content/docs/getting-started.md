@@ -1,17 +1,11 @@
 ---
-title: 'Get started'
-description:
-    'lightGallery is a lightweight, modular, JavaScript library for creating
-    beautiful image & video galleries for the web and the mobile.'
-lead:
-    'lightGallery is a lightweight, modular, JavaScript library for creating
-    beautiful image & video galleries for the web and the mobile.'
-date: 2020-10-06T08:48:57+00:00
+title: Get started
+description: lightGallery is a lightweight, modular, JavaScript library for creating beautiful image & video galleries for the web and the mobile.
+lead: lightGallery is a lightweight, modular, JavaScript library for creating beautiful image & video galleries for the web and the mobile.
+date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu:
-    docs:
-        parent: 'API Docs'
+menu: {docs: {parent: API Docs}}
 weight: 1
 toc: true
 ---
@@ -82,7 +76,7 @@ of the following method to download lightGallery
 
 #### Include CSS and Javascript files
 
-First of all, include lightgallery.css in the &lt;head&gt; of the document. If
+First of all, include lightgallery.css in the &lt;head> of the document. If
 you want include any lightGallery plugin such as thumbnails or zoom, you need to
 include respective css files as well.
 
@@ -165,6 +159,7 @@ Finally, you need to initiate the gallery by adding the following code.
 <script type="text/javascript">
     lightGallery(document.getElementById('lightgallery'), {
         plugins: [lgZoom, lgThumbnail],
+        licenseKey: 'your_license_key'
         speed: 500,
         ... other settings
     });
@@ -172,6 +167,10 @@ Finally, you need to initiate the gallery by adding the following code.
 ```
 
 [CodePen Demos](https://codepen.io/collection/BNNjpR)
+
+#### License Key
+
+You'll receive a license key via email one you purchase a license [More info](https://www.lightgalleryjs.com/docs/settings/#licenseKey)
 
 #### Plugins
 
@@ -201,3 +200,11 @@ option, your source code is kept proprietary.
 
 If you are creating an open source application under a license compatible with
 the GNU GPL license v3, you may use this project under the terms of the GPLv3.
+
+## Custom work
+
+If you need any help with customizing lightGallery, adding new features, create a new plugin, or need any other assistance that is beyond the scope of regular support, reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) with your requirements. We'll help you if we can or at least point you in the right direction.
+
+We try to build separate lightGallery plugins whenever possible for custom requirements so that you can easily upgrade to a newer version when available.
+
+Note: We charge $100 per hour.

@@ -61,3 +61,10 @@ ul.pricing-terms li {
         margin: 3rem 0 0.5rem;
     }
 }
+.license {
+    #paritybar {
+        .pb-powered {
+            display: none !important;
+        }
+    }
+}
