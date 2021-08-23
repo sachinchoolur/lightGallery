@@ -323,9 +323,10 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
 
 .lg-outer .lg-thumb-outer {
   background-color: #0d0a0a;
-  display: inline-block;
   width: 100%;
   max-height: 350px;
+  overflow: hidden;
+  float: left;
 }
 
 .lg-outer .lg-thumb-outer.lg-grab .lg-thumb-item {
@@ -1385,7 +1386,8 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   opacity: 1;
 }
 
-.lg-outer .lg-empty-html.lg-sub-html, .lg-outer .lg-empty-html .lg-sub-html {
+.lg-outer .lg-empty-html.lg-sub-html,
+.lg-outer .lg-empty-html .lg-sub-html {
   display: none;
 }
 
