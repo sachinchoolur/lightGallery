@@ -25,7 +25,7 @@ export interface ThumbnailsSettings {
     thumbWidth: number;
 
     /**
-     * Height of each thumbnails. Applicable only if animateThumb is false.
+     * Height of each thumbnails.
      */
     thumbHeight: string;
 
