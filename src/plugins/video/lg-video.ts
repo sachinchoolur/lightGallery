@@ -16,6 +16,7 @@
  * @ref Youtube
  * https://developers.google.com/youtube/player_parameters#enablejsapi
  * https://developers.google.com/youtube/iframe_api_reference
+ * https://developer.chrome.com/blog/autoplay/#iframe-delegation
  *
  */
 
@@ -198,7 +199,10 @@ export default class Video {
         if (videoInfo.youtube) {
             const videoId = 'lg-youtube' + index;
 
-            const youTubePlayerParams = `?wmode=opaque&autoplay=0&enablejsapi=1`;
+            const slideUrlParams = videoInfo.youtube[2]
+                ? videoInfo.youtube[2] + '&'
+                : '';
+            const youTubePlayerParams = `?${slideUrlParams}wmode=opaque&autoplay=0&mute=1&enablejsapi=1`;
 
             const playerParams =
                 youTubePlayerParams +
