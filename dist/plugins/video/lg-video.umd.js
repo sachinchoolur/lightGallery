@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0 | August 20th 2021
+ * lightgallery | 2.3.0-beta | August 29th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -97,6 +97,7 @@
      * @ref Youtube
      * https://developers.google.com/youtube/player_parameters#enablejsapi
      * https://developers.google.com/youtube/iframe_api_reference
+     * https://developer.chrome.com/blog/autoplay/#iframe-delegation
      *
      */
     function param(obj) {
@@ -125,10 +126,37 @@
                 var $el = _this.core.getSlideItem(_this.core.index);
                 _this.loadVideoOnPosterClick($el);
             });
+            this.core.LGel.on(lGEvents.slideItemLoad + ".video", this.onSlideItemLoad.bind(this));
             // @desc fired immediately before each slide transition.
             this.core.LGel.on(lGEvents.beforeSlide + ".video", this.onBeforeSlide.bind(this));
             // @desc fired immediately after each slide transition.
             this.core.LGel.on(lGEvents.afterSlide + ".video", this.onAfterSlide.bind(this));
+        };
+        /**
+         * @desc Event triggered when a slide is completely loaded
+         *
+         * @param {Event} event - lightGalley custom event
+         */
+        Video.prototype.onSlideItemLoad = function (event) {
+            var _this = this;
+            var _a = event.detail, isFirstSlide = _a.isFirstSlide, index = _a.index;
+            // Should check the active slide as well as user may have moved to different slide before the first slide is loaded
+            if (this.settings.autoplayFirstVideo &&
+                isFirstSlide &&
+                index === this.core.index) {
+                // Delay is just for the transition effect on video load
+                setTimeout(function () {
+                    var currentGalleryItem = _this.core.galleryItems[index];
+                    var poster = currentGalleryItem.poster;
+                    if (poster) {
+                        var $slide = _this.core.getSlideItem(index);
+                        _this.loadVideoOnPosterClick($slide);
+                    }
+                    else {
+                        _this.playVideo(index);
+                    }
+                }, 200);
+            }
         };
         /**
          * @desc Event triggered when video url or poster found
@@ -138,7 +166,7 @@
          * @param {Event} event - Javascript Event object.
          */
         Video.prototype.onHasVideo = function (event) {
-            var _a = event.detail, index = _a.index, src = _a.src, html5Video = _a.html5Video, hasPoster = _a.hasPoster, isFirstSlide = _a.isFirstSlide;
+            var _a = event.detail, index = _a.index, src = _a.src, html5Video = _a.html5Video, hasPoster = _a.hasPoster;
             if (!hasPoster) {
                 // All functions are called separately if poster exist in loadVideoOnPosterClick function
                 this.appendVideos(this.core.getSlideItem(index), {
@@ -149,15 +177,6 @@
                 });
                 // Automatically navigate to next slide once video reaches the end.
                 this.gotoNextSlideOnVideoEnd(src, index);
-            }
-            if (this.settings.autoplayFirstVideo && isFirstSlide) {
-                if (hasPoster) {
-                    var $slide = this.core.getSlideItem(index);
-                    this.loadVideoOnPosterClick($slide);
-                }
-                else {
-                    this.playVideo(index);
-                }
             }
         };
         /**
@@ -170,8 +189,10 @@
          * @param {number} index - Current index of the slide
          */
         Video.prototype.onBeforeSlide = function (event) {
-            var _a = event.detail, prevIndex = _a.prevIndex; _a.index;
-            this.pauseVideo(prevIndex);
+            if (this.core.lGalleryOn) {
+                var prevIndex = event.detail.prevIndex;
+                this.pauseVideo(prevIndex);
+            }
         };
         /**
          * @desc fired immediately after each slide transition.
@@ -180,11 +201,13 @@
          * @param {Event} event - Javascript Event object.
          * @param {number} prevIndex - Previous index of the slide.
          * @param {number} index - Current index of the slide
+         * @todo should check on onSlideLoad as well if video is not loaded on after slide
          */
         Video.prototype.onAfterSlide = function (event) {
             var _this = this;
-            var index = event.detail.index;
-            if (this.settings.autoplayVideoOnSlide && this.core.lGalleryOn) {
+            var _a = event.detail, index = _a.index, prevIndex = _a.prevIndex;
+            // Do not call on first slide
+            if (this.settings.autoplayVideoOnSlide && index !== prevIndex) {
                 setTimeout(function () {
                     var $slide = _this.core.getSlideItem(index);
                     if (!$slide.hasClass('lg-video-loaded')) {
@@ -220,7 +243,10 @@
             var commonIframeProps = "allowtransparency=\"true\"\n            frameborder=\"0\"\n            scrolling=\"no\"\n            allowfullscreen\n            mozallowfullscreen\n            webkitallowfullscreen\n            oallowfullscreen\n            msallowfullscreen";
             if (videoInfo.youtube) {
                 var videoId = 'lg-youtube' + index;
-                var youTubePlayerParams = "?wmode=opaque&autoplay=0&enablejsapi=1";
+                var slideUrlParams = videoInfo.youtube[2]
+                    ? videoInfo.youtube[2] + '&'
+                    : '';
+                var youTubePlayerParams = "?" + slideUrlParams + "wmode=opaque&autoplay=0&mute=1&enablejsapi=1";
                 var playerParams = youTubePlayerParams +
                     (this.settings.youTubePlayerParams
                         ? '&' + param(this.settings.youTubePlayerParams)
