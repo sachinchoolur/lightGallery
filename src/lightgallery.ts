@@ -422,7 +422,7 @@ export class LightGallery {
     refreshOnResize(): void {
         if (this.lgOpened) {
             const currentGalleryItem = this.galleryItems[this.index];
-            const videoInfo = currentGalleryItem.__slideVideoInfo;
+            const { __slideVideoInfo, poster } = currentGalleryItem;
 
             this.mediaContainerPosition = this.getMediaContainerPosition();
             const { top, bottom } = this.mediaContainerPosition;
@@ -430,9 +430,10 @@ export class LightGallery {
                 this.items[this.index],
                 this.outer,
                 top + bottom,
-                videoInfo && this.settings.videoMaxSize,
+                __slideVideoInfo && !poster,
+                __slideVideoInfo && this.settings.videoMaxSize,
             );
-            if (videoInfo) {
+            if (__slideVideoInfo) {
                 this.resizeVideoSlide(this.index, this.currentImageSize);
             }
             if (this.zoomFromOrigin && !this.isDummyImageRemoved) {
@@ -623,13 +624,14 @@ export class LightGallery {
         if (!this.settings.allowMediaOverlap) {
             this.setMediaContainerPosition(top, bottom);
         }
+        const { __slideVideoInfo, poster } = this.galleryItems[index];
         if (this.zoomFromOrigin && element) {
             this.currentImageSize = utils.getSize(
                 element,
                 this.outer,
                 top + bottom,
-                this.galleryItems[index].__slideVideoInfo &&
-                    this.settings.videoMaxSize,
+                __slideVideoInfo && !poster,
+                __slideVideoInfo && this.settings.videoMaxSize,
             );
             transform = utils.getTransform(
                 element,
@@ -962,11 +964,13 @@ export class LightGallery {
         delay: number,
         speed: number,
         dummyImageLoaded: boolean,
+        isFirstSlide: boolean,
     ): void {
         if (dummyImageLoaded) {
             this.LGel.trigger<SlideItemLoadDetail>(lGEvents.slideItemLoad, {
                 index,
                 delay: delay || 0,
+                isFirstSlide,
             });
         }
         $el.find('.lg-object')
@@ -978,6 +982,7 @@ export class LightGallery {
                     delay,
                     speed,
                     dummyImageLoaded,
+                    isFirstSlide,
                 );
             });
         setTimeout(() => {
@@ -997,6 +1002,7 @@ export class LightGallery {
         delay: number,
         speed: number,
         dummyImageLoaded: boolean,
+        isFirstSlide: boolean,
     ): void {
         setTimeout(() => {
             $el.addClass('lg-complete lg-complete_');
@@ -1004,6 +1010,7 @@ export class LightGallery {
                 this.LGel.trigger<SlideItemLoadDetail>(lGEvents.slideItemLoad, {
                     index,
                     delay: delay || 0,
+                    isFirstSlide,
                 });
             }
         }, speed);
@@ -1096,6 +1103,18 @@ export class LightGallery {
 
         const iframe = !!currentGalleryItem.iframe;
 
+        const isFirstSlide = !this.lGalleryOn;
+
+        // delay for adding complete class. it is 0 except first time.
+        let delay = 0;
+        if (isFirstSlide) {
+            if (this.zoomFromOrigin && this.currentImageSize) {
+                delay = this.settings.startAnimationDuration + 10;
+            } else {
+                delay = this.settings.backdropDuration + 10;
+            }
+        }
+
         if (!$currentSlide.hasClass('lg-loaded')) {
             if (videoInfo) {
                 const { top, bottom } = this.mediaContainerPosition;
@@ -1103,6 +1122,7 @@ export class LightGallery {
                     this.items[index],
                     this.outer,
                     top + bottom,
+                    false,
                     videoInfo && this.settings.videoMaxSize,
                 );
                 lgVideoStyle = this.getVideoContStyle(videoSize);
@@ -1117,9 +1137,8 @@ export class LightGallery {
                 $currentSlide.prepend(markup);
             } else if (poster) {
                 let dummyImg = '';
-                const isFirstSlide = !this.lGalleryOn;
                 const hasStartAnimation =
-                    !this.lGalleryOn &&
+                    isFirstSlide &&
                     this.zoomFromOrigin &&
                     this.currentImageSize;
                 if (hasStartAnimation) {
@@ -1137,34 +1156,24 @@ export class LightGallery {
                     videoInfo,
                 );
                 $currentSlide.prepend(markup);
-                const delay =
-                    (hasStartAnimation
-                        ? this.settings.startAnimationDuration
-                        : this.settings.backdropDuration) + 100;
-                setTimeout(() => {
-                    this.LGel.trigger(lGEvents.hasVideo, {
-                        index,
-                        src: src,
-                        html5Video: _html5Video,
-                        hasPoster: true,
-                        isFirstSlide,
-                    });
-                }, delay);
             } else if (videoInfo) {
                 const markup = `<div class="lg-video-cont " style="${lgVideoStyle}"></div>`;
                 $currentSlide.prepend(markup);
-                this.LGel.trigger(lGEvents.hasVideo, {
-                    index,
-                    src: src,
-                    html5Video: _html5Video,
-                    hasPoster: false,
-                });
             } else {
                 this.setImgMarkup(src as string, $currentSlide, index);
                 if (srcset || sources) {
                     const $img = $currentSlide.find('.lg-object');
                     this.initPictureFill($img);
                 }
+            }
+            if (poster || videoInfo) {
+                this.LGel.trigger(lGEvents.hasVideo, {
+                    index,
+                    src: src,
+                    html5Video: _html5Video,
+                    hasPoster: !!poster,
+                    isFirstSlide,
+                });
             }
 
             this.LGel.trigger<AfterAppendSlideEventDetail>(
@@ -1182,16 +1191,6 @@ export class LightGallery {
 
         // For first time add some delay for displaying the start animation.
         let _speed = 0;
-
-        // delay for adding complete class. it is 0 except first time.
-        let delay = 0;
-        if (!this.lGalleryOn) {
-            if (this.zoomFromOrigin && this.currentImageSize) {
-                delay = this.settings.startAnimationDuration + 10;
-            } else {
-                delay = this.settings.backdropDuration + 10;
-            }
-        }
 
         // Do not change the delay value because it is required for zoom plugin.
         // If gallery opened from direct url (hash) speed value should be 0
@@ -1230,6 +1229,7 @@ export class LightGallery {
                         delay,
                         _speed,
                         true,
+                        true,
                     );
                     const mediaObject = $currentSlide
                         .find('.lg-object')
@@ -1255,7 +1255,15 @@ export class LightGallery {
 
         // SLide content has been added to dom
         $currentSlide.addClass('lg-loaded');
-        this.onLgObjectLoad($currentSlide, index, delay, _speed, false);
+
+        this.onLgObjectLoad(
+            $currentSlide,
+            index,
+            delay,
+            _speed,
+            false,
+            isFirstSlide,
+        );
 
         // @todo check load state for html5 videos
         if (videoInfo && videoInfo.html5 && !poster) {
@@ -1533,6 +1541,7 @@ export class LightGallery {
                     this.items[index],
                     this.outer,
                     top + bottom,
+                    false,
                     videoInfo && this.settings.videoMaxSize,
                 );
                 this.resizeVideoSlide(index, videoSize);
@@ -2226,12 +2235,13 @@ export class LightGallery {
         let transform: string | undefined;
         if (this.zoomFromOrigin && currentItem) {
             const { top, bottom } = this.mediaContainerPosition;
+            const { __slideVideoInfo, poster } = this.galleryItems[this.index];
             const imageSize = utils.getSize(
                 currentItem,
                 this.outer,
                 top + bottom,
-                this.galleryItems[this.index].__slideVideoInfo &&
-                    this.settings.videoMaxSize,
+                __slideVideoInfo && !poster,
+                __slideVideoInfo && poster && this.settings.videoMaxSize,
             );
             transform = utils.getTransform(
                 currentItem,

@@ -241,16 +241,18 @@ const utils = {
     /**
      * get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
      */
+    // @todo improive this
     getSize(
         el: HTMLElement,
         container: lgQuery,
         spacing = 0,
+        isDisabled: boolean | undefined,
         defaultLgSize?: string,
     ): ImageSize | undefined {
         const LGel = $LG(el);
         let lgSize = LGel.attr('data-lg-size') || defaultLgSize;
 
-        if (!lgSize) {
+        if (!lgSize || isDisabled) {
             return;
         }
 

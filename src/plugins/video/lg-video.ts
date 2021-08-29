@@ -23,7 +23,11 @@
 import { VideoSettings, videoSettings } from './lg-video-settings';
 import { LightGallery } from '../../lightgallery';
 import { lgQuery } from '../../lgQuery';
-import { CustomEventHasVideo } from '../../types';
+import {
+    CustomEventAfterSlide,
+    CustomEventHasVideo,
+    CustomEventSlideItemLoad,
+} from '../../types';
 import { lGEvents } from '../../lg-events';
 import { VideoSource } from './types';
 
@@ -69,6 +73,10 @@ export default class Video {
             const $el = this.core.getSlideItem(this.core.index);
             this.loadVideoOnPosterClick($el);
         });
+        this.core.LGel.on(
+            `${lGEvents.slideItemLoad}.video`,
+            this.onSlideItemLoad.bind(this),
+        );
 
         // @desc fired immediately before each slide transition.
         this.core.LGel.on(
@@ -84,6 +92,34 @@ export default class Video {
     }
 
     /**
+     * @desc Event triggered when a slide is completely loaded
+     *
+     * @param {Event} event - lightGalley custom event
+     */
+    onSlideItemLoad(event: CustomEventSlideItemLoad): void {
+        const { isFirstSlide, index } = event.detail;
+
+        // Should check the active slide as well as user may have moved to different slide before the first slide is loaded
+        if (
+            this.settings.autoplayFirstVideo &&
+            isFirstSlide &&
+            index === this.core.index
+        ) {
+            // Delay is just for the transition effect on video load
+            setTimeout(() => {
+                const currentGalleryItem = this.core.galleryItems[index];
+                const { poster } = currentGalleryItem;
+                if (poster) {
+                    const $slide = this.core.getSlideItem(index);
+                    this.loadVideoOnPosterClick($slide);
+                } else {
+                    this.playVideo(index);
+                }
+            }, 200);
+        }
+    }
+
+    /**
      * @desc Event triggered when video url or poster found
      * Append video HTML is poster is not given
      * Play if autoplayFirstVideo is true
@@ -91,13 +127,7 @@ export default class Video {
      * @param {Event} event - Javascript Event object.
      */
     onHasVideo(event: CustomEventHasVideo): void {
-        const {
-            index,
-            src,
-            html5Video,
-            hasPoster,
-            isFirstSlide,
-        } = event.detail;
+        const { index, src, html5Video, hasPoster } = event.detail;
         if (!hasPoster) {
             // All functions are called separately if poster exist in loadVideoOnPosterClick function
 
@@ -111,15 +141,6 @@ export default class Video {
             // Automatically navigate to next slide once video reaches the end.
             this.gotoNextSlideOnVideoEnd(src, index);
         }
-
-        if (this.settings.autoplayFirstVideo && isFirstSlide) {
-            if (hasPoster) {
-                const $slide = this.core.getSlideItem(index);
-                this.loadVideoOnPosterClick($slide);
-            } else {
-                this.playVideo(index);
-            }
-        }
     }
 
     /**
@@ -131,9 +152,11 @@ export default class Video {
      * @param {number} prevIndex - Previous index of the slide.
      * @param {number} index - Current index of the slide
      */
-    onBeforeSlide(event: CustomEvent) {
-        const { prevIndex, index } = event.detail;
-        this.pauseVideo(prevIndex);
+    onBeforeSlide(event: CustomEvent): void {
+        if (this.core.lGalleryOn) {
+            const { prevIndex } = event.detail;
+            this.pauseVideo(prevIndex);
+        }
     }
 
     /**
@@ -143,10 +166,12 @@ export default class Video {
      * @param {Event} event - Javascript Event object.
      * @param {number} prevIndex - Previous index of the slide.
      * @param {number} index - Current index of the slide
+     * @todo should check on onSlideLoad as well if video is not loaded on after slide
      */
-    onAfterSlide(event: CustomEvent): void {
-        const { index } = event.detail;
-        if (this.settings.autoplayVideoOnSlide && this.core.lGalleryOn) {
+    onAfterSlide(event: CustomEventAfterSlide): void {
+        const { index, prevIndex } = event.detail;
+        // Do not call on first slide
+        if (this.settings.autoplayVideoOnSlide && index !== prevIndex) {
             setTimeout(() => {
                 const $slide = this.core.getSlideItem(index);
                 if (!$slide.hasClass('lg-video-loaded')) {

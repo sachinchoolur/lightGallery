@@ -1,4 +1,8 @@
-import { HasVideoDetail } from './lg-events';
+import {
+    AfterSlideDetail,
+    HasVideoDetail,
+    SlideItemLoadDetail,
+} from './lg-events';
 import { LightGallerySettings } from './lg-settings';
 import { $LG } from './lgQuery';
 import { LightGallery } from './lightgallery';
@@ -20,6 +24,12 @@ export interface Coordinates {
 }
 export interface CustomEventHasVideo extends CustomEvent {
     detail: HasVideoDetail;
+}
+export interface CustomEventSlideItemLoad extends CustomEvent {
+    detail: SlideItemLoadDetail;
+}
+export interface CustomEventAfterSlide extends CustomEvent {
+    detail: AfterSlideDetail;
 }
 
 export type SlideDirection = 'next' | 'prev';
