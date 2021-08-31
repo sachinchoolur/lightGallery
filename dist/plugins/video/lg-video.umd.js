@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.3.0-beta | August 29th 2021
+ * lightgallery | 2.3.0-beta.1 | August 31st 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -256,11 +256,13 @@
             else if (videoInfo.vimeo) {
                 var videoId = 'lg-vimeo' + index;
                 var playerParams = param(this.settings.vimeoPlayerParams);
+                playerParams = playerParams ? '?' + playerParams : '';
                 video = "<iframe allow=\"autoplay\" id=" + videoId + " class=\"lg-video-object lg-vimeo " + addClass + "\" " + videoTitle + " src=\"//player.vimeo.com/video/" + (videoInfo.vimeo[1] + playerParams) + "\" " + commonIframeProps + "></iframe>";
             }
             else if (videoInfo.wistia) {
                 var wistiaId = 'lg-wistia' + index;
                 var playerParams = param(this.settings.wistiaPlayerParams);
+                playerParams = playerParams ? '?' + playerParams : '';
                 video = "<iframe allow=\"autoplay\" id=\"" + wistiaId + "\" src=\"//fast.wistia.net/embed/iframe/" + (videoInfo.wistia[4] + playerParams) + "\" " + videoTitle + " class=\"wistia_embed lg-video-object lg-wistia " + addClass + "\" name=\"wistia_embed\" " + commonIframeProps + "></iframe>";
             }
             else if (videoInfo.html5) {
