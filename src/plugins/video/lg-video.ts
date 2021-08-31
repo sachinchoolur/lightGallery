@@ -240,14 +240,15 @@ export default class Video {
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.vimeo) {
             const videoId = 'lg-vimeo' + index;
-            const playerParams = param(this.settings.vimeoPlayerParams);
-
+            let playerParams = param(this.settings.vimeoPlayerParams);
+            playerParams = playerParams ? '?' + playerParams : '';
             video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-vimeo ${addClass}" ${videoTitle} src="//player.vimeo.com/video/${
                 videoInfo.vimeo[1] + playerParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.wistia) {
             const wistiaId = 'lg-wistia' + index;
-            const playerParams = param(this.settings.wistiaPlayerParams);
+            let playerParams = param(this.settings.wistiaPlayerParams);
+            playerParams = playerParams ? '?' + playerParams : '';
             video = `<iframe allow="autoplay" id="${wistiaId}" src="//fast.wistia.net/embed/iframe/${
                 videoInfo.wistia[4] + playerParams
             }" ${videoTitle} class="wistia_embed lg-video-object lg-wistia ${addClass}" name="wistia_embed" ${commonIframeProps}></iframe>`;
