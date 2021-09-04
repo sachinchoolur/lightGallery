@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.0 | August 20th 2021
+ * lightgallery | 2.2.1 | September 4th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -388,9 +388,8 @@ var Zoom = /** @class */ (function () {
      */
     Zoom.prototype.setActualSize = function (index, event) {
         var _this = this;
-        var currentItem = this.core.galleryItems[this.core.index];
         // Allow zoom only on image
-        if (!currentItem.src ||
+        if (!this.isImageSlide() ||
             this.core.outer.hasClass('lg-first-slide-loading')) {
             return;
         }
@@ -568,9 +567,8 @@ var Zoom = /** @class */ (function () {
         this.positionChanged = false;
     };
     Zoom.prototype.zoomIn = function (scale) {
-        var currentItem = this.core.galleryItems[this.core.index];
         // Allow zoom only on image
-        if (!currentItem.src) {
+        if (!this.isImageSlide()) {
             return;
         }
         if (scale) {
@@ -613,6 +611,9 @@ var Zoom = /** @class */ (function () {
         var $item = this.core.getSlideItem(this.core.index);
         this.core.$inner.on('touchstart.lg', function (e) {
             $item = _this.core.getSlideItem(_this.core.index);
+            if (!_this.isImageSlide()) {
+                return;
+            }
             if (e.targetTouches.length === 2 &&
                 !_this.core.outer.hasClass('lg-first-slide-loading') &&
                 (_this.$LG(e.target).hasClass('lg-item') ||
@@ -806,9 +807,8 @@ var Zoom = /** @class */ (function () {
         var _LGel;
         var $item = this.core.getSlideItem(this.core.index);
         this.core.$inner.on('touchstart.lg', function (e) {
-            var currentItem = _this.core.galleryItems[_this.core.index];
             // Allow zoom only on image
-            if (!currentItem.src) {
+            if (!_this.isImageSlide()) {
                 return;
             }
             $item = _this.core.getSlideItem(_this.core.index);
@@ -881,9 +881,8 @@ var Zoom = /** @class */ (function () {
         var possibleSwipeCords;
         var _LGel;
         this.core.outer.on('mousedown.lg.zoom', function (e) {
-            var currentItem = _this.core.galleryItems[_this.core.index];
             // Allow zoom only on image
-            if (!currentItem.src) {
+            if (!_this.isImageSlide()) {
                 return;
             }
             var $item = _this.core.getSlideItem(_this.core.index);
