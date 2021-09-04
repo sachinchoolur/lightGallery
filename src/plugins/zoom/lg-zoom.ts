@@ -434,10 +434,9 @@ export default class Zoom {
      * @param event - event will be available only if the function is called on clicking/taping the imags
      */
     setActualSize(index: number, event?: ZoomTouchEvent): void {
-        const currentItem = this.core.galleryItems[this.core.index];
         // Allow zoom only on image
         if (
-            !currentItem.src ||
+            !this.isImageSlide() ||
             this.core.outer.hasClass('lg-first-slide-loading')
         ) {
             return;
@@ -644,9 +643,8 @@ export default class Zoom {
     }
 
     zoomIn(scale?: number): void {
-        const currentItem = this.core.galleryItems[this.core.index];
         // Allow zoom only on image
-        if (!currentItem.src) {
+        if (!this.isImageSlide()) {
             return;
         }
         if (scale) {
@@ -698,6 +696,9 @@ export default class Zoom {
 
         this.core.$inner.on('touchstart.lg', (e) => {
             $item = this.core.getSlideItem(this.core.index);
+            if (!this.isImageSlide()) {
+                return;
+            }
             if (
                 e.targetTouches.length === 2 &&
                 !this.core.outer.hasClass('lg-first-slide-loading') &&
@@ -983,9 +984,8 @@ export default class Zoom {
         let $item = this.core.getSlideItem(this.core.index);
 
         this.core.$inner.on('touchstart.lg', (e) => {
-            const currentItem = this.core.galleryItems[this.core.index];
             // Allow zoom only on image
-            if (!currentItem.src) {
+            if (!this.isImageSlide()) {
                 return;
             }
             $item = this.core.getSlideItem(this.core.index);
@@ -1103,9 +1103,8 @@ export default class Zoom {
         let _LGel: lgQuery;
 
         this.core.outer.on('mousedown.lg.zoom', (e) => {
-            const currentItem = this.core.galleryItems[this.core.index];
             // Allow zoom only on image
-            if (!currentItem.src) {
+            if (!this.isImageSlide()) {
                 return;
             }
             const $item = this.core.getSlideItem(this.core.index);
