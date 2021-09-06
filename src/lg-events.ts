@@ -291,9 +291,4 @@ export interface HasVideoDetail {
      * True if video has poster
      */
     hasPoster: boolean;
-
-    /**
-     * True for first slide
-     */
-    isFirstSlide: boolean;
 }

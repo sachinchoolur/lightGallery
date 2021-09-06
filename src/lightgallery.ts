@@ -422,7 +422,7 @@ export class LightGallery {
     refreshOnResize(): void {
         if (this.lgOpened) {
             const currentGalleryItem = this.galleryItems[this.index];
-            const { __slideVideoInfo, poster } = currentGalleryItem;
+            const { __slideVideoInfo } = currentGalleryItem;
 
             this.mediaContainerPosition = this.getMediaContainerPosition();
             const { top, bottom } = this.mediaContainerPosition;
@@ -430,7 +430,6 @@ export class LightGallery {
                 this.items[this.index],
                 this.outer,
                 top + bottom,
-                __slideVideoInfo && !poster,
                 __slideVideoInfo && this.settings.videoMaxSize,
             );
             if (__slideVideoInfo) {
@@ -624,13 +623,12 @@ export class LightGallery {
         if (!this.settings.allowMediaOverlap) {
             this.setMediaContainerPosition(top, bottom);
         }
-        const { __slideVideoInfo, poster } = this.galleryItems[index];
+        const { __slideVideoInfo } = this.galleryItems[index];
         if (this.zoomFromOrigin && element) {
             this.currentImageSize = utils.getSize(
                 element,
                 this.outer,
                 top + bottom,
-                __slideVideoInfo && !poster,
                 __slideVideoInfo && this.settings.videoMaxSize,
             );
             transform = utils.getTransform(
@@ -938,7 +936,7 @@ export class LightGallery {
         let imgContent = '';
         const altAttr = alt ? 'alt="' + alt + '"' : '';
 
-        if (!this.lGalleryOn && this.zoomFromOrigin && this.currentImageSize) {
+        if (this.isFirstSlideWithZoomAnimation()) {
             imgContent = this.getDummyImageContent(
                 $currentSlide,
                 index,
@@ -958,62 +956,63 @@ export class LightGallery {
         $currentSlide.prepend(imgMarkup);
     }
 
+    onSlideObjectLoad(
+        $slide: lgQuery,
+        onLoad: () => void,
+        onError: () => void,
+    ): void {
+        const mediaObject = $slide.find('.lg-object').first();
+        if (utils.isImageLoaded(mediaObject.get() as HTMLImageElement)) {
+            onLoad();
+        } else {
+            mediaObject.on('load.lg error.lg', () => {
+                onLoad && onLoad();
+            });
+            mediaObject.on('error.lg', () => {
+                onError && onError();
+            });
+        }
+    }
+
+    /**
+     *
+     * @param $el Current slide item
+     * @param index
+     * @param delay Delay is 0 except first time
+     * @param speed Speed is same as delay, except it is 0 if gallery is opened via hash plugin
+     * @param isFirstSlide
+     */
     onLgObjectLoad(
         $el: lgQuery,
         index: number,
         delay: number,
         speed: number,
-        dummyImageLoaded: boolean,
         isFirstSlide: boolean,
     ): void {
-        if (dummyImageLoaded) {
-            this.LGel.trigger<SlideItemLoadDetail>(lGEvents.slideItemLoad, {
-                index,
-                delay: delay || 0,
-                isFirstSlide,
-            });
-        }
-        $el.find('.lg-object')
-            .first()
-            .on('load.lg', () => {
-                this.handleLgObjectLoad(
-                    $el,
-                    index,
-                    delay,
-                    speed,
-                    dummyImageLoaded,
-                    isFirstSlide,
-                );
-            });
-        setTimeout(() => {
-            $el.find('.lg-object')
-                .first()
-                .on('error.lg', () => {
+        this.onSlideObjectLoad(
+            $el,
+            () => {
+                setTimeout(() => {
+                    $el.addClass('lg-complete lg-complete_');
+                    this.LGel.trigger<SlideItemLoadDetail>(
+                        lGEvents.slideItemLoad,
+                        {
+                            index,
+                            delay: delay || 0,
+                            isFirstSlide,
+                        },
+                    );
+                }, speed);
+            },
+            () => {
+                setTimeout(() => {
                     $el.addClass('lg-complete lg-complete_');
                     $el.html(
                         '<span class="lg-error-msg">Oops... Failed to load content...</span>',
                     );
-                });
-        }, speed);
-    }
-    handleLgObjectLoad(
-        $el: lgQuery,
-        index: number,
-        delay: number,
-        speed: number,
-        dummyImageLoaded: boolean,
-        isFirstSlide: boolean,
-    ): void {
-        setTimeout(() => {
-            $el.addClass('lg-complete lg-complete_');
-            if (!dummyImageLoaded) {
-                this.LGel.trigger<SlideItemLoadDetail>(lGEvents.slideItemLoad, {
-                    index,
-                    delay: delay || 0,
-                    isFirstSlide,
-                });
-            }
-        }, speed);
+                }, speed);
+            },
+        );
     }
 
     /**
@@ -1063,6 +1062,14 @@ export class LightGallery {
                 wistia,
             };
         }
+    }
+
+    isFirstSlideWithZoomAnimation(): boolean {
+        return !!(
+            !this.lGalleryOn &&
+            this.zoomFromOrigin &&
+            this.currentImageSize
+        );
     }
 
     // Add video slideInfo
@@ -1122,7 +1129,6 @@ export class LightGallery {
                     this.items[index],
                     this.outer,
                     top + bottom,
-                    false,
                     videoInfo && this.settings.videoMaxSize,
                 );
                 lgVideoStyle = this.getVideoContStyle(videoSize);
@@ -1172,7 +1178,6 @@ export class LightGallery {
                     src: src,
                     html5Video: _html5Video,
                     hasPoster: !!poster,
-                    isFirstSlide,
                 });
             }
 
@@ -1198,8 +1203,8 @@ export class LightGallery {
             _speed = delay;
         }
 
-        // Only for first slide
-        if (!this.lGalleryOn && this.zoomFromOrigin && this.currentImageSize) {
+        // Only for first slide and zoomFromOrigin is enabled
+        if (this.isFirstSlideWithZoomAnimation()) {
             setTimeout(() => {
                 $currentSlide
                     .removeClass('lg-start-end-progress lg-start-progress')
@@ -1229,26 +1234,25 @@ export class LightGallery {
                         delay,
                         _speed,
                         true,
-                        true,
                     );
-                    const mediaObject = $currentSlide
-                        .find('.lg-object')
-                        .first();
-                    if (
-                        utils.isImageLoaded(
-                            mediaObject.get() as HTMLImageElement,
-                        )
-                    ) {
-                        this.loadContentOnLoad(index, $currentSlide, _speed);
-                    } else {
-                        mediaObject.on('load.lg error.lg', () => {
-                            this.loadContentOnLoad(
+
+                    this.onSlideObjectLoad(
+                        $currentSlide,
+                        () => {
+                            this.loadContentOnFirstSlideLoad(
                                 index,
                                 $currentSlide,
                                 _speed,
                             );
-                        });
-                    }
+                        },
+                        () => {
+                            this.loadContentOnFirstSlideLoad(
+                                index,
+                                $currentSlide,
+                                _speed,
+                            );
+                        },
+                    );
                 }, this.settings.startAnimationDuration + 100);
             }
         }
@@ -1256,14 +1260,15 @@ export class LightGallery {
         // SLide content has been added to dom
         $currentSlide.addClass('lg-loaded');
 
-        this.onLgObjectLoad(
-            $currentSlide,
-            index,
-            delay,
-            _speed,
-            false,
-            isFirstSlide,
-        );
+        if (!this.isFirstSlideWithZoomAnimation()) {
+            this.onLgObjectLoad(
+                $currentSlide,
+                index,
+                delay,
+                _speed,
+                isFirstSlide,
+            );
+        }
 
         // @todo check load state for html5 videos
         if (videoInfo && videoInfo.html5 && !poster) {
@@ -1299,7 +1304,14 @@ export class LightGallery {
         }
     }
 
-    loadContentOnLoad(
+    /**
+     * @desc Remove dummy image content and load next slides
+     * Called only for the first time if zoomFromOrigin animation is enabled
+     * @param index
+     * @param $currentSlide
+     * @param speed
+     */
+    loadContentOnFirstSlideLoad(
         index: number,
         $currentSlide: lgQuery,
         speed: number,
@@ -1541,7 +1553,6 @@ export class LightGallery {
                     this.items[index],
                     this.outer,
                     top + bottom,
-                    false,
                     videoInfo && this.settings.videoMaxSize,
                 );
                 this.resizeVideoSlide(index, videoSize);
@@ -1613,17 +1624,15 @@ export class LightGallery {
             // Do not put load content in set timeout as it needs to load immediately when the gallery is opened
             if (!this.lGalleryOn) {
                 this.loadContent(index, true);
-            }
-
-            setTimeout(() => {
-                if (this.lGalleryOn) {
+            } else {
+                setTimeout(() => {
                     this.loadContent(index, true);
-                }
-                // Add title if this.settings.appendSubHtmlTo === lg-sub-html
-                if (this.settings.appendSubHtmlTo !== '.lg-item') {
-                    this.addHtml(index);
-                }
-            }, (this.lGalleryOn ? this.settings.speed + 50 : 50) + (fromTouch ? 0 : this.settings.slideDelay));
+                    // Add title if this.settings.appendSubHtmlTo === lg-sub-html
+                    if (this.settings.appendSubHtmlTo !== '.lg-item') {
+                        this.addHtml(index);
+                    }
+                }, this.settings.speed + 50 + (fromTouch ? 0 : this.settings.slideDelay));
+            }
 
             setTimeout(() => {
                 this.lgBusy = false;
@@ -2240,7 +2249,6 @@ export class LightGallery {
                 currentItem,
                 this.outer,
                 top + bottom,
-                __slideVideoInfo && !poster,
                 __slideVideoInfo && poster && this.settings.videoMaxSize,
             );
             transform = utils.getTransform(
