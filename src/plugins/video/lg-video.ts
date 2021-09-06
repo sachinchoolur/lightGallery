@@ -107,15 +107,17 @@ export default class Video {
         ) {
             // Delay is just for the transition effect on video load
             setTimeout(() => {
-                const currentGalleryItem = this.core.galleryItems[index];
-                const { poster } = currentGalleryItem;
-                if (poster) {
-                    const $slide = this.core.getSlideItem(index);
-                    this.loadVideoOnPosterClick($slide);
-                } else {
-                    this.playVideo(index);
-                }
+                this.loadAndPlayVideo(index);
             }, 200);
+        }
+
+        // Should not call on first slide. should check only if the slide is active
+        if (
+            !isFirstSlide &&
+            this.settings.autoplayVideoOnSlide &&
+            index === this.core.index
+        ) {
+            this.loadAndPlayVideo(index);
         }
     }
 
@@ -171,15 +173,23 @@ export default class Video {
     onAfterSlide(event: CustomEventAfterSlide): void {
         const { index, prevIndex } = event.detail;
         // Do not call on first slide
+        const $slide = this.core.getSlideItem(index);
         if (this.settings.autoplayVideoOnSlide && index !== prevIndex) {
-            setTimeout(() => {
-                const $slide = this.core.getSlideItem(index);
-                if (!$slide.hasClass('lg-video-loaded')) {
-                    this.loadVideoOnPosterClick($slide);
-                } else {
-                    this.playVideo(index);
-                }
-            }, 100);
+            if ($slide.hasClass('lg-complete')) {
+                setTimeout(() => {
+                    this.loadAndPlayVideo(index);
+                }, 100);
+            }
+        }
+    }
+
+    loadAndPlayVideo(index: number): void {
+        const $slide = this.core.getSlideItem(index);
+        const currentGalleryItem = this.core.galleryItems[index];
+        if (currentGalleryItem.poster) {
+            this.loadVideoOnPosterClick($slide, true);
+        } else {
+            this.playVideo(index);
         }
     }
 
@@ -432,7 +442,7 @@ export default class Video {
         }
     }
 
-    loadVideoOnPosterClick($el: lgQuery): void {
+    loadVideoOnPosterClick($el: lgQuery, forcePlay?: boolean): void {
         // check slide has poster
         if (!$el.hasClass('lg-video-loaded')) {
             // check already video element present
@@ -486,6 +496,8 @@ export default class Video {
             } else {
                 this.playVideo(this.core.index);
             }
+        } else if (forcePlay) {
+            this.playVideo(this.core.index);
         }
     }
     onVideoLoadAfterPosterClick($el: lgQuery, index: number): void {

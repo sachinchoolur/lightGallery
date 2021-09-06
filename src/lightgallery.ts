@@ -958,11 +958,15 @@ export class LightGallery {
 
     onSlideObjectLoad(
         $slide: lgQuery,
+        isHTML5VideoWithoutPoster: boolean,
         onLoad: () => void,
         onError: () => void,
     ): void {
         const mediaObject = $slide.find('.lg-object').first();
-        if (utils.isImageLoaded(mediaObject.get() as HTMLImageElement)) {
+        if (
+            utils.isImageLoaded(mediaObject.get() as HTMLImageElement) ||
+            isHTML5VideoWithoutPoster
+        ) {
             onLoad();
         } else {
             mediaObject.on('load.lg error.lg', () => {
@@ -983,36 +987,59 @@ export class LightGallery {
      * @param isFirstSlide
      */
     onLgObjectLoad(
-        $el: lgQuery,
+        currentSlide: lgQuery,
+        index: number,
+        delay: number,
+        speed: number,
+        isFirstSlide: boolean,
+        isHTML5VideoWithoutPoster: boolean,
+    ): void {
+        this.onSlideObjectLoad(
+            currentSlide,
+            isHTML5VideoWithoutPoster,
+            () => {
+                this.triggerSlideItemLoad(
+                    currentSlide,
+                    index,
+                    delay,
+                    speed,
+                    isFirstSlide,
+                );
+            },
+            () => {
+                currentSlide.addClass('lg-complete lg-complete_');
+                currentSlide.html(
+                    '<span class="lg-error-msg">Oops... Failed to load content...</span>',
+                );
+            },
+        );
+    }
+
+    triggerSlideItemLoad(
+        $currentSlide: lgQuery,
         index: number,
         delay: number,
         speed: number,
         isFirstSlide: boolean,
     ): void {
-        this.onSlideObjectLoad(
-            $el,
-            () => {
-                setTimeout(() => {
-                    $el.addClass('lg-complete lg-complete_');
-                    this.LGel.trigger<SlideItemLoadDetail>(
-                        lGEvents.slideItemLoad,
-                        {
-                            index,
-                            delay: delay || 0,
-                            isFirstSlide,
-                        },
-                    );
-                }, speed);
-            },
-            () => {
-                setTimeout(() => {
-                    $el.addClass('lg-complete lg-complete_');
-                    $el.html(
-                        '<span class="lg-error-msg">Oops... Failed to load content...</span>',
-                    );
-                }, speed);
-            },
-        );
+        const currentGalleryItem = this.galleryItems[index];
+
+        // Adding delay for video slides without poster for better performance and user experience
+        // Videos should start playing once once the gallery is completely loaded
+        const _speed =
+            isFirstSlide &&
+            this.getSlideType(currentGalleryItem) === 'video' &&
+            !currentGalleryItem.poster
+                ? speed
+                : 0;
+        setTimeout(() => {
+            $currentSlide.addClass('lg-complete lg-complete_');
+            this.LGel.trigger<SlideItemLoadDetail>(lGEvents.slideItemLoad, {
+                index,
+                delay: delay || 0,
+                isFirstSlide,
+            });
+        }, _speed);
     }
 
     /**
@@ -1212,47 +1239,58 @@ export class LightGallery {
             }, this.settings.startAnimationDuration + 100);
             if (!$currentSlide.hasClass('lg-loaded')) {
                 setTimeout(() => {
-                    $currentSlide
-                        .find('.lg-img-wrap')
-                        .append(
-                            utils.getImgMarkup(
-                                index,
-                                src as string,
-                                '',
-                                srcset,
-                                sizes,
-                                currentGalleryItem.sources,
-                            ),
-                        );
-                    if (srcset || sources) {
-                        const $img = $currentSlide.find('.lg-object');
-                        this.initPictureFill($img);
+                    if (this.getSlideType(currentGalleryItem) === 'image') {
+                        $currentSlide
+                            .find('.lg-img-wrap')
+                            .append(
+                                utils.getImgMarkup(
+                                    index,
+                                    src as string,
+                                    '',
+                                    srcset,
+                                    sizes,
+                                    currentGalleryItem.sources,
+                                ),
+                            );
+                        if (srcset || sources) {
+                            const $img = $currentSlide.find('.lg-object');
+                            this.initPictureFill($img);
+                        }
                     }
-                    this.onLgObjectLoad(
-                        $currentSlide,
-                        index,
-                        delay,
-                        _speed,
-                        true,
-                    );
+                    if (
+                        this.getSlideType(currentGalleryItem) === 'image' ||
+                        (this.getSlideType(currentGalleryItem) === 'video' &&
+                            poster)
+                    ) {
+                        this.onLgObjectLoad(
+                            $currentSlide,
+                            index,
+                            delay,
+                            _speed,
+                            true,
+                            false,
+                        );
 
-                    this.onSlideObjectLoad(
-                        $currentSlide,
-                        () => {
-                            this.loadContentOnFirstSlideLoad(
-                                index,
-                                $currentSlide,
-                                _speed,
-                            );
-                        },
-                        () => {
-                            this.loadContentOnFirstSlideLoad(
-                                index,
-                                $currentSlide,
-                                _speed,
-                            );
-                        },
-                    );
+                        // load remaining slides once the slide is completely loaded
+                        this.onSlideObjectLoad(
+                            $currentSlide,
+                            !!(videoInfo && videoInfo.html5 && !poster),
+                            () => {
+                                this.loadContentOnFirstSlideLoad(
+                                    index,
+                                    $currentSlide,
+                                    _speed,
+                                );
+                            },
+                            () => {
+                                this.loadContentOnFirstSlideLoad(
+                                    index,
+                                    $currentSlide,
+                                    _speed,
+                                );
+                            },
+                        );
+                    }
                 }, this.settings.startAnimationDuration + 100);
             }
         }
@@ -1260,19 +1298,18 @@ export class LightGallery {
         // SLide content has been added to dom
         $currentSlide.addClass('lg-loaded');
 
-        if (!this.isFirstSlideWithZoomAnimation()) {
+        if (
+            !this.isFirstSlideWithZoomAnimation() ||
+            (this.getSlideType(currentGalleryItem) === 'video' && !poster)
+        ) {
             this.onLgObjectLoad(
                 $currentSlide,
                 index,
                 delay,
                 _speed,
                 isFirstSlide,
+                !!(videoInfo && videoInfo.html5 && !poster),
             );
-        }
-
-        // @todo check load state for html5 videos
-        if (videoInfo && videoInfo.html5 && !poster) {
-            $currentSlide.addClass('lg-complete lg-complete_');
         }
 
         // When gallery is opened once content is loaded (second time) need to add lg-complete class for css styling
