@@ -14,7 +14,7 @@ class TranslateService {
     }
 
     public static translate(key: string): string {
-        return i18next.t(key);
+        return i18next?.t(key);
     }
 
     static async initTranslateService(): Promise<TFunction> {
