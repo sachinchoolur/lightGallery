@@ -18,6 +18,7 @@ import {
     lGEvents,
     SlideItemLoadDetail,
 } from './lg-events';
+import TranslateService from './langs/service';
 
 declare let picturefill: any;
 
@@ -98,6 +99,9 @@ export class LightGallery {
 
         this.el = element;
         this.LGel = $LG(element);
+
+        // Translation i18next initialization
+        TranslateService.init();
 
         this.generateSettings(options);
 
@@ -276,14 +280,14 @@ export class LightGallery {
         if (this.settings.controls) {
             controls = `<button type="button" id="${this.getIdName(
                 'lg-prev',
-            )}" aria-label="Previous slide" class="lg-prev lg-icon"> ${
-                this.settings.prevHtml
-            } </button>
+            )}" aria-label="${TranslateService.translate(
+                'previousSlide',
+            )}" class="lg-prev lg-icon"> ${this.settings.prevHtml} </button>
                 <button type="button" id="${this.getIdName(
                     'lg-next',
-                )}" aria-label="Next slide" class="lg-next lg-icon"> ${
-                this.settings.nextHtml
-            } </button>`;
+                )}" aria-label="${TranslateService.translate(
+                'nextSlide',
+            )}" class="lg-next lg-icon"> ${this.settings.nextHtml} </button>`;
         }
 
         if (this.settings.appendSubHtmlTo !== '.lg-item') {
@@ -310,12 +314,16 @@ export class LightGallery {
         }`;
         const closeIcon =
             this.settings.closable && this.settings.showCloseIcon
-                ? `<button type="button" aria-label="Close gallery" id="${this.getIdName(
+                ? `<button type="button" aria-label="${TranslateService.translate(
+                      'closeGallery',
+                  )}" id="${this.getIdName(
                       'lg-close',
                   )}" class="lg-close lg-icon"></button>`
                 : '';
         const maximizeIcon = this.settings.showMaximizeIcon
-            ? `<button type="button" aria-label="Toggle maximize" id="${this.getIdName(
+            ? `<button type="button" aria-label="${TranslateService.translate(
+                  'toggleMaximize',
+              )}" id="${this.getIdName(
                   'lg-maximize',
               )}" class="lg-maximize lg-icon"></button>`
             : '';
@@ -397,7 +405,9 @@ export class LightGallery {
             this.$toolbar.append(
                 `<a id="${this.getIdName(
                     'lg-download',
-                )}" target="_blank" rel="noopener" aria-label="Download" download class="lg-download lg-icon"></a>`,
+                )}" target="_blank" rel="noopener" aria-label="${TranslateService.translate(
+                    'download',
+                )}" download class="lg-download lg-icon"></a>`,
             );
         }
 

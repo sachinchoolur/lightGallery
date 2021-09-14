@@ -6,6 +6,7 @@ import { getPinterestShareLink } from './lg-pinterest-share-utils';
 import { LightGallery } from '../../lightgallery';
 import { lGEvents } from '../../lg-events';
 import { ShareOption } from './types';
+import TranslateService from '../../langs/service';
 interface DefaultShareOptions extends ShareOption {
     type: string;
 }
@@ -16,6 +17,10 @@ export default class Share {
     constructor(instance: LightGallery) {
         // get lightGallery core plugin instance
         this.core = instance;
+
+        // Translation i18next initialization
+        TranslateService.init();
+
         // extend module default settings with lightGallery core settings
         this.settings = { ...shareSettings, ...this.core.settings };
         return this;
@@ -51,7 +56,9 @@ export default class Share {
 
     setLgShareMarkup(): void {
         this.core.$toolbar.append(
-            `<button type="button" aria-label="Share" aria-haspopup="true" aria-expanded="false" class="lg-share lg-icon">
+            `<button type="button" aria-label="${TranslateService.translate(
+                'share',
+            )}" aria-haspopup="true" aria-expanded="false" class="lg-share lg-icon">
                 <ul class="lg-dropdown" style="position: absolute;"></ul></button>`,
         );
 

@@ -2,6 +2,7 @@ import { ZoomSettings, zoomSettings } from './lg-zoom-settings';
 import { LgQuery, lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { lGEvents } from '../../lg-events';
+import TranslateService from '../../langs/service';
 
 interface Coords {
     x: number;
@@ -48,6 +49,9 @@ export default class Zoom {
         this.core = instance;
         this.$LG = $LG;
 
+        // Translation i18next initialization
+        TranslateService.init();
+
         this.settings = { ...zoomSettings, ...this.core.settings };
 
         return this;
@@ -58,15 +62,21 @@ export default class Zoom {
         let zoomIcons = this.settings.showZoomInOutIcons
             ? `<button id="${this.core.getIdName(
                   'lg-zoom-in',
-              )}" type="button" aria-label="Zoom in" class="lg-zoom-in lg-icon"></button><button id="${this.core.getIdName(
+              )}" type="button" aria-label="${TranslateService.translate(
+                  'zoomIn',
+              )}" class="lg-zoom-in lg-icon"></button><button id="${this.core.getIdName(
                   'lg-zoom-out',
-              )}" type="button" aria-label="Zoom out" class="lg-zoom-out lg-icon"></button>`
+              )}" type="button" aria-label="${TranslateService.translate(
+                  'zoomOut',
+              )}" class="lg-zoom-out lg-icon"></button>`
             : '';
 
         if (this.settings.actualSize) {
             zoomIcons += `<button id="${this.core.getIdName(
                 'lg-actual-size',
-            )}" type="button" aria-label="View actual size" class="${
+            )}" type="button" aria-label="${TranslateService.translate(
+                'viewActualSize',
+            )}" class="${
                 this.settings.actualSizeIcons.zoomIn
             } lg-icon"></button>`;
         }

@@ -13,6 +13,8 @@ import { lGEvents } from '../../lg-events';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { commentSettings, CommentSettings } from './lg-comment-settings';
+import TranslateService from '../../langs/service';
+
 declare let FB: any;
 declare let DISQUS: any;
 
@@ -24,6 +26,10 @@ export default class CommentBox {
         // get lightGallery core plugin instance
         this.core = instance;
         this.$LG = $LG;
+
+        // Translation i18next initialization
+        TranslateService.init();
+
         // extend module default settings with lightGallery core settings
         this.settings = { ...commentSettings, ...this.core.settings };
 
@@ -49,8 +55,9 @@ export default class CommentBox {
                 '<div class="lg-comment-overlay"></div>',
         );
 
-        const commentToggleBtn =
-            '<button type="button" aria-label="Toggle comments" class="lg-comment-toggle lg-icon"></button>';
+        const commentToggleBtn = `<button type="button" aria-label="${TranslateService.translate(
+            'toggleComments',
+        )}" class="lg-comment-toggle lg-icon"></button>`;
         this.core.$toolbar.append(commentToggleBtn);
     }
 
