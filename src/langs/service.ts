@@ -22,7 +22,7 @@ class TranslateService {
             order: ['navigator'],
         };
 
-        return i18next.use(languageDetector).init({
+        return i18next?.use(languageDetector).init({
             detection: options,
             resources: {
                 en: {
