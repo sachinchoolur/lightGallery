@@ -3,7 +3,7 @@ title: 'Mixed contents'
 description: 'lightGallery mixed contents demo.'
 lead:
     'lightGallery supports, images, HTML5 videos, external videos such as
-    YouTub, Vimeo videos and iframes. You can mix all types of supported
+    YouTube, Vimeo videos and iframes. You can mix all types of supported
     contents in a same gallery. lightGallery will automatically find the content
     type from source and create appropriate slides'
 date: 2020-10-06T08:48:57+00:00
