@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.3.0-beta.1 | August 31st 2021
+ * lightgallery | 2.3.0-beta.2 | September 28th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -448,12 +448,11 @@
         /**
          * get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
          */
-        // @todo improive this
-        getSize: function (el, container, spacing, isDisabled, defaultLgSize) {
+        getSize: function (el, container, spacing, defaultLgSize) {
             if (spacing === void 0) { spacing = 0; }
             var LGel = $LG(el);
             var lgSize = LGel.attr('data-lg-size') || defaultLgSize;
-            if (!lgSize || isDisabled) {
+            if (!lgSize) {
                 return;
             }
             var isResponsiveSizes = lgSize.split(',');
@@ -646,6 +645,47 @@
         },
         isMobile: function () {
             return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        },
+        /**
+         * @desc Check the given src is video
+         * @param {String} src
+         * @return {Object} video type
+         * Ex:{ youtube  :  ["//www.youtube.com/watch?v=c0asJgSyxcY", "c0asJgSyxcY"] }
+         *
+         * @todo - this information can be moved to dynamicEl to avoid frequent calls
+         */
+        isVideo: function (src, isHTML5VIdeo, index) {
+            if (!src) {
+                if (isHTML5VIdeo) {
+                    return {
+                        html5: true,
+                    };
+                }
+                else {
+                    console.error('lightGallery :- data-src is not provided on slide item ' +
+                        (index + 1) +
+                        '. Please make sure the selector property is properly configured. More info - https://www.lightgalleryjs.com/demos/html-markup/');
+                    return;
+                }
+            }
+            var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com|be-nocookie\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)([\&|?][\S]*)*/i);
+            var vimeo = src.match(/\/\/(?:www\.)?(?:player\.)?vimeo.com\/(?:video\/)?([0-9a-z\-_]+)(.*)?/i);
+            var wistia = src.match(/https?:\/\/(.+)?(wistia\.com|wi\.st)\/(medias|embed)\/([0-9a-z\-_]+)(.*)/);
+            if (youtube) {
+                return {
+                    youtube: youtube,
+                };
+            }
+            else if (vimeo) {
+                return {
+                    vimeo: vimeo,
+                };
+            }
+            else if (wistia) {
+                return {
+                    wistia: wistia,
+                };
+            }
         },
     };
 
@@ -983,10 +1023,10 @@
         LightGallery.prototype.refreshOnResize = function () {
             if (this.lgOpened) {
                 var currentGalleryItem = this.galleryItems[this.index];
-                var __slideVideoInfo = currentGalleryItem.__slideVideoInfo, poster = currentGalleryItem.poster;
+                var __slideVideoInfo = currentGalleryItem.__slideVideoInfo;
                 this.mediaContainerPosition = this.getMediaContainerPosition();
                 var _a = this.mediaContainerPosition, top_1 = _a.top, bottom = _a.bottom;
-                this.currentImageSize = utils.getSize(this.items[this.index], this.outer, top_1 + bottom, __slideVideoInfo && !poster, __slideVideoInfo && this.settings.videoMaxSize);
+                this.currentImageSize = utils.getSize(this.items[this.index], this.outer, top_1 + bottom, __slideVideoInfo && this.settings.videoMaxSize);
                 if (__slideVideoInfo) {
                     this.resizeVideoSlide(this.index, this.currentImageSize);
                 }
@@ -1165,9 +1205,9 @@
             if (!this.settings.allowMediaOverlap) {
                 this.setMediaContainerPosition(top, bottom);
             }
-            var _b = this.galleryItems[index], __slideVideoInfo = _b.__slideVideoInfo, poster = _b.poster;
+            var __slideVideoInfo = this.galleryItems[index].__slideVideoInfo;
             if (this.zoomFromOrigin && element) {
-                this.currentImageSize = utils.getSize(element, this.outer, top + bottom, __slideVideoInfo && !poster, __slideVideoInfo && this.settings.videoMaxSize);
+                this.currentImageSize = utils.getSize(element, this.outer, top + bottom, __slideVideoInfo && this.settings.videoMaxSize);
                 transform = utils.getTransform(element, this.outer, top, bottom, this.currentImageSize);
             }
             if (!this.zoomFromOrigin || !transform) {
@@ -1421,7 +1461,7 @@
             // displayed on top of actual image
             var imgContent = '';
             var altAttr = alt ? 'alt="' + alt + '"' : '';
-            if (!this.lGalleryOn && this.zoomFromOrigin && this.currentImageSize) {
+            if (this.isFirstSlideWithZoomAnimation()) {
                 imgContent = this.getDummyImageContent($currentSlide, index, altAttr);
             }
             else {
@@ -1430,88 +1470,66 @@
             var imgMarkup = "<picture class=\"lg-img-wrap\"> " + imgContent + "</picture>";
             $currentSlide.prepend(imgMarkup);
         };
-        LightGallery.prototype.onLgObjectLoad = function ($el, index, delay, speed, dummyImageLoaded, isFirstSlide) {
+        LightGallery.prototype.onSlideObjectLoad = function ($slide, isHTML5VideoWithoutPoster, onLoad, onError) {
+            var mediaObject = $slide.find('.lg-object').first();
+            if (utils.isImageLoaded(mediaObject.get()) ||
+                isHTML5VideoWithoutPoster) {
+                onLoad();
+            }
+            else {
+                mediaObject.on('load.lg error.lg', function () {
+                    onLoad && onLoad();
+                });
+                mediaObject.on('error.lg', function () {
+                    onError && onError();
+                });
+            }
+        };
+        /**
+         *
+         * @param $el Current slide item
+         * @param index
+         * @param delay Delay is 0 except first time
+         * @param speed Speed is same as delay, except it is 0 if gallery is opened via hash plugin
+         * @param isFirstSlide
+         */
+        LightGallery.prototype.onLgObjectLoad = function (currentSlide, index, delay, speed, isFirstSlide, isHTML5VideoWithoutPoster) {
             var _this = this;
-            if (dummyImageLoaded) {
-                this.LGel.trigger(lGEvents.slideItemLoad, {
+            this.onSlideObjectLoad(currentSlide, isHTML5VideoWithoutPoster, function () {
+                _this.triggerSlideItemLoad(currentSlide, index, delay, speed, isFirstSlide);
+            }, function () {
+                currentSlide.addClass('lg-complete lg-complete_');
+                currentSlide.html('<span class="lg-error-msg">Oops... Failed to load content...</span>');
+            });
+        };
+        LightGallery.prototype.triggerSlideItemLoad = function ($currentSlide, index, delay, speed, isFirstSlide) {
+            var _this = this;
+            var currentGalleryItem = this.galleryItems[index];
+            // Adding delay for video slides without poster for better performance and user experience
+            // Videos should start playing once once the gallery is completely loaded
+            var _speed = isFirstSlide &&
+                this.getSlideType(currentGalleryItem) === 'video' &&
+                !currentGalleryItem.poster
+                ? speed
+                : 0;
+            setTimeout(function () {
+                $currentSlide.addClass('lg-complete lg-complete_');
+                _this.LGel.trigger(lGEvents.slideItemLoad, {
                     index: index,
                     delay: delay || 0,
                     isFirstSlide: isFirstSlide,
                 });
-            }
-            $el.find('.lg-object')
-                .first()
-                .on('load.lg', function () {
-                _this.handleLgObjectLoad($el, index, delay, speed, dummyImageLoaded, isFirstSlide);
-            });
-            setTimeout(function () {
-                $el.find('.lg-object')
-                    .first()
-                    .on('error.lg', function () {
-                    $el.addClass('lg-complete lg-complete_');
-                    $el.html('<span class="lg-error-msg">Oops... Failed to load content...</span>');
-                });
-            }, speed);
+            }, _speed);
         };
-        LightGallery.prototype.handleLgObjectLoad = function ($el, index, delay, speed, dummyImageLoaded, isFirstSlide) {
-            var _this = this;
-            setTimeout(function () {
-                $el.addClass('lg-complete lg-complete_');
-                if (!dummyImageLoaded) {
-                    _this.LGel.trigger(lGEvents.slideItemLoad, {
-                        index: index,
-                        delay: delay || 0,
-                        isFirstSlide: isFirstSlide,
-                    });
-                }
-            }, speed);
-        };
-        /**
-         * @desc Check the given src is video
-         * @param {String} src
-         * @return {Object} video type
-         * Ex:{ youtube  :  ["//www.youtube.com/watch?v=c0asJgSyxcY", "c0asJgSyxcY"] }
-         *
-         * @todo - this information can be moved to dynamicEl to avoid frequent calls
-         */
-        LightGallery.prototype.isVideo = function (src, index) {
-            if (!src) {
-                if (this.galleryItems[index].video) {
-                    return {
-                        html5: true,
-                    };
-                }
-                else {
-                    console.error('lightGallery :- data-src is not provided on slide item ' +
-                        (index + 1) +
-                        '. Please make sure the selector property is properly configured. More info - https://www.lightgalleryjs.com/demos/html-markup/');
-                    return;
-                }
-            }
-            var youtube = src.match(/\/\/(?:www\.)?youtu(?:\.be|be\.com|be-nocookie\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)([\&|?][\S]*)*/i);
-            var vimeo = src.match(/\/\/(?:www\.)?(?:player\.)?vimeo.com\/(?:video\/)?([0-9a-z\-_]+)/i);
-            var wistia = src.match(/https?:\/\/(.+)?(wistia\.com|wi\.st)\/(medias|embed)\/([0-9a-z\-_]+)(.*)/);
-            if (youtube) {
-                return {
-                    youtube: youtube,
-                };
-            }
-            else if (vimeo) {
-                return {
-                    vimeo: vimeo,
-                };
-            }
-            else if (wistia) {
-                return {
-                    wistia: wistia,
-                };
-            }
+        LightGallery.prototype.isFirstSlideWithZoomAnimation = function () {
+            return !!(!this.lGalleryOn &&
+                this.zoomFromOrigin &&
+                this.currentImageSize);
         };
         // Add video slideInfo
         LightGallery.prototype.addSlideVideoInfo = function (items) {
-            var _this = this;
             items.forEach(function (element, index) {
-                element.__slideVideoInfo = _this.isVideo(element.src, index);
+                element.__slideVideoInfo = utils.isVideo(element.src, !!element.video, index);
             });
         };
         /**
@@ -1549,7 +1567,7 @@
             if (!$currentSlide.hasClass('lg-loaded')) {
                 if (videoInfo) {
                     var _a = this.mediaContainerPosition, top_2 = _a.top, bottom = _a.bottom;
-                    var videoSize = utils.getSize(this.items[index], this.outer, top_2 + bottom, false, videoInfo && this.settings.videoMaxSize);
+                    var videoSize = utils.getSize(this.items[index], this.outer, top_2 + bottom, videoInfo && this.settings.videoMaxSize);
                     lgVideoStyle = this.getVideoContStyle(videoSize);
                 }
                 if (iframe) {
@@ -1584,7 +1602,6 @@
                         src: src,
                         html5Video: _html5Video,
                         hasPoster: !!poster,
-                        isFirstSlide: isFirstSlide,
                     });
                 }
                 this.LGel.trigger(lGEvents.afterAppendSlide, { index: index });
@@ -1600,8 +1617,8 @@
             if (delay && !$LG(document.body).hasClass('lg-from-hash')) {
                 _speed = delay;
             }
-            // Only for first slide
-            if (!this.lGalleryOn && this.zoomFromOrigin && this.currentImageSize) {
+            // Only for first slide and zoomFromOrigin is enabled
+            if (this.isFirstSlideWithZoomAnimation()) {
                 setTimeout(function () {
                     $currentSlide
                         .removeClass('lg-start-end-progress lg-start-progress')
@@ -1609,23 +1626,24 @@
                 }, this.settings.startAnimationDuration + 100);
                 if (!$currentSlide.hasClass('lg-loaded')) {
                     setTimeout(function () {
-                        $currentSlide
-                            .find('.lg-img-wrap')
-                            .append(utils.getImgMarkup(index, src, '', srcset, sizes, currentGalleryItem.sources));
-                        if (srcset || sources) {
-                            var $img = $currentSlide.find('.lg-object');
-                            _this.initPictureFill($img);
+                        if (_this.getSlideType(currentGalleryItem) === 'image') {
+                            $currentSlide
+                                .find('.lg-img-wrap')
+                                .append(utils.getImgMarkup(index, src, '', srcset, sizes, currentGalleryItem.sources));
+                            if (srcset || sources) {
+                                var $img = $currentSlide.find('.lg-object');
+                                _this.initPictureFill($img);
+                            }
                         }
-                        _this.onLgObjectLoad($currentSlide, index, delay, _speed, true, true);
-                        var mediaObject = $currentSlide
-                            .find('.lg-object')
-                            .first();
-                        if (utils.isImageLoaded(mediaObject.get())) {
-                            _this.loadContentOnLoad(index, $currentSlide, _speed);
-                        }
-                        else {
-                            mediaObject.on('load.lg error.lg', function () {
-                                _this.loadContentOnLoad(index, $currentSlide, _speed);
+                        if (_this.getSlideType(currentGalleryItem) === 'image' ||
+                            (_this.getSlideType(currentGalleryItem) === 'video' &&
+                                poster)) {
+                            _this.onLgObjectLoad($currentSlide, index, delay, _speed, true, false);
+                            // load remaining slides once the slide is completely loaded
+                            _this.onSlideObjectLoad($currentSlide, !!(videoInfo && videoInfo.html5 && !poster), function () {
+                                _this.loadContentOnFirstSlideLoad(index, $currentSlide, _speed);
+                            }, function () {
+                                _this.loadContentOnFirstSlideLoad(index, $currentSlide, _speed);
                             });
                         }
                     }, this.settings.startAnimationDuration + 100);
@@ -1633,10 +1651,9 @@
             }
             // SLide content has been added to dom
             $currentSlide.addClass('lg-loaded');
-            this.onLgObjectLoad($currentSlide, index, delay, _speed, false, isFirstSlide);
-            // @todo check load state for html5 videos
-            if (videoInfo && videoInfo.html5 && !poster) {
-                $currentSlide.addClass('lg-complete lg-complete_');
+            if (!this.isFirstSlideWithZoomAnimation() ||
+                (this.getSlideType(currentGalleryItem) === 'video' && !poster)) {
+                this.onLgObjectLoad($currentSlide, index, delay, _speed, isFirstSlide, !!(videoInfo && videoInfo.html5 && !poster));
             }
             // When gallery is opened once content is loaded (second time) need to add lg-complete class for css styling
             if ((!this.zoomFromOrigin || !this.currentImageSize) &&
@@ -1663,7 +1680,14 @@
                 }
             }
         };
-        LightGallery.prototype.loadContentOnLoad = function (index, $currentSlide, speed) {
+        /**
+         * @desc Remove dummy image content and load next slides
+         * Called only for the first time if zoomFromOrigin animation is enabled
+         * @param index
+         * @param $currentSlide
+         * @param speed
+         */
+        LightGallery.prototype.loadContentOnFirstSlideLoad = function (index, $currentSlide, speed) {
             var _this = this;
             setTimeout(function () {
                 $currentSlide.find('.lg-dummy-img').remove();
@@ -1834,7 +1858,7 @@
                 this.setDownloadValue(index);
                 if (videoInfo) {
                     var _a = this.mediaContainerPosition, top_3 = _a.top, bottom = _a.bottom;
-                    var videoSize = utils.getSize(this.items[index], this.outer, top_3 + bottom, false, videoInfo && this.settings.videoMaxSize);
+                    var videoSize = utils.getSize(this.items[index], this.outer, top_3 + bottom, videoInfo && this.settings.videoMaxSize);
                     this.resizeVideoSlide(index, videoSize);
                 }
                 this.LGel.trigger(lGEvents.beforeSlide, {
@@ -1894,15 +1918,15 @@
                 if (!this.lGalleryOn) {
                     this.loadContent(index, true);
                 }
-                setTimeout(function () {
-                    if (_this.lGalleryOn) {
+                else {
+                    setTimeout(function () {
                         _this.loadContent(index, true);
-                    }
-                    // Add title if this.settings.appendSubHtmlTo === lg-sub-html
-                    if (_this.settings.appendSubHtmlTo !== '.lg-item') {
-                        _this.addHtml(index);
-                    }
-                }, (this.lGalleryOn ? this.settings.speed + 50 : 50) + (fromTouch ? 0 : this.settings.slideDelay));
+                        // Add title if this.settings.appendSubHtmlTo === lg-sub-html
+                        if (_this.settings.appendSubHtmlTo !== '.lg-item') {
+                            _this.addHtml(index);
+                        }
+                    }, this.settings.speed + 50 + (fromTouch ? 0 : this.settings.slideDelay));
+                }
                 setTimeout(function () {
                     _this.lgBusy = false;
                     previousSlideItem_1.removeClass('lg-slide-progress');
@@ -2441,7 +2465,7 @@
             if (this.zoomFromOrigin && currentItem) {
                 var _a = this.mediaContainerPosition, top_4 = _a.top, bottom = _a.bottom;
                 var _b = this.galleryItems[this.index], __slideVideoInfo = _b.__slideVideoInfo, poster = _b.poster;
-                var imageSize = utils.getSize(currentItem, this.outer, top_4 + bottom, __slideVideoInfo && !poster, __slideVideoInfo && poster && this.settings.videoMaxSize);
+                var imageSize = utils.getSize(currentItem, this.outer, top_4 + bottom, __slideVideoInfo && poster && this.settings.videoMaxSize);
                 transform = utils.getTransform(currentItem, this.outer, top_4, bottom, imageSize);
             }
             if (this.zoomFromOrigin && transform) {
