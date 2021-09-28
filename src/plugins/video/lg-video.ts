@@ -485,7 +485,7 @@ export default class Video {
 
                 $el.find('.lg-video-object')
                     .first()
-                    .on('load.lg error.lg loadeddata.lg', () => {
+                    .on('load.lg error.lg loadedmetadata.lg', () => {
                         setTimeout(() => {
                             this.onVideoLoadAfterPosterClick(
                                 $el,
