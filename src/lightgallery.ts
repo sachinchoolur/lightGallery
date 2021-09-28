@@ -1042,55 +1042,6 @@ export class LightGallery {
         }, _speed);
     }
 
-    /**
-     * @desc Check the given src is video
-     * @param {String} src
-     * @return {Object} video type
-     * Ex:{ youtube  :  ["//www.youtube.com/watch?v=c0asJgSyxcY", "c0asJgSyxcY"] }
-     *
-     * @todo - this information can be moved to dynamicEl to avoid frequent calls
-     */
-    isVideo(src: string, index: number): VideoInfo | undefined {
-        if (!src) {
-            if (this.galleryItems[index].video) {
-                return {
-                    html5: true,
-                };
-            } else {
-                console.error(
-                    'lightGallery :- data-src is not provided on slide item ' +
-                        (index + 1) +
-                        '. Please make sure the selector property is properly configured. More info - https://www.lightgalleryjs.com/demos/html-markup/',
-                );
-                return;
-            }
-        }
-
-        const youtube = src.match(
-            /\/\/(?:www\.)?youtu(?:\.be|be\.com|be-nocookie\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)([\&|?][\S]*)*/i,
-        );
-        const vimeo = src.match(
-            /\/\/(?:www\.)?(?:player\.)?vimeo.com\/(?:video\/)?([0-9a-z\-_]+)/i,
-        );
-        const wistia = src.match(
-            /https?:\/\/(.+)?(wistia\.com|wi\.st)\/(medias|embed)\/([0-9a-z\-_]+)(.*)/,
-        );
-
-        if (youtube) {
-            return {
-                youtube,
-            };
-        } else if (vimeo) {
-            return {
-                vimeo,
-            };
-        } else if (wistia) {
-            return {
-                wistia,
-            };
-        }
-    }
-
     isFirstSlideWithZoomAnimation(): boolean {
         return !!(
             !this.lGalleryOn &&
@@ -1102,8 +1053,9 @@ export class LightGallery {
     // Add video slideInfo
     addSlideVideoInfo(items: GalleryItem[]): void {
         items.forEach((element, index) => {
-            element.__slideVideoInfo = this.isVideo(
+            element.__slideVideoInfo = utils.isVideo(
                 element.src as string,
+                !!element.video,
                 index,
             );
         });

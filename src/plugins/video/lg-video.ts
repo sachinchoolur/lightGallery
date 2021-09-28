@@ -18,6 +18,10 @@
  * https://developers.google.com/youtube/iframe_api_reference
  * https://developer.chrome.com/blog/autoplay/#iframe-delegation
  *
+ * @ref Vimeo
+ * https://stackoverflow.com/questions/10488943/easy-way-to-get-vimeo-id-from-a-vimeo-url
+ * https://vimeo.zendesk.com/hc/en-us/articles/360000121668-Starting-playback-at-a-specific-timecode
+ * https://vimeo.zendesk.com/hc/en-us/articles/360001494447-Using-Player-Parameters
  */
 
 import { VideoSettings, videoSettings } from './lg-video-settings';
@@ -27,9 +31,11 @@ import {
     CustomEventAfterSlide,
     CustomEventHasVideo,
     CustomEventSlideItemLoad,
+    VideoInfo,
 } from '../../types';
 import { lGEvents } from '../../lg-events';
 import { VideoSource } from './types';
+import { getVimeoURLParams, param } from './lg-video-utils';
 
 declare let Vimeo: any;
 declare let videojs: any;
@@ -39,15 +45,6 @@ declare global {
         Vimeo: any;
     }
 }
-
-function param(obj: { [x: string]: string | number | boolean }): string {
-    return Object.keys(obj)
-        .map(function (k) {
-            return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]);
-        })
-        .join('&');
-}
-
 export default class Video {
     private core: LightGallery;
     private settings: VideoSettings;
@@ -237,6 +234,7 @@ export default class Video {
             const slideUrlParams = videoInfo.youtube[2]
                 ? videoInfo.youtube[2] + '&'
                 : '';
+            // For youtube first parms gets priority if duplicates found
             const youTubePlayerParams = `?${slideUrlParams}wmode=opaque&autoplay=0&mute=1&enablejsapi=1`;
 
             const playerParams =
@@ -250,8 +248,10 @@ export default class Video {
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.vimeo) {
             const videoId = 'lg-vimeo' + index;
-            let playerParams = param(this.settings.vimeoPlayerParams);
-            playerParams = playerParams ? '?' + playerParams : '';
+            const playerParams = getVimeoURLParams(
+                this.settings.vimeoPlayerParams,
+                videoInfo,
+            );
             video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-vimeo ${addClass}" ${videoTitle} src="//player.vimeo.com/video/${
                 videoInfo.vimeo[1] + playerParams
             }" ${commonIframeProps}></iframe>`;
