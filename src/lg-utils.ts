@@ -1,7 +1,6 @@
 import { $LG, lgQuery } from './lgQuery';
 import { VideoSource } from './plugins/video/types';
 import { VideoInfo } from './types';
-import TranslateService from './langs/service';
 
 export interface ImageSize {
     width: number;
@@ -458,6 +457,7 @@ const utils = {
         _poster: string,
         dummyImg: string,
         videoContStyle: string,
+        playVideoString: string,
         _isVideo?: VideoInfo,
     ): string {
         let videoClass = '';
@@ -475,11 +475,11 @@ const utils = {
                     viewBox="0 0 20 20"
                     preserveAspectRatio="xMidYMid"
                     focusable="false"
-                    aria-labelledby="${TranslateService.translate('playVideo')}"
+                    aria-labelledby="${playVideoString}"
                     role="img"
                     class="lg-video-play-icon"
                 >
-                    <title>${TranslateService.translate('playVideo')}</title>
+                    <title>${playVideoString}</title>
                     <polygon class="lg-video-play-icon-inner" points="1,0 20,10 1,20"></polygon>
                 </svg>
                 <svg class="lg-video-play-icon-bg" viewBox="0 0 50 50" focusable="false">
