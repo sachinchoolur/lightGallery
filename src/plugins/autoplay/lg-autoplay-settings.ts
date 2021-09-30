@@ -33,6 +33,8 @@ export interface AutoplaySettings {
      * Specify where the autoplay controls should be appended.
      */
     appendAutoplayControlsTo: string;
+
+    autoplayPluginStrings: { [key: string]: string };
 }
 export const autoplaySettings: AutoplaySettings = {
     autoplay: true,
@@ -42,4 +44,5 @@ export const autoplaySettings: AutoplaySettings = {
     forceSlideShowAutoplay: false,
     autoplayControls: true,
     appendAutoplayControlsTo: '.lg-toolbar',
+    autoplayPluginStrings: { toggleAutoplay: 'Toggle Autoplay' },
 };

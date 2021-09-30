@@ -1,7 +1,6 @@
 import { lGEvents } from '../../lg-events';
 import { LightGallery } from '../../lightgallery';
 import { AutoplaySettings, autoplaySettings } from './lg-autoplay-settings';
-import TranslateService from '../../langs/service';
 
 /**
  * Creates the autoplay plugin.
@@ -17,9 +16,6 @@ export default class Autoplay {
 
     constructor(instance: LightGallery) {
         this.core = instance;
-
-        // Translation i18next initialization
-        TranslateService.init();
 
         // extend module default settings with lightGallery core settings
         this.settings = { ...autoplaySettings, ...this.core.settings };
@@ -133,9 +129,7 @@ export default class Autoplay {
 
     // Manage autoplay via play/stop buttons
     private controls() {
-        const _html = `<button aria-label="${TranslateService.translate(
-            'toggleAutoplay',
-        )}" type="button" class="lg-autoplay-button lg-icon"></button>`;
+        const _html = `<button aria-label="${this.settings.autoplayPluginStrings['toggleAutoplay']}" type="button" class="lg-autoplay-button lg-icon"></button>`;
 
         // Append autoplay controls
         this.core.outer
