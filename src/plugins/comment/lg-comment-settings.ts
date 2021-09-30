@@ -25,6 +25,9 @@ export interface CommentSettings {
      */
     commentsMarkup: string;
 
+    /**
+     * Custom translation strings for aria-labels
+     */
     commentPluginStrings: { [key: string]: string };
 }
 
