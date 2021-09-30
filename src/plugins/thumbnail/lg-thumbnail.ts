@@ -6,7 +6,7 @@ import { LgQuery, lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { GalleryItem } from '../../lg-utils';
 import { lGEvents } from '../../lg-events';
-import TranslateService from '../../langs/service';
+
 interface ThumbDragUtils {
     cords: {
         startX: number;
@@ -35,9 +35,6 @@ export default class Thumbnail {
         // get lightGallery core plugin instance
         this.core = instance;
         this.$LG = $LG;
-
-        // Translation i18next initialization
-        TranslateService.init();
 
         return this;
     }
@@ -480,7 +477,7 @@ export default class Thumbnail {
             this.core.outer.addClass('lg-can-toggle');
             this.core.$toolbar.append(
                 '<button type="button" aria-label="' +
-                    TranslateService.translate('toggleThumbnails') +
+                    this.settings.thumbnailPluginStrings['toggleThumbnails'] +
                     '" class="lg-toggle-thumb lg-icon"></button>',
             );
             this.core.outer
