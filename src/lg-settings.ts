@@ -575,7 +575,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     } as MobileSettings,
     plugins: [],
     strings: {
-        closeGallery: 'Close Gallery',
+        closeGallery: 'Close gallery',
         toggleMaximize: 'Toggle maximize',
         previousSlide: 'Previous slide',
         nextSlide: 'Next slide',
