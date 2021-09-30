@@ -16,6 +16,4 @@ export default class I18Next {
 
         return this;
     }
-
-    init(): void {}
 }
