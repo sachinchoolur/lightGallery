@@ -4,7 +4,6 @@ import {
     FullscreenSettings,
     fullscreenSettings,
 } from './lg-fullscreen-settings';
-import TranslateService from '../../langs/service';
 
 declare let document: any;
 
@@ -16,9 +15,6 @@ export default class FullScreen {
         // get lightGallery core plugin instance
         this.core = instance;
         this.$LG = $LG;
-
-        // Translation i18next initialization
-        TranslateService.init();
 
         // extend module default settings with lightGallery core settings
         this.settings = { ...fullscreenSettings, ...this.core.settings };
@@ -38,9 +34,7 @@ export default class FullScreen {
             ) {
                 return;
             } else {
-                fullScreen = `<button type="button" aria-label="${TranslateService.translate(
-                    'toggleFullscreen',
-                )}" class="lg-fullscreen lg-icon"></button>`;
+                fullScreen = `<button type="button" aria-label="${this.settings.fullscreenPluginStrings['toggleFullscreen']}" class="lg-fullscreen lg-icon"></button>`;
                 this.core.$toolbar.append(fullScreen);
                 this.fullScreen();
             }
