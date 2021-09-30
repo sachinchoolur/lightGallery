@@ -2,7 +2,6 @@ import { lGEvents } from '../../lg-events';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { rotateSettings, RotateSettings } from './lg-rotate-settings';
-import TranslateService from '../../langs/service';
 
 export default class Rotate {
     core: LightGallery;
@@ -16,9 +15,6 @@ export default class Rotate {
         this.core = instance;
         this.$LG = $LG;
 
-        // Translation i18next initialization
-        TranslateService.init();
-
         // extend module default settings with lightGallery core settings
         this.settings = { ...rotateSettings, ...this.core.settings };
 
@@ -27,24 +23,16 @@ export default class Rotate {
     buildTemplates(): void {
         let rotateIcons = '';
         if (this.settings.flipVertical) {
-            rotateIcons += `<button type="button" id="lg-flip-ver" aria-label="${TranslateService.translate(
-                'flipVertical',
-            )}" class="lg-flip-ver lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-flip-ver" aria-label="${this.settings.rotatePluginStrings['flipVertical']}" class="lg-flip-ver lg-icon"></button>`;
         }
         if (this.settings.flipHorizontal) {
-            rotateIcons += `<button type="button" id="lg-flip-hor" aria-label="${TranslateService.translate(
-                'flipHorizontal',
-            )}" class="lg-flip-hor lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-flip-hor" aria-label="${this.settings.rotatePluginStrings['flipHorizontal']}" class="lg-flip-hor lg-icon"></button>`;
         }
         if (this.settings.rotateLeft) {
-            rotateIcons += `<button type="button" id="lg-rotate-left" aria-label="${TranslateService.translate(
-                'rotateLeft',
-            )}" class="lg-rotate-left lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-rotate-left" aria-label="${this.settings.rotatePluginStrings['rotateLeft']}" class="lg-rotate-left lg-icon"></button>`;
         }
         if (this.settings.rotateRight) {
-            rotateIcons += `<button type="button" id="lg-rotate-right" aria-label="${TranslateService.translate(
-                'rotateRight',
-            )}" class="lg-rotate-right lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-rotate-right" aria-label="${this.settings.rotatePluginStrings['rotateRight']}" class="lg-rotate-right lg-icon"></button>`;
         }
         this.core.$toolbar.append(rotateIcons);
     }
