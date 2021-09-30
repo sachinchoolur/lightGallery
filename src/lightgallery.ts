@@ -1,16 +1,3 @@
-import utils, { GalleryItem, ImageSize } from './lg-utils';
-import { $LG, lgQuery } from './lgQuery';
-import {
-    LightGallerySettings,
-    lightGalleryCoreSettings,
-    LightGalleryAllSettings,
-} from './lg-settings';
-import {
-    Coords,
-    MediaContainerPosition,
-    SlideDirection,
-    VideoInfo,
-} from './types';
 import {
     AfterAppendSlideEventDetail,
     AfterAppendSubHtmlDetail,
@@ -18,7 +5,19 @@ import {
     lGEvents,
     SlideItemLoadDetail,
 } from './lg-events';
-import TranslateService from './langs/service';
+import {
+    LightGalleryAllSettings,
+    lightGalleryCoreSettings,
+    LightGallerySettings,
+} from './lg-settings';
+import utils, { GalleryItem, ImageSize } from './lg-utils';
+import { $LG, lgQuery } from './lgQuery';
+import {
+    Coords,
+    MediaContainerPosition,
+    SlideDirection,
+    VideoInfo,
+} from './types';
 
 declare let picturefill: any;
 
@@ -99,9 +98,6 @@ export class LightGallery {
 
         this.el = element;
         this.LGel = $LG(element);
-
-        // Translation i18next initialization
-        TranslateService.init();
 
         this.generateSettings(options);
 
@@ -280,13 +276,11 @@ export class LightGallery {
         if (this.settings.controls) {
             controls = `<button type="button" id="${this.getIdName(
                 'lg-prev',
-            )}" aria-label="${TranslateService.translate(
-                'previousSlide',
+            )}" aria-label="${this.settings.strings['previousSlide']},
             )}" class="lg-prev lg-icon"> ${this.settings.prevHtml} </button>
                 <button type="button" id="${this.getIdName(
                     'lg-next',
-                )}" aria-label="${TranslateService.translate(
-                'nextSlide',
+                )}" aria-label="${this.settings.strings['nextSlide']},
             )}" class="lg-next lg-icon"> ${this.settings.nextHtml} </button>`;
         }
 
@@ -314,16 +308,16 @@ export class LightGallery {
         }`;
         const closeIcon =
             this.settings.closable && this.settings.showCloseIcon
-                ? `<button type="button" aria-label="${TranslateService.translate(
-                      'closeGallery',
-                  )}" id="${this.getIdName(
+                ? `<button type="button" aria-label="${
+                      this.settings.strings['closeGallery']
+                  }" id="${this.getIdName(
                       'lg-close',
                   )}" class="lg-close lg-icon"></button>`
                 : '';
         const maximizeIcon = this.settings.showMaximizeIcon
-            ? `<button type="button" aria-label="${TranslateService.translate(
-                  'toggleMaximize',
-              )}" id="${this.getIdName(
+            ? `<button type="button" aria-label="${
+                  this.settings.strings['toggleMaximize']
+              }" id="${this.getIdName(
                   'lg-maximize',
               )}" class="lg-maximize lg-icon"></button>`
             : '';
@@ -406,9 +400,9 @@ export class LightGallery {
             this.$toolbar.append(
                 `<a id="${this.getIdName(
                     'lg-download',
-                )}" target="_blank" rel="noopener" aria-label="${TranslateService.translate(
-                    'download',
-                )}" download class="lg-download lg-icon"></a>`,
+                )}" target="_blank" rel="noopener" aria-label="${
+                    this.settings.strings['download']
+                }" download class="lg-download lg-icon"></a>`,
             );
         }
 

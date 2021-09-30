@@ -493,6 +493,8 @@ export interface LightGalleryCoreSettings {
     mobileSettings: Partial<MobileSettings>;
 
     plugins: (new (instance: LightGallery, $LG: LgQuery) => any)[];
+
+    strings: { [key: string]: string };
 }
 
 export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
@@ -559,4 +561,11 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
         download: false,
     } as MobileSettings,
     plugins: [],
+    strings: {
+        closeGallery: 'Close Gallery',
+        toggleMaximize: 'Toggle maximize',
+        previousSlide: 'Previous slide',
+        nextSlide: 'Next slide',
+        download: 'Download',
+    },
 };
