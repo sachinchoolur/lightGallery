@@ -44,6 +44,11 @@ export interface ShareSettings {
      * <a href="/demos/share/">Demo</a>
      */
     additionalShareOptions: ShareOption[];
+
+    /**
+     * Custom translation strings for aria-labels
+     */
+    sharePluginStrings: { [key: string]: string };
 }
 
 export const shareSettings = {
@@ -55,4 +60,5 @@ export const shareSettings = {
     pinterest: true,
     pinterestDropdownText: 'Pinterest',
     additionalShareOptions: [],
+    sharePluginStrings: { share: 'Share' },
 };
