@@ -7,7 +7,6 @@
 import { waitFor } from '@testing-library/dom';
 import '@testing-library/jest-dom';
 import lightGallery from '../src';
-import TranslateService from '../src/langs/service';
 import Autoplay from '../src/plugins/autoplay/lg-autoplay';
 import Fullscreen from '../src/plugins/fullscreen/lg-fullscreen';
 import Pager from '../src/plugins/pager/lg-pager';
@@ -16,14 +15,7 @@ import Share from '../src/plugins/share/lg-share';
 import Thumbnails from '../src/plugins/thumbnail/lg-thumbnail';
 import Zoom from '../src/plugins/zoom/lg-zoom';
 
-jest.mock('../src/langs/service');
-
 describe('Initialize', () => {
-    beforeAll(() => {
-        TranslateService.init = jest.fn();
-        TranslateService.translate = jest.fn((key: string) => key);
-    });
-
     it('Should be able to initialize lightGallery', () => {
         document.body.innerHTML = `<div id="lightGallery">
                 <a href="a.png">
@@ -41,7 +33,7 @@ describe('Initialize', () => {
             </div>`;
         lightGallery(document.getElementById('lightGallery') as HTMLElement);
         expect(
-            document.querySelector('button[aria-label="closeGallery"]'),
+            document.querySelector('button[aria-label="Close gallery"]'),
         ).toBeInTheDocument();
     });
     it('Should not display close icon', () => {
@@ -59,11 +51,6 @@ describe('Initialize', () => {
     });
 });
 describe('Controls', () => {
-    beforeAll(() => {
-        TranslateService.init = jest.fn();
-        TranslateService.translate = jest.fn((key: string) => key);
-    });
-
     it('Should be able to display controls', async () => {
         document.body.innerHTML = `<div id="lightGallery">
                 <a href="a.png">
@@ -94,11 +81,6 @@ describe('Controls', () => {
     });
 });
 describe('Plugins', () => {
-    beforeAll(() => {
-        TranslateService.init = jest.fn();
-        TranslateService.translate = jest.fn((key: string) => key);
-    });
-
     it('Should be able to initialize autoplay plugin', async () => {
         document.body.innerHTML = `<div id="lightGallery">
                 <a href="a.png">
