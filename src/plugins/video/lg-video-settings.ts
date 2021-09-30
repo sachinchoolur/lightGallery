@@ -67,6 +67,11 @@ export interface VideoSettings {
      * Videojs player options
      */
     videojsOptions: any;
+
+    /**
+     * Custom translation strings for aria-labels
+     */
+    videoPluginStrings: { [key: string]: string };
 }
 export const videoSettings: VideoSettings = {
     autoplayFirstVideo: true,
@@ -77,4 +82,5 @@ export const videoSettings: VideoSettings = {
     autoplayVideoOnSlide: false,
     videojs: false,
     videojsOptions: {},
+    videoPluginStrings: { playVideo: 'Play video' },
 };
