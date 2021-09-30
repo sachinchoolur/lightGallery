@@ -38,6 +38,11 @@ export interface ZoomSettings {
      * to show actual size icons instead of zoom in and zoom out icons.
      */
     actualSizeIcons: ActualSizeIcons;
+
+    /**
+     * Custom translation strings for aria-labels
+     */
+    zoomPluginStrings: { [key: string]: string };
 }
 
 export const zoomSettings: ZoomSettings = {
@@ -50,4 +55,9 @@ export const zoomSettings: ZoomSettings = {
         zoomOut: 'lg-zoom-out',
     } as ActualSizeIcons,
     enableZoomAfter: 300,
+    zoomPluginStrings: {
+        zoomIn: 'Zoom in',
+        zoomOut: 'Zoom out',
+        viewActualSize: 'View actual size',
+    },
 };
