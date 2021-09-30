@@ -4,6 +4,9 @@ export interface FullscreenSettings {
      */
     fullScreen: boolean;
 
+    /**
+     * Custom translation strings for aria-labels
+     */
     fullscreenPluginStrings: { [key: string]: string };
 }
 

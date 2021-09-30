@@ -34,6 +34,9 @@ export interface AutoplaySettings {
      */
     appendAutoplayControlsTo: string;
 
+    /**
+     * Custom translation strings for aria-labels
+     */
     autoplayPluginStrings: { [key: string]: string };
 }
 export const autoplaySettings: AutoplaySettings = {
