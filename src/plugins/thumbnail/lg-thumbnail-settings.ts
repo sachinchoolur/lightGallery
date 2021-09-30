@@ -74,6 +74,11 @@ export interface ThumbnailsSettings {
      */
     //@todo add demo
     youTubeThumbSize: number;
+
+    /**
+     * Custom translation strings for aria-labels
+     */
+    thumbnailPluginStrings: { [key: string]: string };
 }
 
 export const thumbnailsSettings: ThumbnailsSettings = {
@@ -96,4 +101,6 @@ export const thumbnailsSettings: ThumbnailsSettings = {
 
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
+
+    thumbnailPluginStrings: { toggleThumbnails: 'Toggle thumbnails' },
 };
