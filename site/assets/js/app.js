@@ -1041,3 +1041,43 @@ lightGallery(document.querySelector('.medium-zoom-demo'), {
     selector: '.blog-images',
     plugins: [lgMediumZoom],
 });
+
+var Airtable = require('airtable');
+
+function subscribe() {
+    const email = $('#subscribe-email').val();
+
+    var base = new Airtable({ apiKey: 'keyaUjHRn2iCSdyIu' }).base(
+        'appeau7igth6rETjo',
+    );
+
+    $subscribeBtn.attr('disabled', 'disabled');
+
+    base('Subscribers').create(
+        [
+            {
+                fields: {
+                    Email: email,
+                },
+            },
+        ],
+        function (err) {
+            $subscribeBtn.removeAttr('disabled');
+            $('#subscribe-email').val('');
+            if (err) {
+                console.error(err);
+                $('#subscribe').addClass('subscribed-error');
+                return;
+            }
+            $('#subscribe').addClass('subscribed');
+        },
+    );
+}
+
+const $subscribeBtn = $('#subscribe-btn');
+$('#subscribe-btn').on('click', subscribe);
+$('#subscribe-email').on('keypress', function (e) {
+    if (e.which == 13) {
+        subscribe();
+    }
+});
