@@ -195,7 +195,9 @@ export class lgQuery {
         this._each((el: any) => {
             // IE doesn't support multiple arguments
             classNames.split(' ').forEach((className) => {
-                el.classList.add(className);
+                if (className) {
+                    el.classList.add(className);
+                }
             });
         });
         return this;
@@ -205,7 +207,9 @@ export class lgQuery {
         this._each((el: any) => {
             // IE doesn't support multiple arguments
             classNames.split(' ').forEach((className) => {
-                el.classList.remove(className);
+                if (className) {
+                    el.classList.remove(className);
+                }
             });
         });
         return this;
