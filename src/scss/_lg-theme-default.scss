@@ -219,16 +219,23 @@
 body:not(.lg-from-hash) {
     .lg-outer {
         &.lg-start-zoom {
-            .lg-object {
-                opacity: 0;
-                will-change: opacity;
-                @include transitionCustom(
-                    opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important
-                );
-            }
-            .lg-item.lg-complete {
-                .lg-object {
-                    opacity: 1;
+            .lg-item:not(.lg-zoomable) {
+                .lg-img-wrap,
+                .lg-video-cont {
+                    opacity: 0;
+                    @include transform(scale3d(0.5, 0.5, 0.5));
+                    will-change: transform, opacity;
+                    @include transitionCustom(
+                        transform 250ms cubic-bezier(0, 0, 0.25, 1) 0s,
+                        opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important
+                    );
+                }
+                &.lg-complete {
+                    .lg-img-wrap,
+                    .lg-video-cont {
+                        opacity: 1;
+                        @include transform(scale3d(1, 1, 1));
+                    }
                 }
             }
         }

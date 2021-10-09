@@ -124,9 +124,9 @@ export interface LightGalleryCoreSettings {
      * Start animation class for the gallery.
      * @description
      * <ul>
-     * <li>This can be used to change the zoom effect when the image is loaded</li>
-     * <li>This is also applied when navigating to new slides</li>
      * <li>startClass will be empty zoomFromOrigin is true.</li>
+     * <li>This can be used to change the starting effect when the image is loaded</li>
+     * <li>This is also applied when navigating to new slides</li>
      * </ul>
      */
     startClass: string;
