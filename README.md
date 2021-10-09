@@ -89,8 +89,8 @@ of the following method to download lightGallery
 
 #### Include CSS and Javascript files
 
-First of all, include lightgallery.css in the &lt;head> of the document. If
-you want include any lightGallery plugin such as thumbnails or zoom, you need to
+First of all, include lightgallery.css in the &lt;head> of the document. If you
+want include any lightGallery plugin such as thumbnails or zoom, you need to
 include respective css files as well.
 
 Alternatively you can include `lightgallery-bundle.css` which contains
@@ -183,7 +183,8 @@ Finally, you need to initiate the gallery by adding the following code.
 
 #### License Key
 
-You'll receive a license key via email one you purchase a license [More info](https://www.lightgalleryjs.com/docs/settings/#licenseKey)
+You'll receive a license key via email one you purchase a license
+[More info](https://www.lightgalleryjs.com/docs/settings/#licenseKey)
 
 #### Plugins
 
@@ -194,7 +195,7 @@ If you are including lightGallery files via script tag, please use the same
 plugins names as follows.
 
 `lgZoom`, `lgAutoplay`, ` lgComment`, `lgFullscreen `, `lgHash`, `lgPager`,
-`lgRotate`, `lgShare`, `lgThumbnail`, `lgVideo`, `lgMediumZoom`
+`lgRotate`, `lgShare`, `lgThumbnail`, `lgVideo`, `lgMediumZoom`, `lgI18Next`
 
 ## Browser support
 

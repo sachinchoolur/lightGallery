@@ -33,6 +33,7 @@ var __assign = function() {
 
 var fullscreenSettings = {
     fullScreen: true,
+    fullscreenPluginStrings: { toggleFullscreen: 'Toggle Fullscreen' },
 };
 
 var FullScreen = /** @class */ (function () {
@@ -55,8 +56,7 @@ var FullScreen = /** @class */ (function () {
                 return;
             }
             else {
-                fullScreen =
-                    '<button type="button" aria-label="Toggle fullscreen" class="lg-fullscreen lg-icon"></button>';
+                fullScreen = "<button type=\"button\" aria-label=\"" + this.settings.fullscreenPluginStrings['toggleFullscreen'] + "\" class=\"lg-fullscreen lg-icon\"></button>";
                 this.core.$toolbar.append(fullScreen);
                 this.fullScreen();
             }

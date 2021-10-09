@@ -1,0 +1,7 @@
+{
+    "name": "lightgallery/plugins/i18next",
+    "private": true,
+    "main": "lg-i18next.umd.js",
+    "module": "lg-i18next.es5.js",
+    "typings": "lg-i18next.d.ts"
+}

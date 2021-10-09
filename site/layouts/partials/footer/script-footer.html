@@ -13,6 +13,7 @@
 {{ $lightGalleryAutoplay := resources.Get "js/plugins/autoplay/lg-autoplay.umd.js" -}}
 {{ $lightGalleryMediumZoom := resources.Get "js/plugins/mediumZoom/lg-medium-zoom.umd.js" -}}
 {{ $lightGalleryRelativeCaption := resources.Get "js/plugins/relativeCaption/lg-relative-caption.umd.js" -}}
+{{ $lightGalleryI18Next := resources.Get "js/plugins/i18next/lg-i18next.umd.js" -}}
 {{ $jQuery := resources.Get "js/vendor/jQuery.js" -}}
 {{ $justifiedGallery := resources.Get "js/vendor/jquery.justifiedGallery.js" -}}
 
@@ -94,11 +95,12 @@
   <script src="{{$lightGalleryAutoplay.Permalink}}"></script>
   <script src="{{$lightGalleryMediumZoom.Permalink}}"></script>
   <script src="{{$lightGalleryRelativeCaption.Permalink}}"></script>
+  <script src="{{$lightGalleryI18Next.Permalink}}"></script>
   <script src="{{ $js.Permalink }}"></script>
 {{ else -}}
   {{ $instantPage := resources.Get "js/vendor/instant.page/instantpage.js" | babel | minify -}}
   {{ $app := resources.Get "js/app.js" | babel | minify -}}
-  {{ $js := slice $lazysizes $jQuery $justifiedGallery $bootstrap $instantPage $lightGallery $lightGalleryVideo $lightGalleryFullscreen $lightGalleryZoom $lightGalleryRotate $lightGalleryThumbnail $lightGalleryPager $lightGalleryHash $lightGalleryShare $lightGalleryComment $lightGalleryAutoplay $lightGalleryRelativeCaption $lightGalleryMediumZoom $app | resources.Concat "main.js" -}}
+  {{ $js := slice $lazysizes $jQuery $justifiedGallery $bootstrap $instantPage $lightGallery $lightGalleryVideo $lightGalleryFullscreen $lightGalleryZoom $lightGalleryRotate $lightGalleryThumbnail $lightGalleryPager $lightGalleryHash $lightGalleryShare $lightGalleryComment $lightGalleryAutoplay $lightGalleryRelativeCaption $lightGalleryMediumZoom $lightGalleryI18Next $app | resources.Concat "main.js" -}}
   {{ $secureJS := $js | resources.Fingerprint "sha512" -}}
   <script src="{{ $secureJS.Permalink }}" integrity="{{ $secureJS.Data.Integrity }}" crossorigin="anonymous" defer></script>
 {{ end -}}

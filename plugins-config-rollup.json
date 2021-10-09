@@ -58,5 +58,10 @@
         "name": "relativeCaption",
         "folder": "plugins/relativeCaption/",
         "fileName": "lg-relative-caption"
+    },
+    {
+        "name": "i18next",
+        "folder": "plugins/i18next/",
+        "fileName": "lg-i18next"
     }
 ]

@@ -46,6 +46,7 @@
         autoplayVideoOnSlide: false,
         videojs: false,
         videojsOptions: {},
+        videoPluginStrings: { playVideo: 'Play video' },
     };
 
     /**

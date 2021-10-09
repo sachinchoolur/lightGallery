@@ -1,9 +1,7 @@
-import { ITranslate } from './model';
-
-const english: ITranslate = {
+const english: { [key: string]: string } = {
     previousSlide: 'Previous slide',
     nextSlide: 'Next slide',
-    closeGallery: 'Close gallery',
+    closeGallery: 'Close xxx',
     toggleMaximize: 'Toggle maximize',
     download: 'Download',
     viewActualSize: 'View actual size',

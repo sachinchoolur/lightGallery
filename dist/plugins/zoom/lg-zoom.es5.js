@@ -41,6 +41,11 @@ var zoomSettings = {
         zoomOut: 'lg-zoom-out',
     },
     enableZoomAfter: 300,
+    zoomPluginStrings: {
+        zoomIn: 'Zoom in',
+        zoomOut: 'Zoom out',
+        viewActualSize: 'View actual size',
+    },
 };
 
 /**
@@ -85,10 +90,10 @@ var Zoom = /** @class */ (function () {
     // Append Zoom controls. Actual size, Zoom-in, Zoom-out
     Zoom.prototype.buildTemplates = function () {
         var zoomIcons = this.settings.showZoomInOutIcons
-            ? "<button id=\"" + this.core.getIdName('lg-zoom-in') + "\" type=\"button\" aria-label=\"Zoom in\" class=\"lg-zoom-in lg-icon\"></button><button id=\"" + this.core.getIdName('lg-zoom-out') + "\" type=\"button\" aria-label=\"Zoom out\" class=\"lg-zoom-out lg-icon\"></button>"
+            ? "<button id=\"" + this.core.getIdName('lg-zoom-in') + "\" type=\"button\" aria-label=\"" + this.settings.zoomPluginStrings['zoomIn'] + "\" class=\"lg-zoom-in lg-icon\"></button><button id=\"" + this.core.getIdName('lg-zoom-out') + "\" type=\"button\" aria-label=\"" + this.settings.zoomPluginStrings['zoomIn'] + "\" class=\"lg-zoom-out lg-icon\"></button>"
             : '';
         if (this.settings.actualSize) {
-            zoomIcons += "<button id=\"" + this.core.getIdName('lg-actual-size') + "\" type=\"button\" aria-label=\"View actual size\" class=\"" + this.settings.actualSizeIcons.zoomIn + " lg-icon\"></button>";
+            zoomIcons += "<button id=\"" + this.core.getIdName('lg-actual-size') + "\" type=\"button\" aria-label=\"" + this.settings.zoomPluginStrings['viewActualSize'] + "\" class=\"" + this.settings.actualSizeIcons.zoomIn + " lg-icon\"></button>";
         }
         this.core.outer.addClass('lg-use-transition-for-zoom');
         this.core.$toolbar.first().append(zoomIcons);
