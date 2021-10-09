@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.1 | September 4th 2021
+ * lightgallery | 2.2.1 | September 30th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -71,6 +71,7 @@ var commentSettings = {
         language: 'en',
     },
     commentsMarkup: '<div id="lg-comment-box" class="lg-comment-box lg-fb-comment-box"><div class="lg-comment-header"><h3 class="lg-comment-title">Leave a comment.</h3><span class="lg-comment-close lg-icon"></span></div><div class="lg-comment-body"></div></div>',
+    commentPluginStrings: { toggleComments: 'Toggle Comments' },
 };
 
 /**
@@ -108,7 +109,7 @@ var CommentBox = /** @class */ (function () {
     CommentBox.prototype.setMarkup = function () {
         this.core.outer.append(this.settings.commentsMarkup +
             '<div class="lg-comment-overlay"></div>');
-        var commentToggleBtn = '<button type="button" aria-label="Toggle comments" class="lg-comment-toggle lg-icon"></button>';
+        var commentToggleBtn = "<button type=\"button\" aria-label=\"" + this.settings.commentPluginStrings['toggleComments'] + "\" class=\"lg-comment-toggle lg-icon\"></button>";
         this.core.$toolbar.append(commentToggleBtn);
     };
     CommentBox.prototype.toggleCommentBox = function () {

@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.1 | September 4th 2021
+ * lightgallery | 2.2.1 | September 30th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -40,6 +40,7 @@ var videoSettings = {
     autoplayVideoOnSlide: false,
     videojs: false,
     videojsOptions: {},
+    videoPluginStrings: { playVideo: 'Play video' },
 };
 
 /**

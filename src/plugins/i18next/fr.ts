@@ -1,6 +1,4 @@
-import { ITranslate } from './model';
-
-const french: ITranslate = {
+const french: { [key: string]: string } = {
     previousSlide: 'Diapositive précédente',
     nextSlide: 'Diapositive suivante',
     closeGallery: 'Fermer la galerie',
