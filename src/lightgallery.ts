@@ -385,10 +385,6 @@ export class LightGallery {
             outerClassNames += 'lg-grab ';
         }
 
-        if (this.settings.showAfterLoad) {
-            outerClassNames += 'lg-show-after-load';
-        }
-
         this.outer.addClass(outerClassNames);
 
         this.$inner.css('transition-timing-function', this.settings.easing);

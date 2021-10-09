@@ -342,11 +342,6 @@ export interface LightGalleryCoreSettings {
     numberOfSlideItemsInDom: number;
 
     /**
-     * Show Content once it is fully loaded
-     */
-    showAfterLoad: boolean;
-
-    /**
      * Custom selector property instead of direct children.
      * @description Based on your markup structure, you can specify custom selectors to fetch media data for the gallery
      * Pass "this" to select same element
@@ -534,7 +529,6 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     subHtmlSelectorRelative: false,
     preload: 2,
     numberOfSlideItemsInDom: 10,
-    showAfterLoad: true,
     selector: '',
     selectWithin: '',
     nextHtml: '',
