@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.3.0-beta.2 | September 28th 2021
+ * lightgallery | 2.3.0-beta.3 | October 9th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -195,7 +195,9 @@
             this._each(function (el) {
                 // IE doesn't support multiple arguments
                 classNames.split(' ').forEach(function (className) {
-                    el.classList.add(className);
+                    if (className) {
+                        el.classList.add(className);
+                    }
                 });
             });
             return this;
@@ -204,7 +206,9 @@
             this._each(function (el) {
                 // IE doesn't support multiple arguments
                 classNames.split(' ').forEach(function (className) {
-                    el.classList.remove(className);
+                    if (className) {
+                        el.classList.remove(className);
+                    }
                 });
             });
             return this;
@@ -728,7 +732,6 @@
         subHtmlSelectorRelative: false,
         preload: 2,
         numberOfSlideItemsInDom: 10,
-        showAfterLoad: true,
         selector: '',
         selectWithin: '',
         nextHtml: '',
@@ -1001,9 +1004,6 @@
             this.manageSingleSlideClassName();
             if (this.settings.enableDrag) {
                 outerClassNames += 'lg-grab ';
-            }
-            if (this.settings.showAfterLoad) {
-                outerClassNames += 'lg-show-after-load';
             }
             this.outer.addClass(outerClassNames);
             this.$inner.css('transition-timing-function', this.settings.easing);

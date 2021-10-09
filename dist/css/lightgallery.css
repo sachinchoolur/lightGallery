@@ -308,17 +308,29 @@
   transition: transform 0.08 cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.08 cubic-bezier(0, 0, 0.25, 1) 0s, color 0.08 linear;
 }
 
-body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-object {
+body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable) .lg-img-wrap,
+body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable) .lg-video-cont {
   opacity: 0;
-  will-change: opacity;
-  -webkit-transition: opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
-  -moz-transition: opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
-  -o-transition: opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
-  transition: opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
+  -moz-transform: scale3d(0.5, 0.5, 0.5);
+  -o-transform: scale3d(0.5, 0.5, 0.5);
+  -ms-transform: scale3d(0.5, 0.5, 0.5);
+  -webkit-transform: scale3d(0.5, 0.5, 0.5);
+  transform: scale3d(0.5, 0.5, 0.5);
+  will-change: transform, opacity;
+  -webkit-transition: -webkit-transform 250ms cubic-bezier(0, 0, 0.25, 1) 0s, opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
+  -moz-transition: -moz-transform 250ms cubic-bezier(0, 0, 0.25, 1) 0s, opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
+  -o-transition: -o-transform 250ms cubic-bezier(0, 0, 0.25, 1) 0s, opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
+  transition: transform 250ms cubic-bezier(0, 0, 0.25, 1) 0s, opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
 }
 
-body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object {
+body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-complete .lg-img-wrap,
+body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-complete .lg-video-cont {
   opacity: 1;
+  -moz-transform: scale3d(1, 1, 1);
+  -o-transform: scale3d(1, 1, 1);
+  -ms-transform: scale3d(1, 1, 1);
+  -webkit-transform: scale3d(1, 1, 1);
+  transform: scale3d(1, 1, 1);
 }
 
 .lg-group:after {
@@ -531,25 +543,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item.lg-complete .lg-object 
   width: auto;
   height: auto;
   position: relative;
-}
-
-.lg-outer.lg-show-after-load .lg-item .lg-object,
-.lg-outer.lg-show-after-load .lg-item .lg-video-play-button {
-  opacity: 0;
-  will-change: opacity;
-  -webkit-transition: opacity 0.15s ease 0s;
-  -o-transition: opacity 0.15s ease 0s;
-  transition: opacity 0.15s ease 0s;
-}
-
-.lg-outer.lg-show-after-load .lg-item.lg-zoom-from-image .lg-object,
-.lg-outer.lg-show-after-load .lg-item.lg-zoom-from-image .lg-video-play-button {
-  opacity: 1;
-}
-
-.lg-outer.lg-show-after-load .lg-item.lg-complete .lg-object,
-.lg-outer.lg-show-after-load .lg-item.lg-complete .lg-video-play-button {
-  opacity: 1;
 }
 
 .lg-outer .lg-empty-html.lg-sub-html,
