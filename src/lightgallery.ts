@@ -2126,12 +2126,12 @@ export class LightGallery {
             }
 
             if (e.deltaY > 0) {
-                this.goToPrevSlide();
-            } else {
                 this.goToNextSlide();
+                e.preventDefault();
+            } else if (e.deltaY < 0) {
+                this.goToPrevSlide();
+                e.preventDefault();
             }
-
-            e.preventDefault();
         });
     }
 
