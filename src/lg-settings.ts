@@ -172,8 +172,9 @@ export interface LightGalleryCoreSettings {
     /**
      * Configure where the gallery should be appended.
      * Useful to create inline galleries and more
+     * It is an empty string in the default settings and later assigned to document.body to avoid accessing document for SSR
      */
-    container: HTMLElement;
+    container: HTMLElement | '';
 
     /**
      * Delay for hiding gallery controls in ms.
@@ -500,7 +501,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     addClass: '',
     startClass: 'lg-start-zoom',
     backdropDuration: 300,
-    container: document.body,
+    container: '',
     startAnimationDuration: 400,
     zoomFromOrigin: true,
     hideBarsDelay: 0,
