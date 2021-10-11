@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.3.0-beta.3 | October 9th 2021
+ * lightgallery | 2.3.0-beta.4 | October 11th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -39,24 +39,30 @@ function __spreadArrays() {
     return r;
 }
 
-(function () {
-    if (typeof window.CustomEvent === 'function')
-        return false;
-    function CustomEvent(event, params) {
-        params = params || { bubbles: false, cancelable: false, detail: null };
-        var evt = document.createEvent('CustomEvent');
-        evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
-        return evt;
-    }
-    window.CustomEvent = CustomEvent;
-})();
-(function () {
-    if (!Element.prototype.matches) {
-        Element.prototype.matches =
-            Element.prototype.msMatchesSelector ||
-                Element.prototype.webkitMatchesSelector;
-    }
-})();
+function initLgPolyfills() {
+    (function () {
+        if (typeof window.CustomEvent === 'function')
+            return false;
+        function CustomEvent(event, params) {
+            params = params || {
+                bubbles: false,
+                cancelable: false,
+                detail: null,
+            };
+            var evt = document.createEvent('CustomEvent');
+            evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+            return evt;
+        }
+        window.CustomEvent = CustomEvent;
+    })();
+    (function () {
+        if (!Element.prototype.matches) {
+            Element.prototype.matches =
+                Element.prototype.msMatchesSelector ||
+                    Element.prototype.webkitMatchesSelector;
+        }
+    })();
+}
 var lgQuery = /** @class */ (function () {
     function lgQuery(selector) {
         this.cssVenderPrefixes = [
@@ -402,6 +408,7 @@ var lgQuery = /** @class */ (function () {
     return lgQuery;
 }());
 function $LG(selector) {
+    initLgPolyfills();
     return new lgQuery(selector);
 }
 
@@ -697,7 +704,7 @@ var lightGalleryCoreSettings = {
     addClass: '',
     startClass: 'lg-start-zoom',
     backdropDuration: 300,
-    container: document.body,
+    container: '',
     startAnimationDuration: 400,
     zoomFromOrigin: true,
     hideBarsDelay: 0,
@@ -2364,12 +2371,13 @@ var LightGallery = /** @class */ (function () {
                 return;
             }
             if (e.deltaY > 0) {
-                _this.goToPrevSlide();
-            }
-            else {
                 _this.goToNextSlide();
+                e.preventDefault();
             }
-            e.preventDefault();
+            else if (e.deltaY < 0) {
+                _this.goToPrevSlide();
+                e.preventDefault();
+            }
         });
     };
     LightGallery.prototype.isSlideElement = function (target) {
