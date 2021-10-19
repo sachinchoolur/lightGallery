@@ -2120,17 +2120,22 @@ export class LightGallery {
     }
 
     mousewheel(): void {
-        this.outer.on('mousewheel.lg', (e) => {
+        let lastCall = 0;
+        this.outer.on('wheel.lg', (e) => {
             if (!e.deltaY || this.galleryItems.length < 2) {
                 return;
             }
-
-            if (e.deltaY > 0) {
+            e.preventDefault();
+            const now = new Date().getTime();
+            if (now - lastCall < 1000) {
+                return;
+            }
+            lastCall = now;
+            const delta = Math.sign(e.deltaY);
+            if (delta > 0) {
                 this.goToNextSlide();
-                e.preventDefault();
-            } else if (e.deltaY < 0) {
+            } else if (delta < 0) {
                 this.goToPrevSlide();
-                e.preventDefault();
             }
         });
     }
