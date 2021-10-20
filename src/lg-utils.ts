@@ -28,7 +28,19 @@ export interface GalleryItem {
 
     /**
      * Thumbnail url
-     * @data-attr data-thumb
+     * @description By default lightGallery uses the image inside gallery selector as thumbnail.
+     * But, If you want to use external image for thumbnail,
+     * pass the thumbnail url via any data attribute and
+     * pass the attribute name via exThumbImage option
+     * @example
+     * <div id="lightGallery">
+     *     <a href="a.jpg" data-external-thumb-image="images/externalThumb.jpg" ><img src="thumb.jpg" /></a>
+     * </div>
+     *
+     * lightGallery(document.getElementById('lightGallery'), {
+     *     exThumbImage: 'data-external-thumb-image'
+     * })
+     * @data-attr data-*
      */
     thumb?: string;
 
@@ -40,7 +52,7 @@ export interface GalleryItem {
 
     /**
      * Title attribute for the video
-     * @data-attr thumb
+     * @data-attr title
      */
     title?: string;
 
