@@ -2131,10 +2131,9 @@ export class LightGallery {
                 return;
             }
             lastCall = now;
-            const delta = Math.sign(e.deltaY);
-            if (delta > 0) {
+            if (e.deltaY > 0) {
                 this.goToNextSlide();
-            } else if (delta < 0) {
+            } else if (e.deltaY < 0) {
                 this.goToPrevSlide();
             }
         });
