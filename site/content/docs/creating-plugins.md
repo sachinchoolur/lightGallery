@@ -47,7 +47,7 @@ plugin
 ## Plugin structure
 
 Plugins have access to the current lightGallery instance. Also, it provide a
-utility for DOM manipulation. FOr examples, you can take a look at the existing
+utility for DOM manipulation. For examples, you can take a look at the existing
 plugin's
 [source code](https://github.com/sachinchoolur/lightGallery/tree/master/src/plugins)
 You can find the basic structure of lightGallery plugins below
