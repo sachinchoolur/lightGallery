@@ -1120,6 +1120,8 @@ export class LightGallery {
                 const markup = utils.getIframeMarkup(
                     this.settings.iframeWidth,
                     this.settings.iframeHeight,
+                    this.settings.iframeMaxWidth,
+                    this.settings.iframeMaxHeight,
                     src,
                     currentGalleryItem.iframeTitle,
                 );

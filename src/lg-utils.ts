@@ -366,11 +366,13 @@ const utils = {
     getIframeMarkup(
         iframeWidth: string,
         iframeHeight: string,
+        iframeMaxWidth: string,
+        iframeMaxHeight: string,
         src?: string,
         iframeTitle?: string,
     ): string {
         const title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
-        return `<div class="lg-video-cont lg-has-iframe" style="width:${iframeWidth}; height: ${iframeHeight}">
+        return `<div class="lg-video-cont lg-has-iframe" style="width:${iframeWidth}; max-width:${iframeMaxWidth}; height: ${iframeHeight}; max-height:${iframeMaxHeight}">
                     <iframe class="lg-object" frameborder="0" ${title} src="${src}"  allowfullscreen="true"></iframe>
                 </div>`;
     },
