@@ -1054,6 +1054,14 @@ export class LightGallery {
                 !!element.video,
                 index,
             );
+            if (
+                element.__slideVideoInfo &&
+                this.settings.loadYouTubePoster &&
+                !element.poster &&
+                element.__slideVideoInfo.youtube
+            ) {
+                element.poster = `//img.youtube.com/vi/${element.__slideVideoInfo.youtube[1]}/maxresdefault.jpg`;
+            }
         });
     }
 

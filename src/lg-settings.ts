@@ -228,6 +228,11 @@ export interface LightGalleryCoreSettings {
     videoMaxSize: string;
 
     /**
+     * Automatically load poster image for YouTube videos
+     */
+    loadYouTubePoster: boolean;
+
+    /**
      * Height of the caption for calculating allowMediaOverlap positions
      * Note - this is only used to find the position of media item if allowMediaOverlap is true.
      * Not for setting height of the captions
@@ -510,6 +515,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     supportLegacyBrowser: true,
     allowMediaOverlap: false,
     videoMaxSize: '1280-720',
+    loadYouTubePoster: true,
     defaultCaptionHeight: 0,
     ariaLabelledby: '',
     ariaDescribedby: '',
