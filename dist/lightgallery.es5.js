@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.1 | October 28th 2021
+ * lightgallery | 2.3.0 | October 28th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -532,9 +532,9 @@ var utils = {
             ', 1)';
         return transform;
     },
-    getIframeMarkup: function (iframeWidth, iframeHeight, src, iframeTitle) {
+    getIframeMarkup: function (iframeWidth, iframeHeight, iframeMaxWidth, iframeMaxHeight, src, iframeTitle) {
         var title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
-        return "<div class=\"lg-video-cont lg-has-iframe\" style=\"width:" + iframeWidth + "; height: " + iframeHeight + "\">\n                    <iframe class=\"lg-object\" frameborder=\"0\" " + title + " src=\"" + src + "\"  allowfullscreen=\"true\"></iframe>\n                </div>";
+        return "<div class=\"lg-video-cont lg-has-iframe\" style=\"width:" + iframeWidth + "; max-width:" + iframeMaxWidth + "; height: " + iframeHeight + "; max-height:" + iframeMaxHeight + "\">\n                    <iframe class=\"lg-object\" frameborder=\"0\" " + title + " src=\"" + src + "\"  allowfullscreen=\"true\"></iframe>\n                </div>";
     },
     getImgMarkup: function (index, src, altAttr, srcset, sizes, sources) {
         var srcsetAttr = srcset ? "srcset=\"" + srcset + "\"" : '';
@@ -741,6 +741,8 @@ var lightGalleryCoreSettings = {
     index: 0,
     iframeWidth: '100%',
     iframeHeight: '100%',
+    iframeMaxWidth: '100%',
+    iframeMaxHeight: '100%',
     download: true,
     counter: true,
     appendCounterTo: '.lg-toolbar',
@@ -1580,7 +1582,7 @@ var LightGallery = /** @class */ (function () {
                 lgVideoStyle = this.getVideoContStyle(videoSize);
             }
             if (iframe) {
-                var markup = utils.getIframeMarkup(this.settings.iframeWidth, this.settings.iframeHeight, src, currentGalleryItem.iframeTitle);
+                var markup = utils.getIframeMarkup(this.settings.iframeWidth, this.settings.iframeHeight, this.settings.iframeMaxWidth, this.settings.iframeMaxHeight, src, currentGalleryItem.iframeTitle);
                 $currentSlide.prepend(markup);
             }
             else if (poster) {
