@@ -255,4 +255,57 @@ describe('Plugins', () => {
             expect(document.querySelector('.lg-prev')).not.toBeDisabled();
         });
     });
+    it('Should fetch poster from youtube videos', async () => {
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="//www.youtube.com/watch?v=egyIeygdS_E">
+                    <img src="b.png" />
+                </a>
+            </div>`;
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        LG.openGallery(0);
+        expect(LG.galleryItems[0].poster).toBe(
+            '//img.youtube.com/vi/egyIeygdS_E/maxresdefault.jpg',
+        );
+    });
+    it('Should not fetch poster from youtube videos when turned off via settings', async () => {
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="//www.youtube.com/watch?v=egyIeygdS_E">
+                    <img src="b.png" />
+                </a>
+            </div>`;
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+            {
+                loadYouTubePoster: false,
+            },
+        );
+        LG.openGallery(0);
+        expect(LG.galleryItems[0].poster).toBeUndefined();
+    });
+    it('Should not fetch poster from youtube videos for image slide', async () => {
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" />
+                </a>
+            </div>`;
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        LG.openGallery(0);
+        expect(LG.galleryItems[0].poster).toBeUndefined();
+    });
+    it('Should not fetch poster from youtube videos for other video slides', async () => {
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="//vimeo.com/112836958">
+                    <img src="b.png" />
+                </a>
+            </div>`;
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        LG.openGallery(0);
+        expect(LG.galleryItems[0].poster).toBeUndefined();
+    });
 });

@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.1 | September 4th 2021
+ * lightgallery | 2.2.1 | October 28th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -73,6 +73,27 @@ var lGEvents = {
     flipVertical: 'lgFlipVertical',
 };
 
+var param = function (obj) {
+    return Object.keys(obj)
+        .map(function (k) {
+        return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]);
+    })
+        .join('&');
+};
+var getVimeoURLParams = function (defaultParams, videoInfo) {
+    if (!videoInfo || !videoInfo.vimeo)
+        return '';
+    var urlParams = videoInfo.vimeo[2] || '';
+    urlParams =
+        urlParams[0] == '?' ? '&' + urlParams.slice(1) : urlParams || '';
+    var defaultPlayerParams = defaultParams
+        ? '&' + param(defaultParams)
+        : '';
+    // For vimeo last parms gets priority if duplicates found
+    var vimeoPlayerParams = "?autoplay=0&muted=1" + defaultPlayerParams + urlParams;
+    return vimeoPlayerParams;
+};
+
 /**
  * Video module for lightGallery
  * Supports HTML5, YouTube, Vimeo, wistia videos
@@ -91,15 +112,13 @@ var lGEvents = {
  * @ref Youtube
  * https://developers.google.com/youtube/player_parameters#enablejsapi
  * https://developers.google.com/youtube/iframe_api_reference
+ * https://developer.chrome.com/blog/autoplay/#iframe-delegation
  *
+ * @ref Vimeo
+ * https://stackoverflow.com/questions/10488943/easy-way-to-get-vimeo-id-from-a-vimeo-url
+ * https://vimeo.zendesk.com/hc/en-us/articles/360000121668-Starting-playback-at-a-specific-timecode
+ * https://vimeo.zendesk.com/hc/en-us/articles/360001494447-Using-Player-Parameters
  */
-function param(obj) {
-    return Object.keys(obj)
-        .map(function (k) {
-        return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]);
-    })
-        .join('&');
-}
 var Video = /** @class */ (function () {
     function Video(instance) {
         // get lightGallery core plugin instance
@@ -119,10 +138,35 @@ var Video = /** @class */ (function () {
             var $el = _this.core.getSlideItem(_this.core.index);
             _this.loadVideoOnPosterClick($el);
         });
+        this.core.LGel.on(lGEvents.slideItemLoad + ".video", this.onSlideItemLoad.bind(this));
         // @desc fired immediately before each slide transition.
         this.core.LGel.on(lGEvents.beforeSlide + ".video", this.onBeforeSlide.bind(this));
         // @desc fired immediately after each slide transition.
         this.core.LGel.on(lGEvents.afterSlide + ".video", this.onAfterSlide.bind(this));
+    };
+    /**
+     * @desc Event triggered when a slide is completely loaded
+     *
+     * @param {Event} event - lightGalley custom event
+     */
+    Video.prototype.onSlideItemLoad = function (event) {
+        var _this = this;
+        var _a = event.detail, isFirstSlide = _a.isFirstSlide, index = _a.index;
+        // Should check the active slide as well as user may have moved to different slide before the first slide is loaded
+        if (this.settings.autoplayFirstVideo &&
+            isFirstSlide &&
+            index === this.core.index) {
+            // Delay is just for the transition effect on video load
+            setTimeout(function () {
+                _this.loadAndPlayVideo(index);
+            }, 200);
+        }
+        // Should not call on first slide. should check only if the slide is active
+        if (!isFirstSlide &&
+            this.settings.autoplayVideoOnSlide &&
+            index === this.core.index) {
+            this.loadAndPlayVideo(index);
+        }
     };
     /**
      * @desc Event triggered when video url or poster found
@@ -132,7 +176,7 @@ var Video = /** @class */ (function () {
      * @param {Event} event - Javascript Event object.
      */
     Video.prototype.onHasVideo = function (event) {
-        var _a = event.detail, index = _a.index, src = _a.src, html5Video = _a.html5Video, hasPoster = _a.hasPoster, isFirstSlide = _a.isFirstSlide;
+        var _a = event.detail, index = _a.index, src = _a.src, html5Video = _a.html5Video, hasPoster = _a.hasPoster;
         if (!hasPoster) {
             // All functions are called separately if poster exist in loadVideoOnPosterClick function
             this.appendVideos(this.core.getSlideItem(index), {
@@ -143,15 +187,6 @@ var Video = /** @class */ (function () {
             });
             // Automatically navigate to next slide once video reaches the end.
             this.gotoNextSlideOnVideoEnd(src, index);
-        }
-        if (this.settings.autoplayFirstVideo && isFirstSlide) {
-            if (hasPoster) {
-                var $slide = this.core.getSlideItem(index);
-                this.loadVideoOnPosterClick($slide);
-            }
-            else {
-                this.playVideo(index);
-            }
         }
     };
     /**
@@ -164,8 +199,10 @@ var Video = /** @class */ (function () {
      * @param {number} index - Current index of the slide
      */
     Video.prototype.onBeforeSlide = function (event) {
-        var _a = event.detail, prevIndex = _a.prevIndex; _a.index;
-        this.pauseVideo(prevIndex);
+        if (this.core.lGalleryOn) {
+            var prevIndex = event.detail.prevIndex;
+            this.pauseVideo(prevIndex);
+        }
     };
     /**
      * @desc fired immediately after each slide transition.
@@ -174,20 +211,29 @@ var Video = /** @class */ (function () {
      * @param {Event} event - Javascript Event object.
      * @param {number} prevIndex - Previous index of the slide.
      * @param {number} index - Current index of the slide
+     * @todo should check on onSlideLoad as well if video is not loaded on after slide
      */
     Video.prototype.onAfterSlide = function (event) {
         var _this = this;
-        var index = event.detail.index;
-        if (this.settings.autoplayVideoOnSlide && this.core.lGalleryOn) {
-            setTimeout(function () {
-                var $slide = _this.core.getSlideItem(index);
-                if (!$slide.hasClass('lg-video-loaded')) {
-                    _this.loadVideoOnPosterClick($slide);
-                }
-                else {
-                    _this.playVideo(index);
-                }
-            }, 100);
+        var _a = event.detail, index = _a.index, prevIndex = _a.prevIndex;
+        // Do not call on first slide
+        var $slide = this.core.getSlideItem(index);
+        if (this.settings.autoplayVideoOnSlide && index !== prevIndex) {
+            if ($slide.hasClass('lg-complete')) {
+                setTimeout(function () {
+                    _this.loadAndPlayVideo(index);
+                }, 100);
+            }
+        }
+    };
+    Video.prototype.loadAndPlayVideo = function (index) {
+        var $slide = this.core.getSlideItem(index);
+        var currentGalleryItem = this.core.galleryItems[index];
+        if (currentGalleryItem.poster) {
+            this.loadVideoOnPosterClick($slide, true);
+        }
+        else {
+            this.playVideo(index);
         }
     };
     /**
@@ -214,7 +260,11 @@ var Video = /** @class */ (function () {
         var commonIframeProps = "allowtransparency=\"true\"\n            frameborder=\"0\"\n            scrolling=\"no\"\n            allowfullscreen\n            mozallowfullscreen\n            webkitallowfullscreen\n            oallowfullscreen\n            msallowfullscreen";
         if (videoInfo.youtube) {
             var videoId = 'lg-youtube' + index;
-            var youTubePlayerParams = "?wmode=opaque&autoplay=0&enablejsapi=1";
+            var slideUrlParams = videoInfo.youtube[2]
+                ? videoInfo.youtube[2] + '&'
+                : '';
+            // For youtube first parms gets priority if duplicates found
+            var youTubePlayerParams = "?" + slideUrlParams + "wmode=opaque&autoplay=0&mute=1&enablejsapi=1";
             var playerParams = youTubePlayerParams +
                 (this.settings.youTubePlayerParams
                     ? '&' + param(this.settings.youTubePlayerParams)
@@ -223,12 +273,13 @@ var Video = /** @class */ (function () {
         }
         else if (videoInfo.vimeo) {
             var videoId = 'lg-vimeo' + index;
-            var playerParams = param(this.settings.vimeoPlayerParams);
+            var playerParams = getVimeoURLParams(this.settings.vimeoPlayerParams, videoInfo);
             video = "<iframe allow=\"autoplay\" id=" + videoId + " class=\"lg-video-object lg-vimeo " + addClass + "\" " + videoTitle + " src=\"//player.vimeo.com/video/" + (videoInfo.vimeo[1] + playerParams) + "\" " + commonIframeProps + "></iframe>";
         }
         else if (videoInfo.wistia) {
             var wistiaId = 'lg-wistia' + index;
             var playerParams = param(this.settings.wistiaPlayerParams);
+            playerParams = playerParams ? '?' + playerParams : '';
             video = "<iframe allow=\"autoplay\" id=\"" + wistiaId + "\" src=\"//fast.wistia.net/embed/iframe/" + (videoInfo.wistia[4] + playerParams) + "\" " + videoTitle + " class=\"wistia_embed lg-video-object lg-wistia " + addClass + "\" name=\"wistia_embed\" " + commonIframeProps + "></iframe>";
         }
         else if (videoInfo.html5) {
@@ -379,7 +430,7 @@ var Video = /** @class */ (function () {
             }
         }
     };
-    Video.prototype.loadVideoOnPosterClick = function ($el) {
+    Video.prototype.loadVideoOnPosterClick = function ($el, forcePlay) {
         var _this = this;
         // check slide has poster
         if (!$el.hasClass('lg-video-loaded')) {
@@ -412,7 +463,7 @@ var Video = /** @class */ (function () {
                     });
                 $el.find('.lg-video-object')
                     .first()
-                    .on('load.lg error.lg loadeddata.lg', function () {
+                    .on('load.lg error.lg loadedmetadata.lg', function () {
                     setTimeout(function () {
                         _this.onVideoLoadAfterPosterClick($el, _this.core.index);
                     }, 50);
@@ -421,6 +472,9 @@ var Video = /** @class */ (function () {
             else {
                 this.playVideo(this.core.index);
             }
+        }
+        else if (forcePlay) {
+            this.playVideo(this.core.index);
         }
     };
     Video.prototype.onVideoLoadAfterPosterClick = function ($el, index) {

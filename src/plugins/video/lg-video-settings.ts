@@ -1,3 +1,5 @@
+import { PlayerParams } from './lg-video-utils';
+
 export interface VideoSettings {
     /**
      * Enable/DIsable first video autoplay.
@@ -34,7 +36,7 @@ export interface VideoSettings {
      *     }
      * })
      */
-    vimeoPlayerParams: any;
+    vimeoPlayerParams: PlayerParams;
 
     /**
      * Change Wistia player parameters.

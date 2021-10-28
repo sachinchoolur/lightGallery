@@ -16,7 +16,7 @@ weight: 2
 toc: true
 ---
 
-##### External videos
+#### External videos
 
 <p>To display YouTube, Vimeo and Wistia, videos, you just need to paste the video URL, or share URL of the video in the data-src attribute. The same way you display images in the gallery. lightGallery will check the data-src attribute and if it is a video URL, it will create the respective video slide.</p>
 
@@ -24,7 +24,7 @@ toc: true
 
 <p>lightGallery allows you to load thumbnail images automatically from YouTube and Vimeo. You can specify the size of the thumbnails in the settings. Videos will be automatically paused when a user starts to navigate to another slide.</p>
 
-##### HTML5 videos
+#### HTML5 videos
 
 <p>For displaying HTML5 videos, you need to construct an object with array of video sources and types, and videos attributes objects as shown below and pass it via data-video attribute</p>
 Note - data-src should not be provided when you use html5 videos
@@ -41,7 +41,7 @@ Note - data-src should not be provided when you use html5 videos
     // Optional video tracks - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/track
     tracks : [
         {
-            src: '/videos/title.txt', 
+            src: '/videos/title.txt',
             kind:'captions'
         }
     ],
@@ -49,7 +49,15 @@ Note - data-src should not be provided when you use html5 videos
 };
 ```
 
-{{< videos-gallery id="gallery-videos-demo">}}
+<div class="alert alert-warning" role="alert">
+    Note: You need to include the lightGallery videos plugin in the document to enable video slides
+</div>
+
+{{< videos-gallery id="gallery-videos-demo" >}}
+
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/ExXxqPe">View on CodePen</a>
+</div>
 
 ##### HTML structure
 
@@ -60,7 +68,7 @@ Note - data-src should not be provided when you use html5 videos
         data-lg-size="1280-720"
         data-src="//www.youtube.com/watch?v=egyIeygdS_E"
         data-poster="https://img.youtube.com/vi/egyIeygdS_E/maxresdefault.jpg"
-        data-sub-html="<h4>Visual Soundscapes - Mountains | Planet Earth II | BBC America</h4><p>On the heels of Planet Earth II’s record-breaking Emmy nominations, BBC America presents stunning visual soundscapes from the series' amazing habitats.</p>"
+        data-sub-html="<h4>Visual Soundscapes - Mountains | Planet Earth II | BBC America</h4><p>On the heels of Planet Earth II's record-breaking Emmy nominations, BBC America presents stunning visual soundscapes from the series' amazing habitats.</p>"
     >
         <img
             width="300"
@@ -103,7 +111,7 @@ Note - data-src should not be provided when you use html5 videos
     <!-- HTML5 Video --->
     <a
         data-lg-size="1280-720"
-        data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "tracks": [{"src": "{/videos/title.txt", "kind":"captions", "srclang": "en", "label": "English", "default": "true"}], "attributes": {"preload": false, "controls": true}}'
+        data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "tracks": [{"src": "{/videos/title.txt", "kind":"captions", "srclang": "en", "label": "English", "default": "true"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}'
         data-poster="/images/demo/youtube-video-poster.jpg"
         data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
     >
@@ -120,10 +128,12 @@ Note - data-src should not be provided when you use html5 videos
 ##### JavaScript
 
 ```js
-lightGallery(document.getElementById('gallery-videos-demo'));
+lightGallery(document.getElementById('gallery-videos-demo'), {
+    plugins: [lgVideo],
+});
 ```
 
-### Videojs example
+#### Videojs example
 
 <a href="https://videojs.com/" target="_blank">Video.js</a> is a web video
 player built from the ground up for an HTML5 world. lightGallery has inbuilt
@@ -135,7 +145,7 @@ Note - Make sure that you pass proper JSON object in data-video attribute
 
 ##### Demo
 
-{{< html5-video-gallery id="gallery-videojs-demo">}}
+{{< html5-video-gallery id="gallery-videojs-demo" >}}
 
 ##### HTML structure
 
@@ -162,9 +172,72 @@ Note - Make sure that you pass proper JSON object in data-video attribute
 
 ```js
 lightGallery(document.getElementById('gallery-videojs-demo'), {
+    plugins: [lgVideo],
     videojs: true,
     videojsOptions: {
         muted: true,
     },
 });
+```
+
+#### Video Autoplay
+
+Autoplay might be blocked in some environments, such as IOS, Chrome 66+, and Safari 11+ due to their predefined auto-play policy.
+
+It is  dependent on [many scenarios](https://developer.chrome.com/blog/autoplay/).
+By default, lightGallery mute the video and enable autoplay for the first slide if it contains videos.
+Since version 2.3.0, lightGallery allows you to pass query parameters via YouTube or Vimeo videos.
+If you want, you can unmute the video by passing `?mute=0` or `?muted=false` respectively via video URL params
+
+Also, [on IOS](https://stackoverflow.com/questions/43570460/html5-video-autoplay-on-iphone), you might need to set `"playsinline": true,` for HTML5 videos
+
+##### HTML structure
+
+```html
+<div id="gallery-videojs-demo">
+    <!-- YouTube Video --->
+    <a
+        data-lg-size="1280-720"
+        data-src="//www.youtube.com/watch?v=egyIeygdS_E&mute=0"
+        data-poster="https://img.youtube.com/vi/egyIeygdS_E/maxresdefault.jpg"
+        data-sub-html="<h4>Visual Soundscapes - Mountains | Planet Earth II | BBC America</h4><p>On the heels of Planet Earth II's record-breaking Emmy nominations, BBC America presents stunning visual soundscapes from the series' amazing habitats.</p>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="https://img.youtube.com/vi/egyIeygdS_E/maxresdefault.jpg"
+        />
+    </a>
+
+    <!-- VImeo Video --->
+    <a
+        data-lg-size="1280-720"
+        data-src="//vimeo.com/112836958?muted=false"
+        data-poster="/images/demo/vimeo-video-poster.jpg"
+        data-sub-html="<h4>Nature</h4><p>Video by <a target='_blank' href='https://vimeo.com/charliekaye'>Charlie Kaye</a></p>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="/images/demo/vimeo-video-poster.jpg"
+        />
+    </a>
+    <!-- HTML5 videos -->
+    <a
+        data-lg-size="1280-720"
+        data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}'
+        data-poster="/images/demo/youtube-video-poster.jpg"
+        data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="/images/demo/youtube-video-poster.jpg"
+        />
+    </a>
+    ...
+</div>
 ```

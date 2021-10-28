@@ -82,7 +82,7 @@ images: []
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h2 class="align-center">Open source license</h2>
-            <p>If you are creating an open source application under a license compatible with the <a target="_blank" href="https://www.gnu.org/licenses/gpl-3.0.html">GNU GPL license v3</a>, you may use this project under the terms of the GPLv3. Questions? <a target="_blank" href="https://www.gnu.org/licenses/gpl-faq.html#GPLRequireSourcePostedPublic">Read the GPL FAQ.</a></p>
+            <p>If you are creating an open source application under a license compatible with the <a target="_blank" href="https://www.gnu.org/licenses/gpl-3.0.html">GNU GPL license v3</a>, you may use this project under the terms of the GPLv3. Questions? <a target="_blank" href="https://www.gnu.org/licenses/gpl-faq.html#GPLRequireSourcePostedPublic">Read the GPL FAQ.</a> or <a target="_blank" href="http://greendrake.info/publications/js-gpl">this blog post.</a></p>
         </div>
     </div>
 </div>

@@ -3,30 +3,36 @@ interface Offset {
     top: number;
 }
 
-(function () {
-    if (typeof window.CustomEvent === 'function') return false;
+function initLgPolyfills() {
+    (function () {
+        if (typeof window.CustomEvent === 'function') return false;
 
-    function CustomEvent(event: string, params: any) {
-        params = params || { bubbles: false, cancelable: false, detail: null };
-        const evt = document.createEvent('CustomEvent');
-        evt.initCustomEvent(
-            event,
-            params.bubbles,
-            params.cancelable,
-            params.detail,
-        );
-        return evt;
-    }
+        function CustomEvent(event: string, params: any) {
+            params = params || {
+                bubbles: false,
+                cancelable: false,
+                detail: null,
+            };
+            const evt = document.createEvent('CustomEvent');
+            evt.initCustomEvent(
+                event,
+                params.bubbles,
+                params.cancelable,
+                params.detail,
+            );
+            return evt;
+        }
 
-    window.CustomEvent = CustomEvent as any;
-})();
-(function () {
-    if (!Element.prototype.matches) {
-        Element.prototype.matches =
-            (Element.prototype as any).msMatchesSelector ||
-            Element.prototype.webkitMatchesSelector;
-    }
-})();
+        window.CustomEvent = CustomEvent as any;
+    })();
+    (function () {
+        if (!Element.prototype.matches) {
+            Element.prototype.matches =
+                (Element.prototype as any).msMatchesSelector ||
+                Element.prototype.webkitMatchesSelector;
+        }
+    })();
+}
 
 export type LgQuery = (selector: any) => lgQuery;
 export class lgQuery {
@@ -195,7 +201,9 @@ export class lgQuery {
         this._each((el: any) => {
             // IE doesn't support multiple arguments
             classNames.split(' ').forEach((className) => {
-                el.classList.add(className);
+                if (className) {
+                    el.classList.add(className);
+                }
             });
         });
         return this;
@@ -205,7 +213,9 @@ export class lgQuery {
         this._each((el: any) => {
             // IE doesn't support multiple arguments
             classNames.split(' ').forEach((className) => {
-                el.classList.remove(className);
+                if (className) {
+                    el.classList.remove(className);
+                }
             });
         });
         return this;
@@ -424,5 +434,6 @@ export class lgQuery {
 }
 
 export function $LG(selector: any): lgQuery {
+    initLgPolyfills();
     return new lgQuery(selector);
 }

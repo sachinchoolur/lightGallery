@@ -93,11 +93,14 @@ export interface SlideItemLoadDetail {
      */
     index: number;
     /**
-     * First time when an item is loaded lightGallery adds some delay for showing the completed item
-     * to show transition effect on item load
+     * For the first slide, lightGallery adds some delay for displaying the loaded slide item.
+     * This delay is required for the transition effect when the slide item is displayed
      * Respect the delay when you use this event
      */
     delay: number;
+
+    // Will be true for the first slide
+    isFirstSlide: boolean;
 }
 
 /**
@@ -288,9 +291,4 @@ export interface HasVideoDetail {
      * True if video has poster
      */
     hasPoster: boolean;
-
-    /**
-     * True for first slide
-     */
-    isFirstSlide: boolean;
 }

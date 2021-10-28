@@ -16,15 +16,26 @@
  * @ref Youtube
  * https://developers.google.com/youtube/player_parameters#enablejsapi
  * https://developers.google.com/youtube/iframe_api_reference
+ * https://developer.chrome.com/blog/autoplay/#iframe-delegation
  *
+ * @ref Vimeo
+ * https://stackoverflow.com/questions/10488943/easy-way-to-get-vimeo-id-from-a-vimeo-url
+ * https://vimeo.zendesk.com/hc/en-us/articles/360000121668-Starting-playback-at-a-specific-timecode
+ * https://vimeo.zendesk.com/hc/en-us/articles/360001494447-Using-Player-Parameters
  */
 
 import { VideoSettings, videoSettings } from './lg-video-settings';
 import { LightGallery } from '../../lightgallery';
 import { lgQuery } from '../../lgQuery';
-import { CustomEventHasVideo } from '../../types';
+import {
+    CustomEventAfterSlide,
+    CustomEventHasVideo,
+    CustomEventSlideItemLoad,
+    VideoInfo,
+} from '../../types';
 import { lGEvents } from '../../lg-events';
 import { VideoSource } from './types';
+import { getVimeoURLParams, param } from './lg-video-utils';
 
 declare let Vimeo: any;
 declare let videojs: any;
@@ -34,15 +45,6 @@ declare global {
         Vimeo: any;
     }
 }
-
-function param(obj: { [x: string]: string | number | boolean }): string {
-    return Object.keys(obj)
-        .map(function (k) {
-            return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]);
-        })
-        .join('&');
-}
-
 export default class Video {
     private core: LightGallery;
     private settings: VideoSettings;
@@ -68,6 +70,10 @@ export default class Video {
             const $el = this.core.getSlideItem(this.core.index);
             this.loadVideoOnPosterClick($el);
         });
+        this.core.LGel.on(
+            `${lGEvents.slideItemLoad}.video`,
+            this.onSlideItemLoad.bind(this),
+        );
 
         // @desc fired immediately before each slide transition.
         this.core.LGel.on(
@@ -83,6 +89,36 @@ export default class Video {
     }
 
     /**
+     * @desc Event triggered when a slide is completely loaded
+     *
+     * @param {Event} event - lightGalley custom event
+     */
+    onSlideItemLoad(event: CustomEventSlideItemLoad): void {
+        const { isFirstSlide, index } = event.detail;
+
+        // Should check the active slide as well as user may have moved to different slide before the first slide is loaded
+        if (
+            this.settings.autoplayFirstVideo &&
+            isFirstSlide &&
+            index === this.core.index
+        ) {
+            // Delay is just for the transition effect on video load
+            setTimeout(() => {
+                this.loadAndPlayVideo(index);
+            }, 200);
+        }
+
+        // Should not call on first slide. should check only if the slide is active
+        if (
+            !isFirstSlide &&
+            this.settings.autoplayVideoOnSlide &&
+            index === this.core.index
+        ) {
+            this.loadAndPlayVideo(index);
+        }
+    }
+
+    /**
      * @desc Event triggered when video url or poster found
      * Append video HTML is poster is not given
      * Play if autoplayFirstVideo is true
@@ -90,13 +126,7 @@ export default class Video {
      * @param {Event} event - Javascript Event object.
      */
     onHasVideo(event: CustomEventHasVideo): void {
-        const {
-            index,
-            src,
-            html5Video,
-            hasPoster,
-            isFirstSlide,
-        } = event.detail;
+        const { index, src, html5Video, hasPoster } = event.detail;
         if (!hasPoster) {
             // All functions are called separately if poster exist in loadVideoOnPosterClick function
 
@@ -110,15 +140,6 @@ export default class Video {
             // Automatically navigate to next slide once video reaches the end.
             this.gotoNextSlideOnVideoEnd(src, index);
         }
-
-        if (this.settings.autoplayFirstVideo && isFirstSlide) {
-            if (hasPoster) {
-                const $slide = this.core.getSlideItem(index);
-                this.loadVideoOnPosterClick($slide);
-            } else {
-                this.playVideo(index);
-            }
-        }
     }
 
     /**
@@ -130,9 +151,11 @@ export default class Video {
      * @param {number} prevIndex - Previous index of the slide.
      * @param {number} index - Current index of the slide
      */
-    onBeforeSlide(event: CustomEvent) {
-        const { prevIndex, index } = event.detail;
-        this.pauseVideo(prevIndex);
+    onBeforeSlide(event: CustomEvent): void {
+        if (this.core.lGalleryOn) {
+            const { prevIndex } = event.detail;
+            this.pauseVideo(prevIndex);
+        }
     }
 
     /**
@@ -142,18 +165,28 @@ export default class Video {
      * @param {Event} event - Javascript Event object.
      * @param {number} prevIndex - Previous index of the slide.
      * @param {number} index - Current index of the slide
+     * @todo should check on onSlideLoad as well if video is not loaded on after slide
      */
-    onAfterSlide(event: CustomEvent): void {
-        const { index } = event.detail;
-        if (this.settings.autoplayVideoOnSlide && this.core.lGalleryOn) {
-            setTimeout(() => {
-                const $slide = this.core.getSlideItem(index);
-                if (!$slide.hasClass('lg-video-loaded')) {
-                    this.loadVideoOnPosterClick($slide);
-                } else {
-                    this.playVideo(index);
-                }
-            }, 100);
+    onAfterSlide(event: CustomEventAfterSlide): void {
+        const { index, prevIndex } = event.detail;
+        // Do not call on first slide
+        const $slide = this.core.getSlideItem(index);
+        if (this.settings.autoplayVideoOnSlide && index !== prevIndex) {
+            if ($slide.hasClass('lg-complete')) {
+                setTimeout(() => {
+                    this.loadAndPlayVideo(index);
+                }, 100);
+            }
+        }
+    }
+
+    loadAndPlayVideo(index: number): void {
+        const $slide = this.core.getSlideItem(index);
+        const currentGalleryItem = this.core.galleryItems[index];
+        if (currentGalleryItem.poster) {
+            this.loadVideoOnPosterClick($slide, true);
+        } else {
+            this.playVideo(index);
         }
     }
 
@@ -198,7 +231,11 @@ export default class Video {
         if (videoInfo.youtube) {
             const videoId = 'lg-youtube' + index;
 
-            const youTubePlayerParams = `?wmode=opaque&autoplay=0&enablejsapi=1`;
+            const slideUrlParams = videoInfo.youtube[2]
+                ? videoInfo.youtube[2] + '&'
+                : '';
+            // For youtube first parms gets priority if duplicates found
+            const youTubePlayerParams = `?${slideUrlParams}wmode=opaque&autoplay=0&mute=1&enablejsapi=1`;
 
             const playerParams =
                 youTubePlayerParams +
@@ -211,14 +248,17 @@ export default class Video {
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.vimeo) {
             const videoId = 'lg-vimeo' + index;
-            const playerParams = param(this.settings.vimeoPlayerParams);
-
+            const playerParams = getVimeoURLParams(
+                this.settings.vimeoPlayerParams,
+                videoInfo,
+            );
             video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-vimeo ${addClass}" ${videoTitle} src="//player.vimeo.com/video/${
                 videoInfo.vimeo[1] + playerParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.wistia) {
             const wistiaId = 'lg-wistia' + index;
-            const playerParams = param(this.settings.wistiaPlayerParams);
+            let playerParams = param(this.settings.wistiaPlayerParams);
+            playerParams = playerParams ? '?' + playerParams : '';
             video = `<iframe allow="autoplay" id="${wistiaId}" src="//fast.wistia.net/embed/iframe/${
                 videoInfo.wistia[4] + playerParams
             }" ${videoTitle} class="wistia_embed lg-video-object lg-wistia ${addClass}" name="wistia_embed" ${commonIframeProps}></iframe>`;
@@ -402,7 +442,7 @@ export default class Video {
         }
     }
 
-    loadVideoOnPosterClick($el: lgQuery): void {
+    loadVideoOnPosterClick($el: lgQuery, forcePlay?: boolean): void {
         // check slide has poster
         if (!$el.hasClass('lg-video-loaded')) {
             // check already video element present
@@ -445,7 +485,7 @@ export default class Video {
 
                 $el.find('.lg-video-object')
                     .first()
-                    .on('load.lg error.lg loadeddata.lg', () => {
+                    .on('load.lg error.lg loadedmetadata.lg', () => {
                         setTimeout(() => {
                             this.onVideoLoadAfterPosterClick(
                                 $el,
@@ -456,6 +496,8 @@ export default class Video {
             } else {
                 this.playVideo(this.core.index);
             }
+        } else if (forcePlay) {
+            this.playVideo(this.core.index);
         }
     }
     onVideoLoadAfterPosterClick($el: lgQuery, index: number): void {
