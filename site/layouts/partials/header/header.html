@@ -32,7 +32,7 @@
                 {{ end }}
                 {{ range .Site.Menus.social }}
                 <li class="nav-item nav-item-social">
-                    <a class="nav-link" href="{{ .URL }}">
+                    <a onclick="ga('send', 'event', '{{.Name}}', 'click');" target="_blank"  class="nav-link" href="{{ .URL }}">
                         {{ if eq .Name "GitHub"}}
                         <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             
