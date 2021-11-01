@@ -53,3 +53,16 @@
         margin-left: 1.25rem;
     }
 }
+
+.nav-item svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.nav-item-social > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
