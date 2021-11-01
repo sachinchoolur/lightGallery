@@ -1,14 +1,11 @@
 ---
-title: 'lightGallery Angular'
-description: 'Full featured image and video gallery component for Angular'
-lead: 'Full featured image and video gallery component for angular.'
-date: 2020-10-06T08:48:57+00:00
+title: lightGallery Angular
+description: Full featured image and video gallery component for Angular
+lead: Full featured image and video gallery component for angular.
+date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu:
-    docs:
-        parent: 'API Docs'
-        name: 'Angular'
+menu: {docs: {parent: API Docs, name: Angular}}
 weight: 9
 toc: true
 ---
@@ -24,18 +21,17 @@ You can import it using the following way
 
 -   Install lightGallery via NPM
 
-```
-npm install lightgallery
-```
+
+    npm install lightgallery
 
 -   Import lightGallery module
 
 ```jsx
 import { LightgalleryModule } from 'lightgallery/angular';
 
-// lightGallery supports the last 4 major version of Angular, 
-// if you are using older versions of angular, you can import the respective versions 
-// For example, if you are using Angular version 10, you can import it using 
+// lightGallery supports the last 4 major version of Angular,
+// if you are using older versions of angular, you can import the respective versions
+// For example, if you are using Angular version 10, you can import it using
 // import { LightgalleryModule } from 'lightgallery/angular/9';
 
 @NgModule({
@@ -44,7 +40,7 @@ import { LightgalleryModule } from 'lightgallery/angular';
 export class AppModule {}
 ```
 
-Since, [version 2.2.0-beta.0](https://github.com/sachinchoolur/lightGallery/releases/tag/2.2.0-beta.0), lightGallery supports the last 4 major versions of Angular.
+Since, [version 2.2.0](https://github.com/sachinchoolur/lightGallery/releases/tag/2.2.0), lightGallery supports the last 4 major versions of Angular.
 If you are using an older version of Angular, please choose the respective version.
 
 For example, if you are using Angular version 10, you can import it by suffixing the version number as shown below
