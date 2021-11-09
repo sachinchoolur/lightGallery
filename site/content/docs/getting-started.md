@@ -1,15 +1,11 @@
 ---
 title: Get started
-description:
-    lightGallery is a lightweight, modular, JavaScript library for creating
-    beautiful image & video galleries for the web and the mobile.
-lead:
-    lightGallery is a lightweight, modular, JavaScript library for creating
-    beautiful image & video galleries for the web and the mobile.
+description: lightGallery is a lightweight, modular, JavaScript library for creating beautiful image & video galleries for the web and the mobile.
+lead: lightGallery is a lightweight, modular, JavaScript library for creating beautiful image & video galleries for the web and the mobile.
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu: { docs: { parent: API Docs } }
+menu: {docs: {parent: API Docs}}
 weight: 1
 toc: true
 ---
@@ -80,8 +76,8 @@ of the following method to download lightGallery
 
 #### Include CSS and Javascript files
 
-First of all, include lightgallery.css in the &lt;head> of the document. If you
-want include any lightGallery plugin such as thumbnails or zoom, you need to
+First of all, include lightgallery.css in the &lt;head> of the document. If
+you want include any lightGallery plugin such as thumbnails or zoom, you need to
 include respective css files as well.
 
 Alternatively you can include `lightgallery-bundle.css` which contains
@@ -174,8 +170,7 @@ Finally, you need to initiate the gallery by adding the following code.
 
 #### License Key
 
-You'll receive a license key via email one you purchase a license
-[More info](https://www.lightgalleryjs.com/docs/settings/#licenseKey)
+You'll receive a license key via email one you purchase a license [More info](https://www.lightgalleryjs.com/docs/settings/#licenseKey)
 
 #### Plugins
 
@@ -186,7 +181,7 @@ If you are including lightGallery files via script tag, please use the same
 plugins names as follows.
 
 `lgZoom`, `lgAutoplay`, ` lgComment`, `lgFullscreen `, `lgHash`, `lgPager`,
-`lgRotate`, `lgShare`, `lgThumbnail`, `lgVideo`, `lgMediumZoom`, `lgI18Next`
+`lgRotate`, `lgShare`, `lgThumbnail`, `lgVideo`, `lgMediumZoom`
 
 ## Browser support
 

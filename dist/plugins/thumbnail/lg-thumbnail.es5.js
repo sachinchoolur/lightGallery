@@ -46,7 +46,6 @@ var thumbnailsSettings = {
     thumbnailSwipeThreshold: 10,
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
-    thumbnailPluginStrings: { toggleThumbnails: 'Toggle thumbnails' },
 };
 
 /**
@@ -436,9 +435,7 @@ var Thumbnail = /** @class */ (function () {
         var _this = this;
         if (this.settings.toggleThumb) {
             this.core.outer.addClass('lg-can-toggle');
-            this.core.$toolbar.append('<button type="button" aria-label="' +
-                this.settings.thumbnailPluginStrings['toggleThumbnails'] +
-                '" class="lg-toggle-thumb lg-icon"></button>');
+            this.core.$toolbar.append('<button type="button" aria-label="Toggle thumbnails" class="lg-toggle-thumb lg-icon"></button>');
             this.core.outer
                 .find('.lg-toggle-thumb')
                 .first()

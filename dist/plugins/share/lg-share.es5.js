@@ -48,7 +48,6 @@ var shareSettings = {
     pinterest: true,
     pinterestDropdownText: 'Pinterest',
     additionalShareOptions: [],
-    sharePluginStrings: { share: 'Share' },
 };
 
 function getFacebookShareLink(galleryItem) {
@@ -137,7 +136,7 @@ var Share = /** @class */ (function () {
     };
     Share.prototype.setLgShareMarkup = function () {
         var _this = this;
-        this.core.$toolbar.append("<button type=\"button\" aria-label=\"" + this.settings.sharePluginStrings['share'] + "\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"lg-share lg-icon\">\n                <ul class=\"lg-dropdown\" style=\"position: absolute;\"></ul></button>");
+        this.core.$toolbar.append("<button type=\"button\" aria-label=\"Share\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"lg-share lg-icon\">\n                <ul class=\"lg-dropdown\" style=\"position: absolute;\"></ul></button>");
         this.core.outer.append('<div class="lg-dropdown-overlay"></div>');
         var $shareButton = this.core.outer.find('.lg-share');
         $shareButton.first().on('click.lg', function () {

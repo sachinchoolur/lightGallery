@@ -76,7 +76,6 @@
         forceSlideShowAutoplay: false,
         autoplayControls: true,
         appendAutoplayControlsTo: '.lg-toolbar',
-        autoplayPluginStrings: { toggleAutoplay: 'Toggle Autoplay' },
     };
 
     /**
@@ -173,7 +172,7 @@
         // Manage autoplay via play/stop buttons
         Autoplay.prototype.controls = function () {
             var _this = this;
-            var _html = "<button aria-label=\"" + this.settings.autoplayPluginStrings['toggleAutoplay'] + "\" type=\"button\" class=\"lg-autoplay-button lg-icon\"></button>";
+            var _html = '<button aria-label="Toggle autoplay" type="button" class="lg-autoplay-button lg-icon"></button>';
             // Append autoplay controls
             this.core.outer
                 .find(this.settings.appendAutoplayControlsTo)
