@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.1 | September 30th 2021
+ * lightgallery | 2.2.1 | September 4th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -75,12 +75,6 @@
         rotateRight: true,
         flipHorizontal: true,
         flipVertical: true,
-        rotatePluginStrings: {
-            flipVertical: 'Flip vertical',
-            flipHorizontal: 'Flip horizontal',
-            rotateLeft: 'Rotate left',
-            rotateRight: 'Rotate right',
-        },
     };
 
     var Rotate = /** @class */ (function () {
@@ -95,16 +89,20 @@
         Rotate.prototype.buildTemplates = function () {
             var rotateIcons = '';
             if (this.settings.flipVertical) {
-                rotateIcons += "<button type=\"button\" id=\"lg-flip-ver\" aria-label=\"" + this.settings.rotatePluginStrings['flipVertical'] + "\" class=\"lg-flip-ver lg-icon\"></button>";
+                rotateIcons +=
+                    '<button type="button" id="lg-flip-ver" aria-label="flip vertical" class="lg-flip-ver lg-icon"></button>';
             }
             if (this.settings.flipHorizontal) {
-                rotateIcons += "<button type=\"button\" id=\"lg-flip-hor\" aria-label=\"" + this.settings.rotatePluginStrings['flipHorizontal'] + "\" class=\"lg-flip-hor lg-icon\"></button>";
+                rotateIcons +=
+                    '<button type="button" id="lg-flip-hor" aria-label="Flip horizontal" class="lg-flip-hor lg-icon"></button>';
             }
             if (this.settings.rotateLeft) {
-                rotateIcons += "<button type=\"button\" id=\"lg-rotate-left\" aria-label=\"" + this.settings.rotatePluginStrings['rotateLeft'] + "\" class=\"lg-rotate-left lg-icon\"></button>";
+                rotateIcons +=
+                    '<button type="button" id="lg-rotate-left" aria-label="Rotate left" class="lg-rotate-left lg-icon"></button>';
             }
             if (this.settings.rotateRight) {
-                rotateIcons += "<button type=\"button\" id=\"lg-rotate-right\" aria-label=\"" + this.settings.rotatePluginStrings['rotateRight'] + "\" class=\"lg-rotate-right lg-icon\"></button>";
+                rotateIcons +=
+                    '<button type="button" id="lg-rotate-right" aria-label="Rotate right" class="lg-rotate-right lg-icon"></button>';
             }
             this.core.$toolbar.append(rotateIcons);
         };

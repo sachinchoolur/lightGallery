@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.2.1 | September 30th 2021
+ * lightgallery | 2.2.1 | September 4th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -54,7 +54,6 @@
         pinterest: true,
         pinterestDropdownText: 'Pinterest',
         additionalShareOptions: [],
-        sharePluginStrings: { share: 'Share' },
     };
 
     function getFacebookShareLink(galleryItem) {
@@ -143,7 +142,7 @@
         };
         Share.prototype.setLgShareMarkup = function () {
             var _this = this;
-            this.core.$toolbar.append("<button type=\"button\" aria-label=\"" + this.settings.sharePluginStrings['share'] + "\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"lg-share lg-icon\">\n                <ul class=\"lg-dropdown\" style=\"position: absolute;\"></ul></button>");
+            this.core.$toolbar.append("<button type=\"button\" aria-label=\"Share\" aria-haspopup=\"true\" aria-expanded=\"false\" class=\"lg-share lg-icon\">\n                <ul class=\"lg-dropdown\" style=\"position: absolute;\"></ul></button>");
             this.core.outer.append('<div class="lg-dropdown-overlay"></div>');
             var $shareButton = this.core.outer.find('.lg-share');
             $shareButton.first().on('click.lg', function () {
