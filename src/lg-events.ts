@@ -292,3 +292,51 @@ export interface HasVideoDetail {
      */
     hasPoster: boolean;
 }
+
+/**
+ * Fired when the image is rotated in anticlockwise direction
+ * @name lgRotateLeft
+ * @method onRotateLeft
+ */
+export interface RotateLeftDetail {
+    /**
+     * Index of the slide
+     */
+    index: number;
+}
+
+/**
+ * Fired when the image is rotated in clockwise direction
+ * @name lgRotateRight
+ * @method onRotateRight
+ */
+export interface RotateRightDetail {
+    /**
+     * Index of the slide
+     */
+    index: number;
+}
+
+/**
+ * Fired when the image is flipped horizontally
+ * @name lgFlipHorizontal
+ * @method onFlipHorizontal
+ */
+export interface FlipHorizontalDetail {
+    /**
+     * Index of the slide
+     */
+    index: number;
+}
+
+/**
+ * Fired when the image is flipped vertically
+ * @name lgFlipVertical
+ * @method onFlipVertical
+ */
+export interface FlipVerticalDetail {
+    /**
+     * Index of the slide
+     */
+    index: number;
+}
