@@ -32,7 +32,13 @@ export const lGEvents: {
     rotateRight: 'lgRotateRight',
     flipHorizontal: 'lgFlipHorizontal',
     flipVertical: 'lgFlipVertical',
+    autoplay: 'lgAutoplay',
+    autoplayStart: 'lgAutoplayStart',
+    autoplayStop: 'lgAutoplayStop',
 };
+
+// Follow the below format for the event documentation
+// @method is the method name when event is used with Angular/React components
 
 /**
  * Fired only once when lightGallery is initialized
