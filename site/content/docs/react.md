@@ -1,14 +1,11 @@
 ---
-title: 'lightGallery React'
-description: 'Full featured image and video gallery component for react'
-lead: 'Full featured image and video gallery component for react.'
-date: 2020-10-06T08:48:57+00:00
+title: lightGallery React
+description: Full featured image and video gallery component for react
+lead: Full featured image and video gallery component for react.
+date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu:
-    docs:
-        parent: 'API Docs'
-        name: 'React'
+menu: {docs: {parent: API Docs, name: React}}
 weight: 7
 toc: true
 ---
@@ -24,9 +21,8 @@ it using the following way
 
 -   Install lightGallery via NPM
 
-```
-npm install lightgallery
-```
+
+    npm install lightgallery
 
 -   Import react component and styles
 
@@ -121,6 +117,10 @@ function Gallery() {
     {{< callbacks interface="ContainerResizeDetail" >}}
     {{< callbacks interface="BeforeCloseDetail" >}}
     {{< callbacks interface="AfterCloseDetail" >}}
+    {{< callbacks interface="RotateLeftDetail" >}}
+    {{< callbacks interface="RotateRightDetail" >}}
+    {{< callbacks interface="FlipHorizontalDetail" >}}
+    {{< callbacks interface="FlipVerticalDetail" >}}
 </div>
 
 ## Updating slides

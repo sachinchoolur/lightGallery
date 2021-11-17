@@ -1,14 +1,11 @@
 ---
-title: 'lightGallery Vue'
-description: 'Full featured image and video gallery component for Vue.js'
-lead: 'Full featured image and video gallery component for vue.'
-date: 2020-10-06T08:48:57+00:00
+title: lightGallery Vue
+description: Full featured image and video gallery component for Vue.js
+lead: Full featured image and video gallery component for vue.
+date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu:
-    docs:
-        parent: 'API Docs'
-        name: 'Vue'
+menu: {docs: {parent: API Docs, name: Vue}}
 weight: 8
 toc: true
 ---
@@ -28,9 +25,8 @@ using the following way
 
 -   Install lightGallery via NPM
 
-```
-npm install lightgallery
-```
+
+    npm install lightgallery
 
 -   Import vue component and styles
 
@@ -141,6 +137,10 @@ export default class App extends Vue {}
     {{< callbacks interface="ContainerResizeDetail" >}}
     {{< callbacks interface="BeforeCloseDetail" >}}
     {{< callbacks interface="AfterCloseDetail" >}}
+    {{< callbacks interface="RotateLeftDetail" >}}
+    {{< callbacks interface="RotateRightDetail" >}}
+    {{< callbacks interface="FlipHorizontalDetail" >}}
+    {{< callbacks interface="FlipVerticalDetail" >}}
 </div>
 
 ## Updating slides

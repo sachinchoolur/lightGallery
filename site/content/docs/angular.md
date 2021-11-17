@@ -122,6 +122,10 @@ export class AppComponent {
     {{< callbacks interface="ContainerResizeDetail" >}}
     {{< callbacks interface="BeforeCloseDetail" >}}
     {{< callbacks interface="AfterCloseDetail" >}}
+    {{< callbacks interface="RotateLeftDetail" >}}
+    {{< callbacks interface="RotateRightDetail" >}}
+    {{< callbacks interface="FlipHorizontalDetail" >}}
+    {{< callbacks interface="FlipVerticalDetail" >}}
 </div>
 
 ## Updating slides
