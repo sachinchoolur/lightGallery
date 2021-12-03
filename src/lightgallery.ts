@@ -361,9 +361,12 @@ export class LightGallery {
         </div>
         `;
 
-        $LG(this.settings.container)
-            .css('position', 'relative')
-            .append(template);
+        $LG(this.settings.container).append(template);
+
+        if (document.body !== this.settings.container) {
+            $LG(this.settings.container).css('position', 'relative');
+        }
+
         this.outer = this.getElementById('lg-outer');
         this.$lgComponents = this.getElementById('lg-components');
         this.$backdrop = this.getElementById('lg-backdrop');
