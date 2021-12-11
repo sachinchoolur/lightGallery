@@ -168,8 +168,6 @@
   "dependencies": {
     "@types/picturefill": "^3.0.0",
     "i": "^0.3.6",
-    "i18next": "^20.6.1",
-    "i18next-browser-languagedetector": "^6.1.2",
     "npm": "^6.14.8",
     "video.js": "^7.0.3"
   },
