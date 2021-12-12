@@ -1151,7 +1151,7 @@ export class LightGallery {
                     poster,
                     dummyImg || '',
                     lgVideoStyle,
-                    this.settings.videoPluginStrings['playVideo'],
+                    this.settings.strings['playVideo'],
                     videoInfo,
                 );
                 $currentSlide.prepend(markup);

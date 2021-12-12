@@ -580,5 +580,6 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
         previousSlide: 'Previous slide',
         nextSlide: 'Next slide',
         download: 'Download',
+        playVideo: 'Play video',
     },
 };
