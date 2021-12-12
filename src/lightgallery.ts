@@ -276,12 +276,14 @@ export class LightGallery {
         if (this.settings.controls) {
             controls = `<button type="button" id="${this.getIdName(
                 'lg-prev',
-            )}" aria-label="${this.settings.strings['previousSlide']},
-            )}" class="lg-prev lg-icon"> ${this.settings.prevHtml} </button>
+            )}" aria-label="${
+                this.settings.strings['previousSlide']
+            }" class="lg-prev lg-icon"> ${this.settings.prevHtml} </button>
                 <button type="button" id="${this.getIdName(
                     'lg-next',
-                )}" aria-label="${this.settings.strings['nextSlide']},
-            )}" class="lg-next lg-icon"> ${this.settings.nextHtml} </button>`;
+                )}" aria-label="${
+                this.settings.strings['nextSlide']
+            }" class="lg-next lg-icon"> ${this.settings.nextHtml} </button>`;
         }
 
         if (this.settings.appendSubHtmlTo !== '.lg-item') {
