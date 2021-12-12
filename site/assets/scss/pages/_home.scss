@@ -436,3 +436,50 @@
         }
     }
 }
+
+.subscribe {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    .subscribe-inner {
+        padding: 30px 30px;
+        border: 1px solid #9fc8fb3d;
+        border-radius: 4px;
+        background-color: #b5d6ff3d;
+        color: #0e3481;
+        max-width: 500px;
+    }
+    .form-group {
+        display: flex;
+        margin-top: 26px;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .form-control {
+        margin-right: 10px;
+    }
+
+    h3 {
+        margin: 0;
+        margin-bottom: 10px;
+    }
+    .alert {
+        display: none;
+        padding: 0.5rem 0.5rem;
+        margin-top: 10px;
+    }
+    &.subscribed {
+        .alert-success {
+            display: block;
+        }
+    }
+    &.subscribed-error {
+        .alert-danger {
+            display: block;
+        }
+    }
+}

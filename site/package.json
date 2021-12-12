@@ -8,6 +8,7 @@
   "scripts": {
     "init": "rimraf .git && git init -b main",
     "start": "hugo server --disableFastRender -p 5000",
+    "start:local": "ts-node tools/startLocalServer",
     "build": "hugo --gc --minify && npm run build:functions && npm run copyFilesToSite",
     "copyFilesToSite": "ts-node tools/copysitefiles",
     "build:functions": "netlify-lambda build assets/lambda",
@@ -29,7 +30,9 @@
     "bootstrap": "^5.0.0-beta1",
     "eslint": "^7.17",
     "instant.page": "^5.1",
+    "ip": "^1.1.5",
     "lazysizes": "^5.3",
+    "ts-node": "^9.1.1",
     "markdownlint-cli": "^0.26",
     "netlify-lambda": "^2.0",
     "postcss": "^8.2",

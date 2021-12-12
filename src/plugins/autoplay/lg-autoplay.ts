@@ -53,7 +53,7 @@ export default class Autoplay {
         // Start autoplay
         if (this.settings.slideShowAutoplay) {
             this.core.LGel.once(`${lGEvents.slideItemLoad}.autoplay`, () => {
-                this.startAuto();
+                this.startAutoPlay();
             });
         }
 
@@ -62,7 +62,7 @@ export default class Autoplay {
             `${lGEvents.dragStart}.autoplay touchstart.lg.autoplay`,
             () => {
                 if (this.interval) {
-                    this.cancelAuto();
+                    this.stopAutoPlay();
                     this.pausedOnTouchDrag = true;
                 }
             },
@@ -73,7 +73,7 @@ export default class Autoplay {
             `${lGEvents.dragEnd}.autoplay touchend.lg.autoplay`,
             () => {
                 if (!this.interval && this.pausedOnTouchDrag) {
-                    this.startAuto();
+                    this.startAutoPlay();
                     this.pausedOnTouchDrag = false;
                 }
             },
@@ -82,7 +82,7 @@ export default class Autoplay {
         this.core.LGel.on(`${lGEvents.beforeSlide}.autoplay`, () => {
             this.showProgressBar();
             if (!this.fromAuto && this.interval) {
-                this.cancelAuto();
+                this.stopAutoPlay();
                 this.pausedOnSlideChange = true;
             } else {
                 this.pausedOnSlideChange = false;
@@ -97,7 +97,7 @@ export default class Autoplay {
                 !this.interval &&
                 this.settings.forceSlideShowAutoplay
             ) {
-                this.startAuto();
+                this.startAutoPlay();
                 this.pausedOnSlideChange = false;
             }
         });
@@ -141,17 +141,17 @@ export default class Autoplay {
             .first()
             .on('click.lg.autoplay', () => {
                 if (this.core.outer.hasClass('lg-show-autoplay')) {
-                    this.cancelAuto();
+                    this.stopAutoPlay();
                 } else {
                     if (!this.interval) {
-                        this.startAuto();
+                        this.startAutoPlay();
                     }
                 }
             });
     }
 
     // Autostart gallery
-    public startAuto(): void {
+    public startAutoPlay(): void {
         this.core.outer
             .find('.lg-progress')
             .css(
@@ -163,6 +163,9 @@ export default class Autoplay {
             );
         this.core.outer.addClass('lg-show-autoplay');
         this.core.outer.find('.lg-progress-bar').addClass('lg-start');
+        this.core.LGel.trigger(lGEvents.autoplayStart, {
+            index: this.core.index,
+        });
 
         this.interval = setInterval(() => {
             if (this.core.index + 1 < this.core.galleryItems.length) {
@@ -171,14 +174,21 @@ export default class Autoplay {
                 this.core.index = 0;
             }
 
+            this.core.LGel.trigger(lGEvents.autoplay, {
+                index: this.core.index,
+            });
+
             this.fromAuto = true;
             this.core.slide(this.core.index, false, false, 'next');
         }, this.core.settings.speed + this.settings.slideShowInterval);
     }
 
     // cancel Autostart
-    public cancelAuto(): void {
+    public stopAutoPlay(): void {
         if (this.interval) {
+            this.core.LGel.trigger(lGEvents.autoplayStop, {
+                index: this.core.index,
+            });
             this.core.outer.find('.lg-progress').removeAttr('style');
             this.core.outer.removeClass('lg-show-autoplay');
             this.core.outer.find('.lg-progress-bar').removeClass('lg-start');
@@ -188,7 +198,7 @@ export default class Autoplay {
     }
 
     public closeGallery(): void {
-        this.cancelAuto();
+        this.stopAutoPlay();
     }
     public destroy(): void {
         if (this.settings.autoplay) {

@@ -11,6 +11,10 @@ import { LightGallerySettings } from '../../../src/lg-settings';
 import {
     AfterAppendSubHtmlDetail,
     AfterCloseDetail,
+    RotateLeftDetail,
+    RotateRightDetail,
+    FlipHorizontalDetail,
+    FlipVerticalDetail,
     AfterOpenDetail,
     AfterSlideDetail,
     BeforeCloseDetail,
@@ -87,12 +91,24 @@ import {
         onAfterClose: {
             type: Function,
         },
+        onRotateLeft: {
+            type: Function,
+        },
+        onRotateRight: {
+            type: Function,
+        },
+        onFlipHorizontal: {
+            type: Function,
+        },
+        onFlipVertical: {
+            type: Function,
+        },
     },
 })
 export default class Lightgallery extends Vue {
-	$refs!: {
-		container: HTMLElement
-	}
+    $refs!: {
+        container: HTMLElement;
+    };
 
     settings!: LightGallerySettings;
 
@@ -114,15 +130,16 @@ export default class Lightgallery extends Vue {
     onBeforePrevSlide!: (detail: BeforePrevSlideDetail) => void;
     onBeforeClose!: (detail: BeforeCloseDetail) => void;
     onAfterClose!: (detail: AfterCloseDetail) => void;
+    onRotateLeft?: (detail: RotateLeftDetail) => void;
+    onRotateRight?: (detail: RotateRightDetail) => void;
+    onFlipHorizontal?: (detail: FlipHorizontalDetail) => void;
+    onFlipVertical?: (detail: FlipVerticalDetail) => void;
 
     LG!: LGPlugin;
 
     mounted(): void {
         this.registerEvents.call(this);
-        this.LG = lightGallery(
-            this.$refs.container,
-            { ...this.settings },
-        );
+        this.LG = lightGallery(this.$refs.container, { ...this.settings });
     }
 
     unmounted(): void {
@@ -137,8 +154,8 @@ export default class Lightgallery extends Vue {
 
     private registerEvents(): void {
         Object.keys(lGEvents).forEach((key: string) => {
-			// https://github.com/microsoft/TypeScript/issues/28357
-            ((this.$refs.container) as any).addEventListener(
+            // https://github.com/microsoft/TypeScript/issues/28357
+            (this.$refs.container as any).addEventListener(
                 lGEvents[key].split('.')[0],
                 (event: CustomEvent) => {
                     if ((this as any)[this.getMethodName(key)]) {

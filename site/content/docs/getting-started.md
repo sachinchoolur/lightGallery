@@ -201,10 +201,10 @@ option, your source code is kept proprietary.
 If you are creating an open source application under a license compatible with
 the GNU GPL license v3, you may use this project under the terms of the GPLv3.
 
+## Support
+
+If you have any questions, suggestions, feedback, please reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) or DM me on [twitter](https://twitter.com/sachinchoolur)
+
 ## Custom work
 
 If you need any help with customizing lightGallery, adding new features, create a new plugin, or need any other assistance that is beyond the scope of regular support, reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) with your requirements. We'll help you if we can or at least point you in the right direction.
-
-We try to build separate lightGallery plugins whenever possible for custom requirements so that you can easily upgrade to a newer version when available.
-
-Note: We charge $100 per hour.

@@ -1,16 +1,11 @@
 ---
-title: 'Events'
-description: 'lightGallery custom events documentation.'
-lead:
-    'lightGallery emits several custom events throughout the gallery lifecycle.
-    This can be used to customize the gallery or to add your own features. <a
-    href="../../demos/events/">Demo</a>'
-date: 2020-10-06T08:48:57+00:00
+title: Events
+description: lightGallery custom events documentation.
+lead: lightGallery emits several custom events throughout the gallery lifecycle. This can be used to customize the gallery or to add your own features. <a href="../../demos/events/">Demo</a>
+date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu:
-    docs:
-        parent: 'API Docs'
+menu: {docs: {parent: API Docs}}
 weight: 3
 toc: true
 ---
@@ -64,4 +59,8 @@ event section represents the event detail object.
     {{< events interface="ContainerResizeDetail" >}}
     {{< events interface="BeforeCloseDetail" >}}
     {{< events interface="AfterCloseDetail" >}}
+    {{< events interface="RotateLeftDetail" >}}
+    {{< events interface="RotateRightDetail" >}}
+    {{< events interface="FlipHorizontalDetail" >}}
+    {{< events interface="FlipVerticalDetail" >}}
 </div>

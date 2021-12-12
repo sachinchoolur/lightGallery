@@ -20,6 +20,10 @@ import {
     BeforePrevSlideDetail,
     BeforeCloseDetail,
     AfterCloseDetail,
+    FlipHorizontalDetail,
+    FlipVerticalDetail,
+    RotateLeftDetail,
+    RotateRightDetail,
 } from 'lightgallery/lg-events';
 
 interface LgEvents {
@@ -41,6 +45,10 @@ interface LgEvents {
     onBeforePrevSlide?: (detail: BeforePrevSlideDetail) => void;
     onBeforeClose?: (detail: BeforeCloseDetail) => void;
     onAfterClose?: (detail: AfterCloseDetail) => void;
+    onRotateLeft?: (detail: RotateLeftDetail) => void;
+    onRotateRight?: (detail: RotateRightDetail) => void;
+    onFlipHorizontal?: (detail: FlipHorizontalDetail) => void;
+    onFlipVertical?: (detail: FlipVerticalDetail) => void;
 }
 
 export interface LightGalleryProps extends LgEvents, LightGallerySettings {
@@ -68,6 +76,10 @@ const LgMethods = {
     onBeforePrevSlide: 'lgBeforePrevSlide',
     onBeforeClose: 'lgBeforeClose',
     onAfterClose: 'lgAfterClose',
+    onRotateLeft: 'lgRotateLeft',
+    onRotateRight: 'lgRotateRight',
+    onFlipHorizontal: 'lgFlipHorizontal',
+    onFlipVertical: 'lgFlipVertical',
 };
 
 const LG: React.FC<LightGalleryProps> = ({
@@ -91,6 +103,10 @@ const LG: React.FC<LightGalleryProps> = ({
     onBeforePrevSlide,
     onBeforeClose,
     onAfterClose,
+    onRotateLeft,
+    onRotateRight,
+    onFlipHorizontal,
+    onFlipVertical,
     ...restProps
 }: LightGalleryProps) => {
     const $lg = React.useRef<HTMLDivElement>(null);
@@ -222,10 +238,42 @@ const LG: React.FC<LightGalleryProps> = ({
                 onAfterClose(event.detail);
             }) as EventListener);
         }
+        if (onRotateLeft && $lg && $lg.current) {
+            $lg.current.addEventListener(LgMethods.onRotateLeft, ((
+                event: CustomEvent,
+            ) => {
+                onRotateLeft(event.detail);
+            }) as EventListener);
+        }
+        if (onRotateRight && $lg && $lg.current) {
+            $lg.current.addEventListener(LgMethods.onRotateRight, ((
+                event: CustomEvent,
+            ) => {
+                onRotateRight(event.detail);
+            }) as EventListener);
+        }
+        if (onFlipHorizontal && $lg && $lg.current) {
+            $lg.current.addEventListener(LgMethods.onFlipHorizontal, ((
+                event: CustomEvent,
+            ) => {
+                onFlipHorizontal(event.detail);
+            }) as EventListener);
+        }
+        if (onFlipVertical && $lg && $lg.current) {
+            $lg.current.addEventListener(LgMethods.onFlipVertical, ((
+                event: CustomEvent,
+            ) => {
+                onFlipVertical(event.detail);
+            }) as EventListener);
+        }
     }, [
         onAfterAppendSlide,
         onAfterAppendSubHtml,
         onAfterClose,
+        onRotateLeft,
+        onRotateRight,
+        onFlipHorizontal,
+        onFlipVertical,
         onAfterOpen,
         onAfterSlide,
         onBeforeClose,

@@ -14,8 +14,12 @@ import {
     DragEndDetail,
     DragMoveDetail,
     DragStartDetail,
+    FlipHorizontalDetail,
+    FlipVerticalDetail,
     InitDetail,
     PosterClickDetail,
+    RotateLeftDetail,
+    RotateRightDetail,
     SlideItemLoadDetail,
 } from 'lightgallery/lg-events';
 import { LightGallerySettings } from 'lightgallery/lg-settings';
@@ -41,6 +45,10 @@ const LgMethods = {
     onBeforePrevSlide: 'lgBeforePrevSlide',
     onBeforeClose: 'lgBeforeClose',
     onAfterClose: 'lgAfterClose',
+    onRotateLeft: 'lgRotateLeft',
+    onRotateRight: 'lgRotateRight',
+    onFlipHorizontal: 'lgFlipHorizontal',
+    onFlipVertical: 'lgFlipVertical',
 };
 
 @Component({
@@ -74,6 +82,10 @@ export class LightgalleryComponent {
     @Input() onBeforePrevSlide?: (detail: BeforePrevSlideDetail) => void;
     @Input() onBeforeClose?: (detail: BeforeCloseDetail) => void;
     @Input() onAfterClose?: (detail: AfterCloseDetail) => void;
+    @Input() onRotateLeft?: (detail: RotateLeftDetail) => void;
+    @Input() onRotateRight?: (detail: RotateRightDetail) => void;
+    @Input() onFlipHorizontal?: (detail: FlipHorizontalDetail) => void;
+    @Input() onFlipVertical?: (detail: FlipVerticalDetail) => void;
 
     ngAfterViewChecked(): void {
         if (!this.lgInitialized) {
@@ -237,6 +249,39 @@ export class LightgalleryComponent {
                 LgMethods.onAfterClose,
                 ((event: CustomEvent) => {
                     this.onAfterClose && this.onAfterClose(event.detail);
+                }) as EventListener,
+            );
+        }
+        if (this.onRotateLeft) {
+            this._elementRef.nativeElement.addEventListener(
+                LgMethods.onRotateLeft,
+                ((event: CustomEvent) => {
+                    this.onRotateLeft && this.onRotateLeft(event.detail);
+                }) as EventListener,
+            );
+        }
+        if (this.onRotateRight) {
+            this._elementRef.nativeElement.addEventListener(
+                LgMethods.onRotateRight,
+                ((event: CustomEvent) => {
+                    this.onRotateRight && this.onRotateRight(event.detail);
+                }) as EventListener,
+            );
+        }
+        if (this.onFlipHorizontal) {
+            this._elementRef.nativeElement.addEventListener(
+                LgMethods.onFlipHorizontal,
+                ((event: CustomEvent) => {
+                    this.onFlipHorizontal &&
+                        this.onFlipHorizontal(event.detail);
+                }) as EventListener,
+            );
+        }
+        if (this.onFlipVertical) {
+            this._elementRef.nativeElement.addEventListener(
+                LgMethods.onFlipVertical,
+                ((event: CustomEvent) => {
+                    this.onFlipVertical && this.onFlipVertical(event.detail);
                 }) as EventListener,
             );
         }

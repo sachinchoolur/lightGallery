@@ -158,7 +158,6 @@
             background: url('#{$lg-path-images}/loading.gif') no-repeat scroll
                 center center transparent;
         }
-        will-change: transform, opacity;
         display: none !important;
     }
     &.lg-css3 {
@@ -219,30 +218,6 @@
         width: auto;
         height: auto;
         position: relative;
-    }
-
-    &.lg-show-after-load {
-        .lg-item {
-            .lg-object,
-            .lg-video-play-button {
-                opacity: 0;
-                will-change: opacity;
-                @include transition(opacity 0.15s ease 0s);
-            }
-            &.lg-zoom-from-image {
-                .lg-object,
-                .lg-video-play-button {
-                    opacity: 1;
-                }
-            }
-
-            &.lg-complete {
-                .lg-object,
-                .lg-video-play-button {
-                    opacity: 1;
-                }
-            }
-        }
     }
 
     // Hide title div if empty

@@ -124,9 +124,9 @@ export interface LightGalleryCoreSettings {
      * Start animation class for the gallery.
      * @description
      * <ul>
-     * <li>This can be used to change the zoom effect when the image is loaded</li>
-     * <li>This is also applied when navigating to new slides</li>
      * <li>startClass will be empty zoomFromOrigin is true.</li>
+     * <li>This can be used to change the starting effect when the image is loaded</li>
+     * <li>This is also applied when navigating to new slides</li>
      * </ul>
      */
     startClass: string;
@@ -172,8 +172,9 @@ export interface LightGalleryCoreSettings {
     /**
      * Configure where the gallery should be appended.
      * Useful to create inline galleries and more
+     * It is an empty string in the default settings and later assigned to document.body to avoid accessing document for SSR
      */
-    container: HTMLElement;
+    container: HTMLElement | '';
 
     /**
      * Delay for hiding gallery controls in ms.
@@ -225,6 +226,11 @@ export interface LightGalleryCoreSettings {
      * Recommended video resolution and & aspect ratios <a href="https://support.google.com/youtube/answer/6375112">https://support.google.com/youtube/answer/6375112</a>
      */
     videoMaxSize: string;
+
+    /**
+     * Automatically load poster image for YouTube videos
+     */
+    loadYouTubePoster: boolean;
 
     /**
      * Height of the caption for calculating allowMediaOverlap positions
@@ -342,11 +348,6 @@ export interface LightGalleryCoreSettings {
     numberOfSlideItemsInDom: number;
 
     /**
-     * Show Content once it is fully loaded
-     */
-    showAfterLoad: boolean;
-
-    /**
      * Custom selector property instead of direct children.
      * @description Based on your markup structure, you can specify custom selectors to fetch media data for the gallery
      * Pass "this" to select same element
@@ -384,9 +385,19 @@ export interface LightGalleryCoreSettings {
     iframeWidth: string;
 
     /**
-     * Set width for iframe.
+     * Set height for iframe.
      */
     iframeHeight: string;
+
+    /**
+     * Set max width for iframe.
+     */
+    iframeMaxWidth: string;
+
+    /**
+     * Set max height for iframe.
+     */
+    iframeMaxHeight: string;
 
     /**
      * Enable download button.
@@ -507,7 +518,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     addClass: '',
     startClass: 'lg-start-zoom',
     backdropDuration: 300,
-    container: document.body,
+    container: '',
     startAnimationDuration: 400,
     zoomFromOrigin: true,
     hideBarsDelay: 0,
@@ -516,6 +527,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     supportLegacyBrowser: true,
     allowMediaOverlap: false,
     videoMaxSize: '1280-720',
+    loadYouTubePoster: true,
     defaultCaptionHeight: 0,
     ariaLabelledby: '',
     ariaDescribedby: '',
@@ -536,7 +548,6 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     subHtmlSelectorRelative: false,
     preload: 2,
     numberOfSlideItemsInDom: 10,
-    showAfterLoad: true,
     selector: '',
     selectWithin: '',
     nextHtml: '',
@@ -544,6 +555,8 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     index: 0,
     iframeWidth: '100%',
     iframeHeight: '100%',
+    iframeMaxWidth: '100%',
+    iframeMaxHeight: '100%',
     download: true,
     counter: true,
     appendCounterTo: '.lg-toolbar',
@@ -567,5 +580,6 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
         previousSlide: 'Previous slide',
         nextSlide: 'Next slide',
         download: 'Download',
+        playVideo: 'Play video',
     },
 };

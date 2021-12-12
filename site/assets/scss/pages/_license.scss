@@ -62,9 +62,14 @@ ul.pricing-terms li {
     }
 }
 .license {
-    #paritybar {
-        .pb-powered {
-            display: none !important;
+    .parity-banner {
+        position: fixed;
+        padding: 16px;
+        width: 100%;
+        bottom: 0;
+        font-size: 14px;
+        b {
+            color: #cefdff;
         }
     }
 }

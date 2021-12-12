@@ -29,7 +29,19 @@ export interface GalleryItem {
 
     /**
      * Thumbnail url
-     * @data-attr data-thumb
+     * @description By default lightGallery uses the image inside gallery selector as thumbnail.
+     * But, If you want to use external image for thumbnail,
+     * pass the thumbnail url via any data attribute and
+     * pass the attribute name via exThumbImage option
+     * @example
+     * <div id="lightGallery">
+     *     <a href="a.jpg" data-external-thumb-image="images/externalThumb.jpg" ><img src="thumb.jpg" /></a>
+     * </div>
+     *
+     * lightGallery(document.getElementById('lightGallery'), {
+     *     exThumbImage: 'data-external-thumb-image'
+     * })
+     * @data-attr data-*
      */
     thumb?: string;
 
@@ -41,7 +53,7 @@ export interface GalleryItem {
 
     /**
      * Title attribute for the video
-     * @data-attr thumb
+     * @data-attr title
      */
     title?: string;
 
@@ -355,11 +367,13 @@ const utils = {
     getIframeMarkup(
         iframeWidth: string,
         iframeHeight: string,
+        iframeMaxWidth: string,
+        iframeMaxHeight: string,
         src?: string,
         iframeTitle?: string,
     ): string {
         const title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
-        return `<div class="lg-video-cont lg-has-iframe" style="width:${iframeWidth}; height: ${iframeHeight}">
+        return `<div class="lg-video-cont lg-has-iframe" style="width:${iframeWidth}; max-width:${iframeMaxWidth}; height: ${iframeHeight}; max-height:${iframeMaxHeight}">
                     <iframe class="lg-object" frameborder="0" ${title} src="${src}"  allowfullscreen="true"></iframe>
                 </div>`;
     },
@@ -531,6 +545,59 @@ const utils = {
     },
     isMobile(): boolean {
         return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    },
+    /**
+     * @desc Check the given src is video
+     * @param {String} src
+     * @return {Object} video type
+     * Ex:{ youtube  :  ["//www.youtube.com/watch?v=c0asJgSyxcY", "c0asJgSyxcY"] }
+     *
+     * @todo - this information can be moved to dynamicEl to avoid frequent calls
+     */
+
+    isVideo(
+        src: string,
+        isHTML5VIdeo: boolean,
+        index: number,
+    ): VideoInfo | undefined {
+        if (!src) {
+            if (isHTML5VIdeo) {
+                return {
+                    html5: true,
+                };
+            } else {
+                console.error(
+                    'lightGallery :- data-src is not provided on slide item ' +
+                        (index + 1) +
+                        '. Please make sure the selector property is properly configured. More info - https://www.lightgalleryjs.com/demos/html-markup/',
+                );
+                return;
+            }
+        }
+
+        const youtube = src.match(
+            /\/\/(?:www\.)?youtu(?:\.be|be\.com|be-nocookie\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)([\&|?][\S]*)*/i,
+        );
+        const vimeo = src.match(
+            /\/\/(?:www\.)?(?:player\.)?vimeo.com\/(?:video\/)?([0-9a-z\-_]+)(.*)?/i,
+        );
+        const wistia = src.match(
+            /https?:\/\/(.+)?(wistia\.com|wi\.st)\/(medias|embed)\/([0-9a-z\-_]+)(.*)/,
+        );
+
+        if (youtube) {
+            return {
+                youtube,
+            };
+        } else if (vimeo) {
+            return {
+                vimeo,
+            };
+        } else if (wistia) {
+            return {
+                wistia,
+            };
+        }
     },
 };
 

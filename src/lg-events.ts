@@ -32,7 +32,13 @@ export const lGEvents: {
     rotateRight: 'lgRotateRight',
     flipHorizontal: 'lgFlipHorizontal',
     flipVertical: 'lgFlipVertical',
+    autoplay: 'lgAutoplay',
+    autoplayStart: 'lgAutoplayStart',
+    autoplayStop: 'lgAutoplayStop',
 };
+
+// Follow the below format for the event documentation
+// @method is the method name when event is used with Angular/React components
 
 /**
  * Fired only once when lightGallery is initialized
@@ -93,11 +99,14 @@ export interface SlideItemLoadDetail {
      */
     index: number;
     /**
-     * First time when an item is loaded lightGallery adds some delay for showing the completed item
-     * to show transition effect on item load
+     * For the first slide, lightGallery adds some delay for displaying the loaded slide item.
+     * This delay is required for the transition effect when the slide item is displayed
      * Respect the delay when you use this event
      */
     delay: number;
+
+    // Will be true for the first slide
+    isFirstSlide: boolean;
 }
 
 /**
@@ -288,9 +297,52 @@ export interface HasVideoDetail {
      * True if video has poster
      */
     hasPoster: boolean;
+}
 
+/**
+ * Fired when the image is rotated in anticlockwise direction
+ * @name lgRotateLeft
+ * @method onRotateLeft
+ */
+export interface RotateLeftDetail {
     /**
-     * True for first slide
+     * Index of the slide
      */
-    isFirstSlide: boolean;
+    index: number;
+}
+
+/**
+ * Fired when the image is rotated in clockwise direction
+ * @name lgRotateRight
+ * @method onRotateRight
+ */
+export interface RotateRightDetail {
+    /**
+     * Index of the slide
+     */
+    index: number;
+}
+
+/**
+ * Fired when the image is flipped horizontally
+ * @name lgFlipHorizontal
+ * @method onFlipHorizontal
+ */
+export interface FlipHorizontalDetail {
+    /**
+     * Index of the slide
+     */
+    index: number;
+}
+
+/**
+ * Fired when the image is flipped vertically
+ * @name lgFlipVertical
+ * @method onFlipVertical
+ */
+export interface FlipVerticalDetail {
+    /**
+     * Index of the slide
+     */
+    index: number;
 }
