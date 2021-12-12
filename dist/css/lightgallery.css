@@ -482,7 +482,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 }
 
 .lg-outer .lg-item {
-  will-change: transform, opacity;
   display: none !important;
 }
 

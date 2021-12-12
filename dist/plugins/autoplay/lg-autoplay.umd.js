@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.3.0 | October 28th 2021
+ * lightgallery | 2.4.0-beta.0 | December 12th 2021
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -66,6 +66,9 @@
         rotateRight: 'lgRotateRight',
         flipHorizontal: 'lgFlipHorizontal',
         flipVertical: 'lgFlipVertical',
+        autoplay: 'lgAutoplay',
+        autoplayStart: 'lgAutoplayStart',
+        autoplayStop: 'lgAutoplayStop',
     };
 
     var autoplaySettings = {
@@ -76,6 +79,7 @@
         forceSlideShowAutoplay: false,
         autoplayControls: true,
         appendAutoplayControlsTo: '.lg-toolbar',
+        autoplayPluginStrings: { toggleAutoplay: 'Toggle Autoplay' },
     };
 
     /**
@@ -111,27 +115,27 @@
             // Start autoplay
             if (this.settings.slideShowAutoplay) {
                 this.core.LGel.once(lGEvents.slideItemLoad + ".autoplay", function () {
-                    _this.startAuto();
+                    _this.startAutoPlay();
                 });
             }
             // cancel interval on touchstart and dragstart
             this.core.LGel.on(lGEvents.dragStart + ".autoplay touchstart.lg.autoplay", function () {
                 if (_this.interval) {
-                    _this.cancelAuto();
+                    _this.stopAutoPlay();
                     _this.pausedOnTouchDrag = true;
                 }
             });
             // restore autoplay if autoplay canceled from touchstart / dragstart
             this.core.LGel.on(lGEvents.dragEnd + ".autoplay touchend.lg.autoplay", function () {
                 if (!_this.interval && _this.pausedOnTouchDrag) {
-                    _this.startAuto();
+                    _this.startAutoPlay();
                     _this.pausedOnTouchDrag = false;
                 }
             });
             this.core.LGel.on(lGEvents.beforeSlide + ".autoplay", function () {
                 _this.showProgressBar();
                 if (!_this.fromAuto && _this.interval) {
-                    _this.cancelAuto();
+                    _this.stopAutoPlay();
                     _this.pausedOnSlideChange = true;
                 }
                 else {
@@ -144,7 +148,7 @@
                 if (_this.pausedOnSlideChange &&
                     !_this.interval &&
                     _this.settings.forceSlideShowAutoplay) {
-                    _this.startAuto();
+                    _this.startAutoPlay();
                     _this.pausedOnSlideChange = false;
                 }
             });
@@ -172,7 +176,7 @@
         // Manage autoplay via play/stop buttons
         Autoplay.prototype.controls = function () {
             var _this = this;
-            var _html = '<button aria-label="Toggle autoplay" type="button" class="lg-autoplay-button lg-icon"></button>';
+            var _html = "<button aria-label=\"" + this.settings.autoplayPluginStrings['toggleAutoplay'] + "\" type=\"button\" class=\"lg-autoplay-button lg-icon\"></button>";
             // Append autoplay controls
             this.core.outer
                 .find(this.settings.appendAutoplayControlsTo)
@@ -182,17 +186,17 @@
                 .first()
                 .on('click.lg.autoplay', function () {
                 if (_this.core.outer.hasClass('lg-show-autoplay')) {
-                    _this.cancelAuto();
+                    _this.stopAutoPlay();
                 }
                 else {
                     if (!_this.interval) {
-                        _this.startAuto();
+                        _this.startAutoPlay();
                     }
                 }
             });
         };
         // Autostart gallery
-        Autoplay.prototype.startAuto = function () {
+        Autoplay.prototype.startAutoPlay = function () {
             var _this = this;
             this.core.outer
                 .find('.lg-progress')
@@ -202,6 +206,9 @@
                 'ms ease 0s');
             this.core.outer.addClass('lg-show-autoplay');
             this.core.outer.find('.lg-progress-bar').addClass('lg-start');
+            this.core.LGel.trigger(lGEvents.autoplayStart, {
+                index: this.core.index,
+            });
             this.interval = setInterval(function () {
                 if (_this.core.index + 1 < _this.core.galleryItems.length) {
                     _this.core.index++;
@@ -209,13 +216,19 @@
                 else {
                     _this.core.index = 0;
                 }
+                _this.core.LGel.trigger(lGEvents.autoplay, {
+                    index: _this.core.index,
+                });
                 _this.fromAuto = true;
                 _this.core.slide(_this.core.index, false, false, 'next');
             }, this.core.settings.speed + this.settings.slideShowInterval);
         };
         // cancel Autostart
-        Autoplay.prototype.cancelAuto = function () {
+        Autoplay.prototype.stopAutoPlay = function () {
             if (this.interval) {
+                this.core.LGel.trigger(lGEvents.autoplayStop, {
+                    index: this.core.index,
+                });
                 this.core.outer.find('.lg-progress').removeAttr('style');
                 this.core.outer.removeClass('lg-show-autoplay');
                 this.core.outer.find('.lg-progress-bar').removeClass('lg-start');
@@ -224,7 +237,7 @@
             this.interval = false;
         };
         Autoplay.prototype.closeGallery = function () {
-            this.cancelAuto();
+            this.stopAutoPlay();
         };
         Autoplay.prototype.destroy = function () {
             if (this.settings.autoplay) {
