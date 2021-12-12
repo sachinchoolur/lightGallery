@@ -158,7 +158,6 @@
             background: url('#{$lg-path-images}/loading.gif') no-repeat scroll
                 center center transparent;
         }
-        will-change: transform, opacity;
         display: none !important;
     }
     &.lg-css3 {
