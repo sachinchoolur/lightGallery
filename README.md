@@ -216,4 +216,4 @@ the GNU GPL license v3, you may use this project under the terms of the GPLv3.
 
 ## Support
 
-If you have any questions, suggestions, feedback, please reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) or DM me on [twitter](https://twitter.com/sachinchoolur)
+If you have any questions, suggestions, feedback, please reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) or DM me on [twitter](https://twitter.com/SachinNeravath)

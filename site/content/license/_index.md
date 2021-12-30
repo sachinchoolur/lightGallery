@@ -70,6 +70,16 @@ images: []
 </div>
 <div class="container-xl pricing-section">
     <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="alert alert-info" role="alert">
+                Lock in your rate before price increase:
+                $25, $99, $240 respectively from Jan 7th, 2022.
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-xl pricing-section">
+    <div class="row justify-content-center">
         <div class="col-md-6">
             <h2 class="align-center">Commercial OEM license</h2>
             <p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Commercial OEM license.
@@ -137,7 +147,7 @@ images: []
     <div class="row justify-content-center pricing-points">
         <div class="col-md-6">
             <h2 class="align-center">Student discount </h2>
-            <p>If you are a student currently enrolled in a College or University, DM me on <a href="https://twitter.com/sachinchoolur">Twitter</a> to get a free license.</p>
+            <p>If you are a student currently enrolled in a College or University, DM me on <a href="https://twitter.com/SachinNeravath">Twitter</a> to get a free license.</p>
         </div>
     </div>
 </div>
