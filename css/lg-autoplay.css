@@ -7,7 +7,6 @@
   width: 100%;
   z-index: 1083;
   opacity: 0;
-  will-change: opacity;
   -webkit-transition: opacity 0.08s ease 0s;
   -moz-transition: opacity 0.08s ease 0s;
   -o-transition: opacity 0.08s ease 0s;

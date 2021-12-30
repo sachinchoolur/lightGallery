@@ -45,7 +45,6 @@
   position: absolute;
   width: 120px;
   border-radius: 3px;
-  will-change: transform, opacity;
   -webkit-transition: opacity 0.15s ease 0s, -webkit-transform 0.15s ease 0s;
   -moz-transition: opacity 0.15s ease 0s, -moz-transform 0.15s ease 0s;
   -o-transition: opacity 0.15s ease 0s, -o-transform 0.15s ease 0s;

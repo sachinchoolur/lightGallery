@@ -32,7 +32,6 @@
 
 .lg-outer .lg-has-video .lg-video-object {
   opacity: 0;
-  will-change: opacity;
   -webkit-transition: opacity 0.3s ease-in;
   -o-transition: opacity 0.3s ease-in;
   transition: opacity 0.3s ease-in;
@@ -78,7 +77,6 @@
   z-index: 2;
   cursor: pointer;
   transform: translate(-50%, -50%) scale(1);
-  will-change: opacity, transform;
   -webkit-transition: -webkit-transform 0.25s cubic-bezier(0.17, 0.88, 0.32, 1.28), opacity 0.1s;
   -moz-transition: -moz-transform 0.25s cubic-bezier(0.17, 0.88, 0.32, 1.28), opacity 0.1s;
   -o-transition: -o-transform 0.25s cubic-bezier(0.17, 0.88, 0.32, 1.28), opacity 0.1s;
@@ -95,7 +93,6 @@
   stroke-width: 3%;
   stroke: #fcfcfc;
   opacity: 0.6;
-  will-change: opacity;
   -webkit-transition: opacity 0.12s ease-in;
   -o-transition: opacity 0.12s ease-in;
   transition: opacity 0.12s ease-in;
@@ -124,7 +121,6 @@
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
   opacity: 0.6;
-  will-change: opacity;
   -webkit-transition: opacity 0.12s ease-in;
   -o-transition: opacity 0.12s ease-in;
   transition: opacity 0.12s ease-in;

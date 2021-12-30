@@ -7,7 +7,6 @@
   bottom: 0;
   z-index: 9999;
   background-color: #fff;
-  will-change: transform;
   -moz-transform: translate3d(100%, 0, 0);
   -o-transform: translate3d(100%, 0, 0);
   -ms-transform: translate3d(100%, 0, 0);
@@ -63,7 +62,6 @@
   cursor: pointer;
   font-size: 20px;
   color: #999;
-  will-change: color;
   -webkit-transition: color 0.2s linear;
   -o-transition: color 0.2s linear;
   transition: color 0.2s linear;
@@ -97,7 +95,6 @@
   z-index: 1081;
   opacity: 0;
   visibility: hidden;
-  will-change: visibility, opacity;
   -webkit-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
   -o-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
   transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;

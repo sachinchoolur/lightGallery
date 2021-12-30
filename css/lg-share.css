@@ -9,7 +9,6 @@
   z-index: 1081;
   opacity: 0;
   visibility: hidden;
-  will-change: visibility, opacity;
   -webkit-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
   -o-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
   transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
@@ -50,7 +49,6 @@
   -ms-transform: translate3d(0, 5px, 0);
   -webkit-transform: translate3d(0, 5px, 0);
   transform: translate3d(0, 5px, 0);
-  will-change: visibility, opacity, transform;
   -webkit-transition: -webkit-transform 0.18s linear 0s, visibility 0s linear 0.5s, opacity 0.18s linear 0s;
   -moz-transition: -moz-transform 0.18s linear 0s, visibility 0s linear 0.5s, opacity 0.18s linear 0s;
   -o-transition: -o-transform 0.18s linear 0s, visibility 0s linear 0.5s, opacity 0.18s linear 0s;

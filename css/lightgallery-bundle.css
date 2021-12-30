@@ -207,7 +207,6 @@
   width: 50px;
   text-decoration: none !important;
   outline: medium none;
-  will-change: color;
   -webkit-transition: color 0.2s linear;
   -o-transition: color 0.2s linear;
   transition: color 0.2s linear;
@@ -316,7 +315,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable) .lg-v
   -ms-transform: scale3d(0.5, 0.5, 0.5);
   -webkit-transform: scale3d(0.5, 0.5, 0.5);
   transform: scale3d(0.5, 0.5, 0.5);
-  will-change: transform, opacity;
   -webkit-transition: -webkit-transform 250ms cubic-bezier(0, 0, 0.25, 1) 0s, opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
   -moz-transition: -moz-transform 250ms cubic-bezier(0, 0, 0.25, 1) 0s, opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
   -o-transition: -o-transform 250ms cubic-bezier(0, 0, 0.25, 1) 0s, opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
@@ -405,7 +403,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   height: 100%;
   border-radius: 2px;
   margin-bottom: 5px;
-  will-change: border-color;
 }
 
 @media (min-width: 768px) {
@@ -476,7 +473,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 
 .lg-outer .lg-has-video .lg-video-object {
   opacity: 0;
-  will-change: opacity;
   -webkit-transition: opacity 0.3s ease-in;
   -o-transition: opacity 0.3s ease-in;
   transition: opacity 0.3s ease-in;
@@ -522,7 +518,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   z-index: 2;
   cursor: pointer;
   transform: translate(-50%, -50%) scale(1);
-  will-change: opacity, transform;
   -webkit-transition: -webkit-transform 0.25s cubic-bezier(0.17, 0.88, 0.32, 1.28), opacity 0.1s;
   -moz-transition: -moz-transform 0.25s cubic-bezier(0.17, 0.88, 0.32, 1.28), opacity 0.1s;
   -o-transition: -o-transform 0.25s cubic-bezier(0.17, 0.88, 0.32, 1.28), opacity 0.1s;
@@ -539,7 +534,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   stroke-width: 3%;
   stroke: #fcfcfc;
   opacity: 0.6;
-  will-change: opacity;
   -webkit-transition: opacity 0.12s ease-in;
   -o-transition: opacity 0.12s ease-in;
   transition: opacity 0.12s ease-in;
@@ -568,7 +562,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
   opacity: 0.6;
-  will-change: opacity;
   -webkit-transition: opacity 0.12s ease-in;
   -o-transition: opacity 0.12s ease-in;
   transition: opacity 0.12s ease-in;
@@ -596,7 +589,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   width: 100%;
   z-index: 1083;
   opacity: 0;
-  will-change: opacity;
   -webkit-transition: opacity 0.08s ease 0s;
   -moz-transition: opacity 0.08s ease 0s;
   -o-transition: opacity 0.08s ease 0s;
@@ -637,7 +629,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 }
 
 .lg-outer.lg-use-transition-for-zoom .lg-item.lg-complete.lg-zoomable .lg-img-wrap {
-  will-change: transform;
   -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s;
   -moz-transition: -moz-transform 0.5s cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s;
   -o-transition: -o-transform 0.5s cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s;
@@ -645,7 +636,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 }
 
 .lg-outer.lg-use-transition-for-zoom.lg-zoom-drag-transition .lg-item.lg-complete.lg-zoomable .lg-img-wrap {
-  will-change: transform;
   -webkit-transition: -webkit-transform 0.8s cubic-bezier(0, 0, 0.25, 1) 0s;
   -moz-transition: -moz-transform 0.8s cubic-bezier(0, 0, 0.25, 1) 0s;
   -o-transition: -o-transform 0.8s cubic-bezier(0, 0, 0.25, 1) 0s;
@@ -664,7 +654,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 .lg-outer .lg-item.lg-complete.lg-zoomable .lg-dummy-img {
   -webkit-transform: scale3d(1, 1, 1);
   transform: scale3d(1, 1, 1);
-  will-change: opacity, transform;
   -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s, opacity 0.15s !important;
   -moz-transition: -moz-transform 0.5s cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s, opacity 0.15s !important;
   -o-transition: -o-transform 0.5s cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s, opacity 0.15s !important;
@@ -762,7 +751,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   position: absolute;
   width: 120px;
   border-radius: 3px;
-  will-change: transform, opacity;
   -webkit-transition: opacity 0.15s ease 0s, -webkit-transform 0.15s ease 0s;
   -moz-transition: opacity 0.15s ease 0s, -moz-transform 0.15s ease 0s;
   -o-transition: opacity 0.15s ease 0s, -o-transform 0.15s ease 0s;
@@ -825,7 +813,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   z-index: 1081;
   opacity: 0;
   visibility: hidden;
-  will-change: visibility, opacity;
   -webkit-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
   -o-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
   transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
@@ -866,7 +853,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   -ms-transform: translate3d(0, 5px, 0);
   -webkit-transform: translate3d(0, 5px, 0);
   transform: translate3d(0, 5px, 0);
-  will-change: visibility, opacity, transform;
   -webkit-transition: -webkit-transform 0.18s linear 0s, visibility 0s linear 0.5s, opacity 0.18s linear 0s;
   -moz-transition: -moz-transform 0.18s linear 0s, visibility 0s linear 0.5s, opacity 0.18s linear 0s;
   -o-transition: -o-transform 0.18s linear 0s, visibility 0s linear 0.5s, opacity 0.18s linear 0s;
@@ -967,7 +953,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   bottom: 0;
   z-index: 9999;
   background-color: #fff;
-  will-change: transform;
   -moz-transform: translate3d(100%, 0, 0);
   -o-transform: translate3d(100%, 0, 0);
   -ms-transform: translate3d(100%, 0, 0);
@@ -1023,7 +1008,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   cursor: pointer;
   font-size: 20px;
   color: #999;
-  will-change: color;
   -webkit-transition: color 0.2s linear;
   -o-transition: color 0.2s linear;
   transition: color 0.2s linear;
@@ -1057,7 +1041,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   z-index: 1081;
   opacity: 0;
   visibility: hidden;
-  will-change: visibility, opacity;
   -webkit-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
   -o-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
   transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
@@ -1192,7 +1175,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 .lg-pager-outer,
 .lg-hide-sub-html .lg-sub-html {
   opacity: 0;
-  will-change: transform, opacity;
   -webkit-transition: -webkit-transform 0.25s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.25s cubic-bezier(0, 0, 0.25, 1) 0s;
   -moz-transition: -moz-transform 0.25s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.25s cubic-bezier(0, 0, 0.25, 1) 0s;
   -o-transition: -o-transform 0.25s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.25s cubic-bezier(0, 0, 0.25, 1) 0s;
@@ -1244,7 +1226,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   text-align: left;
   opacity: 0.001;
   outline: none;
-  will-change: auto;
   overflow: hidden;
   -webkit-transition: opacity 0.15s ease 0s;
   -o-transition: opacity 0.15s ease 0s;
@@ -1316,7 +1297,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 }
 
 .lg-outer .lg-item {
-  will-change: transform, opacity;
   display: none !important;
 }
 
@@ -1415,7 +1395,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   z-index: 1040;
   background-color: #000;
   opacity: 0;
-  will-change: auto;
   -webkit-transition: opacity 333ms ease-in 0s;
   -o-transition: opacity 333ms ease-in 0s;
   transition: opacity 333ms ease-in 0s;
@@ -1535,7 +1514,6 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 .lg-components {
   -webkit-transform: translate3d(0, 100%, 0);
   transform: translate3d(0, 100%, 0);
-  will-change: transform;
   -webkit-transition: -webkit-transform 0.35s ease-out 0s;
   -moz-transition: -moz-transform 0.35s ease-out 0s;
   -o-transition: -o-transform 0.35s ease-out 0s;
