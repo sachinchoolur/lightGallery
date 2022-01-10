@@ -243,3 +243,15 @@ table {
 button:focus {
     outline: none;
 }
+
+.btn-white {
+    color: #006eb7;
+    background-color: #fff;
+    border-color: #fff;
+    &:focus,
+    &:hover {
+        color: #006eb7;
+        background-color: #fff;
+        border-color: #fff;
+    }
+}

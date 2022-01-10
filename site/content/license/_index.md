@@ -12,7 +12,7 @@ images: []
         <div class="pricing-list-item">
             <div class="pricing-type">Personal</div>
             <div class="pricing-cost">
-                $19 <span class="pricing-cost-label">/ lifetime</span>
+                $25 <span class="pricing-cost-label">/ lifetime</span>
             </div>
             <div class="pricing-desc">
                 For personal use.
@@ -21,8 +21,8 @@ images: []
                 <a href="https://gum.co/lightgallery-developer-license" target="_blank"  class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
-                <li>For one developer</li>
-                <li>For one product</li>
+                <li>For <b>one</b> developer</li>
+                <li>For <b>one</b> product</li>
                 <li>Can't be used in a product for sale</li>
                 <li>GitHub support only</li>
                 <li>Lifetime free updates</li>
@@ -31,7 +31,7 @@ images: []
         <div class="pricing-list-item">
             <div class="pricing-type">Team</div>
             <div class="pricing-cost">
-                $78 <span class="pricing-cost-label">/ lifetime</span>
+                $99 <span class="pricing-cost-label">/ lifetime</span>
             </div>
             <div class="pricing-desc">
                 For small teams.
@@ -40,8 +40,8 @@ images: []
                 <a href="https://gum.co/lightgallery-team-license" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
-                <li>For upto 8 developers</li>
-                <li>For upto 5 products</li>
+                <li>For upto <b>8</b> developers</li>
+                <li>For upto <b>5</b> products</li>
                 <li>Can be used in a product for sale</li>
                 <li>GitHub and email support</li>
                 <li>Lifetime free updates</li>
@@ -50,7 +50,7 @@ images: []
         <div class="pricing-list-item">
             <div class="pricing-type">Organization</div>
             <div class="pricing-cost">
-                $185 <span class="pricing-cost-label">/ lifetime</span>
+                $239 <span class="pricing-cost-label">/ lifetime</span>
             </div>
             <div class="pricing-desc">
                 For large teams and organizations
@@ -59,8 +59,8 @@ images: []
                 <a href="https://gum.co/lightgallery-organization-license" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
-                <li>For unlimited developers</li>
-                <li>For unlimitted products</li>
+                <li>For <b>unlimited</b> developers</li>
+                <li>For <b>unlimited</b> products</li>
                 <li>Can be used in a product for sale</li>
                 <li>GitHub, Email and Skype support</li>
                 <li>Lifetime free updates</li>
@@ -70,21 +70,24 @@ images: []
 </div>
 <div class="container-xl pricing-section">
     <div class="row justify-content-center">
-        <div class="col-md-7">
-            <div class="alert alert-info" role="alert">
-                Lock in your rate before price increase:
-                $25, $99, $240 respectively from Jan 7th, 2022.
-            </div>
+        <div class="col-md-6">
+            <h2 class="align-center">Extended Commercial license</h2>
+            <p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Extended Commercial license.
         </div>
     </div>
-</div>
-<div class="container-xl pricing-section">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="align-center">Commercial OEM license</h2>
-            <p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Commercial OEM license.
-            <a href="https://gum.co/lightgallery-oem">More info →</a>
-            </p>
+    <div class="pricing-list justify-content-center">
+        <div class="pricing-list-item pricing-list-item-colored">
+            <div class="pricing-type">Extended</div>
+            <div class="pricing-cost">
+                $299 <span class="pricing-cost-label">/ lifetime</span>
+            </div>
+            <div class="d-grid pricing-btn-wrap">
+                <a href="https://neravat.gumroad.com/l/lightgallery-extended-license" target="_blank" class="btn btn-white">Purchase Now</a>
+            </div>
+            <ul class="pricing-terms">
+                <li>For <b>unlimited</b> developers</li>
+                <li>For <b>one</b> product</li>
+            </ul>
         </div>
     </div>
 </div>
@@ -120,7 +123,7 @@ images: []
                 <p>Note: This use is limited within the same company. </p>
             </div>
             <div class="pricing-points-item">
-                <h4>No reselling</h4>
+                <h4>Reselling</h4>
                 <p>lightGallery cannot be used in a product offered for sale or for free, where lightGallery contributes to the core value of the product being sold. If you like to build something based on lightGallery such as a pro WordPress plugin for lightGallery, please reach out to us at <a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a></p>
                 <p>lightGallery may not be used for re-selling, sub-licensing, or sharing purposes, and cannot otherwise be redistributed on its own (even for free).</p>
             </div>

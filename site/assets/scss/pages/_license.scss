@@ -6,6 +6,21 @@
     margin: 20px;
     color: #0e3481;
     border-radius: 5px;
+    &.pricing-list-item-colored {
+        border: 2px solid;
+        color: white;
+        border-radius: 8px;
+        width: 290px;
+        padding: 50px 40px;
+        background-image: linear-gradient(
+            to right top,
+            #0e3481,
+            #0066b5,
+            #0095c8,
+            #00c2ba,
+            #00ea95
+        );
+    }
 }
 
 .pricing-list {
