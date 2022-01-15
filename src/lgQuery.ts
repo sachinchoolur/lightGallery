@@ -306,9 +306,11 @@ export class lgQuery {
 
     // Does not support IE
     load(url: string): this {
-        fetch(url).then((res) => {
-            this.selector.innerHTML = res;
-        });
+        fetch(url)
+            .then((res) => res.text())
+            .then((html) => {
+                this.selector.innerHTML = html;
+            });
         return this;
     }
 
