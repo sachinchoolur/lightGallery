@@ -124,3 +124,12 @@ $stretched-link-z-index: 1;
 
 // typography
 $h3-font-size: 1.4rem;
+
+$gutters: (
+    0: 0,
+    1: $spacer * 0.25,
+    2: $spacer * 0.5,
+    3: $spacer,
+    4: $spacer * 8,
+    5: $spacer * 3,
+);

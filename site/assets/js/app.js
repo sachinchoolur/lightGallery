@@ -213,6 +213,41 @@ window.lightGallery(
     },
 );
 
+jQuery('#animated-thumbnails-wp')
+    .justifiedGallery({
+        captions: false,
+        lastRow: 'hide',
+        rowHeight: 120,
+        maxRowsCount: 4,
+        margins: 5,
+    })
+    .on('jg.complete', function () {
+        window.lightGallery(document.getElementById('animated-thumbnails-wp'), {
+            autoplayFirstVideo: false,
+            pager: false,
+            galleryId: 'nature',
+            plugins: [
+                lgZoom,
+                lgAutoplay,
+                lgHash,
+                lgFullscreen,
+                lgPager,
+                lgRotate,
+                lgShare,
+                lgThumbnail,
+                lgVideo,
+            ],
+            ...getResponsiveThumbnailsSettings(),
+            preload: 3,
+            videoMaxWidth: '1400px',
+            mobileSettings: {
+                controls: false,
+                showCloseIcon: false,
+                download: false,
+                rotate: false,
+            },
+        });
+    });
 jQuery('#animated-thumbnails-gallery')
     .justifiedGallery({
         captions: false,
@@ -1042,42 +1077,42 @@ lightGallery(document.querySelector('.medium-zoom-demo'), {
     plugins: [lgMediumZoom],
 });
 
-var Airtable = require('airtable');
+// var Airtable = require('airtable');
 
-function subscribe() {
-    const email = $('#subscribe-email').val();
+// function subscribe() {
+//     const email = $('#subscribe-email').val();
 
-    var base = new Airtable({ apiKey: 'keyaUjHRn2iCSdyIu' }).base(
-        'appeau7igth6rETjo',
-    );
+//     var base = new Airtable({ apiKey: 'keyaUjHRn2iCSdyIu' }).base(
+//         'appeau7igth6rETjo',
+//     );
 
-    $subscribeBtn.attr('disabled', 'disabled');
+//     $subscribeBtn.attr('disabled', 'disabled');
 
-    base('Subscribers').create(
-        [
-            {
-                fields: {
-                    Email: email,
-                },
-            },
-        ],
-        function (err) {
-            $subscribeBtn.removeAttr('disabled');
-            $('#subscribe-email').val('');
-            if (err) {
-                console.error(err);
-                $('#subscribe').addClass('subscribed-error');
-                return;
-            }
-            $('#subscribe').addClass('subscribed');
-        },
-    );
-}
+//     base('Subscribers').create(
+//         [
+//             {
+//                 fields: {
+//                     Email: email,
+//                 },
+//             },
+//         ],
+//         function (err) {
+//             $subscribeBtn.removeAttr('disabled');
+//             $('#subscribe-email').val('');
+//             if (err) {
+//                 console.error(err);
+//                 $('#subscribe').addClass('subscribed-error');
+//                 return;
+//             }
+//             $('#subscribe').addClass('subscribed');
+//         },
+//     );
+// }
 
-const $subscribeBtn = $('#subscribe-btn');
-$('#subscribe-btn').on('click', subscribe);
-$('#subscribe-email').on('keypress', function (e) {
-    if (e.which == 13) {
-        subscribe();
-    }
-});
+// const $subscribeBtn = $('#subscribe-btn');
+// $('#subscribe-btn').on('click', subscribe);
+// $('#subscribe-email').on('keypress', function (e) {
+//     if (e.which == 13) {
+//         subscribe();
+//     }
+// });

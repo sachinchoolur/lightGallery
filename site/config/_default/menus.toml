@@ -21,6 +21,12 @@
   weight = 50
 
 [[main]]
+  name = "WordPress"
+  identifier = "WordPress"
+  url = "/wordpress/"
+  weight = 30
+
+[[main]]
   name = "Vue"
   identifier = "Vue"
   url = "/docs/vue/"
