@@ -38,10 +38,10 @@ using the following way
         :onBeforeSlide="onBeforeSlide"
     >
         <a href="img/img1.jpg">
-            <img alt=".." src="img/thumb1.jpg" />
+            <img alt="img1" src="img/thumb1.jpg" />
         </a>
         <a href="img/img2.jpg">
-            <img alt=".." src="img/thumb2.jpg" />
+            <img alt="img2" src="img/thumb2.jpg" />
         </a>
         ...
     </lightgallery>
@@ -96,10 +96,10 @@ which holds useful plugin data
         :onBeforeSlide="onBeforeSlide"
     >
         <a href="img/img1.jpg">
-            <img alt=".." src="img/thumb1.jpg" />
+            <img alt="img1" src="img/thumb1.jpg" />
         </a>
         <a href="img/img2.jpg">
-            <img alt=".." src="img/thumb2.jpg" />
+            <img alt="img2" src="img/thumb2.jpg" />
         </a>
         ...
     </lightgallery>

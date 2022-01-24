@@ -142,10 +142,10 @@ If you know the original size of the media, you can pass it via
 ```HTML
 <div id="lightgallery">
     <a href="img/img1.jpg" data-lg-size="1600-2400">
-        <img alt=".." src="img/thumb1.jpg" />
+        <img alt="img1" src="img/thumb1.jpg" />
     </a>
     <a href="img/img2.jpg" data-lg-size="1024-800">
-        <img alt=".." src="img/thumb2.jpg" />
+        <img alt="img2" src="img/thumb2.jpg" />
     </a>
     ...
 </div>

@@ -60,10 +60,10 @@ import { LightgalleryModule } from 'lightgallery/angular/10';
 ```html
 <lightgallery [settings]="settings" [onInit]="onInit">
     <a href="img/img1.jpg">
-        <img alt=".." src="img/thumb1.jpg" />
+        <img alt="img1" src="img/thumb1.jpg" />
     </a>
     <a href="img/img1.jpg">
-        <img alt=".." src="img/thumb1.jpg" />
+        <img alt="img2" src="img/thumb1.jpg" />
     </a>
 </lightgallery>
 ```
@@ -83,10 +83,10 @@ which holds useful plugin data
     template: `
         <lightgallery [settings]="settings" [onBeforeSlide]="onBeforeSlide">
             <a href="img/img1.jpg">
-                <img alt=".." src="img/thumb1.jpg" />
+                <img alt="img1" src="img/thumb1.jpg" />
             </a>
             <a href="img/img1.jpg">
-                <img alt=".." src="img/thumb1.jpg" />
+                <img alt="img2" src="img/thumb1.jpg" />
             </a>
         </lightgallery>
     `,
