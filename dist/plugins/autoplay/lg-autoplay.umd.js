@@ -79,7 +79,9 @@
         forceSlideShowAutoplay: false,
         autoplayControls: true,
         appendAutoplayControlsTo: '.lg-toolbar',
-        autoplayPluginStrings: { toggleAutoplay: 'Toggle Autoplay' },
+        autoplayPluginStrings: {
+            toggleAutoplay: 'Toggle Autoplay',
+        },
     };
 
     /**

@@ -52,7 +52,9 @@
         thumbnailSwipeThreshold: 10,
         loadYouTubeThumbnail: true,
         youTubeThumbSize: 1,
-        thumbnailPluginStrings: { toggleThumbnails: 'Toggle thumbnails' },
+        thumbnailPluginStrings: {
+            toggleThumbnails: 'Toggle thumbnails',
+        },
     };
 
     /**

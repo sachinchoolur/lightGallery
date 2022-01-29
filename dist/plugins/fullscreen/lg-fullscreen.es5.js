@@ -33,7 +33,9 @@ var __assign = function() {
 
 var fullscreenSettings = {
     fullScreen: true,
-    fullscreenPluginStrings: { toggleFullscreen: 'Toggle Fullscreen' },
+    fullscreenPluginStrings: {
+        toggleFullscreen: 'Toggle Fullscreen',
+    },
 };
 
 var FullScreen = /** @class */ (function () {
