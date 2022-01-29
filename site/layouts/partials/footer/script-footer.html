@@ -69,7 +69,7 @@
 
 {{ end -}}
 
-{{ if eq .Title "Pricing" -}}
+{{ if or (eq .Title "Pricing") (eq .Title "WordPress") -}}
 
 <script src='https://cdn.paritydeals.com/banner.js'></script>
 

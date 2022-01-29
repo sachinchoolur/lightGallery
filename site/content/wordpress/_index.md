@@ -1,5 +1,5 @@
 ---
-title: Full featured gallery plugin for WordPress.
+title: WordPress
 description: The official lightGallery WordPress plugin.
 lead: Create stunning image and video galleries for your WordPress website in minutes. Responsive, touch friendly, and easy to use.
 date: 2020-04-17T12:18:10.000Z
