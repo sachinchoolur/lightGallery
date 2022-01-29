@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.4.0-beta.0 | December 30th 2021
+ * lightgallery | 2.4.0 | January 29th 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -406,8 +406,10 @@ var lgQuery = /** @class */ (function () {
     // Does not support IE
     lgQuery.prototype.load = function (url) {
         var _this = this;
-        fetch(url).then(function (res) {
-            _this.selector.innerHTML = res;
+        fetch(url)
+            .then(function (res) { return res.text(); })
+            .then(function (html) {
+            _this.selector.innerHTML = html;
         });
         return this;
     };
