@@ -23,6 +23,7 @@
 .lg-pager-outer,
 .lg-hide-sub-html .lg-sub-html {
   opacity: 0;
+  will-change: transform, opacity;
   -webkit-transition: -webkit-transform 0.25s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.25s cubic-bezier(0, 0, 0.25, 1) 0s;
   -moz-transition: -moz-transform 0.25s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.25s cubic-bezier(0, 0, 0.25, 1) 0s;
   -o-transition: -o-transform 0.25s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 0.25s cubic-bezier(0, 0, 0.25, 1) 0s;
@@ -74,6 +75,7 @@
   text-align: left;
   opacity: 0.001;
   outline: none;
+  will-change: auto;
   overflow: hidden;
   -webkit-transition: opacity 0.15s ease 0s;
   -o-transition: opacity 0.15s ease 0s;
@@ -243,6 +245,7 @@
   z-index: 1040;
   background-color: #000;
   opacity: 0;
+  will-change: auto;
   -webkit-transition: opacity 333ms ease-in 0s;
   -o-transition: opacity 333ms ease-in 0s;
   transition: opacity 333ms ease-in 0s;
@@ -362,6 +365,7 @@
 .lg-components {
   -webkit-transform: translate3d(0, 100%, 0);
   transform: translate3d(0, 100%, 0);
+  will-change: transform;
   -webkit-transition: -webkit-transform 0.35s ease-out 0s;
   -moz-transition: -moz-transform 0.35s ease-out 0s;
   -o-transition: -o-transform 0.35s ease-out 0s;
