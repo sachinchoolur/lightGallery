@@ -1,3 +1,7 @@
+export interface AutoplayStrings {
+    toggleAutoplay: string;
+}
+
 export interface AutoplaySettings {
     /**
      * Enable autoplay plugin
@@ -37,7 +41,7 @@ export interface AutoplaySettings {
     /**
      * Custom translation strings for aria-labels
      */
-    autoplayPluginStrings: { [key: string]: string };
+    autoplayPluginStrings: AutoplayStrings;
 }
 export const autoplaySettings: AutoplaySettings = {
     autoplay: true,
@@ -47,5 +51,7 @@ export const autoplaySettings: AutoplaySettings = {
     forceSlideShowAutoplay: false,
     autoplayControls: true,
     appendAutoplayControlsTo: '.lg-toolbar',
-    autoplayPluginStrings: { toggleAutoplay: 'Toggle Autoplay' },
+    autoplayPluginStrings: {
+        toggleAutoplay: 'Toggle Autoplay',
+    } as AutoplayStrings,
 };

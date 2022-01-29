@@ -1,3 +1,7 @@
+interface ThumbnailStrings {
+    toggleThumbnails: string;
+}
+
 export interface ThumbnailsSettings {
     /**
      * Enable thumbnails for the gallery
@@ -78,7 +82,7 @@ export interface ThumbnailsSettings {
     /**
      * Custom translation strings for aria-labels
      */
-    thumbnailPluginStrings: { [key: string]: string };
+    thumbnailPluginStrings: ThumbnailStrings;
 }
 
 export const thumbnailsSettings: ThumbnailsSettings = {
@@ -102,5 +106,7 @@ export const thumbnailsSettings: ThumbnailsSettings = {
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
 
-    thumbnailPluginStrings: { toggleThumbnails: 'Toggle thumbnails' },
+    thumbnailPluginStrings: {
+        toggleThumbnails: 'Toggle thumbnails',
+    } as ThumbnailStrings,
 };

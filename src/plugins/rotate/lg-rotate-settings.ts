@@ -1,3 +1,10 @@
+export interface RotateStrings {
+    flipVertical: string;
+    flipHorizontal: string;
+    rotateLeft: string;
+    rotateRight: string;
+}
+
 export interface RotateSettings {
     /**
      * Enable/Disable rotate option
@@ -32,7 +39,7 @@ export interface RotateSettings {
     /**
      * Custom translation strings for aria-labels
      */
-    rotatePluginStrings: { [key: string]: string };
+    rotatePluginStrings: RotateStrings;
 }
 export const rotateSettings = {
     rotate: true,
@@ -46,5 +53,5 @@ export const rotateSettings = {
         flipHorizontal: 'Flip horizontal',
         rotateLeft: 'Rotate left',
         rotateRight: 'Rotate right',
-    },
+    } as RotateStrings,
 };

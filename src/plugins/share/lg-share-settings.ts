@@ -1,5 +1,9 @@
 import { ShareOption } from './types';
 
+export interface ShareStrings {
+    share: string;
+}
+
 export interface ShareSettings {
     /**
      * Enable/Disable share options
@@ -48,7 +52,7 @@ export interface ShareSettings {
     /**
      * Custom translation strings for aria-labels
      */
-    sharePluginStrings: { [key: string]: string };
+    sharePluginStrings: ShareStrings;
 }
 
 export const shareSettings = {
@@ -60,5 +64,5 @@ export const shareSettings = {
     pinterest: true,
     pinterestDropdownText: 'Pinterest',
     additionalShareOptions: [],
-    sharePluginStrings: { share: 'Share' },
+    sharePluginStrings: { share: 'Share' } as ShareStrings,
 };

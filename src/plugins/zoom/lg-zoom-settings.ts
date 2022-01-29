@@ -2,6 +2,13 @@ export interface ActualSizeIcons {
     zoomIn: 'lg-zoom-in' | 'lg-actual-size';
     zoomOut: 'lg-zoom-out' | 'lg-actual-size';
 }
+
+export interface ZoomStrings {
+    zoomIn: string;
+    zoomOut: string;
+    viewActualSize: string;
+}
+
 export interface ZoomSettings {
     /**
      * Value of zoom should be incremented/decremented
@@ -42,7 +49,7 @@ export interface ZoomSettings {
     /**
      * Custom translation strings for aria-labels
      */
-    zoomPluginStrings: { [key: string]: string };
+    zoomPluginStrings: ZoomStrings;
 }
 
 export const zoomSettings: ZoomSettings = {
@@ -59,5 +66,5 @@ export const zoomSettings: ZoomSettings = {
         zoomIn: 'Zoom in',
         zoomOut: 'Zoom out',
         viewActualSize: 'View actual size',
-    },
+    } as ZoomStrings,
 };

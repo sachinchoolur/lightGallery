@@ -31,6 +31,15 @@ export interface MobileSettings
         Partial<RotateSettings>,
         Partial<ShareSettings> {}
 
+export interface LightGalleryCoreStrings {
+    closeGallery: string;
+    toggleMaximize: string;
+    previousSlide: string;
+    nextSlide: string;
+    download: string;
+    playVideo: string;
+}
+
 export type LightGalleryAllSettings = LightGalleryCoreSettings &
     ZoomSettings &
     ThumbnailsSettings &
@@ -503,9 +512,15 @@ export interface LightGalleryCoreSettings {
      */
     mobileSettings: Partial<MobileSettings>;
 
-    plugins: (new (instance: LightGallery, $LG: LgQuery) => any)[];
+    /**
+     * Aria label strings for lightGallery core modules.
+     * @description This can be useful if you want to localize the lightGallery strings to other languages.
+     * Use your own service to translate the strings and pass it via settings.strings
+     * You can find dedicated strings option for all lightGallery modules in their respective documentation.
+     */
+    strings: LightGalleryCoreStrings;
 
-    strings: { [key: string]: string };
+    plugins: (new (instance: LightGallery, $LG: LgQuery) => any)[];
 }
 
 export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
@@ -581,5 +596,5 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
         nextSlide: 'Next slide',
         download: 'Download',
         playVideo: 'Play video',
-    },
+    } as LightGalleryCoreStrings,
 };

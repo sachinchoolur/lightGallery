@@ -1,3 +1,6 @@
+export interface FullscreenStrings {
+    toggleFullscreen: string;
+}
 export interface FullscreenSettings {
     /**
      * Enable/Disable fullscreen option
@@ -7,10 +10,12 @@ export interface FullscreenSettings {
     /**
      * Custom translation strings for aria-labels
      */
-    fullscreenPluginStrings: { [key: string]: string };
+    fullscreenPluginStrings: FullscreenStrings;
 }
 
 export const fullscreenSettings: FullscreenSettings = {
     fullScreen: true,
-    fullscreenPluginStrings: { toggleFullscreen: 'Toggle Fullscreen' },
+    fullscreenPluginStrings: {
+        toggleFullscreen: 'Toggle Fullscreen',
+    } as FullscreenStrings,
 };
