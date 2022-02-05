@@ -76,25 +76,3 @@ ul.pricing-terms li {
         margin: 3rem 0 0.5rem;
     }
 }
-.license {
-    .parity-banner {
-        position: fixed;
-        padding: 16px;
-        width: 100%;
-        bottom: 0;
-        font-size: 14px;
-        b {
-            color: #cefdff;
-        }
-    }
-    .parity-banner-poweredby {
-        position: absolute;
-        left: 5px;
-        color: #51dfe5;
-        font-size: 12px;
-        margin-top: 2px;
-    }
-    .parity-banner-inner {
-        padding-left: 80px;
-    }
-}
