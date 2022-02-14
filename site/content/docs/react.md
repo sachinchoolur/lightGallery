@@ -133,7 +133,7 @@ Demo</a>
 
 ```tsx
 function App() {
-    const lightGallery = useRef < any > null;
+    const lightGallery = useRef<any>(null);
     const [items, setItems] = useState([
         {
             id: '1',
