@@ -1,0 +1,7 @@
+{
+    "name": "lightgallery/plugins/vimeoThumbnail",
+    "private": true,
+    "main": "lg-vimeo-thumbnail.umd.js",
+    "module": "lg-vimeo-thumbnail.es5.js",
+    "typings": "lg-vimeo-thumbnail.d.ts"
+}

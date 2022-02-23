@@ -58,5 +58,10 @@
         "name": "relativeCaption",
         "folder": "plugins/relativeCaption/",
         "fileName": "lg-relative-caption"
+    },
+    {
+        "name": "vimeoThumbnail",
+        "folder": "plugins/vimeoThumbnail/",
+        "fileName": "lg-vimeo-thumbnail"
     }
 ]
