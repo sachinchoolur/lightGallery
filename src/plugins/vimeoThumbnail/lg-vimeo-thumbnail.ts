@@ -29,7 +29,12 @@ export default class VimeoThumbnail {
 
         this.core.LGel.on(`${lGEvents.init}.vimeothumbnails`, (event) => {
             const pluginInstance = event.detail.instance;
-            this.setVimeoThumbnails(pluginInstance);
+            const thumbCont = pluginInstance.$container
+                .find('.lg-thumb-outer')
+                .get();
+            if (thumbCont) {
+                this.setVimeoThumbnails(pluginInstance);
+            }
         });
     }
 
