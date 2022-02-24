@@ -11,5 +11,5 @@ export interface VimeoThumbnailSettings {
 }
 export const vimeoSettings: VimeoThumbnailSettings = {
     showVimeoThumbnails: true,
-    showThumbnailWithPlayButton: true,
+    showThumbnailWithPlayButton: false,
 };
