@@ -64,4 +64,68 @@ describe('Video plugin', () => {
         );
         expect(params).toBe('?autoplay=0&muted=1&controls=0');
     });
+    it('should be able to display private videos', async () => {
+        const url = '//vimeo.com/674425314/a39356545b';
+        const videoInfo = utils.isVideo(url, false, 0);
+        console.log('vimeo videoInfo', videoInfo);
+        const params = getVimeoURLParams({}, videoInfo);
+        expect(params).toBe('?autoplay=0&muted=1&h=a39356545b');
+    });
+
+    it('should build private vimeo url params', async () => {
+        const url = '//vimeo.com/674425314/a39356545b?controls=0#t=1m2s';
+        const videoInfo = utils.isVideo(url, false, 0);
+        const params = getVimeoURLParams(false, videoInfo);
+        expect(params).toBe(
+            '?autoplay=0&muted=1&h=a39356545b&controls=0#t=1m2s',
+        );
+    });
+    it('should build private vimeo url params when no value is passed via video url', async () => {
+        const url = '//vimeo.com/674425314/a39356545b';
+        const videoInfo = utils.isVideo(url, false, 0);
+        const params = getVimeoURLParams(false, videoInfo);
+        expect(params).toBe('?autoplay=0&muted=1&h=a39356545b');
+    });
+    it('should build private vimeo url params without start time', async () => {
+        const url = '//vimeo.com/674425314/a39356545b?controls=0';
+        const videoInfo = utils.isVideo(url, false, 0);
+        const params = getVimeoURLParams(false, videoInfo);
+        expect(params).toBe('?autoplay=0&muted=1&h=a39356545b&controls=0');
+    });
+    it('should build private vimeo url params with default params in the last place', async () => {
+        const url = '//vimeo.com/674425314/a39356545b?muted=0';
+        const videoInfo = utils.isVideo(url, false, 0);
+        const params = getVimeoURLParams(false, videoInfo);
+        expect(params).toBe('?autoplay=0&muted=1&h=a39356545b&muted=0');
+    });
+    it('should build private vimeo url params only if start time found in the url', async () => {
+        const url = '//vimeo.com/674425314/a39356545b#t=1m2s';
+        const videoInfo = utils.isVideo(url, false, 0);
+        const params = getVimeoURLParams(false, videoInfo);
+        expect(params).toBe('?autoplay=0&muted=1&h=a39356545b#t=1m2s');
+    });
+    it('should build private vimeo url params with default params', async () => {
+        const url = '//vimeo.com/674425314/a39356545b#t=1m2s';
+        const videoInfo = utils.isVideo(url, false, 0);
+        const params = getVimeoURLParams(
+            {
+                controls: 0,
+            },
+            videoInfo,
+        );
+        expect(params).toBe(
+            '?autoplay=0&muted=1&h=a39356545b&controls=0#t=1m2s',
+        );
+    });
+    it('should build private vimeo url params when no value is passed via video url and playerParams passed via settings', async () => {
+        const url = '//vimeo.com/674425314/a39356545b';
+        const videoInfo = utils.isVideo(url, false, 0);
+        const params = getVimeoURLParams(
+            {
+                controls: 0,
+            },
+            videoInfo,
+        );
+        expect(params).toBe('?autoplay=0&muted=1&h=a39356545b&controls=0');
+    });
 });
