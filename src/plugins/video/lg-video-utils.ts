@@ -16,14 +16,28 @@ export const getVimeoURLParams = (
 ): string => {
     if (!videoInfo || !videoInfo.vimeo) return '';
     let urlParams = videoInfo.vimeo[2] || '';
+
+    const defaultPlayerParams =
+        defaultParams && Object.keys(defaultParams).length !== 0
+            ? '&' + param(defaultParams as any)
+            : '';
+
+    // Support private video
+    const urlWithHash = videoInfo.vimeo[0].split('/').pop() || '';
+    const urlWithHashWithParams = urlWithHash.split('?')[0] || '';
+    const hash = urlWithHashWithParams.split('#')[0];
+
+    const isPrivate = videoInfo.vimeo[1] !== hash;
+    if (isPrivate) {
+        urlParams = urlParams.replace(`/${hash}`, '');
+    }
+
     urlParams =
         urlParams[0] == '?' ? '&' + urlParams.slice(1) : urlParams || '';
 
-    const defaultPlayerParams = defaultParams
-        ? '&' + param(defaultParams as any)
-        : '';
-
-    // For vimeo last parms gets priority if duplicates found
-    const vimeoPlayerParams = `?autoplay=0&muted=1${defaultPlayerParams}${urlParams}`;
+    // For vimeo last params gets priority if duplicates found
+    const vimeoPlayerParams = `?autoplay=0&muted=1${
+        isPrivate ? `&h=${hash}` : ''
+    }${defaultPlayerParams}${urlParams}`;
     return vimeoPlayerParams;
 };
