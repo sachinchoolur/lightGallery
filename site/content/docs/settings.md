@@ -154,6 +154,8 @@ easily add your own comment widget as well.
 
 </div>
 
+<div class="options-section">
+
 ## Medium zoom plugin
 
 MediumZoom plugin helps you create similar zooming experience as seen on medium.
@@ -163,13 +165,15 @@ lightGallery
 
 {{< options pluginName="Medium zoom" interface="MediumZoomSettings" variable="mediumZoomSettings" >}}
 
+</div>
+
+<div class="options-section">
+
 ## Vimeo thumbnails plugin
 
 Vimeo thumbnails plugin helps you load thumbnails automatically for Vimeo videos.
-<span class="badge rounded-pill bg-danger font-12" title="Available since version 2.4.0">v2.4.0</span>
+<span class="badge rounded-pill bg-danger font-12" title="Available since version 2.4.0">v2.5.0</span>
 
 {{< options pluginName="Vimeo Thumbnails" interface="VimeoThumbnailSettings" variable="vimeoSettings" >}}
-
-</div>
 
 </div>

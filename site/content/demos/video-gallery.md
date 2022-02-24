@@ -1,17 +1,11 @@
 ---
-title: 'Video gallery'
-description:
-    'lightGallery supports YouTube, Vimeo, VK, DailyMotion, Wistia and all other
-    types of HTML5 video formats. Such as MP4, WebM, Ogg, etc.'
-lead:
-    'lightGallery supports YouTube, Vimeo, Wistia and all other types of HTML5
-    video formats. Such as MP4, WebM, Ogg, etc.'
-date: 2020-10-06T08:48:57+00:00
+title: Video gallery
+description: lightGallery supports YouTube, Vimeo, VK, DailyMotion, Wistia and all other types of HTML5 video formats. Such as MP4, WebM, Ogg, etc.
+lead: lightGallery supports YouTube, Vimeo, Wistia and all other types of HTML5 video formats. Such as MP4, WebM, Ogg, etc.
+date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu:
-    demos:
-        parent: 'Demos'
+menu: {demos: {parent: Demos}}
 weight: 2
 toc: true
 ---
@@ -22,7 +16,7 @@ toc: true
 
 <p>You can also provide poster image for each videos. Poster images will be loaded instead of videos. So user will be able to navigate to other slides by using mouse drag or swipe. Poster images improve performance, and maintain the flexibility of your gallery without effecting user experience. Videos will be loaded when a user clicks on the poster images. You can place poster image url in the data-poster attribute.</p>
 
-<p>lightGallery allows you to load thumbnail images automatically from YouTube and Vimeo. You can specify the size of the thumbnails in the settings. Videos will be automatically paused when a user starts to navigate to another slide.</p>
+<p>lightGallery allows you to load thumbnail images automatically from YouTube and Vimeo. You can specify the size of the thumbnails in the settings. You need to use <a href="/docs/settings/#vimeo-thumbnails-plugin">Vimeo thumbnail plugin</a> to load thumbnails for vimeo videos. Videos will be automatically paused when a user starts to navigate to another slide.</p>
 
 #### HTML5 videos
 

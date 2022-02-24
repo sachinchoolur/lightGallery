@@ -40,12 +40,6 @@
 
 
 [[social]]
-  name = "Twitter"
-  identifier = "Twitter"
-  url = "https://twitter.com/SachinNeravath"
-  weight = 20
-
-[[social]]
   name = "GitHub"
   identifier = "GitHub"
   url = "https://github.com/sachinchoolur/lightGallery"
