@@ -62,7 +62,7 @@ lightGallery(document.getElementById('animated-thumbnails-gallery'), {
 ##### HTML Structure
 
 ```html
-<div id="animated-thumbnails-gallery">
+<div id="static-thumbnails">
     <a href="img/img1.jpg">
         <img src="img/thumb1.jpg" />
     </a>
