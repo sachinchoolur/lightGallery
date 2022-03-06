@@ -60,10 +60,16 @@ export interface VideoSettings {
     /**
      * Enbale videojs custom video player
      * <div class="alert alert-info" role="alert">
-     *     <b>Dependency</b> - You need to include <a href="https://videojs.com/">videoJs</div> on your document to enable videojs player
+     *     <b>Dependency</b> - You need to include <a href="https://videojs.com/">videoJs</a> on your document to enable videojs player
      * </div>
      */
     videojs: boolean;
+
+    /**
+     * Class name of the videojs theme
+     * You need to include the theme stylesheet on your document. <a href="https://videojs.com/getting-started/#home-page-themes" target="_blank">More info</a>
+     */
+    videojsTheme: string;
 
     /**
      * Videojs player options
@@ -78,5 +84,6 @@ export const videoSettings: VideoSettings = {
     gotoNextSlideOnVideoEnd: true,
     autoplayVideoOnSlide: false,
     videojs: false,
+    videojsTheme: '',
     videojsOptions: {},
 };

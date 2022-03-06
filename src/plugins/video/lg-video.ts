@@ -284,8 +284,10 @@ export default class Video {
                 html5VideoAttrs += `${key}="${(videoAttributes as any)[key]}" `;
             });
             video = `<video class="lg-video-object lg-html5 ${
-                this.settings.videojs ? 'video-js' : ''
-            }" ${html5VideoAttrs}>
+                this.settings.videojs && this.settings.videojsTheme
+                    ? this.settings.videojsTheme + ' '
+                    : ''
+            } ${this.settings.videojs ? ' video-js' : ''}" ${html5VideoAttrs}>
                 ${html5VideoMarkup}
                 Your browser does not support HTML5 video.
             </video>`;
