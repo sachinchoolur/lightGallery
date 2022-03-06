@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.5.0-beta.1 | February 24th 2022
+ * lightgallery | 2.5.0-beta.2 | March 6th 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -45,6 +45,7 @@
         gotoNextSlideOnVideoEnd: true,
         autoplayVideoOnSlide: false,
         videojs: false,
+        videojsTheme: '',
         videojsOptions: {},
     };
 
@@ -322,7 +323,9 @@
                 Object.keys(videoAttributes_1 || {}).forEach(function (key) {
                     html5VideoAttrs_1 += key + "=\"" + videoAttributes_1[key] + "\" ";
                 });
-                video = "<video class=\"lg-video-object lg-html5 " + (this.settings.videojs ? 'video-js' : '') + "\" " + html5VideoAttrs_1 + ">\n                " + html5VideoMarkup + "\n                Your browser does not support HTML5 video.\n            </video>";
+                video = "<video class=\"lg-video-object lg-html5 " + (this.settings.videojs && this.settings.videojsTheme
+                    ? this.settings.videojsTheme + ' '
+                    : '') + " " + (this.settings.videojs ? ' video-js' : '') + "\" " + html5VideoAttrs_1 + ">\n                " + html5VideoMarkup + "\n                Your browser does not support HTML5 video.\n            </video>";
             }
             return video;
         };
