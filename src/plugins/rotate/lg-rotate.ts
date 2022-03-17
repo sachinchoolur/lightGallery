@@ -1,4 +1,5 @@
 import { lGEvents } from '../../lg-events';
+import { LightGallerySettings } from '../../lg-settings';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { rotateSettings, RotateSettings } from './lg-rotate-settings';
@@ -16,7 +17,10 @@ export default class Rotate {
         this.$LG = $LG;
 
         // extend module default settings with lightGallery core settings
-        this.settings = { ...rotateSettings, ...this.core.settings };
+        this.settings = {
+            ...rotateSettings,
+            ...this.core.settings,
+        };
 
         return this;
     }
@@ -48,14 +52,15 @@ export default class Rotate {
         this.rotateValuesList = {};
 
         // event triggered after appending slide content
-        this.core.LGel.on(`${lGEvents.afterAppendSlide}.rotate`, (event) => {
+        this.core.LGel.on(`${lGEvents.slideItemLoad}.rotate`, (event) => {
             const { index } = event.detail;
             const imageWrap = this.core
                 .getSlideItem(index)
-                .find('.lg-img-wrap')
+                .find('.lg-object')
                 .first();
 
             imageWrap.wrap('lg-img-rotate');
+            //this.rotateValuesList[this.core.index]
             this.core
                 .getSlideItem(this.core.index)
                 .find('.lg-img-rotate')
