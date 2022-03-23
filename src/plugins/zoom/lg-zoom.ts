@@ -27,7 +27,7 @@ export default class Zoom {
     private core: LightGallery;
     private settings: ZoomSettings;
     private $LG!: LgQuery;
-    private previousScale!: number | boolean;
+    private imageReset!: number | boolean;
     zoomableTimeout: any;
     positionChanged!: boolean;
     pageX!: number;
@@ -387,7 +387,7 @@ export default class Zoom {
         // if (scale === actualSizeScale) {
         //     setTimeout(() => {
         //         if (possibleSwipeCords) {
-        //             this.previousScale = scale;
+        //             this.imageReset = scale;
         //             const $image = this.core
         //                 .getSlideItem(this.core.index)
         //                 .find('.lg-image')
@@ -423,7 +423,7 @@ export default class Zoom {
             .getSlideItem(this.core.index)
             .find('.lg-image')
             .first();
-        this.previousScale = false;
+        this.imageReset = false;
         $image.removeClass(
             'reset-transition reset-transition-y reset-transition-x',
         );
@@ -440,6 +440,7 @@ export default class Zoom {
             .first();
         setTimeout(() => {
             $image.addClass('no-transition');
+            this.imageReset = true;
         }, 500);
         setTimeout(() => {
             const dragAllowedAxises = this.getDragAllowedAxises(this.scale);
@@ -557,7 +558,7 @@ export default class Zoom {
     getActualSizeScale(naturalWidth: number, width: number): number {
         let _scale;
         let scale;
-        if (naturalWidth > width) {
+        if (naturalWidth >= width) {
             _scale = naturalWidth / width;
             scale = _scale || 2;
         } else {
@@ -682,13 +683,24 @@ export default class Zoom {
         });
 
         this.core.getElementById('lg-zoom-out').on('click.lg', () => {
-            if (this.core.outer.find('.lg-current .lg-image').get()) {
-                let scale = this.scale - this.settings.scale;
-
-                scale = this.getScale(scale);
-                this.beginZoom(scale);
-                this.zoomImage(scale, true);
+            // Allow zoom only on image
+            if (!this.isImageSlide()) {
+                return;
             }
+
+            let scale = this.scale - this.settings.scale;
+            let timeout = 0;
+            if (this.imageReset) {
+                this.resetImageTranslate();
+                timeout = 50;
+            }
+            setTimeout(() => {
+                if (scale < 1) {
+                    scale = 1;
+                }
+                this.beginZoom(scale);
+                this.zoomImage(scale);
+            }, timeout);
         });
 
         this.core.getElementById('lg-zoom-in').on('click.lg', () => {
