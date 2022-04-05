@@ -204,7 +204,7 @@ Also, [on IOS](https://stackoverflow.com/questions/43570460/html5-video-autoplay
         />
     </a>
 
-    <!-- VImeo Video --->
+    <!-- Vimeo Video --->
     <a
         data-lg-size="1280-720"
         data-src="//vimeo.com/112836958?muted=false"
