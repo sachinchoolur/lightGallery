@@ -52,10 +52,20 @@ export default class Share {
     }
 
     setLgShareMarkup(): void {
-        this.core.$toolbar.append(
-            `<button type="button" aria-label="${this.settings.sharePluginStrings['share']}" aria-haspopup="true" aria-expanded="false" class="lg-share lg-icon">
-                <ul class="lg-dropdown" style="position: absolute;"></ul></button>`,
+        const shareBtn = document.createElement('button');
+        shareBtn.classList.add('lg-share', 'lg-icon');
+        shareBtn.type = 'button';
+        shareBtn.setAttribute(
+            'ariaLabel',
+            this.settings.sharePluginStrings['share'],
         );
+        shareBtn.setAttribute('ariaHasPopup', 'true');
+        shareBtn.setAttribute('ariaExpanded', 'false');
+        const shareBtnUl = document.createElement('ul');
+        shareBtnUl.classList.add('lg-dropdown');
+        shareBtnUl.style.position = 'absolute';
+        shareBtn.appendChild(shareBtnUl);
+        this.core.$toolbar.append(shareBtn);
 
         this.core.outer.append('<div class="lg-dropdown-overlay"></div>');
         const $shareButton = this.core.outer.find('.lg-share');
