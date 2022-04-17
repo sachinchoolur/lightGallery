@@ -406,7 +406,7 @@ export default class Thumbnail {
         return thumbDragUtils;
     }
 
-    getThumbHtml(thumb: string, index: number): string {
+    getThumbHtml(thumb: string, index: number): HTMLElement {
         const slideVideoInfo =
             this.core.galleryItems[index].__slideVideoInfo || {};
         let thumbImg;
@@ -426,29 +426,29 @@ export default class Thumbnail {
             thumbImg = thumb;
         }
 
-        return `<div data-lg-item-id="${index}" class="lg-thumb-item ${
-            index === this.core.index ? ' active' : ''
-        }" 
-        style="width:${this.settings.thumbWidth}px; height: ${
-            this.settings.thumbHeight
-        };
-            margin-right: ${this.settings.thumbMargin}px;">
-            <img data-lg-item-id="${index}" src="${thumbImg}" />
-        </div>`;
+        const thumbDiv = document.createElement('div');
+        thumbDiv.dataset['lg-item-id'] = index.toString();
+        thumbDiv.classList.add('lg-thumb-item');
+        thumbDiv.classList.toggle('active', index === this.core.index);
+        thumbDiv.style.width = `${this.settings.thumbWidth}px`;
+        thumbDiv.style.height = `${this.settings.thumbHeight}px`;
+        thumbDiv.style.marginRight = `${this.settings.thumbMargin}px`;
+        thumbDiv.innerHTML = `<img data-lg-item-id="${index}" src="${thumbImg}" />`;
+        return thumbDiv;
     }
 
-    getThumbItemHtml(items: ThumbnailGalleryItem[]): string {
-        let thumbList = '';
-        for (let i = 0; i < items.length; i++) {
-            thumbList += this.getThumbHtml(items[i].thumb, i);
-        }
-
+    getThumbItemHtml(items: ThumbnailGalleryItem[]): HTMLElement[] {
+        const thumbList: HTMLElement[] = [];
+        items.forEach((item, i) => {
+            thumbList.push(this.getThumbHtml(item.thumb, i));
+        });
         return thumbList;
     }
 
     setThumbItemHtml(items: ThumbnailGalleryItem[]): void {
         const thumbList = this.getThumbItemHtml(items);
-        this.$lgThumb.html(thumbList);
+        this.$lgThumb.empty();
+        thumbList.forEach((e) => this.$lgThumb.append(e));
     }
 
     setAnimateThumbStyles(): void {
