@@ -371,11 +371,16 @@ const utils = {
         iframeMaxHeight: string,
         src?: string,
         iframeTitle?: string,
-    ): string {
+    ): HTMLElement {
         const title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
-        return `<div class="lg-video-cont lg-has-iframe" style="width:${iframeWidth}; max-width:${iframeMaxWidth}; height: ${iframeHeight}; max-height:${iframeMaxHeight}">
-                    <iframe class="lg-object" frameborder="0" ${title} src="${src}"  allowfullscreen="true"></iframe>
-                </div>`;
+        const iframeDiv = document.createElement('div');
+        iframeDiv.classList.add('lg-video-cont', 'lg-has-iframe');
+        iframeDiv.style.width = iframeWidth;
+        iframeDiv.style.maxWidth = iframeMaxWidth;
+        iframeDiv.style.height = iframeHeight;
+        iframeDiv.style.maxHeight = iframeMaxHeight;
+        iframeDiv.innerHTML = `<iframe class="lg-object" frameborder="0" ${title} src="${src}"  allowfullscreen="true"></iframe>`;
+        return iframeDiv;
     },
 
     getImgMarkup(
