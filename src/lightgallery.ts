@@ -603,7 +603,6 @@ export class LightGallery {
         // prevent accidental double execution
         if (this.lgOpened) return;
         this.lgOpened = true;
-        this.outer.get().focus();
         this.outer.removeClass('lg-hide-items');
 
         // Add display block, but still has opacity 0
@@ -689,6 +688,15 @@ export class LightGallery {
                 this.$backdrop.addClass('in');
                 this.$container.addClass('lg-show-in');
             }, 10);
+
+            setTimeout(() => {
+                if (
+                    this.settings.trapFocus &&
+                    document.body === this.settings.container
+                ) {
+                    this.trapFocus();
+                }
+            }, this.settings.backdropDuration + 50);
 
             // lg-visible class resets gallery opacity to 1
             if (!this.zoomFromOrigin || !transform) {
@@ -2197,6 +2205,37 @@ export class LightGallery {
         }
     }
 
+    trapFocus(): void {
+        this.$container.get().focus();
+        $LG(window).on(`keydown.lg.global${this.lgId}`, (e) => {
+            if (!this.lgOpened) {
+                return;
+            }
+
+            const isTabPressed = e.key === 'Tab' || e.keyCode === 9;
+            if (!isTabPressed) {
+                return;
+            }
+            const focusableEls = utils.getFocusableElements(
+                this.$container.get(),
+            );
+            const firstFocusableEl = focusableEls[0];
+            const lastFocusableEl = focusableEls[focusableEls.length - 1];
+
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusableEl) {
+                    (lastFocusableEl as HTMLElement).focus();
+                    e.preventDefault();
+                }
+            } else {
+                if (document.activeElement === lastFocusableEl) {
+                    (firstFocusableEl as HTMLElement).focus();
+                    e.preventDefault();
+                }
+            }
+        });
+    }
+
     manageCloseGallery(): void {
         if (!this.settings.closable) return;
         let mousedown = false;
@@ -2336,8 +2375,8 @@ export class LightGallery {
                     instance: this,
                 });
             }
-            if (this.outer.get()) {
-                this.outer.get().blur();
+            if (this.$container.get()) {
+                this.$container.get().blur();
             }
 
             this.lgOpened = false;

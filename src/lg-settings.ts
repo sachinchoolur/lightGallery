@@ -303,6 +303,11 @@ export interface LightGalleryCoreSettings {
     keyPress: boolean;
 
     /**
+     * Trap focus within the lightGallery
+     */
+    trapFocus: boolean;
+
+    /**
      * If false, prev/next buttons will not be displayed.
      */
     controls: boolean;
@@ -554,6 +559,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     loop: true,
     escKey: true,
     keyPress: true,
+    trapFocus: true,
     controls: true,
     slideEndAnimation: true,
     hideControlOnEnd: false,

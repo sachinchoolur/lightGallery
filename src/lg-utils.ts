@@ -493,6 +493,17 @@ const utils = {
         </div>`;
     },
 
+    getFocusableElements(container: HTMLElement): NodeListOf<Element> {
+        const elements = container.querySelectorAll(
+            'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])',
+        );
+        const visibleElements = [].filter.call(elements, (element) => {
+            const style = window.getComputedStyle(element);
+            return style.display !== 'none' && style.visibility !== 'hidden';
+        });
+        return (visibleElements as unknown) as NodeListOf<Element>;
+    },
+
     /**
      * @desc Create dynamic elements array from gallery items when dynamic option is false
      * It helps to avoid frequent DOM interaction

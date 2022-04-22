@@ -241,3 +241,19 @@ body:not(.lg-from-hash) {
         }
     }
 }
+
+.lg-icon {
+    &:focus-visible {
+        color: #fff;
+        border-radius: 3px;
+        outline: 1px dashed rgba(255, 255, 255, 0.6);
+    }
+}
+.lg-toolbar {
+    .lg-icon {
+        &:focus-visible {
+            border-radius: 8px;
+            outline-offset: -5px;
+        }
+    }
+}
