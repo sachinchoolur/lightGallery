@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.5.0-beta.2 | March 6th 2022
+ * lightgallery | 2.5.0-beta.3 | April 23rd 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -104,6 +104,7 @@ var lightGalleryCoreSettings = {
     loop: true,
     escKey: true,
     keyPress: true,
+    trapFocus: true,
     controls: true,
     slideEndAnimation: true,
     hideControlOnEnd: false,
@@ -720,6 +721,14 @@ var utils = {
         }
         return "<div class=\"lg-video-cont " + videoClass + "\" style=\"" + videoContStyle + "\">\n                <div class=\"lg-video-play-button\">\n                <svg\n                    viewBox=\"0 0 20 20\"\n                    preserveAspectRatio=\"xMidYMid\"\n                    focusable=\"false\"\n                    aria-labelledby=\"" + playVideoString + "\"\n                    role=\"img\"\n                    class=\"lg-video-play-icon\"\n                >\n                    <title>" + playVideoString + "</title>\n                    <polygon class=\"lg-video-play-icon-inner\" points=\"1,0 20,10 1,20\"></polygon>\n                </svg>\n                <svg class=\"lg-video-play-icon-bg\" viewBox=\"0 0 50 50\" focusable=\"false\">\n                    <circle cx=\"50%\" cy=\"50%\" r=\"20\"></circle></svg>\n                <svg class=\"lg-video-play-icon-circle\" viewBox=\"0 0 50 50\" focusable=\"false\">\n                    <circle cx=\"50%\" cy=\"50%\" r=\"20\"></circle>\n                </svg>\n            </div>\n            " + (dummyImg || '') + "\n            <img class=\"lg-object lg-video-poster\" src=\"" + _poster + "\" />\n        </div>";
     },
+    getFocusableElements: function (container) {
+        var elements = container.querySelectorAll('a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])');
+        var visibleElements = [].filter.call(elements, function (element) {
+            var style = window.getComputedStyle(element);
+            return style.display !== 'none' && style.visibility !== 'hidden';
+        });
+        return visibleElements;
+    },
     /**
      * @desc Create dynamic elements array from gallery items when dynamic option is false
      * It helps to avoid frequent DOM interaction
@@ -1205,7 +1214,6 @@ var LightGallery = /** @class */ (function () {
         if (this.lgOpened)
             return;
         this.lgOpened = true;
-        this.outer.get().focus();
         this.outer.removeClass('lg-hide-items');
         // Add display block, but still has opacity 0
         this.$container.addClass('lg-show');
@@ -1265,6 +1273,12 @@ var LightGallery = /** @class */ (function () {
                 _this.$backdrop.addClass('in');
                 _this.$container.addClass('lg-show-in');
             }, 10);
+            setTimeout(function () {
+                if (_this.settings.trapFocus &&
+                    document.body === _this.settings.container) {
+                    _this.trapFocus();
+                }
+            }, _this.settings.backdropDuration + 50);
             // lg-visible class resets gallery opacity to 1
             if (!_this.zoomFromOrigin || !transform) {
                 setTimeout(function () {
@@ -2440,6 +2454,34 @@ var LightGallery = /** @class */ (function () {
             $element.off("click.lgcustom-item-" + $element.attr('data-lg-id'));
         }
     };
+    LightGallery.prototype.trapFocus = function () {
+        var _this = this;
+        this.$container.get().focus();
+        $LG(window).on("keydown.lg.global" + this.lgId, function (e) {
+            if (!_this.lgOpened) {
+                return;
+            }
+            var isTabPressed = e.key === 'Tab' || e.keyCode === 9;
+            if (!isTabPressed) {
+                return;
+            }
+            var focusableEls = utils.getFocusableElements(_this.$container.get());
+            var firstFocusableEl = focusableEls[0];
+            var lastFocusableEl = focusableEls[focusableEls.length - 1];
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusableEl) {
+                    lastFocusableEl.focus();
+                    e.preventDefault();
+                }
+            }
+            else {
+                if (document.activeElement === lastFocusableEl) {
+                    firstFocusableEl.focus();
+                    e.preventDefault();
+                }
+            }
+        });
+    };
     LightGallery.prototype.manageCloseGallery = function () {
         var _this = this;
         if (!this.settings.closable)
@@ -2547,8 +2589,8 @@ var LightGallery = /** @class */ (function () {
                     instance: _this,
                 });
             }
-            if (_this.outer.get()) {
-                _this.outer.get().blur();
+            if (_this.$container.get()) {
+                _this.$container.get().blur();
             }
             _this.lgOpened = false;
         }, removeTimeout + 100);
