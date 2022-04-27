@@ -220,7 +220,7 @@ export interface LightGalleryCoreSettings {
      * Also, toggle thumbnails button is not displayed if allowMediaOverlap is false
      * <section>
      * Note - Changing the position of the media on every slide transition creates a flickering effect.
-     * Therefore, The height of the caption is calculated dynamically, only once based on the first slide caption.
+     * Therefore, the height of the caption is calculated dynamically, only once based on the first slide caption.
      * </section>
      * <section>
      * if you have dynamic captions for each media,
