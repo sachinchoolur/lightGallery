@@ -2286,7 +2286,10 @@ export class LightGallery {
             return 0;
         }
         this.LGel.trigger(lGEvents.beforeClose);
-        $LG(window).scrollTop(this.prevScrollTop);
+
+        if (this.settings.resetScrollPosition) {
+            $LG(window).scrollTop(this.prevScrollTop);
+        }
 
         const currentItem = this.items[this.index];
         let transform: string | undefined;
