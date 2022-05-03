@@ -2206,7 +2206,9 @@ export class LightGallery {
     }
 
     trapFocus(): void {
-        this.$container.get().focus();
+        this.$container.get().focus({
+            preventScroll: true,
+        });
         $LG(window).on(`keydown.lg.global${this.lgId}`, (e) => {
             if (!this.lgOpened) {
                 return;
