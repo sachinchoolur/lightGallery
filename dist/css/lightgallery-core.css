@@ -17,6 +17,10 @@
   scroll-behavior: unset;
 }
 
+.lg-overlay-open {
+  overflow: hidden;
+}
+
 .lg-toolbar,
 .lg-prev,
 .lg-next,

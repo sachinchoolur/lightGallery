@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.5.0-beta.3 | April 23rd 2022
+ * lightgallery | 2.5.0-beta.4 | May 9th 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -102,6 +102,8 @@
         defaultCaptionHeight: 0,
         ariaLabelledby: '',
         ariaDescribedby: '',
+        resetScrollPosition: true,
+        hideScrollbar: false,
         closable: true,
         swipeToClose: true,
         closeOnTap: true,
@@ -838,6 +840,7 @@
             this.currentItemsInDom = [];
             // Scroll top value before lightGallery is opened
             this.prevScrollTop = 0;
+            this.bodyPaddingRight = 0;
             this.isDummyImageRemoved = false;
             this.dragOrSwipeEnabled = false;
             this.mediaContainerPosition = {
@@ -1185,6 +1188,27 @@
                 return this.settings.dynamicEl || [];
             }
         };
+        LightGallery.prototype.shouldHideScrollbar = function () {
+            return (this.settings.hideScrollbar &&
+                document.body === this.settings.container);
+        };
+        LightGallery.prototype.hideScrollbar = function () {
+            if (!this.shouldHideScrollbar()) {
+                return;
+            }
+            this.bodyPaddingRight = parseFloat($LG('body').style().paddingRight);
+            var bodyRect = document.documentElement.getBoundingClientRect();
+            var scrollbarWidth = window.innerWidth - bodyRect.width;
+            $LG(document.body).css('padding-right', scrollbarWidth + this.bodyPaddingRight + 'px');
+            $LG(document.body).addClass('lg-overlay-open');
+        };
+        LightGallery.prototype.resetScrollBar = function () {
+            if (!this.shouldHideScrollbar()) {
+                return;
+            }
+            $LG(document.body).css('padding-right', this.bodyPaddingRight + 'px');
+            $LG(document.body).removeClass('lg-overlay-open');
+        };
         /**
          * Open lightGallery.
          * Open gallery with specific slide by passing index of the slide as parameter.
@@ -1221,6 +1245,7 @@
                 return;
             this.lgOpened = true;
             this.outer.removeClass('lg-hide-items');
+            this.hideScrollbar();
             // Add display block, but still has opacity 0
             this.$container.addClass('lg-show');
             var itemsToBeInsertedToDom = this.getItemsToBeInsertedToDom(index, index);
@@ -2462,7 +2487,9 @@
         };
         LightGallery.prototype.trapFocus = function () {
             var _this = this;
-            this.$container.get().focus();
+            this.$container.get().focus({
+                preventScroll: true,
+            });
             $LG(window).on("keydown.lg.global" + this.lgId, function (e) {
                 if (!_this.lgOpened) {
                     return;
@@ -2538,7 +2565,9 @@
                 return 0;
             }
             this.LGel.trigger(lGEvents.beforeClose);
-            $LG(window).scrollTop(this.prevScrollTop);
+            if (this.settings.resetScrollPosition && !this.settings.hideScrollbar) {
+                $LG(window).scrollTop(this.prevScrollTop);
+            }
             var currentItem = this.items[this.index];
             var transform;
             if (this.zoomFromOrigin && currentItem) {
@@ -2583,6 +2612,8 @@
                     _this.outer.removeClass('lg-zoom-from-image');
                 }
                 _this.$container.removeClass('lg-show');
+                // Reset scrollbar
+                _this.resetScrollBar();
                 // Need to remove inline opacity as it is used in the stylesheet as well
                 _this.$backdrop
                     .removeAttr('style')
