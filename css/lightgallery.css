@@ -363,6 +363,10 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   scroll-behavior: unset;
 }
 
+.lg-overlay-open {
+  overflow: hidden;
+}
+
 .lg-toolbar,
 .lg-prev,
 .lg-next,
