@@ -76,6 +76,8 @@ export class LightGallery {
     // Scroll top value before lightGallery is opened
     public prevScrollTop = 0;
 
+    public bodyPaddingRight = 0;
+
     private zoomFromOrigin!: boolean;
 
     private currentImageSize?: ImageSize;
@@ -571,6 +573,36 @@ export class LightGallery {
         }
     }
 
+    shouldHideScrollbar(): boolean {
+        return (
+            this.settings.hideScrollbar &&
+            document.body === this.settings.container
+        );
+    }
+
+    hideScrollbar(): void {
+        if (!this.shouldHideScrollbar()) {
+            return;
+        }
+        this.bodyPaddingRight = parseFloat($LG('body').style().paddingRight);
+        const bodyRect = document.documentElement.getBoundingClientRect();
+        const scrollbarWidth = window.innerWidth - bodyRect.width;
+
+        $LG(document.body).css(
+            'padding-right',
+            scrollbarWidth + this.bodyPaddingRight + 'px',
+        );
+        $LG(document.body).addClass('lg-overlay-open');
+    }
+
+    resetScrollBar(): void {
+        if (!this.shouldHideScrollbar()) {
+            return;
+        }
+        $LG(document.body).css('padding-right', this.bodyPaddingRight + 'px');
+        $LG(document.body).removeClass('lg-overlay-open');
+    }
+
     /**
      * Open lightGallery.
      * Open gallery with specific slide by passing index of the slide as parameter.
@@ -604,6 +636,8 @@ export class LightGallery {
         if (this.lgOpened) return;
         this.lgOpened = true;
         this.outer.removeClass('lg-hide-items');
+
+        this.hideScrollbar();
 
         // Add display block, but still has opacity 0
         this.$container.addClass('lg-show');
@@ -2289,7 +2323,7 @@ export class LightGallery {
         }
         this.LGel.trigger(lGEvents.beforeClose);
 
-        if (this.settings.resetScrollPosition) {
+        if (this.settings.resetScrollPosition && !this.settings.hideScrollbar) {
             $LG(window).scrollTop(this.prevScrollTop);
         }
 
@@ -2362,6 +2396,9 @@ export class LightGallery {
                 this.outer.removeClass('lg-zoom-from-image');
             }
             this.$container.removeClass('lg-show');
+
+            // Reset scrollbar
+            this.resetScrollBar();
 
             // Need to remove inline opacity as it is used in the stylesheet as well
             this.$backdrop

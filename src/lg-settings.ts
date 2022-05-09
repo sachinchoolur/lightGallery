@@ -260,6 +260,11 @@ export interface LightGalleryCoreSettings {
     ariaDescribedby: string;
 
     /**
+     * Hide scrollbar when gallery is opened
+     */
+    hideScrollbar: boolean;
+
+    /**
      * Reset to previous scrollPosition when lightGallery is closed
      * @description By default, lightGallery doesn't hide the scrollbar for a smooth opening transition.
      * If a user changes the scroll position, lightGallery resets it to the previous value
@@ -559,6 +564,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     ariaLabelledby: '',
     ariaDescribedby: '',
     resetScrollPosition: true,
+    hideScrollbar: false,
     closable: true,
     swipeToClose: true,
     closeOnTap: true,

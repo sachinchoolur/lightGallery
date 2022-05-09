@@ -19,6 +19,9 @@
 .lg-on {
     scroll-behavior: unset;
 }
+.lg-overlay-open {
+    overflow: hidden;
+}
 
 // for idle state
 .lg-toolbar,
