@@ -1250,13 +1250,16 @@ export class LightGallery {
             if (!$currentSlide.hasClass('lg-loaded')) {
                 setTimeout(() => {
                     if (this.getSlideType(currentGalleryItem) === 'image') {
+                        const { alt } = currentGalleryItem;
+                        const altAttr = alt ? 'alt="' + alt + '"' : '';
+
                         $currentSlide
                             .find('.lg-img-wrap')
                             .append(
                                 utils.getImgMarkup(
                                     index,
                                     src as string,
-                                    '',
+                                    altAttr,
                                     srcset,
                                     sizes,
                                     currentGalleryItem.sources,
