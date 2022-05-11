@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.5.0-beta.4 | May 9th 2022
+ * lightgallery | 2.5.0-beta.5 | May 11th 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -1697,9 +1697,11 @@
                 if (!$currentSlide.hasClass('lg-loaded')) {
                     setTimeout(function () {
                         if (_this.getSlideType(currentGalleryItem) === 'image') {
+                            var alt = currentGalleryItem.alt;
+                            var altAttr = alt ? 'alt="' + alt + '"' : '';
                             $currentSlide
                                 .find('.lg-img-wrap')
-                                .append(utils.getImgMarkup(index, src, '', srcset, sizes, currentGalleryItem.sources));
+                                .append(utils.getImgMarkup(index, src, altAttr, srcset, sizes, currentGalleryItem.sources));
                             if (srcset || sources) {
                                 var $img = $currentSlide.find('.lg-object');
                                 _this.initPictureFill($img);
