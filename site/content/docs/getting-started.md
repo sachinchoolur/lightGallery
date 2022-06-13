@@ -161,7 +161,7 @@ Finally, you need to initiate the gallery by adding the following code.
         plugins: [lgZoom, lgThumbnail],
         licenseKey: 'your_license_key',
         speed: 500,
-        # ... other settings
+        // ... other settings
     });
 </script>
 ```
