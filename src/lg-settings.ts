@@ -261,6 +261,7 @@ export interface LightGalleryCoreSettings {
 
     /**
      * Hide scrollbar when gallery is opened
+     * @version V2.5.0
      */
     hideScrollbar: boolean;
 
@@ -268,6 +269,7 @@ export interface LightGalleryCoreSettings {
      * Reset to previous scrollPosition when lightGallery is closed
      * @description By default, lightGallery doesn't hide the scrollbar for a smooth opening transition.
      * If a user changes the scroll position, lightGallery resets it to the previous value
+     * @version V2.5.0
      */
     resetScrollPosition: boolean;
 
@@ -316,6 +318,7 @@ export interface LightGalleryCoreSettings {
 
     /**
      * Trap focus within the lightGallery
+     * @version V2.5.0
      */
     trapFocus: boolean;
 

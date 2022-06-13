@@ -60,6 +60,9 @@
             {{ if eq .tag "description"}}
             <p>{{.text | safeHTML}}</p>
             {{ end}}
+            {{ if eq .tag "version"}}
+            <p class="docs-minimum-version">Minimum lightGallery version required:  <b>{{.text}}</b></p>
+            {{ end}}
             {{ if eq .tag "example"}}
             {{ highlight .text "js" "" }}
             {{ end}}

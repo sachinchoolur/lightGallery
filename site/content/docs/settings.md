@@ -172,7 +172,7 @@ lightGallery
 ## Vimeo thumbnails plugin
 
 Vimeo thumbnails plugin helps you load thumbnails automatically for Vimeo videos.
-<span class="badge rounded-pill bg-danger font-12" title="Available since version 2.4.0">v2.5.0</span>
+<span class="badge rounded-pill bg-danger font-12" title="Available since version 2.5.0">v2.5.0</span>
 
 {{< options pluginName="Vimeo Thumbnails" interface="VimeoThumbnailSettings" variable="vimeoSettings" >}}
 

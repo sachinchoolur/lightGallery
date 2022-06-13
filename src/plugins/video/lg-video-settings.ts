@@ -68,6 +68,7 @@ export interface VideoSettings {
     /**
      * Class name of the videojs theme
      * You need to include the theme stylesheet on your document. <a href="https://videojs.com/getting-started/#home-page-themes" target="_blank">More info</a>
+     * @version V2.5.0
      */
     videojsTheme: string;
 
