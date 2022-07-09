@@ -1,5 +1,4 @@
 import { lGEvents } from '../../lg-events';
-import { LightGallerySettings } from '../../lg-settings';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { rotateSettings, RotateSettings } from './lg-rotate-settings';
@@ -54,17 +53,27 @@ export default class Rotate {
         // event triggered after appending slide content
         this.core.LGel.on(`${lGEvents.slideItemLoad}.rotate`, (event) => {
             const { index } = event.detail;
-            const imageWrap = this.core
-                .getSlideItem(index)
-                .find('.lg-object')
-                .first();
 
-            imageWrap.wrap('lg-img-rotate');
-            //this.rotateValuesList[this.core.index]
-            this.core
-                .getSlideItem(this.core.index)
+            const rotateEl = this.core
+                .getSlideItem(index)
                 .find('.lg-img-rotate')
-                .css('transition-duration', this.settings.rotateSpeed + 'ms');
+                .get();
+            if (!rotateEl) {
+                const imageWrap = this.core
+                    .getSlideItem(index)
+                    .find('.lg-object')
+                    .first();
+
+                imageWrap.wrap('lg-img-rotate');
+                //this.rotateValuesList[this.core.index]
+                this.core
+                    .getSlideItem(this.core.index)
+                    .find('.lg-img-rotate')
+                    .css(
+                        'transition-duration',
+                        this.settings.rotateSpeed + 'ms',
+                    );
+            }
         });
 
         this.core.outer
