@@ -268,8 +268,8 @@ export default class Zoom {
      *
      * @param {String} scale - Zoom decrement/increment value
      */
-    zoomImage(scale: number, scaleDiff: number): void {
-        if (scaleDiff <= 0) return;
+    zoomImage(scale: number, scaleDiff: number, reposition: boolean): void {
+        if (Math.abs(scaleDiff) <= 0) return;
         //scale = scale + this.settings.scale;
         // Find offset manually to avoid issue after zoom
         const offsetX = this.containerRect.width / 2 + this.containerRect.left;
@@ -315,10 +315,13 @@ export default class Zoom {
         let _y = offsetY - this.pageY;
 
         if (scale - scaleDiff > 1) {
-            const scaleVal = (scale - scaleDiff) / scaleDiff;
-
-            _x = _x + this.left * (scaleVal + 1);
-            _y = _y + this.top * (scaleVal + 1);
+            const scaleVal = (scale - scaleDiff) / Math.abs(scaleDiff);
+            _x =
+                (scaleDiff < 0 ? -_x : _x) +
+                this.left * (scaleVal + (scaleDiff < 0 ? -1 : 1));
+            _y =
+                (scaleDiff < 0 ? -_y : _y) +
+                this.top * (scaleVal + (scaleDiff < 0 ? -1 : 1));
             x = _x / scaleVal;
             y = _y / scaleVal;
         } else {
@@ -326,38 +329,43 @@ export default class Zoom {
             x = _x * scaleVal;
             y = _y * scaleVal;
         }
-        if (allowX) {
-            if (this.isBeyondPossibleLeft(x, possibleSwipeCords.minX)) {
-                x = possibleSwipeCords.minX;
-            } else if (this.isBeyondPossibleRight(x, possibleSwipeCords.maxX)) {
-                x = possibleSwipeCords.maxX;
-            }
-        } else {
-            if (scale > 1) {
-                if (x < possibleSwipeCords.minX) {
+
+        if (reposition) {
+            if (allowX) {
+                if (this.isBeyondPossibleLeft(x, possibleSwipeCords.minX)) {
                     x = possibleSwipeCords.minX;
-                } else if (x > possibleSwipeCords.maxX) {
+                } else if (
+                    this.isBeyondPossibleRight(x, possibleSwipeCords.maxX)
+                ) {
                     x = possibleSwipeCords.maxX;
                 }
+            } else {
+                if (scale > 1) {
+                    if (x < possibleSwipeCords.minX) {
+                        x = possibleSwipeCords.minX;
+                    } else if (x > possibleSwipeCords.maxX) {
+                        x = possibleSwipeCords.maxX;
+                    }
+                }
             }
-        }
-        // @todo fix this
-        if (allowY) {
-            if (this.isBeyondPossibleTop(y, possibleSwipeCords.minY)) {
-                y = possibleSwipeCords.minY;
-            } else if (
-                this.isBeyondPossibleBottom(y, possibleSwipeCords.maxY)
-            ) {
-                y = possibleSwipeCords.maxY;
-            }
-        } else {
-            // If the translate value based on index of beyond the viewport, utilize the available space to prevent image being cut out
-            if (scale > 1) {
-                //If image goes beyond viewport top, use the minim possible translate value
-                if (y < possibleSwipeCords.minY) {
+            // @todo fix this
+            if (allowY) {
+                if (this.isBeyondPossibleTop(y, possibleSwipeCords.minY)) {
                     y = possibleSwipeCords.minY;
-                } else if (y > possibleSwipeCords.maxY) {
+                } else if (
+                    this.isBeyondPossibleBottom(y, possibleSwipeCords.maxY)
+                ) {
                     y = possibleSwipeCords.maxY;
+                }
+            } else {
+                // If the translate value based on index of beyond the viewport, utilize the available space to prevent image being cut out
+                if (scale > 1) {
+                    //If image goes beyond viewport top, use the minim possible translate value
+                    if (y < possibleSwipeCords.minY) {
+                        y = possibleSwipeCords.minY;
+                    } else if (y > possibleSwipeCords.maxY) {
+                        y = possibleSwipeCords.maxY;
+                    }
                 }
             }
         }
@@ -375,38 +383,11 @@ export default class Zoom {
         this.left = x;
         this.top = y;
 
-        // if (scale === actualSizeScale) {
-        //     setTimeout(() => {
-        //         if (possibleSwipeCords) {
-        //             this.imageReset = scale;
-        //             const $image = this.core
-        //                 .getSlideItem(this.core.index)
-        //                 .find('.lg-image')
-        //                 .first();
-        //             $image.addClass('reset-transition');
-        //             setTimeout(() => {
-        //                 if (allowX) {
-        //                     x = Math.abs(possibleSwipeCords.minX);
-        //                 } else {
-        //                     x = Math.abs(possibleSwipeCords.minX)
-        //                 }
-        //                 if (allowY) {
-        //                     const { top } = this.core.mediaContainerPosition;
-        //                     y = Math.abs(possibleSwipeCords.minY) - top;
-        //                 }
-        //                 $image
-        //                     .css('maxHeight', 'none')
-        //                     .css('maxWidth', 'none')
-        //                     .css(
-        //                         'transform',
-        //                         `translate3d(${Math.abs(x)}px, ${Math.abs(
-        //                             y,
-        //                         )}px, 0px)`,
-        //                     );
-        //             }, 10);
-        //         }
-        //     }, 600);
-        // }
+        const actualSizeScale = this.getCurrentImageActualSizeScale();
+
+        if (scale >= actualSizeScale) {
+            this.setZoomImageSize(scale);
+        }
     }
 
     resetImageTranslate(): void {
@@ -418,6 +399,7 @@ export default class Zoom {
         $image.removeClass(
             'reset-transition reset-transition-y reset-transition-x',
         );
+        this.core.outer.removeClass('lg-actual-size');
         $image.css('width', 'auto').css('height', 'auto');
         setTimeout(() => {
             $image.removeClass('no-transition');
@@ -451,6 +433,7 @@ export default class Zoom {
             $image
                 .css('width', ($image.get() as any).naturalWidth + 'px')
                 .css('height', ($image.get() as any).naturalHeight + 'px');
+            this.core.outer.addClass('lg-actual-size');
             if (dragAllowedAxises.allowX && dragAllowedAxises.allowY) {
                 $image.addClass('reset-transition');
             } else if (dragAllowedAxises.allowX && !dragAllowedAxises.allowY) {
@@ -523,7 +506,7 @@ export default class Zoom {
             this.setPageCords(event);
 
             this.beginZoom(this.scale);
-            this.zoomImage(this.scale, this.scale - prevScale);
+            this.zoomImage(this.scale, this.scale - prevScale, true);
 
             if (this.scale >= scale) {
                 this.setZoomImageSize(this.scale);
@@ -654,12 +637,12 @@ export default class Zoom {
         this.core.LGel.on(
             `${lGEvents.containerResize}.zoom ${lGEvents.rotateRight}.zoom ${lGEvents.rotateLeft}.zoom ${lGEvents.flipHorizontal}.zoom ${lGEvents.flipVertical}.zoom`,
             () => {
-                if (!this.core.lgOpened || !this.isImageSlide()) return;
-                this.setPageCords();
-                this.setZoomEssentials();
-                if (this.scale > 1) {
-                    this.zoomImage(this.scale, 0);
-                }
+                // if (!this.core.lgOpened || !this.isImageSlide()) return;
+                // this.setPageCords();
+                // this.setZoomEssentials();
+                // if (this.scale > 1) {
+                //     this.zoomImage(this.scale, 0);
+                // }
             },
         );
         // Update zoom on resize and orientationchange
@@ -674,18 +657,19 @@ export default class Zoom {
                 return;
             }
 
-            let scale = this.scale - this.settings.scale;
             let timeout = 0;
             if (this.imageReset) {
                 this.resetImageTranslate();
                 timeout = 50;
             }
             setTimeout(() => {
+                let scale = this.scale - this.settings.scale;
+
                 if (scale < 1) {
                     scale = 1;
                 }
                 this.beginZoom(scale);
-                this.zoomImage(scale, this.settings.scale);
+                this.zoomImage(scale, -this.settings.scale, true);
             }, timeout);
         });
 
@@ -746,7 +730,7 @@ export default class Zoom {
 
         scale = this.getScale(scale);
         this.beginZoom(scale);
-        this.zoomImage(scale, this.settings.scale);
+        this.zoomImage(scale, this.settings.scale, true);
     }
 
     // Reset zoom effect
@@ -833,6 +817,7 @@ export default class Zoom {
                     this.zoomImage(
                         this.scale,
                         Math.round((diff + Number.EPSILON) * 100) / 100,
+                        false,
                     );
                 }
             }
@@ -850,7 +835,7 @@ export default class Zoom {
                     this.resetZoom();
                 } else {
                     this.scale = this.getScale(this.scale);
-                    this.zoomImage(this.scale, 0);
+                    //this.zoomImage(this.scale, 0);
                     this.manageActualPixelClassNames();
 
                     const actualSizeScale = this.getCurrentImageActualSizeScale();
