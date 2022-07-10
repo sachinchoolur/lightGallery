@@ -268,7 +268,12 @@ export default class Zoom {
      *
      * @param {String} scale - Zoom decrement/increment value
      */
-    zoomImage(scale: number, scaleDiff: number, reposition: boolean): void {
+    zoomImage(
+        scale: number,
+        scaleDiff: number,
+        reposition: boolean,
+        resetToMax: boolean,
+    ): void {
         if (Math.abs(scaleDiff) <= 0) return;
         //scale = scale + this.settings.scale;
         // Find offset manually to avoid issue after zoom
@@ -383,10 +388,12 @@ export default class Zoom {
         this.left = x;
         this.top = y;
 
-        const actualSizeScale = this.getCurrentImageActualSizeScale();
+        if (resetToMax) {
+            const actualSizeScale = this.getCurrentImageActualSizeScale();
 
-        if (scale >= actualSizeScale) {
-            this.setZoomImageSize(scale);
+            if (scale >= actualSizeScale) {
+                this.setZoomImageSize(scale);
+            }
         }
     }
 
@@ -506,11 +513,7 @@ export default class Zoom {
             this.setPageCords(event);
 
             this.beginZoom(this.scale);
-            this.zoomImage(this.scale, this.scale - prevScale, true);
-
-            if (this.scale >= scale) {
-                this.setZoomImageSize(this.scale);
-            }
+            this.zoomImage(this.scale, this.scale - prevScale, true, true);
 
             setTimeout(() => {
                 this.core.outer.removeClass('lg-grabbing').addClass('lg-grab');
@@ -669,7 +672,7 @@ export default class Zoom {
                     scale = 1;
                 }
                 this.beginZoom(scale);
-                this.zoomImage(scale, -this.settings.scale, true);
+                this.zoomImage(scale, -this.settings.scale, true, true);
             }, timeout);
         });
 
@@ -730,7 +733,7 @@ export default class Zoom {
 
         scale = this.getScale(scale);
         this.beginZoom(scale);
-        this.zoomImage(scale, this.settings.scale, true);
+        this.zoomImage(scale, this.settings.scale, true, true);
     }
 
     // Reset zoom effect
@@ -814,9 +817,11 @@ export default class Zoom {
                     this.scale =
                         Math.round((_scale + Number.EPSILON) * 100) / 100;
                     const diff = this.scale - prevScale;
+                    const actualSizeScale = this.getCurrentImageActualSizeScale();
                     this.zoomImage(
                         this.scale,
                         Math.round((diff + Number.EPSILON) * 100) / 100,
+                        false,
                         false,
                     );
                 }
@@ -834,15 +839,16 @@ export default class Zoom {
                 if (this.scale <= 1) {
                     this.resetZoom();
                 } else {
-                    this.scale = this.getScale(this.scale);
-                    //this.zoomImage(this.scale, 0);
-                    this.manageActualPixelClassNames();
-
                     const actualSizeScale = this.getCurrentImageActualSizeScale();
 
                     if (this.scale >= actualSizeScale) {
-                        this.setZoomImageSize(this.scale);
+                        let scaleDiff = actualSizeScale - this.scale;
+                        if (scaleDiff === 0) {
+                            scaleDiff = 0.01;
+                        }
+                        this.zoomImage(actualSizeScale, scaleDiff, false, true);
                     }
+                    this.manageActualPixelClassNames();
 
                     this.core.outer.addClass('lg-zoomed');
                 }
