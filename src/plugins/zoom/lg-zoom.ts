@@ -178,7 +178,7 @@ export default class Zoom {
      * @param scale When image portratit image is rotated and scaled, check the reset values
      * @returns
      */
-    getDragAllowedAxises(scale?: number): DragAllowedAxises {
+    getDragAllowedAxises(scale: number, scaleDiff?: number): DragAllowedAxises {
         const $image = this.core
             .getSlideItem(this.core.index)
             .find('.lg-image')
@@ -187,12 +187,14 @@ export default class Zoom {
 
         let height = 0;
         let width = 0;
+        const rect = $image.getBoundingClientRect();
         if (scale) {
-            scale = scale || 1;
             height = $image.offsetHeight * scale;
             width = $image.offsetWidth * scale;
+        } else if (scaleDiff) {
+            height = rect.height + scaleDiff * rect.height;
+            width = rect.width + scaleDiff * rect.width;
         } else {
-            const rect = $image.getBoundingClientRect();
             height = rect.height;
             width = rect.width;
         }
@@ -300,7 +302,7 @@ export default class Zoom {
             this.positionChanged = false;
         }
 
-        const dragAllowedAxises = this.getDragAllowedAxises(scale);
+        const dragAllowedAxises = this.getDragAllowedAxises(0, scaleDiff);
 
         const { allowY, allowX } = dragAllowedAxises;
         if (this.positionChanged) {
@@ -312,7 +314,7 @@ export default class Zoom {
             this.positionChanged = false;
         }
 
-        const possibleSwipeCords = this.getPossibleSwipeDragCords(scale);
+        const possibleSwipeCords = this.getPossibleSwipeDragCords(scaleDiff);
 
         let x;
         let y;
@@ -392,7 +394,7 @@ export default class Zoom {
             const actualSizeScale = this.getCurrentImageActualSizeScale();
 
             if (scale >= actualSizeScale) {
-                this.setZoomImageSize(scale);
+                this.setZoomImageSize(scaleDiff);
             }
         }
     }
@@ -413,7 +415,7 @@ export default class Zoom {
         }, 10);
     }
 
-    setZoomImageSize(scale: number): void {
+    setZoomImageSize(scaleDiff: number): void {
         const $image = this.core
             .getSlideItem(this.core.index)
             .find('.lg-image')
@@ -640,12 +642,16 @@ export default class Zoom {
         this.core.LGel.on(
             `${lGEvents.containerResize}.zoom ${lGEvents.rotateRight}.zoom ${lGEvents.rotateLeft}.zoom ${lGEvents.flipHorizontal}.zoom ${lGEvents.flipVertical}.zoom`,
             () => {
-                // if (!this.core.lgOpened || !this.isImageSlide()) return;
-                // this.setPageCords();
-                // this.setZoomEssentials();
-                // if (this.scale > 1) {
-                //     this.zoomImage(this.scale, 0);
-                // }
+                if (!this.core.lgOpened || !this.isImageSlide()) return;
+                const _LGel = this.core
+                    .getSlideItem(this.core.index)
+                    .find('.lg-img-wrap')
+                    .first();
+                this.top = 0;
+                this.left = 0;
+                this.setZoomEssentials();
+                this.setZoomSwipeStyles(_LGel, { x: 0, y: 0 });
+                this.positionChanged = true;
             },
         );
         // Update zoom on resize and orientationchange
@@ -1012,7 +1018,7 @@ export default class Zoom {
     }
 
     getPossibleSwipeDragCords(scale?: number): PossibleCords {
-        const dataScale = scale || this.scale || 1;
+        const dataScale = 1;
         const $image = this.core
             .getSlideItem(this.core.index)
             .find('.lg-image')
@@ -1029,20 +1035,21 @@ export default class Zoom {
 
         // SCale should not conside if transition is reset
 
-        const imageYSize = scale
-            ? $image.get().offsetHeight
-            : this.getImageSize(
-                  $image.get() as HTMLImageElement,
-                  this.rotateValue,
-                  'y',
-              );
-        const imageXSize = scale
-            ? $image.get().offsetWidth
-            : this.getImageSize(
-                  $image.get() as HTMLImageElement,
-                  this.rotateValue,
-                  'x',
-              );
+        let imageYSize = this.getImageSize(
+            $image.get() as HTMLImageElement,
+            this.rotateValue,
+            'y',
+        );
+        let imageXSize = this.getImageSize(
+            $image.get() as HTMLImageElement,
+            this.rotateValue,
+            'x',
+        );
+
+        if (scale) {
+            imageYSize = imageYSize + scale * imageYSize;
+            imageXSize = imageXSize + scale * imageXSize;
+        }
 
         const minY = (imageYSize * elDataScale - this.containerRect.height) / 2;
         const maxY =
@@ -1110,7 +1117,7 @@ export default class Zoom {
                     .find('.lg-img-wrap')
                     .first();
 
-                const dragAllowedAxises = this.getDragAllowedAxises();
+                const dragAllowedAxises = this.getDragAllowedAxises(0);
 
                 allowY = dragAllowedAxises.allowY;
                 allowX = dragAllowedAxises.allowX;
@@ -1222,7 +1229,7 @@ export default class Zoom {
                     .find('.lg-img-wrap')
                     .first();
 
-                const dragAllowedAxises = this.getDragAllowedAxises();
+                const dragAllowedAxises = this.getDragAllowedAxises(0);
 
                 allowY = dragAllowedAxises.allowY;
                 allowX = dragAllowedAxises.allowX;
