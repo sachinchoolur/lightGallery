@@ -516,11 +516,16 @@ export default class Zoom {
             }
         });
 
-        // Update zoom on resize and orientationchange
         this.core.LGel.on(
             `${lGEvents.containerResize}.zoom ${lGEvents.rotateRight}.zoom ${lGEvents.rotateLeft}.zoom ${lGEvents.flipHorizontal}.zoom ${lGEvents.flipVertical}.zoom`,
             () => {
-                if (!this.core.lgOpened || !this.isImageSlide()) return;
+                if (
+                    !this.core.lgOpened ||
+                    !this.isImageSlide() ||
+                    this.core.touchAction
+                ) {
+                    return;
+                }
                 const _LGel = this.core
                     .getSlideItem(this.core.index)
                     .find('.lg-img-wrap')
