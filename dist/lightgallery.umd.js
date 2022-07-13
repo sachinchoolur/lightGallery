@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.5.0 | June 13th 2022
+ * lightgallery | 2.6.0-beta.1 | July 13th 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -2152,23 +2152,23 @@
                         $item.get().contains(e.target)) &&
                         !_this.outer.hasClass('lg-zoomed') &&
                         !_this.lgBusy &&
-                        e.targetTouches.length === 1) {
+                        e.touches.length === 1) {
                         isSwiping = true;
                         _this.touchAction = 'swipe';
                         _this.manageSwipeClass();
                         startCoords = {
-                            pageX: e.targetTouches[0].pageX,
-                            pageY: e.targetTouches[0].pageY,
+                            pageX: e.touches[0].pageX,
+                            pageY: e.touches[0].pageY,
                         };
                     }
                 });
                 this.$inner.on('touchmove.lg', function (e) {
                     if (isSwiping &&
                         _this.touchAction === 'swipe' &&
-                        e.targetTouches.length === 1) {
+                        e.touches.length === 1) {
                         endCoords = {
-                            pageX: e.targetTouches[0].pageX,
-                            pageY: e.targetTouches[0].pageY,
+                            pageX: e.touches[0].pageX,
+                            pageY: e.touches[0].pageY,
                         };
                         _this.touchMove(startCoords, endCoords, e);
                         isMoved = true;
