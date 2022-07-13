@@ -21,6 +21,13 @@
   pointer-events: none;
 }
 
+.lg-outer .lg-img-rotate:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
 .lg-rotate-left:after {
   content: '\e900';
 }
