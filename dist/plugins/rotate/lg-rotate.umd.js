@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.5.0 | June 13th 2022
+ * lightgallery | 2.6.0-beta.1 | July 13th 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -121,17 +121,24 @@
             // even after navigating to diferent slides
             this.rotateValuesList = {};
             // event triggered after appending slide content
-            this.core.LGel.on(lGEvents.afterAppendSlide + ".rotate", function (event) {
+            this.core.LGel.on(lGEvents.slideItemLoad + ".rotate", function (event) {
                 var index = event.detail.index;
-                var imageWrap = _this.core
+                var rotateEl = _this.core
                     .getSlideItem(index)
-                    .find('.lg-img-wrap')
-                    .first();
-                imageWrap.wrap('lg-img-rotate');
-                _this.core
-                    .getSlideItem(_this.core.index)
                     .find('.lg-img-rotate')
-                    .css('transition-duration', _this.settings.rotateSpeed + 'ms');
+                    .get();
+                if (!rotateEl) {
+                    var imageWrap = _this.core
+                        .getSlideItem(index)
+                        .find('.lg-object')
+                        .first();
+                    imageWrap.wrap('lg-img-rotate');
+                    //this.rotateValuesList[this.core.index]
+                    _this.core
+                        .getSlideItem(_this.core.index)
+                        .find('.lg-img-rotate')
+                        .css('transition-duration', _this.settings.rotateSpeed + 'ms');
+                }
             });
             this.core.outer
                 .find('#lg-rotate-left')
