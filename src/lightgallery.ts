@@ -2517,7 +2517,7 @@ export class LightGallery {
     destroy(): number {
         const closeTimeout = this.closeGallery(true);
         if (closeTimeout) {
-            setTimeout(this.destroyGallery, closeTimeout);
+            setTimeout(this.destroyGallery.bind(this), closeTimeout);
         } else {
             this.destroyGallery();
         }
