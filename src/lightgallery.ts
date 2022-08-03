@@ -2491,6 +2491,16 @@ export class LightGallery {
         this.manageSingleSlideClassName();
     }
 
+    private destroyGallery(): void {
+        this.destroyModules(true);
+        if (!this.settings.dynamic) {
+            this.invalidateItems();
+        }
+        $LG(window).off(`.lg.global${this.lgId}`);
+        this.LGel.off('.lg');
+        this.$container.remove();
+    }
+
     /**
      * Destroy lightGallery.
      * Destroy lightGallery and its plugin instances completely
@@ -2506,15 +2516,11 @@ export class LightGallery {
      */
     destroy(): number {
         const closeTimeout = this.closeGallery(true);
-        setTimeout(() => {
-            this.destroyModules(true);
-            if (!this.settings.dynamic) {
-                this.invalidateItems();
-            }
-            $LG(window).off(`.lg.global${this.lgId}`);
-            this.LGel.off('.lg');
-            this.$container.remove();
-        }, closeTimeout);
+        if (closeTimeout) {
+            setTimeout(this.destroyGallery, closeTimeout);
+        } else {
+            this.destroyGallery();
+        }
         return closeTimeout;
     }
 }
