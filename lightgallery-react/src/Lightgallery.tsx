@@ -300,7 +300,7 @@ const LG: React.FC<LightGalleryProps> = ({
         return function cleanup() {
             lightGallery.destroy();
         };
-    }, []);
+    }, [registerEvents, restProps]);
 
     return (
         <div
