@@ -415,7 +415,10 @@ export default class Zoom {
         const $dummyImage = this.core.outer
             .find('.lg-current .lg-dummy-img')
             .first();
-        const $imageWrap = $image.parent();
+        const $imageWrap = this.core
+            .getSlideItem(this.core.index)
+            .find('.lg-img-wrap')
+            .first();
         this.scale = style.scale;
         $image.css(
             'transform',
