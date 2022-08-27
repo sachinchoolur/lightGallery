@@ -1,14 +1,8 @@
 {
   "name": "lightgallery",
-  "version": "0.0.0-development",
+  "version": "2.5.0",
   "description": "lightGallery is a feature-rich, modular JavaScript gallery plugin for building beautiful image and video galleries for the web and the mobile",
-  "keywords": [
-    "JavaScript",
-    "Gallery",
-    "Video",
-    "slider",
-    "lightBox"
-  ],
+  "keywords": ["JavaScript", "Gallery", "Video", "slider", "lightBox"],
   "main": "lightgallery.umd.js",
   "min": "lightgallery.min.js",
   "module": "lightgallery.es5.js",
@@ -16,6 +10,96 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/sachinchoolur/lightGallery"
+  },
+  "exports": {
+    "./": {
+      "types": "./index.d.ts",
+      "import": "./lightgallery.es5.js",
+      "require": "./lightgallery.umd.js",
+      "default": "./lightgallery.umd.js"
+    },
+    "./angular": {
+      "types": "./angular/lightgallery-angular.d.ts",
+      "import": "./angular/fesm2015/lightgallery-angular.js",
+      "default": "./angular/bundles/lightgallery-angular.umd.js"
+    },
+    "./lit": {
+      "types": "./react/lightgallery.d.ts",
+      "import": "./react/lightgallery.es5.js",
+      "default": "./react/lightgallery.umd.js"
+    },
+    "./plugins/autoplay": {
+      "types": "./react/lg-autoplay.d.ts",
+      "import": "./react/lg-autoplay.es5.js",
+      "default": "./react/lg-autoplay.umd.js"
+    },
+    "./plugins/comment": {
+      "types": "./react/lg-comment.d.ts",
+      "import": "./react/lg-comment.es5.js",
+      "default": "./react/lg-comment.umd.js"
+    },
+    "./plugins/fullscreen": {
+      "types": "./react/lg-fullscreen.d.ts",
+      "import": "./react/lg-fullscreen.es5.js",
+      "default": "./react/lg-fullscreen.umd.js"
+    },
+    "./plugins/hash": {
+      "types": "./react/lg-hash.d.ts",
+      "import": "./react/lg-hash.es5.js",
+      "default": "./react/lg-hash.umd.js"
+    },
+    "./plugins/mediumZoom": {
+      "types": "./react/lg-medium-zoom.d.ts",
+      "import": "./react/lg-medium-zoom.es5.js",
+      "default": "./react/lg-medium-zoom.umd.js"
+    },
+    "./plugins/pager": {
+      "types": "./react/lg-pager.d.ts",
+      "import": "./react/lg-pager.es5.js",
+      "default": "./react/lg-pager.umd.js"
+    },
+    "./plugins/relativeCaption": {
+      "types": "./react/lg-relative-caption.d.ts",
+      "import": "./react/lg-relative-caption.es5.js",
+      "default": "./react/lg-relative-caption.umd.js"
+    },
+
+    "./plugins/rotate": {
+      "types": "./react/lg-rotate.d.ts",
+      "import": "./react/lg-rotate.es5.js",
+      "default": "./react/lg-rotate.umd.js"
+    },
+    "./plugins/share": {
+      "types": "./react/lg-share.d.ts",
+      "import": "./react/lg-share.es5.js",
+      "default": "./react/lg-share.umd.js"
+    },
+    "./plugins/video": {
+      "types": "./react/lg-video.d.ts",
+      "import": "./react/lg-video.es5.js",
+      "default": "./react/lg-video.umd.js"
+    },
+    "./plugins/vimeoThumbnail": {
+      "types": "./react/lg-vimeo-thumbnail.d.ts",
+      "import": "./react/lg-vimeo-thumbnail.es5.js",
+      "default": "./react/lg-vimeo-thumbnail.umd.js"
+    },
+    "./plugins/zoom": {
+      "types": "./react/lg-zoom.d.ts",
+      "import": "./react/lg-zoom.es5.js",
+      "default": "./react/lg-zoom.umd.js"
+    },
+    "./react": {
+      "types": "./react/Lightgallery.d.ts",
+      "import": "./react/Lightgallery.es5.js",
+      "default": "./react/Lightgallery.umd.js"
+    },
+    "./vue": {
+      "types": "./vue/LightGallery.vue.d.ts",
+      "import": "./vue/LightGalleryVue.common.js",
+      "default": "./vue/LightGalleryVue.umd.js"
+    },
+    "./*": "./*"
   },
   "homepage": "https://www.lightgalleryjs.com/",
   "bugs": {
