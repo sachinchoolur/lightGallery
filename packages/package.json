@@ -69,7 +69,6 @@
       "import": "./react/lg-relative-caption.es5.js",
       "default": "./react/lg-relative-caption.umd.js"
     },
-
     "./plugins/rotate": {
       "types": "./react/lg-rotate.d.ts",
       "import": "./react/lg-rotate.es5.js",
