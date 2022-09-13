@@ -235,13 +235,13 @@ export default class Video {
                 ? videoInfo.youtube[2] + '&'
                 : '';
             // For youtube first parms gets priority if duplicates found
-            const youTubePlayerParams = `?${slideUrlParams}wmode=opaque&autoplay=0&mute=1&enablejsapi=1`;
+            const defaultYouTubePlayerParams = `${slideUrlParams}wmode=opaque&autoplay=0&mute=1&enablejsapi=1`;
 
-            const playerParams =
-                youTubePlayerParams +
-                (this.settings.youTubePlayerParams
-                    ? '&' + param(this.settings.youTubePlayerParams)
-                    : '');
+            const playerParams = `?${
+                this.settings.youTubePlayerParams
+                    ? `${param(this.settings.youTubePlayerParams)}&`
+                    : ''
+            }${defaultYouTubePlayerParams}`;
 
             video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="//www.youtube.com/embed/${
                 videoInfo.youtube[1] + playerParams
