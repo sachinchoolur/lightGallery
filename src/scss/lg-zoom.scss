@@ -42,14 +42,37 @@
         .lg-dummy-img {
             // Translate required for zoom
             @include scale3d(1, 1, 1);
-            will-change: opacity, transform;
             @include transitionCustom(
                 transform $zoom-transition-duration
                     cubic-bezier(0.12, 0.415, 0.01, 1.19) 0s,
                 opacity 0.15s !important
             );
-            @include transform-origin(0 0);
             @include backface-visibility(hidden);
+
+            &.no-transition {
+                transition: none !important;
+            }
+            &.reset-transition {
+                transform: scale3d(1, 1, 1) translate3d(-50%, -50%, 0px) !important;
+                max-width: none !important;
+                max-height: none !important;
+                top: 50% !important;
+                left: 50% !important;
+            }
+            &.reset-transition-x {
+                transform: scale3d(1, 1, 1) translate3d(-50%, 0, 0px) !important;
+                top: 0 !important;
+                left: 50% !important;
+                max-width: none !important;
+                max-height: none !important;
+            }
+            &.reset-transition-y {
+                transform: scale3d(1, 1, 1) translate3d(0, -50%, 0px) !important;
+                top: 50% !important;
+                left: 0% !important;
+                max-width: none !important;
+                max-height: none !important;
+            }
         }
     }
 }
@@ -59,6 +82,10 @@
     &.lg-zoom-in {
         &:after {
             content: '\e311';
+        }
+        .lg-actual-size & {
+            opacity: 0.5;
+            pointer-events: none;
         }
     }
 

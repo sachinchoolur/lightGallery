@@ -19,7 +19,8 @@ export interface ThumbnailsSettings {
     currentPagerPosition: 'left' | 'middle' | 'right';
 
     /**
-     * Position of thumbnails.
+     * Position of thumbnails when the width of all thumbnails combined is less than the gallery's width.
+     *
      */
     alignThumbnails: 'left' | 'middle' | 'right';
 

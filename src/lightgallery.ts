@@ -1874,14 +1874,14 @@ export class LightGallery {
                         $item.get().contains(e.target)) &&
                     !this.outer.hasClass('lg-zoomed') &&
                     !this.lgBusy &&
-                    e.targetTouches.length === 1
+                    e.touches.length === 1
                 ) {
                     isSwiping = true;
                     this.touchAction = 'swipe';
                     this.manageSwipeClass();
                     startCoords = {
-                        pageX: e.targetTouches[0].pageX,
-                        pageY: e.targetTouches[0].pageY,
+                        pageX: e.touches[0].pageX,
+                        pageY: e.touches[0].pageY,
                     };
                 }
             });
@@ -1890,11 +1890,11 @@ export class LightGallery {
                 if (
                     isSwiping &&
                     this.touchAction === 'swipe' &&
-                    e.targetTouches.length === 1
+                    e.touches.length === 1
                 ) {
                     endCoords = {
-                        pageX: e.targetTouches[0].pageX,
-                        pageY: e.targetTouches[0].pageY,
+                        pageX: e.touches[0].pageX,
+                        pageY: e.touches[0].pageY,
                     };
                     this.touchMove(startCoords, endCoords, e);
                     isMoved = true;
@@ -2491,6 +2491,16 @@ export class LightGallery {
         this.manageSingleSlideClassName();
     }
 
+    private destroyGallery(): void {
+        this.destroyModules(true);
+        if (!this.settings.dynamic) {
+            this.invalidateItems();
+        }
+        $LG(window).off(`.lg.global${this.lgId}`);
+        this.LGel.off('.lg');
+        this.$container.remove();
+    }
+
     /**
      * Destroy lightGallery.
      * Destroy lightGallery and its plugin instances completely
@@ -2506,15 +2516,11 @@ export class LightGallery {
      */
     destroy(): number {
         const closeTimeout = this.closeGallery(true);
-        setTimeout(() => {
-            this.destroyModules(true);
-            if (!this.settings.dynamic) {
-                this.invalidateItems();
-            }
-            $LG(window).off(`.lg.global${this.lgId}`);
-            this.LGel.off('.lg');
-            this.$container.remove();
-        }, closeTimeout);
+        if (closeTimeout) {
+            setTimeout(this.destroyGallery.bind(this), closeTimeout);
+        } else {
+            this.destroyGallery();
+        }
         return closeTimeout;
     }
 }

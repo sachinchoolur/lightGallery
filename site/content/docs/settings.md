@@ -19,7 +19,7 @@ want to modify default behaviors
 ```javascript
 lightGallery(document.getElementById('gallery-container'), {
     speed: 500,
-    mode: 'fade',
+    mode: 'lg-fade',
     ...Other settings
 });
 ```

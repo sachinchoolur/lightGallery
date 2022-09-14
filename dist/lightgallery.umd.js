@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.5.0 | June 13th 2022
+ * lightgallery | 2.6.1 | September 14th 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -2152,23 +2152,23 @@
                         $item.get().contains(e.target)) &&
                         !_this.outer.hasClass('lg-zoomed') &&
                         !_this.lgBusy &&
-                        e.targetTouches.length === 1) {
+                        e.touches.length === 1) {
                         isSwiping = true;
                         _this.touchAction = 'swipe';
                         _this.manageSwipeClass();
                         startCoords = {
-                            pageX: e.targetTouches[0].pageX,
-                            pageY: e.targetTouches[0].pageY,
+                            pageX: e.touches[0].pageX,
+                            pageY: e.touches[0].pageY,
                         };
                     }
                 });
                 this.$inner.on('touchmove.lg', function (e) {
                     if (isSwiping &&
                         _this.touchAction === 'swipe' &&
-                        e.targetTouches.length === 1) {
+                        e.touches.length === 1) {
                         endCoords = {
-                            pageX: e.targetTouches[0].pageX,
-                            pageY: e.targetTouches[0].pageY,
+                            pageX: e.touches[0].pageX,
+                            pageY: e.touches[0].pageY,
                         };
                         _this.touchMove(startCoords, endCoords, e);
                         isMoved = true;
@@ -2693,6 +2693,15 @@
             this.updateCounterTotal();
             this.manageSingleSlideClassName();
         };
+        LightGallery.prototype.destroyGallery = function () {
+            this.destroyModules(true);
+            if (!this.settings.dynamic) {
+                this.invalidateItems();
+            }
+            $LG(window).off(".lg.global" + this.lgId);
+            this.LGel.off('.lg');
+            this.$container.remove();
+        };
         /**
          * Destroy lightGallery.
          * Destroy lightGallery and its plugin instances completely
@@ -2707,17 +2716,13 @@
          *
          */
         LightGallery.prototype.destroy = function () {
-            var _this = this;
             var closeTimeout = this.closeGallery(true);
-            setTimeout(function () {
-                _this.destroyModules(true);
-                if (!_this.settings.dynamic) {
-                    _this.invalidateItems();
-                }
-                $LG(window).off(".lg.global" + _this.lgId);
-                _this.LGel.off('.lg');
-                _this.$container.remove();
-            }, closeTimeout);
+            if (closeTimeout) {
+                setTimeout(this.destroyGallery.bind(this), closeTimeout);
+            }
+            else {
+                this.destroyGallery();
+            }
             return closeTimeout;
         };
         return LightGallery;
