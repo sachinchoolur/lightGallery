@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.6.0 | August 29th 2022
+ * lightgallery | 2.6.1 | September 14th 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -128,7 +128,7 @@
                 this.$LG('body').first().removeClass('lg-from-hash');
             }
             this.zoomableTimeout = setTimeout(function () {
-                if (!_this.isImageSlide()) {
+                if (!_this.isImageSlide(_this.core.index)) {
                     return;
                 }
                 _this.core.getSlideItem(event.detail.index).addClass('lg-zoomable');
@@ -289,11 +289,11 @@
                 }
             }
         };
-        Zoom.prototype.resetImageTranslate = function () {
-            var $image = this.core
-                .getSlideItem(this.core.index)
-                .find('.lg-image')
-                .first();
+        Zoom.prototype.resetImageTranslate = function (index) {
+            if (!this.isImageSlide(index)) {
+                return;
+            }
+            var $image = this.core.getSlideItem(index).find('.lg-image').first();
             this.imageReset = false;
             $image.removeClass('reset-transition reset-transition-y reset-transition-x');
             this.core.outer.removeClass('lg-actual-size');
@@ -358,7 +358,7 @@
         Zoom.prototype.setActualSize = function (index, event) {
             var _this = this;
             var currentItem = this.core.galleryItems[this.core.index];
-            this.resetImageTranslate();
+            this.resetImageTranslate(index);
             setTimeout(function () {
                 // Allow zoom only on image
                 if (!currentItem.src ||
@@ -490,7 +490,7 @@
             });
             this.core.LGel.on(lGEvents.containerResize + ".zoom " + lGEvents.rotateRight + ".zoom " + lGEvents.rotateLeft + ".zoom " + lGEvents.flipHorizontal + ".zoom " + lGEvents.flipVertical + ".zoom", function () {
                 if (!_this.core.lgOpened ||
-                    !_this.isImageSlide() ||
+                    !_this.isImageSlide(_this.core.index) ||
                     _this.core.touchAction) {
                     return;
                 }
@@ -512,12 +512,12 @@
             });
             this.core.getElementById('lg-zoom-out').on('click.lg', function () {
                 // Allow zoom only on image
-                if (!_this.isImageSlide()) {
+                if (!_this.isImageSlide(_this.core.index)) {
                     return;
                 }
                 var timeout = 0;
                 if (_this.imageReset) {
-                    _this.resetImageTranslate();
+                    _this.resetImageTranslate(_this.core.index);
                     timeout = 50;
                 }
                 setTimeout(function () {
@@ -551,7 +551,8 @@
                 _this.scale = 1;
                 _this.positionChanged = false;
                 _this.resetZoom(prevIndex);
-                if (_this.isImageSlide()) {
+                _this.resetImageTranslate(prevIndex);
+                if (_this.isImageSlide(_this.core.index)) {
                     _this.setZoomEssentials();
                 }
             });
@@ -565,7 +566,7 @@
         };
         Zoom.prototype.zoomIn = function () {
             // Allow zoom only on image
-            if (!this.isImageSlide()) {
+            if (!this.isImageSlide(this.core.index)) {
                 return;
             }
             var scale = this.scale + this.settings.scale;
@@ -604,7 +605,7 @@
             var $item = this.core.getSlideItem(this.core.index);
             this.core.outer.on('touchstart.lg', function (e) {
                 $item = _this.core.getSlideItem(_this.core.index);
-                if (!_this.isImageSlide()) {
+                if (!_this.isImageSlide(_this.core.index)) {
                     return;
                 }
                 if (e.touches.length === 2) {
@@ -615,7 +616,7 @@
                     initScale = _this.scale || 1;
                     _this.core.outer.removeClass('lg-zoom-drag-transition lg-zoom-dragging');
                     _this.setPageCords(e);
-                    _this.resetImageTranslate();
+                    _this.resetImageTranslate(_this.core.index);
                     _this.core.touchAction = 'pinch';
                     startDist = _this.getTouchDistance(e);
                 }
@@ -764,8 +765,8 @@
         Zoom.prototype.isBeyondPossibleBottom = function (y, maxY) {
             return y <= maxY;
         };
-        Zoom.prototype.isImageSlide = function () {
-            var currentItem = this.core.galleryItems[this.core.index];
+        Zoom.prototype.isImageSlide = function (index) {
+            var currentItem = this.core.galleryItems[index];
             return this.core.getSlideType(currentItem) === 'image';
         };
         Zoom.prototype.getPossibleSwipeDragCords = function (scale) {
@@ -812,7 +813,7 @@
             var $item = this.core.getSlideItem(this.core.index);
             this.core.$inner.on('touchstart.lg', function (e) {
                 // Allow zoom only on image
-                if (!_this.isImageSlide()) {
+                if (!_this.isImageSlide(_this.core.index)) {
                     return;
                 }
                 $item = _this.core.getSlideItem(_this.core.index);
@@ -887,7 +888,7 @@
             var _LGel;
             this.core.outer.on('mousedown.lg.zoom', function (e) {
                 // Allow zoom only on image
-                if (!_this.isImageSlide()) {
+                if (!_this.isImageSlide(_this.core.index)) {
                     return;
                 }
                 var $item = _this.core.getSlideItem(_this.core.index);
