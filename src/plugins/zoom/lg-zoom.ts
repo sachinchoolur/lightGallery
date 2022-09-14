@@ -101,7 +101,7 @@ export default class Zoom {
         }
 
         this.zoomableTimeout = setTimeout(() => {
-            if (!this.isImageSlide()) {
+            if (!this.isImageSlide(this.core.index)) {
                 return;
             }
             this.core.getSlideItem(event.detail.index).addClass('lg-zoomable');
@@ -287,11 +287,11 @@ export default class Zoom {
         }
     }
 
-    resetImageTranslate(): void {
-        const $image = this.core
-            .getSlideItem(this.core.index)
-            .find('.lg-image')
-            .first();
+    resetImageTranslate(index: number): void {
+        if (!this.isImageSlide(index)) {
+            return;
+        }
+        const $image = this.core.getSlideItem(index).find('.lg-image').first();
         this.imageReset = false;
         $image.removeClass(
             'reset-transition reset-transition-y reset-transition-x',
@@ -374,7 +374,7 @@ export default class Zoom {
      */
     setActualSize(index: number, event?: ZoomTouchEvent): void {
         const currentItem = this.core.galleryItems[this.core.index];
-        this.resetImageTranslate();
+        this.resetImageTranslate(index);
         setTimeout(() => {
             // Allow zoom only on image
             if (
@@ -521,7 +521,7 @@ export default class Zoom {
             () => {
                 if (
                     !this.core.lgOpened ||
-                    !this.isImageSlide() ||
+                    !this.isImageSlide(this.core.index) ||
                     this.core.touchAction
                 ) {
                     return;
@@ -545,13 +545,13 @@ export default class Zoom {
 
         this.core.getElementById('lg-zoom-out').on('click.lg', () => {
             // Allow zoom only on image
-            if (!this.isImageSlide()) {
+            if (!this.isImageSlide(this.core.index)) {
                 return;
             }
 
             let timeout = 0;
             if (this.imageReset) {
-                this.resetImageTranslate();
+                this.resetImageTranslate(this.core.index);
                 timeout = 50;
             }
             setTimeout(() => {
@@ -594,7 +594,8 @@ export default class Zoom {
                 this.scale = 1;
                 this.positionChanged = false;
                 this.resetZoom(prevIndex);
-                if (this.isImageSlide()) {
+                this.resetImageTranslate(prevIndex);
+                if (this.isImageSlide(this.core.index)) {
                     this.setZoomEssentials();
                 }
             },
@@ -614,7 +615,7 @@ export default class Zoom {
 
     zoomIn(): void {
         // Allow zoom only on image
-        if (!this.isImageSlide()) {
+        if (!this.isImageSlide(this.core.index)) {
             return;
         }
 
@@ -664,7 +665,7 @@ export default class Zoom {
 
         this.core.outer.on('touchstart.lg', (e) => {
             $item = this.core.getSlideItem(this.core.index);
-            if (!this.isImageSlide()) {
+            if (!this.isImageSlide(this.core.index)) {
                 return;
             }
             if (e.touches.length === 2) {
@@ -678,7 +679,7 @@ export default class Zoom {
                 );
 
                 this.setPageCords(e);
-                this.resetImageTranslate();
+                this.resetImageTranslate(this.core.index);
 
                 this.core.touchAction = 'pinch';
 
@@ -891,8 +892,8 @@ export default class Zoom {
         return y <= maxY;
     }
 
-    isImageSlide(): boolean {
-        const currentItem = this.core.galleryItems[this.core.index];
+    isImageSlide(index: number): boolean {
+        const currentItem = this.core.galleryItems[index];
         return this.core.getSlideType(currentItem) === 'image';
     }
 
@@ -961,7 +962,7 @@ export default class Zoom {
 
         this.core.$inner.on('touchstart.lg', (e) => {
             // Allow zoom only on image
-            if (!this.isImageSlide()) {
+            if (!this.isImageSlide(this.core.index)) {
                 return;
             }
             $item = this.core.getSlideItem(this.core.index);
@@ -1073,7 +1074,7 @@ export default class Zoom {
 
         this.core.outer.on('mousedown.lg.zoom', (e) => {
             // Allow zoom only on image
-            if (!this.isImageSlide()) {
+            if (!this.isImageSlide(this.core.index)) {
                 return;
             }
             const $item = this.core.getSlideItem(this.core.index);
