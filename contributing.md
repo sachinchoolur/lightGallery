@@ -54,6 +54,26 @@ inside `lightgallery-angular > projects` you'll find two folders. `angular-demo`
 and `lightgallery-angular`. `lightgallery-angular` is for the library and
 `angular-demo` is for viewing the preview.
 
+#### Example of creating new angular build
+
+- npm install  @angular/cli@14.2.2
+- ng new 14 --create-application false
+- cd 14
+- ng generate application angular-demo
+- ng generate library lightgallery-angular (Uses folder name as package name)
+
+- Go to lightGallery dist folder and run npm link
+- Go to lightgallery-angular/14 folder and run npm link lightgallery
+- Change package name to lightgallery/angular/14
+
+- Need to compile library before using it
+- Replace both lib and app folder from previous version
+
+Docs
+- https://angular.io/guide/file-structure
+- https://angular.io/guide/creating-libraries
+
+
 ## Modifying the code
 
 First, ensure that you have the latest [Node.js](http://nodejs.org/) and
