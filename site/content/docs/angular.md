@@ -27,12 +27,13 @@ You can import it using the following way
 -   Import lightGallery module
 
 ```jsx
+// For angular version 14
 import { LightgalleryModule } from 'lightgallery/angular';
 
 // lightGallery supports the last 4 major version of Angular,
 // if you are using older versions of angular, you can import the respective versions
-// For example, if you are using Angular version 10, you can import it using
-// import { LightgalleryModule } from 'lightgallery/angular/9';
+// For example, if you are using Angular version 13, you can import it using
+// import { LightgalleryModule } from 'lightgallery/angular/13';
 
 @NgModule({
     imports: [LightgalleryModule],
@@ -43,10 +44,10 @@ export class AppModule {}
 Since, [version 2.2.0](https://github.com/sachinchoolur/lightGallery/releases/tag/2.2.0), lightGallery supports the last 4 major versions of Angular.
 If you are using an older version of Angular, please choose the respective version.
 
-For example, if you are using Angular version 10, you can import it by suffixing the version number as shown below
+For example, if you are using Angular version 13, you can import it by suffixing the version number as shown below
 
 ```js
-import { LightgalleryModule } from 'lightgallery/angular/10';
+import { LightgalleryModule } from 'lightgallery/angular/13';
 ```
 
 -   import styles in styles.scss
