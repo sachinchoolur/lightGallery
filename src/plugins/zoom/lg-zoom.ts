@@ -23,6 +23,9 @@ interface PossibleCords {
     maxX: number;
     maxY: number;
 }
+
+const ZOOM_TRANSITION_DURATION = 500;
+
 export default class Zoom {
     private core: LightGallery;
     private settings: ZoomSettings;
@@ -279,11 +282,7 @@ export default class Zoom {
         this.top = y;
 
         if (resetToMax) {
-            const actualSizeScale = this.getCurrentImageActualSizeScale();
-
-            if (scale >= actualSizeScale) {
-                this.setZoomImageSize();
-            }
+            this.setZoomImageSize();
         }
     }
 
@@ -310,30 +309,47 @@ export default class Zoom {
             .first();
 
         setTimeout(() => {
-            $image.addClass('no-transition');
-            this.imageReset = true;
-        }, 500);
-        setTimeout(() => {
-            const dragAllowedAxises = this.getDragAllowedAxises(this.scale);
+            const actualSizeScale = this.getCurrentImageActualSizeScale();
 
-            $image
-                .css(
-                    'width',
-                    ($image.get() as HTMLImageElement).naturalWidth + 'px',
-                )
-                .css(
-                    'height',
-                    ($image.get() as HTMLImageElement).naturalHeight + 'px',
-                );
-            this.core.outer.addClass('lg-actual-size');
-            if (dragAllowedAxises.allowX && dragAllowedAxises.allowY) {
-                $image.addClass('reset-transition');
-            } else if (dragAllowedAxises.allowX && !dragAllowedAxises.allowY) {
-                $image.addClass('reset-transition-x');
-            } else if (!dragAllowedAxises.allowX && dragAllowedAxises.allowY) {
-                $image.addClass('reset-transition-y');
+            if (this.scale >= actualSizeScale) {
+                $image.addClass('no-transition');
+                this.imageReset = true;
             }
-        }, 550);
+        }, ZOOM_TRANSITION_DURATION);
+
+        setTimeout(() => {
+            const actualSizeScale = this.getCurrentImageActualSizeScale();
+
+            if (this.scale >= actualSizeScale) {
+                const dragAllowedAxises = this.getDragAllowedAxises(this.scale);
+
+                $image
+                    .css(
+                        'width',
+                        ($image.get() as HTMLImageElement).naturalWidth + 'px',
+                    )
+                    .css(
+                        'height',
+                        ($image.get() as HTMLImageElement).naturalHeight + 'px',
+                    );
+
+                this.core.outer.addClass('lg-actual-size');
+
+                if (dragAllowedAxises.allowX && dragAllowedAxises.allowY) {
+                    $image.addClass('reset-transition');
+                } else if (
+                    dragAllowedAxises.allowX &&
+                    !dragAllowedAxises.allowY
+                ) {
+                    $image.addClass('reset-transition-x');
+                } else if (
+                    !dragAllowedAxises.allowX &&
+                    dragAllowedAxises.allowY
+                ) {
+                    $image.addClass('reset-transition-y');
+                }
+            }
+        }, ZOOM_TRANSITION_DURATION + 50);
     }
 
     /**
