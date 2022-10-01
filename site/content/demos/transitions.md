@@ -1,25 +1,23 @@
 ---
-title: 'Transitions'
-description: 'LightGallery allows you to build inline image/video galleries.'
-lead:
-    'lightGallery comes with a numerous number of beautiful built in transitions. 
-    You can change the type of transitions by passing the transition name via mode option. 
-    lightGallery uses Hardware-Accelerated CSS3 transitions for faster animation performance. 
-    You can easily create your own beautiful custom transitions by updating the CSS transform values.
-'
-date: 2020-10-06T08:48:57+00:00
+title: Transitions
+description: LightGallery allows you to build inline image/video galleries.
+lead: 'lightGallery comes with a numerous number of beautiful built in transitions.  You can change the type of transitions by passing the transition name via mode option.  lightGallery uses Hardware-Accelerated CSS3 transitions for faster animation performance.  You can easily create your own beautiful custom transitions by updating the CSS transform values. '
+date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu:
-    demos:
-        parent: 'Demos'
+menu: {demos: {parent: Demos}}
 weight: 11
 toc: true
 ---
 
 #### Demo
 
-{{< image-gallery id="gallery-transitions-demo">}}
+{{< image-gallery id="gallery-transitions-demo" >}}
+
+<div class="alert alert-warning" role="alert">
+    Note: You need to include the <a href="https://github.com/sachinchoolur/lightGallery/blob/master/dist/css/lg-transitions.css
+">lg-transitions.css</a> file in your document to enable custom transitions
+</div>
 
 <div class="choose-select-option-wrap">
 <span class="choose-select-option">Change transition : </span>
