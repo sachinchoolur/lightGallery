@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.7.0-beta.0 | September 19th 2022
+ * lightgallery | 2.7.0 | October 9th 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -82,6 +82,7 @@ var lGEvents = {
     autoplayStop: 'lgAutoplayStop',
 };
 
+var ZOOM_TRANSITION_DURATION = 500;
 var Zoom = /** @class */ (function () {
     function Zoom(instance, $LG) {
         // get lightGallery core plugin instance
@@ -277,10 +278,7 @@ var Zoom = /** @class */ (function () {
         this.left = x;
         this.top = y;
         if (resetToMax) {
-            var actualSizeScale = this.getCurrentImageActualSizeScale();
-            if (scale >= actualSizeScale) {
-                this.setZoomImageSize();
-            }
+            this.setZoomImageSize();
         }
     };
     Zoom.prototype.resetImageTranslate = function (index) {
@@ -303,25 +301,33 @@ var Zoom = /** @class */ (function () {
             .find('.lg-image')
             .first();
         setTimeout(function () {
-            $image.addClass('no-transition');
-            _this.imageReset = true;
-        }, 500);
+            var actualSizeScale = _this.getCurrentImageActualSizeScale();
+            if (_this.scale >= actualSizeScale) {
+                $image.addClass('no-transition');
+                _this.imageReset = true;
+            }
+        }, ZOOM_TRANSITION_DURATION);
         setTimeout(function () {
-            var dragAllowedAxises = _this.getDragAllowedAxises(_this.scale);
-            $image
-                .css('width', $image.get().naturalWidth + 'px')
-                .css('height', $image.get().naturalHeight + 'px');
-            _this.core.outer.addClass('lg-actual-size');
-            if (dragAllowedAxises.allowX && dragAllowedAxises.allowY) {
-                $image.addClass('reset-transition');
+            var actualSizeScale = _this.getCurrentImageActualSizeScale();
+            if (_this.scale >= actualSizeScale) {
+                var dragAllowedAxises = _this.getDragAllowedAxises(_this.scale);
+                $image
+                    .css('width', $image.get().naturalWidth + 'px')
+                    .css('height', $image.get().naturalHeight + 'px');
+                _this.core.outer.addClass('lg-actual-size');
+                if (dragAllowedAxises.allowX && dragAllowedAxises.allowY) {
+                    $image.addClass('reset-transition');
+                }
+                else if (dragAllowedAxises.allowX &&
+                    !dragAllowedAxises.allowY) {
+                    $image.addClass('reset-transition-x');
+                }
+                else if (!dragAllowedAxises.allowX &&
+                    dragAllowedAxises.allowY) {
+                    $image.addClass('reset-transition-y');
+                }
             }
-            else if (dragAllowedAxises.allowX && !dragAllowedAxises.allowY) {
-                $image.addClass('reset-transition-x');
-            }
-            else if (!dragAllowedAxises.allowX && dragAllowedAxises.allowY) {
-                $image.addClass('reset-transition-y');
-            }
-        }, 550);
+        }, ZOOM_TRANSITION_DURATION + 50);
     };
     /**
      * @desc apply scale3d to image and translate to image wrap
