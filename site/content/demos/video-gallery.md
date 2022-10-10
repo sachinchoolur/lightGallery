@@ -28,7 +28,7 @@ Note - data-src should not be provided when you use html5 videos
     source: [
         {
             src: '/videos/video1.mp4',
-            type: 'video/mp4',,
+            type: 'video/mp4',
         },
         ...
     ],
@@ -72,7 +72,7 @@ Note - data-src should not be provided when you use html5 videos
         />
     </a>
 
-    <!-- VImeo Video --->
+    <!-- Vimeo Video --->
     <a
         data-lg-size="1280-720"
         data-src="//vimeo.com/112836958"
