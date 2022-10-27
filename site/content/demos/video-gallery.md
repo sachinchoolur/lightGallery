@@ -60,15 +60,15 @@ Note - data-src should not be provided when you use html5 videos
     <!-- YouTube Video --->
     <a
         data-lg-size="1280-720"
-        data-src="//www.youtube.com/watch?v=egyIeygdS_E"
-        data-poster="https://img.youtube.com/vi/egyIeygdS_E/maxresdefault.jpg"
-        data-sub-html="<h4>Visual Soundscapes - Mountains | Planet Earth II | BBC America</h4><p>On the heels of Planet Earth II's record-breaking Emmy nominations, BBC America presents stunning visual soundscapes from the series' amazing habitats.</p>"
+        data-src="//www.youtube.com/watch?v=EIUJfXk3_3w"
+        data-poster="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+        data-sub-html="<h4>Puffin Hunts Fish To Feed Puffling | Blue Planet II | BBC Earth</h4><p>On the heels of Planet Earth II's record-breaking Emmy nominations, BBC America presents stunning visual soundscapes from the series' amazing habitats.</p>"
     >
         <img
             width="300"
             height="100"
             class="img-responsive"
-            src="https://img.youtube.com/vi/egyIeygdS_E/maxresdefault.jpg"
+            src="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
         />
     </a>
 
@@ -192,15 +192,15 @@ Also, [on IOS](https://stackoverflow.com/questions/43570460/html5-video-autoplay
     <!-- YouTube Video --->
     <a
         data-lg-size="1280-720"
-        data-src="//www.youtube.com/watch?v=egyIeygdS_E&mute=0"
-        data-poster="https://img.youtube.com/vi/egyIeygdS_E/maxresdefault.jpg"
-        data-sub-html="<h4>Visual Soundscapes - Mountains | Planet Earth II | BBC America</h4><p>On the heels of Planet Earth II's record-breaking Emmy nominations, BBC America presents stunning visual soundscapes from the series' amazing habitats.</p>"
+        data-src="//www.youtube.com/watch?v=EIUJfXk3_3w&mute=0"
+        data-poster="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+        data-sub-html="<h4>Puffin Hunts Fish To Feed Puffling | Blue Planet II | BBC Earth</h4><p>On the heels of Planet Earth II's record-breaking Emmy nominations, BBC America presents stunning visual soundscapes from the series' amazing habitats.</p>"
     >
         <img
             width="300"
             height="100"
             class="img-responsive"
-            src="https://img.youtube.com/vi/egyIeygdS_E/maxresdefault.jpg"
+            src="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
         />
     </a>
 
