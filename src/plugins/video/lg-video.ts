@@ -35,7 +35,7 @@ import {
 } from '../../types';
 import { lGEvents } from '../../lg-events';
 import { VideoSource } from './types';
-import { getVimeoURLParams, param } from './lg-video-utils';
+import { getVimeoURLParams, getYouTubeParams, param } from './lg-video-utils';
 
 declare let Vimeo: any;
 declare let videojs: any;
@@ -231,20 +231,13 @@ export default class Video {
         if (videoInfo.youtube) {
             const videoId = 'lg-youtube' + index;
 
-            const slideUrlParams = videoInfo.youtube[2]
-                ? videoInfo.youtube[2] + '&'
-                : '';
-            // For youtube first parms gets priority if duplicates found
-            const defaultYouTubePlayerParams = `${slideUrlParams}wmode=opaque&autoplay=0&mute=1&enablejsapi=1`;
-
-            const playerParams = `?${
-                this.settings.youTubePlayerParams
-                    ? `${param(this.settings.youTubePlayerParams)}&`
-                    : ''
-            }${defaultYouTubePlayerParams}`;
+            const youTubeParams = getYouTubeParams(
+                videoInfo,
+                this.settings.youTubePlayerParams,
+            );
 
             video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="//www.youtube.com/embed/${
-                videoInfo.youtube[1] + playerParams
+                videoInfo.youtube[1] + youTubeParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.vimeo) {
             const videoId = 'lg-vimeo' + index;

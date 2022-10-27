@@ -250,7 +250,7 @@ describe('Plugins', () => {
     });
     it('Should fetch poster from youtube videos', async () => {
         document.body.innerHTML = `<div id="lightGallery">
-                <a href="//www.youtube.com/watch?v=egyIeygdS_E">
+                <a href="//www.youtube.com/watch?v=EIUJfXk3_3w">
                     <img src="b.png" />
                 </a>
             </div>`;
@@ -259,12 +259,12 @@ describe('Plugins', () => {
         );
         LG.openGallery(0);
         expect(LG.galleryItems[0].poster).toBe(
-            '//img.youtube.com/vi/egyIeygdS_E/maxresdefault.jpg',
+            '//img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
         );
     });
     it('Should not fetch poster from youtube videos when turned off via settings', async () => {
         document.body.innerHTML = `<div id="lightGallery">
-                <a href="//www.youtube.com/watch?v=egyIeygdS_E">
+                <a href="//www.youtube.com/watch?v=EIUJfXk3_3w">
                     <img src="b.png" />
                 </a>
             </div>`;
