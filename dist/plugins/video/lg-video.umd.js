@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.7.0 | October 9th 2022
+ * lightgallery | 2.7.1-beta.0 | October 28th 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -89,6 +89,39 @@
             return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]);
         })
             .join('&');
+    };
+    var paramsToObject = function (url) {
+        var paramas = url
+            .slice(1)
+            .split('&')
+            .map(function (p) { return p.split('='); })
+            .reduce(function (obj, pair) {
+            var _a = pair.map(decodeURIComponent), key = _a[0], value = _a[1];
+            obj[key] = value;
+            return obj;
+        }, {});
+        return paramas;
+    };
+    var getYouTubeParams = function (videoInfo, youTubePlayerParamsSettings) {
+        if (!videoInfo.youtube)
+            return '';
+        var slideUrlParams = videoInfo.youtube[2]
+            ? paramsToObject(videoInfo.youtube[2])
+            : '';
+        // For youtube first params gets priority if duplicates found
+        var defaultYouTubePlayerParams = {
+            wmode: 'opaque',
+            autoplay: 0,
+            mute: 1,
+            enablejsapi: 1,
+        };
+        var playerParamsSettings = youTubePlayerParamsSettings || {};
+        var youTubePlayerParams = __assign(__assign(__assign({}, defaultYouTubePlayerParams), playerParamsSettings), slideUrlParams);
+        var youTubeParams = "?" + param(youTubePlayerParams);
+        return youTubeParams;
+    };
+    var isYouTubeNoCookie = function (url) {
+        return url.includes('youtube-nocookie.com');
     };
     var getVimeoURLParams = function (defaultParams, videoInfo) {
         if (!videoInfo || !videoInfo.vimeo)
@@ -278,16 +311,12 @@
             var commonIframeProps = "allowtransparency=\"true\"\n            frameborder=\"0\"\n            scrolling=\"no\"\n            allowfullscreen\n            mozallowfullscreen\n            webkitallowfullscreen\n            oallowfullscreen\n            msallowfullscreen";
             if (videoInfo.youtube) {
                 var videoId = 'lg-youtube' + index;
-                var slideUrlParams = videoInfo.youtube[2]
-                    ? videoInfo.youtube[2] + '&'
-                    : '';
-                // For youtube first parms gets priority if duplicates found
-                var youTubePlayerParams = "?" + slideUrlParams + "wmode=opaque&autoplay=0&mute=1&enablejsapi=1";
-                var playerParams = youTubePlayerParams +
-                    (this.settings.youTubePlayerParams
-                        ? '&' + param(this.settings.youTubePlayerParams)
-                        : '');
-                video = "<iframe allow=\"autoplay\" id=" + videoId + " class=\"lg-video-object lg-youtube " + addClass + "\" " + videoTitle + " src=\"//www.youtube.com/embed/" + (videoInfo.youtube[1] + playerParams) + "\" " + commonIframeProps + "></iframe>";
+                var youTubeParams = getYouTubeParams(videoInfo, this.settings.youTubePlayerParams);
+                var isYouTubeNoCookieURL = isYouTubeNoCookie(src);
+                var youtubeURL = isYouTubeNoCookieURL
+                    ? '//www.youtube-nocookie.com/'
+                    : '//www.youtube.com/';
+                video = "<iframe allow=\"autoplay\" id=" + videoId + " class=\"lg-video-object lg-youtube " + addClass + "\" " + videoTitle + " src=\"" + youtubeURL + "embed/" + (videoInfo.youtube[1] + youTubeParams) + "\" " + commonIframeProps + "></iframe>";
             }
             else if (videoInfo.vimeo) {
                 var videoId = 'lg-vimeo' + index;
