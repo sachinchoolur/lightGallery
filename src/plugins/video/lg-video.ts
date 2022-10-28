@@ -35,7 +35,12 @@ import {
 } from '../../types';
 import { lGEvents } from '../../lg-events';
 import { VideoSource } from './types';
-import { getVimeoURLParams, getYouTubeParams, param } from './lg-video-utils';
+import {
+    getVimeoURLParams,
+    getYouTubeParams,
+    isYouTubeNoCookie,
+    param,
+} from './lg-video-utils';
 
 declare let Vimeo: any;
 declare let videojs: any;
@@ -236,7 +241,13 @@ export default class Video {
                 this.settings.youTubePlayerParams,
             );
 
-            video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="//www.youtube.com/embed/${
+            const isYouTubeNoCookieURL = isYouTubeNoCookie(src);
+
+            const youtubeURL = isYouTubeNoCookieURL
+                ? '//www.youtube-nocookie.com/'
+                : '//www.youtube.com/';
+
+            video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="${youtubeURL}embed/${
                 videoInfo.youtube[1] + youTubeParams
             }" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.vimeo) {
