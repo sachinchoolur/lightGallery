@@ -3,6 +3,6 @@ export interface VideoSource {
         src: string;
         type: string;
     }[];
-    tracks: HTMLTrackElement[];
-    attributes: HTMLVideoElement;
+    tracks: Partial<HTMLTrackElement>[];
+    attributes: Partial<HTMLVideoElement>;
 }
