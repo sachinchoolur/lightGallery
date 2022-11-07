@@ -382,9 +382,9 @@ export interface LightGalleryCoreSettings {
      * @description Based on your markup structure, you can specify custom selectors to fetch media data for the gallery
      * Pass "this" to select same element
      * You can also pass HTMLCollection directly
-     * Example - '.my-selector' | '#my-selector' | this | document.querySelectorAll('.my-selector')
+     * Example - '.my-selector' | '#my-selector' | this | document.getElementsByClassName('my-selector') | document.querySelectorAll('.my-selector')
      */
-    selector: string | HTMLCollection[];
+    selector: string | HTMLCollection | NodeList;
 
     /**
      * By default selector element relative to the current gallery.
