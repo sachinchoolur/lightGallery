@@ -639,7 +639,12 @@ export default class Zoom {
 
         scale = this.getScale(scale);
         this.beginZoom(scale);
-        this.zoomImage(scale, this.settings.scale, true, true);
+        this.zoomImage(
+            scale,
+            Math.min(this.settings.scale, scale - this.scale),
+            true,
+            true,
+        );
     }
 
     // Reset zoom effect
