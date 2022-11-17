@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.7.1-beta.0 | October 28th 2022
+ * lightgallery | 2.7.1-beta.1 | November 17th 2022
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -578,7 +578,7 @@
             var scale = this.scale + this.settings.scale;
             scale = this.getScale(scale);
             this.beginZoom(scale);
-            this.zoomImage(scale, this.settings.scale, true, true);
+            this.zoomImage(scale, Math.min(this.settings.scale, scale - this.scale), true, true);
         };
         // Reset zoom effect
         Zoom.prototype.resetZoom = function (index) {
