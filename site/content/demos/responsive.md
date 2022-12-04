@@ -17,7 +17,7 @@ toc: true
 
 ### Demo
 
-For cress browser responsive image support, lightGallery accepts a comma
+For cross browser responsive image support, lightGallery accepts a comma
 separated list of images sources, each with a max width descriptor for
 displaying different images for different screen sizes. For modern browsers you
 can use native srcset and sizes attributes. Please refer the next demo.
