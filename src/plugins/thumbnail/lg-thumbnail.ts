@@ -428,12 +428,12 @@ export default class Thumbnail {
 
         return `<div data-lg-item-id="${index}" class="lg-thumb-item ${
             index === this.core.index ? ' active' : ''
-        }" 
+        }"
         style="width:${this.settings.thumbWidth}px; height: ${
             this.settings.thumbHeight
         };
             margin-right: ${this.settings.thumbMargin}px;">
-            <img data-lg-item-id="${index}" src="${thumbImg}" />
+            <img data-lg-item-id="${index}" src="${thumbImg}" loading="lazy" />
         </div>`;
     }
 
