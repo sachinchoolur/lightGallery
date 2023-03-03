@@ -26,7 +26,7 @@ using the following way
 -   Install lightGallery via NPM
 
 
-    npm install lightgallery
+    ```npm install lightgallery```
 
 -   Import vue component and styles
 
