@@ -31,13 +31,9 @@ code is kept proprietary.
 Once purchased, you’ll receive a commercial license PDF and be all set to use
 lightGallery in your commercial applications.
 
-## Commercial OEM license
+## Extended Commercial license
 
-If you want to include lightGallery as part of software developer kit (SDK), web
-application builder or website builder, downloadable or installable products
-like Wordpress themes, HTML templates,or something that produces copies that
-each use lightGallery, you need to choose the Commercial OEM license. commercial
-OEM licenses are customized per customer. Contact contact@lightgalleryjs.com
+If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Extended Commercial license
 
 ## Open source license
 
