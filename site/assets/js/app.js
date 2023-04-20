@@ -665,12 +665,24 @@ $('#dynamic-gallery-demo-load-more').on('click', () => {
 
 window.lightGallery(document.getElementById('open-website'), {
     selector: 'this',
+    download: false,
+    mobileSettings: {
+        controls: true,
+    },
 });
 window.lightGallery(document.getElementById('open-google-map'), {
     selector: 'this',
+    download: false,
+    mobileSettings: {
+        controls: true,
+    },
 });
 window.lightGallery(document.getElementById('open-pdf'), {
     selector: 'this',
+    download: false,
+    mobileSettings: {
+        controls: true,
+    },
 });
 
 jQuery('#gallery-videos-demo')
