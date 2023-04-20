@@ -33,6 +33,7 @@ export default class Zoom {
     private imageReset!: number | boolean;
     zoomableTimeout: any;
     positionChanged!: boolean;
+    zoomInProgress!: boolean;
     pageX!: number;
     pageY!: number;
     scale!: number;
@@ -389,6 +390,10 @@ export default class Zoom {
      * @param event - event will be available only if the function is called on clicking/taping the imags
      */
     setActualSize(index: number, event?: ZoomTouchEvent): void {
+        if (this.zoomInProgress) {
+            return;
+        }
+        this.zoomInProgress = true;
         const currentItem = this.core.galleryItems[this.core.index];
         this.resetImageTranslate(index);
         setTimeout(() => {
@@ -410,11 +415,13 @@ export default class Zoom {
 
             this.beginZoom(this.scale);
             this.zoomImage(this.scale, this.scale - prevScale, true, true);
-
-            setTimeout(() => {
-                this.core.outer.removeClass('lg-grabbing').addClass('lg-grab');
-            }, 10);
         }, 50);
+        setTimeout(() => {
+            this.core.outer.removeClass('lg-grabbing').addClass('lg-grab');
+        }, 60);
+        setTimeout(() => {
+            this.zoomInProgress = false;
+        }, ZOOM_TRANSITION_DURATION + 110);
     }
 
     getNaturalWidth(index: number): number {
@@ -609,6 +616,7 @@ export default class Zoom {
                 const { prevIndex } = event.detail;
                 this.scale = 1;
                 this.positionChanged = false;
+                this.zoomInProgress = false;
                 this.resetZoom(prevIndex);
                 this.resetImageTranslate(prevIndex);
                 if (this.isImageSlide(this.core.index)) {
@@ -627,6 +635,7 @@ export default class Zoom {
         // Store the zoomable timeout value just to clear it while closing
         this.zoomableTimeout = false;
         this.positionChanged = false;
+        this.zoomInProgress = false;
     }
 
     zoomIn(): void {
@@ -1191,6 +1200,7 @@ export default class Zoom {
 
     closeGallery(): void {
         this.resetZoom();
+        this.zoomInProgress = false;
     }
 
     destroy(): void {
