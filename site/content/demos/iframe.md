@@ -16,11 +16,11 @@ weight: 8
 toc: true
 ---
 
-<button class="btn btn-success mrb50" data-iframe="true" id="open-website" data-iframe-title="All new time tracking. Greater insight." data-src="https://tack.one/">Open
+<button class="btn btn-success mrb50" data-iframe="true" id="open-website" data-iframe-title="All new time tracking. Greater insight." data-src="https://www.paritydeals.com/">Open
 website</button>
 <button class="btn btn-success mrb50" data-iframe="true" id="open-google-map" data-src="https://www.google.com/maps/embed">Google
 map</button>
-<button class="btn btn-success mrb50" data-iframe="true" id="open-pdf" data-src="https://file-examples-com.github.io/uploads/2017/10/file-sample_150kB.pdf">Open
+<button class="btn btn-success mrb50" data-iframe="true" id="open-pdf" data-src="/pdf/sample.pdf">Open
 PDF file</button>
 
 ##### HTML Structure
