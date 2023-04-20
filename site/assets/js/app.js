@@ -781,6 +781,21 @@ jQuery('#gallery-share-demo')
             plugins: [lgZoom, lgShare, lgThumbnail, lgHash],
         });
     });
+jQuery('#gallery-zoom-from-origin-demo')
+    .justifiedGallery({
+        captions: false,
+        lastRow: 'justify',
+        rowHeight: 180,
+        margins: 5,
+    })
+    .on('jg.complete', function () {
+        window.lightGallery(document.getElementById('gallery-zoom-from-origin-demo'), {
+            thumbnail: false,
+            pager: false,
+            hash: true,
+            plugins: [lgZoom, lgShare, lgThumbnail, lgHash],
+        });
+    });
 jQuery('#gallery-captions-demo')
     .justifiedGallery({
         captions: false,
