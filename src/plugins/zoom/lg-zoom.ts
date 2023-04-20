@@ -584,7 +584,12 @@ export default class Zoom {
                     scale = 1;
                 }
                 this.beginZoom(scale);
-                this.zoomImage(scale, -this.settings.scale, true, true);
+                this.zoomImage(
+                    scale,
+                    -this.settings.scale,
+                    true,
+                    !this.settings.infiniteZoom,
+                );
             }, timeout);
         });
 
@@ -646,13 +651,15 @@ export default class Zoom {
 
         let scale = this.scale + this.settings.scale;
 
-        scale = this.getScale(scale);
+        if (!this.settings.infiniteZoom) {
+            scale = this.getScale(scale);
+        }
         this.beginZoom(scale);
         this.zoomImage(
             scale,
             Math.min(this.settings.scale, scale - this.scale),
             true,
-            true,
+            !this.settings.infiniteZoom,
         );
     }
 
