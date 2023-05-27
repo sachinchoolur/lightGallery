@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.7.2-beta.0 | May 25th 2023
+ * lightgallery | 2.7.2-beta.0 | May 27th 2023
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3

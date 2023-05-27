@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.7.2-beta.0 | May 25th 2023
+ * lightgallery | 2.7.2-beta.0 | May 27th 2023
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -100,8 +100,8 @@ var Hash = /** @class */ (function () {
         slideName = this.settings.customSlideName
             ? slideName || event.detail.index
             : event.detail.index;
-        if (history.replaceState) {
-            history.replaceState(null, '', window.location.pathname +
+        if (history.pushState) {
+            history.pushState(null, '', window.location.pathname +
                 window.location.search +
                 '#lg=' +
                 this.settings.galleryId +
@@ -152,16 +152,16 @@ var Hash = /** @class */ (function () {
         // Reset to old hash value
         if (this.oldHash &&
             this.oldHash.indexOf('lg=' + this.settings.galleryId) < 0) {
-            if (history.replaceState) {
-                history.replaceState(null, '', this.oldHash);
+            if (history.pushState) {
+                history.pushState(null, '', this.oldHash);
             }
             else {
                 window.location.hash = this.oldHash;
             }
         }
         else {
-            if (history.replaceState) {
-                history.replaceState(null, document.title, window.location.pathname + window.location.search);
+            if (history.pushState) {
+                history.pushState(null, document.title, window.location.pathname + window.location.search);
             }
             else {
                 window.location.hash = '';

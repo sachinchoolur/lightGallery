@@ -47,8 +47,8 @@ export default class Hash {
         slideName = this.settings.customSlideName
             ? slideName || event.detail.index
             : event.detail.index;
-        if (history.replaceState) {
-            history.replaceState(
+        if (history.pushState) {
+            history.pushState(
                 null,
                 '',
                 window.location.pathname +
@@ -113,14 +113,14 @@ export default class Hash {
             this.oldHash &&
             this.oldHash.indexOf('lg=' + this.settings.galleryId) < 0
         ) {
-            if (history.replaceState) {
-                history.replaceState(null, '', this.oldHash);
+            if (history.pushState) {
+                history.pushState(null, '', this.oldHash);
             } else {
                 window.location.hash = this.oldHash;
             }
         } else {
-            if (history.replaceState) {
-                history.replaceState(
+            if (history.pushState) {
+                history.pushState(
                     null,
                     document.title,
                     window.location.pathname + window.location.search,

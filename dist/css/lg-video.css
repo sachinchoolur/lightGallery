@@ -135,7 +135,7 @@
 }
 
 .lg-video-loading .lg-video-play-icon-circle {
-  animation: lg-play-rotate 2s linear 0.25s infinite, lg-play-stroke 1.5s ease-in-out 0.25s infinite;
+  animation: lg-play-rotate 2s linear 0.25s infinite, lg-play-stroke 1.5s ease-in-out 0.25s infinite;
 }
 
 .lg-video-loaded .lg-video-play-button {
