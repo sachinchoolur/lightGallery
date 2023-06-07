@@ -1143,3 +1143,22 @@ lightGallery(document.querySelector('.medium-zoom-demo'), {
 //         subscribe();
 //     }
 // });
+
+
+
+let $lgSwiper = document.getElementById('lg-swipper');
+const swiper = new Swiper('.swiper', {
+    // other parameters
+    navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+    },
+    on: {
+        init: function () {
+            const lg = lightGallery($lgSwiper);
+            $lgSwiper.addEventListener('lgBeforeClose', () => {
+                swiper.slideTo(lg.index, 0)
+            });
+        },
+    }
+});

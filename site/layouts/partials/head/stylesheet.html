@@ -12,6 +12,13 @@
   <link rel="stylesheet" href="{{ "/css/lg-transitions.css" | relURL }}">
 
 
+  {{ if eq .Title "SwiperJs demo" -}}
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
+  />
+{{ end -}}
+
   {{ if eq .Title "Video gallery" -}}
     <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
   {{ end -}}
