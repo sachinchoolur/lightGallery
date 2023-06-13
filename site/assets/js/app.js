@@ -1147,18 +1147,20 @@ lightGallery(document.querySelector('.medium-zoom-demo'), {
 
 
 let $lgSwiper = document.getElementById('lg-swipper');
-const swiper = new Swiper('.swiper', {
-    // other parameters
-    navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-    },
-    on: {
-        init: function () {
-            const lg = lightGallery($lgSwiper);
-            $lgSwiper.addEventListener('lgBeforeClose', () => {
-                swiper.slideTo(lg.index, 0)
-            });
+if ($lgSwiper) {
+    const swiper = new Swiper('.swiper', {
+        // other parameters
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
         },
-    }
-});
+        on: {
+            init: function () {
+                const lg = lightGallery($lgSwiper);
+                $lgSwiper.addEventListener('lgBeforeClose', () => {
+                    swiper.slideTo(lg.index, 0);
+                });
+            },
+        },
+    });
+}
