@@ -406,7 +406,7 @@ export default class Thumbnail {
         return thumbDragUtils;
     }
 
-    getThumbHtml(thumb: string, index: number): string {
+    getThumbHtml(thumb: string, index: number, alt?: string): string {
         const slideVideoInfo =
             this.core.galleryItems[index].__slideVideoInfo || {};
         let thumbImg;
@@ -426,21 +426,23 @@ export default class Thumbnail {
             thumbImg = thumb;
         }
 
+        const altAttr = alt ? 'alt="' + alt + '"' : '';
+
         return `<div data-lg-item-id="${index}" class="lg-thumb-item ${
             index === this.core.index ? ' active' : ''
-        }" 
+        }"
         style="width:${this.settings.thumbWidth}px; height: ${
             this.settings.thumbHeight
         };
             margin-right: ${this.settings.thumbMargin}px;">
-            <img data-lg-item-id="${index}" src="${thumbImg}" />
+            <img ${altAttr} data-lg-item-id="${index}" src="${thumbImg}" />
         </div>`;
     }
 
     getThumbItemHtml(items: ThumbnailGalleryItem[]): string {
         let thumbList = '';
         for (let i = 0; i < items.length; i++) {
-            thumbList += this.getThumbHtml(items[i].thumb, i);
+            thumbList += this.getThumbHtml(items[i].thumb, i, items[i].alt);
         }
 
         return thumbList;
