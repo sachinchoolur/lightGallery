@@ -1,9 +1,8 @@
 ---
-title: 'Thumbnails'
-description: 'Create JavaScript image gallery with animated thumbnails.'
+title: 'JavaScript gallery with thumbnails.'
+description: 'Create beautiful JavaScript image and video gallery with animated thumbnails.'
 lead:
-    'lightGallery allows you to create animated thumbnails for your gallery with
-    the help of thumbnail plugin. Thumbnails plugin supports touch swipe
+    'Create JavaScript image and video galleries with animated thumbnails. lightGallery thumbnails plugin supports touch swipe
     navigation on touchscreen devices as well as mouse drag for desktops. it
     allows users to navigate between slides by clicking on the thumbnails.
     Thumbnails plugin also allows you to load thumbnails automatically for
