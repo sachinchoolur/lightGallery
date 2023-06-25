@@ -19,6 +19,53 @@ images: []
         </div>
     </div>
 </div>
+<div class="container-xl trusted-by">
+    <div class="row justify-content-center trusted-by-header">
+        <div class="col-lg-7">
+            <h2>Used by thousands.</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="contents-list">
+                <div class="contents-list-item">
+                    <img alt="lightGallery customer accenture" class="content-list-logo" src="images/customer-logos/accenture-logo.svg">
+                </div>
+                <div class="contents-list-item">
+                    <img alt="lightGallery customer Airtel" class="content-list-logo" src="images/customer-logos/airtel-logo.svg">
+                </div>
+                <div class="contents-list-item">
+                    <img alt="lightGallery customer Apple" class="content-list-logo" src="images/customer-logos/Apple-logo.svg">
+                </div><div class="contents-list-item">
+                    <img alt="lightGallery customer Al-Jazeera" class="content-list-logo" src="images/customer-logos/Al-Jazeera-logo.svg">
+                </div>
+                <div class="contents-list-item">
+                    <img alt="lightGallery customer Vogue" class="content-list-logo" src="images/customer-logos/Vogue-logo.svg">
+                </div><div class="contents-list-item">
+                    <img alt="lightGallery customer Volvo" class="content-list-logo" src="images/customer-logos/volvo.svg">
+                </div><div class="contents-list-item">
+                    <img alt="lightGallery customer PWC" class="content-list-logo" src="images/customer-logos/pwc.svg">
+                </div>
+                <div class="contents-list-item">
+                    <img alt="lightGallery customer SAP" class="content-list-logo" src="images/customer-logos/sap.svg">
+                </div><div class="contents-list-item">
+                    <img alt="lightGallery customer Sony" class="content-list-logo" src="images/customer-logos/Sony-logo.svg">
+                </div>
+                <div class="contents-list-item">
+                    <img alt="lightGallery customer Hyundai" class="content-list-logo" src="images/customer-logos/Hyundai-Logo.svg">
+                </div><div class="contents-list-item" style="
+    display: none;
+">
+                    <img alt="lightGallery customer Lexus" class="content-list-logo" src="images/customer-logos/Lexus-Logo.svg">
+                </div><div class="contents-list-item" style="
+    display: none;
+">
+                    <img alt="lightGallery customer Lufthansa" class="content-list-logo" src="images/customer-logos/Lufthansa-Logo.svg">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-xl features-list-grid">
     <div class="row justify-content-center ">
         <div class="col-lg-4 features-list-grid-item">

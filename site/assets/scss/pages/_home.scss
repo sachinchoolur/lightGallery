@@ -222,10 +222,10 @@
 }
 
 .features-list-grid {
-    padding-top: 8rem;
+    padding-top: 5rem;
     padding-bottom: 8rem;
     @include media-breakpoint-up(lg) {
-        padding-top: 13rem;
+        padding-top: 10rem;
         padding-bottom: 13rem;
     }
     .features-list-grid-img {
@@ -680,5 +680,32 @@
     }
     .parity-banner-inner {
         padding-left: 80px;
+    }
+}
+
+.trusted-by {
+    padding-top: 4rem;
+    padding-bottom: 0rem;
+    text-align: center;
+    @include media-breakpoint-up(lg) {
+        padding-top: 7rem;
+        padding-bottom: 0;
+    }
+    .contents-list-item {
+        box-shadow: none;
+        width: 20%;
+        margin: 0;
+        padding: 1rem;
+        @include media-breakpoint-up(md) {
+            padding: 1.5rem;
+        }
+    }
+    h2 {
+        font-size: 18px;
+        @include media-breakpoint-up(md) {
+            font-size: 24px;
+        }
+        margin: 0 0px 24px 0;
+        color: #666;
     }
 }
