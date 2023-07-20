@@ -407,7 +407,6 @@
         box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
     }
-
     img.content-list-logo {
         max-width: 100px;
         max-height: 100px;
@@ -687,6 +686,7 @@
     padding-top: 4rem;
     padding-bottom: 0rem;
     text-align: center;
+    color: #5b6373;
     @include media-breakpoint-up(lg) {
         padding-top: 7rem;
         padding-bottom: 0;
@@ -696,6 +696,10 @@
         width: 20%;
         margin: 0;
         padding: 1rem;
+        svg {
+            max-width: 110px;
+            max-height: 36px;
+        }
         @include media-breakpoint-up(md) {
             padding: 1.5rem;
         }
@@ -705,7 +709,10 @@
         @include media-breakpoint-up(md) {
             font-size: 24px;
         }
-        margin: 0 0px 24px 0;
-        color: #666;
+        margin: 0 0px 36px 0;
+        color: inherit
+    }
+    &.trusted-by-blue {
+        color: #2d477c;
     }
 }
