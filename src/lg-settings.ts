@@ -38,6 +38,7 @@ export interface LightGalleryCoreStrings {
     nextSlide: string;
     download: string;
     playVideo: string;
+    mediaLoadingFailed: string;
 }
 
 export type LightGalleryAllSettings = LightGalleryCoreSettings &
@@ -534,10 +535,11 @@ export interface LightGalleryCoreSettings {
     mobileSettings: Partial<MobileSettings>;
 
     /**
-     * Aria label strings for lightGallery core modules.
+     * Customize string.
      * @description This can be useful if you want to localize the lightGallery strings to other languages.
      * Use your own service to translate the strings and pass it via settings.strings
      * You can find dedicated strings option for all lightGallery modules in their respective documentation.
+     * Note - You need to provide values for all the strings. For example, even if you just want to change the closeGallery string, you need to provide all the other strings as well.
      */
     strings: LightGalleryCoreStrings;
 
@@ -620,5 +622,6 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
         nextSlide: 'Next slide',
         download: 'Download',
         playVideo: 'Play video',
+        mediaLoadingFailed: 'Oops... Failed to load content...',
     } as LightGalleryCoreStrings,
 };

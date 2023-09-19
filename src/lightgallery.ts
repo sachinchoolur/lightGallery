@@ -1056,7 +1056,9 @@ export class LightGallery {
             () => {
                 currentSlide.addClass('lg-complete lg-complete_');
                 currentSlide.html(
-                    '<span class="lg-error-msg">Oops... Failed to load content...</span>',
+                    '<span class="lg-error-msg">' +
+                        this.settings.strings['mediaLoadingFailed'] +
+                        '</span>',
                 );
             },
         );
