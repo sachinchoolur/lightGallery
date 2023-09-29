@@ -2,7 +2,6 @@ const fs = require('fs-extra');
 const colors = require('colors/safe');
 
 try {
-    fs.copySync('v1', 'public/v1');
     fs.copySync('CNAME', 'public/CNAME');
     console.log(colors.green('Success!'));
 } catch (err) {
