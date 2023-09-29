@@ -66,7 +66,7 @@ $dynamicGallery.addEventListener('click', function () {
 });
 ```
 
-### Load more slides
+### Load more slides dynamically
 
 You can add or remove slides of a dynamic gallery by passing the updated
 dynamicEl list via refresh method
@@ -111,3 +111,20 @@ document
         dynamicGallery.openGallery();
     });
 ```
+
+### Load more slides with images
+
+You can use the dynamic mode to display a few thumbnails and show all the images by clicking on a button.
+
+
+<div class="dynamic-mode-images">
+    {{< gallery-demo-sm id="gallery-dynamic-thumbnails">}}
+    <button type="button" class="btn btn-dynamic"
+        id="dynamic-mode-images" >
+        See 15 photos
+    </button>
+</div>
+
+<div class="codepen-demo">
+    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/KKbeWaV">View on CodePen</a>
+</div>
