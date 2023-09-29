@@ -1,9 +1,0 @@
-.lg-fullscreen {
-    &:after {
-        content: "\e20c";
-
-        .lg-fullscreen-on & {
-            content: "\e20d";
-        }
-    }
-}
