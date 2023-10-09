@@ -275,7 +275,7 @@ export interface LightGalleryCoreSettings {
     resetScrollPosition: boolean;
 
     /**
-     * If false user won't be abel to close the gallery at all
+     * If false user won't be able to close the gallery at all
      * This is useful for creating inline galleries.
      */
     closable: boolean;
