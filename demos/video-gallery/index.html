@@ -8,21 +8,20 @@
 <link rel=stylesheet href=https://www.lightgalleryjs.com/main.5cce80e54730726310bee9b30461824f9bbeb8c686506d797304dc5ee4e15ba21e05c04e08544283f9b0146377dca747835390597ce35ad0cec05e426fc75f50.css integrity="sha512-XM6A5UcwcmMQvumzBGGCT5u+uMaGUG15cwTcXuThW6IeBcBOCFRCg/mwFGN33KdHg1OQWXzjWtDOwF5Cb8dfUA==" crossorigin=anonymous>
 <link rel=stylesheet href=/css/lightgallery-bundle.css>
 <link rel=stylesheet href=/css/lg-transitions.css>
-<link href=https://vjs.zencdn.net/7.10.2/video-js.css rel=stylesheet>
 <noscript><style>img.lazyload{display:none}</style></noscript>
 <meta name=robots content="index, follow">
 <meta name=googlebot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 <meta name=bingbot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<title>Video gallery - lightGallery</title>
+<title>Responsive HTML5 Video Gallery - lightGallery</title>
 <meta name=description content="lightGallery supports YouTube, Vimeo, VK, DailyMotion, Wistia and all other types of HTML5 video formats. Such as MP4, WebM, Ogg, etc.">
 <link rel=canonical href=https://www.lightgalleryjs.com/demos/video-gallery/>
 <meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://www.lightgalleryjs.com/lightgallery.png">
-<meta name=twitter:title content="Video gallery">
+<meta name=twitter:title content="Responsive HTML5 Video Gallery">
 <meta name=twitter:description content="lightGallery supports YouTube, Vimeo, VK, DailyMotion, Wistia and all other types of HTML5 video formats. Such as MP4, WebM, Ogg, etc.">
 <meta name=twitter:site content="@sachinchoolur">
 <meta name=twitter:creator content="@sachinchoolur">
-<meta property="og:title" content="Video gallery">
+<meta property="og:title" content="Responsive HTML5 Video Gallery">
 <meta property="og:description" content="lightGallery supports YouTube, Vimeo, VK, DailyMotion, Wistia and all other types of HTML5 video formats. Such as MP4, WebM, Ogg, etc.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://www.lightgalleryjs.com/demos/video-gallery/">
@@ -90,7 +89,7 @@ lightGallery
 <li><a class=docs-link href=https://www.lightgalleryjs.com/demos/hash/>Hash</a></li>
 <li><a class=docs-link href=https://www.lightgalleryjs.com/demos/responsive/>Responsive images</a></li>
 <li><a class=docs-link href=https://www.lightgalleryjs.com/demos/mixed-contents/>Mixed contents</a></li>
-<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/iframe/>Iframe</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/iframe/>Iframe lightbox</a></li>
 <li><a class=docs-link href=https://www.lightgalleryjs.com/demos/dynamic-mode/>Dynamic Mode</a></li>
 <li><a class=docs-link href=https://www.lightgalleryjs.com/demos/update-slides/>Update Slides</a></li>
 <li><a class=docs-link href=https://www.lightgalleryjs.com/demos/transitions/>Transitions</a></li>
@@ -101,13 +100,13 @@ lightGallery
 <li><a class=docs-link href=https://www.lightgalleryjs.com/demos/captions/>Captions</a></li>
 <li><a class=docs-link href=https://www.lightgalleryjs.com/demos/comment-box/>Comment box</a></li>
 <li><a class=docs-link href=https://www.lightgalleryjs.com/demos/infinite-scrolling/>Infinite scrolling</a></li>
-<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/medium-zoom/>Medium like zoom</a></li>
-<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/zoom-from-origin/>Zoom from origin</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/medium-zoom/>Medium like image zoom</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/zoom-from-origin/>Zoom image from origin</a></li>
 </ul>
 </nav>
 </div>
 <main class="docs-content col-lg-10 col-xl-8">
-<h1>Video gallery</h1>
+<h1>Responsive HTML5 Video Gallery</h1>
 <p class=lead>lightGallery supports YouTube, Vimeo, Wistia and all other types of HTML5 video formats. Such as MP4, WebM, Ogg, etc.</p>
 <h4 id=external-videos>External videos<a href=#external-videos class=anchor aria-hidden=true>#</a> </h4>
 <p>To display YouTube, Vimeo and Wistia, videos, you just need to paste the video URL, or share URL of the video in the data-src attribute. The same way you display images in the gallery. lightGallery will check the data-src attribute and if it is a video URL, it will create the respective video slide.</p>
@@ -446,9 +445,6 @@ Social sharing &rarr;
 </div>
 </div>
 </footer>
-<script src=//player.vimeo.com/api/player.js></script>
-<script src=//fast.wistia.com/assets/external/E-v1.js></script>
-<script src=https://vjs.zencdn.net/7.10.2/video.min.js></script>
 <script id=__webwhizSdk__ src=https://widget.webwhiz.ai/webwhiz-sdk.js chatbotid=6427de1eb464389fa02a8e61></script>
 <script src=https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js></script>
 <script src=https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js></script>
