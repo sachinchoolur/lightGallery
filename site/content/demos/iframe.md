@@ -1,8 +1,8 @@
 ---
-title: 'Iframe'
+title: 'Iframe lightbox'
 description: 'Open iframe in lightGallery.'
 lead:
-    'If you want to display a webpage within the gallery, you just need to set
+    'Create simple lightbox iframe gallery with lightGallery. If you want to display a webpage, google map, PDF file or any other iframe within the gallery, you just need to set
     data-iframe attribute true for the slide item. lightGallery will
     automatically display the source in an iframe. This can be used to view PDF
     files, google maps and more.'

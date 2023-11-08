@@ -1,7 +1,7 @@
 ---
-title: 'Zoom from origin'
+title: 'Zoom image from origin'
 description:
-    'Zoom images from its origin while opening the image gallery'
+    "Create image gallery with zoom effect from image's origin while opening the image gallery"
 lead:
     'Zoom images from its origin while opening the image gallery.'
 date: 2020-10-06T08:48:57+00:00

@@ -1,8 +1,8 @@
 ---
-title: 'Comment box'
-description: 'lightGallery facebook and Disqus comments demo.'
+title: 'lightbox gallery with Facebook and Disqus comments'
+description: 'lightbox gallery with Facebook and Disqus comments'
 lead:
-    'LightGallery supports facebook and Disqus comments out of the box with the
+    'Create lightBox gallery with Facebook and Disqus comments. LightGallery supports Facebook and Disqus comments out of the box with the
     help of lg-comments plugin.'
 date: 2020-10-06T08:48:57+00:00
 draft: false
@@ -10,11 +10,12 @@ images: []
 menu:
     demos:
         parent: 'Demos'
+        name: 'Comment box'
 weight: 16
 toc: true
 ---
 
-#### Facebook comments demo
+#### facebook comments in lightbox
 
 {{< image-gallery id="gallery-fb-comments-demo">}}
 
@@ -81,7 +82,7 @@ lightGallery(document.getElementById('gallery-fb-comments-demo'), {
 });
 ```
 
-### Disqus comments
+### Disqus comments in lightbox
 
 {{< image-gallery id="gallery-disqus-comments-demo">}}
 

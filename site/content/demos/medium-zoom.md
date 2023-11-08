@@ -1,10 +1,9 @@
 ---
-title: 'Medium like zoom'
+title: 'Medium like image zoom'
 description: 'Easily create image zooming experience as seen on medium. '
 lead:
-    'Easily create image zooming experience as seen on medium. You can just use
-    lightGallery mediumZoom plugin to achieve the same experience out of the
-    box.'
+    "Add a zoom feature to your blog images just like on Medium.
+    With lightGallery's mediumZoom plugin, it's easy to give your readers a closer look at your pictures, straight away"
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []

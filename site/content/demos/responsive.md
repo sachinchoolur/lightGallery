@@ -1,16 +1,14 @@
 ---
-title: 'Responsive images'
-description: 'lightGallery responsive images demo.'
+title: 'Responsive Image Gallery'
+description: 'lightGallery responsive image gallery demo.'
 lead:
-    "You can provide different images for different screen sizes, resolution or
+    "Create beautiful responsive html image gallery with lightGallery. You can provide different images for different screen sizes, resolution or
     devices. Other than it's own mechanism, lightGallery supports HTML5 picture
     tag, srcset and sizes for responsive images."
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
-menu:
-    demos:
-        parent: 'Demos'
+menu: {demos: {parent: Demos, name: Responsive images}}
 weight: 6
 toc: true
 ---

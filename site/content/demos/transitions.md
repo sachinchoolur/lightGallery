@@ -1,7 +1,7 @@
 ---
 title: Transitions
-description: LightGallery allows you to build inline image/video galleries.
-lead: 'lightGallery comes with a numerous number of beautiful built in transitions.  You can change the type of transitions by passing the transition name via mode option.  lightGallery uses Hardware-Accelerated CSS3 transitions for faster animation performance.  You can easily create your own beautiful custom transitions by updating the CSS transform values. '
+description: Create beautiful image and video galleries with CSS transitions.
+lead: 'Create beautiful image and video galleries with built in CSS transitions. You can change the type of transitions by passing the transition name via mode option.  lightGallery uses Hardware-Accelerated CSS3 transitions for faster animation performance.  You can easily create your own beautiful custom transitions by updating the CSS transform values. '
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []

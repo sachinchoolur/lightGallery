@@ -1,11 +1,11 @@
 ---
-title: Video gallery
+title: Responsive HTML5 Video Gallery
 description: lightGallery supports YouTube, Vimeo, VK, DailyMotion, Wistia and all other types of HTML5 video formats. Such as MP4, WebM, Ogg, etc.
 lead: lightGallery supports YouTube, Vimeo, Wistia and all other types of HTML5 video formats. Such as MP4, WebM, Ogg, etc.
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu: {demos: {parent: Demos}}
+menu: {demos: {parent: Demos, name: Video gallery}}
 weight: 2
 toc: true
 ---
