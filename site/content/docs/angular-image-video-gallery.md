@@ -1,7 +1,7 @@
 ---
-title: lightGallery Angular
-description: Full featured image and video gallery component for Angular
-lead: Full featured image and video gallery component for angular.
+title: Image and video gallery for Angular
+description: Full featured image and video lightbox gallery component for Angular
+lead: Full featured image and video lightbox gallery component for angular.
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []

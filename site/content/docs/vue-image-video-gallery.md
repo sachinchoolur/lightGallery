@@ -1,5 +1,5 @@
 ---
-title: lightGallery Vue
+title: Image and video gallery for Vue
 description: Full featured image and video gallery component for Vue.js
 lead: Full featured image and video gallery component for vue.
 date: 2020-10-06T08:48:57.000Z

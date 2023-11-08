@@ -427,13 +427,13 @@ images: []
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="contents-list">
-                <a href="docs/react/" class="contents-list-item">
+                <a href="docs/react-image-video-gallery/" class="contents-list-item">
                     <img alt="lightGallery react component" class="content-list-logo" src="images/logos/react.svg">
                 </a>
-                <a href="docs/vue/" class="contents-list-item">
+                <a href="docs/vue-image-video-gallery/" class="contents-list-item">
                     <img alt="lightGallery vue.js component" class="content-list-logo" src="images/logos/vue.png">
                 </a>
-                <a href="docs/angular/" class="contents-list-item">
+                <a href="docs/angular-image-video-gallery/" class="contents-list-item">
                     <img alt="lightGallery angular component" class="content-list-logo content-list-lg" src="images/logos/angular.svg">
                 </a>
                 <a href="docs/getting-started/" class="contents-list-item">

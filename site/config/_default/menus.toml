@@ -17,19 +17,19 @@
 [[main]]
   name = "React"
   identifier = "React"
-  url = "/docs/react/"
+  url = "/docs/react-image-video-gallery/"
   weight = 50
 
 [[main]]
   name = "Vue"
   identifier = "Vue"
-  url = "/docs/vue/"
+  url = "/docs/vue-image-video-gallery/"
   weight = 50
 
 [[main]]
   name = "Angular"
   identifier = "Angular"
-  url = "/docs/angular/"
+  url = "/docs/angular-image-video-gallery/"
   weight = 50
 
 

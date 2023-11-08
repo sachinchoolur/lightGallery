@@ -1,7 +1,7 @@
 ---
-title: lightGallery React
+title: Image and video gallery for React
 description: Full featured image and video gallery component for react
-lead: Full featured image and video gallery component for react.
+lead: Full featured image and video gallery lightbox component for react.
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
