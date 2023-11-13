@@ -1,6 +1,17 @@
+# lightgallery-react
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Prerequisites
+
+Before starting with `lightgallery-react`, you need to follow these steps:
+
+1. First, build `lightgallery` by running `npm run build` from the root path. This will generate a new `dist` folder.
+2. Navigate to the `dist` folder and run the command `npm link`.
+3. Go to the `lightgallery-react` folder and run `npm link lightgallary`.
+4. Finally, start the project with `npm run start`.
 
 ## Available Scripts
 
