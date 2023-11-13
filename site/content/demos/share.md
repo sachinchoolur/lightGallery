@@ -20,9 +20,7 @@ toc: true
 
 {{< image-gallery id="gallery-share-demo">}}
 
-<div class="codepen-demo">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/GRWZbRv">View on CodePen</a>
-</div>
+{{< demoButtons js="https://codepen.io/sachinchoolur/pen/GRWZbRv" react="https://stackblitz.com/edit/stackblitz-starters-uqetpy" >}}
 
 ##### HTML Structure
 

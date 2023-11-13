@@ -20,12 +20,13 @@ toc: true
 <button type="button" class="btn btn-success" id="dynamic-gallery-demo">Launch
 Gallery</button>
 
-<div class="codepen-demo" style="
-    display: inline-block;
-    margin: 0 10px 0 10px;
-">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/VwpYagE">View on CodePen</a>
-</div>
+
+{{< demoButtons
+   class="dynamic-mode-demo"
+   js="https://codepen.io/sachinchoolur/pen/VwpYagE"
+   react="https://stackblitz.com/edit/stackblitz-starters-puyir7" >}}
+
+
 </div>
 
 ##### HTML Structure
@@ -125,6 +126,7 @@ You can use the dynamic mode to display a few thumbnails and show all the images
     </button>
 </div>
 
-<div class="codepen-demo">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/KKbeWaV">View on CodePen</a>
-</div>
+
+{{< demoButtons
+   js="https://codepen.io/sachinchoolur/pen/KKbeWaV"
+   react="https://stackblitz.com/edit/stackblitz-starters-q1htvi" >}}

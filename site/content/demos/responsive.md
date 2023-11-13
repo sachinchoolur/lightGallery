@@ -24,9 +24,7 @@ can use native srcset and sizes attributes. Please refer the next demo.
 
 {{< image-gallery id="gallery-captions-demo">}}
 
-<div class="codepen-demo">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/OJpXJda">View on CodePen</a>
-</div>
+{{< demoButtons js="https://codepen.io/sachinchoolur/pen/OJpXJda" react="https://stackblitz.com/edit/stackblitz-starters-v7wpeb" >}}
 
 ##### HTML Structure
 

@@ -47,6 +47,25 @@
     }
 }
 
+
+
+.demo-btns-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 1rem 0 2rem 0;
+    &.dynamic-mode-demo {
+        display: inline-flex;
+        margin: 0 10px 0 10px;
+    }
+}
+
+.demo-btn {
+    text-align: center;
+    font-size: 14px;
+}
+
 .codepen-demo {
     text-align: center;
     margin: 1rem 0 2rem 0;

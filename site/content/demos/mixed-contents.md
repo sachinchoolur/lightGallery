@@ -14,6 +14,8 @@ toc: true
 
 {{< minimal-gallery id="gallery-mixed-content-demo" >}}
 
+{{< demoButtons  react="https://stackblitz.com/edit/stackblitz-starters-owvp26" >}}
+
 ##### HTML Structure
 
 ```html

@@ -58,9 +58,7 @@ toc: true
     </div>
 </div>
 
-<div class="codepen-demo">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/bGQGMXb">View on CodePen</a>
-</div>
+{{< demoButtons js="https://codepen.io/sachinchoolur/pen/bGQGMXb" react="https://stackblitz.com/edit/stackblitz-starters-5sp895" >}}
 
 ##### HTML Structure
 

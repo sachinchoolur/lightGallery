@@ -24,9 +24,7 @@ toc: true
 
 {{< gallery-demo size="xl"  id="animated-thumbnails-gallery">}}
 
-<div class="codepen-demo">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/poebzpV">View on CodePen</a>
-</div>
+{{< demoButtons js="https://codepen.io/sachinchoolur/pen/poebzpV" react="https://stackblitz.com/edit/stackblitz-starters-p5ngcb?file=src%2Findex.tsx" >}}
 
 ##### HTML Structure
 

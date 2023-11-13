@@ -85,3 +85,7 @@ toLower = false
   [[module.mounts]]
     source = "node_modules/bootstrap"
     target = "assets/js/vendor/bootstrap"
+
+[security]
+  [security.exec]
+    allow = ['^dart-sass-embedded$', '^go$', '^npx$', '^postcss$', '^babel$']

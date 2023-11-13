@@ -1,0 +1,14 @@
+{{$js := .Get "js"}} {{$react := .Get "react"}}
+
+<div class="demo-btns-container {{ .Get "class" }}" >
+    {{ if $js}}
+    <div class="demo-btn" >
+        <a target="_blank" href="{{ $js}}">Javascript code</a>
+    </div>
+    {{end}}
+    {{ if $react}}
+    <div class="demo-btn">
+        <a target="_blank" href="{{ $react }}">React code</a>
+    </div>
+    {{end}}
+</div>
