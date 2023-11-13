@@ -49,9 +49,7 @@ Note - data-src should not be provided when you use html5 videos
 
 {{< videos-gallery id="gallery-videos-demo" >}}
 
-<div class="codepen-demo">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/ExXxqPe">View on CodePen</a>
-</div>
+{{< demoButtons js="https://codepen.io/sachinchoolur/pen/ExXxqPe" react="https://stackblitz.com/edit/stackblitz-starters-r3xycb" >}}
 
 ##### HTML structure
 

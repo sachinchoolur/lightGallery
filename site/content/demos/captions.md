@@ -95,9 +95,9 @@ interval to animate captions before the next slide transition starts.
 
 {{< image-gallery-captions id="gallery-animated-captions-demo" >}}
 
-<div class="codepen-demo">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/poebjrm">View on CodePen</a>
-</div>
+{{< demoButtons
+   js="https://codepen.io/sachinchoolur/pen/poebjrm"
+   react="https://stackblitz.com/edit/stackblitz-starters-5qyqkx" >}}
 
 ##### HTML
 

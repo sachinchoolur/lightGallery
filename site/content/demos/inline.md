@@ -13,9 +13,7 @@ toc: true
 #### Demo
 
 <div id="inline-gallery-container" class="inline-gallery-container"></div>
-<div class="codepen-demo">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/zYZqaGm">View on CodePen</a>
-</div>
+{{< demoButtons js="https://codepen.io/sachinchoolur/pen/zYZqaGm" react="https://stackblitz.com/edit/stackblitz-starters-vhsu43" >}}
 
 ##### HTML
 

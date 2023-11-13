@@ -23,9 +23,7 @@ buttons using lightGallery methods.
 
 {{< image-gallery id="gallery-methods-demo">}}
 
-<div class="codepen-demo">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/yLMJYOw">View on CodePen</a>
-</div>
+{{< demoButtons js="https://codepen.io/sachinchoolur/pen/yLMJYOw" react="https://stackblitz.com/edit/stackblitz-starters-6v4ncr" >}}
 
 ##### HTML Structure
 
