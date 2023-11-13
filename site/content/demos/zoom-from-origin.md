@@ -24,9 +24,9 @@ lightGallery will show the default animation if data-lg-size is not available
 
 {{< image-gallery id="gallery-zoom-from-origin-demo">}}
 
-<div class="codepen-demo">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/GRWZbRv">View on CodePen</a>
-</div>
+{{< demoButtons
+   js="https://codepen.io/sachinchoolur/pen/GRWZbRv"
+   react="https://stackblitz.com/edit/stackblitz-starters-cva7eb" >}}
 
 ##### HTML Structure
 

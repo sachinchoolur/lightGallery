@@ -22,6 +22,8 @@ toc: true
 
 {{< image-gallery id="gallery-hash-demo">}}
 
+{{< demoButtons react="https://stackblitz.com/edit/stackblitz-starters-fz6ajn" >}}
+
 ##### HTML Structure
 
 ```html
@@ -42,7 +44,7 @@ toc: true
 lightGallery(document.getElementById('gallery-hash-demo'));
 
 // if You have multiple galleries on same page you have to set unique id for each gallery.
-/* 
+/*
 lightGallery(document.getElementById('gallery-hash-demo-2'), {
     galleryId: 2
 });
