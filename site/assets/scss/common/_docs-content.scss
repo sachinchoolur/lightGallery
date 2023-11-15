@@ -65,6 +65,24 @@
     text-align: center;
     font-size: 14px;
 }
+.demo-btn svg {
+    width: 18px;
+    margin-right: 5px;
+}
+
+.demo-btn a {
+    display: flex;
+    align-items: center;
+}
+.demo-btn-stackblits {
+    svg {
+        margin-right: 3px;
+    }
+}
+
+.demo-btn + .demo-btn {
+    margin-left: 10px;
+}
 
 .codepen-demo {
     text-align: center;
