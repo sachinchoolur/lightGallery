@@ -252,6 +252,30 @@ export function convertToData(attr: string): string {
 
 const utils = {
     /**
+     * Fetches HTML content from a given URL and inserts it into a specified element.
+     *
+     * @param url - The URL to fetch the HTML content from.
+     * @param element - The DOM element (jQuery object) to insert the HTML content into.
+     * @param insertMethod - The method to insert the HTML ('append' or 'replace').
+     */
+    fetchCaptionFromUrl(
+        url: string,
+        element: lgQuery,
+        insertMethod: 'append' | 'replace',
+    ): void {
+        // Fetch content from the URL
+        fetch(url)
+            .then((response) => response.text())
+            .then((htmlContent) => {
+                if (insertMethod === 'append') {
+                    const contentDiv = `<div class="lg-sub-html">${htmlContent}</div>`;
+                    element.append(contentDiv);
+                } else {
+                    element.html(htmlContent);
+                }
+            });
+    },
+    /**
      * get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
      */
     getSize(
