@@ -874,14 +874,18 @@ export class LightGallery {
 
         if (this.settings.appendSubHtmlTo !== '.lg-item') {
             if (subHtmlUrl) {
-                this.outer.find('.lg-sub-html').load(subHtmlUrl);
+                utils.fetchCaptionFromUrl(
+                    subHtmlUrl,
+                    this.outer.find('.lg-sub-html'),
+                    'replace',
+                );
             } else {
                 this.outer.find('.lg-sub-html').html(subHtml as string);
             }
         } else {
             const currentSlide = $LG(this.getSlideItemId(index));
             if (subHtmlUrl) {
-                currentSlide.load(subHtmlUrl);
+                utils.fetchCaptionFromUrl(subHtmlUrl, currentSlide, 'append');
             } else {
                 currentSlide.append(
                     `<div class="lg-sub-html">${subHtml}</div>`,
