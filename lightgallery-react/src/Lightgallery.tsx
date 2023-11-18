@@ -25,6 +25,7 @@ import {
     RotateLeftDetail,
     RotateRightDetail,
 } from 'lightgallery/lg-events';
+import isEqual from './utils/equal';
 
 interface LgEvents {
     onAfterAppendSlide?: (detail: AfterSlideDetail) => void;
@@ -302,6 +303,7 @@ const LG: React.FC<LightGalleryProps> = ({
         };
     }, [registerEvents, restProps]);
 
+
     return (
         <div
             className={`lg-react-element ${
@@ -313,4 +315,5 @@ const LG: React.FC<LightGalleryProps> = ({
         </div>
     );
 };
-export default LG;
+
+export default React.memo(LG, isEqual);
