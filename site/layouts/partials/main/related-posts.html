@@ -1,0 +1,33 @@
+{{ $related := .Site.RegularPages.Related . | first 2 }}
+{{ with $related -}}
+<div class="related-posts">
+  <div class="row row-cols-1 row-cols-lg-2">
+    {{ range . }}
+    <div class="blog-list">
+      <div class="blog-list-item">
+        <div class="blog-header">
+          <a href="{{ .RelPermalink }}" class="docs-hero-image">
+            <img alt="related post header" class="img-fluid" src="{{ .RelPermalink }}header.png">
+          </a>
+          {{ if .Params.tags -}}
+          <div style="display: inline-block; margin-right:8px;">
+            {{ range $index, $tag := .Params.tags -}}
+            <p class="blog-text"><span>{{ . }} </span></p>
+            {{ end -}}
+          </div>
+          {{ end -}}
+          <div style="display: inline-block;">
+            {{ partial "main/blog-meta.html" . }}
+          </div>
+          <h2 class="h3"><a class="stretched-link text-body" href="{{ .RelPermalink }}">{{ .Params.title| truncate 70 }}</a></h2>
+        </div>
+        <div class="blog-body">
+          {{.Content| truncate 300 }}
+          {{ partial "main/blog-contributers.html" . }}
+        </div>
+      </div>
+    </div>
+    {{ end -}}
+  </div>
+</div>
+{{ end -}}
