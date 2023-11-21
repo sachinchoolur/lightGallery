@@ -1,31 +1,30 @@
 //https://github.com/facebook/create-react-app/issues/8785
-import * as React from 'react';
-
-import { LightGallerySettings } from 'lightgallery/lg-settings';
 import LightGallery from 'lightgallery';
 import {
-    AfterSlideDetail,
-    InitDetail,
-    ContainerResizeDetail,
     AfterAppendSubHtmlDetail,
-    BeforeOpenDetail,
-    AfterOpenDetail,
-    SlideItemLoadDetail,
-    BeforeSlideDetail,
-    PosterClickDetail,
-    DragStartDetail,
-    DragMoveDetail,
-    DragEndDetail,
-    BeforeNextSlideDetail,
-    BeforePrevSlideDetail,
-    BeforeCloseDetail,
     AfterCloseDetail,
+    AfterOpenDetail,
+    AfterSlideDetail,
+    BeforeCloseDetail,
+    BeforeNextSlideDetail,
+    BeforeOpenDetail,
+    BeforePrevSlideDetail,
+    BeforeSlideDetail,
+    ContainerResizeDetail,
+    DragEndDetail,
+    DragMoveDetail,
+    DragStartDetail,
     FlipHorizontalDetail,
     FlipVerticalDetail,
+    InitDetail,
+    PosterClickDetail,
     RotateLeftDetail,
     RotateRightDetail,
+    SlideItemLoadDetail,
 } from 'lightgallery/lg-events';
-import isEqual from './utils/equal';
+import { LightGallerySettings } from 'lightgallery/lg-settings';
+import * as React from 'react';
+import { memo, useEffect } from 'react';
 
 interface LgEvents {
     onAfterAppendSlide?: (detail: AfterSlideDetail) => void;
@@ -108,9 +107,13 @@ const LG: React.FC<LightGalleryProps> = ({
     onRotateRight,
     onFlipHorizontal,
     onFlipVertical,
+    mode,
+    easing,
+    speed,
     ...restProps
 }: LightGalleryProps) => {
     const $lg = React.useRef<HTMLDivElement>(null);
+    const LGinstance = React.useRef<any>(null);
 
     const registerEvents = React.useCallback(() => {
         if (onAfterAppendSlide && $lg && $lg.current) {
@@ -292,17 +295,41 @@ const LG: React.FC<LightGalleryProps> = ({
         onSlideItemLoad,
     ]);
 
-    React.useEffect(() => {
+    useEffect(() => {
+        LGinstance?.current?.updateTransitionMode(restProps);
+    }, [mode]);
+
+    useEffect(() => {
+        LGinstance?.current?.updateEasing(restProps);
+    }, [easing, speed]);
+
+    const onUpdateSlides = () => {
+        LGinstance?.current?.refresh();
+    };
+
+    useEffect(() => {
+        onUpdateSlides();
+    }, [children]);
+
+    useEffect(() => {
         registerEvents();
-        const lightGallery = LightGallery(
-            ($lg.current as unknown) as HTMLElement,
+    }, [registerEvents]);
+
+    const init = React.useCallback(() => {
+        if (!$lg.current || LGinstance.current) return;
+        LGinstance.current = LightGallery(
+            $lg.current as HTMLElement,
             restProps,
         );
-        return function cleanup() {
-            lightGallery.destroy();
+        return () => {
+            LGinstance?.current?.destroy();
+            LGinstance.current = null;
         };
-    }, [registerEvents, restProps]);
+    }, [restProps]);
 
+    useEffect(() => {
+        init();
+    }, [init]);
 
     return (
         <div
@@ -316,4 +343,4 @@ const LG: React.FC<LightGalleryProps> = ({
     );
 };
 
-export default React.memo(LG, isEqual);
+export default memo(LG);

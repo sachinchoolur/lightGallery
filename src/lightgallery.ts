@@ -10,7 +10,7 @@ import {
     lightGalleryCoreSettings,
     LightGallerySettings,
 } from './lg-settings';
-import utils, { GalleryItem, ImageSize } from './lg-utils';
+import utils, { GalleryItem, ImageSize, modeClasses } from './lg-utils';
 import { $LG, lgQuery } from './lgQuery';
 import {
     Coords,
@@ -2493,6 +2493,18 @@ export class LightGallery {
         this.updateControls();
         this.openGalleryOnItemClick();
         this.LGel.trigger(lGEvents.updateSlides);
+    }
+
+    updateTransitionMode(options: LightGallerySettings): void {
+        this.generateSettings(options);
+        modeClasses.forEach((modeClass) => this.outer.removeClass(modeClass));
+        this.outer.addClass(options.mode);
+    }
+
+    updateEasing(options: LightGallerySettings): void {
+        this.generateSettings(options);
+        this.$inner.css('transition-timing-function', options.easing);
+        this.$inner.css('transition-duration', options.speed + 'ms');
     }
 
     updateControls(): void {
