@@ -406,7 +406,7 @@ export default class Thumbnail {
         return thumbDragUtils;
     }
 
-    getThumbHtml(thumb: string, index: number, alt?: string): string {
+    getThumbHtml(thumb: string, index: number, alt?: string): HTMLElement {
         const slideVideoInfo =
             this.core.galleryItems[index].__slideVideoInfo || {};
         let thumbImg;
@@ -426,31 +426,25 @@ export default class Thumbnail {
             thumbImg = thumb;
         }
 
-        const altAttr = alt ? 'alt="' + alt + '"' : '';
-
-        return `<div data-lg-item-id="${index}" class="lg-thumb-item ${
-            index === this.core.index ? ' active' : ''
-        }"
-        style="width:${this.settings.thumbWidth}px; height: ${
-            this.settings.thumbHeight
-        };
-            margin-right: ${this.settings.thumbMargin}px;">
-            <img ${altAttr} data-lg-item-id="${index}" src="${thumbImg}" />
-        </div>`;
-    }
-
-    getThumbItemHtml(items: ThumbnailGalleryItem[]): string {
-        let thumbList = '';
-        for (let i = 0; i < items.length; i++) {
-            thumbList += this.getThumbHtml(items[i].thumb, i, items[i].alt);
-        }
-
-        return thumbList;
+        const div = document.createElement('div');
+        div.setAttribute('data-lg-item-id', index + '');
+        div.className = `lg-thumb-item ${
+            index === this.core.index ? 'active' : ''
+        }`;
+        div.style.cssText = `width: ${this.settings.thumbWidth}px; height: ${this.settings.thumbHeight}; margin-right: ${this.settings.thumbMargin}px;`;
+        const img = document.createElement('img');
+        img.alt = alt || '';
+        img.setAttribute('data-lg-item-id', index + '');
+        img.src = thumbImg;
+        div.appendChild(img);
+        return div;
     }
 
     setThumbItemHtml(items: ThumbnailGalleryItem[]): void {
-        const thumbList = this.getThumbItemHtml(items);
-        this.$lgThumb.html(thumbList);
+        for (let i = 0; i < items.length; i++) {
+            const thumb = this.getThumbHtml(items[i].thumb, i, items[i].alt);
+            this.$lgThumb.append(thumb);
+        }
     }
 
     setAnimateThumbStyles(): void {
