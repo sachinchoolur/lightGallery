@@ -962,7 +962,7 @@ export class LightGallery {
         $currentSlide: lgQuery,
         index: number,
         alt: string,
-    ): string {
+    ): HTMLImageElement | string {
         let $currentItem;
         if (!this.settings.dynamic) {
             $currentItem = $LG(this.items).eq(index);
@@ -976,12 +976,16 @@ export class LightGallery {
             }
             if (!_dummyImgSrc) return '';
             const imgStyle = this.getDummyImgStyles(this.currentImageSize);
-            const dummyImgContent = `<img ${alt} style="${imgStyle}" class="lg-dummy-img" src="${_dummyImgSrc}" />`;
+            const dummyImgContentImg = document.createElement('img');
+            dummyImgContentImg.alt = alt || '';
+            dummyImgContentImg.src = _dummyImgSrc;
+            dummyImgContentImg.className = `lg-dummy-img`;
+            dummyImgContentImg.style.cssText = imgStyle;
 
             $currentSlide.addClass('lg-first-slide');
             this.outer.addClass('lg-first-slide-loading');
 
-            return dummyImgContent;
+            return dummyImgContentImg;
         }
         return '';
     }
@@ -992,7 +996,7 @@ export class LightGallery {
 
         // Use the thumbnail as dummy image which will be resized to actual image size and
         // displayed on top of actual image
-        let imgContent = '';
+        let imgContent: string | HTMLImageElement = '';
         const altAttr = alt ? 'alt="' + alt + '"' : '';
 
         if (this.isFirstSlideWithZoomAnimation()) {
@@ -1011,8 +1015,10 @@ export class LightGallery {
                 sources,
             );
         }
-        const imgMarkup = `<picture class="lg-img-wrap"> ${imgContent}</picture>`;
-        $currentSlide.prepend(imgMarkup);
+        const picture = document.createElement('picture');
+        picture.className = 'lg-img-wrap';
+        picture.append(imgContent);
+        $currentSlide.prepend(picture);
     }
 
     onSlideObjectLoad(
@@ -1192,7 +1198,7 @@ export class LightGallery {
                 );
                 $currentSlide.prepend(markup);
             } else if (poster) {
-                let dummyImg = '';
+                let dummyImg: string | HTMLImageElement = '';
                 const hasStartAnimation =
                     isFirstSlide &&
                     this.zoomFromOrigin &&

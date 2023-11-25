@@ -479,7 +479,7 @@ const utils = {
 
     getVideoPosterMarkup(
         _poster: string,
-        dummyImg: string,
+        dummyImg: string | HTMLElement,
         videoContStyle: string,
         playVideoString: string,
         _isVideo?: VideoInfo,
