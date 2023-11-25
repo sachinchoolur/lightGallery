@@ -338,9 +338,13 @@ export class lgQuery {
         });
         return this;
     }
-    prepend(html: string): this {
+    prepend(html: string | HTMLElement): this {
         this._each((el: any) => {
-            el.insertAdjacentHTML('afterbegin', html);
+            if (typeof html === 'string') {
+                el.insertAdjacentHTML('afterbegin', html);
+            } else if (html instanceof HTMLElement) {
+                el.insertBefore(html.cloneNode(true), el.firstChild);
+            }
         });
         return this;
     }
