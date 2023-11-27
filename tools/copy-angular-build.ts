@@ -2,9 +2,18 @@ const fs = require('fs-extra');
 const colors = require('colors/safe');
 
 (async function main() {
-    fs.copySync('lightgallery-angular/14/dist', 'dist/angular');
+    fs.copySync('lightgallery-angular/17/dist', 'dist/angular');
     fs.moveSync('dist/angular/lightgallery-angular', 'dist/angular');
     console.log(colors.green('Copied latest angular dist!'));
+    fs.copySync('lightgallery-angular/16/dist', 'dist/angular/16');
+    fs.moveSync('dist/angular/16/lightgallery-angular', 'dist/angular/16');
+    console.log(colors.green('Copied angular 16 dist!'));
+    fs.copySync('lightgallery-angular/15/dist', 'dist/angular/15');
+    fs.moveSync('dist/angular/15/lightgallery-angular', 'dist/angular/15');
+    console.log(colors.green('Copied angular 15 dist!'));
+    fs.copySync('lightgallery-angular/14/dist', 'dist/angular/14');
+    fs.moveSync('dist/angular/14/lightgallery-angular', 'dist/angular/14');
+    console.log(colors.green('Copied angular 14 dist!'));
     fs.copySync('lightgallery-angular/13/dist', 'dist/angular/13');
     fs.moveSync('dist/angular/13/lightgallery-angular', 'dist/angular/13');
     console.log(colors.green('Copies angular 13 dist!'));
