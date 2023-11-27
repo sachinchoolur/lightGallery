@@ -1,8 +1,8 @@
 ---
 title: "blog"
-description: "With WebWhiz Self-Hosted, turn your vision into a profitable business. Create and resell custom chatbots, and let your clients experience the best in AI technology under your brand."
-heading: Host, Rebrand, and Resell!
-lead: "With WebWhiz Self-Hosted, turn your vision into a profitable business. Create and resell custom chatbots, and let your clients experience the best in AI technology under your brand."
+description: "A lightweight, modular, JavaScript image and video lightbox gallery plugin. Available for React.js, Vue.js, Angular, and TypeScript."
+heading: lightGallery
+lead: "A lightweight, modular, JavaScript image and video lightbox gallery plugin. Available for React.js, Vue.js, Angular, and TypeScript."
 date: 2020-10-06T08:48:23+00:00
 lastmod: 2020-10-06T08:48:23+00:00
 draft: false

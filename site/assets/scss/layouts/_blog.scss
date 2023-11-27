@@ -1,8 +1,8 @@
 .blog-wrap {
-    padding: 0 0px;
+    padding: 100px 0 0 0;
 
     @include media-breakpoint-up(md) {
-        padding: 0 75px;
+        padding: 100px 75px;
     }
 
     font-family: 'Inter';
@@ -11,7 +11,6 @@
     font-size: 18px;
     line-height: 32px;
     color: #1A202C;
-    margin-bottom: 120px;
 
     .docs-hero-image {
         margin-bottom: 60px;
@@ -71,15 +70,15 @@
 }
 
 
-.blog-contributers {
-    a {
+.blog-contributors {
+    .blog-contributors-list {
         font-weight: 400;
         font-size: 14px;
         line-height: 20px;
         color: #718096;
     }
 
-    .contributer-image {
+    .contributor-image {
         img {
             max-width: 36px;
             border-radius: 4px;
@@ -103,7 +102,7 @@
 }
 
 .blog-list {
-    padding-top: 60px;
+    padding-top: 120px;
     padding-bottom: 60px;
 
     .blog-list-item+.blog-list-item {
@@ -149,15 +148,10 @@
         font-weight: 400;
         font-size: 16px;
         line-height: 24px;
-        /* or 150% */
-
-
-        /* gray/600 */
-
         color: #4A5568;
     }
 
-    .blog-contributers {
+    .blog-contributors {
         margin-top: 16px;
     }
 }
@@ -170,9 +164,10 @@
 
     display: flex;
     align-items: center;
+
     &:hover {
-      color: #ffffff;
-      text-decoration: none;
+        color: #ffffff;
+        text-decoration: none;
     }
 
     span {

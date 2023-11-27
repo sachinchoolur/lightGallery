@@ -1,10 +1,31 @@
 {{ define "main" }}
-<div class="row justify-content-center">
-  <div class="col-lg-7">
-    <article>
-      <h1>{{ .Title }}</h1>
-      {{ .Content }}
-    </article>
+<div class="container-xxl">
+  <div class="row justify-content-center">
+    <div class="col-md-9 col-lg-12 col-xl-9">
+      <div class="blog-wrapper">
+      <article class="blog-wrap">
+        <div class="blog-header">
+          {{ if .Params.tags -}}
+          <div class="blog-tags">
+            {{ range $index, $tag := .Params.tags -}}
+            <div class="blog-text"><span>{{ . }} </span></div>
+            {{ end -}}
+          </div>
+          {{ end -}}
+          <div class="blog-tags">
+            {{ partial "main/blog-meta.html" . }}
+          </div>
+          <h1>{{ .Title }}</h1>
+          {{ partial "main/blog-contributors.html" . }}
+        </div>
+        <div class="docs-hero-image">
+          <img alt="blog header" class="img-fluid" src="header.png">
+        </div>
+        {{ .Content }}
+      </article>
+    </div>
   </div>
+  </div>
+  {{partial "main/related-posts.html" .}}
 </div>
 {{ end }}
