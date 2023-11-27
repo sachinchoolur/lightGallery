@@ -19,11 +19,11 @@
           <div style="display: inline-block;">
             {{ partial "main/blog-meta.html" . }}
           </div>
-          <h2 class="h3"><a class="stretched-link text-body" href="{{ .RelPermalink }}">{{ .Params.title| truncate 70 }}</a></h2>
+          <h2 class="h3"><a class="stretched-link text-body" href="{{ .RelPermalink }}">{{ .Params.title| truncate 70}}</a></h2>
         </div>
         <div class="blog-body">
           {{.Content| truncate 300 }}
-          {{ partial "main/blog-contributers.html" . }}
+          {{ partial "main/blog-contributors.html" . }}
         </div>
       </div>
     </div>

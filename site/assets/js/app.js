@@ -1234,6 +1234,13 @@ lightGallery(document.querySelector('.medium-zoom-demo'), {
     plugins: [lgMediumZoom],
 });
 
+lightGallery(document.querySelector('.blog-wrapper'), {
+    selector: '.blog-images',
+    getCaptionFromTitleOrAlt: false,
+    backgroundColor:"#FFF",
+    plugins: [lgMediumZoom],
+});
+
 // var Airtable = require('airtable');
 
 // function subscribe() {

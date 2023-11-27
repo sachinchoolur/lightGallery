@@ -56,18 +56,21 @@ notAlternative = true
   category = "categories"
 
 [permalinks]
-  blog = "/:title/"
+  blog = "/blog/:title/"
 
 [related]
-threshold = 80
-includeNewer = true
-toLower = false
-  [[related.indices]]
-  name = "categories"
-  weight = 100
-  [[related.indices]]
-  name = "date"
-  weight = 10
+  threshold = 80
+  includeNewer = true
+  toLower = false
+    [[related.indices]]
+    name = "categories"
+    weight = 100
+    [[related.indices]]
+    name = "tags"
+    weight = 80
+    [[related.indices]]
+    name = "date"
+    weight = 10
 
 [module]
   [[module.mounts]]
