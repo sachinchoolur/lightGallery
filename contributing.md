@@ -56,15 +56,17 @@ and `lightgallery-angular`. `lightgallery-angular` is for the library and
 
 #### Example of creating new angular build
 
-- npm install  @angular/cli@14.2.2
-- ng new 14 --create-application false
-- cd 14
+- cd lightgallery-angular (navigate to lightgallery-angular folder)
+- npm install  @angular/cli@17.0.4
+- ng new 17 --create-application false
+- cd 17
 - ng generate application angular-demo
 - ng generate library lightgallery-angular (Uses folder name as package name)
+- open package.json and add `"build:library": "ng build lightgallery-angular"`
 
 - Go to lightGallery dist folder and run npm link
-- Go to lightgallery-angular/14 folder and run npm link lightgallery
-- Change package name to lightgallery/angular/14
+- Go to lightgallery-angular/17 folder and run npm link lightgallery
+- Change package name to lightgallery/angular/17
 
 - Need to compile library before using it
 - Replace both lib and app folder from previous version
