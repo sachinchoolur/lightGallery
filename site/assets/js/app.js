@@ -1377,3 +1377,25 @@ if ($lgInlineVideoContainer) {
     });
     _inlineGallery.openGallery();
 }
+
+
+jQuery(document).ready(function () {
+    let owl = jQuery('#owl-carousel-gallery-demo');
+    owl.on('initialized.owl.carousel', function (event) {
+        const container = document.querySelector('.owl-stage');
+        window.lightGallery(container, {
+            thumbnail: false,
+            pager: false,
+            plugins: [],
+            hash: false,
+            preload: 4,
+            selector: '.owl-carousel-item',
+        });
+    });
+    owl.owlCarousel({
+        center: true,
+        items: 2,
+        loop: true,
+        margin: 10,
+    });
+});
