@@ -16,3 +16,18 @@
     height: 100%;
     position: absolute !important;
 }
+
+.owl-carousel {
+  .owl-stage {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .owl-carousel-item {
+    img {
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      height: 300px;
+    }
+  }
+}
