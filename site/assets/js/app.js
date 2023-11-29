@@ -1380,22 +1380,72 @@ if ($lgInlineVideoContainer) {
 
 
 jQuery(document).ready(function () {
-    let owl = jQuery('#owl-carousel-gallery-demo');
-    owl.on('initialized.owl.carousel', function (event) {
-        const container = document.querySelector('.owl-stage');
-        window.lightGallery(container, {
-            thumbnail: false,
-            pager: false,
-            plugins: [],
-            hash: false,
-            preload: 4,
-            selector: '.owl-carousel-item',
+    let owlEl = document.getElementById('owl-carousel-gallery-demo');
+    if (owlEl) {
+        let owl = jQuery('#owl-carousel-gallery-demo');
+        owl.on('initialized.owl.carousel', function (event) {
+            const container = document.querySelector('.owl-stage');
+            window.lightGallery(container, {
+                thumbnail: false,
+                pager: false,
+                plugins: [],
+                hash: false,
+                preload: 4,
+                selector: '.lg-item',
+            });
         });
-    });
-    owl.owlCarousel({
-        center: true,
-        items: 2,
-        loop: true,
-        margin: 10,
-    });
+        owl.owlCarousel({
+            center: true,
+            items: 2,
+            loop: true,
+            margin: 10,
+        });
+    }
+
+    let slickEl = document.getElementById('slick-carousel-gallery-demo');
+    if (slickEl) {
+        var $slickDemo = $('#slick-carousel-gallery-demo');
+
+        $slickDemo.on('init', function (event, slick, direction) {
+            console.log('Slick slider initialized');
+            const container = document.querySelector('.slick-track');
+            window.lightGallery(container, {
+                thumbnail: false,
+                pager: false,
+                plugins: [],
+                hash: false,
+                preload: 4,
+            });
+        });
+        $slickDemo.slick({
+            centerMode: true,
+            centerPadding: '60px',
+            slidesToShow: 3,
+            customPaging: '10px',
+            focusOnSelect: true,
+            swipe: false,
+            variableWidth: true,
+            responsive: [
+              {
+                breakpoint: 768,
+                settings: {
+                  arrows: false,
+                  centerMode: true,
+                  centerPadding: '40px',
+                  slidesToShow: 3
+                }
+              },
+              {
+                breakpoint: 480,
+                settings: {
+                  arrows: false,
+                  centerMode: true,
+                  centerPadding: '40px',
+                  slidesToShow: 1
+                }
+              }
+            ]
+        });
+    }
 });
+
