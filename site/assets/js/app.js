@@ -1301,3 +1301,79 @@ if ($lgSwiper) {
         },
     });
 }
+
+const $lgInlineVideoContainer = document.getElementById(
+    'inline-video-gallery-container',
+);
+
+if ($lgInlineVideoContainer) {
+    const _inlineGallery = window.lightGallery($lgInlineVideoContainer, {
+        container: $lgInlineVideoContainer,
+        dynamic: true,
+        thumbnail: true,
+        swipeToClose: false,
+        addClass: 'lg-inline',
+        mode: 'lg-scale-up',
+        slideShowAutoplay: true,
+        hash: false,
+        pager: false,
+        closable: false,
+        showMaximizeIcon: true,
+        rotate: false,
+        download: false,
+        slideDelay: 400,
+        plugins: [lgShare, lgThumbnail, lgVideo],
+        appendSubHtmlTo: '.lg-item',
+        ...getResponsiveThumbnailsSettings(),
+        dynamicEl: [
+            {
+                // size: '1280-720',
+                src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+                poster:
+                    'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+                thumb:
+                    'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+                subHtml:
+                    '<h4>Puffin Hunts Fish To Feed Puffling | Blue Planet II | BBC Earth</h4><p>This puffin parent must go out to sea to feed his chick, but he must evade other birds that would rob him.</p>',
+            },
+            {
+                src: '//vimeo.com/112836958',
+                poster: location.origin + '/images/demo/vimeo-video-poster.jpg',
+                thumb: location.origin + '/images/demo/vimeo-video-poster.jpg',
+                subHtml:
+                    "<h4>Nature</h4><p>Video by <a target='_blank' href='https://vimeo.com/charliekaye'>Charlie Kaye</a></p>",
+            },
+            {
+                source: [
+                    {
+                        src: location.origin + '/videos/video1.mp4',
+                        type: 'video/mp4',
+                    },
+                ],
+                tracks: [
+                    {
+                        src: location.origin + '/videos/title.txt',
+                        kind: 'captions',
+                        srclang: 'en',
+                        label: 'English',
+                        default: 'true',
+                    },
+                ],
+                attributes: { preload: false, controls: true },
+                poster: location.origin + '/images/demo/html5-video-poster.jpg',
+                thumb: location.origin + '/images/demo/html5-video-poster.jpg',
+                subHtml:
+                    "<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>",
+            },
+            {
+                src: 'https://private-sharing.wistia.com/medias/mwhrulrucj',
+                poster:
+                    location.origin + '/images/demo/wistia-video-poster.jpeg',
+                thumb:
+                    location.origin + '/images/demo/wistia-video-poster.jpeg',
+                subHtml: '<h4>Thank You!</h4><p> Sample Wistia video </p>',
+            },
+        ],
+    });
+    _inlineGallery.openGallery();
+}
