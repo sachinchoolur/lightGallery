@@ -17,17 +17,39 @@
     position: absolute !important;
 }
 
-.owl-carousel {
-  .owl-stage {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .owl-carousel-item {
-    img {
-      width: 100%;
-      height: auto;
-      max-width: 100%;
-      height: 300px;
+.carousel {
+    .owl-stage {
+        display: flex;
+        flex-wrap: wrap;
     }
-  }
+    .slick-track {
+        gap: 10px;
+        display: flex;
+    }
+    .lg-item {
+        img {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            height: 300px;
+        }
+    }
+}
+
+.carousel {
+    .slick-prev,
+    .slick-next {
+        padding: 10px;
+        position: absolute;
+        top: 50%;
+        z-index: 1;
+        cursor: pointer;
+        zoom: 2;
+    }
+    .slick-prev {
+        left: -8px;
+    }
+    .slick-next {
+        right: 12px;
+    }
 }
