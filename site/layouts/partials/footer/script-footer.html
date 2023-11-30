@@ -34,6 +34,11 @@
 {{ if eq .Title "Slick carousel demo" -}}
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {{end}}
+
+{{ if eq .Title "Flickity carousel demo" -}}
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+{{ end }}
+
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49767543-2"></script>
 <script>

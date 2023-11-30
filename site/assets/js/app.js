@@ -1449,3 +1449,21 @@ jQuery(document).ready(function () {
     }
 });
 
+
+var $flickityLG = document.querySelector('#flickity-carousel-gallery-demo');
+if ($flickityLG) {
+    var flkty = new Flickity($flickityLG, {
+        cellAlign: 'center',
+        pageDots: false,
+        contain: true,
+        autoPlay: true,
+        on: {
+            ready: function () {
+                const container = document.querySelector('.flickity-slider');
+                window.lightGallery(container, {
+                    selector: '.lg-item',
+                });
+            }
+        },
+    });
+}

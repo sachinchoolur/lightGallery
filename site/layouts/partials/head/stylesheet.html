@@ -34,3 +34,8 @@
     <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
   {{ end -}}
 <noscript><style>img.lazyload { display: none; }</style></noscript>
+
+
+{{ if eq .Title "Flickity carousel demo" -}}
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+{{ end }}
