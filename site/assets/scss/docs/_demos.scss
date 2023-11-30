@@ -22,16 +22,24 @@
         display: flex;
         flex-wrap: wrap;
     }
-    .slick-track {
+    .slick-track,
+    .flickity-slider {
         gap: 10px;
         display: flex;
     }
     .lg-item {
         img {
             width: 100%;
-            height: auto;
             max-width: 100%;
             height: 300px;
+        }
+    }
+
+    .flickity-slider {
+        .lg-item {
+            img {
+                height: 600px;
+            }
         }
     }
 }
@@ -53,3 +61,4 @@
         right: 12px;
     }
 }
+
