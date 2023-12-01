@@ -1371,8 +1371,27 @@ if ($lgInlineVideoContainer) {
     _inlineGallery.openGallery();
 }
 
-
 jQuery(document).ready(function () {
+    let bootstrapEl = document.getElementById('bootstrap-gallery-container');
+    if (bootstrapEl) {
+        let initialized = false;
+        let bootstrap = jQuery('#bootstrap-gallery-container');
+        bootstrap.carousel({ keyboard: true });
+        initialized = true;
+        if (initialized) {
+            const container = document.querySelector('.carousel-inner');
+            window.lightGallery(container, {
+                thumbnail: true,
+                zoomFromOrigin: false,
+                pager: false,
+                plugins: [lgThumbnail],
+                hash: false,
+                preload: 4,
+                selector: '.lg-item',
+            });
+        }
+    }
+
     let owlEl = document.getElementById('owl-carousel-gallery-demo');
     if (owlEl) {
         let owl = jQuery('#owl-carousel-gallery-demo');
@@ -1419,29 +1438,28 @@ jQuery(document).ready(function () {
             swipe: false,
             variableWidth: true,
             responsive: [
-              {
-                breakpoint: 768,
-                settings: {
-                  arrows: false,
-                  centerMode: true,
-                  centerPadding: '40px',
-                  slidesToShow: 3
-                }
-              },
-              {
-                breakpoint: 480,
-                settings: {
-                  arrows: false,
-                  centerMode: true,
-                  centerPadding: '40px',
-                  slidesToShow: 1
-                }
-              }
-            ]
+                {
+                    breakpoint: 768,
+                    settings: {
+                        arrows: false,
+                        centerMode: true,
+                        centerPadding: '40px',
+                        slidesToShow: 3,
+                    },
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        arrows: false,
+                        centerMode: true,
+                        centerPadding: '40px',
+                        slidesToShow: 1,
+                    },
+                },
+            ],
         });
     }
 });
-
 
 var $flickityLG = document.querySelector('#flickity-carousel-gallery-demo');
 if ($flickityLG) {
@@ -1456,7 +1474,7 @@ if ($flickityLG) {
                 window.lightGallery(container, {
                     selector: '.lg-item',
                 });
-            }
+            },
         },
     });
 }
