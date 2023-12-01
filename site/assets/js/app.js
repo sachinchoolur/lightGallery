@@ -1478,3 +1478,10 @@ if ($flickityLG) {
         },
     });
 }
+
+const container = document.querySelector('#bootstrap-image-gallery');
+window.lightGallery(container, {
+    selector: '.lg-item',
+    zoomFromOrigin: true,
+    download: true,
+});
