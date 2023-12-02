@@ -163,7 +163,15 @@ export class LightGallery {
             this.zoomFromOrigin = false;
         }
 
-        if (!this.settings.container) {
+        if (this.settings.container) {
+            const { container } = this.settings;
+            if (typeof container === 'function') {
+                this.settings.container = container();
+            } else if (typeof container === 'string') {
+                const el = document.querySelector<HTMLElement>(container);
+                this.settings.container = el ?? document.body;
+            }
+        } else {
             this.settings.container = document.body;
         }
 

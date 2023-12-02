@@ -184,7 +184,7 @@ export interface LightGalleryCoreSettings {
      * Useful to create inline galleries and more
      * It is an empty string in the default settings and later assigned to document.body to avoid accessing document for SSR
      */
-    container: HTMLElement | '';
+    container: HTMLElement | (() => HTMLElement | null) | (string | null);
 
     /**
      * Delay for hiding gallery controls in ms.
