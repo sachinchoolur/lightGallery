@@ -1,5 +1,5 @@
 ---
-title: Bootstrap Inline Gallery
+title: Bootstrap inline carousel
 description:
     'Create thumbnails image gallery with lightGallery and Bootstrap inline gallery'
 lead:
