@@ -981,8 +981,7 @@ export class LightGallery {
         // Use the thumbnail as dummy image which will be resized to actual image size and
         // displayed on top of actual image
         let imgContent = '';
-        const altAttr = alt ? 'alt="' + alt + '"' : '';
-
+        const altAttr = `alt="${alt}"`;
         if (this.isFirstSlideWithZoomAnimation()) {
             imgContent = this.getDummyImageContent(
                 $currentSlide,
@@ -1253,7 +1252,7 @@ export class LightGallery {
                 setTimeout(() => {
                     if (this.getSlideType(currentGalleryItem) === 'image') {
                         const { alt } = currentGalleryItem;
-                        const altAttr = alt ? 'alt="' + alt + '"' : '';
+                        const altAttr = `alt="${alt}"`;
 
                         $currentSlide
                             .find('.lg-img-wrap')
