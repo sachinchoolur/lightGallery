@@ -15,21 +15,11 @@ import LightGallery from './Lightgallery';
 
 function App() {
     const lightGalleryRef = useRef<ILightGallery>();
-    const [
-        InlineContainer,
-        setInlineContainer,
-    ] = useState<HTMLElement | null>();
 
-    useEffect(() => {
-        const InlineContainer = document.getElementById(
-            'inline-gallery-container',
-        );
-        setInlineContainer(InlineContainer);
-    }, []);
+    const inlineContainerRef = useRef(null);
 
     const onInit = (detail: InitDetail) => {
         if (detail) {
-            console.log('calling method', detail.instance);
             detail.instance.openGallery();
             lightGalleryRef.current = detail.instance;
         }
@@ -37,13 +27,17 @@ function App() {
 
     return (
         <div className="App" >
+            <h2>React inline gallery</h2>
             <div
+                ref={inlineContainerRef}
                 id="inline-gallery-container"
                 className="inline-gallery-container"
             ></div>
             <LightGallery
                 onInit={onInit}
-                container={InlineContainer || undefined}
+                container={()=>{
+                    return inlineContainerRef.current
+                }}
                 zoom={true}
                 thumbnail={true}
                 rotate={false}
@@ -211,6 +205,7 @@ function App() {
                 ]}
             />
             <div>
+                <h2>React lightBox gallery</h2>
                 <LightGallery
                     zoom={false}
                     thumbnail={false}

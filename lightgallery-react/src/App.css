@@ -27,3 +27,7 @@
         padding-bottom: 65%;
     }
 }
+.lg-react-element {
+    display: flex;
+    align-items: end;
+}
