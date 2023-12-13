@@ -65,9 +65,18 @@ export const getVimeoURLParams = (
     if (!videoInfo || !videoInfo.vimeo) return '';
     let urlParams = videoInfo.vimeo[2] || '';
 
-    const defaultPlayerParams =
-        defaultParams && Object.keys(defaultParams).length !== 0
-            ? '&' + param(defaultParams as any)
+    const defaultVimeoPlayerParams = Object.assign(
+        {},
+        {
+            autoplay: 0,
+            muted: 1,
+        },
+        defaultParams,
+    );
+    let defaultPlayerParams =
+        defaultVimeoPlayerParams &&
+        Object.keys(defaultVimeoPlayerParams).length !== 0
+            ? param(defaultVimeoPlayerParams as any)
             : '';
 
     // Support private video
@@ -82,10 +91,11 @@ export const getVimeoURLParams = (
 
     urlParams =
         urlParams[0] == '?' ? '&' + urlParams.slice(1) : urlParams || '';
+    const privateUrlParams = isPrivate ? `h=${hash}` : '';
+    defaultPlayerParams = privateUrlParams
+        ? `&${defaultPlayerParams}`
+        : defaultPlayerParams;
 
-    // For vimeo last params gets priority if duplicates found
-    const vimeoPlayerParams = `?autoplay=0&muted=1${
-        isPrivate ? `&h=${hash}` : ''
-    }${defaultPlayerParams}${urlParams}`;
+    const vimeoPlayerParams = `?${privateUrlParams}${defaultPlayerParams}${urlParams}`;
     return vimeoPlayerParams;
 };
