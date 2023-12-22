@@ -42,13 +42,13 @@ For visual appealings of different types of photos, arts and videos React image 
 
 - Styling Challenges: While customizable, developers might encounter challenges in styling the gallery to match complex design requirements.
 
-- Performance with Many Images:Performance might be affected when dealing with a large number of high-resolution images. Lazy loading and optimization techniques may be necessary.
+- Performance with Many Images: Performance might be affected when dealing with a large number of high-resolution images. Lazy loading and optimization techniques may be necessary.
 
 
-- Limited Default Styles:The image gallery might require additional styling to achieve a specific look and feel, depending on design preferences.
+- Limited Default Styles: The image gallery might require additional styling to achieve a specific look and feel, depending on design preferences.
 
 
-- Transition Animations:The transition animations might be considered basic compared to more feature-rich gallery libraries. Advanced animation requirements may need additional customization.
+- Transition Animations: The transition animations might be considered basic compared to more feature-rich gallery libraries. Advanced animation requirements may need additional customization.
 
 
 ### React Slick 
@@ -103,7 +103,7 @@ For visual appealings of different types of photos, arts and videos React image 
 
 - Not designed to display very large images
 
-- Learning curve : complex  in understanding and implementation
+- Learning curve: complex  in understanding and implementation
 
 - Compared to other website it does not have video support,there may be issues when using iframe
 
@@ -140,7 +140,7 @@ For visual appealings of different types of photos, arts and videos React image 
 
 - Limited Features: Depending on your project requirements, Keen Slider might lack certain advanced features compared to other slider solutions.
 
-- Styling Challenges:While customizable, developers might encounter challenges in styling the slider to match complex design requirements.
+- Styling Challenges: While customizable, developers might encounter challenges in styling the slider to match complex design requirements.
 
 
 
@@ -175,7 +175,7 @@ For visual appealings of different types of photos, arts and videos React image 
 
 - Bundle Size:  Depending on the features you include in your project, Swiper's bundle size can be relatively large. This might be a concern for developers prioritizing minimalism and optimizing page load times.
 
-- Not Native Feel:Some developers might find that Swiper doesn't provide the exact native feel they desire, especially if they have specific UI/UX expectations.
+- Not Native Feel: Some developers might find that Swiper doesn't provide the exact native feel they desire, especially if they have specific UI/UX expectations.
 
 - Bundle Size: Depending on the features you include in your project, Swiper's bundle size can be relatively large. This may be a concern for projects aiming for minimal page load times.
 
@@ -192,7 +192,7 @@ For visual appealings of different types of photos, arts and videos React image 
 
 - Customization Options: React Responsive Carousel typically provides a variety of customization options, allowing developers to tailor the appearance and behavior to match project requirements.
 
-- supports thumbnails, vertical scrolling, and fading effect out of the box.
+- Supports thumbnails, vertical scrolling, and fading effect out of the box.
 
 - It provides advanced options such as server-side rendering, lazy load, and presentation mode.
 
@@ -235,13 +235,13 @@ For visual appealings of different types of photos, arts and videos React image 
 
 - Styling Challenges: While customizable, developers might encounter challenges in styling the photo viewer to match complex design requirements.
 
-- Performance with Many Images:Performance might be affected when dealing with a large number of high-resolution images. Lazy loading and optimization techniques may be necessary.
+- Performance with Many Images: Performance might be affected when dealing with a large number of high-resolution images. Lazy loading and optimization techniques may be necessary.
 
 
-- Limited Default Styles:The photo viewer might require additional styling to achieve a specific look and feel, depending on design preferences.
+- Limited Default Styles: The photo viewer might require additional styling to achieve a specific look and feel, depending on design preferences.
 
 
-- Transition Animations:The transition animations might be considered basic compared to more feature-rich photo viewer libraries. Advanced animation requirements may need additional customization.
+- Transition Animations: The transition animations might be considered basic compared to more feature-rich photo viewer libraries. Advanced animation requirements may need additional customization.
  
 
 

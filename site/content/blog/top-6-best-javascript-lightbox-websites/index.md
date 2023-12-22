@@ -37,9 +37,9 @@ This article covers some of the best JavaScript lightbox Websites that give your
 
 **Cons**
 
-- not designed to display very large images
+- Not designed to display very large images
 
-- Learning curve : complex  in understanding and implementation
+- Learning curve: complex  in understanding and implementation
 
 - Compared to other website it does not have video support,there may be issues when using iframe
 
@@ -60,9 +60,9 @@ This article covers some of the best JavaScript lightbox Websites that give your
 
 - It's relatively easy to use and set up
 
-- has minimal dependencies, which can be an advantage if you want a standalone solution without relying on other libraries
+- Has minimal dependencies, which can be an advantage if you want a standalone solution without relying on other libraries
 
-- baguetteBox.js is mobile-friendly, so you can use it to display images on touch-screen devices. You can navigate through the gallery images with arrows navigation or swipe gestures
+- BaguetteBox.js is mobile-friendly, so you can use it to display images on touch-screen devices. You can navigate through the gallery images with arrows navigation or swipe gestures
 
 - Responsive - works with any screen size
 
@@ -71,7 +71,7 @@ This article covers some of the best JavaScript lightbox Websites that give your
 
 - BaguetteBox.js is primarily designed for images, and it may have limited support for handling other multimedia types, such as videos or iframes.
 
-- it may lack some advanced features present in other, more feature-rich libraries.
+- It may lack some advanced features present in other, more feature-rich libraries.
 
 - No Thumbnail Support
 
@@ -101,12 +101,13 @@ This article covers some of the best JavaScript lightbox Websites that give your
 
 **Cons**
 
-- Learning Curve:While GLightbox is designed to be easy to use, there might still be a learning curve for developers who are new to the library or those who have specific customization needs.
+- Learning Curve: While GLightbox is designed to be easy to use, there might still be a learning curve for developers who are new to the library or those who have specific customization needs.
 
 - License Restrictions: GLightbox, like many other JavaScript libraries, is likely to have a specific license agreement. It's crucial to review and understand the terms of the license to ensure compliance with your project's requirements.
-Performance Impact:Some lightbox plugins can affect page loading times and overall performance, especially if they load large media files or if there are compatibility issues.
 
-- Complexity for Non-Technical Users:Configuring and customizing certain lightbox plugins might be challenging for users who are not familiar with web development or coding.
+- Performance Impact: Some lightbox plugins can affect page loading times and overall performance, especially if they load large media files or if there are compatibility issues.
+
+- Complexity for Non-Technical Users: Configuring and customizing certain lightbox plugins might be challenging for users who are not familiar with web development or coding.
 
 
 ### Blueimp Gallery 
@@ -131,11 +132,11 @@ Performance Impact:Some lightbox plugins can affect page loading times and overa
 
 - While blueimp Gallery is feature-rich, its extensive capabilities may make it more complex than needed for simpler projects. Developers may find it overkill for basic use cases.
 
-- Potentially Heavier Initial Load:The library's comprehensive features may result in a heavier initial load compared to more lightweight alternatives
+- Potentially Heavier Initial Load: The library's comprehensive features may result in a heavier initial load compared to more lightweight alternatives
 
-- Learning Curve for Advanced Features:Advanced features and customization options might be more challenging to implement, requiring a deeper understanding of the library's documentation.
+- Learning Curve for Advanced Features: Advanced features and customization options might be more challenging to implement, requiring a deeper understanding of the library's documentation.
 
-- Performance Impact:Depending on the size and number of images or videos, there could be 
+- Performance Impact: Depending on the size and number of images or videos, there could be 
 Performance impact
 
 
@@ -180,7 +181,7 @@ Performance impact
 
 - The plugin is relatively lightweight, contributing to faster loading times for web pages.
 
-- Minimalist Design:Fluidbox has a minimalist design, providing a clean and unobtrusive interface that focuses on showcasing the images.
+- Minimalist Design: Fluidbox has a minimalist design, providing a clean and unobtrusive interface that focuses on showcasing the images.
 
 - Fluidbox supports dynamic loading, allowing you to load images on demand rather than preloading all images at once
 
@@ -195,7 +196,7 @@ Performance impact
 
 - Performance Impact: Lightbox plugins can sometimes impact the overall performance of a webpage, particularly if large media files are involved.
 
-- Documentation Quality:The quality of documentation can vary among plugins. If Fluidbox lacks comprehensive documentation, it may be challenging for users to implement and customize it effectively.
+- Documentation Quality: The quality of documentation can vary among plugins. If Fluidbox lacks comprehensive documentation, it may be challenging for users to implement and customize it effectively.
 
 ### Conclusion 
 
