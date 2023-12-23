@@ -23,17 +23,17 @@ images: []
 <div class="container-xl features-list-grid">
     <div class="row justify-content-center ">
         <div class="col-lg-4 features-list-grid-item">
-            <img class="features-list-grid-img" src="images/vector/modern.svg">
+            <img class="features-list-grid-img" src="images/vector/modern.png">    
             <h3 class="features-list-grid-title">Modern</h3>
             <p class="features-list-grid-desc">lightGallery is built with most modern technologies available to achieve the best performance and quality. It supports all modern browsers including IE 10 and above.</p>
         </div>
         <div class="col-lg-4 features-list-grid-item">
-            <img class="features-list-grid-img" src="images/vector/modular.svg">
+            <img class="features-list-grid-img" src="images/vector/modular.png">
             <h3 class="features-list-grid-title">Modular.</h3>
             <p class="features-list-grid-desc"> Built with modular architecture. Easily create your own modules, or detach modules that you don't want to use. lightGallery comes with many built in modules, such as thumbnails, zoom, etc. </p>
         </div>
         <div class="col-lg-4 features-list-grid-item">
-            <img class="features-list-grid-img" src="images/vector/mobile-optimized.svg">
+            <img class="features-list-grid-img" src="images/vector/mobile-optimized.png">
             <h3 class="features-list-grid-title">Mobile and desktop optimized.</h3>
             <p class="features-list-grid-desc">lightGallery is highly optimized for mobile and tablets to get native look and feel and achieve best performance. Supports separate settings for mobile devices to optimize further.
 
