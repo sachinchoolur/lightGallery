@@ -22,7 +22,7 @@ toc: true
 #### Demo
 
 {{< owl-carousel-gallery id="flickity-carousel-gallery-demo" >}}
-{{< demoButtons js="https://codepen.io/Mohammed-Ajmal-the-decoder/pen/OJdBLLX" >}}
+{{< demoButtons js="https://codepen.io/light-gallery/pen/OJdBLLX" >}}
 
 ##### HTML Structure
 

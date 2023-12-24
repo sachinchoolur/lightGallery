@@ -71,7 +71,7 @@ toc: true
   </button>
 </div>
 
-{{< demoButtons js="https://codepen.io/Mohammed-Ajmal-the-decoder/pen/ZEwqJqX" >}}
+{{< demoButtons js="https://codepen.io/light-gallery/pen/ZEwqJqX" >}}
 
 ##### HTML
 

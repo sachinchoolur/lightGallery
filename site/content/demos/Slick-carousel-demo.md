@@ -21,7 +21,7 @@ toc: true
 #### Demo
 
 {{< owl-carousel-gallery id="slick-carousel-gallery-demo" >}}
-{{< demoButtons js="https://codepen.io/Mohammed-Ajmal-the-decoder/pen/GRzXYgZ" >}}
+{{< demoButtons js="https://codepen.io/light-gallery/pen/GRzXYgZ" >}}
 
 ##### HTML Structure
 

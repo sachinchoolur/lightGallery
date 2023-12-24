@@ -21,7 +21,7 @@ toc: true
 
 <div id="inline-video-gallery-container" class="inline-gallery-container"></div>
 
-{{< demoButtons js="https://codepen.io/Mohammed-Ajmal-the-decoder/pen/ZEwMyWE" react="https://stackblitz.com/edit/stackblitz-starters-rnvyp4" >}}
+{{< demoButtons js="https://codepen.io/light-gallery/pen/ZEwMyWE" react="https://stackblitz.com/edit/stackblitz-starters-rnvyp4" >}}
 
 ##### HTML
 
