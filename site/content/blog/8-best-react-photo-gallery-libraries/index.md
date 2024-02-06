@@ -1,8 +1,8 @@
 ---
-slug: "7-best-react-image-gallery-components"
-title: "7 Best React image Gallery Libraries"
-description: "7 Best React image Gallery components"
-lead: "7 Best React Image Gallery libraries"
+slug: "8-best-react-image-gallery-components"
+title: "8 Best React image Gallery Libraries"
+description: "Explore 8 React image gallery components for stunning media displays on your site, for enhancing user engagement effortlessly."
+lead: "Photo galleries play a crucial role in displaying images in a structured and engaging way, which is essential whether you're showcasing a portfolio, product images, or any other visual content."
 date: 2023-12-24T09:19:42+01:00
 tags: ["gallery"]
 lastmod: 2023-12-25T09:19:42+01:00
@@ -17,7 +17,36 @@ Photo galleries play a crucial role in displaying images in a structured and eng
 
 Given the popularity of React in front end development, picking the right photo gallery library is vital for not just the look and feel, but also for enhancing user interaction and engagement
 
-In this concise guide, we present the top 7 React image gallery components, each meticulously handpicked and manually verified for quality and performance. We not only highlight their features but also discuss the pros and cons of each, ensuring you have all the information needed to make an informed choice for your projects.
+In this concise guide, we present the top 8 React image gallery components, each meticulously handpicked and manually verified for quality and performance. We not only highlight their features but also discuss the pros and cons of each, ensuring you have all the information needed to make an informed choice for your projects.
+
+### lightGallery
+
+<figure class="blog-images" data-src="lightgallery.png" data-lg-size="1200-630">
+    <img src="lightgallery.png" alt="lightGallery"/>
+</figure>
+
+<a href="https://www.lightgalleryjs.com/">lightGallery</a>  is a lightweight, modular, JavaScript library for creating beautiful image and video galleries for the web and mobile. It supports various types of media, such as images, videos, iframes, and inline content. It offers many options to customize the gallery, such as colors, animations, plugins, and touch gestures. It is compatible with React, Vue.js, Angular, and TypeScript.
+
+**Pros**
+
+- Responsive Design: LightGallery is built to adapt to different screen sizes and devices, ensuring a consistent and optimal viewing experience for users on desktops, tablets, and smartphones.
+
+- Thumbnail Navigation: LightGallery typically includes a thumbnail navigation feature, allowing users to quickly navigate to specific images or videos within the gallery.
+
+- Virtual slides: lightGallery keeps only minimal number of slides in the DOM. So, overall performance is not hampered even if you have a very large number of slides. lightGallery loads only 3 slides at a time. Remaining slides are loaded as you navigate to it.
+
+- 20+ Animations: lightGallery uses Hardware-Accelerated CSS3 transitions for faster animation performance. lightGallery comes with numerous number of beautiful in-built animations. If you want, you can 
+
+
+**Cons**
+
+- Learning Curve: While LightGallery aims to be user-friendly, developers may still need some time to familiarize themselves with its features and customization options. The learning curve could be a consideration for projects with tight deadlines or limited development resources.
+
+- Learning Curve: While LightGallery aims to be user-friendly, developers may still need some time to familiarize themselves with its features and customization options. The learning curve could be a consideration for projects with tight deadlines or limited development resources.
+
+- Customization Complexity: While LightGallery offers customization options, achieving certain highly customized layouts or functionalities may require a deeper understanding of the library's internals. Extensive customization could lead to more complex code and potential maintenance challenges.
+
+- Browser Compatibility: Like many web-related technologies, the performance and compatibility of LightGallery may vary across different web browsers. It's essential to check and ensure compatibility with the target browsers, especially if the user base includes a diverse range of browsers and devices.
 
 ### React image Gallery
 
@@ -244,4 +273,4 @@ In this concise guide, we present the top 7 React image gallery components, each
 
 ### Conclusion
 
-In essence, picking the right React photo gallery component is vital for enhancing project quality. Our article distills the top 7 choices, each evaluated for key features and limitations, aiming to equip developers with the knowledge to make the best selection.
+In essence, picking the right React photo gallery component is vital for enhancing project quality. Our article distills the top 8 choices, each evaluated for key features and limitations, aiming to equip developers with the knowledge to make the best selection.

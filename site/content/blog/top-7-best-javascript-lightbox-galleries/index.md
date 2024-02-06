@@ -1,7 +1,9 @@
 ---
-title: "Top 6 JavaScript lightbox galleries."
-description: "Top 6 JavaScript lightbox galleries."
-lead: "Top 6 JavaScript lightbox galleries."
+slug: "top-7-javascript-lightbox-galleries."
+title: "Top 7 JavaScript lightbox galleries."
+description: "Explore 8 React image gallery components for stunning media displays on your site, for enhancing user engagement effortlessly."
+lead: "Using the right JavaScript gallery is key to making your website's photos and videos look amazing.
+It's not just about looks; it's about making your website more engaging."
 date: 2024-01-03T09:19:42+01:00
 tags: ["lightbox"]
 lastmod: 2024-03-01T09:19:42+01:00
@@ -16,10 +18,38 @@ Using the right JavaScript gallery is key to making your website's photos and vi
 It's not just about looks; it's about making your website more engaging.
 
 There are so many options to choose from, and it can be hard to know which one is best.
-That's why we've carefully chosen the top 6 JavaScript libraries for 2024. These are perfect for making your site interactive and interesting.
+That's why we've carefully chosen the top 7 JavaScript libraries for 2024. These are perfect for making your site interactive and interesting.
 
 No matter if you're an expert or new to web design, these libraries will fit all kinds of needs. Join us as we explore these top choices and help you upgrade your website this year!
 
+### lightGallery
+
+<figure class="blog-images" data-src="lightgallery.png" data-lg-size="1200-630">
+    <img src="lightgallery.png" alt="lightGallery"/>
+</figure>
+
+<a href="https://www.lightgalleryjs.com/">lightGallery</a>  is a lightweight, modular, JavaScript library for creating beautiful image and video galleries for the web and mobile. It supports various types of media, such as images, videos, iframes, and inline content. It offers many options to customize the gallery, such as colors, animations, plugins, and touch gestures. It is compatible with React, Vue.js, Angular, and TypeScript.
+
+**Pros**
+
+- Responsive Design: LightGallery is built to adapt to different screen sizes and devices, ensuring a consistent and optimal viewing experience for users on desktops, tablets, and smartphones.
+
+- Thumbnail Navigation: LightGallery typically includes a thumbnail navigation feature, allowing users to quickly navigate to specific images or videos within the gallery.
+
+- Virtual slides: lightGallery keeps only minimal number of slides in the DOM. So, overall performance is not hampered even if you have a very large number of slides. lightGallery loads only 3 slides at a time. Remaining slides are loaded as you navigate to it.
+
+- 20+ Animations: lightGallery uses Hardware-Accelerated CSS3 transitions for faster animation performance. lightGallery comes with numerous number of beautiful in-built animations. If you want, you can 
+
+
+**Cons**
+
+- Learning Curve: While LightGallery aims to be user-friendly, developers may still need some time to familiarize themselves with its features and customization options. The learning curve could be a consideration for projects with tight deadlines or limited development resources.
+
+- Learning Curve: While LightGallery aims to be user-friendly, developers may still need some time to familiarize themselves with its features and customization options. The learning curve could be a consideration for projects with tight deadlines or limited development resources.
+
+- Customization Complexity: While LightGallery offers customization options, achieving certain highly customized layouts or functionalities may require a deeper understanding of the library's internals. Extensive customization could lead to more complex code and potential maintenance challenges.
+
+- Browser Compatibility: Like many web-related technologies, the performance and compatibility of LightGallery may vary across different web browsers. It's essential to check and ensure compatibility with the target browsers, especially if the user base includes a diverse range of browsers and devices.
 
 ### PhotoSwipe
 
