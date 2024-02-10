@@ -1,11 +1,17 @@
-.App {
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 30px;
+}
+
+.content {
     padding: 20px;
     max-width: 900px;
     margin: 0 auto;
     flex: 0 0 auto;
     display: flex;
     align-items: center;
-    justify-content: center;
     min-height: 100vh;
     flex-direction: column;
     gap: 20px;
@@ -29,5 +35,16 @@
 }
 .lg-react-element {
     display: flex;
-    align-items: end;
+    align-items: flex-end;
+}
+
+.custom-class-name {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.custom-class-name .gallery-item > img {
+    width: 300px;
+    height: 300px;
 }
