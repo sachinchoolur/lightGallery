@@ -1,14 +1,9 @@
 ---
 title: React carousel
 description:
-    LightGallery allows you to build inline carousel slider image and video
-    galleries.
+    Full featured, Responsive carousel component for React.
 lead:
-    With lightGallery you can create both inline carousel slider and lightBox
-    galleries. You can create inline gallery by passing the container element
-    via container option. All the lightBox features are available in inline
-    gallery as well. inline gallery can be converted to the lightBox gallery by
-    clicking on the maximize icon on the toolbar
+    Use the lightGallery React component to build beautiful image and video carousels with a lightbox gallery. The lightGallery React component supports all the features of lightGallery, such as pinch to zoom, rotate, flip images, social sharing, animated thumbnails, etc. A carousel gallery can be converted to a lightbox gallery by clicking on the maximize icon on the toolbar.
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []

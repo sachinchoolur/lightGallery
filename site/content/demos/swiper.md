@@ -12,7 +12,7 @@ images: []
 menu:
     demos:
         parent: 'Demos'
-weight: 3
+weight: 25
 toc: true
 ---
 

@@ -1,8 +1,7 @@
 ---
 title: 'React video gallery'
 description:
-    lightGallery supports YouTube, Vimeo, VK, DailyMotion, Wistia and all other
-    types of HTML5 video formats. Such as MP4, WebM, Ogg, etc.
+    Full featured video gallery component for React
 lead:
     lightGallery supports YouTube, Vimeo, Wistia and all other types of HTML5
     video formats. Such as MP4, WebM, Ogg, etc. into a full-fledged lightbox

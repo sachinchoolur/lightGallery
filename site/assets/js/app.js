@@ -1405,9 +1405,15 @@ jQuery(document).ready(function () {
         owl.on('initialized.owl.carousel', function (event) {
             const container = document.querySelector('.owl-stage');
             window.lightGallery(container, {
-                thumbnail: false,
                 pager: false,
-                plugins: [],
+                plugins: [
+                    lgZoom,
+                    lgAutoplay,
+                    lgFullscreen,
+                    lgRotate,
+                    lgShare,
+                    lgThumbnail,
+                ],
                 hash: false,
                 preload: 4,
                 selector: '.lg-item',
@@ -1429,9 +1435,15 @@ jQuery(document).ready(function () {
             console.log('Slick slider initialized');
             const container = document.querySelector('.slick-track');
             window.lightGallery(container, {
-                thumbnail: false,
                 pager: false,
-                plugins: [],
+                plugins: [
+                    lgZoom,
+                    lgAutoplay,
+                    lgFullscreen,
+                    lgRotate,
+                    lgShare,
+                    lgThumbnail,
+                ],
                 hash: false,
                 preload: 4,
             });
@@ -1480,6 +1492,14 @@ if ($flickityLG) {
                 const container = document.querySelector('.flickity-slider');
                 window.lightGallery(container, {
                     selector: '.lg-item',
+                    plugins: [
+                        lgZoom,
+                        lgAutoplay,
+                        lgFullscreen,
+                        lgRotate,
+                        lgShare,
+                        lgThumbnail,
+                    ],
                 });
             },
         },
