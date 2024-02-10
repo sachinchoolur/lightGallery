@@ -1,7 +1,7 @@
 ---
 title: 'Slick carousel demo'
 description:
-    'Create thumbnails image gallery with lightGallery and Slick carousel'
+    'Add lightBox gallery support for Slick carousel with lightGallery'
 lead:
     '<a href="https://kenwheeler.github.io/slick/" target="_blank">Slick</a> is a jQuery plugin for creating versatile and responsive content sliders..
 Slick can be used for creating beautiful image galleries with thumbnails.
@@ -12,7 +12,7 @@ images: []
 menu:
     demos:
         parent: 'Demos'
-weight: 4
+weight: 28
 toc: true
 ---
 

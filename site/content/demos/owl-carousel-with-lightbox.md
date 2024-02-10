@@ -1,6 +1,6 @@
 ---
 title: 'Owl carousel demo'
-description: 'Create image gallery with lightGallery and Owl Carousel JS'
+description: 'Add lightBox gallery support for Owl Carousel with lightGallery'
 lead:  '<a href="https://owlcarousel2.github.io/OwlCarousel2/" target="_blank">Owl Carousel</a> is a touch enabled jQuery plugin that lets you create a beautiful responsive carousel slider.
 Owl can be used for creating beautiful image galleries with thumbnails.
 Here is the demo of adding lightbox gallery support for the Owl Carousel.'
@@ -11,7 +11,7 @@ images: []
 menu:
     demos:
         parent: 'Demos'
-weight: 4
+weight: 27
 toc: true
 ---
 

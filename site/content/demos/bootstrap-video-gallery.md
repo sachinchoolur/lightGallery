@@ -1,16 +1,13 @@
 ---
 title: Bootstrap video gallery
-description: Create beautiful Bootstrap image gallery with light gallery.
+description: Demo of adding lightBox gallery support for Bootstrap with lightGallery
 lead:
-    Responsive galleries created with <a
-    href="https://getbootstrap.com/docs/5.2" target="_blank">Bootstrap 5</a>.
-    Image gallery, video gallery, photo gallery, full-page, eCommerce, lightbox,
-    slider, thumbnails, & more.
+    Bootstrap is the most popular CSS Framework for developing responsive and mobile-first websites. Bootstrap can be used for creating beautiful video galleries with thumbnails. Here is the demo of adding lightbox gallery support for the Bootstrap.
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
 menu: { demos: { parent: Demos } }
-weight: 4
+weight: 26
 toc: true
 ---
 

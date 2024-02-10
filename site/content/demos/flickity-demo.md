@@ -1,7 +1,7 @@
 ---
 title: 'Flickity carousel demo'
 description:
-    'Create thumbnails image gallery with lightGallery and Flickity carousel'
+    'Add lightBox gallery support for Flickity Carousel with lightGallery'
 lead:
     '<a href="https://flickity.metafizzy.co/" target="_blank">Flickity</a> makes carousels, galleries, & sliders that feel lively and effortless.
 Flickity can be used for creating beautiful image galleries with thumbnails.
@@ -13,7 +13,7 @@ images: []
 menu:
     demos:
         parent: 'Demos'
-weight: 4
+weight: 26
 toc: true
 ---
 

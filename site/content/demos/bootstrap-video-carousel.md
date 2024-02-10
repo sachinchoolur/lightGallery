@@ -1,17 +1,15 @@
 ---
 title: Bootstrap video carousel
 description:
-    'Create thumbnails image gallery with lightGallery and Bootstrap inline gallery'
+    'Demo of adding lightBox gallery support for Bootstrap video carousel with lightGallery'
 lead:
-    '<a href="https://getbootstrap.com/docs/5.2/components/carousel" target="_blank">Bootstrap 5</a>, the world’s most popular framework for building responsive, mobile-first sites, with jsDelivr and a template starter page...
-Bootstrap can be used for creating beautiful image galleries with thumbnails.
-Here is the demo of adding lightbox gallery support for the Bootstrap carousel.'
+    'Bootstrap is the most popular CSS Framework for developing responsive and mobile-first websites. Here is the demo adding lightBox gallery support for Bootstrap video carousel.'
 
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
 menu: {demos: {parent: Demos}}
-weight: 4
+weight: 25
 toc: true
 ---
 

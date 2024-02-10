@@ -1,15 +1,9 @@
 ---
 title: 'React image gallery'
 description:
-    Build a React gallery with lightGallery. Customize sliders and lightbox
-    galleries effortlessly. Transform inline images with a click.
+    Full featured, responsive image gallery component for React.
 lead:
-    Utilize lightGallery in your React application to create inline carousel
-    sliders and lightbox galleries. Easily set up an inline gallery by passing
-    the container element through the container option. All the powerful
-    lightbox features are seamlessly integrated into the inline gallery.
-    Clicking on the maximize icon in the toolbar transforms the inline gallery
-    into a full-fledged lightbox gallery.
+    Use lightGallery React component to build beautiful image gallery lightBox. lightGallery react component support all the feature of lightGallery such as pinch to zoom, rotate, flip images, social sharing, animated thumbnails, etc.
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []

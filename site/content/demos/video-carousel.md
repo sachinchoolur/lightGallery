@@ -1,19 +1,26 @@
 ---
-title: Inline Gallery
-description: LightGallery allows you to build inline carousel slider image and video galleries.
-lead: With lightGallery you can create both inline carousel slider and lightBox galleries. You can create inline gallery by passing the container element via container option. All the lightBox features are available in inline gallery as well. inline gallery can be converted to the lightBox gallery by clicking on the maximize icon on the toolbar
+title: Video carousel
+description:
+    Demo of javascript video carousel gallery.
+lead:
+    With lightGallery, you can create both carousel slider and lightBox
+    galleries. You can create inline gallery by passing the container element
+    via container option. All the lightBox features are available in inline
+    gallery as well. inline gallery can be converted to the lightBox gallery by
+    clicking on the maximize icon on the toolbar
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu: {demos: {parent: Demos}}
+menu: { demos: { parent: Demos } }
 weight: 4
 toc: true
 ---
 
 #### Demo
 
-<div id="inline-gallery-container" class="inline-gallery-container"></div>
-{{< demoButtons js="https://codepen.io/sachinchoolur/pen/zYZqaGm" react="https://stackblitz.com/edit/stackblitz-starters-vhsu43" >}}
+<div id="inline-video-gallery-container" class="inline-gallery-container"></div>
+
+{{< demoButtons js="https://codepen.io/light-gallery/pen/ZEwMyWE" react="https://stackblitz.com/edit/stackblitz-starters-rnvyp4" >}}
 
 ##### HTML
 
@@ -44,22 +51,20 @@ const inlineGallery = lightGallery(lgContainer, {
     slideDelay: 400,
     dynamicEl: [
         {
-            src: 'img/img1.jpg',
-            thumb: 'img/thumb1.jpg',
-            subHtml: `<div class="lightGallery-captions">
-                <h4>Caption 1</h4>
-                <p>Description of the slide 1</p>
-            </div>`,
+            src: 'https://youtu.be/IUN664s7N-c',
+            subHtml: `<h4>'Peck Pocketed' by Kevin Herron</h4>`,
         },
         {
-            src: 'img/img2.jpg',
-            thumb: 'img/thumb2.jpg',
-            subHtml: `<div class="lightGallery-captions">
-                <h4>Caption 2</h4>
-                <p>Description of the slide 2</p>
-            </div>`,
+            src: 'https://www.youtube.com/watch?v=ttLu7ygaN6I',
+            subHtml: `<h4>'Peck Pocketed' by Kevin Herron</h4>`,
+            thumb:
+                'https://img.youtube.com/vi/your_youtube_video_id/mqdefault.jpg',
         },
-        ...
+        {
+            src: 'https://www.youtube.com/watch?v=C3vyugaBhSs',
+            subHtml: `<h4>UE5</h4>`,
+        },
+        // Add more video objects as needed
     ],
 });
 
@@ -69,7 +74,8 @@ inlineGallery.openGallery();
 
 ##### CSS
 
-Set height and width for the container as the inline automatically adopts the container size
+Set height and width for the container as the inline automatically adopts the
+container size
 
 ```scss
 .inline-gallery-container {
