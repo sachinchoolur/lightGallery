@@ -279,22 +279,8 @@ export class LightGallery {
         if (container) {
             return;
         }
-        let controls = '';
-        let subHtmlCont = '';
 
-        // Create controls
-        if (this.settings.controls) {
-            controls = `<button type="button" id="${this.getIdName(
-                'lg-prev',
-            )}" aria-label="${
-                this.settings.strings['previousSlide']
-            }" class="lg-prev lg-icon"> ${this.settings.prevHtml} </button>
-                <button type="button" id="${this.getIdName(
-                    'lg-next',
-                )}" aria-label="${
-                this.settings.strings['nextSlide']
-            }" class="lg-next lg-icon"> ${this.settings.nextHtml} </button>`;
-        }
+        let subHtmlCont = '';
 
         if (this.settings.appendSubHtmlTo !== '.lg-item') {
             subHtmlCont =
@@ -349,7 +335,7 @@ export class LightGallery {
               <div id="${this.getIdName('lg-content')}" class="lg-content">
                 <div id="${this.getIdName('lg-inner')}" class="lg-inner">
                 </div>
-                ${controls}
+
               </div>
                 <div id="${this.getIdName(
                     'lg-toolbar',
@@ -407,17 +393,9 @@ export class LightGallery {
         this.$inner.css('transition-timing-function', this.settings.easing);
         this.$inner.css('transition-duration', this.settings.speed + 'ms');
 
-        if (this.settings.download) {
-            this.$toolbar.append(
-                `<a id="${this.getIdName(
-                    'lg-download',
-                )}" target="_blank" rel="noopener" aria-label="${
-                    this.settings.strings['download']
-                }" download class="lg-download lg-icon"></a>`,
-            );
-        }
-
-        this.counter();
+        this.showDownloadOption(this.settings.counter);
+        this.showProgressCounter(this.settings.counter);
+        this.showControls(this.settings.controls);
 
         $LG(window).on(
             `resize.lg.global${this.lgId} orientationchange.lg.global${this.lgId}`,
@@ -430,7 +408,6 @@ export class LightGallery {
 
         this.manageCloseGallery();
         this.toggleMaximize();
-
         this.initModules();
     }
 
@@ -825,11 +802,36 @@ export class LightGallery {
     }
 
     /**
+     *  @desc Create controls
+     *  Ex: left arrow/right arrow
+     */
+    showControls(controls: boolean): void {
+        this.settings.controls = controls;
+        if (controls) {
+            const controls = `<button type="button" id="${this.getIdName(
+                'lg-prev',
+            )}" aria-label="${
+                this.settings.strings['previousSlide']
+            }" class="lg-prev lg-icon"> ${this.settings.prevHtml} </button>
+                    <button type="button" id="${this.getIdName(
+                        'lg-next',
+                    )}" aria-label="${
+                this.settings.strings['nextSlide']
+            }" class="lg-next lg-icon"> ${this.settings.nextHtml} </button>`;
+            this.outer.find('.lg-content').append(controls);
+        } else {
+            this.outer.find('.lg-next').remove();
+            this.outer.find('.lg-prev').remove();
+        }
+    }
+
+    /**
      *  @desc Create image counter
      *  Ex: 1/10
      */
-    counter(): void {
-        if (this.settings.counter) {
+    showProgressCounter(counter: boolean): void {
+        this.settings.counter = counter;
+        if (counter) {
             const counterHtml = `<div class="lg-counter" role="status" aria-live="polite">
                 <span id="${this.getIdName(
                     'lg-counter-current',
@@ -840,6 +842,26 @@ export class LightGallery {
                 this.galleryItems.length
             } </span></div>`;
             this.outer.find(this.settings.appendCounterTo).append(counterHtml);
+        } else {
+            this.outer.find('.lg-counter').remove();
+        }
+    }
+
+    /**
+     *  @desc Create download button
+     */
+    showDownloadOption(download: boolean): void {
+        this.settings.download = download;
+        if (download) {
+            this.$toolbar.append(
+                `<a id="${this.getIdName(
+                    'lg-download',
+                )}" target="_blank" rel="noopener" aria-label="${
+                    this.settings.strings['download']
+                }" download class="lg-download lg-icon"></a>`,
+            );
+        } else {
+            this.outer.find('.lg-download').remove();
         }
     }
 
@@ -2513,6 +2535,10 @@ export class LightGallery {
         this.addSlideVideoInfo(this.galleryItems);
         this.updateCounterTotal();
         this.manageSingleSlideClassName();
+    }
+
+    updateSettings(options: Partial<LightGallerySettings>): void {
+        this.settings = { ...this.settings, ...options };
     }
 
     private destroyGallery(): void {

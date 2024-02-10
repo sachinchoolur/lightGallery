@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import lgVideo from 'lightgallery/plugins/video';
 import lgZoom from 'lightgallery/plugins/zoom';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import LightGallery from '../Lightgallery';
 
 interface UpdateSlidesProps {}

@@ -110,6 +110,9 @@ const LG: React.FC<LightGalleryProps> = ({
     mode,
     easing,
     speed,
+    counter,
+    controls,
+    download,
     ...restProps
 }: LightGalleryProps) => {
     const $lg = React.useRef<HTMLDivElement>(null);
@@ -322,6 +325,18 @@ const LG: React.FC<LightGalleryProps> = ({
     useEffect(() => {
         LGinstance?.current?.updateTransition({ easing, speed, mode });
     }, [easing, speed, mode]);
+
+    useEffect(() => {
+        LGinstance?.current?.showProgressCounter(counter);
+    }, [counter]);
+
+    useEffect(() => {
+        LGinstance?.current?.showControls(controls);
+    }, [controls]);
+
+    useEffect(() => {
+        LGinstance?.current?.showDownloadOption(download);
+    }, [download]);
 
     return (
         <div

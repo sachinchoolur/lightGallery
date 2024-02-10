@@ -7,7 +7,10 @@ import LightGallery, { LightGalleryProps } from '../Lightgallery';
 interface ThumbnailsProps {}
 
 export const Thumbnails = (props: ThumbnailsProps) => {
+    const [showCounter, setShowCounter] = useState(false);
+    const [showControls, setShowControls] = useState(false);
     const [easing, setEasing] = useState('0.680, -0.550, 0.265, 1.550');
+    const [download, setDownload] = useState(false);
 
     const [transition, setTransition] = useState<
         Pick<LightGalleryProps, 'mode'>['mode']
@@ -20,27 +23,41 @@ export const Thumbnails = (props: ThumbnailsProps) => {
     const handleEasingChange = (event: any) => {
         setEasing(event.target.value);
     };
+
     return (
         <>
-            <h2>React thumbnails gallery</h2>
-            <SelectEasingComponent
-                easing={easing}
-                handleEasingChange={handleEasingChange}
-            />
-            <SelectModeComponent
-                transition={transition}
-                handleTransitionChange={handleTransitionChange}
-            />
+            <h2>React Thumbnails Gallery</h2>
+            <div className="controls">
+                <SelectEasingComponent
+                    easing={easing}
+                    handleEasingChange={handleEasingChange}
+                />
+                <SelectModeComponent
+                    transition={transition}
+                    handleTransitionChange={handleTransitionChange}
+                />
+                <button onClick={() => setShowCounter((p) => !p)}>
+                    {showCounter ? 'Hide' : 'Show'} Progress Count
+                </button>
+                <button onClick={() => setShowControls((p) => !p)}>
+                    {showControls ? 'Hide' : 'Show'} Controls
+                </button>
+                <button onClick={() => setDownload((p) => !p)}>
+                    {download ? 'Hide' : 'Show'} Download
+                </button>
+            </div>
             <LightGallery
                 zoom={false}
                 thumbnail={false}
+                counter={showCounter}
                 rotate={false}
+                controls={showControls}
                 mode={transition}
                 easing={`cubic-bezier(${easing})`}
                 pager={false}
                 plugins={[]}
                 hash={false}
-                download={false}
+                download={download}
                 fullScreen={false}
                 speed={1000}
             >
@@ -234,16 +251,14 @@ const SelectEasingComponent = ({ handleEasingChange, easing }: any) => {
 const SelectModeComponent = ({ handleTransitionChange, transition }: any) => {
     return (
         <div className="choose-select-option-wrap">
-            <span className="choose-select-option">Change easing : </span>
+            <span className="choose-select-option">Change transition : </span>
             <select
                 id="select-easing"
                 className="mrb30 select"
                 value={transition}
                 onChange={handleTransitionChange}
             >
-                <option selected value="lg-slide">
-                    lg-slide
-                </option>
+                <option value="lg-slide">lg-slide</option>
                 <option value="lg-fade">lg-fade</option>
                 <option value="lg-zoom-in">lg-zoom-in</option>
                 <option value="lg-zoom-in-big">lg-zoom-in-big</option>
