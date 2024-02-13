@@ -1379,10 +1379,10 @@ if ($lgInlineVideoContainer) {
 }
 
 jQuery(document).ready(function () {
-    let bootstrapEl = document.getElementById('bootstrap-gallery-container');
+    let bootstrapEl = document.getElementById('bootstrap-gallery-carousel');
     if (bootstrapEl) {
         let initialized = false;
-        let bootstrap = jQuery('#bootstrap-gallery-container');
+        let bootstrap = jQuery('#bootstrap-gallery-carousel');
         bootstrap.carousel({ keyboard: true });
         initialized = true;
         if (initialized) {
@@ -1405,7 +1405,6 @@ jQuery(document).ready(function () {
         owl.on('initialized.owl.carousel', function (event) {
             const container = document.querySelector('.owl-stage');
             window.lightGallery(container, {
-                pager: false,
                 plugins: [
                     lgZoom,
                     lgAutoplay,
@@ -1414,16 +1413,15 @@ jQuery(document).ready(function () {
                     lgShare,
                     lgThumbnail,
                 ],
-                hash: false,
-                preload: 4,
-                selector: '.lg-item',
+                selector: '.carousel-cell',
             });
         });
         owl.owlCarousel({
             center: true,
-            items: 2,
-            loop: true,
+            items: 1,
+            loop: false,
             margin: 10,
+            nav: true,
         });
     }
 
@@ -1510,5 +1508,30 @@ const container = document.querySelector('#bootstrap-image-gallery');
 window.lightGallery(container, {
     selector: '.lg-item',
     zoomFromOrigin: true,
-    download: true,
+    download: false,
+    plugins: [
+        lgZoom,
+        lgAutoplay,
+        lgFullscreen,
+        lgRotate,
+        lgShare,
+    ],
+});
+
+
+
+$(document).ready(function () {
+    var container = document.querySelector('#masonry-gallery-demo');
+    var msnry = new Masonry(container, {
+        itemSelector: '.lg-item',
+        columnWidth: '.grid-sizer',
+        percentPosition: true,
+        gutter: 10,
+        horizontalOrder: true,
+        fitWidth: true,
+    });
+    imagesLoaded(container).on('progress', function() {
+        // layout Masonry after each image loads
+        msnry.layout();
+    });
 });
