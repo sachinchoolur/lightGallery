@@ -1391,7 +1391,13 @@ jQuery(document).ready(function () {
                 thumbnail: true,
                 zoomFromOrigin: false,
                 pager: false,
-                plugins: [lgThumbnail],
+                plugins: [
+                    lgZoom,
+                    lgAutoplay,
+                    lgFullscreen,
+                    lgRotate,
+                    lgShare,
+                ],
                 hash: false,
                 preload: 4,
                 selector: '.lg-item',
@@ -1535,20 +1541,13 @@ $(document).ready(function () {
         // layout Masonry after each image loads
         msnry.layout();
     });
-
-    // msnry.on('layoutComplete', function (event, laidOutItems) {
-    //     console.log(
-    //         'Masonry layout completed on ' + laidOutItems?.length + ' items',
-    //     );
-
-
-    // });
     window.lightGallery(container, {
         thumbnail: true,
         pager: true,
         plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
         hash: false,
         preload: 0,
+        selector: '.lg-item'
     });
 });
 
@@ -1560,4 +1559,16 @@ window.lightGallery(document.getElementById('bootstrap-video-gallery'), {
     plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
     hash: false,
     preload: 0,
+
 });
+
+
+window.lightGallery(document.getElementById('bootstrap-video-carousel'), {
+    thumbnail: true,
+    pager: true,
+    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
+    hash: false,
+    preload: 0,
+    selector: '.lg-item'
+});
+
