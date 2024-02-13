@@ -43,17 +43,22 @@ owl.on('initialized.owl.carousel', function (event) {
     window.lightGallery(container, {
         thumbnail: false,
         pager: false,
-        plugins: [],
+        plugins: [
+            lgZoom,
+            lgAutoplay,
+            lgFullscreen,
+            lgRotate,
+            lgShare,
+            lgThumbnail,
+        ],
         hash: false,
-        preload: 4,
+        preload: 1,
         selector: '.owl-carousel-item',
-
     });
 });
 owl.owlCarousel({
     center: true,
     items: 1,
-    loop: true,
     margin: 20,
 });
 ```
@@ -62,17 +67,10 @@ owl.owlCarousel({
 
 ```css
 .owl-carousel {
-  .owl-stage {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .owl-carousel-item {
-    img {
-      width: 100%;
-      height: auto;
-      max-width: 100%;
-      height: 300px;
+    .owl-carousel-item {
+        img {
+            height: 300px;
+        }
     }
-  }
 }
 ```

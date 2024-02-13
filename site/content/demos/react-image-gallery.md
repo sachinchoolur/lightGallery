@@ -16,8 +16,10 @@ toc: true
 
 #### Demo
 
-<div id="inline-gallery-container" class="inline-gallery-container"></div>
-{{< demoButtons js="https://codepen.io/sachinchoolur/pen/zYZqaGm" react="https://stackblitz.com/edit/stackblitz-starters-vhsu43" >}}
+
+{{< masonry-layout id="masonry-gallery-demo" >}}
+
+{{< demoButtons js="https://codepen.io/light-gallery/pen/jOdeQYJ" react="https://stackblitz.com/edit/stackblitz-starters-gyrdgu" >}}
 
 ##### React
 
