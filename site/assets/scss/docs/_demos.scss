@@ -44,6 +44,29 @@
     }
 }
 
+#bootstrap-video-carousel {
+    &.carousel {
+        .lg-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            img {
+                width: unset !important;
+                height: 500px;
+            }
+        }
+
+        .carousel-item {
+            .lg-item {
+                img {
+                    height: 600px;
+                }
+            }
+        }
+    }
+}
+
 //slick
 #slick-carousel-gallery-demo {
     img {
