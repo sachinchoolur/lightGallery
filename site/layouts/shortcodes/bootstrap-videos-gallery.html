@@ -1,0 +1,62 @@
+{{$id := .Get "id"}}
+
+<div class=" px-0">
+    <div class="row mx-0" id="{{$id}}">
+        <a
+            class="col-md-6 col-sm-6 px-0"
+            data-lg-size="1280-720"
+            data-pinterest-text="Pin it3"
+            data-tweet-text="lightGallery slide  4"
+            data-src="//www.youtube.com/watch?v=EIUJfXk3_3w"
+            data-poster="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+            data-sub-html="<h4>Puffin Hunts Fish To Feed Puffling | Blue Planet II | BBC Earth</h4><p>This puffin parent must go out to sea to feed his chick, but he must evade other birds that would rob him.</p>"
+        >
+            <img
+                class="img-fluid"
+                src="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+            />
+        </a>
+        <a
+            class="col-md-6 col-sm-6 px-0"
+            data-lg-size="1280-720"
+            data-pinterest-text="Pin it3"
+            data-tweet-text="lightGallery slide  4"
+            data-src="//vimeo.com/112836958"
+            data-poster="{{.Page.Site.BaseURL}}images/demo/vimeo-video-poster.jpg"
+            data-sub-html="<h4>Nature</h4><p>Video by <a target='_blank' href='https://vimeo.com/charliekaye'>Charlie Kaye</a></p>"
+        >
+            <img
+                class="img-fluid"
+                src="{{.Page.Site.BaseURL}}images/demo/vimeo-video-poster.jpg"
+            />
+        </a>
+        <a
+            class="col-md-6 col-sm-6 px-0"
+            data-lg-size="1280-720"
+            data-pinterest-text="Pin it3"
+            data-tweet-text="lightGallery slide  4"
+            data-src="https://private-sharing.wistia.com/medias/mwhrulrucj"
+            data-poster="{{.Page.Site.BaseURL}}images/demo/wistia-video-poster.jpeg"
+            data-sub-html="<h4>Thank You!</h4><p> Sample Wistia video </p>"
+        >
+            <img
+                class="img-fluid"
+                src="{{.Page.Site.BaseURL}}images/demo/wistia-video-poster.jpeg"
+            />
+        </a>
+        <a
+            class="col-md-6 col-sm-6 px-0"
+            data-lg-size="1280-720"
+            data-pinterest-text="Pin it3"
+            data-tweet-text="lightGallery slide  4"
+            data-video='{"source": [{"src":"{{.Page.Site.BaseURL}}videos/video1.mp4", "type":"video/mp4"}], "tracks": [{"src": "{{.Page.Site.BaseURL}}videos/title.txt", "kind":"captions", "srclang": "en", "label": "English", "default": "true"}], "attributes": {"preload": false, "controls": true}}'
+            data-poster="{{.Page.Site.BaseURL}}images/demo/html5-video-poster.jpg"
+            data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
+        >
+            <img
+                class="img-fluid"
+                src="{{.Page.Site.BaseURL}}images/demo/html5-video-poster.jpg"
+            />
+        </a>
+    </div>
+</div>

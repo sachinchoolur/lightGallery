@@ -1530,8 +1530,34 @@ $(document).ready(function () {
         horizontalOrder: true,
         fitWidth: true,
     });
-    imagesLoaded(container).on('progress', function() {
+
+    imagesLoaded(container).on('progress', function () {
         // layout Masonry after each image loads
         msnry.layout();
     });
+
+    // msnry.on('layoutComplete', function (event, laidOutItems) {
+    //     console.log(
+    //         'Masonry layout completed on ' + laidOutItems?.length + ' items',
+    //     );
+
+
+    // });
+    window.lightGallery(container, {
+        thumbnail: true,
+        pager: true,
+        plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
+        hash: false,
+        preload: 0,
+    });
+});
+
+
+
+window.lightGallery(document.getElementById('bootstrap-video-gallery'), {
+    thumbnail: true,
+    pager: true,
+    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
+    hash: false,
+    preload: 0,
 });
