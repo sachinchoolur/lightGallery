@@ -10,7 +10,7 @@ import {
     lightGalleryCoreSettings,
     LightGallerySettings,
 } from './lg-settings';
-import utils, { GalleryItem, ImageSize } from './lg-utils';
+import utils, { GalleryItem, ImageSize, modeClasses } from './lg-utils';
 import { $LG, lgQuery } from './lgQuery';
 import {
     Coords,
@@ -201,7 +201,6 @@ export class LightGallery {
             this.triggerPosterClick();
         }, 50);
 
-        this.arrow();
         if (this.settings.mousewheel) {
             this.mousewheel();
         }
@@ -279,22 +278,8 @@ export class LightGallery {
         if (container) {
             return;
         }
-        let controls = '';
-        let subHtmlCont = '';
 
-        // Create controls
-        if (this.settings.controls) {
-            controls = `<button type="button" id="${this.getIdName(
-                'lg-prev',
-            )}" aria-label="${
-                this.settings.strings['previousSlide']
-            }" class="lg-prev lg-icon"> ${this.settings.prevHtml} </button>
-                <button type="button" id="${this.getIdName(
-                    'lg-next',
-                )}" aria-label="${
-                this.settings.strings['nextSlide']
-            }" class="lg-next lg-icon"> ${this.settings.nextHtml} </button>`;
-        }
+        let subHtmlCont = '';
 
         if (this.settings.appendSubHtmlTo !== '.lg-item') {
             subHtmlCont =
@@ -349,7 +334,7 @@ export class LightGallery {
               <div id="${this.getIdName('lg-content')}" class="lg-content">
                 <div id="${this.getIdName('lg-inner')}" class="lg-inner">
                 </div>
-                ${controls}
+
               </div>
                 <div id="${this.getIdName(
                     'lg-toolbar',
@@ -407,17 +392,9 @@ export class LightGallery {
         this.$inner.css('transition-timing-function', this.settings.easing);
         this.$inner.css('transition-duration', this.settings.speed + 'ms');
 
-        if (this.settings.download) {
-            this.$toolbar.append(
-                `<a id="${this.getIdName(
-                    'lg-download',
-                )}" target="_blank" rel="noopener" aria-label="${
-                    this.settings.strings['download']
-                }" download class="lg-download lg-icon"></a>`,
-            );
-        }
-
-        this.counter();
+        this.showDownloadOption(this.settings.counter);
+        this.showProgressCounter(this.settings.counter);
+        this.showControls(this.settings.controls);
 
         $LG(window).on(
             `resize.lg.global${this.lgId} orientationchange.lg.global${this.lgId}`,
@@ -430,7 +407,6 @@ export class LightGallery {
 
         this.manageCloseGallery();
         this.toggleMaximize();
-
         this.initModules();
     }
 
@@ -825,11 +801,46 @@ export class LightGallery {
     }
 
     /**
+     *  @desc Create controls
+     *  Ex: left arrow/right arrow
+     */
+    showControls(controls: boolean): void {
+        this.settings.controls = controls;
+        const nextEl = this.outer.find('.lg-next');
+        const prevEl = this.outer.find('.lg-prev');
+        if (controls && (!nextEl.get() || !prevEl.get())) {
+            const controls = `<button type="button" id="${this.getIdName(
+                'lg-prev',
+            )}" aria-label="${
+                this.settings.strings['previousSlide']
+            }" class="lg-prev lg-icon"> ${this.settings.prevHtml} </button>
+                    <button type="button" id="${this.getIdName(
+                        'lg-next',
+                    )}" aria-label="${
+                this.settings.strings['nextSlide']
+            }" class="lg-next lg-icon"> ${this.settings.nextHtml} </button>`;
+            this.outer.find('.lg-content').append(controls);
+            setTimeout(() => {
+                this.arrow();
+            }, 50);
+        } else {
+            nextEl.remove();
+            prevEl.remove();
+            setTimeout(() => {
+                this.getElementById('lg-prev').off('click.lg');
+                this.getElementById('lg-next').off('click.lg');
+            }, 50);
+        }
+    }
+
+    /**
      *  @desc Create image counter
      *  Ex: 1/10
      */
-    counter(): void {
-        if (this.settings.counter) {
+    showProgressCounter(counter: boolean): void {
+        this.settings.counter = counter;
+        const counterEl = this.outer.find('.lg-counter');
+        if (counter && !counterEl.get()) {
             const counterHtml = `<div class="lg-counter" role="status" aria-live="polite">
                 <span id="${this.getIdName(
                     'lg-counter-current',
@@ -840,6 +851,27 @@ export class LightGallery {
                 this.galleryItems.length
             } </span></div>`;
             this.outer.find(this.settings.appendCounterTo).append(counterHtml);
+        } else {
+            this.outer.find('.lg-counter').remove();
+        }
+    }
+
+    /**
+     *  @desc Create download button
+     */
+    showDownloadOption(download: boolean): void {
+        this.settings.download = download;
+        const downloadEl = this.outer.find('.lg-download');
+        if (download && !downloadEl.get()) {
+            this.$toolbar.append(
+                `<a id="${this.getIdName(
+                    'lg-download',
+                )}" target="_blank" rel="noopener" aria-label="${
+                    this.settings.strings['download']
+                }" download class="lg-download lg-icon"></a>`,
+            );
+        } else {
+            downloadEl.remove();
         }
     }
 
@@ -2506,10 +2538,24 @@ export class LightGallery {
         this.LGel.trigger(lGEvents.updateSlides);
     }
 
+    updateTransition(
+        options: Pick<LightGallerySettings, 'easing' | 'speed' | 'mode'>,
+    ): void {
+        this.$inner.css('transition-timing-function', options.easing);
+        this.$inner.css('transition-duration', options.speed + 'ms');
+        modeClasses.forEach((modeClass) => this.outer.removeClass(modeClass));
+        this.outer.addClass(options.mode);
+        this.settings = { ...this.settings, ...options };
+    }
+
     updateControls(): void {
         this.addSlideVideoInfo(this.galleryItems);
         this.updateCounterTotal();
         this.manageSingleSlideClassName();
+    }
+
+    updateSettings(options: Partial<LightGallerySettings>): void {
+        this.settings = { ...this.settings, ...options };
     }
 
     private destroyGallery(): void {
