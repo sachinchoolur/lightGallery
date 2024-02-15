@@ -2,6 +2,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react';
 import LightGallery, { LightGalleryProps } from '../Lightgallery';
+import lgAutoplay from 'lightgallery/plugins/autoplay';
+import {
+    default as lgShare,
+    default as lgZoom,
+} from 'lightgallery/plugins/share';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
 
 /* eslint-disable-next-line */
 interface ThumbnailsProps {}
@@ -11,15 +17,13 @@ export const Thumbnails = (props: ThumbnailsProps) => {
     const [showControls, setShowControls] = useState(false);
     const [easing, setEasing] = useState('0.680, -0.550, 0.265, 1.550');
     const [download, setDownload] = useState(false);
-
+    const [speed, setSpeed] = useState(1000);
     const [transition, setTransition] = useState<
         Pick<LightGalleryProps, 'mode'>['mode']
     >('lg-slide');
-
     const handleTransitionChange = (event: any) => {
         setTransition(event.target.value);
     };
-
     const handleEasingChange = (event: any) => {
         setEasing(event.target.value);
     };
@@ -45,21 +49,34 @@ export const Thumbnails = (props: ThumbnailsProps) => {
                 <button onClick={() => setDownload((p) => !p)}>
                     {download ? 'Hide' : 'Show'} Download
                 </button>
+                <label htmlFor="speed">
+                    Speed
+                </label>
+                <input
+                    id="speed"
+                    type="number"
+                    defaultValue={speed}
+                    onBlur={(e) => {
+                        setSpeed(Number(e.target.value));
+                    }}
+                />
             </div>
             <LightGallery
-                zoom={false}
-                thumbnail={false}
+                zoom={true}
+                thumbnail={true}
+                share={true}
                 counter={showCounter}
-                rotate={false}
+                rotate={true}
                 controls={showControls}
                 mode={transition}
                 easing={`cubic-bezier(${easing})`}
-                pager={false}
-                plugins={[]}
+                pager={true}
+                plugins={[lgZoom, lgShare, lgAutoplay, lgThumbnail]}
                 hash={false}
                 download={download}
                 fullScreen={false}
-                speed={1000}
+                speed={speed}
+                elementClassNames='thumbnails-gallery'
             >
                 <a
                     className="gallery-item"

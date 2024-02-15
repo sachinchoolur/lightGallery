@@ -103,6 +103,7 @@ export const UpdateSlides = (props: UpdateSlidesProps) => {
             <LightGallery
                 plugins={[lgVideo, lgZoom]}
                 elementClassNames="custom-class-name"
+                preload={4}
             >
                 {getItems()}
             </LightGallery>

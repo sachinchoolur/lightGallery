@@ -201,7 +201,6 @@ export class LightGallery {
             this.triggerPosterClick();
         }, 50);
 
-        this.arrow();
         if (this.settings.mousewheel) {
             this.mousewheel();
         }
@@ -807,7 +806,9 @@ export class LightGallery {
      */
     showControls(controls: boolean): void {
         this.settings.controls = controls;
-        if (controls) {
+        const nextEl = this.outer.find('.lg-next');
+        const prevEl = this.outer.find('.lg-prev');
+        if (controls && (!nextEl.get() || !prevEl.get())) {
             const controls = `<button type="button" id="${this.getIdName(
                 'lg-prev',
             )}" aria-label="${
@@ -819,9 +820,16 @@ export class LightGallery {
                 this.settings.strings['nextSlide']
             }" class="lg-next lg-icon"> ${this.settings.nextHtml} </button>`;
             this.outer.find('.lg-content').append(controls);
+            setTimeout(() => {
+                this.arrow();
+            }, 50);
         } else {
-            this.outer.find('.lg-next').remove();
-            this.outer.find('.lg-prev').remove();
+            nextEl.remove();
+            prevEl.remove();
+            setTimeout(() => {
+                this.getElementById('lg-prev').off('click.lg');
+                this.getElementById('lg-next').off('click.lg');
+            }, 50);
         }
     }
 
@@ -831,7 +839,8 @@ export class LightGallery {
      */
     showProgressCounter(counter: boolean): void {
         this.settings.counter = counter;
-        if (counter) {
+        const counterEl = this.outer.find('.lg-counter');
+        if (counter && !counterEl.get()) {
             const counterHtml = `<div class="lg-counter" role="status" aria-live="polite">
                 <span id="${this.getIdName(
                     'lg-counter-current',
@@ -852,7 +861,8 @@ export class LightGallery {
      */
     showDownloadOption(download: boolean): void {
         this.settings.download = download;
-        if (download) {
+        const downloadEl = this.outer.find('.lg-download');
+        if (download && !downloadEl.get()) {
             this.$toolbar.append(
                 `<a id="${this.getIdName(
                     'lg-download',
@@ -861,7 +871,7 @@ export class LightGallery {
                 }" download class="lg-download lg-icon"></a>`,
             );
         } else {
-            this.outer.find('.lg-download').remove();
+            downloadEl.remove();
         }
     }
 

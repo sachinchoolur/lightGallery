@@ -50,3 +50,14 @@ h2 {
     background-position: right 10px center;
     background-size: 12px;
 }
+
+
+.thumbnails-gallery {
+    display: flex;
+
+}
+
+
+.gallery-item {
+    width: fit-content;
+}

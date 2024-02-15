@@ -107,12 +107,7 @@ const LG: React.FC<LightGalleryProps> = ({
     onRotateRight,
     onFlipHorizontal,
     onFlipVertical,
-    mode,
-    easing,
-    speed,
-    counter,
-    controls,
-    download,
+
     ...restProps
 }: LightGalleryProps) => {
     const $lg = React.useRef<HTMLDivElement>(null);
@@ -299,12 +294,10 @@ const LG: React.FC<LightGalleryProps> = ({
     ]);
 
     useEffect(() => {
-        LGinstance?.current?.refresh();
-    }, [children]);
-
-    useEffect(() => {
         registerEvents();
     }, [registerEvents]);
+
+
 
     const init = useCallback(() => {
         if (!$lg.current || LGinstance.current) return;
@@ -316,27 +309,40 @@ const LG: React.FC<LightGalleryProps> = ({
             LGinstance?.current?.destroy();
             LGinstance.current = null;
         };
-    }, [restProps]);
+    }, []);
 
     useEffect(() => {
         init();
     }, [init]);
 
-    useEffect(() => {
-        LGinstance?.current?.updateTransition({ easing, speed, mode });
-    }, [easing, speed, mode]);
 
     useEffect(() => {
-        LGinstance?.current?.showProgressCounter(counter);
-    }, [counter]);
+        LGinstance?.current?.refresh();
+    }, [children]);
 
     useEffect(() => {
-        LGinstance?.current?.showControls(controls);
-    }, [controls]);
+        LGinstance?.current?.updateTransition({
+            easing: restProps.easing,
+            speed: restProps.speed,
+            mode: restProps.mode,
+        });
+    }, [restProps.easing, restProps.speed, restProps.mode]);
 
     useEffect(() => {
-        LGinstance?.current?.showDownloadOption(download);
-    }, [download]);
+        LGinstance?.current?.showProgressCounter(restProps.counter);
+    }, [restProps.counter]);
+
+    useEffect(() => {
+        LGinstance?.current?.showControls(restProps.controls);
+    }, [restProps.controls]);
+
+    useEffect(() => {
+        LGinstance?.current?.showDownloadOption(restProps.download);
+    }, [restProps.download]);
+
+    useEffect(() => {
+        LGinstance?.current?.refresh(restProps.dynamicEl);
+    }, [restProps.dynamicEl]);
 
     return (
         <div
