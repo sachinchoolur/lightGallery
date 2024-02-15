@@ -63,7 +63,7 @@ export default class Zoom {
               }" class="lg-zoom-in lg-icon"></button><button id="${this.core.getIdName(
                   'lg-zoom-out',
               )}" type="button" aria-label="${
-                  this.settings.zoomPluginStrings['zoomIn']
+                  this.settings.zoomPluginStrings['zoomOut']
               }" class="lg-zoom-out lg-icon"></button>`
             : '';
 
