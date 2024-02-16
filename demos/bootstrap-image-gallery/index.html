@@ -1,0 +1,324 @@
+<!doctype html><html lang=en-us>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="ie=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<link rel=preload as=font href=https://www.lightgalleryjs.com/fonts/HelveticaNowDisplay-Regular.woff2 type=font/woff2 crossorigin>
+<link rel=preload as=font href=https://www.lightgalleryjs.com/fonts/HelveticaNowDisplay-Medium.woff2 type=font/woff2 crossorigin>
+<link rel=stylesheet href=https://www.lightgalleryjs.com/main.4886fbcb18158745c65fb6d5b5400b25a4520628f8470429cb01c84578a4bdaf2b6fca3a8996bc2c1e3539ac0add7d07d96d8ddb68c2d99f3de4380326317505.css integrity="sha512-SIb7yxgVh0XGX7bVtUALJaRSBij4RwQpywHIRXikva8rb8o6iZa8LB41OawK3X0H2W2N22jC2Z895DgDJjF1BQ==" crossorigin=anonymous>
+<link rel=stylesheet href=/css/lightgallery-bundle.css>
+<link rel=stylesheet href=/css/lg-transitions.css>
+<noscript><style>img.lazyload{display:none}</style></noscript>
+<meta name=robots content="index, follow">
+<meta name=googlebot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name=bingbot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<title>Bootstrap image gallery - lightGallery</title>
+<meta name=description content="Create beautiful Bootstrap image gallery with light gallery.">
+<link rel=canonical href=https://www.lightgalleryjs.com/demos/bootstrap-image-gallery/>
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://www.lightgalleryjs.com/lightgallery.png">
+<meta name=twitter:title content="Bootstrap image gallery">
+<meta name=twitter:description content="Create beautiful Bootstrap image gallery with light gallery.">
+<meta name=twitter:site content="@sachinchoolur">
+<meta name=twitter:creator content="@sachinchoolur">
+<meta property="og:title" content="Bootstrap image gallery">
+<meta property="og:description" content="Create beautiful Bootstrap image gallery with light gallery.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.lightgalleryjs.com/demos/bootstrap-image-gallery/">
+<meta property="og:image" content="https://www.lightgalleryjs.com/lightgallery.png">
+<meta property="article:published_time" content="2020-10-06T08:48:57+00:00">
+<meta property="article:modified_time" content="2024-02-13T19:17:47+05:30">
+<meta property="og:site_name" content="lightGallery">
+<meta property="article:publisher" content="https://www.facebook.com/sachinchoolur">
+<meta property="article:author" content="https://www.facebook.com/sachinchoolur">
+<meta property="og:locale" content="en_US">
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/www.lightgalleryjs.com\/"},{"@type":"ListItem","position":2,"name":"Demos","item":"https:\/\/www.lightgalleryjs.com\/demos\/"},{"@type":"ListItem","position":3,"name":"Bootstrap Image Gallery","item":"https:\/\/www.lightgalleryjs.com\/demos\/bootstrap-image-gallery\/"}]}</script>
+<meta name=ahrefs-site-verification content="96bd744dcfe6c078a1994c8d9e0e0ca6a5cf16004f63946a0cd349ca937c1b24">
+<meta name=theme-color content="#fff">
+<link rel=apple-touch-icon sizes=180x180 href=https://www.lightgalleryjs.com/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=https://www.lightgalleryjs.com/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=https://www.lightgalleryjs.com/favicon-16x16.png>
+<link rel=manifest href=https://www.lightgalleryjs.com/site.webmanifest>
+</head>
+<body class="demos single">
+<header id=nav-header class="navbar fixed-top navbar-expand-lg navbar-light">
+<div class=container-xxl>
+<a class="navbar-brand monospace" href=https://www.lightgalleryjs.com/>
+lightGallery
+</a>
+<button class=navbar-toggler type=button data-bs-toggle=collapse data-bs-target=#navbarSupportedContent aria-controls=navbarSupportedContent aria-expanded=false aria-label="Toggle navigation"><svg class="navbar-toggler-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentcolor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 11.5A.5.5.0 013 11h10a.5.5.0 010 1H3a.5.5.0 01-.5-.5zm0-4A.5.5.0 013 7h10a.5.5.0 010 1H3a.5.5.0 01-.5-.5zm0-4A.5.5.0 013 3h10a.5.5.0 010 1H3a.5.5.0 01-.5-.5z"/></svg>
+</button>
+<div class="collapse navbar-collapse" id=navbarSupportedContent>
+<ul class="navbar-nav ms-auto mb-2 mb-lg-0"><li class=nav-item>
+<a class=nav-link href=/docs/getting-started/>Docs</a>
+</li>
+<li class=nav-item>
+<a class="nav-link active" href=/demos/thumbnails/>Demos</a>
+</li>
+<li class=nav-item>
+<a class=nav-link href=/docs/angular-image-video-gallery/>Angular</a>
+</li>
+<li class=nav-item>
+<a class=nav-link href=/docs/react-image-video-gallery/>React</a>
+</li>
+<li class=nav-item>
+<a class=nav-link href=/docs/vue-image-video-gallery/>Vue</a>
+</li>
+<li class=nav-item>
+<a class=nav-link href=/license/>License</a>
+</li>
+<li class="nav-item nav-item-social">
+<a onclick="ga('send','event','GitHub','click')" target=_blank class=nav-link href=https://github.com/sachinchoolur/lightGallery><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</header>
+<div class="wrap container-xxl page-wrap" role=document>
+<div class="row flex-xl-nowrap">
+<div class="col-lg-2 col-xl-2 docs-sidebar">
+<nav class=docs-links aria-label="Main navigation">
+<h3>Demos</h3>
+<ul class=list-unstyled>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/thumbnails/>Thumbnails</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/video-gallery/>Video gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/share/>Social sharing</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/bootstrap-image-carousel/>Bootstrap carousel gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/carousel-gallery/>Carousel gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/react-carousel/>React carousel</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/video-carousel/>Video carousel</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/hash/>Hash</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/responsive/>Responsive images</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/mixed-contents/>Mixed contents</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/iframe/>Iframe lightbox</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/dynamic-mode/>Dynamic Mode</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/update-slides/>Update Slides</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/transitions/>Transitions</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/methods/>Methods</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/html-markup/>HTML Markup</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/events/>Events</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/custom-easing/>Custom Easing</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/captions/>Captions</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/comment-box/>Comment box</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/infinite-scrolling/>Infinite scrolling</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/medium-zoom/>Medium like image zoom</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/zoom-from-origin/>Zoom image from origin</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/react-image-gallery/>React image gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/react-video-gallery/>React video gallery</a></li>
+<li><a class="docs-link active" href=https://www.lightgalleryjs.com/demos/bootstrap-image-gallery/>Bootstrap image gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/bootstrap-video-carousel/>Bootstrap video carousel</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/swiper/>SwiperJs demo</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/bootstrap-video-gallery/>Bootstrap video gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/flickity-demo/>Flickity carousel demo</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/owl-carousel-with-lightbox/>Owl carousel demo</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/slick-carousel-demo/>Slick carousel demo</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/react-video-carousel/>React video carousel</a></li>
+</ul>
+</nav>
+</div>
+<main class="docs-content col-lg-10 col-xl-8">
+<h1>Bootstrap image gallery</h1>
+<p class=lead>Bootstrap is the most popular CSS Framework for developing responsive and mobile-first websites. Here is the demo adding lightBox gallery support for Bootstrap.</p>
+<h3 id=demo>Demo<a href=#demo class=anchor aria-hidden=true>#</a> </h3>
+<div class="row mx-0" id=bootstrap-image-gallery>
+<div class="col-lg-4 col-md-12 mb-4 mb-lg-0 px-2">
+<img data-lg-size=1600-1067 src="https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80" class="lg-item w-100 shadow-1-strong mb-3" alt="Boat on Calm Water">
+<img src="https://images.unsplash.com/photo-1608481337062-4093bf3ed404?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80" class="lg-item w-100 shadow-1-strong" alt="Wintry Mountain Landscape">
+</div>
+<div class="col-lg-4 mb-4 mb-lg-0 px-2">
+<img src="https://images.unsplash.com/photo-1526281216101-e55f00f0db7a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80" class="lg-item w-100 shadow-1-strong mb-3" alt="Mountains in the Clouds">
+<img src="https://images.unsplash.com/photo-1596370743446-6a7ef43a36f9?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80" class="lg-item w-100 shadow-1-strong" alt="Boat on Calm Water">
+</div>
+<div class="col-lg-4 mb-4 mb-lg-0 px-2">
+<img src="https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80" class="lg-item w-100 shadow-1-strong mb-3" alt="Waves at Sea">
+<img src="https://images.unsplash.com/photo-1610448721566-47369c768e70?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80" class="lg-item w-100 shadow-1-strong" alt="Yosemite National Park">
+</div>
+</div>
+<h5 id=html-structure>HTML Structure<a href=#html-structure class=anchor aria-hidden=true>#</a> </h5>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;row&#34;</span> <span class=na>id</span><span class=o>=</span><span class=s>&#34;bootstrap-image-gallery&#34;</span><span class=p>&gt;</span>
+    <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;col-lg-4 col-md-12 mb-4 mb-lg-0 px-2 &#34;</span><span class=p>&gt;</span>
+        <span class=p>&lt;</span><span class=nt>img</span>
+            <span class=na>src</span><span class=o>=</span><span class=s>&#34;...&#34;</span>
+            <span class=na>class</span><span class=o>=</span><span class=s>&#34;lg-item w-100 shadow-1-strong mb-3&#34;</span>
+        <span class=p>/&gt;</span>
+        <span class=p>&lt;</span><span class=nt>img</span>
+            <span class=na>src</span><span class=o>=</span><span class=s>&#34;...&#34;</span>
+            <span class=na>class</span><span class=o>=</span><span class=s>&#34;lg-item w-100 shadow-1-strong mb-3&#34;</span>
+        <span class=p>/&gt;</span>
+    <span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+    <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;col-lg-4 mb-4 mb-lg-0 px-2&#34;</span><span class=p>&gt;</span>
+        <span class=p>&lt;</span><span class=nt>img</span>
+            <span class=na>src</span><span class=o>=</span><span class=s>&#34;...&#34;</span>
+            <span class=na>class</span><span class=o>=</span><span class=s>&#34;lg-item w-100 shadow-1-strong mb-3&#34;</span>
+        <span class=p>/&gt;</span>
+        <span class=p>&lt;</span><span class=nt>img</span>
+            <span class=na>src</span><span class=o>=</span><span class=s>&#34;...&#34;</span>
+            <span class=na>class</span><span class=o>=</span><span class=s>&#34;lg-item w-100 shadow-1-strong mb-3&#34;</span>
+        <span class=p>/&gt;</span>
+    <span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+    <span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;col-lg-4 mb-4 mb-lg-0 px-2&#34;</span><span class=p>&gt;</span>
+        <span class=p>&lt;</span><span class=nt>img</span>
+            <span class=na>src</span><span class=o>=</span><span class=s>&#34;...&#34;</span>
+            <span class=na>class</span><span class=o>=</span><span class=s>&#34;lg-item w-100 shadow-1-strong mb-3&#34;</span>
+        <span class=p>/&gt;</span>
+        <span class=p>&lt;</span><span class=nt>img</span>
+            <span class=na>src</span><span class=o>=</span><span class=s>&#34;...&#34;</span>
+            <span class=na>class</span><span class=o>=</span><span class=s>&#34;lg-item w-100 shadow-1-strong mb-3&#34;</span>
+        <span class=p>/&gt;</span>
+    <span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+</code></pre></div><h5 id=javascript>JavaScript<a href=#javascript class=anchor aria-hidden=true>#</a> </h5>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kr>const</span> <span class=nx>container</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>querySelector</span><span class=p>(</span><span class=s1>&#39;#bootstrap-image-gallery&#39;</span><span class=p>);</span>
+<span class=nb>window</span><span class=p>.</span><span class=nx>lightGallery</span><span class=p>(</span><span class=nx>container</span><span class=p>,</span> <span class=p>{</span>
+    <span class=nx>selector</span><span class=o>:</span> <span class=s1>&#39;.lg-item&#39;</span><span class=p>,</span>
+    <span class=nx>zoomFromOrigin</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span>
+    <span class=nx>download</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span>
+<span class=p>});</span>
+</code></pre></div>
+<p class=edit-page><a href=https://github.com/sachinchoolur/lightGallery/tree/master/site/content/demos/bootstrap-image-gallery.md><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828.0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>Edit this page on GitHub</a></p>
+<div class="docs-navigation d-flex justify-content-between">
+<a href=https://www.lightgalleryjs.com/demos/react-video-gallery/>
+<div class="card my-1">
+<div class="card-body py-2">
+&larr; React video gallery
+</div>
+</div>
+</a>
+<a class=ms-auto href=https://www.lightgalleryjs.com/demos/bootstrap-video-carousel/>
+<div class="card my-1">
+<div class="card-body py-2">
+Bootstrap video carousel &rarr;
+</div>
+</div>
+</a>
+</div>
+</main>
+</div>
+</div>
+<footer class="footer text-muted">
+<div class=container-xxl>
+<div class=row>
+<div class=col-sm-3>
+<h4>Components</h4>
+<ul class=footer-menu>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/react-image-video-gallery/>React</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/vue-image-video-gallery/>Vue.js</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/angular-image-video-gallery/>Angular</a>
+</li>
+<li class=footer-menu-item>
+<a href="https://codesandbox.io/s/lightgallery-lit-23yv2?file=/src/index.js">Lit</a>
+</li>
+</ul>
+</div>
+<div class=col-sm-3>
+<h4>Docs</h4>
+<ul class=footer-menu>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/getting-started/>Get started</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/settings/>Settings</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/events/>Events</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/methods/>Methods</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/blog/>Blog</a>
+</li>
+</ul>
+</div>
+<div class=col-sm-3>
+<h4>Demos</h4>
+<ul class=footer-menu>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/demos/thumbnails/>Thumbnails</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/demos/dynamic-mode/>Dynamic</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/demos/carousel-gallery/>Carousel</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/demos/video-gallery/>Video</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/demos/transitions/>Transitions</a>
+</li>
+</ul>
+</div>
+<div class=col-sm-3>
+<h4>Social</h4>
+<ul class=footer-menu>
+<li class=footer-menu-item>
+<a href=https://github.com/sachinchoolur/lightGallery>GitHub</a>
+</li>
+<li class=footer-menu-item>
+<a target=_blank href=https://twitter.com/SachinNeravath>Twitter</a>
+</li>
+<li class=footer-menu-item>
+<a target=_blank href=https://codepen.io/collection/BNNjpR>CodePen</a>
+</li>
+<li class=footer-menu-item>
+<a target=_blank href=https://stackblitz.com/@sachinchoolur>Stackblitz</a>
+</li>
+<li class=footer-menu-item>
+<a target=_blank href="https://docs.google.com/forms/d/e/1FAIpQLSfcxknmKJAF9btnCg8HugFadxyWRZ3TgC0ZKxOtIjdaGfqxIw/viewform?usp=pp_url&entry.34608024=Yes">Write a review</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class=container-xxl>
+<div class="row other-products">
+<div class=other-products-label>We also make</div>
+<div class=col-lg-4>
+<a class=other-products-item href=https://www.paritydeals.com/ target=_blank>
+<img src=https://www.lightgalleryjs.com/images/logos/paritydeals.jpeg alt=ParityDeals class=img-fluid width=200 height=200>
+<div class=other-products-item-content>
+<h5>ParityDeals</h5>
+<p>Optimize pricing across contries to maximize revenue</p>
+</div>
+</a>
+</div>
+<div class=col-lg-4>
+<a class=other-products-item href=https://www.timemaster.ai/ target=_blank>
+<img src=https://www.lightgalleryjs.com/images/logos/timemaster.png alt=timeMaster class=img-fluid width=200 height=200>
+<div class=other-products-item-content>
+<h5>timeMaster.ai</h5>
+<p>Supercharge your Focus and Productivity</p>
+</div>
+</a>
+</div>
+<div class=col-lg-4>
+<a class=other-products-item href=https://www.lightgalleryjs.com/ target=_blank>
+<img src=https://www.lightgalleryjs.com/images/logos/webwhiz.png alt=WebWhiz class=img-fluid width=200 height=200>
+<div class=other-products-item-content>
+<h5>WebWhiz.ai</h5>
+<p> ChatGPT trained on your website data
+</p>
+</div>
+</a>
+</div>
+</div>
+</div>
+</footer>
+<script id=__webwhizSdk__ src=https://widget.webwhiz.ai/webwhiz-sdk.js chatbotid=6427de1eb464389fa02a8e61></script>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js></script>
+<script src=https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.js></script>
+<script src=https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/airtable@0.11.1/build/airtable.browser.js></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-49767543-2"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-49767543-2')</script>
+<script src=https://www.lightgalleryjs.com/main.6c3b7a44dae7fec50a7118abd45307694535e7acac0a670dc266e4cb06d3a2dfa98ac5e1987276ceb14ff8fc3516244224ec66cdcda81814e24485c316e30756.js integrity="sha512-bDt6RNrn/sUKcRir1FMHaUU156ysCmcNwmbkywbTot+pisXhmHJ2zrFP+Pw1FiRCJOxmzc2oGBTiRIXDFuMHVg==" crossorigin=anonymous defer></script>
+</body>
+</html>

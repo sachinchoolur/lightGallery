@@ -13,30 +13,27 @@
   -o-transition: opacity 0.08s ease 0s;
   transition: opacity 0.08s ease 0s;
 }
-
 .lg-progress-bar .lg-progress {
-  background-color: #a90707;
+  background-color: rgb(169, 7, 7);
   height: 5px;
   width: 0;
 }
-
 .lg-progress-bar.lg-start .lg-progress {
   width: 100%;
 }
-
 .lg-show-autoplay .lg-progress-bar {
   opacity: 1;
 }
 
 .lg-autoplay-button:after {
-  content: '\e01d';
+  content: "\e01d";
 }
-
 .lg-show-autoplay .lg-autoplay-button:after {
-  content: '\e01a';
+  content: "\e01a";
 }
-
 .lg-single-item .lg-autoplay-button {
   opacity: 0.75;
   pointer-events: none;
 }
+
+/*# sourceMappingURL=lg-autoplay.css.map */

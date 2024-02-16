@@ -1,0 +1,370 @@
+<!doctype html><html lang=en-us>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="ie=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<link rel=preload as=font href=https://www.lightgalleryjs.com/fonts/HelveticaNowDisplay-Regular.woff2 type=font/woff2 crossorigin>
+<link rel=preload as=font href=https://www.lightgalleryjs.com/fonts/HelveticaNowDisplay-Medium.woff2 type=font/woff2 crossorigin>
+<link rel=stylesheet href=https://www.lightgalleryjs.com/main.4886fbcb18158745c65fb6d5b5400b25a4520628f8470429cb01c84578a4bdaf2b6fca3a8996bc2c1e3539ac0add7d07d96d8ddb68c2d99f3de4380326317505.css integrity="sha512-SIb7yxgVh0XGX7bVtUALJaRSBij4RwQpywHIRXikva8rb8o6iZa8LB41OawK3X0H2W2N22jC2Z895DgDJjF1BQ==" crossorigin=anonymous>
+<link rel=stylesheet href=/css/lightgallery-bundle.css>
+<link rel=stylesheet href=/css/lg-transitions.css>
+<noscript><style>img.lazyload{display:none}</style></noscript>
+<meta name=robots content="index, follow">
+<meta name=googlebot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name=bingbot content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<title>React video gallery - lightGallery</title>
+<meta name=description content="Full featured video gallery component for React">
+<link rel=canonical href=https://www.lightgalleryjs.com/demos/react-video-gallery/>
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://www.lightgalleryjs.com/lightgallery.png">
+<meta name=twitter:title content="React video gallery">
+<meta name=twitter:description content="Full featured video gallery component for React">
+<meta name=twitter:site content="@sachinchoolur">
+<meta name=twitter:creator content="@sachinchoolur">
+<meta property="og:title" content="React video gallery">
+<meta property="og:description" content="Full featured video gallery component for React">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.lightgalleryjs.com/demos/react-video-gallery/">
+<meta property="og:image" content="https://www.lightgalleryjs.com/lightgallery.png">
+<meta property="article:published_time" content="2020-10-06T08:48:57+00:00">
+<meta property="article:modified_time" content="2024-02-10T11:47:47+05:30">
+<meta property="og:site_name" content="lightGallery">
+<meta property="article:publisher" content="https://www.facebook.com/sachinchoolur">
+<meta property="article:author" content="https://www.facebook.com/sachinchoolur">
+<meta property="og:locale" content="en_US">
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/www.lightgalleryjs.com\/"},{"@type":"ListItem","position":2,"name":"Demos","item":"https:\/\/www.lightgalleryjs.com\/demos\/"},{"@type":"ListItem","position":3,"name":"React Video Gallery","item":"https:\/\/www.lightgalleryjs.com\/demos\/react-video-gallery\/"}]}</script>
+<meta name=ahrefs-site-verification content="96bd744dcfe6c078a1994c8d9e0e0ca6a5cf16004f63946a0cd349ca937c1b24">
+<meta name=theme-color content="#fff">
+<link rel=apple-touch-icon sizes=180x180 href=https://www.lightgalleryjs.com/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=https://www.lightgalleryjs.com/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=https://www.lightgalleryjs.com/favicon-16x16.png>
+<link rel=manifest href=https://www.lightgalleryjs.com/site.webmanifest>
+</head>
+<body class="demos single">
+<header id=nav-header class="navbar fixed-top navbar-expand-lg navbar-light">
+<div class=container-xxl>
+<a class="navbar-brand monospace" href=https://www.lightgalleryjs.com/>
+lightGallery
+</a>
+<button class=navbar-toggler type=button data-bs-toggle=collapse data-bs-target=#navbarSupportedContent aria-controls=navbarSupportedContent aria-expanded=false aria-label="Toggle navigation"><svg class="navbar-toggler-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentcolor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 11.5A.5.5.0 013 11h10a.5.5.0 010 1H3a.5.5.0 01-.5-.5zm0-4A.5.5.0 013 7h10a.5.5.0 010 1H3a.5.5.0 01-.5-.5zm0-4A.5.5.0 013 3h10a.5.5.0 010 1H3a.5.5.0 01-.5-.5z"/></svg>
+</button>
+<div class="collapse navbar-collapse" id=navbarSupportedContent>
+<ul class="navbar-nav ms-auto mb-2 mb-lg-0"><li class=nav-item>
+<a class=nav-link href=/docs/getting-started/>Docs</a>
+</li>
+<li class=nav-item>
+<a class="nav-link active" href=/demos/thumbnails/>Demos</a>
+</li>
+<li class=nav-item>
+<a class=nav-link href=/docs/angular-image-video-gallery/>Angular</a>
+</li>
+<li class=nav-item>
+<a class=nav-link href=/docs/react-image-video-gallery/>React</a>
+</li>
+<li class=nav-item>
+<a class=nav-link href=/docs/vue-image-video-gallery/>Vue</a>
+</li>
+<li class=nav-item>
+<a class=nav-link href=/license/>License</a>
+</li>
+<li class="nav-item nav-item-social">
+<a onclick="ga('send','event','GitHub','click')" target=_blank class=nav-link href=https://github.com/sachinchoolur/lightGallery><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</header>
+<div class="wrap container-xxl page-wrap" role=document>
+<div class="row flex-xl-nowrap">
+<div class="col-lg-2 col-xl-2 docs-sidebar">
+<nav class=docs-links aria-label="Main navigation">
+<h3>Demos</h3>
+<ul class=list-unstyled>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/thumbnails/>Thumbnails</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/video-gallery/>Video gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/share/>Social sharing</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/bootstrap-image-carousel/>Bootstrap carousel gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/carousel-gallery/>Carousel gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/react-carousel/>React carousel</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/video-carousel/>Video carousel</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/hash/>Hash</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/responsive/>Responsive images</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/mixed-contents/>Mixed contents</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/iframe/>Iframe lightbox</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/dynamic-mode/>Dynamic Mode</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/update-slides/>Update Slides</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/transitions/>Transitions</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/methods/>Methods</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/html-markup/>HTML Markup</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/events/>Events</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/custom-easing/>Custom Easing</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/captions/>Captions</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/comment-box/>Comment box</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/infinite-scrolling/>Infinite scrolling</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/medium-zoom/>Medium like image zoom</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/zoom-from-origin/>Zoom image from origin</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/react-image-gallery/>React image gallery</a></li>
+<li><a class="docs-link active" href=https://www.lightgalleryjs.com/demos/react-video-gallery/>React video gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/bootstrap-image-gallery/>Bootstrap image gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/bootstrap-video-carousel/>Bootstrap video carousel</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/swiper/>SwiperJs demo</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/bootstrap-video-gallery/>Bootstrap video gallery</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/flickity-demo/>Flickity carousel demo</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/owl-carousel-with-lightbox/>Owl carousel demo</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/slick-carousel-demo/>Slick carousel demo</a></li>
+<li><a class=docs-link href=https://www.lightgalleryjs.com/demos/react-video-carousel/>React video carousel</a></li>
+</ul>
+</nav>
+</div>
+<main class="docs-content col-lg-10 col-xl-8">
+<h1>React video gallery</h1>
+<p class=lead>lightGallery supports YouTube, Vimeo, Wistia and all other types of HTML5 video formats. Such as MP4, WebM, Ogg, etc. into a full-fledged lightbox gallery.</p>
+<h4 id=external-videos>External videos<a href=#external-videos class=anchor aria-hidden=true>#</a> </h4>
+<p>To display YouTube, Vimeo and Wistia, videos, you just need to paste the video URL, or share URL of the video in the data-src attribute. The same way you display images in the gallery. lightGallery will check the data-src attribute and if it is a video URL, it will create the respective video slide.</p>
+<p>You can also provide poster image for each videos. Poster images will be loaded instead of videos. So user will be able to navigate to other slides by using mouse drag or swipe. Poster images improve performance, and maintain the flexibility of your gallery without effecting user experience. Videos will be loaded when a user clicks on the poster images. You can place poster image url in the data-poster attribute.</p>
+<p>lightGallery allows you to load thumbnail images automatically from YouTube and Vimeo. You can specify the size of the thumbnails in the settings. You need to use <a href=/docs/settings/#vimeo-thumbnails-plugin>Vimeo thumbnail plugin</a> to load thumbnails for vimeo videos. Videos will be automatically paused when a user starts to navigate to another slide.</p>
+<h4 id=html5-videos>HTML5 videos<a href=#html5-videos class=anchor aria-hidden=true>#</a> </h4>
+<p>For displaying HTML5 videos, you need to construct an object with array of video sources and types, and videos attributes objects as shown below and pass it via data-video attribute</p>
+Note - data-src should not be provided when you use html5 videos
+<h4 id=demo>Demo<a href=#demo class=anchor aria-hidden=true>#</a> </h4>
+<div id=inline-video-gallery-container class=inline-gallery-container></div>
+<div class=demo-btns-container>
+<div class=demo-btn>
+<a target=_blank href=https://codepen.io/light-gallery/pen/ZEwMyWE><svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid"><g><path d="M255.806943 87.0866439C255.748337 86.7763743 255.696625 86.4661047 255.613887 86.1627299 255.562175 85.9800156 255.500121 85.8076436 255.441515 85.6283767 255.355329 85.3594764 255.265695 85.0905761 255.158825 84.8285707 255.082981 84.6458563 254.996795 84.4700369 254.914056 84.2942175 254.796843 84.0460018 254.676183 83.8012335 254.538285 83.5633602 254.441757 83.3875407 254.331439 83.2220636 254.224568 83.0531391 254.076328 82.825608 253.924641 82.6015244 253.759164 82.3843357 253.638504 82.222306 253.514396 82.0671712 253.383393 81.9120364 253.211021 81.70519 253.024859 81.5086859 252.838698 81.3156293 252.693905 81.1708368 252.549113 81.0260443 252.397425 80.8846993 252.197474 80.701985 251.990627 80.529613 251.773439 80.3641359 251.607961 80.2365806 251.445932 80.1055779 251.27356 79.9883649 251.211506 79.9435482 251.156347 79.8918366 251.090845 79.8504673L134.098521 1.8486897C130.406313-.616229901 125.590239-.616229901 121.898031 1.8486897L4.89881225 79.8470198C4.83331089 79.8883891 4.78159929 79.9401007 4.71609793 79.9849174c-.172372.1206605-.33440168.248215700000003-.4998788.375771C4.00247785 80.529613 3.79218401 80.701985 3.59223249 80.8778044 3.44054513 81.015702 3.29575265 81.1604945 3.15440761 81.3087344 2.96135097 81.5017911 2.78208409 81.6982951 2.60626464 81.9051415 2.47526192 82.0602763 2.35115408 82.2154111 2.23049368 82.3877831 2.06501656 82.6049719 1.9133292 82.825608 1.76508928 83.0565865 1.65821864 83.2255111 1.551348 83.3909882 1.45137224 83.5668076 1.31347464 83.804681 1.19281424 84.0494492 1.07904872 84.29077.996310162 84.4665895.906676722 84.6458563.834280482 84.8251232.727409841 85.0871287.634328961 85.356029.548142961 85.6249293.489536481 85.8041962.427482561 85.9800156.379218401 86.1420453.299927281 86.44542.2413208 86.7522422.18616176 87.0659592.1551348 87.2245415.11721296 87.3796763.0965283202 87.5417059.0344744001 88.0174527 284217094e-22 88.4931994 284217094e-22 88.9792884V166.994856C284217094e-22 167.477497.0344744001 167.960139.1034232 168.432438.12755528 168.60481.172372 168.742708.2068464 168.908185.26200544 169.218455.310269601 169.528724.413692801 169.838994.461956961 170.011366.517116001 170.183738.586064801 170.373347.672250801 170.649142.758436801 170.924937.861860002 171.176601.934256242 171.348973 1.034232 171.521345 1.1031808 171.693717 1.21694632 171.935037 1.3445016 172.176358 1.4823992 172.428021 1.57892752 172.600393 1.6892456 172.772765 1.7926688 172.931347 1.94090872 173.172668 2.1029384 173.379515 2.2753104 173.586361 2.3959708 173.758733 2.5166312 173.896631 2.6545288 174.062108 2.83034825 174.268954 2.99927281 174.475801 3.20611921 174.658515 3.34746425 174.796413 3.48191441 174.968785 3.65428641 175.072208 3.85423793 175.24458 4.06797921 175.416952 4.27482561 175.596219 4.44030273 175.734116 4.61956961 175.837539 4.75746721 175.97199 4.82296857 176.006464 4.86089041 176.075413 4.92983921 176.10644L121.898031 254.146139C123.745859 255.387218 125.862587 256.007757 128 255.997414 130.137413 255.987072 132.254141 255.376875 134.101969 254.146139l116.999219-77.99833C251.166689 176.10644 251.221848 176.058176 251.283902 176.013359 251.456274 175.892698 251.618304 175.765143 251.783781 175.637588 251.997522 175.468663 252.207816 175.292844 252.407768 175.113577 252.559455 174.979127 252.704247 174.830887 252.84904 174.686094 253.038649 174.493038 253.221363 174.296534 253.393735 174.089687 253.524738 173.934553 253.648846 173.779418 253.769506 173.613941 253.934983 173.396752 254.086671 173.172668 254.234911 172.945137 254.341781 172.77966 254.448652 172.610736 254.548628 172.441811 254.686525 172.20049 254.807186 171.955722 254.924399 171.707506 255.007137 171.531687 255.093323 171.355867 255.169167 171.176601 255.276038 170.911148 255.365671 170.642247 255.451857 170.373347 255.510464 170.19408 255.572517 170.018261 255.624229 169.838994 255.70352 169.535619 255.758679 169.225349 255.817286 168.91508 255.844865 168.756498 255.886234 168.601363 255.903472 168.439333 255.965526 167.963586 256 167.48784 256 167.001751V88.9999731C256 88.513884 255.962078 88.0381373 255.903472 87.5623906 255.875892 87.393466 255.824181 87.2555684 255.789706 87.0866439H255.806943zM127.996553 154.022139 89.0921921 128.000862l38.9043609-26.024725 38.907807 26.024725-38.907807 26.021277zM116.999219 82.8669773 69.3073339 114.76614 30.8097713 89.0137628 116.999219 31.5552802V82.8669773zM49.5224757 127.997414 22.0050096 146.403297V109.591532l27.5174661 18.405882zm19.7848582 13.245065 47.6918851 31.895715v51.311697L30.8097713 166.984513l38.4975626-25.748929V141.242479zm69.6900001 31.88882 47.691885-31.895715 38.50101 25.748929-86.192895 57.458483V173.131299zm67.476743-45.12699L233.99499 109.59498v36.815211l-27.520913-18.412777V128.004309zM186.689219 114.76614 138.997334 82.8704247V31.5552802l86.192895 57.4584826-38.50101 25.7523772z" fill="currentcolor"/></g></svg>
+JS demo
+</a>
+</div>
+<div class="demo-btn demo-btn-stackblits">
+<a target=_blank href=https://stackblitz.com/edit/stackblitz-starters-rnvyp4><svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" viewBox="0 0 32 32"><path d="M5.853 18.647h8.735L9.45 31l16.697-17.647h-8.735L22.55 1 5.853 18.647z"/></svg>
+React demo
+</a>
+</div>
+</div>
+<h5 id=react>React<a href=#react class=anchor aria-hidden=true>#</a> </h5>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kr>import</span> <span class=p>{</span> <span class=nx>FC</span><span class=p>,</span> <span class=nx>useCallback</span><span class=p>,</span> <span class=nx>useEffect</span><span class=p>,</span> <span class=nx>useRef</span><span class=p>,</span> <span class=nx>useState</span> <span class=p>}</span> <span class=nx>from</span> <span class=s1>&#39;react&#39;</span><span class=p>;</span>
+<span class=kr>import</span> <span class=p>{</span> <span class=nx>LightGallery</span> <span class=nx>as</span> <span class=nx>ILightGallery</span> <span class=p>}</span> <span class=nx>from</span> <span class=s1>&#39;lightgallery/lightgallery&#39;</span><span class=p>;</span>
+<span class=kr>import</span> <span class=nx>LightGallery</span> <span class=nx>from</span> <span class=s1>&#39;lightgallery/react&#39;</span><span class=p>;</span>
+<span class=kr>import</span> <span class=nx>lgVideo</span> <span class=nx>from</span> <span class=s1>&#39;lightgallery/plugins/video&#39;</span><span class=p>;</span>
+<span class=kr>import</span> <span class=nx>lgThumbnail</span> <span class=nx>from</span> <span class=s1>&#39;lightgallery/plugins/thumbnail&#39;</span><span class=p>;</span>
+<span class=kr>import</span> <span class=s1>&#39;lightgallery/css/lightgallery.css&#39;</span><span class=p>;</span>
+<span class=kr>import</span> <span class=s1>&#39;lightgallery/css/lg-thumbnail.css&#39;</span><span class=p>;</span>
+<span class=kr>import</span> <span class=s1>&#39;lightgallery/css/lg-video.css&#39;</span><span class=p>;</span>
+<span class=kr>import</span> <span class=s1>&#39;./style.scss&#39;</span><span class=p>;</span>
+
+<span class=kr>export</span> <span class=kr>const</span> <span class=nx>App</span><span class=o>:</span> <span class=nx>FC</span><span class=o>&lt;</span><span class=p>{</span> <span class=nx>name</span><span class=o>:</span> <span class=nx>string</span> <span class=p>}</span><span class=o>&gt;</span> <span class=o>=</span> <span class=p>({</span> <span class=nx>name</span> <span class=p>})</span> <span class=p>=&gt;</span> <span class=p>{</span>
+    <span class=kr>const</span> <span class=nx>lightGalleryRef</span> <span class=o>=</span> <span class=nx>useRef</span> <span class=o>&lt;</span> <span class=nx>ILightGallery</span> <span class=o>&gt;</span> <span class=kc>null</span><span class=p>;</span>
+    <span class=kr>const</span> <span class=nx>containerRef</span> <span class=o>=</span> <span class=nx>useRef</span><span class=p>(</span><span class=kc>null</span><span class=p>);</span>
+    <span class=kr>const</span> <span class=p>[</span><span class=nx>galleryContainer</span><span class=p>,</span> <span class=nx>setGalleryContainer</span><span class=p>]</span> <span class=o>=</span> <span class=nx>useState</span><span class=p>(</span><span class=kc>null</span><span class=p>);</span>
+
+    <span class=kr>const</span> <span class=nx>onInit</span> <span class=o>=</span> <span class=nx>useCallback</span><span class=p>((</span><span class=nx>detail</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
+        <span class=k>if</span> <span class=p>(</span><span class=nx>detail</span><span class=p>)</span> <span class=p>{</span>
+            <span class=nx>lightGalleryRef</span><span class=p>.</span><span class=nx>current</span> <span class=o>=</span> <span class=nx>detail</span><span class=p>.</span><span class=nx>instance</span><span class=p>;</span>
+            <span class=c1>// Since we are using dynamic mode, we need to programmatically open lightGallery
+</span><span class=c1></span>            <span class=nx>lightGalleryRef</span><span class=p>.</span><span class=nx>current</span><span class=p>.</span><span class=nx>openGallery</span><span class=p>();</span>
+        <span class=p>}</span>
+    <span class=p>},</span> <span class=p>[]);</span>
+
+    <span class=nx>useEffect</span><span class=p>(()</span> <span class=p>=&gt;</span> <span class=p>{</span>
+        <span class=k>if</span> <span class=p>(</span><span class=nx>containerRef</span><span class=p>.</span><span class=nx>current</span><span class=p>)</span> <span class=p>{</span>
+            <span class=nx>setGalleryContainer</span><span class=p>(</span><span class=nx>containerRef</span><span class=p>.</span><span class=nx>current</span><span class=p>);</span>
+        <span class=p>}</span>
+    <span class=p>},</span> <span class=p>[]);</span>
+
+    <span class=kr>const</span> <span class=nx>videos</span> <span class=o>=</span> <span class=p>[</span>
+        <span class=p>{</span>
+            <span class=nx>src</span><span class=o>:</span> <span class=s1>&#39;https://youtu.be/IUN664s7N-c&#39;</span><span class=p>,</span>
+            <span class=nx>subHtml</span><span class=o>:</span> <span class=sb>`&lt;h4&gt;&#39;Peck Pocketed&#39; by Kevin Herron | Disney Favorite&lt;/h4&gt;`</span><span class=p>,</span>
+        <span class=p>},</span>
+        <span class=p>{</span>
+            <span class=nx>src</span><span class=o>:</span> <span class=s1>&#39;https://www.youtube.com/watch?v=ttLu7ygaN6I&#39;</span><span class=p>,</span>
+            <span class=nx>subHtml</span><span class=o>:</span> <span class=sb>`&lt;h4&gt;Forest Path - Unreal Engine 5 Cinematic by Sharkyy&lt;/h4&gt;`</span><span class=p>,</span>
+        <span class=p>},</span>
+        <span class=p>{</span>
+            <span class=nx>src</span><span class=o>:</span> <span class=s1>&#39;https://www.youtube.com/watch?v=C3vyugaBhSs&#39;</span><span class=p>,</span>
+            <span class=nx>subHtml</span><span class=o>:</span> <span class=sb>`&lt;h4&gt;UE5 | In The Heart Of The Forest by Anastasia Gorban&lt;/h4&gt;`</span><span class=p>,</span>
+        <span class=p>},</span>
+        <span class=c1>// Add more video objects as needed
+</span><span class=c1></span>    <span class=p>];</span>
+
+    <span class=k>return</span> <span class=p>(</span>
+        <span class=o>&lt;&gt;</span>
+            <span class=o>&lt;</span><span class=nx>div</span> <span class=nx>ref</span><span class=o>=</span><span class=p>{</span><span class=nx>containerRef</span><span class=p>}</span> <span class=o>/&gt;</span>
+            <span class=o>&lt;</span><span class=nx>LightGallery</span>
+                <span class=nx>container</span><span class=o>=</span><span class=p>{</span><span class=nx>galleryContainer</span><span class=p>}</span>
+                <span class=nx>onInit</span><span class=o>=</span><span class=p>{</span><span class=nx>onInit</span><span class=p>}</span>
+                <span class=nx>plugins</span><span class=o>=</span><span class=p>{[</span><span class=nx>lgThumbnail</span><span class=p>,</span> <span class=nx>lgVideo</span><span class=p>]}</span>
+                <span class=nx>closable</span><span class=o>=</span><span class=p>{</span><span class=kc>false</span><span class=p>}</span>
+                <span class=nx>showMaximizeIcon</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span>
+                <span class=nx>slideDelay</span><span class=o>=</span><span class=p>{</span><span class=mi>400</span><span class=p>}</span>
+                <span class=nx>thumbWidth</span><span class=o>=</span><span class=p>{</span><span class=mi>130</span><span class=p>}</span>
+                <span class=nx>thumbHeight</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;100px&#39;</span><span class=p>}</span>
+                <span class=nx>thumbMargin</span><span class=o>=</span><span class=p>{</span><span class=mi>6</span><span class=p>}</span>
+                <span class=nx>appendSubHtmlTo</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;.lg-item&#39;</span><span class=p>}</span>
+                <span class=nx>dynamic</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span>
+                <span class=nx>dynamicEl</span><span class=o>=</span><span class=p>{</span><span class=nx>videos</span><span class=p>}</span>
+                <span class=c1>// videojs
+</span><span class=c1></span>                <span class=c1>// videojsOptions={{ muted: false }}
+</span><span class=c1></span>                <span class=nx>hash</span><span class=o>=</span><span class=p>{</span><span class=kc>false</span><span class=p>}</span>
+                <span class=nx>elementClassNames</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;inline-gallery-container&#39;</span><span class=p>}</span>
+            <span class=o>/&gt;</span>
+        <span class=o>&lt;</span><span class=err>/&gt;</span>
+    <span class=p>);</span>
+<span class=p>};</span>
+</code></pre></div><h5 id=css>CSS<a href=#css class=anchor aria-hidden=true>#</a> </h5>
+<p>Set height and width for the container as the inline automatically adopts the
+container size</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-scss data-lang=scss><span class=nc>.inline-gallery-container</span> <span class=p>{</span>
+    <span class=na>width</span><span class=o>:</span> <span class=mi>100</span><span class=kt>%</span><span class=p>;</span>
+
+    <span class=c1>// set 60% height
+</span><span class=c1></span>    <span class=na>height</span><span class=o>:</span> <span class=mi>0</span><span class=p>;</span>
+    <span class=na>padding-bottom</span><span class=o>:</span> <span class=mi>65</span><span class=kt>%</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></div>
+<p class=edit-page><a href=https://github.com/sachinchoolur/lightGallery/tree/master/site/content/demos/react-video-gallery.md><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828.0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>Edit this page on GitHub</a></p>
+<div class="docs-navigation d-flex justify-content-between">
+<a href=https://www.lightgalleryjs.com/demos/react-image-gallery/>
+<div class="card my-1">
+<div class="card-body py-2">
+&larr; React image gallery
+</div>
+</div>
+</a>
+<a class=ms-auto href=https://www.lightgalleryjs.com/demos/bootstrap-image-gallery/>
+<div class="card my-1">
+<div class="card-body py-2">
+Bootstrap image gallery &rarr;
+</div>
+</div>
+</a>
+</div>
+</main>
+</div>
+</div>
+<footer class="footer text-muted">
+<div class=container-xxl>
+<div class=row>
+<div class=col-sm-3>
+<h4>Components</h4>
+<ul class=footer-menu>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/react-image-video-gallery/>React</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/vue-image-video-gallery/>Vue.js</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/angular-image-video-gallery/>Angular</a>
+</li>
+<li class=footer-menu-item>
+<a href="https://codesandbox.io/s/lightgallery-lit-23yv2?file=/src/index.js">Lit</a>
+</li>
+</ul>
+</div>
+<div class=col-sm-3>
+<h4>Docs</h4>
+<ul class=footer-menu>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/getting-started/>Get started</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/settings/>Settings</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/events/>Events</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/docs/methods/>Methods</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/blog/>Blog</a>
+</li>
+</ul>
+</div>
+<div class=col-sm-3>
+<h4>Demos</h4>
+<ul class=footer-menu>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/demos/thumbnails/>Thumbnails</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/demos/dynamic-mode/>Dynamic</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/demos/carousel-gallery/>Carousel</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/demos/video-gallery/>Video</a>
+</li>
+<li class=footer-menu-item>
+<a href=https://www.lightgalleryjs.com/demos/transitions/>Transitions</a>
+</li>
+</ul>
+</div>
+<div class=col-sm-3>
+<h4>Social</h4>
+<ul class=footer-menu>
+<li class=footer-menu-item>
+<a href=https://github.com/sachinchoolur/lightGallery>GitHub</a>
+</li>
+<li class=footer-menu-item>
+<a target=_blank href=https://twitter.com/SachinNeravath>Twitter</a>
+</li>
+<li class=footer-menu-item>
+<a target=_blank href=https://codepen.io/collection/BNNjpR>CodePen</a>
+</li>
+<li class=footer-menu-item>
+<a target=_blank href=https://stackblitz.com/@sachinchoolur>Stackblitz</a>
+</li>
+<li class=footer-menu-item>
+<a target=_blank href="https://docs.google.com/forms/d/e/1FAIpQLSfcxknmKJAF9btnCg8HugFadxyWRZ3TgC0ZKxOtIjdaGfqxIw/viewform?usp=pp_url&entry.34608024=Yes">Write a review</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class=container-xxl>
+<div class="row other-products">
+<div class=other-products-label>We also make</div>
+<div class=col-lg-4>
+<a class=other-products-item href=https://www.paritydeals.com/ target=_blank>
+<img src=https://www.lightgalleryjs.com/images/logos/paritydeals.jpeg alt=ParityDeals class=img-fluid width=200 height=200>
+<div class=other-products-item-content>
+<h5>ParityDeals</h5>
+<p>Optimize pricing across contries to maximize revenue</p>
+</div>
+</a>
+</div>
+<div class=col-lg-4>
+<a class=other-products-item href=https://www.timemaster.ai/ target=_blank>
+<img src=https://www.lightgalleryjs.com/images/logos/timemaster.png alt=timeMaster class=img-fluid width=200 height=200>
+<div class=other-products-item-content>
+<h5>timeMaster.ai</h5>
+<p>Supercharge your Focus and Productivity</p>
+</div>
+</a>
+</div>
+<div class=col-lg-4>
+<a class=other-products-item href=https://www.lightgalleryjs.com/ target=_blank>
+<img src=https://www.lightgalleryjs.com/images/logos/webwhiz.png alt=WebWhiz class=img-fluid width=200 height=200>
+<div class=other-products-item-content>
+<h5>WebWhiz.ai</h5>
+<p> ChatGPT trained on your website data
+</p>
+</div>
+</a>
+</div>
+</div>
+</div>
+</footer>
+<script id=__webwhizSdk__ src=https://widget.webwhiz.ai/webwhiz-sdk.js chatbotid=6427de1eb464389fa02a8e61></script>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js></script>
+<script src=https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.js></script>
+<script src=https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/airtable@0.11.1/build/airtable.browser.js></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-49767543-2"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-49767543-2')</script>
+<script src=https://www.lightgalleryjs.com/main.6c3b7a44dae7fec50a7118abd45307694535e7acac0a670dc266e4cb06d3a2dfa98ac5e1987276ceb14ff8fc3516244224ec66cdcda81814e24485c316e30756.js integrity="sha512-bDt6RNrn/sUKcRir1FMHaUU156ysCmcNwmbkywbTot+pisXhmHJ2zrFP+Pw1FiRCJOxmzc2oGBTiRIXDFuMHVg==" crossorigin=anonymous defer></script>
+</body>
+</html>
