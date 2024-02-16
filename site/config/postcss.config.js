@@ -12,6 +12,7 @@ module.exports = {
                 ...whitelister([
                     './assets/scss/components/_demo-gallery.scss',
                     './assets/scss/components/_syntax.scss',
+                    './assets/scss/components/_carousel.scss',
                     './assets/scss/components/_code.scss',
                 ]),
             ],

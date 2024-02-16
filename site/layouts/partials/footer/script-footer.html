@@ -16,6 +16,12 @@
 {{ $lightGalleryVimeoThumbnail := resources.Get "js/plugins/vimeoThumbnail/lg-vimeo-thumbnail.umd.js" -}}
 {{ $jQuery := resources.Get "js/vendor/jQuery.js" -}}
 {{ $justifiedGallery := resources.Get "js/vendor/jquery.justifiedGallery.js" -}}
+{{ $imagesLoaded := resources.Get "js/vendor/imagesloaded.pkgd.js" -}}
+{{ $masonry := resources.Get "js/vendor/masonry.pkgd.min.js" -}}
+{{ $swiper := resources.Get "js/vendor/swiper-bundle.min.js" -}}
+{{ $slick := resources.Get "js/vendor/slick.min.js" -}}
+{{ $flickity := resources.Get "js/vendor/flickity.pkgd.min.js" -}}
+{{ $owl := resources.Get "js/vendor/owl.carousel.min.js" -}}
 
 {{ if eq .Title "Video gallery" -}}
   <script src="//player.vimeo.com/api/player.js"></script>
@@ -24,21 +30,8 @@
 {{ end -}}
 <script id="__webwhizSdk__" src="https://widget.webwhiz.ai/webwhiz-sdk.js" chatbotId="6427de1eb464389fa02a8e61"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js"></script>
-<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.js"></script>
-<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/airtable@0.11.1/build/airtable.browser.js"></script>
-{{ if eq .Title "SwiperJs demo" -}}
-  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-{{ end -}}
-
-{{ if eq .Title "Slick carousel demo" -}}
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-{{end}}
-
-{{ if eq .Title "Flickity carousel demo" -}}
-    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
-{{ end }}
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49767543-2"></script>
@@ -96,6 +89,12 @@
   {{ $js := slice $lazysizes $bootstrap $app | resources.Concat "main.js" -}}
   <script src="{{ $jQuery.Permalink }}"></script>
   <script src="{{$justifiedGallery.Permalink}}"></script>
+  <script src="{{$imagesLoaded.Permalink}}"></script>
+  <script src="{{$masonry.Permalink}}"></script>
+  <script src="{{$swiper.Permalink}}"></script>
+  <script src="{{$slick.Permalink}}"></script>
+  <script src="{{$flickity.Permalink}}"></script>
+  <script src="{{$owl.Permalink}}"></script>
   <script src="{{$lightGallery.Permalink}}"></script>
   <script src="{{$lightGalleryVideo.Permalink}}"></script>
   <script src="{{$lightGalleryFullscreen.Permalink}}"></script>
@@ -114,7 +113,8 @@
 {{ else -}}
   {{ $instantPage := resources.Get "js/vendor/instant.page/instantpage.js" | babel | minify -}}
   {{ $app := resources.Get "js/app.js" | babel | minify -}}
-  {{ $js := slice $lazysizes $jQuery $justifiedGallery $bootstrap $instantPage $lightGallery $lightGalleryVideo $lightGalleryFullscreen $lightGalleryZoom $lightGalleryRotate $lightGalleryThumbnail $lightGalleryPager $lightGalleryHash $lightGalleryShare $lightGalleryComment $lightGalleryAutoplay $lightGalleryRelativeCaption $lightGalleryVimeoThumbnail $lightGalleryMediumZoom $app | resources.Concat "main.js" -}}
+  {{ $js := slice $lazysizes $jQuery $masonry $imagesLoaded $swiper $slick $flickity $owl $justifiedGallery $bootstrap $instantPage $lightGallery $lightGalleryVideo $lightGalleryFullscreen $lightGalleryZoom $lightGalleryRotate $lightGalleryThumbnail $lightGalleryPager $lightGalleryHash $lightGalleryShare $lightGalleryComment $lightGalleryAutoplay $lightGalleryRelativeCaption $lightGalleryVimeoThumbnail $lightGalleryMediumZoom $app | resources.Concat "main.js" -}}
   {{ $secureJS := $js | resources.Fingerprint "sha512" -}}
   <script src="{{ $secureJS.Permalink }}" integrity="{{ $secureJS.Data.Integrity }}" crossorigin="anonymous" defer></script>
+
 {{ end -}}
