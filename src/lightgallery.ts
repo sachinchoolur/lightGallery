@@ -2222,7 +2222,8 @@ export class LightGallery {
         return (
             target.hasClass('lg-outer') ||
             target.hasClass('lg-item') ||
-            target.hasClass('lg-img-wrap')
+            target.hasClass('lg-img-wrap') ||
+            target.hasClass('lg-img-rotate')
         );
     }
 
