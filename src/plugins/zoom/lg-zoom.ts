@@ -139,6 +139,12 @@ export default class Zoom {
     }
 
     getDragAllowedAxises(scale: number, scaleDiff?: number): DragAllowedAxises {
+        if (!this.containerRect) {
+            return {
+                allowX: false,
+                allowY: false,
+            };
+        }
         const $image = this.core
             .getSlideItem(this.core.index)
             .find('.lg-image')
