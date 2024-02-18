@@ -492,7 +492,10 @@ const utils = {
         } else {
             videoClass = 'lg-has-html5';
         }
-
+        let _dummy = dummyImg;
+        if (typeof dummyImg !== 'string') {
+            _dummy = dummyImg.outerHTML;
+        }
         return `<div class="lg-video-cont ${videoClass}" style="${videoContStyle}">
                 <div class="lg-video-play-button">
                 <svg
@@ -512,7 +515,7 @@ const utils = {
                     <circle cx="50%" cy="50%" r="20"></circle>
                 </svg>
             </div>
-            ${dummyImg || ''}
+            ${_dummy}
             <img class="lg-object lg-video-poster" src="${_poster}" />
         </div>`;
     },

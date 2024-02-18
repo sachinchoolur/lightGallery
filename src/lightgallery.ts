@@ -1017,7 +1017,7 @@ export class LightGallery {
         }
         const picture = document.createElement('picture');
         picture.className = 'lg-img-wrap';
-        picture.append(imgContent);
+        $LG(picture).append(imgContent);
         $currentSlide.prepend(picture);
     }
 
