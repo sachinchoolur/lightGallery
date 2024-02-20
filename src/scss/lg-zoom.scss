@@ -84,8 +84,8 @@
             content: '\e311';
         }
         .lg-actual-size & {
-            opacity: 0.5;
-            pointer-events: none;
+            opacity: 1;
+            pointer-events: auto;
         }
     }
 
