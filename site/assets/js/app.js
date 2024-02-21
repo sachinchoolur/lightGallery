@@ -1314,7 +1314,7 @@ if ($lgInlineVideoContainer) {
         swipeToClose: false,
         addClass: 'lg-inline',
         mode: 'lg-scale-up',
-        slideShowAutoplay: true,
+        slideShowAutoplay: false,
         hash: false,
         pager: false,
         closable: false,
@@ -1327,7 +1327,14 @@ if ($lgInlineVideoContainer) {
         ...getResponsiveThumbnailsSettings(),
         dynamicEl: [
             {
-                // size: '1280-720',
+                src: '//vimeo.com/112836958',
+                poster: location.origin + '/images/demo/vimeo-video-poster.jpg',
+                thumb: location.origin + '/images/demo/vimeo-video-poster.jpg',
+                subHtml:
+                    "<h4>Nature</h4><p>Video by <a target='_blank' href='https://vimeo.com/charliekaye'>Charlie Kaye</a></p>",
+            },
+            {
+                size: '1280-720',
                 src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
                 poster:
                     'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
@@ -1335,13 +1342,6 @@ if ($lgInlineVideoContainer) {
                     'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
                 subHtml:
                     '<h4>Puffin Hunts Fish To Feed Puffling | Blue Planet II | BBC Earth</h4><p>This puffin parent must go out to sea to feed his chick, but he must evade other birds that would rob him.</p>',
-            },
-            {
-                src: '//vimeo.com/112836958',
-                poster: location.origin + '/images/demo/vimeo-video-poster.jpg',
-                thumb: location.origin + '/images/demo/vimeo-video-poster.jpg',
-                subHtml:
-                    "<h4>Nature</h4><p>Video by <a target='_blank' href='https://vimeo.com/charliekaye'>Charlie Kaye</a></p>",
             },
             {
                 source: [
