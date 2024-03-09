@@ -258,6 +258,24 @@
             }
         }
     }
+
+    .lg-media-cont {
+        text-align: center;
+        display: inline-block;
+        vertical-align: middle;
+        position: relative;
+        .lg-object {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    }
+
+    .lg-has-iframe {
+        .lg-media-cont {
+            -webkit-overflow-scrolling: touch;
+            overflow: auto;
+        }
+    }
 }
 
 .lg-backdrop {
