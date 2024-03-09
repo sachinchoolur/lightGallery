@@ -397,7 +397,7 @@ const utils = {
         iframeTitle?: string,
     ): string {
         const title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
-        return `<div class="lg-video-cont lg-has-iframe" style="width:${iframeWidth}; max-width:${iframeMaxWidth}; height: ${iframeHeight}; max-height:${iframeMaxHeight}">
+        return `<div class="lg-media-cont lg-has-iframe" style="width:${iframeWidth}; max-width:${iframeMaxWidth}; height: ${iframeHeight}; max-height:${iframeMaxHeight}">
                     <iframe class="lg-object" frameborder="0" ${title} src="${src}"  allowfullscreen="true"></iframe>
                 </div>`;
     },
@@ -579,6 +579,7 @@ const utils = {
             dynamicEl.alt = alt || title || '';
             dynamicElements.push(dynamicEl);
         });
+        console.log(dynamicElements, 'dynamicElements');
         return dynamicElements;
     },
     isMobile(): boolean {
