@@ -5,6 +5,7 @@ import { AutoplaySettings } from './plugins/autoplay/lg-autoplay-settings';
 import { CommentSettings } from './plugins/comment/lg-comment-settings';
 import { FullscreenSettings } from './plugins/fullscreen/lg-fullscreen-settings';
 import { HashSettings } from './plugins/hash/lg-hash-settings';
+import { MediumZoomSettings } from './plugins/mediumZoom/lg-medium-zoom-settings';
 import { PagerSettings } from './plugins/pager/lg-pager-settings';
 import { RotateSettings } from './plugins/rotate/lg-rotate-settings';
 import { ShareSettings } from './plugins/share/lg-share-settings';
@@ -51,7 +52,8 @@ export type LightGalleryAllSettings = LightGalleryCoreSettings &
     HashSettings &
     PagerSettings &
     RotateSettings &
-    ShareSettings;
+    ShareSettings &
+    MediumZoomSettings;
 
 export type LightGallerySettings = Partial<LightGalleryAllSettings>;
 
