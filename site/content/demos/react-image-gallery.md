@@ -1,9 +1,11 @@
 ---
 title: 'React image gallery'
-description:
-    Full featured, responsive image gallery component for React.
+description: Full featured, responsive image gallery component for React.
 lead:
-    Use lightGallery React component to build beautiful image gallery lightBox. lightGallery react component support all the feature of lightGallery such as pinch to zoom, rotate, flip images, social sharing, animated thumbnails, etc.
+    Use lightGallery React component to build beautiful image gallery lightBox.
+    lightGallery react component support all the feature of lightGallery such as
+    pinch to zoom, rotate, flip images, social sharing, animated thumbnails,
+    etc.
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
@@ -15,7 +17,6 @@ toc: true
 ---
 
 #### Demo
-
 
 {{< masonry-layout id="masonry-gallery-demo" >}}
 
@@ -52,18 +53,15 @@ export const App = () => {
 
     const dynamicEl = [
         {
-            src: 'https://via.placeholder.com/1400x800.png?text=Image+1',
-            responsive:
-                'https://via.placeholder.com/800x480.png?text=Image+1 800w, https://via.placeholder.com/480x240.png?text=Image+1 480w',
-            thumb: 'https://via.placeholder.com/240x120.png?text=Image+1',
-            subHtml: `<div class="lightGallery-captions"> <h4>Placeholder Image 1</h4> <p>Published on January 1, 2023</p> </div>`,
+            src: '...',
+            responsive: '...',
+            thumb: '...',
+            subHtml: `...`,
         },
         {
-            src: 'https://via.placeholder.com/1400x800.png?text=Image+2',
-            responsive:
-                'https://via.placeholder.com/800x480.png?text=Image+2 800w, https://via.placeholder.com/480x240.png?text=Image+2 480w',
-            thumb: 'https://via.placeholder.com/240x120.png?text=Image+2',
-            subHtml: `<div class="lightGallery-captions"> <h4>Placeholder Image 2</h4><p>Published on January 2, 2023</p></div>`,
+            src: '...',
+            responsive: '...',
+            subHtml: `...`,
         },
         // Add more placeholder images as needed
     ];
@@ -90,28 +88,11 @@ export const App = () => {
                 thumbHeight={'100px'}
                 thumbMargin={6}
                 appendSubHtmlTo={'.lg-item'}
-                elementClassNames={'inline-gallery-container'}
+                elementClassNames={'react-image-container'}
                 dynamic={true}
                 dynamicEl={dynamicEl}
             />
         </>
     );
 };
-```
-
-##### CSS
-
-Set height and width for the container as the inline automatically adopts the
-container size
-
-```scss
-.inline-gallery-container {
-    width: 100%;
-
-    // set 60% height
-    height: 0;
-    padding-bottom: 65%;
-}
-
-// Add transitions for caption; check the caption page
 ```

@@ -38,10 +38,10 @@ if ($lgInlineContainer) {
         pager: false,
         closable: false,
         showMaximizeIcon: true,
-        rotate: false,
-        download: false,
+        rotate: true,
+        download: true,
         slideDelay: 400,
-        plugins: [lgZoom, lgShare, lgAutoplay, lgThumbnail],
+        plugins: [lgZoom, lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgRotate],
         appendSubHtmlTo: '.lg-item',
         ...getResponsiveThumbnailsSettings(),
         dynamicEl: [
@@ -1319,10 +1319,19 @@ if ($lgInlineVideoContainer) {
         pager: false,
         closable: false,
         showMaximizeIcon: true,
-        rotate: false,
-        download: false,
+        rotate: true,
+        download: true,
         slideDelay: 400,
-        plugins: [lgShare, lgThumbnail, lgVideo],
+        plugins: [
+            lgZoom,
+            lgAutoplay,
+            lgFullscreen,
+            lgPager,
+            lgRotate,
+            lgShare,
+            lgThumbnail,
+            lgVideo,
+        ],
         appendSubHtmlTo: '.lg-item',
         ...getResponsiveThumbnailsSettings(),
         dynamicEl: [
@@ -1546,7 +1555,7 @@ $(document).ready(function () {
     window.lightGallery(container, {
         thumbnail: true,
         pager: true,
-        plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
+        plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo, lgRotate],
         hash: false,
         preload: 0,
         selector: '.lg-item'
@@ -1558,7 +1567,7 @@ $(document).ready(function () {
 window.lightGallery(document.getElementById('bootstrap-video-gallery'), {
     thumbnail: true,
     pager: true,
-    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
+    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo, lgRotate],
     hash: false,
     preload: 0,
 
@@ -1568,7 +1577,7 @@ window.lightGallery(document.getElementById('bootstrap-video-gallery'), {
 window.lightGallery(document.getElementById('bootstrap-video-carousel'), {
     thumbnail: true,
     pager: true,
-    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
+    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo, lgRotate],
     hash: false,
     preload: 0,
     selector: '.lg-item'
