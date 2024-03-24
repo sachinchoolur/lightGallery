@@ -269,7 +269,9 @@ export default class Video {
         } else if (videoInfo.html5) {
             let html5VideoMarkup = '';
             for (let i = 0; i < html5Video.source.length; i++) {
-                html5VideoMarkup += `<source src="${html5Video.source[i].src}" type="${html5Video.source[i].type}">`;
+                const type = html5Video.source[i].type;
+                const typeAttr = type ? `type="${type}"` : '';
+                html5VideoMarkup += `<source src="${html5Video.source[i].src}" ${typeAttr}>`;
             }
             if (html5Video.tracks) {
                 for (let i = 0; i < html5Video.tracks.length; i++) {
