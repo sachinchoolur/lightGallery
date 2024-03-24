@@ -5,6 +5,7 @@ lead: lightGallery supports YouTube, Vimeo, Wistia and all other types of HTML5 
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
+has_video: true
 menu: {demos: {parent: Demos, name: Video gallery}}
 weight: 2
 toc: true
