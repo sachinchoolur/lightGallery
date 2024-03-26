@@ -1,7 +1,7 @@
 ---
 title: Captions
 description: lightGallery captions demo.
-lead: You can directly pass image caption html via data-sub-html attribute or just pass id or class name of any html object (div) which contains your cation html.
+lead: You can directly pass image caption html via data-sub-html attribute or just pass id or class name of any html object (div) which contains your caption html.
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
