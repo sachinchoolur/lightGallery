@@ -38,10 +38,10 @@ if ($lgInlineContainer) {
         pager: false,
         closable: false,
         showMaximizeIcon: true,
-        rotate: false,
-        download: false,
+        rotate: true,
+        download: true,
         slideDelay: 400,
-        plugins: [lgZoom, lgShare, lgAutoplay, lgThumbnail],
+        plugins: [lgZoom, lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgRotate],
         appendSubHtmlTo: '.lg-item',
         ...getResponsiveThumbnailsSettings(),
         dynamicEl: [
@@ -1314,20 +1314,36 @@ if ($lgInlineVideoContainer) {
         swipeToClose: false,
         addClass: 'lg-inline',
         mode: 'lg-scale-up',
-        slideShowAutoplay: true,
+        slideShowAutoplay: false,
         hash: false,
         pager: false,
         closable: false,
         showMaximizeIcon: true,
-        rotate: false,
-        download: false,
+        rotate: true,
+        download: true,
         slideDelay: 400,
-        plugins: [lgShare, lgThumbnail, lgVideo],
+        plugins: [
+            lgZoom,
+            lgAutoplay,
+            lgFullscreen,
+            lgPager,
+            lgRotate,
+            lgShare,
+            lgThumbnail,
+            lgVideo,
+        ],
         appendSubHtmlTo: '.lg-item',
         ...getResponsiveThumbnailsSettings(),
         dynamicEl: [
             {
-                // size: '1280-720',
+                src: '//vimeo.com/112836958',
+                poster: location.origin + '/images/demo/vimeo-video-poster.jpg',
+                thumb: location.origin + '/images/demo/vimeo-video-poster.jpg',
+                subHtml:
+                    "<h4>Nature</h4><p>Video by <a target='_blank' href='https://vimeo.com/charliekaye'>Charlie Kaye</a></p>",
+            },
+            {
+                size: '1280-720',
                 src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
                 poster:
                     'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
@@ -1335,13 +1351,6 @@ if ($lgInlineVideoContainer) {
                     'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
                 subHtml:
                     '<h4>Puffin Hunts Fish To Feed Puffling | Blue Planet II | BBC Earth</h4><p>This puffin parent must go out to sea to feed his chick, but he must evade other birds that would rob him.</p>',
-            },
-            {
-                src: '//vimeo.com/112836958',
-                poster: location.origin + '/images/demo/vimeo-video-poster.jpg',
-                thumb: location.origin + '/images/demo/vimeo-video-poster.jpg',
-                subHtml:
-                    "<h4>Nature</h4><p>Video by <a target='_blank' href='https://vimeo.com/charliekaye'>Charlie Kaye</a></p>",
             },
             {
                 source: [
@@ -1546,7 +1555,7 @@ $(document).ready(function () {
     window.lightGallery(container, {
         thumbnail: true,
         pager: true,
-        plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
+        plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo, lgRotate],
         hash: false,
         preload: 0,
         selector: '.lg-item'
@@ -1558,7 +1567,7 @@ $(document).ready(function () {
 window.lightGallery(document.getElementById('bootstrap-video-gallery'), {
     thumbnail: true,
     pager: true,
-    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
+    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo, lgRotate],
     hash: false,
     preload: 0,
 
@@ -1568,7 +1577,7 @@ window.lightGallery(document.getElementById('bootstrap-video-gallery'), {
 window.lightGallery(document.getElementById('bootstrap-video-carousel'), {
     thumbnail: true,
     pager: true,
-    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
+    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo, lgRotate],
     hash: false,
     preload: 0,
     selector: '.lg-item'

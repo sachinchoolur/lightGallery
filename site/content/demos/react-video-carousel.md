@@ -7,6 +7,7 @@ lead:
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
+has_video: true
 menu: { demos: { parent: Demos } }
 weight: 30
 toc: true
@@ -78,7 +79,7 @@ export const App: FC<{ name: string }> = ({ name }) => {
                     // Add more video objects as needed
                 ]}
                 hash={false}
-                elementClassNames={'inline-video-gallery-container'}
+                elementClassNames={'react-gallery-el'}
             />
         </div>
     );
@@ -91,10 +92,8 @@ Set height and width for the container as the inline automatically adopts the
 container size
 
 ```scss
-.inline-gallery-container {
+.react-gallery-el {
     width: 100%;
-
-    // set 60% height
     height: 0;
     padding-bottom: 65%;
 }

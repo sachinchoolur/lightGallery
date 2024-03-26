@@ -23,11 +23,12 @@
 {{ $flickity := resources.Get "js/vendor/flickity.pkgd.min.js" -}}
 {{ $owl := resources.Get "js/vendor/owl.carousel.min.js" -}}
 
-{{ if eq .Title "Video gallery" -}}
-  <script src="//player.vimeo.com/api/player.js"></script>
-  <script src="//fast.wistia.com/assets/external/E-v1.js"></script>
+{{ if .Params.has_video -}}
+  <script src="https://player.vimeo.com/api/player.js"></script>
+  <script src="https://fast.wistia.com/assets/external/E-v1.js"></script>
   <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
 {{ end -}}
+
 <script id="__webwhizSdk__" src="https://widget.webwhiz.ai/webwhiz-sdk.js" chatbotId="6427de1eb464389fa02a8e61"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js"></script>
 

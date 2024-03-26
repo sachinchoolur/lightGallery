@@ -58,7 +58,7 @@ toc: true
     </div>
 </div>
 
-{{< demoButtons js="https://codepen.io/sachinchoolur/pen/bGQGMXb" react="https://stackblitz.com/edit/stackblitz-starters-5sp895" >}}
+{{< demoButtons js="https://codepen.io/sachinchoolur/pen/bGQGMXb" >}}
 
 ##### HTML Structure
 

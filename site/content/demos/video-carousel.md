@@ -11,6 +11,7 @@ lead:
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
+has_video: true
 menu: { demos: { parent: Demos } }
 weight: 4
 toc: true
