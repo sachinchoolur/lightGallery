@@ -1252,7 +1252,9 @@ export class LightGallery {
                 );
                 $currentSlide.prepend(markup);
             } else if (videoInfo) {
-                const markup = `<div class="lg-video-cont " style="${lgVideoStyle}"></div>`;
+                const markup = document.createElement('div');
+                markup.classList.add('lg-video-cont');
+                markup.style.cssText = lgVideoStyle;
                 $currentSlide.prepend(markup);
             } else {
                 this.setImgMarkup(src as string, $currentSlide, index);
