@@ -222,6 +222,14 @@ export class LightGallery {
             $element
                 .attr('data-lg-id', uuid)
                 .on(`click.lgcustom-item-${uuid}`, (e) => {
+                    // Ignore if clicked on element with data-lg-ignore attribute.
+                    if (
+                        e.target instanceof Element &&
+                        e.target.closest("[data-lg-ignore=true]")
+                    ) {
+                        return;
+                    }
+
                     e.preventDefault();
                     const currentItemIndex = this.settings.index || index;
                     this.openGallery(currentItemIndex, element);
