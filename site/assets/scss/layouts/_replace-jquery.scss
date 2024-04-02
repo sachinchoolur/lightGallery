@@ -1,0 +1,98 @@
+.main-head-view {
+    padding-top: 130px;
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: center;
+}
+.head-section-sub{
+    
+    font-family: Merriweather;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 50px;
+    color: rgba(0, 73, 163, 1);
+}
+.head-converter-section {
+    // margin-top: 200px;
+    // border: 2px solid #ccc;
+    margin: 0px;
+    box-sizing: border-box;
+    // height: 350px;
+    
+  
+//  .expanded-textfield-sub{
+//     height: 100vh;
+//  }
+}
+.main-row-sections{
+ display: flex;
+ --bs-gutter-x: 0px;
+}
+.converter-btn{
+    padding-top: 150px;
+    display: flex;
+   justify-content: center;
+}
+
+.btn-brand-size{
+    padding-left: 35px;
+    padding-right: 35px;
+}
+.taskbar{
+    background-color: #dbe2ea;
+    border: 1px solid #b9c2cb;
+    width: 100%;
+    height: 35px;
+    padding: 2px;
+    margin: 0;
+    box-sizing: border-box;
+    position: relative;
+    
+}
+.cursor-pointer{
+    cursor: pointer;
+}
+.btn-group{
+    float: right;
+    position: relative;
+    // display: inline-block;
+    vertical-align: middle;
+    gap: 20px;
+}
+.btn-style{
+    font-size: 22px;
+    border-radius: 10px;
+    font-weight: bold;
+    background-color: #dbe2ea;
+}
+.main-replace-section{
+    background-image: linear-gradient(#e8f0ff 0%, white 52.08%);
+}
+// .expanded-textfield{
+//     position: fixed;
+//     top: 0;
+//     right: 0;
+//     bottom: 0;
+//     left: 0;
+//     z-index: 1999;
+//     width: 100%;
+//     height: 100%;
+// }
+.text-area{
+    width: 530px;
+    height: 300px;
+    padding: 10px; 
+    font-size: 16px;
+    border: 3px solid #ccc; 
+    border-radius: 5px;
+    resize: vertical; 
+
+}
+.text-area-section{
+    width: 530px; 
+    height: 300px; 
+    padding: 10px; 
+    font-size: 16px; 
+    border: 1px solid #ccc; 
+    resize: vertical;
+}
