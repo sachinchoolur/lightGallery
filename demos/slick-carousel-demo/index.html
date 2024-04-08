@@ -29,7 +29,7 @@
 <meta property="og:url" content="https://www.lightgalleryjs.com/demos/slick-carousel-demo/">
 <meta property="og:image" content="https://www.lightgalleryjs.com/lightgallery.png">
 <meta property="article:published_time" content="2020-10-06T08:48:57+00:00">
-<meta property="article:modified_time" content="2024-02-10T11:47:47+05:30">
+<meta property="article:modified_time" content="2024-04-08T16:03:33+05:30">
 <meta property="og:site_name" content="lightGallery">
 <meta property="article:publisher" content="https://www.facebook.com/sachinchoolur">
 <meta property="article:author" content="https://www.facebook.com/sachinchoolur">
@@ -169,6 +169,11 @@ lightGallery
 JS demo
 </a>
 </div>
+<div class="demo-btn demo-btn-stackblits">
+<a target=_blank href="https://stackblitz.com/edit/stackblitz-starters-a7gtex?file=src%2FApp.tsx"><svg xmlns="http://www.w3.org/2000/svg" fill="currentcolor" viewBox="0 0 32 32"><path d="M5.853 18.647h8.735L9.45 31l16.697-17.647h-8.735L22.55 1 5.853 18.647z"/></svg>
+React demo
+</a>
+</div>
 </div>
 </p>
 <h5 id=html-structure>HTML Structure<a href=#html-structure class=anchor aria-hidden=true>#</a> </h5>
@@ -183,27 +188,22 @@ JS demo
 <span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
 </code></pre></div><h5 id=javascript>Javascript<a href=#javascript class=anchor aria-hidden=true>#</a> </h5>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kd>let</span> <span class=nx>slickEl</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s1>&#39;slick-carousel-gallery-demo&#39;</span><span class=p>);</span>
-    <span class=k>if</span> <span class=p>(</span><span class=nx>slickEl</span><span class=p>)</span> <span class=p>{</span>
-        <span class=kd>var</span> <span class=nx>$slickDemo</span> <span class=o>=</span> <span class=nx>$</span><span class=p>(</span><span class=s1>&#39;#slick-carousel-gallery-demo&#39;</span><span class=p>);</span>
-        <span class=nx>$slickDemo</span><span class=p>.</span><span class=nx>on</span><span class=p>(</span><span class=s1>&#39;init&#39;</span><span class=p>,</span> <span class=kd>function</span> <span class=p>(</span><span class=nx>event</span><span class=p>,</span> <span class=nx>slick</span><span class=p>,</span> <span class=nx>direction</span><span class=p>)</span> <span class=p>{</span>
-            <span class=kr>const</span> <span class=nx>container</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>querySelector</span><span class=p>(</span><span class=s1>&#39;.slick-track&#39;</span><span class=p>);</span>
-            <span class=nb>window</span><span class=p>.</span><span class=nx>lightGallery</span><span class=p>(</span><span class=nx>container</span><span class=p>,</span> <span class=p>{</span>
-                <span class=nx>thumbnail</span><span class=o>:</span> <span class=kc>false</span><span class=p>,</span>
-                <span class=nx>pager</span><span class=o>:</span> <span class=kc>false</span><span class=p>,</span>
-                <span class=nx>plugins</span><span class=o>:</span> <span class=p>[],</span>
-                <span class=nx>hash</span><span class=o>:</span> <span class=kc>false</span><span class=p>,</span>
-                <span class=nx>preload</span><span class=o>:</span> <span class=mi>4</span><span class=p>,</span>
-            <span class=p>});</span>
+<span class=k>if</span> <span class=p>(</span><span class=nx>slickEl</span><span class=p>)</span> <span class=p>{</span>
+    <span class=kd>var</span> <span class=nx>$slickDemo</span> <span class=o>=</span> <span class=nx>$</span><span class=p>(</span><span class=s1>&#39;#slick-carousel-gallery-demo&#39;</span><span class=p>);</span>
+    <span class=nx>$slickDemo</span><span class=p>.</span><span class=nx>on</span><span class=p>(</span><span class=s1>&#39;init&#39;</span><span class=p>,</span> <span class=kd>function</span> <span class=p>(</span><span class=nx>event</span><span class=p>,</span> <span class=nx>slick</span><span class=p>,</span> <span class=nx>direction</span><span class=p>)</span> <span class=p>{</span>
+        <span class=kr>const</span> <span class=nx>container</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>querySelector</span><span class=p>(</span><span class=s1>&#39;.slick-track&#39;</span><span class=p>);</span>
+        <span class=nb>window</span><span class=p>.</span><span class=nx>lightGallery</span><span class=p>(</span><span class=nx>container</span><span class=p>,</span> <span class=p>{</span>
+            <span class=nx>plugins</span><span class=o>:</span> <span class=p>[</span>
+                <span class=nx>lgZoom</span><span class=p>,</span>
+                <span class=nx>lgThumbnail</span><span class=p>,</span>
+            <span class=p>],</span>
+            <span class=nx>preload</span><span class=o>:</span> <span class=mi>4</span><span class=p>,</span>
         <span class=p>});</span>
-        <span class=nx>$slickDemo</span><span class=p>.</span><span class=nx>slick</span><span class=p>({</span>
-            <span class=nx>centerMode</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span>
-            <span class=nx>slidesToShow</span><span class=o>:</span> <span class=mi>3</span><span class=p>,</span>
-            <span class=nx>customPaging</span><span class=o>:</span> <span class=s1>&#39;10px&#39;</span><span class=p>,</span>
-            <span class=nx>swipe</span><span class=o>:</span> <span class=kc>false</span><span class=p>,</span>
-            <span class=nx>arrows</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span>
-            <span class=nx>variableWidth</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span>
-        <span class=p>});</span>
-    <span class=p>}</span>
+    <span class=p>});</span>
+    <span class=nx>$slickDemo</span><span class=p>.</span><span class=nx>slick</span><span class=p>({,</span>
+        <span class=nx>slidesToShow</span><span class=o>:</span> <span class=mi>3</span><span class=p>,</span>
+    <span class=p>});</span>
+<span class=p>}</span>
 </code></pre></div><h5 id=scss-optional>SCSS (Optional)<a href=#scss-optional class=anchor aria-hidden=true>#</a> </h5>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-css data-lang=css><span class=p>.</span><span class=nc>carousel</span> <span class=p>{</span>
     <span class=err>.slick-prev,</span>
@@ -364,6 +364,6 @@ React video carousel &rarr;
 <script src=https://cdn.jsdelivr.net/npm/airtable@0.11.1/build/airtable.browser.js></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49767543-2"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-49767543-2')</script>
-<script src=https://www.lightgalleryjs.com/main.d82c12231e47da9247309d5a4798b87abf2b22c502bfba8692f1e0b6207c880dba528512713ca7b266109c9a8c3fe6d7237d58e26662f6c0a0303c5d32cb38dd.js integrity="sha512-2CwSIx5H2pJHMJ1aR5i4er8rIsUCv7qGkvHgtiB8iA26UoUScTynsmYQnJqMP+bXI31Y4mZi9sCgMDxdMss43Q==" crossorigin=anonymous defer></script>
+<script src=https://www.lightgalleryjs.com/main.a1c0c362e061b96f84eff83912cfda5357d1558ebab4b1996360ae4c4efa5323f0c6a9b38b66748f818a2e584f92840ea93d87abfa3ce3147bd7579ed1a9b073.js integrity="sha512-ocDDYuBhuW+E7/g5Es/aU1fRVY66tLGZY2CuTE76UyPwxqmzi2Z0j4GKLlhPkoQOqT2Hq/o84xR711ee0amwcw==" crossorigin=anonymous defer></script>
 </body>
 </html>

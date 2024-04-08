@@ -27,7 +27,7 @@
 <meta property="og:url" content="https://www.lightgalleryjs.com/demos/react-carousel/">
 <meta property="og:image" content="https://www.lightgalleryjs.com/lightgallery.png">
 <meta property="article:published_time" content="2020-10-06T08:48:57+00:00">
-<meta property="article:modified_time" content="2024-02-10T11:47:47+05:30">
+<meta property="article:modified_time" content="2024-03-24T13:41:52+05:30">
 <meta property="og:site_name" content="lightGallery">
 <meta property="article:publisher" content="https://www.facebook.com/sachinchoolur">
 <meta property="article:author" content="https://www.facebook.com/sachinchoolur">
@@ -139,12 +139,11 @@ React demo
 <h5 id=react>React<a href=#react class=anchor aria-hidden=true>#</a> </h5>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=kr>import</span> <span class=p>{</span> <span class=nx>FC</span><span class=p>,</span> <span class=nx>useCallback</span><span class=p>,</span> <span class=nx>useEffect</span><span class=p>,</span> <span class=nx>useRef</span><span class=p>,</span> <span class=nx>useState</span> <span class=p>}</span> <span class=nx>from</span> <span class=s1>&#39;react&#39;</span><span class=p>;</span>
 <span class=kr>import</span> <span class=nx>LightGallery</span> <span class=nx>from</span> <span class=s1>&#39;lightgallery/react&#39;</span><span class=p>;</span>
-<span class=kr>import</span> <span class=nx>lgZoom</span> <span class=nx>from</span> <span class=s1>&#39;lightgallery/plugins/zoom&#39;</span><span class=p>;</span>
-<span class=kr>import</span> <span class=s1>&#39;./style.scss&#39;</span><span class=p>;</span>
-<span class=kr>import</span> <span class=nx>lgThumbnail</span> <span class=nx>from</span> <span class=s1>&#39;lightgallery/plugins/thumbnail&#39;</span><span class=p>;</span>
 <span class=kr>import</span> <span class=p>{</span> <span class=nx>LightGallery</span> <span class=nx>as</span> <span class=nx>ILightGallery</span> <span class=p>}</span> <span class=nx>from</span> <span class=s1>&#39;lightgallery/lightgallery&#39;</span><span class=p>;</span>
+<span class=kr>import</span> <span class=nx>lgZoom</span> <span class=nx>from</span> <span class=s1>&#39;lightgallery/plugins/zoom&#39;</span><span class=p>;</span>
+<span class=kr>import</span> <span class=nx>lgThumbnail</span> <span class=nx>from</span> <span class=s1>&#39;lightgallery/plugins/thumbnail&#39;</span><span class=p>;</span>
 
-<span class=kr>export</span> <span class=kr>const</span> <span class=nx>App</span><span class=o>:</span> <span class=nx>FC</span><span class=o>&lt;</span><span class=p>{</span> <span class=nx>name</span><span class=o>:</span> <span class=nx>string</span> <span class=p>}</span><span class=o>&gt;</span> <span class=o>=</span> <span class=p>({</span> <span class=nx>name</span> <span class=p>})</span> <span class=p>=&gt;</span> <span class=p>{</span>
+<span class=kr>export</span> <span class=kr>const</span> <span class=nx>App</span> <span class=o>=</span> <span class=p>()</span> <span class=p>=&gt;</span> <span class=p>{</span>
     <span class=kr>const</span> <span class=nx>lightGalleryRef</span> <span class=o>=</span> <span class=nx>useRef</span> <span class=o>&lt;</span> <span class=nx>ILightGallery</span> <span class=o>&gt;</span> <span class=kc>null</span><span class=p>;</span>
     <span class=kr>const</span> <span class=nx>containerRef</span> <span class=o>=</span> <span class=nx>useRef</span><span class=p>(</span><span class=kc>null</span><span class=p>);</span>
     <span class=kr>const</span> <span class=p>[</span><span class=nx>galleryContainer</span><span class=p>,</span> <span class=nx>setGalleryContainer</span><span class=p>]</span> <span class=o>=</span> <span class=nx>useState</span><span class=p>(</span><span class=kc>null</span><span class=p>);</span>
@@ -165,62 +164,29 @@ React demo
     <span class=k>return</span> <span class=p>(</span>
         <span class=o>&lt;</span><span class=nx>div</span> <span class=nx>className</span><span class=o>=</span><span class=s2>&#34;App&#34;</span><span class=o>&gt;</span>
             <span class=o>&lt;</span><span class=nx>div</span> <span class=nx>style</span><span class=o>=</span><span class=p>{{</span> <span class=nx>height</span><span class=o>:</span> <span class=s1>&#39;800px&#39;</span> <span class=p>}}</span> <span class=nx>ref</span><span class=o>=</span><span class=p>{</span><span class=nx>containerRef</span><span class=p>}</span><span class=o>&gt;&lt;</span><span class=err>/div&gt;</span>
-            <span class=o>&lt;</span><span class=nx>div</span><span class=o>&gt;</span>
-                <span class=o>&lt;</span><span class=nx>LightGallery</span>
-                    <span class=nx>container</span><span class=o>=</span><span class=p>{</span><span class=nx>galleryContainer</span><span class=p>}</span>
-                    <span class=nx>onInit</span><span class=o>=</span><span class=p>{</span><span class=nx>onInit</span><span class=p>}</span>
-                    <span class=nx>plugins</span><span class=o>=</span><span class=p>{[</span><span class=nx>lgZoom</span><span class=p>,</span> <span class=nx>lgThumbnail</span><span class=p>]}</span>
-                    <span class=nx>closable</span><span class=o>=</span><span class=p>{</span><span class=kc>false</span><span class=p>}</span>
-                    <span class=nx>showMaximizeIcon</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span>
-                    <span class=nx>slideDelay</span><span class=o>=</span><span class=p>{</span><span class=mi>400</span><span class=p>}</span>
-                    <span class=nx>thumbWidth</span><span class=o>=</span><span class=p>{</span><span class=mi>130</span><span class=p>}</span>
-                    <span class=nx>thumbHeight</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;100px&#39;</span><span class=p>}</span>
-                    <span class=nx>thumbMargin</span><span class=o>=</span><span class=p>{</span><span class=mi>6</span><span class=p>}</span>
-                    <span class=nx>appendSubHtmlTo</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;.lg-item&#39;</span><span class=p>}</span>
-                    <span class=nx>dynamic</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span>
-                    <span class=nx>dynamicEl</span><span class=o>=</span><span class=p>{[</span>
-                        <span class=p>{</span>
-                            <span class=nx>src</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>responsive</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>thumb</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>subHtml</span><span class=o>:</span> <span class=sb>`...`</span><span class=p>,</span>
-                        <span class=p>},</span>
-                        <span class=p>{</span>
-                            <span class=nx>src</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>responsive</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>thumb</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>subHtml</span><span class=o>:</span> <span class=sb>`...`</span><span class=p>,</span>
-                        <span class=p>},</span>
-                        <span class=p>{</span>
-                            <span class=nx>src</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>responsive</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>thumb</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>subHtml</span><span class=o>:</span> <span class=sb>`...`</span><span class=p>,</span>
-                        <span class=p>},</span>
-                        <span class=p>{</span>
-                            <span class=nx>src</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>responsive</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>thumb</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
-                            <span class=nx>subHtml</span><span class=o>:</span> <span class=sb>`...`</span><span class=p>,</span>
-                        <span class=p>},</span>
-                    <span class=p>]}</span>
-                    <span class=nx>hash</span><span class=o>=</span><span class=p>{</span><span class=kc>false</span><span class=p>}</span>
-                    <span class=nx>elementClassNames</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;inline-gallery-container&#39;</span><span class=p>}</span>
-                <span class=o>&gt;&lt;</span><span class=err>/LightGallery&gt;</span>
-            <span class=o>&lt;</span><span class=err>/div&gt;</span>
+            <span class=o>&lt;</span><span class=nx>LightGallery</span>
+                <span class=nx>container</span><span class=o>=</span><span class=p>{</span><span class=nx>galleryContainer</span><span class=p>}</span>
+                <span class=nx>onInit</span><span class=o>=</span><span class=p>{</span><span class=nx>onInit</span><span class=p>}</span>
+                <span class=nx>plugins</span><span class=o>=</span><span class=p>{[</span><span class=nx>lgZoom</span><span class=p>,</span> <span class=nx>lgThumbnail</span><span class=p>]}</span>
+                <span class=nx>dynamic</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span>
+                <span class=nx>dynamicEl</span><span class=o>=</span><span class=p>{[</span>
+                    <span class=p>{</span>
+                        <span class=nx>src</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
+                        <span class=nx>responsive</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
+                        <span class=nx>thumb</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
+                        <span class=nx>subHtml</span><span class=o>:</span> <span class=sb>`...`</span><span class=p>,</span>
+                    <span class=p>},</span>
+                    <span class=p>{</span>
+                        <span class=nx>src</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
+                        <span class=nx>responsive</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
+                        <span class=nx>thumb</span><span class=o>:</span> <span class=s1>&#39;...&#39;</span><span class=p>,</span>
+                        <span class=nx>subHtml</span><span class=o>:</span> <span class=sb>`...`</span><span class=p>,</span>
+                    <span class=p>},</span>
+                <span class=p>]}</span>
+            <span class=o>/&gt;</span>
         <span class=o>&lt;</span><span class=err>/div&gt;</span>
     <span class=p>);</span>
 <span class=p>};</span>
-</code></pre></div><h5 id=css>CSS<a href=#css class=anchor aria-hidden=true>#</a> </h5>
-<p>Set height and width for the container as the inline automatically adopts the
-container size</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-scss data-lang=scss><span class=nc>.inline-gallery-container</span> <span class=p>{</span>
-    <span class=na>width</span><span class=o>:</span> <span class=mi>100</span><span class=kt>%</span><span class=p>;</span>
-
-    <span class=c1>// set 60% height
-</span><span class=c1></span>    <span class=na>height</span><span class=o>:</span> <span class=mi>0</span><span class=p>;</span>
-    <span class=na>padding-bottom</span><span class=o>:</span> <span class=mi>65</span><span class=kt>%</span><span class=p>;</span>
-<span class=p>}</span>
 </code></pre></div>
 <p class=edit-page><a href=https://github.com/sachinchoolur/lightGallery/tree/master/site/content/demos/react-carousel.md><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828.0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>Edit this page on GitHub</a></p>
 <div class="docs-navigation d-flex justify-content-between">
@@ -363,6 +329,6 @@ Video carousel &rarr;
 <script src=https://cdn.jsdelivr.net/npm/airtable@0.11.1/build/airtable.browser.js></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49767543-2"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-49767543-2')</script>
-<script src=https://www.lightgalleryjs.com/main.d82c12231e47da9247309d5a4798b87abf2b22c502bfba8692f1e0b6207c880dba528512713ca7b266109c9a8c3fe6d7237d58e26662f6c0a0303c5d32cb38dd.js integrity="sha512-2CwSIx5H2pJHMJ1aR5i4er8rIsUCv7qGkvHgtiB8iA26UoUScTynsmYQnJqMP+bXI31Y4mZi9sCgMDxdMss43Q==" crossorigin=anonymous defer></script>
+<script src=https://www.lightgalleryjs.com/main.a1c0c362e061b96f84eff83912cfda5357d1558ebab4b1996360ae4c4efa5323f0c6a9b38b66748f818a2e584f92840ea93d87abfa3ce3147bd7579ed1a9b073.js integrity="sha512-ocDDYuBhuW+E7/g5Es/aU1fRVY66tLGZY2CuTE76UyPwxqmzi2Z0j4GKLlhPkoQOqT2Hq/o84xR711ee0amwcw==" crossorigin=anonymous defer></script>
 </body>
 </html>
