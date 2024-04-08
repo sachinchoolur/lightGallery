@@ -46,20 +46,15 @@ if (slickEl) {
     $slickDemo.on('init', function (event, slick, direction) {
         const container = document.querySelector('.slick-track');
         window.lightGallery(container, {
-            thumbnail: false,
-            pager: false,
-            plugins: [],
-            hash: false,
+            plugins: [
+                lgZoom,
+                lgThumbnail,
+            ],
             preload: 4,
         });
     });
-    $slickDemo.slick({
-        centerMode: true,
+    $slickDemo.slick({,
         slidesToShow: 3,
-        customPaging: '10px',
-        swipe: false,
-        arrows: true,
-        variableWidth: true,
     });
 }
 ```
