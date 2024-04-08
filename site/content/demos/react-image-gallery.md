@@ -33,23 +33,6 @@ import { LightGallery as ILightGallery } from 'lightgallery/lightgallery';
 import './style.scss';
 
 export const App = () => {
-    const lightGalleryRef = useRef < ILightGallery > null;
-    const containerRef = useRef(null);
-    const [galleryContainer, setGalleryContainer] = useState(null);
-
-    const onInit = useCallback((detail) => {
-        if (detail) {
-            lightGalleryRef.current = detail.instance;
-            // Since we are using dynamic mode, we need to programmatically open lightGallery
-            lightGalleryRef.current.openGallery();
-        }
-    }, []);
-
-    useEffect(() => {
-        if (containerRef.current) {
-            setGalleryContainer(containerRef.current);
-        }
-    }, []);
 
     const dynamicEl = [
         {
@@ -68,27 +51,7 @@ export const App = () => {
 
     return (
         <>
-            <div ref={containerRef} />
             <LightGallery
-                container={galleryContainer}
-                onInit={onInit}
-                // Turn off hash plugin in case if you are using it
-                // as we don't want to change the url on slide change
-                hash={false}
-                plugins={[lgZoom, lgThumbnail]}
-                // Do not allow users to close the gallery
-                closable={false}
-                // Add maximize icon to enlarge the gallery
-                showMaximizeIcon={true}
-                // Delay slide transition to complete captions animations
-                // before navigating to different slides (Optional)
-                // You can find caption animation demo on the captions demo page
-                slideDelay={400}
-                thumbWidth={130}
-                thumbHeight={'100px'}
-                thumbMargin={6}
-                appendSubHtmlTo={'.lg-item'}
-                elementClassNames={'react-image-container'}
                 dynamic={true}
                 dynamicEl={dynamicEl}
             />
