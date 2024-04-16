@@ -1,0 +1,22 @@
+{{ define "main" }}
+<div class="wrap container-xxl page-wrap">
+    <div class="row justify-content-center">
+        <div class="container yt-thumbnail-container">
+                    <div class="blog-list-item">
+                        <div class="yt-thumbnail-header blog-header">
+                         <h2 class="h3"><a class="stretched-link text-body" href="{{ .RelPermalink }}">{{
+                                    .Params.title }}</a></h2>
+                        </div>
+                        <div class="blog-body">
+                            {{.Content| truncate 350 }}
+                            {{ partial "main/blog-contributors.html" . }}
+                        </div>
+                    </div>
+                    {{ end -}}
+                    {{ $.Scratch.Set "paginator" true }}
+                    {{ template "_internal/pagination.html" . }}
+        </div>
+    </div>
+</div>
+
+{{ end }}
