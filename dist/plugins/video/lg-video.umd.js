@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.8.0-beta.1 | November 27th 2023
+ * lightgallery | 2.8.0-beta.2 | April 25th 2024
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -127,8 +127,13 @@
         if (!videoInfo || !videoInfo.vimeo)
             return '';
         var urlParams = videoInfo.vimeo[2] || '';
-        var defaultPlayerParams = defaultParams && Object.keys(defaultParams).length !== 0
-            ? '&' + param(defaultParams)
+        var defaultVimeoPlayerParams = Object.assign({}, {
+            autoplay: 0,
+            muted: 1,
+        }, defaultParams);
+        var defaultPlayerParams = defaultVimeoPlayerParams &&
+            Object.keys(defaultVimeoPlayerParams).length !== 0
+            ? param(defaultVimeoPlayerParams)
             : '';
         // Support private video
         var urlWithHash = videoInfo.vimeo[0].split('/').pop() || '';
@@ -140,8 +145,11 @@
         }
         urlParams =
             urlParams[0] == '?' ? '&' + urlParams.slice(1) : urlParams || '';
-        // For vimeo last params gets priority if duplicates found
-        var vimeoPlayerParams = "?autoplay=0&muted=1" + (isPrivate ? "&h=" + hash : '') + defaultPlayerParams + urlParams;
+        var privateUrlParams = isPrivate ? "h=" + hash : '';
+        defaultPlayerParams = privateUrlParams
+            ? "&" + defaultPlayerParams
+            : defaultPlayerParams;
+        var vimeoPlayerParams = "?" + privateUrlParams + defaultPlayerParams + urlParams;
         return vimeoPlayerParams;
     };
 
@@ -332,7 +340,9 @@
             else if (videoInfo.html5) {
                 var html5VideoMarkup = '';
                 for (var i = 0; i < html5Video.source.length; i++) {
-                    html5VideoMarkup += "<source src=\"" + html5Video.source[i].src + "\" type=\"" + html5Video.source[i].type + "\">";
+                    var type = html5Video.source[i].type;
+                    var typeAttr = type ? "type=\"" + type + "\"" : '';
+                    html5VideoMarkup += "<source src=\"" + html5Video.source[i].src + "\" " + typeAttr + ">";
                 }
                 if (html5Video.tracks) {
                     var _loop_1 = function (i) {

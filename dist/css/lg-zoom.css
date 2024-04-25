@@ -69,8 +69,8 @@
   content: "\e311";
 }
 .lg-actual-size .lg-icon.lg-zoom-in {
-  opacity: 0.5;
-  pointer-events: none;
+  opacity: 1;
+  pointer-events: auto;
 }
 .lg-icon.lg-actual-size {
   font-size: 20px;
