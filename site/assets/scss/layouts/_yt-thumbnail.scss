@@ -5,6 +5,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    @include media-breakpoint-down(sm){
+        padding-left: 0px;
+        padding-right: 0px;
+    }
 }
 .yt-thumbnail-page {
     display: flex;
@@ -19,6 +23,10 @@
     justify-content: center;
     text-align: center;
     margin-top: 100px;
+    @include media-breakpoint-down(md){
+        padding-top: 30px;
+        margin-top: 50px;
+    }
 }
 .yt-thumbnail-header {
     font-family: 'Helvetica Now Display', 'Helvetica Now Display', system-ui,
@@ -77,6 +85,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    @include media-breakpoint-down(sm){
+        width: 100%;
+    }
 }
 .url-tab {
     margin-right: -1px;
@@ -104,7 +115,8 @@
     color: #8B8B8B;
     height: 66px;
     @include media-breakpoint-down(sm){
-        width: 250px;
+        width:100%;
+        border-radius: 0px;
     }
 
 }
@@ -136,6 +148,9 @@
 }
 .content-url-section{
     margin-right: 0px;
+    @include media-breakpoint-down(md){
+        width: 100%;
+    }
     @include media-breakpoint-down(lg){
         margin-right: 0px;
         margin-bottom: 20px;
@@ -191,6 +206,9 @@
         margin-top: 0px;
         margin-left: 0px;
     }
+    @include media-breakpoint-down(md){
+        width: 100%;
+    }
 }
 .preview-button{
     margin-top:0px;
@@ -211,10 +229,14 @@
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     color: #fff;
     background-color: #0858FE;
-    border-color: #E0EAFD;
+    border-color: #0858FE;
     height: 66px;
     padding-top: 3px;
     width: 236px;
+    @include media-breakpoint-down(sm){
+        border-radius: 0px;
+        width: 100%;
+    }
 }
 .preview-button:hover{
     transition: .5s;
@@ -229,11 +251,18 @@
 }
 .faq-question-single{
     color: #0e3481;
-    font-size: 22px;
+    font-size: 18px;
+    @include media-breakpoint-up(md){
+        font-size: 22px;
+    }
 }
 .faq-answer-single{
     color: #0e3481;
-    font-size: 18px;
+    font-size: 16px;
+    @include media-breakpoint-up(md){
+        font-size: 18px;
+    }
+
 }
 .faq-section-header{
     padding-top: 80px;
@@ -242,6 +271,11 @@
     color: #0e3481;
     font-size: 32px;
     font-weight: 600;
+    @include media-breakpoint-down(sm){
+        padding-top: 40px;
+        padding-bottom: 22px;
+        padding-left: 50px;
+    }
 }
 .faq-section{
     display: flex;
@@ -309,4 +343,61 @@
 }
 .btn-text{
     margin-right: 6px;
+}
+.youtube-thumnail-about-section{
+    display: flex;
+    flex-direction: row;
+    @include media-breakpoint-down(sm){
+        
+    }
+
+}
+.about-section-desc-header{
+    font-size: 24px;
+    color: #0E3481;
+    @include media-breakpoint-up(md){
+        font-size: 32px;
+    }
+}
+.about-seection-desc{
+    font-size: 16px;
+    color: #666666;
+    @include media-breakpoint-up(md){
+        font-size: 18px;
+    }
+   
+}
+.download-icon {
+    stroke: #0858FE;
+    
+}
+.inner-section{
+    text-align: center;
+}
+.other-tool-section-tittle{
+    text-align: center;
+    margin-bottom: 60px;
+    font-size: 24px;
+    color:#0E3481 ;
+    @include media-breakpoint-up(md){
+        font-size: 32px;
+    }
+
+}
+.inner-section-subhead{
+    font-size: 20px;
+    color: #0E3481;
+    @include media-breakpoint-up(md){
+        font-size: 22px;
+    }
+}
+.inner-section-desc{
+    color: #666666;
+    font-size: 16px;
+    @include media-breakpoint-up(md){
+        font-size: 18px;
+    }
+}
+.other-tool-section{
+    margin-top: 110px;
 }
