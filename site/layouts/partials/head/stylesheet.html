@@ -1,10 +1,10 @@
 {{ if eq (hugo.Environment) "development" -}}
   {{ $options := (dict "targetPath" "main.css" "enableSourceMap" true "includePaths" (slice "node_modules")) -}}
-  {{ $css := resources.Get "scss/app.scss" | toCSS $options -}}
+  {{ $css := resources.Get "scss/apps.scss" | toCSS $options -}}
   <link rel="stylesheet" href="{{ $css.Permalink }}">
   {{ else -}}
   {{ $options := (dict "targetPath" "main.css" "outputStyle" "compressed" "includePaths" (slice "node_modules")) -}}
-  {{ $css := resources.Get "scss/app.scss" | toCSS $options | postCSS (dict "config" "config/postcss.config.js") -}}
+  {{ $css := resources.Get "scss/apps.scss" | toCSS $options | postCSS (dict "config" "config/postcss.config.js") -}}
   {{ $secureCSS := $css | resources.Fingerprint "sha512" -}}
   <link rel="stylesheet" href="{{ $secureCSS.Permalink }}" integrity="{{ $secureCSS.Data.Integrity }}" crossorigin="anonymous">
   {{ end -}}
@@ -39,6 +39,5 @@
 {{ if eq .Title "Flickity carousel demo" -}}
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
 {{ end }}
-<link href="
-https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/editor/editor.main.min.css
-" rel="stylesheet">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.css" rel="stylesheet">

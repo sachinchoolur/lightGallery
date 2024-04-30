@@ -1,12 +1,27 @@
 .main-head-view {
-  padding-top: 110px;
-  margin-bottom: 60px;
+  padding-top: 80px;
+  margin-bottom: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include media-breakpoint-up(md) {
+    padding-top: 126px;
+    margin-bottom: 60px;
+  }
 }
-.head-section-para{
-  text-align: center;
-  font-size: 18px;
+.head-section-para {
+  font-size: 12px;
   font-family: Arial, sans-serif;
   color: #0049a3;
+  text-align: center;
+  max-width: 75%;
+  @include media-breakpoint-up(md) {
+    font-size: 14px;
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: 16px;
+    max-width: 45%;
+  }
 }
 .head-converter-section {
   margin: 0px;
@@ -16,7 +31,6 @@
   padding-left: 35px;
   padding-right: 35px;
 }
-
 .cursor-pointer {
   cursor: pointer;
 }
@@ -37,20 +51,29 @@
   border: 1px solid #ccc;
   resize: vertical;
 }
-.head-section-sub {
+.main-section-head {
   font-family: Arial, sans-serif;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: 520;
   color: #0049a3;
-  display: flex;
-  justify-content: center;
+  @include media-breakpoint-up(md) {
+    font-size: 35px;
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: 50px;
+  }
 }
-
 .main-row-sections {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   --bs-gutter-x: 0px;
   justify-content: center;
+  gap: 24px;
+  position: relative;
+  @include media-breakpoint-up(md) {
+    flex-direction: row;
+    gap: 14px;
+  }
 }
 .converter-btn {
   padding-top: 100px;
@@ -60,70 +83,71 @@
 .taskbar {
   border: 1px solid #7f9ab9;
   width: 100%;
-  height: 35px;
-  padding: 4px;
+  height: 62px;
   margin: 0;
   box-sizing: border-box;
   position: relative;
   border-bottom: none;
+  background-color: #0E3481;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
-.taskbar:hover {
-  text-shadow: 1px 1px 2px 1px #7f9ab9;
-  transition: .3s;
-}
-
 .cursor-pointer {
   cursor: pointer;
 }
-
 .btn-group {
   float: right;
   position: relative;
   vertical-align: middle;
-  gap: 10px;
+  gap: 16px;
+  padding: 14px;
 }
-.get-started-btn{
+.get-started-btn {
   padding: 8px;
 }
-body{
+body {
   font-family: Arial, sans-serif;
- 
 }
-
 .expanded-textfield {
-  width: 650px;
-}
+  width: 100%;
+  border-radius: 10px;
 
+  @include media-breakpoint-up(md) {
+    width: 45%;
+    border-radius: 12px;
+  }
+}
 h2,
 .h2 {
   text-align: center;
 }
-
 textarea {
   width: 100%;
   height: 450px;
   border: 1px solid #7191b0;
   background-image: linear-gradient(#eef3fb 0%, white 52.08%);
 }
-
 .main-btn {
   display: flex;
   justify-content: center;
-  padding: 200px 15px 250px 15px;
+  margin-top: 24px;
+  margin-bottom: 32px;
+  display: none;
+  @include media-breakpoint-up(md){
+    display: flex;
+  }
 }
-
 .text-area-converter {
   overflow: auto;
   outline: none;
-  padding-top: 10px;
+  padding-top: 5px;
   width: 100%;
   height: 450px;
-  border: 1px solid #7191b0;
-  background-image: linear-gradient(#eef3fb 0%, white 52.08%);
-}
-.text-area-converter :hover{
-  box-shadow: 0px 1px 2px 0px #d8e5f1;
-  transition: .3s;
+  border: 1px solid #E0EAFD;
+  background-color: #FAFCFF;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  position: sticky;
 }
 .text-area-converter .ace_gutter {
   background: #ebebeb;
@@ -142,73 +166,55 @@ textarea {
   user-select: none;
   contain: style size layout;
 }
-
-.text-area-converter:hover {
-  box-shadow: 0px 1px 2px 0px #7f9ab9;
-  transition: .5s;
-}
-
 .section-faq-lite-blue {
   color: #0049a3;
 }
-
 .section-faq-lite-blue .faq-item {
   border: 1px solid #0049a3;
 }
-
 .section-faq {
   padding: 50px 0;
   margin-bottom: 0 !important;
 }
-
 .section-faq .section-faq-lite-violet {
   background-color: #ebebff;
   color: #38386c;
 }
-
 .section-faq .section-faq-lite-violet .faq-item {
   border: 1px solid #38386c;
 }
-
 .section-faq .section-faq-lite-green {
   background-color: #e5f0e2;
   color: #436c38;
 }
-
 .section-faq .section-faq-lite-green .faq-item {
   border: 1px solid #436c38;
 }
-
 .section-faq .section-faq-lite-blue {
   background-color: #d9eaff;
   color: #0049a3;
 }
-
 .section-faq .section-faq-lite-blue .faq-item {
   border: 1px solid #0049a3;
 }
-
 .section-faq .faq-item {
   padding: 24px 40px;
   background-color: #fff;
   box-sizing: border-box;
   border-radius: 12px;
 }
-
 .section-faq .faq-item+.faq-item {
   margin-top: 24px;
 }
-
 .section-faq .faq-item h4,
 .section-faq .faq-item .h4 {
-  font-family:  Arial, sans-serif;
+  font-family: Arial, sans-serif;
   font-style: normal;
   font-weight: bold;
   font-size: 22px;
   line-height: 28px;
   margin: 0 0 10px 0;
 }
-
 .section-faq .faq-item p {
   font-family: Arial, sans-serif;
   font-style: normal;
@@ -217,14 +223,22 @@ textarea {
   line-height: 24px;
   margin: 0;
 }
-
 .section-header-sub {
-  margin-top: 80px;
-  margin-bottom: 45px;
-  font-size: 30px;
+  margin-top: 50px;
+  margin-bottom: 25px;
+  font-size: 25px;
   font-weight: 500px;
+  @include media-breakpoint-up(md) {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    font-size: 30px;
+  }
+  @include media-breakpoint-up(lg) {
+    margin-top: 60px;
+    margin-bottom: 45px;
+    font-size: 30px;
+  }
 }
-
 .reset-pagesize {
   max-width: 80%;
 }
@@ -235,37 +249,37 @@ textarea {
   width: 100%;
   height: 100%;
   z-index: 1999;
- 
 }
-.maximize-svg{
+.maximize-svg {
   cursor: pointer;
 }
-.copy-svg{
-  cursor: pointer; 
+.copy-svg {
+  cursor: pointer;
 }
-.clear-svg{
-  cursor: pointer; 
-}
-.maximized .text-area-converter {
-  height: 80vh; 
+.clear-svg {
+  cursor: pointer;
 }
 .maximized .text-area-converter {
   height: 80vh;
 }
-.minimize-icon{
+.maximized .text-area-converter {
+  height: 80vh;
+}
+.minimize-icon {
   display: none;
   cursor: pointer;
   padding-right: 25px;
- padding-left: 6px;
+  padding-left: 6px;
 }
 .tooltip {
   position: relative;
   display: inline-block;
   cursor: pointer;
 }
- .tooltiptext {
+.tooltiptext {
   visibility: hidden;
-  width: 55px;
+  width: 70px;
+  border-radius: 8px;
   background-color: #fff;
   border-color: #333;
   color: #555;
@@ -277,17 +291,13 @@ textarea {
   left: 100%;
   margin-left: -55px;
   transition: opacity 0.3s;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
+  background-color: #E0EAFD;
 }
 .tooltip:hover .tooltiptext {
   visibility: visible;
-
 }
-
-
-
-
 .integration-checklist__copy-button {
   display: block;
   position: absolute;
@@ -296,19 +306,16 @@ textarea {
   left: calc(50% - 20px);
   width: 40px;
   height: 40px;
-  
   cursor: pointer;
-  
   background-color: #fff;
-  background-image: url('https://abs.twimg.com/emoji/v1/72x72/1f4cb.png'); /* Twitter clipboard emoji */
+  background-image: url('https://abs.twimg.com/emoji/v1/72x72/1f4cb.png');
   background-size: 60% auto;
   background-position: center center;
   background-repeat: no-repeat;
-  border: 1px solid rgba(0,0,0,.29);
-  border-bottom-color: rgba(0,0,0,.36);
+  border: 1px solid rgba(0, 0, 0, .29);
+  border-bottom-color: rgba(0, 0, 0, .36);
   border-radius: 3px;
-  box-shadow: 0 1px 1px rgba(0,0,0,.12);
-  
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .12);
   &:before {
     content: '';
     display: none;
@@ -318,12 +325,10 @@ textarea {
     left: 15px;
     width: 0;
     height: 0;
-    
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-bottom: 5px solid rgba(0,0,0,.72);
+    border-bottom: 5px solid rgba(0, 0, 0, .72);
   }
-
   &:after {
     content: 'Copy to Clipboard';
     display: none;
@@ -333,48 +338,137 @@ textarea {
     left: -37px;
     width: 114px;
     height: 36px;
-
     color: #fff;
     font-size: 10px;
     line-height: 36px;
     text-align: center;
-
-    background: rgba(0,0,0,.72);
+    background: rgba(0, 0, 0, .72);
     border-radius: 3px;
   }
-  
   &:hover {
     background-color: #eee;
-    
-    &:before, &:after {
+    &:before,
+    &:after {
       display: block;
     }
   }
-  
-  &:active, &:focus {
+  &:active,
+  &:focus {
     outline: none;
-    
     &:after {
       content: 'Copied!';
     }
   }
 }
-
 .signature {
   position: absolute;
   right: 12px;
   bottom: 12px;
-  
-  color: rgba(0,0,0,.07);
+  color: rgba(0, 0, 0, .07);
   font-size: 10px;
 }
-
 a {
-  color: rgba(13,157,219,.55);
+  color: rgba(13, 157, 219, .55);
   font-weight: 500;
   text-decoration: none;
-  
   &:hover {
     text-decoration: underline;
+  }
+}
+.btn-convert {
+  float: right;
+  position: relative;
+  vertical-align: middle;
+  font-weight: bold;
+  border: none;
+  background-color: #E0EAFD;
+  font-size: 16px;
+  color: #0858FE;
+  display: flex;
+  gap: 6px;
+}
+.taskbar-title {
+  font-size: 18px;
+  line-height: 26px;
+  color: #FFFDFD;
+}
+.taskbar-head {
+  float: left;
+  padding-top: 18px;
+  padding-left: 16px;
+}
+.centre-convert-btn {
+  display: flex;
+  justify-content: center;
+  padding-top: 16px;
+  padding-bottom: 14px;
+}
+.centre-convert-btn svg {
+  stroke: #0858FE;
+}
+.centre-convert-btn:hover svg {
+  stroke: #fff;
+}
+.circle-convert-btn {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #ccc;
+  align-items: center;
+  margin-top: 240px;
+  z-index: 2;
+  display: none;
+  cursor: pointer;
+  @include media-breakpoint-up(md) {
+    display: block;
+  }
+}
+.circle-convert-btn i {
+  font-size: 2em;
+  color: #333;
+  transition: color 0.3s;
+}
+.circle-convert-btn:hover {
+  background-color: #0858FE;
+  border: 2px solid #E0EAFD;
+}
+.circle-convert-btn:hover .circle-convert-btn i {
+  color: #fff;
+}
+.btn-btn-svg :hover {
+  color: white;
+}
+.alert-dialogue-box {
+  background-color: #FFDDA9;
+  padding-bottom: 221px;
+  max-width: 90%;
+  margin: auto;
+  display: none;
+}
+.alert-box-main-head {
+  padding-left: 16px;
+  padding-top: 16px;
+}
+.alert-box-head {
+  font-size: 18px;
+  font-weight: bold;
+}
+.alert-box-sub {
+  font-size: 14px;
+  padding-top: 15px;
+}
+.close-svg {
+  float: right;
+  padding: 16px;
+  cursor: pointer;
+}
+.main-btn-main {
+  display: block;
+  display: flex;
+  justify-content: center;
+  @include media-breakpoint-up(md) {
+    display: none;
   }
 }
