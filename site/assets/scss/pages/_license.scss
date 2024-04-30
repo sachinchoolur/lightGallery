@@ -1,11 +1,14 @@
 ////// Pricing
 
 .pricing-list-item {
-    width: 260px;
+    width: 100%;
     padding: 20px;
     margin: 20px;
     color: #0e3481;
     border-radius: 5px;
+    @media (min-width: 768px) {
+        width: 260px;
+    }
     &.pricing-list-item-colored {
         border: 2px solid;
         color: white;
@@ -25,6 +28,7 @@
 
 .pricing-list {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .pricing-type {

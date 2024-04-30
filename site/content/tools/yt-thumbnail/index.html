@@ -1,0 +1,452 @@
+---
+title: 'YouTube Thumbnail Downloader'
+date: 2024-04-12
+---
+
+
+<head>
+
+</head>
+
+<body>
+    <div class="container-fluid yt-thumbnail-container">
+        <div class="container-xl">
+        <div class="hero-section-thumbnail">
+            <h1 class="yt-thumbnail-header blog-header">
+                Free YouTube Thumbnail Downloader
+            </h1>
+            <div class="yt-thumbnail-description-container">
+                <p class="yt-thumbnail-description">
+                    Get free thumbnail images of any YouTube videos in Full HD (1080), HD (720), SD, and also in small
+                    size. It's currently supported formats: YouTube (HD, HQ, 1080p, 4K) videos.
+                </p>
+            </div>
+        </div>
+        <form class="thumb-form" id="thumbnailForm">
+            <div class="content-area">
+                <div class="content-url-section">
+                    <input class="url-tab" placeholder="Enter URL, example: https://www.youtube.com/watch?v=EIUJfXk3_3w"
+                        type="text" id="url" name="url" required />
+                </div>
+                <div class="preview-button-container">
+                    <button class="preview-button" type="submit">
+                        Get Thumbnail Image
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="thumbnail-preview" id="thumbnail">
+            <!-- Thumbnail and button containers, hidden initially -->
+            <div class="preview-section-one">
+                <div class="thumbnail-quality" id="maxresdefault" style="display: none;">
+                    <div class="preview-container">
+                        <div class="preview-name">
+                            HD Image (1280x720)
+                        </div>
+                        <button class="download-btn" onclick="downloadImage('maxresdefault')"><span
+                                class="btn-text">Download</span><svg class="download-icon" width="25" height="24"
+                                viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.339 10.1355C4.1375 10.659 2.5 12.6385 2.5 15C2.5 17.7615 4.7385 20 7.5 20C7.9735 20 8.432 19.934 8.8665 19.811M18.5275 10.1355C20.729 10.659 22.366 12.6385 22.366 15C22.366 17.7615 20.1275 20 17.366 20C16.8925 20 16.434 19.934 16 19.811M18.5 10C18.5 6.6865 15.8135 4 12.5 4C9.1865 4 6.5 6.6865 6.5 10M9.0325 15.0595L12.5 18.538L16.066 15M12.5 10V16.769"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <img src="" alt="Max resolution thumbnail">
+                    </div>
+                </div>
+                <div class="thumbnail-quality" id="sddefault" style="display: none;">
+                    <div class="preview-container preview-container-sd">
+                        <div class="preview-name">
+                            SD Image (640x480)
+                        </div>
+                        <button class="download-btn" onclick="downloadImage('hqdefault')"><span
+                                class="btn-text">Download</span> <svg class="download-icon" width="25" height="24"
+                                viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.339 10.1355C4.1375 10.659 2.5 12.6385 2.5 15C2.5 17.7615 4.7385 20 7.5 20C7.9735 20 8.432 19.934 8.8665 19.811M18.5275 10.1355C20.729 10.659 22.366 12.6385 22.366 15C22.366 17.7615 20.1275 20 17.366 20C16.8925 20 16.434 19.934 16 19.811M18.5 10C18.5 6.6865 15.8135 4 12.5 4C9.1865 4 6.5 6.6865 6.5 10M9.0325 15.0595L12.5 18.538L16.066 15M12.5 10V16.769"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <img src="" alt="High quality thumbnail">
+                    </div>
+                </div>
+            </div>
+            <div class="preview-section-two">
+                <div class="row">
+                    <div class="col-md-5">
+                <div class="thumbnail-quality" id="hqdefault" style="display: none;">
+                    <div class="preview-container">
+                        <div class="preview-name">
+                            Normal Image (480x360)
+                        </div>
+                        <button class="download-btn" onclick="downloadImage('sddefault')"><span
+                                class="btn-text">Download</span> <svg class="download-icon" width="25" height="24"
+                                viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.339 10.1355C4.1375 10.659 2.5 12.6385 2.5 15C2.5 17.7615 4.7385 20 7.5 20C7.9735 20 8.432 19.934 8.8665 19.811M18.5275 10.1355C20.729 10.659 22.366 12.6385 22.366 15C22.366 17.7615 20.1275 20 17.366 20C16.8925 20 16.434 19.934 16 19.811M18.5 10C18.5 6.6865 15.8135 4 12.5 4C9.1865 4 6.5 6.6865 6.5 10M9.0325 15.0595L12.5 18.538L16.066 15M12.5 10V16.769"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <img src="" alt="Standard definition thumbnail">
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="thumbnail-quality" id="mqdefault" style="display: none;">
+                    <div class="preview-container">
+                        <div class="preview-name">
+                            Normal Image (320x180)
+                        </div>
+                        <button class="download-btn" onclick="downloadImage('mqdefault')"><span
+                                class="btn-text">Download</span> <svg class="download-icon" width="25" height="24"
+                                viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.339 10.1355C4.1375 10.659 2.5 12.6385 2.5 15C2.5 17.7615 4.7385 20 7.5 20C7.9735 20 8.432 19.934 8.8665 19.811M18.5275 10.1355C20.729 10.659 22.366 12.6385 22.366 15C22.366 17.7615 20.1275 20 17.366 20C16.8925 20 16.434 19.934 16 19.811M18.5 10C18.5 6.6865 15.8135 4 12.5 4C9.1865 4 6.5 6.6865 6.5 10M9.0325 15.0595L12.5 18.538L16.066 15M12.5 10V16.769"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <img src="" alt="Medium quality thumbnail">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="thumbnail-quality" id="default" style="display: none;">
+                    <div class="preview-container">
+                        <div class="preview-name">
+                            Normal Image (120x90)
+                        </div>
+                        <button class="download-btn" onclick="downloadImage('default')"><span
+                                class="btn-text">Download</span> <svg class="download-icon" width="25" height="24"
+                                viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.339 10.1355C4.1375 10.659 2.5 12.6385 2.5 15C2.5 17.7615 4.7385 20 7.5 20C7.9735 20 8.432 19.934 8.8665 19.811M18.5275 10.1355C20.729 10.659 22.366 12.6385 22.366 15C22.366 17.7615 20.1275 20 17.366 20C16.8925 20 16.434 19.934 16 19.811M18.5 10C18.5 6.6865 15.8135 4 12.5 4C9.1865 4 6.5 6.6865 6.5 10M9.0325 15.0595L12.5 18.538L16.066 15M12.5 10V16.769"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <img src="" alt="Low quality thumbnail">
+                    </div>
+                </div>
+              </div>
+            </div>
+            </div>
+        </div>
+     </div>
+    </div>
+     <div class="container-fluid faq-section-container ">
+       
+            <div class="youtube-thumnail-about-section "></div>
+            <div class="row ">
+                    <div class="col-md-6 mt-5 d-flex align-items-center">
+                        <div>
+                            <h2 class="about-section-desc-header">About YouTube Thumbnail Downloader</h2>
+                            <p class="about-seection-desc">YouTube thumbnails are essential for attracting clicks. You often need them separately
+                                for different tasks: making blog collages, designing channel covers, or for social media
+                                posts if not generated automatically. You can easily download any video's thumbnail by
+                                pasting its URL through our platform.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-5 ">
+                        <div class="about-section-img"><svg class="img-fluid" width="597" height="366" viewBox="0 0 597 366" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect width="597" height="366" fill="#E0EAFD" />
+                                <mask id="mask0_167_217" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
+                                    width="597" height="366">
+                                    <rect width="597" height="366" fill="#E0EAFD" />
+                                </mask>
+                                <g mask="url(#mask0_167_217)">
+                                    <path
+                                        d="M547 271C547 245.524 540.572 220.297 528.084 196.759C515.596 173.222 497.291 151.836 474.216 133.821C451.141 115.807 423.746 101.517 393.597 91.7674C363.447 82.018 331.133 77 298.5 77C265.867 77 233.553 82.018 203.403 91.7674C173.254 101.517 145.859 115.807 122.784 133.821C99.7086 151.836 81.4042 173.222 68.9159 196.759C56.4276 220.297 50 245.524 50 271L298.5 271H547Z"
+                                        fill="#0858FE" />
+                                </g>
+                                <g opacity="0.3">
+                                    <path
+                                        d="M386.993 85.8566L360.488 126.844L478.01 98.041L424.391 49.4065L413.359 101.016L386.993 85.8566Z"
+                                        fill="#0E3481" />
+                                    <rect x="325.209" y="45.9156" width="150" height="86" rx="9"
+                                        transform="rotate(-13.771 325.209 45.9156)" stroke="#0E3481" stroke-width="2"
+                                        stroke-dasharray="7 7" />
+                                </g>
+                                <g opacity="0.3">
+                                    <path
+                                        d="M99.7372 314.656L83.297 344.983L164.535 318.276L124.101 286.932L119.143 323.9L99.7372 314.656Z"
+                                        fill="#0E3481" />
+                                    <rect x="54.3934" y="290.07" width="105.425" height="60.1932" rx="9"
+                                        transform="rotate(-18.1984 54.3934 290.07)" stroke="#0E3481" stroke-width="2"
+                                        stroke-dasharray="7 7" />
+                                </g>
+                                <g opacity="0.3">
+                                    <path
+                                        d="M93.653 96.3274L62.8344 111.827L144.769 136.316L129.488 87.4906L104.3 115L93.653 96.3274Z"
+                                        fill="#0E3481" />
+                                    <rect x="70.4821" y="50.2445" width="105.425" height="60.1932" rx="9"
+                                        transform="rotate(16.6408 70.4821 50.2445)" stroke="#0E3481" stroke-width="2"
+                                        stroke-dasharray="7 7" />
+                                </g>
+                                <rect x="78" y="115" width="444" height="55" rx="27.5" fill="#FFFDFD" />
+                                <circle cx="492.5" cy="142.5" r="40.5" fill="#0E3481" />
+                                <path
+                                    d="M507.25 157.25L500.374 150.374M500.374 150.374C501.55 149.197 502.483 147.801 503.12 146.264C503.756 144.727 504.084 143.08 504.084 141.417C504.084 139.753 503.756 138.106 503.12 136.569C502.483 135.032 501.55 133.636 500.374 132.46C499.197 131.284 497.801 130.351 496.264 129.714C494.727 129.077 493.08 128.75 491.417 128.75C489.753 128.75 488.106 129.077 486.569 129.714C485.032 130.351 483.636 131.284 482.46 132.46C480.084 134.835 478.75 138.057 478.75 141.417C478.75 144.776 480.084 147.998 482.46 150.374C484.835 152.749 488.057 154.084 491.417 154.084C494.776 154.084 497.998 152.749 500.374 150.374Z"
+                                    stroke="#FFFDFD" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                                <path
+                                    d="M108.25 131.5L111.83 124L103.17 124L106.75 131.5L108.25 131.5ZM106.75 154.5L103.17 162L111.83 162L108.25 154.5L106.75 154.5ZM106.75 130.75L106.75 155.25L108.25 155.25L108.25 130.75L106.75 130.75Z"
+                                    fill="#8B8B8B" />
+                                <path
+                                    d="M151.912 152.625L146.062 153.027H146.022C144.112 153.181 142.233 153.599 140.439 154.269L136.672 155.631C135.872 155.921 135.021 156.042 134.173 155.986C133.324 155.93 132.496 155.699 131.742 155.307C131.001 154.929 130.352 154.393 129.839 153.739C129.326 153.084 128.962 152.326 128.772 151.517L126.708 142.441C126.542 141.709 126.528 140.951 126.666 140.213C126.804 139.476 127.092 138.774 127.512 138.151C128.382 136.865 129.723 135.97 131.245 135.66L148.12 132.129C151.326 131.457 154.491 133.404 155.19 136.479L157.294 145.722C157.475 146.523 157.475 147.354 157.294 148.155C157.113 148.955 156.756 149.706 156.249 150.351C155.726 151.012 155.07 151.556 154.323 151.947C153.576 152.338 152.755 152.567 151.914 152.619V152.622L151.912 152.625Z"
+                                    stroke="#0E3481" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M137.5 141L139.312 148.5L145.75 142.5L137.5 141Z" stroke="#0E3481"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            
+
+
+            <div class="faq-section">
+                <div class="faq-section-header">
+                    Frequently Asked Questions (FAQs)
+                </div>
+                <div class="faq-section-body">
+                    <div class="faq-question">
+                        <h2 class="faq-question-single">
+                            1. What is the recommended size for YouTube
+                            thumbnails?
+                        </h2>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-single">
+                            The recommended size for YouTube thumbnails is 1280
+                            pixels wide by 720 pixels tall, with a minimum width
+                            of 640 pixels.
+                        </p>
+                    </div>
+                    <div class="faq-question">
+                        <h2 class="faq-question-single">
+                            2. How do I use the YouTube Thumbnail Downloader
+                            tool?
+                        </h2>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-single">
+                            Simply copy the URL of the YouTube video whose
+                            thumbnail you want to download, paste it into the
+                            designated area on our website, and click the "Get
+                            thumbnail" button. The thumbnail preview will come.
+                            Click on the "Download thumbnail" button. Right
+                            click on the new window and click save image
+                        </p>
+                    </div>
+                    <div class="faq-question">
+                        <h2 class="faq-question-single">
+                            3. Is it legal to download thumbnails from YouTube?
+                        </h2>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-single">
+                            Yes, it's legal to download thumbnails from YouTube
+                            as they are publicly available images associated
+                            with the videos.
+                        </p>
+                    </div>
+                    <div class="faq-question">
+                        <h2 class="faq-question-single">
+                            4. How do I download a YouTube video thumbnail in
+                            high definition (HD)?
+                        </h2>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-single">
+                            Our YouTube Thumbnail Downloader supports HD
+                            thumbnail downloads. Just input the video URL, and
+                            select the HD option if available.
+                        </p>
+                    </div>
+                    <div class="faq-question">
+                        <h2 class="faq-question-single">
+                            5. Can I download YouTube video thumbnails in 4K
+                            resolution?
+                        </h2>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-single">
+                            Yes, our YouTube Thumbnail Downloader allows you to
+                            download thumbnails in 4K resolution if the video
+                            has a 4K thumbnail available.
+                        </p>
+                    </div>
+                    <div class="faq-question">
+                        <h2 class="faq-question-single">
+                            6. How do I create a custom thumbnail for my YouTube
+                            video?
+                        </h2>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-single">
+                            To create a custom thumbnail, you can use image
+                            editing software like Photoshop or online tools like
+                            Canva. Design your thumbnail according to YouTube's
+                            recommended dimensions and upload it when you
+                            publish your video.
+                        </p>
+                    </div>
+                    <div class="faq-question">
+                        <h2 class="faq-question-single">
+                            7. What is a YouTube thumbnail downloader?
+                        </h2>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-single">
+                            A YouTube thumbnail downloader is a tool that allows
+                            users to easily download thumbnails from YouTube
+                            videos for various purposes, such as creating custom
+                            thumbnails or sharing on social media.
+                        </p>
+                    </div>
+                    <div class="faq-question">
+                        <h2 class="faq-question-single">
+                            8. Can I download thumbnails from YouTube Shorts
+                            using this tool?
+                        </h2>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-single">
+                            Yes, our YouTube Thumbnail Downloader supports
+                            downloading thumbnails from YouTube Shorts videos as
+                            well.
+                        </p>
+                    </div>
+                    <div class="faq-question">
+                        <h2 class="faq-question-single">
+                            9. Are there any restrictions on the number of
+                            thumbnails I can download?
+                        </h2>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-single">
+                            No, there are no restrictions on the number of
+                            thumbnails you can download using our tool. You can
+                            download as many thumbnails as you need.
+                        </p>
+                    </div>
+                    <div class="faq-question">
+                        <h2 class="faq-question-single">
+                            10. How can I grab a thumbnail from a YouTube video?
+                        </h2>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-single">
+                            You can use our YouTube Thumbnail Downloader tool.
+                            Simply paste the URL of the YouTube video, and our
+                            tool will retrieve the thumbnail for you.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="other-tool-section">
+            <div class="row ">
+                <h2 class="other-tool-section-tittle">Other Free Tools By lightGallery</h2>
+                <div class="col-md-4 mb-5">
+                    <div class="inner-section">
+                        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="30" fill="#E0EAFD"/>
+                            <path d="M44.2954 33.7046L41.25 30.6593V26.625C41.2465 23.8371 40.2094 21.1495 38.3392 19.0819C36.469 17.0143 33.8986 15.7135 31.125 15.4313V13.125H28.875V15.4313C26.1014 15.7135 23.531 17.0143 21.6608 19.0819C19.7906 21.1495 18.7535 23.8371 18.75 26.625V30.6593L15.7046 33.7046C15.4936 33.9156 15.3751 34.2017 15.375 34.5V37.875C15.375 38.1734 15.4935 38.4595 15.7045 38.6705C15.9155 38.8815 16.2016 39 16.5 39H24.375V39.8741C24.3505 41.3013 24.8536 42.6874 25.7878 43.7667C26.7219 44.846 28.0215 45.5426 29.4375 45.723C30.2196 45.8006 31.0092 45.7136 31.7557 45.4676C32.5021 45.2217 33.1888 44.8222 33.7716 44.295C34.3544 43.7677 34.8204 43.1243 35.1396 42.4061C35.4588 41.6879 35.6241 40.9109 35.625 40.125V39H43.5C43.7984 39 44.0845 38.8815 44.2955 38.6705C44.5065 38.4595 44.625 38.1734 44.625 37.875V34.5C44.6249 34.2017 44.5064 33.9156 44.2954 33.7046ZM33.375 40.125C33.375 41.0201 33.0194 41.8786 32.3865 42.5115C31.7536 43.1444 30.8951 43.5 30 43.5C29.1049 43.5 28.2464 43.1444 27.6135 42.5115C26.9806 41.8786 26.625 41.0201 26.625 40.125V39H33.375V40.125ZM42.375 36.75H17.625V34.9658L20.6704 31.9204C20.8814 31.7094 20.9999 31.4233 21 31.125V26.625C21 24.2381 21.9482 21.9489 23.636 20.261C25.3239 18.5732 27.6131 17.625 30 17.625C32.3869 17.625 34.6761 18.5732 36.364 20.261C38.0518 21.9489 39 24.2381 39 26.625V31.125C39.0001 31.4233 39.1186 31.7094 39.3296 31.9204L42.375 34.9658V36.75Z" fill="#0858FE"/>
+                            </svg>
+                            
+                        <h3 class="inner-section-subhead"> Website Notification Bar Generator</h3> 
+                        <p class="inner-section-desc">A free tool for making a website alert banner with your preferred design</p>
+                        <a href="">Try Free</a>
+                    </div>
+                    
+                </div>
+                <div class="col-md-4 mb-5"> 
+                    <div class="inner-section">
+                        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="30" fill="#E0EAFD"/>
+                            <path d="M30 33.375C34.6599 33.375 38.4375 29.5974 38.4375 24.9375C38.4375 20.2776 34.6599 16.5 30 16.5C25.3401 16.5 21.5625 20.2776 21.5625 24.9375C21.5625 29.5974 25.3401 33.375 30 33.375Z" stroke="#0858FE" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M36.1875 43.5C40.8474 43.5 44.625 39.7224 44.625 35.0625C44.625 30.4026 40.8474 26.625 36.1875 26.625C31.5276 26.625 27.75 30.4026 27.75 35.0625C27.75 39.7224 31.5276 43.5 36.1875 43.5Z" stroke="#0858FE" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M23.8125 43.5C28.4724 43.5 32.25 39.7224 32.25 35.0625C32.25 30.4026 28.4724 26.625 23.8125 26.625C19.1526 26.625 15.375 30.4026 15.375 35.0625C15.375 39.7224 19.1526 43.5 23.8125 43.5Z" stroke="#0858FE" stroke-width="2" stroke-linejoin="round"/>
+                            </svg>
+                            
+                        <h3 class="inner-section-subhead"> CSS Color Generator</h3> 
+                        <p class="inner-section-desc">A free tool for making a website alert banner with your preferred design</p>
+                        <a href="">Try Free</a> 
+                    </div>
+                   
+                </div>
+                <div class="col-md-4 mb-5">
+                    <div class="inner-section">
+                        <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="30" cy="30" r="30" fill="#E0EAFD"/>
+                            <g clip-path="url(#clip0_221_208)">
+                            <path d="M39.3346 21.3585C36.5541 20.9339 33.7114 21.2219 31.0726 22.1955L30.5566 22.3935C27.2796 23.7216 23.7051 24.1414 20.2096 23.6085C18.7066 23.376 17.1991 23.0235 15.8296 22.3425C15.4877 22.1715 15.224 21.8765 15.0923 21.5177C14.9606 21.1589 14.9709 20.7633 15.121 20.4118C15.2711 20.0603 15.5497 19.7794 15.9 19.6264C16.2502 19.4733 16.6457 19.4598 17.0056 19.5885L17.1661 19.656C18.2476 20.1825 19.4866 20.4615 20.6656 20.643C23.4463 21.0666 26.289 20.7776 28.9276 19.803L29.4436 19.608C32.7206 18.2799 36.2951 17.8601 39.7906 18.393C41.2711 18.621 42.8176 18.9855 44.1706 19.6575C44.3469 19.7455 44.5042 19.8674 44.6335 20.0162C44.7627 20.165 44.8613 20.3378 44.9237 20.5247C44.9861 20.7117 45.0111 20.9091 44.9972 21.1057C44.9832 21.3023 44.9307 21.4942 44.8426 21.6705C44.6619 22.0231 44.3504 22.2909 43.9746 22.4165C43.5989 22.5421 43.189 22.5155 42.8326 22.3425C41.7406 21.8295 40.5196 21.54 39.3346 21.3585ZM39.3346 30.3585C36.5541 29.9339 33.7114 30.2219 31.0726 31.1955L30.5566 31.3935C27.2796 32.7217 23.7051 33.1415 20.2096 32.6085C18.7066 32.376 17.1991 32.0235 15.8296 31.3425C15.4877 31.1715 15.224 30.8765 15.0923 30.5177C14.9606 30.1589 14.9709 29.7633 15.121 29.4118C15.2711 29.0603 15.5497 28.7794 15.9 28.6264C16.2502 28.4733 16.6457 28.4598 17.0056 28.5885L17.1661 28.656C18.2476 29.1825 19.4866 29.4615 20.6656 29.643C23.4463 30.0666 26.289 29.7776 28.9276 28.803L29.4436 28.608C32.7206 27.2799 36.2951 26.8601 39.7906 27.393C41.2711 27.621 42.8176 27.9855 44.1706 28.6575C44.3469 28.7455 44.5042 28.8674 44.6335 29.0162C44.7627 29.165 44.8613 29.3378 44.9237 29.5247C44.9861 29.7117 45.0111 29.9091 44.9972 30.1057C44.9832 30.3023 44.9307 30.4942 44.8426 30.6705C44.6619 31.0231 44.3504 31.2909 43.9746 31.4165C43.5989 31.5421 43.189 31.5155 42.8326 31.3425C41.7406 30.8295 40.5196 30.54 39.3346 30.3585ZM30.0076 40.6035L30.5566 40.3935C34.0081 39.0135 37.1041 39.0135 39.3346 39.3585C40.5196 39.54 41.7406 39.8295 42.8311 40.3425C43.1875 40.5155 43.5974 40.5421 43.9731 40.4165C44.3489 40.2909 44.6604 40.0231 44.8411 39.6705C44.9292 39.4942 44.9817 39.3023 44.9957 39.1057C45.0096 38.9091 44.9846 38.7117 44.9222 38.5247C44.8598 38.3378 44.7612 38.165 44.632 38.0162C44.5027 37.8674 44.3454 37.7455 44.1691 37.6575C42.8176 36.9855 41.2711 36.621 39.7906 36.393C36.4923 35.8894 33.12 36.2353 29.9926 37.398L29.4436 37.608C26.6641 38.7368 23.6314 39.0944 20.6656 38.643C19.6546 38.487 18.6016 38.2605 17.6386 37.8675L17.1661 37.6575C16.8118 37.4948 16.4082 37.4764 16.0406 37.6062C15.673 37.7359 15.3704 38.0037 15.1968 38.3528C15.0233 38.7018 14.9924 39.1047 15.1108 39.4761C15.2292 39.8475 15.4875 40.1583 15.8311 40.3425C17.1991 41.025 18.7066 41.3775 20.2096 41.607C22.7341 41.997 26.1796 42.012 30.0076 40.6035Z" fill="#0858FE"/>
+                            </g>
+                            <defs>
+                            <clipPath id="clip0_221_208">
+                            <rect width="36" height="36" fill="white" transform="translate(12 12)"/>
+                            </clipPath>
+                            </defs>
+                            </svg>
+                            
+                        <h3 class="inner-section-subhead">SVG Wave Generator</h3> 
+                        <p class="inner-section-desc">A free design tool to create colorful, multilayer, random, unique, and organic-looking SVG waves.</p>
+                        <a href="">Try Free</a>
+                    </div>
+                    
+                </div>
+            
+            </div>
+          </div>
+        </div> -->
+
+
+        
+    </div>
+
+
+
+    <script>
+        document.getElementById('thumbnailForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const videoUrl = document.getElementById('url').value;
+            let videoId;
+            try {
+                videoId = new URLSearchParams(new URL(videoUrl).search).get('v');
+            } catch (e) {
+                alert('Invalid URL');
+                return;
+            }
+
+            if (videoId) {
+                const qualities = ['maxresdefault', 'hqdefault', 'sddefault', 'mqdefault', 'default'];
+                qualities.forEach(q => {
+                    const imgUrl = `https://img.youtube.com/vi/${videoId}/${q}.jpg`;
+                    const container = document.getElementById(q);
+                    const imgElement = container.querySelector('img');
+                    const btnElement = container.querySelector('button');
+
+                    imgElement.src = imgUrl;
+                    imgElement.alt = `Thumbnail ${q}`;
+                    container.style.display = 'block';  // Unhide the container
+                });
+            } else {
+                alert('Invalid YouTube video ID');
+            }
+        });
+
+        function downloadImage(resolution) {
+            const imageUrl = document.getElementById(resolution).querySelector('img').src;
+            if (imageUrl) {
+                const link = document.createElement('a');
+                link.href = imageUrl;
+                link.download = resolution + '_thumbnail.jpg';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

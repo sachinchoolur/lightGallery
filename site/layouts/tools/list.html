@@ -1,0 +1,41 @@
+{{ define "main" }}
+<div class="wrap container-xxl page-wrap">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-6">
+            <article>
+                <div class="blog-list">
+                    {{ $paginator := .Paginate (.Data.Pages) -}}
+                    {{ range $paginator.Pages -}}
+                    <div class="blog-list-item">
+                        <div class="blog-header">
+                            <a href="{{ .RelPermalink }}" class="docs-hero-image">
+                                <img alt="blog header" class="img-fluid" src="{{ .RelPermalink }}header.png">
+                            </a>
+                            {{ if .Params.tags -}}
+                            <div style="display: inline-block; margin-right:8px;">
+                                {{ range $index, $tag := .Params.tags -}}
+                                <p class="tools-text"><span>{{ . }} </span></p>
+                                {{ end -}}
+                            </div>
+                            {{ end -}}
+                            <div style="display: inline-block;">
+                                {{ partial "main/blog-meta.html" . }}
+                            </div>
+                            <h2 class="h3"><a class="stretched-link text-body" href="{{ .RelPermalink }}">{{
+                                    .Params.title }}</a></h2>
+                        </div>
+                        <!-- <div class="blog-body">
+                            {{.Content| truncate 350 }}
+                            {{ partial "main/blog-contributors.html" . }}
+                        </div> -->
+                    </div>
+                    {{ end -}}
+                    {{ $.Scratch.Set "paginator" true }}
+                    {{ template "_internal/pagination.html" . }}
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
+
+{{ end }}

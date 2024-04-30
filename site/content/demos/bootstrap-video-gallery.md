@@ -10,6 +10,7 @@ lead:
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
+has_video: true
 menu: { demos: { parent: Demos } }
 weight: 26
 toc: true
@@ -45,24 +46,6 @@ toc: true
         >
             <img class="img-fluid" src="..." />
         </a>
-        <a
-            class="col-md-6 col-sm-6 px-0"
-            data-lg-size="1280-720"
-            data-src="https://private-sharing.wistia.com/medias/mwhrulrucj"
-            data-poster="..."
-            data-sub-html="..."
-        >
-            <img class="img-fluid" src="..." />
-        </a>
-        <a
-            class="col-md-6 col-sm-6 px-0"
-            data-lg-size="1280-720"
-            data-video='{"source": [{"src":"{{.Page.Site.BaseURL}}videos/video1.mp4", "type":"video/mp4"}], "tracks": [{"src": "{{.Page.Site.BaseURL}}videos/title.txt", "kind":"captions", "srclang": "en", "label": "English", "default": "true"}], "attributes": {"preload": false, "controls": true}}'
-            data-poster="..."
-            data-sub-html="..."
-        >
-            <img class="img-fluid" src="..." />
-        </a>
     </div>
 </div>
 ```
@@ -71,10 +54,7 @@ toc: true
 
 ```js
 window.lightGallery(document.getElementById('bootstrap-video-gallery'), {
-    thumbnail: true,
-    pager: true,
-    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
-    hash: false,
-    preload: 0,
+    // Optional thumbnail plugin
+    plugins: [lgThumbnail, lgVideo],
 });
 ```

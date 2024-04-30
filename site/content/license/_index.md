@@ -12,7 +12,7 @@ images: []
         <div class="pricing-list-item">
             <div class="pricing-type">Hobby</div>
             <div class="pricing-cost">
-                $25 <span class="pricing-cost-label">/ lifetime</span>
+                $48 <span class="pricing-cost-label">/ lifetime</span>
             </div>
             <div class="pricing-desc">
                 For personal use.
@@ -31,7 +31,7 @@ images: []
         <div class="pricing-list-item">
             <div class="pricing-type">Team</div>
             <div class="pricing-cost">
-                $99 <span class="pricing-cost-label">/ lifetime</span>
+                $118 <span class="pricing-cost-label">/ lifetime</span>
             </div>
             <div class="pricing-desc">
                 For small teams.
@@ -50,7 +50,7 @@ images: []
         <div class="pricing-list-item">
             <div class="pricing-type">Organization</div>
             <div class="pricing-cost">
-                $239 <span class="pricing-cost-label">/ lifetime</span>
+                $188 <span class="pricing-cost-label">/ lifetime</span>
             </div>
             <div class="pricing-desc">
                 For large teams and organizations
@@ -79,7 +79,7 @@ images: []
         <div class="pricing-list-item pricing-list-item-colored">
             <div class="pricing-type">Extended</div>
             <div class="pricing-cost">
-                $299 <span class="pricing-cost-label">/ lifetime</span>
+                $239 <span class="pricing-cost-label">/ lifetime</span>
             </div>
             <div class="d-grid pricing-btn-wrap">
                 <a href="https://sachin.lemonsqueezy.com/checkout/buy/2f129e78-4f58-4166-93af-3e13fedb9101" target="_blank" class="btn btn-white">Purchase Now</a>

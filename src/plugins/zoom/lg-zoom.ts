@@ -63,7 +63,7 @@ export default class Zoom {
               }" class="lg-zoom-in lg-icon"></button><button id="${this.core.getIdName(
                   'lg-zoom-out',
               )}" type="button" aria-label="${
-                  this.settings.zoomPluginStrings['zoomIn']
+                  this.settings.zoomPluginStrings['zoomOut']
               }" class="lg-zoom-out lg-icon"></button>`
             : '';
 
@@ -139,6 +139,12 @@ export default class Zoom {
     }
 
     getDragAllowedAxises(scale: number, scaleDiff?: number): DragAllowedAxises {
+        if (!this.containerRect) {
+            return {
+                allowX: false,
+                allowY: false,
+            };
+        }
         const $image = this.core
             .getSlideItem(this.core.index)
             .find('.lg-image')
