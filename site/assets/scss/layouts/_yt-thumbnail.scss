@@ -1,6 +1,4 @@
 .yt-thumbnail-container {
-    padding-left: 60px;
-    padding-right: 60px;
     margin-top: 3rem;
     display: flex;
     flex-direction: column;
@@ -28,6 +26,10 @@
         margin-top: 50px;
     }
 }
+.hero-section-thumbnail-section{
+    padding-left: 20px;
+    padding-right: 20px;
+}
 .yt-thumbnail-header {
     font-family: 'Helvetica Now Display', 'Helvetica Now Display', system-ui,
         -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
@@ -52,7 +54,7 @@
         -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
         'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-        color: #0e3481;
+        color: #666666;
     font-weight: 400;
     margin-top: 0px;
     line-height: 1.6;
@@ -85,9 +87,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    @include media-breakpoint-down(sm){
-        width: 100%;
+    width: 100%;
+    @include media-breakpoint-up(md){
+    
     }
+    
+    
 }
 .url-tab {
     margin-right: -1px;
@@ -105,27 +110,34 @@
     border-image: initial;
     border-color: inherit;
     background: inherit;
-    width: 730px;
+    width:100%;
     background-color: white;
     border-color: #E0EAFD;
-    border-radius: 6px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    font-size: 14px;
-    color: #8B8B8B;
+    border-radius:6px;
+    font-size: 16px;
+    color: #333333;
     height: 66px;
-    @include media-breakpoint-down(sm){
-        width:100%;
-        border-radius: 0px;
+    @include media-breakpoint-up(sm){
+        border-radius: 6px 0px 0px 6px;
+     }
+    @include media-breakpoint-up(md){
+       border-radius: 6px 0px 0px 6px;
     }
-
+    @include media-breakpoint-up(lg){
+        width: 730px;
+        border-radius: 6px 0px 0px 6px;
+    }
 }
 .content-area{
+    margin-top: 72px;
     display: flex;
     @include media-breakpoint-down(lg){
-        display: contents;
+        display: flex;
+        width: 100%;
     }
-    margin-top: 72px;
+    @include media-breakpoint-down(sm){
+        display: block;
+    }
 }
 .url-tab:focus{
     background-color: white;
@@ -152,6 +164,7 @@
         width: 100%;
     }
     @include media-breakpoint-down(lg){
+        width: 100%;
         margin-right: 0px;
         margin-bottom: 20px;
     }
@@ -202,11 +215,12 @@
 .preview-button-container{
     margin-top: 0px;
     margin-left:0px;
+    flex-shrink: 0px;
     @include media-breakpoint-down(lg){
         margin-top: 0px;
         margin-left: 0px;
     }
-    @include media-breakpoint-down(md){
+    @include media-breakpoint-down(sm){
         width: 100%;
     }
 }
@@ -233,21 +247,29 @@
     height: 66px;
     padding-top: 3px;
     width: 236px;
+    @include media-breakpoint-down(lg){
+        border-radius: 0px,0px,6px,6px;
+        font-size: 14px;
+    }
     @include media-breakpoint-down(sm){
-        border-radius: 0px;
+        border-radius: 6px;
         width: 100%;
+        font-size: 14px;
     }
 }
 .preview-button:hover{
     transition: .5s;
-    color: #0858FE;
-    background-color: transparent;
+    color: #fff;
+    background-color:#0E3481 ;
     border-color: #E0EAFD;
+    border-color:#0E3481;
 }
-
 .faq-section-container{
     width: 100%;
     background-image: linear-gradient(#F6F9FB 0%, #FDFDFE 52.08%);
+    display: flex;
+    justify-content: center;
+    margin-top: 126px;
 }
 .faq-question-single{
     color: #0e3481;
@@ -257,7 +279,7 @@
     }
 }
 .faq-answer-single{
-    color: #0e3481;
+    color:#666666;
     font-size: 16px;
     @include media-breakpoint-up(md){
         font-size: 18px;
@@ -345,12 +367,8 @@
     margin-right: 6px;
 }
 .youtube-thumnail-about-section{
-    display: flex;
-    flex-direction: row;
-    @include media-breakpoint-down(sm){
-        
-    }
-
+  width: 1200px; 
+  
 }
 .about-section-desc-header{
     font-size: 24px;
