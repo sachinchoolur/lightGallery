@@ -525,6 +525,20 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   opacity: 1;
   transition: opacity 0.2s ease-out 0.15s;
 }
+.lg-outer .lg-media-cont {
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+.lg-outer .lg-media-cont .lg-object {
+  width: 100% !important;
+  height: 100% !important;
+}
+.lg-outer .lg-has-iframe .lg-media-cont {
+  -webkit-overflow-scrolling: touch;
+  overflow: auto;
+}
 
 .lg-backdrop {
   position: fixed;

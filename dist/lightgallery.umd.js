@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.8.0-beta.1 | November 27th 2023
+ * lightgallery | 2.8.0-beta.2 | April 25th 2024
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -448,7 +448,12 @@
         };
         lgQuery.prototype.prepend = function (html) {
             this._each(function (el) {
-                el.insertAdjacentHTML('afterbegin', html);
+                if (typeof html === 'string') {
+                    el.insertAdjacentHTML('afterbegin', html);
+                }
+                else if (html instanceof HTMLElement) {
+                    el.insertBefore(html.cloneNode(true), el.firstChild);
+                }
             });
             return this;
         };
@@ -573,6 +578,27 @@
     }
     var utils = {
         /**
+         * Fetches HTML content from a given URL and inserts it into a specified element.
+         *
+         * @param url - The URL to fetch the HTML content from.
+         * @param element - The DOM element (jQuery object) to insert the HTML content into.
+         * @param insertMethod - The method to insert the HTML ('append' or 'replace').
+         */
+        fetchCaptionFromUrl: function (url, element, insertMethod) {
+            // Fetch content from the URL
+            fetch(url)
+                .then(function (response) { return response.text(); })
+                .then(function (htmlContent) {
+                if (insertMethod === 'append') {
+                    var contentDiv = "<div class=\"lg-sub-html\">" + htmlContent + "</div>";
+                    element.append(contentDiv);
+                }
+                else {
+                    element.html(htmlContent);
+                }
+            });
+        },
+        /**
          * get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
          */
         getSize: function (el, container, spacing, defaultLgSize) {
@@ -656,7 +682,7 @@
         },
         getIframeMarkup: function (iframeWidth, iframeHeight, iframeMaxWidth, iframeMaxHeight, src, iframeTitle) {
             var title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
-            return "<div class=\"lg-video-cont lg-has-iframe\" style=\"width:" + iframeWidth + "; max-width:" + iframeMaxWidth + "; height: " + iframeHeight + "; max-height:" + iframeMaxHeight + "\">\n                    <iframe class=\"lg-object\" frameborder=\"0\" " + title + " src=\"" + src + "\"  allowfullscreen=\"true\"></iframe>\n                </div>";
+            return "<div class=\"lg-media-cont lg-has-iframe\" style=\"width:" + iframeWidth + "; max-width:" + iframeMaxWidth + "; height: " + iframeHeight + "; max-height:" + iframeMaxHeight + "\">\n                    <iframe class=\"lg-object\" frameborder=\"0\" " + title + " src=\"" + src + "\"  allowfullscreen=\"true\"></iframe>\n                </div>";
         },
         getImgMarkup: function (index, src, altAttr, srcset, sizes, sources) {
             var srcsetAttr = srcset ? "srcset=\"" + srcset + "\"" : '';
@@ -728,7 +754,11 @@
             else {
                 videoClass = 'lg-has-html5';
             }
-            return "<div class=\"lg-video-cont " + videoClass + "\" style=\"" + videoContStyle + "\">\n                <div class=\"lg-video-play-button\">\n                <svg\n                    viewBox=\"0 0 20 20\"\n                    preserveAspectRatio=\"xMidYMid\"\n                    focusable=\"false\"\n                    aria-labelledby=\"" + playVideoString + "\"\n                    role=\"img\"\n                    class=\"lg-video-play-icon\"\n                >\n                    <title>" + playVideoString + "</title>\n                    <polygon class=\"lg-video-play-icon-inner\" points=\"1,0 20,10 1,20\"></polygon>\n                </svg>\n                <svg class=\"lg-video-play-icon-bg\" viewBox=\"0 0 50 50\" focusable=\"false\">\n                    <circle cx=\"50%\" cy=\"50%\" r=\"20\"></circle></svg>\n                <svg class=\"lg-video-play-icon-circle\" viewBox=\"0 0 50 50\" focusable=\"false\">\n                    <circle cx=\"50%\" cy=\"50%\" r=\"20\"></circle>\n                </svg>\n            </div>\n            " + (dummyImg || '') + "\n            <img class=\"lg-object lg-video-poster\" src=\"" + _poster + "\" />\n        </div>";
+            var _dummy = dummyImg;
+            if (typeof dummyImg !== 'string') {
+                _dummy = dummyImg.outerHTML;
+            }
+            return "<div class=\"lg-video-cont " + videoClass + "\" style=\"" + videoContStyle + "\">\n                <div class=\"lg-video-play-button\">\n                <svg\n                    viewBox=\"0 0 20 20\"\n                    preserveAspectRatio=\"xMidYMid\"\n                    focusable=\"false\"\n                    aria-labelledby=\"" + playVideoString + "\"\n                    role=\"img\"\n                    class=\"lg-video-play-icon\"\n                >\n                    <title>" + playVideoString + "</title>\n                    <polygon class=\"lg-video-play-icon-inner\" points=\"1,0 20,10 1,20\"></polygon>\n                </svg>\n                <svg class=\"lg-video-play-icon-bg\" viewBox=\"0 0 50 50\" focusable=\"false\">\n                    <circle cx=\"50%\" cy=\"50%\" r=\"20\"></circle></svg>\n                <svg class=\"lg-video-play-icon-circle\" viewBox=\"0 0 50 50\" focusable=\"false\">\n                    <circle cx=\"50%\" cy=\"50%\" r=\"20\"></circle>\n                </svg>\n            </div>\n            " + _dummy + "\n            <img class=\"lg-object lg-video-poster\" src=\"" + _poster + "\" />\n        </div>";
         },
         getFocusableElements: function (container) {
             var elements = container.querySelectorAll('a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])');
@@ -776,6 +806,7 @@
                 dynamicEl.alt = alt || title || '';
                 dynamicElements.push(dynamicEl);
             });
+            console.log(dynamicElements, 'dynamicElements');
             return dynamicElements;
         },
         isMobile: function () {
@@ -895,7 +926,17 @@
             if (this.settings.dynamic) {
                 this.zoomFromOrigin = false;
             }
-            if (!this.settings.container) {
+            if (this.settings.container) {
+                var container = this.settings.container;
+                if (typeof container === 'function') {
+                    this.settings.container = container();
+                }
+                else if (typeof container === 'string') {
+                    var el = document.querySelector(container);
+                    this.settings.container = el !== null && el !== void 0 ? el : document.body;
+                }
+            }
+            else {
                 this.settings.container = document.body;
             }
             // settings.preload should not be grater than $item.length
@@ -1434,7 +1475,7 @@
             }
             if (this.settings.appendSubHtmlTo !== '.lg-item') {
                 if (subHtmlUrl) {
-                    this.outer.find('.lg-sub-html').load(subHtmlUrl);
+                    utils.fetchCaptionFromUrl(subHtmlUrl, this.outer.find('.lg-sub-html'), 'replace');
                 }
                 else {
                     this.outer.find('.lg-sub-html').html(subHtml);
@@ -1443,7 +1484,7 @@
             else {
                 var currentSlide = $LG(this.getSlideItemId(index));
                 if (subHtmlUrl) {
-                    currentSlide.load(subHtmlUrl);
+                    utils.fetchCaptionFromUrl(subHtmlUrl, currentSlide, 'append');
                 }
                 else {
                     currentSlide.append("<div class=\"lg-sub-html\">" + subHtml + "</div>");
@@ -1511,10 +1552,14 @@
                 if (!_dummyImgSrc)
                     return '';
                 var imgStyle = this.getDummyImgStyles(this.currentImageSize);
-                var dummyImgContent = "<img " + alt + " style=\"" + imgStyle + "\" class=\"lg-dummy-img\" src=\"" + _dummyImgSrc + "\" />";
+                var dummyImgContentImg = document.createElement('img');
+                dummyImgContentImg.alt = alt || '';
+                dummyImgContentImg.src = _dummyImgSrc;
+                dummyImgContentImg.className = "lg-dummy-img";
+                dummyImgContentImg.style.cssText = imgStyle;
                 $currentSlide.addClass('lg-first-slide');
                 this.outer.addClass('lg-first-slide-loading');
-                return dummyImgContent;
+                return dummyImgContentImg;
             }
             return '';
         };
@@ -1531,8 +1576,10 @@
             else {
                 imgContent = utils.getImgMarkup(index, src, altAttr, srcset, sizes, sources);
             }
-            var imgMarkup = "<picture class=\"lg-img-wrap\"> " + imgContent + "</picture>";
-            $currentSlide.prepend(imgMarkup);
+            var picture = document.createElement('picture');
+            picture.className = 'lg-img-wrap';
+            $LG(picture).append(imgContent);
+            $currentSlide.prepend(picture);
         };
         LightGallery.prototype.onSlideObjectLoad = function ($slide, isHTML5VideoWithoutPoster, onLoad, onError) {
             var mediaObject = $slide.find('.lg-object').first();
@@ -2462,7 +2509,8 @@
         LightGallery.prototype.isSlideElement = function (target) {
             return (target.hasClass('lg-outer') ||
                 target.hasClass('lg-item') ||
-                target.hasClass('lg-img-wrap'));
+                target.hasClass('lg-img-wrap') ||
+                target.hasClass('lg-img-rotate'));
         };
         LightGallery.prototype.isPosterElement = function (target) {
             var playButton = this.getSlideItem(this.index)

@@ -1,10 +1,10 @@
 {{ if eq (hugo.Environment) "development" -}}
   {{ $options := (dict "targetPath" "main.css" "enableSourceMap" true "includePaths" (slice "node_modules")) -}}
-  {{ $css := resources.Get "scss/app.scss" | toCSS $options -}}
+  {{ $css := resources.Get "scss/apps.scss" | toCSS $options -}}
   <link rel="stylesheet" href="{{ $css.Permalink }}">
   {{ else -}}
   {{ $options := (dict "targetPath" "main.css" "outputStyle" "compressed" "includePaths" (slice "node_modules")) -}}
-  {{ $css := resources.Get "scss/app.scss" | toCSS $options | postCSS (dict "config" "config/postcss.config.js") -}}
+  {{ $css := resources.Get "scss/apps.scss" | toCSS $options | postCSS (dict "config" "config/postcss.config.js") -}}
   {{ $secureCSS := $css | resources.Fingerprint "sha512" -}}
   <link rel="stylesheet" href="{{ $secureCSS.Permalink }}" integrity="{{ $secureCSS.Data.Integrity }}" crossorigin="anonymous">
   {{ end -}}
@@ -30,7 +30,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 {{ end -}}
 
-  {{ if eq .Title "Video gallery" -}}
+  {{ if  .Params.has_video  -}}
     <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
   {{ end -}}
 <noscript><style>img.lazyload { display: none; }</style></noscript>
@@ -39,3 +39,5 @@
 {{ if eq .Title "Flickity carousel demo" -}}
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
 {{ end }}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.css" rel="stylesheet">

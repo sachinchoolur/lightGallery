@@ -8,6 +8,7 @@ lead:
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
+has_video: true
 menu: {demos: {parent: Demos}}
 weight: 25
 toc: true
@@ -106,47 +107,9 @@ toc: true
             data-bs-slide-to="1"
             aria-label="Slide 2"
         ></button>
-        <button
-            type="button"
-            data-bs-target="#bootstrap-video-carousel"
-            data-bs-slide-to="2"
-            aria-label="Slide 3"
-        ></button>
     </div>
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <a
-                data-lg-size="1280-720"
-                class="lg-item"
-                data-src="//vimeo.com/112836958"
-                data-poster="..."
-                data-sub-html="..."
-            >
-                <img
-                    width="300"
-                    height="100"
-                    class="img-responsive"
-                    src="/images/demo/vimeo-video-poster.jpg"
-                />
-            </a>
-        </div>
-        <div class="carousel-item ">
-            <a
-                class="lg-item"
-                data-lg-size="1280-720"
-                data-src="//www.youtube.com/watch?v=EIUJfXk3_3w"
-                data-poster="..."
-                data-sub-html="..."
-            >
-                <img
-                    width="300"
-                    height="100"
-                    class="img-responsive"
-                    src="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
-                />
-            </a>
-        </div>
-        <div class="carousel-item">
             <a
                 data-lg-size="1280-720"
                 class="lg-item"
@@ -216,12 +179,7 @@ const carousel = new bootstrap.Carousel(carouselEl, {
 carouselEl.addEventListener('slide.bs.carousel', (event) => {
     const container = document.querySelector('.carousel-inner');
     window.lightGallery(container, {
-        thumbnail: true,
-        pager: false,
-        plugins: [lgThumbnail],
-        hash: false,
-        zoomFromOrigin: false,
-        preload: 3,
+        plugins: [lgVideo],
         selector: '.lg-item',
     });
 });

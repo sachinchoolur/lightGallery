@@ -16,12 +16,12 @@ weight: 28
 toc: true
 ---
 
-
-
 #### Demo
 
-{{< owl-carousel-gallery id="slick-carousel-gallery-demo" >}}
-{{< demoButtons js="https://codepen.io/light-gallery/pen/GRzXYgZ" >}}
+{{< owl-carousel-gallery id="slick-carousel-gallery-demo" >}} {{< demoButtons
+    js="https://codepen.io/light-gallery/pen/GRzXYgZ"
+    react="https://stackblitz.com/edit/stackblitz-starters-a7gtex?file=src%2FApp.tsx"
+    >}}
 
 ##### HTML Structure
 
@@ -41,27 +41,22 @@ toc: true
 
 ```js
 let slickEl = document.getElementById('slick-carousel-gallery-demo');
-    if (slickEl) {
-        var $slickDemo = $('#slick-carousel-gallery-demo');
-        $slickDemo.on('init', function (event, slick, direction) {
-            const container = document.querySelector('.slick-track');
-            window.lightGallery(container, {
-                thumbnail: false,
-                pager: false,
-                plugins: [],
-                hash: false,
-                preload: 4,
-            });
+if (slickEl) {
+    var $slickDemo = $('#slick-carousel-gallery-demo');
+    $slickDemo.on('init', function (event, slick, direction) {
+        const container = document.querySelector('.slick-track');
+        window.lightGallery(container, {
+            plugins: [
+                lgZoom,
+                lgThumbnail,
+            ],
+            preload: 4,
         });
-        $slickDemo.slick({
-            centerMode: true,
-            slidesToShow: 3,
-            customPaging: '10px',
-            swipe: false,
-            arrows: true,
-            variableWidth: true,
-        });
-    }
+    });
+    $slickDemo.slick({,
+        slidesToShow: 3,
+    });
+}
 ```
 
 ##### SCSS (Optional)
@@ -85,4 +80,3 @@ let slickEl = document.getElementById('slick-carousel-gallery-demo');
     }
 }
 ```
-
