@@ -1624,5 +1624,6 @@ if ($lfYoutubeForm) {
             imgElement.alt = `Thumbnail ${q}`;
             container.style.display = 'block'; // Unhide the container
         });
+        document.getElementById('thumbnail').scrollIntoView();
     });
 }
