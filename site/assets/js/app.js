@@ -1583,3 +1583,46 @@ window.lightGallery(document.getElementById('bootstrap-video-carousel'), {
     selector: '.lg-item'
 });
 
+
+
+
+
+const $lfYoutubeForm = document.getElementById('thumbnailForm');
+if ($lfYoutubeForm) {
+    $lfYoutubeForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const videoUrl = document.getElementById('url').value;
+        if (!videoUrl) {
+            alert('Please enter a YouTube video URL');
+            return;
+        }
+        const youtube = videoUrl.match(
+            /\/\/(?:www\.)?youtu(?:\.be|be\.com|be-nocookie\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)([\&|?][\S]*)*/i,
+        );
+
+        const videoId = youtube && youtube[1];
+
+        if (!videoId) {
+            alert('Invalid URL');
+            return;
+        }
+        const qualities = [
+            'maxresdefault',
+            'hqdefault',
+            'sddefault',
+            'mqdefault',
+            'default',
+        ];
+        qualities.forEach((q) => {
+            const imgUrl = `https://img.youtube.com/vi/${videoId}/${q}.jpg`;
+            const container = document.getElementById(q);
+            const imgElement = container.querySelector('img');
+            const btnElement = container.querySelector('.download-btn');
+
+            imgElement.src = imgUrl;
+            btnElement.href = imgUrl;
+            imgElement.alt = `Thumbnail ${q}`;
+            container.style.display = 'block'; // Unhide the container
+        });
+    });
+}

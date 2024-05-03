@@ -34,6 +34,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/airtable@0.11.1/build/airtable.browser.js"></script>
 
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.14.1/runtime.min.js"></script> -->
+
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49767543-2"></script>
 <script>
@@ -83,6 +86,22 @@
 <script src='https://cdn.paritydeals.com/banner.js'></script>
 
 {{ end -}}
+
+{{ if (eq .Title "jQuery to javascript converter") -}}
+
+
+{{ $rjrc := resources.Get "js/replaceJquerySrc.js" | babel -}}
+{{ $rj := resources.Get "js/replaceJquery.js" | babel -}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/javascript/javascript.min.js"></script>
+<script src="https://unpkg.com/prettier@3.2.5/standalone.js"></script>
+<script src="https://unpkg.com/prettier@3.2.5/plugins/babel.js"></script>
+<script src="https://unpkg.com/prettier@3.2.5/plugins/estree.js"></script>
+<script src="{{$rjrc.Permalink}}"></script>
+<script src="{{$rj.Permalink}}"></script>
+{{ end -}}
+
+
 
 
 {{ if eq (hugo.Environment) "development" -}}

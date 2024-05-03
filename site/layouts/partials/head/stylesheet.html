@@ -1,3 +1,12 @@
+{{ if eq .Title "jQuery to javascript converter" -}}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.css" rel="stylesheet">
+{{ end }}
+<style>
+    .CodeMirror {
+        font-size: 13px !important;
+    }
+</style>
+
 {{ if eq (hugo.Environment) "development" -}}
   {{ $options := (dict "targetPath" "main.css" "enableSourceMap" true "includePaths" (slice "node_modules")) -}}
   {{ $css := resources.Get "scss/app.scss" | toCSS $options -}}
