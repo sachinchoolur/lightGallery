@@ -1,9 +1,10 @@
 .yt-thumbnail-container {
-    margin-top: 3rem;
+    padding-top: 4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    @include media-breakpoint-down(sm){
+    background-image: linear-gradient(#e8f0ff 0%, white 52.08%);
+    @include media-breakpoint-down(sm) {
         padding-left: 0px;
         padding-right: 0px;
     }
@@ -21,12 +22,12 @@
     justify-content: center;
     text-align: center;
     margin-top: 100px;
-    @include media-breakpoint-down(md){
+    @include media-breakpoint-down(md) {
         padding-top: 30px;
         margin-top: 50px;
     }
 }
-.hero-section-thumbnail-section{
+.hero-section-thumbnail-section {
     padding-left: 20px;
     padding-right: 20px;
 }
@@ -39,45 +40,41 @@
     font-size: 50px;
     font-weight: 500;
 
-    @include media-breakpoint-down(sm){
+    @include media-breakpoint-down(sm) {
         font-size: 36px;
     }
 }
 .yt-thumbnail-description-container {
-
     display: flex;
     justify-content: center;
     align-items: center;
 }
 .yt-thumbnail-description {
-    font-family: 'Helvetica Now Display', 'Helvetica Now Display', system-ui,
-        -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
-        'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
-        color: #666666;
+    color: #0e3481;
     font-weight: 400;
     margin-top: 0px;
     line-height: 1.6;
-    font-size: 18px;
+    font-size: 21px;
     display: flex;
     justify-content: center;
-    max-width: 874px;
+    max-width: 700px;
 
-    @include media-breakpoint-down(sm){
+    @include media-breakpoint-down(sm) {
         font-size: 20px;
         margin-bottom: 48px;
     }
-    @include media-breakpoint-down(lg){
+    @include media-breakpoint-down(lg) {
         margin-bottom: 48px;
     }
 }
 .quality-option {
     border: 1px solid black;
-    max-width: 220px;-webkit-appearance: none;
+    max-width: 220px;
+    -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Ctitle%3Edown-arrow%3C%2Ftitle%3E%3Cg%20fill%3D%22%230e3481%22%3E%3Cpath%20d%3D%22M10.293%2C3.293%2C6%2C7.586%2C1.707%2C3.293A1%2C1%2C0%2C0%2C0%2C.293%2C4.707l5%2C5a1%2C1%2C0%2C0%2C0%2C1.414%2C0l5-5a1%2C1%2C0%2C1%2C0-1.414-1.414Z%22%20fill%3D%22%230e3481%22%3E%3C%2Fpath%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-    background-size: .6em;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Ctitle%3Edown-arrow%3C%2Ftitle%3E%3Cg%20fill%3D%22%230e3481%22%3E%3Cpath%20d%3D%22M10.293%2C3.293%2C6%2C7.586%2C1.707%2C3.293A1%2C1%2C0%2C0%2C0%2C.293%2C4.707l5%2C5a1%2C1%2C0%2C0%2C0%2C1.414%2C0l5-5a1%2C1%2C0%2C1%2C0-1.414-1.414Z%22%20fill%3D%22%230e3481%22%3E%3C%2Fpath%3E%3C%2Fg%3E%3C%2Fsvg%3E');
+    background-size: 0.6em;
     background-position: calc(100% - 1.3em) center;
     background-repeat: no-repeat;
 }
@@ -88,11 +85,8 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    @include media-breakpoint-up(md){
-    
+    @include media-breakpoint-up(md) {
     }
-    
-    
 }
 .url-tab {
     margin-right: -1px;
@@ -110,47 +104,47 @@
     border-image: initial;
     border-color: inherit;
     background: inherit;
-    width:100%;
+    width: 100%;
     background-color: white;
-    border-color: #E0EAFD;
-    border-radius:6px;
+    border-color: #e0eafd;
+    border-radius: 6px;
     font-size: 16px;
     color: #333333;
     height: 66px;
-    @include media-breakpoint-up(sm){
+    @include media-breakpoint-up(md) {
         border-radius: 6px 0px 0px 6px;
-     }
-    @include media-breakpoint-up(md){
-       border-radius: 6px 0px 0px 6px;
     }
-    @include media-breakpoint-up(lg){
+    @include media-breakpoint-up(lg) {
         width: 730px;
         border-radius: 6px 0px 0px 6px;
     }
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active{
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: #333333;
+        transition: background-color 5000s ease-in-out 0s;
+        box-shadow: inset 0 0 40px 40px #fff;
+    }
 }
-.content-area{
+.content-area {
     margin-top: 72px;
     display: flex;
-    @include media-breakpoint-down(lg){
+    @include media-breakpoint-down(lg) {
         display: flex;
         width: 100%;
     }
-    @include media-breakpoint-down(sm){
+    @include media-breakpoint-down(md) {
         display: block;
     }
 }
-.url-tab:focus{
-    background-color: white;
-    z-index: 1;
-    border-color: #E0EAFD;
-    box-shadow: #E0EAFD 0px 0px 0px 1px;
-}
-.url-tab-header{
+.url-tab-header {
     margin-bottom: 4px;
     display: inline-block;
     font-weight: 400;
     line-height: 1.5;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     color: #0e3481;
     font-size: 16px;
     font-family: 'Helvetica Now Display', 'Helvetica Now Display', system-ui,
@@ -158,38 +152,38 @@
         'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
-.content-url-section{
+.content-url-section {
     margin-right: 0px;
-    @include media-breakpoint-down(md){
+    @include media-breakpoint-down(md) {
         width: 100%;
     }
-    @include media-breakpoint-down(lg){
+    @include media-breakpoint-down(lg) {
         width: 100%;
         margin-right: 0px;
         margin-bottom: 20px;
     }
 }
-.content-quality-section{
-    @include media-breakpoint-down(lg){
+.content-quality-section {
+    @include media-breakpoint-down(lg) {
         margin-right: 0px;
         margin-bottom: 20px;
     }
 }
-.quality-option-header{
+.quality-option-header {
     margin-bottom: 4px;
     display: inline-block;
     font-weight: 400;
     line-height: 1.5;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     font-family: 'Helvetica Now Display', 'Helvetica Now Display', system-ui,
         -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
         'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-        color: #0e3481;
+    color: #0e3481;
     font-size: 16px;
 }
-.quality-option{
-    letter-spacing: .5px;
+.quality-option {
+    letter-spacing: 0.5px;
     display: inline-block;
     font-weight: 400;
     line-height: 1.5;
@@ -205,27 +199,27 @@
     height: 40px;
     width: 220px;
 }
-.quality-value{
+.quality-value {
     font-weight: 500;
     color: #0e3481;
     align-items: center;
     display: flex;
     justify-content: center;
 }
-.preview-button-container{
+.preview-button-container {
     margin-top: 0px;
-    margin-left:0px;
+    margin-left: 0px;
     flex-shrink: 0px;
-    @include media-breakpoint-down(lg){
+    @include media-breakpoint-down(lg) {
         margin-top: 0px;
         margin-left: 0px;
     }
-    @include media-breakpoint-down(sm){
+    @include media-breakpoint-down(md) {
         width: 100%;
     }
 }
-.preview-button{
-    margin-top:0px;
+.preview-button {
+    margin-top: 0px;
     display: inline-block;
     font-weight: 600;
     line-height: 1.5;
@@ -240,99 +234,81 @@
     border-radius: 6px;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     color: #fff;
-    background-color: #0858FE;
-    border-color: #0858FE;
+    background-color: #0858fe;
+    border-color: #0858fe;
     height: 66px;
     padding-top: 3px;
     width: 236px;
-    @include media-breakpoint-down(lg){
-        border-radius: 0px,0px,6px,6px;
-        font-size: 14px;
+    @include media-breakpoint-down(lg) {
+        border-radius: 0px, 0px, 6px, 6px;
     }
-    @include media-breakpoint-down(sm){
+    @include media-breakpoint-down(md) {
         border-radius: 6px;
         width: 100%;
-        font-size: 14px;
     }
 }
-.preview-button:hover{
-    transition: .5s;
+.preview-button:hover {
+    transition: 0.5s;
     color: #fff;
-    background-color:#0E3481 ;
-    border-color: #E0EAFD;
-    border-color:#0E3481;
+    background-color: #0e3481;
+    border-color: #e0eafd;
+    border-color: #0e3481;
 }
-.faq-section-container{
+.faq-section-container {
     width: 100%;
-    background-image: linear-gradient(#F6F9FB 0%, #FDFDFE 52.08%);
+    background-image: linear-gradient(#f6f9fb 0%, #fdfdfe 52.08%);
     display: flex;
     justify-content: center;
     margin-top: 126px;
 }
-.faq-question-single{
+.faq-question-single {
+    color: #0e3481;
+    font-size: 22px;
+}
+.faq-answer-single {
     color: #0e3481;
     font-size: 18px;
-    @include media-breakpoint-up(md){
-        font-size: 22px;
-    }
 }
-.faq-answer-single{
-    color:#666666;
-    font-size: 16px;
-    @include media-breakpoint-up(md){
-        font-size: 18px;
-    }
-
-}
-.faq-section-header{
-    padding-top: 80px;
-    padding-bottom: 42px;
+.faq-section-header {
+    padding-top: 120px;
     display: flex;
     color: #0e3481;
     font-size: 32px;
     font-weight: 600;
-    @include media-breakpoint-down(sm){
-        padding-top: 40px;
-        padding-bottom: 22px;
-        padding-left: 50px;
-    }
-}
-.faq-section{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-.faq-section-body{
-    display: flex;
-    flex-direction: column;
-    max-width: 700px;
 }
 
-.preview-section-two{
+.faq-section-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-section-two {
     max-width: 1346px;
     width: 100%;
     display: flex;
     justify-content: space-between;
 }
-.preview-section-one{
+.preview-section-one {
     display: flex;
     flex-direction: column;
     align-items: center;
-
 }
 
-.preview-container{
+.preview-container {
     border-radius: 12px;
     margin-top: 110px;
-    padding: 32px;
+    padding: 22px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #FAFCFF;
-    border: 1px solid #E0EAFD ;
+    background-color: #fafcff;
+    border: 1px solid #e0eafd;
+    @include media-breakpoint-up(md) {
+        padding: 32px;
+    }
 }
 
 .thumbnail-preview {
@@ -343,79 +319,69 @@
     justify-content: center;
     flex-direction: column;
 }
-.download-btn{
+.download-btn {
     display: flex;
     margin-bottom: 32px;
     padding: 7px 24px 7px 24px;
     border-radius: 4px;
-    color: #0858FE;
+    color: #0858fe;
     border: none;
-    background-color: #E0EAFD;
+    background-color: #e0eafd;
+    text-decoration: none !important;
 }
-.download-btn:hover{
-    transition: .4s;
-    color: #E0EAFD;
-    background-color: #0858FE;
-
+.download-btn:hover {
+    transition: 0.4s;
+    color: #e0eafd;
+    background-color: #0858fe;
 }
 
-.preview-name{
+.preview-name {
     margin-bottom: 16px;
     color: #666666;
 }
-.btn-text{
+.btn-text {
     margin-right: 6px;
 }
-.youtube-thumnail-about-section{
-  width: 1200px; 
-  
+.youtube-thumnail-about-section {
+    max-width: 1200px;
 }
-.about-section-desc-header{
-    font-size: 24px;
-    color: #0E3481;
-    @include media-breakpoint-up(md){
-        font-size: 32px;
-    }
+.about-section-desc-header {
+    color: #0e3481;
+    font-size: 32px;
 }
-.about-seection-desc{
-    font-size: 16px;
-    color: #666666;
-    @include media-breakpoint-up(md){
-        font-size: 18px;
-    }
-   
+.about-seection-desc {
+    color: #0e3481;
+    font-size: 18px;
 }
 .download-icon {
-    stroke: #0858FE;
-    
+    stroke: #0858fe;
 }
-.inner-section{
+.inner-section {
     text-align: center;
 }
-.other-tool-section-tittle{
+.other-tool-section-tittle {
     text-align: center;
     margin-bottom: 60px;
     font-size: 24px;
-    color:#0E3481 ;
-    @include media-breakpoint-up(md){
+    color: #0e3481;
+    @include media-breakpoint-up(md) {
         font-size: 32px;
     }
-
 }
-.inner-section-subhead{
+.inner-section-subhead {
     font-size: 20px;
-    color: #0E3481;
-    @include media-breakpoint-up(md){
+    color: #0e3481;
+    @include media-breakpoint-up(md) {
         font-size: 22px;
     }
 }
-.inner-section-desc{
+.inner-section-desc {
     color: #666666;
     font-size: 16px;
-    @include media-breakpoint-up(md){
+    @include media-breakpoint-up(md) {
         font-size: 18px;
     }
 }
-.other-tool-section{
+.other-tool-section {
     margin-top: 110px;
 }

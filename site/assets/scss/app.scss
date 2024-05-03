@@ -4,10 +4,10 @@
 /** Import theme variables */
 @import 'common/variables';
 
+/*! purgecss start ignore */
 /** Import Bootstrap */
 @import 'bootstrap/scss/bootstrap';
 
-/*! purgecss start ignore */
 @import 'vendor/justifiedGallery';
 
 /** Import theme styles */
@@ -26,6 +26,7 @@
 @import 'components/comments';
 @import 'components/forms';
 @import 'components/images';
+@import 'layouts/youtube-thumb';
 @import 'layouts/footer';
 @import 'layouts/header';
 @import 'layouts/pages';
@@ -46,5 +47,5 @@
 @import 'lightGallery/dynamic-mode';
 @import 'layouts/blog';
 @import 'layouts/replace-jquery';
-@import 'layouts/yt-thumbnail';
+
 /*! purgecss end ignore */
