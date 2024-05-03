@@ -280,7 +280,8 @@
 }
 
 body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable) .lg-img-wrap,
-body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable) .lg-video-cont {
+body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable) .lg-video-cont,
+body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable) .lg-media-cont {
   opacity: 0;
   -moz-transform: scale3d(0.5, 0.5, 0.5);
   -o-transform: scale3d(0.5, 0.5, 0.5);
@@ -294,7 +295,8 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable) .lg-v
   transition: transform 250ms cubic-bezier(0, 0, 0.25, 1) 0s, opacity 250ms cubic-bezier(0, 0, 0.25, 1) !important;
 }
 body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-complete .lg-img-wrap,
-body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-complete .lg-video-cont {
+body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-complete .lg-video-cont,
+body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-complete .lg-media-cont {
   opacity: 1;
   -moz-transform: scale3d(1, 1, 1);
   -o-transform: scale3d(1, 1, 1);
@@ -649,8 +651,8 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   content: "\e311";
 }
 .lg-actual-size .lg-icon.lg-zoom-in {
-  opacity: 0.5;
-  pointer-events: none;
+  opacity: 1;
+  pointer-events: auto;
 }
 .lg-icon.lg-actual-size {
   font-size: 20px;
@@ -1300,6 +1302,20 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 .lg-outer.lg-components-open:not(.lg-zoomed) .lg-sub-html {
   opacity: 1;
   transition: opacity 0.2s ease-out 0.15s;
+}
+.lg-outer .lg-media-cont {
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+.lg-outer .lg-media-cont .lg-object {
+  width: 100% !important;
+  height: 100% !important;
+}
+.lg-outer .lg-has-iframe .lg-media-cont {
+  -webkit-overflow-scrolling: touch;
+  overflow: auto;
 }
 
 .lg-backdrop {
