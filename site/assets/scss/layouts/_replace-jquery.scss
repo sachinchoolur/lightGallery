@@ -290,7 +290,6 @@
     font-weight: 500;
     background-color: #e0eafd;
     margin-top: 5px;
-    transition: opacity 0.3s;
 }
 .tooltip:hover .replace-jq-tooltiptext {
     visibility: visible;
@@ -324,18 +323,6 @@
     float: left;
     padding-left: 16px;
 }
-.centre-convert-btn {
-    display: flex;
-    justify-content: center;
-    padding-top: 16px;
-    padding-bottom: 14px;
-}
-.centre-convert-btn svg {
-    stroke: #0858fe;
-}
-.centre-convert-btn:hover svg {
-    stroke: #fff;
-}
 .replace-jq-centre-convert-btn-circle-convert-btn {
     position: absolute;
     width: 56px;
@@ -348,26 +335,30 @@
     z-index: 2;
     display: none;
     cursor: pointer;
+    transition: background-color 0.3s, border 0.3s;
     @include media-breakpoint-up(xl) {
         display: block;
     }
-}
-.replace-jq-centre-convert-btn-circle-convert-btn i {
-    font-size: 2em;
-    color: #333;
-    transition: color 0.3s;
-}
-.replace-jq-centre-convert-btn-circle-convert-btn:hover {
-    background-color: #0858fe;
-    border: 2px solid #e0eafd;
-}
-.replace-jq-centre-convert-btn-circle-convert-btn:hover
-    .replace-jq-centre-convert-btn-circle-convert-btn
-    i {
-    color: #fff;
+    &:hover {
+        background-color: #0858fe;
+        border: 2px solid #e0eafd;
+        svg {
+            stroke: #FFF;
+        }
+    }
 }
 .btn-btn-svg :hover {
     color: white;
+}
+.centre-convert-btn {
+    display: flex;
+    justify-content: center;
+    padding-top: 16px;
+    padding-bottom: 14px;
+}
+.centre-convert-btn svg {
+    transition: stroke 0.3s;
+    stroke: #0858fe;
 }
 
 .replace-jq-replace-jq-main-btn-main {

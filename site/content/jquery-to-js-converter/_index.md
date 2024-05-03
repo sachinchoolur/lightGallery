@@ -60,7 +60,6 @@ date: 2024-05-01T08:48:57.000Z
             </div>
             <div class="replace-jq-centre-convert-btn-circle-convert-btn" id="replace-jq-centre-convert-btn-sub-convert-btn">
                 <div class="centre-convert-btn">
-                    <i class="fas fa-star"></i>
                     <svg fill=none height=22 viewBox="0 0 22 22"width=22 xmlns=http://www.w3.org/2000/svg><path d="M2.33789 6C4.06694 3.01099 7.29866 1 11.0001 1C16.5229 1 21.0001 5.47715 21.0001 11C21.0001 16.5228 16.5229 21 11.0001 21C7.29866 21 4.06694 18.989 2.33789 16M11 15L15 11M15 11L11 7M15 11H1"stroke=""stroke-linecap=round stroke-linejoin=round stroke-width=2 /></svg>
                 </div>
             </div>
