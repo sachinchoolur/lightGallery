@@ -290,6 +290,7 @@
     font-weight: 500;
     background-color: #e0eafd;
     margin-top: 5px;
+    text-transform: capitalize;
 }
 .tooltip:hover .replace-jq-tooltiptext {
     visibility: visible;
@@ -318,6 +319,7 @@
     font-size: 18px;
     line-height: 26px;
     color: #fffdfd;
+    margin: 0;
 }
 .replace-jq-centre-convert-btn-taskbar-head {
     float: left;

@@ -46,7 +46,7 @@ date: 2024-05-01T08:48:57.000Z
                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"
                                     fill="none"><path
                                         d="M8 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V8M8 21H7.8C6.11984 21 5.27976 21 4.63803 20.673C4.07354 20.3854 3.6146 19.9265 3.32698 19.362C3 18.7202 3 17.8802 3 16.2V16M21 8V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H16M21 16V16.2C21 17.8802 21 18.7202 20.673 19.362C20.3854 19.9265 19.9265 20.3854 19.362 20.673C18.7202 21 17.8802 21 16.2 21H16"
-                                        stroke="white" stroke-width="2" stroke-linecap="round"
+                                        stroke="#E0EAFD" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" /></svg>
                             </div>
                             <div class="replace-jq-centre-convert-btn-taskbar-btn minimize-icon" id="replace-jq-centre-convert-btn-taskbar-minimize">
@@ -83,7 +83,7 @@ date: 2024-05-01T08:48:57.000Z
                             </div>
                             <div class="replace-jq-centre-convert-btn-taskbar-btn maximize-svg" id="replace-jq-centre-convert-btn-taskbar-output-maximize">
                                 <span class="replace-jq-tooltiptext" id="maxTooltip">fullscreen</span>
-                                <svg fill=none height=30 viewBox="0 0 24 24"width=30 xmlns=http://www.w3.org/2000/svg><path d="M8 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V8M8 21H7.8C6.11984 21 5.27976 21 4.63803 20.673C4.07354 20.3854 3.6146 19.9265 3.32698 19.362C3 18.7202 3 17.8802 3 16.2V16M21 8V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H16M21 16V16.2C21 17.8802 21 18.7202 20.673 19.362C20.3854 19.9265 19.9265 20.3854 19.362 20.673C18.7202 21 17.8802 21 16.2 21H16"stroke=white stroke-linecap=round stroke-linejoin=round stroke-width=2 /></svg>
+                                <svg fill=none height=30 viewBox="0 0 24 24"width=30 xmlns=http://www.w3.org/2000/svg><path d="M8 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V8M8 21H7.8C6.11984 21 5.27976 21 4.63803 20.673C4.07354 20.3854 3.6146 19.9265 3.32698 19.362C3 18.7202 3 17.8802 3 16.2V16M21 8V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H16M21 16V16.2C21 17.8802 21 18.7202 20.673 19.362C20.3854 19.9265 19.9265 20.3854 19.362 20.673C18.7202 21 17.8802 21 16.2 21H16" stroke=#E0EAFD stroke-linecap=round stroke-linejoin=round stroke-width=2 /></svg>
                             </div>
                             <div class="replace-jq-centre-convert-btn-taskbar-btn minimize-icon" id="replace-jq-centre-convert-btn-taskbar-output-minimize">
                                 <span class="replace-jq-tooltiptext" id="minTooltip">exit</span>

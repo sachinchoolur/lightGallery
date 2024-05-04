@@ -128,7 +128,7 @@ exitFullscreenButton.addEventListener('click', function () {
     inputEditerSection.classList.remove('fullscreen');
     document.getElementById(
         'replace-jq-centre-convert-btn-input-container',
-    ).style.height = '450px';
+    ).style.height = '650px';
     document.body.style.overflow = 'auto';
     // hide maximize button
     document.getElementById(
@@ -185,7 +185,7 @@ outputFullscreenBtn.addEventListener('click', function () {
 outputMinimizeBtn.addEventListener('click', function () {
     // make textarea fullscreen
     outputEditerSection.classList.remove('fullscreen');
-    document.getElementById('output-container').style.height = '450px';
+    document.getElementById('output-container').style.height = '650px';
     document.body.style.overflow = 'auto';
     // hide maximize button
     document.getElementById(
