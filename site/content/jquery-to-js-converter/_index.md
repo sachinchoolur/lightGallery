@@ -404,6 +404,8 @@ attr(name, value) {
 
 ##### children
 
+Get the children of each element in the set of matched elements, optionally filtered by a selector.
+
 ```js
 children() {
   return new Utils(this.element.children);
@@ -411,6 +413,8 @@ children() {
 ```
 
 ##### closest
+
+ For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.
 
 ```js
 closest(selector) {
@@ -434,6 +438,8 @@ closest(selector) {
 ```
 
 ##### css
+
+ Get the computed style properties for the first element in the set of matched elements.
 
 ```js
 css(css, value) {
@@ -461,6 +467,8 @@ css(css, value) {
 
 ##### data
 
+ Store arbitrary data associated with the matched elements.
+
 ```js
 data(name, value) {
   return this.attr(`data-${name}`, value);
@@ -468,6 +476,8 @@ data(name, value) {
 ```
 
 ##### each
+
+ Iterate over a jQuery object, executing a function for each matched element.
 
 ```js
 each(func) {
@@ -487,6 +497,8 @@ each(func) {
 
 ##### empty
 
+Remove all child nodes of the set of matched elements from the DOM.
+
 ```js
 empty() {
   this.each((el) => {
@@ -498,6 +510,8 @@ empty() {
 
 ##### eq
 
+Reduce the set of matched elements to the one at the specified index.
+
 ```js
 eq(index) {
   return new Utils(this.elements[index]);
@@ -506,6 +520,8 @@ eq(index) {
 
 ##### find
 
+Get the descendants of each element in the current set of matched elements, filtered by a selector, jQuery object, or element.
+
 ```js
 find(selector) {
   return new Utils(Utils.getSelector(selector, this.element));
@@ -513,6 +529,8 @@ find(selector) {
 ```
 
 ##### first
+
+Reduce the set of matched elements to the first in the set.
 
 ```js
 first() {
@@ -525,6 +543,8 @@ first() {
 
 ##### get
 
+Load data from the server using a HTTP GET request.
+
 ```js
 get() {
   return this.elements;
@@ -532,6 +552,8 @@ get() {
 ```
 
 ##### hasClass
+
+Determine whether any of the matched elements are assigned the given class.
 
 ```js
 hasClass(className) {
@@ -544,6 +566,8 @@ hasClass(className) {
 
 ##### height
 
+Get the current computed height for the first element in the set of matched elements.
+
 ```js
 height() {
   if (!this.element) {
@@ -555,6 +579,8 @@ height() {
 ```
 
 ##### html
+
+ Get the HTML contents of the first element in the set of matched elements.
 
 ```js
 html(html) {
@@ -573,6 +599,8 @@ html(html) {
 
 ##### index
 
+Search for a given element from among the matched elements.
+
 ```js
 index() {
   if (!this.element) return -1;
@@ -585,6 +613,8 @@ index() {
 ```
 
 ##### is
+
+ Check the current matched set of elements against a selector, element, or jQuery object and return true if at least one of these elements matches the given arguments.
 
 ```js
 is(el) {
@@ -604,6 +634,8 @@ is(el) {
 
 ##### next
 
+Get the immediately following sibling of each element in the set of matched elements. If a selector is provided, it retrieves the next sibling only if it matches that selector.
+
 ```js
 next() {
   if (!this.element) {
@@ -614,6 +646,8 @@ next() {
 ```
 
 ##### nextAll
+
+Get all following siblings of each element in the set of matched elements, optionally filtered by a selector.
 
 ```js
 nextAll(filter) {
@@ -637,6 +671,8 @@ nextAll(filter) {
 ```
 
 ##### off
+
+Remove an event handler.
 
 ```js
 off(event) {
@@ -662,6 +698,8 @@ off(event) {
 
 ##### offset
 
+Get the current coordinates of the first element in the set of matched elements, relative to the document.
+
 ```js
 offset() {
   if (!this.element) {
@@ -686,6 +724,8 @@ offset() {
 
 ##### offsetParent
 
+Get the closest ancestor element that is positioned.
+
 ```js
 offsetParent() {
   if (!this.element) {
@@ -696,6 +736,8 @@ offsetParent() {
 ```
 
 ##### on
+
+Attach an event handler function for one or more events to the selected elements.
 
 ```js
 on(events, listener) {
@@ -718,6 +760,8 @@ on(events, listener) {
 
 ##### one
 
+Attach a handler to an event for the elements. The handler is executed at most once per element per event type.
+
 ```js
 one(event, listener) {
   this.each((el) => {
@@ -731,6 +775,8 @@ one(event, listener) {
 ```
 
 ##### outerHeight
+
+ Get the current computed outer height (including padding, border, and optionally margin) for the first element in the set of matched elements.
 
 ```js
 outerHeight(margin) {
@@ -752,6 +798,8 @@ outerHeight(margin) {
 
 ##### outerWidth
 
+Get the current computed outer width (including padding, border, and optionally margin) for the first element in the set of matched elements.
+
 ```js
 outerWidth(margin) {
   if (!this.element) {
@@ -772,6 +820,8 @@ outerWidth(margin) {
 
 ##### parent
 
+ Get the parent of each element in the current set of matched elements, optionally filtered by a selector.
+
 ```js
 parent() {
   return new Utils(this.element.parentElement);
@@ -779,6 +829,8 @@ parent() {
 ```
 
 ##### parentsUntil
+
+ Get the ancestors of each element in the current set of matched elements, up to but not including the element matched by the selector, DOM node, or jQuery object.
 
 ```js
 parentsUntil(selector, filter) {
@@ -808,6 +860,8 @@ parentsUntil(selector, filter) {
 
 ##### position
 
+Get the current coordinates of the first element in the set of matched elements, relative to the offset parent.
+
 ```js
 position() {
   return {
@@ -818,6 +872,8 @@ position() {
 ```
 
 ##### prepend
+
+Insert content, specified by the parameter, to the beginning of each element in the set of matched elements.
 
 ```js
 prepend(html) {
@@ -834,6 +890,8 @@ prepend(html) {
 
 ##### prev
 
+Get the immediately preceding sibling of each element in the set of matched elements. If a selector is provided, it retrieves the previous sibling only if it matches that selector.
+
 ```js
 prev() {
   if (!this.element) {
@@ -844,6 +902,8 @@ prev() {
 ```
 
 ##### prevAll
+
+ Get all preceding siblings of each element in the set of matched elements, optionally filtered by a selector, in the reverse document order.
 
 ```js
 prevAll(filter) {
@@ -863,6 +923,8 @@ prevAll(filter) {
 
 ##### remove
 
+Remove the set of matched elements from the DOM.
+
 ```js
 remove() {
   this.each((el) => {
@@ -873,6 +935,8 @@ remove() {
 ```
 
 ##### removeAttr
+
+Remove an attribute from each element in the set of matched elements.
 
 ```js
 removeAttr(attributes) {
@@ -885,6 +949,8 @@ removeAttr(attributes) {
 ```
 
 ##### removeClass
+
+Remove a single class or multiple classes from each element in the set of matched elements.
 
 ```js
 removeClass(classNames) {
@@ -900,6 +966,8 @@ removeClass(classNames) {
 
 ##### siblings
 
+Get the siblings of each element in the set of matched elements, optionally filtered by a selector.
+
 ```js
 siblings() {
   if (!this.element) {
@@ -914,6 +982,8 @@ siblings() {
 ```
 
 ##### text
+
+Get the combined text contents of each element in the set of matched elements, including their descendants.
 
 ```js
 text(text) {
@@ -932,6 +1002,8 @@ text(text) {
 
 ##### toggleClass
 
+Add or remove one or more classes from each element in the set of matched elements, depending on either the class's presence or the value of the state argument.
+
 ```js
 toggleClass(className) {
   if (!this.element) {
@@ -942,6 +1014,8 @@ toggleClass(className) {
 ```
 
 ##### trigger
+
+Execute all handlers and behaviors attached to the matched elements for the given event type.
 
 ```js
 trigger(event, detail) {
@@ -969,6 +1043,8 @@ trigger(event, detail) {
 
 ##### unwrap
 
+Remove the parents of the set of matched elements from the DOM, leaving the matched elements in their place.
+
 ```js
 unwrap() {
   this.each((el) => {
@@ -985,6 +1061,8 @@ unwrap() {
 
 ##### val
 
+Get the current value of the first element in the set of matched elements.
+
 ```js
 val(value) {
   if (!this.element) {
@@ -999,6 +1077,8 @@ val(value) {
 
 ##### width
 
+Get the current computed width for the first element in the set of matched elements.
+
 ```js
 width() {
   if (!this.element) {
@@ -1010,6 +1090,8 @@ width() {
 ```
 
 ##### wrap
+
+Wrap an HTML structure around each element in the set of matched elements.
 
 ```js
 wrap(className) {
