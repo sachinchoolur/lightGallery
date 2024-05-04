@@ -1,0 +1,149 @@
+.libstracker {
+    .tools-hero {
+        margin-bottom: 80px;
+    }
+}
+
+.tracker-head-session {
+    margin-top: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tracker-head-title {
+    font-size: 50px;
+    color: #0e3481;
+}
+
+.tracker-head-sub-title {
+    font-size: 18px;
+    color: #0e3481;
+    max-width: 50%;
+    text-align: center;
+}
+
+.tracker-notice-btn {
+    display: flex;
+    justify-content: center;
+    padding: 55px;
+}
+
+.tracker-btn {
+    background-color: #0858fe;
+    color: #fffdfd;
+    font-size: 18px;
+    border: none;
+}
+
+.libs-trackers-head-sections {
+    background-color: #0e3481;
+    color: #fffdfd;
+    text-align: center;
+}
+
+.libs-tracker-table-head {
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+}
+
+.libs-tracker-table-wrap {
+    background-color: #fafcff;
+    color: #e0eafd;
+    width: 763px;
+    max-width: 100%;
+    border-radius: 12px;
+    border: 1px solid;
+    overflow: hidden;
+    margin-bottom: 80px;
+
+    td,
+    tr {
+        border-bottom-width: 1px;
+        text-align: center;
+        padding: 16px 24px;
+        font-size: 16px;
+    }
+
+    th:first-child {
+        float: left;
+    }
+
+    th:last-child {
+        float: right;
+    }
+
+    a {
+        color: #333333;
+
+        &:hover {
+            color: $link-hover-color;
+            text-decoration: none;
+        }
+    }
+
+    th {
+        border: none;
+        padding: 18px 24px;
+        font-size: 18px;
+        line-height: 26px;
+        font-weight: normal;
+    }
+
+    td:last-child {
+        float: right;
+        border-bottom-width: 0;
+        color: 333333;
+    }
+
+    td:first-child {
+        float: left;
+        border: none;
+    }
+}
+
+.libs-tracker-short-cap {
+    text-align: center;
+    color: #0e3481;
+    padding-top: 24px;
+    font-size: 16px;
+}
+
+a.libstracker-previous-btn {
+    color: #0E3481;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    svg {
+        margin-right: 5px;
+    }
+}
+
+
+.libstracker.single  {
+    table {
+        td {
+            &:first-child {
+                    a {
+                        display: flex;
+                        align-items: center;
+                        &:after{
+                            margin-left: 2px;
+                            width: 18px;
+                            height: 18px;
+                            opacity: 0;
+                            transition: opacity 0.2s ease-in-out;
+                            content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%23115df6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>')
+                        }
+                        &:hover {
+                            &:after {
+                                opacity: 1;
+                            }
+                        }
+                    }
+            }
+        }
+    }
+}

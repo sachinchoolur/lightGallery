@@ -1,0 +1,70 @@
+.tools-container {
+    padding-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: linear-gradient(#e8f0ff 0%, white 300px);
+    @include media-breakpoint-down(sm) {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+.tools-hero-wrap {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.yt-thumbnail-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.tools-hero {
+    padding-top: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin-top: 100px;
+    @include media-breakpoint-down(md) {
+        padding-top: 30px;
+        margin-top: 50px;
+    }
+}
+
+.tools-hero-heading {
+    font-family: 'Helvetica Now Display', 'Helvetica Now Display', system-ui,
+        -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+        'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    color: #0e3481;
+    font-size: 50px;
+    font-weight: 500;
+
+    @include media-breakpoint-down(sm) {
+        font-size: 36px;
+    }
+}
+.tools-hero-sub-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.tools-hero-sub-heading {
+    color: #0e3481;
+    font-weight: 400;
+    margin-top: 0px;
+    line-height: 1.6;
+    font-size: 21px;
+    display: flex;
+    justify-content: center;
+    max-width: 700px;
+
+    @include media-breakpoint-down(sm) {
+        font-size: 20px;
+        margin-bottom: 48px;
+    }
+    @include media-breakpoint-down(lg) {
+        margin-bottom: 48px;
+    }
+}
