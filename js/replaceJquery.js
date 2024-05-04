@@ -94,7 +94,7 @@ fullscreenButton.addEventListener('click', function () {
 exitFullscreenButton.addEventListener('click', function () {
   // make textarea fullscreen
   inputEditerSection.classList.remove('fullscreen');
-  document.getElementById('replace-jq-centre-convert-btn-input-container').style.height = '450px';
+  document.getElementById('replace-jq-centre-convert-btn-input-container').style.height = '650px';
   document.body.style.overflow = 'auto'; // hide maximize button
 
   document.getElementById('replace-jq-centre-convert-btn-taskbar-minimize').style.display = 'none'; // show minimize button
@@ -136,7 +136,7 @@ outputFullscreenBtn.addEventListener('click', function () {
 outputMinimizeBtn.addEventListener('click', function () {
   // make textarea fullscreen
   outputEditerSection.classList.remove('fullscreen');
-  document.getElementById('output-container').style.height = '450px';
+  document.getElementById('output-container').style.height = '650px';
   document.body.style.overflow = 'auto'; // hide maximize button
 
   document.getElementById('replace-jq-centre-convert-btn-taskbar-output-minimize').style.display = 'none'; // show minimize button
