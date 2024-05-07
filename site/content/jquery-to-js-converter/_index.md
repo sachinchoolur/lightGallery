@@ -1,5 +1,5 @@
 ---
-title: Online jQuery to javascript converter
+title: jQuery to javascript converter
 description:
     'Convert your jQuery scripts to efficient JavaScript directly in your browser. Receive reliable, chainable, modern JavaScript code instantly that can be used as a minimal utility library, while keeping your existing code untouched'
 lead:

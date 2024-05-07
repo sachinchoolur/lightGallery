@@ -24,12 +24,15 @@
 {{ $owl := resources.Get "js/vendor/owl.carousel.min.js" -}}
 
 {{ if .Params.has_video -}}
-  <script src="https://player.vimeo.com/api/player.js"></script>
-  <script src="https://fast.wistia.com/assets/external/E-v1.js"></script>
-  <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script src="https://fast.wistia.com/assets/external/E-v1.js"></script>
+<script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
 {{ end -}}
 
-<script id="__webwhizSdk__" src="https://widget.webwhiz.ai/webwhiz-sdk.js" chatbotId="6427de1eb464389fa02a8e61"></script>
+
+{{ if not (eq .Title "jQuery to javascript converter") }}
+    <script id="__webwhizSdk__" src="https://widget.webwhiz.ai/webwhiz-sdk.js" chatbotId="6427de1eb464389fa02a8e61"></script>
+{{ end -}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/airtable@0.11.1/build/airtable.browser.js"></script>
@@ -87,7 +90,7 @@
 
 {{ end -}}
 
-{{ if (eq .Title "Online jQuery to javascript converter") -}}
+{{ if (eq .Title "jQuery to javascript converter") -}}
 
 
 {{ $rjrc := resources.Get "js/replaceJquerySrc.js" | babel -}}

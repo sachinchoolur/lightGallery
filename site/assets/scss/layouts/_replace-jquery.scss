@@ -6,11 +6,6 @@
 .rjq-main {
     background-color: var(--main-bg);
     background-image: linear-gradient(#e8f0ff 0%, white 5%);
-    &.show-alert {
-        .alert-dialogue-box {
-            display: block;
-        }
-    }
     .alert-dialogue-box {
         background-color: #fff3cd;
         margin: auto;
