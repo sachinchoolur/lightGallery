@@ -62,11 +62,37 @@
         padding-top: 126px;
         margin-bottom: 60px;
     }
+    .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+        svg {
+            margin-right: 4px;
+        }
+        .btn-github {
+            background-color: #E0EAFD;
+            color: #0858FE;
+            display: flex;
+            align-items: center;
+            &:hover {
+                background-color: #0858FE;
+                color: #FFF;
+            }
+        }
+        .btn-shield {
+            cursor: default;
+            background-color: #DAF9E2;
+            color: #38A169;
+            display: flex;
+            align-items: center;
+        }
+    }
 }
 .replace-jq-centre-convert-btn-head {
     font-size: 28px;
     font-weight: 520;
     color: #0049a3;
+    text-align: center;
     @include media-breakpoint-up(md) {
         font-size: 35px;
     }
@@ -78,8 +104,8 @@
     font-size: 15px;
     color: #0049a3;
     text-align: center;
-    max-width: 75%;
     @include media-breakpoint-up(md) {
+        max-width: 75%;
         font-size: 18px;
     }
     @include media-breakpoint-up(lg) {
@@ -203,10 +229,13 @@
 .section-faq {
     margin-bottom: 0 !important;
     .faq-item {
-        padding: 24px 40px;
+        padding: 12px;
         background-color: #fff;
         box-sizing: border-box;
         border-radius: 12px;
+        @include media-breakpoint-up(md) {
+            padding: 24px 40px;
+        }
     }
     .faq-item + .faq-item {
         margin-top: 24px;
