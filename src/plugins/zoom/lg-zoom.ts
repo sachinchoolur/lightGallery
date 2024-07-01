@@ -528,9 +528,14 @@ export default class Zoom {
             }
             this.setActualSize(this.core.index, event);
         });
-
+        let preTarget: any = null
         this.core.outer.on('touchstart.lg', (event) => {
             const $target = this.$LG(event.target);
+            if (preTarget && preTarget !== event.target) {
+				clearTimeout(tapped as ReturnType<typeof setTimeout>)
+				tapped = null
+			}
+			preTarget = event.target
             if (event.touches.length === 1 && $target.hasClass('lg-image')) {
                 if (!tapped) {
                     tapped = setTimeout(() => {
