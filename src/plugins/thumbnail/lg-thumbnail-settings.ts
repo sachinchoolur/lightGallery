@@ -84,6 +84,11 @@ export interface ThumbnailsSettings {
      * Custom translation strings for aria-labels
      */
     thumbnailPluginStrings: ThumbnailStrings;
+
+    /**
+     * Enables thumbnail lazy loading when in view
+     */
+    thumbnailLazyLoad: boolean;
 }
 
 export const thumbnailsSettings: ThumbnailsSettings = {
@@ -106,6 +111,8 @@ export const thumbnailsSettings: ThumbnailsSettings = {
 
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
+
+    thumbnailLazyLoad: false,
 
     thumbnailPluginStrings: {
         toggleThumbnails: 'Toggle thumbnails',
