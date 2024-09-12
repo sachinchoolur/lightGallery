@@ -659,13 +659,18 @@
 
 .license,
 .wordpress {
+    .price-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     .parity-banner {
-        position: fixed;
-        padding: 16px;
-        width: 100%;
-        bottom: 0;
         font-size: 14px;
         z-index: 9;
+        background-color: #0e3481;
+        border-radius: 8px;
+        padding: 15px;
+        color: #FFF;
         b {
             color: #cefdff;
         }
@@ -678,7 +683,7 @@
         margin-top: 2px;
     }
     .parity-banner-inner {
-        padding-left: 80px;
+        padding-left: 0;
     }
 }
 

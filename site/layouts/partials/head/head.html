@@ -7,4 +7,25 @@
   {{ block "head/seo" . }}{{ partial "head/seo.html" . }}{{ end }}
   {{ block "head/favicons" . }}{{ partial "head/favicons.html" . }}{{ end }}
   {{ block "head/script-header" . }}{{ partial "head/script-header.html" . }}{{ end }}
+
+  {{ if or (eq .Title "Pricing") (eq .Title "WordPress") -}}
+  <script>
+    (function(w,d,s,o,f,js,fjs){
+        w[o]=w[o]||function(){(w[o].q=w[o].q||[]).push(Array.prototype.slice.call(arguments))};
+        js=d.createElement(s),fjs=d.getElementsByTagName(s)[0];
+        js.id='parity-deals-sdk';js.async=1;js.src=f;
+        fjs.parentNode.insertBefore(js,fjs);
+    }(window,document,'script','ParityDeals','https://cdn.paritydeals.com/sdk.js'));
+    
+    // Initialize ParityDeals
+    ParityDeals('init', {
+        convertToLocal: true,
+        showDecimal: false,
+        bar: {
+          container: '.price-container'
+        }
+    });
+    </script>
+
+  {{ end -}}
 </head>

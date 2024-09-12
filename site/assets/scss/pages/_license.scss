@@ -2,19 +2,19 @@
 
 .pricing-list-item {
     width: 100%;
-    padding: 20px;
+    padding: 15px;
     margin: 20px;
     color: #0e3481;
     border-radius: 5px;
     @media (min-width: 768px) {
-        width: 260px;
+        width: 290px;
     }
     &.pricing-list-item-colored {
         border: 2px solid;
         color: white;
         border-radius: 8px;
-        width: 290px;
-        padding: 50px 40px;
+        width: 340px;
+        padding: 50px 30px;
         background-image: linear-gradient(
             to right top,
             #0e3481,
@@ -23,7 +23,17 @@
             #00c2ba,
             #00ea95
         );
+        .pricing-original {
+            color: #f0f0f0;
+        }
     }
+}
+.pricing-original {
+    text-decoration: line-through;
+    font-size: 20px;
+    font-weight: normal;
+    color: #6f83ac;
+    margin-left: 5px;
 }
 
 .pricing-list {
