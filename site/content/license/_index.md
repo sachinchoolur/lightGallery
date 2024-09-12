@@ -13,7 +13,7 @@ images: []
         <div class="pricing-list-item">
             <div class="pricing-type">Hobby</div>
             <div class="pricing-cost" data-pd-original-price="48">
-                <span data-pd-updated-price-formatted>$48</span> <span class="pricing-cost-label">/ lifetime</span> <span class="pricing-original"   data-pd-original-price-display="48" data-pd-original-price="48"><span data-pd-updated-price-formatted></span></span>
+                <span data-pd-updated-price-formatted>$48</span> <span class="pricing-cost-label">/ lifetime</span> <span class="pricing-original"   data-pd-original-price-display="58" data-pd-original-price="48"><span data-pd-updated-price-formatted></span></span>
             </div>
             <div class="pricing-desc">
                 For personal use.
@@ -32,7 +32,7 @@ images: []
         <div class="pricing-list-item">
             <div class="pricing-type">Team</div>
             <div class="pricing-cost" data-pd-original-price="118">
-                <span data-pd-updated-price-formatted>$118</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="118" data-pd-original-price="118"><span data-pd-updated-price-formatted></span></span>
+                <span data-pd-updated-price-formatted>$118</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="148" data-pd-original-price="118"><span data-pd-updated-price-formatted></span></span>
             </div>
             <div class="pricing-desc">
                 For small teams.
@@ -51,7 +51,7 @@ images: []
         <div class="pricing-list-item">
             <div class="pricing-type">Organization</div>
             <div class="pricing-cost" data-pd-original-price="188">
-                <span data-pd-updated-price-formatted>$188</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="188" data-pd-original-price="188"><span data-pd-updated-price-formatted></span></span>
+                <span data-pd-updated-price-formatted>$188</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="238" data-pd-original-price="188"><span data-pd-updated-price-formatted></span></span>
             </div>
             <div class="pricing-desc">
                 For large teams and organizations
