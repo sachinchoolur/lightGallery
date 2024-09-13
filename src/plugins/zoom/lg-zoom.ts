@@ -545,6 +545,21 @@ export default class Zoom {
             }
         });
 
+        this.core.outer.on('wheel.lg', (event) => {
+            if (!this.$LG(event.target).hasClass('lg-image')) {
+                return;
+            }
+            const old_scale = this.scale;
+            const ScaleDiff = 0.0015 * (event.deltaY > 0 ? 100 : -100);
+            this.scale -= ScaleDiff;
+            this.scale = this.getScale(this.scale);
+            if (this.scale != old_scale) {
+                this.setPageCords(event);
+                this.beginZoom(this.scale);
+                this.zoomImage(this.scale, ScaleDiff, true, false);
+            }
+        });
+
         this.core.LGel.on(
             `${lGEvents.containerResize}.zoom ${lGEvents.rotateRight}.zoom ${lGEvents.rotateLeft}.zoom ${lGEvents.flipHorizontal}.zoom ${lGEvents.flipVertical}.zoom`,
             () => {
@@ -771,7 +786,8 @@ export default class Zoom {
                 if (this.scale <= 1) {
                     this.resetZoom();
                 } else {
-                    const actualSizeScale = this.getCurrentImageActualSizeScale();
+                    const actualSizeScale =
+                        this.getCurrentImageActualSizeScale();
 
                     if (this.scale >= actualSizeScale) {
                         let scaleDiff = actualSizeScale - this.scale;
