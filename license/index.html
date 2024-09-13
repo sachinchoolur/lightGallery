@@ -42,7 +42,7 @@
 <link rel=manifest href=https://www.lightgalleryjs.com/site.webmanifest>
 <script>!function(e,a){var d,b,c,f;a.__SV||(window.posthog=a,a._i=[],a.init=function(j,i,h){function k(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]),a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}(c=e.createElement("script")).type="text/javascript",c.async=!0,c.src=i.api_host+"/static/array.js",(f=e.getElementsByTagName("script")[0]).parentNode.insertBefore(c,f);var g=a;for(void 0!==h?g=a[h]=[]:h="posthog",g.people=g.people||[],g.toString=function(b){var a="posthog";return"posthog"!==h&&(a+="."+h),b||(a+=" (stub)"),a},g.people.toString=function(){return g.toString(1)+".people (stub)"},d="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),b=0;b<d.length;b++)k(g,d[b]);a._i.push([j,i,h])},a.__SV=1)}(document,window.posthog||[]),posthog.init('phc_uyDcoLpTSdtPcDLf2SswgknmWiBsUfV2EzjhzYi3Ke4',{api_host:'https://app.posthog.com'})</script>
 <script>!function(e,a){var d,b,c,f;a.__SV||(window.posthog=a,a._i=[],a.init=function(j,i,h){function k(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]),a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}(c=e.createElement("script")).type="text/javascript",c.async=!0,c.src=i.api_host+"/static/array.js",(f=e.getElementsByTagName("script")[0]).parentNode.insertBefore(c,f);var g=a;for(void 0!==h?g=a[h]=[]:h="posthog",g.people=g.people||[],g.toString=function(b){var a="posthog";return"posthog"!==h&&(a+="."+h),b||(a+=" (stub)"),a},g.people.toString=function(){return g.toString(1)+".people (stub)"},d="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),b=0;b<d.length;b++)k(g,d[b]);a._i.push([j,i,h])},a.__SV=1)}(document,window.posthog||[]),posthog.init('phc_uyDcoLpTSdtPcDLf2SswgknmWiBsUfV2EzjhzYi3Ke4',{api_host:'https://app.posthog.com'})</script>
-<script>(function(b,e,f,c,g,a,d){b[c]=b[c]||function(){(b[c].q=b[c].q||[]).push(Array.prototype.slice.call(arguments))},a=e.createElement(f),d=e.getElementsByTagName(f)[0],a.id='parity-deals-sdk',a.async=1,a.src=g,d.parentNode.insertBefore(a,d)})(window,document,'script','ParityDeals','https://cdn.paritydeals.com/sdk.js'),ParityDeals('init',{convertToLocal:!0,showDecimal:!1,bar:{container:'.price-container'}})</script>
+<script>!function(b,e,f,c,g,a,d){b[c]=b[c]||function(){(b[c].q=b[c].q||[]).push(Array.prototype.slice.call(arguments))},a=e.createElement(f),d=e.getElementsByTagName(f)[0],a.id="parity-deals-sdk",a.async=1,a.src=g,d.parentNode.insertBefore(a,d)}(window,document,"script","ParityDealsSDK","https://cdn.paritydeals.com/sdk.js"),window.ParityDeals={init:function(a){ParityDealsSDK("init",a)},getUpdatedPrice:function(a){return new Promise((b,c)=>{!function d(){window.ParityDealsSDK&&"function"==typeof window.ParityDealsSDK.getUpdatedPrice?ParityDealsSDK.getUpdatedPrice(a).then(b).catch(c):setTimeout(()=>d(),100)}()})}},ParityDeals.init({convertToLocal:!0,showDecimal:!1,bar:{container:'.price-container'}})</script>
 </head>
 <body class="license list">
 <header id=nav-header class="navbar fixed-top navbar-expand-lg navbar-light">
@@ -91,8 +91,8 @@ lightGallery
 <div class="pricing-list justify-content-center">
 <div class=pricing-list-item>
 <div class=pricing-type>Hobby</div>
-<div class=pricing-cost data-pd-original-price=48>
-<span data-pd-updated-price-formatted>$48</span> <span class=pricing-cost-label>/ lifetime</span> <span class=pricing-original data-pd-original-price-display=58 data-pd-original-price=48><span data-pd-updated-price-formatted></span></span>
+<div class=pricing-cost data-pd-original-price=48 data-pd-rel=hobby>
+<span data-pd-price-formatted>$48</span> <span class=pricing-cost-label>/ lifetime</span> <span class=pricing-original data-pd-original-price-display=48 data-pd-rel=hobby><span data-pd-price-formatted></span></span>
 </div>
 <div class=pricing-desc>
 For personal use.
@@ -110,8 +110,8 @@ For personal use.
 </div>
 <div class=pricing-list-item>
 <div class=pricing-type>Team</div>
-<div class=pricing-cost data-pd-original-price=118>
-<span data-pd-updated-price-formatted>$118</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original data-pd-original-price-display=148 data-pd-original-price=118><span data-pd-updated-price-formatted></span></span>
+<div class=pricing-cost data-pd-original-price=118 data-pd-rel=standard>
+<span data-pd-price-formatted>$118</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original data-pd-original-price-display=118 data-pd-rel=standard><span data-pd-price-formatted></span></span>
 </div>
 <div class=pricing-desc>
 For small teams.
@@ -129,8 +129,8 @@ For small teams.
 </div>
 <div class=pricing-list-item>
 <div class=pricing-type>Organization</div>
-<div class=pricing-cost data-pd-original-price=188>
-<span data-pd-updated-price-formatted>$188</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original data-pd-original-price-display=238 data-pd-original-price=188><span data-pd-updated-price-formatted></span></span>
+<div class=pricing-cost data-pd-rel=organization data-pd-original-price=188>
+<span data-pd-price-formatted>$188</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original data-pd-original-price-display=188 data-pd-rel=organization><span data-pd-price-formatted></span></span>
 </div>
 <div class=pricing-desc>
 For large teams and organizations
@@ -158,8 +158,8 @@ For large teams and organizations
 <div class="pricing-list justify-content-center">
 <div class="pricing-list-item pricing-list-item-colored">
 <div class=pricing-type>Extended</div>
-<div class=pricing-cost data-pd-original-price=239>
-<span data-pd-updated-price-formatted>$239</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original data-pd-original-price-display=239 data-pd-original-price=239><span data-pd-updated-price-formatted></span></span>
+<div class=pricing-cost data-pd-original-price=239 data-pd-rel=extended>
+<span data-pd-price-formatted>$239</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original data-pd-original-price-display=239 data-pd-rel=extended><span data-pd-price-formatted></span></span>
 </div>
 <div class="d-grid pricing-btn-wrap">
 <a href="https://api.paritydeals.com/api/v1/lemon-squeezy-buy-now/?store_id=10718&variants=40321&pd_suite_id=801&success_url=https://www.lightgalleryjs.com/" target=_blank class="btn btn-white">Purchase Now</a>
