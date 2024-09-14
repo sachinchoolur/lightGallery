@@ -29,7 +29,7 @@ toc: true
 ##### HTML Structure
 
 ```html
-<div id="animated-thumbnails">
+<div id="animated-thumbnails-gallery">
     <a href="img/img1.jpg">
         <img src="img/thumb1.jpg" />
     </a>
@@ -57,7 +57,7 @@ lightGallery(document.getElementById('animated-thumbnails-gallery'), {
 ##### HTML Structure
 
 ```html
-<div id="static-thumbnails">
+<div id="static-thumbnails-gallery">
     <a href="img/img1.jpg">
         <img src="img/thumb1.jpg" />
     </a>
