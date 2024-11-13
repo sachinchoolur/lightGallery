@@ -10,21 +10,15 @@
 
   {{ if or (eq .Title "Pricing") (eq .Title "WordPress") -}}
   <script>
-    (function(w,d,s,o,f,js,fjs){
-        w[o]=w[o]||function(){(w[o].q=w[o].q||[]).push(Array.prototype.slice.call(arguments))};
-        js=d.createElement(s),fjs=d.getElementsByTagName(s)[0];
-        js.id='parity-deals-sdk';js.async=1;js.src=f;
-        fjs.parentNode.insertBefore(js,fjs);
-    }(window,document,'script','ParityDeals','https://cdn.paritydeals.com/sdk.js'));
-    
-    // Initialize ParityDeals
-    ParityDeals('init', {
-        convertToLocal: true,
-        showDecimal: false,
-        bar: {
-          container: '.price-container'
-        }
-    });
+    !function(e,t,i,n,a,c,r){e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(Array.prototype.slice.call(arguments))},c=t.createElement(i),r=t.getElementsByTagName(i)[0],c.id="parity-deals-sdk",c.async=1,c.src=a,r.parentNode.insertBefore(c,r)}(window,document,"script","ParityDealsSDK","https://cdn.paritydeals.com/sdk.js"),window.ParityDeals={init:function(e){ParityDealsSDK("init",e)},getUpdatedPrice:function(e){return new Promise((t,i)=>{!function n(){window.ParityDealsSDK&&"function"==typeof window.ParityDealsSDK.getUpdatedPrice?ParityDealsSDK.getUpdatedPrice(e).then(t).catch(i):setTimeout(()=>n(),100)}()})}};
+
+        ParityDeals.init({
+          convertToLocal: true,
+          showDecimal: false,
+          bar: {
+            container: '.price-container'
+          }
+        });
     </script>
 
   {{ end -}}

@@ -12,14 +12,14 @@ images: []
     <div class="pricing-list justify-content-center">
         <div class="pricing-list-item">
             <div class="pricing-type">Hobby</div>
-            <div class="pricing-cost" data-pd-original-price="48">
-                <span data-pd-updated-price-formatted>$48</span> <span class="pricing-cost-label">/ lifetime</span> <span class="pricing-original"   data-pd-original-price-display="58" data-pd-original-price="48"><span data-pd-updated-price-formatted></span></span>
+            <div class="pricing-cost" data-pd-original-price="48" data-pd-rel="hobby">
+                <span data-pd-price-formatted>$48</span> <span class="pricing-cost-label">/ lifetime</span> <span class="pricing-original"   data-pd-original-price-display="48" data-pd-rel="hobby"><span data-pd-price-formatted></span></span>
             </div>
             <div class="pricing-desc">
                 For personal use.
             </div>
             <div class="d-grid pricing-btn-wrap">
-                <a href="https://api.paritydeals.com/api/v1/lemon-squeezy-buy-now/?store_id=10718&variants=38778,38130,38780&pd_suite_id=801&success_url=https://www.lightgalleryjs.com/" target="_blank"  class="btn btn-outline-primary">Purchase Now</a>
+                <a href="https://sachin.lemonsqueezy.com/buy/8ed0fa81-9ff3-467b-9f01-cc5d2b0effd0" target="_blank"  class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
                 <li>For <b>one</b> developer</li>
@@ -31,14 +31,14 @@ images: []
         </div>
         <div class="pricing-list-item">
             <div class="pricing-type">Team</div>
-            <div class="pricing-cost" data-pd-original-price="118">
-                <span data-pd-updated-price-formatted>$118</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="148" data-pd-original-price="118"><span data-pd-updated-price-formatted></span></span>
+            <div class="pricing-cost" data-pd-original-price="118" data-pd-rel="standard">
+                <span data-pd-price-formatted>$118</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original" data-pd-original-price-display="118"  data-pd-rel="standard"><span data-pd-price-formatted></span></span>
             </div>
             <div class="pricing-desc">
                 For small teams.
             </div>
             <div class="d-grid pricing-btn-wrap">
-                <a href="https://api.paritydeals.com/api/v1/lemon-squeezy-buy-now/?store_id=10718&variants=38780,38778,38130&pd_suite_id=801&success_url=https://www.lightgalleryjs.com/" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
+                <a href="https://sachin.lemonsqueezy.com/buy/4fda7194-9958-4370-9a34-fa56146c29fe" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
                 <li>For upto <b>8</b> developers</li>
@@ -50,14 +50,14 @@ images: []
         </div>
         <div class="pricing-list-item">
             <div class="pricing-type">Organization</div>
-            <div class="pricing-cost" data-pd-original-price="188">
-                <span data-pd-updated-price-formatted>$188</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="238" data-pd-original-price="188"><span data-pd-updated-price-formatted></span></span>
+            <div class="pricing-cost" data-pd-rel="organization" data-pd-original-price="188">
+                <span data-pd-price-formatted>$188</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="188"  data-pd-rel="organization"><span data-pd-price-formatted></span></span>
             </div>
             <div class="pricing-desc">
                 For large teams and organizations
             </div>
             <div class="d-grid pricing-btn-wrap">
-                <a href="https://api.paritydeals.com/api/v1/lemon-squeezy-buy-now/?store_id=10718&variants=38130,38778,38780&pd_suite_id=801&success_url=https://www.lightgalleryjs.com/" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
+                <a href="https://sachin.lemonsqueezy.com/buy/dd865021-e705-4327-ae2f-8b835414b01b" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
                 <li>For <b>unlimited</b> developers</li>
@@ -79,11 +79,11 @@ images: []
     <div class="pricing-list justify-content-center">
         <div class="pricing-list-item pricing-list-item-colored">
             <div class="pricing-type">Extended</div>
-            <div class="pricing-cost" data-pd-original-price="239">
-                <span data-pd-updated-price-formatted>$239</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="239" data-pd-original-price="239"><span data-pd-updated-price-formatted></span></span>
+            <div class="pricing-cost" data-pd-original-price="239" data-pd-rel="extended">
+                <span data-pd-price-formatted>$239</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="239" data-pd-rel="extended"><span data-pd-price-formatted></span></span>
             </div>
             <div class="d-grid pricing-btn-wrap">
-                <a href="https://api.paritydeals.com/api/v1/lemon-squeezy-buy-now/?store_id=10718&variants=40321&pd_suite_id=801&success_url=https://www.lightgalleryjs.com/" target="_blank" class="btn btn-white">Purchase Now</a>
+                <a href="https://sachin.lemonsqueezy.com/buy/2f129e78-4f58-4166-93af-3e13fedb9101" target="_blank" class="btn btn-white">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
                 <li>For <b>unlimited</b> developers</li>
