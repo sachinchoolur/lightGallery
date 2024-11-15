@@ -31,10 +31,10 @@
 
 .lg-autoplay-button {
     &:after {
+        content: '\e01d';
         .lg-show-autoplay & {
             content: '\e01a';
         }
-        content: '\e01d';
     }
     .lg-single-item & {
         opacity: $lg-toolbar-icon-disabled-opacity;

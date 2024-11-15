@@ -157,11 +157,11 @@
     }
 
     .lg-item {
+        display: none !important;
         &:not(.lg-start-end-progress) {
             background: url('#{$lg-path-images}/loading.gif') no-repeat scroll
                 center center transparent;
         }
-        display: none !important;
     }
     &.lg-css3 {
         .lg-prev-slide,
