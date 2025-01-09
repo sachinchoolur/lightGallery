@@ -579,7 +579,6 @@ const utils = {
             dynamicEl.alt = alt || title || '';
             dynamicElements.push(dynamicEl);
         });
-        console.log(dynamicElements, 'dynamicElements');
         return dynamicElements;
     },
     isMobile(): boolean {
