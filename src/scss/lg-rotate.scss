@@ -1,5 +1,6 @@
-@import 'lg-variables';
-@import 'lg-mixins';
+@use 'lg-variables' as *;
+@use 'lg-mixins' as *;
+
 .lg-outer {
     .lg-img-rotate {
         position: absolute;
@@ -30,27 +31,32 @@
         }
     }
 }
+
 .lg-rotate-left {
     &:after {
         content: '\e900';
     }
 }
+
 .lg-rotate-right {
     &:after {
         content: '\e901';
     }
 }
+
 .lg-icon {
     &.lg-flip-hor,
     &.lg-flip-ver {
         font-size: 26px;
     }
 }
+
 .lg-flip-ver {
     &:after {
         content: '\e903';
     }
 }
+
 .lg-flip-hor {
     &:after {
         content: '\e902';
