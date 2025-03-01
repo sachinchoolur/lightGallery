@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.8.2 | November 28th 2024
+ * lightgallery | 2.8.3 | March 1st 2025
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -806,7 +806,6 @@
                 dynamicEl.alt = alt || title || '';
                 dynamicElements.push(dynamicEl);
             });
-            console.log(dynamicElements, 'dynamicElements');
             return dynamicElements;
         },
         isMobile: function () {
