@@ -188,7 +188,7 @@ export default class Zoom {
         reposition: boolean,
         resetToMax: boolean,
     ): void {
-        if (Math.abs(scaleDiff) <= 0) return;
+        if (!this.containerRect || Math.abs(scaleDiff) <= 0) return;
 
         const offsetX = this.containerRect.width / 2 + this.containerRect.left;
 
