@@ -14,21 +14,19 @@
 // $lg-progress-bar-bg: #999;
 
 // Core variables and mixins
-@import 'lg-variables';
-@import 'lg-mixins';
-@import 'lg-fonts';
-@import 'lg-theme-default';
-@import 'lg-thumbnail';
-@import 'lg-video';
-@import 'lg-autoplay';
-@import 'lg-zoom';
-@import 'lg-pager';
-@import 'lg-fullscreen';
-@import 'lg-share';
-@import 'lg-comments';
-@import 'lg-rotate';
-@import 'lg-medium-zoom';
-@import 'lg-relative-caption';
+@use 'lg-fonts';
+@use 'lg-theme-default';
+@use 'lg-thumbnail';
+@use 'lg-video';
+@use 'lg-autoplay';
+@use 'lg-zoom';
+@use 'lg-pager';
+@use 'lg-fullscreen';
+@use 'lg-share';
+@use 'lg-comments';
+@use 'lg-rotate';
+@use 'lg-medium-zoom';
+@use 'lg-relative-caption';
 
 // Core
-@import 'lightgallery-core';
+@use 'lightgallery-core';

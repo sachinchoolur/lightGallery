@@ -1,3 +1,5 @@
+@use 'sass:list';
+
 // Vendor Prefixes
 //
 // All vendor mixins are deprecated as of v3.2.0 due to the introduction of
@@ -258,10 +260,10 @@
     $result: ();
 
     @each $prefix in $prefixes {
-        @if index($vendor-prefixed-properties, $property) {
+        @if list.index($vendor-prefixed-properties, $property) {
             $property: -#{$prefix}-#{$property};
         }
-        $result: append($result, $property);
+        $result: list.append($result, $property);
     }
     @return $result;
 }
@@ -270,10 +272,10 @@
     $prefixed: ();
 
     @each $trans in $transition {
-        $prop-name: nth($trans, 1);
+        $prop-name: list.nth($trans, 1);
         $vendor-prop-name: prefix($prop-name, $prefix);
-        $prop-vals: nth($trans, 2);
-        $prefixed: append($prefixed, $vendor-prop-name $prop-vals, comma);
+        $prop-vals: list.nth($trans, 2);
+        $prefixed: list.append($prefixed, $vendor-prop-name $prop-vals, comma);
     }
     @return $prefixed;
 }
@@ -282,17 +284,17 @@
     $transitions: ();
 
     @each $declaration in $values {
-        $prop: nth($declaration, 1);
+        $prop: list.nth($declaration, 1);
         $prop-opts: ();
-        $length: length($declaration);
+        $length: list.length($declaration);
 
         @if $length >= 2 {
             @for $i from 2 through $length {
-                $prop-opts: append($prop-opts, nth($declaration, $i));
+                $prop-opts: list.append($prop-opts, list.nth($declaration, $i));
             }
         }
         $trans: $prop, $prop-opts;
-        $transitions: append($transitions, $trans, comma);
+        $transitions: list.append($transitions, $trans, comma);
     }
     -webkit-transition: trans-prefix($transitions, webkit);
     -moz-transition: trans-prefix($transitions, moz);

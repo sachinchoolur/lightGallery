@@ -1,3 +1,5 @@
+@use '../lg-mixins' as *;
+
 .lg-css3 {
     &.lg-slide-circular-vertical {
         .lg-item {

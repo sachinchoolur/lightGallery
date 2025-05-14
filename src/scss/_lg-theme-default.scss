@@ -1,3 +1,6 @@
+@use 'lg-variables' as *;
+@use 'lg-mixins' as *;
+
 .lg-container {
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
         Arial, 'Noto Sans', 'Liberation Sans', sans-serif, 'Apple Color Emoji',

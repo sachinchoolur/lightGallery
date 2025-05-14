@@ -1,5 +1,6 @@
-@import 'lg-variables';
-@import 'lg-mixins';
+@use 'lg-variables' as *;
+@use 'lg-mixins' as *;
+
 .lg-comment-box {
     width: 420px;
     max-width: 100%;
