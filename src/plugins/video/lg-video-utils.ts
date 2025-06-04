@@ -55,7 +55,12 @@ export const getYouTubeParams = (
 };
 
 export const isYouTubeNoCookie = (url: string): boolean => {
-    return url.includes('youtube-nocookie.com');
+    try {
+        const parsedUrl = new URL(url);
+        return parsedUrl.host === 'youtube-nocookie.com';
+    } catch (e) {
+        return false;
+    }
 };
 
 export const getVimeoURLParams = (
