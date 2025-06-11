@@ -21,6 +21,11 @@ export interface ZoomSettings {
     zoom: boolean;
 
     /**
+     * Enable/Disable mousewheel option
+     */
+    wheelZoom: boolean;
+
+    /**
      * Enable/Disable infinite zoom
      * @description If you set this to true, you can zoom in more than the original size of the image.
      */
@@ -61,6 +66,7 @@ export interface ZoomSettings {
 export const zoomSettings: ZoomSettings = {
     scale: 1,
     zoom: true,
+    wheelZoom: false,
     infiniteZoom: true,
     actualSize: true,
     showZoomInOutIcons: false,
