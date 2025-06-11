@@ -123,6 +123,16 @@ export default class Zoom {
         );
     }
 
+    enableWheelZoom(): void {
+        if (!this.settings.wheelZoom) {
+            return;
+        }
+        this.core.outer.on('wheel.lg', (event: WheelEvent) => {
+            event.preventDefault();
+            event.deltaY > 0 ? this.zoomOut() : this.zoomIn();
+        });
+    }
+
     getDragCords(e: MouseEvent): Coords {
         return {
             x: e.pageX,
@@ -573,30 +583,7 @@ export default class Zoom {
         });
 
         this.core.getElementById('lg-zoom-out').on('click.lg', () => {
-            // Allow zoom only on image
-            if (!this.isImageSlide(this.core.index)) {
-                return;
-            }
-
-            let timeout = 0;
-            if (this.imageReset) {
-                this.resetImageTranslate(this.core.index);
-                timeout = 50;
-            }
-            setTimeout(() => {
-                let scale = this.scale - this.settings.scale;
-
-                if (scale < 1) {
-                    scale = 1;
-                }
-                this.beginZoom(scale);
-                this.zoomImage(
-                    scale,
-                    -this.settings.scale,
-                    true,
-                    !this.settings.infiniteZoom,
-                );
-            }, timeout);
+            this.zoomOut();
         });
 
         this.core.getElementById('lg-zoom-in').on('click.lg', () => {
@@ -643,6 +630,8 @@ export default class Zoom {
 
         this.zoomSwipe();
 
+        this.enableWheelZoom();
+
         // Store the zoomable timeout value just to clear it while closing
         this.zoomableTimeout = false;
         this.positionChanged = false;
@@ -667,6 +656,33 @@ export default class Zoom {
             true,
             !this.settings.infiniteZoom,
         );
+    }
+
+    zoomOut(): void {
+        // Allow zoom only on image
+        if (!this.isImageSlide(this.core.index)) {
+            return;
+        }
+
+        let timeout = 0;
+        if (this.imageReset) {
+            this.resetImageTranslate(this.core.index);
+            timeout = 50;
+        }
+        setTimeout(() => {
+            let scale = this.scale - this.settings.scale;
+
+            if (scale < 1) {
+                scale = 1;
+            }
+            this.beginZoom(scale);
+            this.zoomImage(
+                scale,
+                -this.settings.scale,
+                true,
+                !this.settings.infiniteZoom,
+            );
+        }, timeout);
     }
 
     // Reset zoom effect
