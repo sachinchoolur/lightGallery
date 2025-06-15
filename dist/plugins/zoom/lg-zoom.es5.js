@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.8.3 | March 1st 2025
+ * lightgallery | 2.9.0-beta.1 | June 15th 2025
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -195,7 +195,7 @@ var Zoom = /** @class */ (function () {
      * @param {String} scale - Zoom decrement/increment value
      */
     Zoom.prototype.zoomImage = function (scale, scaleDiff, reposition, resetToMax) {
-        if (Math.abs(scaleDiff) <= 0)
+        if (!this.containerRect || Math.abs(scaleDiff) <= 0)
             return;
         var offsetX = this.containerRect.width / 2 + this.containerRect.left;
         var offsetY = this.containerRect.height / 2 +
