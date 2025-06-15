@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.8.3 | March 1st 2025
+ * lightgallery | 2.9.0-beta.1 | June 15th 2025
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -1455,16 +1455,22 @@
                     // if first letter starts with . or # get the html form the jQuery object
                     var fL = subHtml.substring(0, 1);
                     if (fL === '.' || fL === '#') {
-                        if (this.settings.subHtmlSelectorRelative &&
-                            !this.settings.dynamic) {
-                            subHtml = $LG(this.items)
-                                .eq(index)
-                                .find(subHtml)
-                                .first()
-                                .html();
+                        try {
+                            if (this.settings.subHtmlSelectorRelative &&
+                                !this.settings.dynamic) {
+                                subHtml = $LG(this.items)
+                                    .eq(index)
+                                    .find(subHtml)
+                                    .first()
+                                    .html();
+                            }
+                            else {
+                                subHtml = $LG(subHtml).first().html();
+                            }
                         }
-                        else {
-                            subHtml = $LG(subHtml).first().html();
+                        catch (error) {
+                            console.warn("Error processing subHtml selector \"" + subHtml + "\"");
+                            subHtml = '';
                         }
                     }
                 }
