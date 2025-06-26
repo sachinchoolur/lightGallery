@@ -31,10 +31,23 @@ export default class Thumbnail {
     private thumbClickable = false;
     private settings!: ThumbnailsSettings;
     private $LG!: LgQuery;
+
+    private observer: IntersectionObserver;
+
     constructor(instance: LightGallery, $LG: LgQuery) {
         // get lightGallery core plugin instance
         this.core = instance;
         this.$LG = $LG;
+        this.observer = new IntersectionObserver(function (entries, observer) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    const lazyImage = <HTMLImageElement>entry.target;
+                    lazyImage.src = <string>lazyImage.dataset.src;
+                    lazyImage.classList.remove("lg-lazy-thumb");
+                    observer.unobserve(lazyImage);
+                }
+            });
+        });
 
         return this;
     }
@@ -435,7 +448,16 @@ export default class Thumbnail {
         const img = document.createElement('img');
         img.alt = alt || '';
         img.setAttribute('data-lg-item-id', index + '');
-        img.src = thumbImg;
+
+        if (this.settings.thumbnailLazyLoad) {
+            let placeholder = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC";
+            img.className = "lg-lazy-thumb";
+            img.setAttribute('data-src', thumbImg);
+            img.src = placeholder;
+        } else {
+            img.src = thumbImg;
+        }
+
         div.appendChild(img);
         return div;
     }
@@ -444,6 +466,13 @@ export default class Thumbnail {
         for (let i = 0; i < items.length; i++) {
             const thumb = this.getThumbHtml(items[i].thumb, i, items[i].alt);
             this.$lgThumb.append(thumb);
+
+            if (this.settings.thumbnailLazyLoad) {
+                const thumbImg = thumb.querySelector('img.lg-lazy-thumb');
+                if (thumbImg != null) {
+                    this.observer.observe(thumbImg);
+                }
+            }
         }
     }
 
