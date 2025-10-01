@@ -2132,10 +2132,17 @@ export class LightGallery {
 
     keyPress(): void {
         $LG(window).on(`keydown.lg.global${this.lgId}`, (e) => {
+            const noModifier = !(
+                e.altKey ||
+                e.ctrlKey ||
+                e.metaKey ||
+                e.shiftKey
+            );
             if (
                 this.lgOpened &&
                 this.settings.escKey === true &&
-                e.keyCode === 27
+                e.key === 'Escape' &&
+                noModifier
             ) {
                 e.preventDefault();
                 if (
@@ -2149,12 +2156,12 @@ export class LightGallery {
                 }
             }
             if (this.lgOpened && this.galleryItems.length > 1) {
-                if (e.keyCode === 37) {
+                if (e.key === 'ArrowLeft' && noModifier) {
                     e.preventDefault();
                     this.goToPrevSlide();
                 }
 
-                if (e.keyCode === 39) {
+                if (e.key === 'ArrowRight' && noModifier) {
                     e.preventDefault();
                     this.goToNextSlide();
                 }
