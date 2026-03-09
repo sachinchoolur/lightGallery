@@ -140,7 +140,6 @@ export class LightGallery {
         ) {
             const mobileSettings = {
                 ...this.settings.mobileSettings,
-                ...this.settings.mobileSettings,
             };
             this.settings = { ...this.settings, ...mobileSettings };
         }
