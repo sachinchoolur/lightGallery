@@ -7,10 +7,12 @@ import { FullscreenSettings } from './plugins/fullscreen/lg-fullscreen-settings'
 import { HashSettings } from './plugins/hash/lg-hash-settings';
 import { MediumZoomSettings } from './plugins/mediumZoom/lg-medium-zoom-settings';
 import { PagerSettings } from './plugins/pager/lg-pager-settings';
+import { RelativeCaptionSettings } from './plugins/relativeCaption/lg-relative-caption-settings';
 import { RotateSettings } from './plugins/rotate/lg-rotate-settings';
 import { ShareSettings } from './plugins/share/lg-share-settings';
 import { ThumbnailsSettings } from './plugins/thumbnail/lg-thumbnail-settings';
 import { VideoSettings } from './plugins/video/lg-video-settings';
+import { VimeoThumbnailSettings } from './plugins/vimeoThumbnail/lg-vimeo-thumbnail-settings';
 import { ZoomSettings } from './plugins/zoom/lg-zoom-settings';
 
 type LightGalleryCoreMobileSettings = Exclude<
@@ -51,8 +53,10 @@ export type LightGalleryAllSettings = LightGalleryCoreSettings &
     FullscreenSettings &
     HashSettings &
     PagerSettings &
+    RelativeCaptionSettings &
     RotateSettings &
     ShareSettings &
+    VimeoThumbnailSettings &
     MediumZoomSettings;
 
 export type LightGallerySettings = Partial<LightGalleryAllSettings>;
