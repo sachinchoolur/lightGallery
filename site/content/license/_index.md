@@ -19,7 +19,7 @@ images: []
                 For personal use.
             </div>
             <div class="d-grid pricing-btn-wrap">
-                <a href="https://sachin.lemonsqueezy.com/buy/8ed0fa81-9ff3-467b-9f01-cc5d2b0effd0" target="_blank"  class="btn btn-outline-primary">Purchase Now</a>
+                <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=hobby&plan_identifier=hobby&charge_period=ONE_TIME" target="_blank"  class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
                 <li>For <b>one</b> developer</li>
@@ -38,7 +38,7 @@ images: []
                 For small teams.
             </div>
             <div class="d-grid pricing-btn-wrap">
-                <a href="https://sachin.lemonsqueezy.com/buy/4fda7194-9958-4370-9a34-fa56146c29fe" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
+                <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=team&plan_identifier=team&charge_period=ONE_TIME" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
                 <li>For upto <b>8</b> developers</li>
@@ -57,7 +57,7 @@ images: []
                 For large teams and organizations
             </div>
             <div class="d-grid pricing-btn-wrap">
-                <a href="https://sachin.lemonsqueezy.com/buy/dd865021-e705-4327-ae2f-8b835414b01b" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
+                <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=organization&plan_identifier=organization&charge_period=ONE_TIME" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
                 <li>For <b>unlimited</b> developers</li>
@@ -83,7 +83,7 @@ images: []
                 <span data-pd-price-formatted>$239</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="239" data-pd-rel="extended"><span data-pd-price-formatted></span></span>
             </div>
             <div class="d-grid pricing-btn-wrap">
-                <a href="https://sachin.lemonsqueezy.com/buy/2f129e78-4f58-4166-93af-3e13fedb9101" target="_blank" class="btn btn-white">Purchase Now</a>
+                <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=extended&plan_identifier=extended&charge_period=ONE_TIME" target="_blank" class="btn btn-white">Purchase Now</a>
             </div>
             <ul class="pricing-terms">
                 <li>For <b>unlimited</b> developers</li>

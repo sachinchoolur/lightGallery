@@ -8,18 +8,5 @@
   {{ block "head/favicons" . }}{{ partial "head/favicons.html" . }}{{ end }}
   {{ block "head/script-header" . }}{{ partial "head/script-header.html" . }}{{ end }}
 
-  {{ if or (eq .Title "Pricing") (eq .Title "WordPress") -}}
-  <script>
-    !function(e,t,i,n,a,c,r){e[n]=e[n]||function(){(e[n].q=e[n].q||[]).push(Array.prototype.slice.call(arguments))},c=t.createElement(i),r=t.getElementsByTagName(i)[0],c.id="parity-deals-sdk",c.async=1,c.src=a,r.parentNode.insertBefore(c,r)}(window,document,"script","ParityDealsSDK","https://cdn.paritydeals.com/sdk.js"),window.ParityDeals={init:function(e){ParityDealsSDK("init",e)},getUpdatedPrice:function(e){return new Promise((t,i)=>{!function n(){window.ParityDealsSDK&&"function"==typeof window.ParityDealsSDK.getUpdatedPrice?ParityDealsSDK.getUpdatedPrice(e).then(t).catch(i):setTimeout(()=>n(),100)}()})}};
 
-        ParityDeals.init({
-          convertToLocal: true,
-          showDecimal: false,
-          bar: {
-            container: '.price-container'
-          }
-        });
-    </script>
-
-  {{ end -}}
 </head>
