@@ -1960,26 +1960,24 @@ export class LightGallery {
                 ) {
                     if (!this.outer.hasClass('lg-zoomed') && !this.lgBusy) {
                         e.preventDefault();
-                        if (!this.lgBusy) {
-                            this.manageSwipeClass();
-                            startCoords = {
-                                pageX: e.pageX,
-                                pageY: e.pageY,
-                            };
-                            isDraging = true;
+                        this.manageSwipeClass();
+                        startCoords = {
+                            pageX: e.pageX,
+                            pageY: e.pageY,
+                        };
+                        isDraging = true;
 
-                            // ** Fix for webkit cursor issue https://code.google.com/p/chromium/issues/detail?id=26723
-                            this.outer.get().scrollLeft += 1;
-                            this.outer.get().scrollLeft -= 1;
+                        // ** Fix for webkit cursor issue https://code.google.com/p/chromium/issues/detail?id=26723
+                        this.outer.get().scrollLeft += 1;
+                        this.outer.get().scrollLeft -= 1;
 
-                            // *
+                        // *
 
-                            this.outer
-                                .removeClass('lg-grab')
-                                .addClass('lg-grabbing');
+                        this.outer
+                            .removeClass('lg-grab')
+                            .addClass('lg-grabbing');
 
-                            this.LGel.trigger(lGEvents.dragStart);
-                        }
+                        this.LGel.trigger(lGEvents.dragStart);
                     }
                 }
             });
