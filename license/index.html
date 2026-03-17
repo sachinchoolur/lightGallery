@@ -6,7 +6,7 @@
 <link rel=preload as=font href=https://www.lightgalleryjs.com/fonts/HelveticaNowDisplay-Regular.woff2 type=font/woff2 crossorigin>
 <link rel=preload as=font href=https://www.lightgalleryjs.com/fonts/HelveticaNowDisplay-Medium.woff2 type=font/woff2 crossorigin>
 <style>.CodeMirror{font-size:13px!important}.rjq-main.show-alert .alert-dialogue-box{display:block}</style>
-<link rel=stylesheet href=https://www.lightgalleryjs.com/main.b76bf351dbca3f474ecb61e1f9028e33f30f235d34843ace466066af2ef330e962f1b6f53e919749870e699c54e15c9d81123f750498d14833259797084aae0e.css integrity="sha512-t2vzUdvKP0dOy2Hh+QKOM/MPI100hDrORmBmry7zMOli8bb1PpGXSYcOaZxU4VydgRI/dQSY0UgzJZeXCEquDg==" crossorigin=anonymous>
+<link rel=stylesheet href=https://www.lightgalleryjs.com/main.fa99bd12f6b7894dd4d814e024bb5fe210b6200066d06ea82dc27db6a66ea2560bdd219d3af94818dbd4b88ace32fea2108473b272c307971b40a445151436a9.css integrity="sha512-+pm9Eva3iU3U2BTgJLtf4hC2IABm0G6oLcJ9tqZuolYL3SGdOvlIGNvUuIrOMv6iEIRzsnLDB5cbQKRFFRQ2qQ==" crossorigin=anonymous>
 <link rel=stylesheet href=/css/lightgallery-bundle.css>
 <link rel=stylesheet href=/css/lg-transitions.css>
 <noscript><style>img.lazyload{display:none}</style></noscript>
@@ -27,7 +27,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.lightgalleryjs.com/license/">
 <meta property="og:image" content="https://www.lightgalleryjs.com/lightgallery.png">
-<meta property="og:updated_time" content="2024-11-13T10:43:59+05:30">
+<meta property="og:updated_time" content="2026-03-17T11:04:23+05:30">
 <meta property="og:site_name" content="lightGallery">
 <meta property="article:publisher" content="https://www.facebook.com/sachinchoolur">
 <meta property="article:author" content="https://www.facebook.com/sachinchoolur">
@@ -87,11 +87,100 @@ lightGallery
 </div>
 </div><div class=container-xl>
 <div class=price-container></div>
+<div class=pricing-tabs>
+<button class="pricing-tab active" data-tab=onetime onclick="switchPricingTab('onetime')">One-time Payment</button>
+<button class=pricing-tab data-tab=annual onclick="switchPricingTab('annual')">Annual Subscription</button>
+</div>
+<div class=pricing-tab-content id=pricing-annual style=display:none>
 <div class="pricing-list justify-content-center">
 <div class=pricing-list-item>
 <div class=pricing-type>Hobby</div>
-<div class=pricing-cost data-pd-original-price=48 data-pd-rel=hobby>
-<span data-pd-price-formatted>$48</span> <span class=pricing-cost-label>/ lifetime</span> <span class=pricing-original data-pd-original-price-display=48 data-pd-rel=hobby><span data-pd-price-formatted></span></span>
+<div class=pricing-cost>
+<span data-kq-price=hobby-sub data-kq-period=YEARLY>$19</span> <span class=pricing-cost-label>/ year</span>
+</div>
+<div class=pricing-desc>
+For personal use.
+</div>
+<div class="d-grid pricing-btn-wrap">
+<a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=hobby-sub&plan_identifier=hobby-sub&charge_period=YEARLY" target=_blank class="btn btn-outline-primary">Subscribe Now</a>
+</div>
+<ul class=pricing-terms>
+<li>For <b>one</b> developer</li>
+<li>For <b>one</b> product</li>
+<li>Can't be used in a product for sale</li>
+<li>GitHub support only</li>
+<li>Free updates while subscribed</li>
+</ul>
+</div>
+<div class=pricing-list-item>
+<div class=pricing-type>Team</div>
+<div class=pricing-cost>
+<span data-kq-price=team-sub data-kq-period=YEARLY>$49</span> <span class=pricing-cost-label>/ year</span>
+</div>
+<div class=pricing-desc>
+For small teams.
+</div>
+<div class="d-grid pricing-btn-wrap">
+<a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=team-sub&plan_identifier=team-sub&charge_period=YEARLY" target=_blank class="btn btn-outline-primary">Subscribe Now</a>
+</div>
+<ul class=pricing-terms>
+<li>For upto <b>8</b> developers</li>
+<li>For upto <b>5</b> products</li>
+<li>Can be used in a product for sale</li>
+<li>GitHub and email support</li>
+<li>Free updates while subscribed</li>
+</ul>
+</div>
+<div class=pricing-list-item>
+<div class=pricing-type>Organization</div>
+<div class=pricing-cost>
+<span data-kq-price=organization-sub data-kq-period=YEARLY>$79</span> <span class=pricing-cost-label>/ year</span>
+</div>
+<div class=pricing-desc>
+For large teams and organizations
+</div>
+<div class="d-grid pricing-btn-wrap">
+<a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=organization-sub&plan_identifier=organization-sub&charge_period=YEARLY" target=_blank class="btn btn-outline-primary">Subscribe Now</a>
+</div>
+<ul class=pricing-terms>
+<li>For <b>unlimited</b> developers</li>
+<li>For <b>unlimited</b> products</li>
+<li>Can be used in a product for sale</li>
+<li>GitHub, Email and Skype support</li>
+<li>Free updates while subscribed</li>
+</ul>
+</div>
+</div>
+<div class="container-xl pricing-section">
+<div class="row justify-content-center">
+<div class=col-md-6>
+<h2 class=align-center>Extended Commercial license</h2>
+<p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Extended Commercial license.
+</div>
+</div>
+<div class="pricing-list justify-content-center">
+<div class="pricing-list-item pricing-list-item-colored">
+<div class=pricing-type>Extended</div>
+<div class=pricing-cost>
+<span data-kq-price=extended-sub data-kq-period=YEARLY>$239</span> <span class=pricing-cost-label>/ year <span class=pricing-original></span>
+</div>
+<div class="d-grid pricing-btn-wrap">
+<a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=extended-sub&plan_identifier=extended-sub&charge_period=YEARLY" target=_blank class="btn btn-white">Purchase Now</a>
+</div>
+<ul class=pricing-terms>
+<li>For <b>unlimited</b> developers</li>
+<li>For <b>one</b> product</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class=pricing-tab-content id=pricing-onetime>
+<div class="pricing-list justify-content-center">
+<div class=pricing-list-item>
+<div class=pricing-type>Hobby</div>
+<div class=pricing-cost>
+<span data-kq-price=hobby data-kq-period=ONE_TIME>$48</span> <span class=pricing-cost-label>/ lifetime</span> <span class=pricing-original></span>
 </div>
 <div class=pricing-desc>
 For personal use.
@@ -109,8 +198,8 @@ For personal use.
 </div>
 <div class=pricing-list-item>
 <div class=pricing-type>Team</div>
-<div class=pricing-cost data-pd-original-price=118 data-pd-rel=standard>
-<span data-pd-price-formatted>$118</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original data-pd-original-price-display=118 data-pd-rel=standard><span data-pd-price-formatted></span></span>
+<div class=pricing-cost>
+<span data-kq-price=team data-kq-period=ONE_TIME>$118</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original></span>
 </div>
 <div class=pricing-desc>
 For small teams.
@@ -128,8 +217,8 @@ For small teams.
 </div>
 <div class=pricing-list-item>
 <div class=pricing-type>Organization</div>
-<div class=pricing-cost data-pd-rel=organization data-pd-original-price=188>
-<span data-pd-price-formatted>$188</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original data-pd-original-price-display=188 data-pd-rel=organization><span data-pd-price-formatted></span></span>
+<div class=pricing-cost>
+<span data-kq-price=organization data-kq-period=ONE_TIME>$188</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original></span>
 </div>
 <div class=pricing-desc>
 For large teams and organizations
@@ -146,7 +235,6 @@ For large teams and organizations
 </ul>
 </div>
 </div>
-</div>
 <div class="container-xl pricing-section">
 <div class="row justify-content-center">
 <div class=col-md-6>
@@ -157,8 +245,8 @@ For large teams and organizations
 <div class="pricing-list justify-content-center">
 <div class="pricing-list-item pricing-list-item-colored">
 <div class=pricing-type>Extended</div>
-<div class=pricing-cost data-pd-original-price=239 data-pd-rel=extended>
-<span data-pd-price-formatted>$239</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original data-pd-original-price-display=239 data-pd-rel=extended><span data-pd-price-formatted></span></span>
+<div class=pricing-cost>
+<span data-kq-price=extended data-kq-period=ONE_TIME>$99</span> <span class=pricing-cost-label>/ lifetime <span class=pricing-original></span>
 </div>
 <div class="d-grid pricing-btn-wrap">
 <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=extended&plan_identifier=extended&charge_period=ONE_TIME" target=_blank class="btn btn-white">Purchase Now</a>
@@ -167,6 +255,8 @@ For large teams and organizations
 <li>For <b>unlimited</b> developers</li>
 <li>For <b>one</b> product</li>
 </ul>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -347,10 +437,12 @@ For large teams and organizations
 </div>
 </div>
 </footer>
+<script src=https://unpkg.com/@kelviq/js-sdk@2.2.0/dist/kelviq-js-sdk.umd.js></script>
+<script>var kqOnetime,kqSubscription;async function initSDK(){kqOnetime=window.kelviqSDK({productId:"a3d337a7-ade8-4d7a-8dbc-e095dac5082e",accessToken:"client-54cb04c1-1b65-411b-89c0-45570c2da8ea:a51fe7cb-e942-4de4-9fbf-3bd10b604c9c"}),await kqOnetime.ready(),kqOnetime.renderPricing({container:document.getElementById('pricing-onetime')}),kqSubscription=window.kelviqSDK({productId:"5ebc4e6e-5ff7-43f2-8502-bca722bbe68f",accessToken:"client-54cb04c1-1b65-411b-89c0-45570c2da8ea:a51fe7cb-e942-4de4-9fbf-3bd10b604c9c"}),await kqSubscription.ready(),kqSubscription.renderPricing({container:document.getElementById('pricing-annual')})}initSDK();function switchPricingTab(a){document.querySelectorAll('.pricing-tab').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===a)}),document.getElementById('pricing-annual').style.display=a==='annual'?'block':'none',document.getElementById('pricing-onetime').style.display=a==='onetime'?'block':'none',a==='annual'&&kqSubscription&&kqSubscription.renderPricing({container:document.getElementById('pricing-annual')}),a==='onetime'&&kqOnetime&&kqOnetime.renderPricing({container:document.getElementById('pricing-onetime')})}</script>
 <script src=https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js></script>
 <script src=https://cdn.jsdelivr.net/npm/airtable@0.11.1/build/airtable.browser.js></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49767543-2"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-49767543-2')</script>
-<script src=https://www.lightgalleryjs.com/main.025867ba53ebfbe0bc93901f6a0d7568a918e4fd79ae0f657ad41a49e603d6e905fe3fc3037add4b1ea842d19053bcf1dcbe92c5375c09c94de28977edb272a8.js integrity="sha512-AlhnulPr++C8k5Afag11aKkY5P15rg9letQaSeYD1ukF/j/DA3rdSx6oQtGQU7zx3L6SxTdcCclN4ol37bJyqA==" crossorigin=anonymous defer></script>
+<script src=https://www.lightgalleryjs.com/main.a9df0e4f0364622147845911c698cea6e595aadabc32229b24fd28ba7c7cdd2d931ee2a0fb5deb5fdab33c5fb3302d6ecec45d973a67db354edfc11c00d3cbe9.js integrity="sha512-qd8OTwNkYiFHhFkRxpjOpuWVqtq8MiKbJP0ounx83S2THuKg+13rX9qzPF+zMC1uzsRdlzpn2zVO38EcANPL6Q==" crossorigin=anonymous defer></script>
 </body>
 </html>
