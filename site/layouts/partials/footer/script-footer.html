@@ -23,6 +23,48 @@
 {{ $flickity := resources.Get "js/vendor/flickity.pkgd.min.js" -}}
 {{ $owl := resources.Get "js/vendor/owl.carousel.min.js" -}}
 
+
+{{ if eq .Title "Pricing" -}}
+
+<script src="https://unpkg.com/@kelviq/js-sdk@2.2.0/dist/kelviq-js-sdk.umd.js"></script>
+<script>
+  var kqOnetime, kqSubscription;
+
+    async function initSDK() {
+        kqOnetime = window.kelviqSDK({
+            productId: "a3d337a7-ade8-4d7a-8dbc-e095dac5082e",
+            accessToken: "client-54cb04c1-1b65-411b-89c0-45570c2da8ea:a51fe7cb-e942-4de4-9fbf-3bd10b604c9c",
+        });
+        await kqOnetime.ready();
+        kqOnetime.renderPricing({ container: document.getElementById('pricing-onetime') });
+
+        kqSubscription = window.kelviqSDK({
+            productId: "5ebc4e6e-5ff7-43f2-8502-bca722bbe68f",
+            accessToken: "client-54cb04c1-1b65-411b-89c0-45570c2da8ea:a51fe7cb-e942-4de4-9fbf-3bd10b604c9c",
+        });
+        await kqSubscription.ready();
+        kqSubscription.renderPricing({ container: document.getElementById('pricing-annual') });
+    }
+    initSDK();
+
+    function switchPricingTab(tab) {
+        document.querySelectorAll('.pricing-tab').forEach(function(btn) {
+            btn.classList.toggle('active', btn.getAttribute('data-tab') === tab);
+        });
+        document.getElementById('pricing-annual').style.display = tab === 'annual' ? 'block' : 'none';
+        document.getElementById('pricing-onetime').style.display = tab === 'onetime' ? 'block' : 'none';
+
+        if (tab === 'annual' && kqSubscription) {
+            kqSubscription.renderPricing({ container: document.getElementById('pricing-annual') });
+        }
+        if (tab === 'onetime' && kqOnetime) {
+            kqOnetime.renderPricing({ container: document.getElementById('pricing-onetime') });
+        }
+    }
+</script>
+
+{{ end -}}
+
 {{ if .Params.has_video -}}
 <script src="https://player.vimeo.com/api/player.js"></script>
 <script src="https://fast.wistia.com/assets/external/E-v1.js"></script>

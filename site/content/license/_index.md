@@ -9,86 +9,178 @@ images: []
 
 <div class="container-xl">
     <div class="price-container"></div>
-    <div class="pricing-list justify-content-center">
-        <div class="pricing-list-item">
-            <div class="pricing-type">Hobby</div>
-            <div class="pricing-cost" data-pd-original-price="48" data-pd-rel="hobby">
-                <span data-pd-price-formatted>$48</span> <span class="pricing-cost-label">/ lifetime</span> <span class="pricing-original"   data-pd-original-price-display="48" data-pd-rel="hobby"><span data-pd-price-formatted></span></span>
+    <div class="pricing-tabs">
+        <button class="pricing-tab active" data-tab="onetime" onclick="switchPricingTab('onetime')">One-time Payment</button>
+        <button class="pricing-tab" data-tab="annual" onclick="switchPricingTab('annual')">Annual Subscription</button>
+    </div>
+    <!-- Annual Subscription Plans -->
+    <div class="pricing-tab-content" id="pricing-annual" style="display: none;">
+        <div class="pricing-list justify-content-center">
+            <div class="pricing-list-item">
+                <div class="pricing-type">Hobby</div>
+                <div class="pricing-cost">
+                    <span data-kq-price="hobby-sub" data-kq-period="YEARLY">$19</span> <span class="pricing-cost-label">/ year</span>
+                </div>
+                <div class="pricing-desc">
+                    For personal use.
+                </div>
+                <div class="d-grid pricing-btn-wrap">
+                    <a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=hobby-sub&plan_identifier=hobby-sub&charge_period=YEARLY" target="_blank" class="btn btn-outline-primary">Subscribe Now</a>
+                </div>
+                <ul class="pricing-terms">
+                    <li>For <b>one</b> developer</li>
+                    <li>For <b>one</b> product</li>
+                    <li>Can't be used in a product for sale</li>
+                    <li>GitHub support only</li>
+                    <li>Free updates while subscribed</li>
+                </ul>
             </div>
-            <div class="pricing-desc">
-                For personal use.
+            <div class="pricing-list-item">
+                <div class="pricing-type">Team</div>
+                <div class="pricing-cost">
+                    <span data-kq-price="team-sub" data-kq-period="YEARLY">$49</span> <span class="pricing-cost-label">/ year</span>
+                </div>
+                <div class="pricing-desc">
+                    For small teams.
+                </div>
+                <div class="d-grid pricing-btn-wrap">
+                    <a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=team-sub&plan_identifier=team-sub&charge_period=YEARLY" target="_blank" class="btn btn-outline-primary">Subscribe Now</a>
+                </div>
+                <ul class="pricing-terms">
+                    <li>For upto <b>8</b> developers</li>
+                    <li>For upto <b>5</b> products</li>
+                    <li>Can be used in a product for sale</li>
+                    <li>GitHub and email support</li>
+                    <li>Free updates while subscribed</li>
+                </ul>
             </div>
-            <div class="d-grid pricing-btn-wrap">
-                <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=hobby&plan_identifier=hobby&charge_period=ONE_TIME" target="_blank"  class="btn btn-outline-primary">Purchase Now</a>
+            <div class="pricing-list-item">
+                <div class="pricing-type">Organization</div>
+                <div class="pricing-cost">
+                    <span data-kq-price="organization-sub" data-kq-period="YEARLY">$79</span> <span class="pricing-cost-label">/ year</span>
+                </div>
+                <div class="pricing-desc">
+                    For large teams and organizations
+                </div>
+                <div class="d-grid pricing-btn-wrap">
+                    <a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=organization-sub&plan_identifier=organization-sub&charge_period=YEARLY" target="_blank" class="btn btn-outline-primary">Subscribe Now</a>
+                </div>
+                <ul class="pricing-terms">
+                    <li>For <b>unlimited</b> developers</li>
+                    <li>For <b>unlimited</b> products</li>
+                    <li>Can be used in a product for sale</li>
+                    <li>GitHub, Email and Skype support</li>
+                    <li>Free updates while subscribed</li>
+                </ul>
             </div>
-            <ul class="pricing-terms">
-                <li>For <b>one</b> developer</li>
-                <li>For <b>one</b> product</li>
-                <li>Can't be used in a product for sale</li>
-                <li>GitHub support only</li>
-                <li>Lifetime free updates</li>
-            </ul>
         </div>
-        <div class="pricing-list-item">
-            <div class="pricing-type">Team</div>
-            <div class="pricing-cost" data-pd-original-price="118" data-pd-rel="standard">
-                <span data-pd-price-formatted>$118</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original" data-pd-original-price-display="118"  data-pd-rel="standard"><span data-pd-price-formatted></span></span>
+        <div class="container-xl pricing-section">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h2 class="align-center">Extended Commercial license</h2>
+                    <p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Extended Commercial license.
+                </div>
             </div>
-            <div class="pricing-desc">
-                For small teams.
+            <div class="pricing-list justify-content-center">
+                <div class="pricing-list-item pricing-list-item-colored">
+                    <div class="pricing-type">Extended</div>
+                    <div class="pricing-cost">
+                        <span data-kq-price="extended-sub" data-kq-period="YEARLY">$239</span> <span class="pricing-cost-label">/ year <span class="pricing-original"></span>
+                    </div>
+                    <div class="d-grid pricing-btn-wrap">
+                        <a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=extended-sub&plan_identifier=extended-sub&charge_period=YEARLY" target="_blank" class="btn btn-white">Purchase Now</a>
+                    </div>
+                    <ul class="pricing-terms">
+                        <li>For <b>unlimited</b> developers</li>
+                        <li>For <b>one</b> product</li>
+                    </ul>
+                </div>
             </div>
-            <div class="d-grid pricing-btn-wrap">
-                <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=team&plan_identifier=team&charge_period=ONE_TIME" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
-            </div>
-            <ul class="pricing-terms">
-                <li>For upto <b>8</b> developers</li>
-                <li>For upto <b>5</b> products</li>
-                <li>Can be used in a product for sale</li>
-                <li>GitHub and email support</li>
-                <li>Lifetime free updates</li>
-            </ul>
-        </div>
-        <div class="pricing-list-item">
-            <div class="pricing-type">Organization</div>
-            <div class="pricing-cost" data-pd-rel="organization" data-pd-original-price="188">
-                <span data-pd-price-formatted>$188</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="188"  data-pd-rel="organization"><span data-pd-price-formatted></span></span>
-            </div>
-            <div class="pricing-desc">
-                For large teams and organizations
-            </div>
-            <div class="d-grid pricing-btn-wrap">
-                <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=organization&plan_identifier=organization&charge_period=ONE_TIME" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
-            </div>
-            <ul class="pricing-terms">
-                <li>For <b>unlimited</b> developers</li>
-                <li>For <b>unlimited</b> products</li>
-                <li>Can be used in a product for sale</li>
-                <li>GitHub, Email and Skype support</li>
-                <li>Lifetime free updates</li>
-            </ul>
         </div>
     </div>
-</div>
-<div class="container-xl pricing-section">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="align-center">Extended Commercial license</h2>
-            <p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Extended Commercial license.
+    <!-- One-time Payment Plans -->
+    <div class="pricing-tab-content" id="pricing-onetime">
+        <div class="pricing-list justify-content-center">
+            <div class="pricing-list-item">
+                <div class="pricing-type">Hobby</div>
+                <div class="pricing-cost">
+                    <span data-kq-price="hobby" data-kq-period="ONE_TIME">$48</span> <span class="pricing-cost-label">/ lifetime</span> <span class="pricing-original"></span>
+                </div>
+                <div class="pricing-desc">
+                    For personal use.
+                </div>
+                <div class="d-grid pricing-btn-wrap">
+                    <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=hobby&plan_identifier=hobby&charge_period=ONE_TIME" target="_blank"  class="btn btn-outline-primary">Purchase Now</a>
+                </div>
+                <ul class="pricing-terms">
+                    <li>For <b>one</b> developer</li>
+                    <li>For <b>one</b> product</li>
+                    <li>Can't be used in a product for sale</li>
+                    <li>GitHub support only</li>
+                    <li>Lifetime free updates</li>
+                </ul>
+            </div>
+            <div class="pricing-list-item">
+                <div class="pricing-type">Team</div>
+                <div class="pricing-cost">
+                    <span  data-kq-price="team" data-kq-period="ONE_TIME">$118</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"></span>
+                </div>
+                <div class="pricing-desc">
+                    For small teams.
+                </div>
+                <div class="d-grid pricing-btn-wrap">
+                    <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=team&plan_identifier=team&charge_period=ONE_TIME" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
+                </div>
+                <ul class="pricing-terms">
+                    <li>For upto <b>8</b> developers</li>
+                    <li>For upto <b>5</b> products</li>
+                    <li>Can be used in a product for sale</li>
+                    <li>GitHub and email support</li>
+                    <li>Lifetime free updates</li>
+                </ul>
+            </div>
+            <div class="pricing-list-item">
+                <div class="pricing-type">Organization</div>
+                <div class="pricing-cost">
+                    <span data-kq-price="organization" data-kq-period="ONE_TIME">$188</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"></span>
+                </div>
+                <div class="pricing-desc">
+                    For large teams and organizations
+                </div>
+                <div class="d-grid pricing-btn-wrap">
+                    <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=organization&plan_identifier=organization&charge_period=ONE_TIME" target="_blank" class="btn btn-outline-primary">Purchase Now</a>
+                </div>
+                <ul class="pricing-terms">
+                    <li>For <b>unlimited</b> developers</li>
+                    <li>For <b>unlimited</b> products</li>
+                    <li>Can be used in a product for sale</li>
+                    <li>GitHub, Email and Skype support</li>
+                    <li>Lifetime free updates</li>
+                </ul>
+            </div>
         </div>
-    </div>
-    <div class="pricing-list justify-content-center">
-        <div class="pricing-list-item pricing-list-item-colored">
-            <div class="pricing-type">Extended</div>
-            <div class="pricing-cost" data-pd-original-price="239" data-pd-rel="extended">
-                <span data-pd-price-formatted>$239</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"   data-pd-original-price-display="239" data-pd-rel="extended"><span data-pd-price-formatted></span></span>
+        <div class="container-xl pricing-section">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h2 class="align-center">Extended Commercial license</h2>
+                    <p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Extended Commercial license.
+                </div>
             </div>
-            <div class="d-grid pricing-btn-wrap">
-                <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=extended&plan_identifier=extended&charge_period=ONE_TIME" target="_blank" class="btn btn-white">Purchase Now</a>
+            <div class="pricing-list justify-content-center">
+                <div class="pricing-list-item pricing-list-item-colored">
+                    <div class="pricing-type">Extended</div>
+                    <div class="pricing-cost">
+                        <span data-kq-price="extended" data-kq-period="ONE_TIME">$99</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"></span>
+                    </div>
+                    <div class="d-grid pricing-btn-wrap">
+                        <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=extended&plan_identifier=extended&charge_period=ONE_TIME" target="_blank" class="btn btn-white">Purchase Now</a>
+                    </div>
+                    <ul class="pricing-terms">
+                        <li>For <b>unlimited</b> developers</li>
+                        <li>For <b>one</b> product</li>
+                    </ul>
+                </div>
             </div>
-            <ul class="pricing-terms">
-                <li>For <b>unlimited</b> developers</li>
-                <li>For <b>one</b> product</li>
-            </ul>
         </div>
     </div>
 </div>

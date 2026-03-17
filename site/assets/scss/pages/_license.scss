@@ -67,6 +67,31 @@ ul.pricing-terms li {
     font-size: 14px;
 }
 
+.pricing-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    gap: 0;
+}
+
+.pricing-tab {
+    background: none;
+    border: none;
+    padding: 10px 24px;
+    font-size: 1rem;
+    color: #5971a7;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    &:hover {
+        color: #0e3481;
+    }
+    &.active {
+        color: #0e3481;
+        border-bottom: 2px solid #0e3481;
+    }
+}
+
 .pricing-desc {
     color: #5971a7;
     margin: 5px 0;
