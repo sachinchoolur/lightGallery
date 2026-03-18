@@ -1003,13 +1003,13 @@ export class LightGallery {
         // Use the thumbnail as dummy image which will be resized to actual image size and
         // displayed on top of actual image
         let imgContent: string | HTMLImageElement = '';
-        const altAttr = alt ? 'alt="' + alt + '"' : '';
+        const altAttr = alt ? 'alt="' + utils.escapeHtml(alt) + '"' : '';
 
         if (this.isFirstSlideWithZoomAnimation()) {
             imgContent = this.getDummyImageContent(
                 $currentSlide,
                 index,
-                altAttr,
+                alt || '',
             );
         } else {
             imgContent = utils.getImgMarkup(
