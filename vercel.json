@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm run build:travis",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "framework": null,
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
