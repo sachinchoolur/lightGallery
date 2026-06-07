@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AzGallery
 
-## Getting Started
+A professional architectural gallery platform for showcasing projects with community feedback.
 
-First, run the development server:
+## Features
+
+- **Public Gallery** - Browse published architectural projects
+- **Admin Dashboard** - Create, manage, and publish projects
+- **Image Gallery** - Upload and organize project images
+- **Comments** - Community feedback and engagement
+- **Responsive Design** - Works on all devices
+- **Dark Mode** - Built-in dark mode support
+- **Security** - Supabase Row Level Security
+
+## Tech Stack
+
+- Next.js 16 (React 19, TypeScript)
+- Supabase (PostgreSQL + Auth)
+- Tailwind CSS 4
+- react-hot-toast
+
+## Quick Start
+
+### Prerequisites
+- Node.js 18+
+- Supabase project configured
+- Environment variables set
+
+### Installation
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Add to `.env.local`:
+```
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+```
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+### Public Users
+- Visit homepage to browse projects
+- Click projects to see details, images, and comments
+- Leave feedback without signing in
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Project Creators
+1. Sign up at `/auth/signup`
+2. Create projects from admin dashboard
+3. Add images and metadata
+4. Publish to make public
+5. Manage comments and visibility
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Pages
 
-## Deploy on Vercel
+- `/` - Public gallery homepage
+- `/project/[id]` - Project detail view
+- `/auth/login` - Admin login
+- `/auth/signup` - Create admin account
+- `/admin` - Project management dashboard
+- `/admin/project/[id]` - Edit project details
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Database
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5 main tables with Row Level Security:
+- `projects` - Project metadata
+- `images` - Project images
+- `comments` - Community feedback
+- `annotations` - Point-based markups
+- `access_tokens` - Special project access
+
+## Deployment
+
+Deploy to Vercel:
+```bash
+vercel deploy
+```
+
+## See Also
+
+- `BUILD_SUMMARY.md` - Detailed technical documentation
+- Supabase Documentation - https://supabase.com/docs
+- Next.js Documentation - https://nextjs.org/docs
+
+## License
+
+MIT
