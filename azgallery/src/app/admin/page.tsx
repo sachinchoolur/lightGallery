@@ -21,10 +21,10 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [showNewProjectForm, setShowNewProjectForm] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
 
   useEffect(() => {
     const checkAuth = async () => {
+      const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
@@ -41,6 +41,7 @@ export default function AdminDashboard() {
 
   async function loadProjects(userId: string) {
     try {
+      const supabase = createClient();
       const { data, error } = await supabase
         .from('projects')
         .select('id, title, description, category, is_public, created_at')
@@ -59,6 +60,7 @@ export default function AdminDashboard() {
 
   async function handleLogout() {
     try {
+      const supabase = createClient();
       await supabase.auth.signOut();
       router.push('/');
     } catch (error) {
@@ -70,6 +72,7 @@ export default function AdminDashboard() {
     if (!confirm('Are you sure you want to delete this project? This cannot be undone.')) return;
 
     try {
+      const supabase = createClient();
       const { error } = await supabase
         .from('projects')
         .delete()

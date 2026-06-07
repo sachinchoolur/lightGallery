@@ -18,7 +18,6 @@ interface Project {
 export default function HomePage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = createClient();
 
   useEffect(() => {
     loadProjects();
@@ -26,6 +25,7 @@ export default function HomePage() {
 
   async function loadProjects() {
     try {
+      const supabase = createClient();
       const { data, error } = await supabase
         .from('projects')
         .select('id, title, description, category, location, year, cover_image_url')

@@ -26,8 +26,6 @@ export default function AdminProjectPage() {
   const params = useParams();
   const router = useRouter();
   const projectId = params.projectId as string;
-  const supabase = createClient();
-
   const [user, setUser] = useState<any>(null);
   const [project, setProject] = useState<Project | null>(null);
   const [images, setImages] = useState<ProjectImage[]>([]);
@@ -37,6 +35,7 @@ export default function AdminProjectPage() {
 
   useEffect(() => {
     const checkAuth = async () => {
+      const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
@@ -53,6 +52,7 @@ export default function AdminProjectPage() {
 
   async function loadProject(userId: string) {
     try {
+      const supabase = createClient();
       const { data: projectData, error: projectError } = await supabase
         .from('projects')
         .select('id, title, description, category, is_public')
@@ -83,6 +83,7 @@ export default function AdminProjectPage() {
 
   async function updateProject() {
     try {
+      const supabase = createClient();
       const { error } = await supabase
         .from('projects')
         .update({
@@ -106,6 +107,7 @@ export default function AdminProjectPage() {
     if (!confirm('Delete this image?')) return;
 
     try {
+      const supabase = createClient();
       const { error } = await supabase
         .from('images')
         .delete()

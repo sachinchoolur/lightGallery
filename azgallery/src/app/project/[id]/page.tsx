@@ -33,7 +33,6 @@ interface Comment {
 export default function ProjectDetailPage() {
   const params = useParams();
   const projectId = params.id as string;
-  const supabase = createClient();
 
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [images, setImages] = useState<ProjectImage[]>([]);
@@ -48,6 +47,7 @@ export default function ProjectDetailPage() {
 
   async function loadProjectData() {
     try {
+      const supabase = createClient();
       // Load project
       const { data: projectData, error: projectError } = await supabase
         .from('projects')
@@ -101,6 +101,7 @@ export default function ProjectDetailPage() {
         return;
       }
 
+      const supabase = createClient();
       const { error } = await supabase
         .from('comments')
         .insert({
