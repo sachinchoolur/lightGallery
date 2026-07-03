@@ -1,0 +1,9 @@
+{
+  "name": "@lightgallery/core",
+  "private": true,
+  "scripts": {
+    "build:vite": "vite build && vite build --config vite.config.min.ts",
+    "build:types": "tsc -p tsconfig.types.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

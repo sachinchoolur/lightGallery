@@ -14,6 +14,10 @@ import pluginConfigs from './plugins-config-rollup.json';
 
 const libraryName = 'lightGallery';
 const libraryFileName = 'index';
+const typescriptOptions = {
+    useTsconfigDeclarationDir: true,
+    include: ['**/*.ts'],
+};
 
 const umdConfigs = pluginConfigs.map((config) => {
     return {
@@ -37,7 +41,7 @@ const umdConfigs = pluginConfigs.map((config) => {
             // Allow json resolution
             json(),
             // Compile TypeScript files
-            typescript({ useTsconfigDeclarationDir: true }),
+            typescript(typescriptOptions),
             // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
             commonjs(),
             // Allow node_modules resolution, so you can use 'external' to control
@@ -75,7 +79,7 @@ const minConfigs = pluginConfigs.map((config) => {
             // Allow json resolution
             json(),
             // Compile TypeScript files
-            typescript({ useTsconfigDeclarationDir: true }),
+            typescript(typescriptOptions),
             // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
             commonjs(),
             // Allow node_modules resolution, so you can use 'external' to control
@@ -121,7 +125,7 @@ export default [
             // Allow json resolution
             json(),
             // Compile TypeScript files
-            typescript({ useTsconfigDeclarationDir: true }),
+            typescript(typescriptOptions),
             // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
             commonjs(),
             // Allow node_modules resolution, so you can use 'external' to control
@@ -156,7 +160,7 @@ export default [
             // Allow json resolution
             json(),
             // Compile TypeScript files
-            typescript({ useTsconfigDeclarationDir: true }),
+            typescript(typescriptOptions),
             // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
             commonjs(),
             // Allow node_modules resolution, so you can use 'external' to control

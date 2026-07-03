@@ -1,6 +1,16 @@
 {
   "name": "lightgallery",
   "version": "2.9.0",
+  "packageManager": "pnpm@9.15.0",
+  "pnpm": {
+    "overrides": {
+      "@types/babel__traverse": "7.11.1",
+      "@types/express": "4.17.11",
+      "@types/express-serve-static-core": "4.17.19",
+      "@types/react": "18.0.15",
+      "@types/serve-static": "1.13.10"
+    }
+  },
   "description": "lightGallery is a feature-rich, modular JavaScript gallery plugin for building beautiful image and video galleries for the web and the mobile",
   "keywords": [
     "JavaScript",
@@ -37,7 +47,10 @@
     "lint": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet --fix",
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css && npm run copyScss && npm run copyAssetsToSite && npm run copyJsToSite && npm run copyPackages && npm run buildLibraries && npm run updatePackageFields",
+    "build:legacy": "npm run prebuild && tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts",
+    "build:vite": "echo 'vite not configured yet' && exit 1",
     "build:travis": "tsc --module commonjs && rollup -c rollup.config.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "build-scss": "sass src/scss/:dist/css/ --style=expanded",
     "build-scss-dev": "sass src/scss/:site/static/css/ --style=expanded",
     "watch-css": "nodemon --watch 'src/**/*' -e scss -x \"npm run build-scss-dev\"",
