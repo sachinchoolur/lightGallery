@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "../../dist-vite/types",
+    "emitDeclarationOnly": true,
+    "outDir": "../../dist-vite/types"
+  },
+  "include": ["../../src/**/*"]
+}

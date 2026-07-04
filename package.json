@@ -48,7 +48,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css && npm run copyScss && npm run copyAssetsToSite && npm run copyJsToSite && npm run copyPackages && npm run buildLibraries && npm run updatePackageFields",
     "build:legacy": "npm run prebuild && tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts",
-    "build:vite": "echo 'vite not configured yet' && exit 1",
+    "build:vite": "turbo run build:vite build:types --filter=@lightgallery/core",
     "build:travis": "tsc --module commonjs && rollup -c rollup.config.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "build-scss": "sass src/scss/:dist/css/ --style=expanded",
@@ -172,11 +172,15 @@
     "semantic-release": "^17.4.2",
     "semantic-release-cli": "^5.4.3",
     "shelljs": "^0.8.3",
+    "terser": "^5.36.0",
     "travis-deploy-once": "^5.0.9",
     "ts-jest": "^26.5.6",
     "ts-node": "^9.1.1",
+    "tsx": "^4.19.2",
     "typedoc": "^0.19.2",
-    "typescript": "^3.0.3"
+    "turbo": "^2.3.3",
+    "typescript": "5.0.4",
+    "vite": "^5.4.11"
   },
   "dependencies": {
     "@types/picturefill": "^3.0.0",

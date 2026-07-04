@@ -3,7 +3,8 @@
   "tasks": {
     "build": { "dependsOn": ["^build"], "outputs": ["dist/**", "dist-vite/**"] },
     "build:legacy": { "cache": true, "outputs": ["dist/**"] },
-    "build:vite": { "cache": true, "outputs": ["dist-vite/**"] },
+    "build:vite": { "cache": true, "outputs": ["$TURBO_ROOT$/dist-vite/**"] },
+    "build:types": { "cache": true, "outputs": ["$TURBO_ROOT$/dist-vite/types/**"] },
     "lint": {},
     "typecheck": {},
     "test": { "dependsOn": ["build:vite"] }
