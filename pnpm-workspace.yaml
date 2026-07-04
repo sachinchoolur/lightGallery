@@ -3,8 +3,6 @@ packages:
   - 'packages/*'
   - 'lightgallery-react'
   - 'lightgallery-vue'
-  - 'lightgallery-lit'
-  - 'lightgallery-angular/*'
 
 overrides:
   '@types/babel__traverse': 7.11.1
