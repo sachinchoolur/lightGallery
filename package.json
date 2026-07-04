@@ -49,6 +49,7 @@
     "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css && npm run copyScss && npm run copyAssetsToSite && npm run copyJsToSite && npm run copyPackages && npm run buildLibraries && npm run updatePackageFields",
     "build:legacy": "npm run prebuild && tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts",
     "build:vite": "turbo run build:vite build:types --filter=@lightgallery/core",
+    "verify:parity": "tsx scripts/verify-build-parity.ts",
     "build:travis": "tsc --module commonjs && rollup -c rollup.config.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "build-scss": "sass src/scss/:dist/css/ --style=expanded",
