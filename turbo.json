@@ -2,9 +2,32 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "build": { "dependsOn": ["^build"], "outputs": ["dist/**", "dist-vite/**"] },
+    "build:all:vite": { "cache": true, "outputs": ["$TURBO_ROOT$/dist-vite/**"] },
     "build:legacy": { "cache": true, "outputs": ["dist/**"] },
     "build:vite": { "cache": true, "outputs": ["$TURBO_ROOT$/dist-vite/**"] },
     "build:types": { "cache": true, "outputs": ["$TURBO_ROOT$/dist-vite/types/**"] },
+    "build:css": { "cache": true, "outputs": ["$TURBO_ROOT$/dist-vite/css/**"] },
+    "build:css:min": {
+      "dependsOn": ["build:css"],
+      "cache": true,
+      "outputs": ["$TURBO_ROOT$/dist-vite/css/lightgallery-bundle.min.css"]
+    },
+    "copy:assets": {
+      "cache": true,
+      "outputs": [
+        "$TURBO_ROOT$/dist-vite/fonts/**",
+        "$TURBO_ROOT$/dist-vite/images/**"
+      ]
+    },
+    "copy:scss": { "cache": true, "outputs": ["$TURBO_ROOT$/dist-vite/scss/**"] },
+    "assemble:dist": {
+      "cache": true,
+      "outputs": [
+        "$TURBO_ROOT$/dist-vite/package.json",
+        "$TURBO_ROOT$/dist-vite/README.md",
+        "$TURBO_ROOT$/dist-vite/plugins/**/package.json"
+      ]
+    },
     "lint": {},
     "typecheck": {},
     "test": { "dependsOn": ["build:vite"] }

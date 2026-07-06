@@ -17,6 +17,7 @@ const excludedPathPrefixes = [
 ];
 
 const excludedFiles = new Set(['package.json', 'README.md']);
+const requiredAssetPathPrefixes = ['css/', 'fonts/', 'images/', 'scss/'];
 
 interface BundleSize {
     path: string;
@@ -36,6 +37,12 @@ function isExcluded(relativePath: string): boolean {
     return (
         excludedFiles.has(relativePath) ||
         excludedPathPrefixes.some((prefix) => relativePath.startsWith(prefix))
+    );
+}
+
+function isRequiredAssetPath(relativePath: string): boolean {
+    return requiredAssetPathPrefixes.some((prefix) =>
+        relativePath.startsWith(prefix),
     );
 }
 
@@ -143,35 +150,6 @@ function printSizeSummary(sizes: BundleSize[]): void {
     });
 }
 
-function printInformationalAssetDiffs(): void {
-    const legacyAssets = listContractFiles(
-        legacyDir,
-        (file) =>
-            !file.endsWith('.js') &&
-            !file.endsWith('.d.ts') &&
-            !file.endsWith('.map'),
-    );
-    const viteAssets = listContractFiles(
-        viteDir,
-        (file) =>
-            !file.endsWith('.js') &&
-            !file.endsWith('.d.ts') &&
-            !file.endsWith('.map'),
-    );
-    const missingAssets = difference(legacyAssets, viteAssets);
-    const extraAssets = difference(viteAssets, legacyAssets);
-
-    if (missingAssets.length > 0 || extraAssets.length > 0) {
-        console.warn('CSS/assets differences are informational until plan 004:');
-        formatList('Missing in dist-vite:', missingAssets).forEach((line) =>
-            console.warn(line),
-        );
-        formatList('Extra in dist-vite:', extraAssets).forEach((line) =>
-            console.warn(line),
-        );
-    }
-}
-
 function runSmokeImport(): void {
     const result = spawnSync(process.execPath, ['scripts/smoke-import.mjs'], {
         cwd: rootDir,
@@ -199,12 +177,18 @@ function main(): void {
     );
     const missingDeclarations = difference(legacyDeclarations, viteDeclarations);
     const extraDeclarations = difference(viteDeclarations, legacyDeclarations);
+    const legacyAssets = listContractFiles(legacyDir, isRequiredAssetPath);
+    const viteAssets = listContractFiles(viteDir, isRequiredAssetPath);
+    const missingAssets = difference(legacyAssets, viteAssets);
+    const extraAssets = difference(viteAssets, legacyAssets);
 
     const failures = [
         ...formatList('Missing JS bundles in dist-vite:', missingJs),
         ...formatList('Extra JS bundles in dist-vite:', extraJs),
         ...formatList('Missing declaration paths in dist-vite:', missingDeclarations),
         ...formatList('Extra declaration paths in dist-vite:', extraDeclarations),
+        ...formatList('Missing CSS/asset paths in dist-vite:', missingAssets),
+        ...formatList('Extra CSS/asset paths in dist-vite:', extraAssets),
     ];
 
     const matchedJs = legacyJs.filter((file) => viteJs.includes(file));
@@ -219,7 +203,6 @@ function main(): void {
     });
 
     printSizeSummary(sizes);
-    printInformationalAssetDiffs();
 
     if (sizeRegressions.length > 0) {
         failures.push(
