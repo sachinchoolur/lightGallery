@@ -13,7 +13,7 @@ interface LightGalleryViteConfigOptions {
 }
 
 const rootDir = path.resolve(__dirname, '../..');
-const distDir = path.resolve(rootDir, 'dist-vite');
+const distDir = path.resolve(rootDir, 'dist');
 
 export function createViteConfig(
     entry: LightGalleryBuildEntry,

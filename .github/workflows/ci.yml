@@ -1,4 +1,4 @@
-name: Build parity
+name: CI
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - v3
 
 jobs:
-  build-parity:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,17 +24,17 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build legacy artifacts
-        run: pnpm run build:legacy
+      - name: Typecheck
+        run: pnpm run typecheck
 
-      - name: Build Vite artifacts
-        run: pnpm run build:vite
+      - name: Production test gate
+        run: pnpm run test:prod
 
-      - name: Verify build parity
-        run: pnpm run verify:parity
+      - name: Build
+        run: pnpm run build

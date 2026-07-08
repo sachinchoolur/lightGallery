@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 const rootDir = path.resolve(__dirname, '..');
-const distDir = path.resolve(rootDir, 'dist-vite');
+const distDir = path.resolve(rootDir, 'dist');
 const pluginsDir = path.resolve(rootDir, 'packages/plugins');
 
 function readJson(filePath: string): any {

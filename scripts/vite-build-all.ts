@@ -8,7 +8,7 @@ import { createViteConfig, LightGalleryBuildEntry } from '../packages/core/vite.
 import { createViteMinConfig } from '../packages/core/vite.config.min';
 
 const rootDir = path.resolve(__dirname, '..');
-const distDir = path.resolve(rootDir, 'dist-vite');
+const distDir = path.resolve(rootDir, 'dist');
 const coreOutputFiles = [
     'lightgallery.umd.js',
     'lightgallery.umd.js.map',

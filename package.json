@@ -23,6 +23,86 @@
   "min": "dist/lightgallery.min.js",
   "module": "dist/lightgallery.es5.js",
   "typings": "dist/types/index.d.ts",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/lightgallery.es5.js",
+      "require": "./dist/lightgallery.umd.js",
+      "script": "./dist/lightgallery.min.js"
+    },
+    "./plugins/thumbnail": {
+      "types": "./dist/types/plugins/thumbnail/lg-thumbnail.d.ts",
+      "import": "./dist/plugins/thumbnail/lg-thumbnail.es5.js",
+      "require": "./dist/plugins/thumbnail/lg-thumbnail.umd.js"
+    },
+    "./plugins/video": {
+      "types": "./dist/types/plugins/video/lg-video.d.ts",
+      "import": "./dist/plugins/video/lg-video.es5.js",
+      "require": "./dist/plugins/video/lg-video.umd.js"
+    },
+    "./plugins/zoom": {
+      "types": "./dist/types/plugins/zoom/lg-zoom.d.ts",
+      "import": "./dist/plugins/zoom/lg-zoom.es5.js",
+      "require": "./dist/plugins/zoom/lg-zoom.umd.js"
+    },
+    "./plugins/share": {
+      "types": "./dist/types/plugins/share/lg-share.d.ts",
+      "import": "./dist/plugins/share/lg-share.es5.js",
+      "require": "./dist/plugins/share/lg-share.umd.js"
+    },
+    "./plugins/rotate": {
+      "types": "./dist/types/plugins/rotate/lg-rotate.d.ts",
+      "import": "./dist/plugins/rotate/lg-rotate.es5.js",
+      "require": "./dist/plugins/rotate/lg-rotate.umd.js"
+    },
+    "./plugins/pager": {
+      "types": "./dist/types/plugins/pager/lg-pager.d.ts",
+      "import": "./dist/plugins/pager/lg-pager.es5.js",
+      "require": "./dist/plugins/pager/lg-pager.umd.js"
+    },
+    "./plugins/hash": {
+      "types": "./dist/types/plugins/hash/lg-hash.d.ts",
+      "import": "./dist/plugins/hash/lg-hash.es5.js",
+      "require": "./dist/plugins/hash/lg-hash.umd.js"
+    },
+    "./plugins/fullscreen": {
+      "types": "./dist/types/plugins/fullscreen/lg-fullscreen.d.ts",
+      "import": "./dist/plugins/fullscreen/lg-fullscreen.es5.js",
+      "require": "./dist/plugins/fullscreen/lg-fullscreen.umd.js"
+    },
+    "./plugins/comment": {
+      "types": "./dist/types/plugins/comment/lg-comment.d.ts",
+      "import": "./dist/plugins/comment/lg-comment.es5.js",
+      "require": "./dist/plugins/comment/lg-comment.umd.js"
+    },
+    "./plugins/autoplay": {
+      "types": "./dist/types/plugins/autoplay/lg-autoplay.d.ts",
+      "import": "./dist/plugins/autoplay/lg-autoplay.es5.js",
+      "require": "./dist/plugins/autoplay/lg-autoplay.umd.js"
+    },
+    "./plugins/mediumZoom": {
+      "types": "./dist/types/plugins/mediumZoom/lg-medium-zoom.d.ts",
+      "import": "./dist/plugins/mediumZoom/lg-medium-zoom.es5.js",
+      "require": "./dist/plugins/mediumZoom/lg-medium-zoom.umd.js"
+    },
+    "./plugins/relativeCaption": {
+      "types": "./dist/types/plugins/relativeCaption/lg-relative-caption.d.ts",
+      "import": "./dist/plugins/relativeCaption/lg-relative-caption.es5.js",
+      "require": "./dist/plugins/relativeCaption/lg-relative-caption.umd.js"
+    },
+    "./plugins/vimeoThumbnail": {
+      "types": "./dist/types/plugins/vimeoThumbnail/lg-vimeo-thumbnail.d.ts",
+      "import": "./dist/plugins/vimeoThumbnail/lg-vimeo-thumbnail.es5.js",
+      "require": "./dist/plugins/vimeoThumbnail/lg-vimeo-thumbnail.umd.js"
+    },
+    "./css/*": "./dist/css/*",
+    "./scss/*": "./dist/scss/*",
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist"
   ],
@@ -47,21 +127,19 @@
     "lint": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet",
     "lint:fix": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet --fix",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css && npm run copyScss && npm run copyAssetsToSite && npm run copyJsToSite && npm run copyPackages && npm run buildLibraries && npm run updatePackageFields",
-    "build:legacy": "npm run prebuild && tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run minify-css && npm run copyScss && npm run copyPackages",
+    "build": "npm run build:all:vite",
     "build:all:vite": "turbo run build:vite build:types --filter=@lightgallery/core && turbo run build:css build:css:min copy:assets copy:scss assemble:dist --filter=lightgallery",
     "build:vite": "turbo run build:vite build:types --filter=@lightgallery/core",
     "verify:parity": "tsx scripts/verify-build-parity.ts",
-    "build:travis": "tsc --module commonjs && rollup -c rollup.config.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "build-scss": "sass src/scss/:dist/css/ --style=expanded",
-    "build:css": "sass src/scss/:dist-vite/css/ --style=expanded",
-    "build:css:min": "cleancss -o dist-vite/css/lightgallery-bundle.min.css dist-vite/css/lightgallery-bundle.css",
+    "build:css": "sass src/scss/:dist/css/ --style=expanded",
+    "build:css:min": "cleancss -o dist/css/lightgallery-bundle.min.css dist/css/lightgallery-bundle.css",
     "build-scss-dev": "sass src/scss/:site/static/css/ --style=expanded",
     "watch-css": "nodemon --watch 'src/**/*' -e scss -x \"npm run build-scss-dev\"",
     "watch-site-content": "nodemon --watch dist -x \"npm run copyAssetsToSite\"",
     "minify-css": "cleancss -o dist/css/lightgallery-bundle.min.css dist/css/lightgallery-bundle.css",
-    "start": "concurrently \"rollup -c rollup-dev.config.ts -w $LG_PLUGINS\" \"npm run watch-site-content \" \"npm run watch-css \" ",
+    "start": "concurrently \"vite build --config packages/core/vite.config.ts --watch\" \"npm run watch-site-content \" \"npm run watch-css \" ",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
@@ -75,10 +153,10 @@
     "precommit": "lint-staged",
     "travis-deploy-once": "travis-deploy-once",
     "copyAssets": "copyfiles -u 1 src/fonts/** dist && copyfiles -u 1 src/images/** dist",
-    "copy:assets": "copyfiles -u 1 src/fonts/** dist-vite && copyfiles -u 1 src/images/** dist-vite",
-    "copy:scss": "copyfiles -f -u 1 src/scss/** dist-vite/scss && copyfiles -u 2 src/scss/**/* dist-vite/scss",
+    "copy:assets": "copyfiles -u 1 src/fonts/** dist && copyfiles -u 1 src/images/** dist",
+    "copy:scss": "copyfiles -f -u 1 src/scss/** dist/scss && copyfiles -u 2 src/scss/**/* dist/scss",
     "assemble:dist": "tsx scripts/assemble-vite-dist.ts",
-    "sync:site": "copyfiles -f dist-vite/*.js site/assets/js && copyfiles -u 1 dist-vite/plugins/**/* site/assets/js && copyfiles -f dist-vite/images/** site/static/images && copyfiles -f dist-vite/fonts/** site/static/fonts",
+    "sync:site": "copyfiles -f dist/*.js site/assets/js && copyfiles -u 1 dist/plugins/**/* site/assets/js && copyfiles -f dist/images/** site/static/images && copyfiles -f dist/fonts/** site/static/fonts",
     "copyPackages": "copyfiles README.md dist && copyfiles -u 1 packages/**/**/* dist && copyfiles -u 1 packages/**/* dist && copyfiles -u 1 packages/* dist",
     "updatePackageFields": "ts-node tools/update-packages",
     "copyReactBuild": "copyfiles -f -u 1 -e '**/*.d.ts' lightgallery-react/dist/* dist/react && copyfiles -f -u 1 lightgallery-react/dist/Lightgallery.d.ts dist/react",
@@ -143,14 +221,7 @@
     "prompt": "^1.0.0",
     "replace-in-file": "^3.4.4",
     "rimraf": "^2.6.2",
-    "rollup": "^2.52.2",
-    "rollup-plugin-commonjs": "^9.1.8",
-    "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-license": "^2.2.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-sourcemaps": "^0.4.2",
-    "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.27.3",
     "sass": "^1.69.5",
     "semantic-release": "^17.4.2",
     "semantic-release-cli": "^5.4.3",

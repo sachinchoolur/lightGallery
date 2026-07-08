@@ -5,7 +5,7 @@ import license from 'rollup-plugin-license';
 import { LightGalleryBuildEntry } from './vite.config';
 
 const rootDir = path.resolve(__dirname, '../..');
-const distDir = path.resolve(rootDir, 'dist-vite');
+const distDir = path.resolve(rootDir, 'dist');
 
 export function createViteMinConfig(entry: LightGalleryBuildEntry): UserConfig {
     return defineConfig({

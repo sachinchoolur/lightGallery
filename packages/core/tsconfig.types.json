@@ -2,9 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "declarationDir": "../../dist-vite/types",
+    "declarationDir": "../../dist/types",
     "emitDeclarationOnly": true,
-    "outDir": "../../dist-vite/types"
+    "outDir": "../../dist/types"
   },
   "include": ["../../src/**/*"]
 }

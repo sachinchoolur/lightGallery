@@ -23,7 +23,7 @@ by [ Alex Jover](https://github.com/alexjoverm) with several modification.
 -   SCSS
 -   [Hugo](https://gohugo.io/) - For documentation website
 -   [Type Doc](http://typedoc.org/) - For building documentation
--   [Rollup](https://rollupjs.org/guide/en/) - For bundling
+-   [Vite](https://vitejs.dev/) - For bundling (library mode, Rollup under the hood)
 -   [Jest](https://jestjs.io/) - For testing
 -   [Prettier](https://prettier.io/) and [eslint](https://eslint.org/) for code
     formatting and consistency
@@ -78,18 +78,20 @@ Docs
 
 ## Modifying the code
 
-First, ensure that you have the latest [Node.js](http://nodejs.org/) and
-[npm](http://npmjs.org/) installed.
+First, ensure that you have [Node.js](http://nodejs.org/) 24 LTS and
+[pnpm](https://pnpm.io/) 9 installed. This repo is a pnpm workspace; use
+`pnpm` (not `npm`) so the single lockfile stays consistent.
 
 1. Fork and clone the repo.
-1. Run `npm install` to get the project's dependencies
-1. Run `npm npm start` to start build in watch mode By default only lightGallery
-   core module is compiled and watched If you want to compile any plugins along
-   with the core module, you can run `LG_PLUGINS=['thumbnails','pager']`
-   Alternatively, you can run `LG_PLUGINS='all' npm start` to compile all plugin
-   simultaneously // To tun all plugin - LG_PLUGINS='all' npm start
-1. Navigate to `site/` folder and run npm run start to see preview
-   `cd site && npm run start`
+1. Run `pnpm install` to get the project's dependencies.
+1. Run `pnpm run build` to build the library (core + 13 plugins) with Vite into
+   `dist/`.
+1. Run `pnpm run test:prod` to run the production gate (lint + coverage tests).
+   It must pass on Node 24 without any heap flags.
+1. Run `pnpm start` for an incremental Vite watch build of the core module while
+   developing.
+1. Navigate to the `site/` folder and run `pnpm start` to preview the docs
+   site: `cd site && pnpm start`.
 
 ## Submitting pull requests
 
