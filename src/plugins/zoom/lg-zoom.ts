@@ -771,7 +771,8 @@ export default class Zoom {
                 if (this.scale <= 1) {
                     this.resetZoom();
                 } else {
-                    const actualSizeScale = this.getCurrentImageActualSizeScale();
+                    const actualSizeScale =
+                        this.getCurrentImageActualSizeScale();
 
                     if (this.scale >= actualSizeScale) {
                         let scaleDiff = actualSizeScale - this.scale;

@@ -219,7 +219,7 @@ export default class Video {
     ): string {
         let video = '';
         const videoInfo =
-            this.core.galleryItems[(index as unknown) as number]
+            this.core.galleryItems[index as unknown as number]
                 .__slideVideoInfo || {};
         const currentGalleryItem = this.core.galleryItems[index];
         let videoTitle = currentGalleryItem.title || currentGalleryItem.alt;

@@ -151,7 +151,7 @@ export default class Thumbnail {
         }
 
         this.setThumbItemHtml(
-            (this.core.galleryItems as unknown) as ThumbnailGalleryItem[],
+            this.core.galleryItems as unknown as ThumbnailGalleryItem[],
         );
     }
 
@@ -274,7 +274,7 @@ export default class Thumbnail {
             this.$lgThumb.css('width', this.thumbTotalWidth + 'px');
             this.$lgThumb.empty();
             this.setThumbItemHtml(
-                (this.core.galleryItems as unknown) as ThumbnailGalleryItem[],
+                this.core.galleryItems as unknown as ThumbnailGalleryItem[],
             );
             this.animateThumb(this.core.index);
         }, 50);

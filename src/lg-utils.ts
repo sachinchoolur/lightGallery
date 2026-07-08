@@ -528,7 +528,7 @@ const utils = {
             const style = window.getComputedStyle(element);
             return style.display !== 'none' && style.visibility !== 'hidden';
         });
-        return (visibleElements as unknown) as NodeListOf<Element>;
+        return visibleElements as unknown as NodeListOf<Element>;
     },
 
     /**

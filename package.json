@@ -44,7 +44,8 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "lint": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet --fix",
+    "lint": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet",
+    "lint:fix": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet --fix",
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css && npm run copyScss && npm run copyAssetsToSite && npm run copyJsToSite && npm run copyPackages && npm run buildLibraries && npm run updatePackageFields",
     "build:legacy": "npm run prebuild && tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run minify-css && npm run copyScss && npm run copyPackages",
@@ -61,9 +62,10 @@
     "watch-site-content": "nodemon --watch dist -x \"npm run copyAssetsToSite\"",
     "minify-css": "cleancss -o dist/css/lightgallery-bundle.min.css dist/css/lightgallery-bundle.css",
     "start": "concurrently \"rollup -c rollup-dev.config.ts -w $LG_PLUGINS\" \"npm run watch-site-content \" \"npm run watch-css \" ",
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
-    "test:prod": "npm run lint && npm run test -- --no-cache",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:prod": "npm run lint && npm run test:coverage -- --no-cache --runInBand",
     "deploy-docs": "ts-node tools/gh-pages-publish",
     "docs": "typedoc --json site/data/doc.json --target es6 --theme default --mode file src",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
@@ -102,33 +104,6 @@
       "path": "node_modules/cz-conventional-changelog"
     }
   },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "testEnvironment": "jsdom",
-    "testRegex": "(/__tests__/.*|\\.(test))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 0,
-        "functions": 0,
-        "lines": 0,
-        "statements": 0
-      }
-    },
-    "collectCoverageFrom": [
-      "src/*.{js,ts}"
-    ]
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -139,8 +114,8 @@
     "@commitlint/config-conventional": "^7.1.2",
     "@testing-library/dom": "^7.30.4",
     "@testing-library/jest-dom": "^5.12.0",
-    "@types/jest": "^26.0.23",
-    "@types/node": "^10.11.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.13.2",
     "@types/react": "^17.0.3",
     "@types/testing-library__dom": "^7.5.0",
     "@types/testing-library__jest-dom": "^5.9.5",
@@ -159,11 +134,10 @@
     "eslint-plugin-prettier": "^3.1.4",
     "fs-extra": "^7.0.1",
     "husky": "^1.0.1",
-    "jest": "^26.6.3",
-    "jest-config": "^26.6.3",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
     "lint-staged": "^8.0.0",
     "lodash.camelcase": "^4.3.0",
-    "sass": "^1.69.5",
     "nodemon": "^2.0.4",
     "prettier": "^2.1.2",
     "prompt": "^1.0.0",
@@ -177,16 +151,17 @@
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.27.3",
+    "sass": "^1.69.5",
     "semantic-release": "^17.4.2",
     "semantic-release-cli": "^5.4.3",
     "shelljs": "^0.8.3",
     "terser": "^5.36.0",
     "travis-deploy-once": "^5.0.9",
-    "ts-jest": "^26.5.6",
+    "ts-jest": "^29.4.11",
     "ts-node": "^9.1.1",
     "tsx": "^4.19.2",
-    "typedoc": "^0.19.2",
     "turbo": "^2.3.3",
+    "typedoc": "^0.19.2",
     "typescript": "5.0.4",
     "vite": "^5.4.11"
   },
