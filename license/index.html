@@ -86,95 +86,7 @@ lightGallery
 </div>
 </div>
 </div><div class=container-xl>
-<div class=price-container></div>
-<div class=pricing-tabs>
-<button class="pricing-tab active" data-tab=onetime onclick="switchPricingTab('onetime')">One-time Payment</button>
-<button class=pricing-tab data-tab=annual onclick="switchPricingTab('annual')">Annual Subscription</button>
-</div>
-<div class=pricing-tab-content id=pricing-annual style=display:none>
-<div class="pricing-list justify-content-center">
-<div class=pricing-list-item>
-<div class=pricing-type>Hobby</div>
-<div class=pricing-cost>
-<span data-kq-price=hobby-sub data-kq-period=YEARLY>$19</span> <span class=pricing-cost-label>/ year</span>
-</div>
-<div class=pricing-desc>
-For personal use.
-</div>
-<div class="d-grid pricing-btn-wrap">
-<a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=hobby-sub&plan_identifier=hobby-sub&charge_period=YEARLY" target=_blank class="btn btn-outline-primary">Subscribe Now</a>
-</div>
-<ul class=pricing-terms>
-<li>For <b>one</b> developer</li>
-<li>For <b>one</b> product</li>
-<li>Can't be used in a product for sale</li>
-<li>GitHub support only</li>
-<li>Free updates while subscribed</li>
-</ul>
-</div>
-<div class=pricing-list-item>
-<div class=pricing-type>Team</div>
-<div class=pricing-cost>
-<span data-kq-price=team-sub data-kq-period=YEARLY>$49</span> <span class=pricing-cost-label>/ year</span>
-</div>
-<div class=pricing-desc>
-For small teams.
-</div>
-<div class="d-grid pricing-btn-wrap">
-<a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=team-sub&plan_identifier=team-sub&charge_period=YEARLY" target=_blank class="btn btn-outline-primary">Subscribe Now</a>
-</div>
-<ul class=pricing-terms>
-<li>For upto <b>8</b> developers</li>
-<li>For upto <b>5</b> products</li>
-<li>Can be used in a product for sale</li>
-<li>GitHub and email support</li>
-<li>Free updates while subscribed</li>
-</ul>
-</div>
-<div class=pricing-list-item>
-<div class=pricing-type>Organization</div>
-<div class=pricing-cost>
-<span data-kq-price=organization-sub data-kq-period=YEARLY>$79</span> <span class=pricing-cost-label>/ year</span>
-</div>
-<div class=pricing-desc>
-For large teams and organizations
-</div>
-<div class="d-grid pricing-btn-wrap">
-<a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=organization-sub&plan_identifier=organization-sub&charge_period=YEARLY" target=_blank class="btn btn-outline-primary">Subscribe Now</a>
-</div>
-<ul class=pricing-terms>
-<li>For <b>unlimited</b> developers</li>
-<li>For <b>unlimited</b> products</li>
-<li>Can be used in a product for sale</li>
-<li>GitHub, Email and Skype support</li>
-<li>Free updates while subscribed</li>
-</ul>
-</div>
-</div>
-<div class="container-xl pricing-section">
-<div class="row justify-content-center">
-<div class=col-md-6>
-<h2 class=align-center>Extended Commercial license</h2>
-<p>If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Extended Commercial license.
-</div>
-</div>
-<div class="pricing-list justify-content-center">
-<div class="pricing-list-item pricing-list-item-colored">
-<div class=pricing-type>Extended</div>
-<div class=pricing-cost>
-<span data-kq-price=extended-sub data-kq-period=YEARLY>$239</span> <span class=pricing-cost-label>/ year <span class=pricing-original></span>
-</div>
-<div class="d-grid pricing-btn-wrap">
-<a href="https://www.kelviq.com/buy/5ebc4e6e-5ff7-43f2-8502-bca722bbe68f/?enabled=extended-sub&plan_identifier=extended-sub&charge_period=YEARLY" target=_blank class="btn btn-white">Purchase Now</a>
-</div>
-<ul class=pricing-terms>
-<li>For <b>unlimited</b> developers</li>
-<li>For <b>one</b> product</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
+<div id=ppp-banner class=price-container></div>
 <div class=pricing-tab-content id=pricing-onetime>
 <div class="pricing-list justify-content-center">
 <div class=pricing-list-item>
@@ -435,11 +347,12 @@ For large teams and organizations
 </div>
 </footer>
 <script src=https://unpkg.com/@kelviq/js-sdk@2.2.0/dist/kelviq-js-sdk.umd.js></script>
-<script>var kqOnetime,kqSubscription;async function initSDK(){kqOnetime=window.kelviqSDK({productId:"a3d337a7-ade8-4d7a-8dbc-e095dac5082e",accessToken:"client-54cb04c1-1b65-411b-89c0-45570c2da8ea:a51fe7cb-e942-4de4-9fbf-3bd10b604c9c"}),await kqOnetime.ready(),kqOnetime.renderPricing({container:document.getElementById('pricing-onetime')}),kqSubscription=window.kelviqSDK({productId:"5ebc4e6e-5ff7-43f2-8502-bca722bbe68f",accessToken:"client-54cb04c1-1b65-411b-89c0-45570c2da8ea:a51fe7cb-e942-4de4-9fbf-3bd10b604c9c"}),await kqSubscription.ready(),kqSubscription.renderPricing({container:document.getElementById('pricing-annual')})}initSDK();function switchPricingTab(a){document.querySelectorAll('.pricing-tab').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===a)}),document.getElementById('pricing-annual').style.display=a==='annual'?'block':'none',document.getElementById('pricing-onetime').style.display=a==='onetime'?'block':'none',a==='annual'&&kqSubscription&&kqSubscription.renderPricing({container:document.getElementById('pricing-annual')}),a==='onetime'&&kqOnetime&&kqOnetime.renderPricing({container:document.getElementById('pricing-onetime')})}</script>
+<script>var kqOnetime,kqSubscription;async function initSDK(){kqOnetime=window.kelviqSDK({productId:"a3d337a7-ade8-4d7a-8dbc-e095dac5082e",accessToken:"client-54cb04c1-1b65-411b-89c0-45570c2da8ea:a51fe7cb-e942-4de4-9fbf-3bd10b604c9c"}),await kqOnetime.ready(),kqOnetime.renderPricing({container:document.getElementById('pricing-onetime')})}initSDK()</script>
+<script>function resolvePdSDKFunction(a,...b){return new Promise((c,d)=>{!function e(){window.KQPromotionUISDK&&"function"==typeof window.KQPromotionUISDK[a]?window.KQPromotionUISDK[a](...b).then(c).catch(d):setTimeout(e,100)}()})}!function(b,e,f,c,g,a,d){b[c]=b[c]||function(){(b[c].q=b[c].q||[]).push(Array.prototype.slice.call(arguments))},a=e.createElement(f),d=e.getElementsByTagName(f)[0],a.id="kelviq-sdk",a.async=1,a.src="https://cdn.kelviq.com/js-promotions-ui/0.1/js-promotions-ui.umd.js",d.parentNode.insertBefore(a,d)}(window,document,"script","KQPromotionUISDK"),window.KQPromotionUI={init:function(a){KQPromotionUISDK("init",a)},getUpdatedPrice:function(a,b){return resolvePdSDKFunction("getUpdatedPrice",a,b)},updatePriceElement:function(a,b){return resolvePdSDKFunction("updatePriceElement",a,b)},updatePrice:function(a){return resolvePdSDKFunction("updatePrice",a)}},console.log(document.getElementById('ppp-banner')),KQPromotionUI.init({promotionId:"69bd3c63-858d-43a4-b8a3-2b52fcab2114",accessToken:"client-54cb04c1-1b65-411b-89c0-45570c2da8ea:a51fe7cb-e942-4de4-9fbf-3bd10b604c9c",banner:{container:'#ppp-banner'}})</script>
 <script src=https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js></script>
 <script src=https://cdn.jsdelivr.net/npm/airtable@0.11.1/build/airtable.browser.js></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49767543-2"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-49767543-2')</script>
-<script src=https://www.lightgalleryjs.com/main.669d23bd59fd53b3147fbe51f9f407c4f39786c087d5e6bdc4262592e951935c33c78138af194835042fc8223e5ab813121979120a1e22062acbd1946d3d409c.js integrity="sha512-Zp0jvVn9U7MUf75R+fQHxPOXhsCH1ea9xCYlkulRk1wzx4E4rxlINQQvyCI+WrgTEhl5EgoeIgYqy9GUbT1AnA==" crossorigin=anonymous defer></script>
+<script src=https://www.lightgalleryjs.com/main.be174802e042e9695704f4b59b5d808f3c23f24532320934b2a0f011926808b917dfb1f98423dd5db569047176880cb6319a143553feb6246b1e77affe6aff3a.js integrity="sha512-vhdIAuBC6WlXBPS1m12Ajzwj8kUyMgk0sqDwEZJoCLkX37H5hCPdXbVpBHF2iAy2MZoUNVP+tiRrHnev/mr/Og==" crossorigin=anonymous defer></script>
 </body>
 </html>
