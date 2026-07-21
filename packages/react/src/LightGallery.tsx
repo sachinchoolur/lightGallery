@@ -13,9 +13,14 @@ import {
     createGalleryState,
     galleryReducer,
     resolveSettings,
+    type CoreSettings,
     type RectLike,
     type SlideDirection,
+    type UserSettings,
 } from '@lightgallery/headless';
+
+import { createEmitter, type LgEventEmitter } from './events';
+import type { LgPlugin, PluginLayout, PluginRefs } from './plugins/types';
 
 import {
     ActionsContext,
@@ -32,6 +37,7 @@ import {
 import { GalleryOutlet } from './GalleryOutlet';
 import { useEventCallback, useShallowStable, useTimeouts } from './hooks';
 import type {
+    GalleryItem,
     LightGalleryCallbacks,
     LightGalleryProps,
     LightGalleryRefHandle,
@@ -45,6 +51,7 @@ function defaultIsMobile(): boolean {
 }
 
 const EMPTY_SLOTS = {};
+const EMPTY_PLUGINS: LgPlugin[] = [];
 
 export const LightGallery = forwardRef<
     LightGalleryRefHandle,
@@ -61,6 +68,7 @@ export const LightGallery = forwardRef<
         container = null,
         originRect,
         render,
+        plugins = EMPTY_PLUGINS,
         children,
         onInit,
         onBeforeOpen,
@@ -73,6 +81,8 @@ export const LightGallery = forwardRef<
         onDragStart,
         onDragMove,
         onDragEnd,
+        onPosterClick,
+        onHasVideo,
         ...userSettings
     } = props;
 
@@ -82,10 +92,35 @@ export const LightGallery = forwardRef<
             ? stableUserSettings.isMobile()
             : defaultIsMobile(),
     );
-    const settings = useMemo(
-        () => resolveSettings(stableUserSettings, { isMobile }),
-        [stableUserSettings, isMobile],
-    );
+    // ADR §5 merge order: core defaults < plugin presets < plugin defaults <
+    // user settings (core + per-plugin props, flattened) < mobile overrides.
+    // Non-mutating throughout — every input object is left untouched.
+    const settings = useMemo(() => {
+        const userBag = stableUserSettings as Record<string, unknown>;
+        const pluginNames = new Set(plugins.map((plugin) => plugin.name));
+        const flatUser: Record<string, unknown> = {};
+        Object.keys(userBag).forEach((key) => {
+            if (!pluginNames.has(key)) {
+                flatUser[key] = userBag[key];
+            }
+        });
+        plugins.forEach((plugin) => {
+            const own = userBag[plugin.name];
+            if (own && typeof own === 'object') {
+                Object.assign(flatUser, own);
+            }
+        });
+        const pluginDefaults = [
+            ...plugins.map((plugin) => plugin.presets ?? {}),
+            ...plugins.map(
+                (plugin) => (plugin.defaults ?? {}) as Partial<CoreSettings>,
+            ),
+        ];
+        return resolveSettings(flatUser as UserSettings, {
+            isMobile,
+            pluginDefaults,
+        });
+    }, [stableUserSettings, isMobile, plugins]);
 
     // Uncontrolled `<LightGalleryItem>` registry — mount order defines slide
     // order. Item data is read at registration time; galleries with changing
@@ -100,10 +135,37 @@ export const LightGallery = forwardRef<
         };
     }, []);
 
-    const items = useMemo(
+    const baseItems = useMemo(
         () => slides ?? registrations.map((registration) => registration.item),
         [slides, registrations],
     );
+
+    // Plugin item transforms (`transformItems`, possibly async).
+    const [transformedItems, setTransformedItems] = useState<
+        GalleryItem[] | null
+    >(null);
+    useEffect(() => {
+        if (!plugins.some((plugin) => plugin.transformItems)) {
+            setTransformedItems(null);
+            return;
+        }
+        let cancelled = false;
+        void (async () => {
+            let result = baseItems;
+            for (const plugin of plugins) {
+                if (plugin.transformItems) {
+                    result = await plugin.transformItems(result);
+                }
+            }
+            if (!cancelled) {
+                setTransformedItems(result);
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, [baseItems, plugins]);
+    const items = transformedItems ?? baseItems;
 
     const [state, dispatch] = useReducer(
         galleryReducer,
@@ -140,6 +202,8 @@ export const LightGallery = forwardRef<
         onDragStart,
         onDragMove,
         onDragEnd,
+        onPosterClick,
+        onHasVideo,
     };
     const onCloseRef = useRef(onClose);
     onCloseRef.current = onClose;
@@ -168,6 +232,14 @@ export const LightGallery = forwardRef<
         prevOpenControlledRef.current = openControlled;
     }, [openControlled]);
 
+    // The plugin event bus; core lifecycle callbacks fan out to it too
+    // (`onBeforeSlide` → `beforeSlide`), backing plugin↔plugin events.
+    const eventsRef = useRef<LgEventEmitter | null>(null);
+    if (eventsRef.current === null) {
+        eventsRef.current = createEmitter();
+    }
+    const events = eventsRef.current;
+
     const emit = useMemo<EmitFn>(
         () =>
             (name, ...args) => {
@@ -175,7 +247,70 @@ export const LightGallery = forwardRef<
                     | ((...callbackArgs: unknown[]) => void)
                     | undefined;
                 callback?.(...args);
+                const eventName =
+                    (name as string).charAt(2).toLowerCase() +
+                    (name as string).slice(3);
+                events.emit(eventName, args[0]);
             },
+        [events],
+    );
+
+    // Plugin layout capabilities: declarative outer classes and the
+    // components-open toggle (React owns className; plugins must not
+    // mutate it directly the way vanilla plugins did).
+    const [pluginOuterClasses, setPluginOuterClasses] = useState<
+        Record<string, boolean>
+    >({});
+    const componentsToggleRef = useRef<() => void>(() => undefined);
+    const layout = useMemo<PluginLayout>(
+        () => ({
+            setOuterClass(cls, active) {
+                setPluginOuterClasses((prev) =>
+                    !!prev[cls] === active ? prev : { ...prev, [cls]: active },
+                );
+            },
+            toggleComponents() {
+                componentsToggleRef.current();
+            },
+        }),
+        [],
+    );
+    const pluginOuterClassNames = useMemo(
+        () =>
+            Object.keys(pluginOuterClasses)
+                .filter((cls) => pluginOuterClasses[cls])
+                .join(' '),
+        [pluginOuterClasses],
+    );
+
+    // Read-only element refs for plugin effects (ADR §5 `refs`).
+    const elementStoreRef = useRef<{
+        outer: HTMLElement | null;
+        inner: HTMLElement | null;
+    }>({ outer: null, inner: null });
+    const pluginRefs = useMemo<PluginRefs>(
+        () => ({
+            getOuter: () => elementStoreRef.current.outer,
+            getInner: () => elementStoreRef.current.inner,
+            getCurrentSlide: () =>
+                elementStoreRef.current.outer?.querySelector<HTMLElement>(
+                    '.lg-item.lg-current',
+                ) ?? null,
+        }),
+        [],
+    );
+    const registerElements = useCallback(
+        (elements: {
+            outer?: HTMLElement | null;
+            inner?: HTMLElement | null;
+        }) => {
+            if (elements.outer !== undefined) {
+                elementStoreRef.current.outer = elements.outer;
+            }
+            if (elements.inner !== undefined) {
+                elementStoreRef.current.inner = elements.inner;
+            }
+        },
         [],
     );
 
@@ -396,6 +531,13 @@ export const LightGallery = forwardRef<
             getOriginRect,
             edgeBounce,
             gestureSeam,
+            plugins,
+            events,
+            layout,
+            refs: pluginRefs,
+            registerElements,
+            pluginOuterClassNames,
+            componentsToggleRef,
         }),
         [
             items,
@@ -405,6 +547,12 @@ export const LightGallery = forwardRef<
             getOriginRect,
             edgeBounce,
             gestureSeam,
+            plugins,
+            events,
+            layout,
+            pluginRefs,
+            registerElements,
+            pluginOuterClassNames,
         ],
     );
 

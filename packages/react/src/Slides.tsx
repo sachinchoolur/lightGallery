@@ -46,6 +46,7 @@ export function Slides({ timeline, originAnim }: SlidesProps): ReactElement {
     return (
         <div
             className="lg-inner"
+            ref={(element) => internal.registerElements({ inner: element })}
             style={{
                 transitionTimingFunction: settings.easing,
                 transitionDuration: `${settings.speed}ms`,

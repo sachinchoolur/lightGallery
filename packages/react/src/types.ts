@@ -5,6 +5,9 @@ import type {
     UserSettings,
 } from '@lightgallery/headless';
 
+import type { HasVideoDetail } from './events';
+import type { LgPlugin } from './plugins/types';
+
 /** Gallery item with the caption narrowed to a React node (ADR 0001 §7). */
 export type GalleryItem = HeadlessGalleryItem<ReactNode>;
 
@@ -61,9 +64,27 @@ export interface LightGalleryCallbacks {
     onDragStart?: () => void;
     onDragMove?: () => void;
     onDragEnd?: () => void;
+    /** A video poster/play button was activated. */
+    onPosterClick?: () => void;
+    /** A slide with video content mounted (informational, 2.x `hasVideo`). */
+    onHasVideo?: (detail: HasVideoDetail) => void;
 }
 
-export interface LightGalleryProps extends UserSettings, LightGalleryCallbacks {
+/**
+ * Per-plugin settings props, named by plugin (ADR 0001 §5) and typed via
+ * module augmentation from each plugin entry:
+ * `<LightGallery plugins={[Zoom]} zoom={{ scale: 1.3 }} />`.
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface LightGalleryPluginSettings {}
+
+export interface LightGalleryProps
+    extends UserSettings,
+        LightGalleryCallbacks,
+        Partial<LightGalleryPluginSettings> {
+    /** Plugin modules (ADR 0001 §5): `plugins={[Thumbnail, Zoom, Video]}`. */
+    plugins?: LgPlugin[];
+
     /**
      * The gallery data. When omitted, items come from `<LightGalleryItem>`
      * children (uncontrolled mode).

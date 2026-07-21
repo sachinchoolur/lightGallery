@@ -12,6 +12,10 @@ import type {
     RectLike,
     SlideDirection,
 } from '@lightgallery/headless';
+import type { MutableRefObject } from 'react';
+
+import type { LgEventEmitter } from './events';
+import type { LgPlugin, PluginLayout, PluginRefs } from './plugins/types';
 import type {
     GalleryItem,
     LightGalleryCallbacks,
@@ -76,6 +80,20 @@ export interface GalleryInternal {
     /** Slide-end bounce (`lg-left-end` / `lg-right-end`). */
     edgeBounce: 'left' | 'right' | null;
     gestureSeam: GestureSeam;
+    /** Plugin runtime (ADR 0001 §5). */
+    plugins: readonly LgPlugin[];
+    events: LgEventEmitter;
+    layout: PluginLayout;
+    refs: PluginRefs;
+    /** Outlet reports its outer/inner elements for `refs`. */
+    registerElements: (elements: {
+        outer?: HTMLElement | null;
+        inner?: HTMLElement | null;
+    }) => void;
+    /** Space-joined classes plugins toggled onto `.lg-outer`. */
+    pluginOuterClassNames: string;
+    /** The outlet registers its components-open toggle here. */
+    componentsToggleRef: MutableRefObject<() => void>;
 }
 
 export const StateContext = createContext<GalleryState | null>(null);

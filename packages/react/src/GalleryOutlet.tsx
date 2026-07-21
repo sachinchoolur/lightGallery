@@ -31,6 +31,7 @@ import {
     useIsoLayoutEffect,
     useTimeouts,
 } from './hooks';
+import { PluginRunners, PluginSlots } from './plugins/runtime';
 import { Slides } from './Slides';
 import { Toolbar } from './Toolbar';
 import { useGalleryGestures } from './useGalleryGestures';
@@ -91,10 +92,20 @@ export function GalleryOutlet({
     const containerElRef = useRef<HTMLDivElement>(null);
     const outerRef = useRef<HTMLDivElement>(null);
     const toolbarRef = useRef<HTMLDivElement>(null);
+    const setOuterElement = (element: HTMLDivElement | null) => {
+        (outerRef as { current: HTMLDivElement | null }).current = element;
+        internal.registerElements({ outer: element });
+    };
 
     const [phase, setPhase] = useState<OpenPhase>('closed');
     const [visible, setVisible] = useState(false);
     const [componentsOpen, setComponentsOpen] = useState(false);
+    // Register the components-open toggle for plugins (thumbnail toggle).
+    useEffect(() => {
+        internal.componentsToggleRef.current = () =>
+            setComponentsOpen((value) => !value);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     const [useStartClass, setUseStartClass] = useState(false);
     const [zoomFromImage, setZoomFromImage] = useState(false);
     const [maximized, setMaximized] = useState(false);
@@ -593,6 +604,7 @@ export function GalleryOutlet({
         touchSlideMode && settings.mode !== 'lg-slide' && 'lg-slide',
         internal.edgeBounce === 'right' && 'lg-right-end',
         internal.edgeBounce === 'left' && 'lg-left-end',
+        internal.pluginOuterClassNames,
         settings.download &&
             currentItem?.downloadUrl === false &&
             'lg-hide-download',
@@ -623,7 +635,7 @@ export function GalleryOutlet({
                 }}
             />
             <div
-                ref={outerRef}
+                ref={setOuterElement}
                 className={outerClasses}
                 data-lg-slide-type={
                     currentItem ? getSlideType(currentItem) : undefined
@@ -642,9 +654,12 @@ export function GalleryOutlet({
                     onToggleMaximize={() => setMaximized((value) => !value)}
                 />
                 {settings.captionPosition === 'outer' && <Caption />}
+                <PluginSlots kind="outer" />
                 <div className="lg-components">
                     {settings.captionPosition === 'bar' && <Caption />}
+                    <PluginSlots kind="components" />
                 </div>
+                <PluginRunners />
             </div>
         </div>,
         portalTarget,

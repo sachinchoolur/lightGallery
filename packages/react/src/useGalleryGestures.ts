@@ -286,17 +286,20 @@ export function useGalleryGestures({
             return;
         }
         const seam = internalRef.current.gestureSeam;
-        seam.pointers = upsertPointer(seam.pointers, {
-            id: event.pointerId,
-            startX: event.clientX,
-            startY: event.clientY,
-            x: event.clientX,
-            y: event.clientY,
-        });
+        const registerPointer = () => {
+            seam.pointers = upsertPointer(seam.pointers, {
+                id: event.pointerId,
+                startX: event.clientX,
+                startY: event.clientY,
+                x: event.clientX,
+                y: event.clientY,
+            });
+        };
 
         const session = sessionRef.current;
         if (session) {
             // Second pointer: core swipe stands down (pinch is 005's zoom).
+            registerPointer();
             session.suspended = true;
             restoreDragVisuals(session);
             return;
@@ -327,6 +330,9 @@ export function useGalleryGestures({
             internalRef.current.emit('onDragStart');
         }
 
+        // Register only once a session actually starts — early-return paths
+        // must not leave stale records behind (nothing would remove them).
+        registerPointer();
         prepareDrag();
 
         sessionRef.current = {

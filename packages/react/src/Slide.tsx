@@ -4,6 +4,7 @@ import {
     useState,
     type CSSProperties,
     type ReactElement,
+    type ReactNode,
 } from 'react';
 import { getPreloadIndexes, getSlideType } from '@lightgallery/headless';
 
@@ -17,7 +18,13 @@ import {
 } from './context';
 import type { OriginAnimation } from './GalleryOutlet';
 import { useEventCallback } from './hooks';
+import { IframeSlide } from './IframeSlide';
 import { ImageSlide } from './ImageSlide';
+import {
+    resolvePluginSlideContent,
+    usePluginContext,
+    wrapSlideContent,
+} from './plugins/runtime';
 import type { GalleryItem } from './types';
 
 export interface SlideProps {
@@ -114,6 +121,47 @@ export function Slide({
     }
 
     const slideType = item ? getSlideType(item) : 'image';
+    const pluginCtx = usePluginContext();
+
+    let content: ReactNode = null;
+    if (shouldLoad && item && !error) {
+        // Plugin slide renderers win (video plugin); undefined passes
+        // through to the built-in renderers.
+        content = resolvePluginSlideContent(
+            internal.plugins,
+            item,
+            index,
+            pluginCtx,
+        );
+        if (content === undefined) {
+            if (slideType === 'image') {
+                content = (
+                    <ImageSlide
+                        item={item}
+                        index={index}
+                        onLoad={handleLoad}
+                        onError={handleError}
+                    />
+                );
+            } else if (slideType === 'iframe') {
+                content = (
+                    <IframeSlide
+                        item={item}
+                        index={index}
+                        onLoad={handleLoad}
+                    />
+                );
+            } else {
+                // Video items render nothing without the video plugin.
+                content = null;
+            }
+        }
+        content = wrapSlideContent(internal.plugins, content, {
+            item,
+            index,
+            isCurrent,
+        });
+    }
 
     return (
         <div
@@ -129,14 +177,7 @@ export function Slide({
             )}
             style={style}
         >
-            {shouldLoad && item && !error && slideType === 'image' && (
-                <ImageSlide
-                    item={item}
-                    index={index}
-                    onLoad={handleLoad}
-                    onError={handleError}
-                />
-            )}
+            {content}
             {error && (
                 <span className="lg-error-msg">
                     {settings.strings.mediaLoadingFailed}

@@ -7,6 +7,7 @@ import {
     useGallerySettings,
     useGalleryState,
 } from './context';
+import { PluginSlots } from './plugins/runtime';
 
 export interface ToolbarProps {
     toolbarRef: RefObject<HTMLDivElement>;
@@ -63,6 +64,7 @@ export function Toolbar({
                     }
                 />
             )}
+            <PluginSlots kind="toolbar" />
             <Counter />
         </div>
     );

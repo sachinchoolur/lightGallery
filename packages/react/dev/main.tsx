@@ -7,9 +7,18 @@ import {
     type LightGalleryRefHandle,
 } from '@lightgallery/react';
 
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Video from '@lightgallery/react/plugins/video';
+import Zoom from '@lightgallery/react/plugins/zoom';
+
 // CSS stays a consumer import (ADR 0001 §8) — never bundled by the package.
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-transitions.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lg-video.css';
+
+const wave1Plugins = [Thumbnail, Zoom, Video];
 
 type DemoMode = 'lg-slide' | 'lg-fade' | 'lg-lollipop';
 
@@ -37,6 +46,23 @@ const items: GalleryItem[] = [
     ),
 }));
 
+const videoItems: GalleryItem[] = [
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        thumb: '//img.youtube.com/vi/EIUJfXk3_3w/1.jpg',
+        alt: 'YouTube demo video',
+        caption: <h4 style={{ margin: '8px 0' }}>YouTube embed</h4>,
+    },
+    {
+        src: 'https://vimeo.com/112836958',
+        poster: picsum(1015, 1280, 720),
+        thumb: picsum(1015, 240, 160),
+        alt: 'Vimeo demo video (poster first)',
+        caption: <h4 style={{ margin: '8px 0' }}>Vimeo, poster first</h4>,
+    },
+    ...items.slice(0, 2),
+];
+
 function UncontrolledDemo({ mode }: { mode: DemoMode }) {
     const ref = useRef<LightGalleryRefHandle>(null);
     return (
@@ -52,6 +78,8 @@ function UncontrolledDemo({ mode }: { mode: DemoMode }) {
                 mode={mode}
                 hideBarsDelay={3000}
                 showBarsAfter={1000}
+                plugins={wave1Plugins}
+                zoom={{ showZoomInOutIcons: true }}
                 onAfterSlide={(detail) =>
                     console.log('[demo] afterSlide', detail)
                 }
@@ -107,6 +135,28 @@ function ControlledDemo({ mode }: { mode: DemoMode }) {
     );
 }
 
+function VideoDemo() {
+    const ref = useRef<LightGalleryRefHandle>(null);
+    return (
+        <>
+            <h2>Video — YouTube / Vimeo / poster flow</h2>
+            <LightGallery ref={ref} plugins={wave1Plugins}>
+                <div className="demo-grid">
+                    {videoItems.map((item) => (
+                        <LightGalleryItem
+                            key={item.src}
+                            item={item}
+                            href={item.src}
+                        >
+                            <img src={item.thumb} alt={item.alt} />
+                        </LightGalleryItem>
+                    ))}
+                </div>
+            </LightGallery>
+        </>
+    );
+}
+
 function App() {
     const [mode, setMode] = useState<DemoMode>('lg-slide');
     return (
@@ -129,6 +179,7 @@ function App() {
                 )}
             </div>
             <UncontrolledDemo mode={mode} />
+            <VideoDemo />
             <ControlledDemo mode={mode} />
             <div className="demo-spacer">
                 (spacer to verify scroll lock/restore)
