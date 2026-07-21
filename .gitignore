@@ -25,3 +25,17 @@ compiled
 .rpt2_cache
 /docs
 /site/data
+
+# build/tooling caches (v3 stack)
+.turbo/
+.pnpm-store/
+
+# local agent tooling (npx skills)
+.agents/
+skills-lock.json
+
+# private planning repo (symlinks -> ../lightGallery-plans, never publish)
+/v3-plans
+/plans-react
+/plans-angular
+/plans-vue
