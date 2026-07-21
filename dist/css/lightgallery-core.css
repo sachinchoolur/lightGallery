@@ -134,11 +134,11 @@
   transition: opacity 0s;
   white-space: nowrap;
 }
-.lg-outer .lg-item {
-  display: none !important;
-}
 .lg-outer .lg-item:not(.lg-start-end-progress) {
   background: url("../images/loading.gif") no-repeat scroll center center transparent;
+}
+.lg-outer .lg-item {
+  display: none !important;
 }
 .lg-outer.lg-css3 .lg-prev-slide,
 .lg-outer.lg-css3 .lg-current,

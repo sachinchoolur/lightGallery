@@ -1,143 +1,114 @@
-/*!
- * lightgallery | 2.9.0 | October 1st 2025
+(function(global, factory) {
+  typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, global.lgFullscreen = factory());
+})(this, function() {
+  "use strict";/*!
+ * lightgallery | 2.9.0 | July 21st 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
  */
 
-(function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgFullscreen = factory());
-}(this, (function () { 'use strict';
-
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation.
-
-    Permission to use, copy, modify, and/or distribute this software for any
-    purpose with or without fee is hereby granted.
-
-    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-    PERFORMANCE OF THIS SOFTWARE.
-    ***************************************************************************** */
-
-    var __assign = function() {
-        __assign = Object.assign || function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
-        return __assign.apply(this, arguments);
-    };
-
-    var fullscreenSettings = {
-        fullScreen: true,
-        fullscreenPluginStrings: {
-            toggleFullscreen: 'Toggle Fullscreen',
-        },
-    };
-
-    var FullScreen = /** @class */ (function () {
-        function FullScreen(instance, $LG) {
-            // get lightGallery core plugin instance
-            this.core = instance;
-            this.$LG = $LG;
-            // extend module default settings with lightGallery core settings
-            this.settings = __assign(__assign({}, fullscreenSettings), this.core.settings);
-            return this;
+  const fullscreenSettings = {
+    fullScreen: true,
+    fullscreenPluginStrings: {
+      toggleFullscreen: "Toggle Fullscreen"
+    }
+  };
+  var __defProp = Object.defineProperty;
+  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __propIsEnum = Object.prototype.propertyIsEnumerable;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __spreadValues = (a, b) => {
+    for (var prop in b || (b = {}))
+      if (__hasOwnProp.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    if (__getOwnPropSymbols)
+      for (var prop of __getOwnPropSymbols(b)) {
+        if (__propIsEnum.call(b, prop))
+          __defNormalProp(a, prop, b[prop]);
+      }
+    return a;
+  };
+  class FullScreen {
+    constructor(instance, $LG) {
+      this.core = instance;
+      this.$LG = $LG;
+      this.settings = __spreadValues(__spreadValues({}, fullscreenSettings), this.core.settings);
+      return this;
+    }
+    init() {
+      let fullScreen = "";
+      if (this.settings.fullScreen) {
+        if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled && !document.mozFullScreenEnabled && !document.msFullscreenEnabled) {
+          return;
+        } else {
+          fullScreen = `<button type="button" aria-label="${this.settings.fullscreenPluginStrings["toggleFullscreen"]}" class="lg-fullscreen lg-icon"></button>`;
+          this.core.$toolbar.append(fullScreen);
+          this.fullScreen();
         }
-        FullScreen.prototype.init = function () {
-            var fullScreen = '';
-            if (this.settings.fullScreen) {
-                // check for fullscreen browser support
-                if (!document.fullscreenEnabled &&
-                    !document.webkitFullscreenEnabled &&
-                    !document.mozFullScreenEnabled &&
-                    !document.msFullscreenEnabled) {
-                    return;
-                }
-                else {
-                    fullScreen = "<button type=\"button\" aria-label=\"" + this.settings.fullscreenPluginStrings['toggleFullscreen'] + "\" class=\"lg-fullscreen lg-icon\"></button>";
-                    this.core.$toolbar.append(fullScreen);
-                    this.fullScreen();
-                }
-            }
-        };
-        FullScreen.prototype.isFullScreen = function () {
-            return (document.fullscreenElement ||
-                document.mozFullScreenElement ||
-                document.webkitFullscreenElement ||
-                document.msFullscreenElement);
-        };
-        FullScreen.prototype.requestFullscreen = function () {
-            var el = document.documentElement;
-            if (el.requestFullscreen) {
-                el.requestFullscreen();
-            }
-            else if (el.msRequestFullscreen) {
-                el.msRequestFullscreen();
-            }
-            else if (el.mozRequestFullScreen) {
-                el.mozRequestFullScreen();
-            }
-            else if (el.webkitRequestFullscreen) {
-                el.webkitRequestFullscreen();
-            }
-        };
-        FullScreen.prototype.exitFullscreen = function () {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
-            else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-            else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            }
-            else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            }
-        };
-        // https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode
-        FullScreen.prototype.fullScreen = function () {
-            var _this = this;
-            this.$LG(document).on("fullscreenchange.lg.global" + this.core.lgId + " \n            webkitfullscreenchange.lg.global" + this.core.lgId + " \n            mozfullscreenchange.lg.global" + this.core.lgId + " \n            MSFullscreenChange.lg.global" + this.core.lgId, function () {
-                if (!_this.core.lgOpened)
-                    return;
-                _this.core.outer.toggleClass('lg-fullscreen-on');
-            });
-            this.core.outer
-                .find('.lg-fullscreen')
-                .first()
-                .on('click.lg', function () {
-                if (_this.isFullScreen()) {
-                    _this.exitFullscreen();
-                }
-                else {
-                    _this.requestFullscreen();
-                }
-            });
-        };
-        FullScreen.prototype.closeGallery = function () {
-            // exit from fullscreen if activated
-            if (this.isFullScreen()) {
-                this.exitFullscreen();
-            }
-        };
-        FullScreen.prototype.destroy = function () {
-            this.$LG(document).off("fullscreenchange.lg.global" + this.core.lgId + " \n            webkitfullscreenchange.lg.global" + this.core.lgId + " \n            mozfullscreenchange.lg.global" + this.core.lgId + " \n            MSFullscreenChange.lg.global" + this.core.lgId);
-        };
-        return FullScreen;
-    }());
-
-    return FullScreen;
-
-})));
+      }
+    }
+    isFullScreen() {
+      return document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+    }
+    requestFullscreen() {
+      const el = document.documentElement;
+      if (el.requestFullscreen) {
+        el.requestFullscreen();
+      } else if (el.msRequestFullscreen) {
+        el.msRequestFullscreen();
+      } else if (el.mozRequestFullScreen) {
+        el.mozRequestFullScreen();
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      }
+    }
+    exitFullscreen() {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
+    // https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Using_full_screen_mode
+    fullScreen() {
+      this.$LG(document).on(
+        `fullscreenchange.lg.global${this.core.lgId} 
+            webkitfullscreenchange.lg.global${this.core.lgId} 
+            mozfullscreenchange.lg.global${this.core.lgId} 
+            MSFullscreenChange.lg.global${this.core.lgId}`,
+        () => {
+          if (!this.core.lgOpened) return;
+          this.core.outer.toggleClass("lg-fullscreen-on");
+        }
+      );
+      this.core.outer.find(".lg-fullscreen").first().on("click.lg", () => {
+        if (this.isFullScreen()) {
+          this.exitFullscreen();
+        } else {
+          this.requestFullscreen();
+        }
+      });
+    }
+    closeGallery() {
+      if (this.isFullScreen()) {
+        this.exitFullscreen();
+      }
+    }
+    destroy() {
+      this.$LG(document).off(
+        `fullscreenchange.lg.global${this.core.lgId} 
+            webkitfullscreenchange.lg.global${this.core.lgId} 
+            mozfullscreenchange.lg.global${this.core.lgId} 
+            MSFullscreenChange.lg.global${this.core.lgId}`
+      );
+    }
+  }
+  return FullScreen;
+});
 //# sourceMappingURL=lg-fullscreen.umd.js.map

@@ -25,11 +25,11 @@
   opacity: 1;
 }
 
-.lg-autoplay-button:after {
-  content: "\e01d";
-}
 .lg-show-autoplay .lg-autoplay-button:after {
   content: "\e01a";
+}
+.lg-autoplay-button:after {
+  content: "\e01d";
 }
 .lg-single-item .lg-autoplay-button {
   opacity: 0.75;

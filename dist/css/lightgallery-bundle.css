@@ -569,11 +569,11 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   opacity: 1;
 }
 
-.lg-autoplay-button:after {
-  content: "\e01d";
-}
 .lg-show-autoplay .lg-autoplay-button:after {
   content: "\e01a";
+}
+.lg-autoplay-button:after {
+  content: "\e01d";
 }
 .lg-single-item .lg-autoplay-button {
   opacity: 0.75;
@@ -1228,11 +1228,11 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   transition: opacity 0s;
   white-space: nowrap;
 }
-.lg-outer .lg-item {
-  display: none !important;
-}
 .lg-outer .lg-item:not(.lg-start-end-progress) {
   background: url("../images/loading.gif") no-repeat scroll center center transparent;
+}
+.lg-outer .lg-item {
+  display: none !important;
 }
 .lg-outer.lg-css3 .lg-prev-slide,
 .lg-outer.lg-css3 .lg-current,
