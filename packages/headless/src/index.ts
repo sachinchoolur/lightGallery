@@ -10,7 +10,38 @@ export {
     type CreateGalleryStateOptions,
     type GalleryAction,
     type GalleryState,
+    type SlideDirection,
 } from './state';
+
+export {
+    getSlideType,
+    type GalleryItem,
+    type ImageSources,
+    type SlideType,
+} from './items';
+
+export {
+    coreSettingsDefaults,
+    resolveSettings,
+    type CaptionPosition,
+    type CoreSettings,
+    type GalleryCoreStrings,
+    type GalleryMode,
+    type MobileSettings,
+    type ResolveSettingsOptions,
+    type UserSettings,
+} from './settings';
+
+export { getPreloadIndexes, getSlideIndexesInDom } from './preload';
+
+export {
+    fitImageSize,
+    getOriginTransform,
+    parseImageSize,
+    type ImageSize,
+    type OriginTransformInput,
+    type RectLike,
+} from './origin';
 
 /**
  * Clamp a slide index into the valid range for a gallery of `length` slides.

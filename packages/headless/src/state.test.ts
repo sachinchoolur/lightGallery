@@ -69,4 +69,79 @@ describe('galleryReducer', () => {
         expect(shrunk.currentIndex).toBe(1);
         expect(shrunk.previousIndex).toBe(1);
     });
+
+    it('tracks slide direction, including wrap-around edges', () => {
+        let s = state({ open: true, currentIndex: 4, galleryOn: true });
+        s = galleryReducer(s, { type: 'NEXT' });
+        expect(s.currentIndex).toBe(0);
+        expect(s.slideDirection).toBe('next');
+
+        s = galleryReducer(s, { type: 'TRANSITION_END' });
+        s = galleryReducer(s, { type: 'PREV' });
+        expect(s.currentIndex).toBe(4);
+        expect(s.slideDirection).toBe('prev');
+    });
+
+    it('only transitions once the gallery is on (first slide is static)', () => {
+        let s = galleryReducer(state(), { type: 'OPEN', index: 1 });
+        s = galleryReducer(s, { type: 'NEXT' });
+        expect(s.transitioning).toBe(false);
+
+        s = galleryReducer(s, { type: 'SLIDE_LOADED', index: 2 });
+        expect(s.galleryOn).toBe(true);
+        s = galleryReducer(s, { type: 'NEXT' });
+        expect(s.transitioning).toBe(true);
+    });
+
+    it('ignores navigation while transitioning until TRANSITION_END', () => {
+        let s = state({
+            open: true,
+            currentIndex: 1,
+            galleryOn: true,
+            transitioning: true,
+        });
+        expect(galleryReducer(s, { type: 'NEXT' })).toBe(s);
+        expect(galleryReducer(s, { type: 'GO_TO', index: 3 })).toBe(s);
+
+        s = galleryReducer(s, { type: 'TRANSITION_END' });
+        expect(s.transitioning).toBe(false);
+        expect(galleryReducer(s, { type: 'NEXT' }).currentIndex).toBe(2);
+    });
+
+    it('accumulates loaded slides and resets them on open/close', () => {
+        let s = galleryReducer(state(), { type: 'OPEN', index: 0 });
+        s = galleryReducer(s, { type: 'SLIDE_LOADED', index: 0 });
+        s = galleryReducer(s, { type: 'SLIDE_LOADED', index: 1 });
+        expect([...s.loadedSlides].sort()).toEqual([0, 1]);
+
+        const closed = galleryReducer(s, { type: 'CLOSE' });
+        expect(closed.loadedSlides.size).toBe(0);
+        expect(closed.galleryOn).toBe(false);
+
+        const reopened = galleryReducer(s, { type: 'OPEN', index: 2 });
+        expect(reopened.loadedSlides.size).toBe(0);
+    });
+
+    it('marks the gallery on after a slide error without recording a load', () => {
+        let s = galleryReducer(state(), { type: 'OPEN' });
+        s = galleryReducer(s, { type: 'SLIDE_ERROR', index: 0 });
+        expect(s.galleryOn).toBe(true);
+        expect(s.loadedSlides.size).toBe(0);
+    });
+
+    it('prunes loaded slides beyond a shrunk slide count', () => {
+        let s = state({ open: true });
+        s = galleryReducer(s, { type: 'SLIDE_LOADED', index: 1 });
+        s = galleryReducer(s, { type: 'SLIDE_LOADED', index: 4 });
+        s = galleryReducer(s, { type: 'SET_SLIDES_COUNT', count: 3 });
+        expect([...s.loadedSlides]).toEqual([1]);
+    });
+
+    it('updates loop via SET_LOOP', () => {
+        const s = state({ loop: true });
+        expect(galleryReducer(s, { type: 'SET_LOOP', loop: true })).toBe(s);
+        expect(
+            galleryReducer(s, { type: 'SET_LOOP', loop: false }).loop,
+        ).toBe(false);
+    });
 });
