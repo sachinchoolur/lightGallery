@@ -35,6 +35,27 @@ export {
 export { getPreloadIndexes, getSlideIndexesInDom } from './preload';
 
 export {
+    FLICK_MIN_DISTANCE,
+    FLICK_VELOCITY,
+    SWIPE_AXIS_THRESHOLD,
+    VERTICAL_CLOSE_THRESHOLD,
+    getHorizontalDragTransforms,
+    getSwipeAxis,
+    getSwipeReleaseVerdict,
+    getVerticalDragEffects,
+    removePointer,
+    resolveSwipeTarget,
+    shouldCloseOnVerticalDrag,
+    upsertPointer,
+    type HorizontalDragTransforms,
+    type PointerRecord,
+    type SwipeAxis,
+    type SwipeReleaseInput,
+    type SwipeReleaseVerdict,
+    type VerticalDragEffects,
+} from './gestures';
+
+export {
     fitImageSize,
     getOriginTransform,
     parseImageSize,
