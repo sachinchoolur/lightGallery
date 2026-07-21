@@ -38,3 +38,57 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+  react-package:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        react-version: [18, 19]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Use React ${{ matrix.react-version }}
+        if: matrix.react-version != 18
+        run: pnpm --filter @lightgallery/react add -D react@^${{ matrix.react-version }} react-dom@^${{ matrix.react-version }}
+
+      - name: Typecheck packages
+        run: |
+          pnpm --filter @lightgallery/headless run typecheck
+          pnpm --filter @lightgallery/react run typecheck
+
+      - name: Test packages
+        run: |
+          pnpm --filter @lightgallery/headless test
+          pnpm --filter @lightgallery/react test
+
+      - name: Build packages
+        run: |
+          pnpm --filter @lightgallery/headless run build
+          pnpm --filter @lightgallery/react run build
+
+      - name: publint
+        if: matrix.react-version == 18
+        run: |
+          pnpm --filter @lightgallery/headless exec pnpm pack --pack-destination /tmp/lg-pack
+          pnpm --filter @lightgallery/react exec pnpm pack --pack-destination /tmp/lg-pack
+          for tgz in /tmp/lg-pack/*.tgz; do
+            dir=$(mktemp -d)
+            tar -xzf "$tgz" -C "$dir"
+            npx --yes publint@latest "$dir/package" --strict
+          done
