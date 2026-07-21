@@ -1,140 +1,389 @@
 import {
+    forwardRef,
     useCallback,
     useEffect,
+    useImperativeHandle,
+    useMemo,
     useReducer,
+    useRef,
     useState,
-    type ReactElement,
 } from 'react';
-import { createPortal } from 'react-dom';
 import {
+    clampIndex,
     createGalleryState,
     galleryReducer,
+    resolveSettings,
+    type RectLike,
+    type SlideDirection,
 } from '@lightgallery/headless';
 
-/**
- * SPIKE (plan 002): minimal controlled render path proving the architecture —
- * headless reducer + portal + vanilla `lg-*` class contract + ESC close.
- * The real component (plan 003) grows from this shape after ADR sign-off.
- */
+import {
+    ActionsContext,
+    InternalContext,
+    SettingsContext,
+    SlotContext,
+    StateContext,
+    type EmitFn,
+    type GalleryActions,
+    type GalleryInternal,
+    type ItemRegistration,
+} from './context';
+import { GalleryOutlet } from './GalleryOutlet';
+import { useEventCallback, useShallowStable, useTimeouts } from './hooks';
+import type {
+    LightGalleryCallbacks,
+    LightGalleryProps,
+    LightGalleryRefHandle,
+} from './types';
 
-export interface LightGallerySlide {
-    src: string;
-    alt?: string;
+function defaultIsMobile(): boolean {
+    return (
+        typeof navigator !== 'undefined' &&
+        /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+    );
 }
 
-export interface LightGalleryProps {
-    slides: LightGallerySlide[];
-    /** Controlled: whether the lightbox is open. */
-    open: boolean;
-    /** Called when the gallery requests to close (ESC / close button). */
-    onClose: () => void;
-    /** Slide to show when opening. */
-    index?: number;
-    onAfterSlide?: (detail: { index: number; prevIndex: number }) => void;
-    loop?: boolean;
-}
+const EMPTY_SLOTS = {};
 
-export function LightGallery({
-    slides,
-    open,
-    onClose,
-    index = 0,
-    onAfterSlide,
-    loop = true,
-}: LightGalleryProps): ReactElement | null {
-    const [mounted, setMounted] = useState(false);
+export const LightGallery = forwardRef<
+    LightGalleryRefHandle,
+    LightGalleryProps
+>(function LightGallery(props, ref) {
+    const {
+        slides,
+        open,
+        onClose,
+        index,
+        onIndexChange,
+        defaultIndex = 0,
+        className,
+        container = null,
+        originRect,
+        render,
+        children,
+        onInit,
+        onBeforeOpen,
+        onAfterOpen,
+        onSlideItemLoad,
+        onBeforeSlide,
+        onAfterSlide,
+        onBeforeClose,
+        onAfterClose,
+        ...userSettings
+    } = props;
+
+    const stableUserSettings = useShallowStable(userSettings);
+    const [isMobile] = useState(() =>
+        stableUserSettings.isMobile
+            ? stableUserSettings.isMobile()
+            : defaultIsMobile(),
+    );
+    const settings = useMemo(
+        () => resolveSettings(stableUserSettings, { isMobile }),
+        [stableUserSettings, isMobile],
+    );
+
+    // Uncontrolled `<LightGalleryItem>` registry — mount order defines slide
+    // order. Item data is read at registration time; galleries with changing
+    // data should use the `slides` prop.
+    const [registrations, setRegistrations] = useState<ItemRegistration[]>([]);
+    const registerItem = useCallback((registration: ItemRegistration) => {
+        setRegistrations((prev) => [...prev, registration]);
+        return () => {
+            setRegistrations((prev) =>
+                prev.filter((entry) => entry !== registration),
+            );
+        };
+    }, []);
+
+    const items = useMemo(
+        () => slides ?? registrations.map((registration) => registration.item),
+        [slides, registrations],
+    );
+
     const [state, dispatch] = useReducer(
         galleryReducer,
-        { slidesCount: slides.length, loop, index },
+        {
+            slidesCount: items.length,
+            loop: settings.loop,
+            index: index ?? defaultIndex,
+        },
         createGalleryState,
     );
 
-    // Portal targets exist only in the browser; render nothing during SSR.
     useEffect(() => {
-        setMounted(true);
+        dispatch({ type: 'SET_SLIDES_COUNT', count: items.length });
+    }, [items.length]);
+    useEffect(() => {
+        dispatch({ type: 'SET_LOOP', loop: settings.loop });
+    }, [settings.loop]);
+
+    // Latest-value refs so the action callbacks can stay referentially stable.
+    const stateRef = useRef(state);
+    stateRef.current = state;
+    const settingsRef = useRef(settings);
+    settingsRef.current = settings;
+    const callbacksRef = useRef<LightGalleryCallbacks>({});
+    callbacksRef.current = {
+        onInit,
+        onBeforeOpen,
+        onAfterOpen,
+        onSlideItemLoad,
+        onBeforeSlide,
+        onAfterSlide,
+        onBeforeClose,
+        onAfterClose,
+    };
+    const onCloseRef = useRef(onClose);
+    onCloseRef.current = onClose;
+    const onIndexChangeRef = useRef(onIndexChange);
+    onIndexChangeRef.current = onIndexChange;
+    const openControlled = open !== undefined;
+    const openControlledRef = useRef(openControlled);
+    openControlledRef.current = openControlled;
+    const indexControlledRef = useRef(index !== undefined);
+    indexControlledRef.current = index !== undefined;
+    const registrationsRef = useRef(registrations);
+    registrationsRef.current = registrations;
+    const originRectRef = useRef(originRect);
+    originRectRef.current = originRect;
+
+    // Controlled/uncontrolled mode switching warns, like React inputs.
+    const prevOpenControlledRef = useRef(openControlled);
+    useEffect(() => {
+        if (prevOpenControlledRef.current !== openControlled) {
+            console.error(
+                'lightGallery: <LightGallery> is changing between controlled ' +
+                    'and uncontrolled `open`. Decide between controlled and ' +
+                    'uncontrolled for the lifetime of the component.',
+            );
+        }
+        prevOpenControlledRef.current = openControlled;
+    }, [openControlled]);
+
+    const emit = useMemo<EmitFn>(
+        () =>
+            (name, ...args) => {
+                const callback = callbacksRef.current[name] as
+                    | ((...callbackArgs: unknown[]) => void)
+                    | undefined;
+                callback?.(...args);
+            },
+        [],
+    );
+
+    // Slide-end bounce (lg-left-end / lg-right-end) — 400ms, 2.x parity.
+    const timers = useTimeouts();
+    const [edgeBounce, setEdgeBounce] = useState<'left' | 'right' | null>(
+        null,
+    );
+    const bounce = useCallback(
+        (side: 'left' | 'right') => {
+            setEdgeBounce(side);
+            timers.set(() => setEdgeBounce(null), 400);
+        },
+        [timers],
+    );
+
+    const getOriginRect = useCallback((slideIndex: number): RectLike | null => {
+        if (originRectRef.current) {
+            return originRectRef.current;
+        }
+        const registration = registrationsRef.current[slideIndex];
+        const element = registration?.element;
+        if (!element) {
+            return null;
+        }
+        const target = element.querySelector('img') ?? element;
+        const rect = target.getBoundingClientRect();
+        return {
+            left: rect.left,
+            top: rect.top,
+            width: rect.width,
+            height: rect.height,
+        };
     }, []);
 
-    // Controlled open/close → reducer.
-    useEffect(() => {
-        dispatch(open ? { type: 'OPEN', index } : { type: 'CLOSE' });
-    }, [open, index]);
+    const doOpen = useCallback(
+        (slideIndex?: number) => {
+            emit('onBeforeOpen');
+            dispatch({ type: 'OPEN', index: slideIndex });
+        },
+        [emit],
+    );
 
-    useEffect(() => {
-        dispatch({ type: 'SET_SLIDES_COUNT', count: slides.length });
-    }, [slides.length]);
+    const openGallery = useCallback(
+        (slideIndex?: number) => {
+            if (stateRef.current.open || openControlledRef.current) {
+                return;
+            }
+            doOpen(slideIndex);
+        },
+        [doOpen],
+    );
 
-    // ESC closes while open; listener removed on close/unmount.
-    useEffect(() => {
-        if (!open) {
+    const closeGallery = useCallback(() => {
+        if (!settingsRef.current.closable || !stateRef.current.open) {
             return;
         }
-        const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                onClose();
-            }
-        };
-        document.addEventListener('keydown', onKeyDown);
-        return () => document.removeEventListener('keydown', onKeyDown);
-    }, [open, onClose]);
-
-    useEffect(() => {
-        if (state.open && state.currentIndex !== state.previousIndex) {
-            onAfterSlide?.({
-                index: state.currentIndex,
-                prevIndex: state.previousIndex,
-            });
+        onCloseRef.current?.();
+        if (!openControlledRef.current) {
+            dispatch({ type: 'CLOSE' });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state.currentIndex]);
+    }, []);
 
-    const next = useCallback(() => dispatch({ type: 'NEXT' }), []);
-    const prev = useCallback(() => dispatch({ type: 'PREV' }), []);
-
-    if (!mounted || !state.open) {
-        return null;
-    }
-
-    const slide = slides[state.currentIndex];
-
-    return createPortal(
-        <div className="lg-container lg-show lg-show-in">
-            <div className="lg-backdrop lg-show-in" />
-            <div className="lg-outer lg-visible lg-grab">
-                <div className="lg-content">
-                    <div className="lg-inner">
-                        <div className="lg-item lg-current lg-complete">
-                            {slide && (
-                                <img
-                                    className="lg-object lg-image"
-                                    src={slide.src}
-                                    alt={slide.alt ?? ''}
-                                />
-                            )}
-                        </div>
-                    </div>
-                </div>
-                <div className="lg-toolbar lg-group">
-                    <button
-                        type="button"
-                        aria-label="Close gallery"
-                        className="lg-close lg-icon"
-                        onClick={onClose}
-                    />
-                </div>
-                <button
-                    type="button"
-                    aria-label="Previous slide"
-                    className="lg-prev lg-icon"
-                    onClick={prev}
-                />
-                <button
-                    type="button"
-                    aria-label="Next slide"
-                    className="lg-next lg-icon"
-                    onClick={next}
-                />
-            </div>
-        </div>,
-        document.body,
+    const goTo = useCallback(
+        (slideIndex: number, direction?: SlideDirection) => {
+            const current = stateRef.current;
+            if (!current.open || current.transitioning) {
+                return;
+            }
+            const target = clampIndex(
+                slideIndex,
+                current.slidesCount,
+                current.loop,
+            );
+            if (target === current.currentIndex) {
+                return;
+            }
+            if (indexControlledRef.current) {
+                // Controlled index wins: request the change and let the prop
+                // flow back through the sync effect.
+                onIndexChangeRef.current?.(target);
+                return;
+            }
+            dispatch({ type: 'GO_TO', index: slideIndex, direction });
+            onIndexChangeRef.current?.(target);
+        },
+        [],
     );
-}
+
+    const nextSlide = useCallback(() => {
+        const current = stateRef.current;
+        if (!current.open || current.transitioning) {
+            return;
+        }
+        if (current.currentIndex + 1 < current.slidesCount) {
+            goTo(current.currentIndex + 1, 'next');
+        } else if (current.loop) {
+            goTo(0, 'next');
+        } else if (settingsRef.current.slideEndAnimation) {
+            bounce('right');
+        }
+    }, [goTo, bounce]);
+
+    const prevSlide = useCallback(() => {
+        const current = stateRef.current;
+        if (!current.open || current.transitioning) {
+            return;
+        }
+        if (current.currentIndex > 0) {
+            goTo(current.currentIndex - 1, 'prev');
+        } else if (current.loop) {
+            goTo(current.slidesCount - 1, 'prev');
+        } else if (settingsRef.current.slideEndAnimation) {
+            bounce('left');
+        }
+    }, [goTo, bounce]);
+
+    const goToSlide = useCallback(
+        (slideIndex: number) => goTo(slideIndex),
+        [goTo],
+    );
+    const refresh = useCallback(() => {
+        // Vanilla API parity only — in React, changing `slides` is the update.
+    }, []);
+
+    const actions = useMemo<GalleryActions>(
+        () => ({
+            openGallery,
+            closeGallery,
+            goToSlide,
+            nextSlide,
+            prevSlide,
+            refresh,
+            dispatch,
+        }),
+        [openGallery, closeGallery, goToSlide, nextSlide, prevSlide, refresh],
+    );
+
+    // Controlled `open` → reducer.
+    useEffect(() => {
+        if (open === undefined) {
+            return;
+        }
+        if (open && !state.open) {
+            doOpen(index);
+        } else if (!open && state.open) {
+            dispatch({ type: 'CLOSE' });
+        }
+        // `index` is only read at the moment of opening.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, state.open, doOpen]);
+
+    // Controlled `index` → reducer (waits out a running transition).
+    useEffect(() => {
+        if (index === undefined || !state.open) {
+            return;
+        }
+        if (!state.transitioning && index !== state.currentIndex) {
+            dispatch({ type: 'GO_TO', index });
+        }
+    }, [index, state.open, state.currentIndex, state.transitioning]);
+
+    const handle = useMemo<LightGalleryRefHandle>(
+        () => ({
+            openGallery,
+            closeGallery,
+            goToSlide,
+            nextSlide,
+            prevSlide,
+            refresh,
+        }),
+        [openGallery, closeGallery, goToSlide, nextSlide, prevSlide, refresh],
+    );
+    useImperativeHandle(ref, () => handle, [handle]);
+
+    const emitInit = useEventCallback(() =>
+        emit('onInit', { instance: handle }),
+    );
+    useEffect(() => {
+        emitInit();
+    }, [emitInit]);
+
+    const getItemIndex = useCallback(
+        (registration: ItemRegistration) =>
+            registrationsRef.current.indexOf(registration),
+        [],
+    );
+
+    const internal = useMemo<GalleryInternal>(
+        () => ({
+            items,
+            emit,
+            registerItem,
+            getItemIndex,
+            getOriginRect,
+            edgeBounce,
+        }),
+        [items, emit, registerItem, getItemIndex, getOriginRect, edgeBounce],
+    );
+
+    return (
+        <InternalContext.Provider value={internal}>
+            <SettingsContext.Provider value={settings}>
+                <SlotContext.Provider value={render ?? EMPTY_SLOTS}>
+                    <ActionsContext.Provider value={actions}>
+                        <StateContext.Provider value={state}>
+                            {children}
+                            <GalleryOutlet
+                                className={className}
+                                container={container}
+                            />
+                        </StateContext.Provider>
+                    </ActionsContext.Provider>
+                </SlotContext.Provider>
+            </SettingsContext.Provider>
+        </InternalContext.Provider>
+    );
+});
