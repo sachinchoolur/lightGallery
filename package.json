@@ -139,7 +139,7 @@
     "watch-css": "nodemon --watch 'src/**/*' -e scss -x \"npm run build-scss-dev\"",
     "watch-site-content": "nodemon --watch dist -x \"npm run copyAssetsToSite\"",
     "minify-css": "cleancss -o dist/css/lightgallery-bundle.min.css dist/css/lightgallery-bundle.css",
-    "start": "concurrently \"vite build --config packages/core/vite.config.ts --watch\" \"npm run watch-site-content \" \"npm run watch-css \" ",
+    "start": "concurrently \"vite build --config packages/core/vite.config.dev.ts --watch\" \"npm run watch-site-content \" \"npm run watch-css \" ",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
