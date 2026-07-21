@@ -29,6 +29,7 @@ compiled
 # build/tooling caches (v3 stack)
 .turbo/
 .pnpm-store/
+packages/*/dist/
 
 # local agent tooling (npx skills)
 .agents/

@@ -1,0 +1,7 @@
+{
+    "name": "lightgallery/react",
+    "private": true,
+    "main": "Lightgallery.umd.js",
+    "module": "Lightgallery.es5.js",
+    "typings": "Lightgallery.d.ts"
+}
