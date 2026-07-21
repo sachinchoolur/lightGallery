@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from 'react';
+import { useEffect, type ReactElement, type ReactNode } from 'react';
 
 import { cx } from './cx';
 import {
@@ -42,6 +42,13 @@ export function Caption(): ReactElement {
     const internal = useGalleryInternal();
     const slots = useGallerySlots();
     const item = internal.items[state.currentIndex];
+
+    // 2.x afterAppendSubHtml: fired whenever the caption is (re)written.
+    const currentIndex = state.currentIndex;
+    useEffect(() => {
+        internal.emit('onAfterAppendSubHtml', { index: currentIndex });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentIndex]);
     const empty = !slots.caption && !hasCaption(item);
     return (
         <div

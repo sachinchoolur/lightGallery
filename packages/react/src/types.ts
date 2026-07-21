@@ -58,6 +58,15 @@ export interface LightGalleryCallbacks {
     onSlideItemLoad?: (detail: SlideItemLoadDetail) => void;
     onBeforeSlide?: (detail: SlideEventDetail) => void;
     onAfterSlide?: (detail: SlideEventDetail) => void;
+    /** Fired before next/prev navigation commits (2.x parity). */
+    onBeforeNextSlide?: (detail: { index: number }) => void;
+    onBeforePrevSlide?: (detail: { index: number; fromTouch: boolean }) => void;
+    /** A slide's content mounted (2.x `afterAppendSlide`). */
+    onAfterAppendSlide?: (detail: { index: number }) => void;
+    /** The caption for a slide rendered (2.x `afterAppendSubHtml`). */
+    onAfterAppendSubHtml?: (detail: { index: number }) => void;
+    /** The window resized while the gallery is open. */
+    onContainerResize?: (detail: { index: number }) => void;
     onBeforeClose?: () => void;
     onAfterClose?: () => void;
     /** Mouse-drag lifecycle (2.x `dragstart`/`dragmove`/`dragend`). */

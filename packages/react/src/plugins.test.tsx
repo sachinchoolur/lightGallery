@@ -209,7 +209,12 @@ describe('video plugin', () => {
     ];
 
     it('renders the YouTube embed and marks the slide complete', () => {
-        renderGallery({ slides: videoSlides, plugins: [Video] });
+        // loadYouTubePoster off: test the immediate-embed path.
+        renderGallery({
+            slides: videoSlides,
+            plugins: [Video],
+            loadYouTubePoster: false,
+        });
         const frame = document.querySelector<HTMLIFrameElement>(
             'iframe.lg-video-object.lg-youtube',
         );
@@ -247,7 +252,11 @@ describe('video plugin', () => {
     });
 
     it('pauses the video when navigating away', () => {
-        renderGallery({ slides: videoSlides, plugins: [Video] });
+        renderGallery({
+            slides: videoSlides,
+            plugins: [Video],
+            loadYouTubePoster: false,
+        });
         const frame = document.querySelector<HTMLIFrameElement>(
             'iframe.lg-youtube',
         )!;

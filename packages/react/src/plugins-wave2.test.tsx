@@ -187,7 +187,8 @@ describe('share plugin', () => {
     it('renders per-slide share links and toggles the dropdown', () => {
         renderGallery({ plugins: [Share] });
         const button = screen.getByLabelText('Share');
-        const links = button.querySelectorAll('.lg-dropdown a');
+        // The dropdown is a sibling of the button (valid interactive DOM).
+        const links = document.querySelectorAll('.lg-dropdown a');
         expect(links.length).toBe(3);
         expect(links[0]!.getAttribute('href')).toContain('facebook.com');
         expect(links[1]!.getAttribute('href')).toContain('twitter.com');

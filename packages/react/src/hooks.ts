@@ -130,6 +130,22 @@ export function useBodyLock(
 }
 
 /**
+ * Visible focusable elements within a container (2.x
+ * `getFocusableElements`), for the dialog focus trap.
+ */
+export function getFocusableElements(container: HTMLElement): HTMLElement[] {
+    const elements = container.querySelectorAll<HTMLElement>(
+        'a[href]:not([disabled]), button:not([disabled]), ' +
+            'textarea:not([disabled]), input:not([disabled]), ' +
+            'select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    return [...elements].filter((element) => {
+        const style = window.getComputedStyle(element);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+    });
+}
+
+/**
  * `hideBarsDelay` idle behavior (2.x `hideBars`): `showBarsAfter` ms after
  * opening, start hiding the toolbar/controls after `hideBarsDelay` ms of
  * inactivity; any mouse/touch activity on the gallery shows them again.

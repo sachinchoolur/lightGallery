@@ -25,6 +25,7 @@ import {
     useGalleryState,
 } from './context';
 import {
+    getFocusableElements,
     useBodyLock,
     useEventCallback,
     useHideBars,
@@ -115,6 +116,7 @@ export function GalleryOutlet({
         bottom: number;
     } | null>(null);
     const usedZoomRef = useRef(false);
+    const returnFocusRef = useRef<HTMLElement | null>(null);
 
     const isBodyContainer =
         typeof document !== 'undefined' &&
@@ -213,6 +215,11 @@ export function GalleryOutlet({
             setUseStartClass(false);
             setContentOffsets(null);
             usedZoomRef.current = false;
+            // Return focus to the element that opened the gallery.
+            if (returnFocusRef.current?.isConnected) {
+                returnFocusRef.current.focus({ preventScroll: true });
+            }
+            returnFocusRef.current = null;
             internal.emit('onAfterClose');
         }, closeDuration + 100);
     });
@@ -276,6 +283,12 @@ export function GalleryOutlet({
         );
 
         if (settings.trapFocus && isBodyContainer) {
+            // Remember where focus came from; restored when the portal
+            // unmounts (dialog pattern).
+            returnFocusRef.current =
+                document.activeElement instanceof HTMLElement
+                    ? document.activeElement
+                    : null;
             containerElRef.current?.focus({ preventScroll: true });
         }
         internal.emit('onAfterOpen');
@@ -313,10 +326,43 @@ export function GalleryOutlet({
                     actions.nextSlide();
                 }
             }
+            // Focus trap: Tab cycles within the dialog (2.x trapFocus).
+            if (settings.trapFocus && event.key === 'Tab') {
+                const containerEl = containerElRef.current;
+                if (!containerEl) {
+                    return;
+                }
+                const focusable = getFocusableElements(containerEl);
+                if (focusable.length === 0) {
+                    event.preventDefault();
+                    return;
+                }
+                const first = focusable[0]!;
+                const last = focusable[focusable.length - 1]!;
+                const active = document.activeElement;
+                const inside =
+                    active instanceof Node && containerEl.contains(active);
+                if (event.shiftKey) {
+                    if (!inside || active === first) {
+                        event.preventDefault();
+                        last.focus();
+                    }
+                } else if (!inside || active === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            }
         };
         document.addEventListener('keydown', onKeyDown);
         return () => document.removeEventListener('keydown', onKeyDown);
-    }, [bodyLockActive, settings.escKey, settings.keyPress, slidesCount, actions]);
+    }, [
+        bodyLockActive,
+        settings.escKey,
+        settings.keyPress,
+        settings.trapFocus,
+        slidesCount,
+        actions,
+    ]);
 
     // Mousewheel navigation, throttled to one slide per second (2.x parity).
     useEffect(() => {
@@ -356,6 +402,20 @@ export function GalleryOutlet({
         settings.showBarsAfter,
         outerRef,
     );
+
+    // 2.x containerResize: window resizes while open re-measure the media
+    // position and notify listeners.
+    const onResize = useEventCallback(() => {
+        setContentOffsets(measureOffsets());
+        internal.emit('onContainerResize', { index: state.currentIndex });
+    });
+    useEffect(() => {
+        if (!bodyLockActive) {
+            return;
+        }
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, [bodyLockActive, onResize]);
 
     // Slide transition timeline (2.x makeSlideAnimation).
     const [timeline, setTimeline] = useState<SlideTimeline>({
@@ -630,6 +690,7 @@ export function GalleryOutlet({
             tabIndex={-1}
             role="dialog"
             aria-modal="true"
+            aria-label={settings.ariaLabelledby ? undefined : 'Gallery'}
             aria-labelledby={settings.ariaLabelledby || undefined}
             aria-describedby={settings.ariaDescribedby || undefined}
         >

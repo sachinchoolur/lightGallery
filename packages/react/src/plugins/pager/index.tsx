@@ -54,6 +54,16 @@ function PagerList(): ReactElement | null {
                         'lg-pager-cont',
                         index === state.currentIndex && 'lg-pager-active',
                     )}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Go to slide ${index + 1}`}
+                    aria-current={index === state.currentIndex}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            actions.goToSlide(index);
+                        }
+                    }}
                     onClick={() => actions.goToSlide(index)}
                 >
                     <span className="lg-pager" />

@@ -266,6 +266,16 @@ function ThumbnailStrip(): ReactElement | null {
                             height: settings.thumbHeight,
                             marginRight: `${settings.thumbMargin}px`,
                         }}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={item.alt ?? `Go to slide ${index + 1}`}
+                        aria-current={index === state.currentIndex}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                                event.preventDefault();
+                                actions.goToSlide(index);
+                            }
+                        }}
                         onClick={() => {
                             if (clickableRef.current) {
                                 actions.goToSlide(index);

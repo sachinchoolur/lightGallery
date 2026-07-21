@@ -96,6 +96,11 @@ export const LightGallery = forwardRef<
         onRotateRight,
         onFlipHorizontal,
         onFlipVertical,
+        onBeforeNextSlide,
+        onBeforePrevSlide,
+        onAfterAppendSlide,
+        onAfterAppendSubHtml,
+        onContainerResize,
         ...userSettings
     } = props;
 
@@ -104,6 +109,14 @@ export const LightGallery = forwardRef<
         stableUserSettings.isMobile
             ? stableUserSettings.isMobile()
             : defaultIsMobile(),
+    );
+    // prefers-reduced-motion collapses every animation to 0ms and disables
+    // the zoom-from-origin/bounce effects (a11y; checked once per mount).
+    const [reducedMotion] = useState(
+        () =>
+            typeof window !== 'undefined' &&
+            typeof window.matchMedia === 'function' &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     );
     // ADR §5 merge order: core defaults < plugin presets < plugin defaults <
     // user settings (core + per-plugin props, flattened) < mobile overrides.
@@ -129,11 +142,22 @@ export const LightGallery = forwardRef<
                 (plugin) => (plugin.defaults ?? {}) as Partial<CoreSettings>,
             ),
         ];
-        return resolveSettings(flatUser as UserSettings, {
+        const resolved = resolveSettings(flatUser as UserSettings, {
             isMobile,
             pluginDefaults,
         });
-    }, [stableUserSettings, isMobile, plugins]);
+        if (!reducedMotion) {
+            return resolved;
+        }
+        return {
+            ...resolved,
+            speed: 0,
+            backdropDuration: 0,
+            startAnimationDuration: 0,
+            zoomFromOrigin: false,
+            slideEndAnimation: false,
+        };
+    }, [stableUserSettings, isMobile, plugins, reducedMotion]);
 
     // Uncontrolled `<LightGalleryItem>` registry — mount order defines slide
     // order. Item data is read at registration time; galleries with changing
@@ -232,6 +256,11 @@ export const LightGallery = forwardRef<
         onRotateRight,
         onFlipHorizontal,
         onFlipVertical,
+        onBeforeNextSlide,
+        onBeforePrevSlide,
+        onAfterAppendSlide,
+        onAfterAppendSubHtml,
+        onContainerResize,
     };
     const onCloseRef = useRef(onClose);
     onCloseRef.current = onClose;
@@ -462,28 +491,38 @@ export const LightGallery = forwardRef<
         if (!current.open || current.transitioning) {
             return;
         }
-        if (current.currentIndex + 1 < current.slidesCount) {
-            goTo(current.currentIndex + 1, 'next');
-        } else if (current.loop) {
-            goTo(0, 'next');
+        const target =
+            current.currentIndex + 1 < current.slidesCount
+                ? current.currentIndex + 1
+                : current.loop
+                  ? 0
+                  : null;
+        if (target !== null) {
+            emit('onBeforeNextSlide', { index: target });
+            goTo(target, 'next');
         } else if (settingsRef.current.slideEndAnimation) {
             bounce('right');
         }
-    }, [goTo, bounce]);
+    }, [goTo, bounce, emit]);
 
     const prevSlide = useCallback(() => {
         const current = stateRef.current;
         if (!current.open || current.transitioning) {
             return;
         }
-        if (current.currentIndex > 0) {
-            goTo(current.currentIndex - 1, 'prev');
-        } else if (current.loop) {
-            goTo(current.slidesCount - 1, 'prev');
+        const target =
+            current.currentIndex > 0
+                ? current.currentIndex - 1
+                : current.loop
+                  ? current.slidesCount - 1
+                  : null;
+        if (target !== null) {
+            emit('onBeforePrevSlide', { index: target, fromTouch: false });
+            goTo(target, 'prev');
         } else if (settingsRef.current.slideEndAnimation) {
             bounce('left');
         }
-    }, [goTo, bounce]);
+    }, [goTo, bounce, emit]);
 
     const goToSlide = useCallback(
         (slideIndex: number) => goTo(slideIndex),

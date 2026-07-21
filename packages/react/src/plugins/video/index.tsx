@@ -138,7 +138,14 @@ export function VideoSlide({
     const html5Video = parseHtml5Video(item.video);
     const videoInfo = getVideoInfo(item.src, !!html5Video);
 
-    const hasPoster = !!item.poster;
+    // 2.x loadYouTubePoster: derive a poster for YouTube slides that
+    // declare none.
+    const poster =
+        item.poster ??
+        (settings.loadYouTubePoster && videoInfo?.youtube
+            ? `//img.youtube.com/vi/${videoInfo.youtube[1]}/maxresdefault.jpg`
+            : undefined);
+    const hasPoster = !!poster;
     const [activated, setActivated] = useState(!hasPoster);
     const pendingPlayRef = useRef(false);
     const mediaRef = useRef<HTMLVideoElement | HTMLIFrameElement | null>(
@@ -268,7 +275,7 @@ export function VideoSlide({
         }
     };
 
-    const title = item.title ?? item.alt;
+    const title = item.title ?? item.alt ?? 'Embedded video player';
     const iframeProps = {
         allow: 'autoplay',
         allowFullScreen: true,
@@ -400,7 +407,7 @@ export function VideoSlide({
                     <PlayButton label={settings.strings.playVideo} />
                     <img
                         className="lg-object lg-video-poster"
-                        src={item.poster}
+                        src={poster}
                         alt={item.alt ?? ''}
                         draggable={false}
                         onLoad={() => {

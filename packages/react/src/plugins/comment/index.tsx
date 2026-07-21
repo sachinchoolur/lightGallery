@@ -74,6 +74,7 @@ function CommentBox(): ReactElement | null {
                         className="lg-comment-close lg-icon"
                         role="button"
                         tabIndex={0}
+                        aria-label="Close comments"
                         onClick={close}
                         onKeyDown={(event) => {
                             if (event.key === 'Enter') {

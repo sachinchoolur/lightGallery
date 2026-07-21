@@ -102,15 +102,19 @@ function ShareButton(): ReactElement | null {
     );
     const toggle = () =>
         internal.layout.setOuterClass('lg-dropdown-active', !active);
+    // The dropdown is a sibling of the button (vanilla nested it inside,
+    // which is invalid interactive nesting); `.lg-outer .lg-dropdown` CSS
+    // does not depend on the nesting.
     return (
-        <button
-            type="button"
-            aria-label={settings.sharePluginStrings.share}
-            aria-haspopup="true"
-            aria-expanded={active}
-            className="lg-share lg-icon"
-            onClick={toggle}
-        >
+        <>
+            <button
+                type="button"
+                aria-label={settings.sharePluginStrings.share}
+                aria-haspopup="true"
+                aria-expanded={active}
+                className="lg-share lg-icon"
+                onClick={toggle}
+            />
             <ul className="lg-dropdown" style={{ position: 'absolute' }}>
                 {item &&
                     getShareOptions(settings).map((option, index) => (
@@ -129,7 +133,7 @@ function ShareButton(): ReactElement | null {
                         </li>
                     ))}
             </ul>
-        </button>
+        </>
     );
 }
 

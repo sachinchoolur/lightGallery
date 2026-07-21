@@ -1,4 +1,5 @@
 import {
+    useEffect,
     useMemo,
     useRef,
     useState,
@@ -79,6 +80,19 @@ export function Slide({
     if (shouldLoad) {
         stickyLoadRef.current = true;
     }
+
+    // 2.x afterAppendSlide: fired once when the slide's content mounts.
+    const appendedRef = useRef(false);
+    useEffect(() => {
+        if (shouldLoad && !appendedRef.current) {
+            appendedRef.current = true;
+            internal.emit('onAfterAppendSlide', { index });
+            if (settings.captionPosition === 'slide') {
+                internal.emit('onAfterAppendSubHtml', { index });
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [shouldLoad]);
 
     const handleLoad = useEventCallback(() => {
         if (state.loadedSlides.has(index)) {

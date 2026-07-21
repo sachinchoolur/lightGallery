@@ -74,10 +74,21 @@ export default defineConfig({
                 'react/jsx-runtime',
                 '@lightgallery/headless',
             ],
-            output: {
-                chunkFileNames: 'chunks/[name]-[hash].[format].js',
-                exports: 'named',
-            },
+            // Per-format outputs: shared CJS chunks must end in `.cjs` —
+            // with `"type": "module"`, a `.js` chunk would be loaded as ESM
+            // (caught by the plan-007 scratch-consumer check).
+            output: [
+                {
+                    format: 'es',
+                    chunkFileNames: 'chunks/[name]-[hash].js',
+                    exports: 'named',
+                },
+                {
+                    format: 'cjs',
+                    chunkFileNames: 'chunks/[name]-[hash].cjs',
+                    exports: 'named',
+                },
+            ],
         },
     },
     test: {
