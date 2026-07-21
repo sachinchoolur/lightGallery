@@ -4,6 +4,14 @@
  * `window`/`document` do not typecheck here by construction.
  */
 
+export {
+    createGalleryState,
+    galleryReducer,
+    type CreateGalleryStateOptions,
+    type GalleryAction,
+    type GalleryState,
+} from './state';
+
 /**
  * Clamp a slide index into the valid range for a gallery of `length` slides.
  * With `loop`, out-of-range indexes wrap around; without it they clamp to the
