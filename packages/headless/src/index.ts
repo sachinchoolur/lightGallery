@@ -97,9 +97,24 @@ export {
 
 export {
     applyZoom,
+    flipHorizontal,
+    flipVertical,
+    getRotateTransform,
+    initialAutoplaySlice,
+    initialRotateSlice,
     initialZoomSlice,
+    rotateLeft,
+    rotateRight,
+    type AutoplaySlice,
+    type RotateSlice,
     type ZoomSlice,
 } from './plugin-slices';
+
+export {
+    getFacebookShareLink,
+    getPinterestShareLink,
+    getTwitterShareLink,
+} from './share-urls';
 
 /**
  * Clamp a slide index into the valid range for a gallery of `length` slides.

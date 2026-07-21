@@ -84,8 +84,26 @@ export interface GalleryItem<TCaption = unknown> {
     /** Actual image width in px (zoom plugin actual-size math, plan 005). */
     width?: string;
 
-    /** Custom slide name for the hash plugin (plan 006). */
+    /** Custom slide name for the hash plugin. */
     slideName?: string;
+
+    /** Share plugin: per-item Facebook share URL (defaults to the page URL). */
+    facebookShareUrl?: string;
+
+    /** Share plugin: tweet text. */
+    tweetText?: string;
+
+    /** Share plugin: per-item Twitter share URL. */
+    twitterShareUrl?: string;
+
+    /** Share plugin: per-item Pinterest share URL (must be absolute). */
+    pinterestShareUrl?: string;
+
+    /** Share plugin: Pinterest post description. */
+    pinterestText?: string;
+
+    /** mediumZoom plugin: per-item backdrop color. */
+    lgBackgroundColor?: string;
 }
 
 export type SlideType = 'image' | 'video' | 'iframe';
