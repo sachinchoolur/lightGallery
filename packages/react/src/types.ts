@@ -68,6 +68,15 @@ export interface LightGalleryCallbacks {
     onPosterClick?: () => void;
     /** A slide with video content mounted (informational, 2.x `hasVideo`). */
     onHasVideo?: (detail: HasVideoDetail) => void;
+    /** Autoplay plugin lifecycle. */
+    onAutoplayStart?: (detail: { index: number }) => void;
+    onAutoplay?: (detail: { index: number }) => void;
+    onAutoplayStop?: (detail: { index: number }) => void;
+    /** Rotate plugin events (also consumed by other plugins via the bus). */
+    onRotateLeft?: (detail: { rotate: number }) => void;
+    onRotateRight?: (detail: { rotate: number }) => void;
+    onFlipHorizontal?: (detail: { flipHorizontal: number }) => void;
+    onFlipVertical?: (detail: { flipVertical: number }) => void;
 }
 
 /**

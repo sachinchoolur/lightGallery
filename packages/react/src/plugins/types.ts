@@ -30,13 +30,21 @@ export interface SlideWrapperProps {
 /** Flat settings bag: core settings + every plugin's merged settings. */
 export type ResolvedPluginSettings = CoreSettings & Record<string, unknown>;
 
+export interface MediaPosition {
+    top: number;
+    bottom: number;
+}
+
 export interface PluginLayout {
     /** Declaratively toggle a class on the `.lg-outer` element. */
     setOuterClass(className: string, active: boolean): void;
     /** Toggle the footer area (`lg-components-open`) — thumbnail toggle. */
     toggleComponents(): void;
-    /** mediumZoom's core-method override (wired for plan 006). */
-    overrideMediaPosition?(fn: unknown): void;
+    /**
+     * mediumZoom's core-method override: replace the media container
+     * position measurement. Pass `null` to restore the default.
+     */
+    overrideMediaPosition(fn: (() => MediaPosition) | null): void;
 }
 
 export interface PluginRefs {
@@ -67,9 +75,7 @@ export interface LgPluginSlots {
     slideWrapper?: ComponentType<SlideWrapperProps>;
 }
 
-export interface LgPlugin<
-    TSettings extends object = Record<string, unknown>,
-> {
+export interface LgPlugin<TSettings extends object = object> {
     name: string;
     /** Merged NON-mutating below user settings (headless owns the merge). */
     defaults?: TSettings;
@@ -85,9 +91,15 @@ export interface LgPlugin<
      * runs in its own runner component keyed by plugin name).
      */
     usePlugin?: (ctx: PluginContext) => void;
-    /** Transform the item list (vimeoThumbnail); may be async. */
+    /**
+     * Transform the item list (vimeoThumbnail); may be async. The signal
+     * aborts when the inputs change or the gallery unmounts; the resolved
+     * settings carry the plugin's own merged options.
+     */
     transformItems?: (
         items: GalleryItem[],
+        signal?: AbortSignal,
+        settings?: ResolvedPluginSettings,
     ) => GalleryItem[] | Promise<GalleryItem[]>;
     /** Opinionated core-settings overrides applied at merge (mediumZoom). */
     presets?: Partial<CoreSettings>;

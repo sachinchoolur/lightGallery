@@ -21,6 +21,46 @@ export default defineConfig({
                     __dirname,
                     'src/plugins/video/index.tsx',
                 ),
+                'plugins/autoplay/index': path.resolve(
+                    __dirname,
+                    'src/plugins/autoplay/index.tsx',
+                ),
+                'plugins/fullscreen/index': path.resolve(
+                    __dirname,
+                    'src/plugins/fullscreen/index.tsx',
+                ),
+                'plugins/hash/index': path.resolve(
+                    __dirname,
+                    'src/plugins/hash/index.tsx',
+                ),
+                'plugins/pager/index': path.resolve(
+                    __dirname,
+                    'src/plugins/pager/index.tsx',
+                ),
+                'plugins/share/index': path.resolve(
+                    __dirname,
+                    'src/plugins/share/index.tsx',
+                ),
+                'plugins/rotate/index': path.resolve(
+                    __dirname,
+                    'src/plugins/rotate/index.tsx',
+                ),
+                'plugins/comment/index': path.resolve(
+                    __dirname,
+                    'src/plugins/comment/index.tsx',
+                ),
+                'plugins/mediumZoom/index': path.resolve(
+                    __dirname,
+                    'src/plugins/mediumZoom/index.tsx',
+                ),
+                'plugins/relativeCaption/index': path.resolve(
+                    __dirname,
+                    'src/plugins/relativeCaption/index.tsx',
+                ),
+                'plugins/vimeoThumbnail/index': path.resolve(
+                    __dirname,
+                    'src/plugins/vimeoThumbnail/index.tsx',
+                ),
             },
             formats: ['es', 'cjs'],
             fileName: (format, entryName) =>

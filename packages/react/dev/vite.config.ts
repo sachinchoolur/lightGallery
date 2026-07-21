@@ -37,6 +37,76 @@ export default defineConfig({
                 ),
             },
             {
+                find: '@lightgallery/react/plugins/autoplay',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/autoplay/index.tsx',
+                ),
+            },
+            {
+                find: '@lightgallery/react/plugins/fullscreen',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/fullscreen/index.tsx',
+                ),
+            },
+            {
+                find: '@lightgallery/react/plugins/hash',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/hash/index.tsx',
+                ),
+            },
+            {
+                find: '@lightgallery/react/plugins/pager',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/pager/index.tsx',
+                ),
+            },
+            {
+                find: '@lightgallery/react/plugins/share',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/share/index.tsx',
+                ),
+            },
+            {
+                find: '@lightgallery/react/plugins/rotate',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/rotate/index.tsx',
+                ),
+            },
+            {
+                find: '@lightgallery/react/plugins/comment',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/comment/index.tsx',
+                ),
+            },
+            {
+                find: '@lightgallery/react/plugins/mediumZoom',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/mediumZoom/index.tsx',
+                ),
+            },
+            {
+                find: '@lightgallery/react/plugins/relativeCaption',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/relativeCaption/index.tsx',
+                ),
+            },
+            {
+                find: '@lightgallery/react/plugins/vimeoThumbnail',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/vimeoThumbnail/index.tsx',
+                ),
+            },
+            {
                 find: '@lightgallery/react',
                 replacement: path.resolve(__dirname, '../src/index.ts'),
             },

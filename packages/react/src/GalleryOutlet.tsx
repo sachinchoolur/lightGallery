@@ -31,7 +31,7 @@ import {
     useIsoLayoutEffect,
     useTimeouts,
 } from './hooks';
-import { PluginRunners, PluginSlots } from './plugins/runtime';
+import { PluginSlots } from './plugins/runtime';
 import { Slides } from './Slides';
 import { Toolbar } from './Toolbar';
 import { useGalleryGestures } from './useGalleryGestures';
@@ -122,6 +122,11 @@ export function GalleryOutlet({
 
     /** Toolbar/caption offsets for media positioning (2.x parity). */
     const measureOffsets = useEventCallback(() => {
+        // mediumZoom overrides the measurement entirely (ADR §5 layout).
+        const override = internal.mediaPositionOverrideRef.current;
+        if (override) {
+            return override();
+        }
         if (settings.allowMediaOverlap) {
             return { top: 0, bottom: 0 };
         }
@@ -659,7 +664,6 @@ export function GalleryOutlet({
                     {settings.captionPosition === 'bar' && <Caption />}
                     <PluginSlots kind="components" />
                 </div>
-                <PluginRunners />
             </div>
         </div>,
         portalTarget,

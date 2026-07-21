@@ -15,7 +15,12 @@ import type {
 import type { MutableRefObject } from 'react';
 
 import type { LgEventEmitter } from './events';
-import type { LgPlugin, PluginLayout, PluginRefs } from './plugins/types';
+import type {
+    LgPlugin,
+    MediaPosition,
+    PluginLayout,
+    PluginRefs,
+} from './plugins/types';
 import type {
     GalleryItem,
     LightGalleryCallbacks,
@@ -94,6 +99,8 @@ export interface GalleryInternal {
     pluginOuterClassNames: string;
     /** The outlet registers its components-open toggle here. */
     componentsToggleRef: MutableRefObject<() => void>;
+    /** mediumZoom's media-position override (read by the outlet). */
+    mediaPositionOverrideRef: MutableRefObject<(() => MediaPosition) | null>;
 }
 
 export const StateContext = createContext<GalleryState | null>(null);

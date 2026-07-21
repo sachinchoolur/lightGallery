@@ -7,6 +7,14 @@ import {
     type LightGalleryRefHandle,
 } from '@lightgallery/react';
 
+import Autoplay from '@lightgallery/react/plugins/autoplay';
+import Comment from '@lightgallery/react/plugins/comment';
+import Fullscreen from '@lightgallery/react/plugins/fullscreen';
+import Hash from '@lightgallery/react/plugins/hash';
+import MediumZoom from '@lightgallery/react/plugins/mediumZoom';
+import Pager from '@lightgallery/react/plugins/pager';
+import Rotate from '@lightgallery/react/plugins/rotate';
+import Share from '@lightgallery/react/plugins/share';
 import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 import Video from '@lightgallery/react/plugins/video';
 import Zoom from '@lightgallery/react/plugins/zoom';
@@ -17,8 +25,28 @@ import 'lightgallery/css/lg-transitions.css';
 import 'lightgallery/css/lg-thumbnail.css';
 import 'lightgallery/css/lg-zoom.css';
 import 'lightgallery/css/lg-video.css';
+import 'lightgallery/css/lg-autoplay.css';
+import 'lightgallery/css/lg-fullscreen.css';
+import 'lightgallery/css/lg-pager.css';
+import 'lightgallery/css/lg-share.css';
+import 'lightgallery/css/lg-rotate.css';
+import 'lightgallery/css/lg-comments.css';
+import 'lightgallery/css/lg-medium-zoom.css';
 
 const wave1Plugins = [Thumbnail, Zoom, Video];
+// Zoom before Rotate: zoom stays the outermost slide wrapper (2.x DOM).
+const kitchenSinkPlugins = [
+    Thumbnail,
+    Zoom,
+    Video,
+    Autoplay,
+    Fullscreen,
+    Hash,
+    Pager,
+    Share,
+    Rotate,
+    Comment,
+];
 
 type DemoMode = 'lg-slide' | 'lg-fade' | 'lg-lollipop';
 
@@ -78,8 +106,16 @@ function UncontrolledDemo({ mode }: { mode: DemoMode }) {
                 mode={mode}
                 hideBarsDelay={3000}
                 showBarsAfter={1000}
-                plugins={wave1Plugins}
+                plugins={kitchenSinkPlugins}
                 zoom={{ showZoomInOutIcons: true }}
+                comment={{
+                    commentBox: true,
+                    renderComments: (item) => (
+                        <p style={{ padding: 12 }}>
+                            Demo comments for <strong>{item.alt}</strong>
+                        </p>
+                    ),
+                }}
                 onAfterSlide={(detail) =>
                     console.log('[demo] afterSlide', detail)
                 }
@@ -157,6 +193,30 @@ function VideoDemo() {
     );
 }
 
+function MediumZoomDemo() {
+    return (
+        <>
+            <h2>mediumZoom — minimal, click anywhere to close</h2>
+            <LightGallery
+                plugins={[MediumZoom]}
+                mediumZoom={{ backgroundColor: '#101418' }}
+            >
+                <div className="demo-grid">
+                    {items.slice(0, 4).map((item) => (
+                        <LightGalleryItem
+                            key={item.src}
+                            item={item}
+                            href={item.src}
+                        >
+                            <img src={item.thumb} alt={item.alt} />
+                        </LightGalleryItem>
+                    ))}
+                </div>
+            </LightGallery>
+        </>
+    );
+}
+
 function App() {
     const [mode, setMode] = useState<DemoMode>('lg-slide');
     return (
@@ -180,6 +240,7 @@ function App() {
             </div>
             <UncontrolledDemo mode={mode} />
             <VideoDemo />
+            <MediumZoomDemo />
             <ControlledDemo mode={mode} />
             <div className="demo-spacer">
                 (spacer to verify scroll lock/restore)

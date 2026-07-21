@@ -20,7 +20,13 @@ import {
 } from '@lightgallery/headless';
 
 import { createEmitter, type LgEventEmitter } from './events';
-import type { LgPlugin, PluginLayout, PluginRefs } from './plugins/types';
+import { PluginRunners } from './plugins/runtime';
+import type {
+    LgPlugin,
+    MediaPosition,
+    PluginLayout,
+    PluginRefs,
+} from './plugins/types';
 
 import {
     ActionsContext,
@@ -83,6 +89,13 @@ export const LightGallery = forwardRef<
         onDragEnd,
         onPosterClick,
         onHasVideo,
+        onAutoplayStart,
+        onAutoplay,
+        onAutoplayStop,
+        onRotateLeft,
+        onRotateRight,
+        onFlipHorizontal,
+        onFlipVertical,
         ...userSettings
     } = props;
 
@@ -149,21 +162,29 @@ export const LightGallery = forwardRef<
             setTransformedItems(null);
             return;
         }
-        let cancelled = false;
+        const controller = new AbortController();
         void (async () => {
             let result = baseItems;
             for (const plugin of plugins) {
                 if (plugin.transformItems) {
-                    result = await plugin.transformItems(result);
+                    try {
+                        result = await plugin.transformItems(
+                            result,
+                            controller.signal,
+                            settingsRef.current as Parameters<
+                                NonNullable<LgPlugin['transformItems']>
+                            >[2],
+                        );
+                    } catch {
+                        // Aborted or failed transforms keep the previous list.
+                    }
                 }
             }
-            if (!cancelled) {
+            if (!controller.signal.aborted) {
                 setTransformedItems(result);
             }
         })();
-        return () => {
-            cancelled = true;
-        };
+        return () => controller.abort();
     }, [baseItems, plugins]);
     const items = transformedItems ?? baseItems;
 
@@ -204,6 +225,13 @@ export const LightGallery = forwardRef<
         onDragEnd,
         onPosterClick,
         onHasVideo,
+        onAutoplayStart,
+        onAutoplay,
+        onAutoplayStop,
+        onRotateLeft,
+        onRotateRight,
+        onFlipHorizontal,
+        onFlipVertical,
     };
     const onCloseRef = useRef(onClose);
     onCloseRef.current = onClose;
@@ -262,6 +290,9 @@ export const LightGallery = forwardRef<
         Record<string, boolean>
     >({});
     const componentsToggleRef = useRef<() => void>(() => undefined);
+    const mediaPositionOverrideRef = useRef<(() => MediaPosition) | null>(
+        null,
+    );
     const layout = useMemo<PluginLayout>(
         () => ({
             setOuterClass(cls, active) {
@@ -271,6 +302,9 @@ export const LightGallery = forwardRef<
             },
             toggleComponents() {
                 componentsToggleRef.current();
+            },
+            overrideMediaPosition(fn) {
+                mediaPositionOverrideRef.current = fn;
             },
         }),
         [],
@@ -282,6 +316,29 @@ export const LightGallery = forwardRef<
                 .join(' '),
         [pluginOuterClasses],
     );
+
+    // Plugin-emitted bus events surface as public onXxx callbacks (the
+    // reverse of `emit`, which fans callbacks out to the bus).
+    useEffect(() => {
+        const bridged: Array<[string, keyof LightGalleryCallbacks]> = [
+            ['autoplayStart', 'onAutoplayStart'],
+            ['autoplay', 'onAutoplay'],
+            ['autoplayStop', 'onAutoplayStop'],
+            ['rotateLeft', 'onRotateLeft'],
+            ['rotateRight', 'onRotateRight'],
+            ['flipHorizontal', 'onFlipHorizontal'],
+            ['flipVertical', 'onFlipVertical'],
+        ];
+        const offs = bridged.map(([eventName, callbackName]) =>
+            events.on(eventName, (detail: unknown) => {
+                const callback = callbacksRef.current[callbackName] as
+                    | ((d: unknown) => void)
+                    | undefined;
+                callback?.(detail);
+            }),
+        );
+        return () => offs.forEach((off) => off());
+    }, [events]);
 
     // Read-only element refs for plugin effects (ADR §5 `refs`).
     const elementStoreRef = useRef<{
@@ -538,6 +595,7 @@ export const LightGallery = forwardRef<
             registerElements,
             pluginOuterClassNames,
             componentsToggleRef,
+            mediaPositionOverrideRef,
         }),
         [
             items,
@@ -563,6 +621,10 @@ export const LightGallery = forwardRef<
                     <ActionsContext.Provider value={actions}>
                         <StateContext.Provider value={state}>
                             {children}
+                            {/* Runners live outside the portal so plugins
+                                like hash can act while the gallery is
+                                closed (open-from-URL). */}
+                            <PluginRunners />
                             <GalleryOutlet
                                 className={className}
                                 container={container}
