@@ -49,6 +49,10 @@ export function Slides({ timeline, originAnim }: SlidesProps): ReactElement {
             style={{
                 transitionTimingFunction: settings.easing,
                 transitionDuration: `${settings.speed}ms`,
+                // Pointer events cannot preventDefault scrolling; this is
+                // what keeps the page still during swipes. Pinch is handled
+                // by the zoom plugin (005), never by the browser.
+                touchAction: 'none',
             }}
         >
             {indexes.map((index) => (

@@ -26,6 +26,7 @@ import {
     type EmitFn,
     type GalleryActions,
     type GalleryInternal,
+    type GestureSeam,
     type ItemRegistration,
 } from './context';
 import { GalleryOutlet } from './GalleryOutlet';
@@ -69,6 +70,9 @@ export const LightGallery = forwardRef<
         onAfterSlide,
         onBeforeClose,
         onAfterClose,
+        onDragStart,
+        onDragMove,
+        onDragEnd,
         ...userSettings
     } = props;
 
@@ -133,6 +137,9 @@ export const LightGallery = forwardRef<
         onAfterSlide,
         onBeforeClose,
         onAfterClose,
+        onDragStart,
+        onDragMove,
+        onDragEnd,
     };
     const onCloseRef = useRef(onClose);
     onCloseRef.current = onClose;
@@ -302,9 +309,18 @@ export const LightGallery = forwardRef<
             nextSlide,
             prevSlide,
             refresh,
+            navigate: goTo,
             dispatch,
         }),
-        [openGallery, closeGallery, goToSlide, nextSlide, prevSlide, refresh],
+        [
+            openGallery,
+            closeGallery,
+            goToSlide,
+            nextSlide,
+            prevSlide,
+            refresh,
+            goTo,
+        ],
     );
 
     // Controlled `open` → reducer.
@@ -357,6 +373,20 @@ export const LightGallery = forwardRef<
         [],
     );
 
+    // Mutable on purpose (never triggers renders) — see GestureSeam docs.
+    const gestureSeamRef = useRef<GestureSeam | null>(null);
+    if (gestureSeamRef.current === null) {
+        const seam: GestureSeam = {
+            lockOwner: null,
+            claim(owner) {
+                seam.lockOwner = owner;
+            },
+            pointers: [],
+        };
+        gestureSeamRef.current = seam;
+    }
+    const gestureSeam = gestureSeamRef.current;
+
     const internal = useMemo<GalleryInternal>(
         () => ({
             items,
@@ -365,8 +395,17 @@ export const LightGallery = forwardRef<
             getItemIndex,
             getOriginRect,
             edgeBounce,
+            gestureSeam,
         }),
-        [items, emit, registerItem, getItemIndex, getOriginRect, edgeBounce],
+        [
+            items,
+            emit,
+            registerItem,
+            getItemIndex,
+            getOriginRect,
+            edgeBounce,
+            gestureSeam,
+        ],
     );
 
     return (

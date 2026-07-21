@@ -8,7 +8,9 @@ import type {
     CoreSettings,
     GalleryAction,
     GalleryState,
+    PointerRecord,
     RectLike,
+    SlideDirection,
 } from '@lightgallery/headless';
 import type {
     GalleryItem,
@@ -30,6 +32,11 @@ export interface GalleryActions {
     nextSlide: () => void;
     prevSlide: () => void;
     refresh: () => void;
+    /**
+     * Internal: navigate with an explicit direction (gesture releases at the
+     * loop edges need it); honors controlled-index mode like `goToSlide`.
+     */
+    navigate: (index: number, direction?: SlideDirection) => void;
     dispatch: Dispatch<GalleryAction>;
 }
 
@@ -44,6 +51,20 @@ export interface ItemRegistration {
     element: HTMLElement | null;
 }
 
+/**
+ * The gesture seam plugins consume (ADR 0001 §5): the zoom plugin (005)
+ * claims the lock while pinching/zoom-dragging — core swipe stands down —
+ * and reads the live pointer records for its multi-pointer math. Mutable by
+ * design: it changes per pointer event and must never trigger renders.
+ */
+export interface GestureSeam {
+    /** Current lock owner; `null` means core swipe/drag may act. */
+    lockOwner: 'pinch' | 'zoomSwipe' | null;
+    claim(owner: 'pinch' | 'zoomSwipe' | null): void;
+    /** Live pointers inside the gallery (multi-pointer bookkeeping). */
+    pointers: PointerRecord[];
+}
+
 /** Internal plumbing shared between the root and the outlet/slides. */
 export interface GalleryInternal {
     items: GalleryItem[];
@@ -54,6 +75,7 @@ export interface GalleryInternal {
     getOriginRect: (index: number) => RectLike | null;
     /** Slide-end bounce (`lg-left-end` / `lg-right-end`). */
     edgeBounce: 'left' | 'right' | null;
+    gestureSeam: GestureSeam;
 }
 
 export const StateContext = createContext<GalleryState | null>(null);

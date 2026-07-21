@@ -40,6 +40,9 @@ export function ImageSlide({
                 alt={item.alt ?? ''}
                 onLoad={onLoad}
                 onError={onError}
+                // Native image dragging would swallow the swipe gesture.
+                draggable={false}
+                onDragStart={(event) => event.preventDefault()}
             />
         </picture>
     );

@@ -33,6 +33,7 @@ import {
 } from './hooks';
 import { Slides } from './Slides';
 import { Toolbar } from './Toolbar';
+import { useGalleryGestures } from './useGalleryGestures';
 
 /**
  * Open/close lifecycle phases, mirroring the vanilla class timeline:
@@ -275,20 +276,63 @@ export function GalleryOutlet({
         settings.resetScrollPosition,
     );
 
-    // ESC closes while open; listener removed on close/unmount.
+    // Keyboard: ESC close (escKey) and arrow navigation (keyPress) —
+    // listener removed on close/unmount.
+    const slidesCount = internal.items.length;
     useEffect(() => {
-        if (!bodyLockActive || !settings.escKey) {
+        if (!bodyLockActive || (!settings.escKey && !settings.keyPress)) {
             return;
         }
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
+            if (settings.escKey && event.key === 'Escape') {
                 event.preventDefault();
                 actions.closeGallery();
+            }
+            if (settings.keyPress && slidesCount > 1) {
+                if (event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    actions.prevSlide();
+                } else if (event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    actions.nextSlide();
+                }
             }
         };
         document.addEventListener('keydown', onKeyDown);
         return () => document.removeEventListener('keydown', onKeyDown);
-    }, [bodyLockActive, settings.escKey, actions]);
+    }, [bodyLockActive, settings.escKey, settings.keyPress, slidesCount, actions]);
+
+    // Mousewheel navigation, throttled to one slide per second (2.x parity).
+    useEffect(() => {
+        if (!bodyLockActive || !settings.mousewheel || slidesCount < 2) {
+            return;
+        }
+        const outerEl = outerRef.current;
+        if (!outerEl) {
+            return;
+        }
+        let lastCall = 0;
+        // Non-passive on purpose: the gallery owns the wheel while open; the
+        // page behind must not scroll.
+        const onWheel = (event: WheelEvent) => {
+            if (!event.deltaY) {
+                return;
+            }
+            event.preventDefault();
+            const now = Date.now();
+            if (now - lastCall < 1000) {
+                return;
+            }
+            lastCall = now;
+            if (event.deltaY > 0) {
+                actions.nextSlide();
+            } else {
+                actions.prevSlide();
+            }
+        };
+        outerEl.addEventListener('wheel', onWheel, { passive: false });
+        return () => outerEl.removeEventListener('wheel', onWheel);
+    }, [bodyLockActive, settings.mousewheel, slidesCount, actions]);
 
     const barsHidden = useHideBars(
         bodyLockActive,
@@ -349,7 +393,58 @@ export function GalleryOutlet({
             }
         },
     );
+    const fromTouchRef = useRef(false);
+    const [touchSlideMode, setTouchSlideMode] = useState(false);
+    const runTouchTransition = useEventCallback(
+        (from: number, to: number, direction: SlideDirection) => {
+            internal.emit('onBeforeSlide', {
+                index: to,
+                prevIndex: from,
+                fromTouch: true,
+                fromThumb: false,
+            });
+            // 2.x fromTouch path: slides are already positioned by the drag —
+            // switch lg-current immediately (no lg-no-trans / 50ms phase) and
+            // keep only the incoming-side neighbor positioned.
+            const count = state.slidesCount;
+            const positions: Record<number, 'prev' | 'next'> = {};
+            if (direction === 'prev') {
+                let neighbor = to + 1;
+                if (neighbor >= count) {
+                    neighbor = state.loop && count > 2 ? 0 : -1;
+                }
+                if (neighbor >= 0 && neighbor !== to) {
+                    positions[neighbor] = 'next';
+                }
+            } else {
+                let neighbor = to - 1;
+                if (neighbor < 0) {
+                    neighbor = state.loop && count > 2 ? count - 1 : -1;
+                }
+                if (neighbor >= 0 && neighbor !== to) {
+                    positions[neighbor] = 'prev';
+                }
+            }
+            setTimeline({
+                shownIndex: to,
+                positions,
+                noTrans: false,
+                progressIndex: null,
+            });
+            timers.set(() => {
+                actions.dispatch({ type: 'TRANSITION_END' });
+                internal.emit('onAfterSlide', {
+                    index: to,
+                    prevIndex: from,
+                    fromTouch: true,
+                    fromThumb: false,
+                });
+            }, settings.speed + 100);
+        },
+    );
     useEffect(() => {
+        const fromTouch = fromTouchRef.current;
+        fromTouchRef.current = false;
         if (!state.open) {
             prevShownRef.current = null;
             setTimeline({
@@ -377,13 +472,64 @@ export function GalleryOutlet({
             });
             return;
         }
-        runTransition(
-            previous,
-            current,
-            state.slideDirection ?? (current > previous ? 'next' : 'prev'),
-        );
+        const direction =
+            state.slideDirection ?? (current > previous ? 'next' : 'prev');
+        if (fromTouch) {
+            runTouchTransition(previous, current, direction);
+            return;
+        }
+        runTransition(previous, current, direction);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.open, state.currentIndex]);
+
+    // Gesture wiring: position classes at drag start, commit at release.
+    const prepareDrag = useEventCallback(() => {
+        const count = state.slidesCount;
+        const index = state.currentIndex;
+        let prevN = index - 1;
+        let nextN = index + 1;
+        if (state.loop && count > 2) {
+            if (index === 0) {
+                prevN = count - 1;
+            } else if (index === count - 1) {
+                nextN = 0;
+            }
+        }
+        const positions: Record<number, 'prev' | 'next'> = {};
+        if (prevN >= 0 && prevN < count && prevN !== index) {
+            positions[prevN] = 'prev';
+        }
+        if (
+            nextN >= 0 &&
+            nextN < count &&
+            nextN !== index &&
+            nextN !== prevN
+        ) {
+            positions[nextN] = 'next';
+        }
+        setTimeline((tl) => ({ ...tl, positions }));
+    });
+    const commitTouchNavigation = useEventCallback(
+        (target: number, direction: SlideDirection) => {
+            fromTouchRef.current = true;
+            // Drags animate as slide whatever the mode (2.x adds lg-slide
+            // for the release animation, then removes it).
+            if (settings.mode !== 'lg-slide') {
+                setTouchSlideMode(true);
+                timers.set(
+                    () => setTouchSlideMode(false),
+                    settings.speed + 100,
+                );
+            }
+            actions.navigate(target, direction);
+        },
+    );
+    const gestures = useGalleryGestures({
+        outerRef,
+        active: bodyLockActive,
+        prepareDrag,
+        commitTouchNavigation,
+    });
 
     // Close on tap of the black area around the slide (2.x closeOnTap).
     const mouseDownOnSlideRef = useRef(false);
@@ -444,6 +590,7 @@ export function GalleryOutlet({
             'lg-hide-items',
         zoomClosing && 'lg-closing',
         timeline.noTrans && 'lg-no-trans',
+        touchSlideMode && settings.mode !== 'lg-slide' && 'lg-slide',
         internal.edgeBounce === 'right' && 'lg-right-end',
         internal.edgeBounce === 'left' && 'lg-left-end',
         settings.download &&
@@ -484,6 +631,7 @@ export function GalleryOutlet({
                 onMouseDown={onOuterMouseDown}
                 onMouseMove={onOuterMouseMove}
                 onMouseUp={onOuterMouseUp}
+                onPointerDown={gestures.onPointerDown}
             >
                 <div className="lg-content" style={contentStyle}>
                     <Slides timeline={timeline} originAnim={originAnim} />

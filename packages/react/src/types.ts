@@ -57,6 +57,10 @@ export interface LightGalleryCallbacks {
     onAfterSlide?: (detail: SlideEventDetail) => void;
     onBeforeClose?: () => void;
     onAfterClose?: () => void;
+    /** Mouse-drag lifecycle (2.x `dragstart`/`dragmove`/`dragend`). */
+    onDragStart?: () => void;
+    onDragMove?: () => void;
+    onDragEnd?: () => void;
 }
 
 export interface LightGalleryProps extends UserSettings, LightGalleryCallbacks {
