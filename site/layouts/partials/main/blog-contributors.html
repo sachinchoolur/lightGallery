@@ -1,7 +1,6 @@
 <div class="blog-contributors">
     {{ if .Params.contributors -}}
-    {{ range $index,
-    $contributor := .Params.contributors }}
+    {{ range $index, $contributor := .Params.contributors }}
     {{ if gt $index 0 }} and {{ end }}
     <div class="blog-contributors-list">
         <span class="contributor-image">

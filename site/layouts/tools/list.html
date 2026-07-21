@@ -21,8 +21,7 @@
                             <div style="display: inline-block;">
                                 {{ partial "main/blog-meta.html" . }}
                             </div>
-                            <h2 class="h3"><a class="stretched-link text-body" href="{{ .RelPermalink }}">{{
-                                    .Params.title }}</a></h2>
+                            <h2 class="h3"><a class="stretched-link text-body" href="{{ .RelPermalink }}">{{ .Params.title }}</a></h2>
                         </div>
                         <!-- <div class="blog-body">
                             {{.Content| truncate 350 }}
