@@ -8,6 +8,8 @@
  * deliberately loud `captionHtml` field instead.
  */
 
+import { getVideoInfo } from './video-urls';
+
 export interface ImageSources {
     media?: string;
     srcset: string;
@@ -89,12 +91,16 @@ export interface GalleryItem<TCaption = unknown> {
 export type SlideType = 'image' | 'video' | 'iframe';
 
 /**
- * Classify a gallery item. Video URL detection (YouTube/Vimeo/Wistia) is the
- * video plugin's job (plan 005, `video-urls.ts`); at the core level an item is
- * a video when it declares html5 `video` sources or a `poster`.
+ * Classify a gallery item: html5 `video` sources, a `poster`, or a
+ * YouTube/Vimeo/Wistia src URL make it a video (2.x `getSlideType` +
+ * `__slideVideoInfo` combined).
  */
 export function getSlideType(item: GalleryItem<unknown>): SlideType {
-    if (item.video || item.poster) {
+    if (
+        item.video ||
+        item.poster ||
+        getVideoInfo(item.src, false) !== undefined
+    ) {
         return 'video';
     }
     if (item.iframe) {

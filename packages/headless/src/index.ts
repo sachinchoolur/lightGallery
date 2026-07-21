@@ -64,6 +64,43 @@ export {
     type RectLike,
 } from './origin';
 
+export {
+    getVideoInfo,
+    getVimeoEmbedUrl,
+    getWistiaEmbedUrl,
+    getYouTubeEmbedUrl,
+    isYouTubeNoCookie,
+    param,
+    paramsToObject,
+    type PlayerParams,
+    type VideoInfo,
+} from './video-urls';
+
+export {
+    clampPan,
+    clampScale,
+    getActualSizeScale,
+    getPanBounds,
+    getPinchScale,
+    getPointZoomPan,
+    getPointerDistance,
+    type PanBounds,
+    type ZoomPan,
+} from './zoom-math';
+
+export {
+    clampThumbTranslate,
+    getActiveThumbTranslate,
+    getThumbTotalWidth,
+    type ThumbPagerPosition,
+} from './thumb-math';
+
+export {
+    applyZoom,
+    initialZoomSlice,
+    type ZoomSlice,
+} from './plugin-slices';
+
 /**
  * Clamp a slide index into the valid range for a gallery of `length` slides.
  * With `loop`, out-of-range indexes wrap around; without it they clamp to the
