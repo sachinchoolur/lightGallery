@@ -13,13 +13,28 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./plugins/thumbnail": {
+      "types": "./dist/plugins/thumbnail/index.d.ts",
+      "import": "./dist/plugins/thumbnail/index.js",
+      "require": "./dist/plugins/thumbnail/index.cjs"
+    },
+    "./plugins/zoom": {
+      "types": "./dist/plugins/zoom/index.d.ts",
+      "import": "./dist/plugins/zoom/index.js",
+      "require": "./dist/plugins/zoom/index.cjs"
+    },
+    "./plugins/video": {
+      "types": "./dist/plugins/video/index.d.ts",
+      "import": "./dist/plugins/video/index.js",
+      "require": "./dist/plugins/video/index.cjs"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "vite build && vue-tsc -p tsconfig.build.json",
+    "build": "vite build && vue-tsc -p tsconfig.build.json && node ../../scripts/copy-dts-to-cts.mjs dist",
     "dev": "vite --config dev/vite.config.ts",
     "test": "vitest run",
     "test:watch": "vitest",

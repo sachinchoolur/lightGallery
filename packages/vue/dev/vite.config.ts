@@ -15,6 +15,12 @@ export default defineConfig({
     resolve: {
         alias: [
             {
+                find: /^@lightgallery\/vue\/plugins\/([^/]+)$/,
+                replacement: fileURLToPath(
+                    new URL('../src/plugins/$1/index.ts', import.meta.url),
+                ),
+            },
+            {
                 find: '@lightgallery/vue',
                 replacement: fileURLToPath(
                     new URL('../src/index.ts', import.meta.url),

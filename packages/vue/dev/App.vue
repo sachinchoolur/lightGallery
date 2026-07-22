@@ -5,6 +5,9 @@ import {
     LgItem,
     type LgGalleryItem,
 } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Video from '@lightgallery/vue/plugins/video';
+import Zoom from '@lightgallery/vue/plugins/zoom';
 
 const picsum = (id: number, w: number, h: number): string =>
     `https://picsum.photos/id/${id}/${w}/${h}`;
@@ -18,13 +21,23 @@ const SOURCES = [
     { id: 1043, title: 'Foggy ridge' },
 ];
 
-const items: LgGalleryItem[] = SOURCES.map((source) => ({
-    src: picsum(source.id, 1600, 1067),
-    thumb: picsum(source.id, 240, 160),
-    lgSize: '1600-1067',
-    alt: source.title,
-    caption: source.title,
-}));
+const items: LgGalleryItem[] = [
+    ...SOURCES.map((source) => ({
+        src: picsum(source.id, 1600, 1067),
+        thumb: picsum(source.id, 240, 160),
+        lgSize: '1600-1067',
+        alt: source.title,
+        caption: source.title,
+    })),
+    {
+        src: 'https://www.youtube.com/watch?v=EIUJfXk3_3w',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/1.jpg',
+        alt: 'Big Buck Bunny (YouTube)',
+        caption: 'YouTube video slide (video plugin)',
+    },
+];
+
+const plugins = [Thumbnail, Zoom, Video];
 
 const mode = ref<'lg-slide' | 'lg-fade' | 'lg-lollipop'>('lg-slide');
 const loop = ref(true);
@@ -67,6 +80,8 @@ const lg = ref<InstanceType<typeof LightGallery> | null>(null);
                     :loop="loop"
                     :hide-bars-delay="hideBars ? 2000 : 0"
                     :mousewheel="true"
+                    :plugins="plugins"
+                    :zoom="{ showZoomInOutIcons: true }"
                     @before-slide="lastEvent = 'beforeSlide → ' + $event.index"
                     @after-slide="lastEvent = 'afterSlide → ' + $event.index"
                     @slide-item-load="lastEvent = 'slideItemLoad → ' + $event.index"

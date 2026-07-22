@@ -16,6 +16,7 @@ import {
     provide,
     ref,
     shallowRef,
+    useAttrs,
     useSlots,
     watch,
 } from 'vue';
@@ -51,6 +52,14 @@ import {
     LG_STORE,
     type LgGalleryActions,
 } from './store';
+import {
+    dedupePlugins,
+    LG_PLUGIN_CONTEXT,
+    type LgMediaPosition,
+    type LgPluginContext,
+    type LgVuePlugin,
+    type ResolvedPluginSettings,
+} from './plugins/types';
 import { LgTimeouts } from './timeouts';
 import {
     LG_EVENT_EMIT_NAMES,
@@ -78,7 +87,10 @@ interface SlideTimeline {
     progressIndex: number | null;
 }
 
-const props = withDefaults(defineProps<LgGalleryProps>(), {
+const props = withDefaults(
+    defineProps<LgGalleryProps & { plugins?: LgVuePlugin[] }>(),
+    {
+    plugins: undefined,
     slides: undefined,
     container: 'body',
     className: undefined,
@@ -108,7 +120,8 @@ const props = withDefaults(defineProps<LgGalleryProps>(), {
     counter: undefined,
     enableSwipe: undefined,
     enableDrag: undefined,
-});
+    },
+);
 
 const open = defineModel<boolean>('open', { default: false });
 const index = defineModel<number>('index', { default: 0 });
@@ -190,17 +203,36 @@ const reducedMotion =
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 let isMobileCache: boolean | null = null;
-const settings = computed<CoreSettings>(() => {
+const attrs = useAttrs();
+const plugins = computed(() => dedupePlugins(props.plugins ?? []));
+const settings = computed<ResolvedPluginSettings>(() => {
+    // ADR §5 merge order (identical across the tracks; headless owns the
+    // merge): core defaults < plugin presets < plugin defaults < user
+    // settings (core props + per-plugin attr objects) < mobile overrides.
     const user: Record<string, unknown> = {};
     for (const key of SETTING_KEYS) {
         user[key] = props[key];
     }
+    const registered = plugins.value;
+    registered.forEach((plugin) => {
+        const own = attrs[plugin.name];
+        if (own && typeof own === 'object') {
+            Object.assign(user, own);
+        }
+    });
     if (isMobileCache === null) {
         isMobileCache = props.isMobile ? props.isMobile() : defaultIsMobile();
     }
     const resolved = resolveSettings(user as UserSettings, {
         isMobile: isMobileCache,
-    });
+        pluginDefaults: [
+            ...registered.map((plugin) => plugin.presets ?? {}),
+            ...registered.map(
+                (plugin) =>
+                    (plugin.defaults ?? {}) as Partial<CoreSettings>,
+            ),
+        ],
+    }) as ResolvedPluginSettings;
     if (!reducedMotion) {
         return resolved;
     }
@@ -217,10 +249,49 @@ const settings = computed<CoreSettings>(() => {
 // ── Items (slides prop or trigger registry) ──────────────────────────────
 
 const registry = createRegistrationList();
-const items = computed<readonly LgGalleryItem[]>(
+const baseItems = computed<readonly LgGalleryItem[]>(
     () =>
         props.slides ??
         registry.registrations.value.map((entry) => entry.item()),
+);
+/** Plugin `transformItems` results (vimeoThumbnail-style, abortable). */
+const transformedItems = shallowRef<readonly LgGalleryItem[] | null>(null);
+let transformAbort: AbortController | null = null;
+watch(
+    [plugins, baseItems],
+    ([registered, base]) => {
+        transformAbort?.abort();
+        transformAbort = null;
+        if (!registered.some((plugin) => plugin.transformItems)) {
+            transformedItems.value = null;
+            return;
+        }
+        const controller = new AbortController();
+        transformAbort = controller;
+        void (async () => {
+            let result = [...base];
+            for (const plugin of registered) {
+                if (plugin.transformItems) {
+                    try {
+                        result = await plugin.transformItems(
+                            result,
+                            controller.signal,
+                            settings.value,
+                        );
+                    } catch {
+                        // Aborted/failed transforms keep the previous list.
+                    }
+                }
+            }
+            if (!controller.signal.aborted) {
+                transformedItems.value = result;
+            }
+        })();
+    },
+    { immediate: true },
+);
+const items = computed<readonly LgGalleryItem[]>(
+    () => transformedItems.value ?? baseItems.value,
 );
 watch(
     () => items.value.length,
@@ -281,7 +352,13 @@ let mouseDownOnSlide = false;
 
 const containerEl = ref<HTMLDivElement | null>(null);
 const outerEl = ref<HTMLDivElement | null>(null);
+const innerEl = ref<HTMLDivElement | null>(null);
 const toolbarEl = ref<HTMLDivElement | null>(null);
+
+/** Classes plugins toggled onto `.lg-outer` via `layout.setOuterClass`. */
+const pluginOuterClasses = ref<Record<string, boolean>>({});
+/** mediumZoom's media-position override, read by measureOffsets. */
+let mediaPositionOverride: (() => LgMediaPosition) | null = null;
 
 const isBodyContainer = computed(
     () =>
@@ -387,6 +464,7 @@ const outerClasses = computed(() => [
         'lg-no-trans': timeline.value.noTrans,
         'lg-slide':
             touchSlideMode.value && settings.value.mode !== 'lg-slide',
+        ...pluginOuterClasses.value,
         'lg-right-end': edgeBounce.value === 'right',
         'lg-left-end': edgeBounce.value === 'left',
         'lg-hide-download':
@@ -405,7 +483,10 @@ const contentStyle = computed(() => {
 // ── Measurements (zoom-from-origin + media position) ─────────────────────
 
 function measureOffsets(): { top: number; bottom: number } {
-    // Plugin overrides (mediumZoom) arrive with the plugin runtime (006).
+    // mediumZoom overrides the measurement entirely (ADR §5 layout).
+    if (mediaPositionOverride) {
+        return mediaPositionOverride();
+    }
     if (settings.value.allowMediaOverlap) {
         return { top: 0, bottom: 0 };
     }
@@ -990,6 +1071,46 @@ const actions: LgGalleryActions = {
 provide(LG_ACTIONS, actions);
 defineExpose(actions);
 
+const pluginContext: LgPluginContext = {
+    store,
+    actions: {
+        ...actions,
+        navigate,
+        dispatch: (action) => store.dispatch(action),
+    } as LgPluginContext['actions'],
+    settings,
+    items,
+    events,
+    gestureLock: gestureSeam,
+    layout: {
+        setOuterClass(className, active) {
+            const current = !!pluginOuterClasses.value[className];
+            if (current !== active) {
+                pluginOuterClasses.value = {
+                    ...pluginOuterClasses.value,
+                    [className]: active,
+                };
+            }
+        },
+        toggleComponents() {
+            componentsOpen.value = !componentsOpen.value;
+        },
+        overrideMediaPosition(fn) {
+            mediaPositionOverride = fn;
+        },
+    },
+    refs: {
+        getOuter: () => outerEl.value,
+        getInner: () => innerEl.value,
+        getCurrentSlide: () =>
+            outerEl.value?.querySelector<HTMLElement>(
+                '.lg-item.lg-current',
+            ) ?? null,
+    },
+    emit: emitEvent,
+};
+provide(LG_PLUGIN_CONTEXT, pluginContext);
+
 const runtime: LgGalleryRuntime = {
     items,
     settings,
@@ -1000,8 +1121,14 @@ const runtime: LgGalleryRuntime = {
     getItemIndex: registry.indexOf,
     getOriginRect,
     gestureSeam,
+    plugins,
+    pluginContext,
 };
 provide(LG_RUNTIME, runtime);
+
+// Run every plugin's setup inside this component's effect scope — their
+// watchers/listeners/timers are torn down with the gallery automatically.
+plugins.value.forEach((plugin) => plugin.setup?.(pluginContext));
 
 // Gesture bindings: swipe/drag over the shared headless math.
 useGalleryGestures({
@@ -1022,6 +1149,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
     timers.clearAll();
     unbindOpenListeners();
+    transformAbort?.abort();
 });
 </script>
 
@@ -1056,6 +1184,7 @@ onBeforeUnmount(() => {
             >
                 <div class="lg-content" :style="contentStyle">
                     <div
+                        ref="innerEl"
                         class="lg-inner"
                         :style="{
                             transitionTimingFunction: settings.easing,
@@ -1123,6 +1252,15 @@ onBeforeUnmount(() => {
                         :href="downloadHref"
                         :download="downloadName || true"
                     ></a>
+                    <template
+                        v-for="plugin of plugins"
+                        :key="plugin.name"
+                    >
+                        <component
+                            :is="plugin.slots!.toolbar!"
+                            v-if="plugin.slots?.toolbar"
+                        />
+                    </template>
                     <div
                         v-if="settings.counter"
                         class="lg-counter"
@@ -1149,12 +1287,27 @@ onBeforeUnmount(() => {
                     :item="currentItem"
                     :index="store.currentIndex.value"
                 />
+                <template v-for="plugin of plugins" :key="plugin.name">
+                    <component
+                        :is="plugin.slots!.outer!"
+                        v-if="plugin.slots?.outer"
+                    />
+                </template>
                 <div class="lg-components">
                     <LgCaption
                         v-if="settings.captionPosition === 'bar'"
                         :item="currentItem"
                         :index="store.currentIndex.value"
                     />
+                    <template
+                        v-for="plugin of plugins"
+                        :key="plugin.name"
+                    >
+                        <component
+                            :is="plugin.slots!.components!"
+                            v-if="plugin.slots?.components"
+                        />
+                    </template>
                 </div>
             </div>
         </div>

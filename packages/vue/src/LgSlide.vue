@@ -6,7 +6,7 @@
  * long as it stays in the DOM window. The vanilla CSS shows the loading
  * spinner until `lg-complete` lands.
  */
-import { computed, inject, ref, watch } from 'vue';
+import { computed, h, inject, ref, watch, type VNodeChild } from 'vue';
 import { getPreloadIndexes, getSlideType } from '@lightgallery/headless';
 
 import { LgCaptionContent } from './caption-content';
@@ -102,6 +102,53 @@ watch(
 const slideType = computed(() =>
     props.item ? getSlideType(props.item) : 'image',
 );
+
+/**
+ * Slide content resolved through the plugin runtime (ADR §5): the first
+ * plugin slide renderer that owns the item wins (video); otherwise the
+ * built-in image renderer; then every plugin `slideWrapper` wraps the
+ * result, first plugin outermost (2.x DOM order) — the direct Vue
+ * expression of the React runtime's reduceRight.
+ */
+const SlideContent = (): VNodeChild => {
+    const item = props.item;
+    if (!item) {
+        return null;
+    }
+    let content: VNodeChild = null;
+    const registered = runtime.plugins.value;
+    const renderer = registered.find((plugin) =>
+        plugin.slideRenderer?.canRender(item),
+    )?.slideRenderer;
+    if (renderer) {
+        content = h(renderer.component, {
+            item,
+            index: props.index,
+        });
+    } else if (slideType.value === 'image') {
+        content = h(LgImageSlide, {
+            item,
+            index: props.index,
+            onMediaLoad: onLoad,
+            onMediaError: onError,
+        });
+    }
+    // Video/iframe items render nothing without their plugin.
+    return registered.reduceRight((acc, plugin) => {
+        const Wrapper = plugin.slots?.slideWrapper;
+        return Wrapper
+            ? h(
+                  Wrapper,
+                  {
+                      item,
+                      index: props.index,
+                      isCurrent: isCurrent.value,
+                  },
+                  { default: () => acc },
+              )
+            : acc;
+    }, content);
+};
 const renderContent = computed(
     () => shouldLoad.value && !!props.item && !error.value,
 );
@@ -172,16 +219,7 @@ const style = computed(() => {
 
 <template>
     <div :class="classes" :style="style">
-        <template v-if="renderContent">
-            <LgImageSlide
-                v-if="slideType === 'image'"
-                :item="props.item!"
-                :index="props.index"
-                @media-load="onLoad"
-                @media-error="onError"
-            />
-            <!-- video/iframe renderers land with the video plugin (005). -->
-        </template>
+        <SlideContent v-if="renderContent" />
         <span v-if="error" class="lg-error-msg">{{
             runtime.settings.value.strings.mediaLoadingFailed
         }}</span>

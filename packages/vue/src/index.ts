@@ -28,3 +28,15 @@ export type {
     SlideEventDetail,
     SlideItemLoadDetail,
 } from './types';
+export {
+    dedupePlugins,
+    LG_PLUGIN_CONTEXT,
+    type LgMediaPosition,
+    type LgPluginContext,
+    type LgPluginLayout,
+    type LgPluginRefs,
+    type LgPluginSlots,
+    type LgSlideRenderer,
+    type LgVuePlugin,
+    type ResolvedPluginSettings,
+} from './plugins/types';

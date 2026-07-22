@@ -13,6 +13,7 @@ import type {
 } from '@lightgallery/headless';
 
 import type { LgEventMap, LgGalleryItem } from './types';
+import type { LgPluginContext, LgVuePlugin } from './plugins/types';
 
 /**
  * The gesture seam plugins consume (ADR 0001 §5), mirroring the sibling
@@ -68,6 +69,10 @@ export interface LgGalleryRuntime {
     getOriginRect(index: number): RectLike | null;
     /** Multi-pointer seam (consumed by the zoom plugin). */
     readonly gestureSeam: LgGestureSeam;
+    /** Registered plugins, deduped, in `:plugins` order (ADR §5). */
+    readonly plugins: ComputedRef<readonly LgVuePlugin[]>;
+    /** The context plugin `setup(ctx)` receives; also injectable. */
+    readonly pluginContext: LgPluginContext;
 }
 
 export const LG_RUNTIME: InjectionKey<LgGalleryRuntime> =
