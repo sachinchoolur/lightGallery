@@ -20,6 +20,8 @@ export {
     type SlideType,
 } from './items';
 
+export { createEmitter, type TypedEmitter } from './emitter';
+
 export {
     coreSettingsDefaults,
     resolveSettings,

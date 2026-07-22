@@ -27,6 +27,7 @@ export class LightGalleryStore {
     readonly currentIndex = computed(() => this.stateSignal().currentIndex);
     readonly previousIndex = computed(() => this.stateSignal().previousIndex);
     readonly slidesCount = computed(() => this.stateSignal().slidesCount);
+    readonly loop = computed(() => this.stateSignal().loop);
     readonly transitioning = computed(() => this.stateSignal().transitioning);
     readonly slideDirection = computed(
         () => this.stateSignal().slideDirection,

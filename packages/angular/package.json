@@ -5,6 +5,7 @@
   "description": "Native Angular lightGallery over @lightgallery/headless",
   "scripts": {
     "build": "ng-packagr -p ng-package.json -c tsconfig.lib.json",
+    "dev": "vite dev --config dev/vite.config.mts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json",

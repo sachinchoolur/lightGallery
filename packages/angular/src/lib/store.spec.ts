@@ -29,6 +29,10 @@ describe('LightGalleryStore', () => {
         expect(store.isOpen()).toBe(false);
         // Index survives close (2.x behavior via the shared reducer).
         expect(store.currentIndex()).toBe(2);
+
+        expect(store.loop()).toBe(true);
+        store.setLoop(false);
+        expect(store.loop()).toBe(false);
     });
 
     it('inherits headless gating (transitions block navigation)', () => {
