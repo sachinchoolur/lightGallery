@@ -1,6 +1,7 @@
 /** Public API surface of @lightgallery/angular. */
 export { LgGalleryComponent } from './lib/gallery.component';
 export { LgGalleryItemDirective } from './lib/item.directive';
+export { LgGesturesDirective } from './lib/gestures.directive';
 export {
     LgCaptionComponent,
     LgCaptionContentComponent,
@@ -16,7 +17,12 @@ export {
     type LgCounterContext,
 } from './lib/slots';
 export { LightGalleryStore } from './lib/store';
-export { LgGalleryRuntime, type LgItemRegistration } from './lib/runtime';
+export {
+    LgGalleryRuntime,
+    type LgGestureHooks,
+    type LgGestureSeam,
+    type LgItemRegistration,
+} from './lib/runtime';
 export type {
     HasVideoDetail,
     InitDetail,

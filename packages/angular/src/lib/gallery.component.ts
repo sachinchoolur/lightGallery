@@ -42,6 +42,7 @@ import {
 
 import { LgCaptionComponent } from './caption.component';
 import { cx } from './cx';
+import { LgGesturesDirective } from './gestures.directive';
 import { LgGalleryRuntime } from './runtime';
 import { LgSlideComponent, type OriginAnimation } from './slide.component';
 import {
@@ -114,7 +115,12 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
     exportAs: 'lgGallery',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [LightGalleryStore, LgGalleryRuntime],
-    imports: [LgCaptionComponent, LgSlideComponent, NgTemplateOutlet],
+    imports: [
+        LgCaptionComponent,
+        LgGesturesDirective,
+        LgSlideComponent,
+        NgTemplateOutlet,
+    ],
     template: `
         <ng-content />
         <ng-template #galleryTpl>
@@ -141,6 +147,7 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                     #outerEl
                     [class]="outerClasses()"
                     [attr.data-lg-slide-type]="currentSlideType()"
+                    [lgGestures]="bodyLockActive()"
                     (mousedown)="onOuterMouseDown($event)"
                     (mousemove)="onOuterMouseMove()"
                     (mouseup)="onOuterMouseUp($event)"
@@ -578,6 +585,10 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         progressIndex: null,
     });
 
+    /** fromTouch commit path (plan 004): drags animate as `lg-slide`. */
+    private readonly touchSlideMode = signal(false);
+    private fromTouch = false;
+
     private usedZoom = false;
     private prevShown: number | null = null;
     private returnFocus: HTMLElement | null = null;
@@ -585,6 +596,9 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     private mouseDownOnSlide = false;
 
     private keydownListener: ((event: KeyboardEvent) => void) | null = null;
+    private wheelListener: ((event: WheelEvent) => void) | null = null;
+    private wheelTarget: HTMLElement | null = null;
+    private lastWheelAt = 0;
     private resizeListener: (() => void) | null = null;
     private activityListener: (() => void) | null = null;
     private activityTarget: HTMLElement | null = null;
@@ -596,6 +610,13 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     protected readonly showIn = computed(
         () => this.phase() === 'opening' || this.phase() === 'open',
     );
+    /** Open-and-not-closing — gates gestures/listeners (React's twin flag). */
+    protected readonly bodyLockActive = computed(() => {
+        const phase = this.phase();
+        return (
+            phase === 'pre-open' || phase === 'opening' || phase === 'open'
+        );
+    });
     private readonly zoomClosing = computed(
         () =>
             this.phase() === 'closing' &&
@@ -629,6 +650,9 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                 'lg-hide-items',
             this.zoomClosing() && 'lg-closing',
             this.timeline().noTrans && 'lg-no-trans',
+            this.touchSlideMode() &&
+                this.settings().mode !== 'lg-slide' &&
+                'lg-slide',
             this.edgeBounce() === 'right' && 'lg-right-end',
             this.edgeBounce() === 'left' && 'lg-left-end',
             this.settings().download &&
@@ -722,6 +746,11 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             prevSlide: () => this.prevSlide(),
             refresh: () => this.refresh(),
             navigate: (index, direction) => this.navigate(index, direction),
+        };
+        this.runtime.gestureHooks = {
+            prepareDrag: () => this.prepareDrag(),
+            commitTouchNavigation: (target, direction) =>
+                this.commitTouchNavigation(target, direction),
         };
 
         // React counterpart: the SET_SLIDES_COUNT sync effect in the
@@ -910,6 +939,55 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         }
         this.store.goTo(rawIndex, direction);
         this.index.set(this.store.currentIndex());
+    }
+
+    // ── Gesture wiring (plan 004): position classes at drag start, commit
+    // at release — the only two renders a gesture causes. ─────────────────
+
+    /** React counterpart: GalleryOutlet's `prepareDrag`. */
+    private prepareDrag(): void {
+        const count = this.store.slidesCount();
+        const index = this.store.currentIndex();
+        let prevN = index - 1;
+        let nextN = index + 1;
+        if (this.store.loop() && count > 2) {
+            if (index === 0) {
+                prevN = count - 1;
+            } else if (index === count - 1) {
+                nextN = 0;
+            }
+        }
+        const positions: Record<number, 'prev' | 'next'> = {};
+        if (prevN >= 0 && prevN < count && prevN !== index) {
+            positions[prevN] = 'prev';
+        }
+        if (
+            nextN >= 0 &&
+            nextN < count &&
+            nextN !== index &&
+            nextN !== prevN
+        ) {
+            positions[nextN] = 'next';
+        }
+        this.timeline.update((tl) => ({ ...tl, positions }));
+    }
+
+    /** React counterpart: GalleryOutlet's `commitTouchNavigation`. */
+    private commitTouchNavigation(
+        target: number,
+        direction: SlideDirection,
+    ): void {
+        this.fromTouch = true;
+        // Drags animate as slide whatever the mode (2.x adds lg-slide for
+        // the release animation, then removes it).
+        if (this.settings().mode !== 'lg-slide') {
+            this.touchSlideMode.set(true);
+            this.timers.set(
+                () => this.touchSlideMode.set(false),
+                this.settings().speed + 100,
+            );
+        }
+        this.navigate(target, direction);
     }
 
     // Slide-end bounce (lg-left-end / lg-right-end) — 400ms, 2.x parity.
@@ -1107,15 +1185,55 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     // ── Document/window listeners while open ──────────────────────────────
 
     private bindOpenListeners(settings: CoreSettings): void {
-        // ESC close (2.x escKey). Arrow-key navigation and mousewheel land
-        // with the keyboard/gesture bindings (plan 004).
+        // ESC close (2.x escKey) + arrow navigation (2.x keyPress). Focus
+        // trapping beyond CDK defaults is the 007 a11y pass.
         this.keydownListener = (event: KeyboardEvent) => {
             if (this.settings().escKey && event.key === 'Escape') {
                 event.preventDefault();
                 this.closeGallery();
             }
+            if (this.settings().keyPress && this.store.slidesCount() > 1) {
+                if (event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    this.prevSlide();
+                } else if (event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    this.nextSlide();
+                }
+            }
         };
         document.addEventListener('keydown', this.keydownListener);
+
+        // Mousewheel navigation, throttled to one slide per second (2.x
+        // parity). Non-passive on purpose: the gallery owns the wheel while
+        // open; the page behind must not scroll.
+        const wheelTarget = this.outerEl()?.nativeElement ?? null;
+        if (wheelTarget) {
+            this.wheelListener = (event: WheelEvent) => {
+                if (
+                    !this.settings().mousewheel ||
+                    this.store.slidesCount() < 2 ||
+                    !event.deltaY
+                ) {
+                    return;
+                }
+                event.preventDefault();
+                const now = Date.now();
+                if (now - this.lastWheelAt < 1000) {
+                    return;
+                }
+                this.lastWheelAt = now;
+                if (event.deltaY > 0) {
+                    this.nextSlide();
+                } else {
+                    this.prevSlide();
+                }
+            };
+            wheelTarget.addEventListener('wheel', this.wheelListener, {
+                passive: false,
+            });
+            this.wheelTarget = wheelTarget;
+        }
 
         // 2.x containerResize: re-measure the media position and notify.
         this.resizeListener = () => {
@@ -1134,6 +1252,14 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             document.removeEventListener('keydown', this.keydownListener);
             this.keydownListener = null;
         }
+        if (this.wheelTarget && this.wheelListener) {
+            this.wheelTarget.removeEventListener(
+                'wheel',
+                this.wheelListener,
+            );
+        }
+        this.wheelTarget = null;
+        this.wheelListener = null;
         if (this.resizeListener) {
             window.removeEventListener('resize', this.resizeListener);
             this.resizeListener = null;
@@ -1278,6 +1404,8 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     // ── Slide transition timeline (2.x makeSlideAnimation) ────────────────
 
     private onIndexCommit(open: boolean, current: number): void {
+        const fromTouch = this.fromTouch;
+        this.fromTouch = false;
         if (!open) {
             this.prevShown = null;
             this.timeline.set({
@@ -1307,8 +1435,65 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         const direction =
             this.store.slideDirection() ??
             (current > previous ? 'next' : 'prev');
-        // The fromTouch commit path arrives with the gesture bindings (004).
+        if (fromTouch) {
+            this.runTouchTransition(previous, current, direction);
+            return;
+        }
         this.runTransition(previous, current, direction);
+    }
+
+    /**
+     * 2.x fromTouch path (React counterpart: `runTouchTransition`): slides
+     * are already positioned by the drag — switch lg-current immediately
+     * (no lg-no-trans / 50ms phase) and keep only the incoming-side
+     * neighbor positioned.
+     */
+    private runTouchTransition(
+        from: number,
+        to: number,
+        direction: SlideDirection,
+    ): void {
+        this.emitEvent('beforeSlide', {
+            index: to,
+            prevIndex: from,
+            fromTouch: true,
+            fromThumb: false,
+        });
+        const count = this.store.slidesCount();
+        const loop = this.store.loop();
+        const positions: Record<number, 'prev' | 'next'> = {};
+        if (direction === 'prev') {
+            let neighbor = to + 1;
+            if (neighbor >= count) {
+                neighbor = loop && count > 2 ? 0 : -1;
+            }
+            if (neighbor >= 0 && neighbor !== to) {
+                positions[neighbor] = 'next';
+            }
+        } else {
+            let neighbor = to - 1;
+            if (neighbor < 0) {
+                neighbor = loop && count > 2 ? count - 1 : -1;
+            }
+            if (neighbor >= 0 && neighbor !== to) {
+                positions[neighbor] = 'prev';
+            }
+        }
+        this.timeline.set({
+            shownIndex: to,
+            positions,
+            noTrans: false,
+            progressIndex: null,
+        });
+        this.timers.set(() => {
+            this.store.dispatch({ type: 'TRANSITION_END' });
+            this.emitEvent('afterSlide', {
+                index: to,
+                prevIndex: from,
+                fromTouch: true,
+                fromThumb: false,
+            });
+        }, this.settings().speed + 100);
     }
 
     private runTransition(

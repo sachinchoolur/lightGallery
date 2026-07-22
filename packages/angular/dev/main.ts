@@ -84,6 +84,7 @@ const ITEMS: LgGalleryItem[] = SOURCES.map((source) => ({
                 #lg="lgGallery"
                 [mode]="mode()"
                 [loop]="loop()"
+                [mousewheel]="true"
                 [hideBarsDelay]="hideBars() ? 2000 : 0"
                 (beforeSlide)="lastEvent.set('beforeSlide → ' + $event.index)"
                 (afterSlide)="lastEvent.set('afterSlide → ' + $event.index)"

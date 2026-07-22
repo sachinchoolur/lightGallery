@@ -2,6 +2,7 @@ import { Injectable, signal, type Signal } from '@angular/core';
 import {
     createEmitter,
     type CoreSettings,
+    type PointerRecord,
     type SlideDirection,
     type TypedEmitter,
 } from '@lightgallery/headless';
@@ -28,6 +29,29 @@ export interface LgGalleryActions extends LgGalleryHandle {
      * loop edges need it — plan 004); same gating as `goToSlide`.
      */
     navigate(index: number, direction?: SlideDirection): void;
+}
+
+/**
+ * The gesture seam plugins consume (ADR 0001 §5), mirroring the React
+ * `GestureSeam` field-for-field: the zoom feature (005) claims the lock
+ * while pinching/zoom-dragging — core swipe stands down — and reads the
+ * live pointer records for its multi-pointer math. Mutable by design: it
+ * changes per pointer event and must never trigger change detection.
+ */
+export interface LgGestureSeam {
+    /** Current lock owner; `null` means core swipe/drag may act. */
+    lockOwner: 'pinch' | 'zoomSwipe' | null;
+    claim(owner: 'pinch' | 'zoomSwipe' | null): void;
+    /** Live pointers inside the gallery (multi-pointer bookkeeping). */
+    pointers: PointerRecord[];
+}
+
+/** Timeline hooks the gesture directive drives on the gallery (plan 004). */
+export interface LgGestureHooks {
+    /** Assign prev/next position classes around the current slide (1 render). */
+    prepareDrag(): void;
+    /** Commit a swipe release to a slide change with fromTouch semantics. */
+    commitTouchNavigation(target: number, direction: SlideDirection): void;
 }
 
 /** Template slots discovered by the gallery via content queries (ADR §4). */
@@ -68,6 +92,20 @@ export class LgGalleryRuntime {
     ) => void;
 
     actions!: LgGalleryActions;
+
+    /** Assigned by the gallery; consumed by the gesture directive. */
+    gestureHooks!: LgGestureHooks;
+
+    readonly gestureSeam: LgGestureSeam = (() => {
+        const seam: LgGestureSeam = {
+            lockOwner: null,
+            claim(owner) {
+                seam.lockOwner = owner;
+            },
+            pointers: [],
+        };
+        return seam;
+    })();
 
     // Uncontrolled trigger registry — registration (mount) order defines
     // slide order, same caveat as the React `<LightGalleryItem>` registry.
