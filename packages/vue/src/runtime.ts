@@ -7,11 +7,38 @@ import {
 } from 'vue';
 import type {
     CoreSettings,
+    PointerRecord,
     RectLike,
     TypedEmitter,
 } from '@lightgallery/headless';
 
 import type { LgEventMap, LgGalleryItem } from './types';
+
+/**
+ * The gesture seam plugins consume (ADR 0001 §5), mirroring the sibling
+ * tracks' field-for-field: the zoom plugin (005) claims the lock while
+ * pinching/zoom-dragging — core swipe stands down — and reads the live
+ * pointer records for its multi-pointer math. Mutable by design: it
+ * changes per pointer event and must never touch reactivity.
+ */
+export interface LgGestureSeam {
+    /** Current lock owner; `null` means core swipe/drag may act. */
+    lockOwner: 'pinch' | 'zoomSwipe' | null;
+    claim(owner: 'pinch' | 'zoomSwipe' | null): void;
+    /** Live pointers inside the gallery (multi-pointer bookkeeping). */
+    pointers: PointerRecord[];
+}
+
+export function createGestureSeam(): LgGestureSeam {
+    const seam: LgGestureSeam = {
+        lockOwner: null,
+        claim(owner) {
+            seam.lockOwner = owner;
+        },
+        pointers: [],
+    };
+    return seam;
+}
 
 /** One `<LgItem>` trigger registration (uncontrolled mode). */
 export interface LgItemRegistration {
@@ -39,6 +66,8 @@ export interface LgGalleryRuntime {
     getItemIndex(registration: LgItemRegistration): number;
     /** Zoom-from-origin rect: `originRect` prop or the trigger element. */
     getOriginRect(index: number): RectLike | null;
+    /** Multi-pointer seam (consumed by the zoom plugin). */
+    readonly gestureSeam: LgGestureSeam;
 }
 
 export const LG_RUNTIME: InjectionKey<LgGalleryRuntime> =

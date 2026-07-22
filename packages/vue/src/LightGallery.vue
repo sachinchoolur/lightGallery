@@ -35,9 +35,11 @@ import {
 } from '@lightgallery/headless';
 
 import { useBodyLock, useHideBars } from './composables';
+import { useGalleryGestures } from './gestures';
 import LgCaption from './LgCaption.vue';
 import LgSlide, { type OriginAnimation } from './LgSlide.vue';
 import {
+    createGestureSeam,
     createRegistrationList,
     LG_RUNTIME,
     LG_SLOTS,
@@ -270,6 +272,10 @@ const timeline = shallowRef<SlideTimeline>({
 });
 let usedZoom = false;
 let prevShown: number | null = null;
+/** fromTouch commit path (gestures): drags animate as lg-slide. */
+const touchSlideMode = ref(false);
+let fromTouch = false;
+const gestureSeam = createGestureSeam();
 let returnFocus: HTMLElement | null = null;
 let mouseDownOnSlide = false;
 
@@ -379,6 +385,8 @@ const outerClasses = computed(() => [
             (phase.value === 'closing' && !zoomClosing.value),
         'lg-closing': zoomClosing.value,
         'lg-no-trans': timeline.value.noTrans,
+        'lg-slide':
+            touchSlideMode.value && settings.value.mode !== 'lg-slide',
         'lg-right-end': edgeBounce.value === 'right',
         'lg-left-end': edgeBounce.value === 'left',
         'lg-hide-download':
@@ -586,11 +594,19 @@ function finishClose(): void {
 // ── Document/window listeners while open ─────────────────────────────────
 
 function onKeydown(event: KeyboardEvent): void {
-    // ESC close (2.x escKey). Arrow keys and mousewheel land with the
-    // keyboard/gesture composable (plan 004).
+    // ESC close (2.x escKey) + arrow navigation (2.x keyPress).
     if (settings.value.escKey && event.key === 'Escape') {
         event.preventDefault();
         closeGallery();
+    }
+    if (settings.value.keyPress && store.slidesCount.value > 1) {
+        if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            prevSlide();
+        } else if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            nextSlide();
+        }
     }
 }
 function onResize(): void {
@@ -598,6 +614,31 @@ function onResize(): void {
     emitEvent('containerResize', { index: store.currentIndex.value });
 }
 let listenersBound = false;
+let lastWheelAt = 0;
+let wheelTarget: HTMLElement | null = null;
+// Mousewheel navigation, throttled to one slide per second (2.x parity).
+// Non-passive on purpose: the gallery owns the wheel while open; the page
+// behind must not scroll.
+function onWheel(event: WheelEvent): void {
+    if (
+        !settings.value.mousewheel ||
+        store.slidesCount.value < 2 ||
+        !event.deltaY
+    ) {
+        return;
+    }
+    event.preventDefault();
+    const now = Date.now();
+    if (now - lastWheelAt < 1000) {
+        return;
+    }
+    lastWheelAt = now;
+    if (event.deltaY > 0) {
+        nextSlide();
+    } else {
+        prevSlide();
+    }
+}
 function bindOpenListeners(): void {
     if (listenersBound || typeof document === 'undefined') {
         return;
@@ -605,6 +646,8 @@ function bindOpenListeners(): void {
     listenersBound = true;
     document.addEventListener('keydown', onKeydown);
     window.addEventListener('resize', onResize);
+    wheelTarget = outerEl.value;
+    wheelTarget?.addEventListener('wheel', onWheel, { passive: false });
 }
 function unbindOpenListeners(): void {
     if (!listenersBound) {
@@ -613,6 +656,8 @@ function unbindOpenListeners(): void {
     listenersBound = false;
     document.removeEventListener('keydown', onKeydown);
     window.removeEventListener('resize', onResize);
+    wheelTarget?.removeEventListener('wheel', onWheel);
+    wheelTarget = null;
 }
 
 // Close on tap of the black area around the slide (2.x closeOnTap).
@@ -643,6 +688,8 @@ function onOuterMouseUp(event: MouseEvent): void {
 // ── Slide transition timeline (2.x makeSlideAnimation) ───────────────────
 
 watch([store.isOpen, store.currentIndex], ([isOpen, current]) => {
+    const wasFromTouch = fromTouch;
+    fromTouch = false;
     if (!isOpen) {
         prevShown = null;
         timeline.value = {
@@ -672,9 +719,112 @@ watch([store.isOpen, store.currentIndex], ([isOpen, current]) => {
     const direction =
         store.slideDirection.value ??
         (current > previous ? 'next' : 'prev');
-    // The fromTouch commit path arrives with the gesture composable (004).
+    if (wasFromTouch) {
+        runTouchTransition(previous, current, direction);
+        return;
+    }
     runTransition(previous, current, direction);
 });
+
+/**
+ * 2.x fromTouch path (sibling `runTouchTransition` twin): slides are
+ * already positioned by the drag — switch lg-current immediately (no
+ * lg-no-trans / 50ms phase) and keep only the incoming-side neighbor
+ * positioned.
+ */
+function runTouchTransition(
+    from: number,
+    to: number,
+    direction: SlideDirection,
+): void {
+    emitEvent('beforeSlide', {
+        index: to,
+        prevIndex: from,
+        fromTouch: true,
+        fromThumb: false,
+    });
+    const count = store.slidesCount.value;
+    const loop = store.loop.value;
+    const positions: Record<number, 'prev' | 'next'> = {};
+    if (direction === 'prev') {
+        let neighbor = to + 1;
+        if (neighbor >= count) {
+            neighbor = loop && count > 2 ? 0 : -1;
+        }
+        if (neighbor >= 0 && neighbor !== to) {
+            positions[neighbor] = 'next';
+        }
+    } else {
+        let neighbor = to - 1;
+        if (neighbor < 0) {
+            neighbor = loop && count > 2 ? count - 1 : -1;
+        }
+        if (neighbor >= 0 && neighbor !== to) {
+            positions[neighbor] = 'prev';
+        }
+    }
+    timeline.value = {
+        shownIndex: to,
+        positions,
+        noTrans: false,
+        progressIndex: null,
+    };
+    timers.set(() => {
+        store.dispatch({ type: 'TRANSITION_END' });
+        emitEvent('afterSlide', {
+            index: to,
+            prevIndex: from,
+            fromTouch: true,
+            fromThumb: false,
+        });
+    }, settings.value.speed + 100);
+}
+
+/** React counterpart: GalleryOutlet's prepareDrag (one render at start). */
+function prepareDrag(): void {
+    const count = store.slidesCount.value;
+    const current = store.currentIndex.value;
+    let prevN = current - 1;
+    let nextN = current + 1;
+    if (store.loop.value && count > 2) {
+        if (current === 0) {
+            prevN = count - 1;
+        } else if (current === count - 1) {
+            nextN = 0;
+        }
+    }
+    const positions: Record<number, 'prev' | 'next'> = {};
+    if (prevN >= 0 && prevN < count && prevN !== current) {
+        positions[prevN] = 'prev';
+    }
+    if (
+        nextN >= 0 &&
+        nextN < count &&
+        nextN !== current &&
+        nextN !== prevN
+    ) {
+        positions[nextN] = 'next';
+    }
+    timeline.value = { ...timeline.value, positions };
+}
+
+/** Sibling `commitTouchNavigation` twin. */
+function commitTouchNavigation(
+    target: number,
+    direction: SlideDirection,
+): void {
+    fromTouch = true;
+    // Drags animate as slide whatever the mode (2.x adds lg-slide for the
+    // release animation, then removes it).
+    if (settings.value.mode !== 'lg-slide') {
+        touchSlideMode.value = true;
+        timers.set(
+            () => (touchSlideMode.value = false),
+            settings.value.speed + 100,
+        );
+    }
+    navigate(target, direction);
+}
 
 function runTransition(
     from: number,
@@ -849,8 +999,22 @@ const runtime: LgGalleryRuntime = {
     registerItem: registry.register,
     getItemIndex: registry.indexOf,
     getOriginRect,
+    gestureSeam,
 };
 provide(LG_RUNTIME, runtime);
+
+// Gesture bindings: swipe/drag over the shared headless math.
+useGalleryGestures({
+    outer: outerEl,
+    active: bodyLockActive,
+    store,
+    settings: () => settings.value,
+    seam: gestureSeam,
+    emit: emitEvent,
+    closeGallery,
+    prepareDrag,
+    commitTouchNavigation,
+});
 
 onMounted(() => {
     emitEvent('init', { instance: actions });

@@ -38,7 +38,7 @@ const lg = ref<InstanceType<typeof LightGallery> | null>(null);
 <template>
 
         <div style="font-family: system-ui, sans-serif; padding: 1rem 2rem 4rem">
-            <h1>@lightgallery/vue — plan 003 dev demo</h1>
+            <h1>@lightgallery/vue dev demo</h1>
 
             <section>
                 <h2>Uncontrolled (triggers + zoom-from-origin)</h2>
@@ -66,6 +66,7 @@ const lg = ref<InstanceType<typeof LightGallery> | null>(null);
                     :mode="mode"
                     :loop="loop"
                     :hide-bars-delay="hideBars ? 2000 : 0"
+                    :mousewheel="true"
                     @before-slide="lastEvent = 'beforeSlide → ' + $event.index"
                     @after-slide="lastEvent = 'afterSlide → ' + $event.index"
                     @slide-item-load="lastEvent = 'slideItemLoad → ' + $event.index"
