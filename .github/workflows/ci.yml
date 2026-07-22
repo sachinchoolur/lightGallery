@@ -93,6 +93,79 @@ jobs:
             npx --yes publint@latest "$dir/package" --strict
           done
 
+  vue-package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm --filter @lightgallery/vue run typecheck
+
+      - name: Test
+        run: pnpm --filter @lightgallery/vue test
+
+      - name: Build packages
+        run: |
+          pnpm --filter @lightgallery/headless run build
+          pnpm --filter @lightgallery/vue run build
+
+      - name: Pack artifacts
+        run: |
+          mkdir -p /tmp/lg-pack
+          pnpm --filter @lightgallery/headless exec pnpm pack --pack-destination /tmp/lg-pack
+          pnpm --filter @lightgallery/vue exec pnpm pack --pack-destination /tmp/lg-pack
+
+      - name: publint
+        run: |
+          for tgz in /tmp/lg-pack/*.tgz; do
+            dir=$(mktemp -d)
+            tar -xzf "$tgz" -C "$dir"
+            npx --yes publint@latest "$dir/package" --strict
+          done
+
+      - name: Scratch consumer (Vite build + consumer vue-tsc)
+        run: |
+          cp -r packages/vue/ci/vite-consumer /tmp/lg-vite
+          cd /tmp/lg-vite
+          npm i --no-fund --no-audit
+          npm i --no-fund --no-audit /tmp/lg-pack/lightgallery-headless-*.tgz \
+                /tmp/lg-pack/lightgallery-vue-*.tgz
+          npm run build
+          npm run typecheck
+
+      - name: Bare-Node import matrix (ESM + CJS, all 14 entries)
+        run: |
+          cd /tmp/lg-vite
+          node "$GITHUB_WORKSPACE/packages/vue/ci/import-matrix.mjs"
+
+      - name: Scratch consumer (Nuxt SSR prerender)
+        run: |
+          cp -r packages/vue/ci/nuxt-consumer /tmp/lg-nuxt
+          cd /tmp/lg-nuxt
+          npm i --no-fund --no-audit
+          npm i --no-fund --no-audit /tmp/lg-pack/lightgallery-headless-*.tgz \
+                /tmp/lg-pack/lightgallery-vue-*.tgz
+          npm run generate
+          # SSR contract: triggers prerender, the overlay never does.
+          grep -q 'alt="First"' .output/public/index.html
+          ! grep -q 'lg-container' .output/public/index.html
+
   angular-package:
     runs-on: ubuntu-latest
     strategy:
