@@ -20,6 +20,7 @@
   ],
   "scripts": {
     "build": "vite build && vue-tsc -p tsconfig.build.json",
+    "dev": "vite --config dev/vite.config.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",

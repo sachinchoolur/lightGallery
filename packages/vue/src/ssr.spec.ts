@@ -4,7 +4,7 @@ import { renderToString } from 'vue/server-renderer';
 import { describe, expect, it } from 'vitest';
 
 import LightGallery from './LightGallery.vue';
-import type { LgGalleryItem } from './LightGallery.vue';
+import type { LgGalleryItem } from './types';
 
 const ITEMS: LgGalleryItem[] = [
     { src: 'a.jpg', alt: 'First slide' },

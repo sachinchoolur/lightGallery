@@ -1,150 +1,833 @@
 <script setup lang="ts">
 /**
- * ADR 0001 spike (plans-vue 002): the minimal `<LightGallery>` proving the
- * architecture — `shallowRef` store over the shared headless reducer,
- * `<Teleport>` outlet rendering the `lg-*` class contract, `v-model:open` /
- * `v-model:index` controlled state, one typed scoped slot (`#caption`),
- * ESC close, `defineExpose` imperative surface.
- *
- * The full gallery (phases, windowing, transitions, gestures, plugins)
- * grows from this shape in plans 003+ after the ADR sign-off.
+ * The core gallery (ADR 0001 §3): renders uncontrolled triggers via the
+ * default slot and opens the lightbox through `<Teleport>`. Settings are
+ * same-named camelCase props; events are kebab-case emits; `v-model:open`
+ * and `v-model:index` drive controlled state; the template ref exposes the
+ * imperative handle. Open/close phases, the slide-transition timeline and
+ * the zoom-from-origin animation mirror the React outlet (the shared spec)
+ * over the same headless state machine.
  */
 import {
     computed,
+    nextTick,
     onBeforeUnmount,
+    onMounted,
     provide,
+    ref,
+    shallowRef,
+    useSlots,
     watch,
 } from 'vue';
-import type { GalleryItem } from '@lightgallery/headless';
+import {
+    clampIndex,
+    createEmitter,
+    fitImageSize,
+    getOriginTransform,
+    getSlideIndexesInDom,
+    getSlideType,
+    parseImageSize,
+    resolveSettings,
+    type CoreSettings,
+    type RectLike,
+    type SlideDirection,
+    type UserSettings,
+} from '@lightgallery/headless';
 
+import { useBodyLock, useHideBars } from './composables';
+import LgCaption from './LgCaption.vue';
+import LgSlide, { type OriginAnimation } from './LgSlide.vue';
+import {
+    createRegistrationList,
+    LG_RUNTIME,
+    LG_SLOTS,
+    type LgGalleryRuntime,
+} from './runtime';
 import {
     createGalleryStore,
     LG_ACTIONS,
     LG_STORE,
     type LgGalleryActions,
 } from './store';
-
-export type LgGalleryItem = GalleryItem<string>;
-
-const props = withDefaults(
-    defineProps<{
-        /** The gallery data, typed by the shared headless model. */
-        slides?: LgGalleryItem[];
-        /** Teleport target for the overlay. */
-        container?: string | HTMLElement;
-    }>(),
-    { slides: () => [], container: 'body' },
-);
+import { LgTimeouts } from './timeouts';
+import {
+    LG_EVENT_EMIT_NAMES,
+    type HasVideoDetail,
+    type InitDetail,
+    type LgEventMap,
+    type LgGalleryItem,
+    type LgGalleryProps,
+    type SlideEventDetail,
+    type SlideItemLoadDetail,
+} from './types';
 
 /**
- * Controlled state (ADR §3): bound models = controlled (parent value
- * flows back in), unbound = internal — `defineModel` collapses the React
- * controlled/uncontrolled split into one primitive.
+ * Open/close lifecycle phases, mirroring the vanilla class timeline:
+ * `pre-open` — teleport mounted (`lg-show`), backdrop still transparent
+ * `opening`  — `lg-show-in` + backdrop `in`; `open` — settled/visible;
+ * `closing`  — reverse animation; teleport stays until it finishes.
  */
+type OpenPhase = 'closed' | 'pre-open' | 'opening' | 'open' | 'closing';
+
+interface SlideTimeline {
+    shownIndex: number;
+    positions: Record<number, 'prev' | 'next'>;
+    noTrans: boolean;
+    progressIndex: number | null;
+}
+
+const props = withDefaults(defineProps<LgGalleryProps>(), {
+    slides: undefined,
+    container: 'body',
+    className: undefined,
+    originRect: null,
+    // Boolean settings MUST default to undefined explicitly: Vue casts
+    // absent Boolean props to `false`, which resolveSettings would read as
+    // an explicit user value and every boolean default would invert.
+    zoomFromOrigin: undefined,
+    allowMediaOverlap: undefined,
+    loadYouTubePoster: undefined,
+    hideScrollbar: undefined,
+    resetScrollPosition: undefined,
+    closable: undefined,
+    swipeToClose: undefined,
+    closeOnTap: undefined,
+    showCloseIcon: undefined,
+    showMaximizeIcon: undefined,
+    loop: undefined,
+    escKey: undefined,
+    keyPress: undefined,
+    trapFocus: undefined,
+    controls: undefined,
+    slideEndAnimation: undefined,
+    hideControlOnEnd: undefined,
+    mousewheel: undefined,
+    download: undefined,
+    counter: undefined,
+    enableSwipe: undefined,
+    enableDrag: undefined,
+});
+
 const open = defineModel<boolean>('open', { default: false });
 const index = defineModel<number>('index', { default: 0 });
 
 const emit = defineEmits<{
+    init: [InitDetail];
     'before-open': [];
+    'after-open': [];
+    'slide-item-load': [SlideItemLoadDetail];
+    'before-slide': [SlideEventDetail];
+    'after-slide': [SlideEventDetail];
+    'before-next-slide': [{ index: number }];
+    'before-prev-slide': [{ index: number; fromTouch: boolean }];
+    'after-append-slide': [{ index: number }];
+    'after-append-sub-html': [{ index: number }];
+    'container-resize': [{ index: number }];
+    'before-close': [];
     'after-close': [];
+    'drag-start': [];
+    'drag-move': [];
+    'drag-end': [];
+    'poster-click': [];
+    'has-video': [HasVideoDetail];
+    'autoplay-start': [{ index: number }];
+    autoplay: [{ index: number }];
+    'autoplay-stop': [{ index: number }];
+    'rotate-left': [{ rotate: number }];
+    'rotate-right': [{ rotate: number }];
+    'flip-horizontal': [{ flipHorizontal: number }];
+    'flip-vertical': [{ flipVertical: number }];
 }>();
 
 defineSlots<{
-    /** Uncontrolled triggers / page content. */
     default?: () => unknown;
-    /** Caption slot — the React `render.caption` twin (ADR §4). */
     caption?: (props: {
         item: LgGalleryItem | undefined;
         index: number;
     }) => unknown;
+    counter?: (props: { current: number; total: number }) => unknown;
+    'prev-button'?: () => unknown;
+    'next-button'?: () => unknown;
 }>();
+
+// ── Store + settings ─────────────────────────────────────────────────────
 
 const store = createGalleryStore();
 provide(LG_STORE, store);
+const slots = useSlots();
+provide(LG_SLOTS, slots);
 
-const currentItem = computed<LgGalleryItem | undefined>(
-    () => props.slides[store.currentIndex.value],
+const SETTING_KEYS = [
+    'mode', 'easing', 'speed', 'licenseKey', 'height', 'width',
+    'startClass', 'zoomFromOrigin', 'startAnimationDuration',
+    'backdropDuration', 'hideBarsDelay', 'showBarsAfter', 'slideDelay',
+    'allowMediaOverlap', 'videoMaxSize', 'loadYouTubePoster',
+    'defaultCaptionHeight', 'ariaLabelledby', 'ariaDescribedby',
+    'hideScrollbar', 'resetScrollPosition', 'closable', 'swipeToClose',
+    'closeOnTap', 'showCloseIcon', 'showMaximizeIcon', 'loop', 'escKey',
+    'keyPress', 'trapFocus', 'controls', 'slideEndAnimation',
+    'hideControlOnEnd', 'mousewheel', 'captionPosition', 'preload',
+    'numberOfSlideItemsInDom', 'iframeWidth', 'iframeHeight',
+    'iframeMaxWidth', 'iframeMaxHeight', 'download', 'counter',
+    'swipeThreshold', 'enableSwipe', 'enableDrag', 'strings', 'isMobile',
+    'mobileSettings',
+] as const satisfies readonly (keyof UserSettings)[];
+
+function defaultIsMobile(): boolean {
+    return (
+        typeof navigator !== 'undefined' &&
+        /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+    );
+}
+
+// prefers-reduced-motion collapses every animation to 0ms and disables the
+// zoom-from-origin/bounce effects (a11y; checked once per instance).
+const reducedMotion =
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let isMobileCache: boolean | null = null;
+const settings = computed<CoreSettings>(() => {
+    const user: Record<string, unknown> = {};
+    for (const key of SETTING_KEYS) {
+        user[key] = props[key];
+    }
+    if (isMobileCache === null) {
+        isMobileCache = props.isMobile ? props.isMobile() : defaultIsMobile();
+    }
+    const resolved = resolveSettings(user as UserSettings, {
+        isMobile: isMobileCache,
+    });
+    if (!reducedMotion) {
+        return resolved;
+    }
+    return {
+        ...resolved,
+        speed: 0,
+        backdropDuration: 0,
+        startAnimationDuration: 0,
+        zoomFromOrigin: false,
+        slideEndAnimation: false,
+    };
+});
+
+// ── Items (slides prop or trigger registry) ──────────────────────────────
+
+const registry = createRegistrationList();
+const items = computed<readonly LgGalleryItem[]>(
+    () =>
+        props.slides ??
+        registry.registrations.value.map((entry) => entry.item()),
 );
-
-// Mirror the slides input into the reducer (React SET_SLIDES_COUNT twin).
 watch(
-    () => props.slides.length,
+    () => items.value.length,
     (count) => store.setSlidesCount(count),
+    // Sync flush: a trigger can be clicked in the same tick its `<LgItem>`
+    // registered (before a microtask flush) — the reducer would otherwise
+    // clamp the open index against a stale slidesCount of 0.
+    { immediate: true, flush: 'sync' },
+);
+watch(
+    () => settings.value.loop,
+    (loop) => store.setLoop(loop),
     { immediate: true },
 );
 
-// v-model:open ↔ store (both directions; reducer stays source of truth).
-watch(open, (value) => {
-    if (value && !store.isOpen.value) {
-        emit('before-open');
-        store.open(index.value);
-    } else if (!value && store.isOpen.value) {
-        store.close();
-        emit('after-close');
-    }
+// ── Event fan-out: kebab emit + shared bus (ADR §5) ──────────────────────
+
+const events = createEmitter<LgEventMap>();
+function emitEvent<K extends keyof LgEventMap>(
+    name: K,
+    detail: LgEventMap[K],
+): void {
+    (emit as (event: string, ...args: unknown[]) => void)(
+        LG_EVENT_EMIT_NAMES[name],
+        detail,
+    );
+    events.emit(name, detail);
+}
+
+// ── Presentation state (phases, timeline, origin) ────────────────────────
+
+const timers = new LgTimeouts();
+const phase = ref<OpenPhase>('closed');
+const visible = ref(false);
+const componentsOpen = ref(false);
+const useStartClass = ref(false);
+const zoomFromImage = ref(false);
+const maximized = ref(false);
+const edgeBounce = ref<'left' | 'right' | null>(null);
+const originAnim = shallowRef<OriginAnimation | null>(null);
+const contentOffsets = shallowRef<{ top: number; bottom: number } | null>(
+    null,
+);
+const timeline = shallowRef<SlideTimeline>({
+    shownIndex: 0,
+    positions: {},
+    noTrans: false,
+    progressIndex: null,
 });
-// v-model:index ↔ store.
-watch(index, (value) => {
-    if (store.isOpen.value && value !== store.currentIndex.value) {
-        store.goTo(value);
-        index.value = store.currentIndex.value;
-    }
+let usedZoom = false;
+let prevShown: number | null = null;
+let returnFocus: HTMLElement | null = null;
+let mouseDownOnSlide = false;
+
+const containerEl = ref<HTMLDivElement | null>(null);
+const outerEl = ref<HTMLDivElement | null>(null);
+const toolbarEl = ref<HTMLDivElement | null>(null);
+
+const isBodyContainer = computed(
+    () =>
+        props.container === 'body' ||
+        (typeof document !== 'undefined' &&
+            props.container === document.body),
+);
+const bodyLockActive = computed(
+    () =>
+        phase.value === 'pre-open' ||
+        phase.value === 'opening' ||
+        phase.value === 'open',
+);
+useBodyLock(
+    bodyLockActive,
+    isBodyContainer,
+    computed(() => settings.value.hideScrollbar),
+    computed(() => settings.value.resetScrollPosition),
+);
+const barsHidden = useHideBars(
+    bodyLockActive,
+    computed(() => settings.value.hideBarsDelay),
+    computed(() => settings.value.showBarsAfter),
+    outerEl,
+);
+
+const currentItem = computed<LgGalleryItem | undefined>(
+    () => items.value[store.currentIndex.value],
+);
+const currentSlideType = computed(() =>
+    currentItem.value ? getSlideType(currentItem.value) : undefined,
+);
+const slideIndexes = computed(() =>
+    getSlideIndexesInDom(
+        store.currentIndex.value,
+        store.previousIndex.value,
+        store.slidesCount.value,
+        settings.value.numberOfSlideItemsInDom,
+        store.loop.value,
+    ).sort((a, b) => a - b),
+);
+const disablePrev = computed(
+    () =>
+        !store.loop.value &&
+        settings.value.hideControlOnEnd &&
+        store.currentIndex.value === 0,
+);
+const disableNext = computed(
+    () =>
+        !store.loop.value &&
+        settings.value.hideControlOnEnd &&
+        store.currentIndex.value === store.slidesCount.value - 1,
+);
+const showDownload = computed(() => {
+    const item = currentItem.value;
+    return settings.value.download && !!item && item.downloadUrl !== false;
 });
-watch(store.currentIndex, (value) => {
-    index.value = value;
+const downloadHref = computed(() => {
+    const item = currentItem.value;
+    if (!item) {
+        return undefined;
+    }
+    return typeof item.downloadUrl === 'string'
+        ? item.downloadUrl
+        : item.src;
+});
+const downloadName = computed(() => {
+    const item = currentItem.value;
+    return typeof item?.download === 'string' ? item.download : '';
 });
 
-// ESC close — bound only while open, removed symmetrically (SSR-safe: the
-// watcher only touches `document` in the browser, after open).
+const showIn = computed(
+    () => phase.value === 'opening' || phase.value === 'open',
+);
+const zoomClosing = computed(
+    () => phase.value === 'closing' && originAnim.value?.closing === true,
+);
+const containerClasses = computed(() => [
+    'lg-container',
+    'lg-show',
+    props.className,
+    { 'lg-show-in': showIn.value },
+    { 'lg-inline': !isBodyContainer.value && !maximized.value },
+]);
+const outerClasses = computed(() => [
+    'lg-outer',
+    'lg-use-css3',
+    'lg-css3',
+    settings.value.mode,
+    {
+        'lg-grab': settings.value.enableDrag,
+        'lg-single-item': items.value.length < 2,
+        'lg-media-overlap': settings.value.allowMediaOverlap,
+        [settings.value.startClass]:
+            useStartClass.value && !!settings.value.startClass,
+        'lg-zoom-from-image': zoomFromImage.value,
+        'lg-visible': visible.value,
+        'lg-components-open': componentsOpen.value,
+        'lg-hide-items':
+            barsHidden.value ||
+            (phase.value === 'closing' && !zoomClosing.value),
+        'lg-closing': zoomClosing.value,
+        'lg-no-trans': timeline.value.noTrans,
+        'lg-right-end': edgeBounce.value === 'right',
+        'lg-left-end': edgeBounce.value === 'left',
+        'lg-hide-download':
+            settings.value.download &&
+            currentItem.value?.downloadUrl === false,
+    },
+]);
+const contentStyle = computed(() => {
+    const offsets = contentOffsets.value;
+    if (settings.value.allowMediaOverlap || !offsets) {
+        return undefined;
+    }
+    return { top: `${offsets.top}px`, bottom: `${offsets.bottom}px` };
+});
+
+// ── Measurements (zoom-from-origin + media position) ─────────────────────
+
+function measureOffsets(): { top: number; bottom: number } {
+    // Plugin overrides (mediumZoom) arrive with the plugin runtime (006).
+    if (settings.value.allowMediaOverlap) {
+        return { top: 0, bottom: 0 };
+    }
+    const top = toolbarEl.value?.clientHeight ?? 0;
+    const caption = outerEl.value?.querySelector<HTMLElement>(
+        '.lg-components .lg-sub-html',
+    );
+    const bottom =
+        settings.value.defaultCaptionHeight || caption?.clientHeight || 0;
+    return { top, bottom };
+}
+
+function getOriginRect(slideIndex: number): RectLike | null {
+    if (props.originRect) {
+        return props.originRect;
+    }
+    const registration = registry.registrations.value[slideIndex];
+    const element = registration?.element;
+    if (!element) {
+        return null;
+    }
+    const target = element.querySelector('img') ?? element;
+    const rect = target.getBoundingClientRect();
+    return {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+    };
+}
+
+function computeOrigin(slideIndex: number): string | null {
+    const cfg = settings.value;
+    if (!cfg.zoomFromOrigin) {
+        return null;
+    }
+    const item = items.value[slideIndex];
+    const outer = outerEl.value;
+    if (!item?.lgSize || !outer) {
+        return null;
+    }
+    const triggerRect = getOriginRect(slideIndex);
+    if (!triggerRect) {
+        return null;
+    }
+    const natural = parseImageSize(item.lgSize, window.innerWidth);
+    if (!natural) {
+        return null;
+    }
+    const rect = outer.getBoundingClientRect();
+    const containerRect = {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+    };
+    const { top, bottom } = measureOffsets();
+    const imageSize = fitImageSize(
+        natural,
+        containerRect.width,
+        containerRect.height - (top + bottom),
+    );
+    return getOriginTransform({
+        triggerRect,
+        containerRect,
+        top,
+        bottom,
+        imageSize,
+    });
+}
+
+// ── Open/close machinery (React GalleryOutlet phase machine twin) ────────
+
+watch(store.isOpen, (isOpen) => {
+    if (isOpen) {
+        if (phase.value === 'closed' || phase.value === 'closing') {
+            timers.clearAll();
+            originAnim.value = null;
+            phase.value = 'pre-open';
+            // Entrance measurements need the teleported DOM.
+            void nextTick(() => runEntrance());
+        }
+    } else if (phase.value !== 'closed' && phase.value !== 'closing') {
+        beginClose();
+    }
+});
+
+function runEntrance(): void {
+    const cfg = settings.value;
+    contentOffsets.value = measureOffsets();
+
+    const current = store.currentIndex.value;
+    const transform = computeOrigin(current);
+    usedZoom = transform !== null;
+    useStartClass.value = transform === null;
+    if (transform !== null) {
+        originAnim.value = { index: current, transform, stage: 'init' };
+        timers.set(() => {
+            zoomFromImage.value = true;
+            originAnim.value = originAnim.value && {
+                ...originAnim.value,
+                stage: 'armed',
+            };
+        }, 10);
+        timers.set(() => {
+            originAnim.value = originAnim.value && {
+                ...originAnim.value,
+                stage: 'run',
+            };
+        }, 110);
+        timers.set(
+            () => (originAnim.value = null),
+            cfg.startAnimationDuration + 110,
+        );
+    }
+
+    timers.set(() => (phase.value = 'opening'), 10);
+    timers.set(() => {
+        phase.value = 'open';
+        if (!usedZoom) {
+            visible.value = true;
+        }
+    }, 10 + cfg.backdropDuration);
+    timers.set(
+        () => (componentsOpen.value = true),
+        cfg.zoomFromOrigin ? 100 : cfg.backdropDuration,
+    );
+
+    bindOpenListeners();
+    if (cfg.trapFocus && isBodyContainer.value) {
+        // Focus in on open; returned on close. Tab-cycling trap is the 007
+        // a11y pass (hand-rolled per the ADR).
+        returnFocus =
+            document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : null;
+        containerEl.value?.focus({ preventScroll: true });
+    }
+    emitEvent('afterOpen', undefined);
+}
+
+function beginClose(): void {
+    const cfg = settings.value;
+    emitEvent('beforeClose', undefined);
+    unbindOpenListeners();
+    phase.value = 'closing';
+    visible.value = false;
+    componentsOpen.value = false;
+
+    let closeDuration = cfg.backdropDuration;
+    const transform = usedZoom
+        ? computeOrigin(store.currentIndex.value)
+        : null;
+    if (transform) {
+        originAnim.value = {
+            index: store.currentIndex.value,
+            transform,
+            stage: 'run',
+            closing: true,
+        };
+        closeDuration = Math.max(
+            cfg.startAnimationDuration,
+            cfg.backdropDuration,
+        );
+    } else {
+        originAnim.value = null;
+        zoomFromImage.value = false;
+    }
+    timers.set(() => finishClose(), closeDuration + 100);
+}
+
+function finishClose(): void {
+    phase.value = 'closed';
+    originAnim.value = null;
+    zoomFromImage.value = false;
+    useStartClass.value = false;
+    contentOffsets.value = null;
+    usedZoom = false;
+    if (returnFocus?.isConnected) {
+        returnFocus.focus({ preventScroll: true });
+    }
+    returnFocus = null;
+    emitEvent('afterClose', undefined);
+}
+
+// ── Document/window listeners while open ─────────────────────────────────
+
 function onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape') {
+    // ESC close (2.x escKey). Arrow keys and mousewheel land with the
+    // keyboard/gesture composable (plan 004).
+    if (settings.value.escKey && event.key === 'Escape') {
+        event.preventDefault();
         closeGallery();
     }
 }
-watch(store.isOpen, (isOpen) => {
-    if (typeof document === 'undefined') {
+function onResize(): void {
+    contentOffsets.value = measureOffsets();
+    emitEvent('containerResize', { index: store.currentIndex.value });
+}
+let listenersBound = false;
+function bindOpenListeners(): void {
+    if (listenersBound || typeof document === 'undefined') {
         return;
     }
-    if (isOpen) {
-        document.addEventListener('keydown', onKeydown);
-    } else {
-        document.removeEventListener('keydown', onKeydown);
+    listenersBound = true;
+    document.addEventListener('keydown', onKeydown);
+    window.addEventListener('resize', onResize);
+}
+function unbindOpenListeners(): void {
+    if (!listenersBound) {
+        return;
     }
-});
-onBeforeUnmount(() => {
-    if (typeof document !== 'undefined') {
-        document.removeEventListener('keydown', onKeydown);
+    listenersBound = false;
+    document.removeEventListener('keydown', onKeydown);
+    window.removeEventListener('resize', onResize);
+}
+
+// Close on tap of the black area around the slide (2.x closeOnTap).
+function isSlideElement(target: EventTarget | null): boolean {
+    if (!(target instanceof Element)) {
+        return false;
     }
+    return ['lg-outer', 'lg-item', 'lg-img-wrap', 'lg-img-rotate'].some(
+        (name) => target.classList.contains(name),
+    );
+}
+function onOuterMouseDown(event: MouseEvent): void {
+    mouseDownOnSlide = isSlideElement(event.target);
+}
+function onOuterMouseMove(): void {
+    mouseDownOnSlide = false;
+}
+function onOuterMouseUp(event: MouseEvent): void {
+    if (
+        settings.value.closeOnTap &&
+        mouseDownOnSlide &&
+        isSlideElement(event.target)
+    ) {
+        closeGallery();
+    }
+}
+
+// ── Slide transition timeline (2.x makeSlideAnimation) ───────────────────
+
+watch([store.isOpen, store.currentIndex], ([isOpen, current]) => {
+    if (!isOpen) {
+        prevShown = null;
+        timeline.value = {
+            shownIndex: current,
+            positions: {},
+            noTrans: false,
+            progressIndex: null,
+        };
+        return;
+    }
+    const previous = prevShown;
+    prevShown = current;
+    if (previous === null || previous === current) {
+        timeline.value = { ...timeline.value, shownIndex: current };
+        return;
+    }
+    if (!store.transitioning.value) {
+        // Index changed without animation (e.g. slides prop shrank).
+        timeline.value = {
+            shownIndex: current,
+            positions: {},
+            noTrans: false,
+            progressIndex: null,
+        };
+        return;
+    }
+    const direction =
+        store.slideDirection.value ??
+        (current > previous ? 'next' : 'prev');
+    // The fromTouch commit path arrives with the gesture composable (004).
+    runTransition(previous, current, direction);
 });
 
-// Imperative surface (ADR §3), mirroring the sibling tracks' handles.
+function runTransition(
+    from: number,
+    to: number,
+    direction: SlideDirection,
+): void {
+    const cfg = settings.value;
+    const start = (): void => {
+        timeline.value = {
+            shownIndex: from,
+            positions: {
+                [to]: direction === 'next' ? 'next' : 'prev',
+                [from]: direction === 'next' ? 'prev' : 'next',
+            },
+            noTrans: true,
+            progressIndex: from,
+        };
+        timers.set(() => {
+            timeline.value = {
+                ...timeline.value,
+                shownIndex: to,
+                noTrans: false,
+            };
+        }, 50);
+        timers.set(() => {
+            timeline.value = { ...timeline.value, progressIndex: null };
+            store.dispatch({ type: 'TRANSITION_END' });
+            emitEvent('afterSlide', {
+                index: to,
+                prevIndex: from,
+                fromTouch: false,
+                fromThumb: false,
+            });
+        }, cfg.speed + 100 + cfg.slideDelay);
+    };
+    emitEvent('beforeSlide', {
+        index: to,
+        prevIndex: from,
+        fromTouch: false,
+        fromThumb: false,
+    });
+    if (cfg.slideDelay > 0) {
+        timeline.value = { ...timeline.value, progressIndex: from };
+        timers.set(start, cfg.slideDelay);
+    } else {
+        start();
+    }
+}
+
+// ── Actions (v-model sync; gating identical to the siblings) ─────────────
+
+function doOpen(at?: number): void {
+    emitEvent('beforeOpen', undefined);
+    store.open(at);
+    index.value = store.currentIndex.value;
+    open.value = true;
+}
+
 function openGallery(at?: number): void {
     if (store.isOpen.value) {
         return;
     }
-    emit('before-open');
-    store.open(at ?? index.value);
-    index.value = store.currentIndex.value;
-    open.value = true;
+    doOpen(at ?? index.value);
 }
+
 function closeGallery(): void {
+    if (!settings.value.closable || !store.isOpen.value) {
+        return;
+    }
     store.close();
     open.value = false;
-    emit('after-close');
 }
+
+function navigate(rawIndex: number, direction?: SlideDirection): void {
+    const state = store.state.value;
+    if (!state.open || state.transitioning) {
+        return;
+    }
+    const target = clampIndex(rawIndex, state.slidesCount, state.loop);
+    if (target === state.currentIndex) {
+        return;
+    }
+    store.goTo(rawIndex, direction);
+    index.value = store.currentIndex.value;
+}
+
 function goToSlide(at: number): void {
-    store.goTo(at);
-    index.value = store.currentIndex.value;
+    navigate(at);
 }
+
+function bounce(side: 'left' | 'right'): void {
+    edgeBounce.value = side;
+    timers.set(() => (edgeBounce.value = null), 400);
+}
+
 function nextSlide(): void {
-    store.next();
-    index.value = store.currentIndex.value;
+    const state = store.state.value;
+    if (!state.open || state.transitioning) {
+        return;
+    }
+    const target =
+        state.currentIndex + 1 < state.slidesCount
+            ? state.currentIndex + 1
+            : state.loop
+              ? 0
+              : null;
+    if (target !== null) {
+        emitEvent('beforeNextSlide', { index: target });
+        navigate(target, 'next');
+    } else if (settings.value.slideEndAnimation) {
+        bounce('right');
+    }
 }
+
 function prevSlide(): void {
-    store.prev();
-    index.value = store.currentIndex.value;
+    const state = store.state.value;
+    if (!state.open || state.transitioning) {
+        return;
+    }
+    const target =
+        state.currentIndex > 0
+            ? state.currentIndex - 1
+            : state.loop
+              ? state.slidesCount - 1
+              : null;
+    if (target !== null) {
+        emitEvent('beforePrevSlide', { index: target, fromTouch: false });
+        navigate(target, 'prev');
+    } else if (settings.value.slideEndAnimation) {
+        bounce('left');
+    }
 }
+
 function refresh(): void {}
+
+// v-model:open → store (controlled open; index read at open time).
+watch(open, (value) => {
+    if (value && !store.isOpen.value) {
+        doOpen(index.value);
+    } else if (!value && store.isOpen.value) {
+        store.close();
+    }
+});
+// v-model:index → store (waits out a running transition).
+watch([index, store.transitioning], ([value]) => {
+    if (!store.isOpen.value || store.transitioning.value) {
+        return;
+    }
+    if (value !== store.currentIndex.value) {
+        store.goTo(value);
+        index.value = store.currentIndex.value;
+    }
+});
 
 const actions: LgGalleryActions = {
     openGallery,
@@ -155,74 +838,159 @@ const actions: LgGalleryActions = {
     refresh,
 };
 provide(LG_ACTIONS, actions);
-defineExpose<LgGalleryActions>(actions);
+defineExpose(actions);
+
+const runtime: LgGalleryRuntime = {
+    items,
+    settings,
+    events,
+    emit: emitEvent,
+    registrations: registry.registrations,
+    registerItem: registry.register,
+    getItemIndex: registry.indexOf,
+    getOriginRect,
+};
+provide(LG_RUNTIME, runtime);
+
+onMounted(() => {
+    emitEvent('init', { instance: actions });
+});
+onBeforeUnmount(() => {
+    timers.clearAll();
+    unbindOpenListeners();
+});
 </script>
 
 <template>
     <slot />
     <Teleport :to="props.container">
         <div
-            v-if="store.isOpen.value"
-            class="lg-container lg-show lg-show-in"
+            v-if="phase !== 'closed'"
+            ref="containerEl"
+            :class="containerClasses"
+            tabindex="-1"
             role="dialog"
             aria-modal="true"
-            aria-label="Gallery"
+            :aria-label="settings.ariaLabelledby ? undefined : 'Gallery'"
+            :aria-labelledby="settings.ariaLabelledby || undefined"
+            :aria-describedby="settings.ariaDescribedby || undefined"
         >
-            <div class="lg-backdrop in"></div>
-            <div class="lg-outer lg-use-css3 lg-css3 lg-slide lg-visible">
-                <div class="lg-content">
-                    <div class="lg-inner">
-                        <div
-                            v-if="currentItem"
-                            class="lg-item lg-current lg-loaded"
-                        >
-                            <picture class="lg-img-wrap">
-                                <img
-                                    class="lg-object lg-image"
-                                    :src="currentItem.src"
-                                    :alt="currentItem.alt ?? ''"
-                                />
-                            </picture>
-                        </div>
-                    </div>
-                    <button
-                        type="button"
-                        class="lg-prev lg-icon"
-                        aria-label="Previous slide"
-                        @click="prevSlide"
-                    ></button>
-                    <button
-                        type="button"
-                        class="lg-next lg-icon"
-                        aria-label="Next slide"
-                        @click="nextSlide"
-                    ></button>
-                </div>
-                <div class="lg-toolbar lg-group">
-                    <button
-                        type="button"
-                        class="lg-close lg-icon"
-                        aria-label="Close gallery"
-                        @click="closeGallery"
-                    ></button>
-                    <div class="lg-counter" role="status">
-                        <span class="lg-counter-current">{{
-                            store.currentIndex.value + 1
-                        }}</span
-                        >{{ ' / '
-                        }}<span class="lg-counter-all">{{
-                            store.slidesCount.value
-                        }}</span>
-                    </div>
-                </div>
-                <div class="lg-components">
-                    <div class="lg-sub-html" role="status">
-                        <slot
-                            name="caption"
-                            :item="currentItem"
-                            :index="store.currentIndex.value"
+            <div
+                class="lg-backdrop"
+                :class="{ in: showIn }"
+                :style="{
+                    transitionDuration: `${settings.backdropDuration}ms`,
+                }"
+            ></div>
+            <div
+                ref="outerEl"
+                :class="outerClasses"
+                :data-lg-slide-type="currentSlideType"
+                @mousedown="onOuterMouseDown"
+                @mousemove="onOuterMouseMove"
+                @mouseup="onOuterMouseUp"
+            >
+                <div class="lg-content" :style="contentStyle">
+                    <div
+                        class="lg-inner"
+                        :style="{
+                            transitionTimingFunction: settings.easing,
+                            transitionDuration: `${settings.speed}ms`,
+                            touchAction: 'none',
+                        }"
+                    >
+                        <LgSlide
+                            v-for="idx of slideIndexes"
+                            :key="idx"
+                            :index="idx"
+                            :item="items[idx]"
+                            :is-shown="timeline.shownIndex === idx"
+                            :position="timeline.positions[idx]"
+                            :in-progress="timeline.progressIndex === idx"
+                            :origin-anim="
+                                originAnim?.index === idx ? originAnim : null
+                            "
                         />
                     </div>
+                    <template v-if="settings.controls">
+                        <button
+                            type="button"
+                            class="lg-prev lg-icon"
+                            :class="{ disabled: disablePrev }"
+                            :disabled="disablePrev"
+                            :aria-label="settings.strings.previousSlide"
+                            @click="prevSlide"
+                        >
+                            <slot name="prev-button" />
+                        </button>
+                        <button
+                            type="button"
+                            class="lg-next lg-icon"
+                            :class="{ disabled: disableNext }"
+                            :disabled="disableNext"
+                            :aria-label="settings.strings.nextSlide"
+                            @click="nextSlide"
+                        >
+                            <slot name="next-button" />
+                        </button>
+                    </template>
+                </div>
+                <div ref="toolbarEl" class="lg-toolbar lg-group">
+                    <button
+                        v-if="settings.showMaximizeIcon"
+                        type="button"
+                        class="lg-maximize lg-icon"
+                        :aria-label="settings.strings.toggleMaximize"
+                        @click="maximized = !maximized"
+                    ></button>
+                    <button
+                        v-if="settings.closable && settings.showCloseIcon"
+                        type="button"
+                        class="lg-close lg-icon"
+                        :aria-label="settings.strings.closeGallery"
+                        @click="closeGallery"
+                    ></button>
+                    <a
+                        v-if="showDownload"
+                        target="_blank"
+                        rel="noopener"
+                        class="lg-download lg-icon"
+                        :aria-label="settings.strings.download"
+                        :href="downloadHref"
+                        :download="downloadName || true"
+                    ></a>
+                    <div
+                        v-if="settings.counter"
+                        class="lg-counter"
+                        role="status"
+                        aria-live="polite"
+                    >
+                        <slot
+                            name="counter"
+                            :current="store.currentIndex.value + 1"
+                            :total="store.slidesCount.value"
+                        >
+                            <span class="lg-counter-current">{{
+                                store.currentIndex.value + 1
+                            }}</span
+                            >{{ ' / '
+                            }}<span class="lg-counter-all">{{
+                                store.slidesCount.value
+                            }}</span>
+                        </slot>
+                    </div>
+                </div>
+                <LgCaption
+                    v-if="settings.captionPosition === 'outer'"
+                    :item="currentItem"
+                    :index="store.currentIndex.value"
+                />
+                <div class="lg-components">
+                    <LgCaption
+                        v-if="settings.captionPosition === 'bar'"
+                        :item="currentItem"
+                        :index="store.currentIndex.value"
+                    />
                 </div>
             </div>
         </div>
