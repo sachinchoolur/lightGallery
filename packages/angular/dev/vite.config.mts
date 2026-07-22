@@ -22,6 +22,10 @@ export default defineConfig({
     resolve: {
         alias: [
             {
+                find: /^@lightgallery\/angular\/plugins\/([^/]+)$/,
+                replacement: path.resolve(dirname, '../plugins/$1/index.ts'),
+            },
+            {
                 find: '@lightgallery/angular',
                 replacement: path.resolve(dirname, '../src/public-api.ts'),
             },

@@ -15,6 +15,20 @@ export default defineConfig({
             tsconfig: path.join(dirname, 'tsconfig.spec.json'),
         }),
     ],
+    resolve: {
+        // Secondary entry points import the core via the package name (APF
+        // rule: never via relative paths across entries).
+        alias: [
+            {
+                find: /^@lightgallery\/angular\/plugins\/([^/]+)$/,
+                replacement: path.join(dirname, 'plugins/$1/index.ts'),
+            },
+            {
+                find: '@lightgallery/angular',
+                replacement: path.join(dirname, 'src/public-api.ts'),
+            },
+        ],
+    },
     test: {
         environment: 'jsdom',
         globals: true,

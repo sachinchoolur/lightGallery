@@ -8,12 +8,14 @@
     "baseUrl": ".",
     "paths": {
       "@lightgallery/angular": ["../src/public-api.ts"],
+      "@lightgallery/angular/plugins/*": ["../plugins/*/index.ts"],
       "@lightgallery/headless": ["../../headless/src/index.ts"]
     }
   },
   "include": [
     "./**/*.ts",
     "../src/**/*.ts",
+    "../plugins/**/*.ts",
     "../../headless/src/**/*.ts"
   ]
 }

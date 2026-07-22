@@ -1,4 +1,8 @@
-import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
+import {
+    isPlatformBrowser,
+    NgComponentOutlet,
+    NgTemplateOutlet,
+} from '@angular/common';
 import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
@@ -10,6 +14,7 @@ import {
     effect,
     ElementRef,
     inject,
+    Injector,
     input,
     model,
     OnDestroy,
@@ -21,6 +26,7 @@ import {
     ViewContainerRef,
     viewChild,
     type OutputEmitterRef,
+    type Type,
 } from '@angular/core';
 import {
     clampIndex,
@@ -42,6 +48,16 @@ import {
 
 import { LgCaptionComponent } from './caption.component';
 import { cx } from './cx';
+import {
+    dedupeFeatures,
+    LG_FEATURE,
+    LG_FEATURE_INIT,
+    LG_PLUGIN_CONTEXT,
+    type LgFeature,
+    type LgMediaPosition,
+    type LgPluginContext,
+    type ResolvedFeatureSettings,
+} from './features';
 import { LgGesturesDirective } from './gestures.directive';
 import { LgGalleryRuntime } from './runtime';
 import { LgSlideComponent, type OriginAnimation } from './slide.component';
@@ -114,11 +130,19 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
     selector: 'lg-gallery',
     exportAs: 'lgGallery',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [LightGalleryStore, LgGalleryRuntime],
+    providers: [
+        LightGalleryStore,
+        LgGalleryRuntime,
+        {
+            provide: LG_PLUGIN_CONTEXT,
+            useFactory: () => inject(LgGalleryRuntime).pluginContext,
+        },
+    ],
     imports: [
         LgCaptionComponent,
         LgGesturesDirective,
         LgSlideComponent,
+        NgComponentOutlet,
         NgTemplateOutlet,
     ],
     template: `
@@ -158,6 +182,7 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                         [style.bottom]="contentBottomStyle()"
                     >
                         <div
+                            #innerEl
                             class="lg-inner"
                             style="touch-action: none"
                             [style.transition-timing-function]="
@@ -256,6 +281,15 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                                 [attr.download]="downloadName()"
                             ></a>
                         }
+                        @for (slot of toolbarSlots(); track slot) {
+                            <ng-container
+                                *ngComponentOutlet="
+                                    slot;
+                                    injector:
+                                        runtime.featureInjector() ?? undefined
+                                "
+                            />
+                        }
                         @if (settings().counter) {
                             <div
                                 class="lg-counter"
@@ -287,11 +321,29 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                             [index]="store.currentIndex()"
                         />
                     }
+                    @for (slot of outerSlots(); track slot) {
+                        <ng-container
+                            *ngComponentOutlet="
+                                slot;
+                                injector:
+                                    runtime.featureInjector() ?? undefined
+                            "
+                        />
+                    }
                     <div class="lg-components">
                         @if (settings().captionPosition === 'bar') {
                             <lg-caption
                                 [item]="currentItem()"
                                 [index]="store.currentIndex()"
+                            />
+                        }
+                        @for (slot of componentsSlots(); track slot) {
+                            <ng-container
+                                *ngComponentOutlet="
+                                    slot;
+                                    injector:
+                                        runtime.featureInjector() ?? undefined
+                                "
                             />
                         }
                     </div>
@@ -333,6 +385,13 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
      * where there is no trigger element to measure.
      */
     readonly originRect = input<RectLike | null | undefined>(undefined);
+
+    /**
+     * Feature values (ADR §5): `[features]="[withThumbnail(), withZoom()]"`.
+     * Registered behind the `LG_FEATURE` multi-token in a per-gallery
+     * feature injector.
+     */
+    readonly features = input<readonly LgFeature[]>([]);
 
     // ── Settings inputs (same-named, typed from headless — ADR §6) ────────
 
@@ -449,7 +508,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     // ── Wiring ────────────────────────────────────────────────────────────
 
     protected readonly store = inject(LightGalleryStore);
-    private readonly runtime = inject(LgGalleryRuntime);
+    protected readonly runtime = inject(LgGalleryRuntime);
     private readonly overlay = inject(Overlay);
     private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly platformId = inject(PLATFORM_ID);
@@ -460,6 +519,8 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         viewChild<ElementRef<HTMLDivElement>>('containerEl');
     private readonly outerEl =
         viewChild<ElementRef<HTMLDivElement>>('outerEl');
+    private readonly innerEl =
+        viewChild<ElementRef<HTMLDivElement>>('innerEl');
     private readonly toolbarEl =
         viewChild<ElementRef<HTMLDivElement>>('toolbarEl');
 
@@ -534,16 +595,37 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         mobileSettings: this.mobileSettings(),
     }));
 
-    protected readonly settings = computed<CoreSettings>(() => {
+    protected readonly dedupedFeatures = computed(() =>
+        dedupeFeatures(this.features()),
+    );
+
+    protected readonly settings = computed<ResolvedFeatureSettings>(() => {
         const user = this.userSettings();
         if (this.isMobileCache === null) {
             this.isMobileCache = user.isMobile
                 ? user.isMobile()
                 : defaultIsMobile();
         }
-        const resolved = resolveSettings(user, {
-            isMobile: this.isMobileCache,
+        // ADR §5 merge order (identical to React; headless owns the merge):
+        // core defaults < feature presets < feature defaults < user settings
+        // (core inputs + `withX()` options) < mobile overrides. Non-mutating.
+        const features = this.dedupedFeatures();
+        const pluginDefaults = [
+            ...features.map((feature) => feature.presets ?? {}),
+            ...features.map(
+                (feature) => (feature.defaults ?? {}) as Partial<CoreSettings>,
+            ),
+        ];
+        const flatUser: Record<string, unknown> = { ...user };
+        features.forEach((feature) => {
+            if (feature.options) {
+                Object.assign(flatUser, feature.options);
+            }
         });
+        const resolved = resolveSettings(flatUser as UserSettings, {
+            isMobile: this.isMobileCache,
+            pluginDefaults,
+        }) as ResolvedFeatureSettings;
         if (!this.reducedMotion) {
             return resolved;
         }
@@ -557,10 +639,33 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         };
     });
 
-    protected readonly items = computed<readonly LgGalleryItem[]>(
+    private readonly baseItems = computed<readonly LgGalleryItem[]>(
         () =>
             this.slides() ??
             this.runtime.registrations().map((entry) => entry.item()),
+    );
+    /** Feature `transformItems` results (vimeoThumbnail-style, wave 2). */
+    private readonly transformedItems = signal<
+        readonly LgGalleryItem[] | null
+    >(null);
+    protected readonly items = computed<readonly LgGalleryItem[]>(
+        () => this.transformedItems() ?? this.baseItems(),
+    );
+
+    protected readonly toolbarSlots = computed<Type<unknown>[]>(() =>
+        this.dedupedFeatures()
+            .map((feature) => feature.slots?.toolbar)
+            .filter((cmp): cmp is Type<unknown> => !!cmp),
+    );
+    protected readonly componentsSlots = computed<Type<unknown>[]>(() =>
+        this.dedupedFeatures()
+            .map((feature) => feature.slots?.components)
+            .filter((cmp): cmp is Type<unknown> => !!cmp),
+    );
+    protected readonly outerSlots = computed<Type<unknown>[]>(() =>
+        this.dedupedFeatures()
+            .map((feature) => feature.slots?.outer)
+            .filter((cmp): cmp is Type<unknown> => !!cmp),
     );
 
     // ── Open/close + transition presentation state ────────────────────────
@@ -588,6 +693,15 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     /** fromTouch commit path (plan 004): drags animate as `lg-slide`. */
     private readonly touchSlideMode = signal(false);
     private fromTouch = false;
+
+    /** Classes features toggled onto `.lg-outer` via `layout.setOuterClass`. */
+    private readonly featureOuterClasses = signal<Record<string, boolean>>(
+        {},
+    );
+    /** mediumZoom's media-position override (wave 2), read by measureOffsets. */
+    private mediaPositionOverride: (() => LgMediaPosition) | null = null;
+    private featureInjectorRef: Injector | null = null;
+    private transformAbort: AbortController | null = null;
 
     private usedZoom = false;
     private prevShown: number | null = null;
@@ -655,11 +769,19 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                 'lg-slide',
             this.edgeBounce() === 'right' && 'lg-right-end',
             this.edgeBounce() === 'left' && 'lg-left-end',
+            this.featureOuterClassNames(),
             this.settings().download &&
                 this.currentItem()?.downloadUrl === false &&
                 'lg-hide-download',
         ),
     );
+
+    private readonly featureOuterClassNames = computed(() => {
+        const classes = this.featureOuterClasses();
+        return Object.keys(classes)
+            .filter((cls) => classes[cls])
+            .join(' ');
+    });
 
     protected readonly currentItem = computed(
         () => this.items()[this.store.currentIndex()],
@@ -728,9 +850,12 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             : null;
     });
 
+    private readonly injector = inject(Injector);
+
     constructor() {
         this.runtime.settings = this.settings;
         this.runtime.items = this.items;
+        this.runtime.features = this.dedupedFeatures;
         this.runtime.slots = {
             caption: this.captionSlot,
             counter: this.counterSlot,
@@ -746,12 +871,62 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             prevSlide: () => this.prevSlide(),
             refresh: () => this.refresh(),
             navigate: (index, direction) => this.navigate(index, direction),
+            dispatch: (action) => this.store.dispatch(action),
         };
         this.runtime.gestureHooks = {
             prepareDrag: () => this.prepareDrag(),
             commitTouchNavigation: (target, direction) =>
                 this.commitTouchNavigation(target, direction),
         };
+        // The LG_PLUGIN_CONTEXT value (ADR §5): the React PluginContext
+        // mirrored field-for-field onto signals.
+        this.runtime.pluginContext = {
+            state: this.store.state,
+            settings: this.settings,
+            items: this.items,
+            actions: this.runtime.actions as LgPluginContext['actions'],
+            events: this.runtime.events,
+            gestureLock: this.runtime.gestureSeam,
+            layout: {
+                setOuterClass: (className, active) => {
+                    this.featureOuterClasses.update((prev) =>
+                        !!prev[className] === active
+                            ? prev
+                            : { ...prev, [className]: active },
+                    );
+                },
+                toggleComponents: () => {
+                    this.componentsOpen.update((value) => !value);
+                },
+                overrideMediaPosition: (fn) => {
+                    this.mediaPositionOverride = fn;
+                },
+            },
+            refs: {
+                getOuter: () => this.outerEl()?.nativeElement ?? null,
+                getInner: () => this.innerEl()?.nativeElement ?? null,
+                getCurrentSlide: () =>
+                    this.outerEl()?.nativeElement.querySelector<HTMLElement>(
+                        '.lg-item.lg-current',
+                    ) ?? null,
+            },
+            emit: (name, detail) => this.emitEvent(name, detail),
+        };
+
+        // Feature injector lifecycle: rebuilt when the features array
+        // changes; eager services (LG_FEATURE_INIT) instantiate immediately
+        // so features can act while the gallery is closed (hash, wave 2).
+        effect(() => {
+            const features = this.dedupedFeatures();
+            untracked(() => this.rebuildFeatureInjector(features));
+        });
+
+        // React counterpart: the plugin `transformItems` effect (abortable).
+        effect(() => {
+            const features = this.dedupedFeatures();
+            const baseItems = this.baseItems();
+            untracked(() => this.runTransformItems(features, baseItems));
+        });
 
         // React counterpart: the SET_SLIDES_COUNT sync effect in the
         // provider — mirrors the items into the reducer.
@@ -918,6 +1093,75 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             this.removeBodyState();
         }
         this.detachOverlay();
+        this.transformAbort?.abort();
+        this.destroyFeatureInjector();
+    }
+
+    // ── Feature runtime plumbing (ADR §5) ─────────────────────────────────
+
+    private rebuildFeatureInjector(features: readonly LgFeature[]): void {
+        this.destroyFeatureInjector();
+        if (features.length === 0) {
+            this.runtime.featureInjector.set(null);
+            return;
+        }
+        const injector = Injector.create({
+            name: 'lgFeatures',
+            parent: this.injector,
+            providers: [
+                ...features.map((feature) => ({
+                    provide: LG_FEATURE,
+                    useValue: feature,
+                    multi: true,
+                })),
+                ...features.flatMap((feature) => feature.providers ?? []),
+            ],
+        });
+        // Eager feature services (effects that run while closed).
+        injector.get(LG_FEATURE_INIT, [], { optional: true });
+        this.featureInjectorRef = injector;
+        this.runtime.featureInjector.set(injector);
+    }
+
+    private destroyFeatureInjector(): void {
+        const injector = this.featureInjectorRef as
+            | (Injector & { destroy?: () => void })
+            | null;
+        injector?.destroy?.();
+        this.featureInjectorRef = null;
+    }
+
+    private runTransformItems(
+        features: readonly LgFeature[],
+        baseItems: readonly LgGalleryItem[],
+    ): void {
+        this.transformAbort?.abort();
+        this.transformAbort = null;
+        if (!features.some((feature) => feature.transformItems)) {
+            this.transformedItems.set(null);
+            return;
+        }
+        const controller = new AbortController();
+        this.transformAbort = controller;
+        void (async () => {
+            let result = [...baseItems];
+            for (const feature of features) {
+                if (feature.transformItems) {
+                    try {
+                        result = await feature.transformItems(
+                            result,
+                            controller.signal,
+                            this.settings(),
+                        );
+                    } catch {
+                        // Aborted or failed transforms keep the previous list.
+                    }
+                }
+            }
+            if (!controller.signal.aborted) {
+                this.transformedItems.set(result);
+            }
+        })();
     }
 
     // ── Actions plumbing ──────────────────────────────────────────────────
@@ -1325,7 +1569,10 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
     /** Toolbar/caption offsets for media positioning (2.x parity). */
     private measureOffsets(): { top: number; bottom: number } {
-        // mediumZoom's override hook arrives with the feature runtime (006).
+        // mediumZoom overrides the measurement entirely (ADR §5 layout).
+        if (this.mediaPositionOverride) {
+            return this.mediaPositionOverride();
+        }
         if (this.settings().allowMediaOverlap) {
             return { top: 0, bottom: 0 };
         }

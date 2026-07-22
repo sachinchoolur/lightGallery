@@ -1,3 +1,4 @@
+import { NgComponentOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -7,13 +8,18 @@ import {
     input,
     signal,
     untracked,
+    viewChild,
+    type TemplateRef,
+    type Type,
 } from '@angular/core';
 import { getPreloadIndexes, getSlideType } from '@lightgallery/headless';
 
 import { LgCaptionContentComponent } from './caption.component';
 import { cx } from './cx';
+import { LgIframeSlideComponent } from './iframe-slide.component';
 import { LgImageSlideComponent } from './image-slide.component';
 import { LgGalleryRuntime } from './runtime';
+import { LgSlideWrappersComponent } from './slide-wrappers.component';
 import { LightGalleryStore } from './store';
 import type { LgGalleryItem } from './types';
 
@@ -42,23 +48,53 @@ export interface OriginAnimation {
 @Component({
     selector: 'lg-slide',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [LgCaptionContentComponent, LgImageSlideComponent],
+    imports: [
+        LgCaptionContentComponent,
+        LgIframeSlideComponent,
+        LgImageSlideComponent,
+        LgSlideWrappersComponent,
+        NgComponentOutlet,
+    ],
     host: {
         '[class]': 'hostClasses()',
         '[style.transform]': 'originTransform()',
         '[style.transition-duration]': 'originDuration()',
     },
     template: `
-        @if (renderContent()) {
-            @if (slideType() === 'image') {
+        <ng-template #slideContent>
+            @if (renderer(); as rendererCmp) {
+                <!-- Feature slide renderer wins (video); ADR §5. -->
+                <ng-container
+                    *ngComponentOutlet="
+                        rendererCmp;
+                        inputs: rendererInputs();
+                        injector: runtime.featureInjector() ?? undefined
+                    "
+                />
+            } @else if (slideType() === 'image') {
                 <lg-image-slide
                     [item]="item()!"
                     [index]="index()"
                     (mediaLoad)="onLoad()"
                     (mediaError)="onError()"
                 />
+            } @else if (slideType() === 'iframe') {
+                <lg-iframe-slide
+                    [item]="item()!"
+                    [index]="index()"
+                    (mediaLoad)="onLoad()"
+                />
             }
-            <!-- video/iframe renderers land with the video feature (005). -->
+            <!-- Video items render nothing without the video feature. -->
+        </ng-template>
+        @if (renderContent()) {
+            <lg-slide-wrappers
+                [wrappers]="wrappers()"
+                [item]="item()!"
+                [index]="index()"
+                [isCurrent]="isCurrent()"
+                [content]="slideContentTpl()"
+            />
         }
         @if (error()) {
             <span class="lg-error-msg">{{
@@ -90,8 +126,39 @@ export class LgSlideComponent {
     private readonly sticky = signal(false);
     private appended = false;
 
-    private readonly isCurrent = computed(
+    private readonly slideContentTplQuery = viewChild.required<
+        TemplateRef<unknown>
+    >('slideContent');
+    protected readonly slideContentTpl = computed(() =>
+        this.slideContentTplQuery(),
+    );
+
+    protected readonly isCurrent = computed(
         () => this.store.currentIndex() === this.index(),
+    );
+
+    /** First feature slide renderer that owns this item wins (ADR §5). */
+    protected readonly renderer = computed<Type<unknown> | null>(() => {
+        const item = this.item();
+        if (!item) {
+            return null;
+        }
+        for (const feature of this.runtime.features()) {
+            if (feature.slideRenderer?.canRender(item)) {
+                return feature.slideRenderer.component;
+            }
+        }
+        return null;
+    });
+    protected readonly rendererInputs = computed<Record<string, unknown>>(
+        () => ({ item: this.item(), index: this.index() }),
+    );
+    /** slideWrapper chain, features order = outermost-first (React parity). */
+    protected readonly wrappers = computed(() =>
+        this.runtime
+            .features()
+            .map((feature) => feature.slots?.slideWrapper)
+            .filter((cmp): cmp is Type<unknown> => !!cmp),
     );
     private readonly completed = computed(
         () => this.store.loadedSlides().has(this.index()) || this.error(),

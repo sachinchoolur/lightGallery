@@ -1,11 +1,19 @@
-import { Injectable, signal, type Signal } from '@angular/core';
+import {
+    Injectable,
+    signal,
+    type Injector,
+    type Signal,
+} from '@angular/core';
 import {
     createEmitter,
     type CoreSettings,
+    type GalleryAction,
     type PointerRecord,
     type SlideDirection,
     type TypedEmitter,
 } from '@lightgallery/headless';
+
+import type { LgFeature, LgPluginContext } from './features';
 
 import type {
     LgCaptionDirective,
@@ -29,6 +37,8 @@ export interface LgGalleryActions extends LgGalleryHandle {
      * loop edges need it — plan 004); same gating as `goToSlide`.
      */
     navigate(index: number, direction?: SlideDirection): void;
+    /** Raw reducer dispatch (feature runtime; React `GalleryActions` parity). */
+    dispatch(action: GalleryAction): void;
 }
 
 /**
@@ -95,6 +105,19 @@ export class LgGalleryRuntime {
 
     /** Assigned by the gallery; consumed by the gesture directive. */
     gestureHooks!: LgGestureHooks;
+
+    /** Registered features, deduped, in `[features]` order (ADR §5). */
+    features!: Signal<readonly LgFeature[]>;
+
+    /**
+     * Per-gallery feature injector: `LG_FEATURE` multi-providers + every
+     * feature's own `providers`, parented on the gallery's node injector.
+     * Slot components and slide renderers are created with it.
+     */
+    readonly featureInjector = signal<Injector | null>(null);
+
+    /** The `LG_PLUGIN_CONTEXT` value; assigned by the gallery constructor. */
+    pluginContext!: LgPluginContext;
 
     readonly gestureSeam: LgGestureSeam = (() => {
         const seam: LgGestureSeam = {

@@ -10,11 +10,17 @@ import {
     LgGalleryItemDirective,
     type LgGalleryItem,
 } from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withVideo } from '@lightgallery/angular/plugins/video';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
 import type { GalleryMode } from '@lightgallery/headless';
 
 // CSS stays a consumer import (ADR 0001 §7) — never bundled by the package.
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-transitions.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lg-video.css';
 
 const picsum = (id: number, w: number, h: number): string =>
     `https://picsum.photos/id/${id}/${w}/${h}`;
@@ -33,13 +39,21 @@ const SOURCES: DemoSource[] = [
     { id: 1043, title: 'Foggy ridge' },
 ];
 
-const ITEMS: LgGalleryItem[] = SOURCES.map((source) => ({
-    src: picsum(source.id, 1600, 1067),
-    thumb: picsum(source.id, 240, 160),
-    lgSize: '1600-1067',
-    alt: source.title,
-    caption: source.title,
-}));
+const ITEMS: LgGalleryItem[] = [
+    ...SOURCES.map((source) => ({
+        src: picsum(source.id, 1600, 1067),
+        thumb: picsum(source.id, 240, 160),
+        lgSize: '1600-1067',
+        alt: source.title,
+        caption: source.title,
+    })),
+    {
+        src: 'https://www.youtube.com/watch?v=EIUJfXk3_3w',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/1.jpg',
+        alt: 'Big Buck Bunny (YouTube)',
+        caption: 'YouTube video slide (wave-1 video feature)',
+    },
+];
 
 @Component({
     selector: 'demo-root',
@@ -86,6 +100,7 @@ const ITEMS: LgGalleryItem[] = SOURCES.map((source) => ({
                 [loop]="loop()"
                 [mousewheel]="true"
                 [hideBarsDelay]="hideBars() ? 2000 : 0"
+                [features]="features"
                 (beforeSlide)="lastEvent.set('beforeSlide → ' + $event.index)"
                 (afterSlide)="lastEvent.set('afterSlide → ' + $event.index)"
                 (slideItemLoad)="
@@ -165,6 +180,11 @@ const ITEMS: LgGalleryItem[] = SOURCES.map((source) => ({
 })
 class DemoRoot {
     readonly items = ITEMS;
+    readonly features = [
+        withThumbnail({ thumbWidth: 100 }),
+        withZoom({ showZoomInOutIcons: true }),
+        withVideo(),
+    ];
     readonly mode = signal<GalleryMode>('lg-slide');
     readonly loop = signal(true);
     readonly hideBars = signal(false);
