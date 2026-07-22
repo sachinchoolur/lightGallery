@@ -3,8 +3,9 @@ import {
     NgComponentOutlet,
     NgTemplateOutlet,
 } from '@angular/common';
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { DomPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
@@ -139,6 +140,7 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
         },
     ],
     imports: [
+        CdkTrapFocus,
         LgCaptionComponent,
         LgGesturesDirective,
         LgSlideComponent,
@@ -154,6 +156,7 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                 tabindex="-1"
                 role="dialog"
                 aria-modal="true"
+                [cdkTrapFocus]="settings().trapFocus && isBodyContainer()"
                 [attr.aria-label]="
                     settings().ariaLabelledby ? null : 'Gallery'
                 "
@@ -381,6 +384,14 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     readonly className = input<string | undefined>(undefined);
 
     /**
+     * Where the gallery mounts. Defaults to a CDK overlay over the page
+     * (`document.body`); pass an element for an inline gallery (2.x
+     * `container`) — scroll blocking, body classes and the focus trap stay
+     * off in inline mode, and `showMaximizeIcon` toggles `lg-inline`.
+     */
+    readonly container = input<HTMLElement | null | undefined>(undefined);
+
+    /**
      * Zoom-from-origin rect (viewport coordinates) for controlled mode,
      * where there is no trigger element to measure.
      */
@@ -530,6 +541,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     protected readonly nextButtonSlot = contentChild(LgNextButtonDirective);
 
     private overlayRef: OverlayRef | null = null;
+    private domOutlet: DomPortalOutlet | null = null;
     private readonly timers = new LgTimeouts();
 
     // ── Settings resolution (headless merge order; ADR §2) ────────────────
@@ -721,6 +733,15 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
     // ── Derived template state ────────────────────────────────────────────
 
+    protected readonly isBodyContainer = computed(() => {
+        const container = this.container();
+        return (
+            !container ||
+            (typeof document !== 'undefined' &&
+                container === document.body)
+        );
+    });
+
     protected readonly showIn = computed(
         () => this.phase() === 'opening' || this.phase() === 'open',
     );
@@ -743,6 +764,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             'lg-show',
             this.className(),
             this.showIn() && 'lg-show-in',
+            !this.isBodyContainer() && !this.maximized() && 'lg-inline',
         ),
     );
 
@@ -1286,7 +1308,19 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     }
 
     private attachOverlay(): void {
-        if (this.overlayRef) {
+        if (this.overlayRef || this.domOutlet) {
+            return;
+        }
+        const portal = new TemplatePortal(
+            this.galleryTpl(),
+            this.viewContainerRef,
+        );
+        const container = this.container();
+        if (container && !this.isBodyContainer()) {
+            // Inline gallery (2.x `container`): render into the given
+            // element — no global overlay, no scroll blocking.
+            this.domOutlet = new DomPortalOutlet(container);
+            this.domOutlet.attach(portal);
             return;
         }
         // CDK adopted per ADR §3: global position + scroll blocking replace
@@ -1295,14 +1329,14 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             positionStrategy: this.overlay.position().global(),
             scrollStrategy: this.overlay.scrollStrategies.block(),
         });
-        this.overlayRef.attach(
-            new TemplatePortal(this.galleryTpl(), this.viewContainerRef),
-        );
+        this.overlayRef.attach(portal);
     }
 
     private detachOverlay(): void {
         this.overlayRef?.dispose();
         this.overlayRef = null;
+        this.domOutlet?.dispose();
+        this.domOutlet = null;
     }
 
     /** Entrance timeline, once the overlay is in the DOM (2.x class order). */
@@ -1349,10 +1383,12 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             settings.zoomFromOrigin ? 100 : settings.backdropDuration,
         );
 
-        this.applyBodyState(settings);
+        if (this.isBodyContainer()) {
+            this.applyBodyState(settings);
+        }
         this.bindOpenListeners(settings);
 
-        if (settings.trapFocus) {
+        if (settings.trapFocus && this.isBodyContainer()) {
             // Remember where focus came from; restored when the overlay
             // detaches (dialog pattern). CDK FocusTrap hardening lands in 007.
             this.returnFocus =

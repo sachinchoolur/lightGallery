@@ -11,13 +11,17 @@ import {
 } from '@angular/platform-browser/testing';
 import { beforeEach } from 'vitest';
 
-getTestBed().initTestEnvironment(
-    BrowserTestingModule,
-    platformBrowserTesting(),
-);
+// The SSR spec runs under `@vitest-environment node` (no DOM): it drives
+// `renderApplication` itself and must not get a browser TestBed.
+if (typeof document !== 'undefined') {
+    getTestBed().initTestEnvironment(
+        BrowserTestingModule,
+        platformBrowserTesting(),
+    );
 
-beforeEach(() => {
-    TestBed.configureTestingModule({
-        providers: [provideZonelessChangeDetection()],
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [provideZonelessChangeDetection()],
+        });
     });
-});
+}

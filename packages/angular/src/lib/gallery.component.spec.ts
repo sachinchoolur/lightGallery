@@ -1,4 +1,9 @@
-import { Component, signal, viewChild } from '@angular/core';
+import {
+    Component,
+    signal,
+    viewChild,
+    type ElementRef,
+} from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -89,6 +94,25 @@ class ControlledHost {
 })
 class EndsHost {
     readonly gallery = viewChild.required(LgGalleryComponent);
+    readonly items = ITEMS;
+}
+
+@Component({
+    imports: [LgGalleryComponent],
+    template: `
+        <div #inlineHost class="inline-host"></div>
+        <lg-gallery
+            [slides]="items"
+            [zoomFromOrigin]="false"
+            [container]="inlineEl()?.nativeElement ?? null"
+            [showMaximizeIcon]="true"
+        />
+    `,
+})
+class InlineHost {
+    readonly gallery = viewChild.required(LgGalleryComponent);
+    readonly inlineEl =
+        viewChild<ElementRef<HTMLDivElement>>('inlineHost');
     readonly items = ITEMS;
 }
 
@@ -327,6 +351,43 @@ describe('LgGalleryComponent (plan 003 core gallery)', () => {
         expect(document.documentElement.classList.contains('lg-on')).toBe(
             false,
         );
+    });
+
+    it('renders inline into a [container] element (2.x container parity)', async () => {
+        const fixture = TestBed.createComponent(InlineHost);
+        const host = fixture.componentInstance;
+        await flush(fixture);
+        host.gallery().openGallery(0);
+        await flush(fixture);
+
+        // The gallery mounts inside the given element, not a CDK overlay.
+        const container = fixture.nativeElement.querySelector(
+            '.inline-host .lg-container',
+        ) as HTMLElement;
+        expect(container).not.toBeNull();
+        expect(container.classList.contains('lg-inline')).toBe(true);
+        expect(query('.cdk-overlay-container .lg-container')).toBeNull();
+        // No body scroll-lock/classes in inline mode.
+        expect(document.documentElement.classList.contains('lg-on')).toBe(
+            false,
+        );
+
+        // Maximize toggles lg-inline off (fills the viewport) and back.
+        (
+            container.querySelector('.lg-maximize') as HTMLButtonElement
+        ).click();
+        await flush(fixture);
+        expect(container.classList.contains('lg-inline')).toBe(false);
+        (
+            container.querySelector('.lg-maximize') as HTMLButtonElement
+        ).click();
+        await flush(fixture);
+        expect(container.classList.contains('lg-inline')).toBe(true);
+
+        fixture.destroy();
+        expect(
+            document.querySelector('.inline-host .lg-container'),
+        ).toBeNull();
     });
 
     it('honors ends without loop: bounce class and no wrap', async () => {
