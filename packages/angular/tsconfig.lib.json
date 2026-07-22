@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "module": "ES2022",
+    "declaration": true,
+    "inlineSources": true,
+    "sourceMap": true,
+    "types": []
+  },
+  "angularCompilerOptions": {
+    "compilationMode": "partial",
+    "strictTemplates": true,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "typeCheckHostBindings": true
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.spec.ts", "src/test-setup.ts"]
+}

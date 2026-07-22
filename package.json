@@ -9,6 +9,13 @@
       "@types/express-serve-static-core": "4.17.19",
       "@types/react": "18.0.15",
       "@types/serve-static": "1.13.10"
+    },
+    "packageExtensions": {
+      "@analogjs/vite-plugin-angular": {
+        "dependencies": {
+          "typescript": "~5.9.0"
+        }
+      }
     }
   },
   "description": "lightGallery is a feature-rich, modular JavaScript gallery plugin for building beautiful image and video galleries for the web and the mobile",
