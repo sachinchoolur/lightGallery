@@ -146,3 +146,22 @@ export function useHideBars(
 
     return hidden;
 }
+
+/**
+ * Visible focusable elements within a container (2.x
+ * `getFocusableElements`), for the hand-rolled dialog focus trap — the
+ * ADR chose a small local trap over a micro-dependency (no Vue CDK).
+ */
+export function getFocusableElements(
+    container: HTMLElement,
+): HTMLElement[] {
+    const elements = container.querySelectorAll<HTMLElement>(
+        'a[href]:not([disabled]), button:not([disabled]), ' +
+            'textarea:not([disabled]), input:not([disabled]), ' +
+            'select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    return [...elements].filter((element) => {
+        const style = window.getComputedStyle(element);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+    });
+}

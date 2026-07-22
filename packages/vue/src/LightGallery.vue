@@ -35,7 +35,11 @@ import {
     type UserSettings,
 } from '@lightgallery/headless';
 
-import { useBodyLock, useHideBars } from './composables';
+import {
+    getFocusableElements,
+    useBodyLock,
+    useHideBars,
+} from './composables';
 import { useGalleryGestures } from './gestures';
 import LgCaption from './LgCaption.vue';
 import LgSlide, { type OriginAnimation } from './LgSlide.vue';
@@ -330,6 +334,13 @@ function emitEvent<K extends keyof LgEventMap>(
 
 const timers = new LgTimeouts();
 const phase = ref<OpenPhase>('closed');
+/**
+ * SSR/hydration guard: the overlay is client-only (React portal parity),
+ * but `<Teleport>` itself must not render during SSR/hydration — the
+ * server puts its content in a teleport buffer the page never injects,
+ * so hydrating the anchors mismatches. Rendered only after mount.
+ */
+const isClientMounted = ref(false);
 const visible = ref(false);
 const componentsOpen = ref(false);
 const useStartClass = ref(false);
@@ -692,6 +703,36 @@ function onKeydown(event: KeyboardEvent): void {
         } else if (event.key === 'ArrowRight') {
             event.preventDefault();
             nextSlide();
+        }
+    }
+    // Hand-rolled focus trap (2.x trapFocus): Tab cycles inside the
+    // dialog while it is open over the page.
+    if (
+        settings.value.trapFocus &&
+        isBodyContainer.value &&
+        event.key === 'Tab'
+    ) {
+        const container = containerEl.value;
+        if (!container) {
+            return;
+        }
+        const focusable = getFocusableElements(container);
+        if (focusable.length === 0) {
+            event.preventDefault();
+            return;
+        }
+        const first = focusable[0]!;
+        const last = focusable[focusable.length - 1]!;
+        const active = document.activeElement;
+        const inside = active instanceof Node && container.contains(active);
+        if (event.shiftKey) {
+            if (!inside || active === first) {
+                event.preventDefault();
+                last.focus();
+            }
+        } else if (!inside || active === last) {
+            event.preventDefault();
+            first.focus();
         }
     }
 }
@@ -1149,6 +1190,7 @@ useGalleryGestures({
 });
 
 onMounted(() => {
+    isClientMounted.value = true;
     emitEvent('init', { instance: actions });
 });
 onBeforeUnmount(() => {
@@ -1160,7 +1202,7 @@ onBeforeUnmount(() => {
 
 <template>
     <slot />
-    <Teleport :to="props.container">
+    <Teleport v-if="isClientMounted" :to="props.container">
         <div
             v-if="phase !== 'closed'"
             ref="containerEl"
