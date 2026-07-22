@@ -470,7 +470,7 @@ importers:
   packages/angular:
     dependencies:
       '@lightgallery/headless':
-        specifier: workspace:*
+        specifier: ^3.0.0-alpha.1
         version: link:../headless
       tslib:
         specifier: ^2.6.0
@@ -16828,7 +16828,9 @@ snapshots:
       source-map: 0.6.1
       string-length: 2.0.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@jest/reporters@26.6.2':
     dependencies:
@@ -16947,7 +16949,9 @@ snapshots:
       jest-runner: 24.9.0
       jest-runtime: 24.9.0
     transitivePeerDependencies:
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@jest/test-sequencer@26.6.3(ts-node@9.1.1(typescript@4.7.4))':
     dependencies:
@@ -17463,7 +17467,7 @@ snapshots:
       webpack: 4.44.2
     optionalDependencies:
       '@types/webpack': 4.41.40
-      sockjs-client: 1.6.1(supports-color@6.1.0)
+      sockjs-client: 1.6.1
       webpack-dev-server: 3.11.1(webpack@4.44.2)
 
   '@rolldown/binding-android-arm64@1.0.0-rc.4':
@@ -22350,7 +22354,7 @@ snapshots:
 
   eslint-import-resolver-node@0.3.10:
     dependencies:
-      debug: 3.2.7(supports-color@6.1.0)
+      debug: 3.2.7(supports-color@5.5.0)
       is-core-module: 2.16.2
       resolve: 2.0.0-next.7
     transitivePeerDependencies:
@@ -22368,7 +22372,7 @@ snapshots:
 
   eslint-module-utils@2.13.0(@typescript-eslint/parser@4.33.0(eslint@7.32.0)(typescript@4.7.4))(eslint-import-resolver-node@0.3.10)(eslint@7.32.0):
     dependencies:
-      debug: 3.2.7(supports-color@6.1.0)
+      debug: 3.2.7(supports-color@5.5.0)
     optionalDependencies:
       '@typescript-eslint/parser': 4.33.0(eslint@7.32.0)(typescript@4.7.4)
       eslint: 7.32.0
@@ -22394,7 +22398,7 @@ snapshots:
       array.prototype.findlastindex: 1.2.6
       array.prototype.flat: 1.3.3
       array.prototype.flatmap: 1.3.3
-      debug: 3.2.7(supports-color@6.1.0)
+      debug: 3.2.7(supports-color@5.5.0)
       doctrine: 2.1.0
       eslint: 7.32.0
       eslint-import-resolver-node: 0.3.10
@@ -24029,7 +24033,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy-middleware@0.19.1(debug@4.4.3)(supports-color@6.1.0):
+  http-proxy-middleware@0.19.1(debug@4.4.3(supports-color@6.1.0))(supports-color@6.1.0):
     dependencies:
       http-proxy: 1.18.1(debug@4.4.3)
       is-glob: 4.0.3
@@ -24068,7 +24072,7 @@ snapshots:
   https-proxy-agent@2.2.4:
     dependencies:
       agent-base: 4.3.0
-      debug: 3.2.7(supports-color@6.1.0)
+      debug: 3.2.7(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -24891,7 +24895,7 @@ snapshots:
       jest-environment-jsdom: 26.6.2
       jest-environment-node: 26.6.2
       jest-get-type: 26.3.0
-      jest-jasmine2: 26.6.3(ts-node@9.1.1(typescript@4.7.4))
+      jest-jasmine2: 26.6.3
       jest-regex-util: 26.0.0
       jest-resolve: 26.6.2
       jest-util: 26.6.2
@@ -25190,7 +25194,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  jest-jasmine2@26.6.3(ts-node@9.1.1(typescript@4.7.4)):
+  jest-jasmine2@26.6.3:
     dependencies:
       '@babel/traverse': 7.29.7
       '@jest/environment': 26.6.2
@@ -25211,11 +25215,7 @@ snapshots:
       pretty-format: 26.6.2
       throat: 5.0.0
     transitivePeerDependencies:
-      - bufferutil
-      - canvas
       - supports-color
-      - ts-node
-      - utf-8-validate
 
   jest-leak-detector@24.9.0:
     dependencies:
@@ -26171,7 +26171,7 @@ snapshots:
       chalk: 2.4.2
       commander: 2.20.3
       cosmiconfig: 5.2.1
-      debug: 3.2.7(supports-color@6.1.0)
+      debug: 3.2.7(supports-color@5.5.0)
       dedent: 0.7.0
       del: 3.0.0
       execa: 1.0.0
@@ -29715,6 +29715,17 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  sockjs-client@1.6.1:
+    dependencies:
+      debug: 3.2.7(supports-color@5.5.0)
+      eventsource: 2.0.2
+      faye-websocket: 0.11.4
+      inherits: 2.0.4
+      url-parse: 1.5.10
+    transitivePeerDependencies:
+      - supports-color
+    optional: true
+
   sockjs-client@1.6.1(supports-color@6.1.0):
     dependencies:
       debug: 3.2.7(supports-color@6.1.0)
@@ -31570,7 +31581,7 @@ snapshots:
       del: 4.1.1
       express: 4.22.2(supports-color@6.1.0)
       html-entities: 1.4.0
-      http-proxy-middleware: 0.19.1(debug@4.4.3)(supports-color@6.1.0)
+      http-proxy-middleware: 0.19.1(debug@4.4.3(supports-color@6.1.0))(supports-color@6.1.0)
       import-local: 2.0.0
       internal-ip: 4.3.0
       ip: 1.1.9

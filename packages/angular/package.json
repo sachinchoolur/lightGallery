@@ -1,8 +1,32 @@
 {
   "name": "@lightgallery/angular",
-  "version": "3.0.0-alpha.0",
-  "private": true,
-  "description": "Native Angular lightGallery over @lightgallery/headless",
+  "version": "3.0.0-alpha.1",
+  "private": false,
+  "description": "Native Angular lightGallery over @lightgallery/headless — standalone components, signals, zoneless-ready",
+  "license": "GPL-3.0-only",
+  "author": "Sachin Neravath <sachi77n@gmail.com>",
+  "homepage": "https://www.lightgalleryjs.com/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sachinchoolur/lightGallery.git",
+    "directory": "packages/angular"
+  },
+  "keywords": [
+    "lightgallery",
+    "gallery",
+    "lightbox",
+    "angular",
+    "signals",
+    "zoneless",
+    "carousel",
+    "image-gallery",
+    "video-gallery"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "tag": "alpha"
+  },
   "scripts": {
     "build": "ng-packagr -p ng-package.json -c tsconfig.lib.json",
     "dev": "vite dev --config dev/vite.config.mts",
@@ -12,7 +36,7 @@
     "lint": "eslint 'src/**/*.ts' 'plugins/**/*.ts' --quiet"
   },
   "dependencies": {
-    "@lightgallery/headless": "workspace:*",
+    "@lightgallery/headless": "^3.0.0-alpha.1",
     "tslib": "^2.6.0"
   },
   "peerDependencies": {

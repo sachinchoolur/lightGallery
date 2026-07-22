@@ -92,3 +92,64 @@ jobs:
             tar -xzf "$tgz" -C "$dir"
             npx --yes publint@latest "$dir/package" --strict
           done
+
+  angular-package:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The supported window is the last 2 Angular majors (peers
+        # >=21 <23). Add 22 here when it releases.
+        angular-version: [21]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm --filter @lightgallery/angular run typecheck
+
+      - name: Test (zoneless)
+        run: pnpm --filter @lightgallery/angular test
+
+      - name: Build (APF)
+        run: |
+          pnpm --filter @lightgallery/headless run build
+          pnpm --filter @lightgallery/angular run build
+
+      - name: publint
+        run: npx --yes publint@latest packages/angular/dist --strict
+
+      - name: Pack artifacts
+        run: |
+          mkdir -p /tmp/lg-pack
+          pnpm --filter @lightgallery/headless exec pnpm pack --pack-destination /tmp/lg-pack
+          cd packages/angular/dist && npm pack --pack-destination /tmp/lg-pack
+
+      - name: Scratch consumer (AOT + SSR, Angular ${{ matrix.angular-version }})
+        run: |
+          cd /tmp
+          npx -y @angular/cli@${{ matrix.angular-version }} new lg-scratch \
+            --minimal --skip-git --ssr --style css --defaults
+          cd lg-scratch
+          npm i /tmp/lg-pack/lightgallery-headless-*.tgz \
+                /tmp/lg-pack/lightgallery-angular-*.tgz \
+                @angular/cdk@${{ matrix.angular-version }}
+          cp "$GITHUB_WORKSPACE/packages/angular/ci/scratch-app.ts" src/app/app.ts
+          npx ng build
+          # SSR contract: triggers prerender, the overlay never does.
+          grep -q 'alt="First"' dist/lg-scratch/browser/index.html
+          ! grep -q 'lg-container' dist/lg-scratch/browser/index.html
