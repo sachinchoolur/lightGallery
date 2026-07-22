@@ -28,6 +28,56 @@
       "types": "./dist/plugins/video/index.d.ts",
       "import": "./dist/plugins/video/index.js",
       "require": "./dist/plugins/video/index.cjs"
+    },
+    "./plugins/autoplay": {
+      "types": "./dist/plugins/autoplay/index.d.ts",
+      "import": "./dist/plugins/autoplay/index.js",
+      "require": "./dist/plugins/autoplay/index.cjs"
+    },
+    "./plugins/fullscreen": {
+      "types": "./dist/plugins/fullscreen/index.d.ts",
+      "import": "./dist/plugins/fullscreen/index.js",
+      "require": "./dist/plugins/fullscreen/index.cjs"
+    },
+    "./plugins/hash": {
+      "types": "./dist/plugins/hash/index.d.ts",
+      "import": "./dist/plugins/hash/index.js",
+      "require": "./dist/plugins/hash/index.cjs"
+    },
+    "./plugins/pager": {
+      "types": "./dist/plugins/pager/index.d.ts",
+      "import": "./dist/plugins/pager/index.js",
+      "require": "./dist/plugins/pager/index.cjs"
+    },
+    "./plugins/share": {
+      "types": "./dist/plugins/share/index.d.ts",
+      "import": "./dist/plugins/share/index.js",
+      "require": "./dist/plugins/share/index.cjs"
+    },
+    "./plugins/rotate": {
+      "types": "./dist/plugins/rotate/index.d.ts",
+      "import": "./dist/plugins/rotate/index.js",
+      "require": "./dist/plugins/rotate/index.cjs"
+    },
+    "./plugins/comment": {
+      "types": "./dist/plugins/comment/index.d.ts",
+      "import": "./dist/plugins/comment/index.js",
+      "require": "./dist/plugins/comment/index.cjs"
+    },
+    "./plugins/mediumZoom": {
+      "types": "./dist/plugins/mediumZoom/index.d.ts",
+      "import": "./dist/plugins/mediumZoom/index.js",
+      "require": "./dist/plugins/mediumZoom/index.cjs"
+    },
+    "./plugins/relativeCaption": {
+      "types": "./dist/plugins/relativeCaption/index.d.ts",
+      "import": "./dist/plugins/relativeCaption/index.js",
+      "require": "./dist/plugins/relativeCaption/index.cjs"
+    },
+    "./plugins/vimeoThumbnail": {
+      "types": "./dist/plugins/vimeoThumbnail/index.d.ts",
+      "import": "./dist/plugins/vimeoThumbnail/index.js",
+      "require": "./dist/plugins/vimeoThumbnail/index.cjs"
     }
   },
   "files": [

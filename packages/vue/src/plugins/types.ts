@@ -2,6 +2,7 @@ import type { Component, ComputedRef, InjectionKey } from 'vue';
 import type {
     CoreSettings,
     GalleryAction,
+    SlideDirection,
     TypedEmitter,
 } from '@lightgallery/headless';
 
@@ -51,6 +52,8 @@ export interface LgPluginRefs {
 export interface LgPluginContext {
     store: GalleryStore;
     actions: LgGalleryActions & {
+        /** Navigate with an explicit direction (autoplay, gestures). */
+        navigate(index: number, direction?: SlideDirection): void;
         dispatch(action: GalleryAction): void;
     };
     settings: ComputedRef<ResolvedPluginSettings>;

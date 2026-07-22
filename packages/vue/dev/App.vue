@@ -5,6 +5,13 @@ import {
     LgItem,
     type LgGalleryItem,
 } from '@lightgallery/vue';
+import Autoplay from '@lightgallery/vue/plugins/autoplay';
+import Comment from '@lightgallery/vue/plugins/comment';
+import Fullscreen from '@lightgallery/vue/plugins/fullscreen';
+import Hash from '@lightgallery/vue/plugins/hash';
+import Pager from '@lightgallery/vue/plugins/pager';
+import Rotate from '@lightgallery/vue/plugins/rotate';
+import Share from '@lightgallery/vue/plugins/share';
 import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 import Video from '@lightgallery/vue/plugins/video';
 import Zoom from '@lightgallery/vue/plugins/zoom';
@@ -37,7 +44,21 @@ const items: LgGalleryItem[] = [
     },
 ];
 
-const plugins = [Thumbnail, Zoom, Video];
+// Kitchen sink (zoom before rotate: zoom stays the outermost wrapper,
+// 2.x DOM order). mediumZoom/relativeCaption/vimeoThumbnail are demoed
+// separately — their presets reshape the whole gallery.
+const plugins = [
+    Thumbnail,
+    Zoom,
+    Video,
+    Autoplay,
+    Fullscreen,
+    { ...Hash, defaults: { ...Hash.defaults!, galleryId: 'demo' } },
+    Pager,
+    Share,
+    Rotate,
+    { ...Comment, defaults: { ...Comment.defaults!, commentBox: true } },
+];
 
 const mode = ref<'lg-slide' | 'lg-fade' | 'lg-lollipop'>('lg-slide');
 const loop = ref(true);
@@ -99,6 +120,15 @@ const lg = ref<InstanceType<typeof LightGallery> | null>(null);
                             />
                         </LgItem>
                     </div>
+                    <template #comments="{ item, index }">
+                        <div style="padding: 1rem">
+                            <p><strong>{{ item?.caption }}</strong></p>
+                            <p>
+                                Comment panel for slide {{ index + 1 }} —
+                                bring any comment system as a template.
+                            </p>
+                        </div>
+                    </template>
                     <template #caption="{ item, index }">
                         <h4>{{ item?.caption }}</h4>
                         <p>Slide {{ index + 1 }} — scoped-slot caption</p>

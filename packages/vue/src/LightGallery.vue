@@ -163,6 +163,11 @@ defineSlots<{
     counter?: (props: { current: number; total: number }) => unknown;
     'prev-button'?: () => unknown;
     'next-button'?: () => unknown;
+    /** Comment plugin panel body (`#comments="{ item, index }"`). */
+    comments?: (props: {
+        item: LgGalleryItem | undefined;
+        index: number;
+    }) => unknown;
 }>();
 
 // ── Store + settings ─────────────────────────────────────────────────────
