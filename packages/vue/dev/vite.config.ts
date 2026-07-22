@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
 
 /**
- * Dev-demo server for manual verification (plan 003 step 8) — the Vue twin
+ * Dev-demo server for manual verification — the Vue twin
  * of the sibling dev demos. The demo imports styles as a consumer would
  * (`lightgallery/css/...`); the alias points that specifier at the repo's
  * built CSS. Run `npm run build:css` at the root first if `dist/css` is

@@ -146,7 +146,7 @@ export interface CoreSettings {
     /** Close on Escape. */
     escKey: boolean;
 
-    /** Keyboard navigation (arrow keys — wired in plan 004). */
+    /** Keyboard navigation (arrow keys). */
     keyPress: boolean;
 
     /** Trap focus within the gallery. */
@@ -164,7 +164,7 @@ export interface CoreSettings {
      */
     hideControlOnEnd: boolean;
 
-    /** Navigate on mousewheel (wired in plan 004). */
+    /** Navigate on mousewheel. */
     mousewheel: boolean;
 
     /** Where slide captions render. */
@@ -194,13 +194,13 @@ export interface CoreSettings {
     /** Show the slide counter. */
     counter: boolean;
 
-    /** Minimum swipe distance in px to change slides (plan 004). */
+    /** Minimum swipe distance in px to change slides. */
     swipeThreshold: number;
 
-    /** Enable touch swipe (plan 004). */
+    /** Enable touch swipe. */
     enableSwipe: boolean;
 
-    /** Enable desktop mouse drag (plan 004). */
+    /** Enable desktop mouse drag. */
     enableDrag: boolean;
 
     /** Localizable UI strings. */
@@ -294,7 +294,7 @@ export interface ResolveSettingsOptions {
     isMobile?: boolean;
 
     /**
-     * Plugin default settings merged below user settings (plan 005). Merged
+     * Plugin default settings merged below user settings (plugin runtime). Merged
      * left-to-right, never mutating any input.
      */
     pluginDefaults?: ReadonlyArray<Partial<CoreSettings>>;

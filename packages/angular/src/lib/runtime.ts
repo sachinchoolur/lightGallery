@@ -34,7 +34,7 @@ export interface LgItemRegistration {
 export interface LgGalleryActions extends LgGalleryHandle {
     /**
      * Internal: navigate with an explicit direction (gesture releases at the
-     * loop edges need it — plan 004); same gating as `goToSlide`.
+     * loop edges need it); same gating as `goToSlide`.
      */
     navigate(index: number, direction?: SlideDirection): void;
     /** Raw reducer dispatch (feature runtime; React `GalleryActions` parity). */
@@ -56,7 +56,7 @@ export interface LgGestureSeam {
     pointers: PointerRecord[];
 }
 
-/** Timeline hooks the gesture directive drives on the gallery (plan 004). */
+/** Timeline hooks the gesture directive drives on the gallery. */
 export interface LgGestureHooks {
     /** Assign prev/next position classes around the current slide (1 render). */
     prepareDrag(): void;

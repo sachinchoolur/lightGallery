@@ -27,7 +27,7 @@ import {
 
 /**
  * Thumbnail feature (2.x `lg-thumbnail`): footer strip + toggle button —
- * the slot+state template wave 2 copies (plan 005 maintenance note). Logic
+ * the slot+state template the other plugins copy. Logic
  * is a port of the React thumbnail plugin over the same headless math.
  */
 
@@ -245,7 +245,7 @@ export class LgThumbnailStripComponent {
 
     /**
      * Strip drag: transforms are written straight to the track element per
-     * move (plan 004's no-CD rule) and committed to the signal on release.
+     * move (the no-CD-per-move rule) and committed to the signal on release.
      */
     protected onPointerDown(event: PointerEvent): void {
         const settings = this.settings();

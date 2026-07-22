@@ -23,7 +23,7 @@ const ITEMS: LgGalleryItem[] = [
 const SPEED = 400;
 
 /**
- * Change-detection probe (plan 004 done criterion): `ngDoCheck` runs on
+ * Change-detection probe: `ngDoCheck` runs on
  * every application tick that reaches this non-OnPush component, so a
  * pointermove storm must leave the counter untouched.
  */
@@ -121,7 +121,7 @@ function currentSlide(): HTMLElement {
     return query('.lg-item.lg-current')!;
 }
 
-describe('LgGesturesDirective (plan 004)', () => {
+describe('LgGesturesDirective', () => {
     beforeEach(() => {
         vi.useFakeTimers();
         CdProbe.checks = 0;
@@ -210,7 +210,7 @@ describe('LgGesturesDirective (plan 004)', () => {
         expect(query('.lg-counter-current')!.textContent!.trim()).toBe('1');
         expect(runtime.gestureSeam.pointers.length).toBe(0);
 
-        // A claimed lock (zoom pinch, plan 005) blocks new sessions.
+        // A claimed lock (zoom pinch) blocks new sessions.
         runtime.gestureSeam.claim('pinch');
         firePointer(item, 'pointerdown', { x: 200, y: 100 });
         firePointer(window, 'pointermove', { x: 100, y: 100 });

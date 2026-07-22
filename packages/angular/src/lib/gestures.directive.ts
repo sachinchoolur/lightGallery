@@ -27,8 +27,8 @@ import { LightGalleryStore } from './store';
  * Swipe/drag gestures (2.x `enableSwipe`/`enableDrag` via pointer events) —
  * the Angular twin of the React track's `useGalleryGestures`.
  *
- * PERFORMANCE CONTRACT (load-bearing — deliberately "un-Angular", see the
- * plan-004 maintenance note): while a pointer moves, transforms are written
+ * PERFORMANCE CONTRACT (load-bearing — deliberately "un-Angular" and
+ * load-bearing): while a pointer moves, transforms are written
  * DIRECTLY to the slide elements and the backdrop. No signal is written and
  * no change detection runs per move — Angular renders exactly twice per
  * gesture (position classes at drag start, navigation commit at release).

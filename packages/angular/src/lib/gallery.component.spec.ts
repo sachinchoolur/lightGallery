@@ -147,7 +147,7 @@ function loadImage(index: number): void {
     img!.dispatchEvent(new Event('load'));
 }
 
-describe('LgGalleryComponent (plan 003 core gallery)', () => {
+describe('LgGalleryComponent (core gallery)', () => {
     beforeEach(() => {
         vi.useFakeTimers();
     });

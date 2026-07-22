@@ -64,7 +64,7 @@ class A11yHost {
     readonly features = signal<readonly LgFeature[]>([]);
 }
 
-describe('accessibility (plan 007)', () => {
+describe('accessibility', () => {
     describe('with fake timers', () => {
         beforeEach(() => {
             vi.useFakeTimers();

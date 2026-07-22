@@ -5,7 +5,7 @@ import { defineConfig } from 'vitest/config';
 /**
  * Library build (ESM + CJS) + Vitest. Declarations are emitted separately
  * by `vue-tsc` (tsconfig.build.json) — plain tsc cannot see inside SFCs;
- * this split is load-bearing (plan 001 maintenance note).
+ * this split is load-bearing.
  */
 export default defineConfig({
     plugins: [vue()],

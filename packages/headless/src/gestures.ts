@@ -16,7 +16,7 @@ export const SWIPE_AXIS_THRESHOLD = 15;
  * Flick support: a release faster than this (px/ms) navigates even below
  * `swipeThreshold`. 2.x decides on distance alone; the velocity cutoff is
  * tuned so slow drags behave exactly like vanilla while quick flicks do not
- * snap back (noted as a deliberate deviation in the plan-004 report).
+ * snap back (a deliberate, documented deviation from 2.x).
  */
 export const FLICK_VELOCITY = 0.25;
 
@@ -159,7 +159,7 @@ export function resolveSwipeTarget(
     return touchLoop ? slidesCount - 1 : null;
 }
 
-/** One live pointer, for multi-pointer consumers (zoom plugin, plan 005). */
+/** One live pointer, for multi-pointer consumers (zoom plugin). */
 export interface PointerRecord {
     id: number;
     startX: number;

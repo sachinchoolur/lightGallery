@@ -702,7 +702,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         progressIndex: null,
     });
 
-    /** fromTouch commit path (plan 004): drags animate as `lg-slide`. */
+    /** fromTouch commit path (gestures): drags animate as `lg-slide`. */
     private readonly touchSlideMode = signal(false);
     private fromTouch = false;
 
@@ -1207,7 +1207,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         this.index.set(this.store.currentIndex());
     }
 
-    // ── Gesture wiring (plan 004): position classes at drag start, commit
+    // ── Gesture wiring : position classes at drag start, commit
     // at release — the only two renders a gesture causes. ─────────────────
 
     /** React counterpart: GalleryOutlet's `prepareDrag`. */

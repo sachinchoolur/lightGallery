@@ -18,7 +18,7 @@ import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
 import { withZoom } from '@lightgallery/angular/plugins/zoom';
 
 /**
- * SSR smoke (plan 007 step 3, ADR §8): the package renders on the server
+ * SSR smoke (ADR §8): the package renders on the server
  * with zoneless change detection and no browser globals — the closed
  * gallery emits only its projected triggers; the overlay never
  * server-renders (nothing to hydrate-mismatch); eager feature services

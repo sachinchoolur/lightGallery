@@ -38,7 +38,7 @@ import {
 /**
  * Zoom feature (2.x `lg-zoom`): toolbar buttons, double-click/tap point
  * zoom, pinch, pan-when-zoomed — the gesture-consumer template wave 2
- * copies. Same performance contract as the core gestures (plan 004):
+ * copies. Same performance contract as the core gestures:
  * pinch/pan write transforms straight to the DOM; signals change only on
  * discrete commits (button step, gesture end).
  *

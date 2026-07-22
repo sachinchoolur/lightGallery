@@ -56,7 +56,7 @@ export interface GalleryItem<TCaption = unknown> {
     iframeTitle?: string;
 
     /**
-     * HTML5 video sources (video plugin, plan 005). Kept loosely typed until
+     * HTML5 video sources (video plugin). Kept loosely typed until
      * the video plugin lands.
      */
     video?: unknown;
@@ -81,7 +81,7 @@ export interface GalleryItem<TCaption = unknown> {
      */
     lgSize?: string;
 
-    /** Actual image width in px (zoom plugin actual-size math, plan 005). */
+    /** Actual image width in px (zoom plugin actual-size math). */
     width?: string;
 
     /** Custom slide name for the hash plugin. */

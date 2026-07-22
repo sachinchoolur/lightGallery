@@ -99,7 +99,7 @@ function mountUncontrolled(): {
     return { wrapper, log };
 }
 
-describe('LightGallery (plan 003 core gallery)', () => {
+describe('LightGallery (core gallery)', () => {
     it('runs the uncontrolled lifecycle: open from item, navigate, close', async () => {
         const { wrapper, log } = mountUncontrolled();
         expect(query('.lg-container')).toBeNull();

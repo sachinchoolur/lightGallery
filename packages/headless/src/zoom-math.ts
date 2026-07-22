@@ -1,5 +1,5 @@
 /**
- * Zoom math for the zoom plugin (plan 005), ported from the 2.x zoom
+ * Zoom math for the zoom plugin, ported from the 2.x zoom
  * plugin's scale/position logic as pure functions: scale stepping and
  * clamping, actual-size scale, point-anchored zooming, pinch scale and
  * pan bounds. The React plugin writes the resulting transforms to the DOM.

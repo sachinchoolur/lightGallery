@@ -51,8 +51,8 @@ export interface InitDetail {
 
 /**
  * All bus events and their payloads (ADR 0001 §6: outputs without the `on`
- * prefix, payload details identical to React). Core fires the lifecycle
- * subset in plan 003; gesture/plugin events fire from plans 004–006.
+ * prefix, payload details identical to React). Core fires the
+ * lifecycle subset; gesture and plugin events fire from their layers.
  */
 export interface LgEventMap {
     init: InitDetail;

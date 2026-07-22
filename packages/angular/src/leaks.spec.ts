@@ -160,7 +160,7 @@ function trackListeners(): ListenerLedger {
     };
 }
 
-describe('leak + CD audit, all 13 features (plan 007)', () => {
+describe('leak + CD audit, all 13 features', () => {
     beforeEach(() => {
         vi.useFakeTimers();
         CdProbe.checks = 0;
@@ -231,7 +231,7 @@ describe('leak + CD audit, all 13 features (plan 007)', () => {
             ).toBe(false);
             // Add/remove parity for every gallery-owned listener type. The
             // exact residue below is app-level singletons that outlive any
-            // gallery instance (verified by stack trace, plan 007):
+            // gallery instance (verified by stack trace):
             // - jsdom/nwsapi selector engine: document mouseover/mouseout
             // - CDK ViewportRuler: window resize + orientationchange
             // - Angular Location (injected by CDK Overlay): popstate +

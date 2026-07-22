@@ -9,7 +9,7 @@ import {
 import { LgGalleryRuntime } from './runtime';
 import type { LgGalleryItem } from './types';
 
-/** Iframe slide renderer (deferred from plan 003), 2.x `getIframeMarkup`. */
+/** Iframe slide renderer — 2.x `getIframeMarkup`. */
 @Component({
     selector: 'lg-iframe-slide',
     changeDetection: ChangeDetectionStrategy.OnPush,

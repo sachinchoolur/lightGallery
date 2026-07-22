@@ -18,7 +18,7 @@ export const initialZoomSlice: ZoomSlice = {
     zoomed: false,
 };
 
-/** Per-slide rotate/flip state (rotate plugin, plan 006). */
+/** Per-slide rotate/flip state (rotate plugin). */
 export interface RotateSlice {
     /** Rotation in degrees (multiples of 90, may run negative). */
     rotate: number;
@@ -72,7 +72,7 @@ export function getRotateTransform(slice: RotateSlice): string {
     return `rotate(${slice.rotate}deg) scale3d(${slice.flipHorizontal}, ${slice.flipVertical}, 1)`;
 }
 
-/** Autoplay run-state (autoplay plugin, plan 006). */
+/** Autoplay run-state (autoplay plugin). */
 export interface AutoplaySlice {
     running: boolean;
     pausedOnDrag: boolean;

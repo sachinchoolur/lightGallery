@@ -43,7 +43,7 @@ import type { LgGalleryItem } from './types';
 export class LgImageSlideComponent {
     readonly item = input.required<LgGalleryItem>();
     readonly index = input.required<number>();
-    /** Native image dragging would swallow the swipe gesture (plan 004). */
+    /** Native image dragging would swallow the swipe gesture. */
     readonly mediaLoad = output<void>();
     readonly mediaError = output<void>();
 }

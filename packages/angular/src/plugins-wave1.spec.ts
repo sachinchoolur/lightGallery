@@ -82,7 +82,7 @@ async function openAndLoad(
     await flush(fixture);
 }
 
-describe('wave-1 features (plan 005)', () => {
+describe('wave-1 features', () => {
     beforeEach(() => {
         vi.useFakeTimers();
     });
