@@ -1,7 +1,10 @@
 import {
     Component,
+    computed,
     provideZonelessChangeDetection,
     signal,
+    viewChild,
+    type TemplateRef,
 } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import {
@@ -10,6 +13,13 @@ import {
     LgGalleryItemDirective,
     type LgGalleryItem,
 } from '@lightgallery/angular';
+import { withAutoplay } from '@lightgallery/angular/plugins/autoplay';
+import { withComment } from '@lightgallery/angular/plugins/comment';
+import { withFullscreen } from '@lightgallery/angular/plugins/fullscreen';
+import { withHash } from '@lightgallery/angular/plugins/hash';
+import { withPager } from '@lightgallery/angular/plugins/pager';
+import { withRotate } from '@lightgallery/angular/plugins/rotate';
+import { withShare } from '@lightgallery/angular/plugins/share';
 import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
 import { withVideo } from '@lightgallery/angular/plugins/video';
 import { withZoom } from '@lightgallery/angular/plugins/zoom';
@@ -21,6 +31,12 @@ import 'lightgallery/css/lg-transitions.css';
 import 'lightgallery/css/lg-thumbnail.css';
 import 'lightgallery/css/lg-zoom.css';
 import 'lightgallery/css/lg-video.css';
+import 'lightgallery/css/lg-autoplay.css';
+import 'lightgallery/css/lg-fullscreen.css';
+import 'lightgallery/css/lg-pager.css';
+import 'lightgallery/css/lg-share.css';
+import 'lightgallery/css/lg-rotate.css';
+import 'lightgallery/css/lg-comments.css';
 
 const picsum = (id: number, w: number, h: number): string =>
     `https://picsum.photos/id/${id}/${w}/${h}`;
@@ -100,7 +116,7 @@ const ITEMS: LgGalleryItem[] = [
                 [loop]="loop()"
                 [mousewheel]="true"
                 [hideBarsDelay]="hideBars() ? 2000 : 0"
-                [features]="features"
+                [features]="features()"
                 (beforeSlide)="lastEvent.set('beforeSlide → ' + $event.index)"
                 (afterSlide)="lastEvent.set('afterSlide → ' + $event.index)"
                 (slideItemLoad)="
@@ -123,6 +139,15 @@ const ITEMS: LgGalleryItem[] = [
                     <p>Slide {{ index + 1 }} — template caption</p>
                 </ng-template>
             </lg-gallery>
+            <ng-template #commentsTpl let-item let-index="index">
+                <div style="padding: 1rem">
+                    <p><strong>{{ item?.caption }}</strong></p>
+                    <p>
+                        Comment panel for slide {{ index + 1 }} — bring any
+                        comment system as a template.
+                    </p>
+                </div>
+            </ng-template>
             <p>
                 <button type="button" (click)="lg.openGallery(2)">
                     Imperative: open at slide 3
@@ -180,11 +205,26 @@ const ITEMS: LgGalleryItem[] = [
 })
 class DemoRoot {
     readonly items = ITEMS;
-    readonly features = [
+    private readonly commentsTpl =
+        viewChild.required<TemplateRef<unknown>>('commentsTpl');
+    // Kitchen sink (zoom before rotate: zoom stays the outermost wrapper,
+    // 2.x DOM order). mediumZoom/relativeCaption/vimeoThumbnail are demoed
+    // separately — their presets reshape the whole gallery.
+    readonly features = computed(() => [
         withThumbnail({ thumbWidth: 100 }),
         withZoom({ showZoomInOutIcons: true }),
         withVideo(),
-    ];
+        withAutoplay(),
+        withFullscreen(),
+        withHash({ galleryId: 'demo' }),
+        withPager(),
+        withShare(),
+        withRotate(),
+        withComment({
+            commentBox: true,
+            commentsTemplate: this.commentsTpl(),
+        }),
+    ]);
     readonly mode = signal<GalleryMode>('lg-slide');
     readonly loop = signal(true);
     readonly hideBars = signal(false);

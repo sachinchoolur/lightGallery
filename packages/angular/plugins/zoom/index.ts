@@ -224,12 +224,15 @@ export class LgZoomWrapperComponent {
     private lastTap = 0;
     private armTimer: ReturnType<typeof setTimeout> | null = null;
 
+    /** Narrow: re-run the arm effect only when THIS slide's flag flips. */
+    private readonly loaded = computed(() =>
+        this.ctx.state().loadedSlides.has(this.index()),
+    );
+
     constructor() {
         // Zoom interactions arm `enableZoomAfter` ms after the slide loads.
         effect((onCleanup) => {
-            const loaded = this.ctx
-                .state()
-                .loadedSlides.has(this.index());
+            const loaded = this.loaded();
             const enabled = this.enabled();
             if (!loaded || !enabled) {
                 this.interactive.set(false);
