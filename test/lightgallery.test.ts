@@ -302,3 +302,222 @@ describe('Plugins', () => {
         expect(LG.galleryItems[0].poster).toBeUndefined();
     });
 });
+
+describe('Security - XSS Prevention', () => {
+    it('Should escape double quotes in alt attribute to prevent attribute breakout', async () => {
+        // Test: Double quote to break out of attribute and inject malicious HTML
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" alt='"><img src=x onerror=alert(1)>' />
+                </a>
+            </div>`;
+
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        LG.openGallery(0);
+
+        await waitFor(() => {
+            const lgObject = document.querySelector('.lg-object');
+            expect(lgObject).toBeInTheDocument();
+
+            if (lgObject) {
+                const altValue = lgObject.getAttribute('alt');
+                expect(altValue).toBe('"><img src=x onerror=alert(1)>');
+            }
+
+            // Verify no malicious img was injected
+            const xssImg = document.querySelector('img[src="x"]');
+            expect(xssImg).toBeNull();
+        });
+
+        LG.destroy();
+    });
+
+    it('Should escape double quotes in alt to prevent event handler injection', async () => {
+        // Test: Inject onload event handler
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" alt='" onload="alert(1)" x="' />
+                </a>
+            </div>`;
+
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        LG.openGallery(0);
+
+        await waitFor(() => {
+            const lgObject = document.querySelector('.lg-object');
+            expect(lgObject).toBeInTheDocument();
+
+            if (lgObject) {
+                const altValue = lgObject.getAttribute('alt');
+                expect(altValue).toBe('" onload="alert(1)" x="');
+
+                // The onload should not be an actual attribute
+                expect(lgObject.hasAttribute('onload')).toBe(false);
+            }
+        });
+
+        LG.destroy();
+    });
+
+    it('Should escape double quotes in alt to prevent script injection', async () => {
+        // Test: Script tag injection
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" alt='"><script>alert("XSS")</script><img x="' />
+                </a>
+            </div>`;
+
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        LG.openGallery(0);
+
+        await waitFor(() => {
+            const lgObject = document.querySelector('.lg-object');
+            expect(lgObject).toBeInTheDocument();
+
+            // No script tags should be injected
+            const scripts = document.querySelectorAll('.lg-item script');
+            expect(scripts.length).toBe(0);
+        });
+
+        LG.destroy();
+    });
+
+    it('Should handle ampersands in alt without double-encoding', async () => {
+        // Test: Special HTML characters
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" alt="Testing &amp; signs &lt; and &gt; symbols" />
+                </a>
+            </div>`;
+
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        LG.openGallery(0);
+
+        await waitFor(() => {
+            const lgObject = document.querySelector('.lg-object');
+            expect(lgObject).toBeInTheDocument();
+
+            if (lgObject) {
+                const altValue = lgObject.getAttribute('alt');
+                // Browser automatically decodes HTML entities in attributes
+                expect(altValue).toBe('Testing & signs < and > symbols');
+            }
+        });
+
+        LG.destroy();
+    });
+
+    it('Should handle single quotes in alt attribute', async () => {
+        // Test: Single quotes (less dangerous but should still work)
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" alt="It's a nice image with 'quotes'" />
+                </a>
+            </div>`;
+
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        LG.openGallery(0);
+
+        await waitFor(() => {
+            const lgObject = document.querySelector('.lg-object');
+            expect(lgObject).toBeInTheDocument();
+
+            if (lgObject) {
+                const altValue = lgObject.getAttribute('alt');
+                expect(altValue).toBe("It's a nice image with 'quotes'");
+            }
+        });
+
+        LG.destroy();
+    });
+
+    it('Should escape double quotes in srcset attribute', async () => {
+        // Test: Srcset attribute vulnerability
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" srcset='" onload="alert(1)" x="' />
+                </a>
+            </div>`;
+
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        LG.openGallery(0);
+
+        await waitFor(() => {
+            const lgObject = document.querySelector('.lg-object');
+            expect(lgObject).toBeInTheDocument();
+
+            if (lgObject) {
+                // Should not have onload as an actual attribute
+                expect(lgObject.hasAttribute('onload')).toBe(false);
+            }
+        });
+
+        LG.destroy();
+    });
+
+    it('Should escape double quotes in sizes attribute', async () => {
+        // Test: Sizes attribute vulnerability
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" sizes='" onload="alert(1)" x="' />
+                </a>
+            </div>`;
+
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        LG.openGallery(0);
+
+        await waitFor(() => {
+            const lgObject = document.querySelector('.lg-object');
+            expect(lgObject).toBeInTheDocument();
+
+            if (lgObject) {
+                // Should not have onload as an actual attribute
+                expect(lgObject.hasAttribute('onload')).toBe(false);
+            }
+        });
+
+        LG.destroy();
+    });
+
+    it('Should handle backslashes and special characters in alt', async () => {
+        // Test: Various escape characters
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" alt='Test \\ backslash and "quotes" and <tags>' />
+                </a>
+            </div>`;
+
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        LG.openGallery(0);
+
+        await waitFor(() => {
+            const lgObject = document.querySelector('.lg-object');
+            expect(lgObject).toBeInTheDocument();
+
+            if (lgObject) {
+                const altValue = lgObject.getAttribute('alt');
+                // Should preserve the content as-is
+                expect(altValue).toContain('backslash');
+                expect(altValue).toContain('quotes');
+            }
+        });
+
+        LG.destroy();
+    });
+});
