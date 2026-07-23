@@ -587,6 +587,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.3.4
         version: 4.7.0(vite@5.4.21(@types/node@24.13.2)(less@4.6.7)(sass@1.101.0)(stylus@0.59.0)(terser@5.48.0))
+      '@vitest/expect':
+        specifier: 2.1.9
+        version: 2.1.9
       axe-core:
         specifier: ^4.12.1
         version: 4.12.1

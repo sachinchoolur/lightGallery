@@ -74,7 +74,7 @@ afterEach(() => {
     window.history.replaceState(null, '', window.location.pathname);
 });
 
-describe('global leak audit (plan 007)', () => {
+describe('global leak audit', () => {
     it('all 13 plugins: open, interact, unmount → no leaked listeners or timers', () => {
         const docAdd = vi.spyOn(document, 'addEventListener');
         const docRemove = vi.spyOn(document, 'removeEventListener');

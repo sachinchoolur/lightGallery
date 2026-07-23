@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 /**
- * Dev-demo server for manual verification (plan 003 step 8). The demo
+ * Dev-demo server for manual verification. The demo
  * imports styles as a consumer would (`lightgallery/css/...`) — the alias
  * points that specifier at the repo's built CSS. Run `npm run build:css`
  * at the root first if `dist/css` is missing.

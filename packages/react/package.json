@@ -178,6 +178,7 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/expect": "2.1.9",
     "axe-core": "^4.12.1",
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.1.0",

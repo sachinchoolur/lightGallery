@@ -76,7 +76,7 @@ export default defineConfig({
             ],
             // Per-format outputs: shared CJS chunks must end in `.cjs` —
             // with `"type": "module"`, a `.js` chunk would be loaded as ESM
-            // (caught by the plan-007 scratch-consumer check).
+            // (caught by the scratch-consumer packaging check).
             output: [
                 {
                     format: 'es',

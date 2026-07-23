@@ -163,8 +163,6 @@ or the old CRA wrapper:
 - Events keep their documented `onXxx` names and payloads; `updateSlides`
   is gone (changing `slides` is the update). The `videojs` option was
   dropped — bring custom players through `render.slide`.
-- The full behavior comparison lives in the repo's
-  `plans-react/parity-matrix.md`.
 
 ## License
 

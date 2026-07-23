@@ -1,3 +1,8 @@
+import {
+    createEmitter as createTypedEmitter,
+    type TypedEmitter,
+} from '@lightgallery/headless';
+
 import type {
     SlideEventDetail,
     SlideItemLoadDetail,
@@ -7,7 +12,9 @@ import type {
  * The internal event bus (ADR 0001 §5): core lifecycle events fan out to it
  * (alongside the public `onXxx` callback props), and plugins use it to talk
  * to each other (rotate → zoom) and to the core-adjacent components
- * (toolbar buttons → slide wrappers).
+ * (toolbar buttons → slide wrappers). The emitter implementation lives in
+ * `@lightgallery/headless` and is shared by every framework runtime; this
+ * module binds it to the React event map.
  */
 
 export interface HasVideoDetail {
@@ -34,42 +41,8 @@ export interface LgEventMap {
     init: unknown;
 }
 
-type Listener = (detail: never) => void;
-
-export interface LgEventEmitter {
-    /** Subscribe; returns the unsubscribe function. */
-    on<K extends keyof LgEventMap>(
-        name: K,
-        listener: (detail: LgEventMap[K]) => void,
-    ): () => void;
-    on(name: string, listener: (detail: unknown) => void): () => void;
-    emit<K extends keyof LgEventMap>(name: K, detail: LgEventMap[K]): void;
-    emit(name: string, detail?: unknown): void;
-}
+export type LgEventEmitter = TypedEmitter<LgEventMap>;
 
 export function createEmitter(): LgEventEmitter {
-    const listeners = new Map<string, Set<Listener>>();
-    return {
-        on(name: string, listener: (detail: never) => void) {
-            let set = listeners.get(name);
-            if (!set) {
-                set = new Set();
-                listeners.set(name, set);
-            }
-            set.add(listener as Listener);
-            return () => {
-                set.delete(listener as Listener);
-            };
-        },
-        emit(name: string, detail?: unknown) {
-            const set = listeners.get(name);
-            if (!set) {
-                return;
-            }
-            // Copy so unsubscribing inside a listener is safe.
-            [...set].forEach((listener) =>
-                (listener as (d: unknown) => void)(detail),
-            );
-        },
-    };
+    return createTypedEmitter<LgEventMap>();
 }

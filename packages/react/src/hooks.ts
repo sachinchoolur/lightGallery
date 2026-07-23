@@ -10,8 +10,8 @@ import {
 
 /**
  * Cleanup-tracked timers: every timeout in the package goes through this hook
- * so unmounting (even mid-animation) never leaks a timer. Plan 007's leak
- * audit assumes this discipline.
+ * so unmounting (even mid-animation) never leaks a timer. The leak audit
+ * suite assumes this discipline.
  */
 export interface Timeouts {
     set(fn: () => void, ms: number): number;

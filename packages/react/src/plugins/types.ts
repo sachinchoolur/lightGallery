@@ -7,7 +7,8 @@ import type { GalleryItem } from '../types';
 
 /**
  * The plugin contract (ADR 0001 §5), validated against all 13 vanilla
- * plugins in plan 002. Implementation notes vs the ADR snippet:
+ * plugins during the architecture spike. Implementation notes vs the ADR
+ * snippet:
  * - `gestureLock` is the full gesture seam (a superset of `{ claim }`): the
  *   zoom plugin also reads the live pointer records for pinch math.
  * - `PluginContext` additionally carries `items` (every vanilla plugin reads

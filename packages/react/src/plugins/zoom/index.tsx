@@ -35,10 +35,10 @@ import type {
 /**
  * Zoom plugin (2.x `lg-zoom`): toolbar buttons, double-click/tap point
  * zoom, pinch, pan-when-zoomed. Same performance contract as the core
- * gestures (plan 004): pinch/pan write transforms straight to the DOM;
+ * gestures: pinch/pan write transforms straight to the DOM;
  * React state changes only on discrete commits (button step, gesture end).
  *
- * DOM deviation vs 2.x (noted for the 007 parity matrix): transforms live
+ * DOM deviation vs 2.x (noted in the parity matrix): transforms live
  * on two plugin-owned wrapper divs with inline transitions instead of
  * `.lg-img-wrap`/`.lg-image` + `lg-zoomable` CSS.
  */

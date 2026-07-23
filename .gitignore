@@ -30,6 +30,8 @@ compiled
 .turbo/
 .pnpm-store/
 packages/*/dist/
+# hand-written ambient types (the global *.d.ts rule targets v2 build output)
+!packages/*/test/*.d.ts
 
 # local agent tooling (npx skills)
 .agents/

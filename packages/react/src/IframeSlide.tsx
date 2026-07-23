@@ -9,7 +9,7 @@ export interface IframeSlideProps {
     onLoad: () => void;
 }
 
-/** Iframe slide renderer (deferred from plan 003), 2.x `getIframeMarkup`. */
+/** Iframe slide renderer, 2.x `getIframeMarkup`. */
 export function IframeSlide({
     item,
     onLoad,
