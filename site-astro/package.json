@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && cp ../site/CNAME dist/CNAME",
     "preview": "astro preview",
     "check": "astro check"
   },
