@@ -37,6 +37,7 @@ const { bodyClass, meta } = Astro.props;
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
         <Metadata {...meta} />
+        <slot name="head" />
         {
             import.meta.env.PROD && (
                 <script

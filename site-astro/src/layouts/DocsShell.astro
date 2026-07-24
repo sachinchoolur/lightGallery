@@ -35,6 +35,29 @@ const pageUrl = (e: CollectionEntry<'docs'> | CollectionEntry<'demos'>) =>
 
 const editUrl = `${SITE.docsRepo}/site-astro/src/content/${section}/${entry.id}.md`;
 const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+
+// Per-page vendor stylesheets, keyed by page title exactly like the Hugo
+// head conditionals (`head/stylesheet.html`). The matching vendor JS
+// loads from the demo-galleries runtime, element-guarded.
+const VENDOR_CSS: Record<string, string[]> = {
+    'SwiperJs demo': [
+        'https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css',
+    ],
+    'Slick carousel demo': [
+        'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css',
+    ],
+    'Owl carousel demo': [
+        'https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css',
+    ],
+    'Flickity carousel demo': [
+        'https://unpkg.com/flickity@2/dist/flickity.min.css',
+    ],
+};
+const vendorCss = VENDOR_CSS[entry.data.title] ?? [];
+const hasVideo =
+    'has_video' in entry.data ? (entry.data.has_video ?? false) : false;
 ---
 
 <BaseLayout
@@ -44,6 +67,32 @@ const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
         description: entry.data.description,
     }}
 >
+    <Fragment slot="head">
+        {vendorCss.map((href) => <link rel="stylesheet" href={href} />)}
+        {
+            hasVideo && (
+                <>
+                    <link
+                        href="https://vjs.zencdn.net/7.10.2/video-js.css"
+                        rel="stylesheet"
+                    />
+                    {/* Player APIs the video plugin drives (script-footer parity). */}
+                    <script
+                        is:inline
+                        src="https://player.vimeo.com/api/player.js"
+                    />
+                    <script
+                        is:inline
+                        src="https://fast.wistia.com/assets/external/E-v1.js"
+                    />
+                    <script
+                        is:inline
+                        src="https://vjs.zencdn.net/7.10.2/video.min.js"
+                    />
+                </>
+            )
+        }
+    </Fragment>
     <div class="wrap container-xxl page-wrap" role="document">
         <div class="row flex-xl-nowrap">
             <div class="col-lg-2 col-xl-2 docs-sidebar">

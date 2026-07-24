@@ -32,6 +32,25 @@ const Masonry = masonryModule?.default ?? window.Masonry;
 const imagesLoadedModule = await import('./vendor/imagesloaded.pkgd.js');
 const imagesLoaded = imagesLoadedModule?.default ?? window.imagesLoaded;
 
+// Carousel vendors load only on their own demo pages (the init sections
+// below are element-guarded, exactly like the Hugo app.js).
+let Swiper;
+if (document.getElementById('lg-swipper')) {
+    const swiperModule = await import('./vendor/swiper-bundle.min.js');
+    Swiper = swiperModule?.default ?? window.Swiper;
+}
+let Flickity;
+if (document.querySelector('#flickity-carousel-gallery-demo')) {
+    const flickityModule = await import('./vendor/flickity.pkgd.min.js');
+    Flickity = flickityModule?.default ?? window.Flickity;
+}
+if (document.getElementById('slick-carousel-gallery-demo')) {
+    await import('./vendor/slick.min.js');
+}
+if (document.getElementById('owl-carousel-gallery-demo')) {
+    await import('./vendor/owl.carousel.min.js');
+}
+
 function getResponsiveThumbnailsSettings() {
     if ($(window).width() < 768) {
         return {
