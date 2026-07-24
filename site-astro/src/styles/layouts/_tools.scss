@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+
+  /* Style for headings */
+  h1 {
+    text-align: center;
+  }
+
+  h2 {
+    margin-top: 20px;
+  }
+
+  /* Style for listing items */
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 20px;
+  }
+
+  /* Style for links */
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* Style for descriptions */
+  .description {
+    margin-top: 5px;
+    color: #666;
+  }
+
+  /* Style for links on hover */
+  a:hover {
+    color: #0056b3;
+  }

@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Port of `layouts/404.html` — docs + demos card lists as a directory.
+const docs = (await getCollection('docs')).sort((a, b) =>
+    a.id.localeCompare(b.id),
+);
+const demos = (await getCollection('demos')).sort((a, b) =>
+    a.id.localeCompare(b.id),
+);
+---
+
+<BaseLayout
+    bodyClass="error404"
+    meta={{ title: 'Page not found', is404: true }}
+>
+    <div class="wrap container-xxl page-wrap" role="document">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-10 col-xl-8">
+                <article>
+                    <h1 class="text-center">Page not found</h1>
+                    <p class="lead">
+                        We have re-designed the website recently, You can try
+                        finding the page that you are looking for from the
+                        below links.
+                    </p>
+                    <h3 class="text-center">Docs</h3>
+                    <div class="card-list">
+                        {
+                            docs.map((entry) => (
+                                <div class="card my-3">
+                                    <div class="card-body">
+                                        <a
+                                            class="stretched-link"
+                                            href={`/docs/${entry.id.replace(/\/index$/, '')}/`}
+                                        >
+                                            {entry.data.title} &rarr;
+                                        </a>
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                    <h3 class="text-center">Demos</h3>
+                    <div class="card-list">
+                        {
+                            demos.map((entry) => (
+                                <div class="card my-3">
+                                    <div class="card-body">
+                                        <a
+                                            class="stretched-link"
+                                            href={`/demos/${entry.id.replace(/\/index$/, '')}/`}
+                                        >
+                                            {entry.data.title} &rarr;
+                                        </a>
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</BaseLayout>

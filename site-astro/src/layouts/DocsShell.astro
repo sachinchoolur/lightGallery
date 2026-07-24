@@ -1,0 +1,134 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+
+import BaseLayout from './BaseLayout.astro';
+import SidebarMenu from '../components/SidebarMenu.astro';
+import { SITE } from '../lib/site';
+
+/**
+ * Shared docs/demos page shell — port of `layouts/docs/single.html` and
+ * `layouts/demos/single.html` (identical apart from the sidebar source
+ * and the docs-only TOC column).
+ */
+interface Props {
+    section: 'docs' | 'demos';
+    entry: CollectionEntry<'docs'> | CollectionEntry<'demos'>;
+    entries: (CollectionEntry<'docs'> | CollectionEntry<'demos'>)[];
+    headings: MarkdownHeading[];
+}
+
+const { section, entry, entries, headings } = Astro.props;
+const withToc = section === 'docs';
+const showToc = withToc && entry.data.toc !== false;
+
+const sorted = [...entries].sort(
+    (a, b) => (a.data.weight ?? 0) - (b.data.weight ?? 0),
+);
+const index = sorted.findIndex((e) => e.id === entry.id);
+const prev = index > 0 ? sorted[index - 1] : undefined;
+const next = index >= 0 && index < sorted.length - 1
+    ? sorted[index + 1]
+    : undefined;
+const pageUrl = (e: CollectionEntry<'docs'> | CollectionEntry<'demos'>) =>
+    `/${section}/${e.id.replace(/\/index$/, '')}/`;
+
+const editUrl = `${SITE.docsRepo}/site-astro/src/content/${section}/${entry.id}.md`;
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+<BaseLayout
+    bodyClass={`${section} single`}
+    meta={{
+        title: entry.data.title,
+        description: entry.data.description,
+    }}
+>
+    <div class="wrap container-xxl page-wrap" role="document">
+        <div class="row flex-xl-nowrap">
+            <div class="col-lg-2 col-xl-2 docs-sidebar">
+                <nav class="docs-links" aria-label="Main navigation">
+                    <SidebarMenu section={section} entries={entries} />
+                </nav>
+            </div>
+            {
+                withToc && (
+                    <nav
+                        class="docs-toc d-none d-xl-block col-xl-2"
+                        aria-label="Secondary navigation"
+                    >
+                        {showToc && (
+                            <div class="page-links">
+                                <h3>On this page</h3>
+                                <nav id="TableOfContents">
+                                    <ul>
+                                        {tocHeadings.map((h) => (
+                                            <li
+                                                class:list={{
+                                                    'toc-h3': h.depth === 3,
+                                                }}
+                                            >
+                                                <a href={`#${h.slug}`}>
+                                                    {h.text}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </nav>
+                            </div>
+                        )}
+                    </nav>
+                )
+            }
+            <main class="docs-content col-lg-10 col-xl-8">
+                <h1>{entry.data.title}</h1>
+                <p class="lead" set:html={entry.data.lead ?? ''} />
+                <slot />
+                <p class="edit-page">
+                    <a href={editUrl}>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="feather feather-edit-2"
+                        >
+                            <path
+                                d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"
+                            ></path>
+                        </svg>Edit this page on GitHub
+                    </a>
+                </p>
+                {
+                    (prev || next) && (
+                        <div class="docs-navigation d-flex justify-content-between">
+                            {prev && (
+                                <a href={pageUrl(prev)}>
+                                    <div class="card my-1">
+                                        <div class="card-body py-2">
+                                            &larr; {prev.data.title}
+                                        </div>
+                                    </div>
+                                </a>
+                            )}
+                            {next && (
+                                <a class="ms-auto" href={pageUrl(next)}>
+                                    <div class="card my-1">
+                                        <div class="card-body py-2">
+                                            {next.data.title} &rarr;
+                                        </div>
+                                    </div>
+                                </a>
+                            )}
+                        </div>
+                    )
+                }
+            </main>
+        </div>
+    </div>
+</BaseLayout>

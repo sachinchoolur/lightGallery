@@ -21,8 +21,8 @@ In this concise guide, we present the top 7 React image gallery components, each
 
 ### React image Gallery
 
-<figure class="blog-images" data-src="react-image-gallery.png" data-lg-size="1200-630">
-    <img src="react-image-gallery.png" alt="React image Gallery"/>
+<figure class="blog-images" data-src="./react-image-gallery.png" data-lg-size="1200-630">
+    <img src="./react-image-gallery.png" alt="React image Gallery"/>
 </figure>
 
 <a href="https://linxtion.com/demo/react-image-gallery/" rel="nofollow">React image Gallery</a> is a versatile and user-friendly image gallery component for React applications, providing a seamless way to showcase and navigate through a collection of images. Leveraging the customizable options and responsive design, developers can easily create visually appealing galleries with features like thumbnails, captions, and lightbox functionality. React Image Gallery simplifies the process of integrating immersive image displays, making it a popular choice for building interactive and aesthetically pleasing galleries in React projects.
@@ -52,8 +52,8 @@ In this concise guide, we present the top 7 React image gallery components, each
 
 ### React Slick
 
-<figure class="blog-images" data-src="react-slick.png" data-lg-size="1200-630">
-    <img src="react-slick.png" alt="React Slick"/>
+<figure class="blog-images" data-src="./react-slick.png" data-lg-size="1200-630">
+    <img src="./react-slick.png" alt="React Slick"/>
 </figure>
 
 <a href="https://react-slick.neostack.com/" rel="nofollow">React Slick</a> is a popular and feature-rich carousel component for React applications, built on top of the Slick carousel library. It offers a smooth and customizable solution for creating responsive image sliders with various transition effects. With a user-friendly API and extensive configuration options, React Slick is widely used for implementing dynamic and engaging carousels in React projects.
@@ -82,8 +82,8 @@ In this concise guide, we present the top 7 React image gallery components, each
 
 ### PhotoSwipe
 
-<figure class="blog-images" data-src="photoswipe.png" data-lg-size="1200-630">
-    <img src="photoswipe.png" alt="PhotoSwipe"/>
+<figure class="blog-images" data-src="./photoswipe.png" data-lg-size="1200-630">
+    <img src="./photoswipe.png" alt="PhotoSwipe"/>
 </figure>
 
 <a href="https://photoswipe.com/react-image-gallery/" rel="nofollow">PhotoSwipe</a> for React is a React wrapper around the popular PhotoSwipe library, offering an elegant and responsive solution for image galleries and lightboxes. With a focus on simplicity and ease of use, it enables developers to integrate a feature-rich image viewer seamlessly into React applications. PhotoSwipe for React provides smooth gestures, zooming capabilities, and a clean UI, making it an excellent choice for creating visually appealing and user-friendly image galleries in React projects.
@@ -110,8 +110,8 @@ In this concise guide, we present the top 7 React image gallery components, each
 
 ### Keen Slider
 
-<figure class="blog-images" data-src="keen-slider.png" data-lg-size="1200-630">
-    <img src="keen-slider.png" alt="Keen Slider"/>
+<figure class="blog-images" data-src="./keen-slider.png" data-lg-size="1200-630">
+    <img src="./keen-slider.png" alt="Keen Slider"/>
 </figure>
 
 <a href="https://keen-slider.io/" rel="nofollow">Keen Slider</a> is a lightweight and customizable slider library for creating smooth and modern carousel components in React. Known for its simplicity and performance, Keen Slider allows developers to effortlessly implement responsive and touch-friendly sliders with minimal effort. With a focus on flexibility, Keen Slider supports various configurations, making it a user-friendly choice for crafting dynamic and interactive content displays in React applications.
@@ -144,8 +144,8 @@ In this concise guide, we present the top 7 React image gallery components, each
 
 ### Swiper
 
-<figure class="blog-images" data-src="swiper.png" data-lg-size="1200-630">
-    <img src="swiper.png" alt="Swiper"/>
+<figure class="blog-images" data-src="./swiper.png" data-lg-size="1200-630">
+    <img src="./swiper.png" alt="Swiper"/>
 </figure>
 
 <a href="https://swiperjs.com/" rel="nofollow">Swiper</a> is a powerful and touch-friendly carousel component built for React applications, providing a seamless way to create stunning and responsive slideshows. Leveraging the Swiper library, it offers a range of features like smooth transitions, navigation controls, and pagination, enhancing the user experience for dynamic content displays. Swiper flexibility and customization options make it a popular choice for implementing versatile and engaging sliders in React projects.
@@ -179,8 +179,8 @@ In this concise guide, we present the top 7 React image gallery components, each
 
 ### React Responsive Carousel
 
-<figure class="blog-images" data-src="react-responsive-carousel.png" data-lg-size="1200-630">
-    <img src="react-responsive-carousel.png" alt="React Responsive Carousel"/>
+<figure class="blog-images" data-src="./react-responsive-carousel.png" data-lg-size="1200-630">
+    <img src="./react-responsive-carousel.png" alt="React Responsive Carousel"/>
 </figure>
 
 <a href="http://react-responsive-carousel.js.org/" rel="nofollow">React Responsive Carousel</a> is a flexible and feature-rich carousel component for React applications, designed to create dynamic and responsive image sliders. With customizable options and a user-friendly API, it allows developers to easily integrate and configure carousels for various use cases. Its responsiveness ensures optimal display on different devices, making it a go-to solution for creating visually appealing and interactive slideshows in React projects.
@@ -210,8 +210,8 @@ In this concise guide, we present the top 7 React image gallery components, each
 
 ### React Photo View
 
-<figure class="blog-images" data-src="react-photo-view.png" data-lg-size="1200-630">
-    <img src="react-photo-view.png" alt="React Photo View"/>
+<figure class="blog-images" data-src="./react-photo-view.png" data-lg-size="1200-630">
+    <img src="./react-photo-view.png" alt="React Photo View"/>
 </figure>
 
 <a href="https://react-photo-view.vercel.app/en-US" rel="nofollow">React Photo View</a> is a popular image viewer component for React applications, offering a seamless and interactive way to display images. It provides zooming and panning functionalities, enhancing the user experience when inspecting detailed photos. With its responsive design, React Photo View is a versatile choice for creating engaging image galleries or immersive viewing experiences in React-based projects.

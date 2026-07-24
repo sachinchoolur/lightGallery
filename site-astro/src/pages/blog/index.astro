@@ -1,0 +1,38 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+
+// Port of `layouts/blog/list.html`. The Hugo paginator (20/page) never
+// paginated in practice (2 posts); a second page becomes relevant only
+// past 20 posts, at which point pagination routes get added here.
+const blogIndex = await getEntry('pages', 'blog-index');
+const posts = (await getCollection('blog')).sort(
+    (a, b) => (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0),
+);
+---
+
+<BaseLayout
+    bodyClass="blog list"
+    meta={{
+        title: blogIndex?.data.title ?? 'Blog',
+        description: blogIndex?.data.description,
+    }}
+>
+    <div class="wrap container-xxl page-wrap">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-6">
+                <article>
+                    <div class="blog-list">
+                        {
+                            posts.map((entry) => (
+                                <BlogCard entry={entry} teaserLength={350} />
+                            ))
+                        }
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</BaseLayout>

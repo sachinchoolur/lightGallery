@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Port of `layouts/docs/list.html` — the /docs/ section index card list.
+const entries = (await getCollection('docs')).sort((a, b) =>
+    a.data.title.localeCompare(b.data.title),
+);
+---
+
+<BaseLayout bodyClass="docs list" meta={{ title: 'Docs' }}>
+    <div class="wrap container-xxl page-wrap" role="document">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-10 col-xl-8">
+                <article>
+                    <h1 class="text-center">Docs</h1>
+                    <div class="text-center"></div>
+                    <div class="card-list">
+                        {
+                            entries.map((entry) => (
+                                <div class="card my-3">
+                                    <div class="card-body">
+                                        <a
+                                            class="stretched-link"
+                                            href={`/docs/${entry.id.replace(/\/index$/, '')}/`}
+                                        >
+                                            {entry.data.title} &rarr;
+                                        </a>
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</BaseLayout>

@@ -1,0 +1,25 @@
+---
+import { getEntry, render } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const page = await getEntry('pages', 'license');
+if (!page) throw new Error('pages/license.md missing');
+const { Content } = await render(page);
+---
+
+<BaseLayout
+    bodyClass="license list"
+    meta={{ title: page.data.title, description: page.data.description }}
+>
+    <div class="wrap container-xxl page-wrap" role="document">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-10 col-xl-8">
+                <article>
+                    <h1 class="text-center">{page.data.title}</h1>
+                    <div class="text-center"><Content /></div>
+                </article>
+            </div>
+        </div>
+    </div>
+</BaseLayout>

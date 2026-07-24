@@ -1,0 +1,27 @@
+---
+import { getEntry, render } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// The converter's CodeMirror/prettier tooling is wired up in the
+// tool-page pass (its client scripts are page-specific).
+const page = await getEntry('pages', 'jquery-to-js-converter');
+if (!page) throw new Error('pages/jquery-to-js-converter.md missing');
+const { Content } = await render(page);
+---
+
+<BaseLayout
+    bodyClass="jquery-to-js-converter list"
+    meta={{ title: page.data.title, description: page.data.description }}
+>
+    <div class="wrap container-xxl page-wrap" role="document">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-10 col-xl-8">
+                <article>
+                    <h1 class="text-center">{page.data.title}</h1>
+                    <Content />
+                </article>
+            </div>
+        </div>
+    </div>
+</BaseLayout>

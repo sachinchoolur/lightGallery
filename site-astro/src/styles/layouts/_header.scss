@@ -1,0 +1,68 @@
+.banner .nav li {
+    @extend .nav-item;
+}
+
+.banner .nav a {
+    @extend .nav-link;
+}
+
+.navbar-text {
+    margin-left: 1rem;
+}
+.navbar-nav {
+    font-size: $navbar-font-size;
+}
+.navbar {
+    background-color: var(--main-bg);
+    box-shadow: rgba(0, 0, 0, 0) 0px 6px 24px;
+    transition: all 0.3s ease-in-out 0s;
+    will-change: transform;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    .docs &,
+    .demos & {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: rgba(0, 0, 0, 0.06) 0px 6px 24px;
+    }
+    &.fixed-header {
+        box-shadow: rgba(0, 0, 0, 0.06) 0px 6px 24px;
+        background-color: rgba(255, 255, 255, 1);
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    .nav-link {
+        font-weight: 500;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .navbar .container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
+
+@include media-breakpoint-up(md) {
+    .navbar-brand {
+        font-size: $font-size-xl;
+    }
+
+    .navbar-text {
+        margin-left: 1.25rem;
+    }
+}
+
+.nav-item svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.nav-item-social > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}

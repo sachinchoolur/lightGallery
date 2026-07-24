@@ -1,0 +1,13 @@
+.lg-methods-demo {
+    .lg-next,
+    .lg-prev {
+        &:after,
+        &:before {
+            content: '';
+        }
+    }
+}
+
+.docs-methods-list {
+    margin-top: 2rem;
+}

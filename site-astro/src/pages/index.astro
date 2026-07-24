@@ -1,15 +1,36 @@
 ---
-// Placeholder until the homepage is ported (Step 4).
+import { getEntry, render } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Port of `layouts/index.html` — hero + the huge homepage body from
+// `content/_index.md`. Its embedded galleries/shortcodes come alive as
+// the shortcode components land in the demo-conversion pass.
+const home = await getEntry('pages', 'home');
+if (!home) throw new Error('pages/home.md missing');
+const { Content } = await render(home);
 ---
 
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>lightGallery</title>
-    </head>
-    <body>
-        <h1>lg-site-astro scaffold</h1>
-    </body>
-</html>
+<BaseLayout
+    bodyClass="home"
+    meta={{
+        title: home.data.title,
+        description: home.data.description,
+        isHome: true,
+    }}
+>
+    <div class="container-fluid main-page">
+        <div class="row justify-content-center hero-section">
+            <div class="col-lg-6 text-center">
+                <h1 class="main-title">{home.data.title}</h1>
+                <h4 class="sub-title" set:html={home.data.lead ?? ''} />
+                <a
+                    href="https://github.com/sachinchoolur/lightGallery"
+                    class="btn btn-lg btn-outline-primary get-started-btn"
+                    >View on GitHub</a
+                >
+            </div>
+        </div>
+    </div>
+    <Content />
+</BaseLayout>

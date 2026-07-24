@@ -23,8 +23,8 @@ No matter if you're an expert or new to web design, these libraries will fit all
 
 ### PhotoSwipe
 
-<figure class="blog-images" data-src="photoswipe.png" data-lg-size="1200-630" >
-    <img src="photoswipe.png" alt="PhotoSwipe"  />
+<figure class="blog-images" data-src="./photoswipe.png" data-lg-size="1200-630" >
+    <img src="./photoswipe.png" alt="PhotoSwipe"  />
 </figure>
 
 <a href="https://photoswipe.com/" rel="nofollow">PhotoSwipe</a> is a standalone JavaScript library for creating responsive image galleries with a focus on mobile devices. It offers a touch-friendly user interface, smooth transitions, and support for gestures like pinch-to-zoom. Widely used for its simplicity and flexibility, PhotoSwipe enhances the user experience by providing an elegant solution for showcasing images in a lightbox format.
@@ -54,8 +54,8 @@ No matter if you're an expert or new to web design, these libraries will fit all
 
 ### BaguetteBox.js
 
-<figure class="blog-images" data-src="baguettebox.png" data-lg-size="1200-630">
-    <img src="baguettebox.png" alt="BaguetteBox.js"/>
+<figure class="blog-images" data-src="./baguettebox.png" data-lg-size="1200-630">
+    <img src="./baguettebox.png" alt="BaguetteBox.js"/>
 </figure>
 
 <a href="https://feimosi.github.io/baguetteBox.js/" rel="nofollow">BaguetteBox.js</a> is a lightweight and straightforward JavaScript library designed for creating responsive image galleries with a clean and intuitive interface. With a focus on simplicity and performance, it allows developers to easily implement lightbox functionality for a seamless image viewing experience. BaguetteBox.js supports touch gestures, keyboard navigation, and auto-resizing, making it an efficient choice for integrating stylish and functional image galleries into web projects.
@@ -86,8 +86,8 @@ No matter if you're an expert or new to web design, these libraries will fit all
 
 ### GLightbox
 
-<figure class="blog-images" data-src="g-lightbox.png" data-lg-size="1200-630">
-    <img src="g-lightbox.png" alt="GLightbox"/>
+<figure class="blog-images" data-src="./g-lightbox.png" data-lg-size="1200-630">
+    <img src="./g-lightbox.png" alt="GLightbox"/>
 </figure>
 
 <a href="https://biati-digital.github.io/glightbox/" rel="nofollow">GLightbox</a> is a modern and versatile JavaScript library for creating lightweight and customizable lightboxes to showcase images and videos. With a straightforward API, it enables developers to easily implement responsive galleries with features like zooming, fullscreen mode, and keyboard navigation. GLightbox stands out for its mobile-friendly design and seamless integration, offering a user-friendly solution for enhancing visual content presentations on the web.
@@ -116,8 +116,8 @@ No matter if you're an expert or new to web design, these libraries will fit all
 
 ### Blueimp Gallery
 
-<figure class="blog-images" data-src="blueimp.png" data-lg-size="1200-630">
-    <img src="blueimp.png" alt="Blueimp Gallery"/>
+<figure class="blog-images" data-src="./blueimp.png" data-lg-size="1200-630">
+    <img src="./blueimp.png" alt="Blueimp Gallery"/>
 </figure>
 
 <a href="https://blueimp.github.io/Gallery/" rel="nofollow">Blueimp Gallery</a> is a powerful and flexible image and video gallery solution built with JavaScript. It provides a feature-rich environment for showcasing media content in a responsive and touch-friendly manner, supporting various transition effects and customization options. With its focus on accessibility and cross-browser compatibility, Blueimp Gallery is a reliable choice for developers seeking an efficient solution to create engaging and visually appealing galleries on the web.
@@ -146,8 +146,8 @@ Performance impact
 
 ### Lightbox2
 
-<figure class="blog-images" data-src="lightbox.png" data-lg-size="1200-630">
-    <img src="lightbox.png" alt="Lightbox 2"/>
+<figure class="blog-images" data-src="./lightbox.png" data-lg-size="1200-630">
+    <img src="./lightbox.png" alt="Lightbox 2"/>
 </figure>
 
 <a href="https://lokeshdhakar.com/projects/lightbox2/" rel="nofollow">Lightbox 2</a> is a popular and easy-to-use JavaScript library for creating modal image galleries with a simple and elegant interface. With a focus on user experience, it allows developers to implement responsive lightboxes that smoothly display images while overlaying the rest of the page. Lightbox2 is widely adopted for its versatility and customization options, making it a reliable choice for enhancing image presentations on websites.
@@ -175,8 +175,8 @@ Performance impact
 
 ### Fluidbox
 
-<figure class="blog-images" data-src="fluidbox.png" data-lg-size="1200-630">
-    <img src="fluidbox.png" alt="Fluidbox"/>
+<figure class="blog-images" data-src="./fluidbox.png" data-lg-size="1200-630">
+    <img src="./fluidbox.png" alt="Fluidbox"/>
 </figure>
 
 <a href="http://terrymun.github.io/Fluidbox/demo/index.html" rel="nofollow">Fluidbox</a> is a lightweight jQuery plugin designed for creating responsive and fluid lightboxes to display images. With its smooth animations and dynamic resizing, Fluidbox enhances the user experience by providing an elegant way to zoom in on images while maintaining a seamless transition. Its simplicity and compatibility make Fluidbox a user-friendly choice for implementing stylish lightbox functionality in web projects.

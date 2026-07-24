@@ -296,7 +296,7 @@ importers:
         version: 26.6.0(ts-node@9.1.1(typescript@4.7.4))
       jest-circus:
         specifier: 26.6.0
-        version: 26.6.0(ts-node@9.1.1(typescript@4.7.4))
+        version: 26.6.0
       jest-resolve:
         specifier: 26.6.0
         version: 26.6.0
@@ -684,6 +684,9 @@ importers:
       '@lightgallery/react':
         specifier: workspace:*
         version: link:../packages/react
+      bootstrap:
+        specifier: ^5.0.0-beta1
+        version: 5.3.8(@popperjs/core@2.11.8)
       lightgallery:
         specifier: workspace:*
         version: link:..
@@ -715,6 +718,9 @@ importers:
       astro:
         specifier: ^5.0.0
         version: 5.18.2(@types/node@24.13.2)(less@4.6.7)(rollup@4.62.2)(sass@1.101.0)(stylus@0.59.0)(terser@5.48.0)(tsx@4.23.0)(typescript@5.9.3)(yaml@2.9.0)
+      rehype-autolink-headings:
+        specifier: ^7.1.0
+        version: 7.1.0
       sass:
         specifier: ^1.83.0
         version: 1.101.0
@@ -3433,6 +3439,9 @@ packages:
       webpack-plugin-serve:
         optional: true
 
+  '@popperjs/core@2.11.8':
+    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+
   '@rolldown/binding-android-arm64@1.0.0-rc.4':
     resolution: {integrity: sha512-vRq9f4NzvbdZavhQbjkJBx7rRebDKYR9zHfO/Wg486+I7bSecdUapzCm5cyXoK+LHokTxgSq7A5baAXUZkIz0w==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -5589,6 +5598,11 @@ packages:
 
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
+
+  bootstrap@5.3.8:
+    resolution: {integrity: sha512-HP1SZDqaLDPwsNiqRqi5NcP0SSXciX2s9E+RyqJIIqGo+vJeN5AJVM98CXmW/Wux0nQ5L7jeWUdplCEf0Ee+tg==}
+    peerDependencies:
+      '@popperjs/core': ^2.11.8
 
   bottleneck@2.19.5:
     resolution: {integrity: sha512-VHiNCbI1lKdl44tGrhNfU3lup0Tj/ZBMJB5/2ZbNXRCPuRCO7ed2mgcK4r17y+KB2EfuYuRaVlwNbAeaWGSpbw==}
@@ -8577,6 +8591,9 @@ packages:
 
   hast-util-from-parse5@8.0.3:
     resolution: {integrity: sha512-3kxEVkEKt0zvcZ3hCRYI8rqrgwtlIOFMWkbclACvjlDw8Li9S2hk/d51OI0nr/gIpdMHNepwgOKqZ/sy0Clpyg==}
+
+  hast-util-heading-rank@3.0.0:
+    resolution: {integrity: sha512-EJKb8oMUXVHcWZTDepnr+WNbfnXKFNf9duMesmr4S8SXTJBJ9M4Yok08pu9vxdJwdlGRhVumk9mEhkEvKGifwA==}
 
   hast-util-is-element@3.0.0:
     resolution: {integrity: sha512-Val9mnv2IWpLbNPqc/pUem+a7Ipj2aHacCwgNfTiK0vJKl0LF+4Ba4+v1oPHFpf3bLYmreq0/l3Gud9S5OH42g==}
@@ -12729,6 +12746,9 @@ packages:
   regjsparser@0.13.2:
     resolution: {integrity: sha512-NgRBy2Nx/bE+9F27nVHnqcN5HjyLmecqsqx2PJHu3/IEtADD4WuxuXIVExD5PoSDFVrl78dOonfcOe5O+5nbzQ==}
     hasBin: true
+
+  rehype-autolink-headings@7.1.0:
+    resolution: {integrity: sha512-rItO/pSdvnvsP4QRB1pmPiNHUskikqtPojZKJPPPAVx9Hj8i8TwMBhofrrAYRhYOOBZH9tgmG5lPqDLuIWPWmw==}
 
   rehype-parse@9.0.1:
     resolution: {integrity: sha512-ksCzCD0Fgfh7trPDxr2rSylbwq9iYDkSn8TCDmEJ49ljEUBxDVCzCHv7QNzZOfODanX4+bWQ4WZqLCRWYLfhag==}
@@ -18751,9 +18771,7 @@ snapshots:
       source-map: 0.6.1
       string-length: 2.0.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@jest/reporters@26.6.2':
     dependencies:
@@ -18876,7 +18894,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@jest/test-sequencer@26.6.3(ts-node@9.1.1(typescript@4.7.4))':
+  '@jest/test-sequencer@26.6.3':
     dependencies:
       '@jest/test-result': 26.6.2
       graceful-fs: 4.2.11
@@ -18884,11 +18902,7 @@ snapshots:
       jest-runner: 26.6.3(ts-node@9.1.1(typescript@4.7.4))
       jest-runtime: 26.6.3(ts-node@9.1.1(typescript@4.7.4))
     transitivePeerDependencies:
-      - bufferutil
-      - canvas
       - supports-color
-      - ts-node
-      - utf-8-validate
 
   '@jest/test-sequencer@30.4.1':
     dependencies:
@@ -19424,6 +19438,8 @@ snapshots:
       '@types/webpack': 4.41.40
       sockjs-client: 1.6.1
       webpack-dev-server: 3.11.1(webpack@4.44.2)
+
+  '@popperjs/core@2.11.8': {}
 
   '@rolldown/binding-android-arm64@1.0.0-rc.4':
     optional: true
@@ -22494,6 +22510,10 @@ snapshots:
       multicast-dns-service-types: 1.1.0
 
   boolbase@1.0.0: {}
+
+  bootstrap@5.3.8(@popperjs/core@2.11.8):
+    dependencies:
+      '@popperjs/core': 2.11.8
 
   bottleneck@2.19.5: {}
 
@@ -26344,6 +26364,10 @@ snapshots:
       vfile-location: 5.0.3
       web-namespaces: 2.0.1
 
+  hast-util-heading-rank@3.0.0:
+    dependencies:
+      '@types/hast': 3.0.5
+
   hast-util-is-element@3.0.0:
     dependencies:
       '@types/hast': 3.0.5
@@ -27350,7 +27374,7 @@ snapshots:
       jest-util: 30.4.1
       p-limit: 3.1.0
 
-  jest-circus@26.6.0(ts-node@9.1.1(typescript@4.7.4)):
+  jest-circus@26.6.0:
     dependencies:
       '@babel/traverse': 7.29.7
       '@jest/environment': 26.6.2
@@ -27374,11 +27398,7 @@ snapshots:
       stack-utils: 2.0.6
       throat: 5.0.0
     transitivePeerDependencies:
-      - bufferutil
-      - canvas
       - supports-color
-      - ts-node
-      - utf-8-validate
 
   jest-circus@30.4.2(babel-plugin-macros@3.1.0):
     dependencies:
@@ -27496,7 +27516,7 @@ snapshots:
   jest-config@26.6.3(ts-node@9.1.1(typescript@4.7.4)):
     dependencies:
       '@babel/core': 7.12.3
-      '@jest/test-sequencer': 26.6.3(ts-node@9.1.1(typescript@4.7.4))
+      '@jest/test-sequencer': 26.6.3
       '@jest/types': 26.6.2
       babel-jest: 26.6.3(@babel/core@7.12.3)
       chalk: 4.1.2
@@ -27801,9 +27821,7 @@ snapshots:
       pretty-format: 24.9.0
       throat: 4.1.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   jest-jasmine2@26.6.3:
     dependencies:
@@ -32011,6 +32029,15 @@ snapshots:
   regjsparser@0.13.2:
     dependencies:
       jsesc: 3.1.0
+
+  rehype-autolink-headings@7.1.0:
+    dependencies:
+      '@types/hast': 3.0.5
+      '@ungap/structured-clone': 1.3.2
+      hast-util-heading-rank: 3.0.0
+      hast-util-is-element: 3.0.0
+      unified: 11.0.5
+      unist-util-visit: 5.1.0
 
   rehype-parse@9.0.1:
     dependencies:

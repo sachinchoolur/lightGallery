@@ -1,0 +1,45 @@
+.docs-common-section {
+    border-bottom: 2px solid #dae8ff;
+    padding-bottom: 40px;
+    margin-bottom: 40px;
+    p,
+    ul {
+        margin-bottom: 0.8rem;
+        font-size: 1rem;
+    }
+    p {
+        > b {
+            margin-right: 0.3rem;
+        }
+    }
+    li {
+        line-height: 1.5rem;
+    }
+    .chroma {
+        margin: 0 0 0.8rem 0;
+    }
+    .docs-common-name {
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    .docs-common-tag {
+        font-size: 14px;
+        display: block;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        color: $blue-shade;
+        margin-top: 20px;
+    }
+    .docs-common-highlight {
+        .chroma {
+            margin-top: 0;
+        }
+    }
+    .docs-common-notes {
+        margin-top: 1rem;
+    }
+}
+
+#paritybar .pb-bar {
+    border-top: 3px solid #0cc523;
+}
