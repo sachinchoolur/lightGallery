@@ -26,11 +26,17 @@ const baseSchema = z.object({
     toc: z.boolean().optional(),
 });
 
-/** Hugo `menu: { <section>: { parent } }` — drives sidebar grouping. */
+/**
+ * Hugo `menu: { <section>: { parent, name? } }` — drives sidebar grouping;
+ * `name` overrides the sidebar label (defaults to the page title).
+ */
 const menuSchema = (section: string) =>
     z
         .object({
-            [section]: z.object({ parent: z.string() }),
+            [section]: z.object({
+                parent: z.string(),
+                name: z.string().optional(),
+            }),
         })
         .optional();
 
