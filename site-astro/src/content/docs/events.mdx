@@ -1,0 +1,68 @@
+---
+title: Events
+description: lightGallery custom events documentation.
+lead: lightGallery emits several custom events throughout the gallery lifecycle. This can be used to customize the gallery or to add your own features. <a href="../../demos/events/">Demo</a>
+date: 2020-10-06T08:48:57.000Z
+draft: false
+images: []
+menu: {docs: {parent: API Docs}}
+weight: 3
+toc: true
+---
+
+import Events from '../../components/api/Events.astro';
+
+## Usage example
+
+lightGallery custom events can be attached to the HTML element that you are
+using to initialize the gallery. Every custom event holds useful plugin data
+that can be used to control or customize lightGallery. Make sure that you attach
+event listeners before initializing lightGallery
+
+```javascript
+const lg = document.getElementById('custom-events-demo');
+
+// Perform any action just before opening the gallery
+lg.addEventListener('lgBeforeOpen', () => {
+    alert('onBeforeOpen');
+});
+
+// custom event with useful plugin data
+lg.addEventListener('lgBeforeSlide', (event) => {
+    const { index, prevIndex } = event.detail;
+    alert(index, prevIndex);
+});
+
+lightGallery(lg);
+```
+
+## Available custom events
+
+Here you can find the list of available custom events. Most of the events
+provide useful lightGallery data via the event detail object. The table in each
+event section represents the event detail object.
+
+<div class="event-docs-list">
+    <Events interface="InitDetail" />
+    <Events interface="BeforeOpenDetail" />
+    <Events interface="AfterOpenDetail" />
+    <Events interface="AfterAppendSlideEventDetail" />
+    <Events interface="AfterAppendSubHtmlDetail" />
+    <Events interface="SlideItemLoadDetail" />
+    <Events interface="HasVideoDetail" />
+    <Events interface="BeforeSlideDetail" />
+    <Events interface="AfterSlideDetail" />
+    <Events interface="BeforeNextSlideDetail" />
+    <Events interface="BeforePrevSlideDetail" />
+    <Events interface="PosterClickDetail" />
+    <Events interface="DragStartDetail" />
+    <Events interface="DragMoveDetail" />
+    <Events interface="DragEndDetail" />
+    <Events interface="ContainerResizeDetail" />
+    <Events interface="BeforeCloseDetail" />
+    <Events interface="AfterCloseDetail" />
+    <Events interface="RotateLeftDetail" />
+    <Events interface="RotateRightDetail" />
+    <Events interface="FlipHorizontalDetail" />
+    <Events interface="FlipVerticalDetail" />
+</div>

@@ -52,6 +52,15 @@ const { bodyClass, meta } = Astro.props;
         <Footer />
         <script>
             import 'bootstrap/dist/js/bootstrap.min.js';
+
+            // Fixed-header treatment on scroll (app.js header, de-jQueryfied).
+            window.addEventListener('scroll', () => {
+                const fixed = window.scrollY > 50;
+                document.body.classList.toggle('has-fixed-header', fixed);
+                document
+                    .getElementById('nav-header')
+                    ?.classList.toggle('fixed-header', fixed);
+            });
         </script>
     </body>
 </html>

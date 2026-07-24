@@ -1,0 +1,61 @@
+---
+import { Code } from 'astro:components';
+
+import { publicMethods, tagText } from '../../lib/apidocs';
+
+/** Public method docs — port of `shortcodes/methods.html`. */
+const methods = publicMethods();
+---
+
+<div class="docs-methods-section">
+    {
+        methods.map((method) => (
+            <div class="docs-common-section">
+                <p class="docs-common-desc">
+                    <span class="anchor-id" id={method.name}>
+                        <b>Name: </b>
+                        {method.name}{' '}
+                        <a
+                            href={`#${method.name}`}
+                            class="anchor"
+                            aria-hidden="true"
+                        >
+                            #
+                        </a>
+                        <span />
+                    </span>
+                </p>
+                <p class="docs-common-desc">
+                    <b>Description: </b> {method.comment.summary}
+                </p>
+                {tagText(method.comment, 'description').map((text) => (
+                    <p class="docs-common-desc" set:html={text} />
+                ))}
+                {tagText(method.comment, 'example').map((example) => (
+                    <>
+                        <p class="docs-common-desc">
+                            <b>Example: </b>
+                        </p>
+                        <div class="docs-common-highlight">
+                            <Code code={example.trim()} lang="js" />
+                        </div>
+                    </>
+                ))}
+                {tagText(method.comment, 'note').map((note) => (
+                    <div class="docs-common-notes">
+                        <p class="docs-common-desc">
+                            <b>Note : </b>
+                            <Fragment set:html={note} />
+                        </p>
+                    </div>
+                ))}
+                {tagText(method.comment, 'see').map((text) => (
+                    <p class="docs-common-desc">
+                        <b>See also:</b>
+                        <Fragment set:html={text} />
+                    </p>
+                ))}
+            </div>
+        ))
+    }
+</div>

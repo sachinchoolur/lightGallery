@@ -1,0 +1,90 @@
+---
+import { Code } from 'astro:components';
+
+import {
+    commentOf,
+    findReflection,
+    interfaceProps,
+    tagText,
+} from '../../lib/apidocs';
+
+/** Event doc block — port of `shortcodes/events.html`. */
+interface Props {
+    interface: string;
+}
+
+const { interface: interfaceName } = Astro.props;
+const meta = commentOf(findReflection(interfaceName));
+const detail = interfaceProps(interfaceName);
+const names = tagText(meta, 'name');
+const examples = tagText(meta, 'example');
+const seeAlso = tagText(meta, 'see');
+---
+
+<div class="docs-common-section">
+    {
+        names.map((name) => (
+            <p class="docs-common-desc">
+                <span class="anchor-id" id={name}>
+                    <b>Name: </b>
+                    {name}{' '}
+                    <a href={`#${name}`} class="anchor" aria-hidden="true">
+                        #
+                    </a>
+                    <span />
+                </span>
+            </p>
+        ))
+    }
+    <p class="docs-common-desc">
+        <b>Description: </b>{meta.summary}
+    </p>
+    {
+        detail.length > 0 && (
+            <>
+                <p class="docs-common-desc">
+                    <b>Detail:</b>
+                </p>
+                <table class="options table-blue" style="width:100%">
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    {detail.map((prop) => (
+                        <tr>
+                            <td>{prop.name}</td>
+                            <td>{prop.typeName}</td>
+                            <td>
+                                <Fragment set:html={prop.comment.summary} />
+                                {tagText(prop.comment, 'description').map(
+                                    (text) => (
+                                        <p>{text}</p>
+                                    ),
+                                )}
+                            </td>
+                        </tr>
+                    ))}
+                </table>
+            </>
+        )
+    }
+    {
+        examples.map((example) => (
+            <>
+                <p class="docs-common-desc">
+                    <b>Example:</b>
+                </p>
+                <Code code={example.trim()} lang="js" />
+            </>
+        ))
+    }
+    {
+        seeAlso.map((text) => (
+            <p class="docs-common-desc">
+                <b>See also:</b>
+                <Fragment set:html={text} />
+            </p>
+        ))
+    }
+</div>
