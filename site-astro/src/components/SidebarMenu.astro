@@ -41,7 +41,10 @@ for (const entry of entries) {
 const ordered = [...groups.entries()]
     .map(([name, items]) => ({
         name,
-        items: items.sort((a, b) => a.weight - b.weight),
+        items: items.sort(
+            // Hugo breaks equal weights alphabetically.
+            (a, b) => a.weight - b.weight || a.label.localeCompare(b.label),
+        ),
     }))
     .sort(
         (a, b) =>

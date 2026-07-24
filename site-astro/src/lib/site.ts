@@ -34,13 +34,17 @@ export interface MenuItem {
     url: string;
 }
 
-/** Top navigation (Hugo `menus.toml` [[main]]). */
+/**
+ * Top navigation (Hugo `menus.toml` [[main]]). The three framework items
+ * share weight 50, which Hugo breaks alphabetically — hence
+ * Angular/React/Vue order.
+ */
 export const MAIN_MENU: MenuItem[] = [
     { name: 'Docs', url: '/docs/getting-started/' },
     { name: 'Demos', url: '/demos/thumbnails/' },
+    { name: 'Angular', url: '/docs/angular-image-video-gallery/' },
     { name: 'React', url: '/docs/react-image-video-gallery/' },
     { name: 'Vue', url: '/docs/vue-image-video-gallery/' },
-    { name: 'Angular', url: '/docs/angular-image-video-gallery/' },
     { name: 'License', url: '/license/' },
 ];
 

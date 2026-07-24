@@ -66,7 +66,10 @@ export function findReflection(name: string): DocNode | undefined {
 const partsToText = (parts?: { kind: string; text: string }[]): string =>
     (parts ?? [])
         .map((part) => (part.kind === 'code' ? part.text.replace(/^`+|`+$/g, '') : part.text))
-        .join('');
+        .join('')
+        // JSDoc links written without trailing slashes relied on the old
+        // host's directory redirects; normalize to the canonical form.
+        .replace(/href="(\/[\w/-]*[\w-])"/g, 'href="$1/"');
 
 export interface ApiComment {
     summary: string;

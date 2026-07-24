@@ -194,7 +194,7 @@ lightGallery supports all major browsers including IE 10 and above.
 If you want to use lightGallery to develop commercial sites, themes, projects,
 and applications, the Commercial license is the appropriate license. With this
 option, your source code is kept proprietary.
-[Read more about the commercial license](../../license)
+[Read more about the commercial license](/license/)
 
 #### Open source license
 

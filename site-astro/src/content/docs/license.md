@@ -9,7 +9,7 @@ lead:
     'lightGallery is a free and open-source library, however, if you are using
     the library for business, commercial sites, projects, and applications, the
     Commercial license is the appropriate license. With this option, your source
-    code is kept proprietary. <a href="../../license">More info</a>'
+    code is kept proprietary. <a href="/license/">More info</a>'
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []

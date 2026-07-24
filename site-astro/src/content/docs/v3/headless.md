@@ -18,7 +18,7 @@ toc: true
 > a renderer needs, with **no DOM and no framework** (the tsconfig excludes
 > the DOM lib, so `window`/`document` do not even typecheck here).
 
-Consumed today by [`@lightgallery/react`](../react); the Angular port and a
+Consumed today by [`@lightgallery/react`](/docs/v3/react/); the Angular port and a
 future vanilla 3.0 renderer build on the same package.
 
 ```ts

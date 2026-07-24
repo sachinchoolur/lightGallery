@@ -18,37 +18,45 @@ import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgVideo from 'lightgallery/plugins/video';
 import lgZoom from 'lightgallery/plugins/zoom';
 
-// jQuery + layout vendors. The UMD files attach to window when loaded
-// as plain modules (no CJS shim), or export via module.exports when the
-// bundler shims them — accept either shape, never clobber the global.
-const jqModule = await import('./vendor/jQuery.js');
-const $ = jqModule?.default ?? window.jQuery;
-window.jQuery = window.$ = $;
+// jQuery + layout vendors, loaded as classic scripts (see load-vendor).
+import { loadVendor } from './load-vendor.js';
+import jQueryUrl from './vendor/jQuery.js?url';
+import justifiedGalleryUrl from './vendor/jquery.justifiedGallery.js?url';
+import masonryUrl from './vendor/masonry.pkgd.min.js?url';
+import imagesLoadedUrl from './vendor/imagesloaded.pkgd.js?url';
+import swiperUrl from './vendor/swiper-bundle.min.js?url';
+import flickityUrl from './vendor/flickity.pkgd.min.js?url';
+import slickUrl from './vendor/slick.min.js?url';
+import owlUrl from './vendor/owl.carousel.min.js?url';
+
+await loadVendor(jQueryUrl);
+const $ = window.jQuery;
 const jQuery = $;
+window.$ = $;
 window.lightGallery = lightGallery;
-await import('./vendor/jquery.justifiedGallery.js');
-const masonryModule = await import('./vendor/masonry.pkgd.min.js');
-const Masonry = masonryModule?.default ?? window.Masonry;
-const imagesLoadedModule = await import('./vendor/imagesloaded.pkgd.js');
-const imagesLoaded = imagesLoadedModule?.default ?? window.imagesLoaded;
+await loadVendor(justifiedGalleryUrl);
+await loadVendor(masonryUrl);
+const Masonry = window.Masonry;
+await loadVendor(imagesLoadedUrl);
+const imagesLoaded = window.imagesLoaded;
 
 // Carousel vendors load only on their own demo pages (the init sections
 // below are element-guarded, exactly like the Hugo app.js).
 let Swiper;
 if (document.getElementById('lg-swipper')) {
-    const swiperModule = await import('./vendor/swiper-bundle.min.js');
-    Swiper = swiperModule?.default ?? window.Swiper;
+    await loadVendor(swiperUrl);
+    Swiper = window.Swiper;
 }
 let Flickity;
 if (document.querySelector('#flickity-carousel-gallery-demo')) {
-    const flickityModule = await import('./vendor/flickity.pkgd.min.js');
-    Flickity = flickityModule?.default ?? window.Flickity;
+    await loadVendor(flickityUrl);
+    Flickity = window.Flickity;
 }
 if (document.getElementById('slick-carousel-gallery-demo')) {
-    await import('./vendor/slick.min.js');
+    await loadVendor(slickUrl);
 }
 if (document.getElementById('owl-carousel-gallery-demo')) {
-    await import('./vendor/owl.carousel.min.js');
+    await loadVendor(owlUrl);
 }
 
 function getResponsiveThumbnailsSettings() {

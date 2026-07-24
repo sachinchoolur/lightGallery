@@ -16,7 +16,7 @@ toc: true
 > lightGallery — React owns every DOM node; no runtime dependency on the
 > vanilla `lightgallery` JS. Styling reuses the published
 > `lightgallery/css/*` files unchanged. State and pure gallery logic live
-> in [`@lightgallery/headless`](../headless), shared with the upcoming
+> in [`@lightgallery/headless`](/docs/v3/headless/), shared with the upcoming
 > Angular port.
 
 ## Install & styles

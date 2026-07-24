@@ -9,6 +9,11 @@ import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 import Video from '@lightgallery/react/plugins/video';
 
 import { ITEMS } from './react-masonry-items';
+// @ts-expect-error vendor asset url
+import masonryUrl from '../../scripts/vendor/masonry.pkgd.min.js?url';
+// @ts-expect-error vendor asset url
+import imagesLoadedUrl from '../../scripts/vendor/imagesloaded.pkgd.js?url';
+import { loadVendor } from '../../scripts/load-vendor.js';
 
 const PLUGINS = [Autoplay, Fullscreen, Share, Thumbnail, Video, Rotate];
 
@@ -26,19 +31,10 @@ export default function ReactMasonryGallery() {
             | { layout(): void; destroy(): void }
             | undefined;
         (async () => {
-            const masonryModule = await import(
-                '../../scripts/vendor/masonry.pkgd.min.js'
-            );
-            const imagesLoadedModule = await import(
-                '../../scripts/vendor/imagesloaded.pkgd.js'
-            );
-            const Masonry =
-                (masonryModule as { default?: typeof window.Masonry })
-                    .default ?? window.Masonry;
-            const imagesLoaded =
-                (imagesLoadedModule as {
-                    default?: typeof window.imagesLoaded;
-                }).default ?? window.imagesLoaded;
+            await loadVendor(masonryUrl);
+            await loadVendor(imagesLoadedUrl);
+            const Masonry = window.Masonry;
+            const imagesLoaded = window.imagesLoaded;
             const container = containerRef.current;
             if (disposed || !container || !Masonry || !imagesLoaded) {
                 return;
