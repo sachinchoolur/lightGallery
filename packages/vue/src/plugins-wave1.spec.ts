@@ -269,6 +269,102 @@ describe('plugin runtime + wave-1', () => {
         );
     });
 
+    it('zoom: does not leak a tap into a phantom pinch (pointer ledger)', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        // Pointer interactions arm `enableZoomAfter` ms after the load.
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+        const scaleEl = query('.lg-item.lg-current .lg-zoom-scale')!;
+
+        // A plain tap on the (unzoomed) slide: down + up, no gesture.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 11 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 11 });
+
+        // Next single finger must NOT read as a second pinch pointer.
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 12 });
+        firePointer(window, 'pointermove', { x: 260, y: 160, pointerId: 12 });
+        // A leaked tap pointer would misroute this into a pinch and
+        // scale the slide; the rendered rest transform must not change.
+        expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
+        firePointer(window, 'pointerup', { x: 260, y: 160, pointerId: 12 });
+    });
+
+    it('zoom: pans (not pinches) after a double-tap zoom', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        await advance(350);
+        const img = query('img.lg-image[data-index="0"]')!;
+        const scaleEl = query('.lg-item.lg-current .lg-zoom-scale')!;
+
+        // Touch double-tap on the image zooms in (fallback scale 2).
+        firePointer(img, 'pointerdown', { x: 50, y: 50, pointerId: 21 });
+        firePointer(window, 'pointerup', { x: 50, y: 50, pointerId: 21 });
+        vi.advanceTimersByTime(100);
+        firePointer(img, 'pointerdown', { x: 50, y: 50, pointerId: 22 });
+        firePointer(window, 'pointerup', { x: 50, y: 50, pointerId: 22 });
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
+
+        // The next single finger pans — a leaked tap pointer would
+        // misroute this into a pinch and change the scale.
+        firePointer(img, 'pointerdown', { x: 60, y: 60, pointerId: 23 });
+        firePointer(window, 'pointermove', { x: 120, y: 120, pointerId: 23 });
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
+        firePointer(window, 'pointerup', { x: 120, y: 120, pointerId: 23 });
+    });
+
+    it('zoom: snaps a pinch release into [1, actual size] despite infiniteZoom', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+        const scaleEl = query('.lg-item.lg-current .lg-zoom-scale')!;
+
+        // Pinch far beyond the actual-size scale (jsdom fallback max: 2).
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 41 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 42 });
+        firePointer(window, 'pointermove', { x: 500, y: 100, pointerId: 42 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 41 });
+        // 2.x pinch touchend rule: release lands on actual size even with
+        // the infiniteZoom default.
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
+        firePointer(window, 'pointerup', { x: 500, y: 100, pointerId: 42 });
+
+        // Reset to the unzoomed state, then pinch inwards below fit and
+        // release: back to scale 1. Starting from scale 1 guards the
+        // commit-equals-previous-state path (the styles must still land).
+        query('img.lg-image[data-index="0"]')!.dispatchEvent(
+            new MouseEvent('dblclick', { bubbles: true }),
+        );
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 43 });
+        firePointer(panEl, 'pointerdown', { x: 300, y: 100, pointerId: 44 });
+        firePointer(window, 'pointermove', { x: 140, y: 100, pointerId: 44 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 43 });
+        expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
+        firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
+    });
+
+    it('zoom: disables transitions during a pinch and settles on release', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+        const scaleEl = query('.lg-item.lg-current .lg-zoom-scale')!;
+
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 31 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 32 });
+        // Live pinch tracks 1:1 — no easing between finger positions.
+        expect(panEl.style.transition).toBe('none');
+        expect(scaleEl.style.transition).toBe('none');
+
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 31 });
+        // Release snaps with the 2.x settle ease.
+        expect(scaleEl.style.transition).toBe(
+            'transform 0.8s cubic-bezier(0, 0, 0.25, 1)',
+        );
+        firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 32 });
+    });
+
     it('zoom: projects a zoomed-pan release with 2.x momentum, clamped to bounds', async () => {
         const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
         await openAndLoad(wrapper);
