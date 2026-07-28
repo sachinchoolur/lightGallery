@@ -1,0 +1,13 @@
+.choose-select-option-wrap {
+    margin-top: 20px;
+    .choose-select-option {
+        margin-right: 10px;
+        font-size: 14px;
+        color: #333;
+    }
+    .choose-select-option,
+    .select {
+        display: inline-block;
+        vertical-align: middle;
+    }
+}

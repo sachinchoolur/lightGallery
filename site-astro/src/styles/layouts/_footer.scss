@@ -1,0 +1,109 @@
+.footer {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    background-color: #0e3481;
+    margin-top: 3rem;
+
+    ul.footer-menu {
+        padding-left: 0;
+        list-style-type: none;
+        font-size: 1rem;
+        line-height: 1.9rem;
+        margin-bottom: 3rem;
+        @include media-breakpoint-up(sm) {
+            margin-bottom: 0;
+        }
+    }
+    h4 {
+        font-size: 1rem;
+        text-transform: uppercase;
+        font-weight: 400;
+        color: #74a0ff;
+        margin: 0 0 15px;
+    }
+    .footer-menu-item a {
+        color: #9abaff;
+        transition: color 0.2s;
+        &:hover {
+            color: #c9daff;
+        }
+    }
+}
+.license,
+.wordpress {
+    &.list {
+        .footer {
+            padding-bottom: 6.4rem;
+        }
+    }
+}
+
+
+.other-products-item img {
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    float: left;
+    margin-right: 16px;
+  }
+
+  .other-products-item h5 {
+      margin: 0;
+      font-weight: 400;
+      font-size: 14px;
+      margin-bottom: 3px;
+      color: #c1d5ff;
+      transition: color 0.3s ease-in-out;
+  }
+
+  .other-products-item p {
+    font-size: 12px;
+    margin-bottom: 0;
+    line-height: 1.3;
+    color: #9abaff;
+    transition: color 0.3s ease-in-out;
+  }
+
+  .other-products-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none !important;
+    margin-bottom: 20px;
+    @include media-breakpoint-up(lg) {
+      margin-bottom: 0;
+    }
+    &:hover {
+      h5,
+      p {
+        color: #c9daff;
+      }
+    }
+  }
+
+  .other-products-item-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .row.other-products {
+    border-top: 1px solid #4b6599;
+    padding: 40px 0 0 0;
+    margin-top: 80px;
+    position: relative;
+  }
+
+  .other-products-label {
+    position: absolute;
+    left: 50%;
+    top: 1px;
+    font-size: 11px;
+    margin-top: -10px;
+    background-color: #0e3480;
+    width: auto;
+    padding: 0 10px;
+    text-transform: uppercase;
+    transform: translate3d(-50%, 0px, 0px);
+    color: #74a0ff;
+  }

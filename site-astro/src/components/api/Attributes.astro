@@ -1,0 +1,72 @@
+---
+import { Code } from 'astro:components';
+
+import { interfaceProps, tagText } from '../../lib/apidocs';
+
+/** Attribute table — port of `shortcodes/attributes.html`. */
+interface Props {
+    interface: string;
+    data?: string;
+}
+
+const { interface: interfaceName, data } = Astro.props;
+const props = interfaceProps(interfaceName);
+---
+
+<table class="options-table options-stripe-table">
+    <tr>
+        <th style="width:180px">Name</th>
+        <th>Description</th>
+    </tr>
+    {
+        props.map((prop) => (
+            <tr
+                style={
+                    prop.name.startsWith('__') ? 'display: none;' : undefined
+                }
+                class="options-table-tr-head"
+            >
+                <td>
+                    {data === 'true' ? (
+                        tagText(prop.comment, 'data-attr').map((attr) => (
+                            <p>
+                                <span class="anchor-id" id={attr}>
+                                    <Fragment set:html={attr} />{' '}
+                                    <a
+                                        href={`#${attr}`}
+                                        class="anchor"
+                                        aria-hidden="true"
+                                    >
+                                        #
+                                    </a>
+                                    <span />
+                                </span>
+                            </p>
+                        ))
+                    ) : (
+                        <span class="anchor-id" id={prop.name}>
+                            {prop.name}{' '}
+                            <a
+                                href={`#${prop.name}`}
+                                class="anchor"
+                                aria-hidden="true"
+                            >
+                                #
+                            </a>
+                            <span />
+                        </span>
+                    )}
+                </td>
+                <td>
+                    <Fragment set:html={prop.comment.summary} />
+                    {tagText(prop.comment, 'description').map((text) => (
+                        <p set:html={text} />
+                    ))}
+                    {tagText(prop.comment, 'example').map((example) => (
+                        <Code code={example.trim()} lang="html" />
+                    ))}
+                </td>
+            </tr>
+        ))
+    }
+</table>

@@ -1,0 +1,60 @@
+---
+import { getEntry, render } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import replaceJquerySrcUrl from '../../scripts/tools/replaceJquerySrc.js?url';
+import replaceJqueryUrl from '../../scripts/tools/replaceJquery.js?url';
+
+// Converter tooling: CodeMirror + prettier from CDN plus the two local
+// converter scripts, exactly as the Hugo head/script-footer loaded them
+// (classic scripts — they attach to globals, order matters).
+const page = await getEntry('pages', 'jquery-to-js-converter');
+if (!page) throw new Error('pages/jquery-to-js-converter.md missing');
+const { Content } = await render(page);
+---
+
+<BaseLayout
+    bodyClass="jquery-to-js-converter list"
+    meta={{ title: page.data.title, description: page.data.description }}
+>
+    <Fragment slot="head">
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.css"
+            rel="stylesheet"
+        />
+        <style>
+            .CodeMirror {
+                font-size: 13px !important;
+            }
+            .rjq-main.show-alert .alert-dialogue-box {
+                display: block;
+            }
+        </style>
+    </Fragment>
+    <div class="wrap container-xxl page-wrap" role="document">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-10 col-xl-8">
+                <article>
+                    <h1 class="text-center">{page.data.title}</h1>
+                    <Content />
+                </article>
+            </div>
+        </div>
+    </div>
+    <script
+        is:inline
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.js"
+    ></script>
+    <script
+        is:inline
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/javascript/javascript.min.js"
+    ></script>
+    <script is:inline src="https://unpkg.com/prettier@3.2.5/standalone.js"
+    ></script>
+    <script is:inline src="https://unpkg.com/prettier@3.2.5/plugins/babel.js"
+    ></script>
+    <script is:inline src="https://unpkg.com/prettier@3.2.5/plugins/estree.js"
+    ></script>
+    <script is:inline defer src={replaceJquerySrcUrl}></script>
+    <script is:inline defer src={replaceJqueryUrl}></script>
+</BaseLayout>

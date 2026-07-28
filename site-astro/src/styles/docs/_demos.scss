@@ -1,0 +1,148 @@
+.lg-masonry-gallery {
+    .gallery-item {
+        width: 30%;
+        margin-bottom: 10px;
+    }
+}
+
+//swiper
+.swiper {
+    width: 100%;
+    height: 100%;
+    position: absolute !important;
+}
+
+.swiper-lg-wrap {
+    width: 1200px;
+    height: 0;
+    padding-bottom: 65%;
+    position: relative;
+    max-width: 100%;
+}
+
+//bootstrap
+#bootstrap-gallery-carousel {
+    &.carousel {
+        .lg-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            img {
+                width: unset !important;
+                height: 500px;
+            }
+        }
+
+        .carousel-item {
+            .lg-item {
+                img {
+                    height: 600px;
+                }
+            }
+        }
+    }
+}
+
+#bootstrap-video-carousel {
+    &.carousel {
+        .lg-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            img {
+                width: unset !important;
+                height: 500px;
+            }
+        }
+
+        .carousel-item {
+            .lg-item {
+                img {
+                    height: 600px;
+                }
+            }
+        }
+    }
+}
+
+//slick
+#slick-carousel-gallery-demo {
+    img {
+        height: 500px;
+    }
+    .slick-track {
+        gap: 10px;
+        display: flex;
+    }
+    .slick-prev,
+    .slick-next {
+        padding: 10px;
+        position: absolute;
+        top: 50%;
+        z-index: 1;
+        cursor: pointer;
+        zoom: 2;
+    }
+    .slick-prev {
+        left: -8px;
+    }
+    .slick-next {
+        right: 12px;
+    }
+}
+
+//flickity
+#flickity-carousel-gallery-demo {
+    .flickity-slider {
+        gap: 10px;
+        display: flex;
+
+        .lg-item {
+            img {
+                height: 600px;
+            }
+        }
+    }
+}
+
+//masonry
+#masonry-gallery-demo {
+    margin: 0 auto;
+
+    &:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+
+    .grid-sizer,
+    .lg-item {
+        width: 33.33%;
+    }
+
+    .lg-item {
+        float: left;
+        margin-bottom: 10px;
+    }
+
+    .lg-item img {
+        display: block;
+        max-width: 100%;
+    }
+}
+
+//owl
+
+#owl-carousel-gallery-demo {
+    .owl-nav {
+        text-align: center;
+    }
+
+    .owl-carousel-item {
+        img {
+            height: 500px;
+        }
+    }
+}

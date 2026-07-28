@@ -1,0 +1,37 @@
+.alert {
+    font-size: $font-size-sm;
+    text-align: left;
+}
+
+@include media-breakpoint-up(md) {
+    .alert {
+        font-size: $font-size-base;
+    }
+}
+
+.alert .alert-link {
+    text-decoration: underline;
+}
+
+.alert-dark {
+    color: $gray-100;
+    background-color: $gray-900;
+}
+
+.alert-dark .alert-link {
+    color: $gray-100;
+}
+
+.alert-primary {
+    color: $gray-100;
+    background-color: $primary;
+}
+
+.alert-primary .alert-link {
+    color: $gray-100;
+}
+
+.alert .alert-link:hover,
+.alert .alert-link:focus {
+    text-decoration: none;
+}

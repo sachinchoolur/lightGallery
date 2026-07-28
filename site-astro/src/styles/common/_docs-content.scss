@@ -1,0 +1,108 @@
+.docs-content {
+    h2[id]::before,
+    h3[id]::before,
+    h4[id]::before,
+    .anchor-id::before {
+        display: block;
+        height: 6rem;
+        margin-top: -6rem;
+        content: '';
+    }
+    .anchor-id {
+        white-space: nowrap;
+        &:hover {
+            a {
+                visibility: visible;
+                text-decoration: none;
+            }
+        }
+    }
+    .alert {
+        margin-bottom: 1rem;
+    }
+    li {
+        line-height: 2rem;
+    }
+    h2 + h3 {
+        margin-top: 0;
+    }
+    p {
+        &:empty {
+            display: none;
+        }
+    }
+    h2 {
+        font-size: 1.5rem;
+        border-bottom: 1px solid #dae8ff;
+        padding-bottom: 1rem;
+        margin: 4rem 0 1rem;
+    }
+    h4 {
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin: 3rem 0 1rem;
+    }
+    .options-table {
+        margin-top: 2rem;
+    }
+}
+
+
+
+.demo-btns-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 1rem 0 2rem 0;
+    &.dynamic-mode-demo {
+        display: inline-flex;
+        margin: 0 10px 0 10px;
+    }
+}
+
+.demo-btn {
+    text-align: center;
+    font-size: 14px;
+}
+.demo-btn svg {
+    width: 18px;
+    margin-right: 5px;
+}
+
+.demo-btn a {
+    display: flex;
+    align-items: center;
+}
+.demo-btn-stackblits {
+    svg {
+        margin-right: 3px;
+    }
+}
+
+.demo-btn + .demo-btn {
+    margin-left: 10px;
+}
+
+.codepen-demo {
+    text-align: center;
+    margin: 1rem 0 2rem 0;
+    font-size: 14px;
+}
+
+.font-12 {
+    font-size: 12px !important;
+}
+
+.doc-union {
+    > span {
+        &:before {
+            content: '|';
+            margin: 0 5px;
+        }
+        &:first-child:before,
+        &:empty {
+            display: none;
+        }
+    }
+}

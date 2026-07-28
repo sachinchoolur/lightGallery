@@ -1,0 +1,77 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+/**
+ * Docs/demos sidebar — port of `partials/sidebar/{docs,demos}-menu.html`.
+ * Hugo built this from the page-frontmatter `menu` definitions; here the
+ * groups come from the collection entries' `menu.<section>.parent`,
+ * children ordered by `weight`, groups by their lightest child.
+ */
+interface Props {
+    section: 'docs' | 'demos';
+    entries: (CollectionEntry<'docs'> | CollectionEntry<'demos'>)[];
+}
+
+const { section, entries } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+interface Item {
+    label: string;
+    url: string;
+    weight: number;
+}
+
+const groups = new Map<string, Item[]>();
+for (const entry of entries) {
+    const menu = (
+        entry.data.menu as
+            | Record<string, { parent: string; name?: string }>
+            | undefined
+    )?.[section];
+    if (!menu) continue;
+    const slug = entry.id.replace(/\/index$/, '');
+    const items = groups.get(menu.parent) ?? [];
+    items.push({
+        label: menu.name ?? entry.data.title,
+        url: `/${section}/${slug}/`,
+        weight: entry.data.weight ?? 0,
+    });
+    groups.set(menu.parent, items);
+}
+const ordered = [...groups.entries()]
+    .map(([name, items]) => ({
+        name,
+        items: items.sort(
+            // Hugo breaks equal weights alphabetically.
+            (a, b) => a.weight - b.weight || a.label.localeCompare(b.label),
+        ),
+    }))
+    .sort(
+        (a, b) =>
+            Math.min(...a.items.map((i) => i.weight)) -
+            Math.min(...b.items.map((i) => i.weight)),
+    );
+---
+
+{
+    ordered.map((group) => (
+        <>
+            <h3>{group.name}</h3>
+            <ul class="list-unstyled">
+                {group.items.map((item) => (
+                    <li>
+                        <a
+                            class:list={[
+                                'docs-link',
+                                { active: currentPath === item.url },
+                            ]}
+                            href={item.url}
+                        >
+                            {item.label}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </>
+    ))
+}

@@ -1,0 +1,183 @@
+---
+import { SITE } from '../lib/site';
+
+/**
+ * Head metadata — port of the Hugo head partial chain (`head/seo.html`,
+ * `twitter_cards.html`, `opengraph.html`, `structured-data.html`,
+ * `favicons.html`, `resource-hints.html`). Same tags, same fallbacks.
+ */
+interface Props {
+    title: string;
+    description?: string;
+    /** Home page uses the site-level title pattern. */
+    isHome?: boolean;
+    is404?: boolean;
+    /** Article pages (blog) emit article meta + Article JSON-LD. */
+    isArticle?: boolean;
+    robots?: string;
+    /** Frontmatter `images` (paths relative to the page or absolute). */
+    images?: string[];
+    publishDate?: Date;
+    lastmod?: Date;
+    tags?: string[];
+}
+
+const {
+    title,
+    description = SITE.description,
+    isHome = false,
+    is404 = false,
+    isArticle = false,
+    robots,
+    images = [],
+    publishDate,
+    lastmod,
+    tags = [],
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const pageTitle = isHome
+    ? `${SITE.title} ${SITE.titleSeparator} ${SITE.titleAddition}`
+    : `${title} ${SITE.titleSeparator} ${SITE.title}`;
+
+const pageImages = images.length
+    ? images.map((img) => new URL(img, canonical).href)
+    : [new URL(SITE.images[0], Astro.site).href];
+
+const iso = (d: Date) => d.toISOString();
+---
+
+{
+    is404 ? (
+        <meta name="robots" content="noindex, follow" />
+    ) : robots ? (
+        <meta name="robots" content={robots} />
+    ) : (
+        <>
+            <meta name="robots" content="index, follow" />
+            <meta
+                name="googlebot"
+                content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+            />
+            <meta
+                name="bingbot"
+                content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+            />
+        </>
+    )
+}
+
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+{/* Twitter cards */}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content={pageImages[0]} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:site" content={SITE.twitterSite} />
+<meta name="twitter:creator" content={SITE.twitterCreator} />
+
+{/* Open Graph */}
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={isArticle ? 'article' : 'website'} />
+<meta property="og:url" content={canonical} />
+{pageImages.map((img) => <meta property="og:image" content={img} />)}
+{
+    isArticle && publishDate && (
+        <meta property="article:published_time" content={iso(publishDate)} />
+    )
+}
+{
+    isArticle && lastmod && (
+        <meta property="article:modified_time" content={iso(lastmod)} />
+    )
+}
+{isArticle && <meta property="article:section" content="blog" />}
+{
+    isArticle &&
+        tags.slice(0, 6).map((tag) => (
+            <meta property="article:tag" content={tag} />
+        ))
+}
+<meta
+    property="article:publisher"
+    content={`https://www.facebook.com/${SITE.facebookPublisher}`}
+/>
+<meta
+    property="article:author"
+    content={`https://www.facebook.com/${SITE.facebookAuthor}`}
+/>
+<meta property="og:locale" content={SITE.ogLocale} />
+<meta property="og:site_name" content={SITE.title} />
+
+{/* Structured data */}
+{
+    isHome && (
+        <script
+            type="application/ld+json"
+            set:html={JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'Organization',
+                url: Astro.site?.href,
+                name: SITE.title,
+                logo: new URL(SITE.schemaLogo, Astro.site).href,
+                sameAs: [
+                    SITE.schemaTwitter,
+                    SITE.schemaLinkedIn,
+                    SITE.schemaGitHub,
+                ],
+            })}
+        />
+    )
+}
+{
+    isArticle && publishDate && (
+        <script
+            type="application/ld+json"
+            set:html={JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'Article',
+                mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+                headline: title,
+                image: pageImages,
+                datePublished: iso(publishDate),
+                dateModified: iso(lastmod ?? publishDate),
+                author: { '@type': SITE.schemaType, name: SITE.title },
+                publisher: {
+                    '@type': SITE.schemaType,
+                    name: SITE.title,
+                    logo: {
+                        '@type': 'ImageObject',
+                        url: new URL(SITE.schemaLogo, Astro.site).href,
+                    },
+                },
+            })}
+        />
+    )
+}
+
+<meta name="ahrefs-site-verification" content={SITE.ahrefsVerification} />
+<meta name="theme-color" content={SITE.themeColor} />
+
+{/* Favicons + manifest + font preloads */}
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<link
+    rel="preload"
+    as="font"
+    href="/fonts/HelveticaNowDisplay-Regular.woff2"
+    type="font/woff2"
+    crossorigin
+/>
+<link
+    rel="preload"
+    as="font"
+    href="/fonts/HelveticaNowDisplay-Medium.woff2"
+    type="font/woff2"
+    crossorigin
+/>

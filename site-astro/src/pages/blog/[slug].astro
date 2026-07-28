@@ -1,0 +1,132 @@
+---
+import { getCollection, render } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import {
+    POST_DATE_FORMAT,
+    blogSlug,
+    bundleImage,
+    readingTime,
+} from '../../lib/blog';
+
+// Port of `layouts/blog/single.html` + related-posts partial.
+export async function getStaticPaths() {
+    const posts = await getCollection('blog');
+    return posts.map((entry) => ({
+        params: { slug: blogSlug(entry) },
+        props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const header = bundleImage(entry, 'header.png');
+
+// Hugo `.Site.RegularPages.Related . | first 2` — tag-related, newest
+// first, never the page itself.
+const related = (await getCollection('blog'))
+    .filter((post) => post.id !== entry.id)
+    .filter(
+        (post) =>
+            entry.data.tags.length === 0 ||
+            post.data.tags.some((tag) => entry.data.tags.includes(tag)),
+    )
+    .sort(
+        (a, b) => (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0),
+    )
+    .slice(0, 2);
+---
+
+<BaseLayout
+    bodyClass="blog single"
+    meta={{
+        title: entry.data.title,
+        description: entry.data.description,
+        isArticle: true,
+        publishDate: entry.data.date,
+        lastmod: entry.data.lastmod,
+        tags: entry.data.tags,
+    }}
+>
+    <div class="container-xxl">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-12 col-xl-9">
+                <div class="blog-wrapper">
+                    <article class="blog-wrap">
+                        <div class="blog-header">
+                            {
+                                entry.data.tags.length > 0 && (
+                                    <div class="blog-tags">
+                                        {entry.data.tags.map((tag) => (
+                                            <div class="blog-text">
+                                                <span>{tag} </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )
+                            }
+                            <div class="blog-tags">
+                                <p class="blog-meta">
+                                    Posted on {
+                                        entry.data.date
+                                            ? POST_DATE_FORMAT.format(
+                                                  entry.data.date,
+                                              )
+                                            : ''
+                                    } -
+                                    <strong
+                                        >{readingTime(entry.body ?? '')}&nbsp;min
+                                        read</strong
+                                    >
+                                </p>
+                            </div>
+                            <h1>{entry.data.title}</h1>
+                            <div class="blog-contributors">
+                                {
+                                    entry.data.contributors.map(
+                                        (contributor, index) => (
+                                            <>
+                                                {index > 0 && ' and '}
+                                                <div class="blog-contributors-list">
+                                                    <span class="contributor-image">
+                                                        {contributor ===
+                                                            'Ujjwal Maheendran' && (
+                                                            <img src="/images/ujjwal.jpg" />
+                                                        )}
+                                                    </span>
+                                                    {contributor}
+                                                </div>
+                                            </>
+                                        ),
+                                    )
+                                }
+                            </div>
+                        </div>
+                        <div class="docs-hero-image">
+                            <img
+                                alt="blog header"
+                                class="img-fluid"
+                                src={header}
+                            />
+                        </div>
+                        <Content />
+                    </article>
+                </div>
+            </div>
+        </div>
+        {
+            related.length > 0 && (
+                <div class="related-posts">
+                    <div class="row row-cols-1 row-cols-lg-2">
+                        {related.map((post) => (
+                            <div class="blog-list">
+                                <BlogCard entry={post} teaserLength={300} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )
+        }
+    </div>
+</BaseLayout>

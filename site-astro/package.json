@@ -1,0 +1,32 @@
+{
+  "name": "lg-site-astro",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && cp ../site/CNAME dist/CNAME",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@lightgallery/headless": "workspace:*",
+    "@lightgallery/react": "workspace:*",
+    "lightgallery": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "bootstrap": "^5.0.0-beta1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/react": "^4.0.0",
+    "@astrojs/sitemap": "^3.2.0",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "astro": "^5.0.0",
+    "sass": "^1.83.0",
+    "typescript": "~5.9.0",
+    "rehype-autolink-headings": "^7.1.0"
+  }
+}

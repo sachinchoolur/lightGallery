@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadToolPage } from '../../lib/tools';
+
+import raw from '../../tools/libstracker.html?raw';
+
+const page = loadToolPage(raw);
+---
+
+<BaseLayout
+    bodyClass="libstracker list"
+    meta={{
+        title: page.title,
+        description: page.description,
+        images: ['banner.png'],
+    }}
+>
+    <Fragment set:html={page.body} />
+</BaseLayout>

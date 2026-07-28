@@ -1,0 +1,16 @@
+.dynamic-mode-images {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.btn-dynamic {
+    color: #333;
+    background-color: white;
+    padding: 5px 10px;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 14px;
+    z-index: 99;
+}

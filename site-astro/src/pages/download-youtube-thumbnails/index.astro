@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { loadToolPage } from '../../lib/tools';
+
+import raw from '../../tools/download-youtube-thumbnails.html?raw';
+
+const page = loadToolPage(raw);
+---
+
+<BaseLayout
+    bodyClass="download-youtube-thumbnails list"
+    meta={{ title: page.title, description: page.description }}
+>
+    <Fragment set:html={page.body} />
+</BaseLayout>

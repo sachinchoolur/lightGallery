@@ -1,0 +1,84 @@
+---
+import { Code } from 'astro:components';
+
+import {
+    commentOf,
+    findReflection,
+    interfaceProps,
+    tagText,
+} from '../../lib/apidocs';
+
+/**
+ * Framework callback doc block — port of `shortcodes/callbacks.html`
+ * (the event docs re-voiced for callback props: `@method` names,
+ * "Fired" → "Called").
+ */
+interface Props {
+    interface: string;
+}
+
+const { interface: interfaceName } = Astro.props;
+const meta = commentOf(findReflection(interfaceName));
+const detail = interfaceProps(interfaceName);
+const methods = tagText(meta, 'method');
+---
+
+<div class="docs-common-section">
+    {
+        methods.map((name) => (
+            <p class="docs-common-desc">
+                <span class="anchor-id" id={name}>
+                    <b>Name: </b>
+                    {name}{' '}
+                    <a href={`#${name}`} class="anchor" aria-hidden="true">
+                        #
+                    </a>
+                    <span />
+                </span>
+            </p>
+        ))
+    }
+    <p class="docs-common-desc">
+        <b>Description: </b>{meta.summary.replace(/Fired/g, 'Called')}
+    </p>
+    {
+        detail.length > 0 && (
+            <>
+                <p class="docs-common-desc">
+                    <b>Detail:</b>
+                </p>
+                <table class="options table-blue" style="width:100%">
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    {detail.map((prop) => (
+                        <tr>
+                            <td>{prop.name}</td>
+                            <td>{prop.typeName}</td>
+                            <td>
+                                <Fragment set:html={prop.comment.summary} />
+                                {tagText(prop.comment, 'description').map(
+                                    (text) => (
+                                        <p>{text}</p>
+                                    ),
+                                )}
+                            </td>
+                        </tr>
+                    ))}
+                </table>
+            </>
+        )
+    }
+    {
+        tagText(meta, 'example').map((example) => (
+            <>
+                <p class="docs-common-desc">
+                    <b>Example:</b>
+                </p>
+                <Code code={example.trim()} lang="js" />
+            </>
+        ))
+    }
+</div>

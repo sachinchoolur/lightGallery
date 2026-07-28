@@ -1,0 +1,78 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import {
+    POST_DATE_FORMAT,
+    blogUrl,
+    bundleImage,
+    readingTime,
+    teaser,
+} from '../lib/blog';
+
+/**
+ * Blog list/related card — port of the item markup shared by
+ * `layouts/blog/list.html` and `partials/main/related-posts.html`.
+ */
+interface Props {
+    entry: CollectionEntry<'blog'>;
+    teaserLength: number;
+}
+
+const { entry, teaserLength } = Astro.props;
+const url = blogUrl(entry);
+const header = bundleImage(entry, 'header.png');
+---
+
+<div class="blog-list-item">
+    <div class="blog-header">
+        <a href={url} class="docs-hero-image">
+            <img alt="blog header" class="img-fluid" src={header} />
+        </a>
+        {
+            entry.data.tags.length > 0 && (
+                <div style="display: inline-block; margin-right:8px;">
+                    {entry.data.tags.map((tag) => (
+                        <p class="blog-text">
+                            <span>{tag} </span>
+                        </p>
+                    ))}
+                </div>
+            )
+        }
+        <div style="display: inline-block;">
+            <p class="blog-meta">
+                Posted on {
+                    entry.data.date
+                        ? POST_DATE_FORMAT.format(entry.data.date)
+                        : ''
+                } -
+                <strong>{readingTime(entry.body ?? '')}&nbsp;min read</strong>
+            </p>
+        </div>
+        <h2 class="h3">
+            <a class="stretched-link text-body" href={url}>
+                {entry.data.title}
+            </a>
+        </h2>
+    </div>
+    <div class="blog-body">
+        <p>{teaser(entry.body ?? '', teaserLength)}</p>
+        <div class="blog-contributors">
+            {
+                entry.data.contributors.map((contributor, index) => (
+                    <>
+                        {index > 0 && ' and '}
+                        <div class="blog-contributors-list">
+                            <span class="contributor-image">
+                                {contributor === 'Ujjwal Maheendran' && (
+                                    <img src="/images/ujjwal.jpg" />
+                                )}
+                            </span>
+                            {contributor}
+                        </div>
+                    </>
+                ))
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+---
+import { Code } from 'astro:components';
+
+import {
+    interfaceProps,
+    settingsDefaults,
+    tagText,
+} from '../../lib/apidocs';
+
+/** Settings table — port of `shortcodes/options.html`. */
+interface Props {
+    interface: string;
+    variable?: string;
+    pluginName?: string;
+}
+
+const { interface: interfaceName, variable, pluginName } = Astro.props;
+const props = interfaceProps(interfaceName);
+const defaults = variable ? settingsDefaults(variable) : undefined;
+---
+
+{
+    pluginName && (
+        <div class="alert alert-warning" role="alert">
+            <b>Plugin dependency</b> - You need to include {pluginName} plugin
+            in the document to use the following options.
+        </div>
+    )
+}
+
+<table class="options-table">
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        {variable && <th>Default</th>}
+    </tr>
+    {
+        props.map((prop) => (
+            <>
+                <tr
+                    style={
+                        prop.name.startsWith('__')
+                            ? 'display: none;'
+                            : undefined
+                    }
+                    class="options-table-tr-head"
+                >
+                    <td>
+                        <span class="anchor-id" id={prop.name}>
+                            {prop.name}{' '}
+                            <a
+                                href={`#${prop.name}`}
+                                class="anchor"
+                                aria-hidden="true"
+                            >
+                                #
+                            </a>
+                            <span />
+                        </span>
+                    </td>
+                    <td class="doc-union">
+                        {prop.unionValues
+                            ? prop.unionValues.map((value) => (
+                                  <span>{value}</span>
+                              ))
+                            : prop.typeName}
+                    </td>
+                    {variable && <td>{defaults?.get(prop.name) ?? ''}</td>}
+                </tr>
+                <tr class="options-table-description">
+                    <td colspan={variable ? 3 : 2}>
+                        <p set:html={prop.comment.summary} />
+                        {tagText(prop.comment, 'description').map((text) => (
+                            <p set:html={text} />
+                        ))}
+                        {tagText(prop.comment, 'version').map((text) => (
+                            <p class="docs-minimum-version">
+                                Minimum lightGallery version required:{' '}
+                                <b>{text}</b>
+                            </p>
+                        ))}
+                        {tagText(prop.comment, 'example').map((text) => (
+                            <Code code={text.trim()} lang="js" />
+                        ))}
+                    </td>
+                </tr>
+            </>
+        ))
+    }
+</table>
