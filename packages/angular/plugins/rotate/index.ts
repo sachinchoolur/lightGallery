@@ -9,13 +9,17 @@ import {
     input,
     signal,
     untracked,
+    viewChild,
+    type ElementRef,
     type TemplateRef,
 } from '@angular/core';
 import {
     flipHorizontal,
     flipVertical,
+    getRotateFitScale,
     getRotateTransform,
     getSlideType,
+    isOrientationSwapped,
     initialRotateSlice,
     rotateLeft,
     rotateRight,
@@ -143,6 +147,7 @@ export class LgRotateToolbarComponent {
     template: `
         @if (enabled()) {
             <div
+                #wrapperEl
                 class="lg-img-rotate"
                 [style.position]="'absolute'"
                 [style.inset]="'0'"
@@ -175,9 +180,29 @@ export class LgRotateWrapperComponent {
     );
 
     private readonly slice = signal<RotateSlice>(initialRotateSlice);
+    private readonly fitScale = signal(1);
+    private readonly wrapperEl =
+        viewChild<ElementRef<HTMLDivElement>>('wrapperEl');
     protected readonly transform = computed(() =>
-        getRotateTransform(this.slice()),
+        getRotateTransform(this.slice(), this.fitScale()),
     );
+
+    // At 90°/270° the image must refit the stage (offset dimensions are
+    // transform-independent, so measuring stays correct mid-rotation).
+    private measureFitScale(): number {
+        const wrapper = this.wrapperEl()?.nativeElement;
+        const image = wrapper?.querySelector<HTMLElement>('.lg-object');
+        if (!wrapper || !image) {
+            return 1;
+        }
+        return getRotateFitScale(
+            image.offsetWidth,
+            image.offsetHeight,
+            wrapper.clientWidth,
+            wrapper.clientHeight,
+            untracked(this.slice),
+        );
+    }
 
     private readonly emitTimers = new Set<ReturnType<typeof setTimeout>>();
 
@@ -202,6 +227,20 @@ export class LgRotateWrapperComponent {
                 ),
             ];
             onCleanup(() => offs.forEach((off) => off()));
+        });
+        effect((onCleanup) => {
+            const slice = this.slice();
+            this.wrapperEl();
+            this.fitScale.set(this.measureFitScale());
+            if (!isOrientationSwapped(slice)) {
+                return;
+            }
+            const onResize = () =>
+                this.fitScale.set(this.measureFitScale());
+            window.addEventListener('resize', onResize);
+            onCleanup(() =>
+                window.removeEventListener('resize', onResize),
+            );
         });
         inject(DestroyRef).onDestroy(() =>
             this.emitTimers.forEach((timer) => clearTimeout(timer)),

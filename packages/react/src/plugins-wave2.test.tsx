@@ -241,6 +241,35 @@ describe('rotate plugin', () => {
         );
         expect(zoomWrap?.querySelector('.lg-img-rotate')).not.toBeNull();
     });
+
+    it('refits a landscape image into the stage at 90 degrees', () => {
+        renderGallery({ plugins: [Rotate] });
+        loadCurrent();
+        const wrapper = document.querySelector<HTMLElement>(
+            '.lg-item.lg-current .lg-img-rotate',
+        )!;
+        const image = wrapper.querySelector<HTMLElement>('.lg-object')!;
+        // Landscape image (921x614) fitted into a 1265x614 stage — its
+        // 921px width runs vertically after a 90° rotation.
+        Object.defineProperty(image, 'offsetWidth', { value: 921 });
+        Object.defineProperty(image, 'offsetHeight', { value: 614 });
+        Object.defineProperty(wrapper, 'clientWidth', { value: 1265 });
+        Object.defineProperty(wrapper, 'clientHeight', { value: 614 });
+
+        fireEvent.click(screen.getByLabelText('Rotate right'));
+        const scale = 614 / 921;
+        expect(wrapper.style.transform).toBe(
+            `rotate(90deg) scale3d(${scale}, ${scale}, 1)`,
+        );
+        tick(450);
+
+        // Back at 180° the laid-out fit applies again: scale 1.
+        fireEvent.click(screen.getByLabelText('Rotate right'));
+        expect(wrapper.style.transform).toBe(
+            'rotate(180deg) scale3d(1, 1, 1)',
+        );
+        tick(450);
+    });
 });
 
 describe('comment plugin', () => {

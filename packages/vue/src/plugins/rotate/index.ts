@@ -11,7 +11,9 @@ import {
 import {
     flipHorizontal,
     flipVertical,
+    getRotateFitScale,
     getRotateTransform,
+    isOrientationSwapped,
     getSlideType,
     initialRotateSlice,
     rotateLeft,
@@ -144,7 +146,44 @@ export const RotateWrapper = defineComponent({
                 getSlideType(props.item) === 'image',
         );
         const slice = shallowRef<RotateSlice>(initialRotateSlice);
+        const fitScale = shallowRef(1);
+        const wrapperEl = shallowRef<HTMLDivElement | null>(null);
         const emitTimers = new Set<ReturnType<typeof setTimeout>>();
+
+        // At 90°/270° the image must refit the stage (offset dimensions
+        // are transform-independent, so measuring stays correct
+        // mid-rotation).
+        function measureFitScale(): number {
+            const wrapper = wrapperEl.value;
+            const image = wrapper?.querySelector<HTMLElement>('.lg-object');
+            if (!wrapper || !image) {
+                return 1;
+            }
+            return getRotateFitScale(
+                image.offsetWidth,
+                image.offsetHeight,
+                wrapper.clientWidth,
+                wrapper.clientHeight,
+                slice.value,
+            );
+        }
+        const onResize = (): void => {
+            fitScale.value = measureFitScale();
+        };
+        watch(
+            slice,
+            (next, _prev, onCleanup) => {
+                fitScale.value = measureFitScale();
+                if (!isOrientationSwapped(next)) {
+                    return;
+                }
+                window.addEventListener('resize', onResize);
+                onCleanup(() =>
+                    window.removeEventListener('resize', onResize),
+                );
+            },
+            { flush: 'post' },
+        );
 
         function commit(
             transition: (slice: RotateSlice) => RotateSlice,
@@ -215,11 +254,15 @@ export const RotateWrapper = defineComponent({
             return h(
                 'div',
                 {
+                    ref: wrapperEl,
                     class: 'lg-img-rotate',
                     style: {
                         position: 'absolute',
                         inset: '0',
-                        transform: getRotateTransform(slice.value),
+                        transform: getRotateTransform(
+                            slice.value,
+                            fitScale.value,
+                        ),
                         transitionDuration: `${settings.value.rotateSpeed}ms`,
                     },
                 },

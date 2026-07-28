@@ -290,6 +290,36 @@ describe('wave-2 plugins', () => {
         );
     });
 
+    it('rotate: refits a landscape image into the stage at 90 degrees', async () => {
+        const { wrapper } = mountHost([Rotate]);
+        await openAndLoad(wrapper);
+
+        const rotateEl = query('.lg-item.lg-current .lg-img-rotate')!;
+        const image = rotateEl.querySelector<HTMLElement>('.lg-object')!;
+        // Landscape image (921x614) fitted into a 1265x614 stage — its
+        // 921px width runs vertically after a 90° rotation.
+        Object.defineProperty(image, 'offsetWidth', { value: 921 });
+        Object.defineProperty(image, 'offsetHeight', { value: 614 });
+        Object.defineProperty(rotateEl, 'clientWidth', { value: 1265 });
+        Object.defineProperty(rotateEl, 'clientHeight', { value: 614 });
+
+        (query('.lg-rotate-right') as HTMLButtonElement).click();
+        await settle();
+        const scale = 614 / 921;
+        expect(rotateEl.style.transform).toBe(
+            `rotate(90deg) scale3d(${scale}, ${scale}, 1)`,
+        );
+        await advance(500);
+
+        // Back at 180° the laid-out fit applies again: scale 1.
+        (query('.lg-rotate-right') as HTMLButtonElement).click();
+        await settle();
+        expect(rotateEl.style.transform).toBe(
+            'rotate(180deg) scale3d(1, 1, 1)',
+        );
+        await advance(500);
+    });
+
     it('comment: renders the #comments gallery slot, toggles the panel', async () => {
         const { wrapper } = mountHost([
             {

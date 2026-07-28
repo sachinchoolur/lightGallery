@@ -67,9 +67,48 @@ export function flipVertical(slice: RotateSlice): RotateSlice {
     return { ...slice, [axis]: slice[axis] * -1 };
 }
 
-/** CSS transform for a rotate slice (2.x `applyStyles`). */
-export function getRotateTransform(slice: RotateSlice): string {
-    return `rotate(${slice.rotate}deg) scale3d(${slice.flipHorizontal}, ${slice.flipVertical}, 1)`;
+/** Whether the slice's rotation swaps the image's visual axes (90°/270°). */
+export function isOrientationSwapped(slice: RotateSlice): boolean {
+    const normalized = ((slice.rotate % 360) + 360) % 360;
+    return normalized === 90 || normalized === 270;
+}
+
+/**
+ * Scale that refits a rotated image into its stage. At 90°/270° the
+ * image's rendered width runs vertically (and vice versa), so the fit is
+ * computed against the swapped axes; capped at 1 — rotation never
+ * upscales. At 0°/180° (and with degenerate dimensions) the image already
+ * fits the way it was laid out: scale 1.
+ */
+export function getRotateFitScale(
+    imageWidth: number,
+    imageHeight: number,
+    stageWidth: number,
+    stageHeight: number,
+    slice: RotateSlice,
+): number {
+    if (
+        !isOrientationSwapped(slice) ||
+        imageWidth <= 0 ||
+        imageHeight <= 0 ||
+        stageWidth <= 0 ||
+        stageHeight <= 0
+    ) {
+        return 1;
+    }
+    return Math.min(stageWidth / imageHeight, stageHeight / imageWidth, 1);
+}
+
+/**
+ * CSS transform for a rotate slice (2.x `applyStyles`), with the fit
+ * scale folded into the same transform so rotate + refit animate as one
+ * motion. `fitScale` defaults to 1 (the 2.x output, byte-identical).
+ */
+export function getRotateTransform(
+    slice: RotateSlice,
+    fitScale: number = 1,
+): string {
+    return `rotate(${slice.rotate}deg) scale3d(${slice.flipHorizontal * fitScale}, ${slice.flipVertical * fitScale}, 1)`;
 }
 
 /** Autoplay run-state (autoplay plugin). */

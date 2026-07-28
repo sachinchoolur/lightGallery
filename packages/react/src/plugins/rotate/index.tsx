@@ -1,10 +1,12 @@
-import { useEffect, useState, type ReactElement } from 'react';
+import { useEffect, useRef, useState, type ReactElement } from 'react';
 import {
     flipHorizontal,
     flipVertical,
+    getRotateFitScale,
     getRotateTransform,
     getSlideType,
     initialRotateSlice,
+    isOrientationSwapped,
     rotateLeft,
     rotateRight,
     type RotateSlice,
@@ -118,6 +120,34 @@ function RotateWrapper({
     const settings = usePluginSettings<RotateSettings>();
     const enabled = settings.rotate && getSlideType(item) === 'image';
     const [slice, setSlice] = useState<RotateSlice>(initialRotateSlice);
+    const [fitScale, setFitScale] = useState(1);
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    // At 90°/270° the image must refit the stage (offset dimensions are
+    // transform-independent, so measuring stays correct mid-rotation).
+    useEffect(() => {
+        const measure = () => {
+            const wrapper = wrapperRef.current;
+            const image = wrapper?.querySelector<HTMLElement>('.lg-object');
+            if (!wrapper || !image) {
+                return 1;
+            }
+            return getRotateFitScale(
+                image.offsetWidth,
+                image.offsetHeight,
+                wrapper.clientWidth,
+                wrapper.clientHeight,
+                slice,
+            );
+        };
+        setFitScale(measure());
+        if (!isOrientationSwapped(slice)) {
+            return;
+        }
+        const onResize = () => setFitScale(measure());
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, [slice, enabled, isCurrent]);
 
     useEffect(() => {
         if (!isCurrent || !enabled) {
@@ -170,11 +200,12 @@ function RotateWrapper({
 
     return (
         <div
+            ref={wrapperRef}
             className="lg-img-rotate"
             style={{
                 position: 'absolute',
                 inset: 0,
-                transform: getRotateTransform(slice),
+                transform: getRotateTransform(slice, fitScale),
                 transitionDuration: `${settings.rotateSpeed}ms`,
             }}
         >
