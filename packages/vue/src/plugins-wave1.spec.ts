@@ -38,6 +38,26 @@ async function settle(): Promise<void> {
     }
 }
 
+/**
+ * jsdom has no PointerEvent constructor; a MouseEvent with the pointer
+ * fields defined on it walks and quacks enough for the native listeners.
+ */
+function firePointer(
+    target: EventTarget,
+    type: 'pointerdown' | 'pointermove' | 'pointerup',
+    init: { x: number; y: number; pointerId?: number },
+): void {
+    const event = new MouseEvent(type, {
+        bubbles: true,
+        cancelable: true,
+        clientX: init.x,
+        clientY: init.y,
+    });
+    Object.defineProperty(event, 'pointerId', { value: init.pointerId ?? 1 });
+    Object.defineProperty(event, 'pointerType', { value: 'touch' });
+    target.dispatchEvent(event);
+}
+
 const Host = defineComponent({
     components: { LightGallery },
     props: {
@@ -247,6 +267,51 @@ describe('plugin runtime + wave-1', () => {
         expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(
             false,
         );
+    });
+
+    it('zoom: projects a zoomed-pan release with 2.x momentum, clamped to bounds', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        // Pointer interactions arm `enableZoomAfter` ms after the load.
+        await advance(350);
+
+        // jsdom has no layout: stub the metrics the pan bounds derive
+        // from. Image fitted at 400x300, natural 1600 → actual-size scale
+        // 4; at that scale the pan bounds are ±600 x, ±450 y.
+        const img = query('img.lg-image[data-index="0"]')!;
+        Object.defineProperty(img, 'offsetWidth', { value: 400 });
+        Object.defineProperty(img, 'offsetHeight', { value: 300 });
+        Object.defineProperty(img, 'naturalWidth', { value: 1600 });
+        const slide = img.closest<HTMLElement>('.lg-item')!;
+        Object.defineProperty(slide, 'offsetWidth', { value: 400 });
+        Object.defineProperty(slide, 'offsetHeight', { value: 300 });
+
+        (query('.lg-actual-size') as HTMLButtonElement).click();
+        await settle();
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+        expect(
+            query('.lg-item.lg-current .lg-zoom-scale')!.style.transform,
+        ).toBe('scale3d(4, 4, 1)');
+
+        // 100px drag over 100ms: speed = 100/100 + 1 = 2 → the release
+        // travels double the finger delta (2.x `touchendZoom`).
+        firePointer(panEl, 'pointerdown', { x: 300, y: 100, pointerId: 61 });
+        vi.advanceTimersByTime(100);
+        firePointer(window, 'pointermove', { x: 200, y: 100, pointerId: 61 });
+        firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 61 });
+        expect(panEl.style.transform).toBe('translate3d(-200px, 0px, 0)');
+        // The projected pan settles with the 2.x post-gesture ease.
+        expect(panEl.style.transition).toBe(
+            'transform 0.8s cubic-bezier(0, 0, 0.25, 1)',
+        );
+
+        // A flick (100px in 20ms) passes speed 2 and gains the extra step
+        // (factor 7); the projection -200 + -700 clamps into the -600
+        // bound instead of overshooting.
+        firePointer(panEl, 'pointerdown', { x: 300, y: 100, pointerId: 62 });
+        vi.advanceTimersByTime(20);
+        firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 62 });
+        expect(panEl.style.transform).toBe('translate3d(-600px, 0px, 0)');
     });
 
     it('video: renders the video slide, swaps poster for the player, pauses on leave', async () => {

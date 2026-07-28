@@ -17,6 +17,7 @@ import {
     clampScale,
     getActualSizeScale,
     getPanBounds,
+    getPanMomentum,
     getPinchScale,
     getPointerDistance,
     getPointZoomPan,
@@ -187,6 +188,7 @@ export const ZoomWrapper = defineComponent({
             pointerId: number;
             startX: number;
             startY: number;
+            startTime: number;
             startPan: ZoomPan;
         } | null = null;
         let detachWindow: (() => void) | null = null;
@@ -433,9 +435,29 @@ export const ZoomWrapper = defineComponent({
                         'settle',
                     );
                 }
-                if (panDrag && event.pointerId === panDrag.pointerId) {
+                const drag = panDrag;
+                if (drag && event.pointerId === drag.pointerId) {
                     panDrag = null;
-                    commit(live.scale, live.pan, 'settle');
+                    let pan = live.pan;
+                    if (event.type === 'pointerup') {
+                        // 2.x `touchendZoom` momentum: a fast release
+                        // keeps traveling in proportion to its speed,
+                        // anchored at the gesture-start pan; commit clamps
+                        // the projection into bounds. A canceled pointer
+                        // settles where it is.
+                        const projected = getPanMomentum(
+                            {
+                                x: event.clientX - drag.startX,
+                                y: event.clientY - drag.startY,
+                            },
+                            Date.now() - drag.startTime,
+                        );
+                        pan = {
+                            x: drag.startPan.x + projected.x,
+                            y: drag.startPan.y + projected.y,
+                        };
+                    }
+                    commit(live.scale, pan, 'settle');
                 }
                 if (pointers.size === 0) {
                     detachWindow?.();
@@ -506,6 +528,7 @@ export const ZoomWrapper = defineComponent({
                     pointerId: event.pointerId,
                     startX: event.clientX,
                     startY: event.clientY,
+                    startTime: Date.now(),
                     startPan: live.pan,
                 };
                 setLiveTransition('none');

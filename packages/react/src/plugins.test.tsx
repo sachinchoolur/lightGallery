@@ -463,6 +463,51 @@ describe('zoom plugin', () => {
         firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 32 });
     });
 
+    it('projects a zoomed-pan release with 2.x momentum, clamped to bounds', () => {
+        renderGallery({ plugins: [Zoom] });
+        loadCurrent();
+        tick(350);
+        const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
+        const img = document.querySelector<HTMLElement>(
+            '.lg-zoom-pan img.lg-image',
+        )!;
+        // jsdom has no layout: stub the metrics the pan bounds derive
+        // from. Image fitted at 400x300, natural 1600 → actual-size scale
+        // 4; at that scale the pan bounds are ±600 x, ±450 y.
+        Object.defineProperty(img, 'offsetWidth', { value: 400 });
+        Object.defineProperty(img, 'offsetHeight', { value: 300 });
+        Object.defineProperty(img, 'naturalWidth', { value: 1600 });
+        const slide = img.closest<HTMLElement>('.lg-item')!;
+        Object.defineProperty(slide, 'offsetWidth', { value: 400 });
+        Object.defineProperty(slide, 'offsetHeight', { value: 300 });
+
+        fireEvent.dblClick(img);
+        expect(
+            document.querySelector<HTMLElement>('.lg-zoom-scale')!.style
+                .transform,
+        ).toBe('scale3d(4, 4, 1)');
+
+        // 100px drag over 100ms: speed = 100/100 + 1 = 2 → the release
+        // travels double the finger delta (2.x `touchendZoom`).
+        firePointer(pan, 'pointerdown', { x: 300, y: 100, pointerId: 51 });
+        tick(100);
+        firePointer(window, 'pointermove', { x: 200, y: 100, pointerId: 51 });
+        firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 51 });
+        expect(pan.style.transform).toBe('translate3d(-200px, 0px, 0)');
+        // The projected pan settles with the 2.x post-gesture ease.
+        expect(pan.style.transition).toBe(
+            'transform 0.8s cubic-bezier(0, 0, 0.25, 1)',
+        );
+
+        // A flick (100px in 20ms) passes speed 2 and gains the extra step
+        // (factor 7); the projection -200 + -700 clamps into the -600
+        // bound instead of overshooting.
+        firePointer(pan, 'pointerdown', { x: 300, y: 100, pointerId: 52 });
+        tick(20);
+        firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 52 });
+        expect(pan.style.transform).toBe('translate3d(-600px, 0px, 0)');
+    });
+
     it('suppresses swipe navigation while zoomed and resets on slide change', () => {
         renderGallery({ plugins: [Zoom] });
         zoomIn();

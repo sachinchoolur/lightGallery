@@ -20,6 +20,7 @@ import {
     clampScale,
     getActualSizeScale,
     getPanBounds,
+    getPanMomentum,
     getPinchScale,
     getPointerDistance,
     getPointZoomPan,
@@ -238,6 +239,7 @@ export class LgZoomWrapperComponent {
         pointerId: number;
         startX: number;
         startY: number;
+        startTime: number;
         startPan: ZoomPan;
     } | null = null;
     private detachWindow: (() => void) | null = null;
@@ -544,7 +546,25 @@ export class LgZoomWrapperComponent {
             const drag = this.panDrag;
             if (drag && event.pointerId === drag.pointerId) {
                 this.panDrag = null;
-                this.commit(this.live.scale, this.live.pan, 'settle');
+                let pan = this.live.pan;
+                if (event.type === 'pointerup') {
+                    // 2.x `touchendZoom` momentum: a fast release keeps
+                    // traveling in proportion to its speed, anchored at the
+                    // gesture-start pan; commit clamps the projection into
+                    // bounds. A canceled pointer settles where it is.
+                    const projected = getPanMomentum(
+                        {
+                            x: event.clientX - drag.startX,
+                            y: event.clientY - drag.startY,
+                        },
+                        Date.now() - drag.startTime,
+                    );
+                    pan = {
+                        x: drag.startPan.x + projected.x,
+                        y: drag.startPan.y + projected.y,
+                    };
+                }
+                this.commit(this.live.scale, pan, 'settle');
             }
             if (this.pointers.size === 0) {
                 this.detachWindow?.();
@@ -613,6 +633,7 @@ export class LgZoomWrapperComponent {
                 pointerId: event.pointerId,
                 startX: event.clientX,
                 startY: event.clientY,
+                startTime: Date.now(),
                 startPan: this.live.pan,
             };
             this.setLiveTransition('none');

@@ -9,6 +9,7 @@ import {
     clampScale,
     getActualSizeScale,
     getPanBounds,
+    getPanMomentum,
     getPinchScale,
     getPointZoomPan,
     getPointerDistance,
@@ -70,6 +71,47 @@ describe('scale math', () => {
         expect(getPinchScale(100, 500, 1, 3, true)).toBe(5);
         expect(getPinchScale(100, 10, 1, 3, false)).toBe(0.5);
         expect(getPinchScale(0, 200, 1.5, 3, false)).toBe(1.5);
+    });
+});
+
+describe('pan momentum', () => {
+    it('projects the delta by its speed (2.x touchendZoom)', () => {
+        // 100px in 100ms: speed = 100/100 + 1 = 2 → delta doubles.
+        expect(getPanMomentum({ x: -100, y: 0 }, 100)).toEqual({
+            x: -200,
+            y: 0,
+        });
+        expect(getPanMomentum({ x: 0, y: 60 }, 60)).toEqual({ x: 0, y: 120 });
+    });
+
+    it('adds the extra step for a fast flick (speed > 2)', () => {
+        // 100px in 20ms: speed = 5 + 1 = 6, > 2 → 7.
+        expect(getPanMomentum({ x: -100, y: 0 }, 20)).toEqual({
+            x: -700,
+            y: 0,
+        });
+    });
+
+    it('amplifies each axis by its own speed', () => {
+        // x: 100/100 + 1 = 2; y: 40/100 + 1 = 1.4.
+        expect(getPanMomentum({ x: 100, y: 40 }, 100)).toEqual({
+            x: 200,
+            y: 56,
+        });
+    });
+
+    it('returns the raw delta below the 15px write threshold', () => {
+        // Projected (12, 8) stays under 15 on both axes → no momentum.
+        expect(getPanMomentum({ x: 6, y: 4 }, 1000)).toEqual({ x: 6, y: 4 });
+        // One axis past 15 is enough for the projected write (2.x OR).
+        expect(getPanMomentum({ x: 10, y: 0 }, 10)).toEqual({ x: 20, y: 0 });
+    });
+
+    it('guards a zero-duration release instead of dividing by zero', () => {
+        const projected = getPanMomentum({ x: -50, y: 0 }, 0);
+        expect(Number.isFinite(projected.x)).toBe(true);
+        // Instant release = maximal speed for the distance: 50/1 + 1 + 1.
+        expect(projected).toEqual({ x: -2600, y: 0 });
     });
 });
 

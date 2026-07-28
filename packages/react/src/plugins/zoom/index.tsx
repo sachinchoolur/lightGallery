@@ -12,6 +12,7 @@ import {
     clampScale,
     getActualSizeScale,
     getPanBounds,
+    getPanMomentum,
     getPinchScale,
     getPointerDistance,
     getPointZoomPan,
@@ -174,6 +175,7 @@ function ZoomWrapper({
         pointerId: number;
         startX: number;
         startY: number;
+        startTime: number;
         startPan: ZoomPan;
         moved: boolean;
     } | null>(null);
@@ -460,7 +462,25 @@ function ZoomWrapper({
             const drag = panDragRef.current;
             if (drag && event.pointerId === drag.pointerId) {
                 panDragRef.current = null;
-                commit(liveRef.current.scale, liveRef.current.pan, 'settle');
+                let pan = liveRef.current.pan;
+                if (event.type === 'pointerup') {
+                    // 2.x `touchendZoom` momentum: a fast release keeps
+                    // traveling in proportion to its speed, anchored at the
+                    // gesture-start pan; commit clamps the projection into
+                    // bounds. A canceled pointer settles where it is.
+                    const projected = getPanMomentum(
+                        {
+                            x: event.clientX - drag.startX,
+                            y: event.clientY - drag.startY,
+                        },
+                        Date.now() - drag.startTime,
+                    );
+                    pan = {
+                        x: drag.startPan.x + projected.x,
+                        y: drag.startPan.y + projected.y,
+                    };
+                }
+                commit(liveRef.current.scale, pan, 'settle');
             }
             if (pointers.size === 0) {
                 detachRef.current?.();
@@ -530,6 +550,7 @@ function ZoomWrapper({
                 pointerId: event.pointerId,
                 startX: event.clientX,
                 startY: event.clientY,
+                startTime: Date.now(),
                 startPan: liveRef.current.pan,
                 moved: false,
             };
