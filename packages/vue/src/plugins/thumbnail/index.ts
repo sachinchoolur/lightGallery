@@ -242,6 +242,11 @@ export const ThumbnailStrip = defineComponent({
                             'lg-dragging lg-grabbing': dragging.value,
                         },
                     ],
+                    // The strip lives outside .lg-inner's
+                    // touch-action:none, and its pointermove is passive —
+                    // without this the browser owns the pan and cancels
+                    // the drag (2.x prevented via touchmove).
+                    style: { touchAction: 'none' },
                 },
                 h(
                     'div',

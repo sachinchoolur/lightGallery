@@ -134,6 +134,10 @@ export function useGalleryGestures({
         detachRef.current?.();
         detachRef.current = null;
         sessionRef.current = null;
+        // The ledger is session-scoped: once the window listeners detach
+        // nothing can remove records, so clear them here (a suspended
+        // second pointer would otherwise be stranded).
+        internalRef.current.gestureSeam.pointers = [];
         const outer = outerRef.current;
         if (session.isMouse && settingsRef.current.enableDrag) {
             outer?.classList.remove('lg-grabbing');
@@ -143,10 +147,14 @@ export function useGalleryGestures({
 
     const onWindowPointerMove = (event: PointerEvent) => {
         const seam = internalRef.current.gestureSeam;
-        seam.pointers = upsertPointer(
-            seam.pointers,
-            seamRecord(seam.pointers, event),
-        );
+        // Update only pointers that registered at pointerdown — hovering
+        // mouse moves have no down/up lifecycle and would be stranded.
+        if (seam.pointers.some((r) => r.id === event.pointerId)) {
+            seam.pointers = upsertPointer(
+                seam.pointers,
+                seamRecord(seam.pointers, event),
+            );
+        }
         const session = sessionRef.current;
         if (
             !session ||

@@ -298,7 +298,10 @@ describe('zoom plugin', () => {
     function zoomIn() {
         loadCurrent();
         tick(350); // enableZoomAfter
-        fireEvent.dblClick(document.querySelector('.lg-zoom-pan')!);
+        // Double-click zoom is gated to the image itself (2.x behavior).
+        fireEvent.dblClick(
+            document.querySelector('.lg-zoom-pan img.lg-image')!,
+        );
     }
 
     it('shows the actual-size button and zooms on double click', () => {
@@ -316,7 +319,9 @@ describe('zoom plugin', () => {
         expect(document.querySelector('.lg-outer')).toHaveClass('lg-zoomed');
 
         // Double click again zooms back out.
-        fireEvent.dblClick(document.querySelector('.lg-zoom-pan')!);
+        fireEvent.dblClick(
+            document.querySelector('.lg-zoom-pan img.lg-image')!,
+        );
         expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
         expect(document.querySelector('.lg-outer')).not.toHaveClass(
             'lg-zoomed',
@@ -339,6 +344,123 @@ describe('zoom plugin', () => {
             document.querySelector<HTMLElement>('.lg-zoom-scale')!.style
                 .transform,
         ).toBe('scale3d(1, 1, 1)');
+    });
+
+    it('does not leak a tap into a phantom pinch (pointer ledger)', () => {
+        renderGallery({ plugins: [Zoom] });
+        loadCurrent();
+        tick(350);
+        const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
+        const scaleEl =
+            document.querySelector<HTMLElement>('.lg-zoom-scale')!;
+
+        // A plain tap on the (unzoomed) slide: down + up, no gesture.
+        firePointer(pan, 'pointerdown', { x: 100, y: 100, pointerId: 11 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 11 });
+
+        // Next single finger must NOT read as a second pinch pointer.
+        firePointer(pan, 'pointerdown', { x: 200, y: 100, pointerId: 12 });
+        firePointer(window, 'pointermove', {
+            x: 260,
+            y: 160,
+            pointerId: 12,
+        });
+        // A leaked tap pointer would misroute this into a pinch and
+        // scale the slide; the rendered rest transform must not change.
+        expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
+        firePointer(window, 'pointerup', { x: 260, y: 160, pointerId: 12 });
+    });
+
+    it('pans (not pinches) after a double-tap zoom', () => {
+        renderGallery({ plugins: [Zoom] });
+        loadCurrent();
+        tick(350);
+        const img = document.querySelector<HTMLElement>(
+            '.lg-zoom-pan img.lg-image',
+        )!;
+        const scaleEl =
+            document.querySelector<HTMLElement>('.lg-zoom-scale')!;
+
+        // Touch double-tap on the image zooms in (fallback scale 2).
+        firePointer(img, 'pointerdown', { x: 50, y: 50, pointerId: 21 });
+        firePointer(window, 'pointerup', { x: 50, y: 50, pointerId: 21 });
+        tick(100);
+        firePointer(img, 'pointerdown', { x: 50, y: 50, pointerId: 22 });
+        firePointer(window, 'pointerup', { x: 50, y: 50, pointerId: 22 });
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
+
+        // The next single finger pans — a leaked tap pointer would
+        // misroute this into a pinch and change the scale.
+        firePointer(img, 'pointerdown', { x: 60, y: 60, pointerId: 23 });
+        firePointer(window, 'pointermove', {
+            x: 120,
+            y: 120,
+            pointerId: 23,
+        });
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
+        firePointer(window, 'pointerup', { x: 120, y: 120, pointerId: 23 });
+    });
+
+    it('snaps a pinch release into [1, actual size] despite infiniteZoom', () => {
+        renderGallery({ plugins: [Zoom] });
+        loadCurrent();
+        tick(350);
+        const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
+        const scaleEl =
+            document.querySelector<HTMLElement>('.lg-zoom-scale')!;
+
+        // Pinch far beyond the actual-size scale (jsdom fallback max: 2).
+        firePointer(pan, 'pointerdown', { x: 100, y: 100, pointerId: 41 });
+        firePointer(pan, 'pointerdown', { x: 200, y: 100, pointerId: 42 });
+        firePointer(window, 'pointermove', {
+            x: 500,
+            y: 100,
+            pointerId: 42,
+        });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 41 });
+        // 2.x pinch touchend rule: release lands on actual size even with
+        // the infiniteZoom default.
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
+        firePointer(window, 'pointerup', { x: 500, y: 100, pointerId: 42 });
+
+        // Reset to the unzoomed state, then pinch inwards below fit and
+        // release: back to scale 1. Starting from scale 1 exercises the
+        // commit-equals-previous-state path (React must still write).
+        fireEvent.dblClick(
+            document.querySelector('.lg-zoom-pan img.lg-image')!,
+        );
+        firePointer(pan, 'pointerdown', { x: 100, y: 100, pointerId: 43 });
+        firePointer(pan, 'pointerdown', { x: 300, y: 100, pointerId: 44 });
+        firePointer(window, 'pointermove', {
+            x: 140,
+            y: 100,
+            pointerId: 44,
+        });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 43 });
+        expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
+        firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
+    });
+
+    it('disables transitions during a pinch and settles on release', () => {
+        renderGallery({ plugins: [Zoom] });
+        loadCurrent();
+        tick(350);
+        const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
+        const scaleEl =
+            document.querySelector<HTMLElement>('.lg-zoom-scale')!;
+
+        firePointer(pan, 'pointerdown', { x: 100, y: 100, pointerId: 31 });
+        firePointer(pan, 'pointerdown', { x: 200, y: 100, pointerId: 32 });
+        // Live pinch tracks 1:1 — no easing between finger positions.
+        expect(pan.style.transition).toBe('none');
+        expect(scaleEl.style.transition).toBe('none');
+
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 31 });
+        // Release snaps with the 2.x settle ease.
+        expect(scaleEl.style.transition).toBe(
+            'transform 0.8s cubic-bezier(0, 0, 0.25, 1)',
+        );
+        firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 32 });
     });
 
     it('suppresses swipe navigation while zoomed and resets on slide change', () => {

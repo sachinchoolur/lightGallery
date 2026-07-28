@@ -96,6 +96,14 @@ const ZOOM_IN_EVENT = 'lg-zoom-in';
 const ZOOM_OUT_EVENT = 'lg-zoom-out';
 const ACTUAL_SIZE_EVENT = 'lg-actual-size';
 const ZOOM_TRANSITION = 'transform 0.3s cubic-bezier(0, 0, 0.25, 1)';
+/** 2.x post-gesture settle ease (`lg-zoom-drag-transition`). */
+const SETTLE_TRANSITION = 'transform 0.8s cubic-bezier(0, 0, 0.25, 1)';
+
+function isImageTarget(target: unknown): boolean {
+    return (
+        target instanceof HTMLElement && target.classList.contains('lg-image')
+    );
+}
 
 type ZoomResolved = ZoomSettings & Record<string, unknown>;
 
@@ -157,7 +165,7 @@ export class LgZoomToolbarComponent {
                 [style.position]="'absolute'"
                 [style.inset]="'0'"
                 [style.transform]="panTransform()"
-                [style.transition]="transition"
+                [style.transition]="transition()"
                 (pointerdown)="onPointerDown($event)"
                 (dblclick)="onDoubleClick($event)"
             >
@@ -168,7 +176,7 @@ export class LgZoomToolbarComponent {
                     [style.inset]="'0'"
                     [style.transform]="scaleTransform()"
                     [style.transform-origin]="'center center'"
-                    [style.transition]="transition"
+                    [style.transition]="transition()"
                 >
                     <ng-container [ngTemplateOutlet]="content()" />
                 </div>
@@ -197,7 +205,14 @@ export class LgZoomWrapperComponent {
     private readonly scaleEl =
         viewChild<ElementRef<HTMLDivElement>>('scaleEl');
 
-    protected readonly transition = ZOOM_TRANSITION;
+    private readonly transitionMode = signal<'default' | 'settle'>(
+        'default',
+    );
+    protected readonly transition = computed(() =>
+        this.transitionMode() === 'settle'
+            ? SETTLE_TRANSITION
+            : ZOOM_TRANSITION,
+    );
 
     /** Committed zoom slice; live pinch/pan bypasses it (direct writes). */
     private readonly zoom = signal<ZoomSlice>(initialZoomSlice);
@@ -212,7 +227,12 @@ export class LgZoomWrapperComponent {
     private readonly interactive = signal(false);
     private live: ZoomSlice = initialZoomSlice;
     private readonly pointers = new Map<number, ZoomPan>();
-    private pinch: { startDistance: number; startScale: number } | null =
+    private pinch: {
+        startDistance: number;
+        startScale: number;
+        startPan: ZoomPan;
+        startMid: ZoomPan;
+    } | null =
         null;
     private panDrag: {
         pointerId: number;
@@ -306,6 +326,17 @@ export class LgZoomWrapperComponent {
         return getActualSizeScale(naturalWidth, imageWidth);
     }
 
+    private setLiveTransition(value: string): void {
+        const pan = this.panEl()?.nativeElement;
+        if (pan) {
+            pan.style.transition = value;
+        }
+        const scaleEl = this.scaleEl()?.nativeElement;
+        if (scaleEl) {
+            scaleEl.style.transition = value;
+        }
+    }
+
     /** Live transforms during pinch/pan — direct DOM writes, zero CD. */
     private applyLive(slice: ZoomSlice): void {
         this.live = slice;
@@ -319,7 +350,15 @@ export class LgZoomWrapperComponent {
         }
     }
 
-    private commit(scale: number, pan: ZoomPan): void {
+    private commit(
+        scale: number,
+        pan: ZoomPan,
+        mode: 'default' | 'settle' = 'default',
+    ): void {
+        this.transitionMode.set(mode);
+        this.setLiveTransition(
+            mode === 'settle' ? SETTLE_TRANSITION : ZOOM_TRANSITION,
+        );
         const cfg = untracked(this.settings);
         const max = this.maxScale();
         const clamped = clampScale(scale, max, cfg.infiniteZoom);
@@ -350,6 +389,8 @@ export class LgZoomWrapperComponent {
     }
 
     private reset(): void {
+        this.transitionMode.set('default');
+        this.setLiveTransition(ZOOM_TRANSITION);
         this.pointers.clear();
         this.pinch = null;
         this.panDrag = null;
@@ -429,7 +470,21 @@ export class LgZoomWrapperComponent {
                     this.maxScale(),
                     untracked(this.settings).infiniteZoom,
                 );
-                this.applyLive({ ...this.live, scale, zoomed: scale > 1 });
+                // Anchor the zoom to the pinch's starting midpoint (2.x
+                // anchored to the first finger; the midpoint is the same
+                // idea without finger-order dependence).
+                const pan = getPointZoomPan(
+                    pinch.startMid,
+                    pinch.startPan,
+                    pinch.startScale,
+                    scale,
+                );
+                this.applyLive({
+                    ...this.live,
+                    scale,
+                    pan,
+                    zoomed: scale > 1,
+                });
                 return;
             }
             const drag = this.panDrag;
@@ -462,15 +517,34 @@ export class LgZoomWrapperComponent {
                 return;
             }
             this.pointers.delete(event.pointerId);
-            if (this.pinch && this.pointers.size < 2) {
+            const endedPinch = this.pinch;
+            if (endedPinch && this.pointers.size < 2) {
                 this.pinch = null;
-                // Snap the pinch result into the committed range.
-                this.commit(this.live.scale, this.live.pan);
+                // Pinch release snaps into [1, actual size] regardless of
+                // infiniteZoom (2.x pinch touchend rule — the setting
+                // governs button zoom only). The pan is recomputed through
+                // the same focal anchor so the snap stays centered on the
+                // pinched point.
+                const target = clampScale(
+                    this.live.scale,
+                    this.maxScale(),
+                    false,
+                );
+                this.commit(
+                    target,
+                    getPointZoomPan(
+                        endedPinch.startMid,
+                        endedPinch.startPan,
+                        endedPinch.startScale,
+                        target,
+                    ),
+                    'settle',
+                );
             }
             const drag = this.panDrag;
             if (drag && event.pointerId === drag.pointerId) {
                 this.panDrag = null;
-                this.commit(this.live.scale, this.live.pan);
+                this.commit(this.live.scale, this.live.pan, 'settle');
             }
             if (this.pointers.size === 0) {
                 this.detachWindow?.();
@@ -495,21 +569,35 @@ export class LgZoomWrapperComponent {
             x: event.clientX,
             y: event.clientY,
         });
+        // Every insert gets its removal path: onUp/onCancel must be live
+        // for this pointer or the ledger leaks a phantom that corrupts
+        // the next gesture.
+        this.attachWindowListeners();
 
         if (this.pointers.size === 2 && event.pointerType === 'touch') {
             const [a, b] = [...this.pointers.values()];
             this.pinch = {
                 startDistance: getPointerDistance(a!, b!),
                 startScale: this.live.scale,
+                startPan: this.live.pan,
+                startMid: this.eventPoint({
+                    clientX: (a!.x + b!.x) / 2,
+                    clientY: (a!.y + b!.y) / 2,
+                }),
             };
             this.panDrag = null;
             this.ctx.gestureLock.claim('pinch');
-            this.attachWindowListeners();
+            this.setLiveTransition('none');
             return;
         }
 
-        // Double-tap detection for touch (mouse uses dblclick).
-        if (event.pointerType === 'touch' && this.pointers.size === 1) {
+        // Double-tap detection for touch (mouse uses dblclick), gated to
+        // the image itself (2.x `hasClass('lg-image')`).
+        if (
+            event.pointerType === 'touch' &&
+            this.pointers.size === 1 &&
+            isImageTarget(event.target)
+        ) {
             const now = Date.now();
             if (now - this.lastTap < 300) {
                 this.lastTap = 0;
@@ -527,12 +615,15 @@ export class LgZoomWrapperComponent {
                 startY: event.clientY,
                 startPan: this.live.pan,
             };
-            this.attachWindowListeners();
+            this.setLiveTransition('none');
         }
     }
 
     protected onDoubleClick(event: MouseEvent): void {
         if (!this.enabled() || !this.interactive() || !this.isCurrent()) {
+            return;
+        }
+        if (!isImageTarget(event.target)) {
             return;
         }
         this.toggleActualSize(this.eventPoint(event));

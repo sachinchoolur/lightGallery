@@ -93,6 +93,14 @@ const ZOOM_IN_EVENT = 'lg-zoom-in';
 const ZOOM_OUT_EVENT = 'lg-zoom-out';
 const ACTUAL_SIZE_EVENT = 'lg-actual-size';
 const ZOOM_TRANSITION = 'transform 0.3s cubic-bezier(0, 0, 0.25, 1)';
+/** 2.x post-gesture settle ease (`lg-zoom-drag-transition`). */
+const SETTLE_TRANSITION = 'transform 0.8s cubic-bezier(0, 0, 0.25, 1)';
+
+function isImageTarget(target: unknown): boolean {
+    return (
+        target instanceof HTMLElement && target.classList.contains('lg-image')
+    );
+}
 
 type ZoomResolved = ZoomSettings & Record<string, unknown>;
 
@@ -167,7 +175,13 @@ export const ZoomWrapper = defineComponent({
 
         let live: ZoomSlice = initialZoomSlice;
         const pointers = new Map<number, ZoomPan>();
-        let pinch: { startDistance: number; startScale: number } | null =
+        const transitionMode = shallowRef<'default' | 'settle'>('default');
+        let pinch: {
+            startDistance: number;
+            startScale: number;
+            startPan: ZoomPan;
+            startMid: ZoomPan;
+        } | null =
             null;
         let panDrag: {
             pointerId: number;
@@ -203,6 +217,15 @@ export const ZoomWrapper = defineComponent({
             return getActualSizeScale(naturalWidth, imageWidth);
         };
 
+        function setLiveTransition(value: string): void {
+            if (panEl.value) {
+                panEl.value.style.transition = value;
+            }
+            if (scaleEl.value) {
+                scaleEl.value.style.transition = value;
+            }
+        }
+
         /** Live transforms — direct DOM writes, zero reactivity. */
         function applyLive(slice: ZoomSlice): void {
             live = slice;
@@ -214,7 +237,15 @@ export const ZoomWrapper = defineComponent({
             }
         }
 
-        function commit(scale: number, pan: ZoomPan): void {
+        function commit(
+            scale: number,
+            pan: ZoomPan,
+            mode: 'default' | 'settle' = 'default',
+        ): void {
+            transitionMode.value = mode;
+            setLiveTransition(
+                mode === 'settle' ? SETTLE_TRANSITION : ZOOM_TRANSITION,
+            );
             const cfg = settings.value;
             const max = maxScale();
             const clamped = clampScale(scale, max, cfg.infiniteZoom);
@@ -248,6 +279,8 @@ export const ZoomWrapper = defineComponent({
         }
 
         function reset(): void {
+            transitionMode.value = 'default';
+            setLiveTransition(ZOOM_TRANSITION);
             pointers.clear();
             pinch = null;
             panDrag = null;
@@ -333,7 +366,16 @@ export const ZoomWrapper = defineComponent({
                         maxScale(),
                         settings.value.infiniteZoom,
                     );
-                    applyLive({ ...live, scale, zoomed: scale > 1 });
+                    // Anchor the zoom to the pinch's starting midpoint
+                    // (2.x anchored to the first finger; the midpoint is
+                    // the same idea without finger-order dependence).
+                    const pan = getPointZoomPan(
+                        pinch.startMid,
+                        pinch.startPan,
+                        pinch.startScale,
+                        scale,
+                    );
+                    applyLive({ ...live, scale, pan, zoomed: scale > 1 });
                     return;
                 }
                 if (panDrag && event.pointerId === panDrag.pointerId) {
@@ -371,14 +413,29 @@ export const ZoomWrapper = defineComponent({
                     return;
                 }
                 pointers.delete(event.pointerId);
-                if (pinch && pointers.size < 2) {
+                const endedPinch = pinch;
+                if (endedPinch && pointers.size < 2) {
                     pinch = null;
-                    // Snap the pinch result into the committed range.
-                    commit(live.scale, live.pan);
+                    // Pinch release snaps into [1, actual size] regardless
+                    // of infiniteZoom (2.x pinch touchend rule — the
+                    // setting governs button zoom only). The pan is
+                    // recomputed through the same focal anchor so the snap
+                    // stays centered on the pinched point.
+                    const target = clampScale(live.scale, maxScale(), false);
+                    commit(
+                        target,
+                        getPointZoomPan(
+                            endedPinch.startMid,
+                            endedPinch.startPan,
+                            endedPinch.startScale,
+                            target,
+                        ),
+                        'settle',
+                    );
                 }
                 if (panDrag && event.pointerId === panDrag.pointerId) {
                     panDrag = null;
-                    commit(live.scale, live.pan);
+                    commit(live.scale, live.pan, 'settle');
                 }
                 if (pointers.size === 0) {
                     detachWindow?.();
@@ -405,21 +462,35 @@ export const ZoomWrapper = defineComponent({
                 x: event.clientX,
                 y: event.clientY,
             });
+            // Every insert gets its removal path: onUp/onCancel must be
+            // live for this pointer or the ledger leaks a phantom that
+            // corrupts the next gesture.
+            attachWindowListeners();
 
             if (pointers.size === 2 && event.pointerType === 'touch') {
                 const [a, b] = [...pointers.values()];
                 pinch = {
                     startDistance: getPointerDistance(a!, b!),
                     startScale: live.scale,
+                    startPan: live.pan,
+                    startMid: eventPoint({
+                        clientX: (a!.x + b!.x) / 2,
+                        clientY: (a!.y + b!.y) / 2,
+                    }),
                 };
                 panDrag = null;
                 ctx.gestureLock.claim('pinch');
-                attachWindowListeners();
+                setLiveTransition('none');
                 return;
             }
 
-            // Double-tap detection for touch (mouse uses dblclick).
-            if (event.pointerType === 'touch' && pointers.size === 1) {
+            // Double-tap detection for touch (mouse uses dblclick),
+            // gated to the image itself (2.x `hasClass('lg-image')`).
+            if (
+                event.pointerType === 'touch' &&
+                pointers.size === 1 &&
+                isImageTarget(event.target)
+            ) {
                 const now = Date.now();
                 if (now - lastTap < 300) {
                     lastTap = 0;
@@ -437,12 +508,15 @@ export const ZoomWrapper = defineComponent({
                     startY: event.clientY,
                     startPan: live.pan,
                 };
-                attachWindowListeners();
+                setLiveTransition('none');
             }
         }
 
         function onDoubleClick(event: MouseEvent): void {
             if (!enabled.value || !interactive.value || !props.isCurrent) {
+                return;
+            }
+            if (!isImageTarget(event.target)) {
                 return;
             }
             toggleActualSize(eventPoint(event));
@@ -529,7 +603,10 @@ export const ZoomWrapper = defineComponent({
                         position: 'absolute',
                         inset: '0',
                         transform: `translate3d(${zoom.value.pan.x}px, ${zoom.value.pan.y}px, 0)`,
-                        transition: ZOOM_TRANSITION,
+                        transition:
+                            transitionMode.value === 'settle'
+                                ? SETTLE_TRANSITION
+                                : ZOOM_TRANSITION,
                     },
                     onPointerdown: onPointerDown,
                     onDblclick: onDoubleClick,
@@ -544,7 +621,10 @@ export const ZoomWrapper = defineComponent({
                             inset: '0',
                             transform: `scale3d(${zoom.value.scale}, ${zoom.value.scale}, 1)`,
                             transformOrigin: 'center center',
-                            transition: ZOOM_TRANSITION,
+                            transition:
+                                transitionMode.value === 'settle'
+                                    ? SETTLE_TRANSITION
+                                    : ZOOM_TRANSITION,
                         },
                     },
                     slots.default?.(),

@@ -88,6 +88,16 @@ export const zoomSettings: ZoomSettings = {
     },
 };
 
+const TRANSITION = 'transform 0.3s cubic-bezier(0, 0, 0.25, 1)';
+/** 2.x post-gesture settle ease (`lg-zoom-drag-transition`). */
+const SETTLE_TRANSITION = 'transform 0.8s cubic-bezier(0, 0, 0.25, 1)';
+
+function isImageTarget(target: unknown): boolean {
+    return (
+        target instanceof HTMLElement && target.classList.contains('lg-image')
+    );
+}
+
 const ZOOM_IN_EVENT = 'lg-zoom-in';
 const ZOOM_OUT_EVENT = 'lg-zoom-out';
 const ACTUAL_SIZE_EVENT = 'lg-actual-size';
@@ -142,15 +152,24 @@ function ZoomWrapper({
 
     const [zoom, setZoom] = useState<ZoomSlice>(initialZoomSlice);
     const [interactive, setInteractive] = useState(false);
+    // 2.x transition choreography: default ease for button/double-tap
+    // zoom, none while a pinch/pan tracks the fingers, a longer settle
+    // ease for the release snap.
+    const [transitionMode, setTransitionMode] = useState<
+        'default' | 'settle'
+    >('default');
     const panRef = useRef<HTMLDivElement>(null);
     const scaleElRef = useRef<HTMLDivElement>(null);
     const liveRef = useRef<ZoomSlice>(initialZoomSlice);
     const settingsRef = useRef(settings);
     settingsRef.current = settings;
     const pointersRef = useRef(new Map<number, ZoomPan>());
-    const pinchRef = useRef<{ startDistance: number; startScale: number } | null>(
-        null,
-    );
+    const pinchRef = useRef<{
+        startDistance: number;
+        startScale: number;
+        startPan: ZoomPan;
+        startMid: ZoomPan;
+    } | null>(null);
     const panDragRef = useRef<{
         pointerId: number;
         startX: number;
@@ -178,6 +197,15 @@ function ZoomWrapper({
         return getActualSizeScale(naturalWidth, imageWidth);
     };
 
+    const setLiveTransition = (value: string) => {
+        if (panRef.current) {
+            panRef.current.style.transition = value;
+        }
+        if (scaleElRef.current) {
+            scaleElRef.current.style.transition = value;
+        }
+    };
+
     const applyLive = (slice: ZoomSlice) => {
         liveRef.current = slice;
         if (panRef.current) {
@@ -188,7 +216,13 @@ function ZoomWrapper({
         }
     };
 
-    const commit = (scale: number, pan: ZoomPan) => {
+    const commit = (
+        scale: number,
+        pan: ZoomPan,
+        mode: 'default' | 'settle' = 'default',
+    ) => {
+        setTransitionMode(mode);
+        setLiveTransition(mode === 'settle' ? SETTLE_TRANSITION : TRANSITION);
         const cfg = settingsRef.current;
         const max = maxScale();
         const clamped = clampScale(scale, max, cfg.infiniteZoom);
@@ -208,7 +242,11 @@ function ZoomWrapper({
             max,
             cfg.infiniteZoom,
         );
-        liveRef.current = next;
+        // Inline styles first — React's style diffing compares against
+        // its own last render, not the live writes, so a commit that
+        // matches the previous committed state would otherwise skip the
+        // DOM write and strand the gesture's last live transform.
+        applyLive(next);
         setZoom(next);
         internal.layout.setOuterClass('lg-zoomed', next.zoomed);
         // Core swipe stands down while zoomed (2.x `touchAction`).
@@ -216,6 +254,8 @@ function ZoomWrapper({
     };
 
     const reset = () => {
+        setTransitionMode('default');
+        setLiveTransition(TRANSITION);
         pointersRef.current.clear();
         pinchRef.current = null;
         panDragRef.current = null;
@@ -348,7 +388,21 @@ function ZoomWrapper({
                     maxScale(),
                     settingsRef.current.infiniteZoom,
                 );
-                applyLive({ ...liveRef.current, scale, zoomed: scale > 1 });
+                // Anchor the zoom to the pinch's starting midpoint (2.x
+                // anchored to the first finger; the midpoint is the same
+                // idea without the finger-order dependence).
+                const pan = getPointZoomPan(
+                    pinch.startMid,
+                    pinch.startPan,
+                    pinch.startScale,
+                    scale,
+                );
+                applyLive({
+                    ...liveRef.current,
+                    scale,
+                    pan,
+                    zoomed: scale > 1,
+                });
                 return;
             }
             const drag = panDragRef.current;
@@ -379,15 +433,34 @@ function ZoomWrapper({
                 return;
             }
             pointers.delete(event.pointerId);
-            if (pinchRef.current && pointers.size < 2) {
+            const pinch = pinchRef.current;
+            if (pinch && pointers.size < 2) {
                 pinchRef.current = null;
-                // Snap the pinch result into the committed range.
-                commit(liveRef.current.scale, liveRef.current.pan);
+                // Pinch release snaps into [1, actual size] regardless of
+                // infiniteZoom (2.x pinch touchend rule — the setting
+                // governs button zoom only). The pan is recomputed through
+                // the same focal anchor so the snap stays centered on the
+                // pinched point instead of drifting.
+                const target = clampScale(
+                    liveRef.current.scale,
+                    maxScale(),
+                    false,
+                );
+                commit(
+                    target,
+                    getPointZoomPan(
+                        pinch.startMid,
+                        pinch.startPan,
+                        pinch.startScale,
+                        target,
+                    ),
+                    'settle',
+                );
             }
             const drag = panDragRef.current;
             if (drag && event.pointerId === drag.pointerId) {
                 panDragRef.current = null;
-                commit(liveRef.current.scale, liveRef.current.pan);
+                commit(liveRef.current.scale, liveRef.current.pan, 'settle');
             }
             if (pointers.size === 0) {
                 detachRef.current?.();
@@ -413,21 +486,35 @@ function ZoomWrapper({
             x: event.clientX,
             y: event.clientY,
         });
+        // Every insert gets its removal path: onUp/onCancel must be live
+        // for this pointer or the ledger leaks a phantom that corrupts
+        // the next gesture.
+        attachWindowListeners();
 
         if (pointers.size === 2 && event.pointerType === 'touch') {
             const [a, b] = [...pointers.values()];
             pinchRef.current = {
                 startDistance: getPointerDistance(a!, b!),
                 startScale: liveRef.current.scale,
+                startPan: liveRef.current.pan,
+                startMid: eventPoint({
+                    clientX: (a!.x + b!.x) / 2,
+                    clientY: (a!.y + b!.y) / 2,
+                }),
             };
             panDragRef.current = null;
             internal.gestureSeam.claim('pinch');
-            attachWindowListeners();
+            setLiveTransition('none');
             return;
         }
 
-        // Double-tap detection for touch (mouse uses onDoubleClick).
-        if (event.pointerType === 'touch' && pointers.size === 1) {
+        // Double-tap detection for touch (mouse uses onDoubleClick),
+        // gated to the image itself (2.x `hasClass('lg-image')`).
+        if (
+            event.pointerType === 'touch' &&
+            pointers.size === 1 &&
+            isImageTarget(event.target)
+        ) {
             const now = Date.now();
             if (now - lastTapRef.current < 300) {
                 lastTapRef.current = 0;
@@ -446,12 +533,15 @@ function ZoomWrapper({
                 startPan: liveRef.current.pan,
                 moved: false,
             };
-            attachWindowListeners();
+            setLiveTransition('none');
         }
     };
 
     const onDoubleClick = (event: ReactMouseEvent) => {
         if (!enabled || !interactive || !isCurrent) {
+            return;
+        }
+        if (!isImageTarget(event.target)) {
             return;
         }
         toggleActualSize(eventPoint(event));
@@ -461,7 +551,8 @@ function ZoomWrapper({
         return <>{children}</>;
     }
 
-    const transition = 'transform 0.3s cubic-bezier(0, 0, 0.25, 1)';
+    const transition =
+        transitionMode === 'settle' ? SETTLE_TRANSITION : TRANSITION;
     return (
         <div
             ref={panRef}

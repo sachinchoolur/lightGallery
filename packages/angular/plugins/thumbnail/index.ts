@@ -95,6 +95,7 @@ type ThumbnailResolved = ThumbnailSettings & {
                 #stripOuter
                 class="lg-thumb-outer"
                 [class]="outerClasses()"
+                [style.touch-action]="'none'"
             >
                 <div
                     #track

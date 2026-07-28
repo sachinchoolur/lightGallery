@@ -239,6 +239,10 @@ function ThumbnailStrip(): ReactElement | null {
                 settings.enableThumbDrag && 'lg-grab',
                 dragging && 'lg-dragging lg-grabbing',
             )}
+            // The strip lives outside .lg-inner's touch-action:none, and
+            // its pointermove is passive — without this the browser owns
+            // the pan and cancels the drag (2.x prevented via touchmove).
+            style={{ touchAction: 'none' }}
         >
             <div
                 ref={trackRef}

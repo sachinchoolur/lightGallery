@@ -157,6 +157,10 @@ export class LgGesturesDirective implements OnDestroy {
         this.detachWindow?.();
         this.detachWindow = null;
         this.session = null;
+        // The ledger is session-scoped: once the window listeners detach
+        // nothing can remove records, so clear them here (a suspended
+        // second pointer would otherwise be stranded).
+        this.runtime.gestureSeam.pointers = [];
         if (session.isMouse && this.runtime.settings().enableDrag) {
             this.host.classList.remove('lg-grabbing');
             this.host.classList.add('lg-grab');
@@ -165,10 +169,14 @@ export class LgGesturesDirective implements OnDestroy {
 
     private readonly onWindowPointerMove = (event: PointerEvent): void => {
         const seam = this.runtime.gestureSeam;
-        seam.pointers = upsertPointer(
-            seam.pointers,
-            seamRecord(seam.pointers, event),
-        );
+        // Update only pointers that registered at pointerdown — hovering
+        // mouse moves have no down/up lifecycle and would be stranded.
+        if (seam.pointers.some((r) => r.id === event.pointerId)) {
+            seam.pointers = upsertPointer(
+                seam.pointers,
+                seamRecord(seam.pointers, event),
+            );
+        }
         const session = this.session;
         if (
             !session ||
