@@ -195,6 +195,7 @@
     ]
   },
   "devDependencies": {
+    "@lightgallery/headless": "workspace:*",
     "@commitlint/cli": "^7.1.2",
     "@commitlint/config-conventional": "^7.1.2",
     "@testing-library/dom": "^7.30.4",

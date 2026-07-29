@@ -1,43 +1,27 @@
 /**
- * Pinch scale rules — kept in lock-step with the framework packages'
- * `getPinchScale` (@lightgallery/headless).
+ * v2 zoom wiring around the shared @lightgallery/headless math. The math
+ * itself is canonically tested in packages/headless/src/zoom-math.test.ts —
+ * these cover the v2-side adapters and guard against the shared functions
+ * being reimplemented locally again.
  */
 import Zoom from '../src/plugins/zoom/lg-zoom';
 
 import '@testing-library/jest-dom';
 
-const pinchScale = Zoom.prototype.getPinchZoomScale as (
-    this: unknown,
-    startDist: number,
-    endDist: number,
-    initScale: number,
-) => number;
+// ts-jest compiles with the DOM-only root tsconfig (`types: []`) —
+// declare the node bits the ratchet needs instead of adding @types/node
+// to the whole program.
+declare const require: (id: string) => {
+    readFileSync(p: string, enc: string): string;
+    resolve(...parts: string[]): string;
+};
+declare const __dirname: string;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const fs = require('fs');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require('path');
 
-const pinch = (
-    startDist: number,
-    endDist: number,
-    initScale: number,
-    { infiniteZoom = true, actualSize = 2 } = {},
-) =>
-    pinchScale.call(
-        {
-            settings: { infiniteZoom },
-            getCurrentImageActualSizeScale: () => actualSize,
-        },
-        startDist,
-        endDist,
-        initScale,
-    );
-
-const focalPan = Zoom.prototype.getPinchFocalPan as (
-    this: unknown,
-    point: { x: number; y: number },
-    startPan: { x: number; y: number },
-    startScale: number,
-    scale: number,
-) => { x: number; y: number };
-
-const clampPan = Zoom.prototype.clampPinchPan as (
+const clampPinchPan = Zoom.prototype.clampPinchPan as (
     this: unknown,
     pan: { x: number; y: number },
     scale: number,
@@ -56,68 +40,56 @@ const clampThis = {
     containerRect: { width: 1000, height: 800 },
 };
 
-describe('pinch focal pan', () => {
-    it('keeps the anchor point stationary while scaling', () => {
-        // Zoom 1 → 2 anchored at (100, 50): the pan moves so the
-        // anchored image point stays under the fingers (same cases as
-        // the headless getPointZoomPan suite).
-        expect(focalPan({ x: 100, y: 50 }, { x: 0, y: 0 }, 1, 2)).toEqual({
-            x: -100,
-            y: -50,
-        });
-        // Zooming back to 1 returns to centre.
-        expect(focalPan({ x: 100, y: 50 }, { x: -100, y: -50 }, 2, 1)).toEqual({
-            x: 0,
-            y: 0,
-        });
-    });
+const actualSizeScale = Zoom.prototype.getActualSizeScale as (
+    this: unknown,
+    naturalWidth: number,
+    width: number,
+) => number;
 
-    it('projects from the gesture-start pan, not an accumulated one', () => {
-        expect(focalPan({ x: 0, y: 0 }, { x: 40, y: -20 }, 1, 3)).toEqual({
-            x: 120,
-            y: -60,
-        });
-    });
-});
-
-describe('pinch pan clamp', () => {
-    it('clamps into the exact bounds for the scale', () => {
+describe('pinch pan clamp adapter', () => {
+    it('measures the layout size and clamps via the shared bounds', () => {
         // 800x600 at x2 in a 1000x800 stage → bounds ±300 x, ±200 y.
-        expect(clampPan.call(clampThis, { x: 500, y: -500 }, 2)).toEqual({
+        expect(clampPinchPan.call(clampThis, { x: 500, y: -500 }, 2)).toEqual({
             x: 300,
             y: -200,
         });
-        expect(clampPan.call(clampThis, { x: 100, y: 50 }, 2)).toEqual({
+        expect(clampPinchPan.call(clampThis, { x: 100, y: 50 }, 2)).toEqual({
             x: 100,
             y: 50,
         });
-    });
-
-    it('pins to centre when the image fits the stage', () => {
-        expect(clampPan.call(clampThis, { x: 50, y: 40 }, 1)).toEqual({
+        expect(clampPinchPan.call(clampThis, { x: 50, y: 40 }, 1)).toEqual({
             x: 0,
             y: 0,
         });
     });
 });
 
-describe('pinch zoom scale', () => {
-    it('scales by the finger-distance ratio', () => {
-        expect(pinch(100, 200, 1)).toBe(2);
-        expect(pinch(100, 150, 2)).toBe(3);
+describe('actual-size scale adapter', () => {
+    it('delegates the shared math and keeps the 2.x upscale floor', () => {
+        expect(actualSizeScale.call(null, 1600, 800)).toBe(2);
+        expect(actualSizeScale.call(null, 1600, 0)).toBe(2);
+        // Documented deviation: rendered above natural never dips below 1.
+        expect(actualSizeScale.call(null, 400, 800)).toBe(1);
     });
+});
 
-    it('dips below 1 elastically, floored at 0.5', () => {
-        expect(pinch(100, 80, 1)).toBe(0.8);
-        expect(pinch(100, 10, 1)).toBe(0.5);
-    });
-
-    it('caps at the actual-size scale unless infiniteZoom', () => {
-        expect(pinch(100, 500, 1, { infiniteZoom: false })).toBe(2);
-        expect(pinch(100, 500, 1)).toBe(5);
-    });
-
-    it('keeps the current scale for a degenerate start distance', () => {
-        expect(pinch(0, 200, 1.5)).toBe(1.5);
+describe('headless math stays imported (resurrection ratchet)', () => {
+    it('keeps the deleted local reimplementations deleted', () => {
+        const src: string = fs.readFileSync(
+            path.resolve(__dirname, '../src/plugins/zoom/lg-zoom.ts'),
+            'utf8',
+        );
+        // Distinctive fragments of the math that moved to
+        // @lightgallery/headless — reappearing here means someone forked
+        // the shared behavior again.
+        for (const fragment of [
+            'endDist / startDist', // pinch distance-ratio scale
+            'speedX', // pan-release momentum speeds
+            '/ touchDuration + 1',
+            'Math.max(0.5,', // elastic pinch floor
+            '(point.x - startPan.x)', // focal projection
+        ]) {
+            expect(src).not.toContain(fragment);
+        }
     });
 });

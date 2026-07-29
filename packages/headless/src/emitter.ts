@@ -22,11 +22,11 @@ export function createEmitter<TMap extends object>(): TypedEmitter<TMap> {
     const listeners = new Map<string, Set<Listener>>();
     return {
         on(name: string, listener: (detail: never) => void) {
-            let set = listeners.get(name);
-            if (!set) {
-                set = new Set();
-                listeners.set(name, set);
-            }
+            // Const capture: narrowing must survive into the unsubscribe
+            // closure on every TS version source consumers typecheck
+            // with (pre-5.4 does not narrow a reassigned `let` there).
+            const set = listeners.get(name) ?? new Set<Listener>();
+            listeners.set(name, set);
             set.add(listener as Listener);
             return () => {
                 set.delete(listener as Listener);

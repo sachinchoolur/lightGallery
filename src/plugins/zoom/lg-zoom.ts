@@ -1,3 +1,13 @@
+import {
+    clampPan,
+    getActualSizeScale as getNaturalSizeScale,
+    getPanBounds,
+    getPanMomentum,
+    getPinchScale,
+    getPointerDistance,
+    getPointZoomPan,
+} from '@lightgallery/headless';
+
 import { ZoomSettings, zoomSettings } from './lg-zoom-settings';
 import { LgQuery, lgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
@@ -444,12 +454,13 @@ export default class Zoom {
     }
 
     getActualSizeScale(naturalWidth: number, width: number): number {
-        let _scale;
         let scale;
         if (naturalWidth >= width) {
-            _scale = naturalWidth / width;
-            scale = _scale || 2;
+            scale = getNaturalSizeScale(naturalWidth, width);
         } else {
+            // Documented deviation from the shared helper: 2.x never
+            // zooms an image rendered above its natural size below the
+            // fitted scale.
             scale = 1;
         }
         return scale;
@@ -694,38 +705,10 @@ export default class Zoom {
     }
 
     getTouchDistance(e: TouchEvent): number {
-        return Math.sqrt(
-            (e.touches[0].pageX - e.touches[1].pageX) *
-                (e.touches[0].pageX - e.touches[1].pageX) +
-                (e.touches[0].pageY - e.touches[1].pageY) *
-                    (e.touches[0].pageY - e.touches[1].pageY),
+        return getPointerDistance(
+            { x: e.touches[0].pageX, y: e.touches[0].pageY },
+            { x: e.touches[1].pageX, y: e.touches[1].pageY },
         );
-    }
-
-    /**
-     * Scale for one pinch frame: proportional to the finger-distance
-     * ratio, allowed to dip below 1 (floored at 0.5) so the touchend
-     * snap-back can feel elastic; capped at the actual-size scale unless
-     * `infiniteZoom`. Kept in lock-step with the framework packages'
-     * `getPinchScale` (@lightgallery/headless).
-     */
-    getPinchZoomScale(
-        startDist: number,
-        endDist: number,
-        initScale: number,
-    ): number {
-        if (startDist <= 0) {
-            return initScale;
-        }
-        let scale = (endDist / startDist) * initScale;
-        scale = Math.max(0.5, scale);
-        if (!this.settings.infiniteZoom) {
-            scale = Math.min(
-                scale,
-                Math.max(this.getCurrentImageActualSizeScale(), 1),
-            );
-        }
-        return scale;
     }
 
     /**
@@ -745,29 +728,9 @@ export default class Zoom {
     }
 
     /**
-     * Pan that keeps the focal point stationary while the scale changes —
-     * every pinch frame projects from the gesture-start state instead of
-     * accumulating increments. Kept in lock-step with the framework
-     * packages' `getPointZoomPan` (@lightgallery/headless).
-     */
-    getPinchFocalPan(
-        point: Coords,
-        startPan: Coords,
-        startScale: number,
-        scale: number,
-    ): Coords {
-        const ratio = scale / startScale;
-        return {
-            x: point.x - (point.x - startPan.x) * ratio,
-            y: point.y - (point.y - startPan.y) * ratio,
-        };
-    }
-
-    /**
-     * Clamp a pan into the exact bounds at the given scale, measured from
-     * the untransformed layout size (offset dimensions ignore transforms,
-     * so this stays correct mid-gesture). Kept in lock-step with the
-     * framework packages' `getPanBounds`/`clampPan`.
+     * Clamp a pan into the exact bounds at the given scale, measured
+     * from the untransformed layout size (offset dimensions ignore
+     * transforms, so this stays correct mid-gesture).
      */
     clampPinchPan(pan: Coords, scale: number): Coords {
         const $image = this.core
@@ -775,24 +738,23 @@ export default class Zoom {
             .find('.lg-image')
             .first()
             .get();
-        const maxX = Math.max(
-            0,
-            ($image.offsetWidth * scale - this.containerRect.width) / 2,
+        return clampPan(
+            pan,
+            getPanBounds(
+                $image.offsetWidth,
+                $image.offsetHeight,
+                this.containerRect.width,
+                this.containerRect.height,
+                scale,
+            ),
         );
-        const maxY = Math.max(
-            0,
-            ($image.offsetHeight * scale - this.containerRect.height) / 2,
-        );
-        return {
-            x: Math.min(Math.max(pan.x, -maxX), maxX),
-            y: Math.min(Math.max(pan.y, -maxY), maxY),
-        };
     }
 
     pinchZoom(): void {
         let startDist = 0;
         let pinchStarted = false;
         let initScale = 1;
+        let startMaxScale = 1;
         let startPan: Coords = { x: 0, y: 0 };
         let startMid: Coords = { x: 0, y: 0 };
 
@@ -823,6 +785,13 @@ export default class Zoom {
 
                 this.setPageCords(e);
                 this.resetImageTranslate(this.core.index);
+                // One snapshot serves the whole gesture: measured AFTER
+                // the translate reset restores the fitted layout size
+                // (actual-size mode renders at natural px), and the
+                // fitted size cannot change mid-pinch (the resize recalc
+                // stands down while touchAction is set). Live frames
+                // must not pay a layout read.
+                startMaxScale = this.getCurrentImageActualSizeScale();
 
                 this.core.touchAction = 'pinch';
 
@@ -845,10 +814,12 @@ export default class Zoom {
                     pinchStarted = true;
                 }
                 if (pinchStarted) {
-                    const _scale = this.getPinchZoomScale(
+                    const _scale = getPinchScale(
                         startDist,
                         endDist,
                         initScale,
+                        startMaxScale,
+                        this.settings.infiniteZoom,
                     );
                     // 4-decimal precision: at 2 decimals a slow pinch
                     // quantizes into visible ~16px steps on a 1600px
@@ -859,7 +830,7 @@ export default class Zoom {
                     // point under the fingers stays put on every frame —
                     // incremental zoomImage steps drift off the anchor
                     // and only land near it at release.
-                    const pan = this.getPinchFocalPan(
+                    const pan = getPointZoomPan(
                         startMid,
                         startPan,
                         initScale,
@@ -886,18 +857,19 @@ export default class Zoom {
                 if (this.scale <= 1) {
                     this.resetZoom();
                 } else {
-                    const actualSizeScale =
-                        this.getCurrentImageActualSizeScale();
                     // Snap into [1, actual size] and re-project the pan
                     // through the same focal anchor, clamped into the
                     // exact bounds for the landed scale — the released
-                    // image always covers the stage.
+                    // image always covers the stage. The gesture-start
+                    // snapshot keeps the cap identical to the live
+                    // frames'.
+                    const actualSizeScale = startMaxScale;
                     const targetScale = Math.min(
                         this.scale,
                         Math.max(actualSizeScale, 1),
                     );
                     const pan = this.clampPinchPan(
-                        this.getPinchFocalPan(
+                        getPointZoomPan(
                             startMid,
                             startPan,
                             initScale,
@@ -933,22 +905,16 @@ export default class Zoom {
         allowY: boolean,
         touchDuration: number,
     ): void {
-        let distanceXnew = endCoords.x - startCoords.x;
-        let distanceYnew = endCoords.y - startCoords.y;
-
-        let speedX = Math.abs(distanceXnew) / touchDuration + 1;
-        let speedY = Math.abs(distanceYnew) / touchDuration + 1;
-
-        if (speedX > 2) {
-            speedX += 1;
-        }
-
-        if (speedY > 2) {
-            speedY += 1;
-        }
-
-        distanceXnew = distanceXnew * speedX;
-        distanceYnew = distanceYnew * speedY;
+        // Below the momentum threshold the projection returns the raw
+        // delta on both axes (≤ 15px each), so the gate below skips the
+        // write exactly as 2.x always has.
+        const projected = getPanMomentum(
+            {
+                x: endCoords.x - startCoords.x,
+                y: endCoords.y - startCoords.y,
+            },
+            touchDuration,
+        );
 
         const _LGel = this.core
             .getSlideItem(this.core.index)
@@ -956,12 +922,12 @@ export default class Zoom {
             .first();
         const distance: Coords = {} as Coords;
 
-        distance.x = this.left + distanceXnew;
-        distance.y = this.top + distanceYnew;
+        distance.x = this.left + projected.x;
+        distance.y = this.top + projected.y;
 
         const possibleSwipeCords = this.getPossibleSwipeDragCords();
 
-        if (Math.abs(distanceXnew) > 15 || Math.abs(distanceYnew) > 15) {
+        if (Math.abs(projected.x) > 15 || Math.abs(projected.y) > 15) {
             if (allowY) {
                 if (
                     this.isBeyondPossibleTop(
