@@ -25,6 +25,8 @@ interface PossibleCords {
 }
 
 const ZOOM_TRANSITION_DURATION = 500;
+/** Gesture-release settle length — the 0.8s ease in lg-zoom.scss. */
+const PINCH_SETTLE_DURATION = 800;
 
 export default class Zoom {
     private core: LightGallery;
@@ -309,12 +311,14 @@ export default class Zoom {
         }, 10);
     }
 
-    setZoomImageSize(): void {
+    setZoomImageSize(delay: number = ZOOM_TRANSITION_DURATION): void {
         const $image = this.core
             .getSlideItem(this.core.index)
             .find('.lg-image')
             .first();
 
+        // The natural-px swap must wait out the running zoom animation
+        // (button bounce or gesture settle) — firing mid-flight cuts it.
         setTimeout(() => {
             const actualSizeScale = this.getCurrentImageActualSizeScale();
 
@@ -322,7 +326,7 @@ export default class Zoom {
                 $image.addClass('no-transition');
                 this.imageReset = true;
             }
-        }, ZOOM_TRANSITION_DURATION);
+        }, delay);
 
         setTimeout(() => {
             const actualSizeScale = this.getCurrentImageActualSizeScale();
@@ -356,7 +360,7 @@ export default class Zoom {
                     $image.addClass('reset-transition-y');
                 }
             }
-        }, ZOOM_TRANSITION_DURATION + 50);
+        }, delay + 50);
     }
 
     /**
@@ -698,11 +702,99 @@ export default class Zoom {
         );
     }
 
+    /**
+     * Scale for one pinch frame: proportional to the finger-distance
+     * ratio, allowed to dip below 1 (floored at 0.5) so the touchend
+     * snap-back can feel elastic; capped at the actual-size scale unless
+     * `infiniteZoom`. Kept in lock-step with the framework packages'
+     * `getPinchScale` (@lightgallery/headless).
+     */
+    getPinchZoomScale(
+        startDist: number,
+        endDist: number,
+        initScale: number,
+    ): number {
+        if (startDist <= 0) {
+            return initScale;
+        }
+        let scale = (endDist / startDist) * initScale;
+        scale = Math.max(0.5, scale);
+        if (!this.settings.infiniteZoom) {
+            scale = Math.min(
+                scale,
+                Math.max(this.getCurrentImageActualSizeScale(), 1),
+            );
+        }
+        return scale;
+    }
+
+    /**
+     * Pinch midpoint relative to the stage centre — the focal anchor the
+     * whole gesture projects through.
+     */
+    private getPinchMidPoint(e: TouchEvent): Coords {
+        const centerX = this.containerRect.width / 2 + this.containerRect.left;
+        const centerY =
+            this.containerRect.height / 2 +
+            this.containerRect.top +
+            this.scrollTop;
+        return {
+            x: (e.touches[0].pageX + e.touches[1].pageX) / 2 - centerX,
+            y: (e.touches[0].pageY + e.touches[1].pageY) / 2 - centerY,
+        };
+    }
+
+    /**
+     * Pan that keeps the focal point stationary while the scale changes —
+     * every pinch frame projects from the gesture-start state instead of
+     * accumulating increments. Kept in lock-step with the framework
+     * packages' `getPointZoomPan` (@lightgallery/headless).
+     */
+    getPinchFocalPan(
+        point: Coords,
+        startPan: Coords,
+        startScale: number,
+        scale: number,
+    ): Coords {
+        const ratio = scale / startScale;
+        return {
+            x: point.x - (point.x - startPan.x) * ratio,
+            y: point.y - (point.y - startPan.y) * ratio,
+        };
+    }
+
+    /**
+     * Clamp a pan into the exact bounds at the given scale, measured from
+     * the untransformed layout size (offset dimensions ignore transforms,
+     * so this stays correct mid-gesture). Kept in lock-step with the
+     * framework packages' `getPanBounds`/`clampPan`.
+     */
+    clampPinchPan(pan: Coords, scale: number): Coords {
+        const $image = this.core
+            .getSlideItem(this.core.index)
+            .find('.lg-image')
+            .first()
+            .get();
+        const maxX = Math.max(
+            0,
+            ($image.offsetWidth * scale - this.containerRect.width) / 2,
+        );
+        const maxY = Math.max(
+            0,
+            ($image.offsetHeight * scale - this.containerRect.height) / 2,
+        );
+        return {
+            x: Math.min(Math.max(pan.x, -maxX), maxX),
+            y: Math.min(Math.max(pan.y, -maxY), maxY),
+        };
+    }
+
     pinchZoom(): void {
         let startDist = 0;
         let pinchStarted = false;
         let initScale = 1;
-        let prevScale = 0;
+        let startPan: Coords = { x: 0, y: 0 };
+        let startMid: Coords = { x: 0, y: 0 };
 
         let $item = this.core.getSlideItem(this.core.index);
 
@@ -716,8 +808,16 @@ export default class Zoom {
                 if (this.core.outer.hasClass('lg-first-slide-loading')) {
                     return;
                 }
+                this.setZoomEssentials();
                 initScale = this.scale || 1;
-                this.core.outer.removeClass(
+                startPan = { x: this.left, y: this.top };
+                startMid = this.getPinchMidPoint(e);
+                // Same choreography as zoomDrag/zoomSwipe: the
+                // lg-zoom-dragging kill rule (0ms !important) makes the
+                // transforms track the fingers 1:1 while both classes are
+                // on; releasing drops only lg-zoom-dragging so the
+                // lg-zoom-drag-transition settle ease animates the snap.
+                this.core.outer.addClass(
                     'lg-zoom-drag-transition lg-zoom-dragging',
                 );
 
@@ -745,17 +845,29 @@ export default class Zoom {
                     pinchStarted = true;
                 }
                 if (pinchStarted) {
-                    prevScale = this.scale;
-                    const _scale = Math.max(1, initScale + -distance * 0.02);
-                    this.scale =
-                        Math.round((_scale + Number.EPSILON) * 100) / 100;
-                    const diff = this.scale - prevScale;
-                    this.zoomImage(
-                        this.scale,
-                        Math.round((diff + Number.EPSILON) * 100) / 100,
-                        false,
-                        false,
+                    const _scale = this.getPinchZoomScale(
+                        startDist,
+                        endDist,
+                        initScale,
                     );
+                    // 4-decimal precision: at 2 decimals a slow pinch
+                    // quantizes into visible ~16px steps on a 1600px
+                    // image.
+                    const scale =
+                        Math.round((_scale + Number.EPSILON) * 10000) / 10000;
+                    // Project from the gesture-start state so the image
+                    // point under the fingers stays put on every frame —
+                    // incremental zoomImage steps drift off the anchor
+                    // and only land near it at release.
+                    const pan = this.getPinchFocalPan(
+                        startMid,
+                        startPan,
+                        initScale,
+                        scale,
+                    );
+                    this.left = pan.x;
+                    this.top = pan.y;
+                    this.setZoomStyles({ x: pan.x, y: pan.y, scale });
                 }
             }
         });
@@ -768,18 +880,42 @@ export default class Zoom {
             ) {
                 pinchStarted = false;
                 startDist = 0;
+                // Keep lg-zoom-drag-transition: the release snap settles
+                // with the 0.8s ease instead of tracking-speed cuts.
+                this.core.outer.removeClass('lg-zoom-dragging');
                 if (this.scale <= 1) {
                     this.resetZoom();
                 } else {
                     const actualSizeScale =
                         this.getCurrentImageActualSizeScale();
-
-                    if (this.scale >= actualSizeScale) {
-                        let scaleDiff = actualSizeScale - this.scale;
-                        if (scaleDiff === 0) {
-                            scaleDiff = 0.01;
-                        }
-                        this.zoomImage(actualSizeScale, scaleDiff, false, true);
+                    // Snap into [1, actual size] and re-project the pan
+                    // through the same focal anchor, clamped into the
+                    // exact bounds for the landed scale — the released
+                    // image always covers the stage.
+                    const targetScale = Math.min(
+                        this.scale,
+                        Math.max(actualSizeScale, 1),
+                    );
+                    const pan = this.clampPinchPan(
+                        this.getPinchFocalPan(
+                            startMid,
+                            startPan,
+                            initScale,
+                            targetScale,
+                        ),
+                        targetScale,
+                    );
+                    this.left = pan.x;
+                    this.top = pan.y;
+                    this.setZoomStyles({
+                        x: pan.x,
+                        y: pan.y,
+                        scale: targetScale,
+                    });
+                    // Buttons re-derive their anchor from left/top.
+                    this.positionChanged = true;
+                    if (targetScale >= actualSizeScale) {
+                        this.setZoomImageSize(PINCH_SETTLE_DURATION);
                     }
                     this.manageActualPixelClassNames();
 

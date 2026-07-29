@@ -31,6 +31,25 @@
                 }
             }
         }
+        // Gesture releases settle the image scale on the same monotonic
+        // ease as the wrap pan. The default bouncy bezier below overshoots
+        // by ~19% of the delta — fine for one-step button zooms, a violent
+        // excursion when an infinite-zoom pinch releases far above actual
+        // size. Both :not() guards keep this high-specificity rule from
+        // outranking the two !important kill switches it must lose to:
+        // lg-zoom-dragging (fingers still down) and no-transition (the
+        // actual-size natural-px swap, which must never animate).
+        &.lg-zoom-drag-transition:not(.lg-zoom-dragging) {
+            .lg-item.lg-complete.lg-zoomable {
+                .lg-image:not(.no-transition),
+                .lg-dummy-img:not(.no-transition) {
+                    @include transitionCustom(
+                        transform 0.8s cubic-bezier(0, 0, 0.25, 1) 0s,
+                        opacity 0.15s !important
+                    );
+                }
+            }
+        }
     }
 
     .lg-item.lg-complete.lg-zoomable {
