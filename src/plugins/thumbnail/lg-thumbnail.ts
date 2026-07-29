@@ -1,4 +1,10 @@
 import {
+    clampThumbTranslate,
+    getActiveThumbTranslate,
+    getThumbTotalWidth,
+} from '@lightgallery/headless';
+
+import {
     ThumbnailsSettings,
     thumbnailsSettings,
 } from './lg-thumbnail-settings';
@@ -46,9 +52,11 @@ export default class Thumbnail {
             ...this.core.settings,
         };
         this.thumbOuterWidth = 0;
-        this.thumbTotalWidth =
-            this.core.galleryItems.length *
-            (this.settings.thumbWidth + this.settings.thumbMargin);
+        this.thumbTotalWidth = getThumbTotalWidth(
+            this.core.galleryItems.length,
+            this.settings.thumbWidth,
+            this.settings.thumbMargin,
+        );
 
         // Thumbnail animation value
         this.translateX = 0;
@@ -268,9 +276,11 @@ export default class Thumbnail {
         // Remove transitions
         this.$thumbOuter.addClass('lg-rebuilding-thumbnails');
         setTimeout(() => {
-            this.thumbTotalWidth =
-                this.core.galleryItems.length *
-                (this.settings.thumbWidth + this.settings.thumbMargin);
+            this.thumbTotalWidth = getThumbTotalWidth(
+                this.core.galleryItems.length,
+                this.settings.thumbWidth,
+                this.settings.thumbMargin,
+            );
             this.$lgThumb.css('width', this.thumbTotalWidth + 'px');
             this.$lgThumb.empty();
             this.setThumbItemHtml(
@@ -293,14 +303,11 @@ export default class Thumbnail {
     }
 
     getPossibleTransformX(left: number): number {
-        if (left > this.thumbTotalWidth - this.thumbOuterWidth) {
-            left = this.thumbTotalWidth - this.thumbOuterWidth;
-        }
-
-        if (left < 0) {
-            left = 0;
-        }
-        return left;
+        return clampThumbTranslate(
+            left,
+            this.thumbTotalWidth,
+            this.thumbOuterWidth,
+        );
     }
 
     animateThumb(index: number): void {
@@ -309,30 +316,14 @@ export default class Thumbnail {
             this.core.settings.speed + 'ms',
         );
         if (this.settings.animateThumb) {
-            let position = 0;
-            switch (this.settings.currentPagerPosition) {
-                case 'left':
-                    position = 0;
-                    break;
-                case 'middle':
-                    position =
-                        this.thumbOuterWidth / 2 - this.settings.thumbWidth / 2;
-                    break;
-                case 'right':
-                    position = this.thumbOuterWidth - this.settings.thumbWidth;
-            }
-            this.translateX =
-                (this.settings.thumbWidth + this.settings.thumbMargin) * index -
-                1 -
-                position;
-            if (this.translateX > this.thumbTotalWidth - this.thumbOuterWidth) {
-                this.translateX = this.thumbTotalWidth - this.thumbOuterWidth;
-            }
-
-            if (this.translateX < 0) {
-                this.translateX = 0;
-            }
-
+            this.translateX = getActiveThumbTranslate(
+                index,
+                this.settings.thumbWidth,
+                this.settings.thumbMargin,
+                this.thumbOuterWidth,
+                this.thumbTotalWidth,
+                this.settings.currentPagerPosition,
+            );
             this.setTranslate(this.translateX);
         }
     }

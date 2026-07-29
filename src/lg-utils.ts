@@ -1,3 +1,10 @@
+import {
+    fitImageSize,
+    getOriginTransform,
+    getVideoInfo,
+    parseImageSize,
+} from '@lightgallery/headless';
+
 import { $LG, lgQuery } from './lgQuery';
 import { VideoSource } from './plugins/video/types';
 import { VideoInfo } from './types';
@@ -285,45 +292,18 @@ const utils = {
         defaultLgSize?: string,
     ): ImageSize | undefined {
         const LGel = $LG(el);
-        let lgSize = LGel.attr('data-lg-size') || defaultLgSize;
+        const lgSize = LGel.attr('data-lg-size') || defaultLgSize;
 
-        if (!lgSize) {
+        const parsed = parseImageSize(lgSize, window.innerWidth);
+        if (!parsed) {
             return;
         }
 
-        const isResponsiveSizes = lgSize.split(',');
-        // if at-least two viewport sizes are available
-        if (isResponsiveSizes[1]) {
-            const wWidth = window.innerWidth;
-            for (let i = 0; i < isResponsiveSizes.length; i++) {
-                const size = isResponsiveSizes[i];
-                const responsiveWidth = parseInt(size.split('-')[2], 10);
-                if (responsiveWidth > wWidth) {
-                    lgSize = size;
-                    break;
-                }
-
-                // take last item as last option
-                if (i === isResponsiveSizes.length - 1) {
-                    lgSize = size;
-                }
-            }
-        }
-
-        const size = lgSize.split('-');
-
-        const width = parseInt(size[0], 10);
-        const height = parseInt(size[1], 10);
-
-        const cWidth = container.width();
-        const cHeight = container.height() - spacing;
-
-        const maxWidth = Math.min(cWidth, width);
-        const maxHeight = Math.min(cHeight, height);
-
-        const ratio = Math.min(maxWidth / width, maxHeight / height);
-
-        return { width: width * ratio, height: height * ratio };
+        return fitImageSize(
+            parsed,
+            container.width(),
+            container.height() - spacing,
+        );
     },
 
     /**
@@ -347,45 +327,40 @@ const utils = {
         }
 
         const containerRect = container.get().getBoundingClientRect();
-
-        const wWidth = containerRect.width;
-
-        // using innerWidth to include mobile safari bottom bar
-        const wHeight = container.height() - (top + bottom);
-
-        const elWidth = LGel.width();
-        const elHeight = LGel.height();
-
         const elStyle = LGel.style();
-        let x =
-            (wWidth - elWidth) / 2 -
-            LGel.offset().left +
-            (parseFloat(elStyle.paddingLeft) || 0) +
-            (parseFloat(elStyle.borderLeft) || 0) +
-            $LG(window).scrollLeft() +
-            containerRect.left;
-        let y =
-            (wHeight - elHeight) / 2 -
-            LGel.offset().top +
-            (parseFloat(elStyle.paddingTop) || 0) +
-            (parseFloat(elStyle.borderTop) || 0) +
-            $LG(window).scrollTop() +
-            top;
 
-        const scX = elWidth / imageSize.width;
-        const scY = elHeight / imageSize.height;
+        // Offsets are document-based; fold paddings, borders and scroll
+        // back out so the trigger rect lands in the viewport space the
+        // shared math expects.
+        const triggerRect = {
+            left:
+                LGel.offset().left -
+                (parseFloat(elStyle.paddingLeft) || 0) -
+                (parseFloat(elStyle.borderLeft) || 0) -
+                $LG(window).scrollLeft(),
+            top:
+                LGel.offset().top -
+                (parseFloat(elStyle.paddingTop) || 0) -
+                (parseFloat(elStyle.borderTop) || 0) -
+                $LG(window).scrollTop(),
+            width: LGel.width(),
+            height: LGel.height(),
+        };
 
-        const transform =
-            'translate3d(' +
-            (x *= -1) +
-            'px, ' +
-            (y *= -1) +
-            'px, 0) scale3d(' +
-            scX +
-            ', ' +
-            scY +
-            ', 1)';
-        return transform;
+        return getOriginTransform({
+            triggerRect,
+            containerRect: {
+                left: containerRect.left,
+                top: containerRect.top,
+                width: containerRect.width,
+                // Element height, not rect height — includes the mobile
+                // safari bottom bar handling this always had.
+                height: container.height(),
+            },
+            top,
+            bottom,
+            imageSize,
+        });
     },
 
     getIframeMarkup(
@@ -613,29 +588,10 @@ const utils = {
             }
         }
 
-        const youtube = src.match(
-            /\/\/(?:www\.)?youtu(?:\.be|be\.com|be-nocookie\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)([\&|?][\S]*)*/i,
-        );
-        const vimeo = src.match(
-            /\/\/(?:www\.)?(?:player\.)?vimeo.com\/(?:video\/)?([0-9a-z\-_]+)(.*)?/i,
-        );
-        const wistia = src.match(
-            /https?:\/\/(.+)?(wistia\.com|wi\.st)\/(medias|embed)\/([0-9a-z\-_]+)(.*)/,
-        );
-
-        if (youtube) {
-            return {
-                youtube,
-            };
-        } else if (vimeo) {
-            return {
-                vimeo,
-            };
-        } else if (wistia) {
-            return {
-                wistia,
-            };
-        }
+        // Documented deviation from the shared helper: 2.x ignores the
+        // html5 flag once a src is present — a URL matching no provider
+        // is not a video, video payload or not.
+        return getVideoInfo(src, false);
     },
 };
 

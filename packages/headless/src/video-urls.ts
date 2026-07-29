@@ -14,7 +14,17 @@ export interface VideoInfo {
     html5?: boolean;
 }
 
-export type PlayerParams = Record<string, string | number | boolean> | false;
+// `true` is accepted for 2.x-contract compatibility and means the same
+// as an empty params object.
+export type PlayerParams =
+    | Record<string, string | number | boolean>
+    | boolean;
+
+function toParamsObject(
+    params: PlayerParams,
+): Record<string, string | number | boolean> {
+    return typeof params === 'object' && params ? params : {};
+}
 
 /** Detect the video provider for a src URL (2.x `utils.isVideo`). */
 export function getVideoInfo(
@@ -98,7 +108,7 @@ export function getYouTubeEmbedUrl(
         autoplay: 0,
         mute: 1,
         enablejsapi: 1,
-        ...(playerParamsSettings || {}),
+        ...toParamsObject(playerParamsSettings),
         ...slideUrlParams,
     };
     const base = isYouTubeNoCookie(srcUrl)
@@ -122,7 +132,7 @@ export function getVimeoEmbedUrl(
     const defaultPlayerParams = {
         autoplay: 0,
         muted: 1,
-        ...(playerParamsSettings || {}),
+        ...toParamsObject(playerParamsSettings),
     };
     let defaultParams = param(defaultPlayerParams);
 
@@ -152,7 +162,8 @@ export function getWistiaEmbedUrl(
     if (!videoInfo.wistia) {
         return undefined;
     }
-    const params = playerParamsSettings ? param(playerParamsSettings) : '';
+    const paramsObject = toParamsObject(playerParamsSettings);
+    const params = Object.keys(paramsObject).length ? param(paramsObject) : '';
     return `//fast.wistia.net/embed/iframe/${videoInfo.wistia[4]}${
         params ? `?${params}` : ''
     }`;

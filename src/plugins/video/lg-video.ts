@@ -33,14 +33,14 @@ import {
     CustomEventSlideItemLoad,
     VideoInfo,
 } from '../../types';
+import {
+    getVimeoEmbedUrl,
+    getWistiaEmbedUrl,
+    getYouTubeEmbedUrl,
+} from '@lightgallery/headless';
+
 import { lGEvents } from '../../lg-events';
 import { VideoSource } from './types';
-import {
-    getVimeoURLParams,
-    getYouTubeParams,
-    isYouTubeNoCookie,
-    param,
-} from './lg-video-utils';
 
 declare let Vimeo: any;
 declare let videojs: any;
@@ -236,36 +236,27 @@ export default class Video {
         if (videoInfo.youtube) {
             const videoId = 'lg-youtube' + index;
 
-            const youTubeParams = getYouTubeParams(
+            const embedUrl = getYouTubeEmbedUrl(
                 videoInfo,
                 this.settings.youTubePlayerParams,
+                src,
             );
 
-            const isYouTubeNoCookieURL = isYouTubeNoCookie(src);
-
-            const youtubeURL = isYouTubeNoCookieURL
-                ? '//www.youtube-nocookie.com/'
-                : '//www.youtube.com/';
-
-            video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="${youtubeURL}embed/${
-                videoInfo.youtube[1] + youTubeParams
-            }" ${commonIframeProps}></iframe>`;
+            video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="${embedUrl}" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.vimeo) {
             const videoId = 'lg-vimeo' + index;
-            const playerParams = getVimeoURLParams(
-                this.settings.vimeoPlayerParams,
+            const embedUrl = getVimeoEmbedUrl(
                 videoInfo,
+                this.settings.vimeoPlayerParams,
             );
-            video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-vimeo ${addClass}" ${videoTitle} src="//player.vimeo.com/video/${
-                videoInfo.vimeo[1] + playerParams
-            }" ${commonIframeProps}></iframe>`;
+            video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-vimeo ${addClass}" ${videoTitle} src="${embedUrl}" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.wistia) {
             const wistiaId = 'lg-wistia' + index;
-            let playerParams = param(this.settings.wistiaPlayerParams);
-            playerParams = playerParams ? '?' + playerParams : '';
-            video = `<iframe allow="autoplay" id="${wistiaId}" src="//fast.wistia.net/embed/iframe/${
-                videoInfo.wistia[4] + playerParams
-            }" ${videoTitle} class="wistia_embed lg-video-object lg-wistia ${addClass}" name="wistia_embed" ${commonIframeProps}></iframe>`;
+            const embedUrl = getWistiaEmbedUrl(
+                videoInfo,
+                this.settings.wistiaPlayerParams,
+            );
+            video = `<iframe allow="autoplay" id="${wistiaId}" src="${embedUrl}" ${videoTitle} class="wistia_embed lg-video-object lg-wistia ${addClass}" name="wistia_embed" ${commonIframeProps}></iframe>`;
         } else if (videoInfo.html5) {
             let html5VideoMarkup = '';
             for (let i = 0; i < html5Video.source.length; i++) {

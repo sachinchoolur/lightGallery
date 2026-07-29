@@ -1,4 +1,4 @@
-import { PlayerParams } from './lg-video-utils';
+import { PlayerParams } from '@lightgallery/headless';
 
 export interface VideoSettings {
     /**

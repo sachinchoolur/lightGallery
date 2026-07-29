@@ -109,6 +109,27 @@ describe('getVimeoEmbedUrl', () => {
         expect(url).toContain('h=e675e9a5c1');
         expect(url).toContain('/video/112836958?');
     });
+
+    it('keeps slide URL params (and fragments) after the defaults', () => {
+        // The 2.x root-suite edge cases, verbatim: URL params append after
+        // the defaults (duplicate keys included — the player resolves
+        // precedence), and #t fragments ride along untouched.
+        const at = (src: string) => getVideoInfo(src, false)!;
+        const base = '//player.vimeo.com/video/81400335';
+        expect(getVimeoEmbedUrl(at('//vimeo.com/81400335?controls=0#t=1m2s'), false))
+            .toBe(`${base}?autoplay=0&muted=1&controls=0#t=1m2s`);
+        expect(getVimeoEmbedUrl(at('//vimeo.com/81400335?muted=0'), false))
+            .toBe(`${base}?autoplay=0&muted=1&muted=0`);
+        expect(getVimeoEmbedUrl(at('//vimeo.com/81400335#t=1m2s'), false))
+            .toBe(`${base}?autoplay=0&muted=1#t=1m2s`);
+        expect(getVimeoEmbedUrl(at('//vimeo.com/81400335#t=1m2s'), { controls: 0 }))
+            .toBe(`${base}?autoplay=0&muted=1&controls=0#t=1m2s`);
+        const priv = '//player.vimeo.com/video/674425314';
+        expect(getVimeoEmbedUrl(at('//vimeo.com/674425314/a39356545b?controls=0#t=1m2s'), false))
+            .toBe(`${priv}?h=a39356545b&autoplay=0&muted=1&controls=0#t=1m2s`);
+        expect(getVimeoEmbedUrl(at('//vimeo.com/674425314/a39356545b?muted=0'), false))
+            .toBe(`${priv}?h=a39356545b&autoplay=0&muted=1&muted=0`);
+    });
 });
 
 describe('getWistiaEmbedUrl', () => {
