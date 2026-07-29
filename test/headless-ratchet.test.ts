@@ -42,6 +42,12 @@ const FORBIDDEN: Record<string, string[]> = {
         'thumbWidth + this.settings.thumbMargin', // strip total width
         'thumbOuterWidth / 2', // pager-position math
     ],
+    'src/lightgallery.ts': [
+        '* 15) / 100', // horizontal drag gutter
+        '* 10) / 100',
+        'innerWidth * 2', // vertical drag scale
+        'distanceAbs > this.settings.swipeThreshold', // release verdict
+    ],
 };
 
 describe('headless math stays imported', () => {

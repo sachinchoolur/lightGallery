@@ -137,8 +137,7 @@ export const ZoomToolbar = defineComponent({
                     ? h('button', {
                           type: 'button',
                           class: 'lg-actual-size lg-icon',
-                          'aria-label':
-                              cfg.zoomPluginStrings.viewActualSize,
+                          'aria-label': cfg.zoomPluginStrings.viewActualSize,
                           onClick: () => emitBus(ACTUAL_SIZE_EVENT),
                       })
                     : null,
@@ -163,9 +162,7 @@ export const ZoomWrapper = defineComponent({
             () => ctx.settings.value as unknown as ZoomResolved,
         );
         const enabled = computed(
-            () =>
-                settings.value.zoom &&
-                getSlideType(props.item) === 'image',
+            () => settings.value.zoom && getSlideType(props.item) === 'image',
         );
 
         const panEl = ref<HTMLElement | null>(null);
@@ -182,8 +179,7 @@ export const ZoomWrapper = defineComponent({
             startScale: number;
             startPan: ZoomPan;
             startMid: ZoomPan;
-        } | null =
-            null;
+        } | null = null;
         let panDrag: {
             pointerId: number;
             startX: number;
@@ -203,8 +199,7 @@ export const ZoomWrapper = defineComponent({
             containerHeight: number;
         } {
             const img = scaleEl.value?.querySelector('img');
-            const slide =
-                panEl.value?.closest<HTMLElement>('.lg-item');
+            const slide = panEl.value?.closest<HTMLElement>('.lg-item');
             return {
                 imageWidth: img?.offsetWidth ?? 0,
                 imageHeight: img?.offsetHeight ?? 0,
@@ -251,12 +246,8 @@ export const ZoomWrapper = defineComponent({
             const cfg = settings.value;
             const max = maxScale();
             const clamped = clampScale(scale, max, cfg.infiniteZoom);
-            const {
-                imageWidth,
-                imageHeight,
-                containerWidth,
-                containerHeight,
-            } = measure();
+            const { imageWidth, imageHeight, containerWidth, containerHeight } =
+                measure();
             const bounds = getPanBounds(
                 imageWidth,
                 imageHeight,
@@ -322,12 +313,7 @@ export const ZoomWrapper = defineComponent({
             const target = clampScale(maxScale(), maxScale(), true);
             commit(
                 target,
-                getPointZoomPan(
-                    point,
-                    previous.pan,
-                    previous.scale,
-                    target,
-                ),
+                getPointZoomPan(point, previous.pan, previous.scale, target),
             );
         }
 
@@ -335,8 +321,7 @@ export const ZoomWrapper = defineComponent({
             clientX: number;
             clientY: number;
         }): ZoomPan {
-            const slide =
-                panEl.value?.closest<HTMLElement>('.lg-item');
+            const slide = panEl.value?.closest<HTMLElement>('.lg-item');
             const rect = slide?.getBoundingClientRect();
             if (!rect) {
                 return { x: 0, y: 0 };
@@ -548,9 +533,7 @@ export const ZoomWrapper = defineComponent({
         // Zoom interactions arm `enableZoomAfter` ms after the slide loads.
         watch(
             [
-                computed(() =>
-                    ctx.store.loadedSlides.value.has(props.index),
-                ),
+                computed(() => ctx.store.loadedSlides.value.has(props.index)),
                 enabled,
             ],
             ([loaded, isEnabled]) => {
@@ -659,6 +642,10 @@ export const ZoomWrapper = defineComponent({
 
 function setupZoom(ctx: LgPluginContext): void {
     watchEffect(() => {
+        // Decorative in v3 (transitions are inline on the zoom wrappers;
+        // 2.x CSS targeted .lg-img-wrap/.lg-image) — kept as a public
+        // CSS hook so consumer stylesheets can target zoom-enabled
+        // galleries.
         ctx.layout.setOuterClass(
             'lg-use-transition-for-zoom',
             !!(ctx.settings.value as { zoom?: boolean }).zoom,

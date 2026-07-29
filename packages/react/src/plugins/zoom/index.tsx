@@ -22,16 +22,9 @@ import {
     type ZoomSlice,
 } from '@lightgallery/headless';
 
-import {
-    useGalleryInternal,
-    useGalleryState,
-} from '../../context';
+import { useGalleryInternal, useGalleryState } from '../../context';
 import { usePluginSettings } from '../runtime';
-import type {
-    LgPlugin,
-    PluginContext,
-    SlideWrapperProps,
-} from '../types';
+import type { LgPlugin, PluginContext, SlideWrapperProps } from '../types';
 
 /**
  * Zoom plugin (2.x `lg-zoom`): toolbar buttons, double-click/tap point
@@ -156,9 +149,9 @@ function ZoomWrapper({
     // 2.x transition choreography: default ease for button/double-tap
     // zoom, none while a pinch/pan tracks the fingers, a longer settle
     // ease for the release snap.
-    const [transitionMode, setTransitionMode] = useState<
-        'default' | 'settle'
-    >('default');
+    const [transitionMode, setTransitionMode] = useState<'default' | 'settle'>(
+        'default',
+    );
     const panRef = useRef<HTMLDivElement>(null);
     const scaleElRef = useRef<HTMLDivElement>(null);
     const liveRef = useRef<ZoomSlice>(initialZoomSlice);
@@ -410,8 +403,12 @@ function ZoomWrapper({
             const drag = panDragRef.current;
             if (drag && event.pointerId === drag.pointerId) {
                 drag.moved = true;
-                const { imageWidth, imageHeight, containerWidth, containerHeight } =
-                    measure();
+                const {
+                    imageWidth,
+                    imageHeight,
+                    containerWidth,
+                    containerHeight,
+                } = measure();
                 const bounds = getPanBounds(
                     imageWidth,
                     imageHeight,
@@ -608,6 +605,10 @@ function useZoomPlugin(ctx: PluginContext): void {
     const enabled = !!(ctx.settings as { zoom?: boolean }).zoom;
     const { layout } = ctx;
     useEffect(() => {
+        // Decorative in v3 (transitions are inline on the zoom wrappers;
+        // 2.x CSS targeted .lg-img-wrap/.lg-image) — kept as a public
+        // CSS hook so consumer stylesheets can target zoom-enabled
+        // galleries.
         layout.setOuterClass('lg-use-transition-for-zoom', enabled);
         return () => layout.setOuterClass('lg-use-transition-for-zoom', false);
     }, [enabled, layout]);

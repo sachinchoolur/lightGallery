@@ -112,32 +112,27 @@ type ZoomResolved = ZoomSettings & Record<string, unknown>;
     selector: 'lg-zoom-toolbar',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        @if (settings().zoom) {
-            @if (settings().showZoomInOutIcons) {
-                <button
-                    type="button"
-                    [attr.aria-label]="settings().zoomPluginStrings.zoomIn"
-                    [class]="settings().actualSizeIcons.zoomIn + ' lg-icon'"
-                    (click)="emit(ZOOM_IN)"
-                ></button>
-                <button
-                    type="button"
-                    [attr.aria-label]="settings().zoomPluginStrings.zoomOut"
-                    [class]="settings().actualSizeIcons.zoomOut + ' lg-icon'"
-                    (click)="emit(ZOOM_OUT)"
-                ></button>
-            }
-            @if (settings().actualSize) {
-                <button
-                    type="button"
-                    [attr.aria-label]="
-                        settings().zoomPluginStrings.viewActualSize
-                    "
-                    class="lg-actual-size lg-icon"
-                    (click)="emit(ACTUAL)"
-                ></button>
-            }
-        }
+        @if (settings().zoom) { @if (settings().showZoomInOutIcons) {
+        <button
+            type="button"
+            [attr.aria-label]="settings().zoomPluginStrings.zoomIn"
+            [class]="settings().actualSizeIcons.zoomIn + ' lg-icon'"
+            (click)="emit(ZOOM_IN)"
+        ></button>
+        <button
+            type="button"
+            [attr.aria-label]="settings().zoomPluginStrings.zoomOut"
+            [class]="settings().actualSizeIcons.zoomOut + ' lg-icon'"
+            (click)="emit(ZOOM_OUT)"
+        ></button>
+        } @if (settings().actualSize) {
+        <button
+            type="button"
+            [attr.aria-label]="settings().zoomPluginStrings.viewActualSize"
+            class="lg-actual-size lg-icon"
+            (click)="emit(ACTUAL)"
+        ></button>
+        } }
     `,
 })
 export class LgZoomToolbarComponent {
@@ -160,30 +155,30 @@ export class LgZoomToolbarComponent {
     imports: [NgTemplateOutlet],
     template: `
         @if (enabled()) {
+        <div
+            #panEl
+            class="lg-zoom-pan"
+            [style.position]="'absolute'"
+            [style.inset]="'0'"
+            [style.transform]="panTransform()"
+            [style.transition]="transition()"
+            (pointerdown)="onPointerDown($event)"
+            (dblclick)="onDoubleClick($event)"
+        >
             <div
-                #panEl
-                class="lg-zoom-pan"
+                #scaleEl
+                class="lg-zoom-scale"
                 [style.position]="'absolute'"
                 [style.inset]="'0'"
-                [style.transform]="panTransform()"
+                [style.transform]="scaleTransform()"
+                [style.transform-origin]="'center center'"
                 [style.transition]="transition()"
-                (pointerdown)="onPointerDown($event)"
-                (dblclick)="onDoubleClick($event)"
             >
-                <div
-                    #scaleEl
-                    class="lg-zoom-scale"
-                    [style.position]="'absolute'"
-                    [style.inset]="'0'"
-                    [style.transform]="scaleTransform()"
-                    [style.transform-origin]="'center center'"
-                    [style.transition]="transition()"
-                >
-                    <ng-container [ngTemplateOutlet]="content()" />
-                </div>
+                <ng-container [ngTemplateOutlet]="content()" />
             </div>
+        </div>
         } @else {
-            <ng-container [ngTemplateOutlet]="content()" />
+        <ng-container [ngTemplateOutlet]="content()" />
         }
     `,
 })
@@ -198,17 +193,13 @@ export class LgZoomWrapperComponent {
         () => this.ctx.settings() as unknown as ZoomResolved,
     );
     protected readonly enabled = computed(
-        () =>
-            this.settings().zoom && getSlideType(this.item()) === 'image',
+        () => this.settings().zoom && getSlideType(this.item()) === 'image',
     );
 
     private readonly panEl = viewChild<ElementRef<HTMLDivElement>>('panEl');
-    private readonly scaleEl =
-        viewChild<ElementRef<HTMLDivElement>>('scaleEl');
+    private readonly scaleEl = viewChild<ElementRef<HTMLDivElement>>('scaleEl');
 
-    private readonly transitionMode = signal<'default' | 'settle'>(
-        'default',
-    );
+    private readonly transitionMode = signal<'default' | 'settle'>('default');
     protected readonly transition = computed(() =>
         this.transitionMode() === 'settle'
             ? SETTLE_TRANSITION
@@ -218,8 +209,7 @@ export class LgZoomWrapperComponent {
     /** Committed zoom slice; live pinch/pan bypasses it (direct writes). */
     private readonly zoom = signal<ZoomSlice>(initialZoomSlice);
     protected readonly panTransform = computed(
-        () =>
-            `translate3d(${this.zoom().pan.x}px, ${this.zoom().pan.y}px, 0)`,
+        () => `translate3d(${this.zoom().pan.x}px, ${this.zoom().pan.y}px, 0)`,
     );
     protected readonly scaleTransform = computed(
         () => `scale3d(${this.zoom().scale}, ${this.zoom().scale}, 1)`,
@@ -233,8 +223,7 @@ export class LgZoomWrapperComponent {
         startScale: number;
         startPan: ZoomPan;
         startMid: ZoomPan;
-    } | null =
-        null;
+    } | null = null;
     private panDrag: {
         pointerId: number;
         startX: number;
@@ -434,10 +423,7 @@ export class LgZoomWrapperComponent {
         );
     }
 
-    private eventPoint(event: {
-        clientX: number;
-        clientY: number;
-    }): ZoomPan {
+    private eventPoint(event: { clientX: number; clientY: number }): ZoomPan {
         const slide =
             this.panEl()?.nativeElement.closest<HTMLElement>('.lg-item');
         const rect = slide?.getBoundingClientRect();
@@ -651,7 +637,12 @@ export class LgZoomWrapperComponent {
     }
 }
 
-/** `lg-use-transition-for-zoom` while registered (React `usePlugin` twin). */
+/**
+ * `lg-use-transition-for-zoom` while registered (React `usePlugin`
+ * twin). Decorative in v3 (transitions are inline on the zoom wrappers;
+ * 2.x CSS targeted .lg-img-wrap/.lg-image) — kept as a public CSS hook
+ * so consumer stylesheets can target zoom-enabled galleries.
+ */
 @Injectable()
 export class LgZoomInitService {
     constructor() {
@@ -660,10 +651,7 @@ export class LgZoomInitService {
             const enabled = !!(ctx.settings() as { zoom?: boolean }).zoom;
             ctx.layout.setOuterClass('lg-use-transition-for-zoom', enabled);
             onCleanup(() =>
-                ctx.layout.setOuterClass(
-                    'lg-use-transition-for-zoom',
-                    false,
-                ),
+                ctx.layout.setOuterClass('lg-use-transition-for-zoom', false),
             );
         });
     }

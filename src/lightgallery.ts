@@ -1,4 +1,12 @@
 import {
+    getHorizontalDragTransforms,
+    getSwipeAxis,
+    getSwipeReleaseVerdict,
+    getVerticalDragEffects,
+    shouldCloseOnVerticalDrag,
+} from '@lightgallery/headless';
+
+import {
     AfterAppendSlideEventDetail,
     AfterAppendSubHtmlDetail,
     BeforeSlideDetail,
@@ -54,6 +62,9 @@ export class LightGallery {
 
     // Direction of swipe/drag - {horizontal, vertical}
     public swipeDirection?: 'horizontal' | 'vertical';
+
+    // Gesture start timestamp, for the release flick velocity
+    private swipeStartTime = 0;
 
     // Timeout function for hiding controls;
     public hideBarTimeout: any;
@@ -1748,21 +1759,13 @@ export class LightGallery {
     touchMove(startCoords: Coords, endCoords: Coords, e?: TouchEvent): void {
         const distanceX = endCoords.pageX - startCoords.pageX;
         const distanceY = endCoords.pageY - startCoords.pageY;
-        let allowSwipe = false;
 
-        if (this.swipeDirection) {
-            allowSwipe = true;
-        } else {
-            if (Math.abs(distanceX) > 15) {
-                this.swipeDirection = 'horizontal';
-                allowSwipe = true;
-            } else if (Math.abs(distanceY) > 15) {
-                this.swipeDirection = 'vertical';
-                allowSwipe = true;
-            }
-        }
-
-        if (!allowSwipe) {
+        this.swipeDirection = getSwipeAxis(
+            distanceX,
+            distanceY,
+            this.swipeDirection,
+        );
+        if (!this.swipeDirection) {
             return;
         }
 
@@ -1773,35 +1776,33 @@ export class LightGallery {
             // reset opacity and transition duration
             this.outer.addClass('lg-dragging');
 
-            // move current slide
-            this.setTranslate($currentSlide, distanceX, 0);
-
-            // move next and prev slide with current slide
-            const width = $currentSlide.get().offsetWidth;
-            const slideWidthAmount = (width * 15) / 100;
-            const gutter = slideWidthAmount - Math.abs((distanceX * 10) / 100);
-            this.setTranslate(
-                this.outer.find('.lg-prev-slide').first(),
-                -width + distanceX - gutter,
-                0,
+            // move current slide and its neighbors, keeping the gutter
+            const transforms = getHorizontalDragTransforms(
+                distanceX,
+                $currentSlide.get().offsetWidth,
             );
-
-            this.setTranslate(
-                this.outer.find('.lg-next-slide').first(),
-                width + distanceX + gutter,
-                0,
-            );
+            $currentSlide.css('transform', transforms.current);
+            this.outer
+                .find('.lg-prev-slide')
+                .first()
+                .css('transform', transforms.prev);
+            this.outer
+                .find('.lg-next-slide')
+                .first()
+                .css('transform', transforms.next);
         } else if (this.swipeDirection === 'vertical') {
             if (this.settings.swipeToClose) {
                 e?.preventDefault();
                 this.$container.addClass('lg-dragging-vertical');
 
-                const opacity = 1 - Math.abs(distanceY) / window.innerHeight;
-                this.$backdrop.css('opacity', opacity);
-
-                const scale = 1 - Math.abs(distanceY) / (window.innerWidth * 2);
-                this.setTranslate($currentSlide, 0, distanceY, scale, scale);
-                if (Math.abs(distanceY) > 100) {
+                const effects = getVerticalDragEffects(
+                    distanceY,
+                    window.innerWidth,
+                    window.innerHeight,
+                );
+                this.$backdrop.css('opacity', effects.backdropOpacity);
+                $currentSlide.css('transform', effects.transform);
+                if (effects.hideUi) {
                     this.outer
                         .addClass('lg-hide-items')
                         .removeClass('lg-components-open');
@@ -1811,8 +1812,6 @@ export class LightGallery {
     }
 
     touchEnd(endCoords: Coords, startCoords: Coords, event: TouchEvent): void {
-        let distance;
-
         // keep slide animation for any mode while dragg/swipe
         if (this.settings.mode !== 'lg-slide') {
             this.outer.addClass('lg-slide');
@@ -1828,29 +1827,29 @@ export class LightGallery {
             let triggerClick = true;
 
             if (this.swipeDirection === 'horizontal') {
-                distance = endCoords.pageX - startCoords.pageX;
-                const distanceAbs = Math.abs(
-                    endCoords.pageX - startCoords.pageX,
-                );
-                if (
-                    distance < 0 &&
-                    distanceAbs > this.settings.swipeThreshold
-                ) {
+                // Navigate past swipeThreshold, or on a quick flick —
+                // shared release verdict, all runtimes.
+                const verdict = getSwipeReleaseVerdict({
+                    deltaX: endCoords.pageX - startCoords.pageX,
+                    durationMs: Date.now() - this.swipeStartTime,
+                    threshold: this.settings.swipeThreshold,
+                });
+                if (verdict === 'next') {
                     this.goToNextSlide(true);
                     triggerClick = false;
-                } else if (
-                    distance > 0 &&
-                    distanceAbs > this.settings.swipeThreshold
-                ) {
+                } else if (verdict === 'prev') {
                     this.goToPrevSlide(true);
                     triggerClick = false;
                 }
             } else if (this.swipeDirection === 'vertical') {
-                distance = Math.abs(endCoords.pageY - startCoords.pageY);
                 if (
-                    this.settings.closable &&
-                    this.settings.swipeToClose &&
-                    distance > 100
+                    shouldCloseOnVerticalDrag(
+                        endCoords.pageY - startCoords.pageY,
+                        {
+                            closable: this.settings.closable,
+                            swipeToClose: this.settings.swipeToClose,
+                        },
+                    )
                 ) {
                     this.closeGallery();
                     return;
@@ -1905,6 +1904,7 @@ export class LightGallery {
                     isSwiping = true;
                     this.touchAction = 'swipe';
                     this.manageSwipeClass();
+                    this.swipeStartTime = Date.now();
                     startCoords = {
                         pageX: e.touches[0].pageX,
                         pageY: e.touches[0].pageY,
@@ -1961,6 +1961,7 @@ export class LightGallery {
                     if (!this.outer.hasClass('lg-zoomed') && !this.lgBusy) {
                         e.preventDefault();
                         this.manageSwipeClass();
+                        this.swipeStartTime = Date.now();
                         startCoords = {
                             pageX: e.pageX,
                             pageY: e.pageY,
