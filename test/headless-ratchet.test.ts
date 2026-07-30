@@ -25,6 +25,7 @@ const FORBIDDEN: Record<string, string[]> = {
         '/ touchDuration + 1',
         'Math.max(0.5,', // elastic pinch floor
         '(point.x - startPan.x)', // focal projection
+        '}, ZOOM_TRANSITION_DURATION);', // fixed-duration release settle
     ],
     'src/lg-utils.ts': [
         'be-nocookie', // provider regexes
@@ -47,6 +48,8 @@ const FORBIDDEN: Record<string, string[]> = {
         '* 10) / 100',
         'innerWidth * 2', // vertical drag scale
         'distanceAbs > this.settings.swipeThreshold', // release verdict
+        "swipeDirection = 'horizontal'", // local axis tracking
+        'lg-dragging lg-hide-items', // instant CSS release settle
     ],
 };
 

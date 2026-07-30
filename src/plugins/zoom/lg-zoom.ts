@@ -867,11 +867,36 @@ export default class Zoom {
             ) {
                 pinchStarted = false;
                 startDist = 0;
-                // Keep lg-zoom-drag-transition: the release snap settles
-                // with the 0.8s ease instead of tracking-speed cuts.
                 if (this.scale <= 1) {
-                    this.core.outer.removeClass('lg-zoom-dragging');
-                    this.resetZoom();
+                    // The under-fit squeeze springs back to fit exactly
+                    // like the over-fit snap. lg-zoomed drops now (swipe
+                    // availability and chrome state flip at release);
+                    // the drag classes stay so per-frame styles apply
+                    // uncut, and resetZoom's style strip at settle lands
+                    // as a visual no-op (state is at scale 1 / pan 0).
+                    this.core.outer.removeClass('lg-zoomed');
+                    this.stopZoomSpring();
+                    this.cancelZoomSpring = runSprings(
+                        [
+                            { from: this.scale, velocity: 0, target: 1 },
+                            { from: this.left, velocity: 0, target: 0 },
+                            { from: this.top, velocity: 0, target: 0 },
+                        ],
+                        ([scale, x, y]) => {
+                            this.left = x!;
+                            this.top = y!;
+                            this.setZoomStyles({
+                                x: x!,
+                                y: y!,
+                                scale: scale!,
+                            });
+                        },
+                        () => {
+                            this.cancelZoomSpring = undefined;
+                            this.core.outer.removeClass('lg-zoom-dragging');
+                            this.resetZoom();
+                        },
+                    );
                 } else {
                     // Snap into [1, actual size] and re-project the pan
                     // through the same focal anchor, clamped into the
