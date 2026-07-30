@@ -1863,6 +1863,64 @@ export class LightGallery {
     }
 
     /**
+     * Carry the release velocity into a gesture navigation: navigate
+     * immediately (events, counter and busy-lock on time; fromTouch
+     * classes flip underneath — inline transforms keep the visuals),
+     * then spring the same drag geometry until the arriving slide lands
+     * at rest. Falls back to a snap-back when navigation declines
+     * (busy, or an edge without loop — the 2.x end animation plays).
+     */
+    private springSlideNavigation(
+        verdict: 'next' | 'prev',
+        deltaX: number,
+        velocityX: number,
+    ): boolean {
+        const $current = this.getSlideItem(this.index);
+        const $prev = this.outer.find('.lg-prev-slide').first();
+        const $next = this.outer.find('.lg-next-slide').first();
+        const width = $current.get().offsetWidth;
+        if (!width) {
+            return false;
+        }
+
+        const prevIndex = this.index;
+        if (verdict === 'next') {
+            this.goToNextSlide(true);
+        } else {
+            this.goToPrevSlide(true);
+        }
+        if (this.index === prevIndex) {
+            return this.springSlidesBack(deltaX, velocityX);
+        }
+
+        // The x at which the arriving neighbor sits exactly at 0 in the
+        // drag geometry (gutter included): width + x + (0.15w - 0.1|x|).
+        const target = (verdict === 'next' ? -1 : 1) * ((width * 115) / 110);
+        this.stopSlideSpring();
+        this.cancelSlideSpring = runSprings(
+            [{ from: deltaX, velocity: velocityX, target }],
+            ([x]) => {
+                const transforms = getHorizontalDragTransforms(x!, width);
+                $current.css('transform', transforms.current);
+                $prev.css('transform', transforms.prev);
+                $next.css('transform', transforms.next);
+            },
+            () => {
+                this.cancelSlideSpring = undefined;
+                this.outer.removeClass('lg-dragging');
+                this.outer.find('.lg-item').removeAttr('style');
+                // The gesture forced lg-slide geometry; restore the
+                // configured mode for the next button navigation (the
+                // timer-based restore skips while lg-dragging is on).
+                if (this.settings.mode !== 'lg-slide') {
+                    this.outer.removeClass('lg-slide');
+                }
+            },
+        );
+        return true;
+    }
+
+    /**
      * Spring a non-closing vertical drag back to rest — slide transform
      * and backdrop opacity together, seeded with the release velocity.
      */
@@ -1929,12 +1987,13 @@ export class LightGallery {
                     flickVelocity: this.settings.flickVelocity,
                     viewportWidth: this.outer.get().offsetWidth,
                 });
-                if (verdict === 'next') {
-                    this.goToNextSlide(true);
+                if (verdict === 'next' || verdict === 'prev') {
                     triggerClick = false;
-                } else if (verdict === 'prev') {
-                    this.goToPrevSlide(true);
-                    triggerClick = false;
+                    springing = this.springSlideNavigation(
+                        verdict,
+                        endCoords.pageX - startCoords.pageX,
+                        releaseVelocity.x,
+                    );
                 } else {
                     // Snap back on a spring seeded with the release
                     // velocity; lg-dragging stays on (transitions down)
