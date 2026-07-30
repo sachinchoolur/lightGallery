@@ -8,6 +8,8 @@ import {
     getHorizontalDragTransforms,
     getSwipeAxis,
     getSwipeReleaseVerdict,
+    getWindowedVelocity,
+    pushVelocitySample,
     getVerticalDragEffects,
     removePointer,
     resolveSwipeTarget,
@@ -15,6 +17,7 @@ import {
     upsertPointer,
     type SlideDirection,
     type SwipeAxis,
+    type VelocitySample,
 } from '@lightgallery/headless';
 
 import {
@@ -40,7 +43,7 @@ interface DragSession {
     isMouse: boolean;
     startX: number;
     startY: number;
-    startTime: number;
+    samples: VelocitySample[];
     lastX: number;
     lastY: number;
     axis: SwipeAxis | undefined;
@@ -166,6 +169,11 @@ export function useGalleryGestures({
         }
         session.lastX = event.clientX;
         session.lastY = event.clientY;
+        session.samples = pushVelocitySample(session.samples, {
+            x: event.clientX,
+            y: event.clientY,
+            t: performance.now(),
+        });
         const deltaX = event.clientX - session.startX;
         const deltaY = event.clientY - session.startY;
         session.axis = getSwipeAxis(deltaX, deltaY, session.axis);
@@ -247,8 +255,12 @@ export function useGalleryGestures({
             restoreDragVisuals(session);
             const verdict = getSwipeReleaseVerdict({
                 deltaX,
-                durationMs: performance.now() - session.startTime,
+                velocityX: getWindowedVelocity(
+                    session.samples,
+                    performance.now(),
+                ).x,
                 threshold: currentSettings.swipeThreshold,
+                flickVelocity: currentSettings.flickVelocity,
             });
             const target = resolveSwipeTarget(
                 verdict,
@@ -348,7 +360,13 @@ export function useGalleryGestures({
             isMouse,
             startX: event.clientX,
             startY: event.clientY,
-            startTime: performance.now(),
+            samples: [
+                {
+                    x: event.clientX,
+                    y: event.clientY,
+                    t: performance.now(),
+                },
+            ],
             lastX: event.clientX,
             lastY: event.clientY,
             axis: undefined,

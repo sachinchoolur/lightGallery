@@ -331,6 +331,7 @@ describe('wave-1 features', () => {
         // bound instead of overshooting.
         firePointer(panEl, 'pointerdown', { x: 300, y: 100, pointerId: 62 });
         vi.advanceTimersByTime(20);
+        firePointer(window, 'pointermove', { x: 200, y: 100, pointerId: 62 });
         firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 62 });
         expect(panEl.style.transform).toBe('translate3d(-600px, 0px, 0)');
     });

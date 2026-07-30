@@ -3,7 +3,10 @@ import {
     getSwipeAxis,
     getSwipeReleaseVerdict,
     getVerticalDragEffects,
+    getWindowedVelocity,
+    pushVelocitySample,
     shouldCloseOnVerticalDrag,
+    type VelocitySample,
 } from '@lightgallery/headless';
 
 import {
@@ -63,8 +66,8 @@ export class LightGallery {
     // Direction of swipe/drag - {horizontal, vertical}
     public swipeDirection?: 'horizontal' | 'vertical';
 
-    // Gesture start timestamp, for the release flick velocity
-    private swipeStartTime = 0;
+    // Rolling gesture samples, for the windowed release velocity
+    private swipeSamples: VelocitySample[] = [];
 
     // Timeout function for hiding controls;
     public hideBarTimeout: any;
@@ -1760,6 +1763,12 @@ export class LightGallery {
         const distanceX = endCoords.pageX - startCoords.pageX;
         const distanceY = endCoords.pageY - startCoords.pageY;
 
+        this.swipeSamples = pushVelocitySample(this.swipeSamples, {
+            x: endCoords.pageX,
+            y: endCoords.pageY,
+            t: Date.now(),
+        });
+
         this.swipeDirection = getSwipeAxis(
             distanceX,
             distanceY,
@@ -1831,8 +1840,12 @@ export class LightGallery {
                 // shared release verdict, all runtimes.
                 const verdict = getSwipeReleaseVerdict({
                     deltaX: endCoords.pageX - startCoords.pageX,
-                    durationMs: Date.now() - this.swipeStartTime,
+                    velocityX: getWindowedVelocity(
+                        this.swipeSamples,
+                        Date.now(),
+                    ).x,
                     threshold: this.settings.swipeThreshold,
+                    flickVelocity: this.settings.flickVelocity,
                 });
                 if (verdict === 'next') {
                     this.goToNextSlide(true);
@@ -1904,7 +1917,13 @@ export class LightGallery {
                     isSwiping = true;
                     this.touchAction = 'swipe';
                     this.manageSwipeClass();
-                    this.swipeStartTime = Date.now();
+                    this.swipeSamples = [
+                        {
+                            x: e.touches[0].pageX,
+                            y: e.touches[0].pageY,
+                            t: Date.now(),
+                        },
+                    ];
                     startCoords = {
                         pageX: e.touches[0].pageX,
                         pageY: e.touches[0].pageY,
@@ -1961,7 +1980,9 @@ export class LightGallery {
                     if (!this.outer.hasClass('lg-zoomed') && !this.lgBusy) {
                         e.preventDefault();
                         this.manageSwipeClass();
-                        this.swipeStartTime = Date.now();
+                        this.swipeSamples = [
+                            { x: e.pageX, y: e.pageY, t: Date.now() },
+                        ];
                         startCoords = {
                             pageX: e.pageX,
                             pageY: e.pageY,

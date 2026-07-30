@@ -71,7 +71,7 @@ describe('plugin runtime', () => {
                     return () => {
                         calls.push(`${name}:unmount`);
                     };
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
+                     
                 }, []);
             },
         });
@@ -504,6 +504,7 @@ describe('zoom plugin', () => {
         // bound instead of overshooting.
         firePointer(pan, 'pointerdown', { x: 300, y: 100, pointerId: 52 });
         tick(20);
+        firePointer(window, 'pointermove', { x: 200, y: 100, pointerId: 52 });
         firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 52 });
         expect(pan.style.transform).toBe('translate3d(-600px, 0px, 0)');
     });

@@ -24,8 +24,11 @@ import {
     getPinchScale,
     getPointerDistance,
     getPointZoomPan,
+    getWindowedVelocity,
+    pushVelocitySample,
     getSlideType,
     initialZoomSlice,
+    type VelocitySample,
     type ZoomPan,
     type ZoomSlice,
 } from '@lightgallery/headless';
@@ -228,7 +231,7 @@ export class LgZoomWrapperComponent {
         pointerId: number;
         startX: number;
         startY: number;
-        startTime: number;
+        samples: VelocitySample[];
         startPan: ZoomPan;
     } | null = null;
     private detachWindow: (() => void) | null = null;
@@ -477,6 +480,11 @@ export class LgZoomWrapperComponent {
             }
             const drag = this.panDrag;
             if (drag && event.pointerId === drag.pointerId) {
+                drag.samples = pushVelocitySample(drag.samples, {
+                    x: event.clientX,
+                    y: event.clientY,
+                    t: Date.now(),
+                });
                 const {
                     imageWidth,
                     imageHeight,
@@ -543,7 +551,7 @@ export class LgZoomWrapperComponent {
                             x: event.clientX - drag.startX,
                             y: event.clientY - drag.startY,
                         },
-                        Date.now() - drag.startTime,
+                        getWindowedVelocity(drag.samples, Date.now()),
                     );
                     pan = {
                         x: drag.startPan.x + projected.x,
@@ -619,7 +627,9 @@ export class LgZoomWrapperComponent {
                 pointerId: event.pointerId,
                 startX: event.clientX,
                 startY: event.clientY,
-                startTime: Date.now(),
+                samples: [
+                    { x: event.clientX, y: event.clientY, t: Date.now() },
+                ],
                 startPan: this.live.pan,
             };
             this.setLiveTransition('none');

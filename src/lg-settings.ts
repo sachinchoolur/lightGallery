@@ -456,6 +456,12 @@ export interface LightGalleryCoreSettings {
     swipeThreshold: number;
 
     /**
+     * Release velocity (px/ms, measured over the gesture's final ~100ms)
+     * at which a short swipe still changes slides — a flick.
+     */
+    flickVelocity: number;
+
+    /**
      * Enables swipe support for touch devices
      */
     enableSwipe: boolean;
@@ -604,6 +610,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     counter: true,
     appendCounterTo: '.lg-toolbar',
     swipeThreshold: 50,
+    flickVelocity: 0.5,
     enableSwipe: true,
     enableDrag: true,
     dynamic: false,

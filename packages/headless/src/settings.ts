@@ -197,6 +197,12 @@ export interface CoreSettings {
     /** Minimum swipe distance in px to change slides. */
     swipeThreshold: number;
 
+    /**
+     * Release velocity (px/ms, measured over the gesture's final
+     * ~100ms) at which a short swipe still changes slides — a flick.
+     */
+    flickVelocity: number;
+
     /** Enable touch swipe. */
     enableSwipe: boolean;
 
@@ -267,6 +273,7 @@ export const coreSettingsDefaults: CoreSettings = {
     download: true,
     counter: true,
     swipeThreshold: 50,
+    flickVelocity: 0.5,
     enableSwipe: true,
     enableDrag: true,
     isMobile: undefined,

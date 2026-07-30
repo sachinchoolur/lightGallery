@@ -21,8 +21,11 @@ import {
     getPinchScale,
     getPointerDistance,
     getPointZoomPan,
+    getWindowedVelocity,
+    pushVelocitySample,
     getSlideType,
     initialZoomSlice,
+    type VelocitySample,
     type ZoomPan,
     type ZoomSlice,
 } from '@lightgallery/headless';
@@ -184,7 +187,7 @@ export const ZoomWrapper = defineComponent({
             pointerId: number;
             startX: number;
             startY: number;
-            startTime: number;
+            samples: VelocitySample[];
             startPan: ZoomPan;
         } | null = null;
         let detachWindow: (() => void) | null = null;
@@ -366,6 +369,11 @@ export const ZoomWrapper = defineComponent({
                     return;
                 }
                 if (panDrag && event.pointerId === panDrag.pointerId) {
+                    panDrag.samples = pushVelocitySample(panDrag.samples, {
+                        x: event.clientX,
+                        y: event.clientY,
+                        t: Date.now(),
+                    });
                     const {
                         imageWidth,
                         imageHeight,
@@ -435,7 +443,7 @@ export const ZoomWrapper = defineComponent({
                                 x: event.clientX - drag.startX,
                                 y: event.clientY - drag.startY,
                             },
-                            Date.now() - drag.startTime,
+                            getWindowedVelocity(drag.samples, Date.now()),
                         );
                         pan = {
                             x: drag.startPan.x + projected.x,
@@ -513,7 +521,9 @@ export const ZoomWrapper = defineComponent({
                     pointerId: event.pointerId,
                     startX: event.clientX,
                     startY: event.clientY,
-                    startTime: Date.now(),
+                    samples: [
+                        { x: event.clientX, y: event.clientY, t: Date.now() },
+                    ],
                     startPan: live.pan,
                 };
                 setLiveTransition('none');

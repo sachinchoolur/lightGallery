@@ -99,6 +99,14 @@ export {
 } from './thumb-math';
 
 export {
+    VELOCITY_WINDOW_MS,
+    getWindowedVelocity,
+    pushVelocitySample,
+    type Velocity,
+    type VelocitySample,
+} from './velocity';
+
+export {
     applyZoom,
     flipHorizontal,
     flipVertical,

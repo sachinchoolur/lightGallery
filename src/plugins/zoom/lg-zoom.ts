@@ -6,6 +6,10 @@ import {
     getPinchScale,
     getPointerDistance,
     getPointZoomPan,
+    getWindowedVelocity,
+    pushVelocitySample,
+    type Velocity,
+    type VelocitySample,
 } from '@lightgallery/headless';
 
 import { ZoomSettings, zoomSettings } from './lg-zoom-settings';
@@ -903,7 +907,7 @@ export default class Zoom {
         endCoords: Coords,
         allowX: boolean,
         allowY: boolean,
-        touchDuration: number,
+        velocity: Velocity,
     ): void {
         // Below the momentum threshold the projection returns the raw
         // delta on both axes (≤ 15px each), so the gate below skips the
@@ -913,7 +917,7 @@ export default class Zoom {
                 x: endCoords.x - startCoords.x,
                 y: endCoords.y - startCoords.y,
             },
-            touchDuration,
+            velocity,
         );
 
         const _LGel = this.core
@@ -1098,8 +1102,7 @@ export default class Zoom {
         // Allow Y direction drag
         let allowY = false;
 
-        let startTime: Date = new Date();
-        let endTime: Date = new Date();
+        let samples: VelocitySample[] = [];
         let possibleSwipeCords: PossibleCords;
 
         let _LGel: lgQuery;
@@ -1119,7 +1122,8 @@ export default class Zoom {
                 this.core.outer.hasClass('lg-zoomed')
             ) {
                 e.preventDefault();
-                startTime = new Date();
+                const startPoint = this.getSwipeCords(e);
+                samples = [{ x: startPoint.x, y: startPoint.y, t: Date.now() }];
                 this.core.touchAction = 'zoomSwipe';
                 _LGel = this.core
                     .getSlideItem(this.core.index)
@@ -1154,6 +1158,11 @@ export default class Zoom {
                 this.core.touchAction = 'zoomSwipe';
 
                 endCoords = this.getSwipeCords(e);
+                samples = pushVelocitySample(samples, {
+                    x: endCoords.x,
+                    y: endCoords.y,
+                    t: Date.now(),
+                });
 
                 const distance = this.getZoomSwipeCords(
                     startCoords,
@@ -1186,14 +1195,12 @@ export default class Zoom {
                     return;
                 }
                 isMoved = false;
-                endTime = new Date();
-                const touchDuration = endTime.valueOf() - startTime.valueOf();
                 this.touchendZoom(
                     startCoords,
                     endCoords,
                     allowX,
                     allowY,
-                    touchDuration,
+                    getWindowedVelocity(samples, Date.now()),
                 );
             }
         });
@@ -1211,8 +1218,7 @@ export default class Zoom {
         // Allow Y direction drag
         let allowY = false;
 
-        let startTime: number | Date;
-        let endTime;
+        let dragSamples: VelocitySample[] = [];
 
         let possibleSwipeCords: PossibleCords;
 
@@ -1228,7 +1234,7 @@ export default class Zoom {
                 this.$LG(e.target).hasClass('lg-item') ||
                 $item.get().contains(e.target)
             ) {
-                startTime = new Date();
+                dragSamples = [{ x: e.pageX, y: e.pageY, t: Date.now() }];
                 _LGel = this.core
                     .getSlideItem(this.core.index)
                     .find('.lg-img-wrap')
@@ -1268,6 +1274,11 @@ export default class Zoom {
                 if (isDragging) {
                     isMoved = true;
                     endCoords = this.getDragCords(e);
+                    dragSamples = pushVelocitySample(dragSamples, {
+                        x: endCoords.x,
+                        y: endCoords.y,
+                        t: Date.now(),
+                    });
 
                     const distance = this.getZoomSwipeCords(
                         startCoords,
@@ -1284,7 +1295,6 @@ export default class Zoom {
 
         this.$LG(window).on(`mouseup.lg.zoom.global${this.core.lgId}`, (e) => {
             if (isDragging) {
-                endTime = new Date();
                 isDragging = false;
                 this.core.outer.removeClass('lg-zoom-dragging');
 
@@ -1296,14 +1306,12 @@ export default class Zoom {
                 ) {
                     endCoords = this.getDragCords(e);
 
-                    const touchDuration =
-                        endTime.valueOf() - startTime.valueOf();
                     this.touchendZoom(
                         startCoords,
                         endCoords,
                         allowX,
                         allowY,
-                        touchDuration,
+                        getWindowedVelocity(dragSamples, Date.now()),
                     );
                 }
 

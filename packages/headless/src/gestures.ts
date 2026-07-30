@@ -13,12 +13,13 @@ export type SwipeAxis = 'horizontal' | 'vertical';
 export const SWIPE_AXIS_THRESHOLD = 15;
 
 /**
- * Flick support: a release faster than this (px/ms) navigates even below
- * `swipeThreshold`. 2.x decides on distance alone; the velocity cutoff is
- * tuned so slow drags behave exactly like vanilla while quick flicks do not
- * snap back (a deliberate, documented deviation from 2.x).
+ * Flick support: a release faster than this (px/ms, windowed — see
+ * `velocity.ts`) navigates even below `swipeThreshold`. Default per the
+ * gesture-physics teardown: windowed readings run higher than the old
+ * whole-gesture averages, so this gate and windowed measurement ship as
+ * one change. Public setting: `flickVelocity`.
  */
-export const FLICK_VELOCITY = 0.25;
+export const FLICK_VELOCITY = 0.5;
 
 /** Minimum travel (px) for a flick, so taps never navigate. */
 export const FLICK_MIN_DISTANCE = 20;
@@ -95,26 +96,35 @@ export type SwipeReleaseVerdict = 'next' | 'prev' | 'stay';
 
 export interface SwipeReleaseInput {
     deltaX: number;
-    /** Drag duration in ms (for the flick velocity). */
-    durationMs: number;
+    /** Release velocity, px/ms signed (windowed — see `velocity.ts`). */
+    velocityX: number;
     /** `swipeThreshold` setting (px). */
     threshold: number;
+    /** `flickVelocity` setting (px/ms). */
+    flickVelocity?: number;
 }
 
 /**
  * Horizontal release decision: past `swipeThreshold`, or a quick flick →
  * navigate (negative delta = next, 2.x parity); otherwise snap back.
+ * The flick counts only when the release velocity points the same way
+ * as the drag — reversing direction just before lifting is a cancel,
+ * not a flick.
  */
 export function getSwipeReleaseVerdict({
     deltaX,
-    durationMs,
+    velocityX,
     threshold,
+    flickVelocity = FLICK_VELOCITY,
 }: SwipeReleaseInput): SwipeReleaseVerdict {
     const distance = Math.abs(deltaX);
-    const velocity = durationMs > 0 ? distance / durationMs : 0;
+    const directionMatches =
+        deltaX !== 0 && Math.sign(velocityX) === Math.sign(deltaX);
     const passes =
         distance > threshold ||
-        (distance > FLICK_MIN_DISTANCE && velocity > FLICK_VELOCITY);
+        (distance > FLICK_MIN_DISTANCE &&
+            directionMatches &&
+            Math.abs(velocityX) > flickVelocity);
     if (!passes) {
         return 'stay';
     }

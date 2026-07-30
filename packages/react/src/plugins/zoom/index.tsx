@@ -16,8 +16,11 @@ import {
     getPinchScale,
     getPointerDistance,
     getPointZoomPan,
+    getWindowedVelocity,
+    pushVelocitySample,
     getSlideType,
     initialZoomSlice,
+    type VelocitySample,
     type ZoomPan,
     type ZoomSlice,
 } from '@lightgallery/headless';
@@ -168,7 +171,7 @@ function ZoomWrapper({
         pointerId: number;
         startX: number;
         startY: number;
-        startTime: number;
+        samples: VelocitySample[];
         startPan: ZoomPan;
         moved: boolean;
     } | null>(null);
@@ -403,6 +406,11 @@ function ZoomWrapper({
             const drag = panDragRef.current;
             if (drag && event.pointerId === drag.pointerId) {
                 drag.moved = true;
+                drag.samples = pushVelocitySample(drag.samples, {
+                    x: event.clientX,
+                    y: event.clientY,
+                    t: Date.now(),
+                });
                 const {
                     imageWidth,
                     imageHeight,
@@ -470,7 +478,7 @@ function ZoomWrapper({
                             x: event.clientX - drag.startX,
                             y: event.clientY - drag.startY,
                         },
-                        Date.now() - drag.startTime,
+                        getWindowedVelocity(drag.samples, Date.now()),
                     );
                     pan = {
                         x: drag.startPan.x + projected.x,
@@ -547,7 +555,9 @@ function ZoomWrapper({
                 pointerId: event.pointerId,
                 startX: event.clientX,
                 startY: event.clientY,
-                startTime: Date.now(),
+                samples: [
+                    { x: event.clientX, y: event.clientY, t: Date.now() },
+                ],
                 startPan: liveRef.current.pan,
                 moved: false,
             };

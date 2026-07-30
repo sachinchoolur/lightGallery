@@ -40,19 +40,22 @@ export function clampPan(pan: ZoomPan, bounds: PanBounds): ZoomPan {
 }
 
 /**
- * Momentum projection for a zoomed-pan release (2.x `touchendZoom`): each
- * axis's drag delta is amplified by its speed (`|delta| / durationMs + 1`,
- * one extra step past factor 2) so a flick keeps traveling after the
- * finger lifts. Below 2.x's 15px write threshold — checked on the
- * projected values — the raw delta returns unchanged and the pan settles
- * where it was released. The caller anchors the projection at the
- * gesture-start pan (2.x `this.left`/`this.top`, which live moves never
- * touched) and clamps the result via {@link clampPan}.
+ * Momentum projection for a zoomed-pan release (2.x `touchendZoom`
+ * shape): each axis's drag delta is amplified by the release speed
+ * (`|velocity| + 1`, one extra step past factor 2) so a flick keeps
+ * traveling after the finger lifts. The speed is the windowed release
+ * velocity in px/ms (see `velocity.ts`) — a drag that ends at rest
+ * projects nothing extra. Below 2.x's 15px write threshold — checked on
+ * the projected values — the raw delta returns unchanged and the pan
+ * settles where it was released. The caller anchors the projection at
+ * the gesture-start pan and clamps the result via {@link clampPan}.
  */
-export function getPanMomentum(delta: ZoomPan, durationMs: number): ZoomPan {
-    const duration = Math.max(durationMs, 1);
-    let speedX = Math.abs(delta.x) / duration + 1;
-    let speedY = Math.abs(delta.y) / duration + 1;
+export function getPanMomentum(
+    delta: ZoomPan,
+    velocity: { x: number; y: number },
+): ZoomPan {
+    let speedX = Math.abs(velocity.x) + 1;
+    let speedY = Math.abs(velocity.y) + 1;
     if (speedX > 2) {
         speedX += 1;
     }

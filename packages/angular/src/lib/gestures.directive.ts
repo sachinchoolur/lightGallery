@@ -11,6 +11,8 @@ import {
     getHorizontalDragTransforms,
     getSwipeAxis,
     getSwipeReleaseVerdict,
+    getWindowedVelocity,
+    pushVelocitySample,
     getVerticalDragEffects,
     removePointer,
     resolveSwipeTarget,
@@ -18,6 +20,7 @@ import {
     upsertPointer,
     type PointerRecord,
     type SwipeAxis,
+    type VelocitySample,
 } from '@lightgallery/headless';
 
 import { LgGalleryRuntime } from './runtime';
@@ -50,7 +53,7 @@ interface DragSession {
     isMouse: boolean;
     startX: number;
     startY: number;
-    startTime: number;
+    samples: VelocitySample[];
     lastX: number;
     lastY: number;
     axis: SwipeAxis | undefined;
@@ -188,6 +191,11 @@ export class LgGesturesDirective implements OnDestroy {
         }
         session.lastX = event.clientX;
         session.lastY = event.clientY;
+        session.samples = pushVelocitySample(session.samples, {
+            x: event.clientX,
+            y: event.clientY,
+            t: performance.now(),
+        });
         const deltaX = event.clientX - session.startX;
         const deltaY = event.clientY - session.startY;
         session.axis = getSwipeAxis(deltaX, deltaY, session.axis);
@@ -268,8 +276,12 @@ export class LgGesturesDirective implements OnDestroy {
             this.restoreDragVisuals(session);
             const verdict = getSwipeReleaseVerdict({
                 deltaX,
-                durationMs: performance.now() - session.startTime,
+                velocityX: getWindowedVelocity(
+                    session.samples,
+                    performance.now(),
+                ).x,
                 threshold: settings.swipeThreshold,
+                flickVelocity: settings.flickVelocity,
             });
             const target = resolveSwipeTarget(
                 verdict,
@@ -368,7 +380,13 @@ export class LgGesturesDirective implements OnDestroy {
             isMouse,
             startX: event.clientX,
             startY: event.clientY,
-            startTime: performance.now(),
+            samples: [
+                {
+                    x: event.clientX,
+                    y: event.clientY,
+                    t: performance.now(),
+                },
+            ],
             lastX: event.clientX,
             lastY: event.clientY,
             axis: undefined,

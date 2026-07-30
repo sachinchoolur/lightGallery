@@ -64,28 +64,42 @@ describe('getSwipeReleaseVerdict', () => {
 
     it('navigates past the distance threshold (negative delta = next)', () => {
         expect(
-            getSwipeReleaseVerdict({ deltaX: -60, durationMs: 500, threshold }),
+            getSwipeReleaseVerdict({ deltaX: -60, velocityX: -0.1, threshold }),
         ).toBe('next');
         expect(
-            getSwipeReleaseVerdict({ deltaX: 60, durationMs: 500, threshold }),
+            getSwipeReleaseVerdict({ deltaX: 60, velocityX: 0.1, threshold }),
         ).toBe('prev');
     });
 
     it('snaps back below the threshold at slow speed', () => {
         expect(
-            getSwipeReleaseVerdict({ deltaX: -40, durationMs: 400, threshold }),
+            getSwipeReleaseVerdict({ deltaX: -40, velocityX: -0.1, threshold }),
         ).toBe('stay');
     });
 
     it('honors quick flicks below the distance threshold', () => {
-        // 40px in 80ms = 0.5 px/ms > FLICK_VELOCITY
+        // Windowed release velocity past the gate (default 0.5 px/ms)
         expect(
-            getSwipeReleaseVerdict({ deltaX: -40, durationMs: 80, threshold }),
+            getSwipeReleaseVerdict({ deltaX: -40, velocityX: -0.8, threshold }),
         ).toBe('next');
         // ...but never for tiny travels (taps)
         expect(
-            getSwipeReleaseVerdict({ deltaX: -10, durationMs: 10, threshold }),
+            getSwipeReleaseVerdict({ deltaX: -10, velocityX: -2, threshold }),
         ).toBe('stay');
+    });
+
+    it('ignores a flick whose velocity opposes the drag (cancel)', () => {
+        expect(
+            getSwipeReleaseVerdict({ deltaX: -40, velocityX: 0.9, threshold }),
+        ).toBe('stay');
+    });
+
+    it('honors the flickVelocity setting', () => {
+        const input = { deltaX: -40, velocityX: -0.4, threshold };
+        expect(getSwipeReleaseVerdict(input)).toBe('stay');
+        expect(
+            getSwipeReleaseVerdict({ ...input, flickVelocity: 0.3 }),
+        ).toBe('next');
     });
 });
 
