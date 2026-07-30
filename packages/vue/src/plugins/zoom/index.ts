@@ -17,10 +17,11 @@ import {
     clampScale,
     getActualSizeScale,
     getPanBounds,
-    getPanMomentum,
+    SPRING_BOUNCE_DAMPING,
     getPinchScale,
     getPointerDistance,
     getPointZoomPan,
+    project,
     getWindowedVelocity,
     pushVelocitySample,
     getSlideType,
@@ -30,6 +31,7 @@ import {
     type ZoomSlice,
 } from '@lightgallery/headless';
 
+import { runSprings, type SpringTrack } from '../../springRunner';
 import {
     LG_PLUGIN_CONTEXT,
     type LgPluginContext,
@@ -191,6 +193,7 @@ export const ZoomWrapper = defineComponent({
             startPan: ZoomPan;
         } | null = null;
         let detachWindow: (() => void) | null = null;
+        let cancelSpring: (() => void) | null = null;
         let lastTap = 0;
         let armTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -237,6 +240,27 @@ export const ZoomWrapper = defineComponent({
             }
         }
 
+        function stopSpring(): void {
+            cancelSpring?.();
+            cancelSpring = null;
+        }
+
+        // Release settle: the spring drives every frame (transitions
+        // stand down); the commit at completion is visually a no-op that
+        // restores the button-zoom transition and the committed state.
+        function startSpring(
+            tracks: SpringTrack[],
+            onFrame: (values: number[]) => void,
+            onDone: () => void,
+        ): void {
+            stopSpring();
+            setLiveTransition('none');
+            cancelSpring = runSprings(tracks, onFrame, () => {
+                cancelSpring = null;
+                onDone();
+            });
+        }
+
         function commit(
             scale: number,
             pan: ZoomPan,
@@ -275,6 +299,7 @@ export const ZoomWrapper = defineComponent({
         }
 
         function reset(): void {
+            stopSpring();
             transitionMode.value = 'default';
             setLiveTransition(ZOOM_TRANSITION);
             pointers.clear();
@@ -414,43 +439,112 @@ export const ZoomWrapper = defineComponent({
                     // Pinch release snaps into [1, actual size] regardless
                     // of infiniteZoom (2.x pinch touchend rule — the
                     // setting governs button zoom only). The pan is
-                    // recomputed through the same focal anchor so the snap
-                    // stays centered on the pinched point.
+                    // recomputed through the same focal anchor, clamped
+                    // into the landed scale's bounds, and a spring
+                    // animates the snap.
                     const target = clampScale(live.scale, maxScale(), false);
-                    commit(
-                        target,
+                    const {
+                        imageWidth,
+                        imageHeight,
+                        containerWidth,
+                        containerHeight,
+                    } = measure();
+                    const pan = clampPan(
                         getPointZoomPan(
                             endedPinch.startMid,
                             endedPinch.startPan,
                             endedPinch.startScale,
                             target,
                         ),
-                        'settle',
+                        getPanBounds(
+                            imageWidth,
+                            imageHeight,
+                            containerWidth,
+                            containerHeight,
+                            target,
+                        ),
+                    );
+                    startSpring(
+                        [
+                            { from: live.scale, velocity: 0, target },
+                            { from: live.pan.x, velocity: 0, target: pan.x },
+                            { from: live.pan.y, velocity: 0, target: pan.y },
+                        ],
+                        ([scale, x, y]) =>
+                            applyLive({
+                                ...live,
+                                scale: scale!,
+                                pan: { x: x!, y: y! },
+                                zoomed: scale! > 1,
+                            }),
+                        () => commit(target, pan),
                     );
                 }
                 const drag = panDrag;
                 if (drag && event.pointerId === drag.pointerId) {
                     panDrag = null;
-                    let pan = live.pan;
-                    if (event.type === 'pointerup') {
-                        // 2.x `touchendZoom` momentum: a fast release
-                        // keeps traveling in proportion to its speed,
-                        // anchored at the gesture-start pan; commit clamps
-                        // the projection into bounds. A canceled pointer
-                        // settles where it is.
-                        const projected = getPanMomentum(
-                            {
-                                x: event.clientX - drag.startX,
-                                y: event.clientY - drag.startY,
-                            },
-                            getWindowedVelocity(drag.samples, Date.now()),
+                    if (event.type !== 'pointerup') {
+                        // A canceled pointer settles where it is.
+                        commit(live.scale, live.pan);
+                    } else {
+                        // Project the release momentum, clamp into the
+                        // pan bounds, then spring there seeded with the
+                        // live velocity — bouncing only against a
+                        // clamped bound.
+                        const velocity = getWindowedVelocity(
+                            drag.samples,
+                            Date.now(),
                         );
-                        pan = {
-                            x: drag.startPan.x + projected.x,
-                            y: drag.startPan.y + projected.y,
+                        const current = live.pan;
+                        const {
+                            imageWidth,
+                            imageHeight,
+                            containerWidth,
+                            containerHeight,
+                        } = measure();
+                        const projected = {
+                            x: current.x + project(velocity.x),
+                            y: current.y + project(velocity.y),
                         };
+                        const target = clampPan(
+                            projected,
+                            getPanBounds(
+                                imageWidth,
+                                imageHeight,
+                                containerWidth,
+                                containerHeight,
+                                live.scale,
+                            ),
+                        );
+                        startSpring(
+                            [
+                                {
+                                    from: current.x,
+                                    velocity: velocity.x,
+                                    target: target.x,
+                                    dampingRatio:
+                                        target.x !== projected.x
+                                            ? SPRING_BOUNCE_DAMPING
+                                            : 1,
+                                },
+                                {
+                                    from: current.y,
+                                    velocity: velocity.y,
+                                    target: target.y,
+                                    dampingRatio:
+                                        target.y !== projected.y
+                                            ? SPRING_BOUNCE_DAMPING
+                                            : 1,
+                                },
+                            ],
+                            ([x, y]) =>
+                                applyLive({
+                                    ...live,
+                                    pan: { x: x!, y: y! },
+                                }),
+                            () => commit(live.scale, target),
+                        );
                     }
-                    commit(live.scale, pan, 'settle');
                 }
                 if (pointers.size === 0) {
                     detachWindow?.();
@@ -473,6 +567,9 @@ export const ZoomWrapper = defineComponent({
             if (!enabled.value || !interactive.value || !props.isCurrent) {
                 return;
             }
+            // Grab-in-flight: stop a running settle and continue from
+            // the live frame values.
+            stopSpring();
             pointers.set(event.pointerId, {
                 x: event.clientX,
                 y: event.clientY,
@@ -599,6 +696,7 @@ export const ZoomWrapper = defineComponent({
             if (armTimer !== null) {
                 clearTimeout(armTimer);
             }
+            stopSpring();
             detachWindow?.();
             if (live.zoomed) {
                 ctx.layout.setOuterClass('lg-zoomed', false);

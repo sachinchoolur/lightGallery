@@ -84,7 +84,6 @@ export {
     clampScale,
     getActualSizeScale,
     getPanBounds,
-    getPanMomentum,
     getPinchScale,
     getPointZoomPan,
     getPointerDistance,

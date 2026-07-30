@@ -419,7 +419,8 @@ describe('zoom plugin', () => {
         });
         firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 41 });
         // 2.x pinch touchend rule: release lands on actual size even with
-        // the infiniteZoom default.
+        // the infiniteZoom default (the spring settles it).
+        tick(2000);
         expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
         firePointer(window, 'pointerup', { x: 500, y: 100, pointerId: 42 });
 
@@ -437,6 +438,7 @@ describe('zoom plugin', () => {
             pointerId: 44,
         });
         firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 43 });
+        tick(2000);
         expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
     });
@@ -456,9 +458,12 @@ describe('zoom plugin', () => {
         expect(scaleEl.style.transition).toBe('none');
 
         firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 31 });
-        // Release snaps with the 2.x settle ease.
+        // The release spring drives frames directly — still no easing.
+        expect(scaleEl.style.transition).toBe('none');
+        // Once settled, the button-zoom transition is restored.
+        tick(2000);
         expect(scaleEl.style.transition).toBe(
-            'transform 0.8s cubic-bezier(0, 0, 0.25, 1)',
+            'transform 0.3s cubic-bezier(0, 0, 0.25, 1)',
         );
         firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 32 });
     });
@@ -487,26 +492,32 @@ describe('zoom plugin', () => {
                 .transform,
         ).toBe('scale3d(4, 4, 1)');
 
-        // 100px drag over 100ms: speed = 100/100 + 1 = 2 → the release
-        // travels double the finger delta (2.x `touchendZoom`).
+        const panX = () =>
+            parseFloat(pan.style.transform.match(/translate3d\((-?[\d.]+)px/)![1]!);
+
+        // 100px drag over 100ms (1 px/ms release): the spring glides the
+        // pan to current + project(v) = -100 - 199 = -299, inside bounds.
         firePointer(pan, 'pointerdown', { x: 300, y: 100, pointerId: 51 });
         tick(100);
         firePointer(window, 'pointermove', { x: 200, y: 100, pointerId: 51 });
         firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 51 });
-        expect(pan.style.transform).toBe('translate3d(-200px, 0px, 0)');
-        // The projected pan settles with the 2.x post-gesture ease.
+        // Spring in flight: transitions stand down.
+        expect(pan.style.transition).toBe('none');
+        tick(2000);
+        expect(panX()).toBeCloseTo(-299, 0);
+        // Settled: the button-zoom transition is restored.
         expect(pan.style.transition).toBe(
-            'transform 0.8s cubic-bezier(0, 0, 0.25, 1)',
+            'transform 0.3s cubic-bezier(0, 0, 0.25, 1)',
         );
 
-        // A flick (100px in 20ms) passes speed 2 and gains the extra step
-        // (factor 7); the projection -200 + -700 clamps into the -600
-        // bound instead of overshooting.
+        // A flick (100px in 20ms, 5 px/ms): projection -399 - 995 clamps
+        // into the -600 bound; the spring bounces softly against it.
         firePointer(pan, 'pointerdown', { x: 300, y: 100, pointerId: 52 });
         tick(20);
         firePointer(window, 'pointermove', { x: 200, y: 100, pointerId: 52 });
         firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 52 });
-        expect(pan.style.transform).toBe('translate3d(-600px, 0px, 0)');
+        tick(3000);
+        expect(panX()).toBeCloseTo(-600, 0);
     });
 
     it('suppresses swipe navigation while zoomed and resets on slide change', () => {

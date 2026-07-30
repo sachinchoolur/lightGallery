@@ -44,8 +44,8 @@ export function runSprings(
         last = now;
         let settled = true;
         tracks.forEach((t, i) => {
-            states[i] = stepSpring(states[i], t.target, dt, t);
-            if (!isSpringSettled(states[i], t.target)) {
+            states[i] = stepSpring(states[i]!, t.target, dt, t);
+            if (!isSpringSettled(states[i]!, t.target)) {
                 settled = false;
             }
         });
