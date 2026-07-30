@@ -161,7 +161,7 @@ describe('horizontal swipe', () => {
         openAndLoad();
         const item = currentSlide();
         firePointer(item, 'pointerdown', { x: 200, y: 100 });
-        // 18px: past the axis commit (15) but under both swipeThreshold and
+        // 18px: past the axis commit (10) but under both swipeThreshold and
         // the flick minimum distance — must snap back. (Tests run on real
         // performance.now, so any larger travel would count as a flick.)
         firePointer(window, 'pointermove', { x: 182, y: 100 });

@@ -13,11 +13,11 @@ import {
 } from './gestures';
 
 describe('getSwipeAxis', () => {
-    it('commits to an axis only past the 15px threshold', () => {
+    it('commits to an axis only past the 10px threshold', () => {
         expect(getSwipeAxis(10, 5, undefined)).toBeUndefined();
-        expect(getSwipeAxis(16, 5, undefined)).toBe('horizontal');
+        expect(getSwipeAxis(11, 5, undefined)).toBe('horizontal');
         expect(getSwipeAxis(-20, 5, undefined)).toBe('horizontal');
-        expect(getSwipeAxis(5, 16, undefined)).toBe('vertical');
+        expect(getSwipeAxis(5, 11, undefined)).toBe('vertical');
     });
 
     it('is sticky once committed', () => {

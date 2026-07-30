@@ -11,8 +11,12 @@ import { project } from './spring';
 
 export type SwipeAxis = 'horizontal' | 'vertical';
 
-/** Minimum travel (px) before a drag commits to an axis — 2.x parity. */
-export const SWIPE_AXIS_THRESHOLD = 15;
+/**
+ * Minimum travel (px) before a drag commits to an axis. Tuned from the
+ * 2.x 15px to ~10 (UIPanGestureRecognizer territory): drags answer a
+ * touch sooner without axis flip-flop — the commit is still sticky.
+ */
+export const SWIPE_AXIS_THRESHOLD = 10;
 
 /**
  * Flick support: a release faster than this (px/ms, windowed — see
