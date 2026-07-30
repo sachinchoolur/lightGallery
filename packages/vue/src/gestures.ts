@@ -1,5 +1,6 @@
 import { onScopeDispose, watch, type Ref } from 'vue';
 import {
+    getEdgeFrictionedDelta,
     getHorizontalDragTransforms,
     getSwipeAxis,
     getSwipeReleaseVerdict,
@@ -213,7 +214,12 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
         if (drag.axis === 'horizontal') {
             el?.classList.add('lg-dragging');
             const width = els.current?.offsetWidth || el?.offsetWidth || 0;
-            const transforms = getHorizontalDragTransforms(deltaX, width);
+            // Rubber-band past the gallery ends: a missing neighbor in
+            // the drag direction means there is nothing there.
+            const transforms = getHorizontalDragTransforms(
+                getEdgeFrictionedDelta(deltaX, !!els.prev, !!els.next),
+                width,
+            );
             if (els.current) {
                 els.current.style.transform = transforms.current;
             }
@@ -419,16 +425,23 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
                 state.slidesCount,
                 state.loop,
             );
+            // Springs start from the RENDERED delta — rubber-banded at
+            // the gallery ends, identical to raw elsewhere.
+            const renderedDeltaX = getEdgeFrictionedDelta(
+                deltaX,
+                !!drag.els?.prev,
+                !!drag.els?.next,
+            );
             if (target !== null) {
                 springHorizontalNavigate(
                     drag,
                     verdict === 'next' ? 'next' : 'prev',
                     target,
-                    deltaX,
+                    renderedDeltaX,
                     releaseVelocity.x,
                 );
             } else {
-                springHorizontalBack(drag, deltaX, releaseVelocity.x);
+                springHorizontalBack(drag, renderedDeltaX, releaseVelocity.x);
             }
             return;
         }

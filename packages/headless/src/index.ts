@@ -39,9 +39,11 @@ export { getPreloadIndexes, getSlideIndexesInDom } from './preload';
 export {
     FLICK_MIN_DISTANCE,
     FLICK_VELOCITY,
+    SLIDE_EDGE_FRICTION,
     SWIPE_AXIS_THRESHOLD,
     VERTICAL_CLOSE_RATIO,
     VERTICAL_CLOSE_THRESHOLD,
+    getEdgeFrictionedDelta,
     getHorizontalDragTransforms,
     getSwipeAxis,
     getSwipeReleaseVerdict,
@@ -80,6 +82,8 @@ export {
 } from './video-urls';
 
 export {
+    PINCH_OVER_FRICTION,
+    PINCH_UNDER_FRICTION,
     clampPan,
     clampScale,
     getActualSizeScale,
@@ -87,6 +91,7 @@ export {
     getPinchScale,
     getPointZoomPan,
     getPointerDistance,
+    shouldCloseOnPinch,
     type PanBounds,
     type ZoomPan,
 } from './zoom-math';

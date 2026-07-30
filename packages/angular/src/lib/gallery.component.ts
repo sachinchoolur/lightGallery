@@ -451,6 +451,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     readonly counter = input<boolean | undefined>(undefined);
     readonly swipeThreshold = input<number | undefined>(undefined);
     readonly flickVelocity = input<number | undefined>(undefined);
+    readonly pinchToClose = input<boolean | undefined>(undefined);
     readonly enableSwipe = input<boolean | undefined>(undefined);
     readonly enableDrag = input<boolean | undefined>(undefined);
     readonly strings = input<Partial<GalleryCoreStrings> | undefined>(
@@ -602,6 +603,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         counter: this.counter(),
         swipeThreshold: this.swipeThreshold(),
         flickVelocity: this.flickVelocity(),
+        pinchToClose: this.pinchToClose(),
         enableSwipe: this.enableSwipe(),
         enableDrag: this.enableDrag(),
         strings: this.strings(),

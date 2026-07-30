@@ -402,7 +402,9 @@ describe('zoom plugin', () => {
     });
 
     it('snaps a pinch release into [1, actual size] despite infiniteZoom', () => {
-        renderGallery({ plugins: [Zoom] });
+        // pinchToClose off: the under-fit part of this test exercises the
+        // disarmed spring-back (armed default would close the gallery).
+        renderGallery({ plugins: [Zoom], pinchToClose: false });
         loadCurrent();
         tick(350);
         const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
@@ -441,6 +443,27 @@ describe('zoom plugin', () => {
         tick(2000);
         expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
+    });
+
+    it('closes on a pinch released below fit (default pinchToClose)', () => {
+        const onClose = vi.fn();
+        renderGallery({ plugins: [Zoom], onClose });
+        loadCurrent();
+        tick(350);
+        const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
+
+        // Squeeze from fit: distance 200 → 40 (scale 0.2), release.
+        firePointer(pan, 'pointerdown', { x: 100, y: 100, pointerId: 51 });
+        firePointer(pan, 'pointerdown', { x: 300, y: 100, pointerId: 52 });
+        firePointer(window, 'pointermove', {
+            x: 140,
+            y: 100,
+            pointerId: 52,
+        });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 51 });
+        tick(1000);
+        expect(onClose).toHaveBeenCalled();
+        firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 52 });
     });
 
     it('disables transitions during a pinch and settles on release', () => {

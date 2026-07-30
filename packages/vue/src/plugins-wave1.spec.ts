@@ -63,6 +63,7 @@ const Host = defineComponent({
     props: {
         plugins: { type: Array, required: true },
         log: { type: Array, required: true },
+        pinchToClose: { type: Boolean, default: true },
     },
     setup: () => ({ items: ITEMS }),
     template: `
@@ -71,19 +72,23 @@ const Host = defineComponent({
             :zoom-from-origin="false"
             :plugins="plugins"
             :zoom="{ showZoomInOutIcons: true }"
+            :pinch-to-close="pinchToClose"
             @poster-click="log.push('posterClick')"
             @has-video="log.push('hasVideo:' + $event.index)"
         />
     `,
 });
 
-function mountHost(plugins: readonly LgVuePlugin[]): {
+function mountHost(
+    plugins: readonly LgVuePlugin[],
+    extraProps: Record<string, unknown> = {},
+): {
     wrapper: ReturnType<typeof mount>;
     log: string[];
 } {
     const log: string[] = [];
     const wrapper = mount(Host, {
-        props: { plugins: plugins as never[], log },
+        props: { plugins: plugins as never[], log, ...extraProps },
         attachTo: document.body,
     });
     return { wrapper, log };
@@ -314,7 +319,11 @@ describe('plugin runtime + wave-1', () => {
     });
 
     it('zoom: snaps a pinch release into [1, actual size] despite infiniteZoom', async () => {
-        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        // pinchToClose off: the under-fit part of this test exercises the
+        // disarmed spring-back (armed default would close the gallery).
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video], {
+            pinchToClose: false,
+        });
         await openAndLoad(wrapper);
         await advance(350);
         const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
@@ -344,6 +353,23 @@ describe('plugin runtime + wave-1', () => {
         vi.advanceTimersByTime(2000);
         expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
+    });
+
+    it('zoom: closes on a pinch released below fit (default pinchToClose)', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+
+        // Squeeze from fit: distance 200 → 40 (scale 0.2), release.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 51 });
+        firePointer(panEl, 'pointerdown', { x: 300, y: 100, pointerId: 52 });
+        firePointer(window, 'pointermove', { x: 140, y: 100, pointerId: 52 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 51 });
+        await settle();
+        await advance(1000);
+        expect(query('.lg-container')).toBeNull();
+        firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 52 });
     });
 
     it('zoom: disables transitions during a pinch and settles on release', async () => {

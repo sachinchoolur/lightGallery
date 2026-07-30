@@ -462,6 +462,14 @@ export interface LightGalleryCoreSettings {
     flickVelocity: number;
 
     /**
+     * Pinching down on an un-zoomed image and releasing closes the
+     * gallery (iOS Photos). Guarded: a pinch that went past fit zoom at
+     * any point is a zoom correction and never closes. Requires
+     * `closable` and the zoom plugin.
+     */
+    pinchToClose: boolean;
+
+    /**
      * Enables swipe support for touch devices
      */
     enableSwipe: boolean;
@@ -611,6 +619,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     appendCounterTo: '.lg-toolbar',
     swipeThreshold: 50,
     flickVelocity: 0.5,
+    pinchToClose: true,
     enableSwipe: true,
     enableDrag: true,
     dynamic: false,

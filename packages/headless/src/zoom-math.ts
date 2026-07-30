@@ -97,9 +97,23 @@ export function getPointerDistance(
 }
 
 /**
- * Scale during a pinch: proportional to the distance ratio. Allowed to dip
- * slightly below 1 mid-gesture (the release snaps back via
- * {@link clampScale}); capped unless `infiniteZoom`.
+ * Continuous resistance below fit scale — replaces the 2.x hard 0.5
+ * floor: past the boundary the scale keeps moving at 15% per unit.
+ */
+export const PINCH_UNDER_FRICTION = 0.15;
+
+/**
+ * Very stiff resistance beyond actual size instead of a hard stop;
+ * the release spring lands back inside bounds. `infiniteZoom` disables
+ * this boundary entirely.
+ */
+export const PINCH_OVER_FRICTION = 0.05;
+
+/**
+ * Scale during a pinch: proportional to the distance ratio, with
+ * friction (not clamps) at both boundaries. When pinch-to-close is
+ * armed, the under-fit squeeze is free — the shrink IS the close
+ * affordance; the release verdict is {@link shouldCloseOnPinch}.
  */
 export function getPinchScale(
     startDistance: number,
@@ -107,14 +121,39 @@ export function getPinchScale(
     startScale: number,
     maxScale: number,
     infiniteZoom: boolean,
+    pinchToCloseArmed = false,
 ): number {
     if (startDistance <= 0) {
         return startScale;
     }
     let scale = (currentDistance / startDistance) * startScale;
-    scale = Math.max(0.5, scale);
-    if (!infiniteZoom) {
-        scale = Math.min(scale, Math.max(maxScale, 1));
+    if (scale < 1 && !pinchToCloseArmed) {
+        scale = 1 + (scale - 1) * PINCH_UNDER_FRICTION;
+    }
+    const cap = Math.max(maxScale, 1);
+    if (!infiniteZoom && scale > cap) {
+        scale = cap + (scale - cap) * PINCH_OVER_FRICTION;
     }
     return scale;
+}
+
+/**
+ * Pinch-to-close verdict (iOS Photos signature): a pinch released
+ * below fit closes ONLY when the whole gesture stayed at or under fit
+ * — an over-then-under pinch is a zoom correction, not a dismissal.
+ * `maxGestureScale` is the largest scale seen since the pinch started
+ * (seeded with the start scale).
+ */
+export function shouldCloseOnPinch(input: {
+    scale: number;
+    maxGestureScale: number;
+    pinchToClose: boolean;
+    closable: boolean;
+}): boolean {
+    return (
+        input.pinchToClose &&
+        input.closable &&
+        input.scale < 1 &&
+        input.maxGestureScale <= 1
+    );
 }

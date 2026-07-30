@@ -36,6 +36,29 @@ export const VERTICAL_CLOSE_THRESHOLD = 100;
  */
 export const VERTICAL_CLOSE_RATIO = 0.4;
 
+/**
+ * Rubber-band friction past the first/last slide (no loop): the drag
+ * keeps moving at this fraction of the finger instead of the 2.x
+ * un-resisted 1:1 travel — you feel that there is nothing further.
+ */
+export const SLIDE_EDGE_FRICTION = 0.35;
+
+/**
+ * Horizontal drag delta with rubber-banding past the gallery ends.
+ * `hasPrev`/`hasNext` reflect whether a slide exists in that direction
+ * (loop counts); the release spring returns the frictioned distance.
+ */
+export function getEdgeFrictionedDelta(
+    deltaX: number,
+    hasPrev: boolean,
+    hasNext: boolean,
+): number {
+    if ((deltaX > 0 && !hasPrev) || (deltaX < 0 && !hasNext)) {
+        return deltaX * SLIDE_EDGE_FRICTION;
+    }
+    return deltaX;
+}
+
 /** Decide (once) which axis a drag follows; sticky after the first commit. */
 export function getSwipeAxis(
     deltaX: number,

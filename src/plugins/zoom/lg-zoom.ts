@@ -4,6 +4,7 @@ import {
     getActualSizeScale as getNaturalSizeScale,
     getPanBounds,
     getPinchScale,
+    shouldCloseOnPinch,
     getPointerDistance,
     getPointZoomPan,
     getWindowedVelocity,
@@ -772,6 +773,9 @@ export default class Zoom {
         let startMaxScale = 1;
         let startPan: Coords = { x: 0, y: 0 };
         let startMid: Coords = { x: 0, y: 0 };
+        // Largest scale the gesture reached — the pinch-to-close guard
+        // (an over-then-under pinch is a correction, not a dismissal).
+        let maxGestureScale = 1;
 
         let $item = this.core.getSlideItem(this.core.index);
 
@@ -812,6 +816,7 @@ export default class Zoom {
                 this.core.touchAction = 'pinch';
 
                 startDist = this.getTouchDistance(e);
+                maxGestureScale = initScale;
             }
         });
 
@@ -830,12 +835,21 @@ export default class Zoom {
                     pinchStarted = true;
                 }
                 if (pinchStarted) {
+                    // With pinch-to-close armed (setting on, closable,
+                    // gesture never over fit) the under-fit squeeze is
+                    // free — the shrink is the close affordance;
+                    // otherwise it resists with friction.
+                    const closeArmed =
+                        this.core.settings.pinchToClose &&
+                        this.core.settings.closable &&
+                        maxGestureScale <= 1;
                     const _scale = getPinchScale(
                         startDist,
                         endDist,
                         initScale,
                         startMaxScale,
                         this.settings.infiniteZoom,
+                        closeArmed,
                     );
                     // 4-decimal precision: at 2 decimals a slow pinch
                     // quantizes into visible ~16px steps on a 1600px
@@ -855,6 +869,7 @@ export default class Zoom {
                     this.left = pan.x;
                     this.top = pan.y;
                     this.setZoomStyles({ x: pan.x, y: pan.y, scale });
+                    maxGestureScale = Math.max(maxGestureScale, scale);
                 }
             }
         });
@@ -867,7 +882,21 @@ export default class Zoom {
             ) {
                 pinchStarted = false;
                 startDist = 0;
-                if (this.scale <= 1) {
+                if (
+                    shouldCloseOnPinch({
+                        scale: this.scale,
+                        maxGestureScale,
+                        pinchToClose: this.core.settings.pinchToClose,
+                        closable: this.core.settings.closable,
+                    })
+                ) {
+                    // Hand off from fit: the close pipeline strips zoom
+                    // styles synchronously (destroyModules → resetZoom),
+                    // so the close animation starts from the reset state.
+                    this.core.outer.removeClass('lg-zoom-dragging');
+                    this.resetZoom();
+                    this.core.closeGallery();
+                } else if (this.scale <= 1) {
                     // The under-fit squeeze springs back to fit exactly
                     // like the over-fit snap. lg-zoomed drops now (swipe
                     // availability and chrome state flip at release);

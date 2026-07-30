@@ -193,8 +193,8 @@ const SETTING_KEYS = [
     'hideControlOnEnd', 'mousewheel', 'captionPosition', 'preload',
     'numberOfSlideItemsInDom', 'iframeWidth', 'iframeHeight',
     'iframeMaxWidth', 'iframeMaxHeight', 'download', 'counter',
-    'swipeThreshold', 'flickVelocity', 'enableSwipe', 'enableDrag', 'strings', 'isMobile',
-    'mobileSettings',
+    'swipeThreshold', 'flickVelocity', 'pinchToClose', 'enableSwipe', 'enableDrag',
+    'strings', 'isMobile', 'mobileSettings',
 ] as const satisfies readonly (keyof UserSettings)[];
 
 function defaultIsMobile(): boolean {

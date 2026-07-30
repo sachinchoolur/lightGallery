@@ -26,6 +26,8 @@ import {
     pushVelocitySample,
     getSlideType,
     initialZoomSlice,
+    shouldCloseOnPinch,
+    type CoreSettings,
     type VelocitySample,
     type ZoomPan,
     type ZoomSlice,
@@ -108,7 +110,9 @@ function isImageTarget(target: unknown): boolean {
     );
 }
 
-type ZoomResolved = ZoomSettings & Record<string, unknown>;
+type ZoomResolved = ZoomSettings &
+    Pick<CoreSettings, 'pinchToClose' | 'closable'> &
+    Record<string, unknown>;
 
 export const ZoomToolbar = defineComponent({
     name: 'LgZoomToolbar',
@@ -184,6 +188,8 @@ export const ZoomWrapper = defineComponent({
             startScale: number;
             startPan: ZoomPan;
             startMid: ZoomPan;
+            /** Largest scale the gesture reached — pinch-to-close guard. */
+            maxGestureScale: number;
         } | null = null;
         let panDrag: {
             pointerId: number;
@@ -374,12 +380,25 @@ export const ZoomWrapper = defineComponent({
                 });
                 if (pinch && pointers.size >= 2) {
                     const [a, b] = [...pointers.values()];
+                    // With pinch-to-close armed (setting on, closable,
+                    // gesture never over fit) the under-fit squeeze is
+                    // free — the shrink is the close affordance;
+                    // otherwise it resists with friction.
+                    const closeArmed =
+                        settings.value.pinchToClose &&
+                        settings.value.closable &&
+                        pinch.maxGestureScale <= 1;
                     const scale = getPinchScale(
                         pinch.startDistance,
                         getPointerDistance(a!, b!),
                         pinch.startScale,
                         maxScale(),
                         settings.value.infiniteZoom,
+                        closeArmed,
+                    );
+                    pinch.maxGestureScale = Math.max(
+                        pinch.maxGestureScale,
+                        scale,
                     );
                     // Anchor the zoom to the pinch's starting midpoint
                     // (2.x anchored to the first finger; the midpoint is
@@ -436,6 +455,21 @@ export const ZoomWrapper = defineComponent({
                 const endedPinch = pinch;
                 if (endedPinch && pointers.size < 2) {
                     pinch = null;
+                    if (
+                        shouldCloseOnPinch({
+                            scale: live.scale,
+                            maxGestureScale: endedPinch.maxGestureScale,
+                            pinchToClose: settings.value.pinchToClose,
+                            closable: settings.value.closable,
+                        })
+                    ) {
+                        // Hand off from fit: the zoom slice resets so a
+                        // reopen starts clean; the close animation owns
+                        // the rest.
+                        commit(1, { x: 0, y: 0 });
+                        ctx.actions.closeGallery();
+                        return;
+                    }
                     // Pinch release snaps into [1, actual size] regardless
                     // of infiniteZoom (2.x pinch touchend rule — the
                     // setting governs button zoom only). The pan is
@@ -589,6 +623,7 @@ export const ZoomWrapper = defineComponent({
                         clientX: (a!.x + b!.x) / 2,
                         clientY: (a!.y + b!.y) / 2,
                     }),
+                    maxGestureScale: live.scale,
                 };
                 panDrag = null;
                 ctx.gestureLock.claim('pinch');

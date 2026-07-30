@@ -12,6 +12,7 @@ import {
     getPinchScale,
     getPointZoomPan,
     getPointerDistance,
+    shouldCloseOnPinch,
 } from './zoom-math';
 import {
     clampThumbTranslate,
@@ -66,10 +67,44 @@ describe('scale math', () => {
     it('scales pinch by distance ratio', () => {
         expect(getPointerDistance({ x: 0, y: 0 }, { x: 3, y: 4 })).toBe(5);
         expect(getPinchScale(100, 200, 1, 3, false)).toBe(2);
-        expect(getPinchScale(100, 500, 1, 3, false)).toBe(3);
-        expect(getPinchScale(100, 500, 1, 3, true)).toBe(5);
-        expect(getPinchScale(100, 10, 1, 3, false)).toBe(0.5);
         expect(getPinchScale(0, 200, 1.5, 3, false)).toBe(1.5);
+    });
+
+    it('resists past both boundaries with friction, not clamps', () => {
+        // Beyond actual size: raw 5 vs cap 3 → 3 + 2·0.05 (very stiff).
+        expect(getPinchScale(100, 500, 1, 3, false)).toBeCloseTo(3.1, 10);
+        // infiniteZoom disables the upper boundary entirely.
+        expect(getPinchScale(100, 500, 1, 3, true)).toBe(5);
+        // Below fit (close disarmed): raw 0.1 → 1 − 0.9·0.15.
+        expect(getPinchScale(100, 10, 1, 3, false)).toBeCloseTo(0.865, 10);
+        // Armed pinch-to-close squeezes freely below fit.
+        expect(getPinchScale(100, 10, 1, 3, false, true)).toBeCloseTo(
+            0.1,
+            10,
+        );
+        // Friction engages only below fit — in-range scale is untouched.
+        expect(getPinchScale(100, 150, 1, 3, false)).toBe(1.5);
+    });
+
+    it('closes on a pinch released below fit unless the gesture went over', () => {
+        const base = {
+            scale: 0.8,
+            maxGestureScale: 1,
+            pinchToClose: true,
+            closable: true,
+        };
+        expect(shouldCloseOnPinch(base)).toBe(true);
+        // Over-then-under is a zoom correction, not a dismissal.
+        expect(
+            shouldCloseOnPinch({ ...base, maxGestureScale: 1.4 }),
+        ).toBe(false);
+        // Released at/above fit never closes.
+        expect(shouldCloseOnPinch({ ...base, scale: 1 })).toBe(false);
+        // Setting off, or an un-closable gallery, disarms it.
+        expect(shouldCloseOnPinch({ ...base, pinchToClose: false })).toBe(
+            false,
+        );
+        expect(shouldCloseOnPinch({ ...base, closable: false })).toBe(false);
     });
 });
 

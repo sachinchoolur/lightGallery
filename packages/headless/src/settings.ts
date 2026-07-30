@@ -203,6 +203,14 @@ export interface CoreSettings {
      */
     flickVelocity: number;
 
+    /**
+     * Pinching down on an un-zoomed image and releasing closes the
+     * gallery (iOS Photos). Guarded: a pinch that went past fit zoom
+     * at any point is a zoom correction and never closes. Requires
+     * `closable`.
+     */
+    pinchToClose: boolean;
+
     /** Enable touch swipe. */
     enableSwipe: boolean;
 
@@ -274,6 +282,7 @@ export const coreSettingsDefaults: CoreSettings = {
     counter: true,
     swipeThreshold: 50,
     flickVelocity: 0.5,
+    pinchToClose: true,
     enableSwipe: true,
     enableDrag: true,
     isMobile: undefined,

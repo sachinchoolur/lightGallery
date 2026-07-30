@@ -8,6 +8,7 @@ import {
     untracked,
 } from '@angular/core';
 import {
+    getEdgeFrictionedDelta,
     getHorizontalDragTransforms,
     getSwipeAxis,
     getSwipeReleaseVerdict,
@@ -355,7 +356,12 @@ export class LgGesturesDirective implements OnDestroy {
         if (session.axis === 'horizontal') {
             outer.classList.add('lg-dragging');
             const width = els.current?.offsetWidth || outer.offsetWidth || 0;
-            const transforms = getHorizontalDragTransforms(deltaX, width);
+            // Rubber-band past the gallery ends: a missing neighbor in
+            // the drag direction means there is nothing there.
+            const transforms = getHorizontalDragTransforms(
+                getEdgeFrictionedDelta(deltaX, !!els.prev, !!els.next),
+                width,
+            );
             if (els.current) {
                 els.current.style.transform = transforms.current;
             }
@@ -430,18 +436,25 @@ export class LgGesturesDirective implements OnDestroy {
                 state.slidesCount,
                 state.loop,
             );
+            // Springs start from the RENDERED delta — rubber-banded at
+            // the gallery ends, identical to raw elsewhere.
+            const renderedDeltaX = getEdgeFrictionedDelta(
+                deltaX,
+                !!session.els?.prev,
+                !!session.els?.next,
+            );
             if (target !== null) {
                 this.springHorizontalNavigate(
                     session,
                     verdict === 'next' ? 'next' : 'prev',
                     target,
-                    deltaX,
+                    renderedDeltaX,
                     releaseVelocity.x,
                 );
             } else {
                 this.springHorizontalBack(
                     session,
-                    deltaX,
+                    renderedDeltaX,
                     releaseVelocity.x,
                 );
             }

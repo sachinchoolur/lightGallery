@@ -1,10 +1,12 @@
 import {
+    getEdgeFrictionedDelta,
     getHorizontalDragTransforms,
     getSwipeAxis,
     getSwipeReleaseVerdict,
     getVerticalDragEffects,
     getWindowedVelocity,
     pushVelocitySample,
+    resolveSwipeTarget,
     shouldCloseOnVerticalDrag,
     type VelocitySample,
 } from '@lightgallery/headless';
@@ -1797,9 +1799,11 @@ export class LightGallery {
             // reset opacity and transition duration
             this.outer.addClass('lg-dragging');
 
-            // move current slide and its neighbors, keeping the gutter
+            // move current slide and its neighbors, keeping the gutter;
+            // past the gallery ends the drag rubber-bands instead of
+            // tracking 1:1
             const transforms = getHorizontalDragTransforms(
-                distanceX,
+                this.getEdgeDragDelta(distanceX),
                 $currentSlide.get().offsetWidth,
             );
             $currentSlide.css('transform', transforms.current);
@@ -1830,6 +1834,29 @@ export class LightGallery {
                 }
             }
         }
+    }
+
+    /**
+     * The horizontal delta as rendered: rubber-banded when the drag
+     * points past the first/last slide with nothing there (loop counts).
+     */
+    private getEdgeDragDelta(distanceX: number): number {
+        const count = this.galleryItems.length;
+        return getEdgeFrictionedDelta(
+            distanceX,
+            resolveSwipeTarget(
+                'prev',
+                this.index,
+                count,
+                this.settings.loop,
+            ) !== null,
+            resolveSwipeTarget(
+                'next',
+                this.index,
+                count,
+                this.settings.loop,
+            ) !== null,
+        );
     }
 
     /**
@@ -1987,11 +2014,16 @@ export class LightGallery {
                     flickVelocity: this.settings.flickVelocity,
                     viewportWidth: this.outer.get().offsetWidth,
                 });
+                // Springs start from the RENDERED delta — rubber-banded
+                // at the gallery ends, identical to raw elsewhere.
+                const renderedDeltaX = this.getEdgeDragDelta(
+                    endCoords.pageX - startCoords.pageX,
+                );
                 if (verdict === 'next' || verdict === 'prev') {
                     triggerClick = false;
                     springing = this.springSlideNavigation(
                         verdict,
-                        endCoords.pageX - startCoords.pageX,
+                        renderedDeltaX,
                         releaseVelocity.x,
                     );
                 } else {
@@ -1999,7 +2031,7 @@ export class LightGallery {
                     // velocity; lg-dragging stays on (transitions down)
                     // until it settles.
                     springing = this.springSlidesBack(
-                        endCoords.pageX - startCoords.pageX,
+                        renderedDeltaX,
                         releaseVelocity.x,
                     );
                 }

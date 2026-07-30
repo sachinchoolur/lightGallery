@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+    getEdgeFrictionedDelta,
     getHorizontalDragTransforms,
     getSwipeAxis,
     getSwipeReleaseVerdict,
@@ -22,6 +23,18 @@ describe('getSwipeAxis', () => {
     it('is sticky once committed', () => {
         expect(getSwipeAxis(0, 100, 'horizontal')).toBe('horizontal');
         expect(getSwipeAxis(100, 0, 'vertical')).toBe('vertical');
+    });
+});
+
+describe('getEdgeFrictionedDelta', () => {
+    it('rubber-bands only when dragging into a missing neighbor', () => {
+        // Dragging right (toward prev) with no prev slide: 0.35 friction.
+        expect(getEdgeFrictionedDelta(100, false, true)).toBe(35);
+        // Dragging left (toward next) with no next slide.
+        expect(getEdgeFrictionedDelta(-100, true, false)).toBe(-35);
+        // A neighbor in the drag direction keeps 1:1 travel.
+        expect(getEdgeFrictionedDelta(100, true, false)).toBe(100);
+        expect(getEdgeFrictionedDelta(-100, false, true)).toBe(-100);
     });
 });
 

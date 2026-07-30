@@ -1,4 +1,4 @@
-import { Component, viewChild } from '@angular/core';
+import { Component, signal, viewChild } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -69,6 +69,7 @@ function firePointer(
             [slides]="items"
             [zoomFromOrigin]="false"
             [features]="features"
+            [pinchToClose]="pinchToClose()"
             (posterClick)="posterClicks = posterClicks + 1"
             (hasVideo)="hasVideos.push($event.index)"
         />
@@ -78,6 +79,7 @@ class Wave1Host {
     readonly gallery = viewChild.required(LgGalleryComponent);
     readonly items = ITEMS;
     readonly features = [withThumbnail(), withZoom(), withVideo()];
+    readonly pinchToClose = signal(true);
     posterClicks = 0;
     readonly hasVideos: number[] = [];
 }
@@ -237,6 +239,9 @@ describe('wave-1 features', () => {
 
     it('zoom: snaps a pinch release into [1, actual size] despite infiniteZoom', async () => {
         const fixture = TestBed.createComponent(Wave1Host);
+        // pinchToClose off: the under-fit part of this test exercises the
+        // disarmed spring-back (armed default would close the gallery).
+        fixture.componentInstance.pinchToClose.set(false);
         await flush(fixture);
         await openAndLoad(fixture);
         await advance(fixture, 350);
@@ -267,6 +272,24 @@ describe('wave-1 features', () => {
         vi.advanceTimersByTime(2000);
         expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
+    });
+
+    it('zoom: closes on a pinch released below fit (default pinchToClose)', async () => {
+        const fixture = TestBed.createComponent(Wave1Host);
+        await flush(fixture);
+        await openAndLoad(fixture);
+        await advance(fixture, 350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+
+        // Squeeze from fit: distance 200 → 40 (scale 0.2), release.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 51 });
+        firePointer(panEl, 'pointerdown', { x: 300, y: 100, pointerId: 52 });
+        firePointer(window, 'pointermove', { x: 140, y: 100, pointerId: 52 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 51 });
+        await flush(fixture);
+        await advance(fixture, 1000);
+        expect(query('.lg-container')).toBeNull();
+        firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 52 });
     });
 
     it('zoom: disables transitions during a pinch and settles on release', async () => {
