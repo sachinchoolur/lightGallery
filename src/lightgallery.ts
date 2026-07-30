@@ -21,6 +21,7 @@ import {
     lightGalleryCoreSettings,
     LightGallerySettings,
 } from './lg-settings';
+import { runSprings } from './lg-spring-runner';
 import utils, { GalleryItem, ImageSize } from './lg-utils';
 import { $LG, lgQuery } from './lgQuery';
 import {
@@ -68,6 +69,9 @@ export class LightGallery {
 
     // Rolling gesture samples, for the windowed release velocity
     private swipeSamples: VelocitySample[] = [];
+
+    // Cancels a running release spring (slide snap-back / drag restore)
+    private cancelSlideSpring?: () => void;
 
     // Timeout function for hiding controls;
     public hideBarTimeout: any;
@@ -1759,6 +1763,14 @@ export class LightGallery {
         }
     }
 
+    /** Stop a running release spring; visuals stay at the live frame. */
+    stopSlideSpring(): void {
+        if (this.cancelSlideSpring) {
+            this.cancelSlideSpring();
+            this.cancelSlideSpring = undefined;
+        }
+    }
+
     touchMove(startCoords: Coords, endCoords: Coords, e?: TouchEvent): void {
         const distanceX = endCoords.pageX - startCoords.pageX;
         const distanceY = endCoords.pageY - startCoords.pageY;
@@ -1820,6 +1832,69 @@ export class LightGallery {
         }
     }
 
+    /**
+     * Spring the dragged slides back to rest, seeded with the release
+     * velocity. Returns false (no spring) for sub-pixel drags.
+     */
+    private springSlidesBack(deltaX: number, velocityX: number): boolean {
+        if (Math.abs(deltaX) < 1) {
+            return false;
+        }
+        const $currentSlide = this.getSlideItem(this.index);
+        const $prev = this.outer.find('.lg-prev-slide').first();
+        const $next = this.outer.find('.lg-next-slide').first();
+        const width = $currentSlide.get().offsetWidth;
+        this.stopSlideSpring();
+        this.cancelSlideSpring = runSprings(
+            [{ from: deltaX, velocity: velocityX, target: 0 }],
+            ([x]) => {
+                const transforms = getHorizontalDragTransforms(x!, width);
+                $currentSlide.css('transform', transforms.current);
+                $prev.css('transform', transforms.prev);
+                $next.css('transform', transforms.next);
+            },
+            () => {
+                this.cancelSlideSpring = undefined;
+                this.outer.removeClass('lg-dragging');
+                this.outer.find('.lg-item').removeAttr('style');
+            },
+        );
+        return true;
+    }
+
+    /**
+     * Spring a non-closing vertical drag back to rest — slide transform
+     * and backdrop opacity together, seeded with the release velocity.
+     */
+    private springVerticalRestore(deltaY: number, velocityY: number): boolean {
+        if (Math.abs(deltaY) < 1) {
+            return false;
+        }
+        const $currentSlide = this.getSlideItem(this.index);
+        this.stopSlideSpring();
+        this.$container.addClass('lg-dragging-vertical');
+        this.cancelSlideSpring = runSprings(
+            [{ from: deltaY, velocity: velocityY, target: 0 }],
+            ([y]) => {
+                const effects = getVerticalDragEffects(
+                    y!,
+                    window.innerWidth,
+                    window.innerHeight,
+                );
+                this.$backdrop.css('opacity', effects.backdropOpacity);
+                $currentSlide.css('transform', effects.transform);
+            },
+            () => {
+                this.cancelSlideSpring = undefined;
+                this.$container.removeClass('lg-dragging-vertical');
+                this.outer.removeClass('lg-dragging');
+                this.outer.find('.lg-item').removeAttr('style');
+                this.$backdrop.css('opacity', 1);
+            },
+        );
+        return true;
+    }
+
     touchEnd(endCoords: Coords, startCoords: Coords, event: TouchEvent): void {
         // Read the release velocity NOW — the work below is deferred a
         // tick, and velocity is defined at the moment the finger lifts.
@@ -1837,10 +1912,11 @@ export class LightGallery {
         setTimeout(() => {
             this.$container.removeClass('lg-dragging-vertical');
             this.outer
-                .removeClass('lg-dragging lg-hide-items')
+                .removeClass('lg-hide-items')
                 .addClass('lg-components-open');
 
             let triggerClick = true;
+            let springing = false;
 
             if (this.swipeDirection === 'horizontal') {
                 // Navigate past swipeThreshold, a quick flick, or a
@@ -1859,6 +1935,14 @@ export class LightGallery {
                 } else if (verdict === 'prev') {
                     this.goToPrevSlide(true);
                     triggerClick = false;
+                } else {
+                    // Snap back on a spring seeded with the release
+                    // velocity; lg-dragging stays on (transitions down)
+                    // until it settles.
+                    springing = this.springSlidesBack(
+                        endCoords.pageX - startCoords.pageX,
+                        releaseVelocity.x,
+                    );
                 }
             } else if (this.swipeDirection === 'vertical') {
                 if (
@@ -1874,11 +1958,17 @@ export class LightGallery {
                 ) {
                     this.closeGallery();
                     return;
-                } else {
-                    this.$backdrop.css('opacity', 1);
                 }
+                springing = this.springVerticalRestore(
+                    endCoords.pageY - startCoords.pageY,
+                    releaseVelocity.y,
+                );
             }
-            this.outer.find('.lg-item').removeAttr('style');
+            if (!springing) {
+                this.outer.removeClass('lg-dragging');
+                this.outer.find('.lg-item').removeAttr('style');
+                this.$backdrop.css('opacity', 1);
+            }
 
             if (
                 triggerClick &&
@@ -1924,6 +2014,7 @@ export class LightGallery {
                 ) {
                     isSwiping = true;
                     this.touchAction = 'swipe';
+                    this.stopSlideSpring();
                     this.manageSwipeClass();
                     this.swipeSamples = [
                         {
@@ -1987,6 +2078,7 @@ export class LightGallery {
                 ) {
                     if (!this.outer.hasClass('lg-zoomed') && !this.lgBusy) {
                         e.preventDefault();
+                        this.stopSlideSpring();
                         this.manageSwipeClass();
                         this.swipeSamples = [
                             { x: e.pageX, y: e.pageY, t: Date.now() },

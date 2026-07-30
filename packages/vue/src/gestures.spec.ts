@@ -267,6 +267,8 @@ describe('useGalleryGestures', () => {
         firePointer(window, 'pointermove', { x: 200, y: 120 });
         firePointer(window, 'pointermove', { x: 200, y: 160 });
         firePointer(window, 'pointerup', { x: 200, y: 160 });
+        // The release spring glides everything home, then restores.
+        vi.advanceTimersByTime(2000);
         await settle();
 
         expect(query('.lg-container')).not.toBeNull();

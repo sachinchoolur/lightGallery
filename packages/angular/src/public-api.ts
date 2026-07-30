@@ -49,3 +49,5 @@ export type {
     SlideEventDetail,
     SlideItemLoadDetail,
 } from './lib/types';
+
+export { runSprings, type SpringTrack } from './lib/spring-runner';

@@ -250,6 +250,8 @@ describe('vertical drag-to-close', () => {
         firePointer(window, 'pointerup', { x: 200, y: 160 });
 
         expect(onClose).not.toHaveBeenCalled();
+        // The release spring glides everything home, then restores.
+        tick(2000);
         expect(backdrop.style.opacity).toBe('');
         expect(item.style.transform).toBe('');
     });

@@ -33,12 +33,13 @@ import {
     type ZoomPan,
     type ZoomSlice,
 } from '@lightgallery/headless';
-import { runSprings, type SpringTrack } from './spring-runner';
 import {
     LG_FEATURE_INIT,
     LG_PLUGIN_CONTEXT,
     type LgFeature,
     type LgGalleryItem,
+    runSprings,
+    type SpringTrack,
 } from '@lightgallery/angular';
 
 /**

@@ -20,6 +20,8 @@ import {
     type VelocitySample,
 } from '@lightgallery/headless';
 
+import { runSprings } from './springRunner';
+
 import {
     useGalleryActions,
     useGalleryInternal,
@@ -95,6 +97,7 @@ export function useGalleryGestures({
 
     const sessionRef = useRef<DragSession | null>(null);
     const detachRef = useRef<(() => void) | null>(null);
+    const springCancelRef = useRef<(() => void) | null>(null);
 
     const queryEls = (session: DragSession) => {
         const outer = outerRef.current;
@@ -137,6 +140,83 @@ export function useGalleryGestures({
                 els.backdrop.style.opacity = '';
             }
         }
+    };
+
+    const stopReleaseSpring = () => {
+        springCancelRef.current?.();
+        springCancelRef.current = null;
+    };
+
+    // Snap the dragged slides back to rest on a spring seeded with the
+    // release velocity; lg-dragging stays on (transitions down) until it
+    // settles, then the visuals are restored to the rendered state.
+    const springHorizontalBack = (
+        session: DragSession,
+        deltaX: number,
+        velocityX: number,
+    ) => {
+        const els = session.els;
+        const width =
+            els?.current?.offsetWidth || outerRef.current?.offsetWidth || 0;
+        if (!els || !width || Math.abs(deltaX) < 1) {
+            restoreDragVisuals(session);
+            return;
+        }
+        stopReleaseSpring();
+        springCancelRef.current = runSprings(
+            [{ from: deltaX, velocity: velocityX, target: 0 }],
+            ([x]) => {
+                const transforms = getHorizontalDragTransforms(x!, width);
+                if (els.current) {
+                    els.current.style.transform = transforms.current;
+                }
+                if (els.prev) {
+                    els.prev.style.transform = transforms.prev;
+                }
+                if (els.next) {
+                    els.next.style.transform = transforms.next;
+                }
+            },
+            () => {
+                springCancelRef.current = null;
+                restoreDragVisuals(session);
+            },
+        );
+    };
+
+    // Same for a non-closing vertical drag: slide transform and backdrop
+    // opacity spring home together.
+    const springVerticalBack = (
+        session: DragSession,
+        deltaY: number,
+        velocityY: number,
+    ) => {
+        const els = session.els;
+        if (!els?.current || Math.abs(deltaY) < 1) {
+            restoreDragVisuals(session);
+            return;
+        }
+        stopReleaseSpring();
+        springCancelRef.current = runSprings(
+            [{ from: deltaY, velocity: velocityY, target: 0 }],
+            ([y]) => {
+                const effects = getVerticalDragEffects(
+                    y!,
+                    window.innerWidth,
+                    window.innerHeight,
+                );
+                els.current!.style.transform = effects.transform;
+                if (els.backdrop) {
+                    els.backdrop.style.opacity = String(
+                        effects.backdropOpacity,
+                    );
+                }
+            },
+            () => {
+                springCancelRef.current = null;
+                restoreDragVisuals(session);
+            },
+        );
     };
 
     const endSession = (session: DragSession) => {
@@ -255,10 +335,6 @@ export function useGalleryGestures({
         );
 
         if (session.axis === 'horizontal') {
-            // Removing lg-dragging re-enables transitions, so clearing the
-            // inline transforms animates the slides from the dragged position
-            // to their class targets (2.x touchEnd behavior).
-            restoreDragVisuals(session);
             const verdict = getSwipeReleaseVerdict({
                 deltaX,
                 velocityX: releaseVelocity.x,
@@ -274,10 +350,16 @@ export function useGalleryGestures({
                 currentState.loop,
             );
             if (target !== null) {
+                // Removing lg-dragging re-enables transitions, so
+                // clearing the inline transforms animates the slides
+                // from the dragged position to their class targets.
+                restoreDragVisuals(session);
                 commitTouchNavigation(
                     target,
                     verdict === 'next' ? 'next' : 'prev',
                 );
+            } else {
+                springHorizontalBack(session, deltaX, releaseVelocity.x);
             }
             return;
         }
@@ -296,7 +378,7 @@ export function useGalleryGestures({
             restoreDragVisuals(session);
             actionsRef.current.closeGallery();
         } else {
-            restoreDragVisuals(session);
+            springVerticalBack(session, deltaY, releaseVelocity.y);
         }
     };
 
@@ -315,6 +397,8 @@ export function useGalleryGestures({
         if (!active) {
             return;
         }
+        // Any new interaction claims the visuals from a settling spring.
+        stopReleaseSpring();
         const seam = internalRef.current.gestureSeam;
         const registerPointer = () => {
             seam.pointers = upsertPointer(seam.pointers, {
@@ -418,6 +502,8 @@ export function useGalleryGestures({
     }, [active]);
     useEffect(
         () => () => {
+            springCancelRef.current?.();
+            springCancelRef.current = null;
             detachRef.current?.();
             detachRef.current = null;
             sessionRef.current = null;
