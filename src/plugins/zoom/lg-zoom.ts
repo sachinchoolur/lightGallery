@@ -1,16 +1,19 @@
 import {
+    SPRING_BOUNCE_DAMPING,
     clampPan,
     getActualSizeScale as getNaturalSizeScale,
     getPanBounds,
-    getPanMomentum,
     getPinchScale,
     getPointerDistance,
     getPointZoomPan,
     getWindowedVelocity,
+    project,
     pushVelocitySample,
     type Velocity,
     type VelocitySample,
 } from '@lightgallery/headless';
+
+import { runSprings } from '../../lg-spring-runner';
 
 import { ZoomSettings, zoomSettings } from './lg-zoom-settings';
 import { LgQuery, lgQuery } from '../../lgQuery';
@@ -39,8 +42,6 @@ interface PossibleCords {
 }
 
 const ZOOM_TRANSITION_DURATION = 500;
-/** Gesture-release settle length — the 0.8s ease in lg-zoom.scss. */
-const PINCH_SETTLE_DURATION = 800;
 
 export default class Zoom {
     private core: LightGallery;
@@ -59,6 +60,7 @@ export default class Zoom {
     top!: number;
     left!: number;
     scrollTop!: number;
+    private cancelZoomSpring?: () => void;
     constructor(instance: LightGallery, $LG: LgQuery) {
         // get lightGallery core plugin instance
         this.core = instance;
@@ -690,6 +692,7 @@ export default class Zoom {
 
     // Reset zoom effect
     resetZoom(index?: number): void {
+        this.stopZoomSpring();
         this.core.outer.removeClass('lg-zoomed lg-zoom-drag-transition');
         const $actualSize = this.core.getElementById('lg-actual-size');
         const $item = this.core.getSlideItem(
@@ -706,6 +709,14 @@ export default class Zoom {
 
         // Reset pagx pagy values to center
         this.setPageCords();
+    }
+
+    /** Stop a running release spring; state stays at its live values. */
+    stopZoomSpring(): void {
+        if (this.cancelZoomSpring) {
+            this.cancelZoomSpring();
+            this.cancelZoomSpring = undefined;
+        }
     }
 
     getTouchDistance(e: TouchEvent): number {
@@ -774,6 +785,7 @@ export default class Zoom {
                 if (this.core.outer.hasClass('lg-first-slide-loading')) {
                     return;
                 }
+                this.stopZoomSpring();
                 this.setZoomEssentials();
                 initScale = this.scale || 1;
                 startPan = { x: this.left, y: this.top };
@@ -857,8 +869,8 @@ export default class Zoom {
                 startDist = 0;
                 // Keep lg-zoom-drag-transition: the release snap settles
                 // with the 0.8s ease instead of tracking-speed cuts.
-                this.core.outer.removeClass('lg-zoom-dragging');
                 if (this.scale <= 1) {
+                    this.core.outer.removeClass('lg-zoom-dragging');
                     this.resetZoom();
                 } else {
                     // Snap into [1, actual size] and re-project the pan
@@ -866,7 +878,8 @@ export default class Zoom {
                     // exact bounds for the landed scale — the released
                     // image always covers the stage. The gesture-start
                     // snapshot keeps the cap identical to the live
-                    // frames'.
+                    // frames'. A spring animates the snap; transitions
+                    // stand down until it settles.
                     const actualSizeScale = startMaxScale;
                     const targetScale = Math.min(
                         this.scale,
@@ -881,21 +894,41 @@ export default class Zoom {
                         ),
                         targetScale,
                     );
-                    this.left = pan.x;
-                    this.top = pan.y;
-                    this.setZoomStyles({
-                        x: pan.x,
-                        y: pan.y,
-                        scale: targetScale,
-                    });
                     // Buttons re-derive their anchor from left/top.
                     this.positionChanged = true;
-                    if (targetScale >= actualSizeScale) {
-                        this.setZoomImageSize(PINCH_SETTLE_DURATION);
-                    }
                     this.manageActualPixelClassNames();
-
                     this.core.outer.addClass('lg-zoomed');
+
+                    this.stopZoomSpring();
+                    this.cancelZoomSpring = runSprings(
+                        [
+                            {
+                                from: this.scale,
+                                velocity: 0,
+                                target: targetScale,
+                            },
+                            { from: this.left, velocity: 0, target: pan.x },
+                            { from: this.top, velocity: 0, target: pan.y },
+                        ],
+                        ([scale, x, y]) => {
+                            this.left = x!;
+                            this.top = y!;
+                            this.setZoomStyles({
+                                x: x!,
+                                y: y!,
+                                scale: scale!,
+                            });
+                        },
+                        () => {
+                            this.cancelZoomSpring = undefined;
+                            this.core.outer.removeClass(
+                                'lg-zoom-dragging lg-zoom-drag-transition',
+                            );
+                            if (targetScale >= actualSizeScale) {
+                                this.setZoomImageSize(0);
+                            }
+                        },
+                    );
                 }
                 this.core.touchAction = undefined;
             }
@@ -909,81 +942,91 @@ export default class Zoom {
         allowY: boolean,
         velocity: Velocity,
     ): void {
-        // Below the momentum threshold the projection returns the raw
-        // delta on both axes (≤ 15px each), so the gate below skips the
-        // write exactly as 2.x always has.
-        const projected = getPanMomentum(
-            {
-                x: endCoords.x - startCoords.x,
-                y: endCoords.y - startCoords.y,
-            },
-            velocity,
-        );
-
         const _LGel = this.core
             .getSlideItem(this.core.index)
             .find('.lg-img-wrap')
             .first();
-        const distance: Coords = {} as Coords;
-
-        distance.x = this.left + projected.x;
-        distance.y = this.top + projected.y;
-
         const possibleSwipeCords = this.getPossibleSwipeDragCords();
 
-        if (Math.abs(projected.x) > 15 || Math.abs(projected.y) > 15) {
-            if (allowY) {
-                if (
-                    this.isBeyondPossibleTop(
-                        distance.y,
-                        possibleSwipeCords.minY,
-                    )
-                ) {
-                    distance.y = possibleSwipeCords.minY;
-                } else if (
-                    this.isBeyondPossibleBottom(
-                        distance.y,
-                        possibleSwipeCords.maxY,
-                    )
-                ) {
-                    distance.y = possibleSwipeCords.maxY;
-                }
-            }
+        // Where the fingers left the image (rubber-banding included).
+        const current = this.getZoomSwipeCords(
+            startCoords,
+            endCoords,
+            allowX,
+            allowY,
+            possibleSwipeCords,
+        );
 
-            if (allowX) {
-                if (
-                    this.isBeyondPossibleLeft(
-                        distance.x,
-                        possibleSwipeCords.minX,
-                    )
-                ) {
-                    distance.x = possibleSwipeCords.minX;
-                } else if (
-                    this.isBeyondPossibleRight(
-                        distance.x,
-                        possibleSwipeCords.maxX,
-                    )
-                ) {
-                    distance.x = possibleSwipeCords.maxX;
-                }
-            }
+        // Project the momentum, then clamp into the pan bounds. A
+        // clamped axis settles with a soft bounce; a free one glides.
+        const clampAxis = (value: number, min: number, max: number): number =>
+            Math.min(Math.max(value, max), min);
+        const targetX = allowX
+            ? clampAxis(
+                  current.x + project(velocity.x),
+                  possibleSwipeCords.minX,
+                  possibleSwipeCords.maxX,
+              )
+            : this.left;
+        const targetY = allowY
+            ? clampAxis(
+                  current.y + project(velocity.y),
+                  possibleSwipeCords.minY,
+                  possibleSwipeCords.maxY,
+              )
+            : this.top;
 
-            if (allowY) {
-                this.top = distance.y;
-            } else {
-                distance.y = this.top;
-            }
-
-            if (allowX) {
-                this.left = distance.x;
-            } else {
-                distance.x = this.left;
-            }
-
-            this.setZoomSwipeStyles(_LGel, distance);
-
-            this.positionChanged = true;
+        this.positionChanged = true;
+        if (
+            Math.abs(targetX - current.x) < 1 &&
+            Math.abs(targetY - current.y) < 1
+        ) {
+            this.left = targetX;
+            this.top = targetY;
+            this.setZoomSwipeStyles(_LGel, { x: targetX, y: targetY });
+            this.core.outer.removeClass(
+                'lg-zoom-dragging lg-zoom-drag-transition',
+            );
+            return;
         }
+
+        // The spring drives every frame — CSS transitions stand down
+        // until it settles.
+        this.core.outer.addClass('lg-zoom-dragging');
+        this.stopZoomSpring();
+        this.cancelZoomSpring = runSprings(
+            [
+                {
+                    from: current.x,
+                    velocity: velocity.x,
+                    target: targetX,
+                    dampingRatio:
+                        targetX !== current.x + project(velocity.x)
+                            ? SPRING_BOUNCE_DAMPING
+                            : 1,
+                },
+                {
+                    from: current.y,
+                    velocity: velocity.y,
+                    target: targetY,
+                    dampingRatio:
+                        targetY !== current.y + project(velocity.y)
+                            ? SPRING_BOUNCE_DAMPING
+                            : 1,
+                },
+            ],
+            ([x, y]) => {
+                this.left = x!;
+                this.top = y!;
+                this.setZoomSwipeStyles(_LGel, { x: x!, y: y! });
+            },
+            () => {
+                this.cancelZoomSpring = undefined;
+                this.core.outer.removeClass(
+                    'lg-zoom-dragging lg-zoom-drag-transition',
+                );
+            },
+        );
     }
 
     getZoomSwipeCords(
@@ -1122,6 +1165,7 @@ export default class Zoom {
                 this.core.outer.hasClass('lg-zoomed')
             ) {
                 e.preventDefault();
+                this.stopZoomSpring();
                 const startPoint = this.getSwipeCords(e);
                 samples = [{ x: startPoint.x, y: startPoint.y, t: Date.now() }];
                 this.core.touchAction = 'zoomSwipe';
@@ -1234,6 +1278,7 @@ export default class Zoom {
                 this.$LG(e.target).hasClass('lg-item') ||
                 $item.get().contains(e.target)
             ) {
+                this.stopZoomSpring();
                 dragSamples = [{ x: e.pageX, y: e.pageY, t: Date.now() }];
                 _LGel = this.core
                     .getSlideItem(this.core.index)
