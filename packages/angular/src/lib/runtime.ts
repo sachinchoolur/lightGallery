@@ -62,6 +62,8 @@ export interface LgGestureHooks {
     prepareDrag(): void;
     /** Commit a swipe release to a slide change with fromTouch semantics. */
     commitTouchNavigation(target: number, direction: SlideDirection): void;
+    /** The navigation spring settled (or died) — restore the slide mode. */
+    settleTouchNavigation(): void;
 }
 
 /** Template slots discovered by the gallery via content queries (ADR §4). */

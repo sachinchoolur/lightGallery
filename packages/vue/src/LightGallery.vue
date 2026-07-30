@@ -942,15 +942,18 @@ function commitTouchNavigation(
 ): void {
     fromTouch = true;
     // Drags animate as slide whatever the mode (2.x adds lg-slide for the
-    // release animation, then removes it).
+    // release animation); the gesture layer restores it via
+    // settleTouchNavigation once its spring settles — a fixed timer here
+    // could revert mid-flight.
     if (settings.value.mode !== 'lg-slide') {
         touchSlideMode.value = true;
-        timers.set(
-            () => (touchSlideMode.value = false),
-            settings.value.speed + 100,
-        );
     }
     navigate(target, direction);
+}
+
+/** Sibling `settleTouchNavigation` twin. */
+function settleTouchNavigation(): void {
+    touchSlideMode.value = false;
 }
 
 function runTransition(
@@ -1187,6 +1190,7 @@ useGalleryGestures({
     closeGallery,
     prepareDrag,
     commitTouchNavigation,
+    settleTouchNavigation,
 });
 
 onMounted(() => {

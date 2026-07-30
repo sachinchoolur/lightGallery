@@ -70,6 +70,8 @@ export interface GalleryGesturesOptions {
     prepareDrag: () => void;
     /** Commit a swipe release to a slide change with fromTouch semantics. */
     commitTouchNavigation: (target: number, direction: SlideDirection) => void;
+    /** The navigation spring settled (or died) — restore the slide mode. */
+    settleTouchNavigation: () => void;
 }
 
 export function useGalleryGestures({
@@ -77,6 +79,7 @@ export function useGalleryGestures({
     active,
     prepareDrag,
     commitTouchNavigation,
+    settleTouchNavigation,
 }: GalleryGesturesOptions): {
     onPointerDown: (event: ReactPointerEvent) => void;
 } {
@@ -98,6 +101,7 @@ export function useGalleryGestures({
     const sessionRef = useRef<DragSession | null>(null);
     const detachRef = useRef<(() => void) | null>(null);
     const springCancelRef = useRef<(() => void) | null>(null);
+    const navSpringActiveRef = useRef(false);
 
     const queryEls = (session: DragSession) => {
         const outer = outerRef.current;
@@ -129,22 +133,26 @@ export function useGalleryGestures({
             outer?.classList.add('lg-components-open');
             session.hidUi = false;
         }
-        const els = session.els;
-        if (els) {
-            [els.current, els.prev, els.next].forEach((el) => {
-                if (el) {
-                    el.style.transform = '';
-                }
-            });
-            if (els.backdrop) {
-                els.backdrop.style.opacity = '';
-            }
+        // Every slide, not just the session's trio: a navigation spring
+        // cancelled mid-flight leaves transforms on slides that are no
+        // longer positioned around the new current index.
+        outer?.querySelectorAll<HTMLElement>('.lg-item').forEach((el) => {
+            el.style.transform = '';
+            el.style.transitionProperty = '';
+        });
+        if (session.els?.backdrop) {
+            session.els.backdrop.style.opacity = '';
         }
     };
 
     const stopReleaseSpring = () => {
         springCancelRef.current?.();
         springCancelRef.current = null;
+        // A cancelled navigation spring still owes the mode restore.
+        if (navSpringActiveRef.current) {
+            navSpringActiveRef.current = false;
+            settleTouchNavigation();
+        }
     };
 
     // Snap the dragged slides back to rest on a spring seeded with the
@@ -180,6 +188,66 @@ export function useGalleryGestures({
             () => {
                 springCancelRef.current = null;
                 restoreDragVisuals(session);
+            },
+        );
+    };
+
+    // Navigate at release (fromTouch semantics: events, counter and classes
+    // flip immediately) while a spring carries the drag geometry to the x
+    // where the arriving slide sits at exactly 0. The class flip is purely
+    // declarative, so the inline transforms keep ruling the visuals until
+    // the spring settles and hands everything back.
+    const springHorizontalNavigate = (
+        session: DragSession,
+        verdict: 'next' | 'prev',
+        target: number,
+        deltaX: number,
+        velocityX: number,
+    ) => {
+        const els = session.els;
+        const width =
+            els?.current?.offsetWidth || outerRef.current?.offsetWidth || 0;
+        stopReleaseSpring();
+        // The commit re-render may rewrite the outer className (dropping the
+        // classList-added lg-dragging), so the driven slides opt out of
+        // transitions inline for the flight.
+        if (els && width) {
+            [els.current, els.prev, els.next].forEach((el) => {
+                if (el) {
+                    el.style.transitionProperty = 'none';
+                }
+            });
+        }
+        commitTouchNavigation(target, verdict);
+        if (!els || !width) {
+            restoreDragVisuals(session);
+            settleTouchNavigation();
+            return;
+        }
+        // The x where the arriving slide's drag transform lands at 0:
+        // slideWidth + x + gutter(x) = 0  →  x = ∓ width·115/110.
+        const springTarget =
+            (verdict === 'next' ? -1 : 1) * ((width * 115) / 110);
+        navSpringActiveRef.current = true;
+        springCancelRef.current = runSprings(
+            [{ from: deltaX, velocity: velocityX, target: springTarget }],
+            ([x]) => {
+                const transforms = getHorizontalDragTransforms(x!, width);
+                if (els.current) {
+                    els.current.style.transform = transforms.current;
+                }
+                if (els.prev) {
+                    els.prev.style.transform = transforms.prev;
+                }
+                if (els.next) {
+                    els.next.style.transform = transforms.next;
+                }
+            },
+            () => {
+                springCancelRef.current = null;
+                navSpringActiveRef.current = false;
+                restoreDragVisuals(session);
+                settleTouchNavigation();
             },
         );
     };
@@ -350,13 +418,12 @@ export function useGalleryGestures({
                 currentState.loop,
             );
             if (target !== null) {
-                // Removing lg-dragging re-enables transitions, so
-                // clearing the inline transforms animates the slides
-                // from the dragged position to their class targets.
-                restoreDragVisuals(session);
-                commitTouchNavigation(
-                    target,
+                springHorizontalNavigate(
+                    session,
                     verdict === 'next' ? 'next' : 'prev',
+                    target,
+                    deltaX,
+                    releaseVelocity.x,
                 );
             } else {
                 springHorizontalBack(session, deltaX, releaseVelocity.x);
@@ -397,8 +464,6 @@ export function useGalleryGestures({
         if (!active) {
             return;
         }
-        // Any new interaction claims the visuals from a settling spring.
-        stopReleaseSpring();
         const seam = internalRef.current.gestureSeam;
         const registerPointer = () => {
             seam.pointers = upsertPointer(seam.pointers, {
@@ -446,6 +511,10 @@ export function useGalleryGestures({
             internalRef.current.emit('onDragStart');
         }
 
+        // The new session claims the visuals from a settling spring — only
+        // here: a blocked tap (transitioning, chrome) must not freeze an
+        // in-flight spring mid-glide.
+        stopReleaseSpring();
         // Register only once a session actually starts — early-return paths
         // must not leave stale records behind (nothing would remove them).
         registerPointer();
@@ -493,6 +562,7 @@ export function useGalleryGestures({
         if (active) {
             return;
         }
+        stopReleaseSpring();
         const session = sessionRef.current;
         if (session) {
             endSession(session);
@@ -504,6 +574,7 @@ export function useGalleryGestures({
         () => () => {
             springCancelRef.current?.();
             springCancelRef.current = null;
+            navSpringActiveRef.current = false;
             detachRef.current?.();
             detachRef.current = null;
             sessionRef.current = null;

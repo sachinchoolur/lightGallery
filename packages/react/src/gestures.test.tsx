@@ -125,6 +125,38 @@ describe('horizontal swipe', () => {
         });
     });
 
+    it('springs the slide change and restores the forced slide mode at settle', () => {
+        // A non-slide mode: the commit must force lg-slide for the flight
+        // and hand it back only when the spring settles (not on a timer).
+        openAndLoad({ mode: 'lg-fade' });
+        const item = currentSlide();
+        // jsdom measures 0 — a real width routes the release through the
+        // navigation spring instead of the degenerate fallback.
+        Object.defineProperty(item, 'offsetWidth', {
+            value: 400,
+            configurable: true,
+        });
+        firePointer(item, 'pointerdown', { x: 200, y: 100 });
+        firePointer(window, 'pointermove', { x: 120, y: 100 });
+        firePointer(window, 'pointerup', { x: 120, y: 100 });
+
+        // Navigation commits immediately...
+        expect(counterText()).toBe('2');
+        expect(document.querySelector('.lg-outer')).toHaveClass('lg-slide');
+        // ...while the spring still owns the visuals: the outgoing slide
+        // keeps its inline transform, transitions are opted out inline.
+        expect(item.style.transform).not.toBe('');
+        expect(item.style.transitionProperty).toBe('none');
+
+        tick(2000);
+        // Settle hands everything back to React.
+        expect(item.style.transform).toBe('');
+        expect(item.style.transitionProperty).toBe('');
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-slide',
+        );
+    });
+
     it('snaps back below the threshold', () => {
         openAndLoad();
         const item = currentSlide();

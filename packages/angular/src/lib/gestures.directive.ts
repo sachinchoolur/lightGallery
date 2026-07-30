@@ -86,6 +86,7 @@ export class LgGesturesDirective implements OnDestroy {
     private session: DragSession | null = null;
     private detachWindow: (() => void) | null = null;
     private springCancel: (() => void) | null = null;
+    private navSpringActive = false;
 
     constructor() {
         // The overlay view only ever attaches in the browser (ADR §8), so a
@@ -107,6 +108,7 @@ export class LgGesturesDirective implements OnDestroy {
     }
 
     private cancelSession(): void {
+        this.stopReleaseSpring();
         const session = this.session;
         if (session) {
             this.endSession(session);
@@ -136,10 +138,14 @@ export class LgGesturesDirective implements OnDestroy {
         return session.els;
     }
 
-    /** Return every mid-drag DOM mutation to what Angular last rendered. */
     private stopReleaseSpring(): void {
         this.springCancel?.();
         this.springCancel = null;
+        // A cancelled navigation spring still owes the mode restore.
+        if (this.navSpringActive) {
+            this.navSpringActive = false;
+            this.runtime.gestureHooks.settleTouchNavigation();
+        }
     }
 
     // Snap the dragged slides back to rest on a spring seeded with the
@@ -179,6 +185,66 @@ export class LgGesturesDirective implements OnDestroy {
         );
     }
 
+    // Navigate at release (fromTouch semantics: events, counter and classes
+    // flip immediately) while a spring carries the drag geometry to the x
+    // where the arriving slide sits at exactly 0. The class flip is purely
+    // declarative, so the inline transforms keep ruling the visuals until
+    // the spring settles and hands everything back.
+    private springHorizontalNavigate(
+        session: DragSession,
+        verdict: 'next' | 'prev',
+        target: number,
+        deltaX: number,
+        velocityX: number,
+    ): void {
+        const els = session.els;
+        const width =
+            els?.current?.offsetWidth || this.host.offsetWidth || 0;
+        this.stopReleaseSpring();
+        // The commit render may rewrite the outer classes (dropping the
+        // classList-added lg-dragging), so the driven slides opt out of
+        // transitions inline for the flight.
+        if (els && width) {
+            [els.current, els.prev, els.next].forEach((el) => {
+                if (el) {
+                    el.style.transitionProperty = 'none';
+                }
+            });
+        }
+        this.runtime.gestureHooks.commitTouchNavigation(target, verdict);
+        if (!els || !width) {
+            this.restoreDragVisuals(session);
+            this.runtime.gestureHooks.settleTouchNavigation();
+            return;
+        }
+        // The x where the arriving slide's drag transform lands at 0:
+        // slideWidth + x + gutter(x) = 0  →  x = ∓ width·115/110.
+        const springTarget =
+            (verdict === 'next' ? -1 : 1) * ((width * 115) / 110);
+        this.navSpringActive = true;
+        this.springCancel = runSprings(
+            [{ from: deltaX, velocity: velocityX, target: springTarget }],
+            ([x]) => {
+                const transforms = getHorizontalDragTransforms(x!, width);
+                if (els.current) {
+                    els.current.style.transform = transforms.current;
+                }
+                if (els.prev) {
+                    els.prev.style.transform = transforms.prev;
+                }
+                if (els.next) {
+                    els.next.style.transform = transforms.next;
+                }
+            },
+            () => {
+                this.springCancel = null;
+                this.navSpringActive = false;
+                this.restoreDragVisuals(session);
+                this.runtime.gestureHooks.settleTouchNavigation();
+            },
+        );
+    }
+
     // Same for a non-closing vertical drag: slide transform and backdrop
     // opacity spring home together.
     private springVerticalBack(
@@ -214,6 +280,7 @@ export class LgGesturesDirective implements OnDestroy {
         );
     }
 
+    /** Return every mid-drag DOM mutation to what Angular last rendered. */
     private restoreDragVisuals(session: DragSession): void {
         const outer = this.host;
         outer.classList.remove('lg-dragging');
@@ -223,16 +290,15 @@ export class LgGesturesDirective implements OnDestroy {
             outer.classList.add('lg-components-open');
             session.hidUi = false;
         }
-        const els = session.els;
-        if (els) {
-            [els.current, els.prev, els.next].forEach((el) => {
-                if (el) {
-                    el.style.transform = '';
-                }
-            });
-            if (els.backdrop) {
-                els.backdrop.style.opacity = '';
-            }
+        // Every slide, not just the session's trio: a navigation spring
+        // cancelled mid-flight leaves transforms on slides that are no
+        // longer positioned around the new current index.
+        outer.querySelectorAll<HTMLElement>('.lg-item').forEach((el) => {
+            el.style.transform = '';
+            el.style.transitionProperty = '';
+        });
+        if (session.els?.backdrop) {
+            session.els.backdrop.style.opacity = '';
         }
     }
 
@@ -365,13 +431,12 @@ export class LgGesturesDirective implements OnDestroy {
                 state.loop,
             );
             if (target !== null) {
-                // Removing lg-dragging re-enables transitions, so
-                // clearing the inline transforms animates the slides
-                // from the dragged position to their class targets.
-                this.restoreDragVisuals(session);
-                this.runtime.gestureHooks.commitTouchNavigation(
-                    target,
+                this.springHorizontalNavigate(
+                    session,
                     verdict === 'next' ? 'next' : 'prev',
+                    target,
+                    deltaX,
+                    releaseVelocity.x,
                 );
             } else {
                 this.springHorizontalBack(
@@ -413,8 +478,6 @@ export class LgGesturesDirective implements OnDestroy {
     };
 
     private readonly onPointerDown = (event: PointerEvent): void => {
-        // Any new interaction claims the visuals from a settling spring.
-        this.stopReleaseSpring();
         if (!this.lgGestures()) {
             return;
         }
@@ -462,6 +525,10 @@ export class LgGesturesDirective implements OnDestroy {
             this.runtime.emit('dragStart', undefined);
         }
 
+        // The new session claims the visuals from a settling spring — only
+        // here: a blocked tap (transitioning, chrome) must not freeze an
+        // in-flight spring mid-glide.
+        this.stopReleaseSpring();
         // Register only once a session actually starts — early-return paths
         // must not leave stale records behind (nothing would remove them).
         registerPointer();

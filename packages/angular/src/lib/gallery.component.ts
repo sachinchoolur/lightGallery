@@ -901,6 +901,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             prepareDrag: () => this.prepareDrag(),
             commitTouchNavigation: (target, direction) =>
                 this.commitTouchNavigation(target, direction),
+            settleTouchNavigation: () => this.touchSlideMode.set(false),
         };
         // The LG_PLUGIN_CONTEXT value (ADR §5): the React PluginContext
         // mirrored field-for-field onto signals.
@@ -1247,13 +1248,11 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     ): void {
         this.fromTouch = true;
         // Drags animate as slide whatever the mode (2.x adds lg-slide for
-        // the release animation, then removes it).
+        // the release animation); the gesture directive restores it via
+        // settleTouchNavigation once its spring settles — a fixed timer
+        // here could revert mid-flight.
         if (this.settings().mode !== 'lg-slide') {
             this.touchSlideMode.set(true);
-            this.timers.set(
-                () => this.touchSlideMode.set(false),
-                this.settings().speed + 100,
-            );
         }
         this.navigate(target, direction);
     }

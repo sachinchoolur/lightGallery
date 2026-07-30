@@ -589,22 +589,24 @@ export function GalleryOutlet({
         (target: number, direction: SlideDirection) => {
             fromTouchRef.current = true;
             // Drags animate as slide whatever the mode (2.x adds lg-slide
-            // for the release animation, then removes it).
+            // for the release animation); the gesture layer restores it via
+            // settleTouchNavigation once its spring settles — a fixed timer
+            // here could revert mid-flight.
             if (settings.mode !== 'lg-slide') {
                 setTouchSlideMode(true);
-                timers.set(
-                    () => setTouchSlideMode(false),
-                    settings.speed + 100,
-                );
             }
             actions.navigate(target, direction);
         },
     );
+    const settleTouchNavigation = useEventCallback(() => {
+        setTouchSlideMode(false);
+    });
     const gestures = useGalleryGestures({
         outerRef,
         active: bodyLockActive,
         prepareDrag,
         commitTouchNavigation,
+        settleTouchNavigation,
     });
 
     // Close on tap of the black area around the slide (2.x closeOnTap).

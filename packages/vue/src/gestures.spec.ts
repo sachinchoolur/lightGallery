@@ -113,9 +113,12 @@ const Host = defineComponent({
     `,
 });
 
-async function openAndLoad(log: string[] = []) {
+async function openAndLoad(
+    log: string[] = [],
+    extraProps: Record<string, unknown> = {},
+) {
     const wrapper = mount(Host, {
-        props: { log },
+        props: { log, ...extraProps },
         attachTo: document.body,
     });
     wrapper.findComponent(LightGallery).vm.openGallery(0);
@@ -207,6 +210,43 @@ describe('useGalleryGestures', () => {
         wrapper.unmount();
     });
 
+    it('springs the slide change and restores the forced slide mode at settle', async () => {
+        // A non-slide mode: the commit must force lg-slide for the flight
+        // and hand it back only when the spring settles (not on a timer).
+        const wrapper = await openAndLoad([], { mode: 'lg-fade' });
+
+        const item = query('.lg-item.lg-current')!;
+        // jsdom measures 0 — a real width routes the release through the
+        // navigation spring instead of the degenerate fallback.
+        Object.defineProperty(item, 'offsetWidth', {
+            value: 400,
+            configurable: true,
+        });
+        firePointer(item, 'pointerdown', { x: 200, y: 100 });
+        await settle();
+        firePointer(window, 'pointermove', { x: 120, y: 100 });
+        firePointer(window, 'pointerup', { x: 120, y: 100 });
+        await settle();
+
+        // Navigation commits immediately...
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
+        expect(query('.lg-outer')!.classList.contains('lg-fade')).toBe(true);
+        expect(query('.lg-outer')!.classList.contains('lg-slide')).toBe(true);
+        // ...while the spring still owns the visuals: the outgoing slide
+        // keeps its inline transform, transitions are opted out inline.
+        expect(item.style.transform).not.toBe('');
+        expect(item.style.transitionProperty).toBe('none');
+
+        await advance(2000);
+        // Settle hands everything back to Vue.
+        expect(item.style.transform).toBe('');
+        expect(item.style.transitionProperty).toBe('');
+        expect(query('.lg-outer')!.classList.contains('lg-slide')).toBe(
+            false,
+        );
+        wrapper.unmount();
+    });
+
     it('stands down for a second pointer (pinch seam) or a claimed lock', async () => {
         const wrapper = await openAndLoad();
         const runtime = runtimeOf(wrapper);
@@ -274,35 +314,6 @@ describe('useGalleryGestures', () => {
         expect(query('.lg-container')).not.toBeNull();
         expect(query('.lg-backdrop')!.style.opacity).toBe('');
         expect(item.style.transform).toBe('');
-        wrapper.unmount();
-    });
-
-    it('adds lg-slide for the release animation in non-slide modes', async () => {
-        const log: string[] = [];
-        const wrapper = mount(Host, {
-            props: { log, mode: 'lg-fade' },
-            attachTo: document.body,
-        });
-        wrapper.findComponent(LightGallery).vm.openGallery(0);
-        await settle();
-        await advance(450);
-        document
-            .querySelector<HTMLImageElement>('img.lg-image[data-index="0"]')
-            ?.dispatchEvent(new Event('load'));
-        await settle();
-
-        const item = query('.lg-item.lg-current')!;
-        firePointer(item, 'pointerdown', { x: 200, y: 100 });
-        await settle();
-        firePointer(window, 'pointermove', { x: 100, y: 100 });
-        firePointer(window, 'pointerup', { x: 100, y: 100 });
-        await settle();
-
-        const outer = query('.lg-outer')!;
-        expect(outer.classList.contains('lg-fade')).toBe(true);
-        expect(outer.classList.contains('lg-slide')).toBe(true);
-        await advance(SPEED + 100);
-        expect(outer.classList.contains('lg-slide')).toBe(false);
         wrapper.unmount();
     });
 

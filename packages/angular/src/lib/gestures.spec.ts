@@ -261,22 +261,40 @@ describe('LgGesturesDirective', () => {
         expect(item.style.transform).toBe('');
     });
 
-    it('adds lg-slide for the release animation in non-slide modes', async () => {
+    it('springs the slide change and restores the forced slide mode at settle', async () => {
+        // A non-slide mode: the commit must force lg-slide for the flight
+        // and hand it back only when the spring settles (not on a timer).
         const fixture = TestBed.createComponent(GestureHost);
         fixture.componentInstance.mode.set('lg-fade');
         await openAndLoad(fixture);
 
         const item = currentSlide();
+        // jsdom measures 0 — a real width routes the release through the
+        // navigation spring instead of the degenerate fallback.
+        Object.defineProperty(item, 'offsetWidth', {
+            value: 400,
+            configurable: true,
+        });
         firePointer(item, 'pointerdown', { x: 200, y: 100 });
         await flush(fixture);
-        firePointer(window, 'pointermove', { x: 100, y: 100 });
-        firePointer(window, 'pointerup', { x: 100, y: 100 });
+        firePointer(window, 'pointermove', { x: 120, y: 100 });
+        firePointer(window, 'pointerup', { x: 120, y: 100 });
         await flush(fixture);
 
         const outer = query('.lg-outer')!;
+        // Navigation commits immediately...
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
         expect(outer.classList.contains('lg-fade')).toBe(true);
         expect(outer.classList.contains('lg-slide')).toBe(true);
-        await advance(fixture, SPEED + 100);
+        // ...while the spring still owns the visuals: the outgoing slide
+        // keeps its inline transform, transitions are opted out inline.
+        expect(item.style.transform).not.toBe('');
+        expect(item.style.transitionProperty).toBe('none');
+
+        await advance(fixture, 2000);
+        // Settle hands everything back to Angular.
+        expect(item.style.transform).toBe('');
+        expect(item.style.transitionProperty).toBe('');
         expect(outer.classList.contains('lg-slide')).toBe(false);
     });
 
