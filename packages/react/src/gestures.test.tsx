@@ -219,7 +219,7 @@ describe('horizontal swipe', () => {
 });
 
 describe('vertical drag-to-close', () => {
-    it('fades the backdrop with the drag and closes past 100px', () => {
+    it('fades the backdrop with the drag and closes past the projected ratio', () => {
         const onClose = vi.fn();
         openAndLoad({ onClose });
         const item = currentSlide();
@@ -230,12 +230,12 @@ describe('vertical drag-to-close', () => {
         expect(backdrop.style.opacity).not.toBe('');
         expect(item.style.transform).toContain('scale3d');
 
-        firePointer(window, 'pointermove', { x: 200, y: 260 });
+        firePointer(window, 'pointermove', { x: 200, y: 460 });
         expect(document.querySelector('.lg-outer')).toHaveClass(
             'lg-hide-items',
         );
 
-        firePointer(window, 'pointerup', { x: 200, y: 260 });
+        firePointer(window, 'pointerup', { x: 200, y: 460 });
         expect(onClose).toHaveBeenCalledTimes(1);
     });
 

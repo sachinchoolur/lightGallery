@@ -226,7 +226,7 @@ describe('LgGesturesDirective', () => {
         firePointer(item, 'pointerdown', { x: 200, y: 100 });
         await flush(fixture);
         firePointer(window, 'pointermove', { x: 200, y: 120 });
-        firePointer(window, 'pointermove', { x: 200, y: 220 });
+        firePointer(window, 'pointermove', { x: 200, y: 460 });
         const backdrop = query('.lg-backdrop')!;
         expect(backdrop.style.opacity).not.toBe('');
         expect(Number(backdrop.style.opacity)).toBeLessThan(1);
@@ -235,7 +235,7 @@ describe('LgGesturesDirective', () => {
             true,
         );
 
-        firePointer(window, 'pointerup', { x: 200, y: 220 });
+        firePointer(window, 'pointerup', { x: 200, y: 460 });
         await flush(fixture);
         expect(backdrop.style.opacity).toBe('');
         await advance(fixture, 450);

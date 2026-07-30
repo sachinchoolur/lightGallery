@@ -117,8 +117,7 @@ export class LgGesturesDirective implements OnDestroy {
         const outer = this.host;
         session.els = {
             current:
-                outer.querySelector<HTMLElement>('.lg-item.lg-current') ??
-                null,
+                outer.querySelector<HTMLElement>('.lg-item.lg-current') ?? null,
             prev:
                 outer.querySelector<HTMLElement>('.lg-item.lg-prev-slide') ??
                 null,
@@ -235,10 +234,7 @@ export class LgGesturesDirective implements OnDestroy {
             if (effects.hideUi !== session.hidUi) {
                 session.hidUi = effects.hideUi;
                 outer.classList.toggle('lg-hide-items', effects.hideUi);
-                outer.classList.toggle(
-                    'lg-components-open',
-                    !effects.hideUi,
-                );
+                outer.classList.toggle('lg-components-open', !effects.hideUi);
             }
         }
 
@@ -268,6 +264,10 @@ export class LgGesturesDirective implements OnDestroy {
 
         const deltaX = session.lastX - session.startX;
         const deltaY = session.lastY - session.startY;
+        const releaseVelocity = getWindowedVelocity(
+            session.samples,
+            performance.now(),
+        );
 
         if (session.axis === 'horizontal') {
             // Removing lg-dragging re-enables transitions, so clearing the
@@ -276,10 +276,8 @@ export class LgGesturesDirective implements OnDestroy {
             this.restoreDragVisuals(session);
             const verdict = getSwipeReleaseVerdict({
                 deltaX,
-                velocityX: getWindowedVelocity(
-                    session.samples,
-                    performance.now(),
-                ).x,
+                velocityX: releaseVelocity.x,
+                viewportWidth: this.host.offsetWidth || window.innerWidth,
                 threshold: settings.swipeThreshold,
                 flickVelocity: settings.flickVelocity,
             });
@@ -299,10 +297,15 @@ export class LgGesturesDirective implements OnDestroy {
         }
 
         if (
-            shouldCloseOnVerticalDrag(deltaY, {
-                closable: settings.closable,
-                swipeToClose: settings.swipeToClose,
-            })
+            shouldCloseOnVerticalDrag(
+                deltaY,
+                releaseVelocity.y,
+                window.innerHeight,
+                {
+                    closable: settings.closable,
+                    swipeToClose: settings.swipeToClose,
+                },
+            )
         ) {
             this.restoreDragVisuals(session);
             this.runtime.actions.closeGallery();
@@ -405,10 +408,7 @@ export class LgGesturesDirective implements OnDestroy {
         window.addEventListener('pointerup', this.onWindowPointerUp);
         window.addEventListener('pointercancel', this.onWindowPointerCancel);
         this.detachWindow = () => {
-            window.removeEventListener(
-                'pointermove',
-                this.onWindowPointerMove,
-            );
+            window.removeEventListener('pointermove', this.onWindowPointerMove);
             window.removeEventListener('pointerup', this.onWindowPointerUp);
             window.removeEventListener(
                 'pointercancel',

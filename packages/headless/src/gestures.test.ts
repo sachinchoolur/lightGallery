@@ -94,30 +94,61 @@ describe('getSwipeReleaseVerdict', () => {
         ).toBe('stay');
     });
 
+    it('navigates when momentum projects past the midpoint', () => {
+        // High threshold, sub-flick velocity: only the projection rule
+        // can pass. 260px at 0.3 px/ms projects ~320 > 400/2.
+        const input = {
+            deltaX: -260,
+            velocityX: -0.3,
+            threshold: 400,
+            viewportWidth: 400,
+        };
+        expect(getSwipeReleaseVerdict(input)).toBe('next');
+        expect(
+            getSwipeReleaseVerdict({ ...input, viewportWidth: undefined }),
+        ).toBe('stay');
+    });
+
     it('honors the flickVelocity setting', () => {
         const input = { deltaX: -40, velocityX: -0.4, threshold };
         expect(getSwipeReleaseVerdict(input)).toBe('stay');
-        expect(
-            getSwipeReleaseVerdict({ ...input, flickVelocity: 0.3 }),
-        ).toBe('next');
+        expect(getSwipeReleaseVerdict({ ...input, flickVelocity: 0.3 })).toBe(
+            'next',
+        );
     });
 });
 
 describe('shouldCloseOnVerticalDrag', () => {
     const settings = { closable: true, swipeToClose: true };
+    const vh = 800; // close ratio 0.4 -> 320px projected travel
 
-    it('closes past 100px when closable and swipeToClose', () => {
-        expect(shouldCloseOnVerticalDrag(150, settings)).toBe(true);
-        expect(shouldCloseOnVerticalDrag(-150, settings)).toBe(true);
-        expect(shouldCloseOnVerticalDrag(80, settings)).toBe(false);
+    it('closes when the projected travel passes the ratio', () => {
+        expect(shouldCloseOnVerticalDrag(350, 0, vh, settings)).toBe(true);
+        expect(shouldCloseOnVerticalDrag(-350, 0, vh, settings)).toBe(true);
+        // A slow 150px drag no longer closes (used to at the fixed 100px).
+        expect(shouldCloseOnVerticalDrag(150, 0, vh, settings)).toBe(false);
+    });
+
+    it('closes on a small fast flick via momentum projection', () => {
+        // 60px travelled, 1.5 px/ms: projects ~358px > 320.
+        expect(shouldCloseOnVerticalDrag(60, 1.5, vh, settings)).toBe(true);
+        expect(shouldCloseOnVerticalDrag(-60, -1.5, vh, settings)).toBe(true);
+    });
+
+    it('never closes when the release moves back toward rest', () => {
+        // Far past the ratio, but momentum points home.
+        expect(shouldCloseOnVerticalDrag(350, -2, vh, settings)).toBe(false);
     });
 
     it('never closes when disabled', () => {
         expect(
-            shouldCloseOnVerticalDrag(200, { ...settings, closable: false }),
+            shouldCloseOnVerticalDrag(400, 0, vh, {
+                ...settings,
+                closable: false,
+            }),
         ).toBe(false);
         expect(
-            shouldCloseOnVerticalDrag(200, {
+            shouldCloseOnVerticalDrag(400, 0, vh, {
                 ...settings,
                 swipeToClose: false,
             }),

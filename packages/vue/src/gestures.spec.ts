@@ -241,7 +241,7 @@ describe('useGalleryGestures', () => {
         firePointer(item, 'pointerdown', { x: 200, y: 100 });
         await settle();
         firePointer(window, 'pointermove', { x: 200, y: 120 });
-        firePointer(window, 'pointermove', { x: 200, y: 220 });
+        firePointer(window, 'pointermove', { x: 200, y: 460 });
         const backdrop = query('.lg-backdrop')!;
         expect(backdrop.style.opacity).not.toBe('');
         expect(Number(backdrop.style.opacity)).toBeLessThan(1);
@@ -250,7 +250,7 @@ describe('useGalleryGestures', () => {
             true,
         );
 
-        firePointer(window, 'pointerup', { x: 200, y: 220 });
+        firePointer(window, 'pointerup', { x: 200, y: 460 });
         await settle();
         expect(backdrop.style.opacity).toBe('');
         await advance(450);

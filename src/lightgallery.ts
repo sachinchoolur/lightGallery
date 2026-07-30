@@ -1821,6 +1821,13 @@ export class LightGallery {
     }
 
     touchEnd(endCoords: Coords, startCoords: Coords, event: TouchEvent): void {
+        // Read the release velocity NOW — the work below is deferred a
+        // tick, and velocity is defined at the moment the finger lifts.
+        const releaseVelocity = getWindowedVelocity(
+            this.swipeSamples,
+            Date.now(),
+        );
+
         // keep slide animation for any mode while dragg/swipe
         if (this.settings.mode !== 'lg-slide') {
             this.outer.addClass('lg-slide');
@@ -1836,16 +1843,15 @@ export class LightGallery {
             let triggerClick = true;
 
             if (this.swipeDirection === 'horizontal') {
-                // Navigate past swipeThreshold, or on a quick flick —
-                // shared release verdict, all runtimes.
+                // Navigate past swipeThreshold, a quick flick, or a
+                // momentum projection past the midpoint — shared release
+                // verdict, all runtimes.
                 const verdict = getSwipeReleaseVerdict({
                     deltaX: endCoords.pageX - startCoords.pageX,
-                    velocityX: getWindowedVelocity(
-                        this.swipeSamples,
-                        Date.now(),
-                    ).x,
+                    velocityX: releaseVelocity.x,
                     threshold: this.settings.swipeThreshold,
                     flickVelocity: this.settings.flickVelocity,
+                    viewportWidth: this.outer.get().offsetWidth,
                 });
                 if (verdict === 'next') {
                     this.goToNextSlide(true);
@@ -1858,6 +1864,8 @@ export class LightGallery {
                 if (
                     shouldCloseOnVerticalDrag(
                         endCoords.pageY - startCoords.pageY,
+                        releaseVelocity.y,
+                        window.innerHeight,
                         {
                             closable: this.settings.closable,
                             swipeToClose: this.settings.swipeToClose,

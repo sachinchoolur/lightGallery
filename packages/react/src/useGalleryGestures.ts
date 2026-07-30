@@ -99,9 +99,15 @@ export function useGalleryGestures({
     const queryEls = (session: DragSession) => {
         const outer = outerRef.current;
         session.els = {
-            current: outer?.querySelector<HTMLElement>('.lg-item.lg-current') ?? null,
-            prev: outer?.querySelector<HTMLElement>('.lg-item.lg-prev-slide') ?? null,
-            next: outer?.querySelector<HTMLElement>('.lg-item.lg-next-slide') ?? null,
+            current:
+                outer?.querySelector<HTMLElement>('.lg-item.lg-current') ??
+                null,
+            prev:
+                outer?.querySelector<HTMLElement>('.lg-item.lg-prev-slide') ??
+                null,
+            next:
+                outer?.querySelector<HTMLElement>('.lg-item.lg-next-slide') ??
+                null,
             backdrop:
                 outer?.parentElement?.querySelector<HTMLElement>(
                     '.lg-backdrop',
@@ -186,8 +192,7 @@ export function useGalleryGestures({
 
         if (session.axis === 'horizontal') {
             outer?.classList.add('lg-dragging');
-            const width =
-                els.current?.offsetWidth || outer?.offsetWidth || 0;
+            const width = els.current?.offsetWidth || outer?.offsetWidth || 0;
             const transforms = getHorizontalDragTransforms(deltaX, width);
             if (els.current) {
                 els.current.style.transform = transforms.current;
@@ -214,10 +219,7 @@ export function useGalleryGestures({
             if (effects.hideUi !== session.hidUi) {
                 session.hidUi = effects.hideUi;
                 outer?.classList.toggle('lg-hide-items', effects.hideUi);
-                outer?.classList.toggle(
-                    'lg-components-open',
-                    !effects.hideUi,
-                );
+                outer?.classList.toggle('lg-components-open', !effects.hideUi);
             }
         }
 
@@ -247,6 +249,10 @@ export function useGalleryGestures({
 
         const deltaX = session.lastX - session.startX;
         const deltaY = session.lastY - session.startY;
+        const releaseVelocity = getWindowedVelocity(
+            session.samples,
+            performance.now(),
+        );
 
         if (session.axis === 'horizontal') {
             // Removing lg-dragging re-enables transitions, so clearing the
@@ -255,10 +261,9 @@ export function useGalleryGestures({
             restoreDragVisuals(session);
             const verdict = getSwipeReleaseVerdict({
                 deltaX,
-                velocityX: getWindowedVelocity(
-                    session.samples,
-                    performance.now(),
-                ).x,
+                velocityX: releaseVelocity.x,
+                viewportWidth:
+                    outerRef.current?.offsetWidth || window.innerWidth,
                 threshold: currentSettings.swipeThreshold,
                 flickVelocity: currentSettings.flickVelocity,
             });
@@ -278,10 +283,15 @@ export function useGalleryGestures({
         }
 
         if (
-            shouldCloseOnVerticalDrag(deltaY, {
-                closable: currentSettings.closable,
-                swipeToClose: currentSettings.swipeToClose,
-            })
+            shouldCloseOnVerticalDrag(
+                deltaY,
+                releaseVelocity.y,
+                window.innerHeight,
+                {
+                    closable: currentSettings.closable,
+                    swipeToClose: currentSettings.swipeToClose,
+                },
+            )
         ) {
             restoreDragVisuals(session);
             actionsRef.current.closeGallery();
@@ -333,7 +343,9 @@ export function useGalleryGestures({
             return;
         }
         const isMouse = event.pointerType === 'mouse';
-        if (isMouse ? !currentSettings.enableDrag : !currentSettings.enableSwipe) {
+        if (
+            isMouse ? !currentSettings.enableDrag : !currentSettings.enableSwipe
+        ) {
             return;
         }
         const target = event.target as Element | null;

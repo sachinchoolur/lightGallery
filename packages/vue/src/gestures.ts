@@ -71,18 +71,12 @@ export interface GalleryGesturesOptions {
     store: GalleryStore;
     settings: () => CoreSettings;
     seam: LgGestureSeam;
-    emit: <K extends keyof LgEventMap>(
-        name: K,
-        detail: LgEventMap[K],
-    ) => void;
+    emit: <K extends keyof LgEventMap>(name: K, detail: LgEventMap[K]) => void;
     closeGallery: () => void;
     /** Assign prev/next position classes around the current slide. */
     prepareDrag: () => void;
     /** Commit a swipe release to a slide change with fromTouch semantics. */
-    commitTouchNavigation: (
-        target: number,
-        direction: SlideDirection,
-    ) => void;
+    commitTouchNavigation: (target: number, direction: SlideDirection) => void;
 }
 
 export function useGalleryGestures(options: GalleryGesturesOptions): void {
@@ -101,23 +95,18 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
     let session: DragSession | null = null;
     let detachWindow: (() => void) | null = null;
 
-    function queryEls(
-        drag: DragSession,
-    ): NonNullable<DragSession['els']> {
+    function queryEls(drag: DragSession): NonNullable<DragSession['els']> {
         const el = outer.value!;
         drag.els = {
             current:
                 el.querySelector<HTMLElement>('.lg-item.lg-current') ?? null,
             prev:
-                el.querySelector<HTMLElement>('.lg-item.lg-prev-slide') ??
-                null,
+                el.querySelector<HTMLElement>('.lg-item.lg-prev-slide') ?? null,
             next:
-                el.querySelector<HTMLElement>('.lg-item.lg-next-slide') ??
-                null,
+                el.querySelector<HTMLElement>('.lg-item.lg-next-slide') ?? null,
             backdrop:
-                el.parentElement?.querySelector<HTMLElement>(
-                    '.lg-backdrop',
-                ) ?? null,
+                el.parentElement?.querySelector<HTMLElement>('.lg-backdrop') ??
+                null,
         };
         return drag.els;
     }
@@ -207,8 +196,7 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
 
         if (drag.axis === 'horizontal') {
             el?.classList.add('lg-dragging');
-            const width =
-                els.current?.offsetWidth || el?.offsetWidth || 0;
+            const width = els.current?.offsetWidth || el?.offsetWidth || 0;
             const transforms = getHorizontalDragTransforms(deltaX, width);
             if (els.current) {
                 els.current.style.transform = transforms.current;
@@ -227,9 +215,7 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
                 window.innerHeight,
             );
             if (els.backdrop) {
-                els.backdrop.style.opacity = String(
-                    effects.backdropOpacity,
-                );
+                els.backdrop.style.opacity = String(effects.backdropOpacity);
             }
             if (els.current) {
                 els.current.style.transform = effects.transform;
@@ -237,10 +223,7 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
             if (effects.hideUi !== drag.hidUi) {
                 drag.hidUi = effects.hideUi;
                 el?.classList.toggle('lg-hide-items', effects.hideUi);
-                el?.classList.toggle(
-                    'lg-components-open',
-                    !effects.hideUi,
-                );
+                el?.classList.toggle('lg-components-open', !effects.hideUi);
             }
         }
 
@@ -269,6 +252,10 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
 
         const deltaX = drag.lastX - drag.startX;
         const deltaY = drag.lastY - drag.startY;
+        const releaseVelocity = getWindowedVelocity(
+            drag.samples,
+            performance.now(),
+        );
 
         if (drag.axis === 'horizontal') {
             // Removing lg-dragging re-enables transitions, so clearing the
@@ -277,10 +264,8 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
             restoreDragVisuals(drag);
             const verdict = getSwipeReleaseVerdict({
                 deltaX,
-                velocityX: getWindowedVelocity(
-                    drag.samples,
-                    performance.now(),
-                ).x,
+                velocityX: releaseVelocity.x,
+                viewportWidth: outer.value?.offsetWidth || window.innerWidth,
                 threshold: cfg.swipeThreshold,
                 flickVelocity: cfg.flickVelocity,
             });
@@ -300,10 +285,15 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
         }
 
         if (
-            shouldCloseOnVerticalDrag(deltaY, {
-                closable: cfg.closable,
-                swipeToClose: cfg.swipeToClose,
-            })
+            shouldCloseOnVerticalDrag(
+                deltaY,
+                releaseVelocity.y,
+                window.innerHeight,
+                {
+                    closable: cfg.closable,
+                    swipeToClose: cfg.swipeToClose,
+                },
+            )
         ) {
             restoreDragVisuals(drag);
             closeGallery();
@@ -400,15 +390,9 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
         window.addEventListener('pointerup', onWindowPointerUp);
         window.addEventListener('pointercancel', onWindowPointerCancel);
         detachWindow = () => {
-            window.removeEventListener(
-                'pointermove',
-                onWindowPointerMove,
-            );
+            window.removeEventListener('pointermove', onWindowPointerMove);
             window.removeEventListener('pointerup', onWindowPointerUp);
-            window.removeEventListener(
-                'pointercancel',
-                onWindowPointerCancel,
-            );
+            window.removeEventListener('pointercancel', onWindowPointerCancel);
         };
     };
 

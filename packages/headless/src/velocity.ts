@@ -25,6 +25,9 @@ export const VELOCITY_WINDOW_MS = 100;
 /** Below this displacement (px) an axis reads as at rest. */
 const MIN_DISPLACEMENT = 1;
 
+/** Below this span (ms) the window cannot measure reliably. */
+const MIN_WINDOW_SPAN_MS = 5;
+
 /**
  * Append a sample, pruning everything older than the window — the
  * buffer stays a handful of entries regardless of gesture length.
@@ -34,10 +37,7 @@ export function pushVelocitySample(
     sample: VelocitySample,
     windowMs: number = VELOCITY_WINDOW_MS,
 ): VelocitySample[] {
-    return [
-        ...samples.filter((s) => sample.t - s.t <= windowMs),
-        sample,
-    ];
+    return [...samples.filter((s) => sample.t - s.t <= windowMs), sample];
 }
 
 /**
@@ -57,7 +57,7 @@ export function getWindowedVelocity(
     const first = recent[0]!;
     const last = recent[recent.length - 1]!;
     const dt = last.t - first.t;
-    if (dt <= 0) {
+    if (dt < MIN_WINDOW_SPAN_MS) {
         return { x: 0, y: 0 };
     }
     const dx = last.x - first.x;

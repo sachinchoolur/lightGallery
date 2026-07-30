@@ -6,9 +6,7 @@ import {
     type VelocitySample,
 } from './velocity';
 
-function record(
-    points: Array<[number, number, number]>,
-): VelocitySample[] {
+function record(points: Array<[number, number, number]>): VelocitySample[] {
     let samples: VelocitySample[] = [];
     for (const [x, y, t] of points) {
         samples = pushVelocitySample(samples, { x, y, t });
@@ -69,6 +67,19 @@ describe('windowed velocity', () => {
         // Everything older than 100ms behind the newest sample is gone.
         expect(samples[0]!.t).toBe(80);
         expect(samples.length).toBe(3);
+    });
+
+    it('reads zero when the window span is too short to measure', () => {
+        // Two samples 0.4ms apart would read 150 px/ms — noise.
+        expect(
+            getWindowedVelocity(
+                record([
+                    [0, 0, 1000],
+                    [60, 0, 1000.4],
+                ]),
+                1000.4,
+            ),
+        ).toEqual({ x: 0, y: 0 });
     });
 
     it('is signed per axis', () => {

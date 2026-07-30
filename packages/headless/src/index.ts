@@ -40,6 +40,7 @@ export {
     FLICK_MIN_DISTANCE,
     FLICK_VELOCITY,
     SWIPE_AXIS_THRESHOLD,
+    VERTICAL_CLOSE_RATIO,
     VERTICAL_CLOSE_THRESHOLD,
     getHorizontalDragTransforms,
     getSwipeAxis,
@@ -97,6 +98,18 @@ export {
     getThumbTotalWidth,
     type ThumbPagerPosition,
 } from './thumb-math';
+
+export {
+    DECELERATION_RATE,
+    SPRING_BOUNCE_DAMPING,
+    SPRING_NATURAL_FREQUENCY,
+    SPRING_SETTLE_DAMPING,
+    isSpringSettled,
+    project,
+    stepSpring,
+    type SpringConfig,
+    type SpringState,
+} from './spring';
 
 export {
     VELOCITY_WINDOW_MS,

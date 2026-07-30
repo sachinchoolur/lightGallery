@@ -7,6 +7,8 @@
  * identical across frameworks.
  */
 
+import { project } from './spring';
+
 export type SwipeAxis = 'horizontal' | 'vertical';
 
 /** Minimum travel (px) before a drag commits to an axis — 2.x parity. */
@@ -24,8 +26,15 @@ export const FLICK_VELOCITY = 0.5;
 /** Minimum travel (px) for a flick, so taps never navigate. */
 export const FLICK_MIN_DISTANCE = 20;
 
-/** Vertical travel (px) beyond which a drag-to-close release closes — 2.x. */
+/** Vertical travel (px) beyond which the drag hides the UI chrome — 2.x. */
 export const VERTICAL_CLOSE_THRESHOLD = 100;
+
+/**
+ * Drag-to-close verdict: the momentum-projected travel must pass this
+ * fraction of the viewport height — a small fast downward flick closes,
+ * a large slow drag released while returning does not.
+ */
+export const VERTICAL_CLOSE_RATIO = 0.4;
 
 /** Decide (once) which axis a drag follows; sticky after the first commit. */
 export function getSwipeAxis(
@@ -102,6 +111,12 @@ export interface SwipeReleaseInput {
     threshold: number;
     /** `flickVelocity` setting (px/ms). */
     flickVelocity?: number;
+    /**
+     * Slide width (px). When given, a release whose momentum-projected
+     * travel crosses the midpoint also navigates — a firm half-hearted
+     * swipe keeps going where a hesitant one snaps back.
+     */
+    viewportWidth?: number;
 }
 
 /**
@@ -116,30 +131,45 @@ export function getSwipeReleaseVerdict({
     velocityX,
     threshold,
     flickVelocity = FLICK_VELOCITY,
+    viewportWidth,
 }: SwipeReleaseInput): SwipeReleaseVerdict {
     const distance = Math.abs(deltaX);
     const directionMatches =
         deltaX !== 0 && Math.sign(velocityX) === Math.sign(deltaX);
+    const projected = deltaX + project(velocityX);
     const passes =
         distance > threshold ||
         (distance > FLICK_MIN_DISTANCE &&
             directionMatches &&
-            Math.abs(velocityX) > flickVelocity);
+            Math.abs(velocityX) > flickVelocity) ||
+        (viewportWidth !== undefined &&
+            distance > FLICK_MIN_DISTANCE &&
+            directionMatches &&
+            Math.abs(projected) > viewportWidth / 2);
     if (!passes) {
         return 'stay';
     }
     return deltaX < 0 ? 'next' : 'prev';
 }
 
-/** Vertical release decision (2.x `touchEnd` vertical branch). */
+/**
+ * Vertical release decision: close when the momentum-projected travel
+ * passes {@link VERTICAL_CLOSE_RATIO} of the viewport in the drag's own
+ * direction (a release moving back toward rest never closes).
+ */
 export function shouldCloseOnVerticalDrag(
     deltaY: number,
+    velocityY: number,
+    viewportHeight: number,
     options: { closable: boolean; swipeToClose: boolean },
 ): boolean {
+    if (!options.closable || !options.swipeToClose || deltaY === 0) {
+        return false;
+    }
+    const projected = deltaY + project(velocityY);
     return (
-        options.closable &&
-        options.swipeToClose &&
-        Math.abs(deltaY) > VERTICAL_CLOSE_THRESHOLD
+        Math.sign(projected) === Math.sign(deltaY) &&
+        Math.abs(projected) > VERTICAL_CLOSE_RATIO * viewportHeight
     );
 }
 
