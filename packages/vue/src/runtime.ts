@@ -67,6 +67,14 @@ export interface LgGalleryRuntime {
     getItemIndex(registration: LgItemRegistration): number;
     /** Zoom-from-origin rect: `originRect` prop or the trigger element. */
     getOriginRect(index: number): RectLike | null;
+    /**
+     * Src for the first-slide dummy image (2.x `getDummyImageContent`):
+     * the item's `thumb`, else the trigger's rendered img — pixels that
+     * are already decoded and can fly without waiting on the network.
+     */
+    getDummySrc(index: number): string | null;
+    /** True while the first-slide dummy is up (`lg-first-slide-loading`). */
+    readonly firstSlideLoading: ShallowRef<boolean>;
     /** Multi-pointer seam (consumed by the zoom plugin). */
     readonly gestureSeam: LgGestureSeam;
     /** Registered plugins, deduped, in `:plugins` order (ADR §5). */

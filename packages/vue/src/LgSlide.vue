@@ -6,7 +6,15 @@
  * long as it stays in the DOM window. The vanilla CSS shows the loading
  * spinner until `lg-complete` lands.
  */
-import { computed, h, inject, ref, watch, type VNodeChild } from 'vue';
+import {
+    computed,
+    h,
+    inject,
+    onUnmounted,
+    ref,
+    watch,
+    type VNodeChild,
+} from 'vue';
 import { getPreloadIndexes, getSlideType } from '@lightgallery/headless';
 
 import { LgCaptionContent } from './caption-content';
@@ -103,6 +111,63 @@ const slideType = computed(() =>
     props.item ? getSlideType(props.item) : 'image',
 );
 
+// 2.x first-slide dummy (`getDummyImageContent`): while the
+// zoom-from-origin flight runs, the trigger's already-decoded thumbnail
+// flies enlarged in place of the still-loading image; the real image
+// mounts only once the flight lands and the dummy drops shortly after
+// the load settles (`loadContentOnFirstSlideLoad`). The arming watch is
+// pre-flush so the dummy is in the flight's first painted frame.
+const dummySrc = ref<string | null>(null);
+let dummyDone = false;
+let dummyDropTimer: ReturnType<typeof setTimeout> | null = null;
+watch(
+    () => props.originAnim,
+    (anim) => {
+        if (
+            dummyDone ||
+            dummySrc.value ||
+            !anim ||
+            anim.closing ||
+            completed.value ||
+            slideType.value !== 'image'
+        ) {
+            return;
+        }
+        const src = runtime.getDummySrc(props.index);
+        if (src) {
+            dummySrc.value = src;
+            runtime.firstSlideLoading.value = true;
+        } else {
+            dummyDone = true;
+        }
+    },
+    { flush: 'pre' },
+);
+watch([dummySrc, completed], ([src, isComplete]) => {
+    if (!src || !isComplete) {
+        return;
+    }
+    dummyDropTimer = setTimeout(() => {
+        dummyDone = true;
+        dummySrc.value = null;
+        runtime.firstSlideLoading.value = false;
+    }, 300);
+});
+onUnmounted(() => {
+    if (dummyDropTimer !== null) {
+        clearTimeout(dummyDropTimer);
+    }
+    if (dummySrc.value) {
+        runtime.firstSlideLoading.value = false;
+    }
+});
+// v2 mounts the real image only once the flight lands
+// (startAnimationDuration + 100): its fetch and decode must never jank
+// the flight's frames.
+const deferSrc = computed(
+    () => !!dummySrc.value && !!props.originAnim && !props.originAnim.closing,
+);
+
 /**
  * Slide content resolved through the plugin runtime (ADR §5): the first
  * plugin slide renderer that owns the item wins (video); otherwise the
@@ -129,6 +194,8 @@ const SlideContent = (): VNodeChild => {
         content = h(LgImageSlide, {
             item,
             index: props.index,
+            dummySrc: dummySrc.value,
+            deferSrc: deferSrc.value,
             onMediaLoad: onLoad,
             onMediaError: onError,
         });
@@ -191,6 +258,7 @@ const classes = computed(() => ({
     'lg-loaded': shouldLoad.value,
     'lg-complete': completed.value,
     'lg-complete_': completed.value,
+    'lg-first-slide': !!dummySrc.value,
     'lg-start-progress':
         !!props.originAnim &&
         props.originAnim.stage !== 'init' &&
@@ -205,7 +273,15 @@ const style = computed(() => {
         return undefined;
     }
     if (anim.stage === 'init') {
-        return { transform: anim.transform };
+        return {
+            transform: anim.transform,
+            // The origin transform must LAND, never animate: measuring
+            // (computeOrigin) forces a recalc that baselines the item at
+            // identity, and the `:not(.lg-start-end-progress)` inherit
+            // rule would transition identity → origin — a visible
+            // fullscreen→thumbnail shrink before the flight.
+            transitionProperty: 'none',
+        };
     }
     return {
         transform:

@@ -473,6 +473,7 @@ const outerClasses = computed(() => [
         'lg-zoom-from-image': zoomFromImage.value,
         'lg-visible': visible.value,
         'lg-components-open': componentsOpen.value,
+        'lg-first-slide-loading': firstSlideLoading.value,
         'lg-hide-items':
             barsHidden.value ||
             (phase.value === 'closing' && !zoomClosing.value),
@@ -534,6 +535,20 @@ function getOriginRect(slideIndex: number): RectLike | null {
     };
 }
 
+// 2.x getDummyImageContent src: the item's own thumb, else the
+// trigger's rendered img (`$currentItem.find('img').first()`).
+function getDummySrc(slideIndex: number): string | null {
+    const thumb = items.value[slideIndex]?.thumb;
+    if (thumb) {
+        return thumb;
+    }
+    const element = registry.registrations.value[slideIndex]?.element;
+    const img = element?.querySelector('img');
+    return img?.currentSrc || img?.src || null;
+}
+
+const firstSlideLoading = shallowRef(false);
+
 function computeOrigin(slideIndex: number): string | null {
     const cfg = settings.value;
     if (!cfg.zoomFromOrigin) {
@@ -565,6 +580,12 @@ function computeOrigin(slideIndex: number): string | null {
         containerRect.width,
         containerRect.height - (top + bottom),
     );
+    // Degenerate measurement (zero-sized/hidden viewport, offsets taller
+    // than the stage): the shared math would emit a mirrored flight —
+    // fall back to the startClass fade instead.
+    if (imageSize.width <= 0 || imageSize.height <= 0) {
+        return null;
+    }
     return getOriginTransform({
         triggerRect,
         containerRect,
@@ -1169,6 +1190,8 @@ const runtime: LgGalleryRuntime = {
     registerItem: registry.register,
     getItemIndex: registry.indexOf,
     getOriginRect,
+    getDummySrc,
+    firstSlideLoading,
     gestureSeam,
     plugins,
     pluginContext,

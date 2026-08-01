@@ -209,6 +209,7 @@ export const ZoomWrapper = defineComponent({
         let detachWindow: (() => void) | null = null;
         let cancelSpring: (() => void) | null = null;
         let lastTap = 0;
+        let lastTouchToggle = 0;
         let armTimer: ReturnType<typeof setTimeout> | null = null;
 
         function measure(): {
@@ -780,6 +781,12 @@ export const ZoomWrapper = defineComponent({
                 const now = Date.now();
                 if (now - lastTap < 300) {
                     lastTap = 0;
+                    // 2.x prevents the second touchstart's default:
+                    // without this the browser synthesizes click +
+                    // dblclick after the double tap, and onDoubleClick
+                    // toggles straight back to fit.
+                    event.preventDefault();
+                    lastTouchToggle = now;
                     toggleActualSize(eventPoint(event));
                     return;
                 }
@@ -806,6 +813,11 @@ export const ZoomWrapper = defineComponent({
                 return;
             }
             if (!isImageTarget(event.target)) {
+                return;
+            }
+            // Synthesized dblclick trailing a touch double-tap (belt for
+            // browsers that fire it despite the canceled pointerdown).
+            if (Date.now() - lastTouchToggle < 700) {
                 return;
             }
             toggleActualSize(eventPoint(event));
