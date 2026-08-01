@@ -195,6 +195,7 @@ function ZoomWrapper({
     const detachRef = useRef<(() => void) | null>(null);
     const cancelSpringRef = useRef<(() => void) | null>(null);
     const lastTapRef = useRef(0);
+    const lastTouchToggleRef = useRef(0);
 
     const measure = () => {
         const img = scaleElRef.current?.querySelector('img');
@@ -813,6 +814,12 @@ function ZoomWrapper({
             const now = Date.now();
             if (now - lastTapRef.current < 300) {
                 lastTapRef.current = 0;
+                // 2.x prevents the second touchstart's default: without
+                // this the browser synthesizes click + dblclick after the
+                // double tap, and onDoubleClick toggles straight back to
+                // fit.
+                event.preventDefault();
+                lastTouchToggleRef.current = now;
                 toggleActualSize(eventPoint(event));
                 return;
             }
@@ -839,6 +846,11 @@ function ZoomWrapper({
             return;
         }
         if (!isImageTarget(event.target)) {
+            return;
+        }
+        // Synthesized dblclick trailing a touch double-tap (belt for
+        // browsers that fire it despite the canceled pointerdown).
+        if (Date.now() - lastTouchToggleRef.current < 700) {
             return;
         }
         toggleActualSize(eventPoint(event));
