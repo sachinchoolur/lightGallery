@@ -148,6 +148,16 @@ describe('shouldCloseOnVerticalDrag', () => {
         expect(shouldCloseOnVerticalDrag(-60, -1.5, vh, settings)).toBe(true);
     });
 
+    it('never closes on a grazed tap — velocity cannot replace travel', () => {
+        // 32px graze at 2 px/ms projects ~430px, but the finger barely
+        // moved; a close needs real travel before momentum counts.
+        expect(shouldCloseOnVerticalDrag(32, 2, vh, settings)).toBe(false);
+        expect(shouldCloseOnVerticalDrag(-32, -2, vh, settings)).toBe(false);
+        // The same instant with the floor travelled closes.
+        expect(shouldCloseOnVerticalDrag(40, 2, vh, settings)).toBe(true);
+        expect(shouldCloseOnVerticalDrag(-40, -2, vh, settings)).toBe(true);
+    });
+
     it('never closes when the release moves back toward rest', () => {
         // Far past the ratio, but momentum points home.
         expect(shouldCloseOnVerticalDrag(350, -2, vh, settings)).toBe(false);

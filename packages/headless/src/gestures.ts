@@ -41,6 +41,14 @@ export const VERTICAL_CLOSE_THRESHOLD = 100;
 export const VERTICAL_CLOSE_RATIO = 0.4;
 
 /**
+ * Minimum actual travel (px) before the projected close arms. Momentum
+ * may extend a real drag, never replace one: a grazed tap releases with
+ * a fast final instant, and projection alone would read it as a close
+ * flick.
+ */
+export const VERTICAL_CLOSE_MIN_DRAG = 40;
+
+/**
  * Rubber-band friction past the first/last slide (no loop): the drag
  * keeps moving at this fraction of the finger instead of the 2.x
  * un-resisted 1:1 travel — you feel that there is nothing further.
@@ -182,7 +190,8 @@ export function getSwipeReleaseVerdict({
 /**
  * Vertical release decision: close when the momentum-projected travel
  * passes {@link VERTICAL_CLOSE_RATIO} of the viewport in the drag's own
- * direction (a release moving back toward rest never closes).
+ * direction (a release moving back toward rest never closes), and the
+ * finger actually travelled {@link VERTICAL_CLOSE_MIN_DRAG}.
  */
 export function shouldCloseOnVerticalDrag(
     deltaY: number,
@@ -191,6 +200,9 @@ export function shouldCloseOnVerticalDrag(
     options: { closable: boolean; swipeToClose: boolean },
 ): boolean {
     if (!options.closable || !options.swipeToClose || deltaY === 0) {
+        return false;
+    }
+    if (Math.abs(deltaY) < VERTICAL_CLOSE_MIN_DRAG) {
         return false;
     }
     const projected = deltaY + project(velocityY);
