@@ -327,24 +327,18 @@ const utils = {
         }
 
         const containerRect = container.get().getBoundingClientRect();
-        const elStyle = LGel.style();
 
-        // Offsets are document-based; fold paddings, borders and scroll
-        // back out so the trigger rect lands in the viewport space the
-        // shared math expects.
+        // Viewport coords straight from the rect. `offset()` folds in a
+        // body-margin correction that shifts the origin on any centered
+        // body (`margin: auto`) — the long-standing "flight starts beside
+        // the thumbnail" bug — and the old padding/border terms adjusted
+        // in the wrong direction on styled thumbnails.
+        const rect = LGel.get().getBoundingClientRect();
         const triggerRect = {
-            left:
-                LGel.offset().left -
-                (parseFloat(elStyle.paddingLeft) || 0) -
-                (parseFloat(elStyle.borderLeft) || 0) -
-                $LG(window).scrollLeft(),
-            top:
-                LGel.offset().top -
-                (parseFloat(elStyle.paddingTop) || 0) -
-                (parseFloat(elStyle.borderTop) || 0) -
-                $LG(window).scrollTop(),
-            width: LGel.width(),
-            height: LGel.height(),
+            left: rect.left,
+            top: rect.top,
+            width: rect.width,
+            height: rect.height,
         };
 
         return getOriginTransform({
