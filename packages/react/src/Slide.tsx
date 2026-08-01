@@ -18,7 +18,7 @@ import {
     useGalleryState,
 } from './context';
 import type { OriginAnimation } from './GalleryOutlet';
-import { useEventCallback } from './hooks';
+import { useEventCallback, useIsoLayoutEffect } from './hooks';
 import { IframeSlide } from './IframeSlide';
 import { ImageSlide } from './ImageSlide';
 import {
@@ -140,7 +140,17 @@ export function Slide({
     let originClasses: string | false = false;
     if (originAnim) {
         if (originAnim.stage === 'init') {
-            style = { transform: originAnim.transform };
+            style = {
+                transform: originAnim.transform,
+                // The origin transform must LAND, never animate: measuring
+                // (computeOrigin) forces a recalc that baselines the item
+                // at identity, and the `:not(.lg-start-end-progress)`
+                // inherit rule would transition identity → origin — a
+                // visible fullscreen→thumbnail shrink before the flight.
+                // (v2 batches transform + flight classes into one style
+                // change event, so it never trips this.)
+                transitionProperty: 'none',
+            };
         } else {
             style = {
                 transform:
@@ -158,6 +168,53 @@ export function Slide({
     const slideType = item ? getSlideType(item) : 'image';
     const pluginCtx = usePluginContext();
 
+    // 2.x first-slide dummy (`getDummyImageContent`): while the
+    // zoom-from-origin flight runs, the trigger's already-decoded
+    // thumbnail flies enlarged in place of the still-loading image; the
+    // real image loads beneath it and the dummy drops shortly after the
+    // load settles (`loadContentOnFirstSlideLoad`). Layout effect: the
+    // dummy must be in the flight's FIRST painted frame.
+    const [dummySrc, setDummySrc] = useState<string | null>(null);
+    const dummyDoneRef = useRef(false);
+    useIsoLayoutEffect(() => {
+        if (
+            dummyDoneRef.current ||
+            dummySrc ||
+            !originAnim ||
+            originAnim.closing ||
+            completed ||
+            slideType !== 'image'
+        ) {
+            return;
+        }
+        const src = internal.getDummySrc(index);
+        if (src) {
+            setDummySrc(src);
+        } else {
+            dummyDoneRef.current = true;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [originAnim]);
+    useEffect(() => {
+        if (!dummySrc || !completed) {
+            return;
+        }
+        const timeout = window.setTimeout(() => {
+            dummyDoneRef.current = true;
+            setDummySrc(null);
+        }, 300);
+        return () => window.clearTimeout(timeout);
+    }, [dummySrc, completed]);
+    useEffect(() => {
+        if (!dummySrc) {
+            return;
+        }
+        internal.layout.setOuterClass('lg-first-slide-loading', true);
+        return () =>
+            internal.layout.setOuterClass('lg-first-slide-loading', false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dummySrc]);
+
     let content: ReactNode = null;
     if (shouldLoad && item && !error) {
         // Plugin slide renderers win (video plugin); undefined passes
@@ -174,6 +231,13 @@ export function Slide({
                     <ImageSlide
                         item={item}
                         index={index}
+                        dummySrc={dummySrc}
+                        // v2 appends the real image only once the flight
+                        // lands (startAnimationDuration + 100): its fetch
+                        // and decode must never jank the flight's frames.
+                        deferSrc={
+                            !!dummySrc && !!originAnim && !originAnim.closing
+                        }
                         onLoad={handleLoad}
                         onError={handleError}
                     />
@@ -208,6 +272,7 @@ export function Slide({
                 inProgress && 'lg-slide-progress',
                 shouldLoad && 'lg-loaded',
                 completed && 'lg-complete lg-complete_',
+                dummySrc && 'lg-first-slide',
                 originClasses,
             )}
             style={style}

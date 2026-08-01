@@ -433,6 +433,21 @@ export const LightGallery = forwardRef<
         };
     }, []);
 
+    // 2.x getDummyImageContent src: the item's own thumb, else the
+    // trigger's rendered img (`$currentItem.find('img').first()`).
+    const getDummySrc = useCallback(
+        (slideIndex: number): string | null => {
+            const thumb = items[slideIndex]?.thumb;
+            if (thumb) {
+                return thumb;
+            }
+            const element = registrationsRef.current[slideIndex]?.element;
+            const img = element?.querySelector('img');
+            return img?.currentSrc || img?.src || null;
+        },
+        [items],
+    );
+
     const doOpen = useCallback(
         (slideIndex?: number) => {
             emit('onBeforeOpen');
@@ -626,6 +641,7 @@ export const LightGallery = forwardRef<
             registerItem,
             getItemIndex,
             getOriginRect,
+            getDummySrc,
             edgeBounce,
             gestureSeam,
             plugins,
@@ -644,6 +660,7 @@ export const LightGallery = forwardRef<
             registerItem,
             getItemIndex,
             getOriginRect,
+            getDummySrc,
             edgeBounce,
             gestureSeam,
             plugins,

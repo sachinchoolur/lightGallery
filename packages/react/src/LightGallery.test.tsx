@@ -127,6 +127,42 @@ describe('open/close lifecycle (controlled)', () => {
         expect(onAfterClose).toHaveBeenCalledTimes(1);
     });
 
+    it('empties the slide items after close and remounts them on reopen', () => {
+        function ReopenHarness() {
+            const [open, setOpen] = useState(true);
+            return (
+                <>
+                    <button onClick={() => setOpen(true)}>reopen</button>
+                    <LightGallery
+                        slides={slides}
+                        open={open}
+                        onClose={() => setOpen(false)}
+                    />
+                </>
+            );
+        }
+        render(<ReopenHarness />);
+        openSettled();
+        expect(
+            document.querySelector('.lg-item.lg-current'),
+        ).toBeInTheDocument();
+
+        fireEvent.keyDown(document, { key: 'Escape' });
+        // Mid-close the items must survive for the exit animation.
+        expect(document.querySelector('.lg-item')).toBeInTheDocument();
+        tick(BACKDROP + 100);
+        // 2.x `$inner.empty()`: the persistent shell keeps .lg-inner, but
+        // the stale items — and their lg-current — unmount with the close.
+        expect(document.querySelector('.lg-inner')).toBeInTheDocument();
+        expect(document.querySelector('.lg-item')).toBeNull();
+
+        fireEvent.click(screen.getByText('reopen'));
+        openSettled();
+        expect(
+            document.querySelector('.lg-item.lg-current'),
+        ).toBeInTheDocument();
+    });
+
     it('ignores ESC when escKey is off and close button when closable is off', () => {
         const onClose = vi.fn();
         const { unmount } = render(

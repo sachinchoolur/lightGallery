@@ -82,6 +82,12 @@ export interface GalleryInternal {
     getItemIndex: (registration: ItemRegistration) => number;
     /** Zoom-from-origin rect for a slide: `originRect` prop or trigger rect. */
     getOriginRect: (index: number) => RectLike | null;
+    /**
+     * Src for the first-slide dummy image (2.x `getDummyImageContent`):
+     * the item's `thumb`, else the trigger's rendered img — pixels that
+     * are already decoded and can fly without waiting on the network.
+     */
+    getDummySrc: (index: number) => string | null;
     /** Slide-end bounce (`lg-left-end` / `lg-right-end`). */
     edgeBounce: 'left' | 'right' | null;
     gestureSeam: GestureSeam;

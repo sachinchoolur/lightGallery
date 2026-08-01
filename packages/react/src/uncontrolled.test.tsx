@@ -121,3 +121,74 @@ describe('uncontrolled mode', () => {
         expect(document.querySelector('.lg-container.lg-show')).toBeNull();
     });
 });
+
+describe('zoom-from-origin dummy image', () => {
+    it('flies the thumb as lg-dummy-img and drops it after the load settles', () => {
+        // jsdom rects are 0×0; a real-looking rect makes computeOrigin
+        // produce a flight (lgSize is the other precondition).
+        const rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        render(
+            <LightGallery>
+                {items.map((item) => (
+                    <LightGalleryItem
+                        key={item.src}
+                        item={{ ...item, lgSize: '1600-1067' }}
+                        href={item.src}
+                        data-testid={`trigger-${item.alt}`}
+                    >
+                        <img src={item.thumb} alt={`${item.alt} thumbnail`} />
+                    </LightGalleryItem>
+                ))}
+            </LightGallery>,
+        );
+        fireEvent.click(screen.getByTestId('trigger-a'));
+        tick(20);
+
+        // 2.x first-slide contract: ONLY the thumb-dummy exists during
+        // the flight — the real image must not fetch/decode mid-flight.
+        const dummy = document.querySelector('img.lg-dummy-img');
+        expect(dummy).toBeInTheDocument();
+        expect(dummy).toHaveAttribute('src', 'a-thumb.jpg');
+        expect(document.querySelector('img.lg-object')).toBeNull();
+        expect(
+            document.querySelector('.lg-item.lg-first-slide'),
+        ).toBeInTheDocument();
+        expect(
+            document.querySelector('.lg-outer.lg-first-slide-loading'),
+        ).toBeInTheDocument();
+
+        // Flight lands: the real image mounts, the dummy stays on top.
+        tick(520);
+        const real = document.querySelector('img.lg-object');
+        expect(real).toBeInTheDocument();
+        expect(document.querySelector('img.lg-dummy-img')).toBeInTheDocument();
+
+        // Real image load settles (deferred completion), then the 300ms
+        // drop buffer removes the dummy and the loading classes.
+        fireEvent.load(real!);
+        tick(400 + 130);
+        tick(310);
+        expect(document.querySelector('img.lg-dummy-img')).toBeNull();
+        expect(document.querySelector('.lg-item.lg-first-slide')).toBeNull();
+        expect(
+            document.querySelector('.lg-outer.lg-first-slide-loading'),
+        ).toBeNull();
+        // The real image is now the visible one.
+        expect(
+            document.querySelector('.lg-item.lg-current.lg-complete'),
+        ).toBeInTheDocument();
+        rectSpy.mockRestore();
+    });
+});

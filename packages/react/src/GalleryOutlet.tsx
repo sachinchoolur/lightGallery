@@ -178,6 +178,12 @@ export function GalleryOutlet({
                 containerRect.width,
                 containerRect.height - (top + bottom),
             );
+            // Degenerate measurement (zero-sized/hidden viewport, offsets
+            // taller than the stage): the shared math would emit a
+            // mirrored flight — fall back to the startClass fade instead.
+            if (imageSize.width <= 0 || imageSize.height <= 0) {
+                return null;
+            }
             return getOriginTransform({
                 triggerRect,
                 containerRect,
@@ -526,7 +532,10 @@ export function GalleryOutlet({
             }, settings.speed + 100);
         },
     );
-    useEffect(() => {
+    // Layout effect, not effect: reopening at another index must correct
+    // `timeline.shownIndex` BEFORE the browser paints, or the previous
+    // slide flashes as lg-current for a frame on every cross-index reopen.
+    useIsoLayoutEffect(() => {
         const fromTouch = fromTouchRef.current;
         fromTouchRef.current = false;
         if (!state.open) {
@@ -736,7 +745,11 @@ export function GalleryOutlet({
                 onPointerUp={onOuterPointerUp}
             >
                 <div className="lg-content" style={contentStyle}>
-                    <Slides timeline={timeline} originAnim={originAnim} />
+                    <Slides
+                        timeline={timeline}
+                        originAnim={originAnim}
+                        cleared={phase === 'closed'}
+                    />
                     <Controls />
                 </div>
                 <Toolbar
