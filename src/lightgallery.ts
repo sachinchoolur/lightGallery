@@ -100,7 +100,8 @@ export class LightGallery {
 
     private zoomFromOrigin!: boolean;
 
-    private currentImageSize?: ImageSize;
+    // Read by the zoom plugin (upstream 2.x exposes it the same way).
+    public currentImageSize?: ImageSize;
 
     private isDummyImageRemoved = false;
 

@@ -179,6 +179,14 @@ export default class Zoom {
         } else if (scaleDiff) {
             height = rect.height + scaleDiff * rect.height;
             width = rect.width + scaleDiff * rect.width;
+        } else if (this.core.currentImageSize) {
+            // Rendered size, transform-independent: the actual-size
+            // machinery rewrites the element's layout after a zoom
+            // (reset-transition !important transform, natural-px swap),
+            // so a rect read races it — the fitted size scaled by the
+            // live zoom is stable in every mode.
+            height = this.core.currentImageSize.height * this.scale;
+            width = this.core.currentImageSize.width * this.scale;
         } else {
             height = rect.height;
             width = rect.width;
@@ -488,7 +496,13 @@ export default class Zoom {
             .getSlideItem(this.core.index)
             .find('.lg-image')
             .first();
-        const width = $image.get().offsetWidth;
+        // The FITTED width is the stable denominator in every mode. The
+        // element's offsetWidth reads the current layout — after the
+        // actual-size swap that IS naturalWidth, and dividing by it
+        // returns 1: settleIntoBounds would then clamp a tap on a
+        // zoomed image into a full animated un-zoom back to fit.
+        const width =
+            this.core.currentImageSize?.width || $image.get().offsetWidth;
         const naturalWidth = this.getNaturalWidth(this.core.index) || width;
         return this.getActualSizeScale(naturalWidth, width);
     }
@@ -1389,9 +1403,10 @@ export default class Zoom {
 
                 allowY = dragAllowedAxises.allowY;
                 allowX = dragAllowedAxises.allowX;
-                if (allowX || allowY) {
-                    startCoords = this.getSwipeCords(e);
-                }
+                // Always captured: touchend runs on these whenever the
+                // finger moved, and axis-gated capture fed it undefined
+                // coords when both axes measured locked.
+                startCoords = this.getSwipeCords(e);
 
                 possibleSwipeCords = this.getPossibleSwipeDragCords();
 
