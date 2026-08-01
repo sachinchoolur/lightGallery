@@ -790,6 +790,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                 'lg-hide-items',
             this.zoomClosing() && 'lg-closing',
             this.timeline().noTrans && 'lg-no-trans',
+            this.runtime.firstSlideLoading() && 'lg-first-slide-loading',
             this.touchSlideMode() &&
                 this.settings().mode !== 'lg-slide' &&
                 'lg-slide',
@@ -1678,6 +1679,12 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             containerRect.width,
             containerRect.height - (top + bottom),
         );
+        // Degenerate measurement (zero-sized/hidden viewport, offsets
+        // taller than the stage): the shared math would emit a mirrored
+        // flight — fall back to the startClass fade instead.
+        if (imageSize.width <= 0 || imageSize.height <= 0) {
+            return null;
+        }
         return getOriginTransform({
             triggerRect,
             containerRect,

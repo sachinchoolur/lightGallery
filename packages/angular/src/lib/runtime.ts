@@ -137,6 +137,24 @@ export class LgGalleryRuntime {
     private readonly registrationsSignal = signal<LgItemRegistration[]>([]);
     readonly registrations = this.registrationsSignal.asReadonly();
 
+    /** True while the first-slide dummy is up (`lg-first-slide-loading`). */
+    readonly firstSlideLoading = signal(false);
+
+    /**
+     * Src for the first-slide dummy image (2.x `getDummyImageContent`):
+     * the item's `thumb`, else the trigger's rendered img — pixels that
+     * are already decoded and can fly without waiting on the network.
+     */
+    getDummySrc(index: number): string | null {
+        const thumb = this.items()[index]?.thumb;
+        if (thumb) {
+            return thumb;
+        }
+        const element = this.registrationsSignal()[index]?.element;
+        const img = element?.querySelector('img');
+        return img?.currentSrc || img?.src || null;
+    }
+
     registerItem(registration: LgItemRegistration): () => void {
         this.registrationsSignal.update((prev) => [...prev, registration]);
         return () => {

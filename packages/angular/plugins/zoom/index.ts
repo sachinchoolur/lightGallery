@@ -254,6 +254,7 @@ export class LgZoomWrapperComponent {
     private detachWindow: (() => void) | null = null;
     private cancelSpring: (() => void) | null = null;
     private lastTap = 0;
+    private lastTouchToggle = 0;
     private armTimer: ReturnType<typeof setTimeout> | null = null;
 
     /** Narrow: re-run the arm effect only when THIS slide's flag flips. */
@@ -891,6 +892,12 @@ export class LgZoomWrapperComponent {
             const now = Date.now();
             if (now - this.lastTap < 300) {
                 this.lastTap = 0;
+                // 2.x prevents the second touchstart's default: without
+                // this the browser synthesizes click + dblclick after
+                // the double tap, and onDoubleClick toggles straight
+                // back to fit.
+                event.preventDefault();
+                this.lastTouchToggle = now;
                 this.toggleActualSize(this.eventPoint(event));
                 return;
             }
@@ -917,6 +924,11 @@ export class LgZoomWrapperComponent {
             return;
         }
         if (!isImageTarget(event.target)) {
+            return;
+        }
+        // Synthesized dblclick trailing a touch double-tap (belt for
+        // browsers that fire it despite the canceled pointerdown).
+        if (Date.now() - this.lastTouchToggle < 700) {
             return;
         }
         this.toggleActualSize(this.eventPoint(event));

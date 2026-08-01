@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    DestroyRef,
     effect,
     inject,
     input,
@@ -59,6 +60,7 @@ export interface OriginAnimation {
         '[class]': 'hostClasses()',
         '[style.transform]': 'originTransform()',
         '[style.transition-duration]': 'originDuration()',
+        '[style.transition-property]': 'originTransitionProperty()',
     },
     template: `
         <ng-template #slideContent>
@@ -75,6 +77,8 @@ export interface OriginAnimation {
                 <lg-image-slide
                     [item]="item()!"
                     [index]="index()"
+                    [dummySrc]="dummySrc()"
+                    [deferSrc]="deferSrc()"
                     (mediaLoad)="onLoad()"
                     (mediaError)="onError()"
                 />
@@ -198,12 +202,68 @@ export class LgSlideComponent {
             !!this.item(),
     );
 
+    // 2.x first-slide dummy (`getDummyImageContent`): while the
+    // zoom-from-origin flight runs, the trigger's already-decoded
+    // thumbnail flies enlarged in place of the still-loading image; the
+    // real image mounts only once the flight lands and the dummy drops
+    // shortly after the load settles (`loadContentOnFirstSlideLoad`).
+    protected readonly dummySrc = signal<string | null>(null);
+    private dummyDone = false;
+    private dummyDropTimer: ReturnType<typeof setTimeout> | null = null;
+    /** v2 mounts the real image only once the flight lands. */
+    protected readonly deferSrc = computed(() => {
+        const anim = this.originAnim();
+        return !!this.dummySrc() && !!anim && !anim.closing;
+    });
+
     constructor() {
         // React counterpart: Slide's sticky `shouldLoad` ref — once content
         // mounts it stays for as long as the slide is in the DOM window.
         effect(() => {
             if (this.shouldLoad()) {
                 this.sticky.set(true);
+            }
+        });
+        effect(() => {
+            const anim = this.originAnim();
+            if (
+                this.dummyDone ||
+                this.dummySrc() ||
+                !anim ||
+                anim.closing ||
+                this.completed() ||
+                this.slideType() !== 'image'
+            ) {
+                return;
+            }
+            untracked(() => {
+                const src = this.runtime.getDummySrc(this.index());
+                if (src) {
+                    this.dummySrc.set(src);
+                    this.runtime.firstSlideLoading.set(true);
+                } else {
+                    this.dummyDone = true;
+                }
+            });
+        });
+        effect(() => {
+            if (!this.dummySrc() || !this.completed()) {
+                return;
+            }
+            untracked(() => {
+                this.dummyDropTimer = setTimeout(() => {
+                    this.dummyDone = true;
+                    this.dummySrc.set(null);
+                    this.runtime.firstSlideLoading.set(false);
+                }, 300);
+            });
+        });
+        inject(DestroyRef).onDestroy(() => {
+            if (this.dummyDropTimer !== null) {
+                clearTimeout(this.dummyDropTimer);
+            }
+            if (this.dummySrc()) {
+                this.runtime.firstSlideLoading.set(false);
             }
         });
         // React counterpart: Slide's afterAppendSlide mount effect (2.x
@@ -257,6 +317,7 @@ export class LgSlideComponent {
             this.inProgress() && 'lg-slide-progress',
             this.shouldLoad() && 'lg-loaded',
             this.completed() && 'lg-complete lg-complete_',
+            !!this.dummySrc() && 'lg-first-slide',
             this.originClasses(),
         ),
     );
@@ -279,6 +340,16 @@ export class LgSlideComponent {
         return anim && anim.stage !== 'init'
             ? `${this.runtime.settings().startAnimationDuration}ms`
             : null;
+    });
+
+    // The origin transform must LAND, never animate: measuring
+    // (computeOrigin) forces a recalc that baselines the item at
+    // identity, and the `:not(.lg-start-end-progress)` inherit rule
+    // would transition identity → origin — a visible
+    // fullscreen→thumbnail shrink before the flight.
+    protected readonly originTransitionProperty = computed(() => {
+        const anim = this.originAnim();
+        return anim && anim.stage === 'init' ? 'none' : null;
     });
 
     private readonly originClasses = computed(() => {

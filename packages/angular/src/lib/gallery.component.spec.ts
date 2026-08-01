@@ -411,3 +411,80 @@ describe('LgGalleryComponent (core gallery)', () => {
         );
     });
 });
+
+@Component({
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery>
+            @for (item of items; track item.src) {
+                <a href="#" class="trigger" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+class DummyFlightHost {
+    readonly items = ITEMS.map((item) => ({
+        ...item,
+        lgSize: '1600-1067',
+    }));
+}
+
+describe('zoom-from-origin dummy image', () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+    });
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('flies the thumb as lg-dummy-img and drops it after the load settles', async () => {
+        // jsdom rects are 0×0; a real-looking rect makes computeOrigin
+        // produce a flight (lgSize is the other precondition).
+        const rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        const fixture = TestBed.createComponent(DummyFlightHost);
+        await flush(fixture);
+        queryAll('.trigger')[0]!.click();
+        await flush(fixture);
+        await advance(fixture, 20);
+
+        // 2.x first-slide contract: ONLY the thumb-dummy exists during
+        // the flight — the real image must not fetch/decode mid-flight.
+        const dummy = query('img.lg-dummy-img');
+        expect(dummy).not.toBeNull();
+        expect(dummy!.getAttribute('src')).toBe('a-t.jpg');
+        expect(query('.lg-item.lg-current img.lg-image')).toBeNull();
+        expect(query('.lg-item.lg-first-slide')).not.toBeNull();
+        expect(query('.lg-outer.lg-first-slide-loading')).not.toBeNull();
+
+        // Flight lands: the real image mounts, the dummy stays on top.
+        await advance(fixture, SPEED + 120);
+        const real = query('.lg-item.lg-current img.lg-image');
+        expect(real).not.toBeNull();
+        expect(query('img.lg-dummy-img')).not.toBeNull();
+
+        // Real image load settles, then the 300ms drop buffer removes
+        // the dummy and the loading classes.
+        real!.dispatchEvent(new Event('load'));
+        await flush(fixture);
+        await advance(fixture, 310);
+        expect(query('img.lg-dummy-img')).toBeNull();
+        expect(query('.lg-item.lg-first-slide')).toBeNull();
+        expect(query('.lg-outer.lg-first-slide-loading')).toBeNull();
+        expect(query('.lg-item.lg-current.lg-complete')).not.toBeNull();
+        rectSpy.mockRestore();
+    });
+});
