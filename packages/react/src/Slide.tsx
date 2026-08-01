@@ -99,17 +99,38 @@ export function Slide({
             return;
         }
         const isFirstSlide = !state.galleryOn;
-        actions.dispatch({ type: 'SLIDE_LOADED', index });
-        internal.emit('onSlideItemLoad', {
-            index,
-            delay: isFirstSlide
-                ? (settings.zoomFromOrigin
-                      ? settings.startAnimationDuration
-                      : settings.backdropDuration) + 10
-                : 0,
-            isFirstSlide,
-        });
+        const complete = () => {
+            actions.dispatch({ type: 'SLIDE_LOADED', index });
+            internal.emit('onSlideItemLoad', {
+                index,
+                delay: isFirstSlide
+                    ? (settings.zoomFromOrigin
+                          ? settings.startAnimationDuration
+                          : settings.backdropDuration) + 10
+                    : 0,
+                isFirstSlide,
+            });
+        };
+        // While the zoom-from-origin flight is animating THIS slide,
+        // hold the completion: the class/state flip rewrites the flying
+        // element's attributes mid-transition, which Safari answers by
+        // restarting the transition (visible flicker whenever a cached
+        // image loads instantly — e.g. reopening on the same slide).
+        // v2 is immune because it flies an isolated dummy image.
+        if (isFirstSlide && internal.zoomOriginOpenRef.current) {
+            loadSettleRef.current = window.setTimeout(
+                complete,
+                settings.startAnimationDuration + 120,
+            );
+            return;
+        }
+        complete();
     });
+    const loadSettleRef = useRef<number | undefined>(undefined);
+    useEffect(
+        () => () => window.clearTimeout(loadSettleRef.current),
+        [],
+    );
     const handleError = useEventCallback(() => {
         setError(true);
         actions.dispatch({ type: 'SLIDE_ERROR', index });

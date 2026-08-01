@@ -13,11 +13,12 @@ import {
 } from 'vue';
 import {
     applyZoom,
-    clampPan,
+    clampPanToStage,
     clampScale,
     getActualSizeScale,
     getPanBounds,
     SPRING_BOUNCE_DAMPING,
+    getPinchPan,
     getPinchScale,
     getPointerDistance,
     getPointZoomPan,
@@ -184,12 +185,19 @@ export const ZoomWrapper = defineComponent({
         const pointers = new Map<number, ZoomPan>();
         const transitionMode = shallowRef<'default' | 'settle'>('default');
         let pinch: {
+            /** The two pointer ids the pinch is made of — extra resting
+             * fingers must never silently re-pair the gesture. */
+            ids: [number, number];
             startDistance: number;
             startScale: number;
             startPan: ZoomPan;
             startMid: ZoomPan;
             /** Largest scale the gesture reached — pinch-to-close guard. */
             maxGestureScale: number;
+            /** Midpoint's live position — its travel pans the image 1:1. */
+            lastMid: ZoomPan;
+            /** Midpoint velocity samples — seed the release springs. */
+            midSamples: VelocitySample[];
         } | null = null;
         let panDrag: {
             pointerId: number;
@@ -209,15 +217,30 @@ export const ZoomWrapper = defineComponent({
             naturalWidth: number;
             containerWidth: number;
             containerHeight: number;
+            stageBottomExtra: number;
         } {
             const img = scaleEl.value?.querySelector('img');
             const slide = panEl.value?.closest<HTMLElement>('.lg-item');
+            // The components strip (thumbnails+caption) below the content
+            // box vacates when zoomed — the stage-aware clamps let the
+            // image ride up until its bottom edge meets the SCREEN bottom.
+            const stage = panEl.value?.closest<HTMLElement>('.lg-inner');
+            const outer = stage?.closest<HTMLElement>('.lg-outer');
+            const stageBottomExtra =
+                outer && stage
+                    ? Math.max(
+                          0,
+                          outer.getBoundingClientRect().bottom -
+                              stage.getBoundingClientRect().bottom,
+                      )
+                    : 0;
             return {
                 imageWidth: img?.offsetWidth ?? 0,
                 imageHeight: img?.offsetHeight ?? 0,
                 naturalWidth: img?.naturalWidth ?? 0,
                 containerWidth: slide?.offsetWidth ?? 0,
                 containerHeight: slide?.offsetHeight ?? 0,
+                stageBottomExtra,
             };
         }
 
@@ -279,8 +302,13 @@ export const ZoomWrapper = defineComponent({
             const cfg = settings.value;
             const max = maxScale();
             const clamped = clampScale(scale, max, cfg.infiniteZoom);
-            const { imageWidth, imageHeight, containerWidth, containerHeight } =
-                measure();
+            const {
+                imageWidth,
+                imageHeight,
+                containerWidth,
+                containerHeight,
+                stageBottomExtra,
+            } = measure();
             const bounds = getPanBounds(
                 imageWidth,
                 imageHeight,
@@ -291,7 +319,7 @@ export const ZoomWrapper = defineComponent({
             const next = applyZoom(
                 live,
                 clamped,
-                clampPan(pan, bounds),
+                clampPanToStage(pan, bounds, stageBottomExtra),
                 max,
                 cfg.infiniteZoom,
             );
@@ -339,6 +367,8 @@ export const ZoomWrapper = defineComponent({
         }
 
         function toggleActualSize(point: ZoomPan): void {
+            // The double-tap zoom takes over from any settling spring.
+            stopSpring();
             const previous = live;
             if (previous.zoomed) {
                 commit(1, { x: 0, y: 0 });
@@ -355,8 +385,13 @@ export const ZoomWrapper = defineComponent({
             clientX: number;
             clientY: number;
         }): ZoomPan {
-            const slide = panEl.value?.closest<HTMLElement>('.lg-item');
-            const rect = slide?.getBoundingClientRect();
+            // Anchor to the gesture-STABLE inner box, not the slide:
+            // the slide's rect equals it at rest, but the slide itself
+            // transforms during core drags/nav springs — measuring
+            // against it would leak the drag displacement 1:1 into the
+            // fused pinch pan when a pinch starts mid-drag.
+            const stage = panEl.value?.closest<HTMLElement>('.lg-inner');
+            const rect = stage?.getBoundingClientRect();
             if (!rect) {
                 return { x: 0, y: 0 };
             }
@@ -379,7 +414,13 @@ export const ZoomWrapper = defineComponent({
                     y: event.clientY,
                 });
                 if (pinch && pointers.size >= 2) {
-                    const [a, b] = [...pointers.values()];
+                    // Only the tracked pair drives the pinch; a member
+                    // that just lifted is handled by onUp's re-baseline.
+                    const a = pointers.get(pinch.ids[0]);
+                    const b = pointers.get(pinch.ids[1]);
+                    if (!a || !b) {
+                        return;
+                    }
                     // With pinch-to-close armed (setting on, closable,
                     // gesture never over fit) the under-fit squeeze is
                     // free — the shrink is the close affordance;
@@ -400,10 +441,21 @@ export const ZoomWrapper = defineComponent({
                         pinch.maxGestureScale,
                         scale,
                     );
-                    // Anchor the zoom to the pinch's starting midpoint
-                    // (2.x anchored to the first finger; the midpoint is
-                    // the same idea without finger-order dependence).
-                    const pan = getPointZoomPan(
+                    // Anchor the zoom to the pinch's focal point and
+                    // follow the fingers: the midpoint's travel pans the
+                    // image 1:1 (fused zoom-and-pan).
+                    const currentMid = eventPoint({
+                        clientX: (a!.x + b!.x) / 2,
+                        clientY: (a!.y + b!.y) / 2,
+                    });
+                    pinch.lastMid = currentMid;
+                    pinch.midSamples = pushVelocitySample(pinch.midSamples, {
+                        x: currentMid.x,
+                        y: currentMid.y,
+                        t: Date.now(),
+                    });
+                    const pan = getPinchPan(
+                        currentMid,
                         pinch.startMid,
                         pinch.startPan,
                         pinch.startScale,
@@ -423,6 +475,7 @@ export const ZoomWrapper = defineComponent({
                         imageHeight,
                         containerWidth,
                         containerHeight,
+                        stageBottomExtra,
                     } = measure();
                     const bounds = getPanBounds(
                         imageWidth,
@@ -433,7 +486,7 @@ export const ZoomWrapper = defineComponent({
                     );
                     applyLive({
                         ...live,
-                        pan: clampPan(
+                        pan: clampPanToStage(
                             {
                                 x:
                                     panDrag.startPan.x +
@@ -443,6 +496,7 @@ export const ZoomWrapper = defineComponent({
                                     (event.clientY - panDrag.startY),
                             },
                             bounds,
+                            stageBottomExtra,
                         ),
                     });
                 }
@@ -453,6 +507,46 @@ export const ZoomWrapper = defineComponent({
                 }
                 pointers.delete(event.pointerId);
                 const endedPinch = pinch;
+                if (
+                    endedPinch &&
+                    endedPinch.ids.includes(event.pointerId) &&
+                    pointers.size >= 2
+                ) {
+                    // A pair finger lifted while another finger rests:
+                    // re-baseline onto the surviving pair — silently
+                    // re-pairing to map order would leap the midpoint
+                    // 1:1 and poison the release velocity.
+                    const survivor =
+                        endedPinch.ids[0] === event.pointerId
+                            ? endedPinch.ids[1]
+                            : endedPinch.ids[0];
+                    const otherId = [...pointers.keys()].find(
+                        (id) => id !== survivor,
+                    )!;
+                    const a = pointers.get(survivor)!;
+                    const b = pointers.get(otherId)!;
+                    const mid = eventPoint({
+                        clientX: (a.x + b.x) / 2,
+                        clientY: (a.y + b.y) / 2,
+                    });
+                    endedPinch.ids = [survivor, otherId];
+                    endedPinch.startDistance = getPointerDistance(a, b);
+                    endedPinch.startScale = live.scale;
+                    endedPinch.startPan = live.pan;
+                    endedPinch.startMid = mid;
+                    endedPinch.lastMid = mid;
+                    endedPinch.midSamples = [
+                        { x: mid.x, y: mid.y, t: Date.now() },
+                    ];
+                    return;
+                }
+                if (
+                    endedPinch &&
+                    !endedPinch.ids.includes(event.pointerId)
+                ) {
+                    // A resting extra finger lifted — the pinch continues.
+                    return;
+                }
                 if (endedPinch && pointers.size < 2) {
                     pinch = null;
                     if (
@@ -473,23 +567,36 @@ export const ZoomWrapper = defineComponent({
                     // Pinch release snaps into [1, actual size] regardless
                     // of infiniteZoom (2.x pinch touchend rule — the
                     // setting governs button zoom only). The pan is
-                    // recomputed through the same focal anchor, clamped
-                    // into the landed scale's bounds, and a spring
-                    // animates the snap.
+                    // recomputed through the same focal anchor — carried
+                    // to the midpoint's last position and projected along
+                    // its momentum — clamped into the landed scale's
+                    // bounds. Velocity-seeded springs animate the snap
+                    // (bounce only where the clamp cut the glide).
                     const target = clampScale(live.scale, maxScale(), false);
                     const {
                         imageWidth,
                         imageHeight,
                         containerWidth,
                         containerHeight,
+                        stageBottomExtra,
                     } = measure();
-                    const pan = clampPan(
-                        getPointZoomPan(
-                            endedPinch.startMid,
-                            endedPinch.startPan,
-                            endedPinch.startScale,
-                            target,
-                        ),
+                    const midVelocity = getWindowedVelocity(
+                        endedPinch.midSamples,
+                        Date.now(),
+                    );
+                    const basePan = getPinchPan(
+                        endedPinch.lastMid,
+                        endedPinch.startMid,
+                        endedPinch.startPan,
+                        endedPinch.startScale,
+                        target,
+                    );
+                    const glide = {
+                        x: basePan.x + project(midVelocity.x),
+                        y: basePan.y + project(midVelocity.y),
+                    };
+                    const pan = clampPanToStage(
+                        glide,
                         getPanBounds(
                             imageWidth,
                             imageHeight,
@@ -497,12 +604,29 @@ export const ZoomWrapper = defineComponent({
                             containerHeight,
                             target,
                         ),
+                        stageBottomExtra,
                     );
                     startSpring(
                         [
                             { from: live.scale, velocity: 0, target },
-                            { from: live.pan.x, velocity: 0, target: pan.x },
-                            { from: live.pan.y, velocity: 0, target: pan.y },
+                            {
+                                from: live.pan.x,
+                                velocity: midVelocity.x,
+                                target: pan.x,
+                                dampingRatio:
+                                    pan.x !== glide.x
+                                        ? SPRING_BOUNCE_DAMPING
+                                        : 1,
+                            },
+                            {
+                                from: live.pan.y,
+                                velocity: midVelocity.y,
+                                target: pan.y,
+                                dampingRatio:
+                                    pan.y !== glide.y
+                                        ? SPRING_BOUNCE_DAMPING
+                                        : 1,
+                            },
                         ],
                         ([scale, x, y]) =>
                             applyLive({
@@ -535,12 +659,13 @@ export const ZoomWrapper = defineComponent({
                             imageHeight,
                             containerWidth,
                             containerHeight,
+                            stageBottomExtra,
                         } = measure();
                         const projected = {
                             x: current.x + project(velocity.x),
                             y: current.y + project(velocity.y),
                         };
-                        const target = clampPan(
+                        const target = clampPanToStage(
                             projected,
                             getPanBounds(
                                 imageWidth,
@@ -549,6 +674,7 @@ export const ZoomWrapper = defineComponent({
                                 containerHeight,
                                 live.scale,
                             ),
+                            stageBottomExtra,
                         );
                         startSpring(
                             [
@@ -601,9 +727,13 @@ export const ZoomWrapper = defineComponent({
             if (!enabled.value || !interactive.value || !props.isCurrent) {
                 return;
             }
-            // Grab-in-flight: stop a running settle and continue from
-            // the live frame values.
-            stopSpring();
+            // Grab-in-flight: only a gesture that can take over (a pan
+            // on a zoomed image; a forming pinch, below) stops a running
+            // settle. A tap on an un-zoomed image must not kill the
+            // under-fit reset spring — nothing would restore it.
+            if (live.zoomed) {
+                stopSpring();
+            }
             pointers.set(event.pointerId, {
                 x: event.clientX,
                 y: event.clientY,
@@ -614,16 +744,25 @@ export const ZoomWrapper = defineComponent({
             attachWindowListeners();
 
             if (pointers.size === 2 && event.pointerType === 'touch') {
+                // The forming pinch takes over whatever was settling.
+                stopSpring();
+                const ids = [...pointers.keys()] as [number, number];
                 const [a, b] = [...pointers.values()];
+                const startMid = eventPoint({
+                    clientX: (a!.x + b!.x) / 2,
+                    clientY: (a!.y + b!.y) / 2,
+                });
                 pinch = {
+                    ids,
                     startDistance: getPointerDistance(a!, b!),
                     startScale: live.scale,
                     startPan: live.pan,
-                    startMid: eventPoint({
-                        clientX: (a!.x + b!.x) / 2,
-                        clientY: (a!.y + b!.y) / 2,
-                    }),
+                    startMid,
                     maxGestureScale: live.scale,
+                    lastMid: startMid,
+                    midSamples: [
+                        { x: startMid.x, y: startMid.y, t: Date.now() },
+                    ],
                 };
                 panDrag = null;
                 ctx.gestureLock.claim('pinch');

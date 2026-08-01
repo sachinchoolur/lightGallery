@@ -99,6 +99,8 @@ export interface GalleryInternal {
     pluginOuterClassNames: string;
     /** The outlet registers its components-open toggle here. */
     componentsToggleRef: MutableRefObject<() => void>;
+    /** True while the current open used the zoom-from-origin flight. */
+    zoomOriginOpenRef: MutableRefObject<boolean>;
     /** mediumZoom's media-position override (read by the outlet). */
     mediaPositionOverrideRef: MutableRefObject<(() => MediaPosition) | null>;
 }

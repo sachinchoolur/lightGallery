@@ -120,7 +120,10 @@ describe('open/close lifecycle (controlled)', () => {
         expect(onAfterClose).not.toHaveBeenCalled();
 
         tick(BACKDROP + 100);
-        expect(document.querySelector('.lg-container')).toBeNull();
+        // v2 parity: the container persists after close, hidden by
+        // dropping lg-show (CSS display:none).
+        expect(document.querySelector('.lg-container.lg-show')).toBeNull();
+        expect(document.querySelector('.lg-container')).toBeInTheDocument();
         expect(onAfterClose).toHaveBeenCalledTimes(1);
     });
 
@@ -147,12 +150,19 @@ describe('open/close lifecycle (controlled)', () => {
         render(<Harness onClose={onClose} />);
         openSettled();
 
+        // closeOnTap listens to POINTER events (the synthesized mouse
+        // burst after an iOS tap must never close the gallery).
         const img = screen.getByAltText('a');
-        fireEvent.mouseDown(img);
-        fireEvent.mouseUp(img);
+        fireEvent.pointerDown(img);
+        fireEvent.pointerUp(img);
         expect(onClose).not.toHaveBeenCalled();
 
         const item = document.querySelector('.lg-item.lg-current')!;
+        fireEvent.pointerDown(item);
+        fireEvent.pointerUp(item);
+        expect(onClose).toHaveBeenCalledTimes(1);
+
+        // The mouse burst alone must not close.
         fireEvent.mouseDown(item);
         fireEvent.mouseUp(item);
         expect(onClose).toHaveBeenCalledTimes(1);
@@ -169,7 +179,7 @@ describe('body state', () => {
         expect(document.documentElement).not.toHaveClass('lg-on');
         expect(document.body).not.toHaveClass('lg-overlay-open');
         tick(BACKDROP + 100);
-        expect(document.querySelector('.lg-container')).toBeNull();
+        expect(document.querySelector('.lg-container.lg-show')).toBeNull();
     });
 });
 

@@ -3,7 +3,7 @@ import {
     useRef,
     useState,
     type CSSProperties,
-    type MouseEvent,
+    type PointerEvent as ReactPointerEvent,
     type ReactElement,
 } from 'react';
 import { createPortal } from 'react-dom';
@@ -115,8 +115,14 @@ export function GalleryOutlet({
         top: number;
         bottom: number;
     } | null>(null);
-    const usedZoomRef = useRef(false);
+    // Shared with Slide: load-completion defers while the origin
+    // flight is running (attribute churn on a transitioning element
+    // restarts the transition in Safari — visible reopen flicker when
+    // a cached image loads instantly).
+    const usedZoomRef = internal.zoomOriginOpenRef;
     const returnFocusRef = useRef<HTMLElement | null>(null);
+    /** Latched at first open — the portal persists afterwards (v2). */
+    const everOpenedRef = useRef(false);
 
     const isBodyContainer =
         typeof document !== 'undefined' &&
@@ -264,10 +270,12 @@ export function GalleryOutlet({
                     ),
                 110,
             );
-            timers.set(
-                () => setOriginAnim(null),
-                settings.startAnimationDuration + 110,
-            );
+            timers.set(() => {
+                setOriginAnim(null);
+                // 2.x adds lg-visible once the start animation lands —
+                // the zoom-from-origin path was missing it entirely.
+                setVisible(true);
+            }, settings.startAnimationDuration + 110);
         }
 
         timers.set(() => setPhase('opening'), 10);
@@ -619,13 +627,18 @@ export function GalleryOutlet({
             (name) => target.classList.contains(name),
         );
     };
-    const onOuterMouseDown = (event: MouseEvent) => {
+    // closeOnTap rides POINTER events, never the synthesized mouse
+    // burst iOS fires ~300ms after a tap: that burst can land on the
+    // freshly opened overlay (same screen point as the trigger) and
+    // close the gallery right after it opened — the reopen bounce.
+    const onOuterPointerDown = (event: ReactPointerEvent) => {
         mouseDownOnSlideRef.current = isSlideElement(event.target);
+        gestures.onPointerDown(event);
     };
-    const onOuterMouseMove = () => {
+    const onOuterPointerMove = () => {
         mouseDownOnSlideRef.current = false;
     };
-    const onOuterMouseUp = (event: MouseEvent) => {
+    const onOuterPointerUp = (event: ReactPointerEvent) => {
         if (
             settings.closeOnTap &&
             mouseDownOnSlideRef.current &&
@@ -635,7 +648,17 @@ export function GalleryOutlet({
         }
     };
 
-    if (!mounted || phase === 'closed') {
+    // v2 parity: after the first open the container STAYS in the DOM
+    // across close/reopen (CSS hides it — `.lg-container` is
+    // display:none without `lg-show`). Unmounting the whole portal per
+    // open makes iOS Safari re-composite a fresh layer tree while the
+    // entrance transitions run, which paints as visible flicker on
+    // reopen; class toggles on a persistent tree (what vanilla does)
+    // don't.
+    if (phase !== 'closed') {
+        everOpenedRef.current = true;
+    }
+    if (!mounted || (phase === 'closed' && !everOpenedRef.current)) {
         return null;
     }
 
@@ -646,7 +669,7 @@ export function GalleryOutlet({
 
     const containerClasses = cx(
         'lg-container',
-        'lg-show',
+        phase !== 'closed' && 'lg-show',
         className,
         showIn && 'lg-show-in',
         !isBodyContainer && !maximized && 'lg-inline',
@@ -708,10 +731,9 @@ export function GalleryOutlet({
                 data-lg-slide-type={
                     currentItem ? getSlideType(currentItem) : undefined
                 }
-                onMouseDown={onOuterMouseDown}
-                onMouseMove={onOuterMouseMove}
-                onMouseUp={onOuterMouseUp}
-                onPointerDown={gestures.onPointerDown}
+                onPointerDown={onOuterPointerDown}
+                onPointerMove={onOuterPointerMove}
+                onPointerUp={onOuterPointerUp}
             >
                 <div className="lg-content" style={contentStyle}>
                     <Slides timeline={timeline} originAnim={originAnim} />

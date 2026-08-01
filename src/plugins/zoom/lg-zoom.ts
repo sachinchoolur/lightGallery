@@ -1,12 +1,12 @@
 import {
     SPRING_BOUNCE_DAMPING,
-    clampPan,
+    clampPanToStage,
     getActualSizeScale as getNaturalSizeScale,
     getPanBounds,
+    getPinchPan,
     getPinchScale,
     shouldCloseOnPinch,
     getPointerDistance,
-    getPointZoomPan,
     getWindowedVelocity,
     project,
     pushVelocitySample,
@@ -336,7 +336,14 @@ export default class Zoom {
 
         // The natural-px swap must wait out the running zoom animation
         // (button bounce or gesture settle) — firing mid-flight cuts it.
+        // Both timers also stand down if a NEW gesture grabbed the image
+        // meanwhile: swapping to natural px (and the reset-transition
+        // !important rules) mid-pinch freezes the visible zoom and
+        // corrupts the release clamp's layout measurements.
         setTimeout(() => {
+            if (this.core.touchAction) {
+                return;
+            }
             const actualSizeScale = this.getCurrentImageActualSizeScale();
 
             if (this.scale >= actualSizeScale) {
@@ -346,6 +353,9 @@ export default class Zoom {
         }, delay);
 
         setTimeout(() => {
+            if (this.core.touchAction) {
+                return;
+            }
             const actualSizeScale = this.getCurrentImageActualSizeScale();
 
             if (this.scale >= actualSizeScale) {
@@ -577,6 +587,10 @@ export default class Zoom {
                 ) {
                     return;
                 }
+                // A release spring runs with touchAction unset — left
+                // running it would overwrite the reset below from its
+                // next frame and finish at the OLD layout's clamp target.
+                this.stopZoomSpring();
                 const _LGel = this.core
                     .getSlideItem(this.core.index)
                     .find('.lg-img-wrap')
@@ -720,6 +734,88 @@ export default class Zoom {
         }
     }
 
+    /**
+     * Any gesture end must leave the image inside its pan bounds: a tap
+     * interrupts a settling spring (stopZoomSpring at its touchstart),
+     * and if it never turns into a drag nothing else re-clamps — the
+     * fused pinch pan can legitimately be far outside mid-settle.
+     * Springs home from wherever the interruption stopped it; a no-op
+     * when already in bounds (the common tap).
+     */
+    settleIntoBounds(): void {
+        // Absolute bounds from the transform-inclusive rendered size
+        // (position-independent — the interrupted position may be far
+        // out of bounds). Per axis the LEGAL ANCHOR range is
+        // ±|imageSize − containerSize| / 2 whether or not the image
+        // overflows: button/double-tap zooms deliberately park a
+        // non-overflowing axis off-center to keep the tapped point
+        // visible, and a plain tap must not recenter it. Only the
+        // overflowing-Y floor is stage-aware (vacated strip).
+        this.setZoomEssentials();
+        const rect = this.core
+            .getSlideItem(this.core.index)
+            .find('.lg-image')
+            .first()
+            .get()
+            .getBoundingClientRect();
+        // The interrupted spring may also have been mid-SCALE (a pinch
+        // release gliding into [1, actual size]); a stranded scale would
+        // skip the actual-size machinery its completion owns. Project
+        // the rendered sizes to the clamped target scale
+        // (transform-invariant: rect × target / current).
+        const actualSizeScale = this.getCurrentImageActualSizeScale();
+        const targetScale = Math.min(
+            Math.max(this.scale, 1),
+            Math.max(actualSizeScale, 1),
+        );
+        const sizeRatio = this.scale > 0 ? targetScale / this.scale : 1;
+        const width = rect.width * sizeRatio;
+        const height = rect.height * sizeRatio;
+        const { bottom } = this.core.mediaContainerPosition;
+        const halfX = Math.abs(width - this.containerRect.width) / 2;
+        const halfY = Math.abs(height - this.containerRect.height) / 2;
+        const floorY =
+            height > this.containerRect.height
+                ? Math.min(-halfY + bottom, halfY)
+                : -halfY;
+        const targetX = Math.min(Math.max(this.left, -halfX), halfX);
+        const targetY = Math.min(Math.max(this.top, floorY), halfY);
+        if (
+            Math.abs(targetX - this.left) < 1 &&
+            Math.abs(targetY - this.top) < 1 &&
+            Math.abs(targetScale - this.scale) < 0.001
+        ) {
+            return;
+        }
+        this.core.outer.addClass('lg-zoom-drag-transition lg-zoom-dragging');
+        this.stopZoomSpring();
+        this.cancelZoomSpring = runSprings(
+            [
+                { from: this.scale, velocity: 0, target: targetScale },
+                { from: this.left, velocity: 0, target: targetX },
+                { from: this.top, velocity: 0, target: targetY },
+            ],
+            ([scale, x, y]) => {
+                this.left = x!;
+                this.top = y!;
+                this.setZoomStyles({ x: x!, y: y!, scale: scale! });
+            },
+            () => {
+                this.cancelZoomSpring = undefined;
+                this.core.outer.removeClass(
+                    'lg-zoom-dragging lg-zoom-drag-transition',
+                );
+                // Mirror the pinch-release completion machinery.
+                if (
+                    targetScale > 1 &&
+                    targetScale >= Math.max(actualSizeScale, 1)
+                ) {
+                    this.setZoomImageSize(0);
+                }
+            },
+        );
+    }
+
     getTouchDistance(e: TouchEvent): number {
         return getPointerDistance(
             { x: e.touches[0].pageX, y: e.touches[0].pageY },
@@ -744,9 +840,12 @@ export default class Zoom {
     }
 
     /**
-     * Clamp a pan into the exact bounds at the given scale, measured
-     * from the untransformed layout size (offset dimensions ignore
-     * transforms, so this stays correct mid-gesture).
+     * Clamp a pan into the stage-aware bounds at the given scale,
+     * measured from the untransformed layout size (offset dimensions
+     * ignore transforms, so this stays correct mid-gesture). Y matches
+     * `getPossibleSwipeDragCords`: the vacated components strip belongs
+     * to the stage, so the pan-up floor sits where the image's bottom
+     * edge meets the SCREEN bottom, not the content box.
      */
     clampPinchPan(pan: Coords, scale: number): Coords {
         const $image = this.core
@@ -754,15 +853,17 @@ export default class Zoom {
             .find('.lg-image')
             .first()
             .get();
-        return clampPan(
+        const bounds = getPanBounds(
+            $image.offsetWidth,
+            $image.offsetHeight,
+            this.containerRect.width,
+            this.containerRect.height,
+            scale,
+        );
+        return clampPanToStage(
             pan,
-            getPanBounds(
-                $image.offsetWidth,
-                $image.offsetHeight,
-                this.containerRect.width,
-                this.containerRect.height,
-                scale,
-            ),
+            bounds,
+            this.core.mediaContainerPosition.bottom,
         );
     }
 
@@ -776,6 +877,11 @@ export default class Zoom {
         // Largest scale the gesture reached — the pinch-to-close guard
         // (an over-then-under pinch is a correction, not a dismissal).
         let maxGestureScale = 1;
+        // The midpoint's live position and velocity samples: two fingers
+        // moving together pan the image (fused zoom-and-pan), and the
+        // release springs inherit the midpoint's momentum.
+        let lastMid: Coords = { x: 0, y: 0 };
+        let midSamples: VelocitySample[] = [];
 
         let $item = this.core.getSlideItem(this.core.index);
 
@@ -817,6 +923,8 @@ export default class Zoom {
 
                 startDist = this.getTouchDistance(e);
                 maxGestureScale = initScale;
+                lastMid = startMid;
+                midSamples = [{ x: startMid.x, y: startMid.y, t: Date.now() }];
             }
         });
 
@@ -858,14 +966,28 @@ export default class Zoom {
                         Math.round((_scale + Number.EPSILON) * 10000) / 10000;
                     // Project from the gesture-start state so the image
                     // point under the fingers stays put on every frame —
-                    // incremental zoomImage steps drift off the anchor
-                    // and only land near it at release.
-                    const pan = getPointZoomPan(
+                    // and follows the fingers: the midpoint's travel pans
+                    // 1:1 (fused zoom-and-pan).
+                    const mid = this.getPinchMidPoint(e);
+                    lastMid = mid;
+                    midSamples = pushVelocitySample(midSamples, {
+                        x: mid.x,
+                        y: mid.y,
+                        t: Date.now(),
+                    });
+                    const pan = getPinchPan(
+                        mid,
                         startMid,
                         startPan,
                         initScale,
                         scale,
                     );
+                    // The pan stays FREE while the pinch is live —
+                    // iOS keeps the focal point glued under the fingers
+                    // with no bounds interference during the gesture
+                    // (live-clamping against scale-dependent bounds
+                    // reads as a drift wobble); the release spring
+                    // lands it inside the stage bounds.
                     this.left = pan.x;
                     this.top = pan.y;
                     this.setZoomStyles({ x: pan.x, y: pan.y, scale });
@@ -928,26 +1050,35 @@ export default class Zoom {
                     );
                 } else {
                     // Snap into [1, actual size] and re-project the pan
-                    // through the same focal anchor, clamped into the
-                    // exact bounds for the landed scale — the released
-                    // image always covers the stage. The gesture-start
-                    // snapshot keeps the cap identical to the live
-                    // frames'. A spring animates the snap; transitions
-                    // stand down until it settles.
+                    // through the same focal anchor — carried to the
+                    // midpoint's last position and projected along its
+                    // momentum — clamped into the exact bounds for the
+                    // landed scale. The gesture-start snapshot keeps the
+                    // cap identical to the live frames'. Velocity-seeded
+                    // springs animate the snap (bounce only where the
+                    // clamp cut the glide); transitions stand down until
+                    // they settle.
                     const actualSizeScale = startMaxScale;
                     const targetScale = Math.min(
                         this.scale,
                         Math.max(actualSizeScale, 1),
                     );
-                    const pan = this.clampPinchPan(
-                        getPointZoomPan(
-                            startMid,
-                            startPan,
-                            initScale,
-                            targetScale,
-                        ),
+                    const midVelocity = getWindowedVelocity(
+                        midSamples,
+                        Date.now(),
+                    );
+                    const basePan = getPinchPan(
+                        lastMid,
+                        startMid,
+                        startPan,
+                        initScale,
                         targetScale,
                     );
+                    const glide = {
+                        x: basePan.x + project(midVelocity.x),
+                        y: basePan.y + project(midVelocity.y),
+                    };
+                    const pan = this.clampPinchPan(glide, targetScale);
                     // Buttons re-derive their anchor from left/top.
                     this.positionChanged = true;
                     this.manageActualPixelClassNames();
@@ -961,8 +1092,24 @@ export default class Zoom {
                                 velocity: 0,
                                 target: targetScale,
                             },
-                            { from: this.left, velocity: 0, target: pan.x },
-                            { from: this.top, velocity: 0, target: pan.y },
+                            {
+                                from: this.left,
+                                velocity: midVelocity.x,
+                                target: pan.x,
+                                dampingRatio:
+                                    pan.x !== glide.x
+                                        ? SPRING_BOUNCE_DAMPING
+                                        : 1,
+                            },
+                            {
+                                from: this.top,
+                                velocity: midVelocity.y,
+                                target: pan.y,
+                                dampingRatio:
+                                    pan.y !== glide.y
+                                        ? SPRING_BOUNCE_DAMPING
+                                        : 1,
+                            },
                         ],
                         ([scale, x, y]) => {
                             this.left = x!;
@@ -1150,8 +1297,6 @@ export default class Zoom {
             .find('.lg-image')
             .first();
 
-        const { bottom } = this.core.mediaContainerPosition;
-
         const imgRect = $image.get().getBoundingClientRect();
 
         let imageHeight = imgRect.height;
@@ -1162,6 +1307,13 @@ export default class Zoom {
             imageWidth = imageWidth + scale * imageWidth;
         }
 
+        // Stage-aware bounds: the components strip (thumbnails+caption)
+        // VACATES when zoomed, so the visible stage extends below the
+        // content box to the screen bottom. The `+ bottom` floor stops
+        // the pan-up exactly where the image's bottom edge meets the
+        // SCREEN bottom — a symmetric content-box clamp would strand a
+        // strip-height gap of black where the thumbnails were.
+        const { bottom } = this.core.mediaContainerPosition;
         const minY = (imageHeight - this.containerRect.height) / 2;
         const maxY = (this.containerRect.height - imageHeight) / 2 + bottom;
 
@@ -1220,6 +1372,11 @@ export default class Zoom {
             ) {
                 e.preventDefault();
                 this.stopZoomSpring();
+                // A previous swipe hijacked by a pinch never reaches its
+                // touchend — stale isMoved/endCoords would make the NEXT
+                // tap run touchendZoom on garbage deltas.
+                isMoved = false;
+                endCoords = {} as Coords;
                 const startPoint = this.getSwipeCords(e);
                 samples = [{ x: startPoint.x, y: startPoint.y, t: Date.now() }];
                 this.core.touchAction = 'zoomSwipe';
@@ -1290,6 +1447,9 @@ export default class Zoom {
                 this.core.touchAction = undefined;
                 this.core.outer.removeClass('lg-zoom-dragging');
                 if (!isMoved) {
+                    // The touchstart stopped any settling spring — a tap
+                    // must not strand an out-of-bounds position.
+                    this.settleIntoBounds();
                     return;
                 }
                 isMoved = false;
@@ -1332,7 +1492,13 @@ export default class Zoom {
                 this.$LG(e.target).hasClass('lg-item') ||
                 $item.get().contains(e.target)
             ) {
-                this.stopZoomSpring();
+                // Only a drag that can actually take over may kill a
+                // settling spring — an (often emulated) mousedown on an
+                // un-zoomed image would strand the under-fit reset
+                // mid-flight (zoomSwipe guards the same way).
+                if (this.core.outer.hasClass('lg-zoomed')) {
+                    this.stopZoomSpring();
+                }
                 dragSamples = [{ x: e.pageX, y: e.pageY, t: Date.now() }];
                 _LGel = this.core
                     .getSlideItem(this.core.index)
@@ -1412,6 +1578,10 @@ export default class Zoom {
                         allowY,
                         getWindowedVelocity(dragSamples, Date.now()),
                     );
+                } else {
+                    // The mousedown stopped any settling spring — a
+                    // click must not strand an out-of-bounds position.
+                    this.settleIntoBounds();
                 }
 
                 isMoved = false;

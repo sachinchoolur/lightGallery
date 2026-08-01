@@ -114,7 +114,9 @@ describe('accessibility', () => {
 
             fireEvent.keyDown(document, { key: 'Escape' });
             tick(500);
-            expect(document.querySelector('.lg-container')).toBeNull();
+            expect(
+                document.querySelector('.lg-container.lg-show'),
+            ).toBeNull();
             expect(document.activeElement).toBe(trigger);
         });
 

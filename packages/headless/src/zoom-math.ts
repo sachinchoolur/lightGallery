@@ -86,6 +86,47 @@ export function getPointZoomPan(
     };
 }
 
+/**
+ * Stage-aware pan clamp. X is symmetric. The pan-up floor on Y extends
+ * past the content box by `stageBottomExtra` — the components strip
+ * (thumbnails + caption) vacates when zoomed, so the visible stage
+ * reaches the SCREEN bottom and the image may ride up until its bottom
+ * edge meets it; a plain symmetric clamp would strand a strip-height
+ * gap of black. Inversion-guarded (min against +maxY) for images
+ * taller than the content box but shorter than the full stage.
+ */
+export function clampPanToStage(
+    pan: ZoomPan,
+    bounds: PanBounds,
+    stageBottomExtra: number,
+): ZoomPan {
+    const floorY = Math.min(-bounds.maxY + stageBottomExtra, bounds.maxY);
+    return {
+        x: Math.min(Math.max(pan.x, -bounds.maxX), bounds.maxX),
+        y: Math.min(Math.max(pan.y, floorY), bounds.maxY),
+    };
+}
+
+/**
+ * Pan during a pinch: the focal zoom projection translated by the
+ * midpoint's travel — the image point between the fingers stays
+ * between the fingers wherever they go (iOS/PhotoSwipe fused
+ * zoom-and-pan; two fingers moving together pan without zooming).
+ */
+export function getPinchPan(
+    currentMid: ZoomPan,
+    startMid: ZoomPan,
+    startPan: ZoomPan,
+    startScale: number,
+    scale: number,
+): ZoomPan {
+    const projected = getPointZoomPan(startMid, startPan, startScale, scale);
+    return {
+        x: projected.x + (currentMid.x - startMid.x),
+        y: projected.y + (currentMid.y - startMid.y),
+    };
+}
+
 /** Distance between two pointers (pinch measurement). */
 export function getPointerDistance(
     a: { x: number; y: number },

@@ -445,6 +445,79 @@ describe('zoom plugin', () => {
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
     });
 
+    it('pans with the pinch midpoint (fused zoom-and-pan)', () => {
+        renderGallery({ plugins: [Zoom], pinchToClose: false });
+        loadCurrent();
+        tick(350);
+        const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
+
+        // Two fingers 100 apart; move BOTH +60px right, spread unchanged:
+        // scale stays 1, the image follows the midpoint 1:1.
+        firePointer(pan, 'pointerdown', { x: 100, y: 100, pointerId: 61 });
+        firePointer(pan, 'pointerdown', { x: 200, y: 100, pointerId: 62 });
+        firePointer(window, 'pointermove', {
+            x: 160,
+            y: 100,
+            pointerId: 61,
+        });
+        firePointer(window, 'pointermove', {
+            x: 260,
+            y: 100,
+            pointerId: 62,
+        });
+        expect(pan.style.transform).toBe('translate3d(60px, 0px, 0)');
+
+        // Release: same-tick samples read zero velocity (windowed guard),
+        // and scale 1 clamps the pan back to center on the spring.
+        firePointer(window, 'pointerup', { x: 160, y: 100, pointerId: 61 });
+        tick(2000);
+        expect(pan.style.transform).toBe('translate3d(0px, 0px, 0)');
+        firePointer(window, 'pointerup', { x: 260, y: 100, pointerId: 62 });
+    });
+
+    it('re-baselines the pinch when a pair finger lifts under a third', () => {
+        renderGallery({ plugins: [Zoom], pinchToClose: false });
+        loadCurrent();
+        tick(350);
+        const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
+
+        // Pinch 61+62: spread 100 → 160 (scale 1.6), midpoint 150 → 180.
+        // pan = startMid·(1−1.6) + travel = (−90, −60) + (30, 0).
+        firePointer(pan, 'pointerdown', { x: 100, y: 100, pointerId: 61 });
+        firePointer(pan, 'pointerdown', { x: 200, y: 100, pointerId: 62 });
+        firePointer(window, 'pointermove', {
+            x: 260,
+            y: 100,
+            pointerId: 62,
+        });
+        expect(pan.style.transform).toBe('translate3d(-60px, -60px, 0)');
+
+        // A third finger rests, then pair finger 61 lifts: the pinch
+        // must re-baseline onto 62+63 (old code silently re-paired to
+        // map order and leapt the midpoint by ~185px).
+        firePointer(pan, 'pointerdown', { x: 400, y: 100, pointerId: 63 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 61 });
+        expect(pan.style.transform).toBe('translate3d(-60px, -60px, 0)');
+
+        // Move BOTH remaining fingers +10px, spread unchanged: scale
+        // stays 1.6 and the pan follows the midpoint exactly 1:1.
+        firePointer(window, 'pointermove', {
+            x: 270,
+            y: 100,
+            pointerId: 62,
+        });
+        firePointer(window, 'pointermove', {
+            x: 410,
+            y: 100,
+            pointerId: 63,
+        });
+        expect(pan.style.transform).toBe('translate3d(-50px, -60px, 0)');
+
+        firePointer(window, 'pointerup', { x: 270, y: 100, pointerId: 62 });
+        firePointer(window, 'pointerup', { x: 410, y: 100, pointerId: 63 });
+        tick(2000);
+    });
+
     it('closes on a pinch released below fit (default pinchToClose)', () => {
         const onClose = vi.fn();
         renderGallery({ plugins: [Zoom], onClose });

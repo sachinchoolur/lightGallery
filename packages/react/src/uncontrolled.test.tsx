@@ -77,7 +77,7 @@ describe('uncontrolled mode', () => {
 
         fireEvent.keyDown(document, { key: 'Escape' });
         tick(450);
-        expect(document.querySelector('.lg-container')).toBeNull();
+        expect(document.querySelector('.lg-container.lg-show')).toBeNull();
         // Triggers survive the close.
         expect(screen.getByTestId('trigger-a')).toBeInTheDocument();
     });
@@ -118,6 +118,6 @@ describe('uncontrolled mode', () => {
 
         act(() => ref.current!.closeGallery());
         tick(450);
-        expect(document.querySelector('.lg-container')).toBeNull();
+        expect(document.querySelector('.lg-container.lg-show')).toBeNull();
     });
 });

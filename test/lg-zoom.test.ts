@@ -14,7 +14,7 @@ const clampPinchPan = Zoom.prototype.clampPinchPan as (
     scale: number,
 ) => { x: number; y: number };
 
-const clampThis = {
+const makeClampThis = (bottom: number) => ({
     core: {
         getSlideItem: () => ({
             find: () => ({
@@ -23,9 +23,15 @@ const clampThis = {
                 }),
             }),
         }),
+        mediaContainerPosition: { top: 0, bottom },
     },
     containerRect: { width: 1000, height: 800 },
-};
+    // Private stage clamp, borrowed off the prototype like the adapter.
+    clampPanToStage: (Zoom.prototype as unknown as Record<string, unknown>)[
+        'clampPanToStage'
+    ],
+});
+const clampThis = makeClampThis(0);
 
 const actualSizeScale = Zoom.prototype.getActualSizeScale as (
     this: unknown,
@@ -47,6 +53,23 @@ describe('pinch pan clamp adapter', () => {
         expect(clampPinchPan.call(clampThis, { x: 50, y: 40 }, 1)).toEqual({
             x: 0,
             y: 0,
+        });
+    });
+
+    it('extends the pan-up floor by the vacated components strip', () => {
+        // Same geometry with a 120px strip below the content box: the
+        // pan-up floor sits 120px earlier — the image's bottom edge
+        // stops flush with the SCREEN bottom (content bottom + strip)
+        // instead of exposing the vacated strip; the downward bound is
+        // unchanged.
+        const stageThis = makeClampThis(120);
+        expect(clampPinchPan.call(stageThis, { x: 0, y: -500 }, 2)).toEqual({
+            x: 0,
+            y: -80,
+        });
+        expect(clampPinchPan.call(stageThis, { x: 0, y: 500 }, 2)).toEqual({
+            x: 0,
+            y: 200,
         });
     });
 });

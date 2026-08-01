@@ -355,6 +355,60 @@ describe('plugin runtime + wave-1', () => {
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
     });
 
+    it('zoom: pans with the pinch midpoint (fused zoom-and-pan)', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video], {
+            pinchToClose: false,
+        });
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+
+        // Two fingers 100 apart; move BOTH +60px right, spread unchanged:
+        // scale stays 1, the image follows the midpoint 1:1.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 61 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 62 });
+        firePointer(window, 'pointermove', { x: 160, y: 100, pointerId: 61 });
+        firePointer(window, 'pointermove', { x: 260, y: 100, pointerId: 62 });
+        expect(panEl.style.transform).toBe('translate3d(60px, 0px, 0)');
+
+        // Release: same-tick samples read zero velocity (windowed guard),
+        // and scale 1 clamps the pan back to center on the spring.
+        firePointer(window, 'pointerup', { x: 160, y: 100, pointerId: 61 });
+        vi.advanceTimersByTime(2000);
+        expect(panEl.style.transform).toBe('translate3d(0px, 0px, 0)');
+        firePointer(window, 'pointerup', { x: 260, y: 100, pointerId: 62 });
+    });
+
+    it('zoom: re-baselines the pinch when a pair finger lifts under a third', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video], {
+            pinchToClose: false,
+        });
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+
+        // Pinch 61+62: spread 100 → 160 (scale 1.6), midpoint 150 → 180.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 61 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 62 });
+        firePointer(window, 'pointermove', { x: 260, y: 100, pointerId: 62 });
+        expect(panEl.style.transform).toBe('translate3d(-60px, -60px, 0)');
+
+        // Third finger rests, then pair finger 61 lifts: re-baseline,
+        // no midpoint leap.
+        firePointer(panEl, 'pointerdown', { x: 400, y: 100, pointerId: 63 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 61 });
+        expect(panEl.style.transform).toBe('translate3d(-60px, -60px, 0)');
+
+        // Both remaining fingers +10px, spread unchanged: pan 1:1.
+        firePointer(window, 'pointermove', { x: 270, y: 100, pointerId: 62 });
+        firePointer(window, 'pointermove', { x: 410, y: 100, pointerId: 63 });
+        expect(panEl.style.transform).toBe('translate3d(-50px, -60px, 0)');
+
+        firePointer(window, 'pointerup', { x: 270, y: 100, pointerId: 62 });
+        firePointer(window, 'pointerup', { x: 410, y: 100, pointerId: 63 });
+        vi.advanceTimersByTime(2000);
+    });
+
     it('zoom: closes on a pinch released below fit (default pinchToClose)', async () => {
         const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
         await openAndLoad(wrapper);

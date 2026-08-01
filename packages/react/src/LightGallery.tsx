@@ -319,6 +319,7 @@ export const LightGallery = forwardRef<
         Record<string, boolean>
     >({});
     const componentsToggleRef = useRef<() => void>(() => undefined);
+    const zoomOriginOpenRef = useRef(false);
     const mediaPositionOverrideRef = useRef<(() => MediaPosition) | null>(
         null,
     );
@@ -634,6 +635,7 @@ export const LightGallery = forwardRef<
             registerElements,
             pluginOuterClassNames,
             componentsToggleRef,
+            zoomOriginOpenRef,
             mediaPositionOverrideRef,
         }),
         [

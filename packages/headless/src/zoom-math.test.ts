@@ -9,6 +9,8 @@ import {
     clampScale,
     getActualSizeScale,
     getPanBounds,
+    clampPanToStage,
+    getPinchPan,
     getPinchScale,
     getPointZoomPan,
     getPointerDistance,
@@ -62,6 +64,59 @@ describe('scale math', () => {
         expect(
             getPointZoomPan({ x: 100, y: 50 }, { x: -100, y: -50 }, 2, 1),
         ).toEqual({ x: 0, y: 0 });
+    });
+
+    it('extends the pan-up floor by the vacated components strip', () => {
+        const bounds = { maxX: 300, maxY: 200 };
+        // No strip: plain symmetric clamp.
+        expect(
+            clampPanToStage({ x: 500, y: -500 }, bounds, 0),
+        ).toEqual({ x: 300, y: -200 });
+        // 120px strip: pan-up stops 120px earlier (image bottom flush
+        // with the SCREEN bottom); downward bound unchanged.
+        expect(
+            clampPanToStage({ x: 0, y: -500 }, bounds, 120),
+        ).toEqual({ x: 0, y: -80 });
+        expect(clampPanToStage({ x: 0, y: 500 }, bounds, 120)).toEqual({
+            x: 0,
+            y: 200,
+        });
+        // Inversion guard: strip taller than the pannable range pins at
+        // the downward bound instead of producing an inverted range.
+        expect(
+            clampPanToStage({ x: 0, y: -500 }, { maxX: 0, maxY: 40 }, 120),
+        ).toEqual({ x: 0, y: 40 });
+    });
+
+    it('keeps the image point between the fingers as the midpoint travels', () => {
+        const startMid = { x: 100, y: 50 };
+        const startPan = { x: 0, y: 0 };
+        // Midpoint-only travel (no scale change): pan follows 1:1.
+        expect(
+            getPinchPan({ x: 140, y: 30 }, startMid, startPan, 1, 1),
+        ).toEqual({ x: 40, y: -20 });
+        // Scale-only change (midpoint still): equals the focal projection.
+        expect(getPinchPan(startMid, startMid, startPan, 1, 2)).toEqual(
+            getPointZoomPan(startMid, startPan, 1, 2),
+        );
+        // Combined: projection plus the travel.
+        const projected = getPointZoomPan(startMid, startPan, 1, 2);
+        expect(
+            getPinchPan({ x: 130, y: 50 }, startMid, startPan, 1, 2),
+        ).toEqual({ x: projected.x + 30, y: projected.y });
+        // Invariant pinned with a non-trivial start state (zoomed,
+        // panned, negative result): the image point that sat between
+        // the fingers at start, p = (startMid − startPan)/s₀ = (10,30),
+        // must satisfy pan + s·p = currentMid → pan = (−10, 0).
+        expect(
+            getPinchPan(
+                { x: 20, y: 90 },
+                { x: 50, y: 40 },
+                { x: 30, y: -20 },
+                2,
+                3,
+            ),
+        ).toEqual({ x: -10, y: 0 });
     });
 
     it('scales pinch by distance ratio', () => {
