@@ -19,6 +19,7 @@ import {
     clampPanToStage,
     clampScale,
     getActualSizeScale,
+    getRotatedVisualSize,
     getPanBounds,
     SPRING_BOUNCE_DAMPING,
     getPinchPan,
@@ -368,6 +369,7 @@ export class LgZoomWrapperComponent {
     private measure(): {
         imageWidth: number;
         imageHeight: number;
+        layoutImageWidth: number;
         naturalWidth: number;
         containerWidth: number;
         containerHeight: number;
@@ -390,9 +392,21 @@ export class LgZoomWrapperComponent {
                           stage.getBoundingClientRect().bottom,
                   )
                 : 0;
+        // Bounds math runs on the image's VISUAL box: the rotate
+        // plugin's wrapper transform swaps the axes at 90°/270° (and
+        // shrinks by its fit scale), which layout offsets don't see.
+        const rotateWrap = img?.closest<HTMLElement>('.lg-img-rotate');
+        const visual = getRotatedVisualSize(
+            img?.offsetWidth ?? 0,
+            img?.offsetHeight ?? 0,
+            rotateWrap?.style.transform,
+        );
         return {
-            imageWidth: img?.offsetWidth ?? 0,
-            imageHeight: img?.offsetHeight ?? 0,
+            imageWidth: visual.width,
+            imageHeight: visual.height,
+            // Unrotated layout width — actual-size scale relates
+            // natural pixels to the image's own axis.
+            layoutImageWidth: img?.offsetWidth ?? 0,
             naturalWidth: img?.naturalWidth ?? 0,
             containerWidth: slide?.offsetWidth ?? 0,
             containerHeight: slide?.offsetHeight ?? 0,
@@ -401,8 +415,8 @@ export class LgZoomWrapperComponent {
     }
 
     private maxScale(): number {
-        const { naturalWidth, imageWidth } = this.measure();
-        return getActualSizeScale(naturalWidth, imageWidth);
+        const { naturalWidth, layoutImageWidth } = this.measure();
+        return getActualSizeScale(naturalWidth, layoutImageWidth);
     }
 
     private setLiveTransition(value: string): void {
@@ -596,10 +610,7 @@ export class LgZoomWrapperComponent {
                     cfg.infiniteZoom,
                     closeArmed,
                 );
-                pinch.maxGestureScale = Math.max(
-                    pinch.maxGestureScale,
-                    scale,
-                );
+                pinch.maxGestureScale = Math.max(pinch.maxGestureScale, scale);
                 // Anchor the zoom to the pinch's focal point and follow
                 // the fingers: the midpoint's travel pans the image 1:1
                 // (fused zoom-and-pan).
@@ -694,15 +705,10 @@ export class LgZoomWrapperComponent {
                 endedPinch.startPan = this.live.pan;
                 endedPinch.startMid = mid;
                 endedPinch.lastMid = mid;
-                endedPinch.midSamples = [
-                    { x: mid.x, y: mid.y, t: Date.now() },
-                ];
+                endedPinch.midSamples = [{ x: mid.x, y: mid.y, t: Date.now() }];
                 return;
             }
-            if (
-                endedPinch &&
-                !endedPinch.ids.includes(event.pointerId)
-            ) {
+            if (endedPinch && !endedPinch.ids.includes(event.pointerId)) {
                 // A resting extra finger lifted — the pinch continues.
                 return;
             }
@@ -778,18 +784,14 @@ export class LgZoomWrapperComponent {
                             velocity: midVelocity.x,
                             target: pan.x,
                             dampingRatio:
-                                pan.x !== glide.x
-                                    ? SPRING_BOUNCE_DAMPING
-                                    : 1,
+                                pan.x !== glide.x ? SPRING_BOUNCE_DAMPING : 1,
                         },
                         {
                             from: this.live.pan.y,
                             velocity: midVelocity.y,
                             target: pan.y,
                             dampingRatio:
-                                pan.y !== glide.y
-                                    ? SPRING_BOUNCE_DAMPING
-                                    : 1,
+                                pan.y !== glide.y ? SPRING_BOUNCE_DAMPING : 1,
                         },
                     ],
                     ([scale, x, y]) =>
@@ -921,9 +923,7 @@ export class LgZoomWrapperComponent {
                 startMid,
                 maxGestureScale: this.live.scale,
                 lastMid: startMid,
-                midSamples: [
-                    { x: startMid.x, y: startMid.y, t: Date.now() },
-                ],
+                midSamples: [{ x: startMid.x, y: startMid.y, t: Date.now() }],
             };
             this.panDrag = null;
             this.ctx.gestureLock.claim('pinch');

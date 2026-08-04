@@ -108,7 +108,36 @@ export function getRotateTransform(
     slice: RotateSlice,
     fitScale: number = 1,
 ): string {
-    return `rotate(${slice.rotate}deg) scale3d(${slice.flipHorizontal * fitScale}, ${slice.flipVertical * fitScale}, 1)`;
+    return `rotate(${slice.rotate}deg) scale3d(${
+        slice.flipHorizontal * fitScale
+    }, ${slice.flipVertical * fitScale}, 1)`;
+}
+
+/**
+ * Visual footprint of an image sitting inside the rotate wrapper.
+ * Layout offsets ignore CSS transforms, so pan-bounds math fed by
+ * them sees the unrotated box: at 90°/270° the rendered width runs
+ * along the layout height (and vice versa), and the folded-in fit
+ * scale shrinks both axes. `transform` is the wrapper's inline style
+ * (`getRotateTransform` output); absent or unparseable input reads
+ * as unrotated.
+ */
+export function getRotatedVisualSize(
+    width: number,
+    height: number,
+    transform: string | null | undefined,
+): { width: number; height: number } {
+    if (!transform) {
+        return { width, height };
+    }
+    const rotate = /rotate\((-?\d+(?:\.\d+)?)deg\)/.exec(transform);
+    const scale = /scale3d\((-?\d+(?:\.\d+)?)/.exec(transform);
+    const fit = scale?.[1] ? Math.abs(parseFloat(scale[1])) : 1;
+    const degrees = rotate?.[1] ? parseFloat(rotate[1]) : 0;
+    const normalized = ((degrees % 360) + 360) % 360;
+    return normalized === 90 || normalized === 270
+        ? { width: height * fit, height: width * fit }
+        : { width: width * fit, height: height * fit };
 }
 
 /** Autoplay run-state (autoplay plugin). */

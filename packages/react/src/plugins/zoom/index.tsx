@@ -12,6 +12,7 @@ import {
     clampScale,
     getActualSizeScale,
     getPanBounds,
+    getRotatedVisualSize,
     SPRING_BOUNCE_DAMPING,
     getPinchPan,
     getPinchScale,
@@ -213,9 +214,21 @@ function ZoomWrapper({
                           stage.getBoundingClientRect().bottom,
                   )
                 : 0;
+        // Bounds math runs on the image's VISUAL box: the rotate
+        // plugin's wrapper transform swaps the axes at 90°/270° (and
+        // shrinks by its fit scale), which layout offsets don't see.
+        const rotateWrap = img?.closest<HTMLElement>('.lg-img-rotate');
+        const visual = getRotatedVisualSize(
+            img?.offsetWidth ?? 0,
+            img?.offsetHeight ?? 0,
+            rotateWrap?.style.transform,
+        );
         return {
-            imageWidth: img?.offsetWidth ?? 0,
-            imageHeight: img?.offsetHeight ?? 0,
+            imageWidth: visual.width,
+            imageHeight: visual.height,
+            // Unrotated layout width — actual-size scale relates
+            // natural pixels to the image's own axis.
+            layoutImageWidth: img?.offsetWidth ?? 0,
             naturalWidth: img?.naturalWidth ?? 0,
             containerWidth: slide?.offsetWidth ?? 0,
             containerHeight: slide?.offsetHeight ?? 0,
@@ -224,8 +237,8 @@ function ZoomWrapper({
     };
 
     const maxScale = () => {
-        const { naturalWidth, imageWidth } = measure();
-        return getActualSizeScale(naturalWidth, imageWidth);
+        const { naturalWidth, layoutImageWidth } = measure();
+        return getActualSizeScale(naturalWidth, layoutImageWidth);
     };
 
     const setLiveTransition = (value: string) => {
@@ -522,10 +535,7 @@ function ZoomWrapper({
                     settingsRef.current.infiniteZoom,
                     closeArmed,
                 );
-                pinch.maxGestureScale = Math.max(
-                    pinch.maxGestureScale,
-                    scale,
-                );
+                pinch.maxGestureScale = Math.max(pinch.maxGestureScale, scale);
                 // Anchor the zoom to the pinch's focal point and follow
                 // the fingers: the midpoint's travel pans the image 1:1
                 // (fused zoom-and-pan).
@@ -847,9 +857,7 @@ function ZoomWrapper({
                 startMid,
                 maxGestureScale: liveRef.current.scale,
                 lastMid: startMid,
-                midSamples: [
-                    { x: startMid.x, y: startMid.y, t: Date.now() },
-                ],
+                midSamples: [{ x: startMid.x, y: startMid.y, t: Date.now() }],
             };
             panDragRef.current = null;
             internal.gestureSeam.claim('pinch');

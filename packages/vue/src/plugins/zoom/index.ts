@@ -16,6 +16,7 @@ import {
     clampPanToStage,
     clampScale,
     getActualSizeScale,
+    getRotatedVisualSize,
     getPanBounds,
     SPRING_BOUNCE_DAMPING,
     getPinchPan,
@@ -215,6 +216,7 @@ export const ZoomWrapper = defineComponent({
         function measure(): {
             imageWidth: number;
             imageHeight: number;
+            layoutImageWidth: number;
             naturalWidth: number;
             containerWidth: number;
             containerHeight: number;
@@ -235,9 +237,22 @@ export const ZoomWrapper = defineComponent({
                               stage.getBoundingClientRect().bottom,
                       )
                     : 0;
+            // Bounds math runs on the image's VISUAL box: the rotate
+            // plugin's wrapper transform swaps the axes at 90°/270°
+            // (and shrinks by its fit scale), which layout offsets
+            // don't see.
+            const rotateWrap = img?.closest<HTMLElement>('.lg-img-rotate');
+            const visual = getRotatedVisualSize(
+                img?.offsetWidth ?? 0,
+                img?.offsetHeight ?? 0,
+                rotateWrap?.style.transform,
+            );
             return {
-                imageWidth: img?.offsetWidth ?? 0,
-                imageHeight: img?.offsetHeight ?? 0,
+                imageWidth: visual.width,
+                imageHeight: visual.height,
+                // Unrotated layout width — actual-size scale relates
+                // natural pixels to the image's own axis.
+                layoutImageWidth: img?.offsetWidth ?? 0,
                 naturalWidth: img?.naturalWidth ?? 0,
                 containerWidth: slide?.offsetWidth ?? 0,
                 containerHeight: slide?.offsetHeight ?? 0,
@@ -246,8 +261,8 @@ export const ZoomWrapper = defineComponent({
         }
 
         const maxScale = (): number => {
-            const { naturalWidth, imageWidth } = measure();
-            return getActualSizeScale(naturalWidth, imageWidth);
+            const { naturalWidth, layoutImageWidth } = measure();
+            return getActualSizeScale(naturalWidth, layoutImageWidth);
         };
 
         function setLiveTransition(value: string): void {
@@ -541,10 +556,7 @@ export const ZoomWrapper = defineComponent({
                     ];
                     return;
                 }
-                if (
-                    endedPinch &&
-                    !endedPinch.ids.includes(event.pointerId)
-                ) {
+                if (endedPinch && !endedPinch.ids.includes(event.pointerId)) {
                     // A resting extra finger lifted — the pinch continues.
                     return;
                 }
@@ -890,11 +902,7 @@ export const ZoomWrapper = defineComponent({
             const cfg = ctx.settings.value as unknown as {
                 infiniteZoom: boolean;
             };
-            const target = clampScale(
-                live.scale,
-                maxScale(),
-                cfg.infiniteZoom,
-            );
+            const target = clampScale(live.scale, maxScale(), cfg.infiniteZoom);
             const {
                 imageWidth,
                 imageHeight,

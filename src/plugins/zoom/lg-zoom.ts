@@ -5,6 +5,7 @@ import {
     getActualSizeScale as getNaturalSizeScale,
     getPanBounds,
     getPinchPan,
+    getRotatedVisualSize,
     getPinchScale,
     shouldCloseOnPinch,
     getPointerDistance,
@@ -175,8 +176,13 @@ export default class Zoom {
         let width = 0;
         const rect = $image.getBoundingClientRect();
         if (scale) {
-            height = $image.offsetHeight * scale;
-            width = $image.offsetWidth * scale;
+            const visual = this.getVisualImageSize(
+                $image,
+                $image.offsetWidth,
+                $image.offsetHeight,
+            );
+            height = visual.height * scale;
+            width = visual.width * scale;
         } else if (scaleDiff) {
             height = rect.height + scaleDiff * rect.height;
             width = rect.width + scaleDiff * rect.width;
@@ -186,8 +192,13 @@ export default class Zoom {
             // (reset-transition !important transform, natural-px swap),
             // so a rect read races it — the fitted size scaled by the
             // live zoom is stable in every mode.
-            height = this.core.currentImageSize.height * this.scale;
-            width = this.core.currentImageSize.width * this.scale;
+            const visual = this.getVisualImageSize(
+                $image,
+                this.core.currentImageSize.width,
+                this.core.currentImageSize.height,
+            );
+            height = visual.height * this.scale;
+            width = visual.width * this.scale;
         } else {
             height = rect.height;
             width = rect.width;
@@ -885,15 +896,35 @@ export default class Zoom {
      * to the stage, so the pan-up floor sits where the image's bottom
      * edge meets the SCREEN bottom, not the content box.
      */
+    /**
+     * Bounds-relevant size of the image: layout offsets swapped and
+     * shrunk by the rotate plugin's wrapper transform when present —
+     * at 90°/270° the visual width runs along the layout height, and
+     * offsets don't see transforms.
+     */
+    getVisualImageSize(
+        $image: HTMLElement,
+        width: number,
+        height: number,
+    ): { width: number; height: number } {
+        const rotateWrap = $image.closest<HTMLElement>('.lg-img-rotate');
+        return getRotatedVisualSize(width, height, rotateWrap?.style.transform);
+    }
+
     clampPinchPan(pan: Coords, scale: number): Coords {
         const $image = this.core
             .getSlideItem(this.core.index)
             .find('.lg-image')
             .first()
             .get();
-        const bounds = getPanBounds(
+        const visual = this.getVisualImageSize(
+            $image,
             $image.offsetWidth,
             $image.offsetHeight,
+        );
+        const bounds = getPanBounds(
+            visual.width,
+            visual.height,
             this.containerRect.width,
             this.containerRect.height,
             scale,

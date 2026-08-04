@@ -14,22 +14,30 @@ const clampPinchPan = Zoom.prototype.clampPinchPan as (
     scale: number,
 ) => { x: number; y: number };
 
-const makeClampThis = (bottom: number) => ({
+const makeClampThis = (bottom: number, rotateTransform?: string) => ({
     core: {
         getSlideItem: () => ({
             find: () => ({
                 first: () => ({
-                    get: () => ({ offsetWidth: 800, offsetHeight: 600 }),
+                    get: () => ({
+                        offsetWidth: 800,
+                        offsetHeight: 600,
+                        closest: () =>
+                            rotateTransform
+                                ? { style: { transform: rotateTransform } }
+                                : null,
+                    }),
                 }),
             }),
         }),
         mediaContainerPosition: { top: 0, bottom },
     },
     containerRect: { width: 1000, height: 800 },
-    // Private stage clamp, borrowed off the prototype like the adapter.
+    // Private helpers, borrowed off the prototype like the adapter.
     clampPanToStage: (Zoom.prototype as unknown as Record<string, unknown>)[
         'clampPanToStage'
     ],
+    getVisualImageSize: Zoom.prototype.getVisualImageSize,
 });
 const clampThis = makeClampThis(0);
 
@@ -71,6 +79,23 @@ describe('pinch pan clamp adapter', () => {
             x: 0,
             y: 200,
         });
+    });
+
+    it('clamps against the rotated visual box at quarter turns', () => {
+        // Same 800x600 layout, quarter-turned with a folded 0.5 fit
+        // scale: visually 300x400. At x4 that is 1200x1600 in the
+        // 1000x800 stage → bounds ±100 x, ±400 y — the unrotated math
+        // would have allowed ±1100 x and clipped y at ±800.
+        const rotatedThis = makeClampThis(
+            0,
+            'rotate(90deg) scale3d(0.5, 0.5, 1)',
+        );
+        expect(clampPinchPan.call(rotatedThis, { x: 500, y: -500 }, 4)).toEqual(
+            {
+                x: 100,
+                y: -400,
+            },
+        );
     });
 });
 

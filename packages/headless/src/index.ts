@@ -132,6 +132,7 @@ export {
     flipVertical,
     getRotateFitScale,
     getRotateTransform,
+    getRotatedVisualSize,
     isOrientationSwapped,
     initialAutoplaySlice,
     initialRotateSlice,

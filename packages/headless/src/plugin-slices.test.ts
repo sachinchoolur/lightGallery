@@ -5,6 +5,7 @@ import {
     flipVertical,
     getRotateFitScale,
     getRotateTransform,
+    getRotatedVisualSize,
     initialRotateSlice,
     isOrientationSwapped,
     rotateLeft,
@@ -90,6 +91,49 @@ describe('rotate slice', () => {
                 0.5,
             ),
         ).toBe('rotate(90deg) scale3d(-0.5, 0.5, 1)');
+    });
+
+    it('reads the visual footprint back from the wrapper transform', () => {
+        // No wrapper / no transform: layout box as-is.
+        expect(getRotatedVisualSize(800, 600, undefined)).toEqual({
+            width: 800,
+            height: 600,
+        });
+        expect(getRotatedVisualSize(800, 600, '')).toEqual({
+            width: 800,
+            height: 600,
+        });
+        // Quarter turns swap the axes and apply the folded fit scale.
+        expect(
+            getRotatedVisualSize(
+                800,
+                600,
+                'rotate(90deg) scale3d(0.5, 0.5, 1)',
+            ),
+        ).toEqual({ width: 300, height: 400 });
+        expect(
+            getRotatedVisualSize(800, 600, 'rotate(270deg) scale3d(1, 1, 1)'),
+        ).toEqual({ width: 600, height: 800 });
+        // Half turns keep the axes (fit scale is 1 there by contract,
+        // but a folded scale still applies).
+        expect(
+            getRotatedVisualSize(800, 600, 'rotate(180deg) scale3d(1, 1, 1)'),
+        ).toEqual({ width: 800, height: 600 });
+        // Accumulated and negative angles normalize.
+        expect(
+            getRotatedVisualSize(800, 600, 'rotate(450deg) scale3d(1, 1, 1)'),
+        ).toEqual({ width: 600, height: 800 });
+        expect(
+            getRotatedVisualSize(800, 600, 'rotate(-90deg) scale3d(1, 1, 1)'),
+        ).toEqual({ width: 600, height: 800 });
+        // Flips carry negative scale components — magnitude wins.
+        expect(
+            getRotatedVisualSize(
+                800,
+                600,
+                'rotate(90deg) scale3d(-0.5, 0.5, 1)',
+            ),
+        ).toEqual({ width: 300, height: 400 });
     });
 });
 
