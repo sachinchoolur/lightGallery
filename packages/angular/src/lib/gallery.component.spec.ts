@@ -1,11 +1,8 @@
-import {
-    Component,
-    signal,
-    viewChild,
-    type ElementRef,
-} from '@angular/core';
+import { Component, signal, viewChild, type ElementRef } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { withVideo } from '@lightgallery/angular/plugins/video';
 
 import { LgGalleryComponent } from './gallery.component';
 import { LgGalleryItemDirective } from './item.directive';
@@ -39,9 +36,9 @@ const SPEED = 400;
             (afterClose)="log.push('afterClose')"
         >
             @for (item of items; track item.src) {
-                <a href="#" class="trigger" [lgGalleryItem]="item">
-                    <img [src]="item.thumb" [alt]="item.alt" />
-                </a>
+            <a href="#" class="trigger" [lgGalleryItem]="item">
+                <img [src]="item.thumb" [alt]="item.alt" />
+            </a>
             }
             <ng-template lgCaption let-item let-index="index">
                 <h4 class="test-caption">{{ item?.alt }} ({{ index }})</h4>
@@ -85,11 +82,7 @@ class ControlledHost {
 @Component({
     imports: [LgGalleryComponent],
     template: `
-        <lg-gallery
-            [slides]="items"
-            [zoomFromOrigin]="false"
-            [loop]="false"
-        />
+        <lg-gallery [slides]="items" [zoomFromOrigin]="false" [loop]="false" />
     `,
 })
 class EndsHost {
@@ -111,8 +104,7 @@ class EndsHost {
 })
 class InlineHost {
     readonly gallery = viewChild.required(LgGalleryComponent);
-    readonly inlineEl =
-        viewChild<ElementRef<HTMLDivElement>>('inlineHost');
+    readonly inlineEl = viewChild<ElementRef<HTMLDivElement>>('inlineHost');
     readonly items = ITEMS;
 }
 
@@ -175,9 +167,7 @@ describe('LgGalleryComponent (core gallery)', () => {
         expect(outer.classList.contains('lg-slide')).toBe(true);
         // No zoom transform available -> startClass entrance.
         expect(outer.classList.contains('lg-start-zoom')).toBe(true);
-        expect(document.documentElement.classList.contains('lg-on')).toBe(
-            true,
-        );
+        expect(document.documentElement.classList.contains('lg-on')).toBe(true);
 
         // Entrance timeline: 10ms -> opening, +backdrop -> open/visible.
         await advance(fixture, 10);
@@ -186,9 +176,7 @@ describe('LgGalleryComponent (core gallery)', () => {
         );
         expect(query('.lg-backdrop')!.classList.contains('in')).toBe(true);
         await advance(fixture, BACKDROP);
-        expect(query('.lg-outer')!.classList.contains('lg-visible')).toBe(
-            true,
-        );
+        expect(query('.lg-outer')!.classList.contains('lg-visible')).toBe(true);
         expect(
             query('.lg-outer')!.classList.contains('lg-components-open'),
         ).toBe(true);
@@ -197,9 +185,9 @@ describe('LgGalleryComponent (core gallery)', () => {
         const current = query('.lg-item.lg-current')!;
         expect(current.classList.contains('lg-loaded')).toBe(true);
         expect(current.classList.contains('lg-complete')).toBe(false);
-        expect(
-            current.querySelector('img.lg-image')!.getAttribute('src'),
-        ).toBe('b.jpg');
+        expect(current.querySelector('img.lg-image')!.getAttribute('src')).toBe(
+            'b.jpg',
+        );
         expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
         expect(query('.lg-sub-html .test-caption')!.textContent).toContain(
             'b (1)',
@@ -297,9 +285,7 @@ describe('LgGalleryComponent (core gallery)', () => {
         expect(query('.test-counter')!.textContent).toBe('1 of 3');
 
         // ESC requests close -> (closed) -> host flips [open] -> closes.
-        document.dispatchEvent(
-            new KeyboardEvent('keydown', { key: 'Escape' }),
-        );
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         await flush(fixture);
         expect(host.opened()).toBe(false);
         await advance(fixture, BACKDROP + 100);
@@ -332,9 +318,7 @@ describe('LgGalleryComponent (core gallery)', () => {
         queryAll('.trigger')[0]!.click();
         await flush(fixture);
         expect(query('.lg-container')).not.toBeNull();
-        expect(document.documentElement.classList.contains('lg-on')).toBe(
-            true,
-        );
+        expect(document.documentElement.classList.contains('lg-on')).toBe(true);
         expect(vi.getTimerCount()).toBeGreaterThan(0);
 
         fixture.destroy();
@@ -343,9 +327,7 @@ describe('LgGalleryComponent (core gallery)', () => {
         expect(document.documentElement.classList.contains('lg-on')).toBe(
             false,
         );
-        expect(document.body.classList.contains('lg-overlay-open')).toBe(
-            false,
-        );
+        expect(document.body.classList.contains('lg-overlay-open')).toBe(false);
         // Every gallery-owned animation/idle timer is cleared with the
         // instance; what remains are Angular's own one-shot scheduler ticks.
         // Flush them: nothing may fire afterwards and nothing may resurrect.
@@ -377,21 +359,15 @@ describe('LgGalleryComponent (core gallery)', () => {
         );
 
         // Maximize toggles lg-inline off (fills the viewport) and back.
-        (
-            container.querySelector('.lg-maximize') as HTMLButtonElement
-        ).click();
+        (container.querySelector('.lg-maximize') as HTMLButtonElement).click();
         await flush(fixture);
         expect(container.classList.contains('lg-inline')).toBe(false);
-        (
-            container.querySelector('.lg-maximize') as HTMLButtonElement
-        ).click();
+        (container.querySelector('.lg-maximize') as HTMLButtonElement).click();
         await flush(fixture);
         expect(container.classList.contains('lg-inline')).toBe(true);
 
         fixture.destroy();
-        expect(
-            document.querySelector('.inline-host .lg-container'),
-        ).toBeNull();
+        expect(document.querySelector('.inline-host .lg-container')).toBeNull();
     });
 
     it('honors ends without loop: bounce class and no wrap', async () => {
@@ -466,9 +442,9 @@ describe('persistent container (v2 close contract)', () => {
     template: `
         <lg-gallery>
             @for (item of items; track item.src) {
-                <a href="#" class="trigger" [lgGalleryItem]="item">
-                    <img [src]="item.thumb" [alt]="item.alt" />
-                </a>
+            <a href="#" class="trigger" [lgGalleryItem]="item">
+                <img [src]="item.thumb" [alt]="item.alt" />
+            </a>
             }
         </lg-gallery>
     `,
@@ -478,6 +454,31 @@ class DummyFlightHost {
         ...item,
         lgSize: '1600-1067',
     }));
+}
+
+@Component({
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+            <a href="#" class="trigger" [lgGalleryItem]="item">
+                <img [src]="item.thumb" [alt]="item.alt" />
+            </a>
+            }
+        </lg-gallery>
+    `,
+})
+class VideoDummyFlightHost {
+    readonly features = [withVideo()];
+    readonly items: LgGalleryItem[] = [
+        {
+            src: 'https://vimeo.com/112836958',
+            poster: 'poster.jpg',
+            thumb: 'v-t.jpg',
+            alt: 'vimeo',
+            lgSize: '1280-720',
+        },
+    ];
 }
 
 describe('zoom-from-origin dummy image', () => {
@@ -532,6 +533,54 @@ describe('zoom-from-origin dummy image', () => {
         await advance(fixture, 310);
         expect(query('img.lg-dummy-img')).toBeNull();
         expect(query('.lg-item.lg-first-slide')).toBeNull();
+        expect(query('.lg-outer.lg-first-slide-loading')).toBeNull();
+        expect(query('.lg-item.lg-current.lg-complete')).not.toBeNull();
+        rectSpy.mockRestore();
+    });
+
+    it('flies the thumb over a video poster and drops it after the load', async () => {
+        // Same flight preconditions as the image dummy: a real-looking
+        // trigger rect and lgSize; the video feature supplies the
+        // poster-first slide (2.x `getVideoPosterMarkup` + dummy).
+        const rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        const fixture = TestBed.createComponent(VideoDummyFlightHost);
+        await flush(fixture);
+        queryAll('.trigger')[0]!.click();
+        await flush(fixture);
+        await advance(fixture, 20);
+
+        // During the flight ONLY the thumb-dummy exists — the poster
+        // must not mount (and fetch) mid-flight.
+        const dummy = query('img.lg-dummy-img');
+        expect(dummy).not.toBeNull();
+        expect(dummy!.getAttribute('src')).toBe('v-t.jpg');
+        expect(query('img.lg-video-poster')).toBeNull();
+        expect(query('.lg-outer.lg-first-slide-loading')).not.toBeNull();
+
+        // Flight lands: the poster mounts beneath the dummy.
+        await advance(fixture, SPEED + 120);
+        const posterEl = query('img.lg-video-poster');
+        expect(posterEl).not.toBeNull();
+        expect(query('img.lg-dummy-img')).not.toBeNull();
+
+        // Poster load settles the slide; the 300ms buffer drops the
+        // dummy and the loading classes.
+        posterEl!.dispatchEvent(new Event('load'));
+        await flush(fixture);
+        await advance(fixture, 310);
+        expect(query('img.lg-dummy-img')).toBeNull();
         expect(query('.lg-outer.lg-first-slide-loading')).toBeNull();
         expect(query('.lg-item.lg-current.lg-complete')).not.toBeNull();
         rectSpy.mockRestore();

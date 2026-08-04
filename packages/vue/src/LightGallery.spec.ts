@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import LightGallery from './LightGallery.vue';
 import LgItem from './LgItem.vue';
+import Video from './plugins/video';
 import type { LgGalleryItem } from './types';
 
 const ITEMS: LgGalleryItem[] = [
@@ -118,9 +119,7 @@ describe('LightGallery (core gallery)', () => {
         expect(outer.classList.contains('lg-slide')).toBe(true);
         // No zoom transform available -> startClass entrance.
         expect(outer.classList.contains('lg-start-zoom')).toBe(true);
-        expect(document.documentElement.classList.contains('lg-on')).toBe(
-            true,
-        );
+        expect(document.documentElement.classList.contains('lg-on')).toBe(true);
 
         // Entrance timeline: 10ms -> opening, +backdrop -> open/visible.
         await advance(10);
@@ -129,9 +128,7 @@ describe('LightGallery (core gallery)', () => {
         );
         expect(query('.lg-backdrop')!.classList.contains('in')).toBe(true);
         await advance(BACKDROP);
-        expect(query('.lg-outer')!.classList.contains('lg-visible')).toBe(
-            true,
-        );
+        expect(query('.lg-outer')!.classList.contains('lg-visible')).toBe(true);
         expect(
             query('.lg-outer')!.classList.contains('lg-components-open'),
         ).toBe(true);
@@ -140,13 +137,11 @@ describe('LightGallery (core gallery)', () => {
         const current = query('.lg-item.lg-current')!;
         expect(current.classList.contains('lg-loaded')).toBe(true);
         expect(current.classList.contains('lg-complete')).toBe(false);
-        expect(
-            current.querySelector('img.lg-image')!.getAttribute('src'),
-        ).toBe('b.jpg');
-        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
-        expect(query('.lg-sub-html .test-caption')!.textContent).toBe(
-            'b (1)',
+        expect(current.querySelector('img.lg-image')!.getAttribute('src')).toBe(
+            'b.jpg',
         );
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
+        expect(query('.lg-sub-html .test-caption')!.textContent).toBe('b (1)');
 
         // Only the current slide loads before its media completes.
         expect(queryAll('img.lg-image').length).toBe(1);
@@ -171,9 +166,7 @@ describe('LightGallery (core gallery)', () => {
         await nextTick();
         expect(query('.lg-counter-current')!.textContent!.trim()).toBe('3');
         await advance(SPEED + 100);
-        expect(query('.lg-sub-html .test-caption')!.textContent).toBe(
-            'c (2)',
-        );
+        expect(query('.lg-sub-html .test-caption')!.textContent).toBe('c (2)');
 
         // Close via the toolbar button; teleport stays through the closing
         // animation, then detaches.
@@ -247,9 +240,7 @@ describe('LightGallery (core gallery)', () => {
         expect(query('.test-counter')!.textContent).toBe('1 of 3');
 
         // ESC clears the open model and closes.
-        document.dispatchEvent(
-            new KeyboardEvent('keydown', { key: 'Escape' }),
-        );
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         await nextTick();
         expect(opened.value).toBe(false);
         await advance(BACKDROP + 100);
@@ -283,9 +274,7 @@ describe('LightGallery (core gallery)', () => {
         queryAll('.trigger')[0]!.click();
         await settle();
         expect(query('.lg-container')).not.toBeNull();
-        expect(document.documentElement.classList.contains('lg-on')).toBe(
-            true,
-        );
+        expect(document.documentElement.classList.contains('lg-on')).toBe(true);
         expect(vi.getTimerCount()).toBeGreaterThan(0);
 
         wrapper.unmount();
@@ -293,9 +282,9 @@ describe('LightGallery (core gallery)', () => {
         expect(document.documentElement.classList.contains('lg-on')).toBe(
             false,
         );
-        expect(
-            removeSpy.mock.calls.some(([type]) => type === 'keydown'),
-        ).toBe(true);
+        expect(removeSpy.mock.calls.some(([type]) => type === 'keydown')).toBe(
+            true,
+        );
         // Gallery-owned timers are cleared on unmount; what remains is
         // jsdom's one-shot focus/Selection tick. Flush it: nothing may
         // fire afterwards and nothing may resurrect.
@@ -350,9 +339,9 @@ describe('LightGallery (core gallery)', () => {
         const wrapper = mount(Host, { attachTo: document.body });
         wrapper.findComponent(LightGallery).vm.openGallery(0);
         await settle();
-        expect(
-            query('.lg-outer')!.classList.contains('lg-lollipop'),
-        ).toBe(true);
+        expect(query('.lg-outer')!.classList.contains('lg-lollipop')).toBe(
+            true,
+        );
         wrapper.findComponent(LightGallery).vm.nextSlide();
         await nextTick();
         expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
@@ -462,6 +451,80 @@ describe('zoom-from-origin dummy image', () => {
         await advance(310);
         expect(query('img.lg-dummy-img')).toBeNull();
         expect(query('.lg-item.lg-first-slide')).toBeNull();
+        expect(query('.lg-outer.lg-first-slide-loading')).toBeNull();
+        expect(query('.lg-item.lg-current.lg-complete')).not.toBeNull();
+        rectSpy.mockRestore();
+    });
+
+    it('flies the thumb over a video poster and drops it after the load', async () => {
+        // Same flight preconditions as the image dummy: a real-looking
+        // trigger rect and lgSize; the video plugin supplies the
+        // poster-first slide (2.x `getVideoPosterMarkup` + dummy).
+        const rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        const Host = defineComponent({
+            components: { LightGallery, LgItem },
+            setup: () => ({
+                items: [
+                    {
+                        src: 'https://vimeo.com/112836958',
+                        poster: 'poster.jpg',
+                        thumb: 'v-t.jpg',
+                        alt: 'vimeo',
+                        lgSize: '1280-720',
+                    },
+                ],
+                plugins: [Video],
+            }),
+            template: `
+                <LightGallery :plugins="plugins">
+                    <LgItem
+                        v-for="item of items"
+                        :key="item.src"
+                        :item="item"
+                        class="trigger"
+                    >
+                        <img :src="item.thumb" :alt="item.alt" />
+                    </LgItem>
+                </LightGallery>
+            `,
+        });
+        mount(Host, { attachTo: document.body });
+        queryAll('.trigger')[0]!.click();
+        await settle();
+        await advance(20);
+
+        // During the flight ONLY the thumb-dummy exists — the poster
+        // must not mount (and fetch) mid-flight.
+        const dummy = query('img.lg-dummy-img');
+        expect(dummy).not.toBeNull();
+        expect(dummy!.getAttribute('src')).toBe('v-t.jpg');
+        expect(query('img.lg-video-poster')).toBeNull();
+        expect(query('.lg-outer.lg-first-slide-loading')).not.toBeNull();
+
+        // Flight lands: the poster mounts beneath the dummy.
+        await advance(SPEED + 120);
+        const posterEl = query('img.lg-video-poster');
+        expect(posterEl).not.toBeNull();
+        expect(query('img.lg-dummy-img')).not.toBeNull();
+
+        // Poster load settles the slide; the 300ms buffer drops the
+        // dummy and the loading classes.
+        posterEl!.dispatchEvent(new Event('load'));
+        await nextTick();
+        await advance(310);
+        expect(query('img.lg-dummy-img')).toBeNull();
         expect(query('.lg-outer.lg-first-slide-loading')).toBeNull();
         expect(query('.lg-item.lg-current.lg-complete')).not.toBeNull();
         rectSpy.mockRestore();
