@@ -2106,6 +2106,12 @@ export class LightGallery {
                 ) {
                     isSwiping = true;
                     this.touchAction = 'swipe';
+                    // A swipe hijacked by a pinch never reaches its
+                    // touchend — stale isMoved/endCoords would make the
+                    // NEXT tap run touchEnd on garbage deltas (same
+                    // pattern zoomSwipe had).
+                    isMoved = false;
+                    endCoords = {} as Coords;
                     this.stopSlideSpring();
                     this.manageSwipeClass();
                     this.swipeSamples = [
