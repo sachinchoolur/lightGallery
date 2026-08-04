@@ -140,7 +140,7 @@ describe('accessibility', () => {
             );
             await settle();
             await advance(450);
-            expect(query('.lg-container')).toBeNull();
+            expect(query('.lg-container.lg-show')).toBeNull();
             expect(document.activeElement).toBe(trigger);
             wrapper.unmount();
         });

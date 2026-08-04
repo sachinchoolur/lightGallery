@@ -422,7 +422,7 @@ describe('plugin runtime + wave-1', () => {
         firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 51 });
         await settle();
         await advance(1000);
-        expect(query('.lg-container')).toBeNull();
+        expect(query('.lg-container.lg-show')).toBeNull();
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 52 });
     });
 

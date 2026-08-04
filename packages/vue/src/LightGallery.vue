@@ -346,6 +346,8 @@ const componentsOpen = ref(false);
 const useStartClass = ref(false);
 const zoomFromImage = ref(false);
 const maximized = ref(false);
+/** Once true, the teleported tree persists across close/reopen (v2). */
+const everOpened = ref(false);
 const edgeBounce = ref<'left' | 'right' | null>(null);
 const originAnim = shallowRef<OriginAnimation | null>(null);
 const contentOffsets = shallowRef<{ top: number; bottom: number } | null>(
@@ -454,8 +456,15 @@ const zoomClosing = computed(
 );
 const containerClasses = computed(() => [
     'lg-container',
-    'lg-show',
     props.className,
+    // v2 parity: after the first open the container STAYS in the DOM
+    // across close/reopen — CSS hides it (`.lg-container` is
+    // display:none without `lg-show`). Unmounting the whole teleport per
+    // open makes iOS Safari re-composite a fresh layer tree while the
+    // entrance transitions run, which paints as visible flicker on
+    // reopen; class toggles on a persistent tree (what vanilla does)
+    // don't.
+    { 'lg-show': phase.value !== 'closed' },
     { 'lg-show-in': showIn.value },
     { 'lg-inline': !isBodyContainer.value && !maximized.value },
 ]);
@@ -603,6 +612,7 @@ watch(store.isOpen, (isOpen) => {
             timers.clearAll();
             originAnim.value = null;
             phase.value = 'pre-open';
+            everOpened.value = true;
             // Entrance measurements need the teleported DOM.
             void nextTick(() => runEntrance());
         }
@@ -1231,7 +1241,7 @@ onBeforeUnmount(() => {
     <slot />
     <Teleport v-if="isClientMounted" :to="props.container">
         <div
-            v-if="phase !== 'closed'"
+            v-if="everOpened || phase !== 'closed'"
             ref="containerEl"
             :class="containerClasses"
             tabindex="-1"
@@ -1266,18 +1276,28 @@ onBeforeUnmount(() => {
                             touchAction: 'none',
                         }"
                     >
-                        <LgSlide
-                            v-for="idx of slideIndexes"
-                            :key="idx"
-                            :index="idx"
-                            :item="items[idx]"
-                            :is-shown="timeline.shownIndex === idx"
-                            :position="timeline.positions[idx]"
-                            :in-progress="timeline.progressIndex === idx"
-                            :origin-anim="
-                                originAnim?.index === idx ? originAnim : null
-                            "
-                        />
+                        <!-- 2.x `$inner.empty()`: the persistent shell
+                             keeps .lg-inner, but the items (and their
+                             lg-current) unmount once the close settles —
+                             stale items would flash into the next
+                             entrance. Mid-close they survive for the
+                             exit flight. -->
+                        <template v-if="phase !== 'closed'">
+                            <LgSlide
+                                v-for="idx of slideIndexes"
+                                :key="idx"
+                                :index="idx"
+                                :item="items[idx]"
+                                :is-shown="timeline.shownIndex === idx"
+                                :position="timeline.positions[idx]"
+                                :in-progress="timeline.progressIndex === idx"
+                                :origin-anim="
+                                    originAnim?.index === idx
+                                        ? originAnim
+                                        : null
+                                "
+                            />
+                        </template>
                     </div>
                     <template v-if="settings.controls">
                         <button

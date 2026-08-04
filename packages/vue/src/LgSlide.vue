@@ -74,6 +74,14 @@ const inPreloadRange = computed(
         ).indexOf(props.index) !== -1,
 );
 const shouldLoad = computed(() => {
+    // Sticky content survives `isOpen` flipping false at close-START:
+    // the close flight animates this slide back to the thumbnail, and an
+    // open-gated unmount would fly an EMPTY item (invisible close).
+    // Teardown belongs to the item's own unmount once the close settles
+    // (the phase-gated v-for) — the moment 2.x empties `$inner`.
+    if (sticky.value) {
+        return true;
+    }
     if (!store.isOpen.value) {
         return false;
     }
@@ -81,7 +89,6 @@ const shouldLoad = computed(() => {
         store.currentIndex.value,
     );
     return (
-        sticky.value ||
         isCurrent.value ||
         (currentLoaded && inPreloadRange.value)
     );

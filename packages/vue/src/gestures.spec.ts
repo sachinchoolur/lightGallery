@@ -294,7 +294,7 @@ describe('useGalleryGestures', () => {
         await settle();
         expect(backdrop.style.opacity).toBe('');
         await advance(450);
-        expect(query('.lg-container')).toBeNull();
+        expect(query('.lg-container.lg-show')).toBeNull();
         wrapper.unmount();
     });
 

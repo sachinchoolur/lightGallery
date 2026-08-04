@@ -210,7 +210,7 @@ describe('wave-2 plugins', () => {
         galleryVm(wrapper).closeGallery();
         await settle();
         await advance(450);
-        expect(query('.lg-container')).toBeNull();
+        expect(query('.lg-container.lg-show')).toBeNull();
         expect(window.location.hash).toBe('');
         expect(document.body.classList.contains('lg-from-hash')).toBe(
             false,
