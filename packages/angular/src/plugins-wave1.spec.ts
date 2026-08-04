@@ -495,4 +495,25 @@ describe('wave-1 features', () => {
         vi.runOnlyPendingTimers();
         expect(vi.getTimerCount()).toBe(0);
     });
+
+    it('leak check: destroy mid-pinch releases the seam lock', async () => {
+        const fixture = TestBed.createComponent(Wave1Host);
+        await flush(fixture);
+        await openAndLoad(fixture);
+        await advance(fixture, 350);
+        const runtime = runtimeOf(fixture);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+
+        // A forming pinch claims the seam BEFORE anything is zoomed.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 71 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 72 });
+        expect(runtime.gestureSeam.lockOwner).toBe('pinch');
+
+        // Fingers never lift: the gallery is destroyed mid-gesture. The
+        // lock must not survive into the next open (core swipe would
+        // stay stood down).
+        fixture.destroy();
+        expect(runtime.gestureSeam.lockOwner).toBeNull();
+        vi.runOnlyPendingTimers();
+    });
 });

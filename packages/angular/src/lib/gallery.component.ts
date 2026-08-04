@@ -1398,6 +1398,11 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         const settings = this.settings();
         this.contentOffsets.set(this.measureOffsets());
 
+        // Belt for unmount-mid-gesture leaks: no gesture can be live at
+        // open, so a lingering seam claim or pointer record is stale.
+        this.runtime.gestureSeam.claim(null);
+        this.runtime.gestureSeam.pointers = [];
+
         const currentIndex = this.store.currentIndex();
         const transform = this.computeOrigin(currentIndex);
         this.usedZoom = transform !== null;
