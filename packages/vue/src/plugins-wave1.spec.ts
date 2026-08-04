@@ -571,4 +571,24 @@ describe('plugin runtime + wave-1', () => {
         vi.runOnlyPendingTimers();
         expect(vi.getTimerCount()).toBe(0);
     });
+
+    it('leak check: unmount mid-pinch releases the seam lock', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        await advance(350);
+        const runtime = runtimeOf(wrapper);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+
+        // A forming pinch claims the seam BEFORE anything is zoomed.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 71 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 72 });
+        expect(runtime.gestureSeam.lockOwner).toBe('pinch');
+
+        // Fingers never lift: the gallery unmounts mid-gesture. The lock
+        // must not survive into the next open (core swipe would stay
+        // stood down).
+        wrapper.unmount();
+        expect(runtime.gestureSeam.lockOwner).toBeNull();
+        vi.runOnlyPendingTimers();
+    });
 });

@@ -878,13 +878,61 @@ export const ZoomWrapper = defineComponent({
                 }
             },
         );
+        // v2 parity: a release spring finishing at the OLD geometry's
+        // clamp target rests out of bounds after a resize/orientation
+        // change — stop it and re-clamp into the fresh bounds.
+        function onWindowResize(): void {
+            const hadSpring = cancelSpring !== null;
+            if (!props.isCurrent || (!hadSpring && !live.zoomed)) {
+                return;
+            }
+            stopSpring();
+            const cfg = ctx.settings.value as unknown as {
+                infiniteZoom: boolean;
+            };
+            const target = clampScale(
+                live.scale,
+                maxScale(),
+                cfg.infiniteZoom,
+            );
+            const {
+                imageWidth,
+                imageHeight,
+                containerWidth,
+                containerHeight,
+                stageBottomExtra,
+            } = measure();
+            const pan = clampPanToStage(
+                live.pan,
+                getPanBounds(
+                    imageWidth,
+                    imageHeight,
+                    containerWidth,
+                    containerHeight,
+                    target,
+                ),
+                stageBottomExtra,
+            );
+            commit(target, pan);
+        }
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', onWindowResize);
+        }
+
         onBeforeUnmount(() => {
+            window.removeEventListener('resize', onWindowResize);
             if (armTimer !== null) {
                 clearTimeout(armTimer);
             }
             stopSpring();
             detachWindow?.();
-            if (live.zoomed) {
+            // The lock is claimed at pinch FORMATION — before `zoomed`
+            // is true. Unmounting mid-gesture (close with fingers down)
+            // must release it, or core swipe stays stood down after
+            // reopen. Guarded to this wrapper's own gesture so an
+            // off-window slide unmounting cannot free another slide's
+            // live claim.
+            if (live.zoomed || pinch || panDrag) {
                 ctx.layout.setOuterClass('lg-zoomed', false);
                 ctx.gestureLock.claim(null);
             }
