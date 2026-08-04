@@ -557,6 +557,8 @@ function getDummySrc(slideIndex: number): string | null {
 }
 
 const firstSlideLoading = shallowRef(false);
+/** Reactive twin of React's `zoomOriginOpenRef` (plugins consume it). */
+const zoomOriginOpen = shallowRef(false);
 
 function computeOrigin(slideIndex: number): string | null {
     const cfg = settings.value;
@@ -628,6 +630,7 @@ function runEntrance(): void {
     const current = store.currentIndex.value;
     const transform = computeOrigin(current);
     usedZoom = transform !== null;
+    zoomOriginOpen.value = usedZoom;
     useStartClass.value = transform === null;
     if (transform !== null) {
         originAnim.value = { index: current, transform, stage: 'init' };
@@ -646,6 +649,7 @@ function runEntrance(): void {
         }, 110);
         timers.set(() => {
             originAnim.value = null;
+            zoomOriginOpen.value = false;
             // 2.x adds lg-visible once the start animation lands — the
             // zoom-from-origin path was missing it entirely.
             visible.value = true;
@@ -714,6 +718,7 @@ function finishClose(): void {
     useStartClass.value = false;
     contentOffsets.value = null;
     usedZoom = false;
+    zoomOriginOpen.value = false;
     if (returnFocus?.isConnected) {
         returnFocus.focus({ preventScroll: true });
     }
@@ -1208,6 +1213,7 @@ const runtime: LgGalleryRuntime = {
     getOriginRect,
     getDummySrc,
     firstSlideLoading,
+    zoomOriginOpen,
     gestureSeam,
     plugins,
     pluginContext,

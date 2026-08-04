@@ -75,6 +75,9 @@ export interface LgGalleryRuntime {
     getDummySrc(index: number): string | null;
     /** True while the first-slide dummy is up (`lg-first-slide-loading`). */
     readonly firstSlideLoading: ShallowRef<boolean>;
+    /** True while the zoom-from-origin flight is RUNNING (entrance →
+     *  flight-end); plugins defer heavy work until it clears. */
+    readonly zoomOriginOpen: ShallowRef<boolean>;
     /** Multi-pointer seam (consumed by the zoom plugin). */
     readonly gestureSeam: LgGestureSeam;
     /** Registered plugins, deduped, in `:plugins` order (ADR §5). */

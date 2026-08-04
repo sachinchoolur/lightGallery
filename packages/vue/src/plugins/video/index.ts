@@ -6,6 +6,7 @@ import {
     onBeforeUnmount,
     onMounted,
     ref,
+    watch,
     type PropType,
     type VNodeChild,
 } from 'vue';
@@ -20,6 +21,7 @@ import {
 } from '@lightgallery/headless';
 
 import { LG_PLUGIN_CONTEXT, type LgVuePlugin } from '../types';
+import { LG_RUNTIME } from '../../runtime';
 import type { LgGalleryItem } from '../../types';
 
 /**
@@ -161,6 +163,58 @@ export const VideoSlide = defineComponent({
             return undefined;
         });
         const hasPoster = computed(() => !!poster.value);
+        const runtime = inject(LG_RUNTIME)!;
+        // 2.x video-poster dummy (`getVideoPosterMarkup` + dummy
+        // content): the first zoom-from-origin slide flies the trigger's
+        // already-decoded thumb inside the video cont while the poster
+        // loads beneath it; the dummy drops shortly after the load
+        // settles.
+        const dummySrc = ref<string | null>(null);
+        let dummyDone = false;
+        let dummyDropTimer: ReturnType<typeof setTimeout> | null = null;
+        watch(
+            runtime.zoomOriginOpen,
+            (flightRunning) => {
+                if (
+                    dummyDone ||
+                    dummySrc.value ||
+                    !flightRunning ||
+                    !hasPoster.value ||
+                    !props.item.lgSize ||
+                    ctx.store.state.value.galleryOn ||
+                    ctx.store.currentIndex.value !== props.index ||
+                    ctx.store.state.value.loadedSlides.has(props.index)
+                ) {
+                    return;
+                }
+                const src = runtime.getDummySrc(props.index);
+                if (src) {
+                    dummySrc.value = src;
+                    runtime.firstSlideLoading.value = true;
+                } else {
+                    dummyDone = true;
+                }
+            },
+            { immediate: true, flush: 'pre' },
+        );
+        const slideLoaded = computed(() =>
+            ctx.store.state.value.loadedSlides.has(props.index),
+        );
+        watch([dummySrc, slideLoaded], ([src, isLoaded]) => {
+            if (!src || !isLoaded) {
+                return;
+            }
+            dummyDropTimer = setTimeout(() => {
+                dummyDone = true;
+                dummySrc.value = null;
+                runtime.firstSlideLoading.value = false;
+            }, 300);
+        });
+        // The poster mounts only once the flight lands — v2 appends the
+        // real markup the same way (the image path defers via deferSrc).
+        const holdPoster = computed(
+            () => !!dummySrc.value && runtime.zoomOriginOpen.value,
+        );
         const activated = ref(false);
         const showPlayer = computed(
             () => activated.value || !hasPoster.value,
@@ -296,6 +350,12 @@ export const VideoSlide = defineComponent({
         onBeforeUnmount(() => {
             offs.forEach((off) => off());
             playTimers.forEach((timer) => clearTimeout(timer));
+            if (dummyDropTimer !== null) {
+                clearTimeout(dummyDropTimer);
+            }
+            if (dummySrc.value) {
+                runtime.firstSlideLoading.value = false;
+            }
         });
 
         function onMediaReady(): void {
@@ -412,7 +472,7 @@ export const VideoSlide = defineComponent({
                 },
                 [
                     player,
-                    !activated.value && hasPoster.value
+                    !activated.value && hasPoster.value && !holdPoster.value
                         ? h(
                               'button',
                               {
@@ -442,6 +502,22 @@ export const VideoSlide = defineComponent({
                                   }),
                               ],
                           )
+                        : null,
+                    dummySrc.value
+                        ? h('img', {
+                              class: 'lg-dummy-img',
+                              src: dummySrc.value,
+                              alt: '',
+                              'aria-hidden': 'true',
+                              draggable: false,
+                              // v2 sizes the dummy to the cont box exactly.
+                              style: {
+                                  position: 'absolute',
+                                  inset: '0',
+                                  width: '100%',
+                                  height: '100%',
+                              },
+                          })
                         : null,
                 ],
             );
