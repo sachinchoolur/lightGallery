@@ -180,9 +180,9 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                     [class]="outerClasses()"
                     [attr.data-lg-slide-type]="currentSlideType()"
                     [lgGestures]="bodyLockActive()"
-                    (mousedown)="onOuterMouseDown($event)"
-                    (mousemove)="onOuterMouseMove()"
-                    (mouseup)="onOuterMouseUp($event)"
+                    (pointerdown)="onOuterPointerDown($event)"
+                    (pointermove)="onOuterPointerMove()"
+                    (pointerup)="onOuterPointerUp($event)"
                 >
                     <div
                         class="lg-content"
@@ -1309,16 +1309,20 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     }
 
     // ── Close-on-tap (2.x closeOnTap) ─────────────────────────────────────
+    // Rides POINTER events, never the synthesized mouse burst iOS fires
+    // ~300ms after a tap: that burst can land on the freshly opened
+    // overlay (same screen point as the trigger) and close the gallery
+    // right after it opened — the reopen bounce.
 
-    protected onOuterMouseDown(event: MouseEvent): void {
+    protected onOuterPointerDown(event: PointerEvent): void {
         this.mouseDownOnSlide = isSlideElement(event.target);
     }
 
-    protected onOuterMouseMove(): void {
+    protected onOuterPointerMove(): void {
         this.mouseDownOnSlide = false;
     }
 
-    protected onOuterMouseUp(event: MouseEvent): void {
+    protected onOuterPointerUp(event: PointerEvent): void {
         if (
             this.settings().closeOnTap &&
             this.mouseDownOnSlide &&
@@ -1413,10 +1417,12 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                     (anim) => anim && { ...anim, stage: 'run' },
                 );
             }, 110);
-            this.timers.set(
-                () => this.originAnim.set(null),
-                settings.startAnimationDuration + 110,
-            );
+            this.timers.set(() => {
+                this.originAnim.set(null);
+                // 2.x adds lg-visible once the start animation lands —
+                // the zoom-from-origin path was missing it entirely.
+                this.visible.set(true);
+            }, settings.startAnimationDuration + 110);
         }
 
         this.timers.set(() => this.phase.set('opening'), 10);
