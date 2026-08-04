@@ -64,6 +64,10 @@ const Host = defineComponent({
         plugins: { type: Array, required: true },
         log: { type: Array, required: true },
         pinchToClose: { type: Boolean, default: true },
+        zoomSettings: {
+            type: Object,
+            default: () => ({ showZoomInOutIcons: true }),
+        },
     },
     setup: () => ({ items: ITEMS }),
     template: `
@@ -71,7 +75,7 @@ const Host = defineComponent({
             :slides="items"
             :zoom-from-origin="false"
             :plugins="plugins"
-            :zoom="{ showZoomInOutIcons: true }"
+            :zoom="zoomSettings"
             :pinch-to-close="pinchToClose"
             @poster-click="log.push('posterClick')"
             @has-video="log.push('hasVideo:' + $event.index)"
@@ -106,9 +110,7 @@ async function openAndLoad(
     await settle();
     await advance(450);
     document
-        .querySelector<HTMLImageElement>(
-            `img.lg-image[data-index="${index}"]`,
-        )
+        .querySelector<HTMLImageElement>(`img.lg-image[data-index="${index}"]`)
         ?.dispatchEvent(new Event('load'));
     await settle();
 }
@@ -146,8 +148,9 @@ describe('plugin runtime + wave-1', () => {
 
         // Presets land below user settings: no :loop prop -> preset wins
         // (prev from slide 0 stays put).
-        const vm = wrapper.findComponent(LightGallery)
-            .vm as unknown as { prevSlide(): void };
+        const vm = wrapper.findComponent(LightGallery).vm as unknown as {
+            prevSlide(): void;
+        };
         vm.prevSlide();
         await settle();
         expect(query('.lg-counter-current')!.textContent!.trim()).toBe('1');
@@ -196,12 +199,12 @@ describe('plugin runtime + wave-1', () => {
         await settle();
         await openAndLoad(wrapper);
 
-        expect(
-            query('.lg-outer')!.classList.contains('lg-probe-setup'),
-        ).toBe(true);
-        expect(
-            query('.lg-item.lg-current img')!.getAttribute('alt'),
-        ).toBe('a-transformed');
+        expect(query('.lg-outer')!.classList.contains('lg-probe-setup')).toBe(
+            true,
+        );
+        expect(query('.lg-item.lg-current img')!.getAttribute('alt')).toBe(
+            'a-transformed',
+        );
     });
 
     it('thumbnail: renders every item, tracks the active index, navigates on click', async () => {
@@ -211,17 +214,17 @@ describe('plugin runtime + wave-1', () => {
         const outer = query('.lg-outer')!;
         expect(outer.classList.contains('lg-has-thumb')).toBe(true);
         expect(outer.classList.contains('lg-animate-thumb')).toBe(true);
-        expect(
-            outer.classList.contains('lg-use-transition-for-zoom'),
-        ).toBe(true);
+        expect(outer.classList.contains('lg-use-transition-for-zoom')).toBe(
+            true,
+        );
 
         const thumbs = queryAll('.lg-thumb-item');
         expect(thumbs.length).toBe(3);
         expect(thumbs[0]!.classList.contains('active')).toBe(true);
         // The video item derives its thumb from img.youtube.com (2.x).
-        expect(
-            thumbs[2]!.querySelector('img')!.getAttribute('src'),
-        ).toContain('img.youtube.com/vi/abc123xyz90');
+        expect(thumbs[2]!.querySelector('img')!.getAttribute('src')).toContain(
+            'img.youtube.com/vi/abc123xyz90',
+        );
 
         thumbs[1]!.click();
         await settle();
@@ -245,17 +248,13 @@ describe('plugin runtime + wave-1', () => {
         ) as HTMLElement;
         // jsdom has no image metrics -> actual-size falls back to scale 2.
         expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
-        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(
-            true,
-        );
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(true);
         expect(runtime.gestureSeam.lockOwner).toBe('zoomSwipe');
 
         (query('.lg-actual-size') as HTMLButtonElement).click();
         await settle();
         expect(runtime.gestureSeam.lockOwner).toBeNull();
-        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(
-            false,
-        );
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(false);
 
         // Zoom again, then navigate: the wrapper resets (2.x parity).
         (query('.lg-actual-size') as HTMLButtonElement).click();
@@ -269,9 +268,7 @@ describe('plugin runtime + wave-1', () => {
         await settle();
         await advance(500);
         expect(runtime.gestureSeam.lockOwner).toBeNull();
-        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(
-            false,
-        );
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(false);
     });
 
     it('zoom: does not leak a tap into a phantom pinch (pointer ledger)', async () => {
@@ -353,6 +350,40 @@ describe('plugin runtime + wave-1', () => {
         vi.advanceTimersByTime(2000);
         expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
+    });
+
+    it('zoom: a tap that kills a release glide re-settles the scale', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video], {
+            pinchToClose: false,
+            zoomSettings: { showZoomInOutIcons: true, infiniteZoom: false },
+        });
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+        const scaleEl = query('.lg-item.lg-current .lg-zoom-scale')!;
+
+        // Pinch far beyond the cap (jsdom fallback max: 2) and release —
+        // the spring starts gliding the scale back down to the cap.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 81 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 82 });
+        firePointer(window, 'pointermove', { x: 500, y: 100, pointerId: 82 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 81 });
+        firePointer(window, 'pointerup', { x: 500, y: 100, pointerId: 82 });
+
+        // A few frames in: mid-glide, still above the cap.
+        vi.advanceTimersByTime(48);
+        const midGlide = parseFloat(
+            /scale3d\(([\d.]+)/.exec(scaleEl.style.transform)![1]!,
+        );
+        expect(midGlide).toBeGreaterThan(2);
+
+        // Tap: pointerdown grabs the glide (kills the spring); the
+        // no-move release must settle the scale back into [1, cap] —
+        // pre-fix it committed the stranded mid-glide value.
+        firePointer(panEl, 'pointerdown', { x: 150, y: 100, pointerId: 83 });
+        firePointer(window, 'pointerup', { x: 150, y: 100, pointerId: 83 });
+        vi.advanceTimersByTime(2000);
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
     });
 
     it('zoom: pans with the pinch midpoint (fused zoom-and-pan)', async () => {

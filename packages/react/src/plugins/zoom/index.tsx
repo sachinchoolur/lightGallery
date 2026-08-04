@@ -743,11 +743,21 @@ function ZoomWrapper({
                     // Project the release momentum, clamp into the pan
                     // bounds, then spring there seeded with the live
                     // velocity — bouncing only against a clamped bound.
+                    // The scale settles too (2.x settleIntoBounds): a
+                    // plain tap lands here after killing a release
+                    // spring mid-glide, and the stranded scale — above
+                    // the cap unless infiniteZoom lifts it — would
+                    // otherwise survive the commit.
                     const velocity = getWindowedVelocity(
                         drag.samples,
                         Date.now(),
                     );
                     const current = liveRef.current.pan;
+                    const targetScale = clampScale(
+                        liveRef.current.scale,
+                        maxScale(),
+                        settingsRef.current.infiniteZoom,
+                    );
                     const {
                         imageWidth,
                         imageHeight,
@@ -766,12 +776,17 @@ function ZoomWrapper({
                             imageHeight,
                             containerWidth,
                             containerHeight,
-                            liveRef.current.scale,
+                            targetScale,
                         ),
                         stageBottomExtra,
                     );
                     startSpring(
                         [
+                            {
+                                from: liveRef.current.scale,
+                                velocity: 0,
+                                target: targetScale,
+                            },
                             {
                                 from: current.x,
                                 velocity: velocity.x,
@@ -791,13 +806,15 @@ function ZoomWrapper({
                                         : 1,
                             },
                         ],
-                        ([x, y]) =>
+                        ([scale, x, y]) =>
                             applyLive({
                                 ...liveRef.current,
+                                scale: scale!,
                                 pan: { x: x!, y: y! },
+                                zoomed: scale! > 1,
                             }),
                         () =>
-                            commit(liveRef.current.scale, {
+                            commit(targetScale, {
                                 x: target.x,
                                 y: target.y,
                             }),

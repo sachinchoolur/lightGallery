@@ -661,12 +661,22 @@ export const ZoomWrapper = defineComponent({
                         // Project the release momentum, clamp into the
                         // pan bounds, then spring there seeded with the
                         // live velocity — bouncing only against a
-                        // clamped bound.
+                        // clamped bound. The scale settles too (2.x
+                        // settleIntoBounds): a plain tap lands here
+                        // after killing a release spring mid-glide, and
+                        // the stranded scale — above the cap unless
+                        // infiniteZoom lifts it — would otherwise
+                        // survive the commit.
                         const velocity = getWindowedVelocity(
                             drag.samples,
                             Date.now(),
                         );
                         const current = live.pan;
+                        const targetScale = clampScale(
+                            live.scale,
+                            maxScale(),
+                            settings.value.infiniteZoom,
+                        );
                         const {
                             imageWidth,
                             imageHeight,
@@ -685,12 +695,17 @@ export const ZoomWrapper = defineComponent({
                                 imageHeight,
                                 containerWidth,
                                 containerHeight,
-                                live.scale,
+                                targetScale,
                             ),
                             stageBottomExtra,
                         );
                         startSpring(
                             [
+                                {
+                                    from: live.scale,
+                                    velocity: 0,
+                                    target: targetScale,
+                                },
                                 {
                                     from: current.x,
                                     velocity: velocity.x,
@@ -710,12 +725,14 @@ export const ZoomWrapper = defineComponent({
                                             : 1,
                                 },
                             ],
-                            ([x, y]) =>
+                            ([scale, x, y]) =>
                                 applyLive({
                                     ...live,
+                                    scale: scale!,
                                     pan: { x: x!, y: y! },
+                                    zoomed: scale! > 1,
                                 }),
-                            () => commit(live.scale, target),
+                            () => commit(targetScale, target),
                         );
                     }
                 }

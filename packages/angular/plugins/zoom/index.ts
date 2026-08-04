@@ -814,11 +814,21 @@ export class LgZoomWrapperComponent {
                     // Project the release momentum, clamp into the pan
                     // bounds, then spring there seeded with the live
                     // velocity — bouncing only against a clamped bound.
+                    // The scale settles too (2.x settleIntoBounds): a
+                    // plain tap lands here after killing a release
+                    // spring mid-glide, and the stranded scale — above
+                    // the cap unless infiniteZoom lifts it — would
+                    // otherwise survive the commit.
                     const velocity = getWindowedVelocity(
                         drag.samples,
                         Date.now(),
                     );
                     const current = this.live.pan;
+                    const targetScale = clampScale(
+                        this.live.scale,
+                        this.maxScale(),
+                        untracked(this.settings).infiniteZoom,
+                    );
                     const {
                         imageWidth,
                         imageHeight,
@@ -837,12 +847,17 @@ export class LgZoomWrapperComponent {
                             imageHeight,
                             containerWidth,
                             containerHeight,
-                            this.live.scale,
+                            targetScale,
                         ),
                         stageBottomExtra,
                     );
                     this.startSpring(
                         [
+                            {
+                                from: this.live.scale,
+                                velocity: 0,
+                                target: targetScale,
+                            },
                             {
                                 from: current.x,
                                 velocity: velocity.x,
@@ -862,12 +877,14 @@ export class LgZoomWrapperComponent {
                                         : 1,
                             },
                         ],
-                        ([x, y]) =>
+                        ([scale, x, y]) =>
                             this.applyLive({
                                 ...this.live,
+                                scale: scale!,
                                 pan: { x: x!, y: y! },
+                                zoomed: scale! > 1,
                             }),
-                        () => this.commit(this.live.scale, target),
+                        () => this.commit(targetScale, target),
                     );
                 }
             }

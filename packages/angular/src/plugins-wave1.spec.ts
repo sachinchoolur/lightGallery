@@ -78,7 +78,7 @@ function firePointer(
 class Wave1Host {
     readonly gallery = viewChild.required(LgGalleryComponent);
     readonly items = ITEMS;
-    readonly features = [withThumbnail(), withZoom(), withVideo()];
+    features = [withThumbnail(), withZoom(), withVideo()];
     readonly pinchToClose = signal(true);
     posterClicks = 0;
     readonly hasVideos: number[] = [];
@@ -121,9 +121,9 @@ describe('wave-1 features', () => {
         const outer = query('.lg-outer')!;
         expect(outer.classList.contains('lg-has-thumb')).toBe(true);
         expect(outer.classList.contains('lg-animate-thumb')).toBe(true);
-        expect(
-            outer.classList.contains('lg-use-transition-for-zoom'),
-        ).toBe(true);
+        expect(outer.classList.contains('lg-use-transition-for-zoom')).toBe(
+            true,
+        );
         expect(query('.lg-thumb-outer')).not.toBeNull();
         expect(query('.lg-actual-size')).not.toBeNull();
     });
@@ -137,9 +137,9 @@ describe('wave-1 features', () => {
         expect(thumbs.length).toBe(3);
         expect(thumbs[0]!.classList.contains('active')).toBe(true);
         // The video item derives its thumb from img.youtube.com (2.x).
-        expect(
-            thumbs[2]!.querySelector('img')!.getAttribute('src'),
-        ).toContain('img.youtube.com/vi/abc123xyz90');
+        expect(thumbs[2]!.querySelector('img')!.getAttribute('src')).toContain(
+            'img.youtube.com/vi/abc123xyz90',
+        );
 
         thumbs[1]!.click();
         await flush(fixture);
@@ -164,9 +164,7 @@ describe('wave-1 features', () => {
         ) as HTMLElement;
         // jsdom has no image metrics -> actual-size falls back to scale 2.
         expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
-        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(
-            true,
-        );
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(true);
         // Core swipe stands down while zoomed.
         expect(runtime.gestureSeam.lockOwner).toBe('zoomSwipe');
 
@@ -174,9 +172,7 @@ describe('wave-1 features', () => {
         (query('.lg-actual-size') as HTMLButtonElement).click();
         await flush(fixture);
         expect(runtime.gestureSeam.lockOwner).toBeNull();
-        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(
-            false,
-        );
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(false);
 
         // Zoom again, then navigate: the wrapper resets (2.x parity).
         (query('.lg-actual-size') as HTMLButtonElement).click();
@@ -186,9 +182,7 @@ describe('wave-1 features', () => {
         await flush(fixture);
         await advance(fixture, 500);
         expect(runtime.gestureSeam.lockOwner).toBeNull();
-        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(
-            false,
-        );
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(false);
     });
 
     it('zoom: does not leak a tap into a phantom pinch (pointer ledger)', async () => {
@@ -272,6 +266,44 @@ describe('wave-1 features', () => {
         vi.advanceTimersByTime(2000);
         expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
+    });
+
+    it('zoom: a tap that kills a release glide re-settles the scale', async () => {
+        const fixture = TestBed.createComponent(Wave1Host);
+        fixture.componentInstance.pinchToClose.set(false);
+        fixture.componentInstance.features = [
+            withThumbnail(),
+            withZoom({ infiniteZoom: false }),
+            withVideo(),
+        ];
+        await flush(fixture);
+        await openAndLoad(fixture);
+        await advance(fixture, 350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+        const scaleEl = query('.lg-item.lg-current .lg-zoom-scale')!;
+
+        // Pinch far beyond the cap (jsdom fallback max: 2) and release —
+        // the spring starts gliding the scale back down to the cap.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 81 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 82 });
+        firePointer(window, 'pointermove', { x: 500, y: 100, pointerId: 82 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 81 });
+        firePointer(window, 'pointerup', { x: 500, y: 100, pointerId: 82 });
+
+        // A few frames in: mid-glide, still above the cap.
+        vi.advanceTimersByTime(48);
+        const midGlide = parseFloat(
+            /scale3d\(([\d.]+)/.exec(scaleEl.style.transform)![1]!,
+        );
+        expect(midGlide).toBeGreaterThan(2);
+
+        // Tap: pointerdown grabs the glide (kills the spring); the
+        // no-move release must settle the scale back into [1, cap] —
+        // pre-fix it committed the stranded mid-glide value.
+        firePointer(panEl, 'pointerdown', { x: 150, y: 100, pointerId: 83 });
+        firePointer(window, 'pointerup', { x: 150, y: 100, pointerId: 83 });
+        vi.advanceTimersByTime(2000);
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
     });
 
     it('zoom: pans with the pinch midpoint (fused zoom-and-pan)', async () => {

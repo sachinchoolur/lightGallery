@@ -71,7 +71,6 @@ describe('plugin runtime', () => {
                     return () => {
                         calls.push(`${name}:unmount`);
                     };
-                     
                 }, []);
             },
         });
@@ -81,9 +80,9 @@ describe('plugin runtime', () => {
 
         const toolbar = document.querySelector('.lg-toolbar')!;
         const buttons = toolbar.querySelectorAll('[data-testid^="btn-"]');
-        expect([...buttons].map((el) => el.getAttribute('data-testid'))).toEqual(
-            ['btn-one', 'btn-two'],
-        );
+        expect(
+            [...buttons].map((el) => el.getAttribute('data-testid')),
+        ).toEqual(['btn-one', 'btn-two']);
         expect(calls).toEqual(['one:mount', 'two:mount']);
 
         unmount();
@@ -124,9 +123,8 @@ describe('plugin runtime', () => {
         // Preset wins over the default; user wins over the preset.
         expect(document.querySelector('.lg-counter')).toBeNull();
         expect(
-            (
-                document.querySelector('.lg-inner') as HTMLElement
-            ).style.transitionDuration,
+            (document.querySelector('.lg-inner') as HTMLElement).style
+                .transitionDuration,
         ).toBe('100ms');
         // 3 base + 1 transformed item, all mounted (tiny gallery).
         expect(document.querySelectorAll('.lg-item').length).toBe(4);
@@ -153,7 +151,9 @@ describe('plugin runtime', () => {
         ).not.toBeNull();
         // Slide 1: replaced content, also wrapped.
         expect(
-            screen.getByTestId('wrap-1').querySelector('[data-testid="replaced"]'),
+            screen
+                .getByTestId('wrap-1')
+                .querySelector('[data-testid="replaced"]'),
         ).not.toBeNull();
     });
 });
@@ -189,7 +189,10 @@ describe('thumbnail plugin', () => {
     });
 
     it('can be disabled entirely', () => {
-        renderGallery({ plugins: [Thumbnail], thumbnail: { thumbnail: false } });
+        renderGallery({
+            plugins: [Thumbnail],
+            thumbnail: { thumbnail: false },
+        });
         expect(document.querySelector('.lg-thumb-outer')).toBeNull();
         expect(document.querySelector('.lg-outer')).not.toHaveClass(
             'lg-has-thumb',
@@ -221,13 +224,13 @@ describe('video plugin', () => {
         expect(frame).not.toBeNull();
         expect(frame!.src).toContain('/embed/abc123');
         expect(frame!.src).toContain('enablejsapi=1');
+        expect(document.querySelector('.lg-item.lg-current')).toHaveClass(
+            'lg-complete',
+        );
         expect(
-            document.querySelector('.lg-item.lg-current'),
-        ).toHaveClass('lg-complete');
-        expect(
-            document.querySelector('.lg-outer')?.getAttribute(
-                'data-lg-slide-type',
-            ),
+            document
+                .querySelector('.lg-outer')
+                ?.getAttribute('data-lg-slide-type'),
         ).toBe('video');
     });
 
@@ -289,9 +292,8 @@ describe('video plugin', () => {
             plugins: [Video],
             loadYouTubePoster: false,
         });
-        const frame = document.querySelector<HTMLIFrameElement>(
-            'iframe.lg-youtube',
-        )!;
+        const frame =
+            document.querySelector<HTMLIFrameElement>('iframe.lg-youtube')!;
         const postMessage = vi.fn();
         Object.defineProperty(frame, 'contentWindow', {
             value: { postMessage },
@@ -338,9 +340,9 @@ describe('zoom plugin', () => {
 
     it('shows the actual-size button and zooms on double click', () => {
         renderGallery({ plugins: [Zoom] });
-        expect(
-            screen.getByLabelText('View actual size'),
-        ).toHaveClass('lg-actual-size');
+        expect(screen.getByLabelText('View actual size')).toHaveClass(
+            'lg-actual-size',
+        );
         // Zoom in/out buttons hidden by default (2.x showZoomInOutIcons).
         expect(document.querySelector('.lg-zoom-in')).toBeNull();
 
@@ -383,8 +385,7 @@ describe('zoom plugin', () => {
         loadCurrent();
         tick(350);
         const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
-        const scaleEl =
-            document.querySelector<HTMLElement>('.lg-zoom-scale')!;
+        const scaleEl = document.querySelector<HTMLElement>('.lg-zoom-scale')!;
 
         // A plain tap on the (unzoomed) slide: down + up, no gesture.
         firePointer(pan, 'pointerdown', { x: 100, y: 100, pointerId: 11 });
@@ -410,8 +411,7 @@ describe('zoom plugin', () => {
         const img = document.querySelector<HTMLElement>(
             '.lg-zoom-pan img.lg-image',
         )!;
-        const scaleEl =
-            document.querySelector<HTMLElement>('.lg-zoom-scale')!;
+        const scaleEl = document.querySelector<HTMLElement>('.lg-zoom-scale')!;
 
         // Touch double-tap on the image zooms in (fallback scale 2).
         firePointer(img, 'pointerdown', { x: 50, y: 50, pointerId: 21 });
@@ -440,8 +440,7 @@ describe('zoom plugin', () => {
         loadCurrent();
         tick(350);
         const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
-        const scaleEl =
-            document.querySelector<HTMLElement>('.lg-zoom-scale')!;
+        const scaleEl = document.querySelector<HTMLElement>('.lg-zoom-scale')!;
 
         // Pinch far beyond the actual-size scale (jsdom fallback max: 2).
         firePointer(pan, 'pointerdown', { x: 100, y: 100, pointerId: 41 });
@@ -475,6 +474,45 @@ describe('zoom plugin', () => {
         tick(2000);
         expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
+    });
+
+    it('a tap that kills a release glide re-settles the scale', () => {
+        renderGallery({
+            plugins: [Zoom],
+            pinchToClose: false,
+            zoom: { infiniteZoom: false },
+        });
+        loadCurrent();
+        tick(350);
+        const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
+        const scaleEl = document.querySelector<HTMLElement>('.lg-zoom-scale')!;
+
+        // Pinch far beyond the cap (jsdom fallback max: 2) and release —
+        // the spring starts gliding the scale back down to the cap.
+        firePointer(pan, 'pointerdown', { x: 100, y: 100, pointerId: 81 });
+        firePointer(pan, 'pointerdown', { x: 200, y: 100, pointerId: 82 });
+        firePointer(window, 'pointermove', {
+            x: 500,
+            y: 100,
+            pointerId: 82,
+        });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 81 });
+        firePointer(window, 'pointerup', { x: 500, y: 100, pointerId: 82 });
+
+        // A few frames in: mid-glide, still above the cap.
+        tick(48);
+        const midGlide = parseFloat(
+            /scale3d\(([\d.]+)/.exec(scaleEl.style.transform)![1]!,
+        );
+        expect(midGlide).toBeGreaterThan(2);
+
+        // Tap: pointerdown grabs the glide (kills the spring); the
+        // no-move release must settle the scale back into [1, cap] —
+        // pre-fix it committed the stranded mid-glide value.
+        firePointer(pan, 'pointerdown', { x: 150, y: 100, pointerId: 83 });
+        firePointer(window, 'pointerup', { x: 150, y: 100, pointerId: 83 });
+        tick(2000);
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
     });
 
     it('pans with the pinch midpoint (fused zoom-and-pan)', () => {
@@ -576,8 +614,7 @@ describe('zoom plugin', () => {
         loadCurrent();
         tick(350);
         const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
-        const scaleEl =
-            document.querySelector<HTMLElement>('.lg-zoom-scale')!;
+        const scaleEl = document.querySelector<HTMLElement>('.lg-zoom-scale')!;
 
         firePointer(pan, 'pointerdown', { x: 100, y: 100, pointerId: 31 });
         firePointer(pan, 'pointerdown', { x: 200, y: 100, pointerId: 32 });
@@ -621,7 +658,9 @@ describe('zoom plugin', () => {
         ).toBe('scale3d(4, 4, 1)');
 
         const panX = () =>
-            parseFloat(pan.style.transform.match(/translate3d\((-?[\d.]+)px/)![1]!);
+            parseFloat(
+                pan.style.transform.match(/translate3d\((-?[\d.]+)px/)![1]!,
+            );
 
         // 100px drag over 100ms (1 px/ms release): the spring glides the
         // pan to current + project(v) = -100 - 199 = -299, inside bounds.
