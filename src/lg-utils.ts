@@ -318,7 +318,11 @@ const utils = {
         bottom: number,
         imageSize?: ImageSize,
     ): string | undefined {
-        if (!imageSize) {
+        // Degenerate measurement (zero-sized/hidden viewport, offsets
+        // taller than the stage): the shared math would emit a mirrored
+        // flight — fall back to the startClass fade instead (the sibling
+        // bindings guard the same way).
+        if (!imageSize || imageSize.width <= 0 || imageSize.height <= 0) {
             return;
         }
         const LGel = $LG(el).find('img').first();
