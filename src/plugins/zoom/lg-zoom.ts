@@ -800,10 +800,12 @@ export default class Zoom {
         // the rendered sizes to the clamped target scale
         // (transform-invariant: rect × target / current).
         const actualSizeScale = this.getCurrentImageActualSizeScale();
-        const targetScale = Math.min(
-            Math.max(this.scale, 1),
-            Math.max(actualSizeScale, 1),
-        );
+        // infiniteZoom lifts the actual-size ceiling everywhere else —
+        // a tap interrupting a glide above it must not spring the scale
+        // back down to the cap.
+        const targetScale = this.settings.infiniteZoom
+            ? Math.max(this.scale, 1)
+            : Math.min(Math.max(this.scale, 1), Math.max(actualSizeScale, 1));
         const sizeRatio = this.scale > 0 ? targetScale / this.scale : 1;
         const width = rect.width * sizeRatio;
         const height = rect.height * sizeRatio;
