@@ -140,6 +140,10 @@ export class LgGalleryRuntime {
     /** True while the first-slide dummy is up (`lg-first-slide-loading`). */
     readonly firstSlideLoading = signal(false);
 
+    /** True while the zoom-from-origin flight is RUNNING (entrance →
+     *  flight-end); features defer heavy work until it clears. */
+    readonly zoomOriginOpen = signal(false);
+
     /**
      * Src for the first-slide dummy image (2.x `getDummyImageContent`):
      * the item's `thumb`, else the trigger's rendered img — pixels that

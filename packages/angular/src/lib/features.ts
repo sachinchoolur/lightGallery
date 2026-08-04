@@ -67,6 +67,14 @@ export interface LgPluginContext {
     layout: LgFeatureLayout;
     refs: LgFeatureRefs;
     emit<K extends keyof LgEventMap>(name: K, detail: LgEventMap[K]): void;
+    /** True while the zoom-from-origin flight is RUNNING (entrance →
+     *  flight-end); features defer heavy work until it clears. */
+    zoomOriginOpen: Signal<boolean>;
+    /**
+     * Src for the first-slide dummy image (2.x `getDummyImageContent`):
+     * the item's `thumb`, else the trigger's rendered img.
+     */
+    getDummySrc(index: number): string | null;
 }
 
 export const LG_PLUGIN_CONTEXT = new InjectionToken<LgPluginContext>(

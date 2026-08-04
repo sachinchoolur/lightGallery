@@ -168,7 +168,7 @@ type VideoResolved = VideoSettings & {
                         </video>
                     }
                 }
-                @if (!activated() && hasPoster()) {
+                @if (!activated() && hasPoster() && !holdPoster()) {
                     <button
                         type="button"
                         class="lg-video-poster-wrap"
@@ -222,6 +222,22 @@ type VideoResolved = VideoSettings & {
                         />
                     </button>
                 }
+                @if (dummySrc(); as dummy) {
+                    <!-- v2 sizes the dummy to the cont box exactly. -->
+                    <img
+                        class="lg-dummy-img"
+                        [attr.src]="dummy"
+                        alt=""
+                        aria-hidden="true"
+                        draggable="false"
+                        style="
+                            position: absolute;
+                            inset: 0;
+                            width: 100%;
+                            height: 100%;
+                        "
+                    />
+                }
             </div>
         }
     `,
@@ -256,6 +272,22 @@ export class LgVideoSlideComponent {
     });
     protected readonly hasPoster = computed(() => !!this.poster());
     protected readonly activated = signal(false);
+
+    // 2.x video-poster dummy (`getVideoPosterMarkup` + dummy content):
+    // the first zoom-from-origin slide flies the trigger's already-
+    // decoded thumb inside the video cont while the poster loads beneath
+    // it; the dummy drops shortly after the load settles.
+    protected readonly dummySrc = signal<string | null>(null);
+    private dummyDone = false;
+    private dummyDropTimer: ReturnType<typeof setTimeout> | null = null;
+    private readonly slideLoaded = computed(() =>
+        this.ctx.state().loadedSlides.has(this.index()),
+    );
+    /** The poster mounts only once the flight lands (v2 defers the real
+     *  markup the same way; the image path defers via deferSrc). */
+    protected readonly holdPoster = computed(
+        () => !!this.dummySrc() && this.ctx.zoomOriginOpen(),
+    );
     protected readonly showPlayer = computed(
         () => this.activated() || !this.hasPoster(),
     );
@@ -318,6 +350,59 @@ export class LgVideoSlideComponent {
     private playTimer: ReturnType<typeof setTimeout> | null = null;
 
     constructor() {
+        // Dummy lifecycle: armed while the origin flight runs for this
+        // (first, unloaded, poster-carrying, sized) slide; dropped 300ms
+        // after the poster load settles.
+        effect(() => {
+            const flightRunning = this.ctx.zoomOriginOpen();
+            if (
+                this.dummyDone ||
+                this.dummySrc() ||
+                !flightRunning ||
+                !this.hasPoster() ||
+                !this.item().lgSize ||
+                this.ctx.state().galleryOn ||
+                this.ctx.state().currentIndex !== this.index() ||
+                this.ctx.state().loadedSlides.has(this.index())
+            ) {
+                return;
+            }
+            untracked(() => {
+                const src = this.ctx.getDummySrc(this.index());
+                if (src) {
+                    this.dummySrc.set(src);
+                    this.ctx.layout.setOuterClass(
+                        'lg-first-slide-loading',
+                        true,
+                    );
+                } else {
+                    this.dummyDone = true;
+                }
+            });
+        });
+        effect(() => {
+            if (!this.dummySrc() || !this.slideLoaded()) {
+                return;
+            }
+            untracked(() => {
+                this.dummyDropTimer = setTimeout(() => {
+                    this.dummyDone = true;
+                    this.dummySrc.set(null);
+                    this.ctx.layout.setOuterClass(
+                        'lg-first-slide-loading',
+                        false,
+                    );
+                }, 300);
+            });
+        });
+        inject(DestroyRef).onDestroy(() => {
+            if (this.dummyDropTimer !== null) {
+                clearTimeout(this.dummyDropTimer);
+            }
+            if (this.dummySrc()) {
+                this.ctx.layout.setOuterClass('lg-first-slide-loading', false);
+            }
+        });
         // hasVideo (informational) + load-state for slides without a poster:
         // a video slide counts as loaded immediately (2.x parity).
         afterNextRender(() => {

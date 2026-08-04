@@ -968,6 +968,8 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                     ) ?? null,
             },
             emit: (name, detail) => this.emitEvent(name, detail),
+            zoomOriginOpen: this.runtime.zoomOriginOpen.asReadonly(),
+            getDummySrc: (index) => this.runtime.getDummySrc(index),
         };
 
         // Feature injector lifecycle: rebuilt when the features array
@@ -1399,6 +1401,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         const currentIndex = this.store.currentIndex();
         const transform = this.computeOrigin(currentIndex);
         this.usedZoom = transform !== null;
+        this.runtime.zoomOriginOpen.set(this.usedZoom);
         this.useStartClass.set(transform === null);
         if (transform !== null) {
             this.originAnim.set({
@@ -1419,6 +1422,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             }, 110);
             this.timers.set(() => {
                 this.originAnim.set(null);
+                this.runtime.zoomOriginOpen.set(false);
                 // 2.x adds lg-visible once the start animation lands —
                 // the zoom-from-origin path was missing it entirely.
                 this.visible.set(true);
@@ -1490,6 +1494,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     private finishClose(): void {
         this.phase.set('closed');
         this.originAnim.set(null);
+        this.runtime.zoomOriginOpen.set(false);
         this.zoomFromImage.set(false);
         this.useStartClass.set(false);
         this.contentOffsets.set(null);
