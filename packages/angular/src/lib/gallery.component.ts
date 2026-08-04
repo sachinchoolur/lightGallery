@@ -4,7 +4,11 @@ import {
     NgTemplateOutlet,
 } from '@angular/common';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
+import {
+    Overlay,
+    type BlockScrollStrategy,
+    type OverlayRef,
+} from '@angular/cdk/overlay';
 import { DomPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import {
     afterNextRender,
@@ -26,6 +30,7 @@ import {
     untracked,
     ViewContainerRef,
     viewChild,
+    type EmbeddedViewRef,
     type OutputEmitterRef,
     type Type,
 } from '@angular/core';
@@ -195,21 +200,33 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                                 settings().speed + 'ms'
                             "
                         >
-                            @for (idx of slideIndexes(); track idx) {
-                                <lg-slide
-                                    [index]="idx"
-                                    [item]="items()[idx]"
-                                    [isShown]="timeline().shownIndex === idx"
-                                    [position]="timeline().positions[idx]"
-                                    [inProgress]="
-                                        timeline().progressIndex === idx
-                                    "
-                                    [originAnim]="
-                                        originAnim()?.index === idx
-                                            ? originAnim()
-                                            : null
-                                    "
-                                />
+                            <!-- 2.x \`$inner.empty()\`: the persistent
+                                 shell keeps .lg-inner, but the items
+                                 (and their lg-current) unmount once the
+                                 close settles — stale items would flash
+                                 into the next entrance. Mid-close they
+                                 survive for the exit flight. -->
+                            @if (phase() !== 'closed') {
+                                @for (idx of slideIndexes(); track idx) {
+                                    <lg-slide
+                                        [index]="idx"
+                                        [item]="items()[idx]"
+                                        [isShown]="
+                                            timeline().shownIndex === idx
+                                        "
+                                        [position]="
+                                            timeline().positions[idx]
+                                        "
+                                        [inProgress]="
+                                            timeline().progressIndex === idx
+                                        "
+                                        [originAnim]="
+                                            originAnim()?.index === idx
+                                                ? originAnim()
+                                                : null
+                                        "
+                                    />
+                                }
                             }
                         </div>
                         @if (settings().controls) {
@@ -544,6 +561,11 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
     private overlayRef: OverlayRef | null = null;
     private domOutlet: DomPortalOutlet | null = null;
+    /** Toggled across close/reopen — the persistent overlay must not
+     *  keep the page scroll-locked while hidden. */
+    private scrollStrategy: BlockScrollStrategy | null = null;
+    /** The portal's embedded view — flushed on reopen (see openOverlay). */
+    private portalViewRef: EmbeddedViewRef<unknown> | null = null;
     private readonly timers = new LgTimeouts();
 
     // ── Settings resolution (headless merge order; ADR §2) ────────────────
@@ -762,10 +784,17 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             this.originAnim()?.closing === true,
     );
 
+    // v2 parity: after the first open the container STAYS in the DOM
+    // across close/reopen — CSS hides it (`.lg-container` is
+    // display:none without `lg-show`). Disposing the overlay per open
+    // makes iOS Safari re-composite a fresh layer tree while the
+    // entrance transitions run, which paints as visible flicker on
+    // reopen; class toggles on a persistent tree (what vanilla does)
+    // don't.
     protected readonly containerClasses = computed(() =>
         cx(
             'lg-container',
-            'lg-show',
+            this.phase() !== 'closed' && 'lg-show',
             this.className(),
             this.showIn() && 'lg-show-in',
             !this.isBodyContainer() && !this.maximized() && 'lg-inline',
@@ -1308,11 +1337,23 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         }
         this.phase.set('pre-open');
         this.attachOverlay();
+        // The entrance measures the just-shown DOM (computeOrigin reads
+        // the outer's rect). On the FIRST open the portal attach renders
+        // the view; on a persistent-overlay REOPEN nothing does — the
+        // container would still be display:none (no lg-show committed
+        // yet), every rect would read 0×0, and the degenerate guard
+        // would silently downgrade the flight to the fade. The portal's
+        // EMBEDDED view must be flushed — it hangs off the parent view
+        // hierarchy, so the component's own ChangeDetectorRef misses it.
+        this.portalViewRef?.detectChanges();
         this.runEntrance();
     }
 
     private attachOverlay(): void {
         if (this.overlayRef || this.domOutlet) {
+            // Reopen on the persistent overlay: only the scroll lock
+            // re-arms (the tree never left the DOM).
+            this.scrollStrategy?.enable();
             return;
         }
         const portal = new TemplatePortal(
@@ -1324,16 +1365,17 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             // Inline gallery (2.x `container`): render into the given
             // element — no global overlay, no scroll blocking.
             this.domOutlet = new DomPortalOutlet(container);
-            this.domOutlet.attach(portal);
+            this.portalViewRef = this.domOutlet.attach(portal);
             return;
         }
         // CDK adopted per ADR §3: global position + scroll blocking replace
         // the hand-rolled portal/body-lock pair from the React outlet.
+        this.scrollStrategy = this.overlay.scrollStrategies.block();
         this.overlayRef = this.overlay.create({
             positionStrategy: this.overlay.position().global(),
-            scrollStrategy: this.overlay.scrollStrategies.block(),
+            scrollStrategy: this.scrollStrategy,
         });
-        this.overlayRef.attach(portal);
+        this.portalViewRef = this.overlayRef.attach(portal);
     }
 
     private detachOverlay(): void {
@@ -1341,6 +1383,8 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         this.overlayRef = null;
         this.domOutlet?.dispose();
         this.domOutlet = null;
+        this.scrollStrategy = null;
+        this.portalViewRef = null;
     }
 
     /** Entrance timeline, once the overlay is in the DOM (2.x class order). */
@@ -1448,7 +1492,10 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             this.returnFocus.focus({ preventScroll: true });
         }
         this.returnFocus = null;
-        this.detachOverlay();
+        // v2 parity: the overlay stays attached — the container hides via
+        // the dropped lg-show class; only the scroll lock releases.
+        // Disposal belongs to ngOnDestroy.
+        this.scrollStrategy?.disable();
         this.emitEvent('afterClose', undefined);
     }
 

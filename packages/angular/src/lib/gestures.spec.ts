@@ -239,7 +239,7 @@ describe('LgGesturesDirective', () => {
         await flush(fixture);
         expect(backdrop.style.opacity).toBe('');
         await advance(fixture, 450);
-        expect(query('.lg-container')).toBeNull();
+        expect(query('.lg-container.lg-show')).toBeNull();
     });
 
     it('restores a sub-threshold vertical drag without closing', async () => {

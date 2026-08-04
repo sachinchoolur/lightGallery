@@ -247,7 +247,10 @@ describe('LgGalleryComponent (core gallery)', () => {
             true,
         );
         await advance(fixture, BACKDROP + 100);
-        expect(query('.lg-container')).toBeNull();
+        // v2 parity: the container persists after close, hidden by
+        // dropping lg-show (CSS display:none).
+        expect(query('.lg-container.lg-show')).toBeNull();
+        expect(query('.lg-container')).not.toBeNull();
         expect(document.documentElement.classList.contains('lg-on')).toBe(
             false,
         );
@@ -300,7 +303,8 @@ describe('LgGalleryComponent (core gallery)', () => {
         await flush(fixture);
         expect(host.opened()).toBe(false);
         await advance(fixture, BACKDROP + 100);
-        expect(query('.lg-container')).toBeNull();
+        expect(query('.lg-container.lg-show')).toBeNull();
+        expect(query('.lg-container')).not.toBeNull();
     });
 
     it('shows the error state when media fails to load', async () => {
@@ -409,6 +413,51 @@ describe('LgGalleryComponent (core gallery)', () => {
         expect(query('.lg-outer')!.classList.contains('lg-right-end')).toBe(
             false,
         );
+    });
+});
+
+describe('persistent container (v2 close contract)', () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+    });
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('keeps the shell, empties the items, and remounts on reopen', async () => {
+        const fixture = TestBed.createComponent(UncontrolledHost);
+        const host = fixture.componentInstance;
+        await flush(fixture);
+        queryAll('.trigger')[0]!.click();
+        await flush(fixture);
+        await advance(fixture, BACKDROP + 150);
+        expect(query('.lg-item.lg-current')).not.toBeNull();
+
+        host.gallery().closeGallery();
+        await flush(fixture);
+        // Mid-close the items — AND their content — must survive for the
+        // exit animation: the close flight on an empty item is invisible.
+        expect(query('.lg-item, lg-slide')).not.toBeNull();
+        expect(query('.lg-item img.lg-image')).not.toBeNull();
+        await advance(fixture, BACKDROP + 100);
+        // 2.x $inner.empty(): the persistent shell keeps .lg-inner, but
+        // the stale items — and their lg-current — unmount with the
+        // close.
+        expect(query('.lg-container')).not.toBeNull();
+        expect(query('.lg-container.lg-show')).toBeNull();
+        expect(query('.lg-inner')).not.toBeNull();
+        expect(query('.lg-item, lg-slide')).toBeNull();
+
+        // Reopen at a DIFFERENT index: fresh items, correct current.
+        queryAll('.trigger')[2]!.click();
+        await flush(fixture);
+        await advance(fixture, BACKDROP + 150);
+        expect(query('.lg-container.lg-show')).not.toBeNull();
+        const current = query('.lg-item.lg-current');
+        expect(current).not.toBeNull();
+        expect(
+            current!.querySelector('img.lg-image')!.getAttribute('src'),
+        ).toBe('c.jpg');
     });
 });
 

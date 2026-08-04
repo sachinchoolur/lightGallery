@@ -176,6 +176,15 @@ export class LgSlideComponent {
             ).indexOf(this.index()) !== -1,
     );
     protected readonly shouldLoad = computed(() => {
+        // Sticky content survives `isOpen` flipping false at close-START:
+        // the close flight animates this slide back to the thumbnail,
+        // and an open-gated unmount would fly an EMPTY item (invisible
+        // close). Teardown belongs to the item's own unmount once the
+        // close settles (the phase-gated @for) — the moment 2.x empties
+        // `$inner`.
+        if (this.sticky()) {
+            return true;
+        }
         if (!this.store.isOpen()) {
             return false;
         }
@@ -183,7 +192,6 @@ export class LgSlideComponent {
             .loadedSlides()
             .has(this.store.currentIndex());
         return (
-            this.sticky() ||
             this.isCurrent() ||
             (currentLoaded && this.inPreloadRange())
         );
