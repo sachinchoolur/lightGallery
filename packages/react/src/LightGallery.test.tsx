@@ -148,8 +148,12 @@ describe('open/close lifecycle (controlled)', () => {
         ).toBeInTheDocument();
 
         fireEvent.keyDown(document, { key: 'Escape' });
-        // Mid-close the items must survive for the exit animation.
+        // Mid-close the items — AND their content — must survive for the
+        // exit animation: the close flight on an empty item is invisible.
         expect(document.querySelector('.lg-item')).toBeInTheDocument();
+        expect(
+            document.querySelector('.lg-item img.lg-object'),
+        ).toBeInTheDocument();
         tick(BACKDROP + 100);
         // 2.x `$inner.empty()`: the persistent shell keeps .lg-inner, but
         // the stale items — and their lg-current — unmount with the close.

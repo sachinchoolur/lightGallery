@@ -72,11 +72,14 @@ export function Slide({
         [state.currentIndex, settings.preload, state.slidesCount, index],
     );
     const stickyLoadRef = useRef(false);
+    // Sticky content survives `state.open` flipping false at close-START:
+    // the close flight animates this slide back to the thumbnail, and an
+    // `open`-gated unmount would fly an EMPTY item (invisible close).
+    // Teardown belongs to the item's own unmount once the close settles
+    // (Slides `cleared`) — the moment 2.x empties `$inner`.
     const shouldLoad =
-        state.open &&
-        (stickyLoadRef.current ||
-            isCurrent ||
-            (currentLoaded && inPreloadRange));
+        stickyLoadRef.current ||
+        (state.open && (isCurrent || (currentLoaded && inPreloadRange)));
     if (shouldLoad) {
         stickyLoadRef.current = true;
     }
