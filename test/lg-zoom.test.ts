@@ -82,3 +82,74 @@ describe('actual-size scale adapter', () => {
         expect(actualSizeScale.call(null, 400, 800)).toBe(1);
     });
 });
+
+describe('getCurrentImageActualSizeScale fallbacks', () => {
+    const getScale = Zoom.prototype.getCurrentImageActualSizeScale as (
+        this: unknown,
+    ) => number;
+
+    const makeScaleThis = (overrides: {
+        currentImageSize?: { width: number; height: number };
+        actualSizeMode?: boolean;
+        containerRect?: { width: number; height: number };
+    }) => ({
+        core: {
+            index: 0,
+            currentImageSize: overrides.currentImageSize,
+            getSlideItem: () => ({
+                find: () => ({
+                    first: () => ({
+                        get: () => ({
+                            offsetWidth: overrides.actualSizeMode
+                                ? 1600 // post-swap layout IS natural px
+                                : 800,
+                            naturalWidth: 1600,
+                            naturalHeight: 1067,
+                        }),
+                    }),
+                }),
+            }),
+            outer: {
+                hasClass: (name: string) =>
+                    name === 'lg-actual-size' && !!overrides.actualSizeMode,
+            },
+        },
+        containerRect: overrides.containerRect ?? null,
+        setZoomEssentials(): void {
+            (this as { containerRect: unknown }).containerRect =
+                overrides.containerRect;
+        },
+        getNaturalWidth: () => 1600,
+        getActualSizeScale: (natural: number, width: number) => natural / width,
+    });
+
+    it('prefers the tracked fitted size in every mode', () => {
+        expect(
+            getScale.call(
+                makeScaleThis({
+                    currentImageSize: { width: 925, height: 617 },
+                    actualSizeMode: true,
+                }),
+            ),
+        ).toBeCloseTo(1600 / 925, 4);
+    });
+
+    it('reads the layout width before the natural-px swap', () => {
+        expect(getScale.call(makeScaleThis({}))).toBe(2);
+    });
+
+    it('recomputes the contain-fit when the swap replaced the layout', () => {
+        // zoomFromOrigin:false / dynamic / no lg-size: currentImageSize
+        // was never set, and offsetWidth now reads naturalWidth — the
+        // old fallback returned scale 1 and a tap fully un-zoomed.
+        const scale = getScale.call(
+            makeScaleThis({
+                actualSizeMode: true,
+                containerRect: { width: 1280, height: 720 },
+            }),
+        );
+        // Height-constrained contain-fit: scale = naturalH / stageH.
+        expect(scale).toBeCloseTo(1067 / 720, 4);
+        expect(scale).not.toBe(1);
+    });
+});

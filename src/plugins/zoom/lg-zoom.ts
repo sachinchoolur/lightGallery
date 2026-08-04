@@ -1,6 +1,7 @@
 import {
     SPRING_BOUNCE_DAMPING,
     clampPanToStage,
+    fitImageSize,
     getActualSizeScale as getNaturalSizeScale,
     getPanBounds,
     getPinchPan,
@@ -496,13 +497,34 @@ export default class Zoom {
             .getSlideItem(this.core.index)
             .find('.lg-image')
             .first();
+        const image = $image.get() as HTMLImageElement;
         // The FITTED width is the stable denominator in every mode. The
         // element's offsetWidth reads the current layout — after the
         // actual-size swap that IS naturalWidth, and dividing by it
         // returns 1: settleIntoBounds would then clamp a tap on a
         // zoomed image into a full animated un-zoom back to fit.
-        const width =
-            this.core.currentImageSize?.width || $image.get().offsetWidth;
+        let width = this.core.currentImageSize?.width;
+        if (!width) {
+            if (this.core.outer.hasClass('lg-actual-size')) {
+                // zoomFromOrigin:false, dynamic mode and items without
+                // lg-size never populate currentImageSize — recompute the
+                // contain-fit analytically from the stage box instead of
+                // trusting the swapped element's layout.
+                if (!this.containerRect) {
+                    this.setZoomEssentials();
+                }
+                width = fitImageSize(
+                    {
+                        width: image.naturalWidth,
+                        height: image.naturalHeight,
+                    },
+                    this.containerRect.width,
+                    this.containerRect.height,
+                ).width;
+            } else {
+                width = image.offsetWidth;
+            }
+        }
         const naturalWidth = this.getNaturalWidth(this.core.index) || width;
         return this.getActualSizeScale(naturalWidth, width);
     }
