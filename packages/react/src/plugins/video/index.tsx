@@ -19,6 +19,7 @@ import { cx } from '../../cx';
 import {
     useGalleryActions,
     useGalleryInternal,
+    useGallerySettings,
     useGalleryState,
 } from '../../context';
 import { usePluginSettings } from '../runtime';
@@ -147,6 +148,45 @@ export function VideoSlide({
             : undefined);
     const hasPoster = !!poster;
     const [activated, setActivated] = useState(!hasPoster);
+    const coreSettings = useGallerySettings();
+    // 2.x video-poster dummy (`getVideoPosterMarkup` + dummy content):
+    // the first zoom-from-origin slide flies the trigger's already-
+    // decoded thumb inside the video cont while the poster loads beneath
+    // it; the dummy drops shortly after the load settles. Armed at mount
+    // with v2's own condition (first slide + zoomFromOrigin + a sized
+    // item — the flight preconditions).
+    const [dummySrc, setDummySrc] = useState<string | null>(() =>
+        hasPoster &&
+        !state.galleryOn &&
+        state.currentIndex === index &&
+        coreSettings.zoomFromOrigin &&
+        item.lgSize &&
+        !state.loadedSlides.has(index)
+            ? internal.getDummySrc(index)
+            : null,
+    );
+    const loaded = state.loadedSlides.has(index);
+    useEffect(() => {
+        if (!dummySrc || !loaded) {
+            return;
+        }
+        const timeout = window.setTimeout(() => setDummySrc(null), 300);
+        return () => window.clearTimeout(timeout);
+    }, [dummySrc, loaded]);
+    useEffect(() => {
+        if (!dummySrc) {
+            return;
+        }
+        internal.layout.setOuterClass('lg-first-slide-loading', true);
+        return () =>
+            internal.layout.setOuterClass('lg-first-slide-loading', false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dummySrc]);
+    const loadSettleRef = useRef<number | undefined>(undefined);
+    useEffect(
+        () => () => window.clearTimeout(loadSettleRef.current),
+        [],
+    );
     const pendingPlayRef = useRef(false);
     const mediaRef = useRef<HTMLVideoElement | HTMLIFrameElement | null>(
         null,
@@ -411,8 +451,11 @@ export function VideoSlide({
                         alt={item.alt ?? ''}
                         draggable={false}
                         onLoad={() => {
-                            if (!state.loadedSlides.has(index)) {
-                                const isFirstSlide = !state.galleryOn;
+                            if (state.loadedSlides.has(index)) {
+                                return;
+                            }
+                            const isFirstSlide = !state.galleryOn;
+                            const complete = () => {
                                 actions.dispatch({
                                     type: 'SLIDE_LOADED',
                                     index,
@@ -422,10 +465,41 @@ export function VideoSlide({
                                     delay: 0,
                                     isFirstSlide,
                                 });
+                            };
+                            // While the zoom-from-origin flight animates
+                            // this slide, hold the completion — the state
+                            // flip mid-transition restarts the flight in
+                            // Safari (the image path holds the same way).
+                            if (
+                                isFirstSlide &&
+                                internal.zoomOriginOpenRef.current
+                            ) {
+                                loadSettleRef.current = window.setTimeout(
+                                    complete,
+                                    coreSettings.startAnimationDuration + 120,
+                                );
+                                return;
                             }
+                            complete();
                         }}
                     />
                 </button>
+            )}
+            {dummySrc && (
+                <img
+                    className="lg-dummy-img"
+                    src={dummySrc}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                    // v2 sizes the dummy to the cont box exactly.
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                    }}
+                />
             )}
         </div>
     );

@@ -251,6 +251,38 @@ describe('video plugin', () => {
         expect(frame!.src).toContain('player.vimeo.com/video/112836958');
     });
 
+    it('flies the trigger thumb as a dummy over the poster (2.x)', () => {
+        renderGallery({
+            slides: [
+                {
+                    src: 'https://vimeo.com/112836958',
+                    alt: 'vimeo',
+                    poster: 'poster.jpg',
+                    thumb: 'v-thumb.jpg',
+                    lgSize: '1280-720',
+                },
+            ],
+            plugins: [Video],
+        });
+        // 2.x video-poster dummy: the already-decoded thumb rides the
+        // origin flight while the poster loads beneath it.
+        const dummy = document.querySelector('img.lg-dummy-img');
+        expect(dummy).not.toBeNull();
+        expect(dummy).toHaveAttribute('src', 'v-thumb.jpg');
+        expect(document.querySelector('img.lg-video-poster')).not.toBeNull();
+        expect(
+            document.querySelector('.lg-item.lg-current.lg-complete'),
+        ).toBeNull();
+
+        // Poster load settles the slide; the dummy drops after 300ms.
+        fireEvent.load(document.querySelector('img.lg-video-poster')!);
+        tick(310);
+        expect(document.querySelector('img.lg-dummy-img')).toBeNull();
+        expect(
+            document.querySelector('.lg-item.lg-current.lg-complete'),
+        ).not.toBeNull();
+    });
+
     it('pauses the video when navigating away', () => {
         renderGallery({
             slides: videoSlides,
