@@ -257,6 +257,11 @@ export function GalleryOutlet({
         }
         setContentOffsets(measureOffsets());
 
+        // Belt for unmount-mid-gesture leaks: no gesture can be live at
+        // open, so a lingering seam claim or pointer record is stale.
+        internal.gestureSeam.claim(null);
+        internal.gestureSeam.pointers = [];
+
         const transform = computeOrigin(state.currentIndex);
         usedZoomRef.current = transform !== null;
         setUseStartClass(transform === null);
