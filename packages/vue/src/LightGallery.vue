@@ -644,10 +644,12 @@ function runEntrance(): void {
                 stage: 'run',
             };
         }, 110);
-        timers.set(
-            () => (originAnim.value = null),
-            cfg.startAnimationDuration + 110,
-        );
+        timers.set(() => {
+            originAnim.value = null;
+            // 2.x adds lg-visible once the start animation lands — the
+            // zoom-from-origin path was missing it entirely.
+            visible.value = true;
+        }, cfg.startAnimationDuration + 110);
     }
 
     timers.set(() => (phase.value = 'opening'), 10);
@@ -827,13 +829,17 @@ function isSlideElement(target: EventTarget | null): boolean {
         (name) => target.classList.contains(name),
     );
 }
-function onOuterMouseDown(event: MouseEvent): void {
+// closeOnTap rides POINTER events, never the synthesized mouse burst
+// iOS fires ~300ms after a tap: that burst can land on the freshly
+// opened overlay (same screen point as the trigger) and close the
+// gallery right after it opened — the reopen bounce.
+function onOuterPointerDown(event: PointerEvent): void {
     mouseDownOnSlide = isSlideElement(event.target);
 }
-function onOuterMouseMove(): void {
+function onOuterPointerMove(): void {
     mouseDownOnSlide = false;
 }
-function onOuterMouseUp(event: MouseEvent): void {
+function onOuterPointerUp(event: PointerEvent): void {
     if (
         settings.value.closeOnTap &&
         mouseDownOnSlide &&
@@ -1262,9 +1268,9 @@ onBeforeUnmount(() => {
                 ref="outerEl"
                 :class="outerClasses"
                 :data-lg-slide-type="currentSlideType"
-                @mousedown="onOuterMouseDown"
-                @mousemove="onOuterMouseMove"
-                @mouseup="onOuterMouseUp"
+                @pointerdown="onOuterPointerDown"
+                @pointermove="onOuterPointerMove"
+                @pointerup="onOuterPointerUp"
             >
                 <div class="lg-content" :style="contentStyle">
                     <div
