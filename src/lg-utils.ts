@@ -152,6 +152,15 @@ export interface GalleryItem {
     width?: string;
 
     /**
+     * Canonical share URL for the native share sheet (Web Share API).
+     * @description Specify only if you want a separate URL for the specific
+     * slide. Falls back to the network-specific share URLs, then the current
+     * browser URL.
+     * @data-attr data-share-url
+     */
+    shareUrl?: string;
+
+    /**
      * Facebook share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL is taken.
      * @data-attr data-facebook-share-url
@@ -233,6 +242,7 @@ const defaultDynamicOptions = [
     'downloadUrl',
     'download',
     'width',
+    'shareUrl',
     'facebookShareUrl',
     'tweetText',
     'iframeTitle',

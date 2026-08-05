@@ -87,6 +87,12 @@ export interface GalleryItem<TCaption = unknown> {
     /** Custom slide name for the hash plugin. */
     slideName?: string;
 
+    /**
+     * Share plugin: canonical per-item URL for the native share sheet
+     * (defaults to the network-specific share URLs, then the page URL).
+     */
+    shareUrl?: string;
+
     /** Share plugin: per-item Facebook share URL (defaults to the page URL). */
     facebookShareUrl?: string;
 

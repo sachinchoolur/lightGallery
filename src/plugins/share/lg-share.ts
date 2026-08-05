@@ -1,3 +1,5 @@
+import { canNativeShare, getSharePayload } from '@lightgallery/headless';
+
 import { ShareSettings, shareSettings } from './lg-share-settings';
 
 import { getFacebookShareLink } from './lg-fb-share-utils';
@@ -6,6 +8,14 @@ import { getPinterestShareLink } from './lg-pinterest-share-utils';
 import { LightGallery } from '../../lightgallery';
 import { lGEvents } from '../../lg-events';
 import { ShareOption } from './types';
+
+/** Web Share default: the OS sheet is where sharing shines on touch devices. */
+function isTouchDevice(): boolean {
+    return (
+        typeof window !== 'undefined' &&
+        (navigator.maxTouchPoints > 0 || 'ontouchstart' in window)
+    );
+}
 
 interface DefaultShareOptions extends ShareOption {
     type: string;
@@ -51,15 +61,44 @@ export default class Share {
         return shareHtml;
     }
 
+    /**
+     * True when the button should try the OS share sheet first. The
+     * dropdown stays rendered as the automatic fallback (a `canShare`
+     * veto or share failure at click time falls back to the menu).
+     */
+    private prefersNativeShare(): boolean {
+        const preferNative = this.settings.preferNativeShare ?? isTouchDevice();
+        return (
+            preferNative &&
+            typeof navigator !== 'undefined' &&
+            typeof navigator.share === 'function'
+        );
+    }
+
     setLgShareMarkup(): void {
+        const popupAttrs = this.prefersNativeShare()
+            ? ''
+            : 'aria-haspopup="true" aria-expanded="false"';
         this.core.$toolbar.append(
-            `<button type="button" aria-label="${this.settings.sharePluginStrings['share']}" aria-haspopup="true" aria-expanded="false" class="lg-share lg-icon">
+            `<button type="button" aria-label="${this.settings.sharePluginStrings['share']}" ${popupAttrs} class="lg-share lg-icon">
                 <ul class="lg-dropdown" style="position: absolute;"></ul></button>`,
         );
 
         this.core.outer.append('<div class="lg-dropdown-overlay"></div>');
         const $shareButton = this.core.outer.find('.lg-share');
         $shareButton.first().on('click.lg', () => {
+            if (this.prefersNativeShare()) {
+                const payload = getSharePayload(
+                    this.core.galleryItems[this.core.index],
+                    window.location.href,
+                );
+                if (canNativeShare(navigator, payload)) {
+                    // Rejection = the user dismissed the sheet (AbortError)
+                    // or the OS refused — nothing to clean up either way.
+                    navigator.share(payload).catch(() => undefined);
+                    return;
+                }
+            }
             this.core.outer.toggleClass('lg-dropdown-active');
             if (this.core.outer.hasClass('lg-dropdown-active')) {
                 this.core.outer.attr('aria-expanded', true);

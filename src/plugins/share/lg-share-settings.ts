@@ -11,6 +11,18 @@ export interface ShareSettings {
     share: boolean;
 
     /**
+     * Prefer the OS share sheet (`navigator.share`) over the dropdown menu
+     * when the browser supports it. The share button then opens the native
+     * sheet with the slide's URL (per-item `shareUrl`, falling back to the
+     * network share URLs, then the page URL); the dropdown remains as the
+     * automatic fallback. URL-sharing only — the image file itself is never
+     * attached.
+     * @description Defaults to true on touch devices and false on desktop,
+     * where the branded dropdown is kept for consistency.
+     */
+    preferNativeShare?: boolean;
+
+    /**
      * Enable Facebook share.
      */
     facebook: boolean;
@@ -60,7 +72,7 @@ export const shareSettings = {
     facebook: true,
     facebookDropdownText: 'Facebook',
     twitter: true,
-    twitterDropdownText: 'Twitter',
+    twitterDropdownText: 'X',
     pinterest: true,
     pinterestDropdownText: 'Pinterest',
     additionalShareOptions: [],

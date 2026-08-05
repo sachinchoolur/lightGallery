@@ -163,9 +163,15 @@ export {
 } from './plugin-slices';
 
 export {
+    canNativeShare,
     getFacebookShareLink,
     getPinterestShareLink,
+    getSharePayload,
     getTwitterShareLink,
+    getXShareLink,
+    type NativeShareNavigator,
+    type ShareItemFields,
+    type SharePayload,
 } from './share-urls';
 
 /**

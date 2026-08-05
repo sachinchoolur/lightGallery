@@ -1,10 +1,9 @@
+import { getXShareLink } from '@lightgallery/headless';
+
 import { GalleryItem } from '../../lg-utils';
 
+/** X (formerly Twitter) intent link; the file name is kept for 2.x import
+ * compatibility — `tweetText`/`twitterShareUrl` fields keep working. */
 export function getTwitterShareLink(galleryItem: GalleryItem): string {
-    const twitterBaseUrl = '//twitter.com/intent/tweet?text=';
-    const url = encodeURIComponent(
-        galleryItem.twitterShareUrl || window.location.href,
-    );
-    const text = galleryItem.tweetText;
-    return twitterBaseUrl + text + '&url=' + url;
+    return getXShareLink(galleryItem, window.location.href);
 }
