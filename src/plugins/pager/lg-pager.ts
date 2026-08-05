@@ -23,7 +23,9 @@ export default class Pager {
         for (let i = 0; i < items.length; i++) {
             pagerList += `<span  data-lg-item-id="${i}" class="lg-pager-cont"> 
                     <span data-lg-item-id="${i}" class="lg-pager"></span>
-                    <div class="lg-pager-thumb-cont"><span class="lg-caret"></span> <img src="${items[i].thumb}" /></div>
+                    <div class="lg-pager-thumb-cont"><span class="lg-caret"></span> <img src="${
+                        items[i].thumb
+                    }" alt="${items[i].alt || ''}" /></div>
                     </span>`;
         }
         return pagerList;

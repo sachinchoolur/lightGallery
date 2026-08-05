@@ -1,5 +1,6 @@
 import {
     awaitDecode,
+    formatSlideAnnouncement,
     getEdgeFrictionedDelta,
     getHorizontalDragTransforms,
     getSwipeAxis,
@@ -97,6 +98,10 @@ export class LightGallery {
     // Scroll top value before lightGallery is opened
     public prevScrollTop = 0;
 
+    // Element that held focus before the gallery opened; focus is returned
+    // to it after close (dialog pattern; captured only when trapFocus runs).
+    private prevActiveElement?: HTMLElement;
+
     public bodyPaddingRight = 0;
 
     private zoomFromOrigin!: boolean;
@@ -164,6 +169,24 @@ export class LightGallery {
                 ...this.settings.mobileSettings,
             };
             this.settings = { ...this.settings, ...mobileSettings };
+        }
+
+        // prefers-reduced-motion collapses every animation to 0ms and
+        // disables the zoom-from-origin/bounce effects (a11y; checked once
+        // per instance, matching the React/Vue/Angular bindings).
+        if (
+            typeof window !== 'undefined' &&
+            typeof window.matchMedia === 'function' &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+            this.settings = {
+                ...this.settings,
+                speed: 0,
+                backdropDuration: 0,
+                startAnimationDuration: 0,
+                zoomFromOrigin: false,
+                slideEndAnimation: false,
+            };
         }
     }
 
@@ -318,8 +341,11 @@ export class LightGallery {
         }
 
         if (this.settings.appendSubHtmlTo !== '.lg-item') {
-            subHtmlCont =
-                '<div class="lg-sub-html" role="status" aria-live="polite"></div>';
+            // When the announcer owns slide-change announcements the caption
+            // bar must not be a second live region (double announcements).
+            subHtmlCont = this.settings.ariaAnnouncements
+                ? '<div class="lg-sub-html"></div>'
+                : '<div class="lg-sub-html" role="status" aria-live="polite"></div>';
         }
 
         let addClasses = '';
@@ -329,9 +355,11 @@ export class LightGallery {
             addClasses += 'lg-media-overlap ';
         }
 
+        // Dialogs need an accessible name; fall back to a localizable
+        // aria-label when the consumer doesn't provide ariaLabelledby.
         const ariaLabelledby = this.settings.ariaLabelledby
             ? 'aria-labelledby="' + this.settings.ariaLabelledby + '"'
-            : '';
+            : `aria-label="${this.settings.strings['galleryLabel']}"`;
         const ariaDescribedby = this.settings.ariaDescribedby
             ? 'aria-describedby="' + this.settings.ariaDescribedby + '"'
             : '';
@@ -362,6 +390,13 @@ export class LightGallery {
             <div id="${this.getIdName(
                 'lg-backdrop',
             )}" class="lg-backdrop"></div>
+            ${
+                this.settings.ariaAnnouncements
+                    ? `<div id="${this.getIdName(
+                          'lg-announcer',
+                      )}" class="lg-announcer" role="status" aria-live="polite"></div>`
+                    : ''
+            }
 
             <div id="${this.getIdName(
                 'lg-outer',
@@ -726,6 +761,19 @@ export class LightGallery {
         // Store the current scroll top value to scroll back after closing the gallery..
         this.prevScrollTop = $LG(window).scrollTop();
 
+        // Remember where focus came from so it can be returned on close
+        // (dialog pattern). Captured under the same condition that moves
+        // focus into the gallery — never touched otherwise.
+        if (
+            this.settings.trapFocus &&
+            document.body === this.settings.container
+        ) {
+            this.prevActiveElement =
+                document.activeElement instanceof HTMLElement
+                    ? document.activeElement
+                    : undefined;
+        }
+
         setTimeout(() => {
             // Need to check both zoomFromOrigin and transform values as we need to set set the
             // default opening animation if user missed to add the lg-size attribute
@@ -851,7 +899,12 @@ export class LightGallery {
      */
     counter(): void {
         if (this.settings.counter) {
-            const counterHtml = `<div class="lg-counter" role="status" aria-live="polite">
+            // With the announcer active the counter is decorative — the
+            // announcer already conveys the position in a friendlier form.
+            const counterA11yAttrs = this.settings.ariaAnnouncements
+                ? 'aria-hidden="true"'
+                : 'role="status" aria-live="polite"';
+            const counterHtml = `<div class="lg-counter" ${counterA11yAttrs}>
                 <span id="${this.getIdName(
                     'lg-counter-current',
                 )}" class="lg-counter-current">${this.index + 1} </span> /
@@ -1645,6 +1698,7 @@ export class LightGallery {
             if (this.settings.counter) {
                 this.updateCurrentCounter(index);
             }
+            this.announceSlide(index);
 
             const currentSlideItem = this.getSlideItem(index);
             const previousSlideItem = this.getSlideItem(prevIndex);
@@ -1762,6 +1816,66 @@ export class LightGallery {
 
     updateCurrentCounter(index: number): void {
         this.getElementById('lg-counter-current').html(index + 1 + '');
+    }
+
+    /**
+     * Plain-text caption of a slide for the aria-live announcer. Resolves
+     * the same sources addHtml uses (inline subHtml markup or a selector)
+     * and strips the markup down to readable text. Remote captions
+     * (subHtmlUrl) are skipped — announcing can't wait on a fetch.
+     */
+    private getSlideCaptionText(index: number): string {
+        const currentGalleryItem = this.galleryItems[index];
+        if (!currentGalleryItem || currentGalleryItem.subHtmlUrl) {
+            return '';
+        }
+        let subHtml = currentGalleryItem.subHtml || '';
+        const firstLetter = subHtml.substring(0, 1);
+        if (firstLetter === '.' || firstLetter === '#') {
+            try {
+                if (
+                    this.settings.subHtmlSelectorRelative &&
+                    !this.settings.dynamic
+                ) {
+                    subHtml = $LG(this.items)
+                        .eq(index)
+                        .find(subHtml)
+                        .first()
+                        .html();
+                } else {
+                    subHtml = $LG(subHtml).first().html();
+                }
+            } catch (error) {
+                subHtml = '';
+            }
+        }
+        if (!subHtml) {
+            return '';
+        }
+        const container = document.createElement('div');
+        container.innerHTML = subHtml;
+        return container.textContent || '';
+    }
+
+    /**
+     * Update the polite live region with the shown slide's position and
+     * caption ("Image X of Y, caption"). The single announcement source —
+     * counter and caption bar are not live regions while this is enabled.
+     */
+    private announceSlide(index: number): void {
+        if (!this.settings.ariaAnnouncements) {
+            return;
+        }
+        const announcer = this.getElementById('lg-announcer').get();
+        if (!announcer) {
+            return;
+        }
+        announcer.textContent = formatSlideAnnouncement({
+            template: this.settings.strings['slideAnnouncement'],
+            index: index + 1,
+            total: this.galleryItems.length,
+            caption: this.getSlideCaptionText(index),
+        });
     }
 
     updateCounterTotal(): void {
@@ -2674,6 +2788,14 @@ export class LightGallery {
 
             this.getSlideItem(this.index).removeClass('lg-start-end-progress');
             this.$inner.empty();
+
+            // Clear the announcer so reopening at the same slide is a fresh
+            // live-region mutation (otherwise identical text = silence).
+            const announcer = this.getElementById('lg-announcer').get();
+            if (announcer) {
+                announcer.textContent = '';
+            }
+
             if (this.lgOpened) {
                 this.LGel.trigger(lGEvents.afterClose, {
                     instance: this,
@@ -2682,6 +2804,13 @@ export class LightGallery {
             if (this.$container.get()) {
                 this.$container.get().blur();
             }
+
+            // Return focus to where it was before the gallery opened
+            // (dialog pattern; captured only when trapFocus moved it).
+            if (this.prevActiveElement && this.prevActiveElement.isConnected) {
+                this.prevActiveElement.focus({ preventScroll: true });
+            }
+            this.prevActiveElement = undefined;
 
             this.lgOpened = false;
         }, removeTimeout + 100);

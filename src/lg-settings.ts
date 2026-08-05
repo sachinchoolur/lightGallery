@@ -40,6 +40,14 @@ export interface LightGalleryCoreStrings {
     download: string;
     playVideo: string;
     mediaLoadingFailed: string;
+    /** Accessible name of the gallery dialog when `ariaLabelledby` is not set. */
+    galleryLabel: string;
+    /**
+     * Template announced to assistive technology on every slide change.
+     * `{index}` and `{total}` are replaced with the 1-based slide position
+     * and the slide count; the slide caption, when present, is appended.
+     */
+    slideAnnouncement: string;
 }
 
 export type LightGalleryAllSettings = LightGalleryCoreSettings &
@@ -261,6 +269,16 @@ export interface LightGalleryCoreSettings {
      * aria-describedby attribute for gallery
      */
     ariaDescribedby: string;
+
+    /**
+     * Announce slide changes to assistive technology through a dedicated
+     * polite live region (strings.slideAnnouncement + the slide caption).
+     * @description While enabled, the counter and caption bar are not
+     * separate live regions — the announcer is the single source of
+     * slide-change announcements. Set to false to restore the previous
+     * behavior (live counter and caption, no announcer).
+     */
+    ariaAnnouncements: boolean;
 
     /**
      * Hide scrollbar when gallery is opened
@@ -585,6 +603,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     defaultCaptionHeight: 0,
     ariaLabelledby: '',
     ariaDescribedby: '',
+    ariaAnnouncements: true,
     resetScrollPosition: true,
     hideScrollbar: false,
     closable: true,
@@ -641,5 +660,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
         download: 'Download',
         playVideo: 'Play video',
         mediaLoadingFailed: 'Oops... Failed to load content...',
+        galleryLabel: 'Gallery',
+        slideAnnouncement: 'Image {index} of {total}',
     } as LightGalleryCoreStrings,
 };

@@ -72,6 +72,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^4.6.0
         version: 4.33.0(eslint@7.32.0)(typescript@5.0.4)
+      axe-core:
+        specifier: ^4.12.1
+        version: 4.12.1
       clean-css-cli:
         specifier: ^4.3.0
         version: 4.3.0
@@ -19614,7 +19617,7 @@ snapshots:
   '@commitlint/format@7.6.1':
     dependencies:
       babel-runtime: 6.26.0
-      chalk: 2.3.1
+      chalk: 2.4.2
 
   '@commitlint/is-ignored@7.6.0':
     dependencies:

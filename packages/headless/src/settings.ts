@@ -52,6 +52,14 @@ export interface GalleryCoreStrings {
     download: string;
     playVideo: string;
     mediaLoadingFailed: string;
+    /** Accessible name of the gallery dialog when `ariaLabelledby` is not set. */
+    galleryLabel: string;
+    /**
+     * Template announced to assistive technology on every slide change.
+     * `{index}` and `{total}` are replaced with the 1-based slide position
+     * and the slide count; the slide caption, when present, is appended.
+     */
+    slideAnnouncement: string;
 }
 
 export interface CoreSettings {
@@ -217,6 +225,16 @@ export interface CoreSettings {
     /** Enable desktop mouse drag. */
     enableDrag: boolean;
 
+    /**
+     * Announce slide changes to assistive technology through a dedicated
+     * polite live region (`strings.slideAnnouncement` + the slide caption).
+     * While enabled, the counter and caption bar are not separate live
+     * regions — the announcer is the single source of slide-change
+     * announcements. Set to `false` to restore the 2.x behavior (live
+     * counter and caption, no announcer).
+     */
+    ariaAnnouncements: boolean;
+
     /** Localizable UI strings. */
     strings: GalleryCoreStrings;
 
@@ -286,6 +304,7 @@ export const coreSettingsDefaults: CoreSettings = {
     enableSwipe: true,
     enableDrag: true,
     isMobile: undefined,
+    ariaAnnouncements: true,
     mobileSettings: {
         controls: false,
         showCloseIcon: false,
@@ -299,6 +318,8 @@ export const coreSettingsDefaults: CoreSettings = {
         download: 'Download',
         playVideo: 'Play video',
         mediaLoadingFailed: 'Oops... Failed to load content...',
+        galleryLabel: 'Gallery',
+        slideAnnouncement: 'Image {index} of {total}',
     },
 };
 

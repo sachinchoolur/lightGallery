@@ -23,6 +23,11 @@ export {
 export { createEmitter, type TypedEmitter } from './emitter';
 
 export {
+    formatSlideAnnouncement,
+    type SlideAnnouncementOptions,
+} from './announce';
+
+export {
     coreSettingsDefaults,
     resolveSettings,
     type CaptionPosition,
