@@ -1,14 +1,13 @@
 import { type ReactElement } from 'react';
 import {
+    canNativeShare,
     getFacebookShareLink,
     getPinterestShareLink,
-    getTwitterShareLink,
+    getSharePayload,
+    getXShareLink,
 } from '@lightgallery/headless';
 
-import {
-    useGalleryInternal,
-    useGalleryState,
-} from '../../context';
+import { useGalleryInternal, useGalleryState } from '../../context';
 import { usePluginSettings } from '../runtime';
 import type { GalleryItem } from '../../types';
 import type { LgPlugin } from '../types';
@@ -31,6 +30,13 @@ export interface ShareOption {
 export interface ShareSettings {
     /** Enable the share button. */
     share: boolean;
+    /**
+     * Prefer the OS share sheet (`navigator.share`) over the dropdown menu
+     * when the browser supports it (URL-sharing only — the image file is
+     * never attached; the dropdown remains the automatic fallback).
+     * Defaults to true on touch devices, false on desktop.
+     */
+    preferNativeShare?: boolean;
     facebook: boolean;
     facebookDropdownText: string;
     twitter: boolean;
@@ -47,12 +53,20 @@ export const shareSettings: ShareSettings = {
     facebook: true,
     facebookDropdownText: 'Facebook',
     twitter: true,
-    twitterDropdownText: 'Twitter',
+    twitterDropdownText: 'X',
     pinterest: true,
     pinterestDropdownText: 'Pinterest',
     additionalShareOptions: [],
     sharePluginStrings: { share: 'Share' },
 };
+
+/** Web Share default: the OS sheet is where sharing shines on touch devices. */
+function isTouchDevice(): boolean {
+    return (
+        typeof window !== 'undefined' &&
+        (navigator.maxTouchPoints > 0 || 'ontouchstart' in window)
+    );
+}
 
 function getShareOptions(settings: ShareSettings): ShareOption[] {
     return [
@@ -70,7 +84,7 @@ function getShareOptions(settings: ShareSettings): ShareOption[] {
                   {
                       text: settings.twitterDropdownText,
                       className: 'lg-share-twitter',
-                      generateLink: getTwitterShareLink,
+                      generateLink: getXShareLink,
                   },
               ]
             : []),
@@ -97,11 +111,27 @@ function ShareButton(): ReactElement | null {
     const item = internal.items[state.currentIndex];
     const currentUrl =
         typeof window !== 'undefined' ? window.location.href : '';
-    const active = internal.pluginOuterClassNames.includes(
-        'lg-dropdown-active',
-    );
+    const active =
+        internal.pluginOuterClassNames.includes('lg-dropdown-active');
     const toggle = () =>
         internal.layout.setOuterClass('lg-dropdown-active', !active);
+    // Web Share hybrid: try the OS sheet first where preferred and
+    // available; the dropdown stays rendered as the automatic fallback.
+    const nativeFirst =
+        (settings.preferNativeShare ?? isTouchDevice()) &&
+        typeof navigator !== 'undefined' &&
+        typeof navigator.share === 'function';
+    const onClick = () => {
+        if (nativeFirst && item) {
+            const payload = getSharePayload(item, currentUrl);
+            if (canNativeShare(navigator, payload)) {
+                // Rejection = user dismissed the sheet (AbortError).
+                navigator.share(payload).catch(() => undefined);
+                return;
+            }
+        }
+        toggle();
+    };
     // The dropdown is a sibling of the button (vanilla nested it inside,
     // which is invalid interactive nesting); `.lg-outer .lg-dropdown` CSS
     // does not depend on the nesting.
@@ -110,10 +140,10 @@ function ShareButton(): ReactElement | null {
             <button
                 type="button"
                 aria-label={settings.sharePluginStrings.share}
-                aria-haspopup="true"
-                aria-expanded={active}
+                aria-haspopup={nativeFirst ? undefined : 'true'}
+                aria-expanded={nativeFirst ? undefined : active}
                 className="lg-share lg-icon"
-                onClick={toggle}
+                onClick={onClick}
             />
             <ul className="lg-dropdown" style={{ position: 'absolute' }}>
                 {item &&

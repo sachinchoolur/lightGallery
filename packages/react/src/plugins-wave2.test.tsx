@@ -134,7 +134,11 @@ describe('hash plugin', () => {
     it('opens from a deep link with a clamped slide index', () => {
         window.location.hash = '#lg=g1&slide=99';
         render(
-            <LightGallery plugins={[Hash]} slides={slides} hash={{ galleryId: 'g1' }}>
+            <LightGallery
+                plugins={[Hash]}
+                slides={slides}
+                hash={{ galleryId: 'g1' }}
+            >
                 {null}
             </LightGallery>,
         );
@@ -148,7 +152,11 @@ describe('hash plugin', () => {
 
     it('writes the slide to the hash and restores it on close', () => {
         render(
-            <LightGallery plugins={[Hash]} slides={slides} hash={{ galleryId: 'g2' }}>
+            <LightGallery
+                plugins={[Hash]}
+                slides={slides}
+                hash={{ galleryId: 'g2' }}
+            >
                 {null}
             </LightGallery>,
         );
@@ -191,7 +199,7 @@ describe('share plugin', () => {
         const links = document.querySelectorAll('.lg-dropdown a');
         expect(links.length).toBe(3);
         expect(links[0]!.getAttribute('href')).toContain('facebook.com');
-        expect(links[1]!.getAttribute('href')).toContain('twitter.com');
+        expect(links[1]!.getAttribute('href')).toContain('x.com/intent/post');
         expect(links[2]!.getAttribute('href')).toContain(
             encodeURIComponent('a.jpg'),
         );
@@ -204,6 +212,80 @@ describe('share plugin', () => {
         expect(document.querySelector('.lg-outer')).not.toHaveClass(
             'lg-dropdown-active',
         );
+    });
+
+    it('prefers the native share sheet when enabled and available', () => {
+        const share = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(window.navigator, 'share', {
+            value: share,
+            configurable: true,
+        });
+        try {
+            renderGallery({
+                plugins: [Share],
+                share: { preferNativeShare: true },
+            });
+            const button = screen.getByLabelText('Share');
+            // Native-first buttons do not advertise a popup.
+            expect(button).not.toHaveAttribute('aria-haspopup');
+            fireEvent.click(button);
+            expect(share).toHaveBeenCalledWith({
+                url: window.location.href,
+                title: 'a',
+            });
+            expect(document.querySelector('.lg-outer')).not.toHaveClass(
+                'lg-dropdown-active',
+            );
+        } finally {
+            delete (window.navigator as { share?: unknown }).share;
+        }
+    });
+
+    it('keeps the dropdown when preferNativeShare is false', () => {
+        const share = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(window.navigator, 'share', {
+            value: share,
+            configurable: true,
+        });
+        try {
+            renderGallery({
+                plugins: [Share],
+                share: { preferNativeShare: false },
+            });
+            fireEvent.click(screen.getByLabelText('Share'));
+            expect(share).not.toHaveBeenCalled();
+            expect(document.querySelector('.lg-outer')).toHaveClass(
+                'lg-dropdown-active',
+            );
+        } finally {
+            delete (window.navigator as { share?: unknown }).share;
+        }
+    });
+
+    it('falls back to the dropdown when canShare vetoes the payload', () => {
+        const share = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(window.navigator, 'share', {
+            value: share,
+            configurable: true,
+        });
+        Object.defineProperty(window.navigator, 'canShare', {
+            value: () => false,
+            configurable: true,
+        });
+        try {
+            renderGallery({
+                plugins: [Share],
+                share: { preferNativeShare: true },
+            });
+            fireEvent.click(screen.getByLabelText('Share'));
+            expect(share).not.toHaveBeenCalled();
+            expect(document.querySelector('.lg-outer')).toHaveClass(
+                'lg-dropdown-active',
+            );
+        } finally {
+            delete (window.navigator as { share?: unknown }).share;
+            delete (window.navigator as { canShare?: unknown }).canShare;
+        }
     });
 });
 
@@ -265,9 +347,7 @@ describe('rotate plugin', () => {
 
         // Back at 180° the laid-out fit applies again: scale 1.
         fireEvent.click(screen.getByLabelText('Rotate right'));
-        expect(wrapper.style.transform).toBe(
-            'rotate(180deg) scale3d(1, 1, 1)',
-        );
+        expect(wrapper.style.transform).toBe('rotate(180deg) scale3d(1, 1, 1)');
         tick(450);
     });
 });
@@ -340,7 +420,9 @@ describe('relativeCaption plugin', () => {
             '.lg-item .lg-sub-html',
         );
         expect(caption).not.toBeNull();
-        expect(document.querySelector('.lg-components .lg-sub-html')).toBeNull();
+        expect(
+            document.querySelector('.lg-components .lg-sub-html'),
+        ).toBeNull();
         expect(document.querySelector('.lg-outer')).toHaveClass(
             'lg-relative-caption',
         );

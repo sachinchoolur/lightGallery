@@ -134,7 +134,7 @@ and configure each with the prop named after it. Import the matching
 | Fullscreen | `@lightgallery/react/plugins/fullscreen` | `fullScreen` |
 | Hash | `@lightgallery/react/plugins/hash` | `galleryId`, `customSlideName` |
 | Pager | `@lightgallery/react/plugins/pager` | `pager` |
-| Share | `@lightgallery/react/plugins/share` | `facebook`, `twitter`, `pinterest`, `additionalShareOptions` (typed objects) |
+| Share | `@lightgallery/react/plugins/share` | `preferNativeShare` (OS share sheet; default on touch), `facebook`, `twitter` (X intent), `pinterest`, `additionalShareOptions` (typed objects) |
 | Rotate | `@lightgallery/react/plugins/rotate` | `rotateSpeed`, `rotateLeft/Right`, `flipHorizontal/Vertical` |
 | Comment | `@lightgallery/react/plugins/comment` | `commentBox`, `renderComments(item)` render prop |
 | MediumZoom | `@lightgallery/react/plugins/mediumZoom` | `margin`, `backgroundColor` (+ per-item `lgBackgroundColor`) |
