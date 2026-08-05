@@ -37,6 +37,7 @@ import {
 import {
     clampIndex,
     fitImageSize,
+    formatSlideAnnouncement,
     getOriginTransform,
     getSlideIndexesInDom,
     getSlideType,
@@ -163,7 +164,9 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                 aria-modal="true"
                 [cdkTrapFocus]="settings().trapFocus && isBodyContainer()"
                 [attr.aria-label]="
-                    settings().ariaLabelledby ? null : 'Gallery'
+                    settings().ariaLabelledby
+                        ? null
+                        : settings().strings.galleryLabel
                 "
                 [attr.aria-labelledby]="settings().ariaLabelledby || null"
                 [attr.aria-describedby]="settings().ariaDescribedby || null"
@@ -175,6 +178,11 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                         settings().backdropDuration + 'ms'
                     "
                 ></div>
+                @if (settings().ariaAnnouncements) {
+                <div class="lg-announcer" role="status" aria-live="polite">
+                    {{ announcement() }}
+                </div>
+                }
                 <div
                     #outerEl
                     [class]="outerClasses()"
@@ -206,165 +214,154 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                                  close settles — stale items would flash
                                  into the next entrance. Mid-close they
                                  survive for the exit flight. -->
-                            @if (phase() !== 'closed') {
-                                @for (idx of slideIndexes(); track idx) {
-                                    <lg-slide
-                                        [index]="idx"
-                                        [item]="items()[idx]"
-                                        [isShown]="
-                                            timeline().shownIndex === idx
-                                        "
-                                        [position]="
-                                            timeline().positions[idx]
-                                        "
-                                        [inProgress]="
-                                            timeline().progressIndex === idx
-                                        "
-                                        [originAnim]="
-                                            originAnim()?.index === idx
-                                                ? originAnim()
-                                                : null
-                                        "
-                                    />
-                                }
-                            }
+                            @if (phase() !== 'closed') { @for (idx of
+                            slideIndexes(); track idx) {
+                            <lg-slide
+                                [index]="idx"
+                                [item]="items()[idx]"
+                                [isShown]="timeline().shownIndex === idx"
+                                [position]="timeline().positions[idx]"
+                                [inProgress]="timeline().progressIndex === idx"
+                                [originAnim]="
+                                    originAnim()?.index === idx
+                                        ? originAnim()
+                                        : null
+                                "
+                            />
+                            } }
                         </div>
                         @if (settings().controls) {
-                            <button
-                                type="button"
-                                [class]="
-                                    disablePrev()
-                                        ? 'lg-prev lg-icon disabled'
-                                        : 'lg-prev lg-icon'
-                                "
-                                [disabled]="disablePrev()"
-                                [attr.aria-label]="
-                                    settings().strings.previousSlide
-                                "
-                                (click)="prevSlide()"
-                            >
-                                @if (prevButtonSlot(); as slot) {
-                                    <ng-container
-                                        *ngTemplateOutlet="slot.templateRef"
-                                    />
-                                }
-                            </button>
-                            <button
-                                type="button"
-                                [class]="
-                                    disableNext()
-                                        ? 'lg-next lg-icon disabled'
-                                        : 'lg-next lg-icon'
-                                "
-                                [disabled]="disableNext()"
-                                [attr.aria-label]="
-                                    settings().strings.nextSlide
-                                "
-                                (click)="nextSlide()"
-                            >
-                                @if (nextButtonSlot(); as slot) {
-                                    <ng-container
-                                        *ngTemplateOutlet="slot.templateRef"
-                                    />
-                                }
-                            </button>
+                        <button
+                            type="button"
+                            [class]="
+                                disablePrev()
+                                    ? 'lg-prev lg-icon disabled'
+                                    : 'lg-prev lg-icon'
+                            "
+                            [disabled]="disablePrev()"
+                            [attr.aria-label]="settings().strings.previousSlide"
+                            (click)="prevSlide()"
+                        >
+                            @if (prevButtonSlot(); as slot) {
+                            <ng-container
+                                *ngTemplateOutlet="slot.templateRef"
+                            />
+                            }
+                        </button>
+                        <button
+                            type="button"
+                            [class]="
+                                disableNext()
+                                    ? 'lg-next lg-icon disabled'
+                                    : 'lg-next lg-icon'
+                            "
+                            [disabled]="disableNext()"
+                            [attr.aria-label]="settings().strings.nextSlide"
+                            (click)="nextSlide()"
+                        >
+                            @if (nextButtonSlot(); as slot) {
+                            <ng-container
+                                *ngTemplateOutlet="slot.templateRef"
+                            />
+                            }
+                        </button>
                         }
                     </div>
                     <div #toolbarEl class="lg-toolbar lg-group">
                         @if (settings().showMaximizeIcon) {
-                            <button
-                                type="button"
-                                class="lg-maximize lg-icon"
-                                [attr.aria-label]="
-                                    settings().strings.toggleMaximize
-                                "
-                                (click)="toggleMaximize()"
-                            ></button>
-                        }
-                        @if (settings().closable && settings().showCloseIcon) {
-                            <button
-                                type="button"
-                                class="lg-close lg-icon"
-                                [attr.aria-label]="
-                                    settings().strings.closeGallery
-                                "
-                                (click)="closeGallery()"
-                            ></button>
-                        }
-                        @if (showDownload()) {
-                            <a
-                                target="_blank"
-                                rel="noopener"
-                                class="lg-download lg-icon"
-                                [attr.aria-label]="settings().strings.download"
-                                [attr.href]="downloadHref()"
-                                [attr.download]="downloadName()"
-                            ></a>
-                        }
-                        @for (slot of toolbarSlots(); track slot) {
+                        <button
+                            type="button"
+                            class="lg-maximize lg-icon"
+                            [attr.aria-label]="
+                                settings().strings.toggleMaximize
+                            "
+                            (click)="toggleMaximize()"
+                        ></button>
+                        } @if (settings().closable && settings().showCloseIcon)
+                        {
+                        <button
+                            type="button"
+                            class="lg-close lg-icon"
+                            [attr.aria-label]="settings().strings.closeGallery"
+                            (click)="closeGallery()"
+                        ></button>
+                        } @if (showDownload()) {
+                        <a
+                            target="_blank"
+                            rel="noopener"
+                            class="lg-download lg-icon"
+                            [attr.aria-label]="settings().strings.download"
+                            [attr.href]="downloadHref()"
+                            [attr.download]="downloadName()"
+                        ></a>
+                        } @for (slot of toolbarSlots(); track slot) {
+                        <ng-container
+                            *ngComponentOutlet="
+                                slot;
+                                injector: runtime.featureInjector() ?? undefined
+                            "
+                        />
+                        } @if (settings().counter) {
+                        <!-- With the announcer active the counter is
+                                 decorative — the announcer already conveys
+                                 the position in a friendlier form. -->
+                        <div
+                            class="lg-counter"
+                            [attr.role]="
+                                settings().ariaAnnouncements ? null : 'status'
+                            "
+                            [attr.aria-live]="
+                                settings().ariaAnnouncements ? null : 'polite'
+                            "
+                            [attr.aria-hidden]="
+                                settings().ariaAnnouncements ? 'true' : null
+                            "
+                        >
+                            @if (counterSlot(); as slot) {
                             <ng-container
-                                *ngComponentOutlet="
-                                    slot;
-                                    injector:
-                                        runtime.featureInjector() ?? undefined
+                                *ngTemplateOutlet="
+                                    slot.templateRef;
+                                    context: counterContext()
                                 "
                             />
-                        }
-                        @if (settings().counter) {
-                            <div
-                                class="lg-counter"
-                                role="status"
-                                aria-live="polite"
-                            >
-                                @if (counterSlot(); as slot) {
-                                    <ng-container
-                                        *ngTemplateOutlet="
-                                            slot.templateRef;
-                                            context: counterContext()
-                                        "
-                                    />
-                                } @else {
-                                    <span class="lg-counter-current">{{
-                                        store.currentIndex() + 1
-                                    }}</span
-                                    >{{ ' / '
-                                    }}<span class="lg-counter-all">{{
-                                        store.slidesCount()
-                                    }}</span>
-                                }
-                            </div>
+                            } @else {
+                            <span class="lg-counter-current">{{
+                                store.currentIndex() + 1
+                            }}</span
+                            >{{ ' / '
+                            }}<span class="lg-counter-all">{{
+                                store.slidesCount()
+                            }}</span>
+                            }
+                        </div>
                         }
                     </div>
                     @if (settings().captionPosition === 'outer') {
+                    <lg-caption
+                        [item]="currentItem()"
+                        [index]="store.currentIndex()"
+                    />
+                    } @for (slot of outerSlots(); track slot) {
+                    <ng-container
+                        *ngComponentOutlet="
+                            slot;
+                            injector: runtime.featureInjector() ?? undefined
+                        "
+                    />
+                    }
+                    <div class="lg-components">
+                        @if (settings().captionPosition === 'bar') {
                         <lg-caption
                             [item]="currentItem()"
                             [index]="store.currentIndex()"
                         />
-                    }
-                    @for (slot of outerSlots(); track slot) {
+                        } @for (slot of componentsSlots(); track slot) {
                         <ng-container
                             *ngComponentOutlet="
                                 slot;
-                                injector:
-                                    runtime.featureInjector() ?? undefined
+                                injector: runtime.featureInjector() ?? undefined
                             "
                         />
-                    }
-                    <div class="lg-components">
-                        @if (settings().captionPosition === 'bar') {
-                            <lg-caption
-                                [item]="currentItem()"
-                                [index]="store.currentIndex()"
-                            />
-                        }
-                        @for (slot of componentsSlots(); track slot) {
-                            <ng-container
-                                *ngComponentOutlet="
-                                    slot;
-                                    injector:
-                                        runtime.featureInjector() ?? undefined
-                                "
-                            />
                         }
                     </div>
                 </div>
@@ -442,6 +439,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     readonly defaultCaptionHeight = input<number | undefined>(undefined);
     readonly ariaLabelledby = input<string | undefined>(undefined);
     readonly ariaDescribedby = input<string | undefined>(undefined);
+    readonly ariaAnnouncements = input<boolean | undefined>(undefined);
     readonly hideScrollbar = input<boolean | undefined>(undefined);
     readonly resetScrollPosition = input<boolean | undefined>(undefined);
     readonly closable = input<boolean | undefined>(undefined);
@@ -547,10 +545,8 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         viewChild.required<TemplateRef<unknown>>('galleryTpl');
     private readonly containerEl =
         viewChild<ElementRef<HTMLDivElement>>('containerEl');
-    private readonly outerEl =
-        viewChild<ElementRef<HTMLDivElement>>('outerEl');
-    private readonly innerEl =
-        viewChild<ElementRef<HTMLDivElement>>('innerEl');
+    private readonly outerEl = viewChild<ElementRef<HTMLDivElement>>('outerEl');
+    private readonly innerEl = viewChild<ElementRef<HTMLDivElement>>('innerEl');
     private readonly toolbarEl =
         viewChild<ElementRef<HTMLDivElement>>('toolbarEl');
 
@@ -599,6 +595,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         defaultCaptionHeight: this.defaultCaptionHeight(),
         ariaLabelledby: this.ariaLabelledby(),
         ariaDescribedby: this.ariaDescribedby(),
+        ariaAnnouncements: this.ariaAnnouncements(),
         hideScrollbar: this.hideScrollbar(),
         resetScrollPosition: this.resetScrollPosition(),
         closable: this.closable(),
@@ -683,9 +680,9 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             this.runtime.registrations().map((entry) => entry.item()),
     );
     /** Feature `transformItems` results (vimeoThumbnail-style, wave 2). */
-    private readonly transformedItems = signal<
-        readonly LgGalleryItem[] | null
-    >(null);
+    private readonly transformedItems = signal<readonly LgGalleryItem[] | null>(
+        null,
+    );
     protected readonly items = computed<readonly LgGalleryItem[]>(
         () => this.transformedItems() ?? this.baseItems(),
     );
@@ -733,9 +730,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     private fromTouch = false;
 
     /** Classes features toggled onto `.lg-outer` via `layout.setOuterClass`. */
-    private readonly featureOuterClasses = signal<Record<string, boolean>>(
-        {},
-    );
+    private readonly featureOuterClasses = signal<Record<string, boolean>>({});
     /** mediumZoom's media-position override (wave 2), read by measureOffsets. */
     private mediaPositionOverride: (() => LgMediaPosition) | null = null;
     private featureInjectorRef: Injector | null = null;
@@ -763,8 +758,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         const container = this.container();
         return (
             !container ||
-            (typeof document !== 'undefined' &&
-                container === document.body)
+            (typeof document !== 'undefined' && container === document.body)
         );
     });
 
@@ -774,14 +768,10 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     /** Open-and-not-closing — gates gestures/listeners (React's twin flag). */
     protected readonly bodyLockActive = computed(() => {
         const phase = this.phase();
-        return (
-            phase === 'pre-open' || phase === 'opening' || phase === 'open'
-        );
+        return phase === 'pre-open' || phase === 'opening' || phase === 'open';
     });
     private readonly zoomClosing = computed(
-        () =>
-            this.phase() === 'closing' &&
-            this.originAnim()?.closing === true,
+        () => this.phase() === 'closing' && this.originAnim()?.closing === true,
     );
 
     // v2 parity: after the first open the container STAYS in the DOM
@@ -847,6 +837,27 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         return item ? getSlideType(item) : null;
     });
 
+    // Slide-change announcement for the polite live region. Cleared while
+    // closed so reopening at the same slide is a fresh mutation (identical
+    // text would not re-announce).
+    protected readonly announcement = computed(() => {
+        const item = this.currentItem();
+        if (
+            !this.settings().ariaAnnouncements ||
+            this.phase() === 'closed' ||
+            !item
+        ) {
+            return '';
+        }
+        return formatSlideAnnouncement({
+            template: this.settings().strings.slideAnnouncement,
+            index: this.store.currentIndex() + 1,
+            total: this.items().length,
+            caption:
+                typeof item.caption === 'string' ? item.caption : undefined,
+        });
+    });
+
     protected readonly slideIndexes = computed(() =>
         getSlideIndexesInDom(
             this.store.currentIndex(),
@@ -881,7 +892,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         }
         return typeof item.downloadUrl === 'string'
             ? item.downloadUrl
-            : (item.src ?? null);
+            : item.src ?? null;
     });
     protected readonly downloadName = computed(() => {
         const item = this.currentItem();
@@ -1110,8 +1121,8 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             state.currentIndex + 1 < state.slidesCount
                 ? state.currentIndex + 1
                 : state.loop
-                  ? 0
-                  : null;
+                ? 0
+                : null;
         if (target !== null) {
             this.emitEvent('beforeNextSlide', { index: target });
             this.navigate(target, 'next');
@@ -1129,8 +1140,8 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             state.currentIndex > 0
                 ? state.currentIndex - 1
                 : state.loop
-                  ? state.slidesCount - 1
-                  : null;
+                ? state.slidesCount - 1
+                : null;
         if (target !== null) {
             this.emitEvent('beforePrevSlide', {
                 index: target,
@@ -1264,12 +1275,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         if (prevN >= 0 && prevN < count && prevN !== index) {
             positions[prevN] = 'prev';
         }
-        if (
-            nextN >= 0 &&
-            nextN < count &&
-            nextN !== index &&
-            nextN !== prevN
-        ) {
+        if (nextN >= 0 && nextN < count && nextN !== index && nextN !== prevN) {
             positions[nextN] = 'next';
         }
         this.timeline.update((tl) => ({ ...tl, positions }));
@@ -1600,10 +1606,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             this.keydownListener = null;
         }
         if (this.wheelTarget && this.wheelListener) {
-            this.wheelTarget.removeEventListener(
-                'wheel',
-                this.wheelListener,
-            );
+            this.wheelTarget.removeEventListener('wheel', this.wheelListener);
         }
         this.wheelTarget = null;
         this.wheelListener = null;
@@ -1680,13 +1683,12 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             return { top: 0, bottom: 0 };
         }
         const top = this.toolbarEl()?.nativeElement.clientHeight ?? 0;
-        const caption = this.outerEl()?.nativeElement.querySelector<
-            HTMLElement
-        >('.lg-components .lg-sub-html');
+        const caption =
+            this.outerEl()?.nativeElement.querySelector<HTMLElement>(
+                '.lg-components .lg-sub-html',
+            );
         const bottom =
-            this.settings().defaultCaptionHeight ||
-            caption?.clientHeight ||
-            0;
+            this.settings().defaultCaptionHeight || caption?.clientHeight || 0;
         return { top, bottom };
     }
 

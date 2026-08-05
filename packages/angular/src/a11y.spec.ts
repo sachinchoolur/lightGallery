@@ -41,17 +41,16 @@ async function flush<T>(fixture: ComponentFixture<T>): Promise<void> {
             [slides]="slides() ? items : undefined"
             [zoomFromOrigin]="false"
             [ariaLabelledby]="labelledby()"
+            [ariaAnnouncements]="announcements()"
             [features]="features()"
             [speed]="0"
             [backdropDuration]="0"
         >
-            @if (!slides()) {
-                @for (item of items; track item.src) {
-                    <a href="#" class="trigger" [lgGalleryItem]="item">
-                        <img [src]="item.thumb" [alt]="item.alt" />
-                    </a>
-                }
-            }
+            @if (!slides()) { @for (item of items; track item.src) {
+            <a href="#" class="trigger" [lgGalleryItem]="item">
+                <img [src]="item.thumb" [alt]="item.alt" />
+            </a>
+            } }
         </lg-gallery>
         <h2 id="gallery-heading">My photos</h2>
     `,
@@ -61,6 +60,7 @@ class A11yHost {
     readonly items = ITEMS;
     readonly slides = signal(true);
     readonly labelledby = signal<string | undefined>(undefined);
+    readonly announcements = signal<boolean | undefined>(undefined);
     readonly features = signal<readonly LgFeature[]>([]);
 }
 
@@ -108,9 +108,8 @@ describe('accessibility', () => {
             host.slides.set(false);
             await flush(fixture);
 
-            const trigger = document.querySelector<HTMLAnchorElement>(
-                '.trigger',
-            )!;
+            const trigger =
+                document.querySelector<HTMLAnchorElement>('.trigger')!;
             trigger.focus();
             trigger.click();
             await flush(fixture);
@@ -127,6 +126,51 @@ describe('accessibility', () => {
             await advance(fixture, 200);
             expect(query('.lg-container.lg-show')).toBeNull();
             expect(document.activeElement).toBe(trigger);
+        });
+
+        it('announces slide changes and demotes the counter/caption', async () => {
+            const fixture = TestBed.createComponent(A11yHost);
+            const host = fixture.componentInstance;
+            await flush(fixture);
+            host.gallery().openGallery(0);
+            await flush(fixture);
+
+            const announcer = query('.lg-announcer')!;
+            expect(announcer.getAttribute('role')).toBe('status');
+            expect(announcer.getAttribute('aria-live')).toBe('polite');
+            expect(announcer.textContent!.trim()).toBe(
+                'Image 1 of 3, Caption A',
+            );
+
+            await advance(fixture, 450);
+            host.gallery().goToSlide(1);
+            await flush(fixture);
+            expect(announcer.textContent!.trim()).toBe('Image 2 of 3');
+
+            const counter = query('.lg-counter')!;
+            expect(counter.getAttribute('aria-hidden')).toBe('true');
+            expect(counter.getAttribute('role')).toBeNull();
+            const caption = query('.lg-sub-html')!;
+            expect(caption.getAttribute('role')).toBeNull();
+            expect(caption.getAttribute('aria-live')).toBeNull();
+        });
+
+        it('restores the 2.x live regions when announcements are disabled', async () => {
+            const fixture = TestBed.createComponent(A11yHost);
+            const host = fixture.componentInstance;
+            host.announcements.set(false);
+            await flush(fixture);
+            host.gallery().openGallery(0);
+            await flush(fixture);
+
+            expect(query('.lg-announcer')).toBeNull();
+            const counter = query('.lg-counter')!;
+            expect(counter.getAttribute('role')).toBe('status');
+            expect(counter.getAttribute('aria-live')).toBe('polite');
+            expect(counter.getAttribute('aria-hidden')).toBeNull();
+            const caption = query('.lg-sub-html')!;
+            expect(caption.getAttribute('role')).toBe('status');
+            expect(caption.getAttribute('aria-live')).toBe('polite');
         });
 
         it('collapses every animation under prefers-reduced-motion', async () => {
@@ -156,9 +200,7 @@ describe('accessibility', () => {
                 await flush(fixture);
                 host.gallery().nextSlide();
                 await flush(fixture);
-                expect(outer.classList.contains('lg-right-end')).toBe(
-                    false,
-                );
+                expect(outer.classList.contains('lg-right-end')).toBe(false);
             } finally {
                 window.matchMedia = originalMatchMedia;
             }

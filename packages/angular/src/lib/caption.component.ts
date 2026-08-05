@@ -25,13 +25,13 @@ import type { LgGalleryItem } from './types';
     imports: [NgTemplateOutlet],
     template: `
         @if (slot(); as slot) {
-            <ng-container
-                *ngTemplateOutlet="slot.templateRef; context: context()"
-            />
+        <ng-container
+            *ngTemplateOutlet="slot.templateRef; context: context()"
+        />
         } @else if (item()?.caption != null) {
-            {{ item()?.caption }}
+        {{ item()?.caption }}
         } @else if (item()?.captionHtml) {
-            <div [innerHTML]="item()?.captionHtml"></div>
+        <div [innerHTML]="item()?.captionHtml"></div>
         }
     `,
 })
@@ -59,12 +59,14 @@ function hasCaption(item: LgGalleryItem | undefined): boolean {
     host: {
         '[class.lg-sub-html]': 'true',
         '[class.lg-empty-html]': 'empty()',
-        role: 'status',
-        'aria-live': 'polite',
+        // The announcer (when active) voices caption changes; a second
+        // live region here would double-announce every slide.
+        '[attr.role]': "live() ? 'status' : null",
+        '[attr.aria-live]': "live() ? 'polite' : null",
     },
     template: `
         @if (item() && !empty()) {
-            <lg-caption-content [item]="item()" [index]="index()" />
+        <lg-caption-content [item]="item()" [index]="index()" />
         }
     `,
 })
@@ -76,15 +78,16 @@ export class LgCaptionComponent {
     protected readonly empty = computed(
         () => !this.runtime.slots.caption() && !hasCaption(this.item()),
     );
+    protected readonly live = computed(
+        () => this.runtime.settings().ariaAnnouncements === false,
+    );
 
     constructor() {
         // React counterpart: Caption's afterAppendSubHtml effect — fired
         // whenever the caption bar is (re)written for a new index.
         effect(() => {
             const index = this.index();
-            untracked(() =>
-                this.runtime.emit('afterAppendSubHtml', { index }),
-            );
+            untracked(() => this.runtime.emit('afterAppendSubHtml', { index }));
         });
     }
 }
