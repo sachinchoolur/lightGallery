@@ -141,8 +141,16 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
         }
         // Every slide, not just the session's trio: a navigation spring
         // cancelled mid-flight leaves transforms on slides that are no
-        // longer positioned around the new current index.
+        // longer positioned around the new current index. EXCEPT slides
+        // the zoom-from-origin flight owns: a backdrop-tap close runs
+        // closeOnTap (outer pointerup) BEFORE this release (window
+        // pointerup), and real events drain microtasks between the two
+        // listeners — the closing transform is already painted and this
+        // wipe would kill the exit flight in place.
         el?.querySelectorAll<HTMLElement>('.lg-item').forEach((slide) => {
+            if (slide.classList.contains('lg-start-end-progress')) {
+                return;
+            }
             slide.style.transform = '';
             slide.style.transitionProperty = '';
         });

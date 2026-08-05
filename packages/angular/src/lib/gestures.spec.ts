@@ -131,6 +131,35 @@ describe('LgGesturesDirective', () => {
         vi.useRealTimers();
     });
 
+    it('tap release spares a flight-owned slide, still cleans the rest', async () => {
+        const fixture = TestBed.createComponent(GestureHost);
+        await openAndLoad(fixture);
+        const cur = currentSlide();
+        const other =
+            document.querySelectorAll<HTMLElement>('.lg-item')[1] ?? cur;
+        // Simulate the backdrop-tap close interleave: the closing
+        // transform is already painted (real events drain microtasks
+        // between the outer closeOnTap listener and this window
+        // release) when the tap's restore runs.
+        cur.classList.add('lg-start-end-progress');
+        cur.style.transform =
+            'translate3d(-100px, -50px, 0) scale3d(0.2, 0.2, 1)';
+        if (other !== cur) {
+            other.style.transform = 'translate3d(50px, 0, 0)';
+        }
+
+        firePointer(cur, 'pointerdown', { x: 40, y: 200 });
+        firePointer(window, 'pointerup', { x: 40, y: 200 });
+
+        // The flight keeps its transform; stray drag leftovers clear.
+        expect(cur.style.transform).toContain('scale3d(0.2');
+        if (other !== cur) {
+            expect(other.style.transform).toBe('');
+        }
+        cur.classList.remove('lg-start-end-progress');
+        cur.style.transform = '';
+    });
+
     it('follows the finger with direct DOM writes — zero CD per move — and commits past the threshold', async () => {
         const fixture = TestBed.createComponent(GestureHost);
         const host = fixture.componentInstance;
