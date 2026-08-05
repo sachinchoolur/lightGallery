@@ -87,7 +87,7 @@ Each plugin is its own tree-shakable subpath
 | fullscreen | `plugins/fullscreen` | — |
 | hash | `plugins/hash` | `galleryId`, `customSlideName` |
 | pager | `plugins/pager` | — |
-| share | `plugins/share` | `facebook`/`twitter`/`pinterest`, `additionalShareOptions` (typed) |
+| share | `plugins/share` | `preferNativeShare` (OS share sheet; default on touch), `facebook`/`twitter` (X intent)/`pinterest`, `additionalShareOptions` (typed) |
 | rotate | `plugins/rotate` | `rotateSpeed`, per-button toggles |
 | comment | `plugins/comment` | `commentBox`; comment body via the `#comments` gallery slot |
 | mediumZoom | `plugins/mediumZoom` | `margin`, `backgroundColor` (presets a minimal UI) |

@@ -1,15 +1,10 @@
+import { defineComponent, h, inject, ref, watch, type Ref } from 'vue';
 import {
-    defineComponent,
-    h,
-    inject,
-    ref,
-    watch,
-    type Ref,
-} from 'vue';
-import {
+    canNativeShare,
     getFacebookShareLink,
     getPinterestShareLink,
-    getTwitterShareLink,
+    getSharePayload,
+    getXShareLink,
 } from '@lightgallery/headless';
 
 import {
@@ -37,6 +32,13 @@ export interface ShareOption {
 export interface ShareSettings {
     /** Enable the share button. */
     share: boolean;
+    /**
+     * Prefer the OS share sheet (`navigator.share`) over the dropdown menu
+     * when the browser supports it (URL-sharing only — the image file is
+     * never attached; the dropdown remains the automatic fallback).
+     * Defaults to true on touch devices, false on desktop.
+     */
+    preferNativeShare?: boolean;
     facebook: boolean;
     facebookDropdownText: string;
     twitter: boolean;
@@ -53,12 +55,20 @@ export const shareSettings: ShareSettings = {
     facebook: true,
     facebookDropdownText: 'Facebook',
     twitter: true,
-    twitterDropdownText: 'Twitter',
+    twitterDropdownText: 'X',
     pinterest: true,
     pinterestDropdownText: 'Pinterest',
     additionalShareOptions: [],
     sharePluginStrings: { share: 'Share' },
 };
+
+/** Web Share default: the OS sheet is where sharing shines on touch devices. */
+function isTouchDevice(): boolean {
+    return (
+        typeof window !== 'undefined' &&
+        (navigator.maxTouchPoints > 0 || 'ontouchstart' in window)
+    );
+}
 
 function getShareOptions(settings: ShareSettings): ShareOption[] {
     return [
@@ -76,7 +86,7 @@ function getShareOptions(settings: ShareSettings): ShareOption[] {
                   {
                       text: settings.twitterDropdownText,
                       className: 'lg-share-twitter',
-                      generateLink: getTwitterShareLink,
+                      generateLink: getXShareLink,
                   },
               ]
             : []),
@@ -122,20 +132,34 @@ export const ShareButton = defineComponent({
             if (!cfg.share) {
                 return null;
             }
-            const item =
-                ctx.items.value[ctx.store.currentIndex.value];
+            const item = ctx.items.value[ctx.store.currentIndex.value];
             const currentUrl =
-                typeof window !== 'undefined'
-                    ? window.location.href
-                    : '';
+                typeof window !== 'undefined' ? window.location.href : '';
+            // Web Share hybrid: try the OS sheet first where preferred and
+            // available; the dropdown stays rendered as the fallback.
+            const nativeFirst =
+                (cfg.preferNativeShare ?? isTouchDevice()) &&
+                typeof navigator !== 'undefined' &&
+                typeof navigator.share === 'function';
+            const onClick = () => {
+                if (nativeFirst && item) {
+                    const payload = getSharePayload(item, currentUrl);
+                    if (canNativeShare(navigator, payload)) {
+                        // Rejection = user dismissed the sheet (AbortError).
+                        navigator.share(payload).catch(() => undefined);
+                        return;
+                    }
+                }
+                active.value = !active.value;
+            };
             return [
                 h('button', {
                     type: 'button',
                     class: 'lg-share lg-icon',
                     'aria-label': cfg.sharePluginStrings.share,
-                    'aria-haspopup': 'true',
-                    'aria-expanded': active.value,
-                    onClick: () => (active.value = !active.value),
+                    'aria-haspopup': nativeFirst ? undefined : 'true',
+                    'aria-expanded': nativeFirst ? undefined : active.value,
+                    onClick,
                 }),
                 // Sibling of the button (vanilla nested it inside, which
                 // is invalid interactive nesting); the CSS does not depend
