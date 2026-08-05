@@ -16,7 +16,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    'media-load': [];
+    'media-load': [event: Event];
     'media-error': [];
 }>();
 </script>
@@ -40,7 +40,7 @@ const emit = defineEmits<{
                 :sizes="props.item.sizes"
                 :alt="props.item.alt ?? ''"
                 draggable="false"
-                @load="emit('media-load')"
+                @load="emit('media-load', $event)"
                 @error="emit('media-error')"
                 @dragstart.prevent
             />

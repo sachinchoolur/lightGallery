@@ -107,6 +107,19 @@ export {
 } from './thumb-math';
 
 export {
+    DECODE_TIMEOUT_MS,
+    awaitDecode,
+    getActualSizeWidth,
+    matchesMedia,
+    parseSrcset,
+    resolveImageSource,
+    resolveSizes,
+    type ResolvedImageSource,
+    type SrcsetCandidate,
+    type Viewport,
+} from './responsive';
+
+export {
     DECELERATION_RATE,
     SPRING_BOUNCE_DAMPING,
     SPRING_NATURAL_FREQUENCY,

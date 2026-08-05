@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { createRef } from 'react';
+import { createRef, StrictMode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -57,23 +57,69 @@ describe('uncontrolled mode', () => {
         expect(document.querySelector('.lg-container')).toBeNull();
     });
 
+    it('decode-gates the slide completion (no partial paint)', async () => {
+        render(<Grid />);
+        fireEvent.click(screen.getByTestId('trigger-a'));
+        tick(450);
+        const img = screen.getByAltText('a') as HTMLImageElement;
+        // jsdom has no decode() — the gate is synchronous there; a
+        // controlled decode makes the ordering observable.
+        let settleDecode!: () => void;
+        Object.defineProperty(img, 'decode', {
+            value: () =>
+                new Promise<void>((resolve) => {
+                    settleDecode = resolve;
+                }),
+        });
+        fireEvent.load(img);
+        // Loaded but not decoded: the slide must NOT complete — a
+        // completion here is exactly the partial paint the gate blocks.
+        expect(
+            document.querySelector('.lg-item.lg-current.lg-complete'),
+        ).toBeNull();
+        await act(async () => {
+            settleDecode();
+            await Promise.resolve();
+        });
+        expect(
+            document.querySelector('.lg-item.lg-current.lg-complete'),
+        ).not.toBeNull();
+    });
+
+    it('completes under StrictMode (double-mount must not swallow loads)', () => {
+        // StrictMode's mount→cleanup→remount cycle flips unmount flags;
+        // a flag that is only SET in cleanup (never reset on mount)
+        // silently swallows every slide completion in dev.
+        render(
+            <StrictMode>
+                <Grid />
+            </StrictMode>,
+        );
+        fireEvent.click(screen.getByTestId('trigger-a'));
+        tick(450);
+        fireEvent.load(screen.getByAltText('a'));
+        expect(
+            document.querySelector('.lg-item.lg-current.lg-complete'),
+        ).not.toBeNull();
+    });
+
     it('opens at the clicked item, navigates, and closes on ESC', () => {
         render(<Grid />);
 
         fireEvent.click(screen.getByTestId('trigger-b'));
         expect(document.querySelector('.lg-container')).toBeInTheDocument();
-        expect(
-            document.querySelector('.lg-counter-current')?.textContent,
-        ).toBe('2');
+        expect(document.querySelector('.lg-counter-current')?.textContent).toBe(
+            '2',
+        );
         expect(screen.getByAltText('b')).toHaveClass('lg-image');
         tick(450);
 
         fireEvent.load(screen.getByAltText('b'));
         fireEvent.click(screen.getByLabelText('Next slide'));
         tick(600);
-        expect(
-            document.querySelector('.lg-counter-current')?.textContent,
-        ).toBe('3');
+        expect(document.querySelector('.lg-counter-current')?.textContent).toBe(
+            '3',
+        );
 
         fireEvent.keyDown(document, { key: 'Escape' });
         tick(450);
@@ -104,17 +150,17 @@ describe('uncontrolled mode', () => {
 
         act(() => ref.current!.openGallery(2));
         expect(document.querySelector('.lg-container')).toBeInTheDocument();
-        expect(
-            document.querySelector('.lg-counter-current')?.textContent,
-        ).toBe('3');
+        expect(document.querySelector('.lg-counter-current')?.textContent).toBe(
+            '3',
+        );
         tick(450);
 
         fireEvent.load(screen.getByAltText('c'));
         act(() => ref.current!.prevSlide());
         tick(600);
-        expect(
-            document.querySelector('.lg-counter-current')?.textContent,
-        ).toBe('2');
+        expect(document.querySelector('.lg-counter-current')?.textContent).toBe(
+            '2',
+        );
 
         act(() => ref.current!.closeGallery());
         tick(450);

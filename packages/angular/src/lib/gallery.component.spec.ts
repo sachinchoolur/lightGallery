@@ -147,6 +147,39 @@ describe('LgGalleryComponent (core gallery)', () => {
         vi.useRealTimers();
     });
 
+    it('decode-gates the slide completion (no partial paint)', async () => {
+        const fixture = TestBed.createComponent(UncontrolledHost);
+        await flush(fixture);
+        queryAll('.trigger')[0]!.click();
+        await flush(fixture);
+        await advance(fixture, BACKDROP + 20);
+        const img = document.querySelector<HTMLImageElement>(
+            'img.lg-image[data-index="0"]',
+        )!;
+        // jsdom has no decode() — the gate is synchronous there; a
+        // controlled decode makes the ordering observable.
+        let settleDecode!: () => void;
+        Object.defineProperty(img, 'decode', {
+            value: () =>
+                new Promise<void>((resolve) => {
+                    settleDecode = resolve;
+                }),
+        });
+        img.dispatchEvent(new Event('load'));
+        await flush(fixture);
+        // Loaded but not decoded: the slide must NOT complete — a
+        // completion here is exactly the partial paint the gate blocks.
+        expect(query('.lg-item.lg-current.lg-complete')).toBeNull();
+        settleDecode();
+        // Drain the decode promise chain (two hops: decode().then →
+        // awaitDecode resolve → completion) — zoneless whenStable does
+        // not track bare microtasks.
+        await Promise.resolve();
+        await Promise.resolve();
+        await flush(fixture);
+        expect(query('.lg-item.lg-current.lg-complete')).not.toBeNull();
+    });
+
     it('runs the uncontrolled lifecycle: open from item, navigate, close', async () => {
         const fixture = TestBed.createComponent(UncontrolledHost);
         const host = fixture.componentInstance;

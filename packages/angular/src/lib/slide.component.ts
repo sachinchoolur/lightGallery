@@ -13,7 +13,11 @@ import {
     type TemplateRef,
     type Type,
 } from '@angular/core';
-import { getPreloadIndexes, getSlideType } from '@lightgallery/headless';
+import {
+    awaitDecode,
+    getPreloadIndexes,
+    getSlideType,
+} from '@lightgallery/headless';
 
 import { LgCaptionContentComponent } from './caption.component';
 import { cx } from './cx';
@@ -65,50 +69,48 @@ export interface OriginAnimation {
     template: `
         <ng-template #slideContent>
             @if (renderer(); as rendererCmp) {
-                <!-- Feature slide renderer wins (video); ADR §5. -->
-                <ng-container
-                    *ngComponentOutlet="
-                        rendererCmp;
-                        inputs: rendererInputs();
-                        injector: runtime.featureInjector() ?? undefined
-                    "
-                />
+            <!-- Feature slide renderer wins (video); ADR §5. -->
+            <ng-container
+                *ngComponentOutlet="
+                    rendererCmp;
+                    inputs: rendererInputs();
+                    injector: runtime.featureInjector() ?? undefined
+                "
+            />
             } @else if (slideType() === 'image') {
-                <lg-image-slide
-                    [item]="item()!"
-                    [index]="index()"
-                    [dummySrc]="dummySrc()"
-                    [deferSrc]="deferSrc()"
-                    (mediaLoad)="onLoad()"
-                    (mediaError)="onError()"
-                />
+            <lg-image-slide
+                [item]="item()!"
+                [index]="index()"
+                [dummySrc]="dummySrc()"
+                [deferSrc]="deferSrc()"
+                (mediaLoad)="onLoad($event)"
+                (mediaError)="onError()"
+            />
             } @else if (slideType() === 'iframe') {
-                <lg-iframe-slide
-                    [item]="item()!"
-                    [index]="index()"
-                    (mediaLoad)="onLoad()"
-                />
+            <lg-iframe-slide
+                [item]="item()!"
+                [index]="index()"
+                (mediaLoad)="onLoad()"
+            />
             }
             <!-- Video items render nothing without the video feature. -->
         </ng-template>
         @if (renderContent()) {
-            <lg-slide-wrappers
-                [wrappers]="wrappers()"
-                [item]="item()!"
-                [index]="index()"
-                [isCurrent]="isCurrent()"
-                [content]="slideContentTpl()"
-            />
-        }
-        @if (error()) {
-            <span class="lg-error-msg">{{
-                runtime.settings().strings.mediaLoadingFailed
-            }}</span>
-        }
-        @if (captionInSlide()) {
-            <div class="lg-sub-html">
-                <lg-caption-content [item]="item()" [index]="index()" />
-            </div>
+        <lg-slide-wrappers
+            [wrappers]="wrappers()"
+            [item]="item()!"
+            [index]="index()"
+            [isCurrent]="isCurrent()"
+            [content]="slideContentTpl()"
+        />
+        } @if (error()) {
+        <span class="lg-error-msg">{{
+            runtime.settings().strings.mediaLoadingFailed
+        }}</span>
+        } @if (captionInSlide()) {
+        <div class="lg-sub-html">
+            <lg-caption-content [item]="item()" [index]="index()" />
+        </div>
         }
     `,
 })
@@ -130,9 +132,8 @@ export class LgSlideComponent {
     private readonly sticky = signal(false);
     private appended = false;
 
-    private readonly slideContentTplQuery = viewChild.required<
-        TemplateRef<unknown>
-    >('slideContent');
+    private readonly slideContentTplQuery =
+        viewChild.required<TemplateRef<unknown>>('slideContent');
     protected readonly slideContentTpl = computed(() =>
         this.slideContentTplQuery(),
     );
@@ -191,10 +192,7 @@ export class LgSlideComponent {
         const currentLoaded = this.store
             .loadedSlides()
             .has(this.store.currentIndex());
-        return (
-            this.isCurrent() ||
-            (currentLoaded && this.inPreloadRange())
-        );
+        return this.isCurrent() || (currentLoaded && this.inPreloadRange());
     });
     protected readonly renderContent = computed(
         () => this.shouldLoad() && !!this.item() && !this.error(),
@@ -218,6 +216,7 @@ export class LgSlideComponent {
     protected readonly dummySrc = signal<string | null>(null);
     private dummyDone = false;
     private dummyDropTimer: ReturnType<typeof setTimeout> | null = null;
+    private destroyed = false;
     /** v2 mounts the real image only once the flight lands. */
     protected readonly deferSrc = computed(() => {
         const anim = this.originAnim();
@@ -267,6 +266,7 @@ export class LgSlideComponent {
             });
         });
         inject(DestroyRef).onDestroy(() => {
+            this.destroyed = true;
             if (this.dummyDropTimer !== null) {
                 clearTimeout(this.dummyDropTimer);
             }
@@ -282,9 +282,7 @@ export class LgSlideComponent {
                 untracked(() => {
                     const index = this.index();
                     this.runtime.emit('afterAppendSlide', { index });
-                    if (
-                        this.runtime.settings().captionPosition === 'slide'
-                    ) {
+                    if (this.runtime.settings().captionPosition === 'slide') {
                         this.runtime.emit('afterAppendSubHtml', { index });
                     }
                 });
@@ -292,23 +290,43 @@ export class LgSlideComponent {
         });
     }
 
-    protected onLoad(): void {
+    protected onLoad(event?: Event): void {
         const index = this.index();
         if (this.store.loadedSlides().has(index)) {
             return;
         }
         const isFirstSlide = !this.store.galleryOn();
-        this.store.dispatch({ type: 'SLIDE_LOADED', index });
-        const settings = this.runtime.settings();
-        this.runtime.emit('slideItemLoad', {
-            index,
-            delay: isFirstSlide
-                ? (settings.zoomFromOrigin
-                      ? settings.startAnimationDuration
-                      : settings.backdropDuration) + 10
-                : 0,
-            isFirstSlide,
-        });
+        const complete = (): void => {
+            this.store.dispatch({ type: 'SLIDE_LOADED', index });
+            const settings = this.runtime.settings();
+            this.runtime.emit('slideItemLoad', {
+                index,
+                delay: isFirstSlide
+                    ? (settings.zoomFromOrigin
+                          ? settings.startAnimationDuration
+                          : settings.backdropDuration) + 10
+                    : 0,
+                isFirstSlide,
+            });
+        };
+        // Decode gate: `lg-complete` flips only once the browser can
+        // paint the FULL image — a loaded-but-undecoded flip paints
+        // partially on slow devices. Synchronous when `decode()` is
+        // unavailable (the load event already fired); the timeout
+        // fallback keeps a stalling decode from stranding the spinner.
+        const target = event?.currentTarget ?? event?.target;
+        if (
+            target instanceof HTMLImageElement &&
+            typeof target.decode === 'function'
+        ) {
+            void awaitDecode(target).then(() => {
+                if (!this.destroyed) {
+                    complete();
+                }
+            });
+            return;
+        }
+        complete();
     }
 
     protected onError(): void {

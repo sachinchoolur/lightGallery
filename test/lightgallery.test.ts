@@ -7,6 +7,7 @@
 import { waitFor } from '@testing-library/dom';
 import '@testing-library/jest-dom';
 import lightGallery from '../src';
+import { LightGallery } from '../src/lightgallery';
 import Autoplay from '../src/plugins/autoplay/lg-autoplay';
 import Fullscreen from '../src/plugins/fullscreen/lg-fullscreen';
 import Pager from '../src/plugins/pager/lg-pager';
@@ -50,6 +51,55 @@ describe('Initialize', () => {
         ).not.toBeInTheDocument();
     });
 });
+describe('decode gate (onSlideObjectLoad adapter)', () => {
+    // Prototype-extraction harness (same pattern as test/lg-zoom.test.ts):
+    // the gate's ordering is pinned without a full gallery open.
+    const onSlideObjectLoad = LightGallery.prototype.onSlideObjectLoad as (
+        this: unknown,
+        $slide: unknown,
+        isHTML5VideoWithoutPoster: boolean,
+        onLoad: () => void,
+        onError: () => void,
+    ) => void;
+
+    const makeSlide = (img: HTMLImageElement) => ({
+        find: () => ({
+            first: () => ({ get: () => img, on: () => undefined }),
+        }),
+    });
+
+    it('holds completion until decode settles (cached-image path)', async () => {
+        const img = new Image();
+        Object.defineProperty(img, 'complete', { value: true });
+        Object.defineProperty(img, 'naturalWidth', { value: 100 });
+        let settleDecode!: () => void;
+        Object.defineProperty(img, 'decode', {
+            value: () =>
+                new Promise<void>((resolve) => {
+                    settleDecode = resolve;
+                }),
+        });
+        const onLoad = jest.fn();
+        onSlideObjectLoad.call({}, makeSlide(img), false, onLoad, jest.fn());
+        // Loaded (cached) but not decoded: completion must wait — a
+        // flip here is exactly the partial paint the gate blocks.
+        expect(onLoad).not.toHaveBeenCalled();
+        settleDecode();
+        await Promise.resolve();
+        await Promise.resolve();
+        expect(onLoad).toHaveBeenCalledTimes(1);
+    });
+
+    it('stays synchronous without decode support (jsdom default)', () => {
+        const img = new Image();
+        Object.defineProperty(img, 'complete', { value: true });
+        Object.defineProperty(img, 'naturalWidth', { value: 100 });
+        const onLoad = jest.fn();
+        onSlideObjectLoad.call({}, makeSlide(img), false, onLoad, jest.fn());
+        expect(onLoad).toHaveBeenCalledTimes(1);
+    });
+});
+
 describe('Controls', () => {
     it('Should be able to display controls', async () => {
         document.body.innerHTML = `<div id="lightGallery">

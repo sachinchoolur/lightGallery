@@ -15,7 +15,11 @@ import {
     watch,
     type VNodeChild,
 } from 'vue';
-import { getPreloadIndexes, getSlideType } from '@lightgallery/headless';
+import {
+    awaitDecode,
+    getPreloadIndexes,
+    getSlideType,
+} from '@lightgallery/headless';
 
 import { LgCaptionContent } from './caption-content';
 import LgImageSlide from './LgImageSlide.vue';
@@ -59,9 +63,7 @@ const error = ref(false);
 const sticky = ref(false);
 let appended = false;
 
-const isCurrent = computed(
-    () => store.currentIndex.value === props.index,
-);
+const isCurrent = computed(() => store.currentIndex.value === props.index);
 const completed = computed(
     () => store.loadedSlides.value.has(props.index) || error.value,
 );
@@ -88,10 +90,7 @@ const shouldLoad = computed(() => {
     const currentLoaded = store.loadedSlides.value.has(
         store.currentIndex.value,
     );
-    return (
-        isCurrent.value ||
-        (currentLoaded && inPreloadRange.value)
-    );
+    return isCurrent.value || (currentLoaded && inPreloadRange.value);
 });
 // React counterpart: Slide's sticky shouldLoad ref — once content mounts
 // it stays for as long as the slide is in the DOM window; and the
@@ -160,7 +159,9 @@ watch([dummySrc, completed], ([src, isComplete]) => {
         runtime.firstSlideLoading.value = false;
     }, 300);
 });
+let unmounted = false;
 onUnmounted(() => {
+    unmounted = true;
     if (dummyDropTimer !== null) {
         clearTimeout(dummyDropTimer);
     }
@@ -233,22 +234,42 @@ const captionInSlide = computed(
         !!props.item,
 );
 
-function onLoad(): void {
+function onLoad(event?: Event): void {
     if (store.loadedSlides.value.has(props.index)) {
         return;
     }
     const isFirstSlide = !store.galleryOn.value;
-    store.dispatch({ type: 'SLIDE_LOADED', index: props.index });
-    const settings = runtime.settings.value;
-    runtime.emit('slideItemLoad', {
-        index: props.index,
-        delay: isFirstSlide
-            ? (settings.zoomFromOrigin
-                  ? settings.startAnimationDuration
-                  : settings.backdropDuration) + 10
-            : 0,
-        isFirstSlide,
-    });
+    const complete = (): void => {
+        store.dispatch({ type: 'SLIDE_LOADED', index: props.index });
+        const settings = runtime.settings.value;
+        runtime.emit('slideItemLoad', {
+            index: props.index,
+            delay: isFirstSlide
+                ? (settings.zoomFromOrigin
+                      ? settings.startAnimationDuration
+                      : settings.backdropDuration) + 10
+                : 0,
+            isFirstSlide,
+        });
+    };
+    // Decode gate: `lg-complete` flips only once the browser can paint
+    // the FULL image — a loaded-but-undecoded flip paints partially on
+    // slow devices. Synchronous when `decode()` is unavailable (the
+    // load event already fired); the timeout fallback keeps a stalling
+    // decode from stranding the spinner.
+    const target = event?.currentTarget ?? event?.target;
+    if (
+        target instanceof HTMLImageElement &&
+        typeof target.decode === 'function'
+    ) {
+        void awaitDecode(target).then(() => {
+            if (!unmounted) {
+                complete();
+            }
+        });
+        return;
+    }
+    complete();
 }
 
 function onError(): void {

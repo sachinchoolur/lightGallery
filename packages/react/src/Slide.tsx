@@ -7,7 +7,11 @@ import {
     type ReactElement,
     type ReactNode,
 } from 'react';
-import { getPreloadIndexes, getSlideType } from '@lightgallery/headless';
+import {
+    awaitDecode,
+    getPreloadIndexes,
+    getSlideType,
+} from '@lightgallery/headless';
 
 import { CaptionContent } from './Caption';
 import { cx } from './cx';
@@ -97,43 +101,73 @@ export function Slide({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [shouldLoad]);
 
-    const handleLoad = useEventCallback(() => {
-        if (state.loadedSlides.has(index)) {
-            return;
-        }
-        const isFirstSlide = !state.galleryOn;
-        const complete = () => {
-            actions.dispatch({ type: 'SLIDE_LOADED', index });
-            internal.emit('onSlideItemLoad', {
-                index,
-                delay: isFirstSlide
-                    ? (settings.zoomFromOrigin
-                          ? settings.startAnimationDuration
-                          : settings.backdropDuration) + 10
-                    : 0,
-                isFirstSlide,
-            });
-        };
-        // While the zoom-from-origin flight is animating THIS slide,
-        // hold the completion: the class/state flip rewrites the flying
-        // element's attributes mid-transition, which Safari answers by
-        // restarting the transition (visible flicker whenever a cached
-        // image loads instantly — e.g. reopening on the same slide).
-        // v2 is immune because it flies an isolated dummy image.
-        if (isFirstSlide && internal.zoomOriginOpenRef.current) {
-            loadSettleRef.current = window.setTimeout(
-                complete,
-                settings.startAnimationDuration + 120,
-            );
-            return;
-        }
-        complete();
-    });
-    const loadSettleRef = useRef<number | undefined>(undefined);
-    useEffect(
-        () => () => window.clearTimeout(loadSettleRef.current),
-        [],
+    const handleLoad = useEventCallback(
+        (event?: { currentTarget?: EventTarget | null }) => {
+            if (state.loadedSlides.has(index)) {
+                return;
+            }
+            const isFirstSlide = !state.galleryOn;
+            const complete = () => {
+                actions.dispatch({ type: 'SLIDE_LOADED', index });
+                internal.emit('onSlideItemLoad', {
+                    index,
+                    delay: isFirstSlide
+                        ? (settings.zoomFromOrigin
+                              ? settings.startAnimationDuration
+                              : settings.backdropDuration) + 10
+                        : 0,
+                    isFirstSlide,
+                });
+            };
+            const proceed = () => {
+                if (unmountedRef.current) {
+                    return;
+                }
+                // While the zoom-from-origin flight is animating THIS
+                // slide, hold the completion: the class/state flip
+                // rewrites the flying element's attributes
+                // mid-transition, which Safari answers by restarting the
+                // transition (visible flicker whenever a cached image
+                // loads instantly — e.g. reopening on the same slide).
+                // v2 is immune because it flies an isolated dummy image.
+                if (isFirstSlide && internal.zoomOriginOpenRef.current) {
+                    loadSettleRef.current = window.setTimeout(
+                        complete,
+                        settings.startAnimationDuration + 120,
+                    );
+                    return;
+                }
+                complete();
+            };
+            // Decode gate: `lg-complete` flips only once the browser can
+            // paint the FULL image — a loaded-but-undecoded flip paints
+            // partially on slow devices. Synchronous when `decode()` is
+            // unavailable (the load event already fired); the timeout
+            // fallback keeps a stalling decode from stranding the
+            // spinner.
+            const target = event?.currentTarget;
+            if (
+                target instanceof HTMLImageElement &&
+                typeof target.decode === 'function'
+            ) {
+                void awaitDecode(target).then(proceed);
+                return;
+            }
+            proceed();
+        },
     );
+    const unmountedRef = useRef(false);
+    useEffect(() => {
+        // Reset on mount, not just set on unmount: StrictMode's
+        // mount→cleanup→remount cycle would otherwise leave the flag
+        // stuck true and silently swallow every completion.
+        unmountedRef.current = false;
+        return () => {
+            unmountedRef.current = true;
+        };
+    }, []);
+    const loadSettleRef = useRef<number | undefined>(undefined);
+    useEffect(() => () => window.clearTimeout(loadSettleRef.current), []);
     const handleError = useEventCallback(() => {
         setError(true);
         actions.dispatch({ type: 'SLIDE_ERROR', index });

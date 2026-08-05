@@ -1,4 +1,5 @@
 import {
+    awaitDecode,
     getEdgeFrictionedDelta,
     getHorizontalDragTransforms,
     getSwipeAxis,
@@ -1055,14 +1056,27 @@ export class LightGallery {
         onError: () => void,
     ): void {
         const mediaObject = $slide.find('.lg-object').first();
-        if (
-            utils.isImageLoaded(mediaObject.get() as HTMLImageElement) ||
-            isHTML5VideoWithoutPoster
-        ) {
-            onLoad();
+        const media = mediaObject.get() as HTMLImageElement;
+        // Decode gate (shared contract with the bindings): completion
+        // flips only once the browser can paint the FULL image — a
+        // loaded-but-undecoded flip paints partially on slow devices.
+        // Synchronous when `decode()` is unavailable; the timeout
+        // fallback keeps a stalling decode from stranding the spinner.
+        const gated = (handler: () => void) => {
+            if (
+                media instanceof HTMLImageElement &&
+                typeof media.decode === 'function'
+            ) {
+                void awaitDecode(media).then(handler);
+            } else {
+                handler();
+            }
+        };
+        if (utils.isImageLoaded(media) || isHTML5VideoWithoutPoster) {
+            gated(onLoad);
         } else {
             mediaObject.on('load.lg error.lg', () => {
-                onLoad && onLoad();
+                gated(() => onLoad && onLoad());
             });
             mediaObject.on('error.lg', () => {
                 onError && onError();
