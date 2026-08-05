@@ -12,6 +12,7 @@
  */
 
 import type { GalleryItem, ImageSources } from './items';
+import { parseImageSize } from './origin';
 
 export interface SrcsetCandidate {
     url: string;
@@ -219,16 +220,26 @@ export function resolveImageSource(
  * The width "actual size" zoom refers to. `img.naturalWidth` LIES under
  * `srcset`/`sizes`: w-descriptor selection density-corrects the
  * intrinsic size to roughly the layout slot — on phones that collapses
- * the actual-size scale to ~1 and kills double-tap/pinch zoom. The real
- * ceiling is the largest candidate the ladder can serve (first matching
- * `sources[]` entry per picture semantics, else the item srcset);
- * without width descriptors the reported natural width stands.
+ * the actual-size scale to ~1 and kills double-tap/pinch zoom. The
+ * resolution order mirrors what the item DECLARES before trusting the
+ * element: explicit `width` (2.x `data-width`), the largest candidate
+ * the srcset ladder can serve (first matching `sources[]` entry per
+ * picture semantics, else the item srcset), the `lgSize` natural dims,
+ * and only then the reported natural width. The declared tiers are what
+ * make optimizer components (next/image, NuxtImg, NgOptimizedImage) —
+ * which manage their own srcset — zoomable to full resolution.
  */
 export function getActualSizeWidth(
-    item: Pick<GalleryItem, 'srcset' | 'sources'>,
+    item: Pick<GalleryItem, 'width' | 'srcset' | 'sources' | 'lgSize'>,
     viewport: Viewport,
     naturalWidth: number,
 ): number {
+    if (item.width) {
+        const declared = parseFloat(item.width);
+        if (!Number.isNaN(declared) && declared > 0) {
+            return declared;
+        }
+    }
     let candidates: SrcsetCandidate[] = [];
     for (const source of item.sources ?? []) {
         if (matchesMedia(source.media, viewport)) {
@@ -244,6 +255,10 @@ export function getActualSizeWidth(
         .filter((width): width is number => width !== undefined);
     if (widths.length) {
         return Math.max(...widths);
+    }
+    const natural = parseImageSize(item.lgSize, viewport.width);
+    if (natural && natural.width > 0) {
+        return natural.width;
     }
     return naturalWidth;
 }

@@ -4,6 +4,7 @@ packages:
   - 'site-astro'
   - 'lightgallery-react'
   - 'lightgallery-vue'
+  - 'demos/*'
 
 overrides:
   '@types/babel__traverse': 7.11.1

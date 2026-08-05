@@ -200,6 +200,42 @@ describe('actual-size reference width', () => {
             ),
         ).toBe(800);
     });
+
+    it('lets an explicit width declaration win over everything', () => {
+        // 2.x `data-width`: the author's word beats the ladder.
+        expect(
+            getActualSizeWidth(
+                { width: '2048', srcset: 'a-1600.jpg 1600w' },
+                viewport,
+                390,
+            ),
+        ).toBe(2048);
+        // Garbage width falls through to the next tier.
+        expect(
+            getActualSizeWidth(
+                { width: 'auto', srcset: 'a-1600.jpg 1600w' },
+                viewport,
+                390,
+            ),
+        ).toBe(1600);
+    });
+
+    it('uses lgSize when no ladder declares widths (optimizer recipes)', () => {
+        // next/image & co. manage srcset internally — the item carries
+        // no ladder, but lgSize (already set for zoom-from-origin)
+        // declares the true natural size.
+        expect(getActualSizeWidth({ lgSize: '1600-1067' }, viewport, 390)).toBe(
+            1600,
+        );
+        // A declared ladder still beats lgSize (servable ceiling).
+        expect(
+            getActualSizeWidth(
+                { lgSize: '1600-1067', srcset: 'a-1280.jpg 1280w' },
+                viewport,
+                390,
+            ),
+        ).toBe(1280);
+    });
 });
 
 describe('decode gate', () => {

@@ -490,15 +490,10 @@ export default class Zoom {
 
     getNaturalWidth(index: number): number {
         const $image = this.core.getSlideItem(index).find('.lg-image').first();
-
-        const naturalWidth = this.core.galleryItems[index].width;
-        if (naturalWidth) {
-            return parseFloat(naturalWidth);
-        }
-        // `img.naturalWidth` lies under srcset/sizes (density-corrected
-        // to roughly the slot width — actual-size zoom collapses to ~1
-        // on phones); the ladder's largest candidate is the true
-        // reference.
+        // Declared tiers first — `img.naturalWidth` lies under
+        // srcset/sizes (density-corrected to roughly the slot width;
+        // actual-size zoom collapses to ~1 on phones): data-width, the
+        // ladder's largest candidate, lg-size, then the element.
         return getActualSizeWidth(
             this.core.galleryItems[index],
             {

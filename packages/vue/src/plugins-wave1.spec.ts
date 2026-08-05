@@ -1,11 +1,11 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils';
-import { defineComponent, nextTick } from 'vue';
+import { defineComponent, h, inject, nextTick, type PropType } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import LightGallery from './LightGallery.vue';
 import { LG_RUNTIME, type LgGalleryRuntime } from './runtime';
 import type { LgGalleryItem } from './types';
-import type { LgVuePlugin } from './plugins/types';
+import { LG_PLUGIN_CONTEXT, type LgVuePlugin } from './plugins/types';
 import Thumbnail from './plugins/thumbnail';
 import Video from './plugins/video';
 import Zoom from './plugins/zoom';
@@ -350,6 +350,83 @@ describe('plugin runtime + wave-1', () => {
         vi.advanceTimersByTime(2000);
         expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
+    });
+
+    it('supports the optimizer recipe contract (docs/recipes)', async () => {
+        // The NuxtImg recipe shape: a custom slideRenderer component
+        // that manages its own srcset, injects the plugin context for
+        // completion, and keeps the lg-image class (the zoom target
+        // contract).
+        const OptimizerSlide = defineComponent({
+            props: {
+                item: {
+                    type: Object as PropType<LgGalleryItem>,
+                    required: true,
+                },
+                index: { type: Number, required: true },
+            },
+            setup(props) {
+                const ctx = inject(LG_PLUGIN_CONTEXT)!;
+                return () =>
+                    h('picture', { class: 'lg-img-wrap' }, [
+                        h('img', {
+                            class: 'lg-object lg-image optimizer-img',
+                            'data-index': props.index,
+                            src: props.item.src,
+                            sizes: '100vw',
+                            alt: props.item.alt,
+                            onLoad: () =>
+                                ctx.actions.dispatch({
+                                    type: 'SLIDE_LOADED',
+                                    index: props.index,
+                                }),
+                        }),
+                    ]);
+            },
+        });
+        const recipe: LgVuePlugin = {
+            name: 'optimizerRecipe',
+            slideRenderer: {
+                component: OptimizerSlide,
+                canRender: (item) => item.src === 'a.jpg',
+            },
+        };
+        const { wrapper } = mountHost([recipe, Zoom, Video]);
+        // Open WITHOUT the helper's load dispatch — completion timing
+        // is what this test asserts.
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                openGallery(i?: number): void;
+            }
+        ).openGallery(0);
+        await settle();
+        await advance(450);
+
+        // The custom renderer replaced the built-in image slide, and
+        // the zoom wrapper chain still wraps it.
+        const img =
+            document.querySelector<HTMLImageElement>('img.optimizer-img')!;
+        expect(img).not.toBeNull();
+        expect(
+            document
+                .querySelector('.lg-item.lg-current .lg-zoom-scale')!
+                .contains(img),
+        ).toBe(true);
+
+        // Completion flows through the public dispatch.
+        expect(query('.lg-item.lg-current.lg-complete')).toBeNull();
+        img.dispatchEvent(new Event('load'));
+        await settle();
+        expect(query('.lg-item.lg-current.lg-complete')).not.toBeNull();
+
+        // Double-click zoom works on the custom slide.
+        await advance(350);
+        img.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+        await settle();
+        expect(
+            query('.lg-item.lg-current .lg-zoom-scale')!.style.transform,
+        ).toBe('scale3d(2, 2, 1)');
+        expect(query('.lg-outer.lg-zoomed')).not.toBeNull();
     });
 
     it('zoom: a tap that kills a release glide re-settles the scale', async () => {

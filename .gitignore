@@ -42,3 +42,8 @@ skills-lock.json
 /plans-react
 /plans-angular
 /plans-vue
+
+# recipe demos (scratch consumers)
+demos/**/.next/
+demos/**/.nuxt/
+demos/**/next-env.d.ts

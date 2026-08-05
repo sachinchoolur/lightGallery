@@ -156,6 +156,65 @@ describe('plugin runtime', () => {
                 .querySelector('[data-testid="replaced"]'),
         ).not.toBeNull();
     });
+
+    it('supports the optimizer recipe contract (docs/recipes)', () => {
+        // The next/image recipe shape: a custom slideRenderer whose img
+        // manages its own srcset, completes the slide through the
+        // public ctx dispatch, and declares the true resolution via
+        // lgSize so actual-size zoom survives the optimizer's
+        // density-corrected naturalWidth.
+        const recipe: LgPlugin = {
+            name: 'optimizerRecipe',
+            slideRenderer: (item, index, ctx) => (
+                <picture className="lg-img-wrap">
+                    <img
+                        className="lg-object lg-image optimizer-img"
+                        data-index={index}
+                        src={item.src}
+                        sizes="100vw"
+                        alt={item.alt}
+                        onLoad={() =>
+                            ctx.actions.dispatch({
+                                type: 'SLIDE_LOADED',
+                                index,
+                            })
+                        }
+                    />
+                </picture>
+            ),
+        };
+        renderGallery({
+            plugins: [recipe, Zoom],
+            slides: [{ src: 'opt.jpg', alt: 'optimized', lgSize: '1600-1067' }],
+        });
+        // The custom renderer replaced the built-in image slide...
+        const img =
+            document.querySelector<HTMLImageElement>('img.optimizer-img')!;
+        expect(img).not.toBeNull();
+        // ...and the zoom plugin's wrapper chain still wraps it.
+        expect(
+            document.querySelector('.lg-zoom-pan .lg-zoom-scale')!,
+        ).toContainElement(img);
+
+        // Completion flows through the public dispatch.
+        expect(
+            document.querySelector('.lg-item.lg-current.lg-complete'),
+        ).toBeNull();
+        fireEvent.load(img);
+        expect(
+            document.querySelector('.lg-item.lg-current.lg-complete'),
+        ).not.toBeNull();
+
+        // Double-click zoom works on the custom slide (the lg-image
+        // class is the zoom target contract).
+        tick(350);
+        fireEvent.dblClick(img);
+        expect(
+            document.querySelector<HTMLElement>('.lg-zoom-scale')!.style
+                .transform,
+        ).toBe('scale3d(2, 2, 1)');
+        expect(document.querySelector('.lg-outer')).toHaveClass('lg-zoomed');
+    });
 });
 
 describe('thumbnail plugin', () => {

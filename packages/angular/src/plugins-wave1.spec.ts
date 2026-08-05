@@ -1,10 +1,12 @@
-import { Component, signal, viewChild } from '@angular/core';
+import { Component, inject, input, signal, viewChild } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+    LG_PLUGIN_CONTEXT,
     LgGalleryComponent,
     LgGalleryRuntime,
+    type LgFeature,
     type LgGalleryItem,
 } from '@lightgallery/angular';
 import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
@@ -78,7 +80,7 @@ function firePointer(
 class Wave1Host {
     readonly gallery = viewChild.required(LgGalleryComponent);
     readonly items = ITEMS;
-    features = [withThumbnail(), withZoom(), withVideo()];
+    features: LgFeature<object>[] = [withThumbnail(), withZoom(), withVideo()];
     readonly pinchToClose = signal(true);
     posterClicks = 0;
     readonly hasVideos: number[] = [];
@@ -266,6 +268,79 @@ describe('wave-1 features', () => {
         vi.advanceTimersByTime(2000);
         expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
         firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
+    });
+
+    it('supports the optimizer recipe contract (docs/recipes)', async () => {
+        // The NgOptimizedImage recipe shape: a custom slideRenderer
+        // component that manages its own srcset, injects the plugin
+        // context for completion, and keeps the lg-image class (the
+        // zoom target contract).
+        @Component({
+            template: `
+                <picture class="lg-img-wrap">
+                    <img
+                        class="lg-object lg-image optimizer-img"
+                        [attr.data-index]="index()"
+                        [attr.src]="item().src ?? null"
+                        sizes="100vw"
+                        [alt]="item().alt ?? ''"
+                        (load)="markLoaded()"
+                    />
+                </picture>
+            `,
+        })
+        class OptimizerSlideComponent {
+            readonly item = input.required<LgGalleryItem>();
+            readonly index = input.required<number>();
+            private readonly ctx = inject(LG_PLUGIN_CONTEXT);
+            markLoaded(): void {
+                this.ctx.actions.dispatch({
+                    type: 'SLIDE_LOADED',
+                    index: this.index(),
+                });
+            }
+        }
+        const recipe: LgFeature = {
+            name: 'optimizerRecipe',
+            slideRenderer: {
+                component: OptimizerSlideComponent,
+                canRender: (item) => item.src === 'a.jpg',
+            },
+        };
+        const fixture = TestBed.createComponent(Wave1Host);
+        fixture.componentInstance.features = [recipe, withZoom(), withVideo()];
+        await flush(fixture);
+        // Open WITHOUT the helper's load dispatch — completion timing
+        // is what this test asserts.
+        fixture.componentInstance.gallery().openGallery(0);
+        await flush(fixture);
+        await advance(fixture, 450);
+
+        // The custom renderer replaced the built-in image slide, and
+        // the zoom wrapper chain still wraps it.
+        const img =
+            document.querySelector<HTMLImageElement>('img.optimizer-img')!;
+        expect(img).not.toBeNull();
+        expect(
+            document
+                .querySelector('.lg-item.lg-current .lg-zoom-scale')!
+                .contains(img),
+        ).toBe(true);
+
+        // Completion flows through the public dispatch.
+        expect(query('.lg-item.lg-current.lg-complete')).toBeNull();
+        img.dispatchEvent(new Event('load'));
+        await flush(fixture);
+        expect(query('.lg-item.lg-current.lg-complete')).not.toBeNull();
+
+        // Double-click zoom works on the custom slide.
+        await advance(fixture, 350);
+        img.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+        await flush(fixture);
+        expect(
+            query('.lg-item.lg-current .lg-zoom-scale')!.style.transform,
+        ).toBe('scale3d(2, 2, 1)');
+        expect(query('.lg-outer.lg-zoomed')).not.toBeNull();
     });
 
     it('zoom: a tap that kills a release glide re-settles the scale', async () => {
