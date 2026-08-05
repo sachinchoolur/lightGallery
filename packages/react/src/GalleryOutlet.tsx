@@ -9,6 +9,7 @@ import {
 import { createPortal } from 'react-dom';
 import {
     fitImageSize,
+    formatSlideAnnouncement,
     getOriginTransform,
     getSlideType,
     parseImageSize,
@@ -147,52 +148,50 @@ export function GalleryOutlet({
         return { top, bottom };
     });
 
-    const computeOrigin = useEventCallback(
-        (index: number): string | null => {
-            if (!settings.zoomFromOrigin) {
-                return null;
-            }
-            const item = internal.items[index];
-            const outerEl = outerRef.current;
-            if (!item?.lgSize || !outerEl) {
-                return null;
-            }
-            const triggerRect = internal.getOriginRect(index);
-            if (!triggerRect) {
-                return null;
-            }
-            const natural = parseImageSize(item.lgSize, window.innerWidth);
-            if (!natural) {
-                return null;
-            }
-            const rect = outerEl.getBoundingClientRect();
-            const containerRect = {
-                left: rect.left,
-                top: rect.top,
-                width: rect.width,
-                height: rect.height,
-            };
-            const { top, bottom } = measureOffsets();
-            const imageSize = fitImageSize(
-                natural,
-                containerRect.width,
-                containerRect.height - (top + bottom),
-            );
-            // Degenerate measurement (zero-sized/hidden viewport, offsets
-            // taller than the stage): the shared math would emit a
-            // mirrored flight — fall back to the startClass fade instead.
-            if (imageSize.width <= 0 || imageSize.height <= 0) {
-                return null;
-            }
-            return getOriginTransform({
-                triggerRect,
-                containerRect,
-                top,
-                bottom,
-                imageSize,
-            });
-        },
-    );
+    const computeOrigin = useEventCallback((index: number): string | null => {
+        if (!settings.zoomFromOrigin) {
+            return null;
+        }
+        const item = internal.items[index];
+        const outerEl = outerRef.current;
+        if (!item?.lgSize || !outerEl) {
+            return null;
+        }
+        const triggerRect = internal.getOriginRect(index);
+        if (!triggerRect) {
+            return null;
+        }
+        const natural = parseImageSize(item.lgSize, window.innerWidth);
+        if (!natural) {
+            return null;
+        }
+        const rect = outerEl.getBoundingClientRect();
+        const containerRect = {
+            left: rect.left,
+            top: rect.top,
+            width: rect.width,
+            height: rect.height,
+        };
+        const { top, bottom } = measureOffsets();
+        const imageSize = fitImageSize(
+            natural,
+            containerRect.width,
+            containerRect.height - (top + bottom),
+        );
+        // Degenerate measurement (zero-sized/hidden viewport, offsets
+        // taller than the stage): the shared math would emit a
+        // mirrored flight — fall back to the startClass fade instead.
+        if (imageSize.width <= 0 || imageSize.height <= 0) {
+            return null;
+        }
+        return getOriginTransform({
+            triggerRect,
+            containerRect,
+            top,
+            bottom,
+            imageSize,
+        });
+    });
 
     const beginClose = useEventCallback(() => {
         internal.emit('onBeforeClose');
@@ -270,15 +269,11 @@ export function GalleryOutlet({
             setOriginAnim({ index, transform, stage: 'init' });
             timers.set(() => {
                 setZoomFromImage(true);
-                setOriginAnim(
-                    (anim) => anim && { ...anim, stage: 'armed' },
-                );
+                setOriginAnim((anim) => anim && { ...anim, stage: 'armed' });
             }, 10);
             timers.set(
                 () =>
-                    setOriginAnim(
-                        (anim) => anim && { ...anim, stage: 'run' },
-                    ),
+                    setOriginAnim((anim) => anim && { ...anim, stage: 'run' }),
                 110,
             );
             timers.set(() => {
@@ -597,12 +592,7 @@ export function GalleryOutlet({
         if (prevN >= 0 && prevN < count && prevN !== index) {
             positions[prevN] = 'prev';
         }
-        if (
-            nextN >= 0 &&
-            nextN < count &&
-            nextN !== index &&
-            nextN !== prevN
-        ) {
+        if (nextN >= 0 && nextN < count && nextN !== index && nextN !== prevN) {
             positions[nextN] = 'next';
         }
         setTimeline((tl) => ({ ...tl, positions }));
@@ -722,6 +712,23 @@ export function GalleryOutlet({
               }
             : undefined;
 
+    // Slide-change announcement for the polite live region. Cleared while
+    // closed so reopening at the same slide is a fresh mutation (identical
+    // text would not re-announce). Non-string captions (ReactNode) are
+    // omitted — only plain text can be voiced.
+    const announcement =
+        settings.ariaAnnouncements && phase !== 'closed' && currentItem
+            ? formatSlideAnnouncement({
+                  template: settings.strings.slideAnnouncement,
+                  index: state.currentIndex + 1,
+                  total: internal.items.length,
+                  caption:
+                      typeof currentItem.caption === 'string'
+                          ? currentItem.caption
+                          : undefined,
+              })
+            : '';
+
     return createPortal(
         <div
             ref={containerElRef}
@@ -729,7 +736,11 @@ export function GalleryOutlet({
             tabIndex={-1}
             role="dialog"
             aria-modal="true"
-            aria-label={settings.ariaLabelledby ? undefined : 'Gallery'}
+            aria-label={
+                settings.ariaLabelledby
+                    ? undefined
+                    : settings.strings.galleryLabel
+            }
             aria-labelledby={settings.ariaLabelledby || undefined}
             aria-describedby={settings.ariaDescribedby || undefined}
         >
@@ -739,6 +750,11 @@ export function GalleryOutlet({
                     transitionDuration: `${settings.backdropDuration}ms`,
                 }}
             />
+            {settings.ariaAnnouncements && (
+                <div className="lg-announcer" role="status" aria-live="polite">
+                    {announcement}
+                </div>
+            )}
             <div
                 ref={setOuterElement}
                 className={outerClasses}

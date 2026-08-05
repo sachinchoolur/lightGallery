@@ -3,6 +3,7 @@ import { useEffect, type ReactElement, type ReactNode } from 'react';
 import { cx } from './cx';
 import {
     useGalleryInternal,
+    useGallerySettings,
     useGallerySlots,
     useGalleryState,
 } from './context';
@@ -40,6 +41,7 @@ function hasCaption(item: GalleryItem | undefined): boolean {
 export function Caption(): ReactElement {
     const state = useGalleryState();
     const internal = useGalleryInternal();
+    const settings = useGallerySettings();
     const slots = useGallerySlots();
     const item = internal.items[state.currentIndex];
 
@@ -50,11 +52,15 @@ export function Caption(): ReactElement {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentIndex]);
     const empty = !slots.caption && !hasCaption(item);
+    // The announcer (when active) voices caption changes; a second live
+    // region here would double-announce every slide.
+    const a11yProps = settings.ariaAnnouncements
+        ? undefined
+        : ({ role: 'status', 'aria-live': 'polite' } as const);
     return (
         <div
             className={cx('lg-sub-html', empty && 'lg-empty-html')}
-            role="status"
-            aria-live="polite"
+            {...a11yProps}
         >
             {item && !empty && (
                 <CaptionContent item={item} index={state.currentIndex} />

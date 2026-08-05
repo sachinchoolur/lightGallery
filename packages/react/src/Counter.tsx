@@ -17,8 +17,13 @@ export function Counter(): ReactElement | null {
     }
     const current = state.currentIndex + 1;
     const total = state.slidesCount;
+    // With the announcer active the counter is decorative — the announcer
+    // already conveys the position in a friendlier form.
+    const a11yProps = settings.ariaAnnouncements
+        ? ({ 'aria-hidden': true } as const)
+        : ({ role: 'status', 'aria-live': 'polite' } as const);
     return (
-        <div className="lg-counter" role="status" aria-live="polite">
+        <div className="lg-counter" {...a11yProps}>
             {slots.counter ? (
                 slots.counter(current, total)
             ) : (

@@ -8,11 +8,7 @@ import {
 import { axe } from 'vitest-axe';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-    LightGallery,
-    LightGalleryItem,
-    type GalleryItem,
-} from './index';
+import { LightGallery, LightGalleryItem, type GalleryItem } from './index';
 import Autoplay from './plugins/autoplay';
 import Comment from './plugins/comment';
 import Fullscreen from './plugins/fullscreen';
@@ -73,9 +69,8 @@ describe('accessibility', () => {
                 />,
             );
             tick(450);
-            const container = document.querySelector<HTMLElement>(
-                '.lg-container',
-            )!;
+            const container =
+                document.querySelector<HTMLElement>('.lg-container')!;
             const buttons = [
                 ...container.querySelectorAll<HTMLElement>('button'),
             ];
@@ -114,10 +109,68 @@ describe('accessibility', () => {
 
             fireEvent.keyDown(document, { key: 'Escape' });
             tick(500);
-            expect(
-                document.querySelector('.lg-container.lg-show'),
-            ).toBeNull();
+            expect(document.querySelector('.lg-container.lg-show')).toBeNull();
             expect(document.activeElement).toBe(trigger);
+        });
+
+        it('announces slide changes with position and caption', () => {
+            render(
+                <LightGallery
+                    slides={slides}
+                    open={true}
+                    onClose={() => undefined}
+                />,
+            );
+            tick(450);
+            const announcer = document.querySelector('.lg-announcer')!;
+            expect(announcer).toHaveAttribute('role', 'status');
+            expect(announcer).toHaveAttribute('aria-live', 'polite');
+            expect(announcer.textContent).toBe('Image 1 of 3, Caption A');
+
+            fireEvent.keyDown(document, { key: 'ArrowRight' });
+            tick(600);
+            expect(announcer.textContent).toBe('Image 2 of 3');
+        });
+
+        it('demotes the counter and caption bar while the announcer is active', () => {
+            render(
+                <LightGallery
+                    slides={slides}
+                    open={true}
+                    onClose={() => undefined}
+                />,
+            );
+            tick(450);
+            const counter = document.querySelector('.lg-counter')!;
+            expect(counter).toHaveAttribute('aria-hidden', 'true');
+            expect(counter).not.toHaveAttribute('role');
+            expect(counter).not.toHaveAttribute('aria-live');
+
+            const caption = document.querySelector('.lg-sub-html')!;
+            expect(caption).not.toHaveAttribute('role');
+            expect(caption).not.toHaveAttribute('aria-live');
+        });
+
+        it('restores the 2.x live regions when announcements are disabled', () => {
+            render(
+                <LightGallery
+                    slides={slides}
+                    open={true}
+                    onClose={() => undefined}
+                    ariaAnnouncements={false}
+                />,
+            );
+            tick(450);
+            expect(document.querySelector('.lg-announcer')).toBeNull();
+
+            const counter = document.querySelector('.lg-counter')!;
+            expect(counter).toHaveAttribute('role', 'status');
+            expect(counter).toHaveAttribute('aria-live', 'polite');
+            expect(counter).not.toHaveAttribute('aria-hidden');
+
+            const caption = document.querySelector('.lg-sub-html')!;
+            expect(caption).toHaveAttribute('role', 'status');
+            expect(caption).toHaveAttribute('aria-live', 'polite');
         });
 
         it('collapses animation durations under prefers-reduced-motion', () => {
@@ -130,7 +183,7 @@ describe('accessibility', () => {
                             media: query,
                             addEventListener: () => undefined,
                             removeEventListener: () => undefined,
-                        }) as unknown as MediaQueryList,
+                        } as unknown as MediaQueryList),
                 );
             render(
                 <LightGallery
@@ -161,9 +214,7 @@ describe('accessibility', () => {
                 />,
             );
             tick(450);
-            fireEvent.load(
-                document.querySelector('img.lg-image[alt="a"]')!,
-            );
+            fireEvent.load(document.querySelector('img.lg-image[alt="a"]')!);
 
             const thumb = document.querySelectorAll('.lg-thumb-item')[2]!;
             expect(thumb).toHaveAttribute('role', 'button');
