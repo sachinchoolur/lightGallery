@@ -8,9 +8,11 @@ import {
     signal,
 } from '@angular/core';
 import {
+    canNativeShare,
     getFacebookShareLink,
     getPinterestShareLink,
-    getTwitterShareLink,
+    getSharePayload,
+    getXShareLink,
 } from '@lightgallery/headless';
 import {
     LG_PLUGIN_CONTEXT,
@@ -36,6 +38,13 @@ export interface ShareOption {
 export interface ShareSettings {
     /** Enable the share button. */
     share: boolean;
+    /**
+     * Prefer the OS share sheet (`navigator.share`) over the dropdown menu
+     * when the browser supports it (URL-sharing only — the image file is
+     * never attached; the dropdown remains the automatic fallback).
+     * Defaults to true on touch devices, false on desktop.
+     */
+    preferNativeShare?: boolean;
     facebook: boolean;
     facebookDropdownText: string;
     twitter: boolean;
@@ -52,12 +61,20 @@ export const shareSettings: ShareSettings = {
     facebook: true,
     facebookDropdownText: 'Facebook',
     twitter: true,
-    twitterDropdownText: 'Twitter',
+    twitterDropdownText: 'X',
     pinterest: true,
     pinterestDropdownText: 'Pinterest',
     additionalShareOptions: [],
     sharePluginStrings: { share: 'Share' },
 };
+
+/** Web Share default: the OS sheet is where sharing shines on touch devices. */
+function isTouchDevice(): boolean {
+    return (
+        typeof window !== 'undefined' &&
+        (navigator.maxTouchPoints > 0 || 'ontouchstart' in window)
+    );
+}
 
 function getShareOptions(settings: ShareSettings): ShareOption[] {
     return [
@@ -75,7 +92,7 @@ function getShareOptions(settings: ShareSettings): ShareOption[] {
                   {
                       text: settings.twitterDropdownText,
                       className: 'lg-share-twitter',
-                      generateLink: getTwitterShareLink,
+                      generateLink: getXShareLink,
                   },
               ]
             : []),
@@ -114,38 +131,33 @@ export class LgShareStateService {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (settings().share) {
-            <button
-                type="button"
-                class="lg-share lg-icon"
-                [attr.aria-label]="settings().sharePluginStrings.share"
-                aria-haspopup="true"
-                [attr.aria-expanded]="state.active()"
-                (click)="state.active.set(!state.active())"
-            ></button>
-            <!-- Sibling of the button (vanilla nested it inside, which is
+        <button
+            type="button"
+            class="lg-share lg-icon"
+            [attr.aria-label]="settings().sharePluginStrings.share"
+            [attr.aria-haspopup]="nativeFirst() ? null : 'true'"
+            [attr.aria-expanded]="nativeFirst() ? null : state.active()"
+            (click)="onShareClick()"
+        ></button>
+        <!-- Sibling of the button (vanilla nested it inside, which is
                  invalid interactive nesting); the .lg-outer .lg-dropdown
                  CSS does not depend on the nesting. -->
-            <ul class="lg-dropdown" [style.position]="'absolute'">
-                @if (currentItem(); as item) {
-                    @for (option of options(); track $index) {
-                        <li>
-                            <a
-                                [class]="option.className ?? ''"
-                                rel="noopener"
-                                target="_blank"
-                                [attr.href]="
-                                    option.generateLink(item, currentUrl())
-                                "
-                            >
-                                <span class="lg-icon"></span>
-                                <span class="lg-dropdown-text">{{
-                                    option.text
-                                }}</span>
-                            </a>
-                        </li>
-                    }
-                }
-            </ul>
+        <ul class="lg-dropdown" [style.position]="'absolute'">
+            @if (currentItem(); as item) { @for (option of options(); track
+            $index) {
+            <li>
+                <a
+                    [class]="option.className ?? ''"
+                    rel="noopener"
+                    target="_blank"
+                    [attr.href]="option.generateLink(item, currentUrl())"
+                >
+                    <span class="lg-icon"></span>
+                    <span class="lg-dropdown-text">{{ option.text }}</span>
+                </a>
+            </li>
+            } }
+        </ul>
         }
     `,
 })
@@ -165,6 +177,31 @@ export class LgShareButtonComponent {
     protected currentUrl(): string {
         return typeof window !== 'undefined' ? window.location.href : '';
     }
+
+    /**
+     * Web Share hybrid: try the OS sheet first where preferred and
+     * available; the dropdown stays rendered as the automatic fallback.
+     */
+    protected nativeFirst(): boolean {
+        return (
+            (this.settings().preferNativeShare ?? isTouchDevice()) &&
+            typeof navigator !== 'undefined' &&
+            typeof navigator.share === 'function'
+        );
+    }
+
+    protected onShareClick(): void {
+        const item = this.currentItem();
+        if (this.nativeFirst() && item) {
+            const payload = getSharePayload(item, this.currentUrl());
+            if (canNativeShare(navigator, payload)) {
+                // Rejection = user dismissed the sheet (AbortError).
+                navigator.share(payload).catch(() => undefined);
+                return;
+            }
+        }
+        this.state.active.set(!this.state.active());
+    }
 }
 
 @Component({
@@ -172,10 +209,10 @@ export class LgShareButtonComponent {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (settings().share) {
-            <div
-                class="lg-dropdown-overlay"
-                (click)="state.active.set(false)"
-            ></div>
+        <div
+            class="lg-dropdown-overlay"
+            (click)="state.active.set(false)"
+        ></div>
         }
     `,
 })

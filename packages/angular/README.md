@@ -97,7 +97,7 @@ factory for the `[features]` input:
 | fullscreen | `withFullscreen()` | — |
 | hash | `withHash()` | `galleryId`, `customSlideName` |
 | pager | `withPager()` | — |
-| share | `withShare()` | `facebook`/`twitter`/`pinterest`, `additionalShareOptions` (typed) |
+| share | `withShare()` | `preferNativeShare` (OS share sheet; default on touch), `facebook`/`twitter` (X intent)/`pinterest`, `additionalShareOptions` (typed) |
 | rotate | `withRotate()` | `rotateSpeed`, per-button toggles |
 | comment | `withComment()` | `commentBox`, `commentsTemplate: TemplateRef` |
 | mediumZoom | `withMediumZoom()` | `margin`, `backgroundColor` (presets a minimal UI) |

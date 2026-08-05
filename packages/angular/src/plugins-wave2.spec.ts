@@ -1,9 +1,4 @@
-import {
-    Component,
-    signal,
-    viewChild,
-    type TemplateRef,
-} from '@angular/core';
+import { Component, signal, viewChild, type TemplateRef } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -22,9 +17,7 @@ import { withFullscreen } from '@lightgallery/angular/plugins/fullscreen';
 import { withHash } from '@lightgallery/angular/plugins/hash';
 import { withMediumZoom } from '@lightgallery/angular/plugins/mediumZoom';
 import { withPager } from '@lightgallery/angular/plugins/pager';
-import {
-    withRelativeCaption,
-} from '@lightgallery/angular/plugins/relativeCaption';
+import { withRelativeCaption } from '@lightgallery/angular/plugins/relativeCaption';
 import { withRotate } from '@lightgallery/angular/plugins/rotate';
 import { withShare } from '@lightgallery/angular/plugins/share';
 import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
@@ -121,9 +114,9 @@ describe('wave-2 features', () => {
         expect(query('.lg-progress-bar')).not.toBeNull();
         (query('.lg-autoplay-button') as HTMLButtonElement).click();
         await flush(fixture);
-        expect(
-            query('.lg-outer')!.classList.contains('lg-show-autoplay'),
-        ).toBe(true);
+        expect(query('.lg-outer')!.classList.contains('lg-show-autoplay')).toBe(
+            true,
+        );
         expect(host.log).toContain('autoplayStart');
 
         // speed(400) + interval(100) later the show advances.
@@ -135,9 +128,9 @@ describe('wave-2 features', () => {
         (query('.lg-autoplay-button') as HTMLButtonElement).click();
         await flush(fixture);
         expect(host.log).toContain('autoplayStop');
-        expect(
-            query('.lg-outer')!.classList.contains('lg-show-autoplay'),
-        ).toBe(false);
+        expect(query('.lg-outer')!.classList.contains('lg-show-autoplay')).toBe(
+            false,
+        );
     });
 
     it('fullscreen: feature-detects, toggles via the browser API', async () => {
@@ -166,10 +159,7 @@ describe('wave-2 features', () => {
         button.click();
         expect(request).toHaveBeenCalled();
         Reflect.deleteProperty(document, 'fullscreenEnabled');
-        Reflect.deleteProperty(
-            document.documentElement,
-            'requestFullscreen',
-        );
+        Reflect.deleteProperty(document.documentElement, 'requestFullscreen');
     });
 
     it('hash: opens from a deep link, writes and restores the hash', async () => {
@@ -193,9 +183,7 @@ describe('wave-2 features', () => {
         await advance(fixture, 450);
         expect(query('.lg-container.lg-show')).toBeNull();
         expect(window.location.hash).toBe('');
-        expect(document.body.classList.contains('lg-from-hash')).toBe(
-            false,
-        );
+        expect(document.body.classList.contains('lg-from-hash')).toBe(false);
     });
 
     it('pager: renders dots, tracks active, navigates on click', async () => {
@@ -224,17 +212,11 @@ describe('wave-2 features', () => {
         await openAndLoad(fixture);
 
         const links = [
-            ...document.querySelectorAll<HTMLAnchorElement>(
-                '.lg-dropdown a',
-            ),
+            ...document.querySelectorAll<HTMLAnchorElement>('.lg-dropdown a'),
         ];
         expect(links.length).toBe(3);
-        expect(links[0]!.getAttribute('href')).toContain(
-            'facebook.com/sharer',
-        );
-        expect(links[1]!.getAttribute('href')).toContain(
-            'twitter.com/intent/tweet',
-        );
+        expect(links[0]!.getAttribute('href')).toContain('facebook.com/sharer');
+        expect(links[1]!.getAttribute('href')).toContain('x.com/intent/post');
         expect(links[2]!.getAttribute('href')).toContain(
             'pinterest.com/pin/create',
         );
@@ -254,6 +236,89 @@ describe('wave-2 features', () => {
         ).toBe(false);
     });
 
+    it('share: native sheet preferred when enabled and available', async () => {
+        const share = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(window.navigator, 'share', {
+            value: share,
+            configurable: true,
+        });
+        try {
+            const fixture = TestBed.createComponent(Wave2Host);
+            const host = fixture.componentInstance;
+            host.features.set([withShare({ preferNativeShare: true })]);
+            await flush(fixture);
+            await openAndLoad(fixture);
+
+            const button = query('.lg-share') as HTMLButtonElement;
+            // Native-first buttons do not advertise a popup.
+            expect(button.getAttribute('aria-haspopup')).toBeNull();
+            button.click();
+            await flush(fixture);
+            expect(share).toHaveBeenCalledWith({
+                url: window.location.href,
+                title: 'a',
+            });
+            expect(
+                query('.lg-outer')!.classList.contains('lg-dropdown-active'),
+            ).toBe(false);
+        } finally {
+            delete (window.navigator as { share?: unknown }).share;
+        }
+    });
+
+    it('share: dropdown kept when preferNativeShare is false', async () => {
+        const share = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(window.navigator, 'share', {
+            value: share,
+            configurable: true,
+        });
+        try {
+            const fixture = TestBed.createComponent(Wave2Host);
+            const host = fixture.componentInstance;
+            host.features.set([withShare({ preferNativeShare: false })]);
+            await flush(fixture);
+            await openAndLoad(fixture);
+
+            (query('.lg-share') as HTMLButtonElement).click();
+            await flush(fixture);
+            expect(share).not.toHaveBeenCalled();
+            expect(
+                query('.lg-outer')!.classList.contains('lg-dropdown-active'),
+            ).toBe(true);
+        } finally {
+            delete (window.navigator as { share?: unknown }).share;
+        }
+    });
+
+    it('share: canShare veto falls back to the dropdown', async () => {
+        const share = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(window.navigator, 'share', {
+            value: share,
+            configurable: true,
+        });
+        Object.defineProperty(window.navigator, 'canShare', {
+            value: () => false,
+            configurable: true,
+        });
+        try {
+            const fixture = TestBed.createComponent(Wave2Host);
+            const host = fixture.componentInstance;
+            host.features.set([withShare({ preferNativeShare: true })]);
+            await flush(fixture);
+            await openAndLoad(fixture);
+
+            (query('.lg-share') as HTMLButtonElement).click();
+            await flush(fixture);
+            expect(share).not.toHaveBeenCalled();
+            expect(
+                query('.lg-outer')!.classList.contains('lg-dropdown-active'),
+            ).toBe(true);
+        } finally {
+            delete (window.navigator as { share?: unknown }).share;
+            delete (window.navigator as { canShare?: unknown }).canShare;
+        }
+    });
+
     it('rotate: composes inside zoom, rotates/flips, fires public events', async () => {
         const fixture = TestBed.createComponent(Wave2Host);
         const host = fixture.componentInstance;
@@ -269,9 +334,7 @@ describe('wave-2 features', () => {
 
         (query('.lg-rotate-right') as HTMLButtonElement).click();
         await flush(fixture);
-        expect(rotateEl.style.transform).toBe(
-            'rotate(90deg) scale3d(1, 1, 1)',
-        );
+        expect(rotateEl.style.transform).toBe('rotate(90deg) scale3d(1, 1, 1)');
         await advance(fixture, 500);
         expect(host.log).toContain('rotateRight:90');
 
