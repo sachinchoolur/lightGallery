@@ -145,6 +145,74 @@ describe('accessibility', () => {
             wrapper.unmount();
         });
 
+        it('announces slide changes and demotes the counter/caption', async () => {
+            const Host = defineComponent({
+                components: { LightGallery },
+                setup: () => ({ items: ITEMS }),
+                template: `
+                    <LightGallery :slides="items" :zoom-from-origin="false" />
+                `,
+            });
+            const wrapper = mount(Host, { attachTo: document.body });
+            const vm = wrapper.findComponent(LightGallery).vm as unknown as {
+                openGallery(i?: number): void;
+                goToSlide(i: number): void;
+            };
+            vm.openGallery(0);
+            await settle();
+
+            const announcer = query('.lg-announcer')!;
+            expect(announcer.getAttribute('role')).toBe('status');
+            expect(announcer.getAttribute('aria-live')).toBe('polite');
+            expect(announcer.textContent!.trim()).toBe(
+                'Image 1 of 3, Caption A',
+            );
+
+            await advance(450);
+            vm.goToSlide(1);
+            await settle();
+            expect(announcer.textContent!.trim()).toBe('Image 2 of 3');
+
+            const counter = query('.lg-counter')!;
+            expect(counter.getAttribute('aria-hidden')).toBe('true');
+            expect(counter.getAttribute('role')).toBeNull();
+            const caption = query('.lg-sub-html')!;
+            expect(caption.getAttribute('role')).toBeNull();
+            expect(caption.getAttribute('aria-live')).toBeNull();
+            wrapper.unmount();
+        });
+
+        it('restores the 2.x live regions when announcements are disabled', async () => {
+            const Host = defineComponent({
+                components: { LightGallery },
+                setup: () => ({ items: ITEMS }),
+                template: `
+                    <LightGallery
+                        :slides="items"
+                        :zoom-from-origin="false"
+                        :aria-announcements="false"
+                    />
+                `,
+            });
+            const wrapper = mount(Host, { attachTo: document.body });
+            (
+                wrapper.findComponent(LightGallery).vm as unknown as {
+                    openGallery(i?: number): void;
+                }
+            ).openGallery(0);
+            await settle();
+
+            expect(query('.lg-announcer')).toBeNull();
+            const counter = query('.lg-counter')!;
+            expect(counter.getAttribute('role')).toBe('status');
+            expect(counter.getAttribute('aria-live')).toBe('polite');
+            expect(counter.getAttribute('aria-hidden')).toBeNull();
+            const caption = query('.lg-sub-html')!;
+            expect(caption.getAttribute('role')).toBe('status');
+            expect(caption.getAttribute('aria-live')).toBe('polite');
+            wrapper.unmount();
+        });
+
         it('collapses every animation under prefers-reduced-motion', async () => {
             const originalMatchMedia = window.matchMedia;
             window.matchMedia = ((mediaQuery: string) => ({
@@ -183,9 +251,7 @@ describe('accessibility', () => {
                 await settle();
                 vm.nextSlide();
                 await settle();
-                expect(outer.classList.contains('lg-right-end')).toBe(
-                    false,
-                );
+                expect(outer.classList.contains('lg-right-end')).toBe(false);
                 wrapper.unmount();
             } finally {
                 window.matchMedia = originalMatchMedia;

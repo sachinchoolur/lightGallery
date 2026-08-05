@@ -24,6 +24,7 @@ import {
     clampIndex,
     createEmitter,
     fitImageSize,
+    formatSlideAnnouncement,
     getOriginTransform,
     getSlideIndexesInDom,
     getSlideType,
@@ -35,11 +36,7 @@ import {
     type UserSettings,
 } from '@lightgallery/headless';
 
-import {
-    getFocusableElements,
-    useBodyLock,
-    useHideBars,
-} from './composables';
+import { getFocusableElements, useBodyLock, useHideBars } from './composables';
 import { useGalleryGestures } from './gestures';
 import LgCaption from './LgCaption.vue';
 import LgSlide, { type OriginAnimation } from './LgSlide.vue';
@@ -94,36 +91,37 @@ interface SlideTimeline {
 const props = withDefaults(
     defineProps<LgGalleryProps & { plugins?: LgVuePlugin[] }>(),
     {
-    plugins: undefined,
-    slides: undefined,
-    container: 'body',
-    className: undefined,
-    originRect: null,
-    // Boolean settings MUST default to undefined explicitly: Vue casts
-    // absent Boolean props to `false`, which resolveSettings would read as
-    // an explicit user value and every boolean default would invert.
-    zoomFromOrigin: undefined,
-    allowMediaOverlap: undefined,
-    loadYouTubePoster: undefined,
-    hideScrollbar: undefined,
-    resetScrollPosition: undefined,
-    closable: undefined,
-    swipeToClose: undefined,
-    closeOnTap: undefined,
-    showCloseIcon: undefined,
-    showMaximizeIcon: undefined,
-    loop: undefined,
-    escKey: undefined,
-    keyPress: undefined,
-    trapFocus: undefined,
-    controls: undefined,
-    slideEndAnimation: undefined,
-    hideControlOnEnd: undefined,
-    mousewheel: undefined,
-    download: undefined,
-    counter: undefined,
-    enableSwipe: undefined,
-    enableDrag: undefined,
+        plugins: undefined,
+        slides: undefined,
+        container: 'body',
+        className: undefined,
+        originRect: null,
+        // Boolean settings MUST default to undefined explicitly: Vue casts
+        // absent Boolean props to `false`, which resolveSettings would read as
+        // an explicit user value and every boolean default would invert.
+        zoomFromOrigin: undefined,
+        allowMediaOverlap: undefined,
+        loadYouTubePoster: undefined,
+        ariaAnnouncements: undefined,
+        hideScrollbar: undefined,
+        resetScrollPosition: undefined,
+        closable: undefined,
+        swipeToClose: undefined,
+        closeOnTap: undefined,
+        showCloseIcon: undefined,
+        showMaximizeIcon: undefined,
+        loop: undefined,
+        escKey: undefined,
+        keyPress: undefined,
+        trapFocus: undefined,
+        controls: undefined,
+        slideEndAnimation: undefined,
+        hideControlOnEnd: undefined,
+        mousewheel: undefined,
+        download: undefined,
+        counter: undefined,
+        enableSwipe: undefined,
+        enableDrag: undefined,
     },
 );
 
@@ -182,19 +180,58 @@ const slots = useSlots();
 provide(LG_SLOTS, slots);
 
 const SETTING_KEYS = [
-    'mode', 'easing', 'speed', 'licenseKey', 'height', 'width',
-    'startClass', 'zoomFromOrigin', 'startAnimationDuration',
-    'backdropDuration', 'hideBarsDelay', 'showBarsAfter', 'slideDelay',
-    'allowMediaOverlap', 'videoMaxSize', 'loadYouTubePoster',
-    'defaultCaptionHeight', 'ariaLabelledby', 'ariaDescribedby',
-    'hideScrollbar', 'resetScrollPosition', 'closable', 'swipeToClose',
-    'closeOnTap', 'showCloseIcon', 'showMaximizeIcon', 'loop', 'escKey',
-    'keyPress', 'trapFocus', 'controls', 'slideEndAnimation',
-    'hideControlOnEnd', 'mousewheel', 'captionPosition', 'preload',
-    'numberOfSlideItemsInDom', 'iframeWidth', 'iframeHeight',
-    'iframeMaxWidth', 'iframeMaxHeight', 'download', 'counter',
-    'swipeThreshold', 'flickVelocity', 'pinchToClose', 'enableSwipe', 'enableDrag',
-    'strings', 'isMobile', 'mobileSettings',
+    'mode',
+    'easing',
+    'speed',
+    'licenseKey',
+    'height',
+    'width',
+    'startClass',
+    'zoomFromOrigin',
+    'startAnimationDuration',
+    'backdropDuration',
+    'hideBarsDelay',
+    'showBarsAfter',
+    'slideDelay',
+    'allowMediaOverlap',
+    'videoMaxSize',
+    'loadYouTubePoster',
+    'defaultCaptionHeight',
+    'ariaLabelledby',
+    'ariaDescribedby',
+    'ariaAnnouncements',
+    'hideScrollbar',
+    'resetScrollPosition',
+    'closable',
+    'swipeToClose',
+    'closeOnTap',
+    'showCloseIcon',
+    'showMaximizeIcon',
+    'loop',
+    'escKey',
+    'keyPress',
+    'trapFocus',
+    'controls',
+    'slideEndAnimation',
+    'hideControlOnEnd',
+    'mousewheel',
+    'captionPosition',
+    'preload',
+    'numberOfSlideItemsInDom',
+    'iframeWidth',
+    'iframeHeight',
+    'iframeMaxWidth',
+    'iframeMaxHeight',
+    'download',
+    'counter',
+    'swipeThreshold',
+    'flickVelocity',
+    'pinchToClose',
+    'enableSwipe',
+    'enableDrag',
+    'strings',
+    'isMobile',
+    'mobileSettings',
 ] as const satisfies readonly (keyof UserSettings)[];
 
 function defaultIsMobile(): boolean {
@@ -237,8 +274,7 @@ const settings = computed<ResolvedPluginSettings>(() => {
         pluginDefaults: [
             ...registered.map((plugin) => plugin.presets ?? {}),
             ...registered.map(
-                (plugin) =>
-                    (plugin.defaults ?? {}) as Partial<CoreSettings>,
+                (plugin) => (plugin.defaults ?? {}) as Partial<CoreSettings>,
             ),
         ],
     }) as ResolvedPluginSettings;
@@ -350,9 +386,7 @@ const maximized = ref(false);
 const everOpened = ref(false);
 const edgeBounce = ref<'left' | 'right' | null>(null);
 const originAnim = shallowRef<OriginAnimation | null>(null);
-const contentOffsets = shallowRef<{ top: number; bottom: number } | null>(
-    null,
-);
+const contentOffsets = shallowRef<{ top: number; bottom: number } | null>(null);
 const timeline = shallowRef<SlideTimeline>({
     shownIndex: 0,
     positions: {},
@@ -381,8 +415,7 @@ let mediaPositionOverride: (() => LgMediaPosition) | null = null;
 const isBodyContainer = computed(
     () =>
         props.container === 'body' ||
-        (typeof document !== 'undefined' &&
-            props.container === document.body),
+        (typeof document !== 'undefined' && props.container === document.body),
 );
 const bodyLockActive = computed(
     () =>
@@ -409,6 +442,27 @@ const currentItem = computed<LgGalleryItem | undefined>(
 const currentSlideType = computed(() =>
     currentItem.value ? getSlideType(currentItem.value) : undefined,
 );
+// Slide-change announcement for the polite live region. Cleared while
+// closed so reopening at the same slide is a fresh mutation (identical
+// text would not re-announce).
+const announcement = computed(() => {
+    if (
+        !settings.value.ariaAnnouncements ||
+        phase.value === 'closed' ||
+        !currentItem.value
+    ) {
+        return '';
+    }
+    return formatSlideAnnouncement({
+        template: settings.value.strings.slideAnnouncement,
+        index: store.currentIndex.value + 1,
+        total: items.value.length,
+        caption:
+            typeof currentItem.value.caption === 'string'
+                ? currentItem.value.caption
+                : undefined,
+    });
+});
 const slideIndexes = computed(() =>
     getSlideIndexesInDom(
         store.currentIndex.value,
@@ -439,9 +493,7 @@ const downloadHref = computed(() => {
     if (!item) {
         return undefined;
     }
-    return typeof item.downloadUrl === 'string'
-        ? item.downloadUrl
-        : item.src;
+    return typeof item.downloadUrl === 'string' ? item.downloadUrl : item.src;
 });
 const downloadName = computed(() => {
     const item = currentItem.value;
@@ -488,14 +540,12 @@ const outerClasses = computed(() => [
             (phase.value === 'closing' && !zoomClosing.value),
         'lg-closing': zoomClosing.value,
         'lg-no-trans': timeline.value.noTrans,
-        'lg-slide':
-            touchSlideMode.value && settings.value.mode !== 'lg-slide',
+        'lg-slide': touchSlideMode.value && settings.value.mode !== 'lg-slide',
         ...pluginOuterClasses.value,
         'lg-right-end': edgeBounce.value === 'right',
         'lg-left-end': edgeBounce.value === 'left',
         'lg-hide-download':
-            settings.value.download &&
-            currentItem.value?.downloadUrl === false,
+            settings.value.download && currentItem.value?.downloadUrl === false,
     },
 ]);
 const contentStyle = computed(() => {
@@ -695,9 +745,7 @@ function beginClose(): void {
     componentsOpen.value = false;
 
     let closeDuration = cfg.backdropDuration;
-    const transform = usedZoom
-        ? computeOrigin(store.currentIndex.value)
-        : null;
+    const transform = usedZoom ? computeOrigin(store.currentIndex.value) : null;
     if (transform) {
         originAnim.value = {
             index: store.currentIndex.value,
@@ -891,8 +939,7 @@ watch([store.isOpen, store.currentIndex], ([isOpen, current]) => {
         return;
     }
     const direction =
-        store.slideDirection.value ??
-        (current > previous ? 'next' : 'prev');
+        store.slideDirection.value ?? (current > previous ? 'next' : 'prev');
     if (wasFromTouch) {
         runTouchTransition(previous, current, direction);
         return;
@@ -971,12 +1018,7 @@ function prepareDrag(): void {
     if (prevN >= 0 && prevN < count && prevN !== current) {
         positions[prevN] = 'prev';
     }
-    if (
-        nextN >= 0 &&
-        nextN < count &&
-        nextN !== current &&
-        nextN !== prevN
-    ) {
+    if (nextN >= 0 && nextN < count && nextN !== current && nextN !== prevN) {
         positions[nextN] = 'next';
     }
     timeline.value = { ...timeline.value, positions };
@@ -1106,8 +1148,8 @@ function nextSlide(): void {
         state.currentIndex + 1 < state.slidesCount
             ? state.currentIndex + 1
             : state.loop
-              ? 0
-              : null;
+            ? 0
+            : null;
     if (target !== null) {
         emitEvent('beforeNextSlide', { index: target });
         navigate(target, 'next');
@@ -1125,8 +1167,8 @@ function prevSlide(): void {
         state.currentIndex > 0
             ? state.currentIndex - 1
             : state.loop
-              ? state.slidesCount - 1
-              : null;
+            ? state.slidesCount - 1
+            : null;
     if (target !== null) {
         emitEvent('beforePrevSlide', { index: target, fromTouch: false });
         navigate(target, 'prev');
@@ -1199,9 +1241,8 @@ const pluginContext: LgPluginContext = {
         getOuter: () => outerEl.value,
         getInner: () => innerEl.value,
         getCurrentSlide: () =>
-            outerEl.value?.querySelector<HTMLElement>(
-                '.lg-item.lg-current',
-            ) ?? null,
+            outerEl.value?.querySelector<HTMLElement>('.lg-item.lg-current') ??
+            null,
     },
     emit: emitEvent,
 };
@@ -1264,7 +1305,11 @@ onBeforeUnmount(() => {
             tabindex="-1"
             role="dialog"
             aria-modal="true"
-            :aria-label="settings.ariaLabelledby ? undefined : 'Gallery'"
+            :aria-label="
+                settings.ariaLabelledby
+                    ? undefined
+                    : settings.strings.galleryLabel
+            "
             :aria-labelledby="settings.ariaLabelledby || undefined"
             :aria-describedby="settings.ariaDescribedby || undefined"
         >
@@ -1275,6 +1320,14 @@ onBeforeUnmount(() => {
                     transitionDuration: `${settings.backdropDuration}ms`,
                 }"
             ></div>
+            <div
+                v-if="settings.ariaAnnouncements"
+                class="lg-announcer"
+                role="status"
+                aria-live="polite"
+            >
+                {{ announcement }}
+            </div>
             <div
                 ref="outerEl"
                 :class="outerClasses"
@@ -1363,20 +1416,27 @@ onBeforeUnmount(() => {
                         :href="downloadHref"
                         :download="downloadName || true"
                     ></a>
-                    <template
-                        v-for="plugin of plugins"
-                        :key="plugin.name"
-                    >
+                    <template v-for="plugin of plugins" :key="plugin.name">
                         <component
                             :is="plugin.slots!.toolbar!"
                             v-if="plugin.slots?.toolbar"
                         />
                     </template>
+                    <!-- With the announcer active the counter is
+                         decorative — the announcer already conveys the
+                         position in a friendlier form. -->
                     <div
                         v-if="settings.counter"
                         class="lg-counter"
-                        role="status"
-                        aria-live="polite"
+                        :role="
+                            settings.ariaAnnouncements ? undefined : 'status'
+                        "
+                        :aria-live="
+                            settings.ariaAnnouncements ? undefined : 'polite'
+                        "
+                        :aria-hidden="
+                            settings.ariaAnnouncements ? 'true' : undefined
+                        "
                     >
                         <slot
                             name="counter"
@@ -1410,10 +1470,7 @@ onBeforeUnmount(() => {
                         :item="currentItem"
                         :index="store.currentIndex.value"
                     />
-                    <template
-                        v-for="plugin of plugins"
-                        :key="plugin.name"
-                    >
+                    <template v-for="plugin of plugins" :key="plugin.name">
                         <component
                             :is="plugin.slots!.components!"
                             v-if="plugin.slots?.components"

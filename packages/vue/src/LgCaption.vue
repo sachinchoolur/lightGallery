@@ -14,8 +14,12 @@ const props = defineProps<{
 const runtime = inject(LG_RUNTIME);
 const slots = inject(LG_SLOTS, undefined);
 
-const empty = computed(
-    () => !slots?.caption && !hasCaption(props.item),
+const empty = computed(() => !slots?.caption && !hasCaption(props.item));
+
+// The announcer (when active) voices caption changes; a second live
+// region here would double-announce every slide.
+const live = computed(
+    () => runtime?.settings.value.ariaAnnouncements === false,
 );
 
 // React counterpart: Caption's afterAppendSubHtml effect — fired whenever
@@ -31,8 +35,8 @@ watch(
     <div
         class="lg-sub-html"
         :class="{ 'lg-empty-html': empty }"
-        role="status"
-        aria-live="polite"
+        :role="live ? 'status' : undefined"
+        :aria-live="live ? 'polite' : undefined"
     >
         <LgCaptionContent
             v-if="props.item && !empty"
