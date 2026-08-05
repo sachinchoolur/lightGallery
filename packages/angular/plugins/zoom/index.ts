@@ -19,6 +19,7 @@ import {
     clampPanToStage,
     clampScale,
     getActualSizeScale,
+    getActualSizeWidth,
     getRotatedVisualSize,
     getPanBounds,
     SPRING_BOUNCE_DAMPING,
@@ -416,7 +417,21 @@ export class LgZoomWrapperComponent {
 
     private maxScale(): number {
         const { naturalWidth, layoutImageWidth } = this.measure();
-        return getActualSizeScale(naturalWidth, layoutImageWidth);
+        // `naturalWidth` lies under srcset/sizes (density-corrected to
+        // roughly the slot width — actual-size zoom collapses to ~1 on
+        // phones); the ladder's largest candidate is the true reference.
+        return getActualSizeScale(
+            getActualSizeWidth(
+                this.item(),
+                {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    dpr: window.devicePixelRatio,
+                },
+                naturalWidth,
+            ),
+            layoutImageWidth,
+        );
     }
 
     private setLiveTransition(value: string): void {

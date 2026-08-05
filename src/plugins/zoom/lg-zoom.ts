@@ -3,6 +3,7 @@ import {
     clampPanToStage,
     fitImageSize,
     getActualSizeScale as getNaturalSizeScale,
+    getActualSizeWidth,
     getPanBounds,
     getPinchPan,
     getRotatedVisualSize,
@@ -381,15 +382,21 @@ export default class Zoom {
             if (this.scale >= actualSizeScale) {
                 const dragAllowedAxises = this.getDragAllowedAxises(this.scale);
 
+                // The natural-px swap uses the same actual-size
+                // reference as the scale — `naturalWidth` is density-
+                // corrected under srcset/sizes and would swap to
+                // roughly the fitted size. Height follows the rendered
+                // aspect ratio (ratios don't lie).
+                const image = $image.get() as HTMLImageElement;
+                const referenceWidth = this.getNaturalWidth(this.core.index);
+                const referenceHeight =
+                    image.naturalWidth > 0
+                        ? (referenceWidth * image.naturalHeight) /
+                          image.naturalWidth
+                        : image.naturalHeight;
                 $image
-                    .css(
-                        'width',
-                        ($image.get() as HTMLImageElement).naturalWidth + 'px',
-                    )
-                    .css(
-                        'height',
-                        ($image.get() as HTMLImageElement).naturalHeight + 'px',
-                    );
+                    .css('width', referenceWidth + 'px')
+                    .css('height', referenceHeight + 'px');
 
                 this.core.outer.addClass('lg-actual-size');
 
@@ -485,9 +492,22 @@ export default class Zoom {
         const $image = this.core.getSlideItem(index).find('.lg-image').first();
 
         const naturalWidth = this.core.galleryItems[index].width;
-        return naturalWidth
-            ? parseFloat(naturalWidth)
-            : undefined || ($image.get() as any).naturalWidth;
+        if (naturalWidth) {
+            return parseFloat(naturalWidth);
+        }
+        // `img.naturalWidth` lies under srcset/sizes (density-corrected
+        // to roughly the slot width — actual-size zoom collapses to ~1
+        // on phones); the ladder's largest candidate is the true
+        // reference.
+        return getActualSizeWidth(
+            this.core.galleryItems[index],
+            {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                dpr: window.devicePixelRatio,
+            },
+            ($image.get() as HTMLImageElement).naturalWidth,
+        );
     }
 
     getActualSizeScale(naturalWidth: number, width: number): number {
@@ -524,10 +544,18 @@ export default class Zoom {
                 if (!this.containerRect) {
                     this.setZoomEssentials();
                 }
+                // Reference dims, not the element's (density-corrected
+                // under srcset, and the swap already rewrote its layout).
+                const referenceWidth = this.getNaturalWidth(this.core.index);
+                const referenceHeight =
+                    image.naturalWidth > 0
+                        ? (referenceWidth * image.naturalHeight) /
+                          image.naturalWidth
+                        : image.naturalHeight;
                 width = fitImageSize(
                     {
-                        width: image.naturalWidth,
-                        height: image.naturalHeight,
+                        width: referenceWidth,
+                        height: referenceHeight,
                     },
                     this.containerRect.width,
                     this.containerRect.height,

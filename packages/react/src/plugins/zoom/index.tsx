@@ -11,6 +11,7 @@ import {
     clampPanToStage,
     clampScale,
     getActualSizeScale,
+    getActualSizeWidth,
     getPanBounds,
     getRotatedVisualSize,
     SPRING_BOUNCE_DAMPING,
@@ -238,7 +239,21 @@ function ZoomWrapper({
 
     const maxScale = () => {
         const { naturalWidth, layoutImageWidth } = measure();
-        return getActualSizeScale(naturalWidth, layoutImageWidth);
+        // `naturalWidth` lies under srcset/sizes (density-corrected to
+        // roughly the slot width — actual-size zoom collapses to ~1 on
+        // phones); the ladder's largest candidate is the true reference.
+        return getActualSizeScale(
+            getActualSizeWidth(
+                item,
+                {
+                    width: window.innerWidth,
+                    height: window.innerHeight,
+                    dpr: window.devicePixelRatio,
+                },
+                naturalWidth,
+            ),
+            layoutImageWidth,
+        );
     };
 
     const setLiveTransition = (value: string) => {
