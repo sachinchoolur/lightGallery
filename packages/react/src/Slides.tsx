@@ -1,5 +1,5 @@
 import { useMemo, type ReactElement } from 'react';
-import { getSlideIndexesInDom } from '@lightgallery/headless';
+import { getSlidePoolIndexes } from '@lightgallery/headless';
 
 import {
     useGalleryInternal,
@@ -37,20 +37,26 @@ export function Slides({
     const settings = useGallerySettings();
     const internal = useGalleryInternal();
 
+    // Pool size: virtualization.slides (plan 010) overrides the classic
+    // numberOfSlideItemsInDom. The current slide is always in the window,
+    // and zoom resets when a slide stops being current, so the pool never
+    // recycles live zoom state.
+    const poolSize =
+        settings.virtualization?.slides ?? settings.numberOfSlideItemsInDom;
     const indexes = useMemo(
         () =>
-            getSlideIndexesInDom(
-                state.currentIndex,
-                state.previousIndex,
-                state.slidesCount,
-                settings.numberOfSlideItemsInDom,
-                state.loop,
-            ).sort((a, b) => a - b),
+            getSlidePoolIndexes({
+                index: state.currentIndex,
+                prevIndex: state.previousIndex,
+                slidesCount: state.slidesCount,
+                poolSize,
+                loop: state.loop,
+            }).sort((a, b) => a - b),
         [
             state.currentIndex,
             state.previousIndex,
             state.slidesCount,
-            settings.numberOfSlideItemsInDom,
+            poolSize,
             state.loop,
         ],
     );

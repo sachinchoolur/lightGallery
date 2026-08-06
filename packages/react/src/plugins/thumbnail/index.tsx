@@ -9,9 +9,16 @@ import {
 import {
     clampThumbTranslate,
     getActiveThumbTranslate,
+    getElasticThumbTranslate,
+    getThumbCorridorWindow,
     getThumbTotalWidth,
+    getThumbWindow,
     getVideoInfo,
+    getWindowedVelocity,
+    project,
+    pushVelocitySample,
     type ThumbPagerPosition,
+    type VelocitySample,
 } from '@lightgallery/headless';
 
 import { cx } from '../../cx';
@@ -20,6 +27,8 @@ import {
     useGalleryInternal,
     useGalleryState,
 } from '../../context';
+import { useEventCallback } from '../../hooks';
+import { runSprings } from '../../springRunner';
 import { usePluginSettings } from '../runtime';
 import type { GalleryItem } from '../../types';
 import type { LgPlugin, PluginContext } from '../types';
@@ -98,8 +107,18 @@ function ThumbnailStrip(): ReactElement | null {
     const [stripWidth, setStripWidth] = useState(0);
     const [translate, setTranslate] = useState(0);
     const [dragging, setDragging] = useState(false);
+    // Fling corridor (plan 010): set at release so the window covers the
+    // whole flight path; cleared at settle.
+    const [corridor, setCorridor] = useState<{
+        from: number;
+        to: number;
+    } | null>(null);
     const translateRef = useRef(0);
-    translateRef.current = translate;
+    if (!dragging) {
+        // While a gesture/glide owns the track, the ref is the live
+        // (frame-written) value — do not clobber it from stale state.
+        translateRef.current = translate;
+    }
     const clickableRef = useRef(true);
     const dragRef = useRef<{
         pointerId: number;
@@ -108,6 +127,8 @@ function ThumbnailStrip(): ReactElement | null {
         moved: boolean;
     } | null>(null);
     const detachRef = useRef<(() => void) | null>(null);
+    const samplesRef = useRef<VelocitySample[]>([]);
+    const springCancelRef = useRef<(() => void) | null>(null);
 
     const totalWidth = getThumbTotalWidth(
         internal.items.length,
@@ -115,21 +136,57 @@ function ThumbnailStrip(): ReactElement | null {
         settings.thumbMargin,
     );
 
+    // Plan-010 thumbnail windowing: with virtualization.thumbs set, only
+    // the visible thumbs plus overscan render; spacers preserve the strip
+    // geometry. The window keys off the COMMITTED translate — it advances
+    // at release/slide-change/resize, never per pointermove, so the
+    // zero-reactivity drag contract holds (overscan covers the in-flight
+    // stretch of a drag).
+    const thumbsOverscan = settings.virtualization?.thumbs;
+    const windowGeometry = {
+        stripWidth,
+        thumbWidth: settings.thumbWidth,
+        thumbMargin: settings.thumbMargin,
+        count: internal.items.length,
+        overscan: thumbsOverscan,
+    };
+    const thumbWindow =
+        thumbsOverscan !== undefined
+            ? corridor
+                ? getThumbCorridorWindow({ ...windowGeometry, ...corridor })
+                : getThumbWindow({ ...windowGeometry, translate })
+            : null;
+    const thumbWindowRef = useRef(thumbWindow);
+    thumbWindowRef.current = thumbWindow;
+
     // Strip width measurement (2.x measures the outer element on open and
     // on resize).
+    const measureStrip = useEventCallback(() =>
+        setStripWidth(
+            outerRef.current?.parentElement?.closest<HTMLElement>('.lg-outer')
+                ?.offsetWidth ??
+                outerRef.current?.offsetWidth ??
+                0,
+        ),
+    );
     useLayoutEffect(() => {
-        const measure = () =>
-            setStripWidth(
-                outerRef.current?.parentElement?.closest<HTMLElement>(
-                    '.lg-outer',
-                )?.offsetWidth ??
-                    outerRef.current?.offsetWidth ??
-                    0,
-            );
-        measure();
-        window.addEventListener('resize', measure);
-        return () => window.removeEventListener('resize', measure);
-    }, []);
+        measureStrip();
+        window.addEventListener('resize', measureStrip);
+        return () => window.removeEventListener('resize', measureStrip);
+    }, [measureStrip]);
+    // The strip mounts one commit before `lg-show` lands (persistent
+    // container), so the mount measurement can read a hidden 0-width
+    // outer — the stale width mis-clamps the pager translate and, when
+    // windowed, shrinks the thumb window. Re-measure shortly after the
+    // gallery opens, once the container is visible (vanilla measures on
+    // beforeOpen for the same reason).
+    useEffect(() => {
+        if (!state.open) {
+            return;
+        }
+        const timeout = window.setTimeout(measureStrip, 50);
+        return () => window.clearTimeout(timeout);
+    }, [state.open, measureStrip]);
 
     // Keep the active thumbnail at the pager position.
     useEffect(() => {
@@ -159,9 +216,23 @@ function ThumbnailStrip(): ReactElement | null {
     useEffect(
         () => () => {
             detachRef.current?.();
+            springCancelRef.current?.();
         },
         [],
     );
+
+    // Strip physics (plan 010): drags rubber-band past the edges, and the
+    // release glides on a velocity-seeded spring (the same headless
+    // project/spring stack the slide gestures ride). Frames write the DOM
+    // directly; state commits once at settle — the windowed strip
+    // re-renders there.
+    const writeTrackTranslate = (value: number) => {
+        translateRef.current = value;
+        const track = trackRef.current;
+        if (track) {
+            track.style.transform = `translate3d(${-value}px, 0px, 0px)`;
+        }
+    };
 
     const onPointerDown = (event: ReactPointerEvent) => {
         if (
@@ -173,6 +244,15 @@ function ThumbnailStrip(): ReactElement | null {
             return;
         }
         event.preventDefault();
+        // A press mid-glide takes over from the current position.
+        springCancelRef.current?.();
+        springCancelRef.current = null;
+        setCorridor(null);
+        samplesRef.current = pushVelocitySample([], {
+            x: event.clientX,
+            y: event.clientY,
+            t: Date.now(),
+        });
         dragRef.current = {
             pointerId: event.pointerId,
             startX: event.clientX,
@@ -190,16 +270,35 @@ function ThumbnailStrip(): ReactElement | null {
                 drag.moved = true;
                 clickableRef.current = false;
             }
-            const next = clampThumbTranslate(
-                drag.startTranslate - delta,
-                totalWidth,
-                stripWidth,
+            samplesRef.current = pushVelocitySample(samplesRef.current, {
+                x: moveEvent.clientX,
+                y: moveEvent.clientY,
+                t: Date.now(),
+            });
+            // Elastic: overshoot past the edges compresses instead of
+            // clamping dead.
+            writeTrackTranslate(
+                getElasticThumbTranslate(
+                    drag.startTranslate - delta,
+                    totalWidth,
+                    stripWidth,
+                ),
             );
-            translateRef.current = next;
-            // Written straight to the DOM per move; committed on release.
-            const track = trackRef.current;
-            if (track) {
-                track.style.transform = `translate3d(-${next}px, 0px, 0px)`;
+            // Windowed strips: a long finger drag can outrun the
+            // rendered window — one commit recenters it (rare; routine
+            // moves stay zero-render).
+            const rendered = thumbWindowRef.current;
+            if (rendered) {
+                const unit = settings.thumbWidth + settings.thumbMargin;
+                const live = translateRef.current;
+                if (
+                    live < rendered.start * unit ||
+                    live + stripWidth > (rendered.end + 1) * unit
+                ) {
+                    setTranslate(
+                        clampThumbTranslate(live, totalWidth, stripWidth),
+                    );
+                }
             }
         };
         const onUp = (upEvent: PointerEvent) => {
@@ -210,11 +309,60 @@ function ThumbnailStrip(): ReactElement | null {
             detachRef.current?.();
             detachRef.current = null;
             dragRef.current = null;
-            setDragging(false);
-            setTranslate(translateRef.current);
             clickableRef.current =
                 Math.abs(upEvent.clientX - drag.startX) <
                 settings.thumbnailSwipeThreshold;
+
+            // Fling: project the release velocity to a target, clamp into
+            // the strip bounds, and spring there (bounces off the edge
+            // when the projection overshoots; pulls back when released
+            // inside the rubber band).
+            const pointerVelocity = getWindowedVelocity(
+                samplesRef.current,
+                Date.now(),
+            ).x;
+            const translateVelocity = -pointerVelocity;
+            const target = clampThumbTranslate(
+                translateRef.current + project(translateVelocity),
+                totalWidth,
+                stripWidth,
+            );
+            if (!drag.moved) {
+                setDragging(false);
+                setTranslate(
+                    clampThumbTranslate(
+                        translateRef.current,
+                        totalWidth,
+                        stripWidth,
+                    ),
+                );
+                return;
+            }
+            // Windowed strips: render the whole flight corridor before
+            // the glide starts — the destination is known at release, so
+            // the spring never crosses unrendered thumbs.
+            if (thumbWindowRef.current) {
+                setCorridor({ from: translateRef.current, to: target });
+            }
+            springCancelRef.current = runSprings(
+                [
+                    {
+                        from: translateRef.current,
+                        velocity: translateVelocity,
+                        target,
+                    },
+                ],
+                ([value]) => writeTrackTranslate(value!),
+                () => {
+                    springCancelRef.current = null;
+                    // One commit: drop the drag styling, clear the
+                    // corridor and publish the settled translate
+                    // (windowed strips re-render here).
+                    setDragging(false);
+                    setCorridor(null);
+                    setTranslate(target);
+                },
+            );
         };
         window.addEventListener('pointermove', onMove, { passive: true });
         window.addEventListener('pointerup', onUp);
@@ -253,11 +401,29 @@ function ThumbnailStrip(): ReactElement | null {
                     transitionDuration: dragging
                         ? '0ms'
                         : `${settings.speed}ms`,
-                    transform: `translate3d(-${translate}px, 0px, 0px)`,
+                    transform: `translate3d(${-(dragging
+                        ? translateRef.current
+                        : translate)}px, 0px, 0px)`,
                 }}
                 onPointerDown={onPointerDown}
             >
-                {internal.items.map((item, index) => (
+                {thumbWindow && thumbWindow.leadingPad > 0 && (
+                    <div
+                        className="lg-thumb-spacer"
+                        aria-hidden="true"
+                        style={{
+                            width: `${thumbWindow.leadingPad}px`,
+                            height: 1,
+                            float: 'left',
+                        }}
+                    />
+                )}
+                {(thumbWindow
+                    ? internal.items
+                          .map((item, index) => ({ item, index }))
+                          .slice(thumbWindow.start, thumbWindow.end + 1)
+                    : internal.items.map((item, index) => ({ item, index }))
+                ).map(({ item, index }) => (
                     <div
                         key={index}
                         data-lg-item-id={index}
@@ -294,6 +460,17 @@ function ThumbnailStrip(): ReactElement | null {
                         />
                     </div>
                 ))}
+                {thumbWindow && thumbWindow.trailingPad > 0 && (
+                    <div
+                        className="lg-thumb-spacer"
+                        aria-hidden="true"
+                        style={{
+                            width: `${thumbWindow.trailingPad}px`,
+                            height: 1,
+                            float: 'left',
+                        }}
+                    />
+                )}
             </div>
         </div>
     );
