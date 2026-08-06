@@ -26,7 +26,7 @@ import {
     fitImageSize,
     formatSlideAnnouncement,
     getOriginTransform,
-    getSlideIndexesInDom,
+    getSlidePoolIndexes,
     getSlideType,
     parseImageSize,
     resolveSettings,
@@ -218,6 +218,7 @@ const SETTING_KEYS = [
     'captionPosition',
     'preload',
     'numberOfSlideItemsInDom',
+    'virtualization',
     'iframeWidth',
     'iframeHeight',
     'iframeMaxWidth',
@@ -463,14 +464,20 @@ const announcement = computed(() => {
                 : undefined,
     });
 });
+// Pool size: virtualization.slides (plan 010) overrides the classic
+// numberOfSlideItemsInDom. The current slide is always in the window, and
+// zoom resets when a slide stops being current, so the pool never
+// recycles live zoom state.
 const slideIndexes = computed(() =>
-    getSlideIndexesInDom(
-        store.currentIndex.value,
-        store.previousIndex.value,
-        store.slidesCount.value,
-        settings.value.numberOfSlideItemsInDom,
-        store.loop.value,
-    ).sort((a, b) => a - b),
+    getSlidePoolIndexes({
+        index: store.currentIndex.value,
+        prevIndex: store.previousIndex.value,
+        slidesCount: store.slidesCount.value,
+        poolSize:
+            settings.value.virtualization?.slides ??
+            settings.value.numberOfSlideItemsInDom,
+        loop: store.loop.value,
+    }).sort((a, b) => a - b),
 );
 const disablePrev = computed(
     () =>

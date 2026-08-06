@@ -7,16 +7,25 @@ import {
     onMounted,
     onScopeDispose,
     ref,
+    watch,
     watchEffect,
 } from 'vue';
 import {
     clampThumbTranslate,
     getActiveThumbTranslate,
+    getElasticThumbTranslate,
+    getThumbCorridorWindow,
     getThumbTotalWidth,
+    getThumbWindow,
     getVideoInfo,
+    getWindowedVelocity,
+    project,
+    pushVelocitySample,
     type ThumbPagerPosition,
+    type VelocitySample,
 } from '@lightgallery/headless';
 
+import { runSprings } from '../../springRunner';
 import {
     LG_PLUGIN_CONTEXT,
     type LgPluginContext,
@@ -83,6 +92,7 @@ export const thumbnailSettings: ThumbnailSettings = {
 type ThumbnailResolved = ThumbnailSettings & {
     speed: number;
     allowMediaOverlap: boolean;
+    virtualization?: { slides?: number; thumbs?: 'auto' | number };
 };
 
 function getThumbSrc(
@@ -106,6 +116,9 @@ export const ThumbnailStrip = defineComponent({
         const stripWidth = ref(0);
         const translate = ref(0);
         const dragging = ref(false);
+        // Fling corridor (plan 010): set at release so the window covers
+        // the whole flight path; cleared at settle.
+        const corridor = ref<{ from: number; to: number } | null>(null);
         const stripOuter = ref<HTMLElement | null>(null);
         const track = ref<HTMLElement | null>(null);
 
@@ -117,6 +130,54 @@ export const ThumbnailStrip = defineComponent({
             ),
         );
 
+        // Plan-010 thumbnail windowing: with virtualization.thumbs set,
+        // only the visible thumbs plus overscan render; spacers preserve
+        // the strip geometry. Keys off the COMMITTED translate — advances
+        // at release/slide-change/resize, never per pointermove.
+        const thumbWindow = computed(() => {
+            const overscan = settings.value.virtualization?.thumbs;
+            if (overscan === undefined) {
+                return null;
+            }
+            const geometry = {
+                stripWidth: stripWidth.value,
+                thumbWidth: settings.value.thumbWidth,
+                thumbMargin: settings.value.thumbMargin,
+                count: ctx.items.value.length,
+                overscan,
+            };
+            return corridor.value
+                ? getThumbCorridorWindow({
+                      ...geometry,
+                      ...corridor.value,
+                  })
+                : getThumbWindow({
+                      ...geometry,
+                      translate: translate.value,
+                  });
+        });
+
+        // Strip drag + physics state (plan 010): frames write the DOM
+        // directly; the reactive translate commits once at settle
+        // (windowed strips re-render there).
+        let clickable = true;
+        let drag: {
+            pointerId: number;
+            startX: number;
+            startTranslate: number;
+            moved: boolean;
+        } | null = null;
+        let detachWindow: (() => void) | null = null;
+        let samples: VelocitySample[] = [];
+        let cancelSpring: (() => void) | null = null;
+        let liveTranslate = 0;
+        function writeTrackTranslate(value: number): void {
+            liveTranslate = value;
+            if (track.value) {
+                track.value.style.transform = `translate3d(${-value}px, 0px, 0px)`;
+            }
+        }
+
         // 2.x measures the outer element on open and on resize.
         const measure = (): void => {
             stripWidth.value =
@@ -124,13 +185,40 @@ export const ThumbnailStrip = defineComponent({
                 stripOuter.value?.offsetWidth ??
                 0;
         };
+        // The strip mounts one commit before `lg-show` lands (persistent
+        // container), so the mount measurement can read a hidden 0-width
+        // outer — the stale width mis-clamps the pager translate and,
+        // when windowed, shrinks the thumb window. Re-measure shortly
+        // after the gallery opens, once the container is visible.
+        let measureTimer: ReturnType<typeof setTimeout> | null = null;
+        watch(
+            () => ctx.store.state.value.open,
+            (open) => {
+                if (!open) {
+                    return;
+                }
+                if (measureTimer) {
+                    clearTimeout(measureTimer);
+                }
+                measureTimer = setTimeout(measure, 50);
+            },
+        );
         onMounted(() => {
             measure();
             window.addEventListener('resize', measure);
         });
         onBeforeUnmount(() => {
             window.removeEventListener('resize', measure);
+            if (measureTimer) {
+                clearTimeout(measureTimer);
+            }
             detachWindow?.();
+            cancelSpring?.();
+        });
+
+        // Committed translate also seeds the live (frame-written) value.
+        watchEffect(() => {
+            liveTranslate = translate.value;
         });
 
         // Keep the active thumbnail at the pager position.
@@ -148,16 +236,6 @@ export const ThumbnailStrip = defineComponent({
             );
         });
 
-        // Strip drag: transforms written straight to the track per move
-        // (the no-reactive-writes-per-move rule); committed on release.
-        let clickable = true;
-        let drag: {
-            pointerId: number;
-            startX: number;
-            startTranslate: number;
-        } | null = null;
-        let detachWindow: (() => void) | null = null;
-
         function onPointerDown(event: PointerEvent): void {
             const cfg = settings.value;
             if (
@@ -169,28 +247,63 @@ export const ThumbnailStrip = defineComponent({
                 return;
             }
             event.preventDefault();
+            // A press mid-glide takes over from the current position.
+            cancelSpring?.();
+            cancelSpring = null;
+            corridor.value = null;
+            samples = pushVelocitySample([], {
+                x: event.clientX,
+                y: event.clientY,
+                t: Date.now(),
+            });
             drag = {
                 pointerId: event.pointerId,
                 startX: event.clientX,
-                startTranslate: translate.value,
+                startTranslate: liveTranslate,
+                moved: false,
             };
             dragging.value = true;
-            let live = translate.value;
             const onMove = (moveEvent: PointerEvent): void => {
                 if (!drag || moveEvent.pointerId !== drag.pointerId) {
                     return;
                 }
                 const delta = moveEvent.clientX - drag.startX;
                 if (Math.abs(delta) > 2) {
+                    drag.moved = true;
                     clickable = false;
                 }
-                live = clampThumbTranslate(
-                    drag.startTranslate - delta,
-                    totalWidth.value,
-                    stripWidth.value,
+                samples = pushVelocitySample(samples, {
+                    x: moveEvent.clientX,
+                    y: moveEvent.clientY,
+                    t: Date.now(),
+                });
+                // Elastic: overshoot past the edges compresses instead of
+                // clamping dead.
+                writeTrackTranslate(
+                    getElasticThumbTranslate(
+                        drag.startTranslate - delta,
+                        totalWidth.value,
+                        stripWidth.value,
+                    ),
                 );
-                if (track.value) {
-                    track.value.style.transform = `translate3d(-${live}px, 0px, 0px)`;
+                // Windowed strips: a long finger drag can outrun the
+                // rendered window — one commit recenters it (rare;
+                // routine moves stay zero-reactive).
+                const rendered = thumbWindow.value;
+                if (rendered) {
+                    const unit =
+                        settings.value.thumbWidth + settings.value.thumbMargin;
+                    if (
+                        liveTranslate < rendered.start * unit ||
+                        liveTranslate + stripWidth.value >
+                            (rendered.end + 1) * unit
+                    ) {
+                        translate.value = clampThumbTranslate(
+                            liveTranslate,
+                            totalWidth.value,
+                            stripWidth.value,
+                        );
+                    }
                 }
             };
             const onUp = (upEvent: PointerEvent): void => {
@@ -199,12 +312,55 @@ export const ThumbnailStrip = defineComponent({
                 }
                 detachWindow?.();
                 detachWindow = null;
-                dragging.value = false;
-                translate.value = live;
                 clickable =
                     Math.abs(upEvent.clientX - drag.startX) <
                     settings.value.thumbnailSwipeThreshold;
+                const moved = drag.moved;
                 drag = null;
+
+                // Fling: project the release velocity, clamp into the
+                // strip bounds, spring there (bounces off the edge; pulls
+                // back when released inside the rubber band).
+                const translateVelocity = -getWindowedVelocity(
+                    samples,
+                    Date.now(),
+                ).x;
+                const target = clampThumbTranslate(
+                    liveTranslate + project(translateVelocity),
+                    totalWidth.value,
+                    stripWidth.value,
+                );
+                if (!moved) {
+                    dragging.value = false;
+                    translate.value = clampThumbTranslate(
+                        liveTranslate,
+                        totalWidth.value,
+                        stripWidth.value,
+                    );
+                    return;
+                }
+                // Windowed strips: render the whole flight corridor
+                // before the glide starts — the destination is known at
+                // release, so the spring never crosses unrendered thumbs.
+                if (thumbWindow.value) {
+                    corridor.value = { from: liveTranslate, to: target };
+                }
+                cancelSpring = runSprings(
+                    [
+                        {
+                            from: liveTranslate,
+                            velocity: translateVelocity,
+                            target,
+                        },
+                    ],
+                    ([value]: number[]) => writeTrackTranslate(value!),
+                    () => {
+                        cancelSpring = null;
+                        dragging.value = false;
+                        corridor.value = null;
+                        translate.value = target;
+                    },
+                );
             };
             window.addEventListener('pointermove', onMove, {
                 passive: true,
@@ -259,54 +415,98 @@ export const ThumbnailStrip = defineComponent({
                             transitionDuration: dragging.value
                                 ? '0ms'
                                 : `${cfg.speed}ms`,
-                            transform: `translate3d(-${translate.value}px, 0px, 0px)`,
+                            transform: `translate3d(${-(dragging.value
+                                ? liveTranslate
+                                : translate.value)}px, 0px, 0px)`,
                         },
                         onPointerdown: onPointerDown,
                     },
-                    ctx.items.value.map((item, index) =>
-                        h(
-                            'div',
-                            {
-                                key: index,
-                                'data-lg-item-id': index,
-                                class: [
-                                    'lg-thumb-item',
-                                    {
-                                        active:
-                                            index ===
-                                            ctx.store.currentIndex.value,
+                    [
+                        ...(thumbWindow.value &&
+                        thumbWindow.value.leadingPad > 0
+                            ? [
+                                  h('div', {
+                                      key: 'lead-spacer',
+                                      class: 'lg-thumb-spacer',
+                                      'aria-hidden': 'true',
+                                      style: {
+                                          width: `${thumbWindow.value.leadingPad}px`,
+                                          height: '1px',
+                                          float: 'left',
+                                      },
+                                  }),
+                              ]
+                            : []),
+                        ...(thumbWindow.value
+                            ? ctx.items.value
+                                  .map((item, index) => ({ item, index }))
+                                  .slice(
+                                      thumbWindow.value.start,
+                                      thumbWindow.value.end + 1,
+                                  )
+                            : ctx.items.value.map((item, index) => ({
+                                  item,
+                                  index,
+                              }))
+                        ).map(({ item, index }) =>
+                            h(
+                                'div',
+                                {
+                                    key: index,
+                                    'data-lg-item-id': index,
+                                    class: [
+                                        'lg-thumb-item',
+                                        {
+                                            active:
+                                                index ===
+                                                ctx.store.currentIndex.value,
+                                        },
+                                    ],
+                                    style: {
+                                        width: `${cfg.thumbWidth}px`,
+                                        height: cfg.thumbHeight,
+                                        marginRight: `${cfg.thumbMargin}px`,
                                     },
-                                ],
-                                style: {
-                                    width: `${cfg.thumbWidth}px`,
-                                    height: cfg.thumbHeight,
-                                    marginRight: `${cfg.thumbMargin}px`,
+                                    role: 'button',
+                                    tabindex: 0,
+                                    'aria-label':
+                                        item.alt ?? `Go to slide ${index + 1}`,
+                                    'aria-current':
+                                        index === ctx.store.currentIndex.value,
+                                    onClick: () => onThumbClick(index),
+                                    onKeydown: (event: KeyboardEvent) => {
+                                        if (
+                                            event.key === 'Enter' ||
+                                            event.key === ' '
+                                        ) {
+                                            event.preventDefault();
+                                            ctx.actions.goToSlide(index);
+                                        }
+                                    },
                                 },
-                                role: 'button',
-                                tabindex: 0,
-                                'aria-label':
-                                    item.alt ?? `Go to slide ${index + 1}`,
-                                'aria-current':
-                                    index ===
-                                    ctx.store.currentIndex.value,
-                                onClick: () => onThumbClick(index),
-                                onKeydown: (event: KeyboardEvent) => {
-                                    if (
-                                        event.key === 'Enter' ||
-                                        event.key === ' '
-                                    ) {
-                                        event.preventDefault();
-                                        ctx.actions.goToSlide(index);
-                                    }
-                                },
-                            },
-                            h('img', {
-                                src: getThumbSrc(item, cfg),
-                                alt: item.alt ?? '',
-                                draggable: false,
-                            }),
+                                h('img', {
+                                    src: getThumbSrc(item, cfg),
+                                    alt: item.alt ?? '',
+                                    draggable: false,
+                                }),
+                            ),
                         ),
-                    ),
+                        ...(thumbWindow.value &&
+                        thumbWindow.value.trailingPad > 0
+                            ? [
+                                  h('div', {
+                                      key: 'trail-spacer',
+                                      class: 'lg-thumb-spacer',
+                                      'aria-hidden': 'true',
+                                      style: {
+                                          width: `${thumbWindow.value.trailingPad}px`,
+                                          height: '1px',
+                                          float: 'left',
+                                      },
+                                  }),
+                              ]
+                            : []),
+                    ],
                 ),
             );
         };
@@ -318,21 +518,15 @@ export const ThumbnailToggle = defineComponent({
     setup() {
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
         return () => {
-            const cfg = ctx.settings
-                .value as unknown as ThumbnailResolved;
+            const cfg = ctx.settings.value as unknown as ThumbnailResolved;
             // 2.x rule: the toggle only exists when media may overlap.
-            if (
-                !cfg.thumbnail ||
-                !cfg.toggleThumb ||
-                !cfg.allowMediaOverlap
-            ) {
+            if (!cfg.thumbnail || !cfg.toggleThumb || !cfg.allowMediaOverlap) {
                 return null;
             }
             return h('button', {
                 type: 'button',
                 class: 'lg-toggle-thumb lg-icon',
-                'aria-label':
-                    cfg.thumbnailPluginStrings.toggleThumbnails,
+                'aria-label': cfg.thumbnailPluginStrings.toggleThumbnails,
                 onClick: () => ctx.layout.toggleComponents(),
             });
         };
