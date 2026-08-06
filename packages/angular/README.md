@@ -92,7 +92,7 @@ factory for the `[features]` input:
 |---|---|---|
 | thumbnail | `withThumbnail()` | `thumbWidth`, `thumbHeight`, `animateThumb`, `toggleThumb` |
 | zoom | `withZoom()` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom` |
-| video | `withVideo()` | `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
+| video | `withVideo()` | `videoFacade` (lite embed, default on), `youTubeNoCookie` (default on), `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
 | autoplay | `withAutoplay()` | `slideShowInterval`, `slideShowAutoplay`, `progressBar` |
 | fullscreen | `withFullscreen()` | — |
 | hash | `withHash()` | `galleryId`, `customSlideName` |

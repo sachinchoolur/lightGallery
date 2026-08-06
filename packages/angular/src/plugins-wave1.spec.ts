@@ -86,6 +86,28 @@ class Wave1Host {
     readonly hasVideos: number[] = [];
 }
 
+@Component({
+    imports: [LgGalleryComponent],
+    template: `
+        <lg-gallery
+            [slides]="items"
+            [zoomFromOrigin]="false"
+            [features]="features"
+        />
+    `,
+})
+class FacadeVideoHost {
+    readonly gallery = viewChild.required(LgGalleryComponent);
+    readonly items: LgGalleryItem[] = [
+        {
+            src: 'https://vimeo.com/112836958',
+            alt: 'vimeo',
+            thumb: 'v-t.jpg',
+        },
+    ];
+    features: LgFeature<object>[] = [withVideo({ autoplayFirstVideo: false })];
+}
+
 function runtimeOf(fixture: ComponentFixture<Wave1Host>): LgGalleryRuntime {
     return fixture.debugElement
         .query((el) => el.name === 'lg-gallery')!
@@ -533,6 +555,49 @@ describe('wave-1 features', () => {
         expect(panX()).toBeCloseTo(-600, 0);
     });
 
+    it('video: facades a posterless provider slide via the thumb fallback', async () => {
+        const fixture = TestBed.createComponent(FacadeVideoHost);
+        const host = fixture.componentInstance;
+        await flush(fixture);
+        host.gallery().openGallery(0);
+        await flush(fixture);
+        vi.advanceTimersByTime(450);
+        await flush(fixture);
+
+        // The thumb feeds the facade — no iframe before user intent.
+        const cont = query('.lg-item.lg-current .lg-video-cont')!;
+        const posterImg = cont.querySelector<HTMLImageElement>(
+            'img.lg-video-poster',
+        )!;
+        expect(posterImg.getAttribute('src')).toBe('v-t.jpg');
+        expect(cont.querySelector('iframe')).toBeNull();
+
+        (
+            cont.querySelector('.lg-video-poster-wrap') as HTMLButtonElement
+        ).click();
+        await flush(fixture);
+        expect(cont.querySelector('iframe.lg-vimeo')).not.toBeNull();
+        fixture.destroy();
+    });
+
+    it('video: videoFacade:false keeps the eager iframe for posterless slides', async () => {
+        const fixture = TestBed.createComponent(FacadeVideoHost);
+        const host = fixture.componentInstance;
+        host.features = [
+            withVideo({ autoplayFirstVideo: false, videoFacade: false }),
+        ];
+        await flush(fixture);
+        host.gallery().openGallery(0);
+        await flush(fixture);
+        vi.advanceTimersByTime(450);
+        await flush(fixture);
+
+        const cont = query('.lg-item.lg-current .lg-video-cont')!;
+        expect(cont.querySelector('iframe.lg-vimeo')).not.toBeNull();
+        expect(cont.querySelector('img.lg-video-poster')).toBeNull();
+        fixture.destroy();
+    });
+
     it('video: renders the video slide, swaps poster for the player, pauses on leave', async () => {
         const fixture = TestBed.createComponent(Wave1Host);
         const host = fixture.componentInstance;
@@ -571,7 +636,7 @@ describe('wave-1 features', () => {
         ) as HTMLIFrameElement;
         expect(frame).not.toBeNull();
         expect(frame.getAttribute('src')).toContain(
-            'youtube.com/embed/abc123xyz90',
+            'youtube-nocookie.com/embed/abc123xyz90',
         );
 
         // Navigating away pauses the player (postMessage command).

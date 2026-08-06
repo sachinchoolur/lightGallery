@@ -12,16 +12,15 @@ import {
     untracked,
     viewChild,
 } from '@angular/core';
+import { DomSanitizer, type SafeResourceUrl } from '@angular/platform-browser';
 import {
-    DomSanitizer,
-    type SafeResourceUrl,
-} from '@angular/platform-browser';
-import {
+    getFacadePoster,
     getSlideType,
     getVideoInfo,
     getVimeoEmbedUrl,
     getWistiaEmbedUrl,
     getYouTubeEmbedUrl,
+    getYouTubePosterUrl,
     type PlayerParams,
     type VideoInfo,
 } from '@lightgallery/headless';
@@ -45,6 +44,23 @@ import {
 export interface VideoSettings {
     /** Autoplay the first slide's video once it loads. */
     autoplayFirstVideo: boolean;
+    /**
+     * Render provider video slides (YouTube/Vimeo/Wistia) as lite
+     * facades: a poster with a play button, with the provider iframe
+     * created only when the user presses play. The facade poster falls
+     * back from the item poster to the YouTube thumbnail endpoint (see
+     * `loadYouTubePoster`) to the item thumb; a slide with no resolvable
+     * poster keeps the eager-iframe behavior. `autoplayFirstVideo` /
+     * `autoplayVideoOnSlide` force an immediate materialize by design.
+     * Set false for 2.x eager iframes on all provider slides.
+     */
+    videoFacade: boolean;
+    /**
+     * Embed YouTube through the privacy-enhanced youtube-nocookie.com
+     * host. Set false to embed through youtube.com; slide URLs that
+     * already point at youtube-nocookie.com always keep it.
+     */
+    youTubeNoCookie: boolean;
     /** Extra YouTube player parameters. */
     youTubePlayerParams: PlayerParams;
     /** Extra Vimeo player parameters. */
@@ -59,6 +75,8 @@ export interface VideoSettings {
 
 export const videoSettings: VideoSettings = {
     autoplayFirstVideo: true,
+    videoFacade: true,
+    youTubeNoCookie: true,
     youTubePlayerParams: false,
     vimeoPlayerParams: false,
     wistiaPlayerParams: false,
@@ -110,135 +128,119 @@ type VideoResolved = VideoSettings & {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (info(); as info) {
-            <div
-                class="lg-video-cont"
-                [class]="contClasses()"
-                [style.width]="'100%'"
-                [style.max-width.px]="maxSize().width"
-                [style.max-height]="'100%'"
-                [style.aspect-ratio]="
-                    maxSize().width + ' / ' + maxSize().height
-                "
+        <div
+            class="lg-video-cont"
+            [class]="contClasses()"
+            [style.width]="'100%'"
+            [style.max-width.px]="maxSize().width"
+            [style.max-height]="'100%'"
+            [style.aspect-ratio]="maxSize().width + ' / ' + maxSize().height"
+        >
+            @if (showPlayer()) { @if (embedUrl(); as url) {
+            <iframe
+                #media
+                [class]="iframeClasses()"
+                [attr.name]="info.wistia ? 'wistia_embed' : null"
+                [src]="url"
+                allow="autoplay"
+                allowfullscreen
+                frameborder="0"
+                [attr.title]="mediaTitle()"
+                (load)="onMediaReady()"
+            ></iframe>
+            } @else if (html5()) {
+            <video
+                #media
+                class="lg-video-object lg-html5"
+                (loadedmetadata)="onMediaReady()"
+                (ended)="onVideoEnded()"
+                (pointerdown)="$event.stopPropagation()"
             >
-                @if (showPlayer()) {
-                    @if (embedUrl(); as url) {
-                        <iframe
-                            #media
-                            [class]="iframeClasses()"
-                            [attr.name]="
-                                info.wistia ? 'wistia_embed' : null
-                            "
-                            [src]="url"
-                            allow="autoplay"
-                            allowfullscreen
-                            frameborder="0"
-                            [attr.title]="mediaTitle()"
-                            (load)="onMediaReady()"
-                        ></iframe>
-                    } @else if (html5()) {
-                        <video
-                            #media
-                            class="lg-video-object lg-html5"
-                            (loadedmetadata)="onMediaReady()"
-                            (ended)="onVideoEnded()"
-                            (pointerdown)="$event.stopPropagation()"
-                        >
-                            @for (
-                                source of html5()?.source ?? [];
-                                track $index
-                            ) {
-                                <source
-                                    [attr.src]="source.src"
-                                    [attr.type]="source.type ?? null"
-                                />
-                            }
-                            @for (
-                                track of html5()?.tracks ?? [];
-                                track $index
-                            ) {
-                                <track
-                                    [attr.kind]="track['kind'] ?? null"
-                                    [attr.src]="track['src'] ?? null"
-                                    [attr.srclang]="track['srclang'] ?? null"
-                                    [attr.label]="track['label'] ?? null"
-                                    [attr.default]="track['default'] ?? null"
-                                />
-                            }
-                            Your browser does not support HTML5 video.
-                        </video>
-                    }
-                }
-                @if (!activated() && hasPoster() && !holdPoster()) {
-                    <button
-                        type="button"
-                        class="lg-video-poster-wrap"
-                        style="
+                @for ( source of html5()?.source ?? []; track $index ) {
+                <source
+                    [attr.src]="source.src"
+                    [attr.type]="source.type ?? null"
+                />
+                } @for ( track of html5()?.tracks ?? []; track $index ) {
+                <track
+                    [attr.kind]="track['kind'] ?? null"
+                    [attr.src]="track['src'] ?? null"
+                    [attr.srclang]="track['srclang'] ?? null"
+                    [attr.label]="track['label'] ?? null"
+                    [attr.default]="track['default'] ?? null"
+                />
+                } Your browser does not support HTML5 video.
+            </video>
+            } } @if (!activated() && hasPoster() && !holdPoster()) {
+            <button
+                type="button"
+                class="lg-video-poster-wrap"
+                style="
                             all: unset;
                             cursor: pointer;
                             display: block;
                             width: 100%;
                             height: 100%;
                         "
-                        [attr.aria-label]="settings().strings.playVideo"
-                        (click)="onPosterClick()"
+                [attr.aria-label]="settings().strings.playVideo"
+                (click)="onPosterClick()"
+            >
+                <div class="lg-video-play-button">
+                    <svg
+                        viewBox="0 0 20 20"
+                        preserveAspectRatio="xMidYMid"
+                        focusable="false"
+                        role="img"
+                        class="lg-video-play-icon"
                     >
-                        <div class="lg-video-play-button">
-                            <svg
-                                viewBox="0 0 20 20"
-                                preserveAspectRatio="xMidYMid"
-                                focusable="false"
-                                role="img"
-                                class="lg-video-play-icon"
-                            >
-                                <title>
-                                    {{ settings().strings.playVideo }}
-                                </title>
-                                <polygon
-                                    class="lg-video-play-icon-inner"
-                                    points="1,0 20,10 1,20"
-                                />
-                            </svg>
-                            <svg
-                                class="lg-video-play-icon-bg"
-                                viewBox="0 0 50 50"
-                                focusable="false"
-                            >
-                                <circle cx="50%" cy="50%" r="20" />
-                            </svg>
-                            <svg
-                                class="lg-video-play-icon-circle"
-                                viewBox="0 0 50 50"
-                                focusable="false"
-                            >
-                                <circle cx="50%" cy="50%" r="20" />
-                            </svg>
-                        </div>
-                        <img
-                            class="lg-object lg-video-poster"
-                            [src]="poster()"
-                            [alt]="item().alt ?? ''"
-                            draggable="false"
-                            (load)="onPosterLoad()"
+                        <title>
+                            {{ settings().strings.playVideo }}
+                        </title>
+                        <polygon
+                            class="lg-video-play-icon-inner"
+                            points="1,0 20,10 1,20"
                         />
-                    </button>
-                }
-                @if (dummySrc(); as dummy) {
-                    <!-- v2 sizes the dummy to the cont box exactly. -->
-                    <img
-                        class="lg-dummy-img"
-                        [attr.src]="dummy"
-                        alt=""
-                        aria-hidden="true"
-                        draggable="false"
-                        style="
+                    </svg>
+                    <svg
+                        class="lg-video-play-icon-bg"
+                        viewBox="0 0 50 50"
+                        focusable="false"
+                    >
+                        <circle cx="50%" cy="50%" r="20" />
+                    </svg>
+                    <svg
+                        class="lg-video-play-icon-circle"
+                        viewBox="0 0 50 50"
+                        focusable="false"
+                    >
+                        <circle cx="50%" cy="50%" r="20" />
+                    </svg>
+                </div>
+                <img
+                    class="lg-object lg-video-poster"
+                    [src]="poster()"
+                    [alt]="item().alt ?? ''"
+                    draggable="false"
+                    (load)="onPosterLoad()"
+                />
+            </button>
+            } @if (dummySrc(); as dummy) {
+            <!-- v2 sizes the dummy to the cont box exactly. -->
+            <img
+                class="lg-dummy-img"
+                [attr.src]="dummy"
+                alt=""
+                aria-hidden="true"
+                draggable="false"
+                style="
                             position: absolute;
                             inset: 0;
                             width: 100%;
                             height: 100%;
                         "
-                    />
-                }
-            </div>
+            />
+            }
+        </div>
         }
     `,
 })
@@ -258,17 +260,25 @@ export class LgVideoSlideComponent {
     protected readonly info = computed(() =>
         getVideoInfo(this.item().src, !!this.html5()),
     );
-    // 2.x loadYouTubePoster: derive a poster for YouTube slides without one.
+    // Lite-embed facade poster chain (headless): item poster → YouTube
+    // thumbnail endpoint (loadYouTubePoster) → item thumb. With
+    // videoFacade:false only the 2.x YouTube synthesis remains.
     protected readonly poster = computed(() => {
         const item = this.item();
-        if (item.poster) {
-            return item.poster;
+        const settings = this.settings();
+        if (settings.videoFacade) {
+            return getFacadePoster(
+                item,
+                this.info(),
+                settings.loadYouTubePoster,
+            );
         }
-        const info = this.info();
-        if (this.settings().loadYouTubePoster && info?.youtube) {
-            return `//img.youtube.com/vi/${info.youtube[1]}/maxresdefault.jpg`;
-        }
-        return undefined;
+        return (
+            item.poster ??
+            (settings.loadYouTubePoster
+                ? getYouTubePosterUrl(this.info())
+                : undefined)
+        );
     });
     protected readonly hasPoster = computed(() => !!this.poster());
     protected readonly activated = signal(false);
@@ -317,10 +327,7 @@ export class LgVideoSlideComponent {
         return { width, height };
     });
     protected readonly mediaTitle = computed(
-        () =>
-            this.item().title ??
-            this.item().alt ??
-            'Embedded video player',
+        () => this.item().title ?? this.item().alt ?? 'Embedded video player',
     );
     protected readonly embedUrl = computed<SafeResourceUrl | null>(() => {
         const info = this.info();
@@ -334,15 +341,14 @@ export class LgVideoSlideComponent {
                 info,
                 settings.youTubePlayerParams,
                 this.item().src ?? '',
+                settings.youTubeNoCookie,
             );
         } else if (info.vimeo) {
             url = getVimeoEmbedUrl(info, settings.vimeoPlayerParams);
         } else if (info.wistia) {
             url = getWistiaEmbedUrl(info, settings.wistiaPlayerParams);
         }
-        return url
-            ? this.sanitizer.bypassSecurityTrustResourceUrl(url)
-            : null;
+        return url ? this.sanitizer.bypassSecurityTrustResourceUrl(url) : null;
     });
 
     private readonly mediaEl = viewChild<ElementRef<HTMLElement>>('media');
@@ -427,18 +433,13 @@ export class LgVideoSlideComponent {
             if (!el || !html5 || el.tagName !== 'VIDEO') {
                 return;
             }
-            Object.entries(html5.attributes ?? {}).forEach(
-                ([key, value]) => {
-                    if (value === false) {
-                        el.removeAttribute(key);
-                    } else {
-                        el.setAttribute(
-                            key,
-                            value === true ? '' : String(value),
-                        );
-                    }
-                },
-            );
+            Object.entries(html5.attributes ?? {}).forEach(([key, value]) => {
+                if (value === false) {
+                    el.removeAttribute(key);
+                } else {
+                    el.setAttribute(key, value === true ? '' : String(value));
+                }
+            });
         });
         // Autoplay + pause-on-leave via the event bus (2.x event wiring).
         const offs = [
@@ -448,11 +449,7 @@ export class LgVideoSlideComponent {
                 }
                 const current = this.isCurrent();
                 const cfg = untracked(this.settings);
-                if (
-                    detail.isFirstSlide &&
-                    cfg.autoplayFirstVideo &&
-                    current
-                ) {
+                if (detail.isFirstSlide && cfg.autoplayFirstVideo && current) {
                     this.playTimer = setTimeout(
                         () => this.activateAndPlay(),
                         200,
