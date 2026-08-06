@@ -95,7 +95,7 @@ factory for the `[features]` input:
 | video | `withVideo()` | `videoFacade` (lite embed, default on), `youTubeNoCookie` (default on), `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
 | autoplay | `withAutoplay()` | `slideShowInterval`, `slideShowAutoplay`, `progressBar` |
 | fullscreen | `withFullscreen()` | — |
-| hash | `withHash()` | `galleryId`, `customSlideName` |
+| hash | `withHash()` | `galleryId`, `customSlideName`, `hashDriver` (`auto` = Navigation API where supported, History fallback) |
 | pager | `withPager()` | — |
 | share | `withShare()` | `preferNativeShare` (OS share sheet; default on touch), `facebook`/`twitter` (X intent)/`pinterest`, `additionalShareOptions` (typed) |
 | rotate | `withRotate()` | `rotateSpeed`, per-button toggles |

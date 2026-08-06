@@ -1,11 +1,11 @@
+import { computed, effect, inject, Injectable, untracked } from '@angular/core';
 import {
-    computed,
-    effect,
-    inject,
-    Injectable,
-    untracked,
-} from '@angular/core';
-import { clampIndex } from '@lightgallery/headless';
+    clampIndex,
+    createHashDriver,
+    type HashDriver,
+    type HashDriverPreference,
+    type HashNavigationWindow,
+} from '@lightgallery/headless';
 import {
     LG_FEATURE_INIT,
     LG_PLUGIN_CONTEXT,
@@ -28,6 +28,13 @@ import {
 export interface HashSettings {
     /** Enable/disable URL hash syncing. */
     hash: boolean;
+    /**
+     * URL engine: 'auto' uses the Navigation API where supported and
+     * falls back to the History API; 'history'/'navigation' force an
+     * engine (unsupported 'navigation' quietly falls back). The
+     * deep-link URL format is identical either way.
+     */
+    hashDriver: HashDriverPreference;
     /** Unique id per gallery — mandatory with multiple galleries per page. */
     galleryId: string;
     /** Use `item.slideName` instead of the index in the URL. */
@@ -36,6 +43,7 @@ export interface HashSettings {
 
 export const hashSettings: HashSettings = {
     hash: true,
+    hashDriver: 'auto',
     galleryId: '1',
     customSlideName: false,
 };
@@ -47,20 +55,14 @@ function getIndexFromHash(
 ): number {
     const slideName = hash.split('&slide=')[1] ?? '';
     if (customSlideName) {
-        const named = items.findIndex(
-            (item) => item.slideName === slideName,
-        );
+        const named = items.findIndex((item) => item.slideName === slideName);
         if (named !== -1) {
             return named;
         }
     }
     const index = parseInt(slideName, 10);
     // Clamp out-of-range indexes (known 2.x bug, fixed here).
-    return clampIndex(
-        Number.isNaN(index) ? 0 : index,
-        items.length,
-        false,
-    );
+    return clampIndex(Number.isNaN(index) ? 0 : index, items.length, false);
 }
 
 @Injectable()
@@ -77,13 +79,15 @@ export class LgHashService {
                 typeof window !== 'undefined',
         );
         const galleryId = computed(
-            () =>
-                (this.ctx.settings() as unknown as HashSettings).galleryId,
+            () => (this.ctx.settings() as unknown as HashSettings).galleryId,
         );
         const customSlideName = computed(
             () =>
                 (this.ctx.settings() as unknown as HashSettings)
                     .customSlideName,
+        );
+        const hashDriver = computed(
+            () => (this.ctx.settings() as unknown as HashSettings).hashDriver,
         );
         effect((onCleanup) => {
             if (!enabled()) {
@@ -91,26 +95,31 @@ export class LgHashService {
             }
             const id = galleryId();
             const custom = customSlideName();
-            untracked(() => this.bind(id, custom, onCleanup));
+            const preference = hashDriver();
+            untracked(() => this.bind(id, custom, preference, onCleanup));
         });
     }
 
     private bind(
         galleryId: string,
         customSlideName: boolean,
+        preference: HashDriverPreference,
         onCleanup: (fn: () => void) => void,
     ): void {
         const ctx = this.ctx;
         const marker = `lg=${galleryId}`;
-        this.oldHash = window.location.hash;
+        // URL engine (plan 012): History API today, Navigation API where
+        // the browser has it — same URLs either way.
+        const driver: HashDriver = createHashDriver(
+            window as unknown as HashNavigationWindow,
+            preference,
+        );
+        this.oldHash = driver.getHash();
 
         // Deep link: open the gallery when the URL carries this gallery id.
         const openTimer = setTimeout(() => {
-            const hash = window.location.hash;
-            if (
-                hash.indexOf(marker) > 0 &&
-                !untracked(ctx.state).open
-            ) {
+            const hash = driver.getHash();
+            if (hash.indexOf(marker) > 0 && !untracked(ctx.state).open) {
                 document.body.classList.add('lg-from-hash');
                 ctx.actions.openGallery(
                     getIndexFromHash(
@@ -128,11 +137,7 @@ export class LgHashService {
                 customSlideName && item?.slideName
                     ? item.slideName
                     : `${index}`;
-            history.replaceState(
-                null,
-                '',
-                `${window.location.pathname}${window.location.search}#${marker}&slide=${slideName}`,
-            );
+            driver.replaceHash(`#${marker}&slide=${slideName}`);
         };
         const offAfterSlide = ctx.events.on('afterSlide', (detail) =>
             writeHash(detail.index),
@@ -147,13 +152,9 @@ export class LgHashService {
             document.body.classList.remove('lg-from-hash');
             const oldHash = this.oldHash;
             if (oldHash && oldHash.indexOf(marker) < 0) {
-                history.replaceState(null, '', oldHash);
+                driver.replaceHash(oldHash);
             } else {
-                history.replaceState(
-                    null,
-                    '',
-                    window.location.pathname + window.location.search,
-                );
+                driver.clearHash();
             }
         });
 
@@ -162,7 +163,7 @@ export class LgHashService {
             if (!untracked(ctx.state).open) {
                 return;
             }
-            const hash = window.location.hash;
+            const hash = driver.getHash();
             if (hash.indexOf(marker) > -1) {
                 ctx.actions.goToSlide(
                     getIndexFromHash(
@@ -175,14 +176,14 @@ export class LgHashService {
                 ctx.actions.closeGallery();
             }
         };
-        window.addEventListener('hashchange', onHashChange);
+        const unsubscribe = driver.subscribe(onHashChange);
 
         onCleanup(() => {
             clearTimeout(openTimer);
             offAfterSlide();
             offAfterOpen();
             offAfterClose();
-            window.removeEventListener('hashchange', onHashChange);
+            unsubscribe();
             document.body.classList.remove('lg-from-hash');
         });
     }
