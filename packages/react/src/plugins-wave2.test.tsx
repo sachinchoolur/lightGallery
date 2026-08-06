@@ -150,6 +150,61 @@ describe('hash plugin', () => {
         tick(500);
     });
 
+    it('runs on the Navigation API driver with identical URLs', () => {
+        const calls: Array<[string, { history?: string }]> = [];
+        const listeners = new Set<() => void>();
+        const navigation = {
+            currentEntry: { url: 'http://localhost/' },
+            navigate: (url: string, options: { history?: string }) => {
+                calls.push([url, options]);
+                navigation.currentEntry = {
+                    url: new URL(url, 'http://localhost/').href,
+                };
+                // The real API fires currententrychange for replaces too —
+                // the handlers must be re-entrant-safe.
+                listeners.forEach((listener) => listener());
+                return {
+                    committed: Promise.resolve(),
+                    finished: Promise.resolve(),
+                };
+            },
+            addEventListener: (type: string, listener: () => void) => {
+                if (type === 'currententrychange') {
+                    listeners.add(listener);
+                }
+            },
+            removeEventListener: (_type: string, listener: () => void) => {
+                listeners.delete(listener);
+            },
+        };
+        Object.defineProperty(window, 'navigation', {
+            value: navigation,
+            configurable: true,
+        });
+        try {
+            renderGallery({
+                plugins: [Hash],
+                hash: { galleryId: 'g3' },
+            });
+            // afterOpen wrote the deep link through a replace navigation.
+            const lastWrite = calls[calls.length - 1]!;
+            expect(lastWrite[0]).toContain('#lg=g3&slide=0');
+            expect(lastWrite[1]).toMatchObject({ history: 'replace' });
+
+            // Back/forward: the entry changes → the gallery follows.
+            navigation.currentEntry = {
+                url: 'http://localhost/#lg=g3&slide=2',
+            };
+            act(() => {
+                listeners.forEach((listener) => listener());
+            });
+            tick(600);
+            expect(counterText()).toBe('3');
+        } finally {
+            delete (window as { navigation?: unknown }).navigation;
+        }
+    });
+
     it('writes the slide to the hash and restores it on close', () => {
         render(
             <LightGallery

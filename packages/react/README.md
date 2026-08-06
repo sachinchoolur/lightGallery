@@ -144,7 +144,7 @@ and configure each with the prop named after it. Import the matching
 | Video | `@lightgallery/react/plugins/video` | `videoFacade` (lite embed, default on), `youTubeNoCookie` (default on), `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams`, `vimeoPlayerParams`, `gotoNextSlideOnVideoEnd` |
 | Autoplay | `@lightgallery/react/plugins/autoplay` | `slideShowAutoplay`, `slideShowInterval`, `progressBar`, `forceSlideShowAutoplay` |
 | Fullscreen | `@lightgallery/react/plugins/fullscreen` | `fullScreen` |
-| Hash | `@lightgallery/react/plugins/hash` | `galleryId`, `customSlideName` |
+| Hash | `@lightgallery/react/plugins/hash` | `galleryId`, `customSlideName`, `hashDriver` (`auto` = Navigation API where supported, History fallback) |
 | Pager | `@lightgallery/react/plugins/pager` | `pager` |
 | Share | `@lightgallery/react/plugins/share` | `preferNativeShare` (OS share sheet; default on touch), `facebook`, `twitter` (X intent), `pinterest`, `additionalShareOptions` (typed objects) |
 | Rotate | `@lightgallery/react/plugins/rotate` | `rotateSpeed`, `rotateLeft/Right`, `flipHorizontal/Vertical` |
