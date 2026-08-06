@@ -85,7 +85,7 @@ Each plugin is its own tree-shakable subpath
 | video | `plugins/video` | `videoFacade` (lite embed, default on), `youTubeNoCookie` (default on), `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
 | autoplay | `plugins/autoplay` | `slideShowInterval`, `slideShowAutoplay`, `progressBar` |
 | fullscreen | `plugins/fullscreen` | — |
-| hash | `plugins/hash` | `galleryId`, `customSlideName` |
+| hash | `plugins/hash` | `galleryId`, `customSlideName`, `hashDriver` (`auto` = Navigation API where supported, History fallback) |
 | pager | `plugins/pager` | — |
 | share | `plugins/share` | `preferNativeShare` (OS share sheet; default on touch), `facebook`/`twitter` (X intent)/`pinterest`, `additionalShareOptions` (typed) |
 | rotate | `plugins/rotate` | `rotateSpeed`, per-button toggles |

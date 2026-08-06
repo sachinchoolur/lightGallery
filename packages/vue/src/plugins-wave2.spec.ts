@@ -212,6 +212,70 @@ describe('wave-2 plugins', () => {
         expect(document.body.classList.contains('lg-from-hash')).toBe(false);
     });
 
+    it('hash: runs on the Navigation API driver with identical URLs', async () => {
+        const calls: Array<[string, { history?: string }]> = [];
+        const listeners = new Set<() => void>();
+        const navigation = {
+            currentEntry: { url: 'http://localhost/' },
+            navigate: (url: string, options: { history?: string }) => {
+                calls.push([url, options]);
+                navigation.currentEntry = {
+                    url: new URL(url, 'http://localhost/').href,
+                };
+                // The real API fires currententrychange for replaces
+                // too — the handlers must be re-entrant-safe.
+                listeners.forEach((listener) => listener());
+                return {
+                    committed: Promise.resolve(),
+                    finished: Promise.resolve(),
+                };
+            },
+            addEventListener: (type: string, listener: () => void) => {
+                if (type === 'currententrychange') {
+                    listeners.add(listener);
+                }
+            },
+            removeEventListener: (_type: string, listener: () => void) => {
+                listeners.delete(listener);
+            },
+        };
+        Object.defineProperty(window, 'navigation', {
+            value: navigation,
+            configurable: true,
+        });
+        try {
+            const { wrapper } = mountHost([
+                {
+                    ...Hash,
+                    defaults: { ...Hash.defaults!, galleryId: 'nav-g' },
+                },
+            ]);
+            await settle();
+            (
+                wrapper.findComponent(LightGallery).vm as unknown as {
+                    openGallery(i?: number): void;
+                }
+            ).openGallery(0);
+            await settle();
+            await advance(450);
+
+            const lastWrite = calls[calls.length - 1]!;
+            expect(lastWrite[0]).toContain('#lg=nav-g&slide=0');
+            expect(lastWrite[1]).toMatchObject({ history: 'replace' });
+
+            // Back/forward: the entry changes → the gallery follows.
+            navigation.currentEntry = {
+                url: 'http://localhost/#lg=nav-g&slide=2',
+            };
+            listeners.forEach((listener) => listener());
+            await settle();
+            await advance(600);
+            expect(query('.lg-counter-current')!.textContent!.trim()).toBe('3');
+        } finally {
+            delete (window as { navigation?: unknown }).navigation;
+        }
+    });
+
     it('pager: renders dots, tracks active, navigates on click', async () => {
         const { wrapper } = mountHost([Pager]);
         await openAndLoad(wrapper);
