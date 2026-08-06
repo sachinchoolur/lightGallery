@@ -313,6 +313,68 @@ describe('video plugin', () => {
         expect(frame!.src).toContain('player.vimeo.com/video/112836958');
     });
 
+    it('facades a posterless provider slide via the thumb fallback', () => {
+        renderGallery({
+            slides: [
+                {
+                    src: 'https://vimeo.com/112836958',
+                    alt: 'vimeo',
+                    thumb: 'v-t.jpg',
+                },
+            ],
+            plugins: [Video],
+        });
+        // The vimeoThumbnail-style thumb feeds the facade — no iframe
+        // before user intent.
+        const posterImg = document.querySelector<HTMLImageElement>(
+            'img.lg-video-poster',
+        );
+        expect(posterImg).not.toBeNull();
+        expect(posterImg!.getAttribute('src')).toBe('v-t.jpg');
+        expect(document.querySelector('iframe')).toBeNull();
+
+        fireEvent.click(screen.getByLabelText('Play video'));
+        expect(document.querySelector('iframe.lg-vimeo')).not.toBeNull();
+    });
+
+    it('embeds YouTube through nocookie by default, youtube.com on revert', () => {
+        const { unmount } = renderGallery({
+            slides: [videoSlides[0]],
+            plugins: [Video],
+            loadYouTubePoster: false,
+        });
+        expect(
+            document.querySelector<HTMLIFrameElement>('iframe.lg-youtube')!.src,
+        ).toContain('www.youtube-nocookie.com/embed/abc123');
+        unmount();
+
+        renderGallery({
+            slides: [videoSlides[0]],
+            plugins: [Video],
+            loadYouTubePoster: false,
+            video: { youTubeNoCookie: false },
+        });
+        expect(
+            document.querySelector<HTMLIFrameElement>('iframe.lg-youtube')!.src,
+        ).toContain('www.youtube.com/embed/abc123');
+    });
+
+    it('videoFacade:false keeps the eager iframe for posterless slides', () => {
+        renderGallery({
+            slides: [
+                {
+                    src: 'https://vimeo.com/112836958',
+                    alt: 'vimeo',
+                    thumb: 'v-t.jpg',
+                },
+            ],
+            plugins: [Video],
+            video: { videoFacade: false },
+        });
+        expect(document.querySelector('iframe.lg-vimeo')).not.toBeNull();
+        expect(document.querySelector('img.lg-video-poster')).toBeNull();
+    });
+
     it('flies the trigger thumb as a dummy over the poster (2.x)', () => {
         renderGallery({
             slides: [

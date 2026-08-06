@@ -6,11 +6,13 @@ import {
     type SyntheticEvent,
 } from 'react';
 import {
+    getFacadePoster,
     getSlideType,
     getVideoInfo,
     getVimeoEmbedUrl,
     getWistiaEmbedUrl,
     getYouTubeEmbedUrl,
+    getYouTubePosterUrl,
     type PlayerParams,
     type VideoInfo,
 } from '@lightgallery/headless';
@@ -35,6 +37,23 @@ import type { LgPlugin } from '../types';
 export interface VideoSettings {
     /** Autoplay the first slide's video once it loads. */
     autoplayFirstVideo: boolean;
+    /**
+     * Render provider video slides (YouTube/Vimeo/Wistia) as lite
+     * facades: a poster with a play button, with the provider iframe
+     * created only when the user presses play. The facade poster falls
+     * back from the item poster to the YouTube thumbnail endpoint (see
+     * `loadYouTubePoster`) to the item thumb; a slide with no resolvable
+     * poster keeps the eager-iframe behavior. `autoplayFirstVideo` /
+     * `autoplayVideoOnSlide` force an immediate materialize by design.
+     * Set false for 2.x eager iframes on all provider slides.
+     */
+    videoFacade: boolean;
+    /**
+     * Embed YouTube through the privacy-enhanced youtube-nocookie.com
+     * host. Set false to embed through youtube.com; slide URLs that
+     * already point at youtube-nocookie.com always keep it.
+     */
+    youTubeNoCookie: boolean;
     /** Extra YouTube player parameters. */
     youTubePlayerParams: PlayerParams;
     /** Extra Vimeo player parameters. */
@@ -49,6 +68,8 @@ export interface VideoSettings {
 
 export const videoSettings: VideoSettings = {
     autoplayFirstVideo: true,
+    videoFacade: true,
+    youTubeNoCookie: true,
     youTubePlayerParams: false,
     vimeoPlayerParams: false,
     wistiaPlayerParams: false,
@@ -139,13 +160,15 @@ export function VideoSlide({
     const html5Video = parseHtml5Video(item.video);
     const videoInfo = getVideoInfo(item.src, !!html5Video);
 
-    // 2.x loadYouTubePoster: derive a poster for YouTube slides that
-    // declare none.
-    const poster =
-        item.poster ??
-        (settings.loadYouTubePoster && videoInfo?.youtube
-            ? `//img.youtube.com/vi/${videoInfo.youtube[1]}/maxresdefault.jpg`
-            : undefined);
+    // Lite-embed facade poster chain (headless): item poster → YouTube
+    // thumbnail endpoint (loadYouTubePoster) → item thumb. With
+    // videoFacade:false only the 2.x YouTube synthesis remains.
+    const poster = settings.videoFacade
+        ? getFacadePoster(item, videoInfo, settings.loadYouTubePoster)
+        : item.poster ??
+          (settings.loadYouTubePoster
+              ? getYouTubePosterUrl(videoInfo)
+              : undefined);
     const hasPoster = !!poster;
     const [activated, setActivated] = useState(!hasPoster);
     const coreSettings = useGallerySettings();
@@ -183,14 +206,9 @@ export function VideoSlide({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dummySrc]);
     const loadSettleRef = useRef<number | undefined>(undefined);
-    useEffect(
-        () => () => window.clearTimeout(loadSettleRef.current),
-        [],
-    );
+    useEffect(() => () => window.clearTimeout(loadSettleRef.current), []);
     const pendingPlayRef = useRef(false);
-    const mediaRef = useRef<HTMLVideoElement | HTMLIFrameElement | null>(
-        null,
-    );
+    const mediaRef = useRef<HTMLVideoElement | HTMLIFrameElement | null>(null);
     const isCurrent = state.currentIndex === index;
     const isCurrentRef = useRef(isCurrent);
     isCurrentRef.current = isCurrent;
@@ -338,6 +356,7 @@ export function VideoSlide({
                         videoInfo,
                         settings.youTubePlayerParams,
                         item.src ?? '',
+                        settings.youTubeNoCookie,
                     )}
                 />
             );

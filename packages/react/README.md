@@ -129,7 +129,7 @@ and configure each with the prop named after it. Import the matching
 |---|---|---|
 | Thumbnail | `@lightgallery/react/plugins/thumbnail` | `thumbWidth`, `thumbHeight`, `thumbMargin`, `animateThumb`, `toggleThumb` |
 | Zoom | `@lightgallery/react/plugins/zoom` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom`, `enableZoomAfter` |
-| Video | `@lightgallery/react/plugins/video` | `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams`, `vimeoPlayerParams`, `gotoNextSlideOnVideoEnd` |
+| Video | `@lightgallery/react/plugins/video` | `videoFacade` (lite embed, default on), `youTubeNoCookie` (default on), `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams`, `vimeoPlayerParams`, `gotoNextSlideOnVideoEnd` |
 | Autoplay | `@lightgallery/react/plugins/autoplay` | `slideShowAutoplay`, `slideShowInterval`, `progressBar`, `forceSlideShowAutoplay` |
 | Fullscreen | `@lightgallery/react/plugins/fullscreen` | `fullScreen` |
 | Hash | `@lightgallery/react/plugins/hash` | `galleryId`, `customSlideName` |
