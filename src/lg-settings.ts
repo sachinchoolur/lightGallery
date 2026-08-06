@@ -1,3 +1,5 @@
+import { VirtualizationSettings } from '@lightgallery/headless';
+
 import { GalleryItem } from './lg-utils';
 import { LgQuery } from './lgQuery';
 import { LightGallery } from './lightgallery';
@@ -269,6 +271,19 @@ export interface LightGalleryCoreSettings {
      * aria-describedby attribute for gallery
      */
     ariaDescribedby: string;
+
+    /**
+     * Large-gallery virtualization. Off when undefined — the classic
+     * behavior: every thumbnail renders and the mounted-slide window is
+     * numberOfSlideItemsInDom.
+     * @description slides overrides the mounted-slide pool size; thumbs
+     * turns on thumbnail-strip windowing (only the visible thumbs plus an
+     * overscan render, with spacers preserving the strip geometry) — a
+     * number is the overscan thumb count per side, 'auto' derives one
+     * extra viewport per side. The window advances at commit points
+     * (release, slide change, resize), never per pointer move.
+     */
+    virtualization?: VirtualizationSettings;
 
     /**
      * Announce slide changes to assistive technology through a dedicated

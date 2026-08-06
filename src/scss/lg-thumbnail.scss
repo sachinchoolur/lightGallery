@@ -62,6 +62,13 @@ $thumbnails-margin: 5px;
         }
     }
 
+    // Virtualized-strip spacer: stands in for the unrendered thumbs so
+    // the track keeps its full scroll geometry.
+    .lg-thumb-spacer {
+        float: left;
+        height: 1px;
+    }
+
     .lg-thumb-item {
         cursor: pointer;
         float: left;

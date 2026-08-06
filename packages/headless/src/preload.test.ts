@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { getPreloadIndexes, getSlideIndexesInDom } from './preload';
+import {
+    getPreloadIndexes,
+    getSlideIndexesInDom,
+    getSlidePoolIndexes,
+} from './preload';
 
 describe('getSlideIndexesInDom', () => {
     it('returns every index for tiny galleries', () => {
@@ -69,5 +73,45 @@ describe('getPreloadIndexes', () => {
     it('returns nothing for zero preload or single slide', () => {
         expect(getPreloadIndexes(0, 0, 10)).toEqual([]);
         expect(getPreloadIndexes(0, 2, 1)).toEqual([]);
+    });
+});
+
+describe('getSlidePoolIndexes', () => {
+    it('matches getSlideIndexesInDom with no protected indexes', () => {
+        expect(
+            getSlidePoolIndexes({
+                index: 5,
+                prevIndex: 4,
+                slidesCount: 20,
+                poolSize: 6,
+                loop: false,
+            }),
+        ).toEqual(getSlideIndexesInDom(5, 4, 20, 6, false));
+    });
+
+    it('keeps protected indexes mounted outside the window', () => {
+        const indexes = getSlidePoolIndexes({
+            index: 50,
+            prevIndex: 49,
+            slidesCount: 1000,
+            poolSize: 5,
+            loop: false,
+            protectedIndexes: [2, 900],
+        });
+        expect(indexes).toContain(2);
+        expect(indexes).toContain(900);
+    });
+
+    it('ignores out-of-bounds and duplicate protected indexes', () => {
+        const indexes = getSlidePoolIndexes({
+            index: 5,
+            prevIndex: 4,
+            slidesCount: 20,
+            poolSize: 5,
+            loop: false,
+            protectedIndexes: [-1, 25, 5, 5],
+        });
+        expect(indexes.filter((idx) => idx === 5).length).toBe(1);
+        expect(indexes.every((idx) => idx >= 0 && idx < 20)).toBe(true);
     });
 });

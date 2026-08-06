@@ -1,8 +1,18 @@
 import {
     clampThumbTranslate,
     getActiveThumbTranslate,
+    getElasticThumbTranslate,
+    getThumbCorridorWindow,
     getThumbTotalWidth,
+    getThumbWindow,
+    type ThumbWindow,
+    getWindowedVelocity,
+    project,
+    pushVelocitySample,
+    type VelocitySample,
 } from '@lightgallery/headless';
+
+import { runSprings } from '../../lg-spring-runner';
 
 import {
     ThumbnailsSettings,
@@ -35,6 +45,14 @@ export default class Thumbnail {
     private thumbTotalWidth = 0;
     private translateX = 0;
     private thumbClickable = false;
+    // Strip physics (plan 010): velocity samples for the release fling,
+    // the live (frame-written) translate, and the running spring cancel.
+    private dragSamples: VelocitySample[] = [];
+    private liveTranslateX = 0;
+    private cancelThumbSpring?: () => void;
+    // Last rendered window (windowed strips) — the mid-drag top-up
+    // check compares the live translate against this coverage.
+    private renderedThumbWindow?: ThumbWindow;
     private settings!: ThumbnailsSettings;
     private $LG!: LgQuery;
     constructor(instance: LightGallery, $LG: LgQuery) {
@@ -158,9 +176,7 @@ export default class Thumbnail {
                 .css('position', 'relative');
         }
 
-        this.setThumbItemHtml(
-            this.core.galleryItems as unknown as ThumbnailGalleryItem[],
-        );
+        this.renderThumbItems();
     }
 
     enableThumbDrag(): void {
@@ -187,6 +203,7 @@ export default class Thumbnail {
                 if (this.thumbTotalWidth > this.thumbOuterWidth) {
                     // execute only on .lg-object
                     e.preventDefault();
+                    this.onThumbDragStart(e.pageX);
                     thumbDragUtils.cords.startX = e.pageX;
 
                     thumbDragUtils.startTime = new Date();
@@ -248,6 +265,7 @@ export default class Thumbnail {
         this.$lgThumb.on('touchstart.lg', (e: TouchEvent) => {
             if (this.thumbTotalWidth > this.thumbOuterWidth) {
                 e.preventDefault();
+                this.onThumbDragStart(e.targetTouches[0].pageX);
                 thumbDragUtils.cords.startX = e.targetTouches[0].pageX;
                 this.thumbClickable = false;
                 thumbDragUtils.startTime = new Date();
@@ -283,9 +301,7 @@ export default class Thumbnail {
             );
             this.$lgThumb.css('width', this.thumbTotalWidth + 'px');
             this.$lgThumb.empty();
-            this.setThumbItemHtml(
-                this.core.galleryItems as unknown as ThumbnailGalleryItem[],
-            );
+            this.renderThumbItems();
             this.animateThumb(this.core.index);
         }, 50);
         setTimeout(() => {
@@ -296,9 +312,10 @@ export default class Thumbnail {
     // @ts-check
 
     setTranslate(value: number): void {
+        // `${-value}` (not '-' + value): elastic overshoot goes negative.
         this.$lgThumb.css(
             'transform',
-            'translate3d(-' + value + 'px, 0px, 0px)',
+            'translate3d(' + -value + 'px, 0px, 0px)',
         );
     }
 
@@ -311,6 +328,11 @@ export default class Thumbnail {
     }
 
     animateThumb(index: number): void {
+        // A slide change owns the strip: stop any release glide first.
+        if (this.cancelThumbSpring) {
+            this.cancelThumbSpring();
+            this.cancelThumbSpring = undefined;
+        }
         this.$lgThumb.css(
             'transition-duration',
             this.core.settings.speed + 'ms',
@@ -324,26 +346,73 @@ export default class Thumbnail {
                 this.thumbTotalWidth,
                 this.settings.currentPagerPosition,
             );
+            this.liveTranslateX = this.translateX;
             this.setTranslate(this.translateX);
+            if (this.isThumbWindowed()) {
+                this.renderThumbItems(index);
+            }
         }
     }
 
+    /**
+     * Drag-start seam (plan 010 physics): a press mid-glide takes over
+     * from the live position, and the velocity window restarts.
+     */
+    private onThumbDragStart(pageX: number): void {
+        if (this.cancelThumbSpring) {
+            this.cancelThumbSpring();
+            this.cancelThumbSpring = undefined;
+            this.translateX = this.liveTranslateX;
+        }
+        this.liveTranslateX = this.translateX;
+        this.dragSamples = pushVelocitySample([], {
+            x: pageX,
+            y: 0,
+            t: Date.now(),
+        });
+    }
+
     onThumbTouchMove(thumbDragUtils: ThumbDragUtils): ThumbDragUtils {
-        thumbDragUtils.newTranslateX = this.translateX;
         thumbDragUtils.isMoved = true;
-
         thumbDragUtils.touchMoveTime = new Date().valueOf();
+        this.dragSamples = pushVelocitySample(this.dragSamples, {
+            x: thumbDragUtils.cords.endX,
+            y: 0,
+            t: Date.now(),
+        });
 
-        thumbDragUtils.newTranslateX -=
-            thumbDragUtils.cords.endX - thumbDragUtils.cords.startX;
-
-        thumbDragUtils.newTranslateX = this.getPossibleTransformX(
-            thumbDragUtils.newTranslateX,
+        // Elastic: overshoot past the edges compresses instead of
+        // clamping dead (plan 010 physics).
+        thumbDragUtils.newTranslateX = getElasticThumbTranslate(
+            this.translateX -
+                (thumbDragUtils.cords.endX - thumbDragUtils.cords.startX),
+            this.thumbTotalWidth,
+            this.thumbOuterWidth,
         );
 
         // move current slide
+        this.liveTranslateX = thumbDragUtils.newTranslateX;
         this.setTranslate(thumbDragUtils.newTranslateX);
         this.$thumbOuter.addClass('lg-dragging');
+
+        // Windowed strips: a long finger drag can outrun the rendered
+        // window — one rebuild recenters it (rare; routine moves only
+        // write the transform).
+        if (this.isThumbWindowed() && this.renderedThumbWindow) {
+            // Rendered coverage in px straight from the window's pads —
+            // [leadingPad, totalWidth - trailingPad].
+            const rendered = this.renderedThumbWindow;
+            if (
+                this.liveTranslateX < rendered.leadingPad ||
+                this.liveTranslateX + this.thumbOuterWidth >
+                    this.thumbTotalWidth - rendered.trailingPad
+            ) {
+                this.renderThumbItems(this.core.index, {
+                    from: this.liveTranslateX,
+                    to: this.liveTranslateX,
+                });
+            }
+        }
 
         return thumbDragUtils;
     }
@@ -353,40 +422,46 @@ export default class Thumbnail {
         thumbDragUtils.endTime = new Date();
         this.$thumbOuter.removeClass('lg-dragging');
 
-        const touchDuration =
-            thumbDragUtils.endTime.valueOf() -
-            thumbDragUtils.startTime.valueOf();
-        let distanceXnew =
-            thumbDragUtils.cords.endX - thumbDragUtils.cords.startX;
-        let speedX = Math.abs(distanceXnew) / touchDuration;
-        // Some magical numbers
-        // Can be improved
-        if (
-            speedX > 0.15 &&
-            thumbDragUtils.endTime.valueOf() - thumbDragUtils.touchMoveTime < 30
-        ) {
-            speedX += 1;
-
-            if (speedX > 2) {
-                speedX += 1;
-            }
-            speedX =
-                speedX +
-                speedX * (Math.abs(distanceXnew) / this.thumbOuterWidth);
-            this.$lgThumb.css(
-                'transition-duration',
-                Math.min(speedX - 1, 2) + 'settings',
-            );
-
-            distanceXnew = distanceXnew * speedX;
-
-            this.translateX = this.getPossibleTransformX(
-                this.translateX - distanceXnew,
-            );
-            this.setTranslate(this.translateX);
-        } else {
-            this.translateX = thumbDragUtils.newTranslateX;
+        // Release physics (plan 010): project the windowed velocity to a
+        // fling target, clamp into the strip bounds, and spring there —
+        // bounces off the edge on overshoot, pulls back when released
+        // inside the rubber band. (Replaces the 2.x magic-numbers
+        // momentum, whose transition-duration carried an invalid
+        // '<n>settings' unit and silently never glided.)
+        const translateVelocity = -getWindowedVelocity(
+            this.dragSamples,
+            Date.now(),
+        ).x;
+        const from = this.liveTranslateX;
+        const target = this.getPossibleTransformX(
+            from + project(translateVelocity),
+        );
+        this.$lgThumb.css('transition-duration', '0ms');
+        // Windowed strips: render the whole flight corridor before the
+        // glide starts — the destination is known at release, so the
+        // spring never crosses unrendered thumbs.
+        if (this.isThumbWindowed()) {
+            this.renderThumbItems(this.core.index, { from, to: target });
         }
+        this.cancelThumbSpring = runSprings(
+            [{ from, velocity: translateVelocity, target }],
+            ([value]) => {
+                this.liveTranslateX = value!;
+                this.setTranslate(value!);
+            },
+            () => {
+                this.cancelThumbSpring = undefined;
+                this.translateX = target;
+                this.$lgThumb.css(
+                    'transition-duration',
+                    this.core.settings.speed + 'ms',
+                );
+                if (this.isThumbWindowed()) {
+                    this.renderThumbItems();
+                }
+            },
+        );
+
         if (
             Math.abs(thumbDragUtils.cords.endX - thumbDragUtils.cords.startX) <
             this.settings.thumbnailSwipeThreshold
@@ -431,6 +506,64 @@ export default class Thumbnail {
         return div;
     }
 
+    /**
+     * True when the strip renders only a window of thumbs
+     * (virtualization.thumbs — plan 010).
+     */
+    private isThumbWindowed(): boolean {
+        return this.core.settings.virtualization?.thumbs !== undefined;
+    }
+
+    /**
+     * (Re)build the strip contents. Classic mode appends every thumb once;
+     * windowed mode renders the visible range plus overscan with spacers
+     * preserving the strip geometry, and re-runs at commit points only
+     * (open, slide change, drag release, resize, updateSlides) — never per
+     * pointer move.
+     */
+    private renderThumbItems(
+        activeIndex = this.core.index,
+        corridor?: { from: number; to: number },
+    ): void {
+        const items = this.core
+            .galleryItems as unknown as ThumbnailGalleryItem[];
+        if (!this.isThumbWindowed()) {
+            this.setThumbItemHtml(items);
+            return;
+        }
+        const geometry = {
+            stripWidth: this.thumbOuterWidth,
+            thumbWidth: this.settings.thumbWidth,
+            thumbMargin: this.settings.thumbMargin,
+            count: items.length,
+            overscan: this.core.settings.virtualization?.thumbs,
+        };
+        // A corridor covers a fling's whole flight path (or recenters
+        // around the live translate during a long drag).
+        const thumbWindow = corridor
+            ? getThumbCorridorWindow({ ...geometry, ...corridor })
+            : getThumbWindow({ ...geometry, translate: this.translateX });
+        this.renderedThumbWindow = thumbWindow;
+        this.$lgThumb.empty();
+        if (thumbWindow.leadingPad > 0) {
+            this.$lgThumb.append(
+                `<div class="lg-thumb-spacer" aria-hidden="true" style="width: ${thumbWindow.leadingPad}px;"></div>`,
+            );
+        }
+        for (let i = thumbWindow.start; i <= thumbWindow.end; i++) {
+            const thumb = this.getThumbHtml(items[i].thumb, i, items[i].alt);
+            if (i === activeIndex) {
+                thumb.classList.add('active');
+            }
+            this.$lgThumb.append(thumb);
+        }
+        if (thumbWindow.trailingPad > 0) {
+            this.$lgThumb.append(
+                `<div class="lg-thumb-spacer" aria-hidden="true" style="width: ${thumbWindow.trailingPad}px;"></div>`,
+            );
+        }
+    }
+
     setThumbItemHtml(items: ThumbnailGalleryItem[]): void {
         for (let i = 0; i < items.length; i++) {
             const thumb = this.getThumbHtml(items[i].thumb, i, items[i].alt);
@@ -450,10 +583,13 @@ export default class Thumbnail {
         this.core.LGel.on(
             `${lGEvents.beforeSlide}.thumb`,
             (event: CustomEvent) => {
-                const $thumb = this.core.outer.find('.lg-thumb-item');
                 const { index } = event.detail;
-                $thumb.removeClass('active');
-                $thumb.eq(index).addClass('active');
+                this.core.outer.find('.lg-thumb-item').removeClass('active');
+                // Id-based lookup: under a windowed strip the item's DOM
+                // position no longer equals its gallery index.
+                this.core.outer
+                    .find(`.lg-thumb-item[data-lg-item-id="${index}"]`)
+                    .addClass('active');
             },
         );
     }
@@ -491,6 +627,10 @@ export default class Thumbnail {
     }
 
     destroy(): void {
+        if (this.cancelThumbSpring) {
+            this.cancelThumbSpring();
+            this.cancelThumbSpring = undefined;
+        }
         if (this.settings.thumbnail) {
             this.$LG(window).off(`.lg.thumb.global${this.core.lgId}`);
             this.core.LGel.off('.lg.thumb');

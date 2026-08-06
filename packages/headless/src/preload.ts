@@ -85,6 +85,44 @@ export function getSlideIndexesInDom(
 }
 
 /**
+ * Slide-pool policy (plan 010 virtualization): the mounted-slide window
+ * from `getSlideIndexesInDom`, plus any protected indexes that must never
+ * be recycled while they hold live state — a zoomed slide keeps its
+ * transform/gesture session, so recycling it would drop the user's zoom.
+ * Protected indexes outside the gallery bounds are ignored.
+ */
+export function getSlidePoolIndexes(options: {
+    index: number;
+    prevIndex: number;
+    slidesCount: number;
+    poolSize?: number;
+    loop?: boolean;
+    protectedIndexes?: readonly number[];
+}): number[] {
+    const {
+        index,
+        prevIndex,
+        slidesCount,
+        poolSize = 0,
+        loop = true,
+        protectedIndexes = [],
+    } = options;
+    const indexes = getSlideIndexesInDom(
+        index,
+        prevIndex,
+        slidesCount,
+        poolSize,
+        loop,
+    );
+    protectedIndexes.forEach((idx) => {
+        if (idx >= 0 && idx < slidesCount && indexes.indexOf(idx) === -1) {
+            indexes.push(idx);
+        }
+    });
+    return indexes;
+}
+
+/**
  * Indexes to preload around `index` once the current slide has finished
  * loading: up to `preload` slides forward and backward, clamped at the
  * gallery bounds (no wrap-around — 2.x parity).

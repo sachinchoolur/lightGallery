@@ -44,6 +44,18 @@ export type GalleryMode =
 /** Where slide captions render (2.x `appendSubHtmlTo`, without selectors). */
 export type CaptionPosition = 'bar' | 'slide' | 'outer';
 
+/** Plan-010 virtualization knobs; the feature is off when the whole
+ *  object is absent. */
+export interface VirtualizationSettings {
+    /** Mounted-slide pool size (overrides `numberOfSlideItemsInDom`). */
+    slides?: number;
+    /**
+     * Thumbnail-strip windowing: overscan thumbs kept mounted on each
+     * side of the visible range, or 'auto' for one extra viewport.
+     */
+    thumbs?: 'auto' | number;
+}
+
 export interface GalleryCoreStrings {
     closeGallery: string;
     toggleMaximize: string;
@@ -224,6 +236,19 @@ export interface CoreSettings {
 
     /** Enable desktop mouse drag. */
     enableDrag: boolean;
+
+    /**
+     * Large-gallery virtualization (plan 010). Off when undefined — the
+     * 2.x behavior: every thumbnail renders and the mounted-slide window
+     * is `numberOfSlideItemsInDom`. `slides` overrides the mounted-slide
+     * pool size; `thumbs` turns on thumbnail-strip windowing (only the
+     * visible thumbs plus an overscan render, with spacers preserving the
+     * strip geometry) — a number is the overscan thumb count per side,
+     * 'auto' derives one extra viewport per side. The window advances at
+     * commit points (release, slide change, resize), never per
+     * pointermove — interaction stays zero-reactivity.
+     */
+    virtualization?: VirtualizationSettings;
 
     /**
      * Announce slide changes to assistive technology through a dedicated

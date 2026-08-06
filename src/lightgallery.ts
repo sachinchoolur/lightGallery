@@ -1581,10 +1581,15 @@ export class LightGallery {
     }
 
     organizeSlideItems(index: number, prevIndex: number): string[] {
+        // Pool size: virtualization.slides (large-gallery setting)
+        // overrides the classic numberOfSlideItemsInDom. The current
+        // slide is always in the window, and the zoom plugin resets zoom
+        // on slide change, so removal never touches live zoom state.
         const itemsToBeInsertedToDom = this.getItemsToBeInsertedToDom(
             index,
             prevIndex,
-            this.settings.numberOfSlideItemsInDom,
+            this.settings.virtualization?.slides ??
+                this.settings.numberOfSlideItemsInDom,
         );
 
         itemsToBeInsertedToDom.forEach((item) => {

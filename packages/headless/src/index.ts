@@ -37,9 +37,14 @@ export {
     type MobileSettings,
     type ResolveSettingsOptions,
     type UserSettings,
+    type VirtualizationSettings,
 } from './settings';
 
-export { getPreloadIndexes, getSlideIndexesInDom } from './preload';
+export {
+    getPreloadIndexes,
+    getSlideIndexesInDom,
+    getSlidePoolIndexes,
+} from './preload';
 
 export {
     FLICK_MIN_DISTANCE,
@@ -111,8 +116,12 @@ export {
 export {
     clampThumbTranslate,
     getActiveThumbTranslate,
+    getElasticThumbTranslate,
+    getThumbCorridorWindow,
     getThumbTotalWidth,
+    getThumbWindow,
     type ThumbPagerPosition,
+    type ThumbWindow,
 } from './thumb-math';
 
 export {
