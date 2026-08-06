@@ -472,6 +472,10 @@ const utils = {
             videoClass = 'lg-has-youtube';
         } else if (_isVideo && _isVideo.vimeo) {
             videoClass = 'lg-has-vimeo';
+        } else if (_isVideo && _isVideo.wistia) {
+            // Wistia fell into lg-has-html5 in 2.x; the facades made the
+            // gap visible (binding providerClass had it right all along).
+            videoClass = 'lg-has-wistia';
         } else {
             videoClass = 'lg-has-html5';
         }

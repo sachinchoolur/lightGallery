@@ -2,6 +2,8 @@ import {
     awaitDecode,
     formatSlideAnnouncement,
     getEdgeFrictionedDelta,
+    getFacadePoster,
+    getYouTubePosterUrl,
     getHorizontalDragTransforms,
     getSwipeAxis,
     getSwipeReleaseVerdict,
@@ -1219,13 +1221,28 @@ export class LightGallery {
                 !!element.video,
                 index,
             );
-            if (
-                element.__slideVideoInfo &&
+            const videoInfo = element.__slideVideoInfo;
+            if (!videoInfo) {
+                return;
+            }
+            if (this.settings.videoFacade !== false) {
+                // Lite-embed facade: provider slides get a poster (item
+                // poster → YouTube thumbnail endpoint → item thumb) so the
+                // iframe is created only on play. The headless chain never
+                // synthesizes a poster for html5 slides.
+                element.poster = getFacadePoster(
+                    element,
+                    videoInfo,
+                    this.settings.loadYouTubePoster,
+                );
+            } else if (
                 this.settings.loadYouTubePoster &&
                 !element.poster &&
-                element.__slideVideoInfo.youtube
+                videoInfo.youtube
             ) {
-                element.poster = `//img.youtube.com/vi/${element.__slideVideoInfo.youtube[1]}/maxresdefault.jpg`;
+                // videoFacade:false — 2.x behavior: only the YouTube
+                // poster is synthesized.
+                element.poster = getYouTubePosterUrl(videoInfo);
             }
         });
     }

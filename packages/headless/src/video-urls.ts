@@ -16,9 +16,7 @@ export interface VideoInfo {
 
 // `true` is accepted for 2.x-contract compatibility and means the same
 // as an empty params object.
-export type PlayerParams =
-    | Record<string, string | number | boolean>
-    | boolean;
+export type PlayerParams = Record<string, string | number | boolean> | boolean;
 
 function toParamsObject(
     params: PlayerParams,
@@ -56,9 +54,7 @@ export function getVideoInfo(
 }
 
 /** Serialize params as a query string (2.x `param`). */
-export function param(
-    obj: Record<string, string | number | boolean>,
-): string {
+export function param(obj: Record<string, string | number | boolean>): string {
     return Object.keys(obj)
         .map(
             (key) =>
@@ -68,9 +64,7 @@ export function param(
 }
 
 /** Parse `?a=b&c=d` into an object (2.x `paramsToObject`). */
-export function paramsToObject(
-    url: string,
-): Record<string, string> {
+export function paramsToObject(url: string): Record<string, string> {
     return url
         .slice(1)
         .split('&')
@@ -90,12 +84,16 @@ export function isYouTubeNoCookie(url: string): boolean {
 
 /**
  * YouTube embed URL. Precedence (2.x parity): defaults < settings < params
- * already present on the slide URL.
+ * already present on the slide URL. The privacy-enhanced
+ * `youtube-nocookie.com` host is the default; pass `preferNoCookie: false`
+ * (the `youTubeNoCookie` setting) to revert to `youtube.com`. A slide URL
+ * that already names the nocookie host always keeps it.
  */
 export function getYouTubeEmbedUrl(
     videoInfo: VideoInfo,
     playerParamsSettings: PlayerParams,
     srcUrl: string,
+    preferNoCookie = true,
 ): string | undefined {
     if (!videoInfo.youtube) {
         return undefined;
@@ -111,11 +109,61 @@ export function getYouTubeEmbedUrl(
         ...toParamsObject(playerParamsSettings),
         ...slideUrlParams,
     };
-    const base = isYouTubeNoCookie(srcUrl)
-        ? '//www.youtube-nocookie.com/'
-        : '//www.youtube.com/';
+    const base =
+        preferNoCookie || isYouTubeNoCookie(srcUrl)
+            ? '//www.youtube-nocookie.com/'
+            : '//www.youtube.com/';
     return `${base}embed/${videoInfo.youtube[1]}?${param(params)}`;
 }
+
+/**
+ * YouTube's public thumbnail endpoint for a detected video — the one
+ * provider poster that needs no API call. (Vimeo/Wistia poster endpoints
+ * require a fetch/auth, so their facades rely on the item's own
+ * poster/thumb — see getFacadePoster.)
+ */
+export function getYouTubePosterUrl(
+    videoInfo: VideoInfo | undefined,
+): string | undefined {
+    if (!videoInfo?.youtube) {
+        return undefined;
+    }
+    return `//img.youtube.com/vi/${videoInfo.youtube[1]}/maxresdefault.jpg`;
+}
+
+/**
+ * Poster for a provider-video facade (lite embed): the explicit item
+ * poster wins, then the YouTube thumbnail endpoint (when enabled), then
+ * the item's grid thumb — for Vimeo galleries the vimeoThumbnail plugin
+ * rewrites `thumb` to the oEmbed thumbnail, which feeds this chain.
+ * HTML5 slides never get a synthesized poster (unchanged 2.x behavior);
+ * a provider slide with no resolvable poster returns undefined and keeps
+ * the eager-iframe path.
+ */
+export function getFacadePoster(
+    item: { poster?: string; thumb?: string },
+    videoInfo: VideoInfo | undefined,
+    loadYouTubePoster: boolean,
+): string | undefined {
+    if (!videoInfo || videoInfo.html5) {
+        return item.poster || undefined;
+    }
+    return (
+        item.poster ||
+        (loadYouTubePoster ? getYouTubePosterUrl(videoInfo) : undefined) ||
+        item.thumb ||
+        undefined
+    );
+}
+
+/**
+ * Provider player-API script URLs, loaded on demand at first play (the
+ * vanilla runtime's control paths need them; the framework bindings drive
+ * players via postMessage and load nothing).
+ */
+export const VIMEO_PLAYER_SCRIPT_URL = 'https://player.vimeo.com/api/player.js';
+export const WISTIA_PLAYER_SCRIPT_URL =
+    'https://fast.wistia.com/assets/external/E-v1.js';
 
 /**
  * Vimeo embed URL, including the private-video hash handling (2.x
@@ -149,9 +197,7 @@ export function getVimeoEmbedUrl(
     const privateUrlParams = isPrivate ? `h=${hash}` : '';
     defaultParams = privateUrlParams ? `&${defaultParams}` : defaultParams;
 
-    return `//player.vimeo.com/video/${
-        videoInfo.vimeo[1]
-    }?${privateUrlParams}${defaultParams}${urlParams}`;
+    return `//player.vimeo.com/video/${videoInfo.vimeo[1]}?${privateUrlParams}${defaultParams}${urlParams}`;
 }
 
 /** Wistia embed URL. */

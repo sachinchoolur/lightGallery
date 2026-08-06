@@ -325,7 +325,10 @@ describe('Plugins', () => {
             },
         );
         LG.openGallery(0);
-        expect(LG.galleryItems[0].poster).toBeUndefined();
+        // The YouTube endpoint is skipped; the facade chain still falls
+        // back to the item thumb (videoFacade default).
+        expect(LG.galleryItems[0].poster).toBe('b.png');
+        expect(LG.galleryItems[0].poster).not.toContain('img.youtube.com');
     });
     it('Should not fetch poster from youtube videos for image slide', async () => {
         document.body.innerHTML = `<div id="lightGallery">
@@ -349,6 +352,9 @@ describe('Plugins', () => {
             document.getElementById('lightGallery') as HTMLElement,
         );
         LG.openGallery(0);
-        expect(LG.galleryItems[0].poster).toBeUndefined();
+        // No YouTube endpoint for Vimeo; the facade chain resolves the
+        // item thumb instead (videoFacade default).
+        expect(LG.galleryItems[0].poster).toBe('b.png');
+        expect(LG.galleryItems[0].poster).not.toContain('img.youtube.com');
     });
 });

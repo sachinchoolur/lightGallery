@@ -34,6 +34,8 @@ import {
     VideoInfo,
 } from '../../types';
 import {
+    VIMEO_PLAYER_SCRIPT_URL,
+    WISTIA_PLAYER_SCRIPT_URL,
     getVimeoEmbedUrl,
     getWistiaEmbedUrl,
     getYouTubeEmbedUrl,
@@ -48,7 +50,27 @@ declare global {
     interface Window {
         _wq: any;
         Vimeo: any;
+        Wistia: any;
     }
+}
+
+// One in-flight/settled promise per provider script URL, page-wide — the
+// player APIs load on demand at first play (lite-embed) instead of being
+// a documented include for the integrator. Never rejects: consumers check
+// the provider global afterwards, matching the old error-log behavior.
+const providerScriptLoads: { [url: string]: Promise<void> } = {};
+function loadProviderScript(url: string): Promise<void> {
+    if (!providerScriptLoads[url]) {
+        providerScriptLoads[url] = new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = url;
+            script.async = true;
+            script.onload = () => resolve();
+            script.onerror = () => resolve();
+            document.head.appendChild(script);
+        });
+    }
+    return providerScriptLoads[url];
 }
 export default class Video {
     private core: LightGallery;
@@ -240,6 +262,7 @@ export default class Video {
                 videoInfo,
                 this.settings.youTubePlayerParams,
                 src,
+                this.settings.youTubeNoCookie,
             );
 
             video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="${embedUrl}" ${commonIframeProps}></iframe>`;
@@ -350,37 +373,66 @@ export default class Video {
                     this.core.goToNextSlide();
                 });
             } else if (videoInfo.vimeo) {
-                try {
-                    // https://github.com/vimeo/player.js/#ended
+                // https://github.com/vimeo/player.js/#ended
+                this.withVimeoApi(() => {
                     new Vimeo.Player($videoElement.get()).on('ended', () => {
                         this.core.goToNextSlide();
                     });
-                } catch (e) {
-                    console.error(
-                        'lightGallery:- Make sure you have included //github.com/vimeo/player.js',
-                    );
-                }
+                });
             } else if (videoInfo.wistia) {
-                try {
-                    window._wq = window._wq || [];
-
-                    // @todo Event is gettign triggered multiple times
-                    window._wq.push({
-                        id: $videoElement.attr('id'),
-                        onReady: (video: {
-                            bind: (arg0: string, arg1: () => void) => void;
-                        }) => {
-                            video.bind('end', () => {
-                                this.core.goToNextSlide();
-                            });
-                        },
-                    });
-                } catch (e) {
-                    console.error(
-                        'lightGallery:- Make sure you have included //fast.wistia.com/assets/external/E-v1.js',
-                    );
-                }
+                // @todo Event is gettign triggered multiple times
+                this.pushWistiaCommand({
+                    id: $videoElement.attr('id'),
+                    onReady: (video: {
+                        bind: (arg0: string, arg1: () => void) => void;
+                    }) => {
+                        video.bind('end', () => {
+                            this.core.goToNextSlide();
+                        });
+                    },
+                });
             }
+        }
+    }
+
+    /**
+     * Run a callback with the Vimeo player API available, loading
+     * player.js on demand at first use (lite-embed: no provider script
+     * before user intent). Errors keep the 2.x console message.
+     */
+    private withVimeoApi(callback: () => void): void {
+        const run = () => {
+            try {
+                callback();
+            } catch (e) {
+                console.error(
+                    'lightGallery:- Make sure you have included //github.com/vimeo/player.js',
+                );
+            }
+        };
+        if (window.Vimeo && window.Vimeo.Player) {
+            run();
+            return;
+        }
+        loadProviderScript(VIMEO_PLAYER_SCRIPT_URL).then(run);
+    }
+
+    /**
+     * Queue a Wistia command and load E-v1.js on demand — `_wq` is
+     * Wistia's own pre-load command queue, drained when the script lands.
+     */
+    private pushWistiaCommand(command: unknown): void {
+        try {
+            window._wq = window._wq || [];
+            window._wq.push(command);
+        } catch (e) {
+            console.error(
+                'lightGallery:- Make sure you have included //fast.wistia.com/assets/external/E-v1.js',
+            );
+            return;
+        }
+        if (!window.Wistia) {
+            loadProviderScript(WISTIA_PLAYER_SCRIPT_URL);
         }
     }
 
@@ -403,13 +455,9 @@ export default class Video {
                 console.error(`lightGallery:- ${e}`);
             }
         } else if (videoInfo.vimeo) {
-            try {
+            this.withVimeoApi(() => {
                 new Vimeo.Player($videoElement.get())[action]();
-            } catch (e) {
-                console.error(
-                    'lightGallery:- Make sure you have included //github.com/vimeo/player.js',
-                );
-            }
+            });
         } else if (videoInfo.html5) {
             if (this.settings.videojs) {
                 try {
@@ -423,21 +471,13 @@ export default class Video {
                 ($videoElement.get() as any)[action]();
             }
         } else if (videoInfo.wistia) {
-            try {
-                window._wq = window._wq || [];
-
-                // @todo Find a way to destroy wistia player instance
-                window._wq.push({
-                    id: $videoElement.attr('id'),
-                    onReady: (video: any) => {
-                        video[action]();
-                    },
-                });
-            } catch (e) {
-                console.error(
-                    'lightGallery:- Make sure you have included //fast.wistia.com/assets/external/E-v1.js',
-                );
-            }
+            // @todo Find a way to destroy wistia player instance
+            this.pushWistiaCommand({
+                id: $videoElement.attr('id'),
+                onReady: (video: any) => {
+                    video[action]();
+                },
+            });
         }
     }
 

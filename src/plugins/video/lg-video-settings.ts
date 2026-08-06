@@ -9,6 +9,27 @@ export interface VideoSettings {
     autoplayFirstVideo: boolean;
 
     /**
+     * Render provider video slides (YouTube/Vimeo/Wistia) as lite facades:
+     * a poster with a play button, with the provider iframe created only
+     * when the user presses play.
+     * @description The facade poster falls back from the item poster to
+     * the YouTube thumbnail endpoint (see loadYouTubePoster) to the item
+     * thumb; a slide with no resolvable poster keeps the previous
+     * eager-iframe behavior. Note autoplayFirstVideo/autoplayVideoOnSlide
+     * force an immediate materialize by design. Set false for 2.x
+     * eager-iframe behavior on all provider slides.
+     */
+    videoFacade: boolean;
+
+    /**
+     * Embed YouTube videos through the privacy-enhanced
+     * youtube-nocookie.com host.
+     * @description Set false to embed through youtube.com instead. Slide
+     * URLs that already point at youtube-nocookie.com always keep it.
+     */
+    youTubeNoCookie: boolean;
+
+    /**
      * Change YouTube player parameters.
      * You can find the list of YouTube player parameters from the following link
      * <a href="https://developers.google.com/youtube/player_parameters">YouTube player parameters</a>
@@ -79,6 +100,8 @@ export interface VideoSettings {
 }
 export const videoSettings: VideoSettings = {
     autoplayFirstVideo: true,
+    videoFacade: true,
+    youTubeNoCookie: true,
     youTubePlayerParams: false,
     vimeoPlayerParams: false,
     wistiaPlayerParams: false,

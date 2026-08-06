@@ -76,10 +76,14 @@ export {
 } from './origin';
 
 export {
+    VIMEO_PLAYER_SCRIPT_URL,
+    WISTIA_PLAYER_SCRIPT_URL,
+    getFacadePoster,
     getVideoInfo,
     getVimeoEmbedUrl,
     getWistiaEmbedUrl,
     getYouTubeEmbedUrl,
+    getYouTubePosterUrl,
     isYouTubeNoCookie,
     param,
     paramsToObject,
