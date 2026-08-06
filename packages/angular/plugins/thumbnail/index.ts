@@ -14,15 +14,23 @@ import {
 import {
     clampThumbTranslate,
     getActiveThumbTranslate,
+    getElasticThumbTranslate,
+    getThumbCorridorWindow,
     getThumbTotalWidth,
+    getThumbWindow,
     getVideoInfo,
+    getWindowedVelocity,
+    project,
+    pushVelocitySample,
     type ThumbPagerPosition,
+    type VelocitySample,
 } from '@lightgallery/headless';
 import {
     LG_FEATURE_INIT,
     LG_PLUGIN_CONTEXT,
     type LgFeature,
     type LgGalleryItem,
+    runSprings,
 } from '@lightgallery/angular';
 
 /**
@@ -84,6 +92,7 @@ export const thumbnailSettings: ThumbnailSettings = {
 type ThumbnailResolved = ThumbnailSettings & {
     speed: number;
     allowMediaOverlap: boolean;
+    virtualization?: { slides?: number; thumbs?: 'auto' | number };
 };
 
 @Component({
@@ -91,51 +100,66 @@ type ThumbnailResolved = ThumbnailSettings & {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (settings().thumbnail) {
+        <div
+            #stripOuter
+            class="lg-thumb-outer"
+            [class]="outerClasses()"
+            [style.touch-action]="'none'"
+        >
             <div
-                #stripOuter
-                class="lg-thumb-outer"
-                [class]="outerClasses()"
-                [style.touch-action]="'none'"
+                #track
+                class="lg-thumb lg-group"
+                [style.width.px]="totalWidth()"
+                [style.position]="'relative'"
+                [style.transition-duration]="
+                    dragging() ? '0ms' : settings().speed + 'ms'
+                "
+                [style.transform]="trackTransform()"
+                (pointerdown)="onPointerDown($event)"
             >
+                @if (thumbWindow(); as window) { @if (window.leadingPad > 0) {
                 <div
-                    #track
-                    class="lg-thumb lg-group"
-                    [style.width.px]="totalWidth()"
-                    [style.position]="'relative'"
-                    [style.transition-duration]="
-                        dragging() ? '0ms' : settings().speed + 'ms'
+                    class="lg-thumb-spacer"
+                    aria-hidden="true"
+                    [style.width.px]="window.leadingPad"
+                    [style.height.px]="1"
+                    [style.float]="'left'"
+                ></div>
+                } } @for (entry of renderedThumbs(); track entry.index) {
+                <div
+                    class="lg-thumb-item"
+                    [class.active]="entry.index === currentIndex()"
+                    [style.width.px]="settings().thumbWidth"
+                    [style.height]="settings().thumbHeight"
+                    [style.margin-right.px]="settings().thumbMargin"
+                    role="button"
+                    tabindex="0"
+                    [attr.data-lg-item-id]="entry.index"
+                    [attr.aria-label]="
+                        entry.item.alt ?? 'Go to slide ' + (entry.index + 1)
                     "
-                    [style.transform]="
-                        'translate3d(-' + translate() + 'px, 0px, 0px)'
-                    "
-                    (pointerdown)="onPointerDown($event)"
+                    [attr.aria-current]="entry.index === currentIndex()"
+                    (click)="onThumbClick(entry.index)"
+                    (keydown)="onThumbKeydown($event, entry.index)"
                 >
-                    @for (item of ctx.items(); track $index) {
-                        <div
-                            class="lg-thumb-item"
-                            [class.active]="$index === currentIndex()"
-                            [style.width.px]="settings().thumbWidth"
-                            [style.height]="settings().thumbHeight"
-                            [style.margin-right.px]="settings().thumbMargin"
-                            role="button"
-                            tabindex="0"
-                            [attr.data-lg-item-id]="$index"
-                            [attr.aria-label]="
-                                item.alt ?? 'Go to slide ' + ($index + 1)
-                            "
-                            [attr.aria-current]="$index === currentIndex()"
-                            (click)="onThumbClick($index)"
-                            (keydown)="onThumbKeydown($event, $index)"
-                        >
-                            <img
-                                [src]="thumbSrc(item)"
-                                [alt]="item.alt ?? ''"
-                                draggable="false"
-                            />
-                        </div>
-                    }
+                    <img
+                        [src]="thumbSrc(entry.item)"
+                        [alt]="entry.item.alt ?? ''"
+                        draggable="false"
+                    />
                 </div>
+                } @if (thumbWindow(); as window) { @if (window.trailingPad > 0)
+                {
+                <div
+                    class="lg-thumb-spacer"
+                    aria-hidden="true"
+                    [style.width.px]="window.trailingPad"
+                    [style.height.px]="1"
+                    [style.float]="'left'"
+                ></div>
+                } }
             </div>
+        </div>
         }
     `,
 })
@@ -153,8 +177,16 @@ export class LgThumbnailStripComponent {
     private readonly track = viewChild<ElementRef<HTMLDivElement>>('track');
 
     private readonly stripWidth = signal(0);
+    protected stripWidthValue(): number {
+        return this.stripWidth();
+    }
     protected readonly translate = signal(0);
     protected readonly dragging = signal(false);
+    // Fling corridor (plan 010): set at release so the window covers the
+    // whole flight path; cleared at settle.
+    private readonly corridor = signal<{ from: number; to: number } | null>(
+        null,
+    );
 
     protected readonly totalWidth = computed(() =>
         getThumbTotalWidth(
@@ -163,6 +195,35 @@ export class LgThumbnailStripComponent {
             this.settings().thumbMargin,
         ),
     );
+    // Plan-010 thumbnail windowing: with virtualization.thumbs set, only
+    // the visible thumbs plus overscan render; spacers preserve the strip
+    // geometry. Keys off the COMMITTED translate — advances at release/
+    // slide-change/resize, never per pointermove.
+    protected readonly thumbWindow = computed(() => {
+        const overscan = this.settings().virtualization?.thumbs;
+        if (overscan === undefined) {
+            return null;
+        }
+        const geometry = {
+            stripWidth: this.stripWidthValue(),
+            thumbWidth: this.settings().thumbWidth,
+            thumbMargin: this.settings().thumbMargin,
+            count: this.ctx.items().length,
+            overscan,
+        };
+        const corridor = this.corridor();
+        return corridor
+            ? getThumbCorridorWindow({ ...geometry, ...corridor })
+            : getThumbWindow({ ...geometry, translate: this.translate() });
+    });
+    protected readonly renderedThumbs = computed(() => {
+        const entries = this.ctx
+            .items()
+            .map((item, index) => ({ item, index }));
+        const window = this.thumbWindow();
+        return window ? entries.slice(window.start, window.end + 1) : entries;
+    });
+
     protected readonly outerClasses = computed(() => {
         const settings = this.settings();
         return [
@@ -179,9 +240,15 @@ export class LgThumbnailStripComponent {
         pointerId: number;
         startX: number;
         startTranslate: number;
+        moved: boolean;
     } | null = null;
+    private samples: VelocitySample[] = [];
+    private cancelSpring: (() => void) | null = null;
+    private liveTranslate = 0;
     private detachWindow: (() => void) | null = null;
     private readonly resizeListener = (): void => this.measure();
+
+    private measureTimer: ReturnType<typeof setTimeout> | null = null;
 
     constructor() {
         // 2.x measures the outer element on open and on resize.
@@ -189,9 +256,28 @@ export class LgThumbnailStripComponent {
             this.measure();
             window.addEventListener('resize', this.resizeListener);
         });
+        // The strip mounts one commit before `lg-show` lands (persistent
+        // container), so the mount measurement can read a hidden 0-width
+        // outer — the stale width mis-clamps the pager translate and,
+        // when windowed, shrinks the thumb window. Re-measure shortly
+        // after the gallery opens, once the container is visible.
+        effect(() => {
+            const open = this.ctx.state().open;
+            if (!open) {
+                return;
+            }
+            if (this.measureTimer) {
+                clearTimeout(this.measureTimer);
+            }
+            this.measureTimer = setTimeout(() => this.measure(), 50);
+        });
         inject(DestroyRef).onDestroy(() => {
             window.removeEventListener('resize', this.resizeListener);
+            if (this.measureTimer) {
+                clearTimeout(this.measureTimer);
+            }
             this.detachWindow?.();
+            this.cancelSpring?.();
         });
         // Keep the active thumbnail at the pager position (React
         // counterpart: the translate-sync effect).
@@ -211,6 +297,25 @@ export class LgThumbnailStripComponent {
                 ),
             );
         });
+    }
+
+    // Track transform for the template: the live (frame-written) value
+    // while a gesture/glide owns the track, the committed signal
+    // otherwise — a corridor re-render must not snap the track.
+    protected trackTransform(): string {
+        const value = this.dragging() ? this.liveTranslate : this.translate();
+        return `translate3d(${-value}px, 0px, 0px)`;
+    }
+
+    // Strip physics (plan 010): frames write the DOM directly; the
+    // translate signal commits once at settle (windowed strips re-render
+    // there).
+    private writeTrackTranslate(value: number): void {
+        this.liveTranslate = value;
+        const track = this.track()?.nativeElement;
+        if (track) {
+            track.style.transform = `translate3d(${-value}px, 0px, 0px)`;
+        }
     }
 
     private measure(): void {
@@ -259,13 +364,23 @@ export class LgThumbnailStripComponent {
             return;
         }
         event.preventDefault();
+        // A press mid-glide takes over from the current position.
+        this.cancelSpring?.();
+        this.cancelSpring = null;
+        this.corridor.set(null);
+        this.samples = pushVelocitySample([], {
+            x: event.clientX,
+            y: event.clientY,
+            t: Date.now(),
+        });
+        this.liveTranslate = this.translate();
         this.drag = {
             pointerId: event.pointerId,
             startX: event.clientX,
-            startTranslate: this.translate(),
+            startTranslate: this.liveTranslate,
+            moved: false,
         };
         this.dragging.set(true);
-        let live = this.translate();
         const onMove = (moveEvent: PointerEvent): void => {
             const drag = this.drag;
             if (!drag || moveEvent.pointerId !== drag.pointerId) {
@@ -273,16 +388,43 @@ export class LgThumbnailStripComponent {
             }
             const delta = moveEvent.clientX - drag.startX;
             if (Math.abs(delta) > 2) {
+                drag.moved = true;
                 this.clickable = false;
             }
-            live = clampThumbTranslate(
-                drag.startTranslate - delta,
-                this.totalWidth(),
-                this.stripWidth(),
+            this.samples = pushVelocitySample(this.samples, {
+                x: moveEvent.clientX,
+                y: moveEvent.clientY,
+                t: Date.now(),
+            });
+            // Elastic: overshoot past the edges compresses instead of
+            // clamping dead.
+            this.writeTrackTranslate(
+                getElasticThumbTranslate(
+                    drag.startTranslate - delta,
+                    this.totalWidth(),
+                    this.stripWidth(),
+                ),
             );
-            const track = this.track()?.nativeElement;
-            if (track) {
-                track.style.transform = `translate3d(-${live}px, 0px, 0px)`;
+            // Windowed strips: a long finger drag can outrun the
+            // rendered window — one commit recenters it (rare; routine
+            // moves stay zero-CD).
+            const rendered = this.thumbWindow();
+            if (rendered) {
+                const unit =
+                    this.settings().thumbWidth + this.settings().thumbMargin;
+                if (
+                    this.liveTranslate < rendered.start * unit ||
+                    this.liveTranslate + this.stripWidth() >
+                        (rendered.end + 1) * unit
+                ) {
+                    this.translate.set(
+                        clampThumbTranslate(
+                            this.liveTranslate,
+                            this.totalWidth(),
+                            this.stripWidth(),
+                        ),
+                    );
+                }
             }
         };
         const onUp = (upEvent: PointerEvent): void => {
@@ -292,12 +434,57 @@ export class LgThumbnailStripComponent {
             }
             this.detachWindow?.();
             this.detachWindow = null;
+            const moved = drag.moved;
             this.drag = null;
-            this.dragging.set(false);
-            this.translate.set(live);
             this.clickable =
                 Math.abs(upEvent.clientX - drag.startX) <
                 this.settings().thumbnailSwipeThreshold;
+
+            // Fling: project the release velocity, clamp into the strip
+            // bounds, spring there (bounces off the edge; pulls back when
+            // released inside the rubber band).
+            const translateVelocity = -getWindowedVelocity(
+                this.samples,
+                Date.now(),
+            ).x;
+            const target = clampThumbTranslate(
+                this.liveTranslate + project(translateVelocity),
+                this.totalWidth(),
+                this.stripWidth(),
+            );
+            if (!moved) {
+                this.dragging.set(false);
+                this.translate.set(
+                    clampThumbTranslate(
+                        this.liveTranslate,
+                        this.totalWidth(),
+                        this.stripWidth(),
+                    ),
+                );
+                return;
+            }
+            // Windowed strips: render the whole flight corridor before
+            // the glide starts — the destination is known at release, so
+            // the spring never crosses unrendered thumbs.
+            if (this.thumbWindow()) {
+                this.corridor.set({ from: this.liveTranslate, to: target });
+            }
+            this.cancelSpring = runSprings(
+                [
+                    {
+                        from: this.liveTranslate,
+                        velocity: translateVelocity,
+                        target,
+                    },
+                ],
+                ([value]) => this.writeTrackTranslate(value!),
+                () => {
+                    this.cancelSpring = null;
+                    this.dragging.set(false);
+                    this.corridor.set(null);
+                    this.translate.set(target);
+                },
+            );
         };
         window.addEventListener('pointermove', onMove, { passive: true });
         window.addEventListener('pointerup', onUp);
@@ -315,14 +502,14 @@ export class LgThumbnailStripComponent {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (visible()) {
-            <button
-                type="button"
-                class="lg-toggle-thumb lg-icon"
-                [attr.aria-label]="
-                    settings().thumbnailPluginStrings.toggleThumbnails
-                "
-                (click)="ctx.layout.toggleComponents()"
-            ></button>
+        <button
+            type="button"
+            class="lg-toggle-thumb lg-icon"
+            [attr.aria-label]="
+                settings().thumbnailPluginStrings.toggleThumbnails
+            "
+            (click)="ctx.layout.toggleComponents()"
+        ></button>
         }
     `,
 })
@@ -348,8 +535,7 @@ export class LgThumbnailInitService {
     constructor() {
         const ctx = inject(LG_PLUGIN_CONTEXT);
         effect((onCleanup) => {
-            const settings =
-                ctx.settings() as unknown as ThumbnailResolved;
+            const settings = ctx.settings() as unknown as ThumbnailResolved;
             const enabled = settings.thumbnail;
             ctx.layout.setOuterClass('lg-has-thumb', enabled);
             ctx.layout.setOuterClass(
@@ -358,9 +544,7 @@ export class LgThumbnailInitService {
             );
             ctx.layout.setOuterClass(
                 'lg-can-toggle',
-                enabled &&
-                    settings.toggleThumb &&
-                    settings.allowMediaOverlap,
+                enabled && settings.toggleThumb && settings.allowMediaOverlap,
             );
             onCleanup(() => {
                 ctx.layout.setOuterClass('lg-has-thumb', false);

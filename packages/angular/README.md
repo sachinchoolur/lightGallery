@@ -108,6 +108,18 @@ Features compose per gallery instance — two galleries on one page can have
 different feature sets. Order matters for slide wrappers: put `withZoom()`
 before `withRotate()` (zoom outermost, 2.x DOM order).
 
+## Large galleries (virtualization)
+
+For 1,000+ item galleries, `virtualization` bounds the DOM (default off):
+
+- `virtualization.slides` — mounted-slide pool size (overrides
+  `numberOfSlideItemsInDom`).
+- `virtualization.thumbs` — thumbnail-strip windowing: only the visible
+  thumbs plus an overscan render, with spacers preserving the strip
+  geometry (`'auto'` = one extra viewport per side, or a thumb count).
+  The window advances at commit points (release, slide change, resize),
+  never per pointer move.
+
 ## SSR / hydration
 
 - Server-safe and zoneless: with `@angular/ssr` the page server-renders

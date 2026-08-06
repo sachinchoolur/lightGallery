@@ -39,7 +39,7 @@ import {
     fitImageSize,
     formatSlideAnnouncement,
     getOriginTransform,
-    getSlideIndexesInDom,
+    getSlidePoolIndexes,
     getSlideType,
     parseImageSize,
     resolveSettings,
@@ -48,6 +48,7 @@ import {
     type GalleryCoreStrings,
     type GalleryMode,
     type MobileSettings,
+    type VirtualizationSettings,
     type RectLike,
     type SlideDirection,
     type UserSettings,
@@ -458,6 +459,9 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     readonly captionPosition = input<CaptionPosition | undefined>(undefined);
     readonly preload = input<number | undefined>(undefined);
     readonly numberOfSlideItemsInDom = input<number | undefined>(undefined);
+    readonly virtualization = input<VirtualizationSettings | undefined>(
+        undefined,
+    );
     readonly iframeWidth = input<string | undefined>(undefined);
     readonly iframeHeight = input<string | undefined>(undefined);
     readonly iframeMaxWidth = input<string | undefined>(undefined);
@@ -614,6 +618,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         captionPosition: this.captionPosition(),
         preload: this.preload(),
         numberOfSlideItemsInDom: this.numberOfSlideItemsInDom(),
+        virtualization: this.virtualization(),
         iframeWidth: this.iframeWidth(),
         iframeHeight: this.iframeHeight(),
         iframeMaxWidth: this.iframeMaxWidth(),
@@ -858,14 +863,20 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         });
     });
 
+    // Pool size: virtualization.slides (plan 010) overrides the classic
+    // numberOfSlideItemsInDom. The current slide is always in the window,
+    // and zoom resets when a slide stops being current, so the pool never
+    // recycles live zoom state.
     protected readonly slideIndexes = computed(() =>
-        getSlideIndexesInDom(
-            this.store.currentIndex(),
-            this.store.previousIndex(),
-            this.store.slidesCount(),
-            this.settings().numberOfSlideItemsInDom,
-            this.store.loop(),
-        ).sort((a, b) => a - b),
+        getSlidePoolIndexes({
+            index: this.store.currentIndex(),
+            prevIndex: this.store.previousIndex(),
+            slidesCount: this.store.slidesCount(),
+            poolSize:
+                this.settings().virtualization?.slides ??
+                this.settings().numberOfSlideItemsInDom,
+            loop: this.store.loop(),
+        }).sort((a, b) => a - b),
     );
 
     protected readonly disablePrev = computed(
