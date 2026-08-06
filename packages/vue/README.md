@@ -82,7 +82,7 @@ Each plugin is its own tree-shakable subpath
 |---|---|---|
 | thumbnail | `plugins/thumbnail` | `thumbWidth`, `thumbHeight`, `animateThumb`, `toggleThumb` |
 | zoom | `plugins/zoom` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom` |
-| video | `plugins/video` | `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
+| video | `plugins/video` | `videoFacade` (lite embed, default on), `youTubeNoCookie` (default on), `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
 | autoplay | `plugins/autoplay` | `slideShowInterval`, `slideShowAutoplay`, `progressBar` |
 | fullscreen | `plugins/fullscreen` | — |
 | hash | `plugins/hash` | `galleryId`, `customSlideName` |

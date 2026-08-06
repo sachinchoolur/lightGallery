@@ -612,6 +612,93 @@ describe('plugin runtime + wave-1', () => {
         expect(panX()).toBeCloseTo(-600, 0);
     });
 
+    it('video: facades a posterless provider slide via the thumb fallback', async () => {
+        const FacadeHost = defineComponent({
+            components: { LightGallery },
+            props: {
+                videoCfg: { type: Object, default: () => ({}) },
+            },
+            setup: () => ({
+                items: [
+                    {
+                        src: 'https://vimeo.com/112836958',
+                        alt: 'vimeo',
+                        thumb: 'v-t.jpg',
+                    },
+                ],
+                plugins: [Video],
+            }),
+            template: `
+                <LightGallery
+                    :slides="items"
+                    :zoom-from-origin="false"
+                    :plugins="plugins"
+                    :video="{ autoplayFirstVideo: false, ...videoCfg }"
+                />
+            `,
+        });
+        const wrapper = mount(FacadeHost, { attachTo: document.body });
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                openGallery(i?: number): void;
+            }
+        ).openGallery(0);
+        await settle();
+        await advance(450);
+
+        // The thumb feeds the facade — no iframe before user intent.
+        const cont = query('.lg-item.lg-current .lg-video-cont')!;
+        const posterImg = cont.querySelector<HTMLImageElement>(
+            'img.lg-video-poster',
+        )!;
+        expect(posterImg.getAttribute('src')).toBe('v-t.jpg');
+        expect(cont.querySelector('iframe')).toBeNull();
+
+        (
+            cont.querySelector('.lg-video-poster-wrap') as HTMLButtonElement
+        ).click();
+        await settle();
+        expect(cont.querySelector('iframe.lg-vimeo')).not.toBeNull();
+        wrapper.unmount();
+    });
+
+    it('video: videoFacade:false keeps the eager iframe for posterless slides', async () => {
+        const EagerHost = defineComponent({
+            components: { LightGallery },
+            setup: () => ({
+                items: [
+                    {
+                        src: 'https://vimeo.com/112836958',
+                        alt: 'vimeo',
+                        thumb: 'v-t.jpg',
+                    },
+                ],
+                plugins: [Video],
+            }),
+            template: `
+                <LightGallery
+                    :slides="items"
+                    :zoom-from-origin="false"
+                    :plugins="plugins"
+                    :video="{ autoplayFirstVideo: false, videoFacade: false }"
+                />
+            `,
+        });
+        const wrapper = mount(EagerHost, { attachTo: document.body });
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                openGallery(i?: number): void;
+            }
+        ).openGallery(0);
+        await settle();
+        await advance(450);
+
+        const cont = query('.lg-item.lg-current .lg-video-cont')!;
+        expect(cont.querySelector('iframe.lg-vimeo')).not.toBeNull();
+        expect(cont.querySelector('img.lg-video-poster')).toBeNull();
+        wrapper.unmount();
+    });
+
     it('video: renders the video slide, swaps poster for the player, pauses on leave', async () => {
         const { wrapper, log } = mountHost([Thumbnail, Zoom, Video]);
         await openAndLoad(wrapper, 2);
@@ -645,7 +732,7 @@ describe('plugin runtime + wave-1', () => {
         ) as HTMLIFrameElement;
         expect(frame).not.toBeNull();
         expect(frame.getAttribute('src')).toContain(
-            'youtube.com/embed/abc123xyz90',
+            'youtube-nocookie.com/embed/abc123xyz90',
         );
 
         // Navigating away pauses the player (postMessage command).

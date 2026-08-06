@@ -11,11 +11,13 @@ import {
     type VNodeChild,
 } from 'vue';
 import {
+    getFacadePoster,
     getSlideType,
     getVideoInfo,
     getVimeoEmbedUrl,
     getWistiaEmbedUrl,
     getYouTubeEmbedUrl,
+    getYouTubePosterUrl,
     type PlayerParams,
     type VideoInfo,
 } from '@lightgallery/headless';
@@ -33,6 +35,23 @@ import type { LgGalleryItem } from '../../types';
 export interface VideoSettings {
     /** Autoplay the first slide's video once it loads. */
     autoplayFirstVideo: boolean;
+    /**
+     * Render provider video slides (YouTube/Vimeo/Wistia) as lite
+     * facades: a poster with a play button, with the provider iframe
+     * created only when the user presses play. The facade poster falls
+     * back from the item poster to the YouTube thumbnail endpoint (see
+     * `loadYouTubePoster`) to the item thumb; a slide with no resolvable
+     * poster keeps the eager-iframe behavior. `autoplayFirstVideo` /
+     * `autoplayVideoOnSlide` force an immediate materialize by design.
+     * Set false for 2.x eager iframes on all provider slides.
+     */
+    videoFacade: boolean;
+    /**
+     * Embed YouTube through the privacy-enhanced youtube-nocookie.com
+     * host. Set false to embed through youtube.com; slide URLs that
+     * already point at youtube-nocookie.com always keep it.
+     */
+    youTubeNoCookie: boolean;
     /** Extra YouTube player parameters. */
     youTubePlayerParams: PlayerParams;
     /** Extra Vimeo player parameters. */
@@ -47,6 +66,8 @@ export interface VideoSettings {
 
 export const videoSettings: VideoSettings = {
     autoplayFirstVideo: true,
+    videoFacade: true,
+    youTubeNoCookie: true,
     youTubePlayerParams: false,
     vimeoPlayerParams: false,
     wistiaPlayerParams: false,
@@ -151,16 +172,23 @@ export const VideoSlide = defineComponent({
         const info = computed(() =>
             getVideoInfo(props.item.src, !!html5.value),
         );
-        // 2.x loadYouTubePoster: derive a poster for YouTube slides.
+        // Lite-embed facade poster chain (headless): item poster →
+        // YouTube thumbnail endpoint (loadYouTubePoster) → item thumb.
+        // With videoFacade:false only the 2.x YouTube synthesis remains.
         const poster = computed(() => {
-            if (props.item.poster) {
-                return props.item.poster;
+            if (settings.value.videoFacade) {
+                return getFacadePoster(
+                    props.item,
+                    info.value,
+                    settings.value.loadYouTubePoster,
+                );
             }
-            const videoInfo = info.value;
-            if (settings.value.loadYouTubePoster && videoInfo?.youtube) {
-                return `//img.youtube.com/vi/${videoInfo.youtube[1]}/maxresdefault.jpg`;
-            }
-            return undefined;
+            return (
+                props.item.poster ??
+                (settings.value.loadYouTubePoster
+                    ? getYouTubePosterUrl(info.value)
+                    : undefined)
+            );
         });
         const hasPoster = computed(() => !!poster.value);
         const runtime = inject(LG_RUNTIME)!;
@@ -216,12 +244,8 @@ export const VideoSlide = defineComponent({
             () => !!dummySrc.value && runtime.zoomOriginOpen.value,
         );
         const activated = ref(false);
-        const showPlayer = computed(
-            () => activated.value || !hasPoster.value,
-        );
-        const mediaEl = ref<
-            HTMLVideoElement | HTMLIFrameElement | null
-        >(null);
+        const showPlayer = computed(() => activated.value || !hasPoster.value);
+        const mediaEl = ref<HTMLVideoElement | HTMLIFrameElement | null>(null);
         let pendingPlay = false;
         const playTimers = new Set<ReturnType<typeof setTimeout>>();
 
@@ -375,9 +399,7 @@ export const VideoSlide = defineComponent({
                 .split('-')
                 .map((value) => parseInt(value, 10));
             const title =
-                props.item.title ??
-                props.item.alt ??
-                'Embedded video player';
+                props.item.title ?? props.item.alt ?? 'Embedded video player';
             const iframeProps = {
                 ref: mediaEl,
                 allow: 'autoplay',
@@ -397,16 +419,14 @@ export const VideoSlide = defineComponent({
                             videoInfo,
                             cfg.youTubePlayerParams,
                             props.item.src ?? '',
+                            cfg.youTubeNoCookie,
                         ),
                     });
                 } else if (videoInfo.vimeo) {
                     player = h('iframe', {
                         ...iframeProps,
                         class: 'lg-video-object lg-vimeo',
-                        src: getVimeoEmbedUrl(
-                            videoInfo,
-                            cfg.vimeoPlayerParams,
-                        ),
+                        src: getVimeoEmbedUrl(videoInfo, cfg.vimeoPlayerParams),
                     });
                 } else if (videoInfo.wistia) {
                     player = h('iframe', {
@@ -427,9 +447,7 @@ export const VideoSlide = defineComponent({
                             class: 'lg-video-object lg-html5',
                             onLoadedmetadata: onMediaReady,
                             onEnded: () => {
-                                if (
-                                    settings.value.gotoNextSlideOnVideoEnd
-                                ) {
+                                if (settings.value.gotoNextSlideOnVideoEnd) {
                                     ctx.actions.nextSlide();
                                 }
                             },
