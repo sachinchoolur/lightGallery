@@ -28,6 +28,17 @@ export {
 } from './announce';
 
 export {
+    createHashDriver,
+    createHistoryHashDriver,
+    createNavigationHashDriver,
+    type HashDriver,
+    type HashDriverPreference,
+    type HashHistoryWindow,
+    type HashNavigationWindow,
+    type NavigationLike,
+} from './hash-driver';
+
+export {
     coreSettingsDefaults,
     resolveSettings,
     type CaptionPosition,

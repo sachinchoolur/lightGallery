@@ -1,8 +1,20 @@
+import { HashDriverPreference } from '@lightgallery/headless';
+
 export interface HashSettings {
     /**
      * Enable/Disable hash option
      */
     hash: boolean;
+
+    /**
+     * URL engine behind the hash syncing.
+     * @description 'auto' uses the Navigation API where the browser
+     * supports it and falls back to the History API everywhere else;
+     * 'history' and 'navigation' force an engine (an unsupported
+     * 'navigation' quietly falls back — the enhancement is never
+     * load-bearing). The deep-link URL format is identical either way.
+     */
+    hashDriver: HashDriverPreference;
 
     /**
      * Unique id for each gallery.
@@ -18,6 +30,7 @@ export interface HashSettings {
 
 export const hashSettings: HashSettings = {
     hash: true,
+    hashDriver: 'auto',
     galleryId: '1',
     customSlideName: false,
 };

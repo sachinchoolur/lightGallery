@@ -1,3 +1,9 @@
+import {
+    createHashDriver,
+    type HashDriver,
+    type HashNavigationWindow,
+} from '@lightgallery/headless';
+
 import { lGEvents } from '../../lg-events';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
@@ -8,6 +14,10 @@ export default class Hash {
     settings: HashSettings;
     oldHash!: string;
     private $LG!: LgQuery;
+    // URL engine (plan 012): History API today, Navigation API where the
+    // browser has it — same URLs either way.
+    private driver!: HashDriver;
+    private unsubscribeDriver?: () => void;
     constructor(instance: LightGallery, $LG: LgQuery) {
         // get lightGallery core plugin instance
         this.core = instance;
@@ -21,7 +31,11 @@ export default class Hash {
         if (!this.settings.hash) {
             return;
         }
-        this.oldHash = window.location.hash;
+        this.driver = createHashDriver(
+            window as unknown as HashNavigationWindow,
+            this.settings.hashDriver,
+        );
+        this.oldHash = this.driver.getHash();
         setTimeout(() => {
             this.buildFromHash();
         }, 100);
@@ -35,9 +49,9 @@ export default class Hash {
             this.onCloseAfter.bind(this),
         );
 
-        // Listen hash change and change the slide according to slide value
-        this.$LG(window).on(
-            `hashchange.lg.hash.global${this.core.lgId}`,
+        // Follow back/forward URL changes (hashchange on the history
+        // driver, currententrychange on the navigation driver).
+        this.unsubscribeDriver = this.driver.subscribe(
             this.onHashchange.bind(this),
         );
     }
@@ -47,21 +61,9 @@ export default class Hash {
         slideName = this.settings.customSlideName
             ? slideName || event.detail.index
             : event.detail.index;
-        if (history.replaceState) {
-            history.replaceState(
-                null,
-                '',
-                window.location.pathname +
-                    window.location.search +
-                    '#lg=' +
-                    this.settings.galleryId +
-                    '&slide=' +
-                    slideName,
-            );
-        } else {
-            window.location.hash =
-                'lg=' + this.settings.galleryId + '&slide=' + slideName;
-        }
+        this.driver.replaceHash(
+            '#lg=' + this.settings.galleryId + '&slide=' + slideName,
+        );
     }
 
     /**
@@ -69,7 +71,7 @@ export default class Hash {
      * @param {String} hash
      * @returns {Number} Index of the slide.
      */
-    getIndexFromUrl(hash = window.location.hash): number {
+    getIndexFromUrl(hash = this.driver.getHash()): number {
         const slideName = hash.split('&slide=')[1];
         let _idx = 0;
 
@@ -95,7 +97,7 @@ export default class Hash {
     // Build Gallery if gallery id exist in the URL
     buildFromHash(): boolean | undefined {
         // if dynamic option is enabled execute immediately
-        const _hash = window.location.hash;
+        const _hash = this.driver.getHash();
         if (_hash.indexOf('lg=' + this.settings.galleryId) > 0) {
             // This class is used to remove the initial animation if galleryId present in the URL
             this.$LG(document.body).addClass('lg-from-hash');
@@ -113,27 +115,15 @@ export default class Hash {
             this.oldHash &&
             this.oldHash.indexOf('lg=' + this.settings.galleryId) < 0
         ) {
-            if (history.replaceState) {
-                history.replaceState(null, '', this.oldHash);
-            } else {
-                window.location.hash = this.oldHash;
-            }
+            this.driver.replaceHash(this.oldHash);
         } else {
-            if (history.replaceState) {
-                history.replaceState(
-                    null,
-                    document.title,
-                    window.location.pathname + window.location.search,
-                );
-            } else {
-                window.location.hash = '';
-            }
+            this.driver.clearHash();
         }
     }
 
     private onHashchange() {
         if (!this.core.lgOpened) return;
-        const _hash = window.location.hash;
+        const _hash = this.driver.getHash();
         const index = this.getIndexFromUrl(_hash);
 
         // it galleryId doesn't exist in the url close the gallery
@@ -153,6 +143,7 @@ export default class Hash {
     destroy(): void {
         this.core.LGel.off('.lg.hash');
         this.core.LGel.off('.hash');
-        this.$LG(window).off(`hashchange.lg.hash.global${this.core.lgId}`);
+        this.unsubscribeDriver?.();
+        this.unsubscribeDriver = undefined;
     }
 }
