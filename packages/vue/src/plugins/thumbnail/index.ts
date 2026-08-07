@@ -68,7 +68,11 @@ export interface ThumbnailSettings {
     loadYouTubeThumbnail: boolean;
     /** YouTube thumb size suffix (`<n>.jpg`). */
     youTubeThumbSize: number;
-    thumbnailPluginStrings: ThumbnailStrings;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    thumbnailPluginStrings?: Partial<ThumbnailStrings>;
 }
 
 export const thumbnailSettings: ThumbnailSettings = {
@@ -84,9 +88,6 @@ export const thumbnailSettings: ThumbnailSettings = {
     thumbnailSwipeThreshold: 10,
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
-    thumbnailPluginStrings: {
-        toggleThumbnails: 'Toggle thumbnails',
-    },
 };
 
 type ThumbnailResolved = ThumbnailSettings & {
@@ -526,7 +527,9 @@ export const ThumbnailToggle = defineComponent({
             return h('button', {
                 type: 'button',
                 class: 'lg-toggle-thumb lg-icon',
-                'aria-label': cfg.thumbnailPluginStrings.toggleThumbnails,
+                'aria-label':
+                    cfg.thumbnailPluginStrings?.toggleThumbnails ??
+                    ctx.settings.value.strings.toggleThumbnails,
                 onClick: () => ctx.layout.toggleComponents(),
             });
         };

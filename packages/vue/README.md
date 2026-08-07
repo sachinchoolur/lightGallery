@@ -132,6 +132,26 @@ buttons everywhere, keyboard-operable thumbnails and pager dots,
 `prefers-reduced-motion` support. Automated axe run (WCAG A/AA): zero
 violations.
 
+## Localizing labels
+
+Every UI label — core controls and plugin buttons alike — lives on the
+`strings` setting and merges per-key over the English defaults:
+
+```vue
+<LightGallery
+    :slides="items"
+    :plugins="[Zoom, Thumbnail]"
+    :strings="{
+        closeGallery: 'Galerie schließen',
+        toggleThumbnails: 'Vorschaubilder umschalten',
+        zoomIn: 'Vergrößern',
+    }"
+/>
+```
+
+The per-plugin string objects (`zoomPluginStrings`, `sharePluginStrings`,
+…) are deprecated aliases — a key set there still wins over `strings`.
+
 ## Migrating from the legacy `lightgallery/vue` wrapper
 
 The old wrapper (`lightgallery-vue*` folders / `lightgallery` v2 with

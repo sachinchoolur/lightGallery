@@ -50,7 +50,11 @@ export interface RotateSettings {
     rotateRight: boolean;
     flipHorizontal: boolean;
     flipVertical: boolean;
-    rotatePluginStrings: RotateStrings;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    rotatePluginStrings?: Partial<RotateStrings>;
 }
 
 export const rotateSettings: RotateSettings = {
@@ -60,12 +64,6 @@ export const rotateSettings: RotateSettings = {
     rotateRight: true,
     flipHorizontal: true,
     flipVertical: true,
-    rotatePluginStrings: {
-        flipVertical: 'Flip vertical',
-        flipHorizontal: 'Flip horizontal',
-        rotateLeft: 'Rotate left',
-        rotateRight: 'Rotate right',
-    },
 };
 
 const ROTATE_LEFT_EVENT = 'lg-rotate-left';
@@ -86,7 +84,15 @@ export const RotateToolbar = defineComponent({
             if (!cfg.rotate) {
                 return null;
             }
-            const strings = cfg.rotatePluginStrings;
+            const legacy = cfg.rotatePluginStrings;
+            const coreStrings = ctx.settings.value.strings;
+            const strings = {
+                flipVertical: legacy?.flipVertical ?? coreStrings.flipVertical,
+                flipHorizontal:
+                    legacy?.flipHorizontal ?? coreStrings.flipHorizontal,
+                rotateLeft: legacy?.rotateLeft ?? coreStrings.rotateLeft,
+                rotateRight: legacy?.rotateRight ?? coreStrings.rotateRight,
+            };
             return [
                 cfg.flipVertical
                     ? h('button', {
@@ -141,9 +147,7 @@ export const RotateWrapper = defineComponent({
             () => ctx.settings.value as unknown as RotateResolved,
         );
         const enabled = computed(
-            () =>
-                settings.value.rotate &&
-                getSlideType(props.item) === 'image',
+            () => settings.value.rotate && getSlideType(props.item) === 'image',
         );
         const slice = shallowRef<RotateSlice>(initialRotateSlice);
         const fitScale = shallowRef(1);
@@ -178,9 +182,7 @@ export const RotateWrapper = defineComponent({
                     return;
                 }
                 window.addEventListener('resize', onResize);
-                onCleanup(() =>
-                    window.removeEventListener('resize', onResize),
-                );
+                onCleanup(() => window.removeEventListener('resize', onResize));
             },
             { flush: 'post' },
         );

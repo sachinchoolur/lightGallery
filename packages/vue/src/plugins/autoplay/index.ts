@@ -35,7 +35,11 @@ export interface AutoplaySettings {
     forceSlideShowAutoplay: boolean;
     /** Show the play/pause toolbar button. */
     autoplayControls: boolean;
-    autoplayPluginStrings: { toggleAutoplay: string };
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    autoplayPluginStrings?: { toggleAutoplay?: string };
 }
 
 export const autoplaySettings: AutoplaySettings = {
@@ -45,7 +49,6 @@ export const autoplaySettings: AutoplaySettings = {
     progressBar: true,
     forceSlideShowAutoplay: false,
     autoplayControls: true,
-    autoplayPluginStrings: { toggleAutoplay: 'Toggle Autoplay' },
 };
 
 const TOGGLE_EVENT = 'lg-autoplay-toggle';
@@ -57,15 +60,16 @@ export const AutoplayButton = defineComponent({
     setup() {
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
         return () => {
-            const cfg = ctx.settings
-                .value as unknown as AutoplayResolved;
+            const cfg = ctx.settings.value as unknown as AutoplayResolved;
             if (!cfg.autoplay || !cfg.autoplayControls) {
                 return null;
             }
             return h('button', {
                 type: 'button',
                 class: 'lg-autoplay-button lg-icon',
-                'aria-label': cfg.autoplayPluginStrings.toggleAutoplay,
+                'aria-label':
+                    cfg.autoplayPluginStrings?.toggleAutoplay ??
+                    ctx.settings.value.strings.toggleAutoplay,
                 onClick: () => ctx.events.emit(TOGGLE_EVENT, undefined),
             });
         };
@@ -88,8 +92,7 @@ export const AutoplayProgress = defineComponent({
         ];
         onBeforeUnmount(() => offs.forEach((off) => off()));
         return () => {
-            const cfg = ctx.settings
-                .value as unknown as AutoplayResolved;
+            const cfg = ctx.settings.value as unknown as AutoplayResolved;
             if (!cfg.autoplay || !cfg.progressBar) {
                 return null;
             }
@@ -97,10 +100,7 @@ export const AutoplayProgress = defineComponent({
             return h(
                 'div',
                 {
-                    class: [
-                        'lg-progress-bar',
-                        { 'lg-start': running.value },
-                    ],
+                    class: ['lg-progress-bar', { 'lg-start': running.value }],
                 },
                 // Recreating the element restarts the width transition
                 // each cycle (keyed remount, sibling-parity trick).

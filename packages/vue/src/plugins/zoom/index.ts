@@ -79,7 +79,11 @@ export interface ZoomSettings {
     };
     /** Delay (ms) after a slide loads before zoom interactions arm. */
     enableZoomAfter: number;
-    zoomPluginStrings: ZoomStrings;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    zoomPluginStrings?: Partial<ZoomStrings>;
 }
 
 export const zoomSettings: ZoomSettings = {
@@ -93,11 +97,6 @@ export const zoomSettings: ZoomSettings = {
         zoomOut: 'lg-zoom-out',
     },
     enableZoomAfter: 300,
-    zoomPluginStrings: {
-        zoomIn: 'Zoom in',
-        zoomOut: 'Zoom out',
-        viewActualSize: 'View actual size',
-    },
 };
 
 const ZOOM_IN_EVENT = 'lg-zoom-in';
@@ -133,7 +132,9 @@ export const ZoomToolbar = defineComponent({
                     ? h('button', {
                           type: 'button',
                           class: `${cfg.actualSizeIcons.zoomIn} lg-icon`,
-                          'aria-label': cfg.zoomPluginStrings.zoomIn,
+                          'aria-label':
+                              cfg.zoomPluginStrings?.zoomIn ??
+                              ctx.settings.value.strings.zoomIn,
                           onClick: () => emitBus(ZOOM_IN_EVENT),
                       })
                     : null,
@@ -141,7 +142,9 @@ export const ZoomToolbar = defineComponent({
                     ? h('button', {
                           type: 'button',
                           class: `${cfg.actualSizeIcons.zoomOut} lg-icon`,
-                          'aria-label': cfg.zoomPluginStrings.zoomOut,
+                          'aria-label':
+                              cfg.zoomPluginStrings?.zoomOut ??
+                              ctx.settings.value.strings.zoomOut,
                           onClick: () => emitBus(ZOOM_OUT_EVENT),
                       })
                     : null,
@@ -149,7 +152,9 @@ export const ZoomToolbar = defineComponent({
                     ? h('button', {
                           type: 'button',
                           class: 'lg-actual-size lg-icon',
-                          'aria-label': cfg.zoomPluginStrings.viewActualSize,
+                          'aria-label':
+                              cfg.zoomPluginStrings?.viewActualSize ??
+                              ctx.settings.value.strings.viewActualSize,
                           onClick: () => emitBus(ACTUAL_SIZE_EVENT),
                       })
                     : null,

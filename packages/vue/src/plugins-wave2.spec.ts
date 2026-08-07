@@ -643,3 +643,38 @@ describe('wave-2 plugins', () => {
         expect(vi.getTimerCount()).toBe(0);
     });
 });
+
+describe('plugin label strings (core alias)', () => {
+    it('resolves labels from core strings, legacy plugin strings winning', async () => {
+        const StringsHost = defineComponent({
+            components: { LightGallery },
+            setup: () => ({
+                items: ITEMS,
+                plugins: [Autoplay, Share],
+                strings: { toggleAutoplay: 'Diaporama', share: 'Partager' },
+                autoplay: {
+                    autoplayPluginStrings: {
+                        toggleAutoplay: 'Legacy autoplay',
+                    },
+                },
+            }),
+            template: `
+                <LightGallery
+                    :slides="items"
+                    :zoom-from-origin="false"
+                    :plugins="plugins"
+                    :strings="strings"
+                    :autoplay="autoplay"
+                />
+            `,
+        });
+        const wrapper = mount(StringsHost, { attachTo: document.body });
+        await openAndLoad(wrapper);
+        // The deprecated per-plugin alias wins where explicitly set…
+        expect(query('.lg-autoplay-button')?.getAttribute('aria-label')).toBe(
+            'Legacy autoplay',
+        );
+        // …and the core strings drive every other plugin label.
+        expect(query('.lg-share')?.getAttribute('aria-label')).toBe('Partager');
+    });
+});

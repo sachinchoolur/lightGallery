@@ -1,11 +1,4 @@
-import {
-    defineComponent,
-    h,
-    inject,
-    ref,
-    watch,
-    type Ref,
-} from 'vue';
+import { defineComponent, h, inject, ref, watch, type Ref } from 'vue';
 
 import { LG_SLOTS } from '../../runtime';
 import {
@@ -27,13 +20,16 @@ export interface CommentSettings {
     commentBox: boolean;
     /** Panel title. */
     commentBoxTitle: string;
-    commentPluginStrings: { toggleComments: string };
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    commentPluginStrings?: { toggleComments?: string };
 }
 
 export const commentSettings: CommentSettings = {
     commentBox: false,
     commentBoxTitle: 'Leave a comment.',
-    commentPluginStrings: { toggleComments: 'Toggle Comments' },
 };
 
 /** Panel open-state shared between toggle and panel, per gallery. */
@@ -63,7 +59,9 @@ export const CommentToggle = defineComponent({
             return h('button', {
                 type: 'button',
                 class: 'lg-comment-toggle lg-icon',
-                'aria-label': cfg.commentPluginStrings.toggleComments,
+                'aria-label':
+                    cfg.commentPluginStrings?.toggleComments ??
+                    ctx.settings.value.strings.toggleComments,
                 onClick: () => (active.value = !active.value),
             });
         };

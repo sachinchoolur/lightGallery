@@ -15,16 +15,15 @@ import {
 export interface FullscreenSettings {
     /** Enable the fullscreen button. */
     fullScreen: boolean;
-    fullscreenPluginStrings: {
-        toggleFullscreen: string;
-    };
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    fullscreenPluginStrings?: { toggleFullscreen?: string };
 }
 
 export const fullscreenSettings: FullscreenSettings = {
     fullScreen: true,
-    fullscreenPluginStrings: {
-        toggleFullscreen: 'Toggle Fullscreen',
-    },
 };
 
 interface FullscreenDocument extends Document {
@@ -64,14 +63,13 @@ export const FullscreenButton = defineComponent({
                 exitFullscreen();
             } else {
                 const el = document.documentElement as FullscreenElement;
-                void (
-                    el.requestFullscreen ?? el.webkitRequestFullscreen
-                )?.call(el);
+                void (el.requestFullscreen ?? el.webkitRequestFullscreen)?.call(
+                    el,
+                );
             }
         };
         return () => {
-            const cfg = ctx.settings
-                .value as unknown as FullscreenSettings;
+            const cfg = ctx.settings.value as unknown as FullscreenSettings;
             if (!cfg.fullScreen || !fullscreenSupported()) {
                 return null;
             }
@@ -79,7 +77,8 @@ export const FullscreenButton = defineComponent({
                 type: 'button',
                 class: 'lg-fullscreen lg-icon',
                 'aria-label':
-                    cfg.fullscreenPluginStrings.toggleFullscreen,
+                    cfg.fullscreenPluginStrings?.toggleFullscreen ??
+                    ctx.settings.value.strings.toggleFullscreen,
                 onClick: toggle,
             });
         };
@@ -111,10 +110,7 @@ function setupFullscreen(ctx: LgPluginContext): void {
             document.addEventListener('fullscreenchange', onChange);
             document.addEventListener('webkitfullscreenchange', onChange);
             onCleanup(() => {
-                document.removeEventListener(
-                    'fullscreenchange',
-                    onChange,
-                );
+                document.removeEventListener('fullscreenchange', onChange);
                 document.removeEventListener(
                     'webkitfullscreenchange',
                     onChange,
