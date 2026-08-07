@@ -313,10 +313,15 @@ export default class Thumbnail {
 
     setTranslate(value: number): void {
         // `${-value}` (not '-' + value): elastic overshoot goes negative.
-        this.$lgThumb.css(
-            'transform',
-            'translate3d(' + -value + 'px, 0px, 0px)',
-        );
+        // The translate scalar lives in logical strip space; in RTL the
+        // strip flows right-to-left (lg-rtl.css floats the thumbs right),
+        // so scrolling toward higher indexes moves the track right.
+        const x = this.isRtl() ? value : -value;
+        this.$lgThumb.css('transform', 'translate3d(' + x + 'px, 0px, 0px)');
+    }
+
+    private isRtl(): boolean {
+        return this.core.settings.direction === 'rtl';
     }
 
     getPossibleTransformX(left: number): number {
@@ -345,6 +350,7 @@ export default class Thumbnail {
                 this.thumbOuterWidth,
                 this.thumbTotalWidth,
                 this.settings.currentPagerPosition,
+                this.isRtl() ? 'rtl' : 'ltr',
             );
             this.liveTranslateX = this.translateX;
             this.setTranslate(this.translateX);
@@ -383,9 +389,12 @@ export default class Thumbnail {
 
         // Elastic: overshoot past the edges compresses instead of
         // clamping dead (plan 010 physics).
+        // Finger motion maps to the logical scroll offset; the mapping
+        // mirrors in RTL together with the applied transform sign.
+        const dragDelta =
+            thumbDragUtils.cords.endX - thumbDragUtils.cords.startX;
         thumbDragUtils.newTranslateX = getElasticThumbTranslate(
-            this.translateX -
-                (thumbDragUtils.cords.endX - thumbDragUtils.cords.startX),
+            this.translateX + (this.isRtl() ? dragDelta : -dragDelta),
             this.thumbTotalWidth,
             this.thumbOuterWidth,
         );
@@ -428,10 +437,13 @@ export default class Thumbnail {
         // inside the rubber band. (Replaces the 2.x magic-numbers
         // momentum, whose transition-duration carried an invalid
         // '<n>settings' unit and silently never glided.)
-        const translateVelocity = -getWindowedVelocity(
+        const pointerVelocityX = getWindowedVelocity(
             this.dragSamples,
             Date.now(),
         ).x;
+        const translateVelocity = this.isRtl()
+            ? pointerVelocityX
+            : -pointerVelocityX;
         const from = this.liveTranslateX;
         const target = this.getPossibleTransformX(
             from + project(translateVelocity),
@@ -497,7 +509,8 @@ export default class Thumbnail {
         div.className = `lg-thumb-item ${
             index === this.core.index ? 'active' : ''
         }`;
-        div.style.cssText = `width: ${this.settings.thumbWidth}px; height: ${this.settings.thumbHeight}; margin-right: ${this.settings.thumbMargin}px;`;
+        const marginSide = this.isRtl() ? 'margin-left' : 'margin-right';
+        div.style.cssText = `width: ${this.settings.thumbWidth}px; height: ${this.settings.thumbHeight}; ${marginSide}: ${this.settings.thumbMargin}px;`;
         const img = document.createElement('img');
         img.alt = alt || '';
         img.setAttribute('data-lg-item-id', index + '');

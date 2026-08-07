@@ -4,6 +4,7 @@
  */
 
 import { SLIDE_EDGE_FRICTION } from './gestures';
+import type { ResolvedGalleryDirection } from './settings';
 
 export type ThumbPagerPosition = 'left' | 'middle' | 'right';
 
@@ -146,9 +147,19 @@ export function getActiveThumbTranslate(
     stripWidth: number,
     totalWidth: number,
     pagerPosition: ThumbPagerPosition,
+    direction: ResolvedGalleryDirection = 'ltr',
 ): number {
+    // The strip math lives in logical space (offset from the strip's
+    // start edge); the pager position names are physical, so RTL swaps
+    // the edges before the math runs.
+    const logicalPosition: ThumbPagerPosition =
+        direction === 'rtl' && pagerPosition !== 'middle'
+            ? pagerPosition === 'left'
+                ? 'right'
+                : 'left'
+            : pagerPosition;
     let position = 0;
-    switch (pagerPosition) {
+    switch (logicalPosition) {
         case 'left':
             position = 0;
             break;

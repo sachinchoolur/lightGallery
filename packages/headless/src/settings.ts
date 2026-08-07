@@ -44,6 +44,16 @@ export type GalleryMode =
 /** Where slide captions render (2.x `appendSubHtmlTo`, without selectors). */
 export type CaptionPosition = 'bar' | 'slide' | 'outer';
 
+/**
+ * Gallery reading direction. `'auto'` inherits the page direction —
+ * resolved by the framework layer (this module is DOM-free, so `'auto'`
+ * reaches the runtimes unresolved, like `isMobile`).
+ */
+export type GalleryDirection = 'ltr' | 'rtl' | 'auto';
+
+/** `direction` with `'auto'` already resolved against the document. */
+export type ResolvedGalleryDirection = 'ltr' | 'rtl';
+
 /** Plan-010 virtualization knobs; the feature is off when the whole
  *  object is absent. */
 export interface VirtualizationSettings {
@@ -215,6 +225,15 @@ export interface CoreSettings {
     /** Navigate on mousewheel. */
     mousewheel: boolean;
 
+    /**
+     * Gallery reading direction: keyboard arrows, swipe advance and the
+     * slide/thumbnail transforms follow it. Visual mirroring is the
+     * opt-in `lg-rtl.css` layer — load it whenever this resolves to
+     * `'rtl'`. `'auto'` inherits the page direction; the default stays
+     * `'ltr'` so upgrades never change behavior on existing pages.
+     */
+    direction: GalleryDirection;
+
     /** Where slide captions render. */
     captionPosition: CaptionPosition;
 
@@ -342,6 +361,7 @@ export const coreSettingsDefaults: CoreSettings = {
     slideEndAnimation: true,
     hideControlOnEnd: false,
     mousewheel: false,
+    direction: 'ltr',
     captionPosition: 'bar',
     preload: 2,
     numberOfSlideItemsInDom: 10,

@@ -413,6 +413,16 @@ export interface LightGalleryCoreSettings {
     mousewheel: boolean;
 
     /**
+     * Gallery reading direction: keyboard arrows, swipe advance and the
+     * slide/thumbnail transforms follow it. Visual mirroring is the
+     * opt-in lg-rtl.css layer - load it whenever this resolves to 'rtl'.
+     * 'auto' inherits the computed direction of the gallery element;
+     * the default stays 'ltr' so upgrades never change behavior on
+     * existing pages.
+     */
+    direction: 'ltr' | 'rtl' | 'auto';
+
+    /**
      * Option to get captions from alt or title tags.
      */
     getCaptionFromTitleOrAlt: boolean;
@@ -668,6 +678,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     slideEndAnimation: true,
     hideControlOnEnd: false,
     mousewheel: false,
+    direction: 'ltr',
     getCaptionFromTitleOrAlt: true,
     appendSubHtmlTo: '.lg-sub-html',
     subHtmlSelectorRelative: false,

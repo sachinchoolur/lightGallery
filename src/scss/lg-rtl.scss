@@ -1,0 +1,134 @@
+@use 'lg-mixins' as *;
+
+// Opt-in RTL layer: load this stylesheet (after the theme and any plugin
+// styles) whenever the gallery's `direction` setting resolves to 'rtl'.
+// Every rule is scoped to `.lg-container[dir='rtl']` — the attribute the
+// core sets from the resolved direction — so LTR galleries pay nothing
+// and a forced-LTR gallery inside an RTL page stays untouched.
+//
+// Scope note: the default lg-slide mode, chrome, thumbnails, share
+// dropdown and comment drawer mirror here. The decorative horizontal
+// transitions (lg-slide-skew, lg-tube, …) keep their LTR choreography.
+
+.lg-container[dir='rtl'] {
+    // Prev/next arrows swap sides and point the other way.
+    .lg-next {
+        right: auto;
+        left: 20px;
+
+        &:before {
+            content: '\e094';
+        }
+    }
+
+    .lg-prev {
+        left: auto;
+        right: 20px;
+
+        &:after {
+            content: '\e095';
+        }
+    }
+
+    // Chrome enter/exit slides from the mirrored side.
+    &.lg-show-in .lg-hide-items {
+        .lg-prev {
+            @include translate3d(10px, 0, 0);
+        }
+
+        .lg-next {
+            @include translate3d(-10px, 0, 0);
+        }
+    }
+
+    // End-of-gallery bounce points at the mirrored edge (the keyframes
+    // ship with the default theme; only the assignment swaps).
+    .lg-outer.lg-right-end .lg-object {
+        animation: lg-left-end 0.3s;
+    }
+
+    .lg-outer.lg-left-end .lg-object {
+        animation: lg-right-end 0.3s;
+    }
+
+    // The slide rail keeps its internal LTR geometry: the absolutely
+    // positioned slides take their STATIC position from the rail's
+    // inline direction, so an inherited rtl shoves the current slide a
+    // full viewport off-screen (left: -100% static offset). Mirroring
+    // lives in the transforms below, never in the rail's writing mode.
+    .lg-inner {
+        direction: ltr;
+    }
+
+    // Slide-level captions (captionPosition: 'slide') sit inside the
+    // rail — restore their reading direction.
+    .lg-inner .lg-sub-html {
+        direction: rtl;
+    }
+
+    // Resting slide positions mirror: prev sits to the physical right.
+    // The drag/spring transforms follow via the direction-aware headless
+    // math, so gestures and CSS agree on the geometry.
+    .lg-outer.lg-slide.lg-use-css3 .lg-item {
+        &.lg-prev-slide {
+            @include translate3d(100%, 0, 0);
+        }
+
+        &.lg-next-slide {
+            @include translate3d(-100%, 0, 0);
+        }
+
+        // Mid-transition a slide carries lg-current AND a neighbor class;
+        // the base stylesheet resolves that tie by source order, so the
+        // current position must be re-asserted at this specificity too.
+        &.lg-current {
+            @include translate3d(0, 0, 0);
+        }
+    }
+
+    // Toolbar icons flow from the left; the counter pads on its right.
+    .lg-toolbar .lg-icon {
+        float: left;
+    }
+
+    .lg-counter {
+        padding-left: 0;
+        padding-right: 20px;
+        // "3 / 5" must not bidi-reorder into "5 / 3" — the counter is a
+        // number pair, not prose.
+        direction: ltr;
+        unicode-bidi: isolate;
+    }
+
+    // Thumbnail strip flows right-to-left; the plugin flips its
+    // translate sign to match (logical strip space stays shared).
+    .lg-outer {
+        .lg-thumb-spacer,
+        .lg-thumb-item {
+            float: right;
+        }
+    }
+
+    // Share dropdown hangs under the mirrored toolbar corner.
+    .lg-outer .lg-dropdown {
+        right: auto;
+        left: 0;
+        text-align: right;
+
+        .lg-icon {
+            margin-right: 0;
+            margin-left: 8px;
+        }
+    }
+
+    // Comment drawer docks and enters from the left.
+    .lg-comment-box {
+        right: auto;
+        left: 0;
+        @include transform(translate3d(-100%, 0, 0));
+    }
+
+    .lg-outer.lg-comment-active .lg-comment-box {
+        @include transform(translate3d(0, 0, 0));
+    }
+}

@@ -42,6 +42,8 @@ export {
     coreSettingsDefaults,
     resolveSettings,
     type CaptionPosition,
+    type GalleryDirection,
+    type ResolvedGalleryDirection,
     type CoreSettings,
     type GalleryCoreStrings,
     type GalleryMode,

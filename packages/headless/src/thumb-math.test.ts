@@ -153,3 +153,18 @@ describe('getThumbCorridorWindow', () => {
         expect(backward).toEqual(forward);
     });
 });
+
+describe('direction-aware pager position (rtl)', () => {
+    it('maps the physical left/right edges to logical ones in rtl', () => {
+        const args = [5, 100, 5, 420, 1050] as const;
+        expect(getActiveThumbTranslate(...args, 'left', 'rtl')).toBe(
+            getActiveThumbTranslate(...args, 'right'),
+        );
+        expect(getActiveThumbTranslate(...args, 'right', 'rtl')).toBe(
+            getActiveThumbTranslate(...args, 'left'),
+        );
+        expect(getActiveThumbTranslate(...args, 'middle', 'rtl')).toBe(
+            getActiveThumbTranslate(...args, 'middle'),
+        );
+    });
+});

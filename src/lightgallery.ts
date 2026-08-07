@@ -199,6 +199,16 @@ export class LightGallery {
     }
 
     private normalizeSettings() {
+        // Resolve direction 'auto' against the gallery element once —
+        // every direction-aware call site reads the resolved value.
+        if (this.settings.direction === 'auto') {
+            this.settings.direction =
+                typeof window !== 'undefined' &&
+                typeof window.getComputedStyle === 'function' &&
+                window.getComputedStyle(this.el).direction === 'rtl'
+                    ? 'rtl'
+                    : 'ltr';
+        }
         if (this.settings.slideEndAnimation) {
             this.settings.hideControlOnEnd = false;
         }
@@ -393,7 +403,7 @@ export class LightGallery {
         const template = `
         <div class="${containerClassName}" id="${this.getIdName(
             'lg-container',
-        )}" tabindex="-1" aria-modal="true" ${ariaLabelledby} ${ariaDescribedby} role="dialog"
+        )}" tabindex="-1" aria-modal="true" ${ariaLabelledby} ${ariaDescribedby} role="dialog" dir="${this.getDirection()}"
         >
             <div id="${this.getIdName(
                 'lg-backdrop',
@@ -1962,6 +1972,7 @@ export class LightGallery {
             const transforms = getHorizontalDragTransforms(
                 this.getEdgeDragDelta(distanceX),
                 $currentSlide.get().offsetWidth,
+                this.getDirection(),
             );
             $currentSlide.css('transform', transforms.current);
             this.outer
@@ -2013,7 +2024,13 @@ export class LightGallery {
                 count,
                 this.settings.loop,
             ) !== null,
+            this.getDirection(),
         );
+    }
+
+    /** Resolved reading direction ('auto' is resolved at init). */
+    private getDirection(): 'ltr' | 'rtl' {
+        return this.settings.direction === 'rtl' ? 'rtl' : 'ltr';
     }
 
     /**
@@ -2032,7 +2049,11 @@ export class LightGallery {
         this.cancelSlideSpring = runSprings(
             [{ from: deltaX, velocity: velocityX, target: 0 }],
             ([x]) => {
-                const transforms = getHorizontalDragTransforms(x!, width);
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    this.getDirection(),
+                );
                 $currentSlide.css('transform', transforms.current);
                 $prev.css('transform', transforms.prev);
                 $next.css('transform', transforms.next);
@@ -2079,12 +2100,19 @@ export class LightGallery {
 
         // The x at which the arriving neighbor sits exactly at 0 in the
         // drag geometry (gutter included): width + x + (0.15w - 0.1|x|).
-        const target = (verdict === 'next' ? -1 : 1) * ((width * 115) / 110);
+        const target =
+            (verdict === 'next' ? -1 : 1) *
+            (this.getDirection() === 'rtl' ? -1 : 1) *
+            ((width * 115) / 110);
         this.stopSlideSpring();
         this.cancelSlideSpring = runSprings(
             [{ from: deltaX, velocity: velocityX, target }],
             ([x]) => {
-                const transforms = getHorizontalDragTransforms(x!, width);
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    this.getDirection(),
+                );
                 $current.css('transform', transforms.current);
                 $prev.css('transform', transforms.prev);
                 $next.css('transform', transforms.next);
@@ -2170,6 +2198,7 @@ export class LightGallery {
                     threshold: this.settings.swipeThreshold,
                     flickVelocity: this.settings.flickVelocity,
                     viewportWidth: this.outer.get().offsetWidth,
+                    direction: this.getDirection(),
                 });
                 // Springs start from the RENDERED delta — rubber-banded
                 // at the gallery ends, identical to raw elsewhere.
@@ -2522,14 +2551,24 @@ export class LightGallery {
                 }
             }
             if (this.lgOpened && this.galleryItems.length > 1) {
+                // Physical arrows follow the reading direction.
+                const rtl = this.getDirection() === 'rtl';
                 if (e.keyCode === 37) {
                     e.preventDefault();
-                    this.goToPrevSlide();
+                    if (rtl) {
+                        this.goToNextSlide();
+                    } else {
+                        this.goToPrevSlide();
+                    }
                 }
 
                 if (e.keyCode === 39) {
                     e.preventDefault();
-                    this.goToNextSlide();
+                    if (rtl) {
+                        this.goToPrevSlide();
+                    } else {
+                        this.goToNextSlide();
+                    }
                 }
             }
         });

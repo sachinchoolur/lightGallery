@@ -217,3 +217,47 @@ describe('pointer bookkeeping', () => {
         expect(removePointer(moved, 1).map((p) => p.id)).toEqual([2]);
     });
 });
+
+describe('direction-aware gestures (rtl)', () => {
+    it('mirrors the release verdict in rtl', () => {
+        const input = { deltaX: -120, velocityX: -1, threshold: 50 };
+        expect(getSwipeReleaseVerdict(input)).toBe('next');
+        expect(getSwipeReleaseVerdict({ ...input, direction: 'rtl' })).toBe(
+            'prev',
+        );
+        expect(
+            getSwipeReleaseVerdict({
+                ...input,
+                deltaX: 120,
+                velocityX: 1,
+                direction: 'rtl',
+            }),
+        ).toBe('next');
+        // The stay verdict is direction-neutral.
+        expect(
+            getSwipeReleaseVerdict({
+                deltaX: 10,
+                velocityX: 0,
+                threshold: 50,
+                direction: 'rtl',
+            }),
+        ).toBe('stay');
+    });
+
+    it('rubber-bands against the mirrored neighbor in rtl', () => {
+        // LTR: positive delta resists when there is no prev.
+        expect(getEdgeFrictionedDelta(100, false, true)).toBe(35);
+        // RTL: positive delta heads toward next instead.
+        expect(getEdgeFrictionedDelta(100, false, true, 'rtl')).toBe(100);
+        expect(getEdgeFrictionedDelta(100, true, false, 'rtl')).toBe(35);
+        expect(getEdgeFrictionedDelta(-100, false, true, 'rtl')).toBe(-35);
+    });
+
+    it('swaps the neighbor transforms in rtl', () => {
+        const ltr = getHorizontalDragTransforms(40, 1000);
+        const rtl = getHorizontalDragTransforms(40, 1000, 'rtl');
+        expect(rtl.current).toBe(ltr.current);
+        expect(rtl.prev).toBe(ltr.next);
+        expect(rtl.next).toBe(ltr.prev);
+    });
+});

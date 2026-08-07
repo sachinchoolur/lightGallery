@@ -8,6 +8,7 @@
  */
 
 import { project } from './spring';
+import type { ResolvedGalleryDirection } from './settings';
 
 export type SwipeAxis = 'horizontal' | 'vertical';
 
@@ -64,8 +65,12 @@ export function getEdgeFrictionedDelta(
     deltaX: number,
     hasPrev: boolean,
     hasNext: boolean,
+    direction: ResolvedGalleryDirection = 'ltr',
 ): number {
-    if ((deltaX > 0 && !hasPrev) || (deltaX < 0 && !hasNext)) {
+    // In RTL the finger drags toward the mirrored neighbor.
+    const [towardPrev, towardNext] =
+        direction === 'rtl' ? [hasNext, hasPrev] : [hasPrev, hasNext];
+    if ((deltaX > 0 && !towardPrev) || (deltaX < 0 && !towardNext)) {
         return deltaX * SLIDE_EDGE_FRICTION;
     }
     return deltaX;
@@ -102,13 +107,18 @@ export interface HorizontalDragTransforms {
 export function getHorizontalDragTransforms(
     deltaX: number,
     slideWidth: number,
+    direction: ResolvedGalleryDirection = 'ltr',
 ): HorizontalDragTransforms {
     const slideWidthAmount = (slideWidth * 15) / 100;
     const gutter = slideWidthAmount - Math.abs((deltaX * 10) / 100);
+    const before = `translate3d(${-slideWidth + deltaX - gutter}px, 0px, 0px)`;
+    const after = `translate3d(${slideWidth + deltaX + gutter}px, 0px, 0px)`;
     return {
         current: `translate3d(${deltaX}px, 0px, 0px)`,
-        prev: `translate3d(${-slideWidth + deltaX - gutter}px, 0px, 0px)`,
-        next: `translate3d(${slideWidth + deltaX + gutter}px, 0px, 0px)`,
+        // In RTL the prev slide rests to the physical right (lg-rtl.css
+        // flips the resting positions the same way).
+        prev: direction === 'rtl' ? after : before,
+        next: direction === 'rtl' ? before : after,
     };
 }
 
@@ -152,6 +162,8 @@ export interface SwipeReleaseInput {
      * swipe keeps going where a hesitant one snaps back.
      */
     viewportWidth?: number;
+    /** Resolved gallery direction; in `'rtl'` the verdict mirrors. */
+    direction?: ResolvedGalleryDirection;
 }
 
 /**
@@ -167,6 +179,7 @@ export function getSwipeReleaseVerdict({
     threshold,
     flickVelocity = FLICK_VELOCITY,
     viewportWidth,
+    direction = 'ltr',
 }: SwipeReleaseInput): SwipeReleaseVerdict {
     const distance = Math.abs(deltaX);
     const directionMatches =
@@ -184,7 +197,8 @@ export function getSwipeReleaseVerdict({
     if (!passes) {
         return 'stay';
     }
-    return deltaX < 0 ? 'next' : 'prev';
+    const towardNext = direction === 'rtl' ? deltaX > 0 : deltaX < 0;
+    return towardNext ? 'next' : 'prev';
 }
 
 /**
