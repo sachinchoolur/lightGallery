@@ -88,6 +88,12 @@ export default defineConfig({
                         import.meta.url,
                     ),
                 ),
+                'plugins/justified/index': fileURLToPath(
+                    new URL(
+                        './src/plugins/justified/index.ts',
+                        import.meta.url,
+                    ),
+                ),
                 'plugins/vimeoThumbnail/index': fileURLToPath(
                     new URL(
                         './src/plugins/vimeoThumbnail/index.ts',
