@@ -148,6 +148,16 @@
         "default": "./dist/plugins/vimeoThumbnail/index.cjs"
       }
     },
+    "./plugins/justified": {
+      "import": {
+        "types": "./dist/plugins/justified/index.d.ts",
+        "default": "./dist/plugins/justified/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/justified/index.d.cts",
+        "default": "./dist/plugins/justified/index.cjs"
+      }
+    },
     "./package.json": "./package.json"
   },
   "files": [

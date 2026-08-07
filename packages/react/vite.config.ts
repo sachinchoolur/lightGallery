@@ -61,6 +61,10 @@ export default defineConfig({
                     __dirname,
                     'src/plugins/vimeoThumbnail/index.tsx',
                 ),
+                'plugins/justified/index': path.resolve(
+                    __dirname,
+                    'src/plugins/justified/index.tsx',
+                ),
             },
             formats: ['es', 'cjs'],
             fileName: (format, entryName) =>
