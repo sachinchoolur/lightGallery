@@ -80,7 +80,10 @@ export default class Share {
             ? ''
             : 'aria-haspopup="true" aria-expanded="false"';
         this.core.$toolbar.append(
-            `<button type="button" aria-label="${this.settings.sharePluginStrings['share']}" ${popupAttrs} class="lg-share lg-icon">
+            `<button type="button" aria-label="${
+                this.settings.sharePluginStrings?.share ??
+                this.core.settings.strings.share
+            }" ${popupAttrs} class="lg-share lg-icon">
                 <ul class="lg-dropdown" style="position: absolute;"></ul></button>`,
         );
 

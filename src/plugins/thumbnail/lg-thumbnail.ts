@@ -600,7 +600,8 @@ export default class Thumbnail {
             this.core.outer.addClass('lg-can-toggle');
             this.core.$toolbar.append(
                 '<button type="button" aria-label="' +
-                    this.settings.thumbnailPluginStrings['toggleThumbnails'] +
+                    (this.settings.thumbnailPluginStrings?.toggleThumbnails ??
+                        this.core.settings.strings.toggleThumbnails) +
                     '" class="lg-toggle-thumb lg-icon"></button>',
             );
             this.core.outer

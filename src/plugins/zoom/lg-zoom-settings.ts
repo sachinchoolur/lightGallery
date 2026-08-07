@@ -54,8 +54,11 @@ export interface ZoomSettings {
 
     /**
      * Custom translation strings for aria-labels
+     * @deprecated Set these labels on the core `strings` object instead —
+     * every user-facing string lives in that one contract. An explicitly set
+     * key here still wins (alias).
      */
-    zoomPluginStrings: ZoomStrings;
+    zoomPluginStrings?: Partial<ZoomStrings>;
 }
 
 export const zoomSettings: ZoomSettings = {
@@ -69,9 +72,4 @@ export const zoomSettings: ZoomSettings = {
         zoomOut: 'lg-zoom-out',
     } as ActualSizeIcons,
     enableZoomAfter: 300,
-    zoomPluginStrings: {
-        zoomIn: 'Zoom in',
-        zoomOut: 'Zoom out',
-        viewActualSize: 'View actual size',
-    } as ZoomStrings,
 };

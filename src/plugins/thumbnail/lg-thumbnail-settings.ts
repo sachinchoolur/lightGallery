@@ -82,8 +82,11 @@ export interface ThumbnailsSettings {
 
     /**
      * Custom translation strings for aria-labels
+     * @deprecated Set these labels on the core `strings` object instead —
+     * every user-facing string lives in that one contract. An explicitly set
+     * key here still wins (alias).
      */
-    thumbnailPluginStrings: ThumbnailStrings;
+    thumbnailPluginStrings?: Partial<ThumbnailStrings>;
 }
 
 export const thumbnailsSettings: ThumbnailsSettings = {
@@ -106,8 +109,4 @@ export const thumbnailsSettings: ThumbnailsSettings = {
 
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
-
-    thumbnailPluginStrings: {
-        toggleThumbnails: 'Toggle thumbnails',
-    } as ThumbnailStrings,
 };

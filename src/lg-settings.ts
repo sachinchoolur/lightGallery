@@ -50,6 +50,34 @@ export interface LightGalleryCoreStrings {
      * and the slide count; the slide caption, when present, is appended.
      */
     slideAnnouncement: string;
+
+    // Plugin labels: every user-facing string lives in this one contract.
+    // The legacy per-plugin *PluginStrings objects remain as deprecated
+    // aliases — an explicitly set legacy key wins.
+    /** Share plugin: share button label. */
+    share: string;
+    /** Thumbnail plugin: strip toggle button label. */
+    toggleThumbnails: string;
+    /** Autoplay plugin: slideshow toggle button label. */
+    toggleAutoplay: string;
+    /** Fullscreen plugin: fullscreen toggle button label. */
+    toggleFullscreen: string;
+    /** Zoom plugin: zoom-in button label. */
+    zoomIn: string;
+    /** Zoom plugin: zoom-out button label. */
+    zoomOut: string;
+    /** Zoom plugin: actual-size button label. */
+    viewActualSize: string;
+    /** Rotate plugin: rotate-left button label. */
+    rotateLeft: string;
+    /** Rotate plugin: rotate-right button label. */
+    rotateRight: string;
+    /** Rotate plugin: horizontal flip button label. */
+    flipHorizontal: string;
+    /** Rotate plugin: vertical flip button label. */
+    flipVertical: string;
+    /** Comment plugin: comments toggle button label. */
+    toggleComments: string;
 }
 
 export type LightGalleryAllSettings = LightGalleryCoreSettings &
@@ -65,7 +93,12 @@ export type LightGalleryAllSettings = LightGalleryCoreSettings &
     ShareSettings &
     MediumZoomSettings;
 
-export type LightGallerySettings = Partial<LightGalleryAllSettings>;
+// User-facing input: everything optional, strings mergeable per-key
+// (headless UserSettings parity — a partial strings object merges over
+// the defaults instead of replacing the whole contract).
+export type LightGallerySettings = Partial<
+    Omit<LightGalleryAllSettings, 'strings'>
+> & { strings?: Partial<LightGalleryCoreStrings> };
 
 export interface LightGalleryCoreSettings {
     /**
@@ -588,7 +621,8 @@ export interface LightGalleryCoreSettings {
      * @description This can be useful if you want to localize the lightGallery strings to other languages.
      * Use your own service to translate the strings and pass it via settings.strings
      * You can find dedicated strings option for all lightGallery modules in their respective documentation.
-     * Note - You need to provide values for all the strings. For example, even if you just want to change the closeGallery string, you need to provide all the other strings as well.
+     * Strings merge per-key over the defaults — override only the keys
+     * you need (the old provide-everything requirement is gone).
      */
     strings: LightGalleryCoreStrings;
 
@@ -677,5 +711,17 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
         mediaLoadingFailed: 'Oops... Failed to load content...',
         galleryLabel: 'Gallery',
         slideAnnouncement: 'Image {index} of {total}',
+        share: 'Share',
+        toggleThumbnails: 'Toggle thumbnails',
+        toggleAutoplay: 'Toggle Autoplay',
+        toggleFullscreen: 'Toggle Fullscreen',
+        zoomIn: 'Zoom in',
+        zoomOut: 'Zoom out',
+        viewActualSize: 'View actual size',
+        rotateLeft: 'Rotate left',
+        rotateRight: 'Rotate right',
+        flipHorizontal: 'Flip horizontal',
+        flipVertical: 'Flip vertical',
+        toggleComments: 'Toggle Comments',
     } as LightGalleryCoreStrings,
 };

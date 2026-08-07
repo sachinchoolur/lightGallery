@@ -81,11 +81,13 @@ export default class Zoom {
             ? `<button id="${this.core.getIdName(
                   'lg-zoom-in',
               )}" type="button" aria-label="${
-                  this.settings.zoomPluginStrings['zoomIn']
+                  this.settings.zoomPluginStrings?.zoomIn ??
+                  this.core.settings.strings.zoomIn
               }" class="lg-zoom-in lg-icon"></button><button id="${this.core.getIdName(
                   'lg-zoom-out',
               )}" type="button" aria-label="${
-                  this.settings.zoomPluginStrings['zoomOut']
+                  this.settings.zoomPluginStrings?.zoomOut ??
+                  this.core.settings.strings.zoomOut
               }" class="lg-zoom-out lg-icon"></button>`
             : '';
 
@@ -93,7 +95,8 @@ export default class Zoom {
             zoomIcons += `<button id="${this.core.getIdName(
                 'lg-actual-size',
             )}" type="button" aria-label="${
-                this.settings.zoomPluginStrings['viewActualSize']
+                this.settings.zoomPluginStrings?.viewActualSize ??
+                this.core.settings.strings.viewActualSize
             }" class="${
                 this.settings.actualSizeIcons.zoomIn
             } lg-icon"></button>`;

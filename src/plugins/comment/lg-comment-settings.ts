@@ -31,8 +31,11 @@ export interface CommentSettings {
 
     /**
      * Custom translation strings for aria-labels
+     * @deprecated Set these labels on the core `strings` object instead —
+     * every user-facing string lives in that one contract. An explicitly set
+     * key here still wins (alias).
      */
-    commentPluginStrings: CommentStrings;
+    commentPluginStrings?: Partial<CommentStrings>;
 }
 
 export const commentSettings: CommentSettings = {
@@ -45,7 +48,4 @@ export const commentSettings: CommentSettings = {
     },
     commentsMarkup:
         '<div id="lg-comment-box" class="lg-comment-box lg-fb-comment-box"><div class="lg-comment-header"><h3 class="lg-comment-title">Leave a comment.</h3><span class="lg-comment-close lg-icon"></span></div><div class="lg-comment-body"></div></div>',
-    commentPluginStrings: {
-        toggleComments: 'Toggle Comments',
-    } as CommentStrings,
 };

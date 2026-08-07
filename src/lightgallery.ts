@@ -160,6 +160,12 @@ export class LightGallery {
         this.settings = {
             ...lightGalleryCoreSettings,
             ...options,
+            // Strings merge per-key (headless resolveSettings parity) —
+            // a partial override keeps every other default.
+            strings: {
+                ...lightGalleryCoreSettings.strings,
+                ...(options?.strings ?? {}),
+            },
         } as LightGalleryAllSettings;
         if (
             this.settings.isMobile &&

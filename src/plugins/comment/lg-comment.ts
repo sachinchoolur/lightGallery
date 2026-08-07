@@ -51,7 +51,10 @@ export default class CommentBox {
                 '<div class="lg-comment-overlay"></div>',
         );
 
-        const commentToggleBtn = `<button type="button" aria-label="${this.settings.commentPluginStrings['toggleComments']}" class="lg-comment-toggle lg-icon"></button>`;
+        const commentToggleBtn = `<button type="button" aria-label="${
+            this.settings.commentPluginStrings?.toggleComments ??
+            this.core.settings.strings.toggleComments
+        }" class="lg-comment-toggle lg-icon"></button>`;
         this.core.$toolbar.append(commentToggleBtn);
     }
 

@@ -72,6 +72,34 @@ export interface GalleryCoreStrings {
      * and the slide count; the slide caption, when present, is appended.
      */
     slideAnnouncement: string;
+
+    // Plugin labels (plan 011): every user-facing string lives in this
+    // one contract. The legacy per-plugin `*PluginStrings` objects remain
+    // as deprecated aliases — an explicitly set legacy key wins.
+    /** Share plugin: share button label. */
+    share: string;
+    /** Thumbnail plugin: strip toggle button label. */
+    toggleThumbnails: string;
+    /** Autoplay plugin: slideshow toggle button label. */
+    toggleAutoplay: string;
+    /** Fullscreen plugin: fullscreen toggle button label. */
+    toggleFullscreen: string;
+    /** Zoom plugin: zoom-in button label. */
+    zoomIn: string;
+    /** Zoom plugin: zoom-out button label. */
+    zoomOut: string;
+    /** Zoom plugin: actual-size button label. */
+    viewActualSize: string;
+    /** Rotate plugin: rotate-left button label. */
+    rotateLeft: string;
+    /** Rotate plugin: rotate-right button label. */
+    rotateRight: string;
+    /** Rotate plugin: horizontal flip button label. */
+    flipHorizontal: string;
+    /** Rotate plugin: vertical flip button label. */
+    flipVertical: string;
+    /** Comment plugin: comments toggle button label. */
+    toggleComments: string;
 }
 
 export interface CoreSettings {
@@ -345,6 +373,18 @@ export const coreSettingsDefaults: CoreSettings = {
         mediaLoadingFailed: 'Oops... Failed to load content...',
         galleryLabel: 'Gallery',
         slideAnnouncement: 'Image {index} of {total}',
+        share: 'Share',
+        toggleThumbnails: 'Toggle thumbnails',
+        toggleAutoplay: 'Toggle Autoplay',
+        toggleFullscreen: 'Toggle Fullscreen',
+        zoomIn: 'Zoom in',
+        zoomOut: 'Zoom out',
+        viewActualSize: 'View actual size',
+        rotateLeft: 'Rotate left',
+        rotateRight: 'Rotate right',
+        flipHorizontal: 'Flip horizontal',
+        flipVertical: 'Flip vertical',
+        toggleComments: 'Toggle Comments',
     },
 };
 

@@ -34,7 +34,10 @@ export default class FullScreen {
             ) {
                 return;
             } else {
-                fullScreen = `<button type="button" aria-label="${this.settings.fullscreenPluginStrings['toggleFullscreen']}" class="lg-fullscreen lg-icon"></button>`;
+                fullScreen = `<button type="button" aria-label="${
+                    this.settings.fullscreenPluginStrings?.toggleFullscreen ??
+                    this.core.settings.strings.toggleFullscreen
+                }" class="lg-fullscreen lg-icon"></button>`;
                 this.core.$toolbar.append(fullScreen);
                 this.fullScreen();
             }

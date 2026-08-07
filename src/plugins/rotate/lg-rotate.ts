@@ -26,16 +26,28 @@ export default class Rotate {
     buildTemplates(): void {
         let rotateIcons = '';
         if (this.settings.flipVertical) {
-            rotateIcons += `<button type="button" id="lg-flip-ver" aria-label="${this.settings.rotatePluginStrings['flipVertical']}" class="lg-flip-ver lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-flip-ver" aria-label="${
+                this.settings.rotatePluginStrings?.flipVertical ??
+                this.core.settings.strings.flipVertical
+            }" class="lg-flip-ver lg-icon"></button>`;
         }
         if (this.settings.flipHorizontal) {
-            rotateIcons += `<button type="button" id="lg-flip-hor" aria-label="${this.settings.rotatePluginStrings['flipHorizontal']}" class="lg-flip-hor lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-flip-hor" aria-label="${
+                this.settings.rotatePluginStrings?.flipHorizontal ??
+                this.core.settings.strings.flipHorizontal
+            }" class="lg-flip-hor lg-icon"></button>`;
         }
         if (this.settings.rotateLeft) {
-            rotateIcons += `<button type="button" id="lg-rotate-left" aria-label="${this.settings.rotatePluginStrings['rotateLeft']}" class="lg-rotate-left lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-rotate-left" aria-label="${
+                this.settings.rotatePluginStrings?.rotateLeft ??
+                this.core.settings.strings.rotateLeft
+            }" class="lg-rotate-left lg-icon"></button>`;
         }
         if (this.settings.rotateRight) {
-            rotateIcons += `<button type="button" id="lg-rotate-right" aria-label="${this.settings.rotatePluginStrings['rotateRight']}" class="lg-rotate-right lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-rotate-right" aria-label="${
+                this.settings.rotatePluginStrings?.rotateRight ??
+                this.core.settings.strings.rotateRight
+            }" class="lg-rotate-right lg-icon"></button>`;
         }
         this.core.$toolbar.append(rotateIcons);
     }

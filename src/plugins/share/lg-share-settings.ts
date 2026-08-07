@@ -63,8 +63,11 @@ export interface ShareSettings {
 
     /**
      * Custom translation strings for aria-labels
+     * @deprecated Set these labels on the core `strings` object instead —
+     * every user-facing string lives in that one contract. An explicitly set
+     * key here still wins (alias).
      */
-    sharePluginStrings: ShareStrings;
+    sharePluginStrings?: Partial<ShareStrings>;
 }
 
 export const shareSettings = {
@@ -76,5 +79,4 @@ export const shareSettings = {
     pinterest: true,
     pinterestDropdownText: 'Pinterest',
     additionalShareOptions: [],
-    sharePluginStrings: { share: 'Share' } as ShareStrings,
 };

@@ -1,5 +1,8 @@
 import { lGEvents } from '../../lg-events';
-import { LightGallerySettings } from '../../lg-settings';
+import {
+    LightGalleryAllSettings,
+    LightGallerySettings,
+} from '../../lg-settings';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import {
@@ -25,7 +28,9 @@ export default class MediumZoom {
         };
 
         // Override some of lightGallery default settings
-        const defaultSettings: Partial<LightGallerySettings> = {
+        // Typed against the resolved settings shape (strings is the
+        // full contract there) — this object never sets strings.
+        const defaultSettings: Partial<LightGalleryAllSettings> = {
             controls: false,
             download: false,
             counter: false,

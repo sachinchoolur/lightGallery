@@ -38,8 +38,11 @@ export interface RotateSettings {
 
     /**
      * Custom translation strings for aria-labels
+     * @deprecated Set these labels on the core `strings` object instead —
+     * every user-facing string lives in that one contract. An explicitly set
+     * key here still wins (alias).
      */
-    rotatePluginStrings: RotateStrings;
+    rotatePluginStrings?: Partial<RotateStrings>;
 }
 export const rotateSettings = {
     rotate: true,
@@ -48,10 +51,4 @@ export const rotateSettings = {
     rotateRight: true,
     flipHorizontal: true,
     flipVertical: true,
-    rotatePluginStrings: {
-        flipVertical: 'Flip vertical',
-        flipHorizontal: 'Flip horizontal',
-        rotateLeft: 'Rotate left',
-        rotateRight: 'Rotate right',
-    } as RotateStrings,
 };

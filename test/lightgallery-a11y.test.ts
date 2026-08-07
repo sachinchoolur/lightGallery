@@ -165,15 +165,10 @@ describe('accessibility (vanilla core)', () => {
         });
 
         it('honors a localized announcement template', () => {
+            // Partial override: strings merge per-key over the defaults
+            // (plan 011 — the provide-everything requirement is gone).
             instance = initGallery({
                 strings: {
-                    closeGallery: 'Close gallery',
-                    toggleMaximize: 'Toggle maximize',
-                    previousSlide: 'Previous slide',
-                    nextSlide: 'Next slide',
-                    download: 'Download',
-                    playVideo: 'Play video',
-                    mediaLoadingFailed: 'Failed',
                     galleryLabel: 'Galerie',
                     slideAnnouncement: 'Bild {index} von {total}',
                 },
@@ -185,6 +180,26 @@ describe('accessibility (vanilla core)', () => {
                 'Galerie',
             );
             expect(query('.lg-announcer')!.textContent).toBe('Bild 2 von 3');
+        });
+
+        it('resolves plugin labels from core strings, legacy aliases winning', () => {
+            instance = initGallery({
+                plugins: [Autoplay, Share],
+                strings: { toggleAutoplay: 'Diaporama', share: 'Partager' },
+                autoplayPluginStrings: { toggleAutoplay: 'Legacy autoplay' },
+            });
+            instance.openGallery(0);
+            tick(200);
+            // The deprecated per-plugin alias wins where explicitly set…
+            expect(query('.lg-autoplay-button')).toHaveAttribute(
+                'aria-label',
+                'Legacy autoplay',
+            );
+            // …and the core strings drive every other plugin label.
+            expect(query('.lg-share')).toHaveAttribute(
+                'aria-label',
+                'Partager',
+            );
         });
 
         it('demotes the counter and caption bar while the announcer is active', () => {
