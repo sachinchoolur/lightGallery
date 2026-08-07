@@ -1,15 +1,19 @@
 // Demo-gallery runtime: the Hugo site's app.js gallery initializers,
 // running on the v3 vanilla `lightgallery` package (workspace build)
-// instead of the bundled v2 UMD globals. Body below is ported verbatim
-// from site/assets/js/app.js (id-guarded per demo, exactly as before);
+// instead of the bundled v2 UMD globals. Body below is ported from
+// site/assets/js/app.js (id-guarded per demo, exactly as before);
 // only this bootstrap is new. Carousel vendors (Swiper/slick/flickity/
 // owl/videojs) stay page-provided globals — their sections are
-// element-guarded and only run on their own demo pages.
+// element-guarded and only run on their own demo pages. The trigger
+// grids run on lightGallery's own justified layout plugin; jQuery
+// loads only for the jQuery-plugin carousels (slick/owl).
+import { getJustifiedLayout, parseImageSize } from '@lightgallery/headless';
 import lightGallery from 'lightgallery';
 import lgAutoplay from 'lightgallery/plugins/autoplay';
 import lgComment from 'lightgallery/plugins/comment';
 import lgFullscreen from 'lightgallery/plugins/fullscreen';
 import lgHash from 'lightgallery/plugins/hash';
+import lgJustified from 'lightgallery/plugins/justified';
 import lgMediumZoom from 'lightgallery/plugins/mediumZoom';
 import lgPager from 'lightgallery/plugins/pager';
 import lgRotate from 'lightgallery/plugins/rotate';
@@ -18,10 +22,9 @@ import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgVideo from 'lightgallery/plugins/video';
 import lgZoom from 'lightgallery/plugins/zoom';
 
-// jQuery + layout vendors, loaded as classic scripts (see load-vendor).
+// Layout/carousel vendors, loaded as classic scripts (see load-vendor).
 import { loadVendor } from './load-vendor.js';
 import jQueryUrl from './vendor/jQuery.js?url';
-import justifiedGalleryUrl from './vendor/jquery.justifiedGallery.js?url';
 import masonryUrl from './vendor/masonry.pkgd.min.js?url';
 import imagesLoadedUrl from './vendor/imagesloaded.pkgd.js?url';
 import swiperUrl from './vendor/swiper-bundle.min.js?url';
@@ -29,19 +32,15 @@ import flickityUrl from './vendor/flickity.pkgd.min.js?url';
 import slickUrl from './vendor/slick.min.js?url';
 import owlUrl from './vendor/owl.carousel.min.js?url';
 
-await loadVendor(jQueryUrl);
-const $ = window.jQuery;
-const jQuery = $;
-window.$ = $;
 window.lightGallery = lightGallery;
-await loadVendor(justifiedGalleryUrl);
 await loadVendor(masonryUrl);
 const Masonry = window.Masonry;
 await loadVendor(imagesLoadedUrl);
 const imagesLoaded = window.imagesLoaded;
 
 // Carousel vendors load only on their own demo pages (the init sections
-// below are element-guarded, exactly like the Hugo app.js).
+// below are element-guarded, exactly like the Hugo app.js). slick and
+// owl are jQuery plugins — jQuery rides along for those two pages only.
 let Swiper;
 if (document.getElementById('lg-swipper')) {
     await loadVendor(swiperUrl);
@@ -53,14 +52,82 @@ if (document.querySelector('#flickity-carousel-gallery-demo')) {
     Flickity = window.Flickity;
 }
 if (document.getElementById('slick-carousel-gallery-demo')) {
+    await loadVendor(jQueryUrl);
     await loadVendor(slickUrl);
 }
 if (document.getElementById('owl-carousel-gallery-demo')) {
+    await loadVendor(jQueryUrl);
     await loadVendor(owlUrl);
 }
 
+// Justified trigger grids: the justified layout plugin positions the
+// thumbnails during lightGallery init — one call replaces the old
+// two-step layout + lightbox wiring.
+function lightGalleryJustified(id, settings = {}) {
+    const el = document.getElementById(id);
+    if (!el) {
+        return null;
+    }
+    return window.lightGallery(el, {
+        justifiedRowHeight: 180,
+        justifiedGap: 5,
+        justifiedLastRow: 'justify',
+        ...settings,
+        plugins: [...(settings.plugins || []), lgJustified],
+    });
+}
+
+// Standalone justified grid (no lightbox bound to the grid element):
+// the same headless row math the plugin uses, applied directly.
+function justifyGrid(container, { rowHeight = 180, gap = 5 } = {}) {
+    const items = Array.from(container.children);
+    if (!items.length) {
+        return;
+    }
+    container.classList.add('lg-justified');
+    items.forEach((item) => item.classList.add('lg-justified-item'));
+    const layout = () => {
+        const containerWidth = container.clientWidth;
+        if (!containerWidth) {
+            return;
+        }
+        const ratios = items.map((item) => {
+            const size = parseImageSize(
+                item.getAttribute('data-lg-size') || undefined,
+                window.innerWidth,
+            );
+            if (size) {
+                return size.width / size.height;
+            }
+            const img = item.querySelector('img');
+            return img && img.complete && img.naturalWidth > 0
+                ? img.naturalWidth / img.naturalHeight
+                : 1;
+        });
+        const { boxes, containerHeight } = getJustifiedLayout({
+            ratios,
+            containerWidth,
+            targetRowHeight: rowHeight,
+            gap,
+            lastRow: 'justify',
+        });
+        container.style.height = `${containerHeight}px`;
+        items.forEach((item, index) => {
+            const box = boxes[index];
+            item.style.top = `${box.top}px`;
+            item.style.left = `${box.start}px`;
+            item.style.width = `${box.width}px`;
+            item.style.height = `${box.height}px`;
+        });
+    };
+    layout();
+    if (typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(layout).observe(container);
+    }
+}
+
 function getResponsiveThumbnailsSettings() {
-    if ($(window).width() < 768) {
+    if (window.innerWidth < 768) {
         return {
             thumbWidth: 30,
             thumbHeight: '20px',
@@ -92,149 +159,132 @@ if ($lgInlineContainer) {
         rotate: true,
         download: true,
         slideDelay: 400,
-        plugins: [lgZoom, lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgRotate],
+        plugins: [
+            lgZoom,
+            lgAutoplay,
+            lgFullscreen,
+            lgShare,
+            lgThumbnail,
+            lgRotate,
+        ],
         appendSubHtmlTo: '.lg-item',
         ...getResponsiveThumbnailsSettings(),
         dynamicEl: [
             {
-                src:
-                    'https://images.unsplash.com/photo-1542103749-8ef59b94f47e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1542103749-8ef59b94f47e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1542103749-8ef59b94f47e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1542103749-8ef59b94f47e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1542103749-8ef59b94f47e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1542103749-8ef59b94f47e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@dann">Dan</a></h4>
                     <p>Published on November 13, 2018</p>
                 </div>`,
             },
             {
-                src:
-                    'https://images.unsplash.com/photo-1473876988266-ca0860a443b8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1473876988266-ca0860a443b8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1473876988266-ca0860a443b8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1473876988266-ca0860a443b8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1473876988266-ca0860a443b8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1473876988266-ca0860a443b8?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@kylepyt">Kyle Peyton</a></h4>
                     <p>Published on September 14, 2016</p>
                 </div>`,
             },
             {
-                src:
-                    'https://images.unsplash.com/photo-1588953936179-d2a4734c5490?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1588953936179-d2a4734c5490?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1588953936179-d2a4734c5490?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1588953936179-d2a4734c5490?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1588953936179-d2a4734c5490?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1588953936179-d2a4734c5490?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@jxnsartstudio">Garrett Jackson</a></h4>
                     <p>Published on May 8, 2020</p>
                 </div>`,
             },
             {
-                src:
-                    'https://images.unsplash.com/photo-1591634616938-1dfa7ee2e617?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1591634616938-1dfa7ee2e617?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1591634616938-1dfa7ee2e617?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1591634616938-1dfa7ee2e617?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1591634616938-1dfa7ee2e617?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1591634616938-1dfa7ee2e617?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@brookecagle">Brooke Cagle</a></h4>
                     <p>Description of the slide 4</p>
                 </div>`,
             },
             {
-                src:
-                    'https://images.unsplash.com/photo-1543059509-6d53dbee1728?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1543059509-6d53dbee1728?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1543059509-6d53dbee1728?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1543059509-6d53dbee1728?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1543059509-6d53dbee1728?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1543059509-6d53dbee1728?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@charlespostiaux">Charles Postiaux</a></h4>
                     <p>Published on November 24, 2018</p>
                 </div>`,
             },
             {
-                src:
-                    'https://images.unsplash.com/photo-1609902726285-00668009f004?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1609902726285-00668009f004?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1609902726285-00668009f004?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1609902726285-00668009f004?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1609902726285-00668009f004?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1609902726285-00668009f004?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@bruno_adam">Bruno Adam</a></h4>
                     <p>Published on January 6, 2021</p>
                 </div>`,
             },
             {
-                src:
-                    'https://images.unsplash.com/photo-1573007974656-b958089e9f7b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1573007974656-b958089e9f7b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1573007974656-b958089e9f7b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1573007974656-b958089e9f7b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1573007974656-b958089e9f7b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1573007974656-b958089e9f7b?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@sigmund">Sigmund</a></h4>
                     <p>Published on November 6, 2019</p>
                 </div>`,
             },
             {
-                src:
-                    'https://images.unsplash.com/photo-1579406842270-ea87c39a8a12?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1579406842270-ea87c39a8a12?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1579406842270-ea87c39a8a12?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1579406842270-ea87c39a8a12?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1579406842270-ea87c39a8a12?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1579406842270-ea87c39a8a12?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@chow_parij">Parij Borgohain</a></h4>
                     <p>Published on January 19, 2020</p>
                 </div>`,
             },
             {
-                src:
-                    'https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@inespiazzese">Ines Piazzese</a></h4>
                     <p>Published on September 1, 2020</p>
                 </div>`,
             },
             {
-                src:
-                    'https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@rdsaunders">Richard Saunders</a></h4>
                     <p>Published on June 19, 2019</p>
                 </div>`,
             },
             {
-                src:
-                    'https://images.unsplash.com/photo-1571292064306-669f0e758231?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1571292064306-669f0e758231?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1571292064306-669f0e758231?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1571292064306-669f0e758231?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1571292064306-669f0e758231?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1571292064306-669f0e758231?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@jalanmeier">J. Meier</a></h4>
                     <p>Published on October 17, 2019</p>
                 </div>`,
             },
             {
-                src:
-                    'https://images.unsplash.com/photo-1601935111741-ae98b2b230b0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
+                src: 'https://images.unsplash.com/photo-1601935111741-ae98b2b230b0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
                 responsive:
                     'https://images.unsplash.com/photo-1601935111741-ae98b2b230b0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1601935111741-ae98b2b230b0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
-                thumb:
-                    'https://images.unsplash.com/photo-1601935111741-ae98b2b230b0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+                thumb: 'https://images.unsplash.com/photo-1601935111741-ae98b2b230b0?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
                 subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@brookecagle">Brooke Cagle</a></h4>
                     <p>Published on October 6, 2020</p>
@@ -264,78 +314,59 @@ window.lightGallery(
     },
 );
 
-jQuery('#animated-thumbnails-wp')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'hide',
-        rowHeight: 120,
-        maxRowsCount: 4,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(document.getElementById('animated-thumbnails-wp'), {
-            autoplayFirstVideo: false,
-            pager: false,
-            galleryId: 'nature',
-            plugins: [
-                lgZoom,
-                lgAutoplay,
-                lgHash,
-                lgFullscreen,
-                lgPager,
-                lgRotate,
-                lgShare,
-                lgThumbnail,
-                lgVideo,
-            ],
-            ...getResponsiveThumbnailsSettings(),
-            preload: 3,
-            videoMaxWidth: '1400px',
-            mobileSettings: {
-                controls: false,
-                showCloseIcon: false,
-                download: false,
-                rotate: false,
-            },
-        });
-    });
-jQuery('#animated-thumbnails-gallery')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'hide',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(
-            document.getElementById('animated-thumbnails-gallery'),
-            {
-                autoplayFirstVideo: false,
-                pager: false,
-                galleryId: 'nature',
-                plugins: [
-                    lgZoom,
-                    lgAutoplay,
-                    lgHash,
-                    lgFullscreen,
-                    lgPager,
-                    lgRotate,
-                    lgShare,
-                    lgThumbnail,
-                    lgVideo,
-                ],
-                ...getResponsiveThumbnailsSettings(),
-                preload: 3,
-                videoMaxWidth: '1400px',
-                mobileSettings: {
-                    controls: false,
-                    showCloseIcon: false,
-                    download: false,
-                    rotate: false,
-                },
-            },
-        );
-    });
+lightGalleryJustified('animated-thumbnails-wp', {
+    justifiedRowHeight: 120,
+    justifiedLastRow: 'hide',
+    autoplayFirstVideo: false,
+    pager: false,
+    galleryId: 'nature',
+    plugins: [
+        lgZoom,
+        lgAutoplay,
+        lgHash,
+        lgFullscreen,
+        lgPager,
+        lgRotate,
+        lgShare,
+        lgThumbnail,
+        lgVideo,
+    ],
+    ...getResponsiveThumbnailsSettings(),
+    preload: 3,
+    videoMaxWidth: '1400px',
+    mobileSettings: {
+        controls: false,
+        showCloseIcon: false,
+        download: false,
+        rotate: false,
+    },
+});
+lightGalleryJustified('animated-thumbnails-gallery', {
+    justifiedLastRow: 'hide',
+    autoplayFirstVideo: false,
+    pager: false,
+    galleryId: 'nature',
+    plugins: [
+        lgZoom,
+        lgAutoplay,
+        lgHash,
+        lgFullscreen,
+        lgPager,
+        lgRotate,
+        lgShare,
+        lgThumbnail,
+        lgVideo,
+    ],
+    ...getResponsiveThumbnailsSettings(),
+    preload: 3,
+    videoMaxWidth: '1400px',
+    mobileSettings: {
+        controls: false,
+        showCloseIcon: false,
+        download: false,
+        rotate: false,
+    },
+});
 
 const masonryElMixed = document.getElementById('static-thumbnails-gallery');
 if (masonryElMixed) {
@@ -360,30 +391,18 @@ if (masonryElMixed) {
     );
 }
 
-jQuery('#customize-thumbnails-gallery')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'hide',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(
-            document.getElementById('customize-thumbnails-gallery'),
-            {
-                animateThumb: false,
-                addClass: 'lg-custom-thumbnails',
-                appendThumbnailsTo: '.lg-outer',
-                pager: false,
-                hash: false,
-                plugins: [lgZoom, lgAutoplay, lgFullscreen, lgThumbnail],
-                allowMediaOverlap: true,
-            },
-        );
-    });
+lightGalleryJustified('customize-thumbnails-gallery', {
+    justifiedLastRow: 'hide',
+    animateThumb: false,
+    addClass: 'lg-custom-thumbnails',
+    appendThumbnailsTo: '.lg-outer',
+    pager: false,
+    hash: false,
+    plugins: [lgZoom, lgAutoplay, lgFullscreen, lgThumbnail],
+    allowMediaOverlap: true,
+});
 
-const $galleryEventsDemo = jQuery('#gallery-events-demo');
-const galleryEventsDemo = $galleryEventsDemo[0];
+const galleryEventsDemo = document.getElementById('gallery-events-demo');
 
 if (galleryEventsDemo) {
     const colours = ['#6a7583', '#1e304b', '#315460', '#080607'];
@@ -392,104 +411,69 @@ if (galleryEventsDemo) {
         document.querySelector('.lg-backdrop').style.backgroundColor =
             colours[index];
     });
-    $galleryEventsDemo
-        .justifiedGallery({
-            captions: false,
-            lastRow: 'justify',
-            rowHeight: 180,
-            margins: 5,
-        })
-        .on('jg.complete', function () {
-            window.lightGallery(galleryEventsDemo, {
-                zoom: false,
-                thumbnail: false,
-                addClass: 'lg-events-demo-outer',
-                rotate: false,
-                pager: false,
-                plugins: [],
-                hash: false,
-                fullScreen: false,
-                download: false,
-            });
-        });
+    lightGalleryJustified('gallery-events-demo', {
+        zoom: false,
+        thumbnail: false,
+        addClass: 'lg-events-demo-outer',
+        rotate: false,
+        pager: false,
+        plugins: [],
+        hash: false,
+        fullScreen: false,
+        download: false,
+    });
 }
 
 let customTransitionsGallery;
 
 function customTransitions(trans) {
-    jQuery('#gallery-transitions-demo')
-        .justifiedGallery({
-            captions: false,
-            lastRow: 'justify',
-            rowHeight: 180,
-            margins: 5,
-        })
-        .on('jg.complete', function () {
-            customTransitionsGallery = window.lightGallery(
-                document.getElementById('gallery-transitions-demo'),
-                {
-                    mode: trans,
-                    zoom: false,
-                    thumbnail: false,
-                    rotate: false,
-                    pager: false,
-                    plugins: [],
-                    hash: false,
-                    fullScreen: false,
-                    download: false,
-                },
-            );
-        });
+    customTransitionsGallery = lightGalleryJustified(
+        'gallery-transitions-demo',
+        {
+            mode: trans,
+            zoom: false,
+            thumbnail: false,
+            rotate: false,
+            pager: false,
+            plugins: [],
+            hash: false,
+            fullScreen: false,
+            download: false,
+        },
+    );
 }
 customTransitions('lg-slide');
 
-jQuery('#select-trans').on('change', function () {
+document.getElementById('select-trans')?.addEventListener('change', (event) => {
     customTransitionsGallery.destroy();
-
-    jQuery('#gallery-transitions-demo').justifiedGallery('destroy');
-    jQuery('#gallery-transitions-demo').off('jg.complete');
-    customTransitions(jQuery(this).val());
+    customTransitions(event.target.value);
 });
 
 let customEasingGallery;
 
 function initCustomEasing(easing) {
-    jQuery('#gallery-custom-easing-demo')
-        .justifiedGallery({
-            captions: false,
-            lastRow: 'justify',
-            rowHeight: 180,
-            margins: 5,
-        })
-        .on('jg.complete', function () {
-            customEasingGallery = window.lightGallery(
-                document.getElementById('gallery-custom-easing-demo'),
-                {
-                    easing: easing,
-                    zoom: false,
-                    thumbnail: false,
-                    rotate: false,
-                    pager: false,
-                    hash: false,
-                    plugins: [],
-                    speed: 1000,
-                    fullScreen: false,
-                    download: false,
-                },
-            );
-        });
+    customEasingGallery = lightGalleryJustified('gallery-custom-easing-demo', {
+        easing: easing,
+        zoom: false,
+        thumbnail: false,
+        rotate: false,
+        pager: false,
+        hash: false,
+        plugins: [],
+        speed: 1000,
+        fullScreen: false,
+        download: false,
+    });
 }
 initCustomEasing('cubic-bezier(0.680, -0.550, 0.265, 1.550)');
-jQuery('#select-easing').on('change', function () {
-    const val = jQuery(this).val();
-    prompt('You can copy cubic-bezier from here', val);
-    customEasingGallery.destroy();
-
-    jQuery('#gallery-custom-easing-demo').justifiedGallery('destroy');
-    jQuery('#gallery-custom-easing-demo').off('jg.complete');
-
-    initCustomEasing('cubic-bezier(' + val + ')');
-});
+document
+    .getElementById('select-easing')
+    ?.addEventListener('change', (event) => {
+        const val = event.target.value;
+        prompt('You can copy cubic-bezier from here', val);
+        customEasingGallery.destroy();
+        initCustomEasing('cubic-bezier(' + val + ')');
+    });
 
 let methodsInstance;
 const $lgGalleryMethodsDemo = document.getElementById('gallery-methods-demo');
@@ -509,60 +493,32 @@ if ($lgGalleryMethodsDemo) {
             methodsInstance.goToPrevSlide();
         });
     });
-    jQuery('#gallery-methods-demo')
-        .justifiedGallery({
-            captions: false,
-            lastRow: 'justify',
-            rowHeight: 180,
-            margins: 5,
-        })
-        .on('jg.complete', function () {
-            methodsInstance = window.lightGallery($lgGalleryMethodsDemo, {
-                zoom: false,
-                thumbnail: false,
-                rotate: false,
-                fullScreen: false,
-                plugins: [lgZoom],
-                addClass: 'lg-methods-demo',
-                controls: false,
-                download: false,
-                pager: false,
-                hash: false,
-            });
-        });
+    methodsInstance = lightGalleryJustified('gallery-methods-demo', {
+        zoom: false,
+        thumbnail: false,
+        rotate: false,
+        fullScreen: false,
+        plugins: [lgZoom],
+        addClass: 'lg-methods-demo',
+        controls: false,
+        download: false,
+        pager: false,
+        hash: false,
+    });
 }
 
-const $lgDemoUpdateSlides = jQuery('#gallery-update-slides-demo');
-const lgDemoUpdateSlides = $lgDemoUpdateSlides.get(0);
+const lgDemoUpdateSlides = document.getElementById(
+    'gallery-update-slides-demo',
+);
 let updateSlidesGallery = null;
 let slidesUpdated = false;
 if (lgDemoUpdateSlides) {
     lgDemoUpdateSlides.addEventListener('lgAfterClose', () => {
         if (slidesUpdated) {
-            setTimeout(() => {
-                $lgDemoUpdateSlides.justifiedGallery('destroy');
-                $lgDemoUpdateSlides.off('jg.complete');
-
-                // Justified Gallery removes the src of added images after destroy for some reason
-                // So manually adding src values of newly added items
-                $('.lg-added-item').attr(
-                    'src',
-                    'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=100',
-                );
-            }, 100);
-            setTimeout(() => {
-                $lgDemoUpdateSlides
-                    .justifiedGallery({
-                        captions: false,
-                        lastRow: 'center',
-                        rowHeight: 180,
-                        margins: 5,
-                    })
-                    .on('jg.complete', function () {
-                        updateSlidesGallery.refresh();
-                    });
-                slidesUpdated = false;
-            }, 200);
+            // refresh() rewires the trigger clicks and the justified
+            // plugin relays the grid out for the new trigger set.
+            updateSlidesGallery.refresh();
+            slidesUpdated = false;
         }
     });
     lgDemoUpdateSlides.addEventListener('lgInit', (event) => {
@@ -579,10 +535,8 @@ if (lgDemoUpdateSlides) {
                 ...updateSlideInstance.galleryItems,
                 ...[
                     {
-                        src:
-                            'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80',
-                        thumb:
-                            'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=100',
+                        src: 'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80',
+                        thumb: 'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=100',
                         subHtml: `<div class="lightGallery-captions">
                     <h4>Photo by <a href="https://unsplash.com/@brookecagle">Brooke Cagle</a></h4>
                     <p>Description of the slide 1</p>
@@ -590,18 +544,20 @@ if (lgDemoUpdateSlides) {
                     },
                 ],
             ];
-            $lgDemoUpdateSlides.append(`<a
+            lgDemoUpdateSlides.insertAdjacentHTML(
+                'beforeend',
+                `<a
             data-lg-size="1600-1067"
             data-src="https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"
             data-sub-html="<h4>Fading Light</h4><p>layers of blue.</p>"
         >
             <img
                 alt="Captions"
-                style="height: 200px; max-width: none; width: 200px"
                 class="img-responsive lg-added-item"
                 src="https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=100"
             />
-        </a>`);
+        </a>`,
+            );
             updateSlideInstance.updateSlides(
                 galleryItems,
                 updateSlideInstance.index,
@@ -614,65 +570,50 @@ if (lgDemoUpdateSlides) {
             );
             galleryItems.shift();
             updateSlideInstance.updateSlides(galleryItems, 1);
-            $lgDemoUpdateSlides.children().first().remove();
+            lgDemoUpdateSlides.firstElementChild.remove();
             slidesUpdated = true;
         });
     });
-    const jG = $lgDemoUpdateSlides.justifiedGallery({
-        captions: false,
-        lastRow: 'center',
-        rowHeight: 180,
-        margins: 5,
-    });
-    jG.on('jg.complete', function () {
-        updateSlidesGallery = window.lightGallery(lgDemoUpdateSlides, {
-            addClass: 'lg-update-slide-demo',
-            controls: false,
-            pager: false,
-            hash: false,
-            plugins: [lgZoom, lgAutoplay, lgFullscreen, lgShare, lgThumbnail],
-            download: false,
-        });
+    updateSlidesGallery = lightGalleryJustified('gallery-update-slides-demo', {
+        justifiedLastRow: 'start',
+        addClass: 'lg-update-slide-demo',
+        controls: false,
+        pager: false,
+        hash: false,
+        plugins: [lgZoom, lgAutoplay, lgFullscreen, lgShare, lgThumbnail],
+        download: false,
     });
 }
 
 // Dynamic mode
-const $dynamicGallery = jQuery('#dynamic-gallery-demo');
+const $dynamicGallery = document.getElementById('dynamic-gallery-demo');
 const dynamicEl = [
     {
-        src:
-            'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
+        src: 'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
         responsive:
             'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
-        thumb:
-            'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+        thumb: 'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-            'https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
+        src: 'https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
         responsive:
             'https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
-        thumb:
-            'https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+        thumb: 'https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-            'https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
+        src: 'https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
         responsive:
             'https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800',
-        thumb:
-            'https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
+        thumb: 'https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
+        src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
         responsive:
             'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800',
-        thumb:
-            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
+        thumb: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
     },
 ];
-const dynamicGallery = window.lightGallery($dynamicGallery[0], {
+const dynamicGallery = window.lightGallery($dynamicGallery, {
     dynamic: true,
     hash: false,
     rotate: false,
@@ -687,108 +628,77 @@ const dynamicGallery = window.lightGallery($dynamicGallery[0], {
     ],
     dynamicEl: dynamicEl,
 });
-$dynamicGallery.on('click', function () {
+$dynamicGallery?.addEventListener('click', function () {
     dynamicGallery.openGallery(2);
 });
 
 //dynamic mode image
 
-const $dynamicimgGallery = jQuery('#dynamic-mode-images');
-const dynamicimgEl= [
+const $dynamicimgGallery = document.getElementById('dynamic-mode-images');
+const dynamicimgEl = [
     {
-        src:
-            'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80',
-        thumb:
-            'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+        src: 'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80',
+        thumb: 'https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-            'https://images.unsplash.com/photo-1526281216101-e55f00f0db7a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80',
-        thumb:
-            'https://images.unsplash.com/photo-1526281216101-e55f00f0db7a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+        src: 'https://images.unsplash.com/photo-1526281216101-e55f00f0db7a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80',
+        thumb: 'https://images.unsplash.com/photo-1526281216101-e55f00f0db7a?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-            'https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80',
-        thumb:
-            'https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
+        src: 'https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80',
+        thumb: 'https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-            'https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80',
-        thumb:
-            'https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+        src: 'https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80',
+        thumb: 'https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-            'https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80',
-        thumb:
-            'https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+        src: 'https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80',
+        thumb: 'https://images.unsplash.com/photo-1477322524744-0eece9e79640?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
-        thumb:
-            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
+        src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80',
+        thumb: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
     },
 
     {
-        src:
-        "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1440&q=80",
-        thumb:
-        "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=2407&q=80",
-
+        src: 'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1440&q=80',
+        thumb: 'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=2407&q=80',
     },
     {
-        src:
-        "https://images.unsplash.com/photo-1596370743446-6a7ef43a36f9?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80",
-        thumb:
-        "https://images.unsplash.com/photo-1596370743446-6a7ef43a36f9?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80",
+        src: 'https://images.unsplash.com/photo-1596370743446-6a7ef43a36f9?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80',
+        thumb: 'https://images.unsplash.com/photo-1596370743446-6a7ef43a36f9?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-        "https://images.unsplash.com/photo-1464852045489-bccb7d17fe39?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80",
-        thumb:
-        "https://images.unsplash.com/photo-1464852045489-bccb7d17fe39?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80",
+        src: 'https://images.unsplash.com/photo-1464852045489-bccb7d17fe39?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80',
+        thumb: 'https://images.unsplash.com/photo-1464852045489-bccb7d17fe39?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-        "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80",
-        thumb:
-        "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80",
+        src: 'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80',
+        thumb: 'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-        "https://images.unsplash.com/photo-1510011560141-62c7e8fc7908?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80",
-        thumb:
-        "https://images.unsplash.com/photo-1510011560141-62c7e8fc7908?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80",
+        src: 'https://images.unsplash.com/photo-1510011560141-62c7e8fc7908?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80',
+        thumb: 'https://images.unsplash.com/photo-1510011560141-62c7e8fc7908?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-        "https://images.unsplash.com/photo-1586276393635-5ecd8a851acc?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80",
-        thumb:
-        "https://images.unsplash.com/photo-1586276393635-5ecd8a851acc?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80",
+        src: 'https://images.unsplash.com/photo-1586276393635-5ecd8a851acc?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80',
+        thumb: 'https://images.unsplash.com/photo-1586276393635-5ecd8a851acc?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-        "https://images.unsplash.com/photo-1471931452361-f5ff1faa15ad?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80",
-        thumb:
-        "https://images.unsplash.com/photo-1471931452361-f5ff1faa15ad?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80",
+        src: 'https://images.unsplash.com/photo-1471931452361-f5ff1faa15ad?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80',
+        thumb: 'https://images.unsplash.com/photo-1471931452361-f5ff1faa15ad?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-        "https://images.unsplash.com/photo-1508766206392-8bd5cf550d1c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80",
-        thumb:
-        "https://images.unsplash.com/photo-1508766206392-8bd5cf550d1c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80",
+        src: 'https://images.unsplash.com/photo-1508766206392-8bd5cf550d1c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80',
+        thumb: 'https://images.unsplash.com/photo-1508766206392-8bd5cf550d1c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
     },
     {
-        src:
-        "https://images.unsplash.com/photo-1610448721566-47369c768e70?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80",
-        thumb:
-        "https://images.unsplash.com/photo-1610448721566-47369c768e70?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80",
-    }
+        src: 'https://images.unsplash.com/photo-1610448721566-47369c768e70?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1440&q=80',
+        thumb: 'https://images.unsplash.com/photo-1610448721566-47369c768e70?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80',
+    },
 ];
-const dynamicimgGallery = window.lightGallery($dynamicimgGallery[0], {
+const dynamicimgGallery = window.lightGallery($dynamicimgGallery, {
     dynamic: true,
     hash: false,
     rotate: false,
@@ -803,46 +713,45 @@ const dynamicimgGallery = window.lightGallery($dynamicimgGallery[0], {
     ],
     dynamicEl: dynamicimgEl,
 });
-$dynamicimgGallery.on('click', function () {
+$dynamicimgGallery?.addEventListener('click', function () {
     dynamicimgGallery.openGallery(5);
 });
 
-$('#gallery-dynamic-thumbnails .gallery-item').on('click', function () {
-    var index = $(this).index();
-    dynamicimgGallery.openGallery(index);
-  });
+const dynamicThumbnailsGrid = document.getElementById(
+    'gallery-dynamic-thumbnails',
+);
+if (dynamicThumbnailsGrid) {
+    Array.from(dynamicThumbnailsGrid.querySelectorAll('.gallery-item')).forEach(
+        (item, index) => {
+            item.addEventListener('click', () => {
+                dynamicimgGallery.openGallery(index);
+            });
+        },
+    );
+    justifyGrid(dynamicThumbnailsGrid);
+}
 
-  jQuery('#gallery-dynamic-thumbnails')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
+document
+    .getElementById('dynamic-gallery-demo-load-more')
+    ?.addEventListener('click', () => {
+        const newItems = [
+            {
+                src: 'https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
+                responsive:
+                    'https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
+                thumb: 'https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
+                responsive:
+                    'https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
+                thumb: 'https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
+            },
+        ];
+        const updatedDynamicElements = [...dynamicEl, ...newItems];
+        dynamicGallery.refresh(updatedDynamicElements);
+        dynamicGallery.openGallery(4);
     });
-
-$('#dynamic-gallery-demo-load-more').on('click', () => {
-    const newItems = [
-        {
-            src:
-                'https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
-            responsive:
-                'https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
-            thumb:
-                'https://images.unsplash.com/photo-1598911543663-37d77962beb1?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
-        },
-        {
-            src:
-                'https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80',
-            responsive:
-                'https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800',
-            thumb:
-                'https://images.unsplash.com/photo-1560885673-2cdc12600ec8?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80',
-        },
-    ];
-    const updatedDynamicElements = [...dynamicEl, ...newItems];
-    dynamicGallery.refresh(updatedDynamicElements);
-    dynamicGallery.openGallery(4);
-});
 
 window.lightGallery(document.getElementById('open-website'), {
     selector: 'this',
@@ -866,341 +775,170 @@ window.lightGallery(document.getElementById('open-pdf'), {
     },
 });
 
-jQuery('#gallery-videos-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(document.getElementById('gallery-videos-demo'), {
-            thumbnail: false,
-            pager: false,
-            plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
-            hash: false,
-            preload: 0,
-        });
-    });
-jQuery('#gallery-videojs-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(document.getElementById('gallery-videojs-demo'), {
-            //thumbnail: false,
-            pager: false,
-            hash: false,
-            preload: 0,
-            plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
-            videojs: true,
-            videojsOptions: {
-                muted: true,
+lightGalleryJustified('gallery-videos-demo', {
+    thumbnail: false,
+    pager: false,
+    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
+    hash: false,
+    preload: 0,
+});
+lightGalleryJustified('gallery-videojs-demo', {
+    //thumbnail: false,
+    pager: false,
+    hash: false,
+    preload: 0,
+    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo],
+    videojs: true,
+    videojsOptions: {
+        muted: true,
+    },
+});
+lightGalleryJustified('gallery-hash-demo', {
+    thumbnail: false,
+    plugins: [lgHash],
+    pager: false,
+    galleryId: 1,
+    customSlideName: false,
+});
+lightGalleryJustified('gallery-custom-hash-demo', {
+    thumbnail: false,
+    plugins: [
+        lgZoom,
+        lgHash,
+        lgAutoplay,
+        lgFullscreen,
+        lgPager,
+        lgRotate,
+        lgShare,
+        lgThumbnail,
+        lgVideo,
+    ],
+    galleryId: 2,
+    pager: false,
+    customSlideName: true,
+});
+lightGalleryJustified('gallery-share-demo', {
+    thumbnail: false,
+    pager: false,
+    hash: true,
+    plugins: [lgZoom, lgShare, lgThumbnail, lgHash],
+});
+lightGalleryJustified('gallery-zoom-from-origin-demo', {
+    thumbnail: false,
+    pager: false,
+    hash: true,
+    plugins: [lgZoom, lgShare, lgThumbnail, lgHash],
+});
+lightGalleryJustified('gallery-captions-demo', {
+    thumbnail: false,
+    plugins: [lgZoom, lgShare],
+    allowMediaOverlap: true,
+    pager: true,
+    hash: true,
+});
+lightGalleryJustified('gallery-animated-captions-demo', {
+    speed: 500,
+    allowMediaOverlap: true,
+    // Append caption inside the slide item
+    // to apply some animation for the captions (Optional)
+    appendSubHtmlTo: '.lg-item',
+    // Delay slide transition to complete captions animations
+    // before navigating to different slides (Optional)
+    // You can find caption animation demo on the captions demo page
+    slideDelay: 400,
+});
+lightGalleryJustified('gallery-srcset-demo', {
+    thumbnail: false,
+    plugins: [lgZoom, lgShare],
+    allowMediaOverlap: true,
+    pager: true,
+    hash: true,
+});
+lightGalleryJustified('gallery-picture-demo', {
+    thumbnail: false,
+    plugins: [lgZoom, lgShare],
+    allowMediaOverlap: true,
+    pager: true,
+    hash: true,
+});
+lightGalleryJustified('responsive-images-demo', {
+    thumbnail: false,
+    pager: true,
+    hash: true,
+    plugins: [lgAutoplay, lgThumbnail],
+});
+lightGalleryJustified('gallery-fb-comments-demo', {
+    thumbnail: false,
+    pager: false,
+    hash: true,
+    plugins: [lgZoom, lgComment, lgShare, lgThumbnail],
+    commentBox: true,
+    disqusComments: false,
+    fbComments: true,
+});
+lightGalleryJustified('gallery-disqus-comments-demo', {
+    thumbnail: false,
+    pager: false,
+    hash: true,
+    plugins: [lgComment, lgRotate],
+    commentBox: true,
+    disqusComments: true,
+    fbComments: false,
+});
+lightGalleryJustified('gallery-mixed-content-demo', {
+    thumbnail: false,
+    pager: false,
+    hash: true,
+    plugins: [
+        lgZoom,
+        lgAutoplay,
+        lgFullscreen,
+        lgPager,
+        lgRotate,
+        lgShare,
+        lgThumbnail,
+        lgVideo,
+    ],
+});
+lightGalleryJustified('gallery-mixed-content-all-demo', {
+    justifiedRowHeight: 130,
+    justifiedLastRow: 'start',
+    thumbnail: false,
+    pager: false,
+    hash: true,
+    plugins: [
+        lgZoom,
+        lgAutoplay,
+        lgFullscreen,
+        lgPager,
+        lgRotate,
+        lgShare,
+        lgThumbnail,
+        lgVideo,
+    ],
+});
+lightGalleryJustified('gallery-share-reddit-demo', {
+    thumbnail: false,
+    pager: false,
+    hash: true,
+    galleryId: 2,
+    plugins: [lgZoom, lgAutoplay, lgHash, lgFullscreen, lgShare, lgThumbnail],
+    addClass: 'lg-custom-share-demo',
+    extraProps: ['redditTitle'],
+    additionalShareOptions: [
+        {
+            selector: '.lg-share-reddit',
+            dropdownHTML:
+                '<li class="lg-share-item-reddit"><a class="lg-share-reddit" target="_blank"><svg class="lg-reddit" version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><title>reddit</title><path d="M8 20c0-1.105 0.895-2 2-2s2 0.895 2 2c0 1.105-0.895 2-2 2s-2-0.895-2-2zM20 20c0-1.105 0.895-2 2-2s2 0.895 2 2c0 1.105-0.895 2-2 2s-2-0.895-2-2zM20.097 24.274c0.515-0.406 1.262-0.317 1.668 0.198s0.317 1.262-0.198 1.668c-1.434 1.13-3.619 1.86-5.567 1.86s-4.133-0.73-5.567-1.86c-0.515-0.406-0.604-1.153-0.198-1.668s1.153-0.604 1.668-0.198c0.826 0.651 2.46 1.351 4.097 1.351s3.271-0.7 4.097-1.351zM32 16c0-2.209-1.791-4-4-4-1.504 0-2.812 0.83-3.495 2.057-2.056-1.125-4.561-1.851-7.29-2.019l2.387-5.36 4.569 1.319c0.411 1.167 1.522 2.004 2.83 2.004 1.657 0 3-1.343 3-3s-1.343-3-3-3c-1.142 0-2.136 0.639-2.642 1.579l-5.091-1.47c-0.57-0.164-1.173 0.116-1.414 0.658l-3.243 7.282c-2.661 0.187-5.102 0.907-7.114 2.007-0.683-1.227-1.993-2.056-3.496-2.056-2.209 0-4 1.791-4 4 0 1.635 0.981 3.039 2.387 3.659-0.252 0.751-0.387 1.535-0.387 2.341 0 5.523 6.268 10 14 10s14-4.477 14-10c0-0.806-0.134-1.589-0.387-2.34 1.405-0.62 2.387-2.025 2.387-3.66zM27 5.875c0.621 0 1.125 0.504 1.125 1.125s-0.504 1.125-1.125 1.125-1.125-0.504-1.125-1.125 0.504-1.125 1.125-1.125zM2 16c0-1.103 0.897-2 2-2 0.797 0 1.487 0.469 1.808 1.145-1.045 0.793-1.911 1.707-2.552 2.711-0.735-0.296-1.256-1.016-1.256-1.856zM16 29.625c-6.42 0-11.625-3.414-11.625-7.625s5.205-7.625 11.625-7.625c6.42 0 11.625 3.414 11.625 7.625s-5.205 7.625-11.625 7.625zM28.744 17.856c-0.641-1.003-1.507-1.918-2.552-2.711 0.321-0.676 1.011-1.145 1.808-1.145 1.103 0 2 0.897 2 2 0 0.84-0.52 1.56-1.256 1.856z"></path></svg><span class="lg-dropdown-text">Reddit</span></a></li>',
+            generateLink: (galleryItem) => {
+                const url = encodeURIComponent(window.location.href);
+                const title = galleryItem.redditTitle;
+                const redditShareLink = `//reddit.com/submit?url=${url}&title=${title}`;
+                return redditShareLink;
             },
-        });
-    });
-jQuery('#gallery-hash-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(document.getElementById('gallery-hash-demo'), {
-            thumbnail: false,
-            plugins: [lgHash],
-            pager: false,
-            galleryId: 1,
-            customSlideName: false,
-        });
-    });
-jQuery('#gallery-custom-hash-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(
-            document.getElementById('gallery-custom-hash-demo'),
-            {
-                thumbnail: false,
-                plugins: [
-                    lgZoom,
-                    lgHash,
-                    lgAutoplay,
-                    lgFullscreen,
-                    lgPager,
-                    lgRotate,
-                    lgShare,
-                    lgThumbnail,
-                    lgVideo,
-                ],
-                galleryId: 2,
-                pager: false,
-                customSlideName: true,
-            },
-        );
-    });
-jQuery('#gallery-share-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(document.getElementById('gallery-share-demo'), {
-            thumbnail: false,
-            pager: false,
-            hash: true,
-            plugins: [lgZoom, lgShare, lgThumbnail, lgHash],
-        });
-    });
-jQuery('#gallery-zoom-from-origin-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(document.getElementById('gallery-zoom-from-origin-demo'), {
-            thumbnail: false,
-            pager: false,
-            hash: true,
-            plugins: [lgZoom, lgShare, lgThumbnail, lgHash],
-        });
-    });
-jQuery('#gallery-captions-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(document.getElementById('gallery-captions-demo'), {
-            thumbnail: false,
-            plugins: [lgZoom, lgShare],
-            allowMediaOverlap: true,
-            pager: true,
-            hash: true,
-        });
-    });
-jQuery('#gallery-animated-captions-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(
-            document.getElementById('gallery-animated-captions-demo'),
-            {
-                speed: 500,
-                allowMediaOverlap: true,
-                // Append caption inside the slide item
-                // to apply some animation for the captions (Optional)
-                appendSubHtmlTo: '.lg-item',
-                // Delay slide transition to complete captions animations
-                // before navigating to different slides (Optional)
-                // You can find caption animation demo on the captions demo page
-                slideDelay: 400,
-            },
-        );
-    });
-jQuery('#gallery-srcset-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(document.getElementById('gallery-srcset-demo'), {
-            thumbnail: false,
-            plugins: [lgZoom, lgShare],
-            allowMediaOverlap: true,
-            pager: true,
-            hash: true,
-        });
-    });
-jQuery('#gallery-picture-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(document.getElementById('gallery-picture-demo'), {
-            thumbnail: false,
-            plugins: [lgZoom, lgShare],
-            allowMediaOverlap: true,
-            pager: true,
-            hash: true,
-        });
-    });
-jQuery('#responsive-images-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(document.getElementById('responsive-images-demo'), {
-            thumbnail: false,
-            pager: true,
-            hash: true,
-            plugins: [lgAutoplay, lgThumbnail],
-        });
-    });
-jQuery('#gallery-fb-comments-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(
-            document.getElementById('gallery-fb-comments-demo'),
-            {
-                thumbnail: false,
-                pager: false,
-                hash: true,
-                plugins: [lgZoom, lgComment, lgShare, lgThumbnail],
-                commentBox: true,
-                disqusComments: false,
-                fbComments: true,
-            },
-        );
-    });
-jQuery('#gallery-disqus-comments-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(
-            document.getElementById('gallery-disqus-comments-demo'),
-            {
-                thumbnail: false,
-                pager: false,
-                hash: true,
-                plugins: [lgComment, lgRotate],
-                commentBox: true,
-                disqusComments: true,
-                fbComments: false,
-            },
-        );
-    });
-jQuery('#gallery-mixed-content-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(
-            document.getElementById('gallery-mixed-content-demo'),
-            {
-                thumbnail: false,
-                pager: false,
-                hash: true,
-                plugins: [
-                    lgZoom,
-                    lgAutoplay,
-                    lgFullscreen,
-                    lgPager,
-                    lgRotate,
-                    lgShare,
-                    lgThumbnail,
-                    lgVideo,
-                ],
-            },
-        );
-    });
-jQuery('#gallery-mixed-content-all-demo')
-    .justifiedGallery({
-        captions: false,
-        rowHeight: 130,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(
-            document.getElementById('gallery-mixed-content-all-demo'),
-            {
-                thumbnail: false,
-                pager: false,
-                hash: true,
-                plugins: [
-                    lgZoom,
-                    lgAutoplay,
-                    lgFullscreen,
-                    lgPager,
-                    lgRotate,
-                    lgShare,
-                    lgThumbnail,
-                    lgVideo,
-                ],
-            },
-        );
-    });
-jQuery('#gallery-share-reddit-demo')
-    .justifiedGallery({
-        captions: false,
-        lastRow: 'justify',
-        rowHeight: 180,
-        margins: 5,
-    })
-    .on('jg.complete', function () {
-        window.lightGallery(
-            document.getElementById('gallery-share-reddit-demo'),
-            {
-                thumbnail: false,
-                pager: false,
-                hash: true,
-                galleryId: 2,
-                plugins: [
-                    lgZoom,
-                    lgAutoplay,
-                    lgHash,
-                    lgFullscreen,
-                    lgShare,
-                    lgThumbnail,
-                ],
-                addClass: 'lg-custom-share-demo',
-                extraProps: ['redditTitle'],
-                additionalShareOptions: [
-                    {
-                        selector: '.lg-share-reddit',
-                        dropdownHTML:
-                            '<li class="lg-share-item-reddit"><a class="lg-share-reddit" target="_blank"><svg class="lg-reddit" version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><title>reddit</title><path d="M8 20c0-1.105 0.895-2 2-2s2 0.895 2 2c0 1.105-0.895 2-2 2s-2-0.895-2-2zM20 20c0-1.105 0.895-2 2-2s2 0.895 2 2c0 1.105-0.895 2-2 2s-2-0.895-2-2zM20.097 24.274c0.515-0.406 1.262-0.317 1.668 0.198s0.317 1.262-0.198 1.668c-1.434 1.13-3.619 1.86-5.567 1.86s-4.133-0.73-5.567-1.86c-0.515-0.406-0.604-1.153-0.198-1.668s1.153-0.604 1.668-0.198c0.826 0.651 2.46 1.351 4.097 1.351s3.271-0.7 4.097-1.351zM32 16c0-2.209-1.791-4-4-4-1.504 0-2.812 0.83-3.495 2.057-2.056-1.125-4.561-1.851-7.29-2.019l2.387-5.36 4.569 1.319c0.411 1.167 1.522 2.004 2.83 2.004 1.657 0 3-1.343 3-3s-1.343-3-3-3c-1.142 0-2.136 0.639-2.642 1.579l-5.091-1.47c-0.57-0.164-1.173 0.116-1.414 0.658l-3.243 7.282c-2.661 0.187-5.102 0.907-7.114 2.007-0.683-1.227-1.993-2.056-3.496-2.056-2.209 0-4 1.791-4 4 0 1.635 0.981 3.039 2.387 3.659-0.252 0.751-0.387 1.535-0.387 2.341 0 5.523 6.268 10 14 10s14-4.477 14-10c0-0.806-0.134-1.589-0.387-2.34 1.405-0.62 2.387-2.025 2.387-3.66zM27 5.875c0.621 0 1.125 0.504 1.125 1.125s-0.504 1.125-1.125 1.125-1.125-0.504-1.125-1.125 0.504-1.125 1.125-1.125zM2 16c0-1.103 0.897-2 2-2 0.797 0 1.487 0.469 1.808 1.145-1.045 0.793-1.911 1.707-2.552 2.711-0.735-0.296-1.256-1.016-1.256-1.856zM16 29.625c-6.42 0-11.625-3.414-11.625-7.625s5.205-7.625 11.625-7.625c6.42 0 11.625 3.414 11.625 7.625s-5.205 7.625-11.625 7.625zM28.744 17.856c-0.641-1.003-1.507-1.918-2.552-2.711 0.321-0.676 1.011-1.145 1.808-1.145 1.103 0 2 0.897 2 2 0 0.84-0.52 1.56-1.256 1.856z"></path></svg><span class="lg-dropdown-text">Reddit</span></a></li>',
-                        generateLink: (galleryItem) => {
-                            const url = encodeURIComponent(
-                                window.location.href,
-                            );
-                            const title = galleryItem.redditTitle;
-                            const redditShareLink = `//reddit.com/submit?url=${url}&title=${title}`;
-                            return redditShareLink;
-                        },
-                    },
-                ],
-            },
-        );
-    });
+        },
+    ],
+});
 
 // var rellax = new Rellax('.vertical-gallery .gallery-item', {
 //     center: true,
@@ -1230,9 +968,9 @@ lightGallery(document.getElementById('gallery-demo-super-customizable'), {
     },
 });
 
-const $infiniteScrollingGallery = $('#infinite-scroll-gallery');
-if ($('#infinite-scroll-gallery').length) {
-    let infiniteScrollingGallery = lightGallery($infiniteScrollingGallery[0], {
+const infiniteScrollEl = document.getElementById('infinite-scroll-gallery');
+if (infiniteScrollEl) {
+    let infiniteScrollingGallery = lightGallery(infiniteScrollEl, {
         plugins: [lgThumbnail, lgZoom],
     });
 
@@ -1265,16 +1003,13 @@ if ($('#infinite-scroll-gallery').length) {
             <img class="img-responsive"
                 src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80" />
         </a>`;
-    $(window).on('scroll', function () {
+    window.addEventListener('scroll', function () {
+        // Load more once the gallery's bottom edge scrolls into view.
         if (
-            $(window).scrollTop() >=
-            $(document).height() -
-                $(window).height() -
-                ($(document).height() -
-                    ($infiniteScrollingGallery.position().top +
-                        $infiniteScrollingGallery.outerHeight(true)))
+            infiniteScrollEl.getBoundingClientRect().bottom <=
+            window.innerHeight
         ) {
-            $('#infinite-scroll-gallery').append(images);
+            infiniteScrollEl.insertAdjacentHTML('beforeend', images);
             infiniteScrollingGallery.refresh();
         }
     });
@@ -1288,7 +1023,7 @@ lightGallery(document.querySelector('.medium-zoom-demo'), {
 lightGallery(document.querySelector('.blog-wrapper'), {
     selector: '.blog-images',
     getCaptionFromTitleOrAlt: false,
-    backgroundColor:"#FFF",
+    backgroundColor: '#FFF',
     plugins: [lgMediumZoom],
 });
 
@@ -1331,8 +1066,6 @@ lightGallery(document.querySelector('.blog-wrapper'), {
 //         subscribe();
 //     }
 // });
-
-
 
 let $lgSwiper = document.getElementById('lg-swipper');
 if ($lgSwiper) {
@@ -1396,10 +1129,8 @@ if ($lgInlineVideoContainer) {
             {
                 size: '1280-720',
                 src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
-                poster:
-                    'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
-                thumb:
-                    'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+                poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+                thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
                 subHtml:
                     '<h4>Puffin Hunts Fish To Feed Puffling | Blue Planet II | BBC Earth</h4><p>This puffin parent must go out to sea to feed his chick, but he must evade other birds that would rob him.</p>',
             },
@@ -1438,36 +1169,29 @@ if ($lgInlineVideoContainer) {
     _inlineGallery.openGallery();
 }
 
-jQuery(document).ready(function () {
+{
     let bootstrapEl = document.getElementById('bootstrap-gallery-carousel');
     if (bootstrapEl) {
-        let initialized = false;
-        let bootstrap = jQuery('#bootstrap-gallery-carousel');
-        bootstrap.carousel({ keyboard: true });
-        initialized = true;
-        if (initialized) {
-            const container = document.querySelector('.carousel-inner');
-            window.lightGallery(container, {
-                thumbnail: true,
-                zoomFromOrigin: false,
-                pager: false,
-                plugins: [
-                    lgZoom,
-                    lgAutoplay,
-                    lgFullscreen,
-                    lgRotate,
-                    lgShare,
-                ],
-                hash: false,
-                preload: 4,
-                selector: '.lg-item',
-            });
-        }
+        // Bootstrap 5 auto-inits via data-bs-ride; the explicit init
+        // only pins the keyboard option.
+        window.bootstrap?.Carousel?.getOrCreateInstance(bootstrapEl, {
+            keyboard: true,
+        });
+        const container = document.querySelector('.carousel-inner');
+        window.lightGallery(container, {
+            thumbnail: true,
+            zoomFromOrigin: false,
+            pager: false,
+            plugins: [lgZoom, lgAutoplay, lgFullscreen, lgRotate, lgShare],
+            hash: false,
+            preload: 4,
+            selector: '.lg-item',
+        });
     }
 
     let owlEl = document.getElementById('owl-carousel-gallery-demo');
     if (owlEl) {
-        let owl = jQuery('#owl-carousel-gallery-demo');
+        let owl = window.jQuery('#owl-carousel-gallery-demo');
         owl.on('initialized.owl.carousel', function (event) {
             const container = document.querySelector('.owl-stage');
             window.lightGallery(container, {
@@ -1493,7 +1217,7 @@ jQuery(document).ready(function () {
 
     let slickEl = document.getElementById('slick-carousel-gallery-demo');
     if (slickEl) {
-        var $slickDemo = $('#slick-carousel-gallery-demo');
+        var $slickDemo = window.jQuery('#slick-carousel-gallery-demo');
 
         $slickDemo.on('init', function (event, slick, direction) {
             console.log('Slick slider initialized');
@@ -1542,7 +1266,7 @@ jQuery(document).ready(function () {
             ],
         });
     }
-});
+}
 
 var $flickityLG = document.querySelector('#flickity-carousel-gallery-demo');
 if ($flickityLG) {
@@ -1576,24 +1300,12 @@ window.lightGallery(container, {
     zoomFromOrigin: true,
     download: true,
     thumbnail: true,
-    plugins: [
-        lgZoom,
-        lgAutoplay,
-        lgFullscreen,
-        lgRotate,
-        lgShare,
-        lgThumbnail
-    ],
+    plugins: [lgZoom, lgAutoplay, lgFullscreen, lgRotate, lgShare, lgThumbnail],
 });
 
-
-
-$(document).ready(function () {
-    var container = document.querySelector('#masonry-gallery-demo');
-    if (!container) {
-        return;
-    }
-    var msnry = new Masonry(container, {
+const masonryGalleryDemo = document.querySelector('#masonry-gallery-demo');
+if (masonryGalleryDemo) {
+    const msnry = new Masonry(masonryGalleryDemo, {
         itemSelector: '.lg-item',
         columnWidth: '.grid-sizer',
         percentPosition: true,
@@ -1602,44 +1314,57 @@ $(document).ready(function () {
         fitWidth: true,
     });
 
-    imagesLoaded(container).on('progress', function () {
+    imagesLoaded(masonryGalleryDemo).on('progress', function () {
         // layout Masonry after each image loads
         msnry.layout();
     });
-    window.lightGallery(container, {
+    window.lightGallery(masonryGalleryDemo, {
         thumbnail: true,
         pager: true,
-        plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo, lgRotate],
+        plugins: [
+            lgAutoplay,
+            lgFullscreen,
+            lgShare,
+            lgThumbnail,
+            lgVideo,
+            lgRotate,
+        ],
         hash: false,
         preload: 0,
-        selector: '.lg-item'
+        selector: '.lg-item',
     });
-});
-
-
+}
 
 window.lightGallery(document.getElementById('bootstrap-video-gallery'), {
     thumbnail: true,
     pager: true,
-    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo, lgRotate],
+    plugins: [
+        lgAutoplay,
+        lgFullscreen,
+        lgShare,
+        lgThumbnail,
+        lgVideo,
+        lgRotate,
+    ],
     hash: false,
     preload: 0,
-
 });
-
 
 window.lightGallery(document.getElementById('bootstrap-video-carousel'), {
     thumbnail: true,
     pager: true,
-    plugins: [lgAutoplay, lgFullscreen, lgShare, lgThumbnail, lgVideo, lgRotate],
+    plugins: [
+        lgAutoplay,
+        lgFullscreen,
+        lgShare,
+        lgThumbnail,
+        lgVideo,
+        lgRotate,
+    ],
     hash: false,
     preload: 0,
-    selector: '.lg-item'
+    selector: '.lg-item',
 });
-
-
-
-
 
 const $lfYoutubeForm = document.getElementById('thumbnailForm');
 if ($lfYoutubeForm) {
