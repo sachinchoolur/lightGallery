@@ -189,6 +189,12 @@ function ThumbnailStrip(): ReactElement | null {
         return () => window.clearTimeout(timeout);
     }, [state.open, measureStrip]);
 
+    // The translate scalar lives in logical strip space; in RTL the
+    // strip flows right-to-left (lg-rtl.css floats the thumbs right), so
+    // the applied sign and the finger mapping mirror together.
+    const isRtl = settings.direction === 'rtl';
+    const toTrackX = (value: number) => (isRtl ? value : -value);
+
     // Keep the active thumbnail at the pager position.
     useEffect(() => {
         if (!settings.animateThumb) {
@@ -202,6 +208,7 @@ function ThumbnailStrip(): ReactElement | null {
                 stripWidth,
                 totalWidth,
                 settings.currentPagerPosition,
+                isRtl ? 'rtl' : 'ltr',
             ),
         );
     }, [
@@ -212,6 +219,7 @@ function ThumbnailStrip(): ReactElement | null {
         settings.thumbWidth,
         settings.thumbMargin,
         settings.currentPagerPosition,
+        isRtl,
     ]);
 
     useEffect(
@@ -231,7 +239,9 @@ function ThumbnailStrip(): ReactElement | null {
         translateRef.current = value;
         const track = trackRef.current;
         if (track) {
-            track.style.transform = `translate3d(${-value}px, 0px, 0px)`;
+            track.style.transform = `translate3d(${toTrackX(
+                value,
+            )}px, 0px, 0px)`;
         }
     };
 
@@ -280,7 +290,7 @@ function ThumbnailStrip(): ReactElement | null {
             // clamping dead.
             writeTrackTranslate(
                 getElasticThumbTranslate(
-                    drag.startTranslate - delta,
+                    drag.startTranslate + (isRtl ? delta : -delta),
                     totalWidth,
                     stripWidth,
                 ),
@@ -322,7 +332,9 @@ function ThumbnailStrip(): ReactElement | null {
                 samplesRef.current,
                 Date.now(),
             ).x;
-            const translateVelocity = -pointerVelocity;
+            const translateVelocity = isRtl
+                ? pointerVelocity
+                : -pointerVelocity;
             const target = clampThumbTranslate(
                 translateRef.current + project(translateVelocity),
                 totalWidth,
@@ -402,9 +414,9 @@ function ThumbnailStrip(): ReactElement | null {
                     transitionDuration: dragging
                         ? '0ms'
                         : `${settings.speed}ms`,
-                    transform: `translate3d(${-(dragging
-                        ? translateRef.current
-                        : translate)}px, 0px, 0px)`,
+                    transform: `translate3d(${toTrackX(
+                        dragging ? translateRef.current : translate,
+                    )}px, 0px, 0px)`,
                 }}
                 onPointerDown={onPointerDown}
             >
@@ -415,7 +427,7 @@ function ThumbnailStrip(): ReactElement | null {
                         style={{
                             width: `${thumbWindow.leadingPad}px`,
                             height: 1,
-                            float: 'left',
+                            float: isRtl ? 'right' : 'left',
                         }}
                     />
                 )}
@@ -435,7 +447,9 @@ function ThumbnailStrip(): ReactElement | null {
                         style={{
                             width: `${settings.thumbWidth}px`,
                             height: settings.thumbHeight,
-                            marginRight: `${settings.thumbMargin}px`,
+                            [isRtl
+                                ? 'marginLeft'
+                                : 'marginRight']: `${settings.thumbMargin}px`,
                         }}
                         role="button"
                         tabIndex={0}
@@ -468,7 +482,7 @@ function ThumbnailStrip(): ReactElement | null {
                         style={{
                             width: `${thumbWindow.trailingPad}px`,
                             height: 1,
-                            float: 'left',
+                            float: isRtl ? 'right' : 'left',
                         }}
                     />
                 )}

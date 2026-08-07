@@ -164,6 +164,10 @@ export function useGalleryGestures({
         }
     };
 
+    // Resolved reading direction ('auto' is resolved at settings time).
+    const getDirection = (): 'ltr' | 'rtl' =>
+        settingsRef.current.direction === 'rtl' ? 'rtl' : 'ltr';
+
     // Snap the dragged slides back to rest on a spring seeded with the
     // release velocity; lg-dragging stays on (transitions down) until it
     // settles, then the visuals are restored to the rendered state.
@@ -183,7 +187,11 @@ export function useGalleryGestures({
         springCancelRef.current = runSprings(
             [{ from: deltaX, velocity: velocityX, target: 0 }],
             ([x]) => {
-                const transforms = getHorizontalDragTransforms(x!, width);
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    getDirection(),
+                );
                 if (els.current) {
                     els.current.style.transform = transforms.current;
                 }
@@ -236,12 +244,18 @@ export function useGalleryGestures({
         // The x where the arriving slide's drag transform lands at 0:
         // slideWidth + x + gutter(x) = 0  →  x = ∓ width·115/110.
         const springTarget =
-            (verdict === 'next' ? -1 : 1) * ((width * 115) / 110);
+            (verdict === 'next' ? -1 : 1) *
+            (getDirection() === 'rtl' ? -1 : 1) *
+            ((width * 115) / 110);
         navSpringActiveRef.current = true;
         springCancelRef.current = runSprings(
             [{ from: deltaX, velocity: velocityX, target: springTarget }],
             ([x]) => {
-                const transforms = getHorizontalDragTransforms(x!, width);
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    getDirection(),
+                );
                 if (els.current) {
                     els.current.style.transform = transforms.current;
                 }
@@ -353,8 +367,14 @@ export function useGalleryGestures({
             // Rubber-band past the gallery ends: a missing neighbor in
             // the drag direction means there is nothing there.
             const transforms = getHorizontalDragTransforms(
-                getEdgeFrictionedDelta(deltaX, !!els.prev, !!els.next),
+                getEdgeFrictionedDelta(
+                    deltaX,
+                    !!els.prev,
+                    !!els.next,
+                    getDirection(),
+                ),
                 width,
+                getDirection(),
             );
             if (els.current) {
                 els.current.style.transform = transforms.current;
@@ -424,6 +444,7 @@ export function useGalleryGestures({
                     outerRef.current?.offsetWidth || window.innerWidth,
                 threshold: currentSettings.swipeThreshold,
                 flickVelocity: currentSettings.flickVelocity,
+                direction: getDirection(),
             });
             const target = resolveSwipeTarget(
                 verdict,
@@ -437,6 +458,7 @@ export function useGalleryGestures({
                 deltaX,
                 !!session.els?.prev,
                 !!session.els?.next,
+                getDirection(),
             );
             if (target !== null) {
                 springHorizontalNavigate(

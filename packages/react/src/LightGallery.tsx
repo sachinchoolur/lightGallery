@@ -146,6 +146,18 @@ export const LightGallery = forwardRef<
             isMobile,
             pluginDefaults,
         });
+        // Resolve direction 'auto' from the page's dir attribute
+        // (headless is DOM-free, so 'auto' arrives unresolved — same
+        // seam as isMobile; the gallery teleports to body, so the root
+        // attribute is the inherited direction).
+        if (resolved.direction === 'auto') {
+            resolved.direction =
+                typeof document !== 'undefined' &&
+                (document.documentElement.getAttribute('dir') === 'rtl' ||
+                    document.body?.getAttribute('dir') === 'rtl')
+                    ? 'rtl'
+                    : 'ltr';
+        }
         if (!reducedMotion) {
             return resolved;
         }
@@ -320,9 +332,7 @@ export const LightGallery = forwardRef<
     >({});
     const componentsToggleRef = useRef<() => void>(() => undefined);
     const zoomOriginOpenRef = useRef(false);
-    const mediaPositionOverrideRef = useRef<(() => MediaPosition) | null>(
-        null,
-    );
+    const mediaPositionOverrideRef = useRef<(() => MediaPosition) | null>(null);
     const layout = useMemo<PluginLayout>(
         () => ({
             setOuterClass(cls, active) {
@@ -403,9 +413,7 @@ export const LightGallery = forwardRef<
 
     // Slide-end bounce (lg-left-end / lg-right-end) — 400ms, 2.x parity.
     const timers = useTimeouts();
-    const [edgeBounce, setEdgeBounce] = useState<'left' | 'right' | null>(
-        null,
-    );
+    const [edgeBounce, setEdgeBounce] = useState<'left' | 'right' | null>(null);
     const bounce = useCallback(
         (side: 'left' | 'right') => {
             setEdgeBounce(side);
@@ -511,8 +519,8 @@ export const LightGallery = forwardRef<
             current.currentIndex + 1 < current.slidesCount
                 ? current.currentIndex + 1
                 : current.loop
-                  ? 0
-                  : null;
+                ? 0
+                : null;
         if (target !== null) {
             emit('onBeforeNextSlide', { index: target });
             goTo(target, 'next');
@@ -530,8 +538,8 @@ export const LightGallery = forwardRef<
             current.currentIndex > 0
                 ? current.currentIndex - 1
                 : current.loop
-                  ? current.slidesCount - 1
-                  : null;
+                ? current.slidesCount - 1
+                : null;
         if (target !== null) {
             emit('onBeforePrevSlide', { index: target, fromTouch: false });
             goTo(target, 'prev');

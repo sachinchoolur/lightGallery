@@ -78,7 +78,9 @@ function currentSlide(): HTMLElement {
 }
 
 function counterText(): string | undefined {
-    return document.querySelector('.lg-counter-current')?.textContent ?? undefined;
+    return (
+        document.querySelector('.lg-counter-current')?.textContent ?? undefined
+    );
 }
 
 beforeEach(() => {
@@ -103,7 +105,8 @@ describe('tap release vs origin flight', () => {
         // between the outer closeOnTap listener and this window
         // release) when the tap's restore runs.
         cur.classList.add('lg-start-end-progress');
-        cur.style.transform = 'translate3d(-100px, -50px, 0) scale3d(0.2, 0.2, 1)';
+        cur.style.transform =
+            'translate3d(-100px, -50px, 0) scale3d(0.2, 0.2, 1)';
         if (other !== cur) {
             other.style.transform = 'translate3d(50px, 0, 0)';
         }
@@ -181,9 +184,7 @@ describe('horizontal swipe', () => {
         // Settle hands everything back to React.
         expect(item.style.transform).toBe('');
         expect(item.style.transitionProperty).toBe('');
-        expect(document.querySelector('.lg-outer')).not.toHaveClass(
-            'lg-slide',
-        );
+        expect(document.querySelector('.lg-outer')).not.toHaveClass('lg-slide');
     });
 
     it('snaps back below the threshold', () => {
@@ -371,6 +372,20 @@ describe('keyboard', () => {
         openAndLoad({ keyPress: false });
         fireEvent.keyDown(document, { key: 'ArrowRight' });
         expect(counterText()).toBe('1');
+    });
+
+    it('mirrors the physical arrows and stamps dir in rtl', () => {
+        openAndLoad({ direction: 'rtl' });
+        expect(
+            document.querySelector('.lg-container')!.getAttribute('dir'),
+        ).toBe('rtl');
+        // ArrowLeft advances in RTL (the strip flows right-to-left).
+        fireEvent.keyDown(document, { key: 'ArrowLeft' });
+        expect(counterText()).toBe('2');
+        tick(550);
+        fireEvent.keyDown(document, { key: 'ArrowRight' });
+        expect(counterText()).toBe('1');
+        tick(550);
     });
 });
 

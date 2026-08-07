@@ -332,12 +332,14 @@ export function GalleryOutlet({
                 actions.closeGallery();
             }
             if (settings.keyPress && slidesCount > 1) {
+                // Physical arrows follow the reading direction.
+                const rtl = settings.direction === 'rtl';
                 if (event.key === 'ArrowLeft') {
                     event.preventDefault();
-                    actions.prevSlide();
+                    (rtl ? actions.nextSlide : actions.prevSlide)();
                 } else if (event.key === 'ArrowRight') {
                     event.preventDefault();
-                    actions.nextSlide();
+                    (rtl ? actions.prevSlide : actions.nextSlide)();
                 }
             }
             // Focus trap: Tab cycles within the dialog (2.x trapFocus).
@@ -734,6 +736,7 @@ export function GalleryOutlet({
             ref={containerElRef}
             className={containerClasses}
             tabIndex={-1}
+            dir={settings.direction === 'rtl' ? 'rtl' : 'ltr'}
             role="dialog"
             aria-modal="true"
             aria-label={
