@@ -1,9 +1,4 @@
-import {
-    Component,
-    signal,
-    viewChild,
-    type DoCheck,
-} from '@angular/core';
+import { Component, signal, viewChild, type DoCheck } from '@angular/core';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import type { GalleryMode } from '@lightgallery/headless';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -48,6 +43,7 @@ class CdProbe implements DoCheck {
             [zoomFromOrigin]="false"
             [mode]="mode()"
             [mousewheel]="true"
+            [direction]="direction()"
             (afterSlide)="afterSlides.push($event)"
         />
     `,
@@ -56,6 +52,7 @@ class GestureHost {
     readonly gallery = viewChild.required(LgGalleryComponent);
     readonly items = ITEMS;
     readonly mode = signal<GalleryMode>('lg-slide');
+    readonly direction = signal<'ltr' | 'rtl' | 'auto' | undefined>(undefined);
     readonly afterSlides: SlideEventDetail[] = [];
 }
 
@@ -366,6 +363,27 @@ describe('LgGesturesDirective', () => {
         await advance(fixture, SPEED + 100);
         document.dispatchEvent(
             new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
+        );
+        await flush(fixture);
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('1');
+    });
+
+    it('mirrors the physical arrows and stamps dir in rtl', async () => {
+        const fixture = TestBed.createComponent(GestureHost);
+        fixture.componentInstance.direction.set('rtl');
+        await openAndLoad(fixture);
+
+        expect(query('.lg-container')!.getAttribute('dir')).toBe('rtl');
+        // ArrowLeft advances in RTL (the strip flows right-to-left).
+        document.dispatchEvent(
+            new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
+        );
+        await flush(fixture);
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
+
+        await advance(fixture, SPEED + 100);
+        document.dispatchEvent(
+            new KeyboardEvent('keydown', { key: 'ArrowRight' }),
         );
         await flush(fixture);
         expect(query('.lg-counter-current')!.textContent!.trim()).toBe('1');

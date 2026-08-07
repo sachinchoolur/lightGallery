@@ -164,9 +164,7 @@ export const LG_FEATURE_INIT = new InjectionToken<readonly unknown[]>(
 );
 
 /** De-duplicate features by name (first wins), warning on duplicates. */
-export function dedupeFeatures(
-    features: readonly LgFeature[],
-): LgFeature[] {
+export function dedupeFeatures(features: readonly LgFeature[]): LgFeature[] {
     const seen = new Set<string>();
     const result: LgFeature[] = [];
     for (const feature of features) {
@@ -180,4 +178,17 @@ export function dedupeFeatures(
         result.push(feature);
     }
     return result;
+}
+
+/**
+ * RTL sugar (plan 011): presets `direction: 'rtl'` so the whole feature
+ * list reads naturally — `[withRtl(), withThumbnail()]`. An explicit
+ * `[direction]` input still wins (presets merge below user settings).
+ * Load the opt-in `lightgallery/css/lg-rtl.css` stylesheet alongside.
+ */
+export function withRtl(): LgFeature {
+    return {
+        name: 'rtl',
+        presets: { direction: 'rtl' },
+    };
 }

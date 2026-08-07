@@ -44,6 +44,7 @@ import {
     parseImageSize,
     resolveSettings,
     type CaptionPosition,
+    type GalleryDirection,
     type CoreSettings,
     type GalleryCoreStrings,
     type GalleryMode,
@@ -161,6 +162,7 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                 #containerEl
                 [class]="containerClasses()"
                 tabindex="-1"
+                [attr.dir]="settings().direction === 'rtl' ? 'rtl' : 'ltr'"
                 role="dialog"
                 aria-modal="true"
                 [cdkTrapFocus]="settings().trapFocus && isBodyContainer()"
@@ -456,6 +458,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     readonly slideEndAnimation = input<boolean | undefined>(undefined);
     readonly hideControlOnEnd = input<boolean | undefined>(undefined);
     readonly mousewheel = input<boolean | undefined>(undefined);
+    readonly direction = input<GalleryDirection | undefined>(undefined);
     readonly captionPosition = input<CaptionPosition | undefined>(undefined);
     readonly preload = input<number | undefined>(undefined);
     readonly numberOfSlideItemsInDom = input<number | undefined>(undefined);
@@ -615,6 +618,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         slideEndAnimation: this.slideEndAnimation(),
         hideControlOnEnd: this.hideControlOnEnd(),
         mousewheel: this.mousewheel(),
+        direction: this.direction(),
         captionPosition: this.captionPosition(),
         preload: this.preload(),
         numberOfSlideItemsInDom: this.numberOfSlideItemsInDom(),
@@ -666,6 +670,18 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             isMobile: this.isMobileCache,
             pluginDefaults,
         }) as ResolvedFeatureSettings;
+        // Resolve direction 'auto' from the page's dir attribute
+        // (headless is DOM-free, so 'auto' arrives unresolved — same
+        // seam as isMobile; the gallery teleports to body, so the root
+        // attribute is the inherited direction).
+        if (resolved.direction === 'auto') {
+            resolved.direction =
+                typeof document !== 'undefined' &&
+                (document.documentElement.getAttribute('dir') === 'rtl' ||
+                    document.body?.getAttribute('dir') === 'rtl')
+                    ? 'rtl'
+                    : 'ltr';
+        }
         if (!this.reducedMotion) {
             return resolved;
         }
@@ -1557,12 +1573,22 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                 this.closeGallery();
             }
             if (this.settings().keyPress && this.store.slidesCount() > 1) {
+                // Physical arrows follow the reading direction.
+                const rtl = this.settings().direction === 'rtl';
                 if (event.key === 'ArrowLeft') {
                     event.preventDefault();
-                    this.prevSlide();
+                    if (rtl) {
+                        this.nextSlide();
+                    } else {
+                        this.prevSlide();
+                    }
                 } else if (event.key === 'ArrowRight') {
                     event.preventDefault();
-                    this.nextSlide();
+                    if (rtl) {
+                        this.prevSlide();
+                    } else {
+                        this.nextSlide();
+                    }
                 }
             }
         };

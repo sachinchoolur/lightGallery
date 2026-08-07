@@ -161,6 +161,29 @@ Every UI label — core controls and feature buttons alike — lives on the
 The per-feature string objects (`zoomPluginStrings`, `sharePluginStrings`,
 …) are deprecated aliases — a key set there still wins over `strings`.
 
+## Right-to-left galleries
+
+Set `direction: 'rtl'` (or `'auto'`, which inherits the page's `dir`
+attribute — the default is `'ltr'`) and load the opt-in RTL stylesheet — keyboard
+arrows, swipe advance, slide transforms and the thumbnail strip all
+mirror; LTR galleries pay zero CSS bytes:
+
+```ts
+import 'lightgallery/css/lg-rtl.css';
+```
+
+```html
+<lg-gallery [slides]="items" direction="rtl" />
+```
+
+`withRtl()` is the same setting as feature-list sugar —
+`[features]="[withRtl(), withThumbnail()]"` — and an explicit
+`[direction]` input still wins.
+
+The stylesheet only styles `.lg-container[dir='rtl']`, so a forced-LTR
+gallery inside an RTL page stays untouched. The decorative horizontal
+transitions (`lg-slide-skew`, `lg-tube`, …) keep their LTR choreography.
+
 ## Migrating from the legacy `lightgallery` Angular wrapper
 
 The old wrapper (`lightgallery-angular*` folders / `lightgallery` v2 with

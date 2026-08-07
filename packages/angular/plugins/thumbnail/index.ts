@@ -124,7 +124,7 @@ type ThumbnailResolved = ThumbnailSettings & {
                     aria-hidden="true"
                     [style.width.px]="window.leadingPad"
                     [style.height.px]="1"
-                    [style.float]="'left'"
+                    [style.float]="isRtl() ? 'right' : 'left'"
                 ></div>
                 } } @for (entry of renderedThumbs(); track entry.index) {
                 <div
@@ -132,7 +132,12 @@ type ThumbnailResolved = ThumbnailSettings & {
                     [class.active]="entry.index === currentIndex()"
                     [style.width.px]="settings().thumbWidth"
                     [style.height]="settings().thumbHeight"
-                    [style.margin-right.px]="settings().thumbMargin"
+                    [style.margin-right.px]="
+                        isRtl() ? null : settings().thumbMargin
+                    "
+                    [style.margin-left.px]="
+                        isRtl() ? settings().thumbMargin : null
+                    "
                     role="button"
                     tabindex="0"
                     [attr.data-lg-item-id]="entry.index"
@@ -156,7 +161,7 @@ type ThumbnailResolved = ThumbnailSettings & {
                     aria-hidden="true"
                     [style.width.px]="window.trailingPad"
                     [style.height.px]="1"
-                    [style.float]="'left'"
+                    [style.float]="isRtl() ? 'right' : 'left'"
                 ></div>
                 } }
             </div>
@@ -295,9 +300,20 @@ export class LgThumbnailStripComponent {
                     this.stripWidth(),
                     this.totalWidth(),
                     settings.currentPagerPosition,
+                    this.isRtl() ? 'rtl' : 'ltr',
                 ),
             );
         });
+    }
+
+    // The translate scalar lives in logical strip space; in RTL the
+    // strip flows right-to-left (lg-rtl.css floats the thumbs right), so
+    // the applied sign and the finger mapping mirror together.
+    protected readonly isRtl = computed(
+        () => this.ctx.settings().direction === 'rtl',
+    );
+    private toTrackX(value: number): number {
+        return this.isRtl() ? value : -value;
     }
 
     // Track transform for the template: the live (frame-written) value
@@ -305,7 +321,7 @@ export class LgThumbnailStripComponent {
     // otherwise — a corridor re-render must not snap the track.
     protected trackTransform(): string {
         const value = this.dragging() ? this.liveTranslate : this.translate();
-        return `translate3d(${-value}px, 0px, 0px)`;
+        return `translate3d(${this.toTrackX(value)}px, 0px, 0px)`;
     }
 
     // Strip physics (plan 010): frames write the DOM directly; the
@@ -315,7 +331,9 @@ export class LgThumbnailStripComponent {
         this.liveTranslate = value;
         const track = this.track()?.nativeElement;
         if (track) {
-            track.style.transform = `translate3d(${-value}px, 0px, 0px)`;
+            track.style.transform = `translate3d(${this.toTrackX(
+                value,
+            )}px, 0px, 0px)`;
         }
     }
 
@@ -401,7 +419,7 @@ export class LgThumbnailStripComponent {
             // clamping dead.
             this.writeTrackTranslate(
                 getElasticThumbTranslate(
-                    drag.startTranslate - delta,
+                    drag.startTranslate + (this.isRtl() ? delta : -delta),
                     this.totalWidth(),
                     this.stripWidth(),
                 ),
@@ -444,10 +462,13 @@ export class LgThumbnailStripComponent {
             // Fling: project the release velocity, clamp into the strip
             // bounds, spring there (bounces off the edge; pulls back when
             // released inside the rubber band).
-            const translateVelocity = -getWindowedVelocity(
+            const pointerVelocityX = getWindowedVelocity(
                 this.samples,
                 Date.now(),
             ).x;
+            const translateVelocity = this.isRtl()
+                ? pointerVelocityX
+                : -pointerVelocityX;
             const target = clampThumbTranslate(
                 this.liveTranslate + project(translateVelocity),
                 this.totalWidth(),

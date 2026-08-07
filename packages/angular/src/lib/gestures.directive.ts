@@ -149,6 +149,11 @@ export class LgGesturesDirective implements OnDestroy {
         }
     }
 
+    // Resolved reading direction ('auto' is resolved at settings time).
+    private getDirection(): 'ltr' | 'rtl' {
+        return this.runtime.settings().direction === 'rtl' ? 'rtl' : 'ltr';
+    }
+
     // Snap the dragged slides back to rest on a spring seeded with the
     // release velocity; lg-dragging stays on (transitions down) until it
     // settles, then the visuals are restored to the rendered state.
@@ -158,8 +163,7 @@ export class LgGesturesDirective implements OnDestroy {
         velocityX: number,
     ): void {
         const els = session.els;
-        const width =
-            els?.current?.offsetWidth || this.host.offsetWidth || 0;
+        const width = els?.current?.offsetWidth || this.host.offsetWidth || 0;
         if (!els || !width || Math.abs(deltaX) < 1) {
             this.restoreDragVisuals(session);
             return;
@@ -168,7 +172,11 @@ export class LgGesturesDirective implements OnDestroy {
         this.springCancel = runSprings(
             [{ from: deltaX, velocity: velocityX, target: 0 }],
             ([x]) => {
-                const transforms = getHorizontalDragTransforms(x!, width);
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    this.getDirection(),
+                );
                 if (els.current) {
                     els.current.style.transform = transforms.current;
                 }
@@ -199,8 +207,7 @@ export class LgGesturesDirective implements OnDestroy {
         velocityX: number,
     ): void {
         const els = session.els;
-        const width =
-            els?.current?.offsetWidth || this.host.offsetWidth || 0;
+        const width = els?.current?.offsetWidth || this.host.offsetWidth || 0;
         this.stopReleaseSpring();
         // The commit render may rewrite the outer classes (dropping the
         // classList-added lg-dragging), so the driven slides opt out of
@@ -221,12 +228,18 @@ export class LgGesturesDirective implements OnDestroy {
         // The x where the arriving slide's drag transform lands at 0:
         // slideWidth + x + gutter(x) = 0  →  x = ∓ width·115/110.
         const springTarget =
-            (verdict === 'next' ? -1 : 1) * ((width * 115) / 110);
+            (verdict === 'next' ? -1 : 1) *
+            (this.getDirection() === 'rtl' ? -1 : 1) *
+            ((width * 115) / 110);
         this.navSpringActive = true;
         this.springCancel = runSprings(
             [{ from: deltaX, velocity: velocityX, target: springTarget }],
             ([x]) => {
-                const transforms = getHorizontalDragTransforms(x!, width);
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    this.getDirection(),
+                );
                 if (els.current) {
                     els.current.style.transform = transforms.current;
                 }
@@ -367,8 +380,14 @@ export class LgGesturesDirective implements OnDestroy {
             // Rubber-band past the gallery ends: a missing neighbor in
             // the drag direction means there is nothing there.
             const transforms = getHorizontalDragTransforms(
-                getEdgeFrictionedDelta(deltaX, !!els.prev, !!els.next),
+                getEdgeFrictionedDelta(
+                    deltaX,
+                    !!els.prev,
+                    !!els.next,
+                    this.getDirection(),
+                ),
                 width,
+                this.getDirection(),
             );
             if (els.current) {
                 els.current.style.transform = transforms.current;
@@ -437,6 +456,7 @@ export class LgGesturesDirective implements OnDestroy {
                 viewportWidth: this.host.offsetWidth || window.innerWidth,
                 threshold: settings.swipeThreshold,
                 flickVelocity: settings.flickVelocity,
+                direction: this.getDirection(),
             });
             const target = resolveSwipeTarget(
                 verdict,
@@ -450,6 +470,7 @@ export class LgGesturesDirective implements OnDestroy {
                 deltaX,
                 !!session.els?.prev,
                 !!session.els?.next,
+                this.getDirection(),
             );
             if (target !== null) {
                 this.springHorizontalNavigate(

@@ -12,6 +12,7 @@ export { LgSlideComponent, type OriginAnimation } from './lib/slide.component';
 export { LgSlideWrappersComponent } from './lib/slide-wrappers.component';
 export {
     dedupeFeatures,
+    withRtl,
     LG_FEATURE,
     LG_FEATURE_INIT,
     LG_PLUGIN_CONTEXT,
