@@ -184,6 +184,34 @@ The stylesheet only styles `.lg-container[dir='rtl']`, so a forced-LTR
 gallery inside an RTL page stays untouched. The decorative horizontal
 transitions (`lg-slide-skew`, `lg-tube`, …) keep their LTR choreography.
 
+## Justified layout
+
+Lay the trigger thumbnails out in justified rows — equal heights,
+varying widths, filling the container edge to edge — with the
+`lightgallery/css/lg-justified.css` stylesheet and the `lg-justified-grid` component. Aspect
+ratios come from `data-lg-size`, the thumbnail's `width`/`height`
+attributes, or the loaded image (one relayout). The grid reflows on
+resize, mirrors under RTL, and writes precise `sizes` attributes on
+`srcset` thumbnails. `lastRow` controls the leftover row (`'start'`
+default, `'justify'`, `'hide'`).
+
+```ts
+import { LgJustifiedGridComponent } from '@lightgallery/angular/plugins/justified';
+import 'lightgallery/css/lg-justified.css';
+```
+
+```html
+<lg-gallery [features]="features">
+    <lg-justified-grid [rowHeight]="180" [gap]="8">
+        @for (item of items; track item.src) {
+            <a [lgGalleryItem]="item" [attr.data-lg-size]="item.lgSize">
+                <img [src]="item.thumb" [alt]="item.alt" />
+            </a>
+        }
+    </lg-justified-grid>
+</lg-gallery>
+```
+
 ## Migrating from the legacy `lightgallery` Angular wrapper
 
 The old wrapper (`lightgallery-angular*` folders / `lightgallery` v2 with
