@@ -1,4 +1,5 @@
 import { getJustifiedLayout, parseImageSize } from '@lightgallery/headless';
+import { lGEvents } from '../../lg-events';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import { JustifiedSettings, justifiedSettings } from './lg-justified-settings';
@@ -25,7 +26,7 @@ export default class Justified {
     private layoutWidth = 0;
     private pendingLoads: (() => void)[] = [];
     private originalContainerStyle = '';
-    private originalTriggerStyles: string[] = [];
+    private originalTriggerStyles = new Map<HTMLElement, string>();
 
     constructor(instance: LightGallery, $LG: LgQuery) {
         this.core = instance;
@@ -39,20 +40,24 @@ export default class Justified {
         if (!this.settings.justified || this.core.settings.dynamic) {
             return;
         }
-        this.triggers = Array.prototype.slice.call(this.core.items);
+        this.collectTriggers();
         if (!this.triggers.length) {
             return;
         }
         this.originalContainerStyle = this.core.el.getAttribute('style') || '';
         this.core.el.classList.add('lg-justified');
-        this.triggers.forEach((trigger) => {
-            this.originalTriggerStyles.push(
-                trigger.getAttribute('style') || '',
-            );
-            trigger.classList.add('lg-justified-item');
-        });
         this.resolveRatios();
         this.layout();
+
+        // refresh()/updateSlides() re-collect the core's items before
+        // firing this event — the grid follows the new trigger set.
+        this.core.LGel.on(`${lGEvents.updateSlides}.justified`, () => {
+            this.pendingLoads.forEach((cancel) => cancel());
+            this.pendingLoads = [];
+            this.collectTriggers();
+            this.resolveRatios();
+            this.layout();
+        });
 
         // Row heights derive from the width alone, so one observer on
         // the container covers every reflow source (viewport, sidebar,
@@ -65,6 +70,20 @@ export default class Justified {
             });
             this.resizeObserver.observe(this.core.el);
         }
+    }
+
+    /** Adopt the core's current trigger list into the layout. */
+    private collectTriggers(): void {
+        this.triggers = Array.prototype.slice.call(this.core.items);
+        this.triggers.forEach((trigger) => {
+            if (!this.originalTriggerStyles.has(trigger)) {
+                this.originalTriggerStyles.set(
+                    trigger,
+                    trigger.getAttribute('style') || '',
+                );
+            }
+            trigger.classList.add('lg-justified-item');
+        });
     }
 
     /** Best-known aspect ratio per trigger; unknowns resolve on load. */
@@ -166,18 +185,19 @@ export default class Justified {
         if (!this.triggers.length) {
             return;
         }
+        this.core.LGel.off('.justified');
         this.core.el.classList.remove('lg-justified');
         if (this.originalContainerStyle) {
             this.core.el.setAttribute('style', this.originalContainerStyle);
         } else {
             this.core.el.removeAttribute('style');
         }
-        this.triggers.forEach((trigger, index) => {
+        this.triggers.forEach((trigger) => {
             trigger.classList.remove(
                 'lg-justified-item',
                 'lg-justified-item-hidden',
             );
-            const original = this.originalTriggerStyles[index];
+            const original = this.originalTriggerStyles.get(trigger);
             if (original) {
                 trigger.setAttribute('style', original);
             } else {

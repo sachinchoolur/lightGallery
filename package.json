@@ -76,6 +76,11 @@
       "import": "./dist/plugins/hash/lg-hash.es5.js",
       "require": "./dist/plugins/hash/lg-hash.umd.js"
     },
+    "./plugins/justified": {
+      "types": "./dist/types/plugins/justified/lg-justified.d.ts",
+      "import": "./dist/plugins/justified/lg-justified.es5.js",
+      "require": "./dist/plugins/justified/lg-justified.umd.js"
+    },
     "./plugins/fullscreen": {
       "types": "./dist/types/plugins/fullscreen/lg-fullscreen.d.ts",
       "import": "./dist/plugins/fullscreen/lg-fullscreen.es5.js",

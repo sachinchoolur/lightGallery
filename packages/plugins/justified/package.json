@@ -1,0 +1,7 @@
+{
+    "name": "lightgallery/plugins/justified",
+    "private": true,
+    "main": "lg-justified.umd.js",
+    "module": "lg-justified.es5.js",
+    "typings": "lg-justified.d.ts"
+}

@@ -132,6 +132,42 @@ describe('justified layout (vanilla)', () => {
         }
     });
 
+    it('adopts refreshed triggers into the layout', () => {
+        instance = initGallery();
+        const el = document.getElementById('lightGallery')!;
+        el.insertAdjacentHTML(
+            'beforeend',
+            `<a href="g.png" data-lg-size="1600-1067">
+                <img src="g-t.png" alt="g" />
+            </a>`,
+        );
+        instance.refresh();
+
+        const added = triggers()[6]!;
+        expect(added).toHaveClass('lg-justified-item');
+        expect(added.style.width).not.toBe('');
+        expect(added.style.height).not.toBe('');
+
+        // The refreshed grid still fills its rows exactly.
+        const items = triggers();
+        const firstTop = items[0]!.style.top;
+        const firstRow = items.filter((item) => item.style.top === firstTop);
+        const total =
+            firstRow.reduce(
+                (sum, item) => sum + parseInt(item.style.width, 10),
+                0,
+            ) +
+            10 * (firstRow.length - 1);
+        expect(total).toBe(CONTAINER_WIDTH);
+
+        // Destroy restores the adopted trigger like any original one.
+        instance.destroy();
+        jest.runOnlyPendingTimers();
+        instance = undefined;
+        expect(added).not.toHaveClass('lg-justified-item');
+        expect(added.getAttribute('style')).toBeNull();
+    });
+
     it('stays inert in dynamic mode', () => {
         document.body.innerHTML = '<div id="dynamic"></div>';
         instance = lightGallery(
