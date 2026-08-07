@@ -25,7 +25,11 @@ export interface AutoplaySettings {
     forceSlideShowAutoplay: boolean;
     /** Show the play/pause toolbar button. */
     autoplayControls: boolean;
-    autoplayPluginStrings: { toggleAutoplay: string };
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    autoplayPluginStrings?: { toggleAutoplay?: string };
 }
 
 export const autoplaySettings: AutoplaySettings = {
@@ -35,7 +39,6 @@ export const autoplaySettings: AutoplaySettings = {
     progressBar: true,
     forceSlideShowAutoplay: false,
     autoplayControls: true,
-    autoplayPluginStrings: { toggleAutoplay: 'Toggle Autoplay' },
 };
 
 const TOGGLE_EVENT = 'lg-autoplay-toggle';
@@ -49,7 +52,10 @@ function AutoplayButton(): ReactElement | null {
     return (
         <button
             type="button"
-            aria-label={settings.autoplayPluginStrings.toggleAutoplay}
+            aria-label={
+                settings.autoplayPluginStrings?.toggleAutoplay ??
+                settings.strings.toggleAutoplay
+            }
             className="lg-autoplay-button lg-icon"
             onClick={() => internal.events.emit(TOGGLE_EVENT, undefined)}
         />

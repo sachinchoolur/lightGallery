@@ -13,16 +13,15 @@ import type { LgPlugin, PluginContext } from '../types';
 export interface FullscreenSettings {
     /** Enable the fullscreen button. */
     fullScreen: boolean;
-    fullscreenPluginStrings: {
-        toggleFullscreen: string;
-    };
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    fullscreenPluginStrings?: { toggleFullscreen?: string };
 }
 
 export const fullscreenSettings: FullscreenSettings = {
     fullScreen: true,
-    fullscreenPluginStrings: {
-        toggleFullscreen: 'Toggle Fullscreen',
-    },
 };
 
 interface FullscreenDocument extends Document {
@@ -67,7 +66,10 @@ function FullscreenButton(): ReactElement | null {
     return (
         <button
             type="button"
-            aria-label={settings.fullscreenPluginStrings.toggleFullscreen}
+            aria-label={
+                settings.fullscreenPluginStrings?.toggleFullscreen ??
+                settings.strings.toggleFullscreen
+            }
             className="lg-fullscreen lg-icon"
             onClick={toggle}
         />

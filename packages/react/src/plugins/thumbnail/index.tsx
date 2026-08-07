@@ -64,7 +64,11 @@ export interface ThumbnailSettings {
     loadYouTubeThumbnail: boolean;
     /** YouTube thumb size suffix (`<n>.jpg`). */
     youTubeThumbSize: number;
-    thumbnailPluginStrings: ThumbnailStrings;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    thumbnailPluginStrings?: Partial<ThumbnailStrings>;
 }
 
 export const thumbnailSettings: ThumbnailSettings = {
@@ -80,9 +84,6 @@ export const thumbnailSettings: ThumbnailSettings = {
     thumbnailSwipeThreshold: 10,
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
-    thumbnailPluginStrings: {
-        toggleThumbnails: 'Toggle thumbnails',
-    },
 };
 
 function getThumbSrc(
@@ -490,7 +491,10 @@ function ThumbnailToggleButton(): ReactElement | null {
     return (
         <button
             type="button"
-            aria-label={settings.thumbnailPluginStrings.toggleThumbnails}
+            aria-label={
+                settings.thumbnailPluginStrings?.toggleThumbnails ??
+                settings.strings.toggleThumbnails
+            }
             className="lg-toggle-thumb lg-icon"
             onClick={() => internal.layout.toggleComponents()}
         />

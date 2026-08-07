@@ -556,3 +556,26 @@ describe('all 13 plugins together', () => {
         tick(600);
     });
 });
+
+describe('plugin label strings (core alias)', () => {
+    it('resolves labels from core strings, legacy plugin strings winning', () => {
+        renderGallery({
+            plugins: [Autoplay, Share],
+            strings: { toggleAutoplay: 'Diaporama', share: 'Partager' },
+            autoplay: {
+                autoplayPluginStrings: { toggleAutoplay: 'Legacy autoplay' },
+            },
+        });
+        loadCurrent();
+        // The deprecated per-plugin alias wins where explicitly set…
+        expect(document.querySelector('.lg-autoplay-button')).toHaveAttribute(
+            'aria-label',
+            'Legacy autoplay',
+        );
+        // …and the core strings drive every other plugin label.
+        expect(document.querySelector('.lg-share')).toHaveAttribute(
+            'aria-label',
+            'Partager',
+        );
+    });
+});

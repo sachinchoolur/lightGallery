@@ -122,6 +122,26 @@ focus returns to the trigger on close, thumbnails and pager dots are
 keyboard-operable, and `prefers-reduced-motion` disables all animations.
 The open gallery passes axe WCAG A/AA checks (automated in CI).
 
+## Localizing labels
+
+Every UI label — core controls and plugin buttons alike — lives on the
+`strings` setting and merges per-key over the English defaults:
+
+```tsx
+<LightGallery
+    slides={slides}
+    plugins={[Zoom, Thumbnail]}
+    strings={{
+        closeGallery: 'Galerie schließen',
+        toggleThumbnails: 'Vorschaubilder umschalten',
+        zoomIn: 'Vergrößern',
+    }}
+/>
+```
+
+The per-plugin string objects (`zoomPluginStrings`, `sharePluginStrings`,
+…) are deprecated aliases — a key set there still wins over `strings`.
+
 ## Keyboard bindings
 
 | Key | Action |

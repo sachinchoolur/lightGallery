@@ -45,7 +45,11 @@ export interface ShareSettings {
     pinterestDropdownText: string;
     /** Extra share options appended after the built-ins. */
     additionalShareOptions: ShareOption[];
-    sharePluginStrings: { share: string };
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    sharePluginStrings?: { share?: string };
 }
 
 export const shareSettings: ShareSettings = {
@@ -57,7 +61,6 @@ export const shareSettings: ShareSettings = {
     pinterest: true,
     pinterestDropdownText: 'Pinterest',
     additionalShareOptions: [],
-    sharePluginStrings: { share: 'Share' },
 };
 
 /** Web Share default: the OS sheet is where sharing shines on touch devices. */
@@ -139,7 +142,10 @@ function ShareButton(): ReactElement | null {
         <>
             <button
                 type="button"
-                aria-label={settings.sharePluginStrings.share}
+                aria-label={
+                    settings.sharePluginStrings?.share ??
+                    settings.strings.share
+                }
                 aria-haspopup={nativeFirst ? undefined : 'true'}
                 aria-expanded={nativeFirst ? undefined : active}
                 className="lg-share lg-icon"

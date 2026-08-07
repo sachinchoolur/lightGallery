@@ -42,7 +42,11 @@ export interface RotateSettings {
     rotateRight: boolean;
     flipHorizontal: boolean;
     flipVertical: boolean;
-    rotatePluginStrings: RotateStrings;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    rotatePluginStrings?: Partial<RotateStrings>;
 }
 
 export const rotateSettings: RotateSettings = {
@@ -52,12 +56,6 @@ export const rotateSettings: RotateSettings = {
     rotateRight: true,
     flipHorizontal: true,
     flipVertical: true,
-    rotatePluginStrings: {
-        flipVertical: 'Flip vertical',
-        flipHorizontal: 'Flip horizontal',
-        rotateLeft: 'Rotate left',
-        rotateRight: 'Rotate right',
-    },
 };
 
 const ROTATE_LEFT_EVENT = 'lg-rotate-left';
@@ -72,7 +70,14 @@ function RotateToolbar(): ReactElement | null {
         return null;
     }
     const emit = (name: string) => internal.events.emit(name, undefined);
-    const strings = settings.rotatePluginStrings;
+    const legacy = settings.rotatePluginStrings;
+    const strings = {
+        flipVertical: legacy?.flipVertical ?? settings.strings.flipVertical,
+        flipHorizontal:
+            legacy?.flipHorizontal ?? settings.strings.flipHorizontal,
+        rotateLeft: legacy?.rotateLeft ?? settings.strings.rotateLeft,
+        rotateRight: legacy?.rotateRight ?? settings.strings.rotateRight,
+    };
     return (
         <>
             {settings.flipVertical && (

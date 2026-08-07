@@ -74,7 +74,11 @@ export interface ZoomSettings {
     };
     /** Delay (ms) after a slide loads before zoom interactions arm. */
     enableZoomAfter: number;
-    zoomPluginStrings: ZoomStrings;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    zoomPluginStrings?: Partial<ZoomStrings>;
 }
 
 export const zoomSettings: ZoomSettings = {
@@ -88,11 +92,6 @@ export const zoomSettings: ZoomSettings = {
         zoomOut: 'lg-zoom-out',
     },
     enableZoomAfter: 300,
-    zoomPluginStrings: {
-        zoomIn: 'Zoom in',
-        zoomOut: 'Zoom out',
-        viewActualSize: 'View actual size',
-    },
 };
 
 const TRANSITION = 'transform 0.3s cubic-bezier(0, 0, 0.25, 1)';
@@ -121,7 +120,10 @@ function ZoomToolbar(): ReactElement | null {
             {settings.showZoomInOutIcons && (
                 <button
                     type="button"
-                    aria-label={settings.zoomPluginStrings.zoomIn}
+                    aria-label={
+                        settings.zoomPluginStrings?.zoomIn ??
+                        settings.strings.zoomIn
+                    }
                     className={`${settings.actualSizeIcons.zoomIn} lg-icon`}
                     onClick={() => emit(ZOOM_IN_EVENT)}
                 />
@@ -129,7 +131,10 @@ function ZoomToolbar(): ReactElement | null {
             {settings.showZoomInOutIcons && (
                 <button
                     type="button"
-                    aria-label={settings.zoomPluginStrings.zoomOut}
+                    aria-label={
+                        settings.zoomPluginStrings?.zoomOut ??
+                        settings.strings.zoomOut
+                    }
                     className={`${settings.actualSizeIcons.zoomOut} lg-icon`}
                     onClick={() => emit(ZOOM_OUT_EVENT)}
                 />
@@ -137,7 +142,10 @@ function ZoomToolbar(): ReactElement | null {
             {settings.actualSize && (
                 <button
                     type="button"
-                    aria-label={settings.zoomPluginStrings.viewActualSize}
+                    aria-label={
+                        settings.zoomPluginStrings?.viewActualSize ??
+                        settings.strings.viewActualSize
+                    }
                     className="lg-actual-size lg-icon"
                     onClick={() => emit(ACTUAL_SIZE_EVENT)}
                 />

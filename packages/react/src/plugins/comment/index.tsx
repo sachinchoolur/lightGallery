@@ -22,14 +22,17 @@ export interface CommentSettings {
     commentBoxTitle: string;
     /** Render the comment UI for the current slide. */
     renderComments?: (item: GalleryItem, index: number) => ReactNode;
-    commentPluginStrings: { toggleComments: string };
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    commentPluginStrings?: { toggleComments?: string };
 }
 
 export const commentSettings: CommentSettings = {
     commentBox: false,
     commentBoxTitle: 'Leave a comment.',
     renderComments: undefined,
-    commentPluginStrings: { toggleComments: 'Toggle Comments' },
 };
 
 function CommentToggleButton(): ReactElement | null {
@@ -44,7 +47,10 @@ function CommentToggleButton(): ReactElement | null {
     return (
         <button
             type="button"
-            aria-label={settings.commentPluginStrings.toggleComments}
+            aria-label={
+                settings.commentPluginStrings?.toggleComments ??
+                settings.strings.toggleComments
+            }
             className="lg-comment-toggle lg-icon"
             onClick={() =>
                 internal.layout.setOuterClass('lg-comment-active', !active)
