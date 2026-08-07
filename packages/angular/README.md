@@ -141,6 +141,26 @@ buttons everywhere, keyboard-operable thumbnails and pager dots,
 `prefers-reduced-motion` support. Automated axe run (WCAG A/AA): zero
 violations.
 
+## Localizing labels
+
+Every UI label — core controls and feature buttons alike — lives on the
+`strings` input and merges per-key over the English defaults:
+
+```html
+<lg-gallery
+    [slides]="items"
+    [features]="features"
+    [strings]="{
+        closeGallery: 'Galerie schließen',
+        toggleThumbnails: 'Vorschaubilder umschalten',
+        zoomIn: 'Vergrößern',
+    }"
+/>
+```
+
+The per-feature string objects (`zoomPluginStrings`, `sharePluginStrings`,
+…) are deprecated aliases — a key set there still wins over `strings`.
+
 ## Migrating from the legacy `lightgallery` Angular wrapper
 
 The old wrapper (`lightgallery-angular*` folders / `lightgallery` v2 with

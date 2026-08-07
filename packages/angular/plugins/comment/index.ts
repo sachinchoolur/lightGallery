@@ -36,14 +36,17 @@ export interface CommentSettings {
     commentBoxTitle: string;
     /** Template rendering the comment UI for the current slide. */
     commentsTemplate?: TemplateRef<CommentContext>;
-    commentPluginStrings: { toggleComments: string };
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    commentPluginStrings?: { toggleComments?: string };
 }
 
 export const commentSettings: CommentSettings = {
     commentBox: false,
     commentBoxTitle: 'Leave a comment.',
     commentsTemplate: undefined,
-    commentPluginStrings: { toggleComments: 'Toggle Comments' },
 };
 
 /** Panel open-state shared between the toggle button and the panel. */
@@ -64,14 +67,15 @@ export class LgCommentStateService {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (settings().commentBox) {
-            <button
-                type="button"
-                class="lg-comment-toggle lg-icon"
-                [attr.aria-label]="
-                    settings().commentPluginStrings.toggleComments
-                "
-                (click)="state.active.set(!state.active())"
-            ></button>
+        <button
+            type="button"
+            class="lg-comment-toggle lg-icon"
+            [attr.aria-label]="
+                settings().commentPluginStrings?.toggleComments ??
+                coreStrings().toggleComments
+            "
+            (click)="state.active.set(!state.active())"
+        ></button>
         }
     `,
 })
@@ -81,6 +85,9 @@ export class LgCommentToggleComponent {
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as CommentSettings,
     );
+    protected readonly coreStrings = computed(
+        () => this.ctx.settings().strings,
+    );
 }
 
 @Component({
@@ -89,32 +96,27 @@ export class LgCommentToggleComponent {
     imports: [NgTemplateOutlet],
     template: `
         @if (settings().commentBox) {
-            <div class="lg-comment-box lg-fb-comment-box">
-                <div class="lg-comment-header">
-                    <h3 class="lg-comment-title">
-                        {{ settings().commentBoxTitle }}
-                    </h3>
-                    <span
-                        class="lg-comment-close lg-icon"
-                        role="button"
-                        tabindex="0"
-                        aria-label="Close comments"
-                        (click)="state.active.set(false)"
-                        (keydown.enter)="state.active.set(false)"
-                    ></span>
-                </div>
-                <div class="lg-comment-body">
-                    @if (settings().commentsTemplate; as tpl) {
-                        <ng-container
-                            *ngTemplateOutlet="tpl; context: context()"
-                        />
-                    }
-                </div>
+        <div class="lg-comment-box lg-fb-comment-box">
+            <div class="lg-comment-header">
+                <h3 class="lg-comment-title">
+                    {{ settings().commentBoxTitle }}
+                </h3>
+                <span
+                    class="lg-comment-close lg-icon"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Close comments"
+                    (click)="state.active.set(false)"
+                    (keydown.enter)="state.active.set(false)"
+                ></span>
             </div>
-            <div
-                class="lg-comment-overlay"
-                (click)="state.active.set(false)"
-            ></div>
+            <div class="lg-comment-body">
+                @if (settings().commentsTemplate; as tpl) {
+                <ng-container *ngTemplateOutlet="tpl; context: context()" />
+                }
+            </div>
+        </div>
+        <div class="lg-comment-overlay" (click)="state.active.set(false)"></div>
         }
     `,
 })

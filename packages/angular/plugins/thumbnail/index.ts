@@ -68,7 +68,11 @@ export interface ThumbnailSettings {
     loadYouTubeThumbnail: boolean;
     /** YouTube thumb size suffix (`<n>.jpg`). */
     youTubeThumbSize: number;
-    thumbnailPluginStrings: ThumbnailStrings;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    thumbnailPluginStrings?: Partial<ThumbnailStrings>;
 }
 
 export const thumbnailSettings: ThumbnailSettings = {
@@ -84,9 +88,6 @@ export const thumbnailSettings: ThumbnailSettings = {
     thumbnailSwipeThreshold: 10,
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
-    thumbnailPluginStrings: {
-        toggleThumbnails: 'Toggle thumbnails',
-    },
 };
 
 type ThumbnailResolved = ThumbnailSettings & {
@@ -506,7 +507,8 @@ export class LgThumbnailStripComponent {
             type="button"
             class="lg-toggle-thumb lg-icon"
             [attr.aria-label]="
-                settings().thumbnailPluginStrings.toggleThumbnails
+                settings().thumbnailPluginStrings?.toggleThumbnails ??
+                coreStrings().toggleThumbnails
             "
             (click)="ctx.layout.toggleComponents()"
         ></button>
@@ -517,6 +519,9 @@ export class LgThumbnailToggleComponent {
     protected readonly ctx = inject(LG_PLUGIN_CONTEXT);
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as ThumbnailResolved,
+    );
+    protected readonly coreStrings = computed(
+        () => this.ctx.settings().strings,
     );
     // 2.x rule: the toggle only exists when media may overlap the strip.
     protected readonly visible = computed(() => {

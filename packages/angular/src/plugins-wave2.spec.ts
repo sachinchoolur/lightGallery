@@ -59,6 +59,7 @@ async function advance<T>(
             [slides]="items"
             [zoomFromOrigin]="false"
             [features]="features()"
+            [strings]="strings()"
             (autoplayStart)="log.push('autoplayStart')"
             (autoplay)="log.push('autoplay:' + $event.index)"
             (autoplayStop)="log.push('autoplayStop')"
@@ -72,6 +73,7 @@ class Wave2Host {
         viewChild.required<TemplateRef<CommentContext>>('comments');
     items = ITEMS;
     readonly features = signal<readonly LgFeature[]>([]);
+    readonly strings = signal<Record<string, string> | undefined>(undefined);
     readonly log: string[] = [];
 }
 
@@ -575,5 +577,35 @@ describe('wave-2 features', () => {
         vi.runOnlyPendingTimers();
         expect(vi.getTimerCount()).toBe(0);
         window.location.hash = '';
+    });
+});
+
+describe('plugin label strings (core alias)', () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+    });
+    afterEach(() => {
+        vi.runOnlyPendingTimers();
+        vi.useRealTimers();
+    });
+
+    it('resolves labels from core strings, legacy plugin strings winning', async () => {
+        const fixture = TestBed.createComponent(Wave2Host);
+        const host = fixture.componentInstance;
+        host.strings.set({ toggleAutoplay: 'Diaporama', share: 'Partager' });
+        host.features.set([
+            withAutoplay({
+                autoplayPluginStrings: { toggleAutoplay: 'Legacy autoplay' },
+            }),
+            withShare(),
+        ]);
+        await flush(fixture);
+        await openAndLoad(fixture);
+        // The deprecated per-plugin alias wins where explicitly set…
+        expect(query('.lg-autoplay-button')?.getAttribute('aria-label')).toBe(
+            'Legacy autoplay',
+        );
+        // …and the core strings drive every other plugin label.
+        expect(query('.lg-share')?.getAttribute('aria-label')).toBe('Partager');
     });
 });

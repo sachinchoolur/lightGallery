@@ -23,16 +23,15 @@ import {
 export interface FullscreenSettings {
     /** Enable the fullscreen button. */
     fullScreen: boolean;
-    fullscreenPluginStrings: {
-        toggleFullscreen: string;
-    };
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    fullscreenPluginStrings?: { toggleFullscreen?: string };
 }
 
 export const fullscreenSettings: FullscreenSettings = {
     fullScreen: true,
-    fullscreenPluginStrings: {
-        toggleFullscreen: 'Toggle Fullscreen',
-    },
 };
 
 interface FullscreenDocument extends Document {
@@ -68,14 +67,15 @@ function exitFullscreen(): void {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (visible()) {
-            <button
-                type="button"
-                class="lg-fullscreen lg-icon"
-                [attr.aria-label]="
-                    settings().fullscreenPluginStrings.toggleFullscreen
-                "
-                (click)="toggle()"
-            ></button>
+        <button
+            type="button"
+            class="lg-fullscreen lg-icon"
+            [attr.aria-label]="
+                settings().fullscreenPluginStrings?.toggleFullscreen ??
+                coreStrings().toggleFullscreen
+            "
+            (click)="toggle()"
+        ></button>
         }
     `,
 })
@@ -83,6 +83,9 @@ export class LgFullscreenButtonComponent {
     private readonly ctx = inject(LG_PLUGIN_CONTEXT);
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as FullscreenSettings,
+    );
+    protected readonly coreStrings = computed(
+        () => this.ctx.settings().strings,
     );
     protected readonly visible = computed(
         () => this.settings().fullScreen && fullscreenSupported(),
@@ -93,9 +96,7 @@ export class LgFullscreenButtonComponent {
             exitFullscreen();
         } else {
             const el = document.documentElement as FullscreenElement;
-            void (el.requestFullscreen ?? el.webkitRequestFullscreen)?.call(
-                el,
-            );
+            void (el.requestFullscreen ?? el.webkitRequestFullscreen)?.call(el);
         }
     }
 }
@@ -109,8 +110,8 @@ export class LgFullscreenService {
         // a per-state re-run would drop lg-fullscreen-on mid-session.
         const enabledSignal = computed(
             () =>
-                (ctx.settings() as unknown as FullscreenSettings)
-                    .fullScreen && fullscreenSupported(),
+                (ctx.settings() as unknown as FullscreenSettings).fullScreen &&
+                fullscreenSupported(),
         );
         const openSignal = computed(() => ctx.state().open);
         effect((onCleanup) => {
@@ -127,15 +128,9 @@ export class LgFullscreenService {
                     );
                 };
                 document.addEventListener('fullscreenchange', onChange);
-                document.addEventListener(
-                    'webkitfullscreenchange',
-                    onChange,
-                );
+                document.addEventListener('webkitfullscreenchange', onChange);
                 onCleanup(() => {
-                    document.removeEventListener(
-                        'fullscreenchange',
-                        onChange,
-                    );
+                    document.removeEventListener('fullscreenchange', onChange);
                     document.removeEventListener(
                         'webkitfullscreenchange',
                         onChange,

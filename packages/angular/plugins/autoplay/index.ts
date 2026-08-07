@@ -35,7 +35,11 @@ export interface AutoplaySettings {
     forceSlideShowAutoplay: boolean;
     /** Show the play/pause toolbar button. */
     autoplayControls: boolean;
-    autoplayPluginStrings: { toggleAutoplay: string };
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    autoplayPluginStrings?: { toggleAutoplay?: string };
 }
 
 export const autoplaySettings: AutoplaySettings = {
@@ -45,7 +49,6 @@ export const autoplaySettings: AutoplaySettings = {
     progressBar: true,
     forceSlideShowAutoplay: false,
     autoplayControls: true,
-    autoplayPluginStrings: { toggleAutoplay: 'Toggle Autoplay' },
 };
 
 const TOGGLE_EVENT = 'lg-autoplay-toggle';
@@ -57,14 +60,15 @@ type AutoplayResolved = AutoplaySettings & { speed: number };
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (settings().autoplay && settings().autoplayControls) {
-            <button
-                type="button"
-                class="lg-autoplay-button lg-icon"
-                [attr.aria-label]="
-                    settings().autoplayPluginStrings.toggleAutoplay
-                "
-                (click)="ctx.events.emit(TOGGLE, undefined)"
-            ></button>
+        <button
+            type="button"
+            class="lg-autoplay-button lg-icon"
+            [attr.aria-label]="
+                settings().autoplayPluginStrings?.toggleAutoplay ??
+                coreStrings().toggleAutoplay
+            "
+            (click)="ctx.events.emit(TOGGLE, undefined)"
+        ></button>
         }
     `,
 })
@@ -72,6 +76,9 @@ export class LgAutoplayButtonComponent {
     protected readonly ctx = inject(LG_PLUGIN_CONTEXT);
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as AutoplayResolved,
+    );
+    protected readonly coreStrings = computed(
+        () => this.ctx.settings().strings,
     );
     protected readonly TOGGLE = TOGGLE_EVENT;
 }
@@ -81,20 +88,18 @@ export class LgAutoplayButtonComponent {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (settings().autoplay && settings().progressBar) {
-            <div class="lg-progress-bar" [class.lg-start]="running()">
-                <!-- Recreating the element restarts the width transition
+        <div class="lg-progress-bar" [class.lg-start]="running()">
+            <!-- Recreating the element restarts the width transition
                      each cycle (the React key={cycle} trick). -->
-                @for (cycle of [cycle()]; track cycle) {
-                    <div
-                        class="lg-progress"
-                        [style.transition]="
-                            running()
-                                ? 'width ' + duration() + 'ms ease 0s'
-                                : null
-                        "
-                    ></div>
-                }
-            </div>
+            @for (cycle of [cycle()]; track cycle) {
+            <div
+                class="lg-progress"
+                [style.transition]="
+                    running() ? 'width ' + duration() + 'ms ease 0s' : null
+                "
+            ></div>
+            }
+        </div>
         }
     `,
 })
@@ -115,9 +120,7 @@ export class LgAutoplayProgressComponent {
                 this.running.set(true);
                 this.cycle.update((value) => value + 1);
             }),
-            this.ctx.events.on('autoplayStop', () =>
-                this.running.set(false),
-            ),
+            this.ctx.events.on('autoplayStop', () => this.running.set(false)),
             this.ctx.events.on('beforeSlide', () =>
                 this.cycle.update((value) => value + 1),
             ),
@@ -139,8 +142,7 @@ export class LgAutoplayService {
     // change, never per state/settings object identity (a re-run tears the
     // running show down through its cleanup).
     private readonly enabled = computed(
-        () =>
-            (this.ctx.settings() as unknown as AutoplayResolved).autoplay,
+        () => (this.ctx.settings() as unknown as AutoplayResolved).autoplay,
     );
     private readonly open = computed(() => this.ctx.state().open);
 

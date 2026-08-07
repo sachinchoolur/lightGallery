@@ -57,7 +57,11 @@ export interface RotateSettings {
     rotateRight: boolean;
     flipHorizontal: boolean;
     flipVertical: boolean;
-    rotatePluginStrings: RotateStrings;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    rotatePluginStrings?: Partial<RotateStrings>;
 }
 
 export const rotateSettings: RotateSettings = {
@@ -67,12 +71,6 @@ export const rotateSettings: RotateSettings = {
     rotateRight: true,
     flipHorizontal: true,
     flipVertical: true,
-    rotatePluginStrings: {
-        flipVertical: 'Flip vertical',
-        flipHorizontal: 'Flip horizontal',
-        rotateLeft: 'Rotate left',
-        rotateRight: 'Rotate right',
-    },
 };
 
 const ROTATE_LEFT_EVENT = 'lg-rotate-left';
@@ -86,40 +84,35 @@ type RotateResolved = RotateSettings & Record<string, unknown>;
     selector: 'lg-rotate-toolbar',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        @if (settings().rotate) {
-            @if (settings().flipVertical) {
-                <button
-                    type="button"
-                    class="lg-flip-ver lg-icon"
-                    [attr.aria-label]="strings().flipVertical"
-                    (click)="emit(FLIP_VER)"
-                ></button>
-            }
-            @if (settings().flipHorizontal) {
-                <button
-                    type="button"
-                    class="lg-flip-hor lg-icon"
-                    [attr.aria-label]="strings().flipHorizontal"
-                    (click)="emit(FLIP_HOR)"
-                ></button>
-            }
-            @if (settings().rotateLeft) {
-                <button
-                    type="button"
-                    class="lg-rotate-left lg-icon"
-                    [attr.aria-label]="strings().rotateLeft"
-                    (click)="emit(ROTATE_LEFT)"
-                ></button>
-            }
-            @if (settings().rotateRight) {
-                <button
-                    type="button"
-                    class="lg-rotate-right lg-icon"
-                    [attr.aria-label]="strings().rotateRight"
-                    (click)="emit(ROTATE_RIGHT)"
-                ></button>
-            }
-        }
+        @if (settings().rotate) { @if (settings().flipVertical) {
+        <button
+            type="button"
+            class="lg-flip-ver lg-icon"
+            [attr.aria-label]="strings().flipVertical"
+            (click)="emit(FLIP_VER)"
+        ></button>
+        } @if (settings().flipHorizontal) {
+        <button
+            type="button"
+            class="lg-flip-hor lg-icon"
+            [attr.aria-label]="strings().flipHorizontal"
+            (click)="emit(FLIP_HOR)"
+        ></button>
+        } @if (settings().rotateLeft) {
+        <button
+            type="button"
+            class="lg-rotate-left lg-icon"
+            [attr.aria-label]="strings().rotateLeft"
+            (click)="emit(ROTATE_LEFT)"
+        ></button>
+        } @if (settings().rotateRight) {
+        <button
+            type="button"
+            class="lg-rotate-right lg-icon"
+            [attr.aria-label]="strings().rotateRight"
+            (click)="emit(ROTATE_RIGHT)"
+        ></button>
+        } }
     `,
 })
 export class LgRotateToolbarComponent {
@@ -127,9 +120,17 @@ export class LgRotateToolbarComponent {
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as RotateResolved,
     );
-    protected readonly strings = computed(
-        () => this.settings().rotatePluginStrings,
-    );
+    protected readonly strings = computed(() => {
+        const legacy = this.settings().rotatePluginStrings;
+        const coreStrings = this.ctx.settings().strings;
+        return {
+            flipVertical: legacy?.flipVertical ?? coreStrings.flipVertical,
+            flipHorizontal:
+                legacy?.flipHorizontal ?? coreStrings.flipHorizontal,
+            rotateLeft: legacy?.rotateLeft ?? coreStrings.rotateLeft,
+            rotateRight: legacy?.rotateRight ?? coreStrings.rotateRight,
+        };
+    });
     protected readonly ROTATE_LEFT = ROTATE_LEFT_EVENT;
     protected readonly ROTATE_RIGHT = ROTATE_RIGHT_EVENT;
     protected readonly FLIP_HOR = FLIP_HOR_EVENT;
@@ -146,20 +147,18 @@ export class LgRotateToolbarComponent {
     imports: [NgTemplateOutlet],
     template: `
         @if (enabled()) {
-            <div
-                #wrapperEl
-                class="lg-img-rotate"
-                [style.position]="'absolute'"
-                [style.inset]="'0'"
-                [style.transform]="transform()"
-                [style.transition-duration]="
-                    settings().rotateSpeed + 'ms'
-                "
-            >
-                <ng-container [ngTemplateOutlet]="content()" />
-            </div>
-        } @else {
+        <div
+            #wrapperEl
+            class="lg-img-rotate"
+            [style.position]="'absolute'"
+            [style.inset]="'0'"
+            [style.transform]="transform()"
+            [style.transition-duration]="settings().rotateSpeed + 'ms'"
+        >
             <ng-container [ngTemplateOutlet]="content()" />
+        </div>
+        } @else {
+        <ng-container [ngTemplateOutlet]="content()" />
         }
     `,
 })
@@ -174,9 +173,7 @@ export class LgRotateWrapperComponent {
         () => this.ctx.settings() as unknown as RotateResolved,
     );
     protected readonly enabled = computed(
-        () =>
-            this.settings().rotate &&
-            getSlideType(this.item()) === 'image',
+        () => this.settings().rotate && getSlideType(this.item()) === 'image',
     );
 
     private readonly slice = signal<RotateSlice>(initialRotateSlice);
@@ -235,12 +232,9 @@ export class LgRotateWrapperComponent {
             if (!isOrientationSwapped(slice)) {
                 return;
             }
-            const onResize = () =>
-                this.fitScale.set(this.measureFitScale());
+            const onResize = () => this.fitScale.set(this.measureFitScale());
             window.addEventListener('resize', onResize);
-            onCleanup(() =>
-                window.removeEventListener('resize', onResize),
-            );
+            onCleanup(() => window.removeEventListener('resize', onResize));
         });
         inject(DestroyRef).onDestroy(() =>
             this.emitTimers.forEach((timer) => clearTimeout(timer)),

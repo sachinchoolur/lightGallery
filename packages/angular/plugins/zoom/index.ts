@@ -83,7 +83,11 @@ export interface ZoomSettings {
     };
     /** Delay (ms) after a slide loads before zoom interactions arm. */
     enableZoomAfter: number;
-    zoomPluginStrings: ZoomStrings;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    zoomPluginStrings?: Partial<ZoomStrings>;
 }
 
 export const zoomSettings: ZoomSettings = {
@@ -97,11 +101,6 @@ export const zoomSettings: ZoomSettings = {
         zoomOut: 'lg-zoom-out',
     },
     enableZoomAfter: 300,
-    zoomPluginStrings: {
-        zoomIn: 'Zoom in',
-        zoomOut: 'Zoom out',
-        viewActualSize: 'View actual size',
-    },
 };
 
 const ZOOM_IN_EVENT = 'lg-zoom-in';
@@ -128,20 +127,27 @@ type ZoomResolved = ZoomSettings &
         @if (settings().zoom) { @if (settings().showZoomInOutIcons) {
         <button
             type="button"
-            [attr.aria-label]="settings().zoomPluginStrings.zoomIn"
+            [attr.aria-label]="
+                settings().zoomPluginStrings?.zoomIn ?? coreStrings().zoomIn
+            "
             [class]="settings().actualSizeIcons.zoomIn + ' lg-icon'"
             (click)="emit(ZOOM_IN)"
         ></button>
         <button
             type="button"
-            [attr.aria-label]="settings().zoomPluginStrings.zoomOut"
+            [attr.aria-label]="
+                settings().zoomPluginStrings?.zoomOut ?? coreStrings().zoomOut
+            "
             [class]="settings().actualSizeIcons.zoomOut + ' lg-icon'"
             (click)="emit(ZOOM_OUT)"
         ></button>
         } @if (settings().actualSize) {
         <button
             type="button"
-            [attr.aria-label]="settings().zoomPluginStrings.viewActualSize"
+            [attr.aria-label]="
+                settings().zoomPluginStrings?.viewActualSize ??
+                coreStrings().viewActualSize
+            "
             class="lg-actual-size lg-icon"
             (click)="emit(ACTUAL)"
         ></button>
@@ -152,6 +158,9 @@ export class LgZoomToolbarComponent {
     private readonly ctx = inject(LG_PLUGIN_CONTEXT);
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as ZoomResolved,
+    );
+    protected readonly coreStrings = computed(
+        () => this.ctx.settings().strings,
     );
     protected readonly ZOOM_IN = ZOOM_IN_EVENT;
     protected readonly ZOOM_OUT = ZOOM_OUT_EVENT;
