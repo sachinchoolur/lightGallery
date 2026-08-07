@@ -63,5 +63,10 @@
         "name": "vimeoThumbnail",
         "folder": "plugins/vimeoThumbnail/",
         "fileName": "lg-vimeo-thumbnail"
+    },
+    {
+        "name": "justified",
+        "folder": "plugins/justified/",
+        "fileName": "lg-justified"
     }
 ]

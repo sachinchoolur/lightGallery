@@ -1,0 +1,24 @@
+// lightGallery justified layout — trigger-grid styles. Its own entry
+// on purpose: galleries that do not use the layout never load it.
+
+.lg-justified {
+    position: relative;
+    display: block;
+
+    .lg-justified-item {
+        position: absolute;
+        display: block;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    }
+
+    .lg-justified-item-hidden {
+        display: none;
+    }
+}

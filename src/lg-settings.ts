@@ -7,6 +7,7 @@ import { AutoplaySettings } from './plugins/autoplay/lg-autoplay-settings';
 import { CommentSettings } from './plugins/comment/lg-comment-settings';
 import { FullscreenSettings } from './plugins/fullscreen/lg-fullscreen-settings';
 import { HashSettings } from './plugins/hash/lg-hash-settings';
+import { JustifiedSettings } from './plugins/justified/lg-justified-settings';
 import { MediumZoomSettings } from './plugins/mediumZoom/lg-medium-zoom-settings';
 import { PagerSettings } from './plugins/pager/lg-pager-settings';
 import { RotateSettings } from './plugins/rotate/lg-rotate-settings';
@@ -88,6 +89,7 @@ export type LightGalleryAllSettings = LightGalleryCoreSettings &
     CommentSettings &
     FullscreenSettings &
     HashSettings &
+    JustifiedSettings &
     PagerSettings &
     RotateSettings &
     ShareSettings &
