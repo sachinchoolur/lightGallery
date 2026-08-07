@@ -136,6 +136,12 @@ export {
     type ThumbPagerPosition,
     type ThumbWindow,
 } from './thumb-math';
+export {
+    getJustifiedLayout,
+    type JustifiedBox,
+    type JustifiedLayout,
+    type JustifiedLayoutOptions,
+} from './justified-layout';
 
 export {
     DECODE_TIMEOUT_MS,
