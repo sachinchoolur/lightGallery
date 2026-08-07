@@ -152,6 +152,25 @@ Every UI label — core controls and plugin buttons alike — lives on the
 The per-plugin string objects (`zoomPluginStrings`, `sharePluginStrings`,
 …) are deprecated aliases — a key set there still wins over `strings`.
 
+## Right-to-left galleries
+
+Set `direction: 'rtl'` (or `'auto'`, which inherits the page's `dir`
+attribute — the default is `'ltr'`) and load the opt-in RTL stylesheet — keyboard
+arrows, swipe advance, slide transforms and the thumbnail strip all
+mirror; LTR galleries pay zero CSS bytes:
+
+```vue
+<script setup>
+import 'lightgallery/css/lg-rtl.css';
+</script>
+
+<LightGallery :slides="items" direction="rtl" />
+```
+
+The stylesheet only styles `.lg-container[dir='rtl']`, so a forced-LTR
+gallery inside an RTL page stays untouched. The decorative horizontal
+transitions (`lg-slide-skew`, `lg-tube`, …) keep their LTR choreography.
+
 ## Migrating from the legacy `lightgallery/vue` wrapper
 
 The old wrapper (`lightgallery-vue*` folders / `lightgallery` v2 with

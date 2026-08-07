@@ -215,6 +215,7 @@ const SETTING_KEYS = [
     'slideEndAnimation',
     'hideControlOnEnd',
     'mousewheel',
+    'direction',
     'captionPosition',
     'preload',
     'numberOfSlideItemsInDom',
@@ -279,6 +280,18 @@ const settings = computed<ResolvedPluginSettings>(() => {
             ),
         ],
     }) as ResolvedPluginSettings;
+    // Resolve direction 'auto' from the page's dir attribute (headless
+    // is DOM-free, so 'auto' arrives unresolved — same seam as isMobile;
+    // the gallery teleports to body, so the root attribute is the
+    // inherited direction).
+    if (resolved.direction === 'auto') {
+        resolved.direction =
+            typeof document !== 'undefined' &&
+            (document.documentElement.getAttribute('dir') === 'rtl' ||
+                document.body?.getAttribute('dir') === 'rtl')
+                ? 'rtl'
+                : 'ltr';
+    }
     if (!reducedMotion) {
         return resolved;
     }
@@ -795,12 +808,14 @@ function onKeydown(event: KeyboardEvent): void {
         closeGallery();
     }
     if (settings.value.keyPress && store.slidesCount.value > 1) {
+        // Physical arrows follow the reading direction.
+        const rtl = settings.value.direction === 'rtl';
         if (event.key === 'ArrowLeft') {
             event.preventDefault();
-            prevSlide();
+            (rtl ? nextSlide : prevSlide)();
         } else if (event.key === 'ArrowRight') {
             event.preventDefault();
-            nextSlide();
+            (rtl ? prevSlide : nextSlide)();
         }
     }
     // Hand-rolled focus trap (2.x trapFocus): Tab cycles inside the
@@ -1310,6 +1325,7 @@ onBeforeUnmount(() => {
             ref="containerEl"
             :class="containerClasses"
             tabindex="-1"
+            :dir="settings.direction === 'rtl' ? 'rtl' : 'ltr'"
             role="dialog"
             aria-modal="true"
             :aria-label="

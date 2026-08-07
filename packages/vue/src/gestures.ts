@@ -102,6 +102,10 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
     let springCancel: (() => void) | null = null;
     let navSpringActive = false;
 
+    // Resolved reading direction ('auto' is resolved at settings time).
+    const getDirection = (): 'ltr' | 'rtl' =>
+        settings().direction === 'rtl' ? 'rtl' : 'ltr';
+
     function stopReleaseSpring(): void {
         springCancel?.();
         springCancel = null;
@@ -225,8 +229,14 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
             // Rubber-band past the gallery ends: a missing neighbor in
             // the drag direction means there is nothing there.
             const transforms = getHorizontalDragTransforms(
-                getEdgeFrictionedDelta(deltaX, !!els.prev, !!els.next),
+                getEdgeFrictionedDelta(
+                    deltaX,
+                    !!els.prev,
+                    !!els.next,
+                    getDirection(),
+                ),
                 width,
+                getDirection(),
             );
             if (els.current) {
                 els.current.style.transform = transforms.current;
@@ -281,7 +291,11 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
         springCancel = runSprings(
             [{ from: deltaX, velocity: velocityX, target: 0 }],
             ([x]) => {
-                const transforms = getHorizontalDragTransforms(x!, width);
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    getDirection(),
+                );
                 if (els.current) {
                     els.current.style.transform = transforms.current;
                 }
@@ -334,12 +348,18 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
         // The x where the arriving slide's drag transform lands at 0:
         // slideWidth + x + gutter(x) = 0  →  x = ∓ width·115/110.
         const springTarget =
-            (verdict === 'next' ? -1 : 1) * ((width * 115) / 110);
+            (verdict === 'next' ? -1 : 1) *
+            (getDirection() === 'rtl' ? -1 : 1) *
+            ((width * 115) / 110);
         navSpringActive = true;
         springCancel = runSprings(
             [{ from: deltaX, velocity: velocityX, target: springTarget }],
             ([x]) => {
-                const transforms = getHorizontalDragTransforms(x!, width);
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    getDirection(),
+                );
                 if (els.current) {
                     els.current.style.transform = transforms.current;
                 }
@@ -426,6 +446,7 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
                 viewportWidth: outer.value?.offsetWidth || window.innerWidth,
                 threshold: cfg.swipeThreshold,
                 flickVelocity: cfg.flickVelocity,
+                direction: getDirection(),
             });
             const target = resolveSwipeTarget(
                 verdict,
@@ -439,6 +460,7 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
                 deltaX,
                 !!drag.els?.prev,
                 !!drag.els?.next,
+                getDirection(),
             );
             if (target !== null) {
                 springHorizontalNavigate(

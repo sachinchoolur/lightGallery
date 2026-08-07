@@ -172,10 +172,19 @@ export const ThumbnailStrip = defineComponent({
         let samples: VelocitySample[] = [];
         let cancelSpring: (() => void) | null = null;
         let liveTranslate = 0;
+        // The translate scalar lives in logical strip space; in RTL the
+        // strip flows right-to-left (lg-rtl.css floats the thumbs right),
+        // so the applied sign and the finger mapping mirror together.
+        const isRtl = computed(() => ctx.settings.value.direction === 'rtl');
+        function toTrackX(value: number): number {
+            return isRtl.value ? value : -value;
+        }
         function writeTrackTranslate(value: number): void {
             liveTranslate = value;
             if (track.value) {
-                track.value.style.transform = `translate3d(${-value}px, 0px, 0px)`;
+                track.value.style.transform = `translate3d(${toTrackX(
+                    value,
+                )}px, 0px, 0px)`;
             }
         }
 
@@ -234,6 +243,7 @@ export const ThumbnailStrip = defineComponent({
                 stripWidth.value,
                 totalWidth.value,
                 settings.value.currentPagerPosition,
+                isRtl.value ? 'rtl' : 'ltr',
             );
         });
 
@@ -282,7 +292,7 @@ export const ThumbnailStrip = defineComponent({
                 // clamping dead.
                 writeTrackTranslate(
                     getElasticThumbTranslate(
-                        drag.startTranslate - delta,
+                        drag.startTranslate + (isRtl.value ? delta : -delta),
                         totalWidth.value,
                         stripWidth.value,
                     ),
@@ -322,10 +332,13 @@ export const ThumbnailStrip = defineComponent({
                 // Fling: project the release velocity, clamp into the
                 // strip bounds, spring there (bounces off the edge; pulls
                 // back when released inside the rubber band).
-                const translateVelocity = -getWindowedVelocity(
+                const pointerVelocityX = getWindowedVelocity(
                     samples,
                     Date.now(),
                 ).x;
+                const translateVelocity = isRtl.value
+                    ? pointerVelocityX
+                    : -pointerVelocityX;
                 const target = clampThumbTranslate(
                     liveTranslate + project(translateVelocity),
                     totalWidth.value,
@@ -416,9 +429,11 @@ export const ThumbnailStrip = defineComponent({
                             transitionDuration: dragging.value
                                 ? '0ms'
                                 : `${cfg.speed}ms`,
-                            transform: `translate3d(${-(dragging.value
-                                ? liveTranslate
-                                : translate.value)}px, 0px, 0px)`,
+                            transform: `translate3d(${toTrackX(
+                                dragging.value
+                                    ? liveTranslate
+                                    : translate.value,
+                            )}px, 0px, 0px)`,
                         },
                         onPointerdown: onPointerDown,
                     },
@@ -433,7 +448,7 @@ export const ThumbnailStrip = defineComponent({
                                       style: {
                                           width: `${thumbWindow.value.leadingPad}px`,
                                           height: '1px',
-                                          float: 'left',
+                                          float: isRtl.value ? 'right' : 'left',
                                       },
                                   }),
                               ]
@@ -466,7 +481,9 @@ export const ThumbnailStrip = defineComponent({
                                     style: {
                                         width: `${cfg.thumbWidth}px`,
                                         height: cfg.thumbHeight,
-                                        marginRight: `${cfg.thumbMargin}px`,
+                                        [isRtl.value
+                                            ? 'marginLeft'
+                                            : 'marginRight']: `${cfg.thumbMargin}px`,
                                     },
                                     role: 'button',
                                     tabindex: 0,
@@ -502,7 +519,7 @@ export const ThumbnailStrip = defineComponent({
                                       style: {
                                           width: `${thumbWindow.value.trailingPad}px`,
                                           height: '1px',
-                                          float: 'left',
+                                          float: isRtl.value ? 'right' : 'left',
                                       },
                                   }),
                               ]

@@ -1,12 +1,5 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils';
-import {
-    defineComponent,
-    h,
-    inject,
-    nextTick,
-    onUpdated,
-    watch,
-} from 'vue';
+import { defineComponent, h, inject, nextTick, onUpdated, watch } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import LightGallery from './LightGallery.vue';
@@ -97,6 +90,7 @@ const Host = defineComponent({
     props: {
         mode: { type: String, default: 'lg-slide' },
         mousewheel: { type: Boolean, default: true },
+        direction: { type: String, default: undefined },
         log: { type: Array, required: true },
     },
     setup: () => ({ items: ITEMS }),
@@ -106,6 +100,7 @@ const Host = defineComponent({
             :zoom-from-origin="false"
             :mode="mode"
             :mousewheel="mousewheel"
+            :direction="direction"
             @after-slide="log.push('afterSlide:' + $event.index + ':' + $event.fromTouch)"
         >
             <StoreProbe />
@@ -270,9 +265,7 @@ describe('useGalleryGestures', () => {
         // Settle hands everything back to Vue.
         expect(item.style.transform).toBe('');
         expect(item.style.transitionProperty).toBe('');
-        expect(query('.lg-outer')!.classList.contains('lg-slide')).toBe(
-            false,
-        );
+        expect(query('.lg-outer')!.classList.contains('lg-slide')).toBe(false);
         wrapper.unmount();
     });
 
@@ -365,6 +358,24 @@ describe('useGalleryGestures', () => {
         await advance(1100);
         document.dispatchEvent(
             new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
+        );
+        await settle();
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('1');
+        wrapper.unmount();
+    });
+
+    it('mirrors the physical arrows and stamps dir in rtl', async () => {
+        const wrapper = await openAndLoad([], { direction: 'rtl' });
+        expect(query('.lg-container')!.getAttribute('dir')).toBe('rtl');
+        // ArrowLeft advances in RTL (the strip flows right-to-left).
+        document.dispatchEvent(
+            new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
+        );
+        await settle();
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
+        await advance(700);
+        document.dispatchEvent(
+            new KeyboardEvent('keydown', { key: 'ArrowRight' }),
         );
         await settle();
         expect(query('.lg-counter-current')!.textContent!.trim()).toBe('1');
