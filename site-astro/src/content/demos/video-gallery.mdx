@@ -19,7 +19,7 @@ import VideosGallery from '../../components/shortcodes/VideosGallery.astro';
 
 <p>To display YouTube, Vimeo and Wistia, videos, you just need to paste the video URL, or share URL of the video in the data-src attribute. The same way you display images in the gallery. lightGallery will check the data-src attribute and if it is a video URL, it will create the respective video slide.</p>
 
-<p>You can also provide poster image for each videos. Poster images will be loaded instead of videos. So user will be able to navigate to other slides by using mouse drag or swipe. Poster images improve performance, and maintain the flexibility of your gallery without effecting user experience. Videos will be loaded when a user clicks on the poster images. You can place poster image url in the data-poster attribute.</p>
+<p>Provider videos render as lightweight facades by default: a poster with a play button, with the provider iframe created only when the user presses play. The poster falls back from the data-poster attribute to the YouTube thumbnail endpoint to the item thumb, so YouTube slides get a facade even without an explicit poster. Users can navigate to other slides by using mouse drag or swipe without loading any player code. See the <a href="/demos/video-facades/">video facades demo</a> for details and how to opt out.</p>
 
 <p>lightGallery allows you to load thumbnail images automatically from YouTube and Vimeo. You can specify the size of the thumbnails in the settings. You need to use <a href="/docs/settings/#vimeo-thumbnails-plugin">Vimeo thumbnail plugin</a> to load thumbnails for vimeo videos. Videos will be automatically paused when a user starts to navigate to another slide.</p>
 

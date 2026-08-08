@@ -21,6 +21,14 @@ import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
 #### Demo
 
+<div class="alert alert-info" role="alert">
+    On touch devices the share button prefers the OS share sheet
+    (<code>navigator.share</code>) when the browser supports it; the dropdown
+    below remains the automatic fallback and the desktop default. See the
+    <a href="/docs/v3/web-share/">Web Share guide</a> and the
+    <a href="/docs/settings/#preferNativeShare">preferNativeShare</a> setting.
+</div>
+
 <ImageGallery id="gallery-share-demo" />
 
 <DemoButtons js="https://codepen.io/sachinchoolur/pen/GRWZbRv" react="https://stackblitz.com/edit/stackblitz-starters-uqetpy" />
