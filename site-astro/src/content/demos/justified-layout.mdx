@@ -1,0 +1,83 @@
+---
+title: 'Justified layout gallery'
+description:
+    'JavaScript image gallery with a justified layout. Rows of equal height
+    fill the container edge to edge, like the classic photo-stream look.'
+lead:
+    'lightGallery justified layout plugin arranges your gallery thumbnails in
+    rows of equal height and varying widths that fill the container edge to
+    edge. The layout is calculated from the image aspect ratios, re-flows on
+    resize, and doubles as the trigger grid for the lightbox. Find all the
+    options in the <a href="/docs/settings/#justified-layout-plugin">docs</a>
+    and the <a href="/docs/v3/justified-layout/">justified layout guide</a>.'
+date: 2026-08-08T08:00:00+00:00
+draft: false
+images: []
+menu: {demos: {parent: Demos, name: Justified layout}}
+weight: 18
+toc: true
+---
+
+import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
+
+<div class="alert alert-warning" role="alert">
+    You need to include the justified layout plugin in the document.
+</div>
+
+### Justified gallery
+
+The default settings target a 180px row height with the last row aligned to
+the reading start.
+
+<GalleryDemo size="xl" id="gallery-justified-layout-demo" />
+
+##### HTML Structure
+
+```html
+<div id="gallery-justified-layout-demo">
+    <a data-lg-size="1600-1067" href="img/img1.jpg">
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a data-lg-size="1600-2400" href="img/img2.jpg">
+        <img src="img/thumb2.jpg" />
+    </a>
+    ...
+</div>
+```
+
+Provide the natural image size via `data-lg-size` so the rows can be laid out
+before the thumbnails finish loading. Without it, the layout falls back to the
+loaded image's aspect ratio.
+
+##### JavaScript
+
+```js
+import lightGallery from 'lightgallery';
+import lgJustified from 'lightgallery/plugins/justified';
+
+// Don't forget to include the justified css file
+// import 'lightgallery/css/lg-justified.css';
+
+lightGallery(document.getElementById('gallery-justified-layout-demo'), {
+    plugins: [lgJustified],
+});
+```
+
+### Customize the layout
+
+Tune the target row height, the gap, and the last-row policy — `'justify'`
+stretches the leftover row to fill the width, `'start'` keeps it at row
+height, `'hide'` hides the leftover thumbnails.
+
+<GalleryDemo size="xl" id="gallery-justified-custom-demo" />
+
+##### JavaScript
+
+```js
+lightGallery(document.getElementById('gallery-justified-custom-demo'), {
+    plugins: [lgJustified],
+    justifiedRowHeight: 120,
+    justifiedGap: 12,
+    justifiedLastRow: 'justify',
+});
+```

@@ -1,0 +1,83 @@
+---
+title: 'RTL gallery'
+description:
+    'JavaScript image gallery with right-to-left support. Navigation, swipe
+    direction, and the gallery chrome mirror for RTL languages.'
+lead:
+    'lightGallery supports right-to-left reading direction. Keyboard arrows,
+    swipe advance, and the slide and thumbnail transforms follow the gallery
+    direction, and the optional lg-rtl.css layer mirrors the controls. The
+    direction can be forced or inherited from the page. Read more in the
+    <a href="/docs/v3/localization-rtl/">localization &amp; RTL guide</a>.'
+date: 2026-08-08T08:00:00+00:00
+draft: false
+images: []
+menu: {demos: {parent: Demos, name: RTL}}
+weight: 18
+toc: true
+---
+
+import RtlGallery from '../../components/shortcodes/RtlGallery.astro';
+
+<div class="alert alert-info" role="alert">
+    <b>direction: 'auto'</b> — the gallery below inherits its direction from
+    the <code>dir="rtl"</code> attribute on the gallery element. You can also
+    force it with <code>direction: 'rtl'</code> regardless of the markup.
+</div>
+
+### Demo
+
+The trigger grid below is an Arabic-captioned gallery. Open it and note that
+the previous/next controls are mirrored and the left/right arrow keys and
+swipe gestures advance in reading order.
+
+<RtlGallery id="gallery-rtl-demo" />
+
+##### HTML Structure
+
+```html
+<div id="gallery-rtl-demo" dir="rtl">
+    <a data-lg-size="1600-1067" data-src="img/img1.jpg"
+        data-sub-html="<h4>طبقات من الأزرق</h4>">
+        <img src="img/thumb1.jpg" />
+    </a>
+    ...
+</div>
+```
+
+##### JavaScript
+
+```js
+import lightGallery from 'lightgallery';
+
+// The RTL chrome mirroring is an opt-in css layer.
+// Include it whenever the direction resolves to rtl.
+// import 'lightgallery/css/lg-rtl.css';
+
+lightGallery(document.getElementById('gallery-rtl-demo'), {
+    // 'auto' inherits the computed direction of the gallery
+    // element — dir="rtl" in the markup above.
+    // Use 'rtl' to force it regardless of the markup.
+    direction: 'auto',
+});
+```
+
+### Localized strings
+
+Every user-facing label lives on the unified `strings` object. Strings merge
+per-key over the defaults, so override only what you need:
+
+```js
+lightGallery(document.getElementById('gallery-rtl-demo'), {
+    direction: 'auto',
+    strings: {
+        closeGallery: 'إغلاق المعرض',
+        previousSlide: 'الشريحة السابقة',
+        nextSlide: 'الشريحة التالية',
+        slideAnnouncement: 'صورة {index} من {total}',
+    },
+});
+```
+
+See the full key list in the
+<a href="/docs/v3/localization-rtl/">localization &amp; RTL guide</a>.

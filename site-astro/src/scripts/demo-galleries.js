@@ -1406,3 +1406,90 @@ if ($lfYoutubeForm) {
         document.getElementById('thumbnail').scrollIntoView();
     });
 }
+
+// Justified layout demo page: plugin defaults, then a customized row.
+lightGalleryJustified('gallery-justified-layout-demo', {
+    justifiedRowHeight: 180,
+    justifiedGap: 8,
+    justifiedLastRow: 'start',
+    pager: false,
+    hash: false,
+    plugins: [lgZoom, lgThumbnail],
+});
+lightGalleryJustified('gallery-justified-custom-demo', {
+    justifiedRowHeight: 120,
+    justifiedGap: 12,
+    justifiedLastRow: 'justify',
+    pager: false,
+    hash: false,
+    plugins: [lgZoom, lgThumbnail],
+});
+
+// RTL demo page: the grid carries dir="rtl"; direction 'auto' inherits it.
+lightGalleryJustified('gallery-rtl-demo', {
+    direction: 'auto',
+    strings: {
+        closeGallery: 'إغلاق المعرض',
+        previousSlide: 'الشريحة السابقة',
+        nextSlide: 'الشريحة التالية',
+        slideAnnouncement: 'صورة {index} من {total}',
+    },
+    pager: false,
+    hash: false,
+    plugins: [lgZoom, lgThumbnail],
+});
+
+// Virtualization stress demo: 1,000 dynamic slides behind a button, with a
+// live mounted-slide/thumb counter proving the DOM stays bounded.
+const virtualizationStressHost = document.getElementById(
+    'virtualization-stress-demo',
+);
+if (virtualizationStressHost) {
+    const stressSlides = Array.from({ length: 1000 }, (_, i) => ({
+        src: `https://picsum.photos/seed/lg-${i}/1600/1067`,
+        thumb: `https://picsum.photos/seed/lg-${i}/240/160`,
+        subHtml: `<h4>Slide ${i + 1} / 1000</h4>`,
+    }));
+    const stressGallery = window.lightGallery(virtualizationStressHost, {
+        dynamic: true,
+        dynamicEl: stressSlides,
+        hash: false,
+        plugins: [lgThumbnail],
+        virtualization: {
+            slides: 7,
+            thumbs: 'auto',
+        },
+    });
+    const stressStats = document.getElementById(
+        'virtualization-stress-demo-stats',
+    );
+    virtualizationStressHost.addEventListener('lgAfterSlide', (event) => {
+        const outer = document.querySelector('.lg-outer');
+        if (!outer || !stressStats) {
+            return;
+        }
+        const mountedSlides = outer.querySelectorAll('.lg-item').length;
+        const mountedThumbs = outer.querySelectorAll('.lg-thumb-item').length;
+        stressStats.textContent =
+            `Slide ${event.detail.index + 1} of 1000 — ` +
+            `${mountedSlides} slides and ${mountedThumbs} thumbnails in the DOM.`;
+    });
+    document
+        .getElementById('virtualization-stress-demo-open')
+        ?.addEventListener('click', () => stressGallery.openGallery(0));
+}
+
+// Video facades demo page: facades and the no-cookie host are the defaults;
+// stated explicitly so the demo matches its code sample.
+lightGalleryJustified('gallery-video-facades-demo', {
+    thumbnail: false,
+    pager: false,
+    hash: false,
+    preload: 0,
+    videoFacade: true,
+    youTubeNoCookie: true,
+    // Autoplay forces an immediate materialize by design — keep it off
+    // so the facade is what the visitor sees.
+    autoplayFirstVideo: false,
+    plugins: [lgAutoplay, lgFullscreen, lgThumbnail, lgVideo],
+});
