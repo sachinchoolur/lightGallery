@@ -18,6 +18,8 @@ export interface VideoSettings {
      * eager-iframe behavior. Note autoplayFirstVideo/autoplayVideoOnSlide
      * force an immediate materialize by design. Set false for 2.x
      * eager-iframe behavior on all provider slides.
+     * See <a href="/docs/v3/video-facades/">Video facades</a>.
+     * @version V3.0.0
      */
     videoFacade: boolean;
 
@@ -26,6 +28,8 @@ export interface VideoSettings {
      * youtube-nocookie.com host.
      * @description Set false to embed through youtube.com instead. Slide
      * URLs that already point at youtube-nocookie.com always keep it.
+     * See <a href="/docs/v3/video-facades/">Video facades</a>.
+     * @version V3.0.0
      */
     youTubeNoCookie: boolean;
 

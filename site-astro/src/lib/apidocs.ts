@@ -210,9 +210,15 @@ export function settingsDefaults(variableName: string): Map<string, string> {
                 }
                 for (const property of declaration.initializer.properties) {
                     if (ts.isPropertyAssignment(property)) {
+                        // `{...} as SomeType` casts are noise in the table —
+                        // show only the value.
+                        let initializer = property.initializer;
+                        while (ts.isAsExpression(initializer)) {
+                            initializer = initializer.expression;
+                        }
                         defaults.set(
                             property.name.getText(source),
-                            property.initializer.getText(source),
+                            initializer.getText(source),
                         );
                     }
                 }

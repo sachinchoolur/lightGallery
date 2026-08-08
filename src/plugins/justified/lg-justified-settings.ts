@@ -4,6 +4,7 @@ export interface JustifiedSettings {
      * rows of equal height and varying widths that fill the container
      * edge to edge. Inline galleries only — dynamic mode has no trigger
      * grid to lay out.
+     * See <a href="/docs/v3/justified-layout/">Justified layout</a>.
      */
     justified: boolean;
     /**

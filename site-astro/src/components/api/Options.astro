@@ -73,6 +73,11 @@ const defaults = variable ? settingsDefaults(variable) : undefined;
                         {tagText(prop.comment, 'description').map((text) => (
                             <p set:html={text} />
                         ))}
+                        {tagText(prop.comment, 'deprecated').map((text) => (
+                            <p class="alert alert-warning" role="alert">
+                                <b>Deprecated</b> — <span set:html={text} />
+                            </p>
+                        ))}
                         {tagText(prop.comment, 'version').map((text) => (
                             <p class="docs-minimum-version">
                                 Minimum lightGallery version required:{' '}

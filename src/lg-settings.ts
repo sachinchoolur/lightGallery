@@ -317,6 +317,8 @@ export interface LightGalleryCoreSettings {
      * number is the overscan thumb count per side, 'auto' derives one
      * extra viewport per side. The window advances at commit points
      * (release, slide change, resize), never per pointer move.
+     * See <a href="/docs/v3/virtualization/">Virtualization</a>.
+     * @version V3.0.0
      */
     virtualization?: VirtualizationSettings;
 
@@ -327,6 +329,8 @@ export interface LightGalleryCoreSettings {
      * separate live regions — the announcer is the single source of
      * slide-change announcements. Set to false to restore the previous
      * behavior (live counter and caption, no announcer).
+     * See <a href="/docs/v3/accessibility/">Accessibility</a>.
+     * @version V3.0.0
      */
     ariaAnnouncements: boolean;
 
@@ -421,6 +425,8 @@ export interface LightGalleryCoreSettings {
      * 'auto' inherits the computed direction of the gallery element;
      * the default stays 'ltr' so upgrades never change behavior on
      * existing pages.
+     * See <a href="/docs/v3/localization-rtl/">Localization &amp; RTL</a>.
+     * @version V3.0.0
      */
     direction: 'ltr' | 'rtl' | 'auto';
 
@@ -536,6 +542,7 @@ export interface LightGalleryCoreSettings {
     /**
      * Release velocity (px/ms, measured over the gesture's final ~100ms)
      * at which a short swipe still changes slides — a flick.
+     * @version V3.0.0
      */
     flickVelocity: number;
 
@@ -544,6 +551,7 @@ export interface LightGalleryCoreSettings {
      * gallery (iOS Photos). Guarded: a pinch that went past fit zoom at
      * any point is a zoom correction and never closes. Requires
      * `closable` and the zoom plugin.
+     * @version V3.0.0
      */
     pinchToClose: boolean;
 
@@ -635,6 +643,7 @@ export interface LightGalleryCoreSettings {
      * You can find dedicated strings option for all lightGallery modules in their respective documentation.
      * Strings merge per-key over the defaults — override only the keys
      * you need (the old provide-everything requirement is gone).
+     * See <a href="/docs/v3/localization-rtl/">Localization &amp; RTL</a>.
      */
     strings: LightGalleryCoreStrings;
 
