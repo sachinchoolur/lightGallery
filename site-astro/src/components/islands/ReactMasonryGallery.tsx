@@ -9,9 +9,7 @@ import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 import Video from '@lightgallery/react/plugins/video';
 
 import { ITEMS } from './react-masonry-items';
-// @ts-expect-error vendor asset url
 import masonryUrl from '../../scripts/vendor/masonry.pkgd.min.js?url';
-// @ts-expect-error vendor asset url
 import imagesLoadedUrl from '../../scripts/vendor/imagesloaded.pkgd.js?url';
 import { loadVendor } from '../../scripts/load-vendor.js';
 
@@ -58,7 +56,7 @@ export default function ReactMasonryGallery() {
     }, []);
 
     return (
-        <LightGallery plugins={PLUGINS} thumbnail pager>
+        <LightGallery plugins={PLUGINS}>
             <div ref={containerRef} className="grid masonry-grid">
                 <div className="grid-sizer"></div>
                 {ITEMS.map((item) => (
