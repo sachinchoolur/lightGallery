@@ -76,19 +76,43 @@ const hasVideo =
                         href="https://vjs.zencdn.net/7.10.2/video-js.css"
                         rel="stylesheet"
                     />
-                    {/* Player APIs the video plugin drives (script-footer parity). */}
-                    <script
-                        is:inline
-                        src="https://player.vimeo.com/api/player.js"
-                    />
-                    <script
-                        is:inline
-                        src="https://fast.wistia.com/assets/external/E-v1.js"
-                    />
-                    <script
-                        is:inline
-                        src="https://vjs.zencdn.net/7.10.2/video.min.js"
-                    />
+                    {/* Player APIs the video plugin drives. Loaded on the
+                        first interaction instead of eagerly — playing a
+                        video needs a click on a trigger plus the open
+                        animation, so the scripts are always in flight
+                        before a video slide can append. The plugin
+                        degrades gracefully if one loses the race:
+                        Vimeo/Wistia orchestration is guarded and Wistia
+                        commands queue on `_wq`. */}
+                    <script is:inline>
+                        (function () {
+                            var urls = [
+                                'https://player.vimeo.com/api/player.js',
+                                'https://fast.wistia.com/assets/external/E-v1.js',
+                                'https://vjs.zencdn.net/7.10.2/video.min.js',
+                            ];
+                            var events = [
+                                'pointermove',
+                                'pointerdown',
+                                'touchstart',
+                                'keydown',
+                            ];
+                            var load = function () {
+                                events.forEach(function (event) {
+                                    removeEventListener(event, load, true);
+                                });
+                                urls.forEach(function (url) {
+                                    var script =
+                                        document.createElement('script');
+                                    script.src = url;
+                                    document.head.appendChild(script);
+                                });
+                            };
+                            events.forEach(function (event) {
+                                addEventListener(event, load, true);
+                            });
+                        })();
+                    </script>
                 </>
             )
         }
