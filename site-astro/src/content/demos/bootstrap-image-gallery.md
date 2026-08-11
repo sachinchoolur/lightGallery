@@ -1,11 +1,11 @@
 ---
-title: Bootstrap image gallery
-description: Create beautiful Bootstrap image gallery with light gallery.
+title: 'Bootstrap image gallery with lightbox'
+description: 'Bootstrap image gallery demo with a full-screen lightbox — responsive grid markup, thumbnails, zoom and captions, and no jQuery required.'
 lead: Bootstrap is the most popular CSS Framework for developing responsive and mobile-first websites. Here is the demo adding lightBox gallery support for Bootstrap.
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
-menu: { demos: { parent: Demos } }
+menu: { demos: { parent: 'Demos', name: 'Bootstrap image gallery' } }
 weight: 24
 toc: true
 ---

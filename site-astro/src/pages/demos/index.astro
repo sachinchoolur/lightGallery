@@ -9,7 +9,14 @@ const entries = (await getCollection('demos')).sort((a, b) =>
 );
 ---
 
-<BaseLayout bodyClass="demos list" meta={{ title: 'Demos' }}>
+<BaseLayout
+    bodyClass="demos list"
+    meta={{
+        title: `Demos — ${entries.length} JavaScript gallery examples`,
+        description:
+            'Live lightGallery demos: thumbnails, zoom, video, captions, carousels, React, justified layout and more — each with the code to copy.',
+    }}
+>
     <div class="wrap container-xxl page-wrap" role="document">
         <div class="row justify-content-center">
             <div class="col-md-12 col-lg-10 col-xl-6">

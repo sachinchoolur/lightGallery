@@ -1,11 +1,11 @@
 ---
-title: Get started
-description: lightGallery is a lightweight, modular, JavaScript library for creating beautiful image & video galleries for the web and the mobile.
+title: 'JavaScript image gallery — get started'
+description: 'Install lightGallery with npm or a CDN and build a responsive image and video gallery in a few lines of JavaScript — no dependencies, 13 plugins.'
 lead: lightGallery is a lightweight, modular, JavaScript library for creating beautiful image & video galleries for the web and the mobile.
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu: {docs: {parent: API Docs}}
+menu: { docs: { parent: 'API Docs', name: 'Get started' } }
 weight: 1
 toc: true
 ---
