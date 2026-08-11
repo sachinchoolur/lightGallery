@@ -19,7 +19,7 @@ export interface ShareSettings {
      * attached.
      * @description Defaults to true on touch devices and false on desktop,
      * where the branded dropdown is kept for consistency.
-     * See <a href="/docs/v3/web-share/">Web Share</a>.
+     * See <a href="/docs/web-share/">Web Share</a>.
      * @version V3.0.0
      */
     preferNativeShare?: boolean;
