@@ -1,0 +1,189 @@
+---
+/**
+ * Framework code tabs — the same example in vanilla JavaScript, React,
+ * Vue and Angular.
+ *
+ * Every panel is rendered into the HTML (crawlers and no-JS readers get
+ * all four); the client script only toggles visibility. Picking a tab
+ * switches every group on the page and is remembered across pages via
+ * localStorage, so a React reader stays on React. `?framework=react` and
+ * `#react` deep-link into a tab — the canonical URL is unaffected, so
+ * the variants never split the page's ranking.
+ *
+ * Usage in MDX (omit a slot and its tab disappears):
+ *
+ *   <CodeTabs>
+ *     <Fragment slot="vanilla">```js …```</Fragment>
+ *     <Fragment slot="react">```tsx …```</Fragment>
+ *   </CodeTabs>
+ */
+interface Props {
+    /** Overrides the content-derived id. */
+    id?: string;
+    /** Tablist label for assistive tech. */
+    label?: string;
+}
+
+const FRAMEWORKS = [
+    { key: 'vanilla', label: 'JavaScript' },
+    { key: 'react', label: 'React' },
+    { key: 'vue', label: 'Vue' },
+    { key: 'angular', label: 'Angular' },
+] as const;
+
+const { id: idProp, label = 'Framework' } = Astro.props;
+
+const panels = await Promise.all(
+    FRAMEWORKS.filter((f) => Astro.slots.has(f.key)).map(async (f) => ({
+        ...f,
+        html: await Astro.slots.render(f.key),
+    })),
+);
+
+/**
+ * Ids have to be unique per document and stable across builds. Astro has
+ * no useId and component module state does not survive between renders,
+ * so the id is derived from the panel content (FNV-1a).
+ */
+const fnv1a = (input: string) => {
+    let hash = 0x811c9dc5;
+    for (let i = 0; i < input.length; i++) {
+        hash ^= input.charCodeAt(i);
+        hash = Math.imul(hash, 0x01000193) >>> 0;
+    }
+    return hash.toString(36);
+};
+const id =
+    idProp ?? `code-tabs-${fnv1a(Astro.url.pathname + panels.map((p) => p.html).join(''))}`;
+
+/** First available tab is the default; the script may switch it client-side. */
+const initial = panels[0]?.key;
+---
+
+<div class="code-tabs" data-code-tabs>
+    <div class="code-tabs-list" role="tablist" aria-label={label}>
+        {
+            panels.map((f) => (
+                <button
+                    type="button"
+                    role="tab"
+                    class="code-tabs-tab"
+                    id={`${id}-tab-${f.key}`}
+                    aria-controls={`${id}-panel-${f.key}`}
+                    aria-selected={f.key === initial ? 'true' : 'false'}
+                    tabindex={f.key === initial ? 0 : -1}
+                    data-framework={f.key}
+                >
+                    {f.label}
+                </button>
+            ))
+        }
+    </div>
+    {
+        panels.map((f) => (
+            <div
+                role="tabpanel"
+                class="code-tabs-panel"
+                id={`${id}-panel-${f.key}`}
+                aria-labelledby={`${id}-tab-${f.key}`}
+                data-framework={f.key}
+                tabindex={0}
+                hidden={f.key !== initial}
+                set:html={f.html}
+            />
+        ))
+    }
+</div>
+
+<script>
+    const STORAGE_KEY = 'lg-framework';
+    const VALID = ['vanilla', 'react', 'vue', 'angular'];
+
+    /** Apply a framework to every group; groups without it keep their first tab. */
+    function apply(framework: string) {
+        document
+            .querySelectorAll<HTMLElement>('[data-code-tabs]')
+            .forEach((group) => {
+                const tabs = [
+                    ...group.querySelectorAll<HTMLButtonElement>(
+                        '.code-tabs-tab',
+                    ),
+                ];
+                const wanted =
+                    tabs.find((t) => t.dataset.framework === framework) ??
+                    tabs[0];
+                if (!wanted) return;
+                tabs.forEach((tab) => {
+                    const on = tab === wanted;
+                    tab.setAttribute('aria-selected', String(on));
+                    tab.tabIndex = on ? 0 : -1;
+                    const panel = group.querySelector<HTMLElement>(
+                        `.code-tabs-panel[data-framework="${tab.dataset.framework}"]`,
+                    );
+                    if (panel) panel.hidden = !on;
+                });
+            });
+    }
+
+    /** Deep link (?framework= or #react) wins over the stored preference. */
+    function preferred(): string | null {
+        const url = new URL(window.location.href);
+        const fromQuery = url.searchParams.get('framework');
+        if (fromQuery && VALID.includes(fromQuery)) return fromQuery;
+        const fromHash = url.hash.replace(/^#/, '');
+        if (VALID.includes(fromHash)) return fromHash;
+        try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored && VALID.includes(stored)) return stored;
+        } catch {
+            /* storage blocked — fall back to the default tab */
+        }
+        return null;
+    }
+
+    function select(framework: string) {
+        apply(framework);
+        try {
+            localStorage.setItem(STORAGE_KEY, framework);
+        } catch {
+            /* storage blocked — the choice just does not persist */
+        }
+    }
+
+    function init() {
+        const groups = document.querySelectorAll('[data-code-tabs]');
+        if (!groups.length) return;
+
+        const initial = preferred();
+        if (initial) apply(initial);
+
+        groups.forEach((group) => {
+            const tabs = [
+                ...group.querySelectorAll<HTMLButtonElement>('.code-tabs-tab'),
+            ];
+            tabs.forEach((tab, i) => {
+                tab.addEventListener('click', () =>
+                    select(tab.dataset.framework ?? 'vanilla'),
+                );
+                // APG tablist keyboard support.
+                tab.addEventListener('keydown', (event) => {
+                    const keys: Record<string, number> = {
+                        ArrowLeft: i - 1,
+                        ArrowRight: i + 1,
+                        Home: 0,
+                        End: tabs.length - 1,
+                    };
+                    const next = keys[event.key];
+                    if (next === undefined) return;
+                    event.preventDefault();
+                    const target =
+                        tabs[(next + tabs.length) % tabs.length] ?? tabs[0];
+                    select(target.dataset.framework ?? 'vanilla');
+                    target.focus();
+                });
+            });
+        });
+    }
+
+    init();
+</script>

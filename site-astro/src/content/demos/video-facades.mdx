@@ -17,6 +17,7 @@ weight: 18
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import VideosGallery from '../../components/shortcodes/VideosGallery.astro';
 
 <div class="alert alert-warning" role="alert">
@@ -54,7 +55,10 @@ JavaScript or cookies load until then.
 </div>
 ```
 
-##### JavaScript
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
 
 ```js
 import lightGallery from 'lightgallery';
@@ -73,6 +77,65 @@ lightGallery(document.getElementById('gallery-video-facades-demo'), {
 });
 ```
 
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery } from '@lightgallery/react';
+import Video from '@lightgallery/react/plugins/video';
+
+<LightGallery
+    slides={slides}
+    plugins={[Video]}
+    video={{
+        videoFacade: true,
+        youTubeNoCookie: true,
+        autoplayFirstVideo: false,
+    }}
+/>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery } from '@lightgallery/vue';
+import Video from '@lightgallery/vue/plugins/video';
+</script>
+
+<template>
+    <LightGallery
+        :slides="slides"
+        :plugins="[Video]"
+        :video="{
+            videoFacade: true,
+            youTubeNoCookie: true,
+            autoplayFirstVideo: false,
+        }"
+    />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery
+    [slides]="slides"
+    [features]="[
+        withVideo({
+            videoFacade: true,
+            youTubeNoCookie: true,
+            autoplayFirstVideo: false,
+        }),
+    ]"
+/>
+```
+
+</Fragment>
+</CodeTabs>
+
 The facade poster falls back from the item's `data-poster` to the YouTube
 thumbnail endpoint to the item thumb. A slide with no resolvable poster keeps
 the previous eager-iframe behavior, as do slides shown with
@@ -83,12 +146,43 @@ the previous eager-iframe behavior, as do slides shown with
 Set `videoFacade: false` to restore the 2.x behavior — the provider iframe is
 created as soon as the slide loads:
 
+<CodeTabs>
+<Fragment slot="vanilla">
+
 ```js
 lightGallery(document.getElementById('gallery-eager-videos'), {
     plugins: [lgVideo],
     videoFacade: false,
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+<LightGallery slides={slides} plugins={[Video]} video={{ videoFacade: false }} />
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<LightGallery
+    :slides="slides"
+    :plugins="[Video]"
+    :video="{ videoFacade: false }"
+/>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery [slides]="slides" [features]="[withVideo({ videoFacade: false })]" />
+```
+
+</Fragment>
+</CodeTabs>
 
 Set `youTubeNoCookie: false` to embed through youtube.com instead of
 youtube-nocookie.com. Slide URLs that already point at youtube-nocookie.com

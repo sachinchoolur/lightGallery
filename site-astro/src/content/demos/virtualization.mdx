@@ -17,6 +17,7 @@ weight: 18
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import VirtualizationStress from '../../components/shortcodes/VirtualizationStress.astro';
 
 ### 1,000-item stress demo
@@ -28,7 +29,10 @@ around the active index and the visible thumbnails (plus an overscan) are in
 the DOM, with spacers preserving the strip geometry. The window advances at
 commit points — release, slide change, resize — never per pointer move.
 
-##### JavaScript
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
 
 ```js
 import lightGallery from 'lightgallery';
@@ -57,6 +61,50 @@ document
     .getElementById('open-button')
     .addEventListener('click', () => gallery.openGallery(0));
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+
+<LightGallery
+    slides={slides}
+    plugins={[Thumbnail]}
+    virtualization={{ slides: 7, thumbs: 'auto' }}
+    open={open}
+    index={index}
+    onClose={() => setOpen(false)}
+/>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<LightGallery
+    v-model:open="open"
+    v-model:index="index"
+    :slides="slides"
+    :plugins="[Thumbnail]"
+    :virtualization="{ slides: 7, thumbs: 'auto' }"
+/>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery
+    [slides]="slides"
+    [features]="[withThumbnail()]"
+    [virtualization]="{ slides: 7, thumbs: 'auto' }"
+/>
+```
+
+</Fragment>
+</CodeTabs>
 
 Virtualization is off when the `virtualization` setting is `undefined` — the
 classic behavior, where every thumbnail renders. See all the knobs in the

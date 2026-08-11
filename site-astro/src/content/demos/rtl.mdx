@@ -17,6 +17,7 @@ weight: 18
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import RtlGallery from '../../components/shortcodes/RtlGallery.astro';
 
 <div class="alert alert-info" role="alert">
@@ -45,7 +46,10 @@ swipe gestures advance in reading order.
 </div>
 ```
 
-##### JavaScript
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
 
 ```js
 import lightGallery from 'lightgallery';
@@ -62,10 +66,53 @@ lightGallery(document.getElementById('gallery-rtl-demo'), {
 });
 ```
 
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery } from '@lightgallery/react';
+
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-rtl.css';
+
+// 'auto' inherits the direction from the nearest dir attribute;
+// 'rtl' forces it regardless of the markup.
+<LightGallery slides={slides} direction="auto" />;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery } from '@lightgallery/vue';
+
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-rtl.css';
+</script>
+
+<template>
+    <LightGallery :slides="slides" direction="auto" />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery [slides]="slides" direction="auto" />
+```
+
+</Fragment>
+</CodeTabs>
+
 ### Localized strings
 
 Every user-facing label lives on the unified `strings` object. Strings merge
 per-key over the defaults, so override only what you need:
+
+<CodeTabs>
+<Fragment slot="vanilla">
 
 ```js
 lightGallery(document.getElementById('gallery-rtl-demo'), {
@@ -78,6 +125,57 @@ lightGallery(document.getElementById('gallery-rtl-demo'), {
     },
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+<LightGallery
+    slides={slides}
+    direction="auto"
+    strings={{
+        closeGallery: 'إغلاق المعرض',
+        previousSlide: 'الشريحة السابقة',
+        nextSlide: 'الشريحة التالية',
+        slideAnnouncement: 'صورة {index} من {total}',
+    }}
+/>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<LightGallery
+    :slides="slides"
+    direction="auto"
+    :strings="{
+        closeGallery: 'إغلاق المعرض',
+        previousSlide: 'الشريحة السابقة',
+        nextSlide: 'الشريحة التالية',
+        slideAnnouncement: 'صورة {index} من {total}',
+    }"
+/>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery
+    [slides]="slides"
+    direction="auto"
+    [strings]="{
+        closeGallery: 'إغلاق المعرض',
+        previousSlide: 'الشريحة السابقة',
+        nextSlide: 'الشريحة التالية',
+        slideAnnouncement: 'صورة {index} من {total}',
+    }"
+/>
+```
+
+</Fragment>
+</CodeTabs>
 
 See the full key list in the
 <a href="/docs/localization-rtl/">localization &amp; RTL guide</a>.

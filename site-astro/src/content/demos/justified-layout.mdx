@@ -18,6 +18,7 @@ weight: 18
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
 
 <div class="alert alert-warning" role="alert">
@@ -49,7 +50,10 @@ Provide the natural image size via `data-lg-size` so the rows can be laid out
 before the thumbnails finish loading. Without it, the layout falls back to the
 loaded image's aspect ratio.
 
-##### JavaScript
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
 
 ```js
 import lightGallery from 'lightgallery';
@@ -63,6 +67,77 @@ lightGallery(document.getElementById('gallery-justified-layout-demo'), {
 });
 ```
 
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import { JustifiedGrid } from '@lightgallery/react/plugins/justified';
+
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-justified.css';
+
+<LightGallery>
+    <JustifiedGrid>
+        {items.map((item) => (
+            <LightGalleryItem
+                key={item.src}
+                item={item}
+                data-lg-size={item.lgSize}
+            >
+                <img src={item.thumb} alt={item.alt} />
+            </LightGalleryItem>
+        ))}
+    </JustifiedGrid>
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import { JustifiedGrid } from '@lightgallery/vue/plugins/justified';
+
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-justified.css';
+</script>
+
+<template>
+    <LightGallery>
+        <JustifiedGrid>
+            <LgItem
+                v-for="item of items"
+                :key="item.src"
+                :item="item"
+                :data-lg-size="item.lgSize"
+            >
+                <img :src="item.thumb" :alt="item.alt" />
+            </LgItem>
+        </JustifiedGrid>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery>
+    <lg-justified-grid>
+        @for (item of items; track item.src) {
+            <a [lgGalleryItem]="item" [attr.data-lg-size]="item.lgSize">
+                <img [src]="item.thumb" [alt]="item.alt" />
+            </a>
+        }
+    </lg-justified-grid>
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
+
 ### Customize the layout
 
 Tune the target row height, the gap, and the last-row policy — `'justify'`
@@ -71,7 +146,10 @@ height, `'hide'` hides the leftover thumbnails.
 
 <GalleryDemo size="xl" id="gallery-justified-custom-demo" />
 
-##### JavaScript
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
 
 ```js
 lightGallery(document.getElementById('gallery-justified-custom-demo'), {
@@ -81,3 +159,33 @@ lightGallery(document.getElementById('gallery-justified-custom-demo'), {
     justifiedLastRow: 'justify',
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+<JustifiedGrid rowHeight={120} gap={12} lastRow="justify">
+    {/* LightGalleryItem triggers */}
+</JustifiedGrid>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<JustifiedGrid :row-height="120" :gap="12" last-row="justify">
+    <!-- LgItem triggers -->
+</JustifiedGrid>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-justified-grid [rowHeight]="120" [gap]="12" lastRow="justify">
+    <!-- lgGalleryItem triggers -->
+</lg-justified-grid>
+```
+
+</Fragment>
+</CodeTabs>
