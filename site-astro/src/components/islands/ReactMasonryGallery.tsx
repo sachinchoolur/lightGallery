@@ -1,5 +1,3 @@
-import { useEffect, useRef } from 'react';
-
 import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 import Autoplay from '@lightgallery/react/plugins/autoplay';
 import Fullscreen from '@lightgallery/react/plugins/fullscreen';
@@ -9,69 +7,52 @@ import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 import Video from '@lightgallery/react/plugins/video';
 
 import { ITEMS } from './react-masonry-items';
-import masonryUrl from '../../scripts/vendor/masonry.pkgd.min.js?url';
-import imagesLoadedUrl from '../../scripts/vendor/imagesloaded.pkgd.js?url';
-import { loadVendor } from '../../scripts/load-vendor.js';
 
 const PLUGINS = [Autoplay, Fullscreen, Share, Thumbnail, Video, Rotate];
 
+/** Rendered width of the grid thumbnails (the `w=270` unsplash crop). */
+const THUMB_WIDTH = 270;
+
 /**
- * The React demo gallery as an actual `@lightgallery/react` island — the
- * same masonry grid markup/classes as the vanilla demo (so the site CSS
- * applies), with the Masonry layout vendor applied after mount.
+ * The React demo gallery as an actual `@lightgallery/react` island.
+ *
+ * The columns are CSS (`.masonry-grid`), not the Masonry vendor the
+ * vanilla demo uses: a JS layout pass repositions every tile after the
+ * images load, which shifts the page under it. CSS columns land with the
+ * first paint, and drop two vendor scripts from the page.
  */
 export default function ReactMasonryGallery() {
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        let disposed = false;
-        let masonryInstance:
-            | { layout(): void; destroy(): void }
-            | undefined;
-        (async () => {
-            await loadVendor(masonryUrl);
-            await loadVendor(imagesLoadedUrl);
-            const Masonry = window.Masonry;
-            const imagesLoaded = window.imagesLoaded;
-            const container = containerRef.current;
-            if (disposed || !container || !Masonry || !imagesLoaded) {
-                return;
-            }
-            masonryInstance = new Masonry(container, {
-                itemSelector: '.lg-item',
-                columnWidth: '.grid-sizer',
-                percentPosition: true,
-                gutter: 10,
-                horizontalOrder: true,
-                fitWidth: true,
-            });
-            imagesLoaded(container).on('progress', () => {
-                masonryInstance?.layout();
-            });
-        })();
-        return () => {
-            disposed = true;
-            masonryInstance?.destroy();
-        };
-    }, []);
-
     return (
         <LightGallery plugins={PLUGINS}>
-            <div ref={containerRef} className="grid masonry-grid">
-                <div className="grid-sizer"></div>
-                {ITEMS.map((item) => (
-                    <LightGalleryItem
-                        key={item.src}
-                        item={item}
-                        className="lg-item"
-                    >
-                        <img
-                            alt={item.alt}
-                            className="img-responsive"
-                            src={item.thumb}
-                        />
-                    </LightGalleryItem>
-                ))}
+            <div className="grid masonry-grid">
+                {ITEMS.map((item) => {
+                    // Intrinsic thumb size from the slide ratio, so a tile
+                    // never resizes once its image arrives.
+                    const [width, height] = (item.lgSize ?? '')
+                        .split('-')
+                        .map(Number);
+                    return (
+                        <LightGalleryItem
+                            key={item.src}
+                            item={item}
+                            className="lg-item"
+                        >
+                            <img
+                                alt={item.alt}
+                                className="img-responsive"
+                                src={item.thumb}
+                                width={THUMB_WIDTH}
+                                height={
+                                    width && height
+                                        ? Math.round(
+                                              (THUMB_WIDTH * height) / width,
+                                          )
+                                        : undefined
+                                }
+                            />
+                        </LightGalleryItem>
+                    );
+                })}
             </div>
         </LightGallery>
     );

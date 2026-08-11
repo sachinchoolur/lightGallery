@@ -108,6 +108,27 @@
 }
 
 //masonry
+// The React island grid gets the same pre-init column sizing as the
+// vanilla demo below: without it the items stack full width until
+// Masonry positions them, and the collapse shifts the whole page.
+.masonry-grid {
+    column-count: 3;
+    column-gap: 10px;
+
+    .lg-item {
+        break-inside: avoid;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .lg-item img {
+        display: block;
+        height: auto;
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
 #masonry-gallery-demo {
     margin: 0 auto;
 
