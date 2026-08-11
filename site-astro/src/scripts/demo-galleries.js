@@ -1135,22 +1135,26 @@ if ($lgInlineVideoContainer) {
                     '<h4>Puffin Hunts Fish To Feed Puffling | Blue Planet II | BBC Earth</h4><p>This puffin parent must go out to sea to feed his chick, but he must evade other birds that would rob him.</p>',
             },
             {
-                source: [
-                    {
-                        src: location.origin + '/videos/video1.mp4',
-                        type: 'video/mp4',
-                    },
-                ],
-                tracks: [
-                    {
-                        src: location.origin + '/videos/title.txt',
-                        kind: 'captions',
-                        srclang: 'en',
-                        label: 'English',
-                        default: 'true',
-                    },
-                ],
-                attributes: { preload: false, controls: true },
+                // HTML5 sources belong under `video` — at the top level the
+                // slide reads as an image with no src.
+                video: {
+                    source: [
+                        {
+                            src: location.origin + '/videos/video1.mp4',
+                            type: 'video/mp4',
+                        },
+                    ],
+                    tracks: [
+                        {
+                            src: location.origin + '/videos/title.txt',
+                            kind: 'captions',
+                            srclang: 'en',
+                            label: 'English',
+                            default: 'true',
+                        },
+                    ],
+                    attributes: { preload: false, controls: true },
+                },
                 poster: location.origin + '/images/demo/html5-video-poster.jpg',
                 thumb: location.origin + '/images/demo/html5-video-poster.jpg',
                 subHtml:

@@ -1,102 +1,91 @@
 ---
-title: React video carousel
-description:
-    Full featured, Responsive, video carousel component for React.
+title: 'React video carousel with lightbox'
+description: 'Native React video carousel — slide through YouTube, Vimeo and HTML5 video inline, then expand any of them into a full-screen lightbox player.'
 lead:
-    Use the lightGallery React component to build beautiful video carousels with a lightbox gallery. The lightGallery React component supports all the features of lightGallery, social sharing, animated thumbnails, pagers, etc. A carousel video gallery can be converted to a lightbox gallery by clicking on the maximize icon on the toolbar.
+    'The same inline carousel as the image version, with the Video plugin
+    added: YouTube, Vimeo, Wistia and HTML5 video play in place, and the
+    maximize icon expands the carousel into the full-screen lightbox. Provider
+    slides render as poster facades until play. The full component API is in
+    the <a href="/docs/react/">React package docs</a>.'
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
 has_video: true
-menu: { demos: { parent: Demos } }
+menu: { demos: { parent: Demos, name: 'React video carousel' } }
 weight: 30
 toc: true
 ---
 
+import InlineGallery from '../../components/shortcodes/InlineGallery.astro';
 import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 
 #### Demo
 
-<div id="inline-video-gallery-container" class="inline-gallery-container"></div>
+<InlineGallery id="inline-video-gallery-container" />
 
 <DemoButtons js="https://codepen.io/light-gallery/pen/ZEwMyWE" react="https://stackblitz.com/edit/stackblitz-starters-rnvyp4" />
 
-##### React
+##### Inline video carousel
 
-```js
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import LightGallery from 'lightgallery/react';
-import lgZoom from 'lightgallery/plugins/zoom';
-import lgThumbnail from 'lightgallery/plugins/thumbnail';
-import { LightGallery as ILightGallery } from 'lightgallery/lightgallery';
+```tsx
+import { useState } from 'react';
+import { LightGallery } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Video from '@lightgallery/react/plugins/video';
 
-export const App: FC<{ name: string }> = ({ name }) => {
-    const lightGalleryRef = useRef < ILightGallery > null;
-    const containerRef = useRef(null);
-    const [galleryContainer, setGalleryContainer] = useState(null);
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-video.css';
 
-    const onInit = useCallback((detail) => {
-        if (detail) {
-            lightGalleryRef.current = detail.instance;
-            lightGalleryRef.current.openGallery();
-        }
-    }, []);
+const videos = [
+    {
+        src: 'https://youtu.be/IUN664s7N-c',
+        caption: <h4>Peck Pocketed by Kevin Herron</h4>,
+    },
+    {
+        src: 'https://vimeo.com/112836958',
+        poster: 'img/vimeo-poster.jpg',
+        caption: <h4>Nature</h4>,
+    },
+];
 
-    useEffect(() => {
-        if (containerRef.current) {
-            setGalleryContainer(containerRef.current);
-        }
-    }, []);
+export function VideoCarousel() {
+    const [container, setContainer] = useState<HTMLElement | null>(null);
 
     return (
-        <div className="App">
-            <div style={{ height: '800px' }} ref={containerRef}></div>
-            <LightGallery
-                container={galleryContainer}
-                onInit={onInit}
-                plugins={[lgZoom, lgThumbnail]}
-                closable={false}
-                showMaximizeIcon={true}
-                slideDelay={400}
-                thumbWidth={130}
-                thumbHeight={'100px'}
-                thumbMargin={6}
-                appendSubHtmlTo={'.lg-item'}
-                dynamic={true}
-                dynamicEl={[
-                    {
-                        src: 'https://youtu.be/IUN664s7N-c',
-                        subHtml: `<h4>'Peck Pocketed' by Kevin Herron</h4>`,
-                    },
-                    {
-                        src: 'https://www.youtube.com/watch?v=ttLu7ygaN6I',
-                        subHtml: `<h4>'Peck Pocketed' by Kevin Herron</h4>`,
-                        thumb:
-                            'https://img.youtube.com/vi/your_youtube_video_id/mqdefault.jpg',
-                    },
-                    {
-                        src: 'https://www.youtube.com/watch?v=C3vyugaBhSs',
-                        subHtml: `<h4>UE5</h4>`,
-                    },
-                    // Add more video objects as needed
-                ]}
-                hash={false}
-                elementClassNames={'react-gallery-el'}
-            />
-        </div>
+        <>
+            <div className="inline-gallery-container" ref={setContainer} />
+            {container && (
+                <LightGallery
+                    container={container}
+                    open
+                    closable={false}
+                    showMaximizeIcon
+                    slides={videos}
+                    plugins={[Thumbnail, Video]}
+                    thumbnail={{ thumbWidth: 130, thumbHeight: '100px' }}
+                    video={{ autoplayFirstVideo: false }}
+                />
+            )}
+        </>
     );
-};
+}
 ```
+
+`autoplayFirstVideo` defaults to `true` and forces the first slide's provider
+iframe to mount immediately; turning it off keeps the poster facade on every
+slide until the viewer presses play.
 
 ##### CSS
 
-Set height and width for the container as the inline automatically adopts the
-container size
-
 ```scss
-.react-gallery-el {
+.inline-gallery-container {
     width: 100%;
     height: 0;
     padding-bottom: 65%;
 }
 ```
+
+More in the [React package docs](/docs/react/), or see the
+[React carousel](/demos/react-carousel/) and
+[React video gallery](/demos/react-video-gallery/) demos.

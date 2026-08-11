@@ -1,0 +1,21 @@
+---
+/**
+ * Container for the inline (carousel) demos. The demo runtime only loads
+ * through a shortcode's script tag, so pages whose single demo is a bare
+ * container div rendered an empty box — this renders the container and
+ * pulls the runtime in with it.
+ *
+ * `id` selects which gallery demo-galleries.js mounts here:
+ * `inline-gallery-container` (images) or `inline-video-gallery-container`.
+ */
+interface Props {
+    id: 'inline-gallery-container' | 'inline-video-gallery-container';
+}
+const { id } = Astro.props;
+---
+
+<div id={id} class="inline-gallery-container"></div>
+
+<script>
+    import '../../scripts/demo-galleries.js';
+</script>
