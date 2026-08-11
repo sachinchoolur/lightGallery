@@ -1,0 +1,145 @@
+---
+title: 'Angular video gallery component'
+description: 'Native Angular video gallery — YouTube, Vimeo, Wistia and HTML5 video in a lightbox, with poster facades so the provider iframe loads only on play.'
+lead:
+    '@lightgallery/angular plays YouTube, Vimeo, Wistia and self-hosted HTML5
+    video (MP4, WebM, Ogg) in a full-screen lightbox, from a standalone
+    component with signal inputs and zoneless change detection. Provider
+    slides render as poster facades, so no third-party iframe, script or
+    cookie loads until the viewer presses play. The full component API is in
+    the <a href="/docs/angular/">Angular package docs</a>.'
+date: 2026-08-11T00:00:00.000Z
+draft: false
+images: []
+has_video: true
+menu:
+    demos:
+        parent: 'Demos'
+        name: 'Angular video gallery'
+weight: 26
+toc: true
+---
+
+import VideosGallery from '../../components/shortcodes/VideosGallery.astro';
+
+#### Demo
+
+<VideosGallery id="gallery-videos-demo" />
+
+##### Install
+
+```bash
+npm install @lightgallery/angular @lightgallery/headless @angular/cdk lightgallery
+```
+
+```ts
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-video.css';
+```
+
+##### Provider videos
+
+Point a slide's `src` at a YouTube, Vimeo or Wistia URL — the video feature
+recognises it and builds the embed. `poster` supplies the facade image;
+YouTube posters are fetched for you when you leave it out.
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withVideo } from '@lightgallery/angular/plugins/video';
+
+@Component({
+    selector: 'app-video-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (video of videos; track video.src) {
+                <a [lgGalleryItem]="video">
+                    <img [src]="video.poster" alt="" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class VideoGallery {
+    features = [withThumbnail(), withVideo()];
+
+    videos: LgGalleryItem[] = [
+        {
+            src: 'https://youtu.be/IUN664s7N-c',
+            caption: 'Peck Pocketed by Kevin Herron',
+        },
+        {
+            src: 'https://vimeo.com/112836958',
+            poster: 'img/vimeo-poster.jpg',
+            caption: 'Nature',
+        },
+    ];
+}
+```
+
+##### HTML5 videos
+
+Self-hosted video takes a `video` object with the sources, tracks and the
+attributes for the `<video>` element. Leave `src` off for these slides:
+
+```ts
+videos: LgGalleryItem[] = [
+    {
+        video: {
+            source: [{ src: 'videos/video1.mp4', type: 'video/mp4' }],
+            tracks: [
+                {
+                    src: 'videos/captions-en.vtt',
+                    kind: 'captions',
+                    srclang: 'en',
+                    label: 'English',
+                    default: 'true',
+                },
+            ],
+            attributes: { preload: false, controls: true },
+        },
+        poster: 'img/html5-video-poster.jpg',
+        caption: 'Peck Pocketed',
+    },
+];
+```
+
+##### Facades and playback settings
+
+Video settings are arguments to the `withVideo()` factory:
+
+```ts
+features = [
+    withThumbnail(),
+    withVideo({
+        // both are the defaults
+        videoFacade: true,
+        youTubeNoCookie: true,
+        // autoplay forces an immediate embed by design — turn it off
+        // to keep the facade on the first slide too
+        autoplayFirstVideo: false,
+        gotoNextSlideOnVideoEnd: true,
+    }),
+];
+```
+
+Facades cut roughly 990 KB and 14 requests per YouTube slide until playback
+starts — the poster chain is described in the
+[video facades guide](/docs/video-facades/). Vimeo thumbnails need
+`withVimeoThumbnail()`.
+
+##### SSR
+
+Entry points import cleanly in bare Node and the overlay mounts through the
+CDK overlay after hydration, so Angular SSR renders your trigger markup
+without contacting any video provider on the server.
+
+More in the [Angular package docs](/docs/angular/), or see the
+[Angular image gallery](/demos/angular-image-gallery/) demo.

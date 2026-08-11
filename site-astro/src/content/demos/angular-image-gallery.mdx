@@ -1,0 +1,168 @@
+---
+title: 'Angular image gallery component'
+description: 'Native Angular image gallery and lightbox — standalone component, signal inputs, zoneless change detection, animated thumbnails and pinch zoom.'
+lead:
+    '@lightgallery/angular is a native Angular image gallery: a standalone
+    component with signal inputs and outputs, zoneless change detection and
+    CDK overlay/a11y, in Angular Package Format with one entry point per
+    feature. Animated thumbnails, pinch and double-tap zoom, captions,
+    rotate, fullscreen and sharing are tree-shakable features. The full
+    component API is in the <a href="/docs/angular/">Angular package
+    docs</a>.'
+date: 2026-08-11T00:00:00.000Z
+draft: false
+images: []
+menu:
+    demos:
+        parent: 'Demos'
+        name: 'Angular image gallery'
+weight: 25
+toc: true
+---
+
+import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
+
+#### Demo
+
+Click any thumbnail. The Angular component renders the same markup and runs
+the same gallery logic — the shared headless core guarantees identical
+behavior across all four packages.
+
+<GalleryDemo size="xl" id="gallery-demo-animated-thumbnails" />
+
+##### Install
+
+```bash
+npm install @lightgallery/angular @lightgallery/headless @angular/cdk lightgallery
+```
+
+Peer ranges are `@angular/core`, `@angular/common` and `@angular/cdk`
+`>=21 <23`. There is no `zone.js` anywhere in the package, so it works with
+zoneless change detection. The CSS comes from the `lightgallery` package —
+add it to the `styles` array in `angular.json` or import it in your root
+stylesheet:
+
+```ts
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+```
+
+##### Thumbnail grid
+
+Put `lgGalleryItem` on each trigger. Mount order is slide order, and
+clicking a trigger opens the lightbox on that slide:
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withThumbnail({ thumbWidth: 130 }), withZoom({ scale: 1.5 })];
+
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/1-1600.jpg',
+            thumb: 'img/1-240.jpg',
+            alt: 'Mountains',
+            // enables the zoom-from-origin open animation
+            lgSize: '1600-1067',
+            caption: 'Mountains',
+        },
+        {
+            src: 'img/2-1600.jpg',
+            thumb: 'img/2-240.jpg',
+            alt: 'Forest path',
+            lgSize: '1600-2400',
+            caption: 'Forest path',
+        },
+    ];
+}
+```
+
+##### Settings, features and events
+
+Core settings are same-named signal inputs (`[mode]`, `[speed]`, `[loop]`,
+`[captionPosition]`, …). Features come from the `with<Name>()` factories,
+each in its own entry point, and events are outputs without the `on` prefix:
+
+```html
+<lg-gallery
+    [features]="features"
+    [speed]="400"
+    (afterSlide)="onSlide($event)"
+    (afterClose)="onClose()"
+/>
+```
+
+Order matters for the slide wrappers: put `withZoom()` before
+`withRotate()`.
+
+##### Controlled and imperative
+
+Drive the gallery from your own signals, or grab the component instance
+through its exported ref:
+
+```html
+<button (click)="open.set(true)">Open gallery</button>
+<button (click)="lg.openGallery(2)">Open at slide 3</button>
+
+<lg-gallery
+    #lg="lgGallery"
+    [slides]="items"
+    [open]="open()"
+    (closed)="open.set(false)"
+    [(index)]="index"
+/>
+```
+
+The instance covers `openGallery(index?)`, `closeGallery()`,
+`goToSlide(i)`, `nextSlide()`, `prevSlide()` and `refresh()`.
+
+##### Templates instead of HTML strings
+
+Captions, the counter and the navigation buttons are `ng-template`
+directives — `lgCaption`, `lgCounter`, `lgPrevButton`, `lgNextButton` — so
+the gallery chrome is your markup:
+
+```html
+<lg-gallery [slides]="items">
+    <ng-template lgCaption let-item let-index="index">
+        <h4>{{ item?.caption }}</h4>
+        <p>Slide {{ index + 1 }}</p>
+    </ng-template>
+</lg-gallery>
+```
+
+The directives are separate imports — add `LgCaptionDirective` (and its
+siblings) to the component's `imports` alongside `LgGalleryComponent`.
+
+##### SSR
+
+Every entry point imports cleanly in bare Node and the overlay mounts
+through the CDK overlay after hydration, so Angular SSR works without a
+browser-only guard. Trigger markup server-renders, keeping the grid
+crawlable.
+
+More in the [Angular package docs](/docs/angular/) — the full input
+surface, all 13 features and the accessibility behavior. See also the
+[Angular video gallery](/demos/angular-video-gallery/) demo.

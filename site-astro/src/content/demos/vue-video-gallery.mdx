@@ -1,0 +1,134 @@
+---
+title: 'Vue video gallery component'
+description: 'Native Vue 3 video gallery — YouTube, Vimeo, Wistia and HTML5 video in a lightbox, with poster facades so the provider iframe loads only on play.'
+lead:
+    '@lightgallery/vue plays YouTube, Vimeo, Wistia and self-hosted HTML5
+    video (MP4, WebM, Ogg) in a full-screen lightbox, driven by
+    <code>v-model</code> and typed emits. Provider slides render as poster
+    facades, so no third-party iframe, script or cookie loads until the
+    viewer presses play. The full component API is in the
+    <a href="/docs/vue/">Vue package docs</a>.'
+date: 2026-08-11T00:00:00.000Z
+draft: false
+images: []
+has_video: true
+menu:
+    demos:
+        parent: 'Demos'
+        name: 'Vue video gallery'
+weight: 24
+toc: true
+---
+
+import VideosGallery from '../../components/shortcodes/VideosGallery.astro';
+
+#### Demo
+
+<VideosGallery id="gallery-videos-demo" />
+
+##### Install
+
+```bash
+npm install @lightgallery/vue @lightgallery/headless lightgallery
+```
+
+```ts
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-video.css';
+```
+
+##### Provider videos
+
+Point a slide's `src` at a YouTube, Vimeo or Wistia URL — the Video plugin
+recognises it and builds the embed. `poster` supplies the facade image;
+YouTube posters are fetched for you when you leave it out.
+
+```vue
+<script setup lang="ts">
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Video from '@lightgallery/vue/plugins/video';
+
+const videos: LgGalleryItem[] = [
+    {
+        src: 'https://youtu.be/IUN664s7N-c',
+        caption: 'Peck Pocketed by Kevin Herron',
+    },
+    {
+        src: 'https://vimeo.com/112836958',
+        poster: 'img/vimeo-poster.jpg',
+        caption: 'Nature',
+    },
+];
+</script>
+
+<template>
+    <LightGallery :plugins="[Thumbnail, Video]">
+        <LgItem v-for="video of videos" :key="video.src" :item="video">
+            <img :src="video.poster" alt="" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+##### HTML5 videos
+
+Self-hosted video takes a `video` object with the sources, tracks and the
+attributes for the `<video>` element. Leave `src` off for these slides:
+
+```ts
+const items: LgGalleryItem[] = [
+    {
+        video: {
+            source: [{ src: 'videos/video1.mp4', type: 'video/mp4' }],
+            tracks: [
+                {
+                    src: 'videos/captions-en.vtt',
+                    kind: 'captions',
+                    srclang: 'en',
+                    label: 'English',
+                    default: 'true',
+                },
+            ],
+            attributes: { preload: false, controls: true },
+        },
+        poster: 'img/html5-video-poster.jpg',
+        caption: 'Peck Pocketed',
+    },
+];
+```
+
+##### Facades and playback settings
+
+Every Video plugin setting lives on the `:video` prop:
+
+```vue
+<LightGallery
+    :slides="videos"
+    :plugins="[Thumbnail, Video]"
+    :video="{
+        // both are the defaults
+        videoFacade: true,
+        youTubeNoCookie: true,
+        // autoplay forces an immediate embed by design — turn it off
+        // to keep the facade on the first slide too
+        autoplayFirstVideo: false,
+        gotoNextSlideOnVideoEnd: true,
+    }"
+/>
+```
+
+Facades cut roughly 990 KB and 14 requests per YouTube slide until playback
+starts — the poster chain is described in the
+[video facades guide](/docs/video-facades/). Vimeo thumbnails need the
+`vimeoThumbnail` plugin.
+
+##### Nuxt and SSR
+
+The overlay never server-renders (the `<Teleport>` mounts client-side), so
+the component works directly in server-rendered pages with no
+`<ClientOnly>` wrapper, and no video provider is contacted on the server.
+
+More in the [Vue package docs](/docs/vue/), or see the
+[Vue image gallery](/demos/vue-image-gallery/) demo.
