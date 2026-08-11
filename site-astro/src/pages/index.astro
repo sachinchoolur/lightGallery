@@ -17,6 +17,10 @@ const { Content } = await render(home);
         title: home.data.title,
         description: home.data.description,
         isHome: true,
+        software: {
+            name: 'lightGallery',
+            description: home.data.description,
+        },
     }}
 >
     <div class="container-fluid main-page">

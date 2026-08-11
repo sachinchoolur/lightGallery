@@ -3,10 +3,119 @@ import { getCollection } from 'astro:content';
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-// Port of `layouts/demos/list.html` — the /demos/ section index card list.
-const entries = (await getCollection('demos')).sort((a, b) =>
-    a.data.title.localeCompare(b.data.title),
+/**
+ * The /demos/ index — grouped by what a visitor is looking for rather
+ * than one flat alphabetical list. Slugs, not titles, key the groups so
+ * retitling a page never moves it (and never silently drops it: anything
+ * unlisted falls into "More demos").
+ */
+const GROUPS: { name: string; blurb: string; slugs: string[] }[] = [
+    {
+        name: 'Image galleries',
+        blurb: 'Thumbnails, zoom, captions and the layouts around them.',
+        slugs: [
+            'thumbnails',
+            'justified-layout',
+            'responsive',
+            'zoom-from-origin',
+            'medium-zoom',
+            'captions',
+            'mixed-contents',
+            'html-markup',
+            'iframe',
+            'infinite-scrolling',
+            'virtualization',
+            'rtl',
+        ],
+    },
+    {
+        name: 'Video galleries',
+        blurb: 'YouTube, Vimeo, Wistia and self-hosted HTML5 video.',
+        slugs: ['video-gallery', 'video-facades', 'video-carousel'],
+    },
+    {
+        name: 'Carousels',
+        blurb: 'Inline galleries that expand into the lightbox.',
+        slugs: ['carousel-gallery'],
+    },
+    {
+        name: 'React, Vue and Angular',
+        blurb: 'The native framework packages, each with its own component API.',
+        slugs: [
+            'react-image-gallery',
+            'react-video-gallery',
+            'react-carousel',
+            'react-video-carousel',
+            'vue-image-gallery',
+            'vue-video-gallery',
+            'angular-image-gallery',
+            'angular-video-gallery',
+        ],
+    },
+    {
+        name: 'Integrations',
+        blurb: 'Adding a lightbox to a slider or grid you already use.',
+        slugs: [
+            'slick-carousel-demo',
+            'owl-carousel-with-lightbox',
+            'swiper',
+            'flickity-demo',
+            'bootstrap-image-gallery',
+            'bootstrap-image-carousel',
+            'bootstrap-video-gallery',
+            'bootstrap-video-carousel',
+        ],
+    },
+    {
+        name: 'Behavior and API',
+        blurb: 'Events, methods, deep links, sharing and dynamic slides.',
+        slugs: [
+            'events',
+            'methods',
+            'dynamic-mode',
+            'update-slides',
+            'hash',
+            'share',
+            'comment-box',
+            'transitions',
+            'custom-easing',
+        ],
+    },
+];
+
+/** Framework badge for the packages that have their own demo pages. */
+const FRAMEWORK = (slug: string) =>
+    slug.startsWith('react-')
+        ? 'React'
+        : slug.startsWith('vue-')
+          ? 'Vue'
+          : slug.startsWith('angular-')
+            ? 'Angular'
+            : null;
+
+const entries = await getCollection('demos');
+const bySlug = new Map(
+    entries.map((entry) => [entry.id.replace(/\/index$/, '').toLowerCase(), entry]),
 );
+
+const groups = GROUPS.map((group) => ({
+    ...group,
+    items: group.slugs
+        .map((slug) => ({ slug, entry: bySlug.get(slug) }))
+        .filter((item) => item.entry),
+}));
+
+const grouped = new Set(GROUPS.flatMap((group) => group.slugs));
+const leftovers = [...bySlug.entries()]
+    .filter(([slug]) => !grouped.has(slug))
+    .map(([slug, entry]) => ({ slug, entry }))
+    .sort((a, b) => a.entry!.data.title.localeCompare(b.entry!.data.title));
+const all = leftovers.length
+    ? [
+          ...groups,
+          { name: 'More demos', blurb: '', slugs: [], items: leftovers },
+      ]
+    : groups;
 ---
 
 <BaseLayout
@@ -15,30 +124,46 @@ const entries = (await getCollection('demos')).sort((a, b) =>
         title: `Demos — ${entries.length} JavaScript gallery examples`,
         description:
             'Live lightGallery demos: thumbnails, zoom, video, captions, carousels, React, justified layout and more — each with the code to copy.',
+        breadcrumbs: [{ name: 'Demos', url: '/demos/' }],
     }}
 >
     <div class="wrap container-xxl page-wrap" role="document">
         <div class="row justify-content-center">
-            <div class="col-md-12 col-lg-10 col-xl-6">
+            <div class="col-md-12 col-lg-10 col-xl-8">
                 <article>
                     <h1 class="text-center">Demos</h1>
                     <div class="text-center"></div>
-                    <div class="card-list">
-                        {
-                            entries.map((entry) => (
-                                <div class="card my-3">
-                                    <div class="card-body">
-                                        <a
-                                            class="stretched-link"
-                                            href={`/demos/${entry.id.replace(/\/index$/, '')}/`}
-                                        >
-                                            {entry.data.title} &rarr;
-                                        </a>
-                                    </div>
+                    {
+                        all.map((group) => (
+                            <section class="demo-group">
+                                <h2>{group.name}</h2>
+                                {group.blurb && (
+                                    <p class="demo-group-blurb">
+                                        {group.blurb}
+                                    </p>
+                                )}
+                                <div class="card-list">
+                                    {group.items.map(({ slug, entry }) => (
+                                        <div class="card my-3">
+                                            <div class="card-body">
+                                                <a
+                                                    class="stretched-link"
+                                                    href={`/demos/${slug}/`}
+                                                >
+                                                    {entry!.data.title} &rarr;
+                                                </a>
+                                                {FRAMEWORK(slug) && (
+                                                    <span class="demo-badge">
+                                                        {FRAMEWORK(slug)}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))
-                        }
-                    </div>
+                            </section>
+                        ))
+                    }
                 </article>
             </div>
         </div>

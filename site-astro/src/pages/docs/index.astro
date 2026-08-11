@@ -9,7 +9,13 @@ const entries = (await getCollection('docs')).sort((a, b) =>
 );
 ---
 
-<BaseLayout bodyClass="docs list" meta={{ title: 'Docs' }}>
+<BaseLayout
+    bodyClass="docs list"
+    meta={{
+        title: 'Docs',
+        breadcrumbs: [{ name: 'Docs', url: '/docs/' }],
+    }}
+>
     <div class="wrap container-xxl page-wrap" role="document">
         <div class="row justify-content-center">
             <div class="col-md-12 col-lg-10 col-xl-8">

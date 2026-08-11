@@ -20,6 +20,13 @@ interface Props {
     publishDate?: Date;
     lastmod?: Date;
     tags?: string[];
+    /** Trail for BreadcrumbList JSON-LD, excluding the site root. */
+    breadcrumbs?: { name: string; url: string }[];
+    /**
+     * Emit SoftwareApplication JSON-LD for the product this page is about
+     * (the library itself, or one framework package).
+     */
+    software?: { name: string; description: string };
 }
 
 const {
@@ -33,6 +40,8 @@ const {
     publishDate,
     lastmod,
     tags = [],
+    breadcrumbs = [],
+    software,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -129,6 +138,45 @@ const iso = (d: Date) => d.toISOString();
                     SITE.schemaLinkedIn,
                     SITE.schemaGitHub,
                 ],
+            })}
+        />
+    )
+}
+{
+    breadcrumbs.length > 0 && (
+        <script
+            type="application/ld+json"
+            set:html={JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                    { name: SITE.title, url: '/' },
+                    ...breadcrumbs,
+                ].map((crumb, position) => ({
+                    '@type': 'ListItem',
+                    position: position + 1,
+                    name: crumb.name,
+                    item: new URL(crumb.url, Astro.site).href,
+                })),
+            })}
+        />
+    )
+}
+{
+    software && (
+        <script
+            type="application/ld+json"
+            set:html={JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'SoftwareApplication',
+                name: software.name,
+                description: software.description,
+                url: canonical,
+                applicationCategory: 'DeveloperApplication',
+                operatingSystem: 'Any',
+                license: 'https://www.gnu.org/licenses/gpl-3.0.html',
+                isAccessibleForFree: true,
+                author: { '@type': SITE.schemaType, name: SITE.title },
             })}
         />
     )
