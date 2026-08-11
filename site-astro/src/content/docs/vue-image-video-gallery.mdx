@@ -1,234 +1,98 @@
 ---
 title: Image and video gallery for Vue
-description: Full featured image and video gallery component for Vue.js
+description: 'Native Vue 3 image and video gallery component — v-model, scoped slots, Teleport, thumbnails, pinch zoom and Nuxt SSR support.'
 lead: Full featured image and video gallery component for vue.
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
-menu: {docs: {parent: API Docs, name: Vue}}
+menu: { docs: { parent: API Docs, name: Vue } }
 weight: 8
 toc: true
 ---
 
-import Callbacks from '../../components/api/Callbacks.astro';
+lightGallery 3 ships **`@lightgallery/vue`** — a native Vue 3 component, not
+a wrapper. Every node is rendered by Vue, with `v-model` for the open state
+and the index, typed emits, scoped slots and a Teleport overlay. State and
+gallery logic come from the shared headless core, so behavior matches the
+vanilla, React and Angular packages exactly.
 
-> **lightGallery v3:** `@lightgallery/vue` is a native Vue 3 package
-> built on the shared headless core — see the
-> [Vue package docs](/docs/vue/).
+## Install
 
-<div class="alert alert-danger" role="alert">
-    lightGallery Vue.js component works only with Vue.js version 3 and above. For vue.js 2 please follow this <a target="_blank" href="https://github.com/sachinchoolur/lightgallery.js/issues/60#issuecomment-422259277">link</a>
-</div>
-
-<a class="btn btn-outline-primary" href="https://stackblitz.com/edit/lightgallery-vue" target="_blank">StackBlitz
-Demo</a>
-
-## Installation
-
-Follow the below steps to use lightGallery vue component in your application.
-Vue component is part of the main lightGallery package on NPM. You can import it
-using the following way
-
--   Install lightGallery via NPM
-
-```
-npm install lightgallery
+```bash
+npm install @lightgallery/vue @lightgallery/headless lightgallery
 ```
 
--   Import vue component and styles
-
-```vue
-<template>
-    <lightgallery
-        :settings="{ speed: 500, plugins: plugins }"
-        :onInit="onInit"
-        :onBeforeSlide="onBeforeSlide"
-    >
-        <a href="img/img1.jpg">
-            <img alt="img1" src="img/thumb1.jpg" />
-        </a>
-        <a href="img/img2.jpg">
-            <img alt="img2" src="img/thumb2.jpg" />
-        </a>
-        ...
-    </lightgallery>
-</template>
-
-<script lang="ts">
-    import { Options, Vue } from 'vue-class-component';
-    import Lightgallery from 'lightgallery/vue';
-    import lgThumbnail from 'lightgallery/plugins/thumbnail';
-    import lgZoom from 'lightgallery/plugins/zoom';
-
-    // If you are using scss you can skip the css imports below and use scss instead
-    import styles from 'lightgallery/scss/lightgallery.scss';
-
-    @Options({
-        components: {
-            Lightgallery,
-        },
-        data: () => ({
-            plugins: [lgThumbnail, lgZoom],
-        }),
-        methods: {
-            onInit: () => {
-                console.log('lightGallery has been initialized');
-            },
-            onBeforeSlide: () => {
-                console.log('calling before slide');
-            },
-        },
-    })
-    export default class App extends Vue {}
-</script>
-<style lang="css" scoped>
-    @import 'lightgallery/css/lightgallery.css';
-    @import 'lightgallery/css/lg-thumbnail.css';
-    @import 'lightgallery/css/lg-zoom.css';
-</style>
-```
-
-## Props and methods
-
-All lightGallery settings can be passed to vue component via settings prop.
-Additionally, you can use lifecycle hook methods listed below to hook into
-lightGalley component lifecycle. Almost every method passes a detail object
-which holds useful plugin data
-
-#### usage example
-
-```js
-<template>
-    <lightgallery
-        :onBeforeSlide="onBeforeSlide"
-    >
-        <a href="img/img1.jpg">
-            <img alt="img1" src="img/thumb1.jpg" />
-        </a>
-        <a href="img/img2.jpg">
-            <img alt="img2" src="img/thumb2.jpg" />
-        </a>
-        ...
-    </lightgallery>
-</template>
-@Options({
-    components: {
-        Lightgallery,
-    },
-    methods: {
-        onBeforeSlide: (detail) => {
-            const { index, prevIndex } = detail;
-            console.log(index, prevIndex);
-        },
-    },
-})
-export default class App extends Vue {}
-```
-
-<div class="event-docs-list">
-    <Callbacks interface="InitDetail" />
-    <Callbacks interface="BeforeOpenDetail" />
-    <Callbacks interface="AfterOpenDetail" />
-    <Callbacks interface="AfterAppendSlideEventDetail" />
-    <Callbacks interface="AfterAppendSubHtmlDetail" />
-    <Callbacks interface="SlideItemLoadDetail" />
-    <Callbacks interface="HasVideoDetail" />
-    <Callbacks interface="BeforeSlideDetail" />
-    <Callbacks interface="AfterSlideDetail" />
-    <Callbacks interface="BeforeNextSlideDetail" />
-    <Callbacks interface="BeforePrevSlideDetail" />
-    <Callbacks interface="PosterClickDetail" />
-    <Callbacks interface="DragStartDetail" />
-    <Callbacks interface="DragMoveDetail" />
-    <Callbacks interface="DragEndDetail" />
-    <Callbacks interface="ContainerResizeDetail" />
-    <Callbacks interface="BeforeCloseDetail" />
-    <Callbacks interface="AfterCloseDetail" />
-    <Callbacks interface="RotateLeftDetail" />
-    <Callbacks interface="RotateRightDetail" />
-    <Callbacks interface="FlipHorizontalDetail" />
-    <Callbacks interface="FlipVerticalDetail" />
-</div>
-
-## Updating slides
-
-lightGallery does not update slides automatically due to performance reasons.
-But you can easily update slides whenever needed by calling `refresh` method.
-
-<a class="btn btn-outline-primary" href="https://stackblitz.com/edit/lightgallery-vue-update-slides" target="_blank">StackBlitz
-Demo</a>
+Peer range is `vue >=3.4`. Import the stylesheets globally — they ship from
+the `lightgallery` package and are shared by every binding:
 
 ```ts
-<template>
-    <button v-on:click="updateSlides">Add new image</button>
-    <lightgallery
-        :settings="{ speed: 500, plugins: plugins }"
-        :onInit="onInit"
-        :onBeforeSlide="onBeforeSlide"
-    >
-        <a
-            v-for="item in items"
-            :key="item.id"
-            :data-lg-size="item.size"
-            className="gallery-item"
-            :data-src="item.src"
-        >
-            <img className="img-responsive" :src="item.thumb" />
-        </a>
-    </lightgallery>
-</template>
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+```
 
-<script>
-import Lightgallery from 'lightgallery/vue';
-import lgZoom from 'lightgallery/plugins/zoom';
-let lightGallery: any = null;
-export default {
-    name: 'App',
-    components: {
-        Lightgallery,
+## A gallery in one SFC
+
+```vue
+<script setup lang="ts">
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+
+const items: LgGalleryItem[] = [
+    {
+        src: 'img/1-1600.jpg',
+        thumb: 'img/1-240.jpg',
+        alt: 'Mountains',
+        lgSize: '1600-1067',
+        caption: 'Mountains',
     },
-    watch: {
-        items(newVal, oldVal) {
-            this.$nextTick(() => {
-                lightGallery.refresh();
-            });
-        },
-    },
-    data: () => ({
-        plugins: [lgZoom],
-        items: [
-            {
-                id: '1',
-                size: '1400-800',
-                src: 'img-1.jpg',
-                thumb: 'thumb-1.jpg',
-            },
-            {
-                id: '2',
-                size: '1400-800',
-                src: 'img-2.jpg',
-                thumb: 'thumb-2.jpg',
-            },
-        ],
-    }),
-    methods: {
-        onInit: (detail) => {
-            lightGallery = detail.instance;
-        },
-        updateSlides: function () {
-            this.items = [
-                ...this.items,
-                {
-                    id: '5',
-                    size: '1400-800',
-                    src: 'img-5.jpg',
-                    thumb: 'thumb-5.jpg',
-                }
-            ];
-            lightGallery.refresh();
-        },
-    },
-};
+];
 </script>
 
+<template>
+    <LightGallery :plugins="[Thumbnail, Zoom]" :zoom="{ scale: 1.5 }">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
 ```
+
+Prefer to own the state? Pass `:slides` with `v-model:open` and
+`v-model:index`. Both modes are documented in the
+[Vue package docs](/docs/vue/).
+
+## What you get
+
+-   **All 13 plugins** as tree-shakable subpaths — thumbnails, zoom, video,
+    autoplay, fullscreen, hash deep links, pager, share, rotate, comments,
+    medium-style zoom, relative captions and Vimeo thumbnails — plus the
+    justified layout.
+-   **Idiomatic Vue API**: settings are same-named props (`:speed`,
+    `:loop`, `:caption-position`), per-plugin settings are one object prop
+    per plugin, events are kebab-case emits (`@after-slide`), and the
+    gallery chrome comes from named scoped slots (`#caption`, `#counter`,
+    `#prev-button`, `#next-button`).
+-   **Typed end to end**, including `LgGalleryItem` for slide data and a
+    template-ref handle for imperative control.
+-   **Nuxt-ready**: entries import without browser globals and the overlay
+    never server-renders, so no `<ClientOnly>` wrapper and no hydration
+    mismatch.
+-   **Accessibility**: dialog semantics, focus trap and restore, keyboard
+    operable thumbnails and pager, `prefers-reduced-motion` support; axe
+    reports zero violations.
+
+## Next steps
+
+-   [Vue package docs](/docs/vue/) — the full prop surface, all plugins,
+    SSR and accessibility notes.
+-   [Vue image gallery demo](/demos/vue-image-gallery/) and
+    [Vue video gallery demo](/demos/vue-video-gallery/) — live galleries
+    with the code behind them.
+-   [Settings reference](/docs/settings/) — every setting, shared by all
+    four packages.
+
+> **Using the 2.x wrapper?** The old `lightgallery/vue` component is
+> documented in the [2.x Vue archive](/docs/v2/vue/), and the
+> [migration guide](/docs/migration/) covers the move to the native package.
