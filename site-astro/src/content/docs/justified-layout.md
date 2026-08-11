@@ -5,21 +5,16 @@ lead: 'Justified thumbnail rows for every lightGallery package — no extra depe
 date: 2026-08-07T00:00:00.000Z
 draft: false
 images: []
-menu: { docs: { parent: 'V3 (alpha)', name: 'Justified layout' } }
+menu: { docs: { parent: 'Features', name: 'Justified layout' } }
 weight: 65
 toc: true
 ---
-
-> **Alpha release** — the v3 packages are published under the `alpha`
-> dist-tag. APIs may change between alpha releases; feedback is very
-> welcome on
-> [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
 
 lightGallery v3 ships a **justified layout** for the trigger
 thumbnails: rows of equal height and varying widths that fill the
 container edge to edge, like the photo grids on popular photography
 sites. The row math lives in
-[`@lightgallery/headless`](/docs/v3/headless/) and is shared by all
+[`@lightgallery/headless`](/docs/headless/) and is shared by all
 four packages, so the same options produce the same grid everywhere.
 
 How it works, in every package:

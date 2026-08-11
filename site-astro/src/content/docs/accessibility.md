@@ -5,15 +5,10 @@ lead: 'Dialog semantics, focus management, live announcements and reduced motion
 date: 2026-08-07T00:00:00.000Z
 draft: false
 images: []
-menu: { docs: { parent: 'V3 (alpha)', name: 'Accessibility' } }
+menu: { docs: { parent: 'Features', name: 'Accessibility' } }
 weight: 69
 toc: true
 ---
-
-> **Alpha release** — the v3 packages are published under the `alpha`
-> dist-tag. APIs may change between alpha releases; feedback is very
-> welcome on
-> [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
 
 lightGallery v3 ships one accessibility contract across the vanilla
 library and the React, Vue and Angular packages — the suites for all
@@ -28,11 +23,11 @@ The open gallery is a modal dialog:
 -   Accessible name: point `ariaLabelledby` at your own caption
     element, or let the built-in label apply —
     `strings.galleryLabel` (default `'Gallery'`,
-    [localizable](/docs/v3/localization-rtl/)).
+    [localizable](/docs/localization-rtl/)).
 -   `ariaDescribedby` is available for a longer description.
 -   Every control is a real `<button>` with a localizable
     `aria-label` from the same
-    [`strings` object](/docs/v3/localization-rtl/).
+    [`strings` object](/docs/localization-rtl/).
 
 ## Focus management
 
@@ -74,7 +69,7 @@ lightGallery(el, {
 
 -   `Escape` closes the gallery (`escKey`, default `true`).
 -   `ArrowLeft` / `ArrowRight` navigate — and follow the reading
-    direction under [RTL](/docs/v3/localization-rtl/).
+    direction under [RTL](/docs/localization-rtl/).
 -   Controls are focusable buttons and activate with
     `Enter`/`Space`.
 

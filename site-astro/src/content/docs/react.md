@@ -5,19 +5,17 @@ lead: "Native React lightGallery component built on the shared headless core."
 date: 2026-07-24T00:00:00.000Z
 draft: false
 images: []
-menu: {docs: {parent: 'V3 (alpha)', name: React}}
+menu: { docs: { parent: 'Frameworks', name: '@lightgallery/react' } }
 weight: 62
 toc: true
 ---
 
-> **Alpha release** — the v3 packages are published under the `alpha` dist-tag. APIs may change between alpha releases; feedback is very welcome on [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
-
-> **Alpha.** A ground-up, native React implementation of
-> lightGallery — React owns every DOM node; no runtime dependency on the
-> vanilla `lightgallery` JS. Styling reuses the published
-> `lightgallery/css/*` files unchanged. State and pure gallery logic live
-> in [`@lightgallery/headless`](/docs/v3/headless/), shared with the upcoming
-> Angular port.
+A ground-up, native React implementation of lightGallery — React owns
+every DOM node; no runtime dependency on the vanilla `lightgallery` JS.
+Styling reuses the published `lightgallery/css/*` files unchanged. State
+and pure gallery logic live in
+[`@lightgallery/headless`](/docs/headless/), shared with the Vue and
+Angular packages.
 
 ## Install & styles
 

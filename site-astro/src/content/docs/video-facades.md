@@ -5,15 +5,10 @@ lead: 'Poster-first video slides: the provider iframe loads only when the user p
 date: 2026-08-07T00:00:00.000Z
 draft: false
 images: []
-menu: { docs: { parent: 'V3 (alpha)', name: 'Video facades' } }
+menu: { docs: { parent: 'Features', name: 'Video facades' } }
 weight: 68
 toc: true
 ---
-
-> **Alpha release** — the v3 packages are published under the `alpha`
-> dist-tag. APIs may change between alpha releases; feedback is very
-> welcome on
-> [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
 
 A provider video embed (YouTube, Vimeo, Wistia) drags a lot of
 JavaScript into the page the moment its iframe mounts. In v3 the

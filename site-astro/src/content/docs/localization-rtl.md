@@ -5,15 +5,10 @@ lead: 'One strings contract for every label, and an opt-in RTL layer that mirror
 date: 2026-08-07T00:00:00.000Z
 draft: false
 images: []
-menu: { docs: { parent: 'V3 (alpha)', name: 'Localization & RTL' } }
+menu: { docs: { parent: 'Features', name: 'Localization & RTL' } }
 weight: 66
 toc: true
 ---
-
-> **Alpha release** — the v3 packages are published under the `alpha`
-> dist-tag. APIs may change between alpha releases; feedback is very
-> welcome on
-> [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
 
 ## The `strings` object
 

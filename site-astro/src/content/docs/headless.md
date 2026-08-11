@@ -5,21 +5,21 @@ lead: "Framework-free lightGallery core: state machine, gesture math and plugin 
 date: 2026-07-24T00:00:00.000Z
 draft: false
 images: []
-menu: {docs: {parent: 'V3 (alpha)', name: Headless}}
+menu: { docs: { parent: 'Frameworks', name: '@lightgallery/headless' } }
 weight: 61
 toc: true
 ---
 
-> **Alpha release** — the v3 packages are published under the `alpha` dist-tag. APIs may change between alpha releases; feedback is very welcome on [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
+Framework-free core logic for lightGallery 3.x: the gallery state
+machine, settings resolution, slide windowing/preload math, gesture
+verdicts, zoom/thumbnail/rotate math and video URL builders — everything
+a renderer needs, with **no DOM and no framework** (the tsconfig excludes
+the DOM lib, so `window`/`document` do not even typecheck here).
 
-> **Alpha.** Framework-free core logic for lightGallery 3.x: the gallery
-> state machine, settings resolution, slide windowing/preload math, gesture
-> verdicts, zoom/thumbnail/rotate math and video URL builders — everything
-> a renderer needs, with **no DOM and no framework** (the tsconfig excludes
-> the DOM lib, so `window`/`document` do not even typecheck here).
-
-Consumed today by [`@lightgallery/react`](/docs/v3/react/); the Angular port and a
-future vanilla 3.0 renderer build on the same package.
+Shared by [`@lightgallery/react`](/docs/react/),
+[`@lightgallery/vue`](/docs/vue/) and
+[`@lightgallery/angular`](/docs/angular/) — build your own binding on the
+same package.
 
 ```ts
 import {

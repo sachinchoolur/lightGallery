@@ -5,19 +5,18 @@ lead: "Native Angular lightGallery component built on the shared headless core."
 date: 2026-07-24T00:00:00.000Z
 draft: false
 images: []
-menu: {docs: {parent: 'V3 (alpha)', name: Angular}}
+menu: { docs: { parent: 'Frameworks', name: '@lightgallery/angular' } }
 weight: 64
 toc: true
 ---
-
-> **Alpha release** — the v3 packages are published under the `alpha` dist-tag. APIs may change between alpha releases; feedback is very welcome on [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
 
 Native Angular lightGallery over `@lightgallery/headless` — every DOM node
 rendered by Angular. Standalone components, signal inputs/outputs, zoneless
 change detection, CDK overlay/a11y, Angular Package Format with a secondary
 entry point per plugin. The framework-free state machine, gesture math and
-plugin logic are shared with `@lightgallery/react` through the headless
-package: one product, three renderings.
+plugin logic are shared with `@lightgallery/react` and
+`@lightgallery/vue` through the headless package: one product, four
+renderings.
 
 ## Install
 

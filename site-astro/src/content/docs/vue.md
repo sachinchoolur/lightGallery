@@ -5,12 +5,10 @@ lead: "Native Vue 3 lightGallery component built on the shared headless core."
 date: 2026-07-24T00:00:00.000Z
 draft: false
 images: []
-menu: {docs: {parent: 'V3 (alpha)', name: Vue}}
+menu: { docs: { parent: 'Frameworks', name: '@lightgallery/vue' } }
 weight: 63
 toc: true
 ---
-
-> **Alpha release** — the v3 packages are published under the `alpha` dist-tag. APIs may change between alpha releases; feedback is very welcome on [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
 
 Native Vue 3 lightGallery over `@lightgallery/headless` — every DOM node
 rendered by Vue. `<script setup>` SFCs, `v-model` open/index, typed emits

@@ -5,15 +5,10 @@ lead: 'Real responsive markup on every slide, and images that only count as load
 date: 2026-08-07T00:00:00.000Z
 draft: false
 images: []
-menu: { docs: { parent: 'V3 (alpha)', name: 'Responsive loading' } }
+menu: { docs: { parent: 'Features', name: 'Responsive loading' } }
 weight: 72
 toc: true
 ---
-
-> **Alpha release** — the v3 packages are published under the `alpha`
-> dist-tag. APIs may change between alpha releases; feedback is very
-> welcome on
-> [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
 
 ## Responsive slide images
 
@@ -73,7 +68,7 @@ default:
 
 Below a 375px-wide viewport the open animation targets the 240×160
 variant; everywhere else, 1600×1067. The
-[justified layout](/docs/v3/justified-layout/) reads the same
+[justified layout](/docs/justified-layout/) reads the same
 attribute for its aspect ratios.
 
 ## The decode gate
@@ -91,7 +86,7 @@ before — the gate is progressive enhancement.
 
 ## Precise `sizes` from the layouts
 
-When the [justified layout](/docs/v3/justified-layout/) positions a
+When the [justified layout](/docs/justified-layout/) positions a
 trigger whose thumbnail carries `srcset`, it writes the rendered
 width as the thumbnail's `sizes` attribute — the browser downloads
 the smallest candidate that actually covers the box.

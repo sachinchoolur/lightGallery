@@ -5,15 +5,10 @@ lead: 'Native OS share sheet first, classic dropdown as the fallback — and sha
 date: 2026-08-07T00:00:00.000Z
 draft: false
 images: []
-menu: { docs: { parent: 'V3 (alpha)', name: 'Web Share' } }
+menu: { docs: { parent: 'Features', name: 'Web Share' } }
 weight: 70
 toc: true
 ---
-
-> **Alpha release** — the v3 packages are published under the `alpha`
-> dist-tag. APIs may change between alpha releases; feedback is very
-> welcome on
-> [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
 
 The share plugin in v3 is a **hybrid**: where the
 [Web Share API](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share)

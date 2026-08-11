@@ -5,15 +5,10 @@ lead: 'Galleries with thousands of items keep a small, constant DOM — one sett
 date: 2026-08-07T00:00:00.000Z
 draft: false
 images: []
-menu: { docs: { parent: 'V3 (alpha)', name: 'Virtualization' } }
+menu: { docs: { parent: 'Features', name: 'Virtualization' } }
 weight: 67
 toc: true
 ---
-
-> **Alpha release** — the v3 packages are published under the `alpha`
-> dist-tag. APIs may change between alpha releases; feedback is very
-> welcome on
-> [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
 
 Large galleries pay for every DOM node: a 1,000-item gallery that
 renders 1,000 thumbnails plus mounted slides gets slow to open,

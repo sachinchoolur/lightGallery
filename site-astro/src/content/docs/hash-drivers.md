@@ -5,15 +5,10 @@ lead: 'Deep-link syncing rides the Navigation API where the browser has it — s
 date: 2026-08-07T00:00:00.000Z
 draft: false
 images: []
-menu: { docs: { parent: 'V3 (alpha)', name: 'Hash drivers' } }
+menu: { docs: { parent: 'Features', name: 'Hash drivers' } }
 weight: 71
 toc: true
 ---
-
-> **Alpha release** — the v3 packages are published under the `alpha`
-> dist-tag. APIs may change between alpha releases; feedback is very
-> welcome on
-> [GitHub](https://github.com/sachinchoolur/lightGallery/issues).
 
 The hash plugin keeps the URL in sync with the open gallery
 (`#lg=galleryId&slide=n`), so slides can be deep-linked and the back
