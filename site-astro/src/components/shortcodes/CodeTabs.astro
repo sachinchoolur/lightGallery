@@ -88,7 +88,7 @@ const initial = panels[0]?.key;
                 aria-labelledby={`${id}-tab-${f.key}`}
                 data-framework={f.key}
                 tabindex={0}
-                hidden={f.key !== initial}
+                data-hidden={f.key === initial ? undefined : ''}
                 set:html={f.html}
             />
         ))
@@ -120,7 +120,10 @@ const initial = panels[0]?.key;
                     const panel = group.querySelector<HTMLElement>(
                         `.code-tabs-panel[data-framework="${tab.dataset.framework}"]`,
                     );
-                    if (panel) panel.hidden = !on;
+                    // `data-hidden`, not `hidden`: the UA rule for the
+                    // hidden attribute is !important, so the pre-paint
+                    // stylesheet could not override it.
+                    if (panel) panel.toggleAttribute('data-hidden', !on);
                 });
             });
     }
@@ -156,6 +159,10 @@ const initial = panels[0]?.key;
 
         const initial = preferred();
         if (initial) apply(initial);
+        // The pre-paint CSS did the visual half; hand visibility back to
+        // `data-hidden` now that it matches (see _code-tabs.scss). Pages
+        // with no tab group keep the attribute — nothing matches it.
+        delete document.documentElement.dataset.lgFramework;
 
         groups.forEach((group) => {
             const tabs = [

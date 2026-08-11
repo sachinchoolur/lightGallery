@@ -36,6 +36,10 @@
   }
 }
 
+.code-tabs-panel[data-hidden] {
+  display: none;
+}
+
 .code-tabs-panel {
   &:focus-visible {
     outline: 2px solid $blue-light;
@@ -48,5 +52,36 @@
 
   > pre:last-child {
     margin-bottom: 0;
+  }
+}
+
+/**
+ * A remembered or deep-linked framework is applied by the inline head
+ * script (BaseLayout) as a root attribute, so the right panel paints
+ * first — swapping it from the deferred module would shift the page.
+ * The `:has()` guard leaves groups that lack the framework on their own
+ * default. The module drops the attribute once it has synced the
+ * panels and the aria state.
+ */
+@each $fw in vanilla, react, vue, angular {
+  :root[data-lg-framework='#{$fw}']
+    .code-tabs:has(.code-tabs-panel[data-framework='#{$fw}']) {
+    .code-tabs-panel {
+      display: none;
+    }
+
+    .code-tabs-panel[data-framework='#{$fw}'] {
+      display: block;
+    }
+
+    .code-tabs-tab {
+      border-bottom-color: transparent;
+      color: $gray-darker;
+    }
+
+    .code-tabs-tab[data-framework='#{$fw}'] {
+      border-bottom-color: $blue;
+      color: $blue;
+    }
   }
 }

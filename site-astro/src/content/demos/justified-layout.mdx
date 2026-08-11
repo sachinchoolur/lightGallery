@@ -32,7 +32,16 @@ the reading start.
 
 <GalleryDemo size="xl" id="gallery-justified-layout-demo" />
 
-##### HTML Structure
+Provide the natural image size via `data-lg-size` so the rows can be laid out
+before the thumbnails finish loading. Without it, the layout falls back to the
+loaded image's aspect ratio.
+
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="gallery-justified-layout-demo">
@@ -46,14 +55,7 @@ the reading start.
 </div>
 ```
 
-Provide the natural image size via `data-lg-size` so the rows can be laid out
-before the thumbnails finish loading. Without it, the layout falls back to the
-loaded image's aspect ratio.
-
-##### Setup
-
-<CodeTabs>
-<Fragment slot="vanilla">
+**JavaScript**
 
 ```js
 import lightGallery from 'lightgallery';

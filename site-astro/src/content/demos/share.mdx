@@ -16,6 +16,7 @@ weight: 3
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
@@ -33,7 +34,12 @@ import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
 <DemoButtons js="https://codepen.io/sachinchoolur/pen/GRWZbRv" react="https://stackblitz.com/edit/stackblitz-starters-uqetpy" />
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="lg-share-demo">
@@ -84,11 +90,63 @@ url.
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
-lightGallery(document.getElementById('gallery-share-demo'));
+import lightGallery from 'lightgallery';
+import lgShare from 'lightgallery/plugins/share';
+
+lightGallery(document.getElementById('gallery-share-demo'), {
+    plugins: [lgShare],
+});
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery } from '@lightgallery/react';
+import Share from '@lightgallery/react/plugins/share';
+
+// preferNativeShare uses the device share sheet where available
+// and falls back to the network buttons everywhere else.
+<LightGallery
+    slides={slides}
+    plugins={[Share]}
+    share={{ preferNativeShare: true }}
+/>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery } from '@lightgallery/vue';
+import Share from '@lightgallery/vue/plugins/share';
+</script>
+
+<template>
+    <LightGallery
+        :slides="slides"
+        :plugins="[Share]"
+        :share="{ preferNativeShare: true }"
+    />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery
+    [slides]="slides"
+    [features]="[withShare({ preferNativeShare: true })]"
+/>
+```
+
+</Fragment>
+</CodeTabs>
 
 #### Add new share options
 

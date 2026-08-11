@@ -14,6 +14,7 @@ weight: 20
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
@@ -22,14 +23,18 @@ You need to know the original image size upfront and provide it via data-lg-size
 If you don't know, the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides,
 lightGallery will show the default animation if data-lg-size is not available
 
-
 #### Demo
 
 <ImageGallery id="gallery-zoom-from-origin-demo" />
 
 <DemoButtons js="https://codepen.io/sachinchoolur/pen/GRWZbRv" react="https://stackblitz.com/edit/stackblitz-starters-cva7eb" />
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="lg-share-demo">
@@ -49,16 +54,68 @@ lightGallery will show the default animation if data-lg-size is not available
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
-lightGallery(document.getElementById('gallery-zoom-from-origin-demo'));
+import lightGallery from 'lightgallery';
+
+lightGallery(document.getElementById('gallery-zoom-from-origin-demo'), {
+    // on by default — the lightbox grows out of the clicked thumbnail
+    zoomFromOrigin: true,
+});
 ```
 
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+
+// The trigger element is measured automatically; in controlled
+// mode pass originRect instead.
+<LightGallery zoomFromOrigin>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+</script>
+
+<template>
+    <LightGallery :zoom-from-origin="true">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery [zoomFromOrigin]="true">
+    @for (item of items; track item.src) {
+        <a [lgGalleryItem]="item">
+            <img [src]="item.thumb" [alt]="item.alt" />
+        </a>
+    }
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
 
 ### Using zoomFromOrigin with responsive images
-
-
 
 If you want to use `zoomFromOrigin` option with responsive images, You can
 provide specific `lg-size` values for specific screen size by providing a comma

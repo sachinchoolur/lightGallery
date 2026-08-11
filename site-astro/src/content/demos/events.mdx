@@ -15,6 +15,7 @@ weight: 14
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
 Let's see how we can change the background color of the gallery on every slide
@@ -24,7 +25,12 @@ change.
 
 <ImageGallery id="gallery-events-demo" />
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="custom-events-demo">
@@ -38,7 +44,7 @@ change.
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 const colours = ['#6a7583', '#1e304b', '#315460', '#080607'];
@@ -52,6 +58,45 @@ lightGallery(galleryEventsDemo, {
     addClass: 'lg-events-demo-outer', // (Optional)
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// Every lg* event is a typed callback prop.
+<LightGallery
+    slides={slides}
+    className="lg-events-demo-outer"
+    onBeforeSlide={({ index }) => setBackdrop(colours[index])}
+/>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<!-- Kebab-case listeners, same payloads. -->
+<LightGallery
+    :slides="slides"
+    class-name="lg-events-demo-outer"
+    @before-slide="({ index }) => setBackdrop(colours[index])"
+/>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<!-- Signal outputs, same payloads. -->
+<lg-gallery
+    [slides]="slides"
+    className="lg-events-demo-outer"
+    (beforeSlide)="setBackdrop($event.index)"
+/>
+```
+
+</Fragment>
+</CodeTabs>
 
 ##### SCSS (Optional)
 

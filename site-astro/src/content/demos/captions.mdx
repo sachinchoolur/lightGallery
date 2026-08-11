@@ -10,6 +10,7 @@ weight: 16
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 import ImageGalleryCaptions from '../../components/shortcodes/ImageGalleryCaptions.astro';
@@ -18,7 +19,12 @@ import ImageGalleryCaptions from '../../components/shortcodes/ImageGalleryCaptio
 
 <ImageGallery id="gallery-captions-demo" />
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="gallery-captions-demo">
@@ -81,13 +87,50 @@ lightGallery to pick up captions from the element within the selector by passing
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
+import lightGallery from 'lightgallery';
+
 lightGallery(document.getElementById('relative-caption'), {
     subHtmlSelectorRelative: true,
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery } from '@lightgallery/react';
+import RelativeCaption from '@lightgallery/react/plugins/relativeCaption';
+
+// The framework packages ship relative captions as a plugin.
+<LightGallery slides={slides} plugins={[RelativeCaption]} />;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery } from '@lightgallery/vue';
+import RelativeCaption from '@lightgallery/vue/plugins/relativeCaption';
+</script>
+
+<template>
+    <LightGallery :slides="slides" :plugins="[RelativeCaption]" />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery [slides]="slides" [features]="[withRelativeCaption()]" />
+```
+
+</Fragment>
+</CodeTabs>
 
 ### Caption animation
 

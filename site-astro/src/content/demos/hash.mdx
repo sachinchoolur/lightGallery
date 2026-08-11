@@ -18,6 +18,7 @@ weight: 5
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
@@ -32,7 +33,12 @@ identical either way. See the
 
 <DemoButtons react="https://stackblitz.com/edit/stackblitz-starters-fz6ajn" />
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="gallery-hash-demo">
@@ -46,21 +52,71 @@ identical either way. See the
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
-lightGallery(document.getElementById('gallery-hash-demo'));
+import lightGallery from 'lightgallery';
+import lgHash from 'lightgallery/plugins/hash';
 
-// if You have multiple galleries on same page you have to set unique id for each gallery.
+lightGallery(document.getElementById('gallery-hash-demo'), {
+    plugins: [lgHash],
+});
+
+// With more than one gallery on a page, give each a unique galleryId.
 /*
 lightGallery(document.getElementById('gallery-hash-demo-2'), {
-    galleryId: 2
-});
-lightGallery(document.getElementById('gallery-hash-demo-3'), {
-    galleryId: 3
+    plugins: [lgHash],
+    galleryId: 2,
 });
 */
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery } from '@lightgallery/react';
+import Hash from '@lightgallery/react/plugins/hash';
+
+// hashDriver 'auto' rides the Navigation API where the browser
+// has it and falls back to History — see the hash drivers guide.
+<LightGallery
+    slides={slides}
+    plugins={[Hash]}
+    hash={{ galleryId: '1', hashDriver: 'auto' }}
+/>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery } from '@lightgallery/vue';
+import Hash from '@lightgallery/vue/plugins/hash';
+</script>
+
+<template>
+    <LightGallery
+        :slides="slides"
+        :plugins="[Hash]"
+        :hash="{ galleryId: '1', hashDriver: 'auto' }"
+    />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery
+    [slides]="slides"
+    [features]="[withHash({ galleryId: '1', hashDriver: 'auto' })]"
+/>
+```
+
+</Fragment>
+</CodeTabs>
 
 #### Custom slide name
 

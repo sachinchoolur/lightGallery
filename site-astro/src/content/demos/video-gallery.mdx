@@ -11,6 +11,7 @@ weight: 2
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import Html5VideoGallery from '../../components/shortcodes/Html5VideoGallery.astro';
 import VideosGallery from '../../components/shortcodes/VideosGallery.astro';
@@ -56,7 +57,12 @@ Note - data-src should not be provided when you use html5 videos
 
 <DemoButtons js="https://codepen.io/sachinchoolur/pen/ExXxqPe" react="https://stackblitz.com/edit/stackblitz-starters-r3xycb" />
 
-##### HTML structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="gallery-videos-demo">
@@ -122,13 +128,66 @@ Note - data-src should not be provided when you use html5 videos
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
+import lightGallery from 'lightgallery';
+import lgVideo from 'lightgallery/plugins/video';
+
 lightGallery(document.getElementById('gallery-videos-demo'), {
     plugins: [lgVideo],
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Video from '@lightgallery/react/plugins/video';
+
+<LightGallery plugins={[Video]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.poster} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Video from '@lightgallery/vue/plugins/video';
+</script>
+
+<template>
+    <LightGallery :plugins="[Video]">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.poster" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery [features]="[withVideo()]">
+    @for (item of items; track item.src) {
+        <a [lgGalleryItem]="item">
+            <img [src]="item.poster" [alt]="item.alt" />
+        </a>
+    }
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
 
 #### Videojs example
 

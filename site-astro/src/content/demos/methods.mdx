@@ -16,6 +16,7 @@ weight: 12
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
@@ -28,7 +29,12 @@ buttons using lightGallery methods.
 
 <DemoButtons js="https://codepen.io/sachinchoolur/pen/yLMJYOw" react="https://stackblitz.com/edit/stackblitz-starters-6v4ncr" />
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="gallery-methods-demo">
@@ -42,7 +48,7 @@ buttons using lightGallery methods.
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 const $lgGalleryMethodsDemo = document.getElementById('gallery-methods-demo');
@@ -77,3 +83,50 @@ methodsInstance = lightGallery($lgGalleryMethodsDemo, {
     controls: false,
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { useRef } from 'react';
+import { LightGallery } from '@lightgallery/react';
+import type { LightGalleryRefHandle } from '@lightgallery/react';
+
+const gallery = useRef<LightGalleryRefHandle>(null);
+
+<>
+    <button onClick={() => gallery.current?.nextSlide()}>Next slide</button>
+    <button onClick={() => gallery.current?.prevSlide()}>Prev slide</button>
+    <LightGallery ref={gallery} slides={slides} controls={false} />
+</>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { ref } from 'vue';
+import { LightGallery } from '@lightgallery/vue';
+
+const gallery = ref();
+</script>
+
+<template>
+    <button @click="gallery.nextSlide()">Next slide</button>
+    <button @click="gallery.prevSlide()">Prev slide</button>
+    <LightGallery ref="gallery" :slides="slides" :controls="false" />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<button (click)="gallery.nextSlide()">Next slide</button>
+<button (click)="gallery.prevSlide()">Prev slide</button>
+<lg-gallery #gallery [slides]="slides" [controls]="false" />
+```
+
+</Fragment>
+</CodeTabs>
