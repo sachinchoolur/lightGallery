@@ -15,6 +15,11 @@ menu:
 weight: 16
 toc: true
 ---
+import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
+
+<DemoRuntime />
+
 
 ### HTML Structure
 
@@ -82,6 +87,9 @@ setTimeout(() => {
 
 That's it. Here the full example
 
+<CodeTabs>
+<Fragment slot="vanilla">
+
 ```js
 const $infiniteScrollGallery = document.getElementById(
     'infinite-scroll-gallery',
@@ -108,6 +116,65 @@ $window.scroll(function () {
     }
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// Appending to the array is the whole integration; the gallery picks up
+// the new slides on the next render — no destroy/re-init cycle.
+const [slides, setSlides] = useState(firstPage);
+
+useEffect(() => {
+    const onScroll = async () => {
+        if (!nearBottom()) return;
+        setSlides((current) => [...current, ...(await fetchNextPage())]);
+    };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+}, []);
+
+<LightGallery slides={slides} plugins={[Thumbnail]} />;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { onMounted, onUnmounted, ref } from 'vue';
+
+const slides = ref(firstPage);
+const onScroll = async () => {
+    if (!nearBottom()) return;
+    slides.value.push(...(await fetchNextPage()));
+};
+
+onMounted(() => window.addEventListener('scroll', onScroll));
+onUnmounted(() => window.removeEventListener('scroll', onScroll));
+</script>
+
+<template>
+    <LightGallery :slides="slides" :plugins="[Thumbnail]" />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+slides = signal(firstPage);
+
+@HostListener('window:scroll')
+async onScroll() {
+    if (!nearBottom()) return;
+    const next = await fetchNextPage();
+    this.slides.update((current) => [...current, ...next]);
+}
+```
+
+</Fragment>
+</CodeTabs>
 
 ### Infinite scrolling
 

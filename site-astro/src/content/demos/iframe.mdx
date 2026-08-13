@@ -15,6 +15,11 @@ menu:
 weight: 8
 toc: true
 ---
+import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
+
+<DemoRuntime />
+
 
 <button class="btn btn-success mrb50" data-iframe="true" id="open-website" data-iframe-title="All new time tracking. Greater insight." data-src="https://www.paritydeals.com/">Open
 website</button>
@@ -23,7 +28,12 @@ map</button>
 <button class="btn btn-success mrb50" data-iframe="true" id="open-pdf" data-src="/pdf/sample.pdf">Open
 PDF file</button>
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <button
@@ -53,7 +63,7 @@ PDF file</button>
 </button>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('open-website'), {
@@ -66,3 +76,38 @@ lightGallery(document.getElementById('open-pdf'), {
     selector: 'this',
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// `iframe: true` on the item replaces the vanilla selector wiring.
+const slides = [
+    {
+        src: 'https://www.lightgalleryjs.com/',
+        iframe: true,
+        iframeTitle: 'lightGallery',
+    },
+    { src: 'https://maps.google.com/maps?q=…&output=embed', iframe: true },
+    { src: 'files/sample.pdf', iframe: true },
+];
+
+<LightGallery slides={slides} open={open} onClose={() => setOpen(false)} />;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<LightGallery v-model:open="open" :slides="slides" />
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery [slides]="slides" [open]="open()" (closed)="open.set(false)" />
+```
+
+</Fragment>
+</CodeTabs>

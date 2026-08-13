@@ -29,6 +29,9 @@ import VideosGallery from '../../components/shortcodes/VideosGallery.astro';
 <p>For displaying HTML5 videos, you need to construct an object with array of video sources and types, and videos attributes objects as shown below and pass it via data-video attribute</p>
 Note - data-src should not be provided when you use html5 videos
 
+<CodeTabs>
+<Fragment slot="vanilla">
+
 ```js
 {
     source: [
@@ -48,6 +51,64 @@ Note - data-src should not be provided when you use html5 videos
     attributes: { preload: false, controls: true },
 };
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// The same object, as the item's `video` field.
+const slides = [
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            tracks: [
+                {
+                    src: '/videos/title.vtt',
+                    kind: 'captions',
+                    srclang: 'en',
+                    label: 'English',
+                    default: 'true',
+                },
+            ],
+            attributes: { preload: false, controls: true },
+        },
+        poster: 'img/html5-video-poster.jpg',
+    },
+];
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```ts
+const slides: LgGalleryItem[] = [
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, controls: true },
+        },
+        poster: 'img/html5-video-poster.jpg',
+    },
+];
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+slides: LgGalleryItem[] = [
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, controls: true },
+        },
+        poster: 'img/html5-video-poster.jpg',
+    },
+];
+```
+
+</Fragment>
+</CodeTabs>
 
 <div class="alert alert-warning" role="alert">
     Note: You need to include the lightGallery videos plugin in the document to enable video slides
@@ -235,6 +296,10 @@ lightGallery(document.getElementById('gallery-videojs-demo'), {
     },
 });
 ```
+
+The `videojs` bridge is vanilla-only. The React, Vue and Angular
+packages render HTML5 video with the native `<video>` element and leave
+custom players to your own slide markup.
 
 #### Video Autoplay
 

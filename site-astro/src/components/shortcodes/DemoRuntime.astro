@@ -1,0 +1,12 @@
+---
+/**
+ * Loads the demo runtime for pages that write their demo markup inline in
+ * the content file. `demo-galleries.js` only ships through a shortcode's
+ * script tag, so without this the markup renders and nothing initialises.
+ * Every initialiser inside is element-guarded, so importing it is cheap.
+ */
+---
+
+<script>
+    import '../../scripts/demo-galleries.js';
+</script>

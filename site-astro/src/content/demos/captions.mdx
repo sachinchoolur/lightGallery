@@ -63,7 +63,12 @@ If you already have captions associated with the thumbnails, you can instruct
 lightGallery to pick up captions from the element within the selector by passing
 `subHtmlSelectorRelative: true,` via lightGallery settings
 
-##### HTML structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="relative-caption">
@@ -170,7 +175,7 @@ interval to animate captions before the next slide transition starts.
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('gallery-animated-captions-demo'), {
@@ -184,6 +189,47 @@ lightGallery(document.getElementById('gallery-animated-captions-demo'), {
     slideDelay: 400,
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// captionPosition 'slide' renders the caption inside the slide, so the
+// active-slide classes can drive your animation.
+<LightGallery
+    slides={slides}
+    speed={500}
+    captionPosition="slide"
+    slideDelay={400}
+/>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<LightGallery
+    :slides="slides"
+    :speed="500"
+    caption-position="slide"
+    :slide-delay="400"
+/>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery
+    [slides]="slides"
+    [speed]="500"
+    captionPosition="slide"
+    [slideDelay]="400"
+/>
+```
+
+</Fragment>
+</CodeTabs>
 
 ##### CSS
 

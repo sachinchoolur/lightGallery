@@ -10,6 +10,7 @@ weight: 4
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import InlineGallery from '../../components/shortcodes/InlineGallery.astro';
 import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 
@@ -18,13 +19,18 @@ import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 <InlineGallery id="inline-gallery-container" />
 <DemoButtons js="https://codepen.io/sachinchoolur/pen/zYZqaGm" react="https://stackblitz.com/edit/stackblitz-starters-vhsu43" />
 
-##### HTML
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="inline-gallery-container" class="inline-gallery-container"></div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 const lgContainer = document.getElementById('inline-gallery-container');
@@ -69,6 +75,75 @@ const inlineGallery = lightGallery(lgContainer, {
 // Since we are using dynamic mode, we need to programmatically open lightGallery
 inlineGallery.openGallery();
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { useState } from 'react';
+import { LightGallery } from '@lightgallery/react';
+
+// An inline gallery is the same component mounted into your own
+// element: keep it open and non-closable, and it behaves as a carousel.
+const [container, setContainer] = useState<HTMLElement | null>(null);
+
+<>
+    <div className="inline-gallery-container" ref={setContainer} />
+    {container && (
+        <LightGallery
+            container={container}
+            open
+            closable={false}
+            showMaximizeIcon
+            slides={slides}
+            plugins={[Thumbnail, Zoom]}
+        />
+    )}
+</>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { ref } from 'vue';
+import { LightGallery } from '@lightgallery/vue';
+
+const container = ref(null);
+</script>
+
+<template>
+    <div class="inline-gallery-container" ref="container" />
+    <LightGallery
+        v-if="container"
+        :container="container"
+        :open="true"
+        :closable="false"
+        :show-maximize-icon="true"
+        :slides="slides"
+        :plugins="[Thumbnail, Zoom]"
+    />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<div class="inline-gallery-container" #host></div>
+<lg-gallery
+    [container]="host"
+    [open]="true"
+    [closable]="false"
+    [showMaximizeIcon]="true"
+    [slides]="slides"
+    [features]="[withThumbnail(), withZoom()]"
+/>
+```
+
+</Fragment>
+</CodeTabs>
 
 ##### CSS
 

@@ -203,6 +203,9 @@ share plugin
 
 #### JavaScript
 
+<CodeTabs>
+<Fragment slot="vanilla">
+
 ```js
 lightGallery(document.getElementById('gallery-share-reddit-demo'), {
     extraProps: ['redditTitle'],
@@ -228,6 +231,83 @@ lightGallery(document.getElementById('gallery-share-reddit-demo'), {
     ],
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import Share from '@lightgallery/react/plugins/share';
+
+// The packages take typed options instead of dropdown HTML strings:
+// { text, className, generateLink }.
+<LightGallery
+    slides={slides}
+    plugins={[Share]}
+    share={{
+        additionalShareOptions: [
+            {
+                text: 'Reddit',
+                className: 'lg-share-reddit',
+                generateLink: (item, currentUrl) =>
+                    `//reddit.com/submit?url=${encodeURIComponent(
+                        currentUrl,
+                    )}&title=${item.title ?? ''}`,
+            },
+        ],
+    }}
+/>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import Share from '@lightgallery/vue/plugins/share';
+
+const reddit = {
+    text: 'Reddit',
+    className: 'lg-share-reddit',
+    generateLink: (item, currentUrl) =>
+        `//reddit.com/submit?url=${encodeURIComponent(currentUrl)}&title=${
+            item.title ?? ''
+        }`,
+};
+</script>
+
+<template>
+    <LightGallery
+        :slides="slides"
+        :plugins="[Share]"
+        :share="{ additionalShareOptions: [reddit] }"
+    />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import { withShare } from '@lightgallery/angular/plugins/share';
+
+features = [
+    withShare({
+        additionalShareOptions: [
+            {
+                text: 'Reddit',
+                className: 'lg-share-reddit',
+                generateLink: (item, currentUrl) =>
+                    `//reddit.com/submit?url=${encodeURIComponent(
+                        currentUrl,
+                    )}&title=${item.title ?? ''}`,
+            },
+        ],
+    }),
+];
+```
+
+</Fragment>
+</CodeTabs>
 
 That's it. Now you can see additional reddit button in the share dropdown menu
 

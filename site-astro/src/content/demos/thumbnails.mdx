@@ -117,7 +117,12 @@ import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
     <GalleryDemo size="xl" id="static-thumbnails-gallery" />
 </div>
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="static-thumbnails">
@@ -131,7 +136,7 @@ import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('static-thumbnails'), {
@@ -142,6 +147,44 @@ lightGallery(document.getElementById('static-thumbnails'), {
 });
 ```
 
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+<LightGallery
+    plugins={[Thumbnail]}
+    thumbnail={{ animateThumb: false, toggleThumb: true }}
+    zoomFromOrigin={false}
+    allowMediaOverlap
+/>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<LightGallery
+    :plugins="[Thumbnail]"
+    :thumbnail="{ animateThumb: false, toggleThumb: true }"
+    :zoom-from-origin="false"
+    :allow-media-overlap="true"
+/>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery
+    [features]="[withThumbnail({ animateThumb: false, toggleThumb: true })]"
+    [zoomFromOrigin]="false"
+    [allowMediaOverlap]="true"
+/>
+```
+
+</Fragment>
+</CodeTabs>
+
 ### Customize more
 
 You can customize the look and feel of the thumbnails however you want just by
@@ -150,7 +193,12 @@ hand side of the slide.
 
 <GalleryDemo size="xl" id="customize-thumbnails-gallery" />
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="customize-thumbnails-gallery">
@@ -164,7 +212,7 @@ hand side of the slide.
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('customize-thumbnails-gallery'), {
@@ -179,6 +227,46 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
     allowMediaOverlap: true,
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// The native packages render the strip in one place and leave the
+// placement to CSS — scope it with a class of your own.
+<LightGallery
+    plugins={[Thumbnail]}
+    className="lg-custom-thumbnails"
+    thumbnail={{ animateThumb: false }}
+    allowMediaOverlap
+/>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<LightGallery
+    :plugins="[Thumbnail]"
+    class-name="lg-custom-thumbnails"
+    :thumbnail="{ animateThumb: false }"
+    :allow-media-overlap="true"
+/>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery
+    className="lg-custom-thumbnails"
+    [features]="[withThumbnail({ animateThumb: false })]"
+    [allowMediaOverlap]="true"
+/>
+```
+
+</Fragment>
+</CodeTabs>
 
 ##### CSS
 

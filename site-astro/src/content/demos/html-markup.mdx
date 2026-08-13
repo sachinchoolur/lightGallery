@@ -13,8 +13,15 @@ menu:
 weight: 13
 toc: true
 ---
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 
-##### HTML Structure
+
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="anchor-tag">
@@ -28,11 +35,53 @@ toc: true
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('anchor-tag'));
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// There is no markup to scrape: a trigger is a component, and its item
+// carries what the data-* attributes used to.
+<LightGallery>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item} href={item.src}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<LightGallery>
+    <LgItem v-for="item of items" :key="item.src" :item="item">
+        <img :src="item.thumb" :alt="item.alt" />
+    </LgItem>
+</LightGallery>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery>
+    @for (item of items; track item.src) {
+        <a [href]="item.src" [lgGalleryItem]="item">
+            <img [src]="item.thumb" [alt]="item.alt" />
+        </a>
+    }
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
 
 ---
 

@@ -15,6 +15,7 @@ weight: 10
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
@@ -24,7 +25,12 @@ In this demo, we'll be using some of the lightGallery jQuery like utilities for
 dom manipulations such as `append`, `find` or `on`. <a
     href="../../docs/lg-query/">Docs</a>
 
-##### HTML Structure
+First, we need to add delete and add buttons into the gallery toolbar.
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="gallery-update-slides-demo">
@@ -38,7 +44,7 @@ dom manipulations such as `append`, `find` or `on`. <a
 </div>
 ```
 
-First, we need to add delete and add buttons into the gallery toolbar.
+**JavaScript**
 
 ```js
 const $lgDemoUpdateSlides = document.getElementById(
@@ -62,6 +68,50 @@ updateSlideInstance = lightGallery($lgDemoUpdateSlides, {
     addClass: 'lg-update-slide-demo',
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// Rendering a different `slides` array is the update — no refresh() and
+// no updateSlides() call.
+const [slides, setSlides] = useState(initialSlides);
+
+const remove = (index: number) =>
+    setSlides(slides.filter((_, i) => i !== index));
+
+<LightGallery slides={slides} index={index} onIndexChange={setIndex} />;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const slides = ref(initialSlides);
+const remove = (index) => slides.value.splice(index, 1);
+</script>
+
+<template>
+    <LightGallery v-model:index="index" :slides="slides" />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+slides = signal(initialSlides);
+
+remove(index: number) {
+    this.slides.update((current) => current.filter((_, i) => i !== index));
+}
+```
+
+</Fragment>
+</CodeTabs>
 
 Delete the first slide on clicking on the delete button
 

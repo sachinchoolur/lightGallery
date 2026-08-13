@@ -125,7 +125,12 @@ You can provide custom slide names for each slide by providing slide name via
 
 <ImageGallery id="gallery-custom-hash-demo" />
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="gallery-hash-demo">
@@ -139,10 +144,59 @@ You can provide custom slide names for each slide by providing slide name via
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('gallery-hash-demo'), {
     customSlideName: true,
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// Slide names come from each item's `slideName`, so deep links read
+// /page/#lg=1&slide=fading-light instead of an index.
+const slides = [
+    { src: 'img/1.jpg', thumb: 'img/1-t.jpg', slideName: 'fading-light' },
+];
+
+<LightGallery
+    slides={slides}
+    plugins={[Hash]}
+    hash={{ customSlideName: true }}
+/>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+const slides = [
+    { src: 'img/1.jpg', thumb: 'img/1-t.jpg', slideName: 'fading-light' },
+];
+</script>
+
+<template>
+    <LightGallery
+        :slides="slides"
+        :plugins="[Hash]"
+        :hash="{ customSlideName: true }"
+    />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery
+    [slides]="slides"
+    [features]="[withHash({ customSlideName: true })]"
+/>
+```
+
+</Fragment>
+</CodeTabs>

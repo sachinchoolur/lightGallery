@@ -15,6 +15,7 @@ weight: 16
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
 #### facebook comments in lightbox
@@ -76,6 +77,9 @@ attribute of each lightGallery item.
 
 ##### JavaScript
 
+<CodeTabs>
+<Fragment slot="vanilla">
+
 ```js
 lightGallery(document.getElementById('gallery-fb-comments-demo'), {
     hash: true,
@@ -83,6 +87,70 @@ lightGallery(document.getElementById('gallery-fb-comments-demo'), {
     fbComments: true,
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import Comment from '@lightgallery/react/plugins/comment';
+
+// The packages render the panel body from your own markup instead of
+// injecting provider HTML strings.
+<LightGallery
+    slides={slides}
+    plugins={[Comment]}
+    comment={{
+        commentBox: true,
+        renderComments: (item) => (
+            <div
+                className="fb-comments"
+                data-href={item.src}
+                data-numposts={5}
+            />
+        ),
+    }}
+/>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import Comment from '@lightgallery/vue/plugins/comment';
+</script>
+
+<template>
+    <LightGallery
+        :slides="slides"
+        :plugins="[Comment]"
+        :comment="{ commentBox: true }"
+    >
+        <template #comments="{ item }">
+            <div class="fb-comments" :data-href="item.src" data-numposts="5" />
+        </template>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery [slides]="slides" [features]="features" />
+
+<ng-template #comments let-item>
+    <div class="fb-comments" [attr.data-href]="item.src" data-numposts="5"></div>
+</ng-template>
+```
+
+```ts
+// features = [withComment({ commentBox: true, commentsTemplate })]
+readonly commentsTemplate = viewChild<TemplateRef<unknown>>('comments');
+```
+
+</Fragment>
+</CodeTabs>
 
 ### Disqus comments in lightbox
 

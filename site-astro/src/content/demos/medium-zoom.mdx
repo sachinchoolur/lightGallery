@@ -13,11 +13,21 @@ menu:
 weight: 17
 toc: true
 ---
+import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
+
+<DemoRuntime />
+
 
 If you want to target all images in a blog post, you can add lightGallery to the
 outer element and select all images using the selector option.
 
-##### HTML structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div class="medium-zoom-demo">
@@ -48,7 +58,7 @@ outer element and select all images using the selector option.
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.querySelector('.medium-zoom-demo'), {
@@ -58,6 +68,56 @@ lightGallery(document.querySelector('.medium-zoom-demo'), {
     plugins: [lgMediumZoom],
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import MediumZoom from '@lightgallery/react/plugins/mediumZoom';
+
+// Triggers are components here, so there is no `selector` to match —
+// wrap the images you want zoomable.
+<LightGallery plugins={[MediumZoom]} mediumZoom={{ margin: 24 }}>
+    {images.map((image) => (
+        <LightGalleryItem key={image.src} item={image}>
+            <img src={image.thumb} alt={image.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import MediumZoom from '@lightgallery/vue/plugins/mediumZoom';
+</script>
+
+<template>
+    <LightGallery :plugins="[MediumZoom]" :medium-zoom="{ margin: 24 }">
+        <LgItem v-for="image of images" :key="image.src" :item="image">
+            <img :src="image.thumb" :alt="image.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery [features]="[withMediumZoom({ margin: 24 })]">
+    @for (image of images; track image.src) {
+        <a [lgGalleryItem]="image">
+            <img [src]="image.thumb" [alt]="image.alt" />
+        </a>
+    }
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
 
 ##### Demo
 

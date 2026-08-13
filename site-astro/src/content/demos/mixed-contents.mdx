@@ -10,6 +10,7 @@ weight: 7
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import MinimalGallery from '../../components/shortcodes/MinimalGallery.astro';
 
@@ -19,7 +20,12 @@ import MinimalGallery from '../../components/shortcodes/MinimalGallery.astro';
 
 <DemoButtons react="https://stackblitz.com/edit/stackblitz-starters-owvp26" />
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="gallery-mixed-content-demo">
@@ -91,8 +97,40 @@ import MinimalGallery from '../../components/shortcodes/MinimalGallery.astro';
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('gallery-mixed-content-demo'));
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// One gallery, mixed slide kinds: images, video URLs and iframes are
+// item fields rather than markup.
+const slides = [
+    { src: 'img/1.jpg', thumb: 'img/1-t.jpg' },
+    { src: 'https://youtu.be/IUN664s7N-c', poster: 'img/yt-poster.jpg' },
+    { src: 'https://example.com', iframe: true, thumb: 'img/site-t.jpg' },
+];
+
+<LightGallery slides={slides} plugins={[Thumbnail, Video]} />;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<LightGallery :slides="slides" :plugins="[Thumbnail, Video]" />
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery [slides]="slides" [features]="[withThumbnail(), withVideo()]" />
+```
+
+</Fragment>
+</CodeTabs>

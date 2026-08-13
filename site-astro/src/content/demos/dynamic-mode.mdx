@@ -130,7 +130,12 @@ dynamicEl list via refresh method
 <button type="button" class="btn btn-success"
 id="dynamic-gallery-demo-load-more"> Launch Gallery with more images </button>
 
-##### HTML Structure
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <button
@@ -142,7 +147,7 @@ id="dynamic-gallery-demo-load-more"> Launch Gallery with more images </button>
 </button>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 document
@@ -167,6 +172,53 @@ document
         dynamicGallery.openGallery();
     });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// Appending is a state update — no refresh() call.
+const [slides, setSlides] = useState(initialSlides);
+
+<>
+    <button onClick={() => setSlides([...slides, ...newSlides])}>
+        Load more
+    </button>
+    <LightGallery slides={slides} open={open} onClose={() => setOpen(false)} />
+</>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { ref } from 'vue';
+
+const slides = ref(initialSlides);
+const open = ref(false);
+</script>
+
+<template>
+    <button @click="slides.push(...newSlides)">Load more</button>
+    <LightGallery v-model:open="open" :slides="slides" />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+// A signal update is the whole story on the Angular side too.
+slides = signal(initialSlides);
+
+loadMore() {
+    this.slides.update((current) => [...current, ...newSlides]);
+}
+```
+
+</Fragment>
+</CodeTabs>
 
 ### Load more slides with images
 
