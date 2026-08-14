@@ -126,11 +126,16 @@ export function createNavigationHashDriver(
                 ),
             ),
         clearHash: () =>
-            settleNavigateResult(
-                navigation.navigate(
-                    win.location.pathname + win.location.search,
-                    { history: 'replace', state: { lgHash: null } },
-                ),
+            // Not navigate(): a destination without a fragment is a
+            // *cross-document* navigation (the same-document fast path
+            // requires the destination to have one), so clearing the hash
+            // through it reloads the page every time a gallery closes.
+            // replaceState drops the fragment in place, and the entry
+            // change still reaches `currententrychange` subscribers.
+            win.history.replaceState(
+                null,
+                '',
+                win.location.pathname + win.location.search,
             ),
         subscribe: (onChange) => {
             // currententrychange also fires for the driver's own replace

@@ -76,7 +76,7 @@ describe('navigation hash driver', () => {
     });
 
     it('replace-navigates with entry state — identical URLs to history', () => {
-        const { win } = makeHistoryWindow();
+        const { win, replaceState } = makeHistoryWindow();
         const { navigation, navigate } = makeNavigation();
         const driver = createNavigationHashDriver(win, navigation);
 
@@ -85,11 +85,12 @@ describe('navigation hash driver', () => {
             history: 'replace',
             state: { lgHash: '#lg=g&slide=2' },
         });
+        // Clearing goes through replaceState: navigate() to a URL without
+        // a fragment is a cross-document navigation, which would reload
+        // the page every time a gallery closes.
         driver.clearHash();
-        expect(navigate).toHaveBeenLastCalledWith('/gallery?a=1', {
-            history: 'replace',
-            state: { lgHash: null },
-        });
+        expect(replaceState).toHaveBeenLastCalledWith(null, '', '/gallery?a=1');
+        expect(navigate).toHaveBeenCalledTimes(1);
 
         // URL parity with the history driver (the deep-link format is
         // frozen public API).
