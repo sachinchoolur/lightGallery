@@ -35,7 +35,7 @@ Guarantees, whichever engine runs:
     engine open correctly under the other. Nothing about your links
     changes.
 -   All updates use **replace semantics**, so stepping through slides
-    never floods the browser history; back closes the gallery.
+    never floods the browser history.
 -   Traversing history entries (back/forward) moves the gallery to
     the matching slide, and removing the `lg=` marker closes it.
 -   The enhancement is never load-bearing: an explicit
