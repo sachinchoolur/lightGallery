@@ -143,40 +143,6 @@ const hasVideo =
     </Fragment>
     <div class="wrap container-xxl page-wrap" role="document">
         <div class="row flex-xl-nowrap">
-            <div class="col-lg-2 col-xl-2 docs-sidebar">
-                <nav class="docs-links" aria-label="Main navigation">
-                    <SidebarMenu section={section} entries={entries} />
-                </nav>
-            </div>
-            {
-                withToc && (
-                    <nav
-                        class="docs-toc d-none d-xl-block col-xl-2"
-                        aria-label="Secondary navigation"
-                    >
-                        {showToc && (
-                            <div class="page-links">
-                                <h3>On this page</h3>
-                                <nav id="TableOfContents">
-                                    <ul>
-                                        {tocHeadings.map((h) => (
-                                            <li
-                                                class:list={{
-                                                    'toc-h3': h.depth === 3,
-                                                }}
-                                            >
-                                                <a href={`#${h.slug}`}>
-                                                    {h.text}
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </nav>
-                            </div>
-                        )}
-                    </nav>
-                )
-            }
             <main class="docs-content col-lg-10 col-xl-8">
                 <h1>{entry.data.title}</h1>
                 <p class="lead" set:html={entry.data.lead ?? ''} />
@@ -226,6 +192,40 @@ const hasVideo =
                     )
                 }
             </main>
+            <div class="col-lg-2 col-xl-2 docs-sidebar">
+                <nav class="docs-links" aria-label="Main navigation">
+                    <SidebarMenu section={section} entries={entries} />
+                </nav>
+            </div>
+            {
+                withToc && (
+                    <nav
+                        class="docs-toc d-none d-xl-block col-xl-2"
+                        aria-label="Secondary navigation"
+                    >
+                        {showToc && (
+                            <div class="page-links">
+                                <h3>On this page</h3>
+                                <nav id="TableOfContents">
+                                    <ul>
+                                        {tocHeadings.map((h) => (
+                                            <li
+                                                class:list={{
+                                                    'toc-h3': h.depth === 3,
+                                                }}
+                                            >
+                                                <a href={`#${h.slug}`}>
+                                                    {h.text}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </nav>
+                            </div>
+                        )}
+                    </nav>
+                )
+            }
         </div>
     </div>
 </BaseLayout>
