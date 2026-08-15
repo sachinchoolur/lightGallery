@@ -4,8 +4,21 @@
     "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
     "build:all:vite": { "cache": true, "outputs": ["$TURBO_ROOT$/dist/**"] },
     "build:legacy": { "cache": true, "outputs": ["dist/**"] },
-    "build:vite": { "cache": true, "outputs": ["$TURBO_ROOT$/dist/**"] },
-    "build:types": { "cache": true, "outputs": ["$TURBO_ROOT$/dist/types/**"] },
+    "build:vite": {
+      "cache": true,
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/src/**",
+        "$TURBO_ROOT$/.banner",
+        "$TURBO_ROOT$/plugins-config-rollup.json"
+      ],
+      "outputs": ["$TURBO_ROOT$/dist/**"]
+    },
+    "build:types": {
+      "cache": true,
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/src/**"],
+      "outputs": ["$TURBO_ROOT$/dist/types/**"]
+    },
     "build:css": { "cache": true, "outputs": ["$TURBO_ROOT$/dist/css/**"] },
     "build:css:min": {
       "dependsOn": ["build:css"],
