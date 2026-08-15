@@ -52,6 +52,22 @@
         }
     }
 
+    // Close-while-zoomed: the core starts the zoom-from-origin shrink on
+    // the slide item and resetZoom strips the pan/scale styles in the
+    // same frame. The strip has to land instantly — animated through the
+    // transitions above it composes with the slide shrink, and the image
+    // never reaches the trigger rect before the close timeout hides the
+    // gallery.
+    &.lg-closing {
+        .lg-item.lg-complete.lg-zoomable {
+            .lg-img-wrap,
+            .lg-image,
+            .lg-dummy-img {
+                transition: none !important;
+            }
+        }
+    }
+
     .lg-item.lg-complete.lg-zoomable {
         .lg-img-wrap {
             @include translate3d(0, 0, 0);

@@ -178,3 +178,39 @@ describe('getCurrentImageActualSizeScale fallbacks', () => {
         expect(scale).not.toBe(1);
     });
 });
+
+describe('close while zoomed', () => {
+    const closeGallery = Zoom.prototype.closeGallery as (this: unknown) => void;
+
+    const makeCloseThis = (imageReset: boolean) => {
+        const calls: string[] = [];
+        return {
+            calls,
+            imageReset,
+            core: { index: 3 },
+            resetImageTranslate(index: number): void {
+                calls.push(`resetImageTranslate:${index}`);
+            },
+            resetZoom(): void {
+                calls.push('resetZoom');
+            },
+            zoomInProgress: true,
+        };
+    };
+
+    it('clears the actual-size natural-px swap before the style strip', () => {
+        // Without this, resetZoom's removeAttr leaves the image at its
+        // natural width (reset-transition max-width:none) and the
+        // zoom-from-origin close shrinks toward the wrong rect.
+        const ctx = makeCloseThis(true);
+        closeGallery.call(ctx);
+        expect(ctx.calls).toEqual(['resetImageTranslate:3', 'resetZoom']);
+        expect(ctx.zoomInProgress).toBe(false);
+    });
+
+    it('skips the swap cleanup when no actual-size swap happened', () => {
+        const ctx = makeCloseThis(false);
+        closeGallery.call(ctx);
+        expect(ctx.calls).toEqual(['resetZoom']);
+    });
+});

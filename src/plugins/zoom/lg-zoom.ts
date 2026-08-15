@@ -1688,6 +1688,13 @@ export default class Zoom {
     }
 
     closeGallery(): void {
+        // A settled actual-size zoom swapped the image to natural px and
+        // added the reset-transition !important rules — resetZoom's style
+        // strip alone would leave the image at natural size, and the
+        // zoom-from-origin close would shrink toward the wrong rect.
+        if (this.imageReset) {
+            this.resetImageTranslate(this.core.index);
+        }
         this.resetZoom();
         this.zoomInProgress = false;
     }
