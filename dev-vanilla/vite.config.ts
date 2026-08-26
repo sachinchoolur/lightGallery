@@ -9,6 +9,9 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     root: __dirname,
     server: {
+        // Reachable from phones on the LAN for device passes.
+        host: true,
         port: 5177,
+        allowedHosts: ['.trycloudflare.com'],
     },
 });

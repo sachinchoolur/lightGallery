@@ -16,6 +16,13 @@ export default defineConfig({
         // package root.
         alias: [
             {
+                find: '@lightgallery/react/plugins/justified',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/justified/index.tsx',
+                ),
+            },
+            {
                 find: '@lightgallery/react/plugins/thumbnail',
                 replacement: path.resolve(
                     __dirname,
@@ -124,6 +131,9 @@ export default defineConfig({
         ],
     },
     server: {
+        // Reachable from phones on the LAN for device passes.
+        host: true,
         port: 5174,
+        allowedHosts: ['.trycloudflare.com'],
     },
 });

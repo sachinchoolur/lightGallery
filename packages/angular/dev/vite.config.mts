@@ -43,6 +43,9 @@ export default defineConfig({
         ],
     },
     server: {
+        // Reachable from phones on the LAN for device passes.
+        host: true,
         port: 5175,
+        allowedHosts: ['.trycloudflare.com'],
     },
 });

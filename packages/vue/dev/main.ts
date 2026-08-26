@@ -5,6 +5,7 @@ import App from './App.vue';
 // CSS stays a consumer import (ADR 0001 §7) — never bundled by the package.
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-transitions.css';
+import 'lightgallery/css/lg-rtl.css';
 import 'lightgallery/css/lg-thumbnail.css';
 import 'lightgallery/css/lg-zoom.css';
 import 'lightgallery/css/lg-video.css';
@@ -14,5 +15,6 @@ import 'lightgallery/css/lg-pager.css';
 import 'lightgallery/css/lg-share.css';
 import 'lightgallery/css/lg-rotate.css';
 import 'lightgallery/css/lg-comments.css';
+import 'lightgallery/css/lg-justified.css';
 
 createApp(App).mount('#app');
