@@ -88,7 +88,10 @@ export class LgAutoplayButtonComponent {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (settings().autoplay && settings().progressBar) {
-        <div class="lg-progress-bar" [class.lg-start]="running()">
+        <div
+            class="lg-progress-bar"
+            [class.lg-start]="running() && armed()"
+        >
             <!-- Recreating the element restarts the width transition
                      each cycle (the React key={cycle} trick). -->
             @for (cycle of [cycle()]; track cycle) {
@@ -110,22 +113,52 @@ export class LgAutoplayProgressComponent {
     );
     protected readonly running = signal(false);
     protected readonly cycle = signal(0);
+    // Two-phase start: the remounted bar must PAINT at width 0 before
+    // lg-start lands — a fresh element has no prior style, so flipping
+    // the class in the same frame renders the bar full instead of
+    // animating (2.x staged this with a 20ms timer).
+    protected readonly armed = signal(false);
     protected readonly duration = computed(
         () => this.settings().speed + this.settings().slideShowInterval,
     );
 
     constructor() {
+        let armTimer: ReturnType<typeof setTimeout> | null = null;
+        const rearm = () => {
+            this.armed.set(false);
+            if (armTimer !== null) {
+                clearTimeout(armTimer);
+                armTimer = null;
+            }
+            if (!this.running()) {
+                return;
+            }
+            armTimer = setTimeout(() => {
+                this.armed.set(true);
+                armTimer = null;
+            }, 20);
+        };
         const offs = [
             this.ctx.events.on('autoplayStart', () => {
                 this.running.set(true);
                 this.cycle.update((value) => value + 1);
+                rearm();
             }),
-            this.ctx.events.on('autoplayStop', () => this.running.set(false)),
-            this.ctx.events.on('beforeSlide', () =>
-                this.cycle.update((value) => value + 1),
-            ),
+            this.ctx.events.on('autoplayStop', () => {
+                this.running.set(false);
+                rearm();
+            }),
+            this.ctx.events.on('beforeSlide', () => {
+                this.cycle.update((value) => value + 1);
+                rearm();
+            }),
         ];
-        inject(DestroyRef).onDestroy(() => offs.forEach((off) => off()));
+        inject(DestroyRef).onDestroy(() => {
+            offs.forEach((off) => off());
+            if (armTimer !== null) {
+                clearTimeout(armTimer);
+            }
+        });
     }
 }
 

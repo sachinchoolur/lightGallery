@@ -82,6 +82,26 @@ export const AutoplayProgress = defineComponent({
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
         const running = ref(false);
         const cycle = ref(0);
+        // Two-phase start: the remounted bar must PAINT at width 0 before
+        // lg-start lands — a fresh element has no prior style, so flipping
+        // the class in the same frame renders the bar full instead of
+        // animating (2.x staged this with a 20ms timer).
+        const armed = ref(false);
+        let armTimer: ReturnType<typeof setTimeout> | null = null;
+        watch([running, cycle], () => {
+            armed.value = false;
+            if (armTimer !== null) {
+                clearTimeout(armTimer);
+                armTimer = null;
+            }
+            if (!running.value) {
+                return;
+            }
+            armTimer = setTimeout(() => {
+                armed.value = true;
+                armTimer = null;
+            }, 20);
+        });
         const offs = [
             ctx.events.on('autoplayStart', () => {
                 running.value = true;
@@ -90,7 +110,12 @@ export const AutoplayProgress = defineComponent({
             ctx.events.on('autoplayStop', () => (running.value = false)),
             ctx.events.on('beforeSlide', () => cycle.value++),
         ];
-        onBeforeUnmount(() => offs.forEach((off) => off()));
+        onBeforeUnmount(() => {
+            offs.forEach((off) => off());
+            if (armTimer !== null) {
+                clearTimeout(armTimer);
+            }
+        });
         return () => {
             const cfg = ctx.settings.value as unknown as AutoplayResolved;
             if (!cfg.autoplay || !cfg.progressBar) {
@@ -100,7 +125,10 @@ export const AutoplayProgress = defineComponent({
             return h(
                 'div',
                 {
-                    class: ['lg-progress-bar', { 'lg-start': running.value }],
+                    class: [
+                        'lg-progress-bar',
+                        { 'lg-start': running.value && armed.value },
+                    ],
                 },
                 // Recreating the element restarts the width transition
                 // each cycle (keyed remount, sibling-parity trick).

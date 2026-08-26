@@ -78,6 +78,13 @@ describe('autoplay plugin', () => {
         expect(onAutoplayStart).toHaveBeenCalledWith({ index: 0 });
         const outer = document.querySelector('.lg-outer');
         expect(outer).toHaveClass('lg-show-autoplay');
+        // Two-phase start: the bar paints a frame at width 0 first —
+        // lg-start in the same frame would render it full instead of
+        // animating.
+        expect(document.querySelector('.lg-progress-bar')).not.toHaveClass(
+            'lg-start',
+        );
+        tick(25);
         expect(document.querySelector('.lg-progress-bar')).toHaveClass(
             'lg-start',
         );

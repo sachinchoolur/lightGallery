@@ -67,6 +67,11 @@ function AutoplayProgressBar(): ReactElement | null {
     const settings = usePluginSettings<AutoplaySettings>();
     const [cycle, setCycle] = useState(0);
     const [running, setRunning] = useState(false);
+    // Two-phase start: the remounted bar must PAINT at width 0 before
+    // lg-start lands — a fresh element has no prior style, so flipping
+    // the class in the same frame renders the bar full instead of
+    // animating (2.x staged this with a 20ms timer).
+    const [armed, setArmed] = useState(false);
 
     useEffect(() => {
         const offs = [
@@ -82,12 +87,21 @@ function AutoplayProgressBar(): ReactElement | null {
         return () => offs.forEach((off) => off());
     }, [internal.events]);
 
+    useEffect(() => {
+        setArmed(false);
+        if (!running) {
+            return;
+        }
+        const id = window.setTimeout(() => setArmed(true), 20);
+        return () => window.clearTimeout(id);
+    }, [running, cycle]);
+
     if (!settings.autoplay || !settings.progressBar) {
         return null;
     }
     const duration = settings.speed + settings.slideShowInterval;
     return (
-        <div className={cx('lg-progress-bar', running && 'lg-start')}>
+        <div className={cx('lg-progress-bar', running && armed && 'lg-start')}>
             <div
                 // Remounting restarts the width transition each cycle.
                 key={cycle}
