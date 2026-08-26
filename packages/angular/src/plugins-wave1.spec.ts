@@ -152,6 +152,28 @@ describe('wave-1 features', () => {
         expect(query('.lg-actual-size')).not.toBeNull();
     });
 
+    it('thumbnail: static mode wraps instead of clipping (animateThumb: false)', async () => {
+        const fixture = TestBed.createComponent(Wave1Host);
+        fixture.componentInstance.features = [
+            withThumbnail({ animateThumb: false }),
+        ];
+        await flush(fixture);
+        await openAndLoad(fixture);
+
+        // 2.x parity: no fixed width/transform on the track — the items
+        // wrap into rows, so every thumbnail stays reachable without the
+        // drag machinery (which static mode disables).
+        expect(query('.lg-thumb')!.getAttribute('style')).toBeNull();
+        // The test DOM has no touchAction in its style declaration —
+        // assert on the attribute instead.
+        expect(
+            query('.lg-thumb-outer')!.getAttribute('style') ?? '',
+        ).not.toContain('touch-action');
+        expect(
+            query('.lg-outer')!.classList.contains('lg-animate-thumb'),
+        ).toBe(false);
+    });
+
     it('thumbnail: renders every item, tracks the active index, navigates on click', async () => {
         const fixture = TestBed.createComponent(Wave1Host);
         await flush(fixture);

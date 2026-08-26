@@ -137,7 +137,9 @@ export const ThumbnailStrip = defineComponent({
         // at release/slide-change/resize, never per pointermove.
         const thumbWindow = computed(() => {
             const overscan = settings.value.virtualization?.thumbs;
-            if (overscan === undefined) {
+            // Windowing is translate-space math — meaningless for the
+            // wrapping static strip.
+            if (overscan === undefined || !settings.value.animateThumb) {
                 return null;
             }
             const geometry = {
@@ -415,26 +417,34 @@ export const ThumbnailStrip = defineComponent({
                     // The strip lives outside .lg-inner's
                     // touch-action:none, and its pointermove is passive —
                     // without this the browser owns the pan and cancels
-                    // the drag (2.x prevented via touchmove).
-                    style: { touchAction: 'none' },
+                    // the drag (2.x prevented via touchmove). Static mode
+                    // has no drag, so the browser keeps the touch.
+                    style: cfg.animateThumb
+                        ? { touchAction: 'none' }
+                        : undefined,
                 },
                 h(
                     'div',
                     {
                         ref: track,
                         class: 'lg-thumb lg-group',
-                        style: {
-                            width: `${totalWidth.value}px`,
-                            position: 'relative',
-                            transitionDuration: dragging.value
-                                ? '0ms'
-                                : `${cfg.speed}ms`,
-                            transform: `translate3d(${toTrackX(
-                                dragging.value
-                                    ? liveTranslate
-                                    : translate.value,
-                            )}px, 0px, 0px)`,
-                        },
+                        // Static mode (2.x parity): no width/transform —
+                        // the items wrap into rows and every thumbnail
+                        // stays visible.
+                        style: cfg.animateThumb
+                            ? {
+                                  width: `${totalWidth.value}px`,
+                                  position: 'relative',
+                                  transitionDuration: dragging.value
+                                      ? '0ms'
+                                      : `${cfg.speed}ms`,
+                                  transform: `translate3d(${toTrackX(
+                                      dragging.value
+                                          ? liveTranslate
+                                          : translate.value,
+                                  )}px, 0px, 0px)`,
+                              }
+                            : undefined,
                         onPointerdown: onPointerDown,
                     },
                     [

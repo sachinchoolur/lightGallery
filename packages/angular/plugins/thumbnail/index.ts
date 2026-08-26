@@ -105,17 +105,23 @@ type ThumbnailResolved = ThumbnailSettings & {
             #stripOuter
             class="lg-thumb-outer"
             [class]="outerClasses()"
-            [style.touch-action]="'none'"
+            [style.touch-action]="animate() ? 'none' : null"
         >
+            <!-- Static mode (2.x parity): no width/transform — the items
+                 wrap into rows and every thumbnail stays visible. -->
             <div
                 #track
                 class="lg-thumb lg-group"
-                [style.width.px]="totalWidth()"
-                [style.position]="'relative'"
+                [style.width.px]="animate() ? totalWidth() : null"
+                [style.position]="animate() ? 'relative' : null"
                 [style.transition-duration]="
-                    dragging() ? '0ms' : settings().speed + 'ms'
+                    animate()
+                        ? dragging()
+                            ? '0ms'
+                            : settings().speed + 'ms'
+                        : null
                 "
-                [style.transform]="trackTransform()"
+                [style.transform]="animate() ? trackTransform() : null"
                 (pointerdown)="onPointerDown($event)"
             >
                 @if (thumbWindow(); as window) { @if (window.leadingPad > 0) {
@@ -205,9 +211,15 @@ export class LgThumbnailStripComponent {
     // the visible thumbs plus overscan render; spacers preserve the strip
     // geometry. Keys off the COMMITTED translate — advances at release/
     // slide-change/resize, never per pointermove.
+    protected readonly animate = computed(
+        () => this.settings().animateThumb,
+    );
+
     protected readonly thumbWindow = computed(() => {
         const overscan = this.settings().virtualization?.thumbs;
-        if (overscan === undefined) {
+        // Windowing is translate-space math — meaningless for the
+        // wrapping static strip.
+        if (overscan === undefined || !this.animate()) {
             return null;
         }
         const geometry = {

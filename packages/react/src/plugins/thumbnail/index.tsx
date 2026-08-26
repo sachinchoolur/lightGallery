@@ -152,7 +152,7 @@ function ThumbnailStrip(): ReactElement | null {
         overscan: thumbsOverscan,
     };
     const thumbWindow =
-        thumbsOverscan !== undefined
+        thumbsOverscan !== undefined && settings.animateThumb
             ? corridor
                 ? getThumbCorridorWindow({ ...windowGeometry, ...corridor })
                 : getThumbWindow({ ...windowGeometry, translate })
@@ -403,21 +403,28 @@ function ThumbnailStrip(): ReactElement | null {
             // The strip lives outside .lg-inner's touch-action:none, and
             // its pointermove is passive — without this the browser owns
             // the pan and cancels the drag (2.x prevented via touchmove).
-            style={{ touchAction: 'none' }}
+            // Static mode has no drag, so the browser keeps the touch.
+            style={settings.animateThumb ? { touchAction: 'none' } : undefined}
         >
             <div
                 ref={trackRef}
                 className="lg-thumb lg-group"
-                style={{
-                    width: `${totalWidth}px`,
-                    position: 'relative',
-                    transitionDuration: dragging
-                        ? '0ms'
-                        : `${settings.speed}ms`,
-                    transform: `translate3d(${toTrackX(
-                        dragging ? translateRef.current : translate,
-                    )}px, 0px, 0px)`,
-                }}
+                // Static mode (2.x parity): no width/transform — the
+                // items wrap into rows and every thumbnail stays visible.
+                style={
+                    settings.animateThumb
+                        ? {
+                              width: `${totalWidth}px`,
+                              position: 'relative',
+                              transitionDuration: dragging
+                                  ? '0ms'
+                                  : `${settings.speed}ms`,
+                              transform: `translate3d(${toTrackX(
+                                  dragging ? translateRef.current : translate,
+                              )}px, 0px, 0px)`,
+                          }
+                        : undefined
+                }
                 onPointerDown={onPointerDown}
             >
                 {thumbWindow && thumbWindow.leadingPad > 0 && (

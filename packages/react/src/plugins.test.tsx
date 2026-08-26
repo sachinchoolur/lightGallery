@@ -239,6 +239,25 @@ describe('thumbnail plugin', () => {
         expect(thumbs[0]).not.toHaveClass('active');
     });
 
+    it('wraps the static strip instead of clipping it (animateThumb: false)', () => {
+        renderGallery({
+            plugins: [Thumbnail],
+            thumbnail: { animateThumb: false },
+        });
+        loadCurrent();
+
+        // 2.x parity: no fixed width/transform on the track — the items
+        // wrap into rows, so every thumbnail stays reachable without the
+        // drag machinery (which static mode disables).
+        const track = document.querySelector('.lg-thumb')!;
+        expect(track.getAttribute('style')).toBeNull();
+        const outer = document.querySelector('.lg-thumb-outer')!;
+        expect(outer.getAttribute('style')).toBeNull();
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-animate-thumb',
+        );
+    });
+
     it('hides the toggle button unless allowMediaOverlap permits it', () => {
         renderGallery({
             plugins: [Thumbnail],

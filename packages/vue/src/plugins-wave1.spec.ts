@@ -235,6 +235,22 @@ describe('plugin runtime + wave-1', () => {
         ).toBe(true);
     });
 
+    it('thumbnail: static mode wraps instead of clipping (animateThumb: false)', async () => {
+        const { wrapper } = mountHost([Thumbnail], {
+            thumbnail: { animateThumb: false },
+        });
+        await openAndLoad(wrapper);
+
+        // 2.x parity: no fixed width/transform on the track — the items
+        // wrap into rows, so every thumbnail stays reachable without the
+        // drag machinery (which static mode disables).
+        expect(query('.lg-thumb')!.getAttribute('style')).toBeNull();
+        expect(query('.lg-thumb-outer')!.getAttribute('style')).toBeNull();
+        expect(
+            query('.lg-outer')!.classList.contains('lg-animate-thumb'),
+        ).toBe(false);
+    });
+
     it('zoom: actual-size toggles committed scale, claims the seam, resets on navigation', async () => {
         const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
         await openAndLoad(wrapper);
