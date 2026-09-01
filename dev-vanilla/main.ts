@@ -180,6 +180,15 @@ const SCENARIOS: Scenario[] = [
         }),
     },
     {
+        id: 'scrub',
+        title: 'Thumb scrub',
+        note: 'scrubThumbnails — drag the strip and the main slide follows instantly; needs the strip to overflow (phone/narrow window).',
+        mount: gridScenario(SOURCES.map(imageAnchor).join(''), {
+            plugins: [Thumbnail],
+            scrubThumbnails: true,
+        }),
+    },
+    {
         id: 'zoom',
         title: 'Zoom',
         note: 'actualSize + infiniteZoom + icons — pinch, double-tap, drag.',
@@ -262,7 +271,7 @@ const SCENARIOS: Scenario[] = [
     {
         id: 'virtualization',
         title: 'Virtualization',
-        note: '1,000 dynamic slides; slide pool 7, thumb strip windowed.',
+        note: '1,000 dynamic slides; slide pool 7, windowed strip of iOS-size scrub thumbs.',
         mount: (host) => {
             const open0 = document.createElement('button');
             open0.type = 'button';
@@ -278,6 +287,11 @@ const SCENARIOS: Scenario[] = [
                 dynamicEl: stressItems,
                 plugins: [Thumbnail],
                 virtualization: { slides: 7, thumbs: 'auto' },
+                // iOS-filmstrip-sized thumbs + scrub over 1,000 slides.
+                scrubThumbnails: true,
+                thumbWidth: 28,
+                thumbHeight: '42px',
+                thumbMargin: 2,
             });
             (window as unknown as { lg: unknown }).lg = instance;
             open0.addEventListener('click', () => instance.openGallery(0));

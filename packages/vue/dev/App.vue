@@ -145,6 +145,11 @@ const SCENARIOS = [
         note: 'Static strip + toggle button (animateThumb off, allowMediaOverlap).',
     },
     {
+        id: 'scrub',
+        title: 'Thumb scrub',
+        note: 'scrubThumbnails — drag the strip and the main slide follows instantly; needs the strip to overflow (phone/narrow window).',
+    },
+    {
         id: 'zoom',
         title: 'Zoom',
         note: 'actualSize + infiniteZoom + icons — pinch, double-tap, drag.',
@@ -167,7 +172,7 @@ const SCENARIOS = [
     {
         id: 'virtualization',
         title: 'Virtualization',
-        note: '1,000 slides; slide pool 7, thumb strip windowed.',
+        note: '1,000 dynamic slides; slide pool 7, windowed strip of iOS-size scrub thumbs.',
     },
     {
         id: 'justified',
@@ -253,6 +258,19 @@ const lastEvent = ref('');
                 :plugins="[Thumbnail]"
                 :thumbnail="{ animateThumb: false, toggleThumb: true }"
                 :allow-media-overlap="true"
+            >
+                <div class="demo-grid">
+                    <LgItem v-for="item of items" :key="item.src" :item="item">
+                        <img :src="item.thumb" :alt="item.alt" />
+                    </LgItem>
+                </div>
+            </LightGallery>
+        </section>
+
+        <section v-else-if="current === 'scrub'">
+            <LightGallery
+                :plugins="[Thumbnail]"
+                :thumbnail="{ scrubThumbnails: true }"
             >
                 <div class="demo-grid">
                     <LgItem v-for="item of items" :key="item.src" :item="item">
@@ -355,6 +373,12 @@ const lastEvent = ref('');
                 :plugins="[Thumbnail]"
                 :virtualization="{ slides: 7, thumbs: 'auto' }"
                 :zoom-from-origin="false"
+                :thumbnail="{
+                    scrubThumbnails: true,
+                    thumbWidth: 28,
+                    thumbHeight: '42px',
+                    thumbMargin: 2,
+                }"
             />
         </section>
 

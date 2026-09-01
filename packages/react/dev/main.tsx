@@ -190,6 +190,17 @@ function ThumbnailsScenario() {
     );
 }
 
+function ThumbScrubScenario() {
+    return (
+        <LightGallery
+            plugins={[Thumbnail]}
+            thumbnail={{ scrubThumbnails: true }}
+        >
+            <Grid slides={items} />
+        </LightGallery>
+    );
+}
+
 function ZoomScenario() {
     return (
         <LightGallery
@@ -292,6 +303,13 @@ function VirtualizationScenario() {
                 plugins={[Thumbnail]}
                 virtualization={{ slides: 7, thumbs: 'auto' }}
                 zoomFromOrigin={false}
+                // iOS-filmstrip-sized thumbs + scrub over 1,000 slides.
+                thumbnail={{
+                    scrubThumbnails: true,
+                    thumbWidth: 28,
+                    thumbHeight: '42px',
+                    thumbMargin: 2,
+                }}
             />
         </>
     );
@@ -404,6 +422,12 @@ const SCENARIOS: {
         Component: ThumbnailsScenario,
     },
     {
+        id: 'scrub',
+        title: 'Thumb scrub',
+        note: 'scrubThumbnails — drag the strip and the main slide follows instantly; needs the strip to overflow (phone/narrow window).',
+        Component: ThumbScrubScenario,
+    },
+    {
         id: 'zoom',
         title: 'Zoom',
         note: 'actualSize + infiniteZoom + icons — pinch, double-tap, drag.',
@@ -430,7 +454,7 @@ const SCENARIOS: {
     {
         id: 'virtualization',
         title: 'Virtualization',
-        note: '1,000 slides; slide pool 7, thumb strip windowed.',
+        note: '1,000 dynamic slides; slide pool 7, windowed strip of iOS-size scrub thumbs.',
         Component: VirtualizationScenario,
     },
     {

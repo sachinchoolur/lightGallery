@@ -137,6 +137,52 @@ export function getThumbCorridorWindow(options: {
 }
 
 /**
+ * Which slide a live strip translate selects in scrub mode (the strip
+ * drives the gallery while it moves). Proportional: the strip's full
+ * scroll travel maps onto the full index range, so the FIRST and LAST
+ * slides are always reachable — a fixed pager-point inverse cannot
+ * reach the ends, because the clamped translate never brings them
+ * under the pager slot. For long strips this converges to one index
+ * per thumb unit of travel. Translate is the logical strip scalar
+ * (RTL-agnostic); elastic overshoot clamps, pinning the ends.
+ * Exact inverse: {@link getScrubThumbTranslate}.
+ */
+export function getScrubThumbIndex(
+    translate: number,
+    totalWidth: number,
+    stripWidth: number,
+    count: number,
+): number {
+    const max = totalWidth - stripWidth;
+    if (count <= 1 || max <= 0) {
+        return 0;
+    }
+    const clamped = clampThumbTranslate(translate, totalWidth, stripWidth);
+    return Math.round((clamped / max) * (count - 1));
+}
+
+/**
+ * Strip translate at which {@link getScrubThumbIndex} resolves exactly
+ * `index` — for aligning the strip to the scrubbed slide after the
+ * release glide settles. (Not `getActiveThumbTranslate`: that pager
+ * alignment is a different map and would re-resolve to a neighboring
+ * index near the ends.)
+ */
+export function getScrubThumbTranslate(
+    index: number,
+    totalWidth: number,
+    stripWidth: number,
+    count: number,
+): number {
+    const max = totalWidth - stripWidth;
+    if (count <= 1 || max <= 0) {
+        return 0;
+    }
+    const clamped = Math.min(Math.max(index, 0), count - 1);
+    return (clamped / (count - 1)) * max;
+}
+
+/**
  * Strip translate that brings the active thumbnail to the pager position
  * (2.x `animateThumb`, including its off-by-one `- 1`).
  */

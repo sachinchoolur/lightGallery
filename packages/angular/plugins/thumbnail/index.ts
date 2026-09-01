@@ -15,6 +15,7 @@ import {
     clampThumbTranslate,
     getActiveThumbTranslate,
     getElasticThumbTranslate,
+    getScrubThumbIndex,
     getThumbCorridorWindow,
     getThumbTotalWidth,
     getThumbWindow,
@@ -64,6 +65,15 @@ export interface ThumbnailSettings {
     enableThumbDrag: boolean;
     /** Below this drag distance (px) a release still counts as a click. */
     thumbnailSwipeThreshold: number;
+    /**
+     * Scrub the gallery with the thumbnail strip: while the strip is
+     * dragged (or gliding after a fling), the slide under the strip's
+     * travel position becomes current immediately, without slide
+     * transitions. The full strip travel spans the whole gallery, so
+     * the first and last slides are always reachable. Requires
+     * `animateThumb`; taps still navigate normally.
+     */
+    scrubThumbnails: boolean;
     /** Load YouTube thumbs from img.youtube.com. */
     loadYouTubeThumbnail: boolean;
     /** YouTube thumb size suffix (`<n>.jpg`). */
@@ -86,6 +96,7 @@ export const thumbnailSettings: ThumbnailSettings = {
     toggleThumb: false,
     enableThumbDrag: true,
     thumbnailSwipeThreshold: 10,
+    scrubThumbnails: false,
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
 };
@@ -263,6 +274,12 @@ export class LgThumbnailStripComponent {
     private samples: VelocitySample[] = [];
     private cancelSpring: (() => void) | null = null;
     private liveTranslate = 0;
+    // Scrub session (scrubThumbnails): while the strip moves it drives
+    // the gallery — each step navigates on the instant no-animation
+    // timeline path (navigate + TRANSITION_END settle before the
+    // timeline effect runs), and the pager-follow effect stands down.
+    private scrubSession = false;
+    private scrubIndex = -1;
     private detachWindow: (() => void) | null = null;
     private readonly resizeListener = (): void => this.measure();
 
@@ -296,17 +313,29 @@ export class LgThumbnailStripComponent {
             }
             this.detachWindow?.();
             this.cancelSpring?.();
+            // A strip destroyed mid-scrub must not strand the outer
+            // class (the root outlives the strip).
+            this.endScrub();
         });
         // Keep the active thumbnail at the pager position (React
         // counterpart: the translate-sync effect).
         effect(() => {
+            // Read (and track) the index BEFORE any early return — a
+            // skipped run must not drop it from the effect's dep set,
+            // or the pager-follow dies after the first scrub session.
+            const index = this.currentIndex();
             const settings = this.settings();
             if (!settings.animateThumb) {
                 return;
             }
+            // Mid-scrub the finger owns the strip; re-centering against
+            // the scrub's own navigation would fight it.
+            if (this.scrubSession) {
+                return;
+            }
             this.translate.set(
                 getActiveThumbTranslate(
-                    this.currentIndex(),
+                    index,
                     settings.thumbWidth,
                     settings.thumbMargin,
                     this.stripWidth(),
@@ -380,6 +409,41 @@ export class LgThumbnailStripComponent {
         }
     }
 
+    private beginScrub(): void {
+        if (this.scrubSession) {
+            return;
+        }
+        this.scrubSession = true;
+        this.scrubIndex = this.currentIndex();
+        this.ctx.layout.setOuterClass('lg-thumb-scrubbing', true);
+    }
+
+    private endScrub(): void {
+        if (!this.scrubSession) {
+            return;
+        }
+        this.scrubSession = false;
+        this.scrubIndex = -1;
+        this.ctx.layout.setOuterClass('lg-thumb-scrubbing', false);
+    }
+
+    /** Live translate → slide, on drag and glide frames alike. */
+    private scrubTo(value: number): void {
+        const index = getScrubThumbIndex(
+            value,
+            this.totalWidth(),
+            this.stripWidth(),
+            this.ctx.items().length,
+        );
+        if (index === this.scrubIndex) {
+            return;
+        }
+        const direction = index > this.scrubIndex ? 'next' : 'prev';
+        this.scrubIndex = index;
+        this.ctx.actions.navigate(index, direction);
+        this.ctx.actions.dispatch({ type: 'TRANSITION_END' });
+    }
+
     /**
      * Strip drag: transforms are written straight to the track element per
      * move (the no-CD-per-move rule) and committed to the signal on release.
@@ -421,6 +485,10 @@ export class LgThumbnailStripComponent {
             if (Math.abs(delta) > 2) {
                 drag.moved = true;
                 this.clickable = false;
+                const cfg = this.settings();
+                if (cfg.scrubThumbnails && cfg.animateThumb) {
+                    this.beginScrub();
+                }
             }
             this.samples = pushVelocitySample(this.samples, {
                 x: moveEvent.clientX,
@@ -436,6 +504,9 @@ export class LgThumbnailStripComponent {
                     this.stripWidth(),
                 ),
             );
+            if (this.scrubSession) {
+                this.scrubTo(this.liveTranslate);
+            }
             // Windowed strips: a long finger drag can outrun the
             // rendered window — one commit recenters it (rare; routine
             // moves stay zero-CD).
@@ -487,6 +558,9 @@ export class LgThumbnailStripComponent {
                 this.stripWidth(),
             );
             if (!moved) {
+                // A press that took over a scrub glide and released
+                // without moving ends the session — no spring runs.
+                this.endScrub();
                 this.dragging.set(false);
                 this.translate.set(
                     clampThumbTranslate(
@@ -511,9 +585,17 @@ export class LgThumbnailStripComponent {
                         target,
                     },
                 ],
-                ([value]) => this.writeTrackTranslate(value!),
+                ([value]) => {
+                    this.writeTrackTranslate(value!);
+                    // The glide keeps scrubbing — a flicked strip drives
+                    // the gallery to where it decelerates.
+                    if (this.scrubSession) {
+                        this.scrubTo(value!);
+                    }
+                },
                 () => {
                     this.cancelSpring = null;
+                    this.endScrub();
                     this.dragging.set(false);
                     this.corridor.set(null);
                     this.translate.set(target);

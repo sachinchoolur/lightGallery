@@ -2,6 +2,7 @@ import {
     clampThumbTranslate,
     getActiveThumbTranslate,
     getElasticThumbTranslate,
+    getScrubThumbIndex,
     getThumbCorridorWindow,
     getThumbTotalWidth,
     getThumbWindow,
@@ -53,6 +54,12 @@ export default class Thumbnail {
     // Last rendered window (windowed strips) — the mid-drag top-up
     // check compares the live translate against this coverage.
     private renderedThumbWindow?: ThumbWindow;
+    // Scrub session (scrubThumbnails): while the strip moves it drives
+    // the gallery — slide changes are instant and the strip must not
+    // re-center itself against the finger.
+    private scrubActive = false;
+    private scrubIndex = -1;
+    private scrubSavedSpeed?: number;
     private settings!: ThumbnailsSettings;
     private $LG!: LgQuery;
     constructor(instance: LightGallery, $LG: LgQuery) {
@@ -125,6 +132,11 @@ export default class Thumbnail {
         });
 
         this.core.LGel.on(`${lGEvents.beforeSlide}.thumb`, (event) => {
+            // Mid-scrub the finger owns the strip; re-centering against
+            // the scrub's own navigation would fight it.
+            if (this.scrubActive) {
+                return;
+            }
             const { index } = event.detail;
             this.animateThumb(index);
         });
@@ -240,6 +252,9 @@ export default class Thumbnail {
                 thumbDragUtils = this.onThumbTouchEnd(thumbDragUtils);
             } else {
                 this.thumbClickable = true;
+                // A press that took over a scrub glide and released
+                // without moving ends the session here — no spring runs.
+                this.endScrub();
             }
 
             if (isDragging) {
@@ -285,6 +300,9 @@ export default class Thumbnail {
                 thumbDragUtils = this.onThumbTouchEnd(thumbDragUtils);
             } else {
                 this.thumbClickable = true;
+                // A tap that took over a scrub glide ends the session
+                // here — no spring runs.
+                this.endScrub();
             }
         });
     }
@@ -360,6 +378,61 @@ export default class Thumbnail {
         }
     }
 
+    private canScrub(): boolean {
+        return this.settings.scrubThumbnails && this.settings.animateThumb;
+    }
+
+    /**
+     * A scrub session starts on the first actual strip movement and
+     * ends when the release glide settles (or the plugin dies). While
+     * it runs: slide transitions are visually off (`lg-thumb-scrubbing`
+     * CSS), the core's transition timers collapse (`speed` 0) so the
+     * landed slide's content loads without the navigation lag, and the
+     * strip's own slide-change re-centering stands down.
+     */
+    private beginScrub(): void {
+        if (this.scrubActive) {
+            return;
+        }
+        this.scrubActive = true;
+        this.scrubIndex = this.core.index;
+        this.scrubSavedSpeed = this.core.settings.speed;
+        this.core.settings.speed = 0;
+        this.core.outer.addClass('lg-thumb-scrubbing');
+    }
+
+    private endScrub(): void {
+        if (!this.scrubActive) {
+            return;
+        }
+        this.scrubActive = false;
+        this.scrubIndex = -1;
+        if (this.scrubSavedSpeed !== undefined) {
+            this.core.settings.speed = this.scrubSavedSpeed;
+            this.scrubSavedSpeed = undefined;
+        }
+        this.core.outer.removeClass('lg-thumb-scrubbing');
+    }
+
+    /** Live translate → slide, on drag frames and glide frames alike. */
+    private scrubTo(translate: number): void {
+        const index = getScrubThumbIndex(
+            translate,
+            this.thumbTotalWidth,
+            this.thumbOuterWidth,
+            this.core.galleryItems.length,
+        );
+        if (index === this.scrubIndex) {
+            return;
+        }
+        this.scrubIndex = index;
+        // The busy flag paces animated navigation; a scrub tracks the
+        // strip frame by frame, so each step clears it (the fromTouch
+        // slide path swaps lg-current immediately).
+        this.core.lgBusy = false;
+        this.core.slide(index, true, true, false);
+    }
+
     /**
      * Drag-start seam (plan 010 physics): a press mid-glide takes over
      * from the live position, and the velocity window restarts.
@@ -403,6 +476,11 @@ export default class Thumbnail {
         this.liveTranslateX = thumbDragUtils.newTranslateX;
         this.setTranslate(thumbDragUtils.newTranslateX);
         this.$thumbOuter.addClass('lg-dragging');
+
+        if (this.canScrub()) {
+            this.beginScrub();
+            this.scrubTo(this.liveTranslateX);
+        }
 
         // Windowed strips: a long finger drag can outrun the rendered
         // window — one rebuild recenters it (rare; routine moves only
@@ -460,10 +538,16 @@ export default class Thumbnail {
             ([value]) => {
                 this.liveTranslateX = value!;
                 this.setTranslate(value!);
+                // The glide keeps scrubbing — a flicked strip drives the
+                // gallery all the way to where it decelerates.
+                if (this.scrubActive) {
+                    this.scrubTo(value!);
+                }
             },
             () => {
                 this.cancelThumbSpring = undefined;
                 this.translateX = target;
+                this.endScrub();
                 this.$lgThumb.css(
                     'transition-duration',
                     this.core.settings.speed + 'ms',
@@ -641,6 +725,7 @@ export default class Thumbnail {
     }
 
     destroy(): void {
+        this.endScrub();
         if (this.cancelThumbSpring) {
             this.cancelThumbSpring();
             this.cancelThumbSpring = undefined;

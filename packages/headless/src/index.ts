@@ -130,6 +130,8 @@ export {
     clampThumbTranslate,
     getActiveThumbTranslate,
     getElasticThumbTranslate,
+    getScrubThumbIndex,
+    getScrubThumbTranslate,
     getThumbCorridorWindow,
     getThumbTotalWidth,
     getThumbWindow,

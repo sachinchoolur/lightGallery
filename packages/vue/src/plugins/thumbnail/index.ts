@@ -14,6 +14,7 @@ import {
     clampThumbTranslate,
     getActiveThumbTranslate,
     getElasticThumbTranslate,
+    getScrubThumbIndex,
     getThumbCorridorWindow,
     getThumbTotalWidth,
     getThumbWindow,
@@ -64,6 +65,15 @@ export interface ThumbnailSettings {
     enableThumbDrag: boolean;
     /** Below this drag distance (px) a release still counts as a click. */
     thumbnailSwipeThreshold: number;
+    /**
+     * Scrub the gallery with the thumbnail strip: while the strip is
+     * dragged (or gliding after a fling), the slide under the strip's
+     * travel position becomes current immediately, without slide
+     * transitions. The full strip travel spans the whole gallery, so
+     * the first and last slides are always reachable. Requires
+     * `animateThumb`; taps still navigate normally.
+     */
+    scrubThumbnails: boolean;
     /** Load YouTube thumbs from img.youtube.com. */
     loadYouTubeThumbnail: boolean;
     /** YouTube thumb size suffix (`<n>.jpg`). */
@@ -86,6 +96,7 @@ export const thumbnailSettings: ThumbnailSettings = {
     toggleThumb: false,
     enableThumbDrag: true,
     thumbnailSwipeThreshold: 10,
+    scrubThumbnails: false,
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
 };
@@ -174,6 +185,45 @@ export const ThumbnailStrip = defineComponent({
         let samples: VelocitySample[] = [];
         let cancelSpring: (() => void) | null = null;
         let liveTranslate = 0;
+        // Scrub session (scrubThumbnails): while the strip moves it
+        // drives the gallery — each step navigates on the instant
+        // no-animation timeline path (navigate + TRANSITION_END land in
+        // the same watcher flush), and the pager-follow effect stands
+        // down. Plain lets: the guard reads must not become deps.
+        let scrubActive = false;
+        let scrubIndex = -1;
+        function beginScrub(): void {
+            if (scrubActive) {
+                return;
+            }
+            scrubActive = true;
+            scrubIndex = ctx.store.currentIndex.value;
+            ctx.layout.setOuterClass('lg-thumb-scrubbing', true);
+        }
+        function endScrub(): void {
+            if (!scrubActive) {
+                return;
+            }
+            scrubActive = false;
+            scrubIndex = -1;
+            ctx.layout.setOuterClass('lg-thumb-scrubbing', false);
+        }
+        /** Live translate → slide, on drag and glide frames alike. */
+        function scrubTo(value: number): void {
+            const index = getScrubThumbIndex(
+                value,
+                totalWidth.value,
+                stripWidth.value,
+                ctx.items.value.length,
+            );
+            if (index === scrubIndex) {
+                return;
+            }
+            const direction = index > scrubIndex ? 'next' : 'prev';
+            scrubIndex = index;
+            ctx.actions.navigate(index, direction);
+            ctx.actions.dispatch({ type: 'TRANSITION_END' });
+        }
         // The translate scalar lives in logical strip space; in RTL the
         // strip flows right-to-left (lg-rtl.css floats the thumbs right),
         // so the applied sign and the finger mapping mirror together.
@@ -226,6 +276,9 @@ export const ThumbnailStrip = defineComponent({
             }
             detachWindow?.();
             cancelSpring?.();
+            // A strip unmounting mid-scrub must not strand the outer
+            // class (the root outlives the strip).
+            endScrub();
         });
 
         // Committed translate also seeds the live (frame-written) value.
@@ -235,11 +288,20 @@ export const ThumbnailStrip = defineComponent({
 
         // Keep the active thumbnail at the pager position.
         watchEffect(() => {
+            // Read (and track) the index BEFORE any early return — a
+            // skipped run must not drop it from the effect's dep set,
+            // or the pager-follow dies after the first scrub session.
+            const index = ctx.store.currentIndex.value;
             if (!settings.value.animateThumb) {
                 return;
             }
+            // Mid-scrub the finger owns the strip; re-centering against
+            // the scrub's own navigation would fight it.
+            if (scrubActive) {
+                return;
+            }
             translate.value = getActiveThumbTranslate(
-                ctx.store.currentIndex.value,
+                index,
                 settings.value.thumbWidth,
                 settings.value.thumbMargin,
                 stripWidth.value,
@@ -284,6 +346,12 @@ export const ThumbnailStrip = defineComponent({
                 if (Math.abs(delta) > 2) {
                     drag.moved = true;
                     clickable = false;
+                    if (
+                        settings.value.scrubThumbnails &&
+                        settings.value.animateThumb
+                    ) {
+                        beginScrub();
+                    }
                 }
                 samples = pushVelocitySample(samples, {
                     x: moveEvent.clientX,
@@ -299,6 +367,9 @@ export const ThumbnailStrip = defineComponent({
                         stripWidth.value,
                     ),
                 );
+                if (scrubActive) {
+                    scrubTo(liveTranslate);
+                }
                 // Windowed strips: a long finger drag can outrun the
                 // rendered window — one commit recenters it (rare;
                 // routine moves stay zero-reactive).
@@ -347,6 +418,9 @@ export const ThumbnailStrip = defineComponent({
                     stripWidth.value,
                 );
                 if (!moved) {
+                    // A press that took over a scrub glide and released
+                    // without moving ends the session — no spring runs.
+                    endScrub();
                     dragging.value = false;
                     translate.value = clampThumbTranslate(
                         liveTranslate,
@@ -369,9 +443,17 @@ export const ThumbnailStrip = defineComponent({
                             target,
                         },
                     ],
-                    ([value]: number[]) => writeTrackTranslate(value!),
+                    ([value]: number[]) => {
+                        writeTrackTranslate(value!);
+                        // The glide keeps scrubbing — a flicked strip
+                        // drives the gallery to where it decelerates.
+                        if (scrubActive) {
+                            scrubTo(value!);
+                        }
+                    },
                     () => {
                         cancelSpring = null;
+                        endScrub();
                         dragging.value = false;
                         corridor.value = null;
                         translate.value = target;

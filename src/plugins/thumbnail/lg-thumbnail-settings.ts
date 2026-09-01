@@ -70,6 +70,18 @@ export interface ThumbnailsSettings {
     thumbnailSwipeThreshold: number;
 
     /**
+     * Scrub the gallery with the thumbnail strip: while the strip is
+     * dragged (or gliding after a fling), the slide under the strip's
+     * travel position becomes current immediately, without slide
+     * transitions — the strip works like a scrubber instead of an
+     * independent scroll area. The full strip travel spans the whole
+     * gallery, so the first and last slides are always reachable.
+     * Requires `animateThumb`; taps still navigate normally.
+     * @version V3.0.0
+     */
+    scrubThumbnails: boolean;
+
+    /**
      * You can automatically load thumbnails for YouTube videos from YouTube by setting loadYouTubeThumbnail true
      */
     loadYouTubeThumbnail: boolean;
@@ -106,6 +118,7 @@ export const thumbnailsSettings: ThumbnailsSettings = {
     enableThumbDrag: true,
     enableThumbSwipe: true,
     thumbnailSwipeThreshold: 10,
+    scrubThumbnails: false,
 
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,

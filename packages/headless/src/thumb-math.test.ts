@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import {
     clampThumbTranslate,
     getActiveThumbTranslate,
+    getScrubThumbIndex,
+    getScrubThumbTranslate,
     getThumbCorridorWindow,
     getThumbTotalWidth,
     getThumbWindow,
@@ -166,5 +168,62 @@ describe('direction-aware pager position (rtl)', () => {
         expect(getActiveThumbTranslate(...args, 'middle', 'rtl')).toBe(
             getActiveThumbTranslate(...args, 'middle'),
         );
+    });
+});
+
+describe('getScrubThumbIndex / getScrubThumbTranslate', () => {
+    // 20 thumbs of 105px unit = 2100px total; 420px strip; max = 1680.
+    const total = getThumbTotalWidth(20, 100, 5);
+
+    it('reaches the FIRST and LAST slides at the strip travel ends', () => {
+        expect(getScrubThumbIndex(0, total, 420, 20)).toBe(0);
+        expect(getScrubThumbIndex(total - 420, total, 420, 20)).toBe(19);
+    });
+
+    it('pins at the ends for elastic overshoot', () => {
+        expect(getScrubThumbIndex(-500, total, 420, 20)).toBe(0);
+        expect(getScrubThumbIndex(total * 2, total, 420, 20)).toBe(19);
+    });
+
+    it('is monotone and covers every index across the travel', () => {
+        const seen = new Set<number>();
+        let last = -1;
+        for (let t = 0; t <= total - 420; t += 7) {
+            const index = getScrubThumbIndex(t, total, 420, 20);
+            expect(index).toBeGreaterThanOrEqual(last);
+            last = index;
+            seen.add(index);
+        }
+        expect(seen.size).toBe(20);
+    });
+
+    it('round-trips exactly with getScrubThumbTranslate', () => {
+        for (let index = 0; index < 20; index++) {
+            expect(
+                getScrubThumbIndex(
+                    getScrubThumbTranslate(index, total, 420, 20),
+                    total,
+                    420,
+                    20,
+                ),
+            ).toBe(index);
+        }
+    });
+
+    it('converges to ~one thumb unit per index step on long strips', () => {
+        const bigTotal = getThumbTotalWidth(1000, 100, 5);
+        const step =
+            getScrubThumbTranslate(500, bigTotal, 420, 1000) -
+            getScrubThumbTranslate(499, bigTotal, 420, 1000);
+        expect(step).toBeGreaterThan(100);
+        expect(step).toBeLessThan(110);
+    });
+
+    it('is safe on degenerate inputs', () => {
+        expect(getScrubThumbIndex(100, total, 420, 0)).toBe(0);
+        expect(getScrubThumbIndex(100, total, 420, 1)).toBe(0);
+        // Strip fits the viewport: no travel, no scrubbing.
+        expect(getScrubThumbIndex(100, 400, 420, 5)).toBe(0);
+        expect(getScrubThumbTranslate(3, 400, 420, 5)).toBe(0);
     });
 });

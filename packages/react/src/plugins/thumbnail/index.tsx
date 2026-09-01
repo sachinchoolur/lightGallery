@@ -10,6 +10,7 @@ import {
     clampThumbTranslate,
     getActiveThumbTranslate,
     getElasticThumbTranslate,
+    getScrubThumbIndex,
     getThumbCorridorWindow,
     getThumbTotalWidth,
     getThumbWindow,
@@ -60,6 +61,15 @@ export interface ThumbnailSettings {
     enableThumbDrag: boolean;
     /** Below this drag distance (px) a release still counts as a click. */
     thumbnailSwipeThreshold: number;
+    /**
+     * Scrub the gallery with the thumbnail strip: while the strip is
+     * dragged (or gliding after a fling), the slide under the strip's
+     * travel position becomes current immediately, without slide
+     * transitions. The full strip travel spans the whole gallery, so
+     * the first and last slides are always reachable. Requires
+     * `animateThumb`; taps still navigate normally.
+     */
+    scrubThumbnails: boolean;
     /** Load YouTube thumbs from img.youtube.com. */
     loadYouTubeThumbnail: boolean;
     /** YouTube thumb size suffix (`<n>.jpg`). */
@@ -82,6 +92,7 @@ export const thumbnailSettings: ThumbnailSettings = {
     toggleThumb: false,
     enableThumbDrag: true,
     thumbnailSwipeThreshold: 10,
+    scrubThumbnails: false,
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
 };
@@ -121,6 +132,12 @@ function ThumbnailStrip(): ReactElement | null {
         translateRef.current = translate;
     }
     const clickableRef = useRef(true);
+    // Scrub session (scrubThumbnails): while the strip moves it drives
+    // the gallery — each step navigates on the instant no-animation
+    // timeline path (navigate + TRANSITION_END batch into one render),
+    // and the pager-follow effect stands down.
+    const scrubActiveRef = useRef(false);
+    const scrubIndexRef = useRef(-1);
     const dragRef = useRef<{
         pointerId: number;
         startX: number;
@@ -195,9 +212,50 @@ function ThumbnailStrip(): ReactElement | null {
     const isRtl = settings.direction === 'rtl';
     const toTrackX = (value: number) => (isRtl ? value : -value);
 
+    const beginScrub = () => {
+        if (scrubActiveRef.current) {
+            return;
+        }
+        scrubActiveRef.current = true;
+        scrubIndexRef.current = state.currentIndex;
+        internal.layout.setOuterClass('lg-thumb-scrubbing', true);
+    };
+    const endScrub = () => {
+        if (!scrubActiveRef.current) {
+            return;
+        }
+        scrubActiveRef.current = false;
+        scrubIndexRef.current = -1;
+        internal.layout.setOuterClass('lg-thumb-scrubbing', false);
+    };
+    /** Live translate → slide, on drag frames and glide frames alike. */
+    const scrubTo = (value: number) => {
+        const index = getScrubThumbIndex(
+            value,
+            totalWidth,
+            stripWidth,
+            internal.items.length,
+        );
+        if (index === scrubIndexRef.current) {
+            return;
+        }
+        const direction = index > scrubIndexRef.current ? 'next' : 'prev';
+        scrubIndexRef.current = index;
+        // Batched into one render: the navigation lands with
+        // `transitioning` already false, so the outlet takes its
+        // instant no-animation timeline path — no staging, no timers.
+        actions.navigate(index, direction);
+        actions.dispatch({ type: 'TRANSITION_END' });
+    };
+
     // Keep the active thumbnail at the pager position.
     useEffect(() => {
         if (!settings.animateThumb) {
+            return;
+        }
+        // Mid-scrub the finger owns the strip; re-centering against the
+        // scrub's own navigation would fight it.
+        if (scrubActiveRef.current) {
             return;
         }
         setTranslate(
@@ -226,7 +284,14 @@ function ThumbnailStrip(): ReactElement | null {
         () => () => {
             detachRef.current?.();
             springCancelRef.current?.();
+            // A strip unmounting mid-scrub must not strand the outer
+            // class (the root outlives the strip).
+            if (scrubActiveRef.current) {
+                scrubActiveRef.current = false;
+                internal.layout.setOuterClass('lg-thumb-scrubbing', false);
+            }
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [],
     );
 
@@ -280,6 +345,9 @@ function ThumbnailStrip(): ReactElement | null {
             if (Math.abs(delta) > 2) {
                 drag.moved = true;
                 clickableRef.current = false;
+                if (settings.scrubThumbnails && settings.animateThumb) {
+                    beginScrub();
+                }
             }
             samplesRef.current = pushVelocitySample(samplesRef.current, {
                 x: moveEvent.clientX,
@@ -295,6 +363,9 @@ function ThumbnailStrip(): ReactElement | null {
                     stripWidth,
                 ),
             );
+            if (scrubActiveRef.current) {
+                scrubTo(translateRef.current);
+            }
             // Windowed strips: a long finger drag can outrun the
             // rendered window — one commit recenters it (rare; routine
             // moves stay zero-render).
@@ -341,6 +412,9 @@ function ThumbnailStrip(): ReactElement | null {
                 stripWidth,
             );
             if (!drag.moved) {
+                // A press that took over a scrub glide and released
+                // without moving ends the session here — no spring runs.
+                endScrub();
                 setDragging(false);
                 setTranslate(
                     clampThumbTranslate(
@@ -365,9 +439,17 @@ function ThumbnailStrip(): ReactElement | null {
                         target,
                     },
                 ],
-                ([value]) => writeTrackTranslate(value!),
+                ([value]) => {
+                    writeTrackTranslate(value!);
+                    // The glide keeps scrubbing — a flicked strip drives
+                    // the gallery to where it decelerates.
+                    if (scrubActiveRef.current) {
+                        scrubTo(value!);
+                    }
+                },
                 () => {
                     springCancelRef.current = null;
+                    endScrub();
                     // One commit: drop the drag styling, clear the
                     // corridor and publish the settled translate
                     // (windowed strips re-render here).

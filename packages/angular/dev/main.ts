@@ -161,6 +161,11 @@ const SCENARIOS = [
         note: 'Static strip + toggle button (animateThumb off, allowMediaOverlap).',
     },
     {
+        id: 'scrub',
+        title: 'Thumb scrub',
+        note: 'scrubThumbnails — drag the strip and the main slide follows instantly; needs the strip to overflow (phone/narrow window).',
+    },
+    {
         id: 'zoom',
         title: 'Zoom',
         note: 'actualSize + infiniteZoom + icons — pinch, double-tap, drag.',
@@ -183,7 +188,7 @@ const SCENARIOS = [
     {
         id: 'virtualization',
         title: 'Virtualization',
-        note: '1,000 slides; slide pool 7, thumb strip windowed.',
+        note: '1,000 dynamic slides; slide pool 7, windowed strip of iOS-size scrub thumbs.',
     },
     {
         id: 'justified',
@@ -250,6 +255,17 @@ const readHash = (): ScenarioId => {
                     [features]="thumbnailsFeatures"
                     [allowMediaOverlap]="true"
                 >
+                    <div class="demo-grid">
+                        @for (item of items; track item.src) {
+                            <a [href]="item.src" [lgGalleryItem]="item">
+                                <img [src]="item.thumb" [alt]="item.alt" />
+                            </a>
+                        }
+                    </div>
+                </lg-gallery>
+            }
+            @case ('scrub') {
+                <lg-gallery [features]="scrubFeatures">
                     <div class="demo-grid">
                         @for (item of items; track item.src) {
                             <a [href]="item.src" [lgGalleryItem]="item">
@@ -475,6 +491,7 @@ class DemoRoot {
     );
 
     readonly imagesFeatures = [withThumbnail(), withZoom()];
+    readonly scrubFeatures = [withThumbnail({ scrubThumbnails: true })];
     readonly thumbnailsFeatures = [
         withThumbnail({ animateThumb: false, toggleThumb: true }),
     ];
@@ -494,7 +511,15 @@ class DemoRoot {
         withShare({ preferNativeShare: true }),
         withThumbnail(),
     ];
-    readonly stressFeatures = [withThumbnail()];
+    // iOS-filmstrip-sized thumbs + scrub over 1,000 slides.
+    readonly stressFeatures = [
+        withThumbnail({
+            scrubThumbnails: true,
+            thumbWidth: 28,
+            thumbHeight: '42px',
+            thumbMargin: 2,
+        }),
+    ];
 
     private readonly commentsTpl =
         viewChild<TemplateRef<CommentContext>>('commentsTpl');
