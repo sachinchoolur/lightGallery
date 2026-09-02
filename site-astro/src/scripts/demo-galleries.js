@@ -368,6 +368,20 @@ lightGalleryJustified('animated-thumbnails-gallery', {
     },
 });
 
+lightGalleryJustified('scrub-thumbnails-gallery', {
+    justifiedLastRow: 'hide',
+    pager: false,
+    hash: false,
+    plugins: [lgZoom, lgThumbnail],
+    scrubThumbnails: true,
+    ...getResponsiveThumbnailsSettings(),
+    mobileSettings: {
+        controls: false,
+        showCloseIcon: false,
+        download: false,
+    },
+});
+
 const masonryElMixed = document.getElementById('static-thumbnails-gallery');
 if (masonryElMixed) {
     imagesLoaded(

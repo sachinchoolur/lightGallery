@@ -77,6 +77,7 @@ export interface ThumbnailsSettings {
      * independent scroll area. The full strip travel spans the whole
      * gallery, so the first and last slides are always reachable.
      * Requires `animateThumb`; taps still navigate normally.
+     * See <a href="/docs/thumbnail-scrubbing/">Thumbnail scrubbing</a>.
      * @version V3.0.0
      */
     scrubThumbnails: boolean;

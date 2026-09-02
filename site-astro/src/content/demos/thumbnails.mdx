@@ -111,6 +111,81 @@ import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 </Fragment>
 </CodeTabs>
 
+### Scrub the gallery from the strip
+
+Turn the strip into a scrubber with
+[`scrubThumbnails`](/docs/thumbnail-scrubbing/): drag it and the
+gallery follows instantly — the slide under the strip's travel
+position becomes current with no transitions, and a flick keeps
+scrubbing through the glide. Taps still navigate normally.
+
+<GalleryDemo size="xl" id="scrub-thumbnails-gallery" />
+
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+```js
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+
+lightGallery(document.getElementById('scrub-thumbnails-gallery'), {
+    plugins: [lgThumbnail],
+    scrubThumbnails: true,
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+
+<LightGallery plugins={[Thumbnail]} thumbnail={{ scrubThumbnails: true }}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+</script>
+
+<template>
+    <LightGallery :plugins="[Thumbnail]" :thumbnail="{ scrubThumbnails: true }">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery [features]="[withThumbnail({ scrubThumbnails: true })]">
+    @for (item of items; track item.src) {
+        <a [lgGalleryItem]="item">
+            <img [src]="item.thumb" [alt]="item.alt" />
+        </a>
+    }
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
+
 ### Static thumbnails
 
 <div class="lg-masonry-gallery">
