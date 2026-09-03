@@ -1,4 +1,5 @@
 import lightGallery from '../src/index';
+import { ICON_SETS } from './icon-sets';
 import { LightGallery } from '../src/lightgallery';
 import Thumbnail from '../src/plugins/thumbnail/lg-thumbnail';
 import Video from '../src/plugins/video/lg-video';
@@ -198,6 +199,46 @@ const SCENARIOS: Scenario[] = [
             actualSize: true,
             infiniteZoom: true,
         }),
+    },
+    {
+        id: 'icons',
+        title: 'Icon sets',
+        note: 'Candidate icon sets over the full chrome via settings.icons — glyphs a set lacks fall back to the built-ins (visible as style mismatches).',
+        mount: (host) => {
+            const picker = document.createElement('div');
+            picker.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;';
+            const grid = document.createElement('div');
+            grid.className = 'demo-grid';
+            grid.innerHTML = SOURCES.map(imageAnchor).join('');
+            host.append(picker, grid);
+            let instance: LightGallery | undefined;
+            const mountSet = (name: string) => {
+                instance?.destroy();
+                grid.innerHTML = SOURCES.map(imageAnchor).join('');
+                instance = lightGallery(grid, {
+                    selector: 'a',
+                    plugins: [Thumbnail, Zoom, Rotate, Share, Autoplay, Fullscreen],
+                    showZoomInOutIcons: true,
+                    actualSize: true,
+                    icons: name === 'original' ? {} : ICON_SETS[name],
+                });
+                (window as unknown as { lg: unknown }).lg = instance;
+                picker.querySelectorAll('button').forEach((b) => {
+                    b.style.fontWeight = b.dataset.set === name ? '700' : '400';
+                });
+            };
+            ['original', ...Object.keys(ICON_SETS)].forEach((name) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.textContent =
+                    name === 'original' ? 'original (built-in)' : name;
+                button.dataset.set = name;
+                button.addEventListener('click', () => mountSet(name));
+                picker.appendChild(button);
+            });
+            mountSet('original');
+            return () => instance?.destroy();
+        },
     },
     {
         id: 'video',

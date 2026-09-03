@@ -111,11 +111,6 @@ $thumbnails-margin: 5px;
         }
     }
 
-    .lg-toggle-thumb {
-        &:after {
-            content: '\e1ff';
-        }
-    }
     &.lg-animate-thumb {
         .lg-thumb {
             @include transition-timing-function(

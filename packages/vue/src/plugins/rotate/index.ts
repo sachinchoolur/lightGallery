@@ -19,9 +19,14 @@ import {
     rotateLeft,
     rotateRight,
     type RotateSlice,
+    rotateDefaultIcons,
 } from '@lightgallery/headless';
 
 import { LG_PLUGIN_CONTEXT, type LgVuePlugin } from '../types';
+import {
+    LG_ICONS,
+    resolveCustomIcons,
+} from '../../icons';
 import type { LgGalleryItem } from '../../types';
 
 /**
@@ -77,6 +82,7 @@ export const RotateToolbar = defineComponent({
     name: 'LgRotateToolbar',
     setup() {
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
+        const lgIcons = inject(LG_ICONS, undefined);
         const emitBus = (name: string): void =>
             ctx.events.emit(name, undefined);
         return () => {
@@ -93,38 +99,86 @@ export const RotateToolbar = defineComponent({
                 rotateLeft: legacy?.rotateLeft ?? coreStrings.rotateLeft,
                 rotateRight: legacy?.rotateRight ?? coreStrings.rotateRight,
             };
+            const ciflipVertical = resolveCustomIcons(
+                lgIcons?.value,
+                ['flipVertical'],
+                rotateDefaultIcons,
+            );
+            const ciflipHorizontal = resolveCustomIcons(
+                lgIcons?.value,
+                ['flipHorizontal'],
+                rotateDefaultIcons,
+            );
+            const cirotateLeft = resolveCustomIcons(
+                lgIcons?.value,
+                ['rotateLeft'],
+                rotateDefaultIcons,
+            );
+            const cirotateRight = resolveCustomIcons(
+                lgIcons?.value,
+                ['rotateRight'],
+                rotateDefaultIcons,
+            );
             return [
                 cfg.flipVertical
-                    ? h('button', {
-                          type: 'button',
-                          class: 'lg-flip-ver lg-icon',
-                          'aria-label': strings.flipVertical,
-                          onClick: () => emitBus(FLIP_VER_EVENT),
-                      })
+                    ? h(
+                          'button',
+                          {
+                              type: 'button',
+                              class: [
+                                  'lg-flip-ver lg-icon',
+                                  ciflipVertical?.cls,
+                              ],
+                              'aria-label': strings.flipVertical,
+                              onClick: () => emitBus(FLIP_VER_EVENT),
+                          },
+                          ciflipVertical?.children,
+                      )
                     : null,
                 cfg.flipHorizontal
-                    ? h('button', {
-                          type: 'button',
-                          class: 'lg-flip-hor lg-icon',
-                          'aria-label': strings.flipHorizontal,
-                          onClick: () => emitBus(FLIP_HOR_EVENT),
-                      })
+                    ? h(
+                          'button',
+                          {
+                              type: 'button',
+                              class: [
+                                  'lg-flip-hor lg-icon',
+                                  ciflipHorizontal?.cls,
+                              ],
+                              'aria-label': strings.flipHorizontal,
+                              onClick: () => emitBus(FLIP_HOR_EVENT),
+                          },
+                          ciflipHorizontal?.children,
+                      )
                     : null,
                 cfg.rotateLeft
-                    ? h('button', {
-                          type: 'button',
-                          class: 'lg-rotate-left lg-icon',
-                          'aria-label': strings.rotateLeft,
-                          onClick: () => emitBus(ROTATE_LEFT_EVENT),
-                      })
+                    ? h(
+                          'button',
+                          {
+                              type: 'button',
+                              class: [
+                                  'lg-rotate-left lg-icon',
+                                  cirotateLeft?.cls,
+                              ],
+                              'aria-label': strings.rotateLeft,
+                              onClick: () => emitBus(ROTATE_LEFT_EVENT),
+                          },
+                          cirotateLeft?.children,
+                      )
                     : null,
                 cfg.rotateRight
-                    ? h('button', {
-                          type: 'button',
-                          class: 'lg-rotate-right lg-icon',
-                          'aria-label': strings.rotateRight,
-                          onClick: () => emitBus(ROTATE_RIGHT_EVENT),
-                      })
+                    ? h(
+                          'button',
+                          {
+                              type: 'button',
+                              class: [
+                                  'lg-rotate-right lg-icon',
+                                  cirotateRight?.cls,
+                              ],
+                              'aria-label': strings.rotateRight,
+                              onClick: () => emitBus(ROTATE_RIGHT_EVENT),
+                          },
+                          cirotateRight?.children,
+                      )
                     : null,
             ];
         };

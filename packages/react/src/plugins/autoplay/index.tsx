@@ -1,7 +1,9 @@
+import { autoplayDefaultIcons } from '@lightgallery/headless';
 import { useEffect, useRef, useState, type ReactElement } from 'react';
 
 import { cx } from '../../cx';
 import { useGalleryInternal } from '../../context';
+import { useCustomIcons } from '../../icons';
 import { usePluginSettings } from '../runtime';
 import type { LgPlugin, PluginContext } from '../types';
 
@@ -46,6 +48,10 @@ const TOGGLE_EVENT = 'lg-autoplay-toggle';
 function AutoplayButton(): ReactElement | null {
     const internal = useGalleryInternal();
     const settings = usePluginSettings<AutoplaySettings>();
+    const apIcon = useCustomIcons(
+        ['autoplayPlay', 'autoplayPause'],
+        autoplayDefaultIcons,
+    );
     if (!settings.autoplay || !settings.autoplayControls) {
         return null;
     }
@@ -56,9 +62,11 @@ function AutoplayButton(): ReactElement | null {
                 settings.autoplayPluginStrings?.toggleAutoplay ??
                 settings.strings.toggleAutoplay
             }
-            className="lg-autoplay-button lg-icon"
+            className={cx('lg-autoplay-button lg-icon', apIcon.className)}
             onClick={() => internal.events.emit(TOGGLE_EVENT, undefined)}
-        />
+        >
+            {apIcon.content}
+        </button>
     );
 }
 

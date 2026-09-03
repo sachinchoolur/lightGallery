@@ -5,9 +5,12 @@ import {
     getPinterestShareLink,
     getSharePayload,
     getXShareLink,
+    shareDefaultIcons,
 } from '@lightgallery/headless';
 
 import { useGalleryInternal, useGalleryState } from '../../context';
+import { cx } from '../../cx';
+import { useCustomIcons, type CustomIconResult } from '../../icons';
 import { usePluginSettings } from '../runtime';
 import type { GalleryItem } from '../../types';
 import type { LgPlugin } from '../types';
@@ -105,6 +108,12 @@ function getShareOptions(settings: ShareSettings): ShareOption[] {
 }
 
 function ShareButton(): ReactElement | null {
+    const shareIcon = useCustomIcons(['share'], shareDefaultIcons);
+    const socialIcons: Record<string, CustomIconResult> = {
+        'lg-share-facebook': useCustomIcons(['shareFacebook'], shareDefaultIcons),
+        'lg-share-twitter': useCustomIcons(['shareX'], shareDefaultIcons),
+        'lg-share-pinterest': useCustomIcons(['sharePinterest'], shareDefaultIcons),
+    };
     const state = useGalleryState();
     const internal = useGalleryInternal();
     const settings = usePluginSettings<ShareSettings>();
@@ -148,9 +157,11 @@ function ShareButton(): ReactElement | null {
                 }
                 aria-haspopup={nativeFirst ? undefined : 'true'}
                 aria-expanded={nativeFirst ? undefined : active}
-                className="lg-share lg-icon"
+                className={cx('lg-share lg-icon', shareIcon.className)}
                 onClick={onClick}
-            />
+            >
+                {shareIcon.content}
+            </button>
             <ul className="lg-dropdown" style={{ position: 'absolute' }}>
                 {item &&
                     getShareOptions(settings).map((option, index) => (
@@ -161,7 +172,18 @@ function ShareButton(): ReactElement | null {
                                 target="_blank"
                                 href={option.generateLink(item, currentUrl)}
                             >
-                                <span className="lg-icon" />
+                                <span
+                                    className={cx(
+                                        'lg-icon',
+                                        socialIcons[option.className ?? '']
+                                            ?.className,
+                                    )}
+                                >
+                                    {
+                                        socialIcons[option.className ?? '']
+                                            ?.content
+                                    }
+                                </span>
                                 <span className="lg-dropdown-text">
                                     {option.text}
                                 </span>

@@ -38,18 +38,11 @@
 
 .lg-next {
     right: 20px;
-
-    &:before {
-        content: '\e095';
-    }
 }
 
 .lg-prev {
     left: 20px;
 
-    &:after {
-        content: '\e094';
-    }
 }
 
 @include keyframes(lg-right-end) {
@@ -133,21 +126,12 @@
     }
 
     .lg-close {
-        &:after {
-            content: '\e070';
-        }
     }
     .lg-maximize {
         font-size: 22px;
-        &:after {
-            content: '\e90a';
-        }
     }
 
     .lg-download {
-        &:after {
-            content: '\e0f2';
-        }
     }
 }
 

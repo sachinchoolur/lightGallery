@@ -6,6 +6,7 @@ import type {
 } from '@lightgallery/headless';
 
 import type { HasVideoDetail } from './events';
+import type { LgIconName } from './icons';
 import type { LgPlugin } from './plugins/types';
 
 /** Gallery item with the caption narrowed to a React node (ADR 0001 §7). */
@@ -49,6 +50,13 @@ export interface RenderSlots {
     counter?: (current: number, total: number) => ReactNode;
     prevButton?: () => ReactNode;
     nextButton?: () => ReactNode;
+    /**
+     * Custom icon per name (SVG node); `undefined` keeps the built-in
+     * glyph. State pairs (`maximize`/`minimize`, `autoplayPlay`/
+     * `autoplayPause`, `fullscreen`/`fullscreenExit`) need both names
+     * answered.
+     */
+    icon?: (name: LgIconName) => ReactNode | undefined;
 }
 
 export interface LightGalleryCallbacks {

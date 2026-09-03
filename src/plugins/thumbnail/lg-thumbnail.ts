@@ -11,6 +11,7 @@ import {
     project,
     pushVelocitySample,
     type VelocitySample,
+    thumbnailDefaultIcons,
 } from '@lightgallery/headless';
 
 import { runSprings } from '../../lg-spring-runner';
@@ -71,6 +72,7 @@ export default class Thumbnail {
     }
 
     init(): void {
+        this.core.registerDefaultIcons(thumbnailDefaultIcons);
         // extend module default settings with lightGallery core settings
         this.settings = {
             ...thumbnailsSettings,

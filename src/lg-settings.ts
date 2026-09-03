@@ -1,5 +1,6 @@
 import { VirtualizationSettings } from '@lightgallery/headless';
 
+import { LgIcons } from './lg-icons';
 import { GalleryItem } from './lg-utils';
 import { LgQuery } from './lgQuery';
 import { LightGallery } from './lightgallery';
@@ -647,6 +648,18 @@ export interface LightGalleryCoreSettings {
      */
     strings: LightGalleryCoreStrings;
 
+    /**
+     * Custom icons: SVG markup per icon name, rendered instead of the
+     * built-in SVG icon set — bring your own icons without touching CSS.
+     * @description Omitted names keep the built-in icon. State-pair
+     * buttons (`maximize`/`minimize`, `autoplayPlay`/`autoplayPause`,
+     * `fullscreen`/`fullscreenExit`) need both names provided; a
+     * half-provided pair keeps the built-in pair. Size and color follow
+     * the button (`1em`/`currentColor`-friendly SVGs recommended).
+     * @version V3.0.0
+     */
+    icons: LgIcons;
+
     plugins: (new (instance: LightGallery, $LG: LgQuery) => any)[];
 }
 
@@ -746,4 +759,5 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
         flipVertical: 'Flip vertical',
         toggleComments: 'Toggle Comments',
     } as LightGalleryCoreStrings,
+    icons: {},
 };

@@ -15,19 +15,17 @@
     .lg-next {
         right: auto;
         left: 20px;
-
-        &:before {
-            content: '\e094';
-        }
     }
 
     .lg-prev {
         left: auto;
         right: 20px;
+    }
 
-        &:after {
-            content: '\e095';
-        }
+    // Custom prev/next arrows mirror instead of swapping glyphs.
+    .lg-prev.lg-icon-custom svg,
+    .lg-next.lg-icon-custom svg {
+        transform: scaleX(-1);
     }
 
     // Chrome enter/exit slides from the mirrored side.

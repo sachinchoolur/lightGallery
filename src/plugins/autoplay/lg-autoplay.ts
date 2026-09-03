@@ -1,3 +1,4 @@
+import { autoplayDefaultIcons } from '@lightgallery/headless';
 import { lGEvents } from '../../lg-events';
 import { LightGallery } from '../../lightgallery';
 import { AutoplaySettings, autoplaySettings } from './lg-autoplay-settings';
@@ -24,6 +25,7 @@ export default class Autoplay {
     }
 
     public init(): void {
+        this.core.registerDefaultIcons(autoplayDefaultIcons);
         if (!this.settings.autoplay) {
             return;
         }

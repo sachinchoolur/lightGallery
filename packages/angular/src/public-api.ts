@@ -34,6 +34,13 @@ export {
     type LgCaptionContext,
     type LgCounterContext,
 } from './lib/slots';
+export {
+    LgCiComponent,
+    LgIconDirective,
+    resolveIconSlot,
+    type LgIconContext,
+    type LgIconName,
+} from './lib/icons';
 export { LightGalleryStore } from './lib/store';
 export {
     LgGalleryRuntime,

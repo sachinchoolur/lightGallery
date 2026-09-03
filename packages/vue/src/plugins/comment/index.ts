@@ -1,3 +1,4 @@
+import { commentDefaultIcons } from '@lightgallery/headless';
 import { defineComponent, h, inject, ref, watch, type Ref } from 'vue';
 
 import { LG_SLOTS } from '../../runtime';
@@ -6,6 +7,10 @@ import {
     type LgPluginContext,
     type LgVuePlugin,
 } from '../types';
+import {
+    LG_ICONS,
+    resolveCustomIcons,
+} from '../../icons';
 
 /**
  * Comment plugin (2.x `lg-comment`): a slide-synced comment panel.
@@ -51,19 +56,29 @@ export const CommentToggle = defineComponent({
     setup() {
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
         const active = useCommentState(ctx);
+        const lgIcons = inject(LG_ICONS, undefined);
         return () => {
             const cfg = ctx.settings.value as unknown as CommentSettings;
             if (!cfg.commentBox) {
                 return null;
             }
-            return h('button', {
-                type: 'button',
-                class: 'lg-comment-toggle lg-icon',
-                'aria-label':
-                    cfg.commentPluginStrings?.toggleComments ??
-                    ctx.settings.value.strings.toggleComments,
-                onClick: () => (active.value = !active.value),
-            });
+            const ci = resolveCustomIcons(
+                lgIcons?.value,
+                ['comment'],
+                commentDefaultIcons,
+            );
+            return h(
+                'button',
+                {
+                    type: 'button',
+                    class: ['lg-comment-toggle lg-icon', ci?.cls],
+                    'aria-label':
+                        cfg.commentPluginStrings?.toggleComments ??
+                        ctx.settings.value.strings.toggleComments,
+                    onClick: () => (active.value = !active.value),
+                },
+                ci?.children,
+            );
         };
     },
 });
@@ -74,6 +89,7 @@ export const CommentBox = defineComponent({
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
         const slots = inject(LG_SLOTS, undefined);
         const active = useCommentState(ctx);
+        const lgIconsBox = inject(LG_ICONS, undefined);
         const close = (): void => {
             active.value = false;
         };
@@ -82,6 +98,11 @@ export const CommentBox = defineComponent({
             if (!cfg.commentBox) {
                 return null;
             }
+            const ciClose = resolveCustomIcons(
+                lgIconsBox?.value,
+                ['commentClose'],
+                commentDefaultIcons,
+            );
             const index = ctx.store.currentIndex.value;
             const item = ctx.items.value[index];
             const commentsSlot = (
@@ -104,18 +125,25 @@ export const CommentBox = defineComponent({
                             { class: 'lg-comment-title' },
                             cfg.commentBoxTitle,
                         ),
-                        h('span', {
-                            class: 'lg-comment-close lg-icon',
-                            role: 'button',
-                            tabindex: 0,
-                            'aria-label': 'Close comments',
-                            onClick: close,
-                            onKeydown: (event: KeyboardEvent) => {
-                                if (event.key === 'Enter') {
-                                    close();
-                                }
+                        h(
+                            'span',
+                            {
+                                class: [
+                                    'lg-comment-close lg-icon',
+                                    ciClose?.cls,
+                                ],
+                                role: 'button',
+                                tabindex: 0,
+                                'aria-label': 'Close comments',
+                                onClick: close,
+                                onKeydown: (event: KeyboardEvent) => {
+                                    if (event.key === 'Enter') {
+                                        close();
+                                    }
+                                },
                             },
-                        }),
+                            ciClose?.children,
+                        ),
                     ]),
                     h(
                         'div',

@@ -20,6 +20,7 @@ import {
     pushVelocitySample,
     type ThumbPagerPosition,
     type VelocitySample,
+    thumbnailDefaultIcons,
 } from '@lightgallery/headless';
 
 import { cx } from '../../cx';
@@ -29,6 +30,7 @@ import {
     useGalleryState,
 } from '../../context';
 import { useEventCallback } from '../../hooks';
+import { useCustomIcons } from '../../icons';
 import { runSprings } from '../../springRunner';
 import { usePluginSettings } from '../runtime';
 import type { GalleryItem } from '../../types';
@@ -582,6 +584,10 @@ function ThumbnailStrip(): ReactElement | null {
 
 function ThumbnailToggleButton(): ReactElement | null {
     const internal = useGalleryInternal();
+    const toggleIcon = useCustomIcons(
+        ['toggleThumbnails'],
+        thumbnailDefaultIcons,
+    );
     const settings = usePluginSettings<ThumbnailSettings>();
     // 2.x rule: the toggle only exists when media may overlap the strip.
     if (
@@ -598,9 +604,11 @@ function ThumbnailToggleButton(): ReactElement | null {
                 settings.thumbnailPluginStrings?.toggleThumbnails ??
                 settings.strings.toggleThumbnails
             }
-            className="lg-toggle-thumb lg-icon"
+            className={cx('lg-toggle-thumb lg-icon', toggleIcon.className)}
             onClick={() => internal.layout.toggleComponents()}
-        />
+        >
+            {toggleIcon.content}
+        </button>
     );
 }
 

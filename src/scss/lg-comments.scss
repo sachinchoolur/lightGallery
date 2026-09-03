@@ -62,9 +62,6 @@
         &:hover {
             color: #fff;
         }
-        &:after {
-            content: '\e070';
-        }
     }
 
     iframe {
@@ -93,11 +90,6 @@
             visibility 0s linear 0.18s,
             opacity 0.18s linear 0s
         );
-    }
-    .lg-comment-toggle {
-        &:after {
-            content: '\e908';
-        }
     }
     &.lg-comment-active {
         .lg-comment-overlay {

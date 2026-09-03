@@ -28,6 +28,7 @@ import {
     type VelocitySample,
     type ZoomPan,
     type ZoomSlice,
+    zoomDefaultIcons,
 } from '@lightgallery/headless';
 
 import { runSprings, type SpringTrack } from '../../springRunner';
@@ -36,6 +37,8 @@ import {
     useGalleryInternal,
     useGalleryState,
 } from '../../context';
+import { cx } from '../../cx';
+import { useCustomIcons } from '../../icons';
 import { usePluginSettings } from '../runtime';
 import type { LgPlugin, PluginContext, SlideWrapperProps } from '../types';
 
@@ -109,6 +112,9 @@ const ZOOM_OUT_EVENT = 'lg-zoom-out';
 const ACTUAL_SIZE_EVENT = 'lg-actual-size';
 
 function ZoomToolbar(): ReactElement | null {
+    const zoomInIcon = useCustomIcons(['zoomIn'], zoomDefaultIcons);
+    const zoomOutIcon = useCustomIcons(['zoomOut'], zoomDefaultIcons);
+    const actualIcon = useCustomIcons(['actualSize'], zoomDefaultIcons);
     const internal = useGalleryInternal();
     const settings = usePluginSettings<ZoomSettings>();
     if (!settings.zoom) {
@@ -124,9 +130,14 @@ function ZoomToolbar(): ReactElement | null {
                         settings.zoomPluginStrings?.zoomIn ??
                         settings.strings.zoomIn
                     }
-                    className={`${settings.actualSizeIcons.zoomIn} lg-icon`}
+                    className={cx(
+                        `${settings.actualSizeIcons.zoomIn} lg-icon`,
+                        zoomInIcon.className,
+                    )}
                     onClick={() => emit(ZOOM_IN_EVENT)}
-                />
+                >
+                    {zoomInIcon.content}
+                </button>
             )}
             {settings.showZoomInOutIcons && (
                 <button
@@ -135,9 +146,14 @@ function ZoomToolbar(): ReactElement | null {
                         settings.zoomPluginStrings?.zoomOut ??
                         settings.strings.zoomOut
                     }
-                    className={`${settings.actualSizeIcons.zoomOut} lg-icon`}
+                    className={cx(
+                        `${settings.actualSizeIcons.zoomOut} lg-icon`,
+                        zoomOutIcon.className,
+                    )}
                     onClick={() => emit(ZOOM_OUT_EVENT)}
-                />
+                >
+                    {zoomOutIcon.content}
+                </button>
             )}
             {settings.actualSize && (
                 <button
@@ -146,9 +162,11 @@ function ZoomToolbar(): ReactElement | null {
                         settings.zoomPluginStrings?.viewActualSize ??
                         settings.strings.viewActualSize
                     }
-                    className="lg-actual-size lg-icon"
+                    className={cx('lg-actual-size lg-icon', actualIcon.className)}
                     onClick={() => emit(ACTUAL_SIZE_EVENT)}
-                />
+                >
+                    {actualIcon.content}
+                </button>
             )}
         </>
     );

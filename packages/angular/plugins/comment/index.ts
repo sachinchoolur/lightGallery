@@ -1,3 +1,4 @@
+import { commentDefaultIcons } from '@lightgallery/headless';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
@@ -13,6 +14,8 @@ import {
     LG_PLUGIN_CONTEXT,
     type LgFeature,
     type LgGalleryItem,
+    LgCiComponent,
+    resolveIconSlot,
 } from '@lightgallery/angular';
 
 /**
@@ -65,22 +68,33 @@ export class LgCommentStateService {
 @Component({
     selector: 'lg-comment-toggle',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [LgCiComponent],
     template: `
         @if (settings().commentBox) {
         <button
             type="button"
-            class="lg-comment-toggle lg-icon"
+            class="lg-comment-toggle lg-icon lg-icon-custom"
             [attr.aria-label]="
                 settings().commentPluginStrings?.toggleComments ??
                 coreStrings().toggleComments
             "
             (click)="state.active.set(!state.active())"
-        ></button>
+        >
+            <lg-ci
+                [slot]="ciComment()"
+                [names]="['comment']"
+                [icons]="defaultIcons"
+            />
+        </button>
         }
     `,
 })
 export class LgCommentToggleComponent {
     private readonly ctx = inject(LG_PLUGIN_CONTEXT);
+    protected readonly defaultIcons = commentDefaultIcons;
+    protected readonly ciComment = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['comment']),
+    );
     protected readonly state = inject(LgCommentStateService);
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as CommentSettings,
@@ -93,7 +107,7 @@ export class LgCommentToggleComponent {
 @Component({
     selector: 'lg-comment-box',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgTemplateOutlet],
+    imports: [LgCiComponent, NgTemplateOutlet],
     template: `
         @if (settings().commentBox) {
         <div class="lg-comment-box lg-fb-comment-box">
@@ -102,13 +116,19 @@ export class LgCommentToggleComponent {
                     {{ settings().commentBoxTitle }}
                 </h3>
                 <span
-                    class="lg-comment-close lg-icon"
+                    class="lg-comment-close lg-icon lg-icon-custom"
                     role="button"
                     tabindex="0"
                     aria-label="Close comments"
                     (click)="state.active.set(false)"
                     (keydown.enter)="state.active.set(false)"
-                ></span>
+                >
+            <lg-ci
+                [slot]="ciClose()"
+                [names]="['commentClose']"
+                [icons]="defaultIcons"
+            />
+        </span>
             </div>
             <div class="lg-comment-body">
                 @if (settings().commentsTemplate; as tpl) {
@@ -122,6 +142,10 @@ export class LgCommentToggleComponent {
 })
 export class LgCommentBoxComponent {
     private readonly ctx = inject(LG_PLUGIN_CONTEXT);
+    protected readonly defaultIcons = commentDefaultIcons;
+    protected readonly ciClose = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['commentClose']),
+    );
     protected readonly state = inject(LgCommentStateService);
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as CommentSettings,

@@ -34,9 +34,17 @@ import {
     type RectLike,
     type SlideDirection,
     type UserSettings,
+    coreDefaultIcons,
 } from '@lightgallery/headless';
 
 import { getFocusableElements, useBodyLock, useHideBars } from './composables';
+import {
+    LG_ICONS,
+    LgCi,
+    resolveCustomIcons,
+    type LgIconName,
+    type LgIcons,
+} from './icons';
 import { useGalleryGestures } from './gestures';
 import LgCaption from './LgCaption.vue';
 import LgSlide, { type OriginAnimation } from './LgSlide.vue';
@@ -89,9 +97,12 @@ interface SlideTimeline {
 }
 
 const props = withDefaults(
-    defineProps<LgGalleryProps & { plugins?: LgVuePlugin[] }>(),
+    defineProps<
+        LgGalleryProps & { plugins?: LgVuePlugin[]; icons?: LgIcons }
+    >(),
     {
         plugins: undefined,
+        icons: undefined,
         slides: undefined,
         container: 'body',
         className: undefined,
@@ -178,6 +189,14 @@ const store = createGalleryStore();
 provide(LG_STORE, store);
 const slots = useSlots();
 provide(LG_SLOTS, slots);
+provide(
+    LG_ICONS,
+    computed(() => props.icons),
+);
+// Exposed for the template's LgCi defaults.
+const iconDefaults = coreDefaultIcons;
+const iconCls = (names: LgIconName[]): string | undefined =>
+    resolveCustomIcons(props.icons, names, coreDefaultIcons)?.cls;
 
 const SETTING_KEYS = [
     'mode',
@@ -1396,22 +1415,38 @@ onBeforeUnmount(() => {
                         <button
                             type="button"
                             class="lg-prev lg-icon"
-                            :class="{ disabled: disablePrev }"
+                            :class="[
+                                { disabled: disablePrev },
+                                !slots['prev-button'] && iconCls(['prev']),
+                            ]"
                             :disabled="disablePrev"
                             :aria-label="settings.strings.previousSlide"
                             @click="prevSlide"
                         >
                             <slot name="prev-button" />
+                            <LgCi
+                                v-if="!slots['prev-button']"
+                                :names="['prev']"
+                                :defaults="iconDefaults"
+                            />
                         </button>
                         <button
                             type="button"
                             class="lg-next lg-icon"
-                            :class="{ disabled: disableNext }"
+                            :class="[
+                                { disabled: disableNext },
+                                !slots['next-button'] && iconCls(['next']),
+                            ]"
                             :disabled="disableNext"
                             :aria-label="settings.strings.nextSlide"
                             @click="nextSlide"
                         >
                             <slot name="next-button" />
+                            <LgCi
+                                v-if="!slots['next-button']"
+                                :names="['next']"
+                                :defaults="iconDefaults"
+                            />
                         </button>
                     </template>
                 </div>
@@ -1420,25 +1455,34 @@ onBeforeUnmount(() => {
                         v-if="settings.showMaximizeIcon"
                         type="button"
                         class="lg-maximize lg-icon"
+                        :class="iconCls(['maximize', 'minimize'])"
                         :aria-label="settings.strings.toggleMaximize"
                         @click="maximized = !maximized"
-                    ></button>
+                    >
+                        <LgCi :names="['maximize', 'minimize']" :defaults="iconDefaults" />
+                    </button>
                     <button
                         v-if="settings.closable && settings.showCloseIcon"
                         type="button"
                         class="lg-close lg-icon"
+                        :class="iconCls(['close'])"
                         :aria-label="settings.strings.closeGallery"
                         @click="closeGallery"
-                    ></button>
+                    >
+                        <LgCi :names="['close']" :defaults="iconDefaults" />
+                    </button>
                     <a
                         v-if="showDownload"
                         target="_blank"
                         rel="noopener"
                         class="lg-download lg-icon"
+                        :class="iconCls(['download'])"
                         :aria-label="settings.strings.download"
                         :href="downloadHref"
                         :download="downloadName || true"
-                    ></a>
+                    >
+                        <LgCi :names="['download']" :defaults="iconDefaults" />
+                    </a>
                     <template v-for="plugin of plugins" :key="plugin.name">
                         <component
                             :is="plugin.slots!.toolbar!"

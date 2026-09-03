@@ -1,9 +1,12 @@
+import { commentDefaultIcons } from '@lightgallery/headless';
 import type { ReactElement, ReactNode } from 'react';
 
 import {
     useGalleryInternal,
     useGalleryState,
 } from '../../context';
+import { cx } from '../../cx';
+import { useCustomIcons } from '../../icons';
 import { usePluginSettings } from '../runtime';
 import type { GalleryItem } from '../../types';
 import type { LgPlugin } from '../types';
@@ -36,6 +39,7 @@ export const commentSettings: CommentSettings = {
 };
 
 function CommentToggleButton(): ReactElement | null {
+    const commentIcon = useCustomIcons(['comment'], commentDefaultIcons);
     const internal = useGalleryInternal();
     const settings = usePluginSettings<CommentSettings>();
     if (!settings.commentBox) {
@@ -51,15 +55,18 @@ function CommentToggleButton(): ReactElement | null {
                 settings.commentPluginStrings?.toggleComments ??
                 settings.strings.toggleComments
             }
-            className="lg-comment-toggle lg-icon"
+            className={cx('lg-comment-toggle lg-icon', commentIcon.className)}
             onClick={() =>
                 internal.layout.setOuterClass('lg-comment-active', !active)
             }
-        />
+        >
+            {commentIcon.content}
+        </button>
     );
 }
 
 function CommentBox(): ReactElement | null {
+    const closeIcon = useCustomIcons(['commentClose'], commentDefaultIcons);
     const state = useGalleryState();
     const internal = useGalleryInternal();
     const settings = usePluginSettings<CommentSettings>();
@@ -77,7 +84,10 @@ function CommentBox(): ReactElement | null {
                         {settings.commentBoxTitle}
                     </h3>
                     <span
-                        className="lg-comment-close lg-icon"
+                        className={cx(
+                            'lg-comment-close lg-icon',
+                            closeIcon.className,
+                        )}
                         role="button"
                         tabIndex={0}
                         aria-label="Close comments"
@@ -87,7 +97,9 @@ function CommentBox(): ReactElement | null {
                                 close();
                             }
                         }}
-                    />
+                    >
+                        {closeIcon.content}
+                    </span>
                 </div>
                 <div className="lg-comment-body">
                     {item && settings.renderComments

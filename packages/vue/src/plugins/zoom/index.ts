@@ -34,6 +34,7 @@ import {
     type VelocitySample,
     type ZoomPan,
     type ZoomSlice,
+    zoomDefaultIcons,
 } from '@lightgallery/headless';
 
 import { runSprings, type SpringTrack } from '../../springRunner';
@@ -42,6 +43,10 @@ import {
     type LgPluginContext,
     type LgVuePlugin,
 } from '../types';
+import {
+    LG_ICONS,
+    resolveCustomIcons,
+} from '../../icons';
 import type { LgGalleryItem } from '../../types';
 
 /**
@@ -120,6 +125,7 @@ export const ZoomToolbar = defineComponent({
     name: 'LgZoomToolbar',
     setup() {
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
+        const lgIcons = inject(LG_ICONS, undefined);
         const emitBus = (name: string): void =>
             ctx.events.emit(name, undefined);
         return () => {
@@ -127,36 +133,69 @@ export const ZoomToolbar = defineComponent({
             if (!cfg.zoom) {
                 return null;
             }
+            const ciZoomIn = resolveCustomIcons(
+                lgIcons?.value,
+                ['zoomIn'],
+                zoomDefaultIcons,
+            );
+            const ciZoomOut = resolveCustomIcons(
+                lgIcons?.value,
+                ['zoomOut'],
+                zoomDefaultIcons,
+            );
+            const ciActual = resolveCustomIcons(
+                lgIcons?.value,
+                ['actualSize'],
+                zoomDefaultIcons,
+            );
             return [
                 cfg.showZoomInOutIcons
-                    ? h('button', {
-                          type: 'button',
-                          class: `${cfg.actualSizeIcons.zoomIn} lg-icon`,
-                          'aria-label':
-                              cfg.zoomPluginStrings?.zoomIn ??
-                              ctx.settings.value.strings.zoomIn,
-                          onClick: () => emitBus(ZOOM_IN_EVENT),
-                      })
+                    ? h(
+                          'button',
+                          {
+                              type: 'button',
+                              class: [
+                                  `${cfg.actualSizeIcons.zoomIn} lg-icon`,
+                                  ciZoomIn?.cls,
+                              ],
+                              'aria-label':
+                                  cfg.zoomPluginStrings?.zoomIn ??
+                                  ctx.settings.value.strings.zoomIn,
+                              onClick: () => emitBus(ZOOM_IN_EVENT),
+                          },
+                          ciZoomIn?.children,
+                      )
                     : null,
                 cfg.showZoomInOutIcons
-                    ? h('button', {
-                          type: 'button',
-                          class: `${cfg.actualSizeIcons.zoomOut} lg-icon`,
-                          'aria-label':
-                              cfg.zoomPluginStrings?.zoomOut ??
-                              ctx.settings.value.strings.zoomOut,
-                          onClick: () => emitBus(ZOOM_OUT_EVENT),
-                      })
+                    ? h(
+                          'button',
+                          {
+                              type: 'button',
+                              class: [
+                                  `${cfg.actualSizeIcons.zoomOut} lg-icon`,
+                                  ciZoomOut?.cls,
+                              ],
+                              'aria-label':
+                                  cfg.zoomPluginStrings?.zoomOut ??
+                                  ctx.settings.value.strings.zoomOut,
+                              onClick: () => emitBus(ZOOM_OUT_EVENT),
+                          },
+                          ciZoomOut?.children,
+                      )
                     : null,
                 cfg.actualSize
-                    ? h('button', {
-                          type: 'button',
-                          class: 'lg-actual-size lg-icon',
-                          'aria-label':
-                              cfg.zoomPluginStrings?.viewActualSize ??
-                              ctx.settings.value.strings.viewActualSize,
-                          onClick: () => emitBus(ACTUAL_SIZE_EVENT),
-                      })
+                    ? h(
+                          'button',
+                          {
+                              type: 'button',
+                              class: ['lg-actual-size lg-icon', ciActual?.cls],
+                              'aria-label':
+                                  cfg.zoomPluginStrings?.viewActualSize ??
+                                  ctx.settings.value.strings.viewActualSize,
+                              onClick: () => emitBus(ACTUAL_SIZE_EVENT),
+                          },
+                          ciActual?.children,
+                      )
                     : null,
             ];
         };

@@ -10,9 +10,12 @@ import {
     rotateLeft,
     rotateRight,
     type RotateSlice,
+    rotateDefaultIcons,
 } from '@lightgallery/headless';
 
 import { useGalleryInternal } from '../../context';
+import { cx } from '../../cx';
+import { useCustomIcons } from '../../icons';
 import { usePluginSettings } from '../runtime';
 import type { LgPlugin, SlideWrapperProps } from '../types';
 
@@ -66,6 +69,10 @@ const FLIP_VER_EVENT = 'lg-flip-ver';
 function RotateToolbar(): ReactElement | null {
     const internal = useGalleryInternal();
     const settings = usePluginSettings<RotateSettings>();
+    const flipVerIcon = useCustomIcons(['flipVertical'], rotateDefaultIcons);
+    const flipHorIcon = useCustomIcons(['flipHorizontal'], rotateDefaultIcons);
+    const rotateLeftIcon = useCustomIcons(['rotateLeft'], rotateDefaultIcons);
+    const rotateRightIcon = useCustomIcons(['rotateRight'], rotateDefaultIcons);
     if (!settings.rotate) {
         return null;
     }
@@ -84,33 +91,41 @@ function RotateToolbar(): ReactElement | null {
                 <button
                     type="button"
                     aria-label={strings.flipVertical}
-                    className="lg-flip-ver lg-icon"
+                    className={cx('lg-flip-ver lg-icon', flipVerIcon.className)}
                     onClick={() => emit(FLIP_VER_EVENT)}
-                />
+                >
+                    {flipVerIcon.content}
+                </button>
             )}
             {settings.flipHorizontal && (
                 <button
                     type="button"
                     aria-label={strings.flipHorizontal}
-                    className="lg-flip-hor lg-icon"
+                    className={cx('lg-flip-hor lg-icon', flipHorIcon.className)}
                     onClick={() => emit(FLIP_HOR_EVENT)}
-                />
+                >
+                    {flipHorIcon.content}
+                </button>
             )}
             {settings.rotateLeft && (
                 <button
                     type="button"
                     aria-label={strings.rotateLeft}
-                    className="lg-rotate-left lg-icon"
+                    className={cx('lg-rotate-left lg-icon', rotateLeftIcon.className)}
                     onClick={() => emit(ROTATE_LEFT_EVENT)}
-                />
+                >
+                    {rotateLeftIcon.content}
+                </button>
             )}
             {settings.rotateRight && (
                 <button
                     type="button"
                     aria-label={strings.rotateRight}
-                    className="lg-rotate-right lg-icon"
+                    className={cx('lg-rotate-right lg-icon', rotateRightIcon.className)}
                     onClick={() => emit(ROTATE_RIGHT_EVENT)}
-                />
+                >
+                    {rotateRightIcon.content}
+                </button>
             )}
         </>
     );

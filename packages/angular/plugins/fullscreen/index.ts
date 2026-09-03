@@ -1,3 +1,4 @@
+import { fullscreenDefaultIcons } from '@lightgallery/headless';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -11,6 +12,8 @@ import {
     LG_FEATURE_INIT,
     LG_PLUGIN_CONTEXT,
     type LgFeature,
+    LgCiComponent,
+    resolveIconSlot,
 } from '@lightgallery/angular';
 
 /**
@@ -65,22 +68,36 @@ function exitFullscreen(): void {
 @Component({
     selector: 'lg-fullscreen-button',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [LgCiComponent],
     template: `
         @if (visible()) {
         <button
             type="button"
-            class="lg-fullscreen lg-icon"
+            class="lg-fullscreen lg-icon lg-icon-custom"
             [attr.aria-label]="
                 settings().fullscreenPluginStrings?.toggleFullscreen ??
                 coreStrings().toggleFullscreen
             "
             (click)="toggle()"
-        ></button>
+        >
+            <lg-ci
+                [slot]="customIcon()"
+                [names]="['fullscreen', 'fullscreenExit']"
+                [icons]="defaultIcons"
+            />
+        </button>
         }
     `,
 })
 export class LgFullscreenButtonComponent {
     private readonly ctx = inject(LG_PLUGIN_CONTEXT);
+    protected readonly customIcon = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), [
+            'fullscreen',
+            'fullscreenExit',
+        ]),
+    );
+    protected readonly defaultIcons = fullscreenDefaultIcons;
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as FullscreenSettings,
     );

@@ -24,11 +24,14 @@ import {
     rotateLeft,
     rotateRight,
     type RotateSlice,
+    rotateDefaultIcons,
 } from '@lightgallery/headless';
 import {
     LG_PLUGIN_CONTEXT,
     type LgFeature,
     type LgGalleryItem,
+    LgCiComponent,
+    resolveIconSlot,
 } from '@lightgallery/angular';
 
 /**
@@ -83,40 +86,78 @@ type RotateResolved = RotateSettings & Record<string, unknown>;
 @Component({
     selector: 'lg-rotate-toolbar',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [LgCiComponent],
     template: `
         @if (settings().rotate) { @if (settings().flipVertical) {
         <button
             type="button"
-            class="lg-flip-ver lg-icon"
+            class="lg-flip-ver lg-icon lg-icon-custom"
             [attr.aria-label]="strings().flipVertical"
             (click)="emit(FLIP_VER)"
-        ></button>
+        >
+            <lg-ci
+                [slot]="ciFlipVertical()"
+                [names]="['flipVertical']"
+                [icons]="defaultIcons"
+            />
+        </button>
         } @if (settings().flipHorizontal) {
         <button
             type="button"
-            class="lg-flip-hor lg-icon"
+            class="lg-flip-hor lg-icon lg-icon-custom"
             [attr.aria-label]="strings().flipHorizontal"
             (click)="emit(FLIP_HOR)"
-        ></button>
+        >
+            <lg-ci
+                [slot]="ciFlipHorizontal()"
+                [names]="['flipHorizontal']"
+                [icons]="defaultIcons"
+            />
+        </button>
         } @if (settings().rotateLeft) {
         <button
             type="button"
-            class="lg-rotate-left lg-icon"
+            class="lg-rotate-left lg-icon lg-icon-custom"
             [attr.aria-label]="strings().rotateLeft"
             (click)="emit(ROTATE_LEFT)"
-        ></button>
+        >
+            <lg-ci
+                [slot]="ciRotateLeft()"
+                [names]="['rotateLeft']"
+                [icons]="defaultIcons"
+            />
+        </button>
         } @if (settings().rotateRight) {
         <button
             type="button"
-            class="lg-rotate-right lg-icon"
+            class="lg-rotate-right lg-icon lg-icon-custom"
             [attr.aria-label]="strings().rotateRight"
             (click)="emit(ROTATE_RIGHT)"
-        ></button>
+        >
+            <lg-ci
+                [slot]="ciRotateRight()"
+                [names]="['rotateRight']"
+                [icons]="defaultIcons"
+            />
+        </button>
         } }
     `,
 })
 export class LgRotateToolbarComponent {
     private readonly ctx = inject(LG_PLUGIN_CONTEXT);
+    protected readonly defaultIcons = rotateDefaultIcons;
+    protected readonly ciFlipVertical = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['flipVertical']),
+    );
+    protected readonly ciFlipHorizontal = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['flipHorizontal']),
+    );
+    protected readonly ciRotateLeft = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['rotateLeft']),
+    );
+    protected readonly ciRotateRight = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['rotateRight']),
+    );
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as RotateResolved,
     );

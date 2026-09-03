@@ -1,4 +1,8 @@
-import { canNativeShare, getSharePayload } from '@lightgallery/headless';
+import {
+    canNativeShare,
+    getSharePayload,
+    shareDefaultIcons,
+} from '@lightgallery/headless';
 
 import { ShareSettings, shareSettings } from './lg-share-settings';
 
@@ -34,6 +38,7 @@ export default class Share {
     }
 
     public init(): void {
+        this.core.registerDefaultIcons(shareDefaultIcons);
         if (!this.settings.share) {
             return;
         }

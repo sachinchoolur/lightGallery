@@ -8,3 +8,4 @@ function lightGallery(
     return new LightGallery(el, options);
 }
 export default lightGallery;
+export type { LgIconName, LgIcons } from './lg-icons';

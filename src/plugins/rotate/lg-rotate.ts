@@ -1,3 +1,4 @@
+import { rotateDefaultIcons } from '@lightgallery/headless';
 import { lGEvents } from '../../lg-events';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
@@ -53,6 +54,7 @@ export default class Rotate {
     }
 
     init(): void {
+        this.core.registerDefaultIcons(rotateDefaultIcons);
         if (!this.settings.rotate) {
             return;
         }

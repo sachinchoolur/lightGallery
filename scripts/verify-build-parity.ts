@@ -17,7 +17,7 @@ const excludedPathPrefixes = [
 ];
 
 const excludedFiles = new Set(['package.json', 'README.md']);
-const requiredAssetPathPrefixes = ['css/', 'fonts/', 'images/', 'scss/'];
+const requiredAssetPathPrefixes = ['css/', 'images/', 'scss/'];
 
 interface BundleSize {
     path: string;

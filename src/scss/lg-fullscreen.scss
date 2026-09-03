@@ -1,9 +1,15 @@
 .lg-fullscreen {
-    &:after {
-        content: "\e20c";
 
-        .lg-fullscreen-on & {
-            content: "\e20d";
+    // Custom pair rides the same lg-fullscreen-on state as the glyphs.
+    &.lg-icon-custom .lg-ci-fullscreen-exit {
+        display: none;
+    }
+    .lg-fullscreen-on &.lg-icon-custom {
+        .lg-ci-fullscreen {
+            display: none;
+        }
+        .lg-ci-fullscreen-exit {
+            display: inline-flex;
         }
     }
 }

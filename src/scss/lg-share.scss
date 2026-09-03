@@ -106,32 +106,20 @@
     }
     .lg-share {
         position: relative;
-        &:after {
-            content: '\e80d';
-        }
     }
     .lg-share-facebook {
         .lg-icon {
             color: #3b5998;
-            &:after {
-                content: '\e904';
-            }
         }
     }
     .lg-share-twitter {
         .lg-icon {
             color: #00aced;
-            &:after {
-                content: '\e907';
-            }
         }
     }
     .lg-share-pinterest {
         .lg-icon {
             color: #cb2027;
-            &:after {
-                content: '\e906';
-            }
         }
     }
 }

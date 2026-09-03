@@ -425,10 +425,41 @@
     .lg-outer {
         z-index: 2;
     }
-    .lg-maximize {
-        &:after {
-            content: '\e909';
-        }
+}
+
+// Custom icons (settings.icons): user SVGs replace the font glyphs. The
+// wrapper spans center the SVG in the button; sizing follows the
+// button's font-size so custom icons land where the glyphs did. Color
+// is deliberately NOT forced — currentColor-based SVGs inherit the
+// button color, and fills/strokes authored into the SVG are respected.
+.lg-icon-custom {
+    &::after {
+        content: none !important;
+    }
+    .lg-ci {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+    svg {
+        width: 1em;
+        height: 1em;
+    }
+}
+
+// Maximize/minimize custom pair follows the same lg-inline state that
+// swaps the font glyphs above.
+.lg-maximize.lg-icon-custom .lg-ci-maximize {
+    display: none;
+}
+.lg-inline .lg-maximize.lg-icon-custom {
+    .lg-ci-maximize {
+        display: inline-flex;
+    }
+    .lg-ci-minimize {
+        display: none;
     }
 }
 

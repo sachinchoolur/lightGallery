@@ -13,6 +13,7 @@ import {
     resolveSwipeTarget,
     shouldCloseOnVerticalDrag,
     type VelocitySample,
+    coreDefaultIcons,
 } from '@lightgallery/headless';
 
 import {
@@ -27,6 +28,7 @@ import {
     lightGalleryCoreSettings,
     LightGallerySettings,
 } from './lg-settings';
+import { applyCustomIcons, LgIcons } from './lg-icons';
 import { runSprings } from './lg-spring-runner';
 import utils, { GalleryItem, ImageSize } from './lg-utils';
 import { $LG, lgQuery } from './lgQuery';
@@ -66,6 +68,9 @@ export class LightGallery {
 
     // True when a slide animation is in progress
     public lgBusy = false;
+    // Built-in icon SVGs: core defaults + whatever the instantiated
+    // plugins register; `settings.icons` overrides per name at apply.
+    private defaultIcons: LgIcons = { ...coreDefaultIcons };
 
     // Type of touch action - {swipe, zoomSwipe, pinch}
     public touchAction?: 'swipe' | 'zoomSwipe' | 'pinch';
@@ -506,6 +511,25 @@ export class LightGallery {
         this.toggleMaximize();
 
         this.initModules();
+
+        // Icons: one pass after the plugins have appended their buttons
+        // and registered their default sets — every icon element exists
+        // by now. `settings.icons` overrides per name; pairs fall back
+        // whole (see lg-icons.ts).
+        applyCustomIcons(
+            this.$container.get(),
+            this.defaultIcons,
+            this.settings.icons,
+        );
+    }
+
+    /**
+     * Merge a plugin's built-in icon SVGs into the default set (called
+     * from plugin `init()`, before the icon pass runs). Consumer
+     * `settings.icons` still win over anything registered here.
+     */
+    registerDefaultIcons(icons: LgIcons): void {
+        this.defaultIcons = { ...this.defaultIcons, ...icons };
     }
 
     refreshOnResize(): void {

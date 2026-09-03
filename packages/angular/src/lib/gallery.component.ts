@@ -53,6 +53,7 @@ import {
     type RectLike,
     type SlideDirection,
     type UserSettings,
+    coreDefaultIcons,
 } from '@lightgallery/headless';
 
 import { LgCaptionComponent } from './caption.component';
@@ -77,6 +78,12 @@ import {
     LgPrevButtonDirective,
     type LgCounterContext,
 } from './slots';
+import {
+    LgCiComponent,
+    LgIconDirective,
+    resolveIconSlot,
+    type LgIconName,
+} from './icons';
 import { LightGalleryStore } from './store';
 import { LgTimeouts } from './timeouts';
 import type {
@@ -150,6 +157,7 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
     imports: [
         CdkTrapFocus,
         LgCaptionComponent,
+        LgCiComponent,
         LgGesturesDirective,
         LgSlideComponent,
         NgComponentOutlet,
@@ -237,9 +245,10 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                         <button
                             type="button"
                             [class]="
-                                disablePrev()
+                                (disablePrev()
                                     ? 'lg-prev lg-icon disabled'
-                                    : 'lg-prev lg-icon'
+                                    : 'lg-prev lg-icon') +
+                                (prevButtonSlot() ? '' : iconCls(['prev']))
                             "
                             [disabled]="disablePrev()"
                             [attr.aria-label]="settings().strings.previousSlide"
@@ -249,14 +258,21 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                             <ng-container
                                 *ngTemplateOutlet="slot.templateRef"
                             />
+                            } @else {
+                            <lg-ci
+                                [slot]="customIcon(['prev'])"
+                                [names]="['prev']"
+                                [icons]="coreIcons"
+                            />
                             }
                         </button>
                         <button
                             type="button"
                             [class]="
-                                disableNext()
+                                (disableNext()
                                     ? 'lg-next lg-icon disabled'
-                                    : 'lg-next lg-icon'
+                                    : 'lg-next lg-icon') +
+                                (nextButtonSlot() ? '' : iconCls(['next']))
                             "
                             [disabled]="disableNext()"
                             [attr.aria-label]="settings().strings.nextSlide"
@@ -266,6 +282,12 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                             <ng-container
                                 *ngTemplateOutlet="slot.templateRef"
                             />
+                            } @else {
+                            <lg-ci
+                                [slot]="customIcon(['next'])"
+                                [names]="['next']"
+                                [icons]="coreIcons"
+                            />
                             }
                         </button>
                         }
@@ -274,29 +296,52 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                         @if (settings().showMaximizeIcon) {
                         <button
                             type="button"
-                            class="lg-maximize lg-icon"
+                            [class]="
+                                'lg-maximize lg-icon' +
+                                iconCls(['maximize', 'minimize'])
+                            "
                             [attr.aria-label]="
                                 settings().strings.toggleMaximize
                             "
                             (click)="toggleMaximize()"
-                        ></button>
+                        >
+                            <lg-ci
+                                [slot]="customIcon(['maximize', 'minimize'])"
+                                [names]="['maximize', 'minimize']"
+                                [icons]="coreIcons"
+                            />
+                        </button>
                         } @if (settings().closable && settings().showCloseIcon)
                         {
                         <button
                             type="button"
-                            class="lg-close lg-icon"
+                            [class]="'lg-close lg-icon' + iconCls(['close'])"
                             [attr.aria-label]="settings().strings.closeGallery"
                             (click)="closeGallery()"
-                        ></button>
+                        >
+                            <lg-ci
+                                [slot]="customIcon(['close'])"
+                                [names]="['close']"
+                                [icons]="coreIcons"
+                            />
+                        </button>
                         } @if (showDownload()) {
                         <a
                             target="_blank"
                             rel="noopener"
-                            class="lg-download lg-icon"
+                            [class]="
+                                'lg-download lg-icon' + iconCls(['download'])
+                            "
                             [attr.aria-label]="settings().strings.download"
                             [attr.href]="downloadHref()"
                             [attr.download]="downloadName()"
-                        ></a>
+                        >
+                            <lg-ci
+                                [slot]="customIcon(['download'])"
+                                [names]="['download']"
+                                [icons]="coreIcons"
+                            />
+                        </a>
                         } @for (slot of toolbarSlots(); track slot) {
                         <ng-container
                             *ngComponentOutlet="
@@ -561,6 +606,17 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     protected readonly counterSlot = contentChild(LgCounterDirective);
     protected readonly prevButtonSlot = contentChild(LgPrevButtonDirective);
     protected readonly nextButtonSlot = contentChild(LgNextButtonDirective);
+    protected readonly iconSlot = contentChild(LgIconDirective);
+
+    /** The icon slot when it covers every name; '' vs class for [class]. */
+    protected customIcon(names: LgIconName[]): LgIconDirective | undefined {
+        return resolveIconSlot(this.iconSlot(), names);
+    }
+    protected iconCls(_names: LgIconName[]): string {
+        // Defaults always render, so every icon button is SVG-mode.
+        return ' lg-icon-custom';
+    }
+    protected readonly coreIcons = coreDefaultIcons;
 
     private overlayRef: OverlayRef | null = null;
     private domOutlet: DomPortalOutlet | null = null;
@@ -1008,6 +1064,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             emit: (name, detail) => this.emitEvent(name, detail),
             zoomOriginOpen: this.runtime.zoomOriginOpen.asReadonly(),
             getDummySrc: (index) => this.runtime.getDummySrc(index),
+            icons: this.iconSlot,
         };
 
         // Feature injector lifecycle: rebuilt when the features array

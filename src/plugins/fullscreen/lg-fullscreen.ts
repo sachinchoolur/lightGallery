@@ -1,3 +1,4 @@
+import { fullscreenDefaultIcons } from '@lightgallery/headless';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
 import {
@@ -23,6 +24,7 @@ export default class FullScreen {
     }
 
     public init(): void {
+        this.core.registerDefaultIcons(fullscreenDefaultIcons);
         let fullScreen = '';
         if (this.settings.fullScreen) {
             // check for fullscreen browser support

@@ -1,3 +1,4 @@
+import { fullscreenDefaultIcons } from '@lightgallery/headless';
 import { computed, defineComponent, h, inject, watch } from 'vue';
 
 import {
@@ -5,6 +6,10 @@ import {
     type LgPluginContext,
     type LgVuePlugin,
 } from '../types';
+import {
+    LG_ICONS,
+    resolveCustomIcons,
+} from '../../icons';
 
 /**
  * Fullscreen plugin (2.x `lg-fullscreen`): toolbar button toggling browser
@@ -58,6 +63,7 @@ export const FullscreenButton = defineComponent({
     name: 'LgFullscreenButton',
     setup() {
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
+        const lgIcons = inject(LG_ICONS, undefined);
         const toggle = (): void => {
             if (fullscreenElement()) {
                 exitFullscreen();
@@ -73,14 +79,23 @@ export const FullscreenButton = defineComponent({
             if (!cfg.fullScreen || !fullscreenSupported()) {
                 return null;
             }
-            return h('button', {
-                type: 'button',
-                class: 'lg-fullscreen lg-icon',
-                'aria-label':
-                    cfg.fullscreenPluginStrings?.toggleFullscreen ??
-                    ctx.settings.value.strings.toggleFullscreen,
-                onClick: toggle,
-            });
+            const ci = resolveCustomIcons(
+                lgIcons?.value,
+                ['fullscreen', 'fullscreenExit'],
+                fullscreenDefaultIcons,
+            );
+            return h(
+                'button',
+                {
+                    type: 'button',
+                    class: ['lg-fullscreen lg-icon', ci?.cls],
+                    'aria-label':
+                        cfg.fullscreenPluginStrings?.toggleFullscreen ??
+                        ctx.settings.value.strings.toggleFullscreen,
+                    onClick: toggle,
+                },
+                ci?.children,
+            );
         };
     },
 });

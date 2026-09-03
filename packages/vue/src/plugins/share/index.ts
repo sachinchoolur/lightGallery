@@ -5,6 +5,7 @@ import {
     getPinterestShareLink,
     getSharePayload,
     getXShareLink,
+    shareDefaultIcons,
 } from '@lightgallery/headless';
 
 import {
@@ -12,6 +13,10 @@ import {
     type LgPluginContext,
     type LgVuePlugin,
 } from '../types';
+import {
+    LG_ICONS,
+    resolveCustomIcons,
+} from '../../icons';
 import type { LgGalleryItem } from '../../types';
 
 /**
@@ -129,6 +134,7 @@ export const ShareButton = defineComponent({
     name: 'LgShareButton',
     setup() {
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
+        const lgIcons = inject(LG_ICONS, undefined);
         const active = useShareState(ctx);
         return () => {
             const cfg = ctx.settings.value as unknown as ShareSettings;
@@ -155,17 +161,54 @@ export const ShareButton = defineComponent({
                 }
                 active.value = !active.value;
             };
+            const socialIcons: Record<
+                string,
+                ReturnType<typeof resolveCustomIcons>
+            > = {
+                'lg-share-facebook': resolveCustomIcons(
+                    lgIcons?.value,
+                    ['shareFacebook'],
+                    shareDefaultIcons,
+                ),
+                'lg-share-twitter': resolveCustomIcons(
+                    lgIcons?.value,
+                    ['shareX'],
+                    shareDefaultIcons,
+                ),
+                'lg-share-pinterest': resolveCustomIcons(
+                    lgIcons?.value,
+                    ['sharePinterest'],
+                    shareDefaultIcons,
+                ),
+            };
             return [
-                h('button', {
-                    type: 'button',
-                    class: 'lg-share lg-icon',
-                    'aria-label':
-                        cfg.sharePluginStrings?.share ??
-                        ctx.settings.value.strings.share,
-                    'aria-haspopup': nativeFirst ? undefined : 'true',
-                    'aria-expanded': nativeFirst ? undefined : active.value,
-                    onClick,
-                }),
+                h(
+                    'button',
+                    {
+                        type: 'button',
+                        class: [
+                            'lg-share lg-icon',
+                            resolveCustomIcons(
+                                lgIcons?.value,
+                                ['share'],
+                                shareDefaultIcons,
+                            )?.cls,
+                        ],
+                        'aria-label':
+                            cfg.sharePluginStrings?.share ??
+                            ctx.settings.value.strings.share,
+                        'aria-haspopup': nativeFirst ? undefined : 'true',
+                        'aria-expanded': nativeFirst
+                            ? undefined
+                            : active.value,
+                        onClick,
+                    },
+                    resolveCustomIcons(
+                        lgIcons?.value,
+                        ['share'],
+                        shareDefaultIcons,
+                    )?.children,
+                ),
                 // Sibling of the button (vanilla nested it inside, which
                 // is invalid interactive nesting); the CSS does not depend
                 // on the nesting.
@@ -190,9 +233,21 @@ export const ShareButton = defineComponent({
                                           ),
                                       },
                                       [
-                                          h('span', {
-                                              class: 'lg-icon',
-                                          }),
+                                          h(
+                                              'span',
+                                              {
+                                                  class: [
+                                                      'lg-icon',
+                                                      socialIcons[
+                                                          option.className ??
+                                                              ''
+                                                      ]?.cls,
+                                                  ],
+                                              },
+                                              socialIcons[
+                                                  option.className ?? ''
+                                              ]?.children,
+                                          ),
                                           h(
                                               'span',
                                               {

@@ -24,6 +24,7 @@ import {
     pushVelocitySample,
     type ThumbPagerPosition,
     type VelocitySample,
+    thumbnailDefaultIcons,
 } from '@lightgallery/headless';
 
 import { runSprings } from '../../springRunner';
@@ -32,6 +33,10 @@ import {
     type LgPluginContext,
     type LgVuePlugin,
 } from '../types';
+import {
+    LG_ICONS,
+    resolveCustomIcons,
+} from '../../icons';
 import type { LgGalleryItem } from '../../types';
 
 /**
@@ -627,20 +632,30 @@ export const ThumbnailToggle = defineComponent({
     name: 'LgThumbnailToggle',
     setup() {
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
+        const lgIcons = inject(LG_ICONS, undefined);
         return () => {
             const cfg = ctx.settings.value as unknown as ThumbnailResolved;
             // 2.x rule: the toggle only exists when media may overlap.
             if (!cfg.thumbnail || !cfg.toggleThumb || !cfg.allowMediaOverlap) {
                 return null;
             }
-            return h('button', {
-                type: 'button',
-                class: 'lg-toggle-thumb lg-icon',
-                'aria-label':
-                    cfg.thumbnailPluginStrings?.toggleThumbnails ??
-                    ctx.settings.value.strings.toggleThumbnails,
-                onClick: () => ctx.layout.toggleComponents(),
-            });
+            const ci = resolveCustomIcons(
+                lgIcons?.value,
+                ['toggleThumbnails'],
+                thumbnailDefaultIcons,
+            );
+            return h(
+                'button',
+                {
+                    type: 'button',
+                    class: ['lg-toggle-thumb lg-icon', ci?.cls],
+                    'aria-label':
+                        cfg.thumbnailPluginStrings?.toggleThumbnails ??
+                        ctx.settings.value.strings.toggleThumbnails,
+                    onClick: () => ctx.layout.toggleComponents(),
+                },
+                ci?.children,
+            );
         };
     },
 });

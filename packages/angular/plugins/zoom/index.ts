@@ -37,6 +37,7 @@ import {
     type VelocitySample,
     type ZoomPan,
     type ZoomSlice,
+    zoomDefaultIcons,
 } from '@lightgallery/headless';
 import {
     LG_FEATURE_INIT,
@@ -45,6 +46,8 @@ import {
     type LgGalleryItem,
     runSprings,
     type SpringTrack,
+    LgCiComponent,
+    resolveIconSlot,
 } from '@lightgallery/angular';
 
 /**
@@ -123,6 +126,7 @@ type ZoomResolved = ZoomSettings &
 @Component({
     selector: 'lg-zoom-toolbar',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [LgCiComponent],
     template: `
         @if (settings().zoom) { @if (settings().showZoomInOutIcons) {
         <button
@@ -130,17 +134,33 @@ type ZoomResolved = ZoomSettings &
             [attr.aria-label]="
                 settings().zoomPluginStrings?.zoomIn ?? coreStrings().zoomIn
             "
-            [class]="settings().actualSizeIcons.zoomIn + ' lg-icon'"
+            [class]="
+                settings().actualSizeIcons.zoomIn + ' lg-icon lg-icon-custom'
+            "
             (click)="emit(ZOOM_IN)"
-        ></button>
+        >
+            <lg-ci
+                [slot]="ciZoomIn()"
+                [names]="['zoomIn']"
+                [icons]="defaultIcons"
+            />
+        </button>
         <button
             type="button"
             [attr.aria-label]="
                 settings().zoomPluginStrings?.zoomOut ?? coreStrings().zoomOut
             "
-            [class]="settings().actualSizeIcons.zoomOut + ' lg-icon'"
+            [class]="
+                settings().actualSizeIcons.zoomOut + ' lg-icon lg-icon-custom'
+            "
             (click)="emit(ZOOM_OUT)"
-        ></button>
+        >
+            <lg-ci
+                [slot]="ciZoomOut()"
+                [names]="['zoomOut']"
+                [icons]="defaultIcons"
+            />
+        </button>
         } @if (settings().actualSize) {
         <button
             type="button"
@@ -148,14 +168,30 @@ type ZoomResolved = ZoomSettings &
                 settings().zoomPluginStrings?.viewActualSize ??
                 coreStrings().viewActualSize
             "
-            class="lg-actual-size lg-icon"
+            class="lg-actual-size lg-icon lg-icon-custom"
             (click)="emit(ACTUAL)"
-        ></button>
+        >
+            <lg-ci
+                [slot]="ciActual()"
+                [names]="['actualSize']"
+                [icons]="defaultIcons"
+            />
+        </button>
         } }
     `,
 })
 export class LgZoomToolbarComponent {
     private readonly ctx = inject(LG_PLUGIN_CONTEXT);
+    protected readonly defaultIcons = zoomDefaultIcons;
+    protected readonly ciZoomIn = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['zoomIn']),
+    );
+    protected readonly ciZoomOut = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['zoomOut']),
+    );
+    protected readonly ciActual = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['actualSize']),
+    );
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as ZoomResolved,
     );

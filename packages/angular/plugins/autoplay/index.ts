@@ -1,3 +1,4 @@
+import { autoplayDefaultIcons } from '@lightgallery/headless';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -12,6 +13,8 @@ import {
 import {
     LG_FEATURE_INIT,
     LG_PLUGIN_CONTEXT,
+    LgCiComponent,
+    resolveIconSlot,
     type LgFeature,
 } from '@lightgallery/angular';
 
@@ -58,22 +61,36 @@ type AutoplayResolved = AutoplaySettings & { speed: number };
 @Component({
     selector: 'lg-autoplay-button',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [LgCiComponent],
     template: `
         @if (settings().autoplay && settings().autoplayControls) {
         <button
             type="button"
-            class="lg-autoplay-button lg-icon"
+            class="lg-autoplay-button lg-icon lg-icon-custom"
             [attr.aria-label]="
                 settings().autoplayPluginStrings?.toggleAutoplay ??
                 coreStrings().toggleAutoplay
             "
             (click)="ctx.events.emit(TOGGLE, undefined)"
-        ></button>
+        >
+            <lg-ci
+                [slot]="customIcon()"
+                [names]="['autoplayPlay', 'autoplayPause']"
+                [icons]="defaultIcons"
+            />
+        </button>
         }
     `,
 })
 export class LgAutoplayButtonComponent {
     protected readonly ctx = inject(LG_PLUGIN_CONTEXT);
+    protected readonly customIcon = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), [
+            'autoplayPlay',
+            'autoplayPause',
+        ]),
+    );
+    protected readonly defaultIcons = autoplayDefaultIcons;
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as AutoplayResolved,
     );

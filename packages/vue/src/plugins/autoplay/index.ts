@@ -1,3 +1,4 @@
+import { autoplayDefaultIcons } from '@lightgallery/headless';
 import {
     computed,
     defineComponent,
@@ -14,6 +15,10 @@ import {
     type LgPluginContext,
     type LgVuePlugin,
 } from '../types';
+import {
+    LG_ICONS,
+    resolveCustomIcons,
+} from '../../icons';
 
 /**
  * Autoplay plugin (2.x `lg-autoplay`): slideshow timer with progress bar.
@@ -59,19 +64,29 @@ export const AutoplayButton = defineComponent({
     name: 'LgAutoplayButton',
     setup() {
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
+        const lgIcons = inject(LG_ICONS, undefined);
         return () => {
             const cfg = ctx.settings.value as unknown as AutoplayResolved;
             if (!cfg.autoplay || !cfg.autoplayControls) {
                 return null;
             }
-            return h('button', {
-                type: 'button',
-                class: 'lg-autoplay-button lg-icon',
-                'aria-label':
-                    cfg.autoplayPluginStrings?.toggleAutoplay ??
-                    ctx.settings.value.strings.toggleAutoplay,
-                onClick: () => ctx.events.emit(TOGGLE_EVENT, undefined),
-            });
+            const ci = resolveCustomIcons(
+                lgIcons?.value,
+                ['autoplayPlay', 'autoplayPause'],
+                autoplayDefaultIcons,
+            );
+            return h(
+                'button',
+                {
+                    type: 'button',
+                    class: ['lg-autoplay-button lg-icon', ci?.cls],
+                    'aria-label':
+                        cfg.autoplayPluginStrings?.toggleAutoplay ??
+                        ctx.settings.value.strings.toggleAutoplay,
+                    onClick: () => ctx.events.emit(TOGGLE_EVENT, undefined),
+                },
+                ci?.children,
+            );
         };
     },
 });

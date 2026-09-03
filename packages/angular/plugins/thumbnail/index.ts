@@ -25,6 +25,7 @@ import {
     pushVelocitySample,
     type ThumbPagerPosition,
     type VelocitySample,
+    thumbnailDefaultIcons,
 } from '@lightgallery/headless';
 import {
     LG_FEATURE_INIT,
@@ -32,6 +33,8 @@ import {
     type LgFeature,
     type LgGalleryItem,
     runSprings,
+    LgCiComponent,
+    resolveIconSlot,
 } from '@lightgallery/angular';
 
 /**
@@ -616,22 +619,33 @@ export class LgThumbnailStripComponent {
 @Component({
     selector: 'lg-thumbnail-toggle',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [LgCiComponent],
     template: `
         @if (visible()) {
         <button
             type="button"
-            class="lg-toggle-thumb lg-icon"
+            class="lg-toggle-thumb lg-icon lg-icon-custom"
             [attr.aria-label]="
                 settings().thumbnailPluginStrings?.toggleThumbnails ??
                 coreStrings().toggleThumbnails
             "
             (click)="ctx.layout.toggleComponents()"
-        ></button>
+        >
+            <lg-ci
+                [slot]="ciToggle()"
+                [names]="['toggleThumbnails']"
+                [icons]="defaultIcons"
+            />
+        </button>
         }
     `,
 })
 export class LgThumbnailToggleComponent {
     protected readonly ctx = inject(LG_PLUGIN_CONTEXT);
+    protected readonly defaultIcons = thumbnailDefaultIcons;
+    protected readonly ciToggle = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['toggleThumbnails']),
+    );
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as ThumbnailResolved,
     );

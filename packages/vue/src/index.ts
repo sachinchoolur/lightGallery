@@ -6,6 +6,7 @@ export type { OriginAnimation } from './LgSlide.vue';
 export { default as LgImageSlide } from './LgImageSlide.vue';
 export { default as LgCaption } from './LgCaption.vue';
 export { LgCaptionContent } from './caption-content';
+export type { LgIcon, LgIconName, LgIcons } from './icons';
 export {
     createGalleryStore,
     LG_ACTIONS,

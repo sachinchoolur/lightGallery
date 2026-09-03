@@ -9,6 +9,7 @@
  *
  */
 
+import { commentDefaultIcons } from '@lightgallery/headless';
 import { lGEvents } from '../../lg-events';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
@@ -33,6 +34,7 @@ export default class CommentBox {
     }
 
     public init(): void {
+        this.core.registerDefaultIcons(commentDefaultIcons);
         if (!this.settings.commentBox) {
             return;
         }

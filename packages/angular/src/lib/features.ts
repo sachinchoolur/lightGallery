@@ -12,6 +12,7 @@ import type {
     TypedEmitter,
 } from '@lightgallery/headless';
 
+import type { LgIconDirective } from './icons';
 import type { LgGalleryActions, LgGestureSeam } from './runtime';
 import type { LgEventMap, LgGalleryItem } from './types';
 
@@ -75,6 +76,8 @@ export interface LgPluginContext {
      * the item's `thumb`, else the trigger's rendered img.
      */
     getDummySrc(index: number): string | null;
+    /** The gallery's `<ng-template lgIcon>` slot, for feature buttons. */
+    icons?: Signal<LgIconDirective | undefined>;
 }
 
 export const LG_PLUGIN_CONTEXT = new InjectionToken<LgPluginContext>(

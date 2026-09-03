@@ -13,11 +13,16 @@ import {
     getPinterestShareLink,
     getSharePayload,
     getXShareLink,
+    shareDefaultIcons,
 } from '@lightgallery/headless';
 import {
     LG_PLUGIN_CONTEXT,
     type LgFeature,
     type LgGalleryItem,
+    LgCiComponent,
+    resolveIconSlot,
+    type LgIconDirective,
+    type LgIconName,
 } from '@lightgallery/angular';
 
 /**
@@ -132,18 +137,25 @@ export class LgShareStateService {
 @Component({
     selector: 'lg-share-button',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [LgCiComponent],
     template: `
         @if (settings().share) {
         <button
             type="button"
-            class="lg-share lg-icon"
+            class="lg-share lg-icon lg-icon-custom"
             [attr.aria-label]="
                 settings().sharePluginStrings?.share ?? coreStrings().share
             "
             [attr.aria-haspopup]="nativeFirst() ? null : 'true'"
             [attr.aria-expanded]="nativeFirst() ? null : state.active()"
             (click)="onShareClick()"
-        ></button>
+        >
+            <lg-ci
+                [slot]="ciShare()"
+                [names]="['share']"
+                [icons]="defaultIcons"
+            />
+        </button>
         <!-- Sibling of the button (vanilla nested it inside, which is
                  invalid interactive nesting); the .lg-outer .lg-dropdown
                  CSS does not depend on the nesting. -->
@@ -157,7 +169,13 @@ export class LgShareStateService {
                     target="_blank"
                     [attr.href]="option.generateLink(item, currentUrl())"
                 >
-                    <span class="lg-icon"></span>
+                    <span class="lg-icon lg-icon-custom">
+                        <lg-ci
+                            [slot]="socialIcon(option.className)"
+                            [names]="[socialName(option.className)]"
+                            [icons]="defaultIcons"
+                        />
+                    </span>
                     <span class="lg-dropdown-text">{{ option.text }}</span>
                 </a>
             </li>
@@ -168,6 +186,22 @@ export class LgShareStateService {
 })
 export class LgShareButtonComponent {
     private readonly ctx = inject(LG_PLUGIN_CONTEXT);
+    protected readonly defaultIcons = shareDefaultIcons;
+    protected readonly ciShare = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['share']),
+    );
+    protected socialName(cls: string | undefined): LgIconName {
+        return cls === 'lg-share-facebook'
+            ? 'shareFacebook'
+            : cls === 'lg-share-pinterest'
+              ? 'sharePinterest'
+              : 'shareX';
+    }
+    protected socialIcon(
+        cls: string | undefined,
+    ): LgIconDirective | undefined {
+        return resolveIconSlot(this.ctx.icons?.(), [this.socialName(cls)]);
+    }
     protected readonly state = inject(LgShareStateService);
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as ShareSettings,
@@ -215,6 +249,7 @@ export class LgShareButtonComponent {
 @Component({
     selector: 'lg-share-overlay',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [LgCiComponent],
     template: `
         @if (settings().share) {
         <div

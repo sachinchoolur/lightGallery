@@ -31,11 +31,17 @@
 }
 
 .lg-autoplay-button {
-    &:after {
-        .lg-show-autoplay & {
-            content: '\e01a';
+    // Custom pair rides the same lg-show-autoplay state as the glyphs.
+    &.lg-icon-custom .lg-ci-autoplay-pause {
+        display: none;
+    }
+    .lg-show-autoplay &.lg-icon-custom {
+        .lg-ci-autoplay-play {
+            display: none;
         }
-        content: '\e01d';
+        .lg-ci-autoplay-pause {
+            display: inline-flex;
+        }
     }
     .lg-single-item & {
         opacity: $lg-toolbar-icon-disabled-opacity;

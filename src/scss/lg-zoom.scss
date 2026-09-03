@@ -1,6 +1,17 @@
 @use 'lg-variables' as *;
 @use 'lg-mixins' as *;
 
+// The actual-size button carries both zoom icons; its live class
+// (toggled by the plugin as the zoom state changes) picks one. The
+// dedicated zoom-in/out buttons carry a single icon each, so these
+// rules are inert on them.
+.lg-icon-custom.lg-zoom-in .lg-ci-zoom-out {
+    display: none;
+}
+.lg-icon-custom.lg-zoom-out .lg-ci-zoom-in {
+    display: none;
+}
+
 .lg-outer {
     // reset transition duration
     &.lg-css3.lg-zoom-dragging {
@@ -116,9 +127,6 @@
 .lg-icon {
     // zoom buttons
     &.lg-zoom-in {
-        &:after {
-            content: '\e311';
-        }
         .lg-actual-size & {
             opacity: 1;
             pointer-events: auto;
@@ -127,18 +135,12 @@
 
     &.lg-actual-size {
         font-size: 20px;
-        &:after {
-            content: '\e033';
-        }
     }
 
     &.lg-zoom-out {
         opacity: 0.5;
         pointer-events: none;
 
-        &:after {
-            content: '\e312';
-        }
 
         .lg-zoomed & {
             opacity: 1;

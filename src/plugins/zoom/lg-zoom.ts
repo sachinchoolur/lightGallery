@@ -15,6 +15,7 @@ import {
     pushVelocitySample,
     type Velocity,
     type VelocitySample,
+    zoomDefaultIcons,
 } from '@lightgallery/headless';
 
 import { runSprings } from '../../lg-spring-runner';
@@ -619,6 +620,7 @@ export default class Zoom {
     }
 
     init(): void {
+        this.core.registerDefaultIcons(zoomDefaultIcons);
         if (!this.settings.zoom) {
             return;
         }

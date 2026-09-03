@@ -1,5 +1,8 @@
+import { fullscreenDefaultIcons } from '@lightgallery/headless';
 import { useEffect, type ReactElement } from 'react';
 
+import { cx } from '../../cx';
+import { useCustomIcons } from '../../icons';
 import { usePluginSettings } from '../runtime';
 import type { LgPlugin, PluginContext } from '../types';
 
@@ -49,6 +52,10 @@ function fullscreenElement(): Element | null {
 
 function FullscreenButton(): ReactElement | null {
     const settings = usePluginSettings<FullscreenSettings>();
+    const fsIcon = useCustomIcons(
+        ['fullscreen', 'fullscreenExit'],
+        fullscreenDefaultIcons,
+    );
     if (!settings.fullScreen || !fullscreenSupported()) {
         return null;
     }
@@ -70,9 +77,11 @@ function FullscreenButton(): ReactElement | null {
                 settings.fullscreenPluginStrings?.toggleFullscreen ??
                 settings.strings.toggleFullscreen
             }
-            className="lg-fullscreen lg-icon"
+            className={cx('lg-fullscreen lg-icon', fsIcon.className)}
             onClick={toggle}
-        />
+        >
+            {fsIcon.content}
+        </button>
     );
 }
 

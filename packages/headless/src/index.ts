@@ -94,6 +94,18 @@ export {
 } from './origin';
 
 export {
+    autoplayDefaultIcons,
+    type LgIconName,
+    commentDefaultIcons,
+    coreDefaultIcons,
+    fullscreenDefaultIcons,
+    rotateDefaultIcons,
+    shareDefaultIcons,
+    thumbnailDefaultIcons,
+    zoomDefaultIcons,
+} from './icons';
+
+export {
     VIMEO_PLAYER_SCRIPT_URL,
     WISTIA_PLAYER_SCRIPT_URL,
     getFacadePoster,
