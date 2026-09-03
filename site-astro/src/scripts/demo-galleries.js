@@ -382,6 +382,48 @@ lightGalleryJustified('scrub-thumbnails-gallery', {
     },
 });
 
+// Custom-icons demo: a thin-stroke set drawn for this page on a 24px
+// grid, applied per name via `settings.icons`. Names not listed keep
+// the built-in artwork — exactly the fallback visitors should see.
+const strokeIcon = (content) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${content}</svg>`;
+
+lightGalleryJustified('custom-icons-gallery', {
+    justifiedLastRow: 'hide',
+    pager: false,
+    hash: false,
+    plugins: [lgZoom, lgFullscreen, lgAutoplay, lgThumbnail],
+    icons: {
+        close: strokeIcon('<path d="M6 6l12 12M18 6L6 18"/>'),
+        prev: strokeIcon('<path d="M14.5 5.5L8 12l6.5 6.5"/>'),
+        next: strokeIcon('<path d="M9.5 5.5L16 12l-6.5 6.5"/>'),
+        // `download` is deliberately NOT overridden — its button keeps
+        // the built-in icon, showing the per-name fallback live.
+        zoomIn: strokeIcon(
+            '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M8 10.5h5M10.5 8v5"/>',
+        ),
+        zoomOut: strokeIcon(
+            '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M8 10.5h5"/>',
+        ),
+        autoplayPlay: strokeIcon('<path d="M9 5.8v12.4L19 12z"/>'),
+        autoplayPause: strokeIcon('<path d="M8.5 6v12M15.5 6v12"/>'),
+        fullscreen: strokeIcon(
+            '<path d="M4.5 9V4.5H9M15 4.5h4.5V9M19.5 15v4.5H15M9 19.5H4.5V15"/>',
+        ),
+        fullscreenExit: strokeIcon(
+            '<path d="M9 4.5V9H4.5M15 4.5V9h4.5M19.5 15H15v4.5M4.5 15H9v4.5"/>',
+        ),
+    },
+    ...getResponsiveThumbnailsSettings(),
+    // The icons ARE the demo — keep the controls visible on phones,
+    // where the library default hides them.
+    mobileSettings: {
+        controls: true,
+        showCloseIcon: true,
+        download: false,
+    },
+});
+
 const masonryElMixed = document.getElementById('static-thumbnails-gallery');
 if (masonryElMixed) {
     imagesLoaded(

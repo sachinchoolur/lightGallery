@@ -1,0 +1,173 @@
+---
+title: 'Lightbox with custom icons'
+description:
+    'JavaScript lightbox gallery with a custom icon set. Replace the control
+    icons per name with your own inline SVGs — live demo plus the code for
+    vanilla JS, React, Vue, and Angular.'
+lead:
+    'Every lightGallery control icon is an inline SVG you can replace per
+    name. This gallery runs a hand-rolled thin-stroke set — close, arrows,
+    zoom, autoplay and fullscreen are all swapped, while everything else
+    keeps the built-in artwork. Read more in the
+    <a href="/docs/custom-icons/">custom icons guide</a>.'
+date: 2026-09-03T08:00:00+00:00
+draft: false
+images: []
+menu: { demos: { parent: Demos, name: 'Custom icons' } }
+weight: 18
+toc: true
+---
+
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
+import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
+
+### Custom icon set
+
+Open the gallery and compare the toolbar with any other demo on this
+site — the icons here are overridden per name with the `icons`
+setting. The download button's name is deliberately omitted, so it
+keeps the built-in icon right next to the custom ones, and state
+pairs such as `autoplayPlay`/`autoplayPause` swap exactly like the
+built-ins do.
+
+<GalleryDemo id="custom-icons-gallery" />
+
+##### Setup
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+```js
+import lightGallery from 'lightgallery';
+import lgAutoplay from 'lightgallery/plugins/autoplay';
+import lgFullscreen from 'lightgallery/plugins/fullscreen';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+
+// Any SVG markup works; drawing with currentColor keeps the
+// hover/active colors of the buttons.
+const icon = (content) =>
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.8" stroke-linecap="round"
+        stroke-linejoin="round">${content}</svg>`;
+
+lightGallery(document.getElementById('custom-icons-gallery'), {
+    plugins: [lgZoom, lgFullscreen, lgAutoplay, lgThumbnail],
+    icons: {
+        close: icon('<path d="M6 6l12 12M18 6L6 18"/>'),
+        prev: icon('<path d="M14.5 5.5L8 12l6.5 6.5"/>'),
+        next: icon('<path d="M9.5 5.5L16 12l-6.5 6.5"/>'),
+        // State pairs need both names, or the pair keeps the built-ins.
+        autoplayPlay: icon('<path d="M9 5.8v12.4L19 12z"/>'),
+        autoplayPause: icon('<path d="M8.5 6v12M15.5 6v12"/>'),
+        // …
+    },
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Autoplay from '@lightgallery/react/plugins/autoplay';
+import Zoom from '@lightgallery/react/plugins/zoom';
+
+<LightGallery
+    plugins={[Zoom, Autoplay]}
+    render={{
+        // A node per name; `undefined` keeps the built-in icon.
+        icon: (name) => {
+            switch (name) {
+                case 'close':
+                    return <CloseIcon />;
+                case 'autoplayPlay':
+                    return <PlayIcon />;
+                case 'autoplayPause':
+                    return <PauseIcon />;
+                default:
+                    return undefined;
+            }
+        },
+    }}
+>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Autoplay from '@lightgallery/vue/plugins/autoplay';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+// SVG components or raw SVG strings, keyed by icon name.
+import CloseIcon from './icons/CloseIcon.vue';
+import PauseIcon from './icons/PauseIcon.vue';
+import PlayIcon from './icons/PlayIcon.vue';
+</script>
+
+<template>
+    <LightGallery
+        :plugins="[Zoom, Autoplay]"
+        :icons="{
+            close: CloseIcon,
+            autoplayPlay: PlayIcon,
+            autoplayPause: PauseIcon,
+        }"
+    >
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery [features]="[withZoom(), withAutoplay()]">
+    @for (item of items; track item.src) {
+        <a [lgGalleryItem]="item">
+            <img [src]="item.thumb" [alt]="item.alt" />
+        </a>
+    }
+    <!-- The template declares the names it covers; other names keep
+         the built-in icons. -->
+    <ng-template
+        [lgIcon]="['close', 'autoplayPlay', 'autoplayPause']"
+        let-name
+    >
+        @switch (name) {
+            @case ('close') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.8" stroke-linecap="round">
+                    <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+            }
+            @case ('autoplayPlay') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.8" stroke-linejoin="round">
+                    <path d="M9 5.8v12.4L19 12z" />
+                </svg>
+            }
+            @case ('autoplayPause') {
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.8" stroke-linecap="round">
+                    <path d="M8.5 6v12M15.5 6v12" />
+                </svg>
+            }
+        }
+    </ng-template>
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>

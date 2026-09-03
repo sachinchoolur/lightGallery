@@ -656,6 +656,7 @@ export interface LightGalleryCoreSettings {
      * `fullscreen`/`fullscreenExit`) need both names provided; a
      * half-provided pair keeps the built-in pair. Size and color follow
      * the button (`1em`/`currentColor`-friendly SVGs recommended).
+     * See <a href="/docs/custom-icons/">Custom icons</a>.
      * @version V3.0.0
      */
     icons: LgIcons;
