@@ -302,3 +302,34 @@ describe('Plugins', () => {
         expect(LG.galleryItems[0].poster).toBeUndefined();
     });
 });
+
+describe('touchMove', () => {
+    it('should not throw on horizontal drag when the current slide is not in the DOM', () => {
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png">
+                    <img src="b.png" />
+                </a>
+                <a href="a.png">
+                    <img src="b.png" />
+                </a>
+            </div>`;
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+            {
+                speed: 0,
+                mode: 'lg-fade',
+            },
+        );
+        LG.openGallery();
+        const currentSlide = document.getElementById(
+            `lg-item-${LG.lgId}-${LG.index}`,
+        );
+        expect(currentSlide).not.toBeNull();
+        currentSlide!.remove();
+        expect(LG.getSlideItem(LG.index).get()).toBeNull();
+
+        expect(() => {
+            LG.touchMove({ pageX: 100, pageY: 50 }, { pageX: 160, pageY: 50 });
+        }).not.toThrow();
+    });
+});
