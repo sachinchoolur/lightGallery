@@ -22,7 +22,7 @@ import {
     type ApiComment,
 } from './apidocs';
 
-export type DocsEntry = CollectionEntry<'docs'>;
+export type DocsEntry = CollectionEntry<'docs'> | CollectionEntry<'demos'>;
 
 export const SITE = 'https://www.lightgalleryjs.com';
 
@@ -30,7 +30,7 @@ export const docsSlug = (entry: DocsEntry): string =>
     entry.id.replace(/\/index$/, '').toLowerCase();
 
 export const docsUrl = (entry: DocsEntry): string =>
-    `${SITE}/docs/${docsSlug(entry)}/`;
+    `${SITE}/${entry.collection}/${docsSlug(entry)}/`;
 
 export const docsMarkdownUrl = (entry: DocsEntry): string =>
     `${docsUrl(entry)}index.md`;
@@ -189,6 +189,7 @@ function reduceMdx(body: string, url: string): string {
                 .replace(/<DemoButtons\b[^>]*\/>/g, '')
                 .replace(/<\/?ClientOnly>/g, '')
                 .replace(/<[A-Z][A-Za-z]*\b[^>]*\/>/g, '') // other self-closing components
+                .replace(/<\/?[A-Z][A-Za-z]*\b[^>]*>/g, '') // remaining paired components (demo scaffolding)
                 .replace(/<div class="alert[^"]*"[^>]*>([\s\S]*?)<\/div>/g, (_m, text) => `> ${inline(text)}`)
                 .replace(/<\/?div\b[^>]*>/g, '') // layout wrappers carry no meaning in markdown
                 .replace(/\n{3,}/g, '\n\n');
@@ -198,7 +199,7 @@ function reduceMdx(body: string, url: string): string {
 
 // ---- public API ------------------------------------------------------------
 
-/** The full markdown document for one docs page. */
+/** The full markdown document for one docs or demo page. */
 export function docsMarkdown(entry: DocsEntry): string {
     const url = docsUrl(entry);
     const isMdx = (entry.filePath ?? '').endsWith('.mdx');

@@ -1,0 +1,45 @@
+---
+/**
+ * Per-page tools for readers and their assistants: the markdown twin,
+ * copy-as-markdown, and "open in" links that hand the page's markdown
+ * URL to a chat assistant with a short prompt.
+ */
+interface Props {
+    /** Page path with trailing slash, e.g. `/docs/settings/`. */
+    url: string;
+    title: string;
+}
+const { url, title } = Astro.props;
+const site = 'https://www.lightgalleryjs.com';
+const markdownUrl = `${site}${url}index.md`;
+const prompt = `Read ${markdownUrl} and help me with "${title}" from lightGallery. Answer with code I can paste.`;
+const claude = `https://claude.ai/new?q=${encodeURIComponent(prompt)}`;
+const chatgpt = `https://chatgpt.com/?q=${encodeURIComponent(prompt)}`;
+---
+
+<div class="page-tools" data-page-tools>
+    <button type="button" class="page-tools-btn" data-copy-markdown data-src={`${url}index.md`}>
+        Copy as Markdown
+    </button>
+    <a class="page-tools-btn" href={`${url}index.md`}>View as Markdown</a>
+    <a class="page-tools-btn" href={claude} target="_blank" rel="noopener">Open in Claude</a>
+    <a class="page-tools-btn" href={chatgpt} target="_blank" rel="noopener">Open in ChatGPT</a>
+</div>
+
+<script>
+    document.querySelectorAll<HTMLButtonElement>('[data-copy-markdown]').forEach((button) => {
+        const label = button.textContent;
+        button.addEventListener('click', async () => {
+            try {
+                const markdown = await (await fetch(button.dataset.src ?? '')).text();
+                await navigator.clipboard.writeText(markdown);
+                button.textContent = 'Copied';
+            } catch {
+                button.textContent = 'Copy failed';
+            }
+            setTimeout(() => {
+                button.textContent = label;
+            }, 1800);
+        });
+    });
+</script>

@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
 
 import BaseLayout from './BaseLayout.astro';
+import PageTools from '../components/PageTools.astro';
 import SidebarMenu from '../components/SidebarMenu.astro';
 import { SITE } from '../lib/site';
 
@@ -92,16 +93,12 @@ const hasVideo =
     }}
 >
     <Fragment slot="head">
-        {
-            section === 'docs' && (
-                <link
-                    rel="alternate"
-                    type="text/markdown"
-                    href={`${pageUrl(entry)}index.md`}
-                    title="Markdown version"
-                />
-            )
-        }
+        <link
+            rel="alternate"
+            type="text/markdown"
+            href={`${pageUrl(entry)}index.md`}
+            title="Markdown version"
+        />
         {vendorCss.map((href) => <link rel="stylesheet" href={href} />)}
         {
             hasVideo && (
@@ -155,6 +152,7 @@ const hasVideo =
         <div class="row flex-xl-nowrap">
             <main class="docs-content col-lg-10 col-xl-8">
                 <h1>{entry.data.title}</h1>
+                <PageTools url={pageUrl(entry)} title={entry.data.title} />
                 <p class="lead" set:html={entry.data.lead ?? ''} />
                 <slot />
                 <p class="edit-page">

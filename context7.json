@@ -1,0 +1,14 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "lightGallery",
+  "description": "Lightweight, modular JavaScript lightbox and gallery for images and video, with native React, Vue and Angular packages on a shared headless core.",
+  "folders": ["site-astro/src/content/docs", "skills", "packages/headless", "packages/react", "packages/vue", "packages/angular"],
+  "excludeFolders": ["site-astro/src/content/docs/v2", "node_modules", "dist", "test", "dev", "dev-vanilla"],
+  "excludeFiles": ["CHANGELOG.md"],
+  "rules": [
+    "Plugins are separate entries: import them from lightgallery/plugins/<name> (or @lightgallery/<framework>/plugins/<name>) and pass them in the plugins list; their settings are ignored otherwise.",
+    "CSS is a consumer import in every stack: import lightgallery/css/lightgallery.css plus one file per plugin, or lightgallery/css/lightgallery-bundle.css.",
+    "The framework packages are @lightgallery/react, @lightgallery/vue and @lightgallery/angular (version 3); the lightgallery/react, lightgallery/vue and lightgallery/angular wrappers are the retired 2.x API.",
+    "Prefer the markdown docs: https://www.lightgalleryjs.com/llms.txt indexes every page, and each docs page has a twin at /docs/<page>/index.md."
+  ]
+}

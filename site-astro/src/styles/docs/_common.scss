@@ -43,3 +43,35 @@
 #paritybar .pb-bar {
     border-top: 3px solid #0cc523;
 }
+// Per-page tools (markdown twin, copy, open in an assistant).
+.page-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: -0.25rem 0 1.25rem;
+}
+
+.page-tools-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid rgba($black, 0.12);
+    border-radius: 999px;
+    background: #fff;
+    color: $brand-dark;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        border-color 0.15s ease,
+        color 0.15s ease;
+    &:hover,
+    &:focus-visible {
+        border-color: rgba($brand, 0.6);
+        color: $brand-light;
+        text-decoration: none;
+    }
+}

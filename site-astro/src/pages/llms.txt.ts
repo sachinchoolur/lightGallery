@@ -40,10 +40,11 @@ export const GET: APIRoute = async () => {
         if (!lines?.length) continue;
         out.push(`## ${group}`, '', ...lines, '');
     }
-    out.push('## Demos', '', '_Live pages; each has the example code for all four stacks._', '');
+    out.push('## Demos', '', '_Each demo page carries the example code for all four stacks; the markdown version keeps the code and links to the live gallery._', '');
     for (const entry of demos) {
-        out.push(`- [${entry.data.title}](${SITE}/demos/${entry.id.replace(/\/index$/, '').toLowerCase()}/): ${one(entry.data.description)}`);
+        out.push(`- [${entry.data.title}](${docsMarkdownUrl(entry)}): ${one(entry.data.description)}`);
     }
+    out.push('', '## API (JSON)', '', `- [Settings](${SITE}/api/settings.json): every option with type, default and description, per interface`, `- [Events](${SITE}/api/events.json): custom events with their detail fields`, `- [Methods](${SITE}/api/methods.json): instance methods`);
     out.push('', '## Optional', '', `- [Changelog](${SITE}/changelog/index.md): what changed in each release`, `- [Blog](${SITE}/blog/)`, `- [License](${SITE}/license/): GPLv3, with a commercial license available`, `- [GitHub](https://github.com/sachinchoolur/lightGallery)`, '');
     // Keep docsUrl referenced for consumers that want HTML links.
     void docsUrl;
