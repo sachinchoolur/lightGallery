@@ -1,6 +1,5 @@
-// The kelviq design system, applied to this site: type scale, buttons,
-// backgrounds and the rail layout. Values come from the DSM (Figma
-// Kelviq-DSM / Website-DSM) and kelviq.com's implementation.
+// The site's design system: type scale, buttons, backgrounds and the
+// rail layout. Values come from the shared design tokens (Figma DSM).
 
 // ---- Type scale ------------------------------------------------------------
 // Desktop / mobile (max-width: 767px) values, in px as specified.
@@ -187,7 +186,7 @@ body.home-v3 h3 {
     background-image: radial-gradient(rgba(#fff, 0.08) 1px, transparent 1px);
     background-size: 14px 14px;
 }
-// Faint vertical lines every 90px (the footer's texture on kelviq.com).
+// Faint vertical lines every 90px (the footer's texture).
 @mixin kq-lines-dark {
     background-image: repeating-linear-gradient(
         to right,
