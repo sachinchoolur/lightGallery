@@ -4,6 +4,8 @@ import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
+import { withLastmod } from './src/lib/lastmod.mjs';
+
 // https://astro.build/config
 export default defineConfig({
     site: 'https://www.lightgalleryjs.com',
@@ -31,7 +33,16 @@ export default defineConfig({
         '/docs/v3/hash-drivers/': '/docs/hash-drivers/',
         '/docs/v3/responsive-loading/': '/docs/responsive-loading/',
     },
-    integrations: [mdx(), react(), sitemap()],
+    integrations: [
+        mdx(),
+        react(),
+        // Review-only pages (noindex) stay out of the sitemap; every
+        // content-backed URL carries its last git commit date.
+        sitemap({
+            filter: (page) => !page.includes('/home-v3/'),
+            serialize: withLastmod,
+        }),
+    ],
     markdown: {
         rehypePlugins: [
             [

@@ -17,9 +17,9 @@ font to load, and every icon follows the button's `color` through
 ```js
 lightGallery(el, {
     icons: {
-        close: '<svg viewBox="0 0 24 24">…</svg>',
-        prev: '<svg viewBox="0 0 24 24">…</svg>',
-        next: '<svg viewBox="0 0 24 24">…</svg>',
+        close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+        prev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>',
+        next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>',
     },
 });
 ```
@@ -78,9 +78,9 @@ renders an SVG per name:
 <lg-gallery [slides]="slides">
     <ng-template [lgIcon]="['close', 'prev', 'next']" let-name>
         @switch (name) {
-            @case ('close') { <svg viewBox="0 0 24 24">…</svg> }
-            @case ('prev') { <svg viewBox="0 0 24 24">…</svg> }
-            @case ('next') { <svg viewBox="0 0 24 24">…</svg> }
+            @case ('close') { <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" /></svg> }
+            @case ('prev') { <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6" /></svg> }
+            @case ('next') { <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6" /></svg> }
         }
     </ng-template>
 </lg-gallery>

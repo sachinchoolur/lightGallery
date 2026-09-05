@@ -92,6 +92,16 @@ const hasVideo =
     }}
 >
     <Fragment slot="head">
+        {
+            section === 'docs' && (
+                <link
+                    rel="alternate"
+                    type="text/markdown"
+                    href={`${pageUrl(entry)}index.md`}
+                    title="Markdown version"
+                />
+            )
+        }
         {vendorCss.map((href) => <link rel="stylesheet" href={href} />)}
         {
             hasVideo && (

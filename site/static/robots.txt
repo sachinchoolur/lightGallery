@@ -1,0 +1,25 @@
+# lightGallery — https://www.lightgalleryjs.com
+# Everything public is crawlable, for search engines and AI assistants
+# alike. Machine-readable entry points: /llms.txt, /llms-full.txt, and a
+# markdown twin of every docs page at /docs/<page>/index.md.
+
+User-agent: *
+Allow: /
+Disallow: /home-v3/
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://www.lightgalleryjs.com/sitemap-index.xml

@@ -147,7 +147,7 @@ If you know the original size of the media, you can pass it via
     <a href="img/img2.jpg" data-lg-size="1024-800">
         <img alt="img2" src="img/thumb2.jpg" />
     </a>
-    ...
+    <!-- more items -->
 </div>
 ```
 
