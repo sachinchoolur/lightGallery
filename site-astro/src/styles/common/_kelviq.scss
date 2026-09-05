@@ -1,0 +1,253 @@
+// The kelviq design system, applied to this site: type scale, buttons,
+// backgrounds and the rail layout. Values come from the DSM (Figma
+// Kelviq-DSM / Website-DSM) and kelviq.com's implementation.
+
+// ---- Type scale ------------------------------------------------------------
+// Desktop / mobile (max-width: 767px) values, in px as specified.
+@mixin kq-text($size, $line, $tracking, $weight: 400, $m-size: null, $m-line: null, $m-tracking: null) {
+    font-size: $size;
+    font-weight: $weight;
+    line-height: $line;
+    letter-spacing: $tracking;
+    @if $m-size {
+        @media (max-width: 767px) {
+            font-size: $m-size;
+            line-height: $m-line;
+            letter-spacing: $m-tracking;
+        }
+    }
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    color: $gray-800;
+}
+
+::selection {
+    background-color: rgba($orange-500, 0.28);
+}
+
+.kq-h1,
+body.home-v3 h1 {
+    @include kq-text(64px, 76px, -1.28px, 700, 36px, 48px, 0);
+    color: $gray-800;
+}
+.kq-h2,
+body.home-v3 h2 {
+    @include kq-text(32px, 44px, -0.32px, 700, 24px, 32px, -0.07px);
+    color: $gray-800;
+}
+.kq-h3,
+body.home-v3 h3 {
+    @include kq-text(20px, 32px, -0.2px, 600, 18px, 30px, -0.16px);
+    color: $gray-800;
+}
+// Serif italic accent inside a heading ("Sell software *globally*").
+.serif-accent {
+    font-family: $font-family-serif-accent;
+    font-style: italic;
+    font-weight: inherit;
+}
+.para1 {
+    @include kq-text(20px, 32px, -0.2px, 400, 18px, 30px, -0.16px);
+}
+.para2 {
+    @include kq-text(16px, 28px, -0.2px, 400, 16px, 28px, -0.16px);
+}
+.para2-medium {
+    @include kq-text(16px, 28px, -0.2px, 500, 16px, 28px, -0.16px);
+}
+.para3 {
+    @include kq-text(14px, 24px, -0.16px, 400, 14px, 24px, -0.18px);
+}
+.para3-semibold {
+    @include kq-text(14px, 24px, -0.16px, 600, 14px, 24px, -0.18px);
+}
+// Section kicker: uppercase orange label.
+.label1 {
+    @include kq-text(14px, 20px, 1px, 600, 14px, 18px, 1px);
+    color: $orange-700;
+    text-transform: uppercase;
+}
+.label2 {
+    @include kq-text(13px, 16px, -0.16px, 400);
+}
+// Developer voice (dark sections): everything in Geist Mono.
+.kq-dev {
+    font-family: $font-family-monospace;
+    h1,
+    h2,
+    h3,
+    p {
+        font-family: $font-family-monospace;
+    }
+}
+
+// ---- Buttons ---------------------------------------------------------------
+.kq-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 12px;
+    font-family: $font-family-sans-serif;
+    @include kq-text(16px, 28px, -0.2px, 500);
+    text-decoration: none;
+    transition: all 120ms cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    &:hover,
+    &:focus-visible {
+        text-decoration: none;
+    }
+    &:focus-visible {
+        outline: 2px solid $orange-500;
+        outline-offset: 2px;
+    }
+}
+
+.kq-btn-primary {
+    padding: 1px;
+    background: $orange-700;
+    color: #fff;
+    &:hover,
+    &:focus-visible {
+        background: $orange-800;
+        color: #fff;
+    }
+    .kq-btn-inner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 13px 24px;
+        border-radius: 11px;
+        background: $orange-700;
+        box-shadow: inset 2px 4px 4px -5px #fff;
+        transition: inherit;
+    }
+    &:hover .kq-btn-inner {
+        background: $orange-800;
+    }
+    .kq-btn-label {
+        position: relative;
+        color: #fff;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.12);
+    }
+    &:hover .kq-btn-label {
+        text-shadow:
+            0 0 4px rgba(0, 0, 0, 0.12),
+            0 -0.3px 0 rgba(0, 0, 0, 0.25);
+    }
+    .kq-btn-arrow {
+        transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    &:hover .kq-btn-arrow {
+        transform: translateX(0.5px);
+    }
+}
+
+.kq-btn-secondary {
+    padding: 14px 25px;
+    border: 1px solid $gray-100;
+    background: #fff;
+    color: $gray-800;
+    &:hover,
+    &:focus-visible {
+        background: $gray-10;
+        color: $gray-800;
+    }
+}
+
+// Bootstrap buttons across the docs pick up the same shapes.
+.btn {
+    border-radius: 12px;
+    font-weight: 500;
+}
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus {
+    color: #fff;
+}
+
+// ---- Backgrounds -----------------------------------------------------------
+// Mixins (not classes) so they never collide with the site's legacy `.bg-*`.
+@mixin kq-dots {
+    background-color: #fff;
+    background-image: radial-gradient($gray-200 1px, transparent 1px);
+    background-size: 14px 14px;
+}
+@mixin kq-dots-dark {
+    background-color: #141413;
+    background-image: radial-gradient(rgba(#fff, 0.08) 1px, transparent 1px);
+    background-size: 14px 14px;
+}
+// Faint vertical lines every 90px (the footer's texture on kelviq.com).
+@mixin kq-lines-dark {
+    background-image: repeating-linear-gradient(
+        to right,
+        rgba(#fff, 0.04) 0,
+        rgba(#fff, 0.04) 1px,
+        transparent 1px,
+        transparent 90px
+    );
+}
+.kq-dots {
+    @include kq-dots;
+}
+.kq-dots-dark {
+    @include kq-dots-dark;
+}
+
+// ---- Rails: the 1080px column with 1px gray-100 edges ----------------------
+.kq-rail {
+    position: relative;
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 8px;
+    border-left: 1px solid $gray-100;
+    border-right: 1px solid $gray-100;
+}
+.kq-band {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border-bottom: 1px solid $gray-100;
+}
+// Plus markers where a section's inner box meets the rails.
+.kq-corners {
+    position: relative;
+    > .kq-corner {
+        position: absolute;
+        line-height: 0;
+        &.tl {
+            top: -7px;
+            left: -6.5px;
+        }
+        &.tr {
+            top: -7px;
+            right: -7.5px;
+        }
+        &.bl {
+            bottom: -7px;
+            left: -6.5px;
+        }
+        &.br {
+            bottom: -7px;
+            right: -7.5px;
+        }
+    }
+}
+
+// ---- Cards ----------------------------------------------------------------
+.kq-card {
+    background: #fff;
+    border: 1px solid $gray-100;
+    border-radius: 24px;
+    box-shadow: 5px 6px 40px -4px rgba(9, 18, 36, 0.03);
+}

@@ -2,6 +2,9 @@
 import { getEntry, render } from 'astro:content';
 
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroTopBox from '../components/kelviq/HeroTopBox.astro';
+import PrimaryButton from '../components/kelviq/PrimaryButton.astro';
+import SecondaryButton from '../components/kelviq/SecondaryButton.astro';
 
 /**
  * Homepage rework candidate — a clone of `index.astro` + `pages/home`
@@ -27,16 +30,15 @@ const { Content } = await render(home);
         },
     }}
 >
-    <div class="container-fluid main-page">
-        <div class="row justify-content-center hero-section">
-            <div class="col-lg-7 text-center">
-                <span class="hero-eyebrow">Version 3 · JavaScript, React, Vue, Angular</span>
+    <div class="home-hero-band">
+        <div class="container-xl home-hero">
+            <div class="home-hero-decor" aria-hidden="true"><HeroTopBox /></div>
+            <div class="home-hero-inner">
                 <h1 class="main-title">{home.data.title}</h1>
-                <h4 class="sub-title" set:html={home.data.lead ?? ''} />
+                <p class="para1 home-hero-lead" set:html={home.data.lead ?? ''} />
                 <div class="hero-actions">
-                    <a
+                    <PrimaryButton
                         href="/docs/getting-started/"
-                        class="btn btn-lg btn-primary"
                         data-stack-cta
                         data-href-vanilla="/docs/getting-started/"
                         data-href-react="/docs/react/"
@@ -44,17 +46,10 @@ const { Content } = await render(home);
                         data-href-angular="/docs/angular/"
                     >
                         Get started
-                    </a>
-                    <a href="/demos/" class="btn btn-lg btn-outline-primary">
-                        Browse demos
-                    </a>
-                    <a
-                        href="https://github.com/sachinchoolur/lightGallery"
-                        class="hero-github-link"
-                        rel="noopener"
-                    >
-                        View on GitHub →
-                    </a>
+                    </PrimaryButton>
+                    <SecondaryButton href="https://github.com/sachinchoolur/lightGallery" rel="noopener">
+                        View on GitHub
+                    </SecondaryButton>
                 </div>
             </div>
         </div>
@@ -86,7 +81,8 @@ const { Content } = await render(home);
                 .forEach((cta) => {
                     const href = cta.dataset[`href${framework[0].toUpperCase()}${framework.slice(1)}`];
                     if (href) cta.href = href;
-                    cta.textContent = LABELS[framework] ?? LABELS.vanilla;
+                    const label = cta.querySelector('.kq-btn-label') ?? cta;
+                    label.textContent = LABELS[framework] ?? LABELS.vanilla;
                 });
             document
                 .querySelectorAll<HTMLAnchorElement>('.home-cta-actions a')

@@ -1,790 +1,620 @@
 @use 'sass:math';
 
-// Homepage rework (/home-v3/).
-//
-// One visual system for the whole page: a type scale, a spacing rhythm,
-// a single card language, and three band tones (white, warm wash, dark)
-// that sections opt into. Everything the page shares with the live
-// homepage (hero shell, Super Customizable, Mixed Contents, Inline
-// Gallery) keeps its `_home.scss` styling.
+// Homepage (/home-v3/) on the kelviq design system: white sections
+// separated by hairlines, content inside a 1080px rail with 1px edges,
+// dotted backgrounds on selected sections, one dark developer-voice
+// section, kickers + serif-accent headings, 24px cards.
+// Sections kept from the live homepage (Super Customizable, Mixed
+// Contents, Inline Gallery) are re-skinned here too.
 
-// ---- Tokens --------------------------------------------------------------
-$home-radius: 16px;
-$home-radius-sm: 10px;
-$home-gap: 1.25rem;
-$home-section-y: clamp(4rem, 7vw, 6.5rem);
-$home-wash: mix($orange-50, #fff, 45%);
-$home-dark: #141414;
-$home-line: rgba($black, 0.09);
-$home-muted: $gray-darker;
-$home-intro-width: 40rem;
+$home-section-y: 80px;
+$home-section-y-m: 56px;
 
-// Card language: white surface, hairline, generous padding, lift on hover
-// only when the card is a link.
-@mixin home-card($surface: #fff) {
-    background: $surface;
-    border: 1px solid $home-line;
-    border-radius: $home-radius;
-    padding: 1.6rem;
-    h3 {
-        color: $brand-dark;
-        font-size: 1.1rem;
-        font-weight: 600;
-        line-height: 1.3;
-        margin: 0 0 0.5rem;
-    }
-    p {
-        color: $home-muted;
-        font-size: 0.95rem;
-        line-height: 1.55;
-        margin: 0;
-    }
-    code {
-        font-size: 0.85em;
-    }
-}
-
-@mixin home-card-link {
-    display: block;
-    color: inherit;
-    text-decoration: none;
-    transition:
-        border-color 0.18s ease,
-        transform 0.18s ease,
-        box-shadow 0.18s ease;
-    &:hover,
-    &:focus-visible {
-        border-color: rgba($brand, 0.55);
-        box-shadow: 0 12px 32px -12px rgba($black, 0.18);
-        color: inherit;
-        text-decoration: none;
-        transform: translateY(-3px);
-    }
-    &:focus-visible {
-        outline: 2px solid $brand;
-        outline-offset: 2px;
-    }
-}
-
-// Full-bleed band behind a `.container-xl` section without touching the
-// markup: the pseudo-element spans the viewport, the section keeps its
-// own stacking context so the band paints behind its content only.
-@mixin home-band($bg) {
-    position: relative;
-    z-index: 0;
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        width: 100vw;
-        margin-left: -50vw;
-        background: $bg;
-        z-index: -1;
-    }
-}
-
-// ---- Page shell ----------------------------------------------------------
 body.home-v3 {
-    // The full-bleed bands are 100vw wide; clip (not hidden) keeps
-    // sticky/fixed behaviour intact while removing the scrollbar slack.
     overflow-x: clip;
+    background: #fff;
 
-    .main-page {
-        padding-bottom: 0;
+    // ---- Sections: Bootstrap container widths, as on the original page ---
+    .container-xl,
+    .home-hero-gallery,
+    .trusted-by {
+        position: relative;
+        padding-top: $home-section-y;
+        padding-bottom: $home-section-y;
+        @media (max-width: 767px) {
+            padding-top: $home-section-y-m;
+            padding-bottom: $home-section-y-m;
+        }
+    }
+    // Full-viewport background behind a section, without touching markup.
+    @mixin full-bleed-bg {
+        position: relative;
+        z-index: 0;
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 100vw;
+            margin-left: -50vw;
+            z-index: -1;
+            @content;
+        }
     }
 
-    .hero-section {
-        padding-top: clamp(7rem, 14vw, 11rem);
-        padding-bottom: clamp(3rem, 5vw, 4.5rem);
+    // Nested containers inside the band wrappers (dark / plain).
+    .home-dark-band,
+    .home-plain-band,
+    .vertical-bg,
+    .gradient-bg-light-blue {
+        background: none;
+        padding: 0;
+        &::before {
+            display: none;
+        }
     }
 
-    .hero-eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 1.5rem;
-        padding: 0.35rem 0.9rem;
-        border: 1px solid rgba($brand, 0.35);
-        border-radius: 999px;
-        background: rgba($brand, 0.06);
-        color: $brand-light;
-        font-size: 0.8rem;
-        font-weight: 600;
-        letter-spacing: 0.04em;
-    }
-
-    .main-title {
-        font-size: clamp(3rem, 8vw, 5.5rem);
-        font-weight: 700;
-        letter-spacing: -0.03em;
-        line-height: 1;
-    }
-
-    .sub-title {
-        max-width: 34rem;
-        margin: 1.5rem auto 0;
-        color: $home-muted;
-        font-size: clamp(1.1rem, 1.6vw, 1.35rem);
-        line-height: 1.5;
-    }
-
-    .hero-actions {
+    // ---- Hero -------------------------------------------------------------
+    .home-hero-band {
         display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
         justify-content: center;
-        align-items: center;
-        margin-top: 2.25rem;
-        .btn {
-            margin: 0;
-            padding: 0.8rem 1.6rem;
-            border-radius: 999px;
-            font-weight: 600;
-        }
+        width: 100%;
     }
-
-    .hero-github-link {
-        flex-basis: 100%;
-        margin-top: 0.25rem;
-        color: $home-muted;
-        font-size: 0.95rem;
-        text-decoration: none;
-        &:hover {
-            color: $brand-light;
-        }
-    }
-
-    // The hero gallery — tighter to the hero, softer edges.
-    .clip-path-bg {
-        .gallery-demo {
-            border-radius: $home-radius;
-            overflow: hidden;
-        }
-        .open-gallery-text {
-            margin-top: 1rem;
-        }
-    }
-
-    // Section headers: one scale, one measure.
-    .home-section-header {
-        margin-bottom: 3rem;
-        h2 {
-            margin-bottom: 0.9rem;
-        }
-        p {
-            max-width: $home-intro-width;
-            margin: 0 auto;
-            color: $home-muted;
-            font-size: 1.1rem;
-            line-height: 1.55;
-        }
-    }
-
-    .main-page h2,
-    h2 {
-        font-size: clamp(1.9rem, 3.4vw, 2.6rem);
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        line-height: 1.15;
-    }
-
-    // Two-column prose blocks (Phones first, Theming, CDN).
-    .home-mobile,
-    .home-theming,
-    .home-cdn {
-        h2 {
-            margin-bottom: 1rem;
-        }
-        p {
-            color: $home-muted;
-            font-size: 1.05rem;
-        }
-        pre {
-            margin: 0;
-            border-radius: $home-radius-sm;
-        }
-        .row {
-            row-gap: 2rem;
-        }
-    }
-
-    // Code blocks everywhere on the page: rounded, never wider than the
-    // column on a phone, and flush when they close a section.
-    pre {
-        border-radius: $home-radius-sm;
-        overflow-x: auto;
-    }
-    .home-modular pre,
-    .home-mobile pre,
-    .home-theming pre,
-    .home-cdn pre {
-        margin-bottom: 0;
-    }
-    .home-dark-band .open-gallery-text {
-        margin-bottom: 0;
-    }
-
-    // Stack switcher: the docs' code tabs, hero-sized.
-    .home-stack {
-        @include home-band($home-wash);
-        padding: $home-section-y 0;
-        .code-tabs {
-            margin: 0;
-        }
-        .code-tabs-list {
-            justify-content: center;
-            border-bottom: 0;
-            gap: 0.5rem;
-            margin-bottom: 1.25rem;
-        }
-        .code-tabs-tab {
-            border: 1px solid $home-line;
-            border-radius: 999px;
-            background: #fff;
-            color: $brand-dark;
-            padding: 0.5rem 1.2rem;
-            font-weight: 600;
-            &[aria-selected='true'] {
-                background: $brand-dark;
-                border-color: $brand-dark;
-                color: #fff;
-            }
-        }
-        pre {
-            margin-bottom: 0.75rem;
-            box-shadow: 0 20px 40px -24px rgba($black, 0.35);
-        }
-    }
-
-    .home-stack-note {
-        margin: 1.5rem 0 0;
-        color: $home-muted;
-        font-size: 0.95rem;
-        text-align: center;
-        a {
-            color: $brand-light;
-            font-weight: 600;
-        }
-    }
-
-    // Numbers strip
-    .home-numbers {
-        padding: 3.5rem 0 0;
-    }
-
-    .home-numbers-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1.5rem 0;
-        list-style: none;
-        margin: 0;
+    .home-hero {
         padding: 0;
     }
-
-    .home-numbers-item {
+    .home-hero-decor {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        pointer-events: none;
+        @media (max-width: 767px) {
+            display: none;
+        }
+    }
+    .home-hero-inner {
         display: flex;
         flex-direction: column;
         align-items: center;
-        min-width: 9rem;
-        padding: 0 1.5rem;
-        @include media-breakpoint-up(md) {
-            & + & {
-                border-left: 1px solid $home-line;
+        text-align: center;
+        padding: 160px 24px 72px;
+        @media (max-width: 767px) {
+            // The header is fixed and 60px tall; keep the title clear of it.
+            padding: 108px 16px 48px;
+        }
+    }
+    .main-title {
+        max-width: 860px;
+        margin: 0 0 24px;
+    }
+    .home-hero-lead {
+        max-width: 600px;
+        margin: 0 0 32px;
+        color: $gray-600;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: stretch;
+        @media (max-width: 767px) {
+            flex-direction: column;
+            width: 100%;
+            max-width: 720px;
+            .kq-btn {
+                width: 100%;
             }
         }
     }
-
-    .home-numbers-value {
-        color: $brand-dark;
-        font-size: 2rem;
-        font-weight: 700;
-        font-variant-numeric: tabular-nums;
-        letter-spacing: -0.02em;
-        line-height: 1.1;
+    // The hero gallery: flush under the hero, no side padding beyond the rail.
+    .home-hero-gallery {
+        padding-top: 0;
+        padding-bottom: 24px;
+        .gallery-demo {
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        .open-gallery-text {
+            margin: 12px 0 0;
+            color: $gray-500;
+        }
     }
 
-    .home-numbers-label {
-        margin-top: 0.3rem;
-        color: $home-muted;
-        font-size: 0.8rem;
-        text-align: center;
-    }
-
-    // Trusted-by: quiet until hovered.
-    .trusted-by {
-        padding: $home-section-y 0;
-        .trusted-by-header {
-            margin-bottom: 2.5rem;
+    // ---- Section headers --------------------------------------------------
+    .home-section-header {
+        margin-bottom: 56px;
+        @media (max-width: 767px) {
+            margin-bottom: 40px;
+        }
+        .home-kicker {
+            display: block;
+            margin-bottom: 24px;
         }
         h2 {
-            color: $brand-dark;
-            font-size: clamp(1.9rem, 3.4vw, 2.6rem);
-            letter-spacing: -0.02em;
+            max-width: 620px;
+            margin: 0 auto 24px;
+        }
+        p {
+            max-width: 660px;
+            margin: 0 auto;
+            @extend .para1;
+            color: $gray-500;
+        }
+    }
+    // Optimized for everyone: two columns under a centered header.
+    .home-everyone-cols {
+        row-gap: 40px;
+        h3 {
+            margin-bottom: 16px;
+        }
+        .home-checklist {
+            margin-top: 0;
+        }
+        pre {
+            margin: 24px 0 0;
+        }
+        .home-keys {
+            margin-top: 24px;
+        }
+    }
+    // Two-column prose blocks
+    .home-mobile,
+    .home-cdn {
+        .home-kicker {
+            display: block;
+            margin-bottom: 24px;
+        }
+        h2 {
+            margin-bottom: 24px;
+        }
+        p {
+            @extend .para1;
+            color: $gray-500;
+        }
+        .row {
+            row-gap: 32px;
+        }
+        pre {
+            margin: 0;
+        }
+    }
+
+    // ---- Code ---------------------------------------------------------------
+    pre {
+        border-radius: 16px;
+        overflow-x: auto;
+    }
+    .home-stack {
+        .code-tabs {
+            margin: 0;
+            padding: 12px;
+            background: $gray-50;
+            border: 1px solid $gray-100;
+            border-radius: 24px;
+        }
+        .code-tabs-list {
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 12px;
+            border-bottom: 0;
+        }
+        .code-tabs-tab {
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            background: transparent;
+            color: $gray-800;
+            @extend .para3-semibold;
+            &[aria-selected='true'] {
+                background: #fff;
+                border-color: $gray-100;
+                color: $gray-800;
+            }
+        }
+        .code-tabs-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            &[data-hidden] {
+                display: none;
+            }
+        }
+        pre {
+            margin: 0;
+        }
+    }
+    .home-stack-desc {
+        margin: 4px 8px 12px;
+        @extend .para2;
+        color: $gray-500;
+        code {
+            font-size: 0.9em;
+        }
+    }
+    .home-stack-note {
+        margin: 32px 0 0;
+        text-align: center;
+        @extend .para3;
+        color: $gray-500;
+        a {
+            color: $orange-700;
+            font-weight: 600;
+        }
+    }
+
+    // ---- Trusted by: the client strip ---------------------------------------
+    .trusted-by {
+        padding-top: 32px;
+        padding-bottom: 32px;
+        .trusted-by-header {
+            margin-bottom: 24px;
+            h2 {
+                @extend .label1;
+                margin: 0;
+                text-align: center;
+            }
         }
         &.trusted-by-blue {
-            color: rgba($black, 0.55);
+            color: $gray-400;
         }
         .contents-list-item {
             transition: color 0.18s ease;
             &:hover {
-                color: $black;
+                color: $gray-800;
             }
         }
     }
 
-    // ---- Section spacing + band tones -------------------------------------
+    // ---- Dotted backgrounds on selected rails --------------------------------
     .home-v3-features,
-    .home-modular,
-    .home-mobile,
-    .home-a11y,
-    .home-theming,
-    .home-api,
-    .home-faq,
-    .home-custom,
-    .home-blog {
-        padding: $home-section-y 0;
-    }
-
-    // Sections kept from the live homepage run on the same rhythm and
-    // the same horizontal edges as the new ones.
-    .feature-list-lg,
-    .vertical-bg {
-        padding-top: $home-section-y;
-        padding-bottom: $home-section-y;
-    }
-    .vertical-bg .home-inline-gallery {
-        padding-top: 0;
-        padding-bottom: 0;
-    }
-    .home-inline-gallery,
-    .home-customize-gallery,
-    .home-mixed-gallery,
-    .trusted-by {
-        padding-left: 0;
-        padding-right: 0;
-    }
-    .home-mixed-gallery.feature-list-lg {
-        padding-top: $home-section-y;
-        padding-bottom: $home-section-y;
-    }
-
-    .home-frameworks,
-    .home-touch,
-    .home-perf,
-    .home-trust {
-        @include home-band($home-wash);
-        padding: $home-section-y 0;
-    }
-
-    .home-share {
-        padding: $home-section-y 0;
-    }
-
-    .home-plain-band {
-        background: #fff;
-    }
-
-    // Mixed Contents keeps its wrapper class from the live page; here it
-    // is a flat wash band like the others, not a fade.
-    .gradient-bg-light-blue {
-        background: $home-wash;
-    }
-
-    // Inline Gallery's skewed wedge from the live page becomes a flat band.
-    .vertical-bg::before {
-        background: $home-wash;
-        transform: none;
-    }
-
-    // Dark bands: physics and the CDN closer.
-    .home-dark-band,
-    .home-cdn {
-        color: rgba(#fff, 0.72);
-        h2,
-        h3 {
-            color: #fff;
-        }
-        p {
-            color: rgba(#fff, 0.72);
-        }
-        .home-section-header p {
-            color: rgba(#fff, 0.72);
-        }
-        a {
-            color: $orange-300;
+    .home-touch {
+        @include full-bleed-bg {
+            @include kq-dots;
         }
     }
 
-    .home-dark-band {
-        background: $home-dark;
-        .vertical-bg-inner {
-            padding: $home-section-y 0;
-        }
-        .open-gallery-text {
-            color: rgba(#fff, 0.55);
-        }
-    }
-
-    .home-cdn {
-        @include home-band($home-dark);
-        padding: $home-section-y 0;
-        pre {
-            box-shadow: none;
-            border: 1px solid rgba(#fff, 0.12);
-        }
-        .home-browser-note {
-            color: rgba(#fff, 0.55);
-            font-size: 0.9rem;
-        }
-    }
-
-    // ---- Grids and cards ----------------------------------------------------
+    // ---- Grids ----------------------------------------------------------------
     .home-feature-grid,
     .home-gesture-grid,
     .home-physics-grid,
-    .home-perf-grid,
     .home-trust-grid,
-    .home-posts {
+    .home-posts,
+    .home-more-grid {
         display: grid;
-        gap: $home-gap;
+        gap: 24px;
         list-style: none;
         margin: 0;
         padding: 0;
+        grid-template-columns: 1fr;
+        @media (min-width: 481px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @include media-breakpoint-up(md) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(4, 1fr);
+        }
     }
-
-    .home-feature-grid {
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    }
-
-    // Six-card grids: three across, never four-plus-two.
     .home-gesture-grid,
-    .home-physics-grid {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    }
-
+    .home-physics-grid,
     .home-trust-grid,
     .home-posts {
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(3, 1fr);
+        }
     }
-
-    .home-perf-grid {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
-
     .home-physics-grid {
-        margin-bottom: 3rem;
+        margin-bottom: 48px;
+    }
+    .home-share .home-trust-grid {
+        @include media-breakpoint-up(md) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    .home-more-grid {
+        gap: 8px 24px;
+        margin-top: 24px;
     }
 
+    // ---- Cards ------------------------------------------------------------------
+    .home-feature-card,
+    .home-gesture-card,
+    .home-trust-card,
+    .home-post,
+    .home-a11y-card {
+        @extend .kq-card;
+        display: block;
+        padding: 24px;
+        color: inherit;
+        text-decoration: none;
+        h3 {
+            font-size: 18px;
+            line-height: 28px;
+            margin: 0 0 8px;
+        }
+        p,
+        span {
+            @extend .para2;
+            color: $gray-500;
+            margin: 0;
+        }
+        code {
+            font-size: 0.9em;
+        }
+    }
+    a.home-feature-card,
+    a.home-trust-card,
+    a.home-post {
+        transition:
+            border-color 0.18s ease,
+            box-shadow 0.18s ease,
+            transform 0.18s ease;
+        &:hover,
+        &:focus-visible {
+            border-color: $gray-200;
+            box-shadow: 5px 6px 40px -4px rgba(9, 18, 36, 0.08);
+            color: inherit;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+        &:focus-visible {
+            outline: 2px solid $orange-500;
+            outline-offset: 2px;
+        }
+    }
     .home-feature-card {
-        @include home-card;
-        @include home-card-link;
         position: relative;
         h3 .home-badge {
             position: absolute;
-            top: 1.1rem;
-            right: 1.1rem;
+            top: 16px;
+            right: 16px;
             margin: 0;
         }
     }
-
-    .home-gesture-card {
-        @include home-card;
+    .feature-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: $orange-700;
+        svg {
+            width: 100%;
+            height: 100%;
+        }
     }
-
+    .home-feature-card .feature-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 16px;
+        padding: 9px;
+        border-radius: 12px;
+        background: $orange-50;
+    }
+    .home-more-grid a {
+        display: grid;
+        grid-template-columns: 22px 1fr;
+        column-gap: 12px;
+        align-items: start;
+        padding: 12px 12px 12px 8px;
+        border-radius: 12px;
+        color: inherit;
+        text-decoration: none;
+        transition: background-color 0.15s ease;
+        &:hover,
+        &:focus-visible {
+            background: $gray-50;
+            text-decoration: none;
+        }
+        .feature-icon {
+            width: 22px;
+            height: 22px;
+            margin-top: 2px;
+        }
+        strong {
+            grid-column: 2;
+            display: block;
+            color: $gray-800;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 24px;
+        }
+        span {
+            grid-column: 2;
+            @extend .para3;
+            color: $gray-500;
+        }
+    }
     .home-gesture-kicker {
         display: block;
-        margin-bottom: 0.5rem;
-        color: $brand-light;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
+        margin-bottom: 8px;
+        @extend .label1;
+        font-size: 12px;
+    }
+    .home-badge {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 6px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: $orange-50;
+        color: $orange-700;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 16px;
         text-transform: uppercase;
+        white-space: nowrap;
     }
-
-    .home-physics-card {
-        @include home-card(rgba(#fff, 0.05));
-        border-color: rgba(#fff, 0.1);
-        h3 {
-            color: #fff;
-            margin-top: 1rem;
-        }
-        p {
-            color: rgba(#fff, 0.7);
-        }
-    }
-
     .home-trust-card {
-        @include home-card;
-        @include home-card-link;
         display: flex;
         flex-direction: column;
         p {
             flex: 1;
-            margin-bottom: 1rem;
+            margin-bottom: 12px;
         }
     }
-
     .home-trust-link {
-        color: $brand-light;
+        color: $orange-700;
         font-weight: 600;
     }
-
     .home-post {
-        @include home-card;
-        @include home-card-link;
         display: flex;
         flex-direction: column;
-        gap: 0.35rem;
+        gap: 6px;
         time {
-            color: $home-muted;
-            font-size: 0.8rem;
+            @extend .label2;
+            color: $gray-500;
         }
         strong {
-            color: $brand-dark;
-            font-size: 1.05rem;
-            line-height: 1.35;
-        }
-        span {
-            color: $home-muted;
-            font-size: 0.9rem;
+            color: $gray-800;
+            font-size: 16px;
+            line-height: 24px;
         }
     }
 
-    // Perf stat cards
-    .home-perf-card {
-        @include home-card;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .home-perf-value {
-        color: $brand-dark;
-        font-size: 2.2rem;
-        font-weight: 700;
-        font-variant-numeric: tabular-nums;
-        letter-spacing: -0.02em;
-        line-height: 1.1;
-        small {
-            color: $home-muted;
-            font-size: 0.5em;
-            font-weight: 500;
-            letter-spacing: 0;
-        }
-    }
-
-    .home-perf-label {
-        margin-top: 0.6rem;
-        color: $home-muted;
-        font-size: 0.9rem;
-    }
-
-    // Compact linked list (the second half of "Everything a gallery needs")
-    .home-more-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 0.5rem 1.25rem;
-        list-style: none;
-        margin: 2rem 0 0;
-        padding: 0;
-        a {
-            display: block;
-            padding: 0.9rem 1.6rem;
-            border-radius: $home-radius-sm;
-            color: inherit;
-            text-decoration: none;
-            transition: background-color 0.15s ease;
-            &:hover,
-            &:focus-visible {
-                background: rgba($black, 0.04);
-                text-decoration: none;
-            }
-        }
-        strong {
-            display: block;
-            margin-bottom: 0.2rem;
-            color: $brand-dark;
-            font-weight: 600;
-        }
-        span {
-            color: $home-muted;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-    }
-
-    // Badge
-    .home-badge {
-        display: inline-block;
-        vertical-align: middle;
-        margin-left: 0.35rem;
-        padding: 0.15em 0.55em;
-        border-radius: 999px;
-        background: rgba($brand, 0.12);
-        color: $brand-light;
-        font-size: 0.65rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        white-space: nowrap;
-    }
-    .home-feature-card p .home-badge {
-        margin: 0 0.35rem 0 0;
-    }
-
-    // Plugin chips
+    // ---- Plugin chips -----------------------------------------------------------
     .home-plugin-chips {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 0.6rem;
+        gap: 8px;
         list-style: none;
-        margin: 0 0 2.5rem;
+        margin: 0 0 40px;
         padding: 0;
     }
-
     .home-plugin-chip {
         display: inline-flex;
         align-items: baseline;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        border: 1px solid $home-line;
-        border-radius: 999px;
+        gap: 8px;
+        padding: 8px 16px;
+        border: 1px solid $gray-100;
+        border-radius: 12px;
         background: #fff;
-        color: $brand-dark;
-        font-size: 0.9rem;
-        font-weight: 500;
+        color: $gray-800;
+        @extend .para3-semibold;
         text-decoration: none;
-        transition:
-            border-color 0.15s ease,
-            transform 0.15s ease;
+        transition: border-color 0.15s ease;
         &:hover,
         &:focus-visible {
-            border-color: rgba($brand, 0.55);
-            color: $brand-dark;
+            border-color: $gray-300;
+            color: $gray-800;
             text-decoration: none;
-            transform: translateY(-2px);
         }
     }
-
     .home-plugin-size {
-        color: $home-muted;
-        font-size: 0.75rem;
-        font-variant-numeric: tabular-nums;
+        color: $gray-500;
+        font-family: $font-family-monospace;
+        font-size: 12px;
+        font-weight: 400;
     }
 
-    // Checklist (Phones first)
+    // ---- Checklist / keyboard map / a11y cards ------------------------------------
     .home-checklist {
         list-style: none;
-        margin: 1.5rem 0 0;
+        margin: 24px 0 0;
         padding: 0;
         li {
             position: relative;
-            margin-bottom: 0.8rem;
-            padding-left: 1.6rem;
-            color: $home-muted;
-            font-size: 1rem;
-            line-height: 1.55;
+            margin-bottom: 12px;
+            padding-left: 24px;
+            @extend .para2;
+            color: $gray-500;
             &::before {
                 content: '';
                 position: absolute;
                 left: 0;
-                top: 0.6em;
-                width: 9px;
-                height: 9px;
+                top: 10px;
+                width: 8px;
+                height: 8px;
                 border-radius: 50%;
-                background: $brand;
+                background: $orange-500;
             }
             strong {
-                color: $brand-dark;
+                color: $gray-800;
             }
         }
     }
-
-    // Keyboard map + a11y cards
     .home-keys {
         margin: 0;
         > div {
             display: flex;
-            gap: 1rem;
+            gap: 16px;
             align-items: baseline;
-            padding: 0.85rem 0;
-            border-bottom: 1px solid $home-line;
+            padding: 14px 0;
+            border-bottom: 1px solid $gray-100;
         }
         dt {
-            flex: 0 0 6.5rem;
+            flex: 0 0 104px;
             white-space: nowrap;
         }
         dd {
             margin: 0;
-            color: $home-muted;
+            @extend .para2;
+            color: $gray-500;
         }
         kbd {
             display: inline-block;
             min-width: 1.9em;
-            padding: 0.2em 0.55em;
-            border: 1px solid rgba($black, 0.2);
+            padding: 2px 8px;
+            border: 1px solid $gray-200;
             border-bottom-width: 2px;
             border-radius: 6px;
             background: #fff;
-            color: $brand-dark;
-            font-family: inherit;
-            font-size: 0.85rem;
-            font-weight: 600;
+            color: $gray-800;
+            font-family: $font-family-monospace;
+            font-size: 12px;
+            font-weight: 500;
             text-align: center;
         }
     }
-
     .home-a11y-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 1rem;
+        gap: 16px;
     }
-
     .home-a11y-card {
-        @include home-card;
-        padding: 1.25rem;
+        padding: 20px;
         h3 {
-            font-size: 1rem;
+            font-size: 16px;
+            line-height: 24px;
         }
         p {
-            font-size: 0.9rem;
+            @extend .para3;
         }
     }
-
     .home-section-link {
-        margin: 1.5rem 0 0;
+        margin: 24px 0 0;
+        @extend .para3-semibold;
         a {
-            color: $brand-light;
-            font-weight: 600;
+            color: $orange-700;
         }
     }
 
-    // FAQ
+    // ---- FAQ ----------------------------------------------------------------------
     .home-faq-item {
-        border-bottom: 1px solid $home-line;
-        padding: 0.35rem 0;
+        border-bottom: 1px solid $gray-100;
+        padding: 6px 0;
         summary {
-            cursor: pointer;
-            padding: 0.7rem 0;
-            color: $brand-dark;
-            font-size: 1.05rem;
-            font-weight: 600;
-            list-style: none;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 12px 0;
+            cursor: pointer;
+            list-style: none;
+            color: $gray-800;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 24px;
             &::-webkit-details-marker {
                 display: none;
             }
             &::after {
                 content: '+';
-                color: $brand-light;
-                font-size: 1.3rem;
+                color: $orange-700;
+                font-size: 20px;
                 font-weight: 400;
-                line-height: 1;
                 transition: transform 0.18s ease;
             }
         }
@@ -792,39 +622,220 @@ body.home-v3 {
             transform: rotate(45deg);
         }
         p {
-            margin: 0 0 0.9rem;
-            color: $home-muted;
-            line-height: 1.55;
+            margin: 0 0 14px;
+            @extend .para2;
+            color: $gray-500;
         }
     }
 
-    // Closing CTA
+    // ---- Dark sections: developer voice (Geist Mono on #1A1A1A) -------------------
+    .home-dark-band,
+    .home-cdn {
+        @extend .kq-dev;
+        color: rgba(#fff, 0.72);
+        h2,
+        h3 {
+            color: #fff;
+        }
+        p,
+        .home-section-header p {
+            color: rgba(#fff, 0.72);
+        }
+        .home-kicker,
+        .label1 {
+            color: $orange-500;
+        }
+        a {
+            color: $orange-300;
+        }
+    }
+    .home-dark-band {
+        @include kq-dots-dark;
+        .home-physics {
+            background: none;
+        }
+        .open-gallery-text {
+            color: rgba(#fff, 0.55);
+        }
+    }
+    .home-cdn {
+        background: $dark-surface;
+        @include full-bleed-bg {
+            @include kq-dots-dark;
+        }
+        pre {
+            border: 1px solid rgba(#fff, 0.12);
+        }
+        .home-browser-note {
+            color: rgba(#fff, 0.55);
+            @extend .para3;
+        }
+    }
+    .home-gesture-chips {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px 24px;
+        list-style: none;
+        margin: 0 0 40px;
+        padding: 0;
+        @include media-breakpoint-up(md) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        li {
+            padding: 12px 16px;
+            border: 1px solid rgba(#fff, 0.1);
+            border-radius: 12px;
+            background: rgba(#fff, 0.04);
+            @extend .para3;
+            color: rgba(#fff, 0.7);
+            strong {
+                display: block;
+                margin-bottom: 2px;
+                color: #fff;
+                font-weight: 600;
+            }
+        }
+    }
+    .home-physics-card {
+        padding: 24px;
+        border: 1px solid rgba(#fff, 0.1);
+        border-radius: 24px;
+        background: rgba(#fff, 0.04);
+        h3 {
+            margin: 16px 0 8px;
+            color: #fff;
+            font-size: 16px;
+            line-height: 24px;
+        }
+        p {
+            @extend .para3;
+            color: rgba(#fff, 0.7);
+        }
+    }
+
+    // ---- Legacy sections re-skinned -----------------------------------------------
+    .feature-list-lg h2,
+    .home-inline-gallery h2 {
+        margin-bottom: 24px;
+    }
+    .feature-list-lg > .row > div > p,
+    .home-inline-gallery-header p {
+        @extend .para1;
+        color: $gray-500;
+    }
+    // Super Customizable: text + four mini cards on the left, the vertical
+    // gallery on the right.
+    .home-customize-gallery {
+        .home-kicker {
+            display: block;
+            margin-bottom: 24px;
+        }
+        .row {
+            row-gap: 40px;
+        }
+        .features-grid {
+            margin-top: 32px;
+            row-gap: 24px;
+        }
+        .features-grid-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .features-grid-icon {
+            flex: 0 0 40px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: $orange-50;
+            img {
+                width: 20px;
+                height: 20px;
+            }
+        }
+        .features-grid-title {
+            margin: 0 0 4px;
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 600;
+            color: $gray-800;
+        }
+        .features-grid-desc {
+            margin: 0;
+            @extend .para3;
+            color: $gray-500;
+        }
+        .vertical-gallery .gallery-item img {
+            border-radius: 12px;
+        }
+        .open-gallery-text {
+            margin-top: 12px;
+            color: $gray-500;
+            text-align: center;
+        }
+    }
+    .svg-bg {
+        display: none; // the blob belonged to the old look
+    }
+
+    // ---- Closing CTA ----------------------------------------------------------------
     .home-cta {
-        padding: $home-section-y 0;
+        text-align: center;
+        .home-kicker {
+            display: block;
+            margin-bottom: 24px;
+        }
         h2 {
-            margin-bottom: 1.5rem;
+            margin-bottom: 32px;
         }
     }
-
     .home-cta-actions {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.75rem;
+        gap: 12px;
         justify-content: center;
         .btn {
-            border-radius: 999px;
-            padding: 0.7rem 1.4rem;
-            font-weight: 600;
+            padding: 13px 24px;
+            border-radius: 12px;
+            @extend .para2-medium;
+        }
+        .btn-outline-primary {
+            border-color: $gray-100;
+            background: #fff;
+            color: $gray-800;
+            &:hover {
+                background: $gray-10;
+                border-color: $gray-200;
+                color: $gray-800;
+            }
+        }
+        .btn-primary {
+            background: $orange-700;
+            border-color: $orange-700;
+            color: #fff;
+            &:hover {
+                background: $orange-800;
+                border-color: $orange-800;
+            }
         }
     }
-
     .home-cta-secondary {
-        margin-top: 1.25rem;
-        color: $home-muted;
+        margin-top: 20px;
+        @extend .para3;
+        color: $gray-500;
+        a {
+            color: $orange-700;
+        }
     }
 }
 
-// ---- Physics illustrations (dark band) -------------------------------------
+// ---- Physics illustrations (dark band) -------------------------------------------
 // Each card's animation is a small illustration of the rule it describes.
 // Durations are long and loops pause on hover so the motion reads rather
 // than distracts; reduced-motion shows the resting frame only.

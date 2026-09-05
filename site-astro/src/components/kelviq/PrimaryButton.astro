@@ -1,0 +1,22 @@
+---
+/**
+ * Primary button, kelviq.com style: 12px radius, orange fill with an
+ * inner highlight, white text with a soft shadow, and a dotted arrow that
+ * nudges on hover.
+ */
+interface Props {
+    href: string;
+    class?: string;
+    [key: string]: unknown;
+}
+const { href, class: className = '', ...rest } = Astro.props;
+---
+
+<a href={href} class={`kq-btn kq-btn-primary ${className}`} {...rest}>
+    <span class="kq-btn-inner">
+        <span class="kq-btn-label"><slot /></span>
+        <svg class="kq-btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M10.1309 3.73067V3.736M12.2642 5.864V5.86933M10.1309 5.864V5.86933M12.2642 7.99733V8.00266M10.1309 7.99733V8.00266M7.99756 7.99733V8.00266M5.86401 7.99733V8.00266M3.73071 7.99733V8.00266M1.59741 7.99733V8.00266M12.2642 10.1307V10.136M10.1309 10.1307V10.136M10.1309 12.264V12.2693M14.3975 7.99733V8.00266" stroke="white" stroke-width="2.13333" stroke-linecap="square" />
+        </svg>
+    </span>
+</a>

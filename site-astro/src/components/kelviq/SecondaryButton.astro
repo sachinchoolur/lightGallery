@@ -1,0 +1,11 @@
+---
+/** Secondary button, kelviq.com style: white, gray-100 border, 12px radius. */
+interface Props {
+    href: string;
+    class?: string;
+    [key: string]: unknown;
+}
+const { href, class: className = '', ...rest } = Astro.props;
+---
+
+<a href={href} class={`kq-btn kq-btn-secondary ${className}`} {...rest}><slot /></a>

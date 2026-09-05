@@ -1,0 +1,91 @@
+---
+/**
+ * Hero decoration shared with kelviq.com: a grid of small tiles that
+ * assemble into place on load, then a single shine sweep. Pure SVG + CSS.
+ */
+const rows = [
+    { y: 0, xs: [0, 46, 92, 138, 184, 230, 276, 322, 368, 404, 460, 506, 542] },
+    { y: 20, xs: [26, 72, 118, 164, 210, 256, 302, 348, 394, 440, 486, 522] },
+    { y: 44, xs: [2, 48, 94, 140, 186, 232, 278, 324, 370, 426, 462, 508, 554] },
+];
+let i = 0;
+const pieces = rows.flatMap((row) =>
+    row.xs.map((x) => {
+        const sign = i % 2 ? 1 : -1;
+        const piece = {
+            x,
+            y: row.y,
+            dx: sign * (26 + (i % 5) * 4),
+            dy: -sign * (20 + (i % 4) * 4),
+            r: sign * (12 + (i % 4) * 4),
+            delay: (0.05 + i * 0.05).toFixed(2),
+        };
+        i++;
+        return piece;
+    }),
+);
+---
+
+<svg width="560" height="52" viewBox="0 0 560 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="hero-grid-assemble" aria-hidden="true">
+    <defs>
+        <linearGradient id="lg-hero-shine" x1="0" y1="0" x2="560" y2="0">
+            <stop offset="0%" stop-color="white" stop-opacity="0" />
+            <stop offset="45%" stop-color="white" stop-opacity="0" />
+            <stop offset="50%" stop-color="white" stop-opacity="0.7" />
+            <stop offset="55%" stop-color="white" stop-opacity="0" />
+            <stop offset="100%" stop-color="white" stop-opacity="0" />
+        </linearGradient>
+        <mask id="lg-hero-shine-mask"><rect width="560" height="52" fill="url(#lg-hero-shine)" /></mask>
+    </defs>
+    {pieces.map((p) => (
+        <rect class="piece" x={p.x} y={p.y} width="6" height="8" style={`--dx:${p.dx}px; --dy:${p.dy}px; --r:${p.r}deg; animation-delay:${p.delay}s`} />
+    ))}
+    <rect class="shine" width="560" height="52" fill="url(#lg-hero-shine)" mask="url(#lg-hero-shine-mask)" opacity="0.6" />
+</svg>
+
+<style>
+    .hero-grid-assemble .piece {
+        fill: #edf2f7;
+        opacity: 0;
+        transform-origin: center;
+        animation: lg-assemble 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes lg-assemble {
+        0% {
+            opacity: 0;
+            transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(0.75);
+            filter: blur(8px);
+        }
+        60% {
+            opacity: 1;
+            filter: blur(2px);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(0, 0) rotate(0deg) scale(1);
+            filter: blur(0);
+        }
+    }
+    .hero-grid-assemble .shine {
+        animation: lg-shine 1.2s ease-out forwards;
+        animation-delay: 2s;
+        transform: translateX(-560px);
+    }
+    @keyframes lg-shine {
+        from {
+            transform: translateX(-560px);
+        }
+        to {
+            transform: translateX(560px);
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .hero-grid-assemble .piece {
+            animation: none;
+            opacity: 1;
+        }
+        .hero-grid-assemble .shine {
+            display: none;
+        }
+    }
+</style>

@@ -1,8 +1,9 @@
 .footer {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-    background-color: $brand-dark;
-    margin-top: 3rem;
+    padding-top: 56px;
+    padding-bottom: 40px;
+    background-color: $dark-surface;
+    margin-top: 0;
+    @include kq-lines-dark;
 
     ul.footer-menu {
         padding-left: 0;
@@ -15,17 +16,19 @@
         }
     }
     h4 {
-        font-size: 1rem;
+        font-size: 12px;
+        letter-spacing: 1px;
         text-transform: uppercase;
-        font-weight: 400;
-        color: #74a0ff;
-        margin: 0 0 15px;
+        font-weight: 600;
+        color: $gray-400;
+        margin: 0 0 16px;
     }
     .footer-menu-item a {
-        color: #9abaff;
+        color: $gray-300;
+        font-size: 14px;
         transition: color 0.2s;
         &:hover {
-            color: #c9daff;
+            color: #fff;
         }
     }
 }
@@ -107,3 +110,22 @@
     transform: translate3d(-50%, 0px, 0px);
     color: #74a0ff;
   }
+
+// Bottom line: maintenance tenure and licensing, kept short.
+.footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(#fff, 0.12);
+    color: rgba(#fff, 0.7);
+    font-size: 0.85rem;
+    a {
+        color: rgba(#fff, 0.85);
+        &:hover {
+            color: #fff;
+        }
+    }
+}

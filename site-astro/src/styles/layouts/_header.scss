@@ -13,27 +13,40 @@
     font-size: $navbar-font-size;
 }
 .navbar {
-    background-color: var(--main-bg);
-    box-shadow: rgba(0, 0, 0, 0) 0px 6px 24px;
-    transition: all 0.3s ease-in-out 0s;
-    will-change: transform;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    .docs &,
-    .demos & {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        box-shadow: rgba(0, 0, 0, 0.06) 0px 6px 24px;
-    }
-    &.fixed-header {
-        box-shadow: rgba(0, 0, 0, 0.06) 0px 6px 24px;
-        background-color: rgba(255, 255, 255, 1);
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+    background-color: #fff;
+    border-bottom: 1px solid $gray-100;
+    box-shadow: none;
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: 60px;
+    transition: none;
+    .navbar-brand {
+        font-family: $font-family-sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: $gray-800;
+        &.monospace {
+            font-family: $font-family-sans-serif;
+        }
     }
     .nav-link {
-        font-weight: 500;
+        padding: 18px 12px;
+        color: $gray-800;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.16px;
+        &:hover,
+        &.active {
+            color: $orange-700;
+        }
+    }
+    .docs &,
+    .demos &,
+    &.fixed-header {
+        box-shadow: none;
+        background-color: #fff;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 }
 
