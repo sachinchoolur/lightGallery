@@ -23,7 +23,7 @@ lightGallery plugins
 -   Add the new plugin configuration to the `plugins-config-rollup.json` file in
     the following format
 
-```js
+```json
 {
     "name": "autoplay",
     "folder": "plugins/autoplay/",

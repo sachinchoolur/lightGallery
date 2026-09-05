@@ -295,7 +295,7 @@ export const LightGallery = forwardRef<
             console.error(
                 'lightGallery: <LightGallery> is changing between controlled ' +
                     'and uncontrolled `open`. Decide between controlled and ' +
-                    'uncontrolled for the lifetime of the component.',
+                    'uncontrolled for the lifetime of the component. See https://www.lightgalleryjs.com/docs/react/',
             );
         }
         prevOpenControlledRef.current = openControlled;

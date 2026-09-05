@@ -211,7 +211,7 @@ describe('feature runtime (ADR 0001 §5)', () => {
         await flush(fixture);
 
         expect(warn).toHaveBeenCalledWith(
-            'lightGallery: duplicate feature "probe" ignored.',
+            expect.stringContaining('duplicate feature "probe" ignored'),
         );
         // First registration wins.
         expect(query('.probe-toolbar')!.textContent).toContain('first');

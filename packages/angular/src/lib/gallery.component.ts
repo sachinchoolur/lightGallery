@@ -1117,7 +1117,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                     'lightGallery: <lg-gallery> is changing between ' +
                         'controlled and uncontrolled `open`. Decide between ' +
                         'controlled and uncontrolled for the lifetime of ' +
-                        'the component.',
+                        'the component. See https://www.lightgalleryjs.com/docs/angular/',
                 );
             }
             this.prevOpenControlled = controlled;

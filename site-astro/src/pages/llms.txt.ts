@@ -44,7 +44,7 @@ export const GET: APIRoute = async () => {
     for (const entry of demos) {
         out.push(`- [${entry.data.title}](${SITE}/demos/${entry.id.replace(/\/index$/, '').toLowerCase()}/): ${one(entry.data.description)}`);
     }
-    out.push('', '## Optional', '', `- [Blog](${SITE}/blog/)`, `- [License](${SITE}/license/): GPLv3, with a commercial license available`, `- [GitHub](https://github.com/sachinchoolur/lightGallery)`, '');
+    out.push('', '## Optional', '', `- [Changelog](${SITE}/changelog/index.md): what changed in each release`, `- [Blog](${SITE}/blog/)`, `- [License](${SITE}/license/): GPLv3, with a commercial license available`, `- [GitHub](https://github.com/sachinchoolur/lightGallery)`, '');
     // Keep docsUrl referenced for consumers that want HTML links.
     void docsUrl;
     return new Response(out.join('\n'), {

@@ -138,7 +138,7 @@ export default class CommentBox {
                         });
                     } catch (err) {
                         console.error(
-                            'Make sure you have included disqus JavaScript code in your document. Ex - https://lg-disqus.disqus.com/admin/install/platforms/universalcode/',
+                            'lightGallery: make sure you have included the Disqus JavaScript code in your document. Ex - https://lg-disqus.disqus.com/admin/install/platforms/universalcode/',
                         );
                     }
                 },

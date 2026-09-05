@@ -310,10 +310,12 @@ export class LightGallery {
 
     validateLicense(): void {
         if (!this.settings.licenseKey) {
-            console.error('Please provide a valid license key');
+            console.error(
+                'lightGallery: please provide a valid license key. See https://www.lightgalleryjs.com/docs/license/',
+            );
         } else if (this.settings.licenseKey === '0000-0000-000-0000') {
             console.warn(
-                `lightGallery: ${this.settings.licenseKey} license key is not valid for production use`,
+                `lightGallery: ${this.settings.licenseKey} license key is not valid for production use. See https://www.lightgalleryjs.com/docs/license/`,
             );
         }
     }
@@ -929,7 +931,7 @@ export class LightGallery {
                 });
             } catch (e) {
                 console.warn(
-                    'lightGallery :- If you want srcset or picture tag to be supported for older browser please include picturefil javascript library in your document.',
+                    'lightGallery :- If you want srcset or picture tag to be supported for older browser please include picturefil javascript library in your document. See https://www.lightgalleryjs.com/docs/responsive-loading/',
                 );
             }
         }
@@ -993,7 +995,7 @@ export class LightGallery {
                         }
                     } catch (error) {
                         console.warn(
-                            `Error processing subHtml selector "${subHtml}"`,
+                            `lightGallery: error processing subHtml selector "${subHtml}". See https://www.lightgalleryjs.com/demos/captions/`,
                         );
                         subHtml = '';
                     }
@@ -2914,7 +2916,7 @@ export class LightGallery {
                 module.init();
             } catch (err) {
                 console.warn(
-                    `lightGallery:- make sure lightGallery module is properly initiated`,
+                    `lightGallery:- make sure lightGallery module is properly initiated. See https://www.lightgalleryjs.com/docs/methods/`,
                 );
             }
         });
@@ -2930,7 +2932,7 @@ export class LightGallery {
                 }
             } catch (err) {
                 console.warn(
-                    `lightGallery:- make sure lightGallery module is properly destroyed`,
+                    `lightGallery:- make sure lightGallery module is properly destroyed. See https://www.lightgalleryjs.com/docs/methods/`,
                 );
             }
         });

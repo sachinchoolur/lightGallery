@@ -67,7 +67,7 @@ function sanitizeRatios(ratios: readonly number[]): number[] {
         if (!warned && typeof console !== 'undefined') {
             warned = true;
             console.warn(
-                'lightGallery justified layout: invalid aspect ratio, treating as 1 (square).',
+                'lightGallery justified layout: invalid aspect ratio, treating as 1 (square). See https://www.lightgalleryjs.com/docs/justified-layout/',
             );
         }
         return 1;

@@ -155,7 +155,7 @@ If you know the original size of the media, you can pass it via
 
 Finally, you need to initiate the gallery by adding the following code.
 
-```javascript
+```html
 <script type="text/javascript">
     lightGallery(document.getElementById('lightgallery'), {
         plugins: [lgZoom, lgThumbnail],

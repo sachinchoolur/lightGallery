@@ -128,7 +128,8 @@ const [slides, setSlides] = useState(firstPage);
 useEffect(() => {
     const onScroll = async () => {
         if (!nearBottom()) return;
-        setSlides((current) => [...current, ...(await fetchNextPage())]);
+        const next = await fetchNextPage();
+        setSlides((current) => [...current, ...next]);
     };
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);

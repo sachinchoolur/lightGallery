@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "build": "astro build && cp ../site/CNAME dist/CNAME",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "check:examples": "node scripts/check-examples.mjs"
   },
   "dependencies": {
     "@lightgallery/headless": "workspace:*",

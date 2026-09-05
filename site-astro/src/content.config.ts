@@ -74,4 +74,10 @@ const pages = defineCollection({
     schema: baseSchema,
 });
 
-export const collections = { docs, demos, blog, pages };
+/** The repo's CHANGELOG.md, rendered at /changelog/. */
+const changelog = defineCollection({
+    loader: glob({ pattern: 'CHANGELOG.md', base: '..' }),
+    schema: z.object({}),
+});
+
+export const collections = { docs, demos, blog, pages, changelog };

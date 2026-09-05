@@ -173,7 +173,7 @@ export function dedupeFeatures(features: readonly LgFeature[]): LgFeature[] {
     for (const feature of features) {
         if (seen.has(feature.name)) {
             console.warn(
-                `lightGallery: duplicate feature "${feature.name}" ignored.`,
+                `lightGallery: duplicate feature "${feature.name}" ignored. See https://www.lightgalleryjs.com/docs/angular/`,
             );
             continue;
         }

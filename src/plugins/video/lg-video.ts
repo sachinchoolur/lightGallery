@@ -355,7 +355,7 @@ export default class Video {
                 );
             } catch (e) {
                 console.error(
-                    'lightGallery:- Make sure you have included videojs',
+                    'lightGallery:- Make sure you have included videojs. See https://www.lightgalleryjs.com/demos/video-gallery/',
                 );
             }
         }
@@ -406,7 +406,7 @@ export default class Video {
                 callback();
             } catch (e) {
                 console.error(
-                    'lightGallery:- Make sure you have included //github.com/vimeo/player.js',
+                    'lightGallery:- Make sure you have included //github.com/vimeo/player.js. See https://www.lightgalleryjs.com/demos/video-gallery/',
                 );
             }
         };
@@ -427,7 +427,7 @@ export default class Video {
             window._wq.push(command);
         } catch (e) {
             console.error(
-                'lightGallery:- Make sure you have included //fast.wistia.com/assets/external/E-v1.js',
+                'lightGallery:- Make sure you have included //fast.wistia.com/assets/external/E-v1.js. See https://www.lightgalleryjs.com/demos/video-gallery/',
             );
             return;
         }
@@ -464,7 +464,7 @@ export default class Video {
                     (videojs($videoElement.get()) as any)[action as any]();
                 } catch (e) {
                     console.error(
-                        'lightGallery:- Make sure you have included videojs',
+                        'lightGallery:- Make sure you have included videojs. See https://www.lightgalleryjs.com/demos/video-gallery/',
                     );
                 }
             } else {
