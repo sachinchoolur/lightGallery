@@ -5,7 +5,7 @@
 
 .rjq-main {
     background-color: var(--main-bg);
-    background-image: linear-gradient(#e8f0ff 0%, white 5%);
+    background-image: linear-gradient($brand-wash 0%, white 5%);
     .alert-dialogue-box {
         background-color: #fff3cd;
         margin: auto;
@@ -159,7 +159,7 @@
     display: flex;
     align-items: center;
     border-bottom: none;
-    background-color: #0e3481;
+    background-color: $brand-dark;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     justify-content: space-between;
@@ -441,7 +441,7 @@
 
 
 .section-rjq-docs {
-    color: #0e3481;
+    color: $brand-dark;
 
     h2 {
         text-align: center;

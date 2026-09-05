@@ -13,12 +13,12 @@
 
 .tracker-head-title {
     font-size: 50px;
-    color: #0e3481;
+    color: $brand-dark;
 }
 
 .tracker-head-sub-title {
     font-size: 18px;
-    color: #0e3481;
+    color: $brand-dark;
     max-width: 50%;
     text-align: center;
 }
@@ -37,7 +37,7 @@
 }
 
 .libs-trackers-head-sections {
-    background-color: #0e3481;
+    background-color: $brand-dark;
     color: #fffdfd;
     text-align: center;
 }
@@ -105,7 +105,7 @@
 
 .libs-tracker-short-cap {
     text-align: center;
-    color: #0e3481;
+    color: $brand-dark;
     padding-top: 24px;
     font-size: 16px;
 }

@@ -77,7 +77,7 @@
     font-weight: 400;
     line-height: 1.5;
     letter-spacing: 0.5px;
-    color: #0e3481;
+    color: $brand-dark;
     font-size: 16px;
     font-family: 'Helvetica Now Display', 'Helvetica Now Display', system-ui,
         -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
@@ -111,7 +111,7 @@
         -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
         'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-    color: #0e3481;
+    color: $brand-dark;
     font-size: 16px;
 }
 .quality-option {
@@ -121,8 +121,8 @@
     line-height: 1.5;
     text-align: center;
     vertical-align: middle;
-    border-color: #0e3481;
-    color: #0e3481;
+    border-color: $brand-dark;
+    color: $brand-dark;
     text-align: center;
     align-items: center;
     display: flex;
@@ -133,7 +133,7 @@
 }
 .quality-value {
     font-weight: 500;
-    color: #0e3481;
+    color: $brand-dark;
     align-items: center;
     display: flex;
     justify-content: center;
@@ -185,29 +185,29 @@
 .preview-button:hover {
     transition: 0.5s;
     color: #fff;
-    background-color: #0e3481;
+    background-color: $brand-dark;
     border-color: #e0eafd;
-    border-color: #0e3481;
+    border-color: $brand-dark;
 }
 .faq-section-container {
     width: 100%;
-    background-image: linear-gradient(#f6f9fb 0%, #fdfdfe 52.08%);
+    background-image: linear-gradient(#fff5f0 0%, #fdfdfe 52.08%);
     display: flex;
     justify-content: center;
     margin-top: 126px;
 }
 .faq-question-single {
-    color: #0e3481;
+    color: $brand-dark;
     font-size: 22px;
 }
 .faq-answer-single {
-    color: #0e3481;
+    color: $brand-dark;
     font-size: 18px;
 }
 .faq-section-header {
     padding-top: 120px;
     display: flex;
-    color: #0e3481;
+    color: $brand-dark;
     font-size: 32px;
     font-weight: 600;
 }
@@ -278,11 +278,11 @@
     max-width: 1200px;
 }
 .about-section-desc-header {
-    color: #0e3481;
+    color: $brand-dark;
     font-size: 32px;
 }
 .about-seection-desc {
-    color: #0e3481;
+    color: $brand-dark;
     font-size: 18px;
 }
 .download-icon {
@@ -295,14 +295,14 @@
     text-align: center;
     margin-bottom: 60px;
     font-size: 24px;
-    color: #0e3481;
+    color: $brand-dark;
     @include media-breakpoint-up(md) {
         font-size: 32px;
     }
 }
 .inner-section-subhead {
     font-size: 20px;
-    color: #0e3481;
+    color: $brand-dark;
     @include media-breakpoint-up(md) {
         font-size: 22px;
     }

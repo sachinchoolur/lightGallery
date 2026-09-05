@@ -1,7 +1,7 @@
 .footer {
     padding-top: 4rem;
     padding-bottom: 4rem;
-    background-color: #0e3481;
+    background-color: $brand-dark;
     margin-top: 3rem;
 
     ul.footer-menu {
@@ -100,7 +100,7 @@
     top: 1px;
     font-size: 11px;
     margin-top: -10px;
-    background-color: #0e3480;
+    background-color: $brand-dark;
     width: auto;
     padding: 0 10px;
     text-transform: uppercase;

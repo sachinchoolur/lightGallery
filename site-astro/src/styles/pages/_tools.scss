@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-image: linear-gradient(#e8f0ff 0%, white 300px);
+    background-image: linear-gradient($brand-wash 0%, white 300px);
     @include media-breakpoint-down(sm) {
         padding-left: 0px;
         padding-right: 0px;
@@ -37,7 +37,7 @@
         -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
         'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-    color: #0e3481;
+    color: $brand-dark;
     font-size: 50px;
     font-weight: 500;
 
@@ -51,7 +51,7 @@
     align-items: center;
 }
 .tools-hero-sub-heading {
-    color: #0e3481;
+    color: $brand-dark;
     font-weight: 400;
     margin-top: 0px;
     line-height: 1.6;

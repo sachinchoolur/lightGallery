@@ -29,11 +29,7 @@
     padding-top: 15rem;
     padding-bottom: 11.75rem;
     background-color: var(--main-bg);
-    background-image: linear-gradient(
-        rgb(232, 240, 255) 0%,
-        rgb(255, 255, 255) 52.08%
-    );
-    color: $blue-dark;
+    color: $brand-dark;
     .main-title {
         margin: 0;
     }
@@ -165,7 +161,6 @@
         left: 0;
         bottom: 30%;
         background-color: var(--main-bg);
-        background-image: linear-gradient(180deg, white, #84bbff3d);
         z-index: 1;
     }
 }
@@ -174,7 +169,7 @@
     padding-top: 7.5rem;
     padding-bottom: 7.5rem;
     &::before {
-        background-image: linear-gradient(180deg, #fff, #f7f9fc 100%);
+        background-image: linear-gradient(180deg, #fff, #fbf7f5 100%);
         content: '';
         height: 100%;
         left: 0;
@@ -190,7 +185,7 @@
 }
 
 .gradient-bg-light-blue {
-    background-image: linear-gradient(#f6f9fb 0%, #fdfdfe 50%);
+    background-image: linear-gradient(#fff5f0 0%, #fdfdfe 50%);
 }
 
 .features-list-header {
@@ -213,8 +208,8 @@
         margin-top: 0;
     }
     svg {
-        fill: #0959fe;
-        color: #0959fe;
+        fill: $brand-light;
+        color: $brand-light;
         width: 32px;
         margin-right: 14px;
         height: 28px;
@@ -319,14 +314,14 @@
         width: 3rem;
         height: 3rem;
         flex-shrink: 0;
-        background-color: rgba(204, 221, 255, 0.5);
+        background-color: rgba($orange-100, 0.5);
         border-radius: 4px;
         display: flex;
         align-items: center;
         justify-content: center;
         svg {
             width: 1.5rem;
-            fill: #0858fe;
+            fill: $brand-light;
         }
     }
 
@@ -446,7 +441,7 @@
         border: 1px solid #9fc8fb3d;
         border-radius: 4px;
         background-color: #b5d6ff3d;
-        color: #0e3481;
+        color: $brand-dark;
         max-width: 500px;
     }
     .form-group {
@@ -667,7 +662,7 @@
     .parity-banner {
         font-size: 14px;
         z-index: 9;
-        background-color: #0e3481;
+        background-color: $brand-dark;
         border-radius: 8px;
         padding: 15px;
         color: #FFF;
@@ -718,6 +713,6 @@
         color: inherit
     }
     &.trusted-by-blue {
-        color: #2d477c;
+        color: $brand-dark;
     }
 }

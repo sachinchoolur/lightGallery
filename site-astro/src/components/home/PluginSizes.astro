@@ -1,0 +1,61 @@
+---
+/**
+ * Plugin chips with each plugin's real cost: the minified + gzipped size
+ * of its browser bundle, measured from the workspace build at build
+ * time. A plugin whose bundle is missing (partial local build) renders
+ * without a size rather than a wrong one.
+ */
+import { gzipSync } from 'node:zlib';
+import { existsSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
+
+const PLUGINS: { dir: string; file: string; label: string; href: string }[] = [
+    { dir: 'thumbnail', file: 'lg-thumbnail', label: 'Thumbnails', href: '/demos/thumbnails/' },
+    { dir: 'zoom', file: 'lg-zoom', label: 'Zoom', href: '/demos/zoom-from-origin/' },
+    { dir: 'video', file: 'lg-video', label: 'Video', href: '/demos/video-gallery/' },
+    { dir: 'autoplay', file: 'lg-autoplay', label: 'Autoplay', href: '/docs/settings/#autoplay-plugin' },
+    { dir: 'fullscreen', file: 'lg-fullscreen', label: 'Fullscreen', href: '/docs/settings/#fullscreen-plugin' },
+    { dir: 'share', file: 'lg-share', label: 'Share', href: '/docs/web-share/' },
+    { dir: 'hash', file: 'lg-hash', label: 'Hash', href: '/docs/hash-drivers/' },
+    { dir: 'rotate', file: 'lg-rotate', label: 'Rotate', href: '/docs/settings/#rotate-plugin' },
+    { dir: 'pager', file: 'lg-pager', label: 'Pager', href: '/docs/settings/#pager-plugin' },
+    { dir: 'comment', file: 'lg-comment', label: 'Comments', href: '/demos/comment-box/' },
+    { dir: 'mediumZoom', file: 'lg-medium-zoom', label: 'Medium zoom', href: '/demos/medium-zoom/' },
+    { dir: 'relativeCaption', file: 'lg-relative-caption', label: 'Relative caption', href: '/demos/captions/' },
+    { dir: 'vimeoThumbnail', file: 'lg-vimeo-thumbnail', label: 'Vimeo thumbnails', href: '/demos/video-gallery/' },
+    { dir: 'justified', file: 'lg-justified', label: 'Justified layout', href: '/docs/justified-layout/' },
+];
+
+let root: string | null = null;
+try {
+    const require = createRequire(import.meta.url);
+    root = dirname(require.resolve('lightgallery/package.json'));
+} catch {
+    root = null;
+}
+
+const chips = PLUGINS.map((plugin) => {
+    let kb: string | null = null;
+    if (root) {
+        const path = join(root, 'dist/plugins', plugin.dir, `${plugin.file}.min.js`);
+        if (existsSync(path)) {
+            kb = (gzipSync(readFileSync(path)).length / 1024).toFixed(1);
+        }
+    }
+    return { ...plugin, kb };
+});
+---
+
+<ul class="home-plugin-chips" aria-label="Plugins and their gzipped size">
+    {
+        chips.map((chip) => (
+            <li>
+                <a class="home-plugin-chip" href={chip.href}>
+                    <span class="home-plugin-name">{chip.label}</span>
+                    {chip.kb && <span class="home-plugin-size">{chip.kb} KB</span>}
+                </a>
+            </li>
+        ))
+    }
+</ul>

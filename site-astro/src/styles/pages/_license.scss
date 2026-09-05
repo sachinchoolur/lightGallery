@@ -4,7 +4,7 @@
     width: 100%;
     padding: 15px;
     margin: 20px;
-    color: #0e3481;
+    color: $brand-dark;
     border-radius: 5px;
     @media (min-width: 768px) {
         width: 290px;
@@ -17,7 +17,7 @@
         padding: 50px 30px;
         background-image: linear-gradient(
             to right top,
-            #0e3481,
+            $brand-dark,
             #0066b5,
             #0095c8,
             #00c2ba,
@@ -79,21 +79,21 @@ ul.pricing-terms li {
     border: none;
     padding: 10px 24px;
     font-size: 1rem;
-    color: #5971a7;
+    color: $brand-shade;
     cursor: pointer;
     border-bottom: 2px solid transparent;
     transition: all 0.2s ease;
     &:hover {
-        color: #0e3481;
+        color: $brand-dark;
     }
     &.active {
-        color: #0e3481;
-        border-bottom: 2px solid #0e3481;
+        color: $brand-dark;
+        border-bottom: 2px solid $brand-dark;
     }
 }
 
 .pricing-desc {
-    color: #5971a7;
+    color: $brand-shade;
     margin: 5px 0;
     font-size: 14px;
 }
@@ -104,7 +104,7 @@ ul.pricing-terms li {
     padding-bottom: 3rem;
 }
 .pricing-section {
-    color: #0e3481;
+    color: $brand-dark;
     margin-top: 5rem;
 }
 

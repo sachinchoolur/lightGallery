@@ -1,28 +1,46 @@
 // Color system
 
-$blue: #0e3481;
+// Brand palette (orange scale).
+$orange-50: #ffe8e0;
+$orange-100: #ffd6c3;
+$orange-200: #ffb199;
+$orange-300: #ff8c66;
+$orange-400: #ff7040;
+$orange-500: #ff5722;
+$orange-600: #ff4c19;
+$orange-700: #ff4500;
+$orange-800: #ff4b00;
+$orange-900: #691f01;
+
 $lg-theme-color: #fff;
 $white: #fff;
-$black: #333;
+$black: #1d1d1d;
 $gray-darker: #586069;
 $gray-dark: #6a737d;
 $gray: #dfe2e5;
 $gray-200: #f6f8fa;
 $gray-light: #fafbfc;
-$blue-dark: #0e3481;
-$blue-shade: #5971a7;
-$blue-light-shade: #3e7eff;
-$blue-light: rgb(17, 93, 246);
-$blue-dark-shade: rgb(18, 80, 204);
 $body-color: $black;
 
-$primary: $blue;
+// Semantic brand tokens. Text is black: `brand-dark` (headings, nav,
+// and the tint base for borders) and `brand-shade` (muted copy) are
+// neutrals; orange is reserved for `brand` (buttons, active tabs,
+// Bootstrap's $primary), links and accents.
+$brand: $orange-500;
+$brand-dark: $black;
+$brand-shade: $gray-darker;
+$brand-light: $orange-700;
+$brand-light-shade: $orange-400;
+$brand-dark-shade: $orange-800;
+$brand-wash: $orange-50;
+
+$primary: $brand;
 
 /** Bootstrap navbar fix (https://git.io/fADqW) */
 $navbar-dark-toggler-icon-bg: none;
 $navbar-light-toggler-icon-bg: none;
 $navbar-toggler-focus-width: 0;
-$navbar-light-toggler-border-color: $blue-dark;
+$navbar-light-toggler-border-color: $brand-dark;
 
 // Options
 //
@@ -88,10 +106,10 @@ $navbar-toggler-font-size: 1rem;
 $navbar-brand-font-size: 1rem;
 $navbar-font-size: 1rem;
 
-$navbar-light-color: $blue-dark;
-$navbar-light-brand-color: $blue-dark;
-$navbar-light-hover-color: $blue-light-shade;
-$navbar-light-active-color: $blue-light;
+$navbar-light-color: $brand-dark;
+$navbar-light-brand-color: $brand-dark;
+$navbar-light-hover-color: $brand-light-shade;
+$navbar-light-active-color: $brand-light;
 
 // Alerts
 //
@@ -112,11 +130,11 @@ $alert-color-level: 0;
 //
 // Style anchor elements.
 
-$link-color: $blue-light;
+$link-color: $brand-light;
 $link-decoration: none;
 $link-shade-percentage: 20%;
-$link-hover-color: $blue-dark-shade;
-$link-hover-active: $blue-light;
+$link-hover-color: $brand-dark-shade;
+$link-hover-active: $brand-light;
 $link-hover-decoration: underline;
 
 $stretched-link-pseudo-element: after;

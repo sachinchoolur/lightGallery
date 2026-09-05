@@ -424,6 +424,22 @@ lightGalleryJustified('custom-icons-gallery', {
     },
 });
 
+// Homepage physics section: the gestures the cards describe, in one
+// gallery — scrubbable strip for the fling/glide, zoom for the pinch.
+lightGalleryJustified('physics-gallery', {
+    justifiedLastRow: 'hide',
+    pager: false,
+    hash: false,
+    plugins: [lgZoom, lgThumbnail],
+    scrubThumbnails: true,
+    ...getResponsiveThumbnailsSettings(),
+    mobileSettings: {
+        controls: false,
+        showCloseIcon: false,
+        download: false,
+    },
+});
+
 const masonryElMixed = document.getElementById('static-thumbnails-gallery');
 if (masonryElMixed) {
     imagesLoaded(

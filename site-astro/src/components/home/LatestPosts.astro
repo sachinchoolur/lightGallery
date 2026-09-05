@@ -1,0 +1,42 @@
+---
+/** The newest blog posts, for a "from the blog" homepage section. */
+import { getCollection } from 'astro:content';
+
+import { blogUrl } from '../../lib/blog';
+
+interface Props {
+    count?: number;
+}
+const { count = 3 } = Astro.props;
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+    .sort(
+        (a, b) =>
+            (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0),
+    )
+    .slice(0, count);
+
+const dateFormat = new Intl.DateTimeFormat('en', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+});
+---
+
+<ul class="home-posts">
+    {
+        posts.map((post) => (
+            <li>
+                <a class="home-post" href={blogUrl(post)}>
+                    {post.data.date && (
+                        <time datetime={post.data.date.toISOString()}>
+                            {dateFormat.format(post.data.date)}
+                        </time>
+                    )}
+                    <strong>{post.data.title}</strong>
+                    {post.data.description && <span>{post.data.description}</span>}
+                </a>
+            </li>
+        ))
+    }
+</ul>

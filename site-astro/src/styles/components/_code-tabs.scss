@@ -22,17 +22,17 @@
   padding: 0.5rem 0.85rem;
 
   &:hover {
-    color: $blue;
+    color: $brand;
   }
 
   &:focus-visible {
-    outline: 2px solid $blue-light;
+    outline: 2px solid $brand-light;
     outline-offset: -2px;
   }
 
   &[aria-selected='true'] {
-    border-bottom-color: $blue;
-    color: $blue;
+    border-bottom-color: $brand;
+    color: $brand;
   }
 }
 
@@ -42,7 +42,7 @@
 
 .code-tabs-panel {
   &:focus-visible {
-    outline: 2px solid $blue-light;
+    outline: 2px solid $brand-light;
     outline-offset: 2px;
   }
 
@@ -80,8 +80,8 @@
     }
 
     .code-tabs-tab[data-framework='#{$fw}'] {
-      border-bottom-color: $blue;
-      color: $blue;
+      border-bottom-color: $brand;
+      color: $brand;
     }
   }
 }

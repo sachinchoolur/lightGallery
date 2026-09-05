@@ -1,0 +1,1007 @@
+@use 'sass:math';
+
+// Homepage rework (/home-v3/).
+//
+// One visual system for the whole page: a type scale, a spacing rhythm,
+// a single card language, and three band tones (white, warm wash, dark)
+// that sections opt into. Everything the page shares with the live
+// homepage (hero shell, Super Customizable, Mixed Contents, Inline
+// Gallery) keeps its `_home.scss` styling.
+
+// ---- Tokens --------------------------------------------------------------
+$home-radius: 16px;
+$home-radius-sm: 10px;
+$home-gap: 1.25rem;
+$home-section-y: clamp(4rem, 7vw, 6.5rem);
+$home-wash: mix($orange-50, #fff, 45%);
+$home-dark: #141414;
+$home-line: rgba($black, 0.09);
+$home-muted: $gray-darker;
+$home-intro-width: 40rem;
+
+// Card language: white surface, hairline, generous padding, lift on hover
+// only when the card is a link.
+@mixin home-card($surface: #fff) {
+    background: $surface;
+    border: 1px solid $home-line;
+    border-radius: $home-radius;
+    padding: 1.6rem;
+    h3 {
+        color: $brand-dark;
+        font-size: 1.1rem;
+        font-weight: 600;
+        line-height: 1.3;
+        margin: 0 0 0.5rem;
+    }
+    p {
+        color: $home-muted;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        margin: 0;
+    }
+    code {
+        font-size: 0.85em;
+    }
+}
+
+@mixin home-card-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    transition:
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+    &:hover,
+    &:focus-visible {
+        border-color: rgba($brand, 0.55);
+        box-shadow: 0 12px 32px -12px rgba($black, 0.18);
+        color: inherit;
+        text-decoration: none;
+        transform: translateY(-3px);
+    }
+    &:focus-visible {
+        outline: 2px solid $brand;
+        outline-offset: 2px;
+    }
+}
+
+// Full-bleed band behind a `.container-xl` section without touching the
+// markup: the pseudo-element spans the viewport, the section keeps its
+// own stacking context so the band paints behind its content only.
+@mixin home-band($bg) {
+    position: relative;
+    z-index: 0;
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 100vw;
+        margin-left: -50vw;
+        background: $bg;
+        z-index: -1;
+    }
+}
+
+// ---- Page shell ----------------------------------------------------------
+body.home-v3 {
+    // The full-bleed bands are 100vw wide; clip (not hidden) keeps
+    // sticky/fixed behaviour intact while removing the scrollbar slack.
+    overflow-x: clip;
+
+    .main-page {
+        padding-bottom: 0;
+    }
+
+    .hero-section {
+        padding-top: clamp(7rem, 14vw, 11rem);
+        padding-bottom: clamp(3rem, 5vw, 4.5rem);
+    }
+
+    .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        padding: 0.35rem 0.9rem;
+        border: 1px solid rgba($brand, 0.35);
+        border-radius: 999px;
+        background: rgba($brand, 0.06);
+        color: $brand-light;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+    }
+
+    .main-title {
+        font-size: clamp(3rem, 8vw, 5.5rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1;
+    }
+
+    .sub-title {
+        max-width: 34rem;
+        margin: 1.5rem auto 0;
+        color: $home-muted;
+        font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+        line-height: 1.5;
+    }
+
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2.25rem;
+        .btn {
+            margin: 0;
+            padding: 0.8rem 1.6rem;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+    }
+
+    .hero-github-link {
+        flex-basis: 100%;
+        margin-top: 0.25rem;
+        color: $home-muted;
+        font-size: 0.95rem;
+        text-decoration: none;
+        &:hover {
+            color: $brand-light;
+        }
+    }
+
+    // The hero gallery — tighter to the hero, softer edges.
+    .clip-path-bg {
+        .gallery-demo {
+            border-radius: $home-radius;
+            overflow: hidden;
+        }
+        .open-gallery-text {
+            margin-top: 1rem;
+        }
+    }
+
+    // Section headers: one scale, one measure.
+    .home-section-header {
+        margin-bottom: 3rem;
+        h2 {
+            margin-bottom: 0.9rem;
+        }
+        p {
+            max-width: $home-intro-width;
+            margin: 0 auto;
+            color: $home-muted;
+            font-size: 1.1rem;
+            line-height: 1.55;
+        }
+    }
+
+    .main-page h2,
+    h2 {
+        font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+    }
+
+    // Two-column prose blocks (Phones first, Theming, CDN).
+    .home-mobile,
+    .home-theming,
+    .home-cdn {
+        h2 {
+            margin-bottom: 1rem;
+        }
+        p {
+            color: $home-muted;
+            font-size: 1.05rem;
+        }
+        pre {
+            margin: 0;
+            border-radius: $home-radius-sm;
+        }
+        .row {
+            row-gap: 2rem;
+        }
+    }
+
+    // Code blocks everywhere on the page: rounded, never wider than the
+    // column on a phone, and flush when they close a section.
+    pre {
+        border-radius: $home-radius-sm;
+        overflow-x: auto;
+    }
+    .home-modular pre,
+    .home-mobile pre,
+    .home-theming pre,
+    .home-cdn pre {
+        margin-bottom: 0;
+    }
+    .home-dark-band .open-gallery-text {
+        margin-bottom: 0;
+    }
+
+    // Stack switcher: the docs' code tabs, hero-sized.
+    .home-stack {
+        @include home-band($home-wash);
+        padding: $home-section-y 0;
+        .code-tabs {
+            margin: 0;
+        }
+        .code-tabs-list {
+            justify-content: center;
+            border-bottom: 0;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+        .code-tabs-tab {
+            border: 1px solid $home-line;
+            border-radius: 999px;
+            background: #fff;
+            color: $brand-dark;
+            padding: 0.5rem 1.2rem;
+            font-weight: 600;
+            &[aria-selected='true'] {
+                background: $brand-dark;
+                border-color: $brand-dark;
+                color: #fff;
+            }
+        }
+        pre {
+            margin-bottom: 0.75rem;
+            box-shadow: 0 20px 40px -24px rgba($black, 0.35);
+        }
+    }
+
+    .home-stack-note {
+        margin: 1.5rem 0 0;
+        color: $home-muted;
+        font-size: 0.95rem;
+        text-align: center;
+        a {
+            color: $brand-light;
+            font-weight: 600;
+        }
+    }
+
+    // Numbers strip
+    .home-numbers {
+        padding: 3.5rem 0 0;
+    }
+
+    .home-numbers-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem 0;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .home-numbers-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 9rem;
+        padding: 0 1.5rem;
+        @include media-breakpoint-up(md) {
+            & + & {
+                border-left: 1px solid $home-line;
+            }
+        }
+    }
+
+    .home-numbers-value {
+        color: $brand-dark;
+        font-size: 2rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+    }
+
+    .home-numbers-label {
+        margin-top: 0.3rem;
+        color: $home-muted;
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    // Trusted-by: quiet until hovered.
+    .trusted-by {
+        padding: $home-section-y 0;
+        .trusted-by-header {
+            margin-bottom: 2.5rem;
+        }
+        h2 {
+            color: $brand-dark;
+            font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+            letter-spacing: -0.02em;
+        }
+        &.trusted-by-blue {
+            color: rgba($black, 0.55);
+        }
+        .contents-list-item {
+            transition: color 0.18s ease;
+            &:hover {
+                color: $black;
+            }
+        }
+    }
+
+    // ---- Section spacing + band tones -------------------------------------
+    .home-v3-features,
+    .home-modular,
+    .home-mobile,
+    .home-a11y,
+    .home-theming,
+    .home-api,
+    .home-faq,
+    .home-custom,
+    .home-blog {
+        padding: $home-section-y 0;
+    }
+
+    // Sections kept from the live homepage run on the same rhythm and
+    // the same horizontal edges as the new ones.
+    .feature-list-lg,
+    .vertical-bg {
+        padding-top: $home-section-y;
+        padding-bottom: $home-section-y;
+    }
+    .vertical-bg .home-inline-gallery {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .home-inline-gallery,
+    .home-customize-gallery,
+    .home-mixed-gallery,
+    .trusted-by {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .home-mixed-gallery.feature-list-lg {
+        padding-top: $home-section-y;
+        padding-bottom: $home-section-y;
+    }
+
+    .home-frameworks,
+    .home-touch,
+    .home-perf,
+    .home-trust {
+        @include home-band($home-wash);
+        padding: $home-section-y 0;
+    }
+
+    .home-share {
+        padding: $home-section-y 0;
+    }
+
+    .home-plain-band {
+        background: #fff;
+    }
+
+    // Mixed Contents keeps its wrapper class from the live page; here it
+    // is a flat wash band like the others, not a fade.
+    .gradient-bg-light-blue {
+        background: $home-wash;
+    }
+
+    // Inline Gallery's skewed wedge from the live page becomes a flat band.
+    .vertical-bg::before {
+        background: $home-wash;
+        transform: none;
+    }
+
+    // Dark bands: physics and the CDN closer.
+    .home-dark-band,
+    .home-cdn {
+        color: rgba(#fff, 0.72);
+        h2,
+        h3 {
+            color: #fff;
+        }
+        p {
+            color: rgba(#fff, 0.72);
+        }
+        .home-section-header p {
+            color: rgba(#fff, 0.72);
+        }
+        a {
+            color: $orange-300;
+        }
+    }
+
+    .home-dark-band {
+        background: $home-dark;
+        .vertical-bg-inner {
+            padding: $home-section-y 0;
+        }
+        .open-gallery-text {
+            color: rgba(#fff, 0.55);
+        }
+    }
+
+    .home-cdn {
+        @include home-band($home-dark);
+        padding: $home-section-y 0;
+        pre {
+            box-shadow: none;
+            border: 1px solid rgba(#fff, 0.12);
+        }
+        .home-browser-note {
+            color: rgba(#fff, 0.55);
+            font-size: 0.9rem;
+        }
+    }
+
+    // ---- Grids and cards ----------------------------------------------------
+    .home-feature-grid,
+    .home-gesture-grid,
+    .home-physics-grid,
+    .home-perf-grid,
+    .home-trust-grid,
+    .home-posts {
+        display: grid;
+        gap: $home-gap;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .home-feature-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    // Six-card grids: three across, never four-plus-two.
+    .home-gesture-grid,
+    .home-physics-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .home-trust-grid,
+    .home-posts {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .home-perf-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .home-physics-grid {
+        margin-bottom: 3rem;
+    }
+
+    .home-feature-card {
+        @include home-card;
+        @include home-card-link;
+        position: relative;
+        h3 .home-badge {
+            position: absolute;
+            top: 1.1rem;
+            right: 1.1rem;
+            margin: 0;
+        }
+    }
+
+    .home-gesture-card {
+        @include home-card;
+    }
+
+    .home-gesture-kicker {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: $brand-light;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .home-physics-card {
+        @include home-card(rgba(#fff, 0.05));
+        border-color: rgba(#fff, 0.1);
+        h3 {
+            color: #fff;
+            margin-top: 1rem;
+        }
+        p {
+            color: rgba(#fff, 0.7);
+        }
+    }
+
+    .home-trust-card {
+        @include home-card;
+        @include home-card-link;
+        display: flex;
+        flex-direction: column;
+        p {
+            flex: 1;
+            margin-bottom: 1rem;
+        }
+    }
+
+    .home-trust-link {
+        color: $brand-light;
+        font-weight: 600;
+    }
+
+    .home-post {
+        @include home-card;
+        @include home-card-link;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        time {
+            color: $home-muted;
+            font-size: 0.8rem;
+        }
+        strong {
+            color: $brand-dark;
+            font-size: 1.05rem;
+            line-height: 1.35;
+        }
+        span {
+            color: $home-muted;
+            font-size: 0.9rem;
+        }
+    }
+
+    // Perf stat cards
+    .home-perf-card {
+        @include home-card;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .home-perf-value {
+        color: $brand-dark;
+        font-size: 2.2rem;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        small {
+            color: $home-muted;
+            font-size: 0.5em;
+            font-weight: 500;
+            letter-spacing: 0;
+        }
+    }
+
+    .home-perf-label {
+        margin-top: 0.6rem;
+        color: $home-muted;
+        font-size: 0.9rem;
+    }
+
+    // Compact linked list (the second half of "Everything a gallery needs")
+    .home-more-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 0.5rem 1.25rem;
+        list-style: none;
+        margin: 2rem 0 0;
+        padding: 0;
+        a {
+            display: block;
+            padding: 0.9rem 1.6rem;
+            border-radius: $home-radius-sm;
+            color: inherit;
+            text-decoration: none;
+            transition: background-color 0.15s ease;
+            &:hover,
+            &:focus-visible {
+                background: rgba($black, 0.04);
+                text-decoration: none;
+            }
+        }
+        strong {
+            display: block;
+            margin-bottom: 0.2rem;
+            color: $brand-dark;
+            font-weight: 600;
+        }
+        span {
+            color: $home-muted;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+    }
+
+    // Badge
+    .home-badge {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 0.35rem;
+        padding: 0.15em 0.55em;
+        border-radius: 999px;
+        background: rgba($brand, 0.12);
+        color: $brand-light;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .home-feature-card p .home-badge {
+        margin: 0 0.35rem 0 0;
+    }
+
+    // Plugin chips
+    .home-plugin-chips {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.6rem;
+        list-style: none;
+        margin: 0 0 2.5rem;
+        padding: 0;
+    }
+
+    .home-plugin-chip {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid $home-line;
+        border-radius: 999px;
+        background: #fff;
+        color: $brand-dark;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition:
+            border-color 0.15s ease,
+            transform 0.15s ease;
+        &:hover,
+        &:focus-visible {
+            border-color: rgba($brand, 0.55);
+            color: $brand-dark;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+    }
+
+    .home-plugin-size {
+        color: $home-muted;
+        font-size: 0.75rem;
+        font-variant-numeric: tabular-nums;
+    }
+
+    // Checklist (Phones first)
+    .home-checklist {
+        list-style: none;
+        margin: 1.5rem 0 0;
+        padding: 0;
+        li {
+            position: relative;
+            margin-bottom: 0.8rem;
+            padding-left: 1.6rem;
+            color: $home-muted;
+            font-size: 1rem;
+            line-height: 1.55;
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0.6em;
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                background: $brand;
+            }
+            strong {
+                color: $brand-dark;
+            }
+        }
+    }
+
+    // Keyboard map + a11y cards
+    .home-keys {
+        margin: 0;
+        > div {
+            display: flex;
+            gap: 1rem;
+            align-items: baseline;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid $home-line;
+        }
+        dt {
+            flex: 0 0 6.5rem;
+            white-space: nowrap;
+        }
+        dd {
+            margin: 0;
+            color: $home-muted;
+        }
+        kbd {
+            display: inline-block;
+            min-width: 1.9em;
+            padding: 0.2em 0.55em;
+            border: 1px solid rgba($black, 0.2);
+            border-bottom-width: 2px;
+            border-radius: 6px;
+            background: #fff;
+            color: $brand-dark;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+        }
+    }
+
+    .home-a11y-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+    }
+
+    .home-a11y-card {
+        @include home-card;
+        padding: 1.25rem;
+        h3 {
+            font-size: 1rem;
+        }
+        p {
+            font-size: 0.9rem;
+        }
+    }
+
+    .home-section-link {
+        margin: 1.5rem 0 0;
+        a {
+            color: $brand-light;
+            font-weight: 600;
+        }
+    }
+
+    // FAQ
+    .home-faq-item {
+        border-bottom: 1px solid $home-line;
+        padding: 0.35rem 0;
+        summary {
+            cursor: pointer;
+            padding: 0.7rem 0;
+            color: $brand-dark;
+            font-size: 1.05rem;
+            font-weight: 600;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            &::-webkit-details-marker {
+                display: none;
+            }
+            &::after {
+                content: '+';
+                color: $brand-light;
+                font-size: 1.3rem;
+                font-weight: 400;
+                line-height: 1;
+                transition: transform 0.18s ease;
+            }
+        }
+        &[open] summary::after {
+            transform: rotate(45deg);
+        }
+        p {
+            margin: 0 0 0.9rem;
+            color: $home-muted;
+            line-height: 1.55;
+        }
+    }
+
+    // Closing CTA
+    .home-cta {
+        padding: $home-section-y 0;
+        h2 {
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    .home-cta-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+        .btn {
+            border-radius: 999px;
+            padding: 0.7rem 1.4rem;
+            font-weight: 600;
+        }
+    }
+
+    .home-cta-secondary {
+        margin-top: 1.25rem;
+        color: $home-muted;
+    }
+}
+
+// ---- Physics illustrations (dark band) -------------------------------------
+// Each card's animation is a small illustration of the rule it describes.
+// Durations are long and loops pause on hover so the motion reads rather
+// than distracts; reduced-motion shows the resting frame only.
+.physics-anim {
+    position: relative;
+    height: 44px;
+    border-radius: 8px;
+    background: rgba(#fff, 0.06);
+    overflow: hidden;
+}
+
+.physics-dot,
+.physics-ring,
+.physics-bar {
+    position: absolute;
+    top: 50%;
+    display: block;
+}
+
+.physics-dot {
+    width: 14px;
+    height: 14px;
+    margin-top: -7px;
+    border-radius: 50%;
+    background: $brand;
+}
+
+.physics-ring {
+    width: 28px;
+    height: 28px;
+    margin-top: -14px;
+    left: 50%;
+    margin-left: -14px;
+    border: 2px solid $orange-300;
+    border-radius: 50%;
+}
+
+.physics-bar {
+    left: 12px;
+    right: 40%;
+    height: 8px;
+    margin-top: -4px;
+    border-radius: 4px;
+    background: $orange-300;
+    transform-origin: left center;
+}
+
+.physics-anim-velocity .physics-dot {
+    left: 12px;
+    animation: physics-velocity 3.2s cubic-bezier(0.2, 0.9, 0.3, 1) infinite;
+}
+
+.physics-anim-momentum .physics-dot {
+    left: 12px;
+    animation: physics-momentum 3.6s cubic-bezier(0.05, 0.7, 0.1, 1) infinite;
+}
+
+.physics-anim-edge .physics-bar {
+    animation: physics-edge 3s ease-in-out infinite;
+}
+
+.physics-anim-pinch .physics-dot {
+    left: 50%;
+    margin-left: -7px;
+}
+
+.physics-anim-pinch .physics-ring {
+    animation: physics-pinch 3.4s ease-in-out infinite;
+}
+
+.physics-anim-interrupt .physics-dot {
+    left: 12px;
+    animation: physics-interrupt 4s ease-out infinite;
+}
+
+.physics-anim-parity .physics-dot {
+    left: 12px;
+    animation: physics-parity 3.2s cubic-bezier(0.2, 0.9, 0.3, 1) infinite;
+    @for $i from 1 through 4 {
+        &:nth-child(#{$i}) {
+            top: percentage(math.div($i, 5));
+            width: 10px;
+            height: 10px;
+            margin-top: -5px;
+            opacity: 0.55 + $i * 0.1;
+        }
+    }
+}
+
+.home-physics-card:hover .physics-dot,
+.home-physics-card:hover .physics-ring,
+.home-physics-card:hover .physics-bar {
+    animation-play-state: paused;
+}
+
+@keyframes physics-velocity {
+    0% {
+        transform: translateX(0);
+    }
+    35% {
+        transform: translateX(120px);
+    }
+    // The hand-off: no pause, no restart — the glide continues at speed.
+    70%,
+    100% {
+        transform: translateX(300px);
+    }
+}
+
+@keyframes physics-momentum {
+    0% {
+        transform: translateX(0);
+    }
+    60%,
+    100% {
+        transform: translateX(200px);
+    }
+}
+
+@keyframes physics-edge {
+    0%,
+    100% {
+        transform: scaleX(1);
+    }
+    40% {
+        transform: scaleX(1.35);
+    }
+    55% {
+        transform: scaleX(0.97);
+    }
+    70% {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes physics-pinch {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(2.2);
+    }
+}
+
+@keyframes physics-interrupt {
+    0% {
+        transform: translateX(0);
+    }
+    30% {
+        transform: translateX(150px);
+    }
+    // Caught mid-flight and sent back from wherever it was.
+    45% {
+        transform: translateX(110px);
+    }
+    75%,
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes physics-parity {
+    0% {
+        transform: translateX(0);
+    }
+    50%,
+    100% {
+        transform: translateX(200px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .physics-dot,
+    .physics-ring,
+    .physics-bar {
+        animation: none !important;
+    }
+}
+

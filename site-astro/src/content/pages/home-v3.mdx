@@ -1,0 +1,865 @@
+---
+title: 'lightGallery'
+description:
+    'A lightweight, modular lightbox and gallery for images and video —
+    thumbnails, zoom, touch gestures and more. For JavaScript, React, Vue
+    and Angular.'
+lead:
+    'A lightweight, modular lightbox and gallery for images and video.
+    For JavaScript, React, Vue and Angular.'
+date: 2026-09-03T00:00:00+00:00
+draft: false
+images: []
+---
+
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
+import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
+import LatestPosts from '../../components/home/LatestPosts.astro';
+import NumbersBar from '../../components/home/NumbersBar.astro';
+import PluginSizes from '../../components/home/PluginSizes.astro';
+import TrustedBy from '../../components/shortcodes/TrustedBy.astro';
+
+<div class="container-fluid">
+    <div class="row justify-content-center clip-path-bg">
+        <div class="col-lg-8 text-center clip-path-bg-inner">
+            <GalleryDemo size="xl" id="animated-thumbnails-gallery" />
+            <p class="open-gallery-text"> Click on any thumbnail to open lightGallery</p>
+        </div>
+    </div>
+</div>
+<NumbersBar />
+<div class="container-xl home-stack" id="stack">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <h2>Pick your stack</h2>
+            <p>One package to install. Every feature and every demo on this site works the same way in yours.</p>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+<CodeTabs label="Stack">
+<Fragment slot="vanilla">
+
+```bash
+npm install lightgallery
+```
+
+```js
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+import 'lightgallery/css/lightgallery-bundle.css';
+
+lightGallery(document.getElementById('gallery'), {
+    plugins: [lgZoom, lgThumbnail],
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```bash
+npm install @lightgallery/react
+```
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Zoom from '@lightgallery/react/plugins/zoom';
+
+<LightGallery plugins={[Zoom, Thumbnail]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```bash
+npm install @lightgallery/vue
+```
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+</script>
+
+<template>
+    <LightGallery :plugins="[Zoom, Thumbnail]">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```bash
+npm install @lightgallery/angular
+```
+
+```html
+<lg-gallery [features]="[withZoom(), withThumbnail()]">
+    @for (item of items; track item.src) {
+        <a [lgGalleryItem]="item">
+            <img [src]="item.thumb" [alt]="item.alt" />
+        </a>
+    }
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
+
+            <p class="home-section-link home-stack-note">Building for something else? The gallery's core ships standalone, without a renderer — <a href="/docs/headless/">@lightgallery/headless</a>.</p>
+        </div>
+    </div>
+</div>
+<TrustedBy />
+<div class="container-xl home-v3-features" id="features">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <h2>Everything a gallery needs</h2>
+            <p>Each of these has a page with a live demo and the settings behind it.</p>
+        </div>
+    </div>
+    <div class="home-feature-grid">
+        <a class="home-feature-card" href="/demos/thumbnails/">
+            <h3>Thumbnails</h3>
+            <p>Animated or static strips, fetched automatically for YouTube and Vimeo, draggable on every device.</p>
+        </a>
+        <a class="home-feature-card" href="/demos/zoom-from-origin/">
+            <h3>Zoom</h3>
+            <p>Pinch and double-tap to zoom. Slides open from the thumbnail's position and close back to it.</p>
+        </a>
+        <a class="home-feature-card" href="/demos/video-gallery/">
+            <h3>Video</h3>
+            <p>YouTube, Vimeo, Wistia and HTML5 video, with autoplay-on-slide and posters. <span class="home-badge">New in v3</span> Facades load the player only when someone presses play.</p>
+        </a>
+        <a class="home-feature-card" href="/docs/justified-layout/">
+            <h3>Justified layout <span class="home-badge">New in v3</span></h3>
+            <p>Row-justified trigger grids from one plugin — no layout library in front of the lightbox.</p>
+        </a>
+        <a class="home-feature-card" href="/docs/virtualization/">
+            <h3>Virtualization <span class="home-badge">New in v3</span></h3>
+            <p>Thousand-slide galleries keep a few dozen nodes in the DOM; slides and thumbnails mount as they come into view.</p>
+        </a>
+        <a class="home-feature-card" href="/docs/thumbnail-scrubbing/">
+            <h3>Thumbnail scrubbing <span class="home-badge">New in v3</span></h3>
+            <p>Drag the thumbnail strip and the gallery follows instantly, all the way through the release glide.</p>
+        </a>
+        <a class="home-feature-card" href="/docs/custom-icons/">
+            <h3>Custom icons <span class="home-badge">New in v3</span></h3>
+            <p>Every control icon is an inline SVG you can replace by name — bring your own set without touching CSS.</p>
+        </a>
+        <a class="home-feature-card" href="/docs/localization-rtl/">
+            <h3>Localization &amp; RTL <span class="home-badge">New in v3</span></h3>
+            <p>Every string is a setting, and the gallery mirrors for right-to-left pages — navigation, swipe direction and chrome.</p>
+        </a>
+    </div>
+    <ul class="home-more-grid">
+        <li><a href="/docs/accessibility/"><strong>Accessibility</strong><span>Keyboard navigation, focus management and screen-reader announcements out of the box.</span></a></li>
+        <li><a href="/docs/responsive-loading/"><strong>Responsive loading</strong><span>Size ladders and <code>srcset</code> for the lightbox image, so phones never download the desktop original.</span></a></li>
+        <li><a href="/docs/web-share/"><strong>Sharing</strong><span>The device's native share sheet where it exists, social links where it doesn't.</span></a></li>
+        <li><a href="/docs/hash-drivers/"><strong>Deep links</strong><span>A URL for every slide, with browser back and forward, on hash or history drivers.</span></a></li>
+        <li><a href="/demos/dynamic-mode/"><strong>Dynamic mode</strong><span>Open a gallery from an array of items — no trigger markup required.</span></a></li>
+        <li><a href="/demos/update-slides/"><strong>Live updates</strong><span>Add, edit and remove slides while the gallery is open.</span></a></li>
+        <li><a href="/demos/transitions/"><strong>Transitions</strong><span>Twenty-plus slide transitions, hardware accelerated, plus your own easing.</span></a></li>
+        <li><a href="/demos/captions/"><strong>Captions</strong><span>HTML captions per slide, from markup or data, with animated and relative-position variants.</span></a></li>
+        <li><a href="/demos/comment-box/"><strong>Comments</strong><span>A per-slide comment panel with Facebook and Disqus adapters, or your own widget.</span></a></li>
+        <li><a href="/docs/settings/#rotate-plugin"><strong>Rotate &amp; flip</strong><span>Rotate and flip any image, with hooks to persist the result.</span></a></li>
+        <li><a href="/docs/settings/#autoplay-plugin"><strong>Autoplay &amp; fullscreen</strong><span>Slideshow with a progress bar that pauses on interaction, and native fullscreen from the toolbar.</span></a></li>
+        <li><a href="/docs/settings/#pager-plugin"><strong>Pagers</strong><span>Minimal dot navigation instead of a strip, with thumbnails on hover.</span></a></li>
+    </ul>
+</div>
+<div class="container-xl home-frameworks" id="frameworks">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <h2>Native in every framework</h2>
+            <p>Each package is written for its framework — components, props and types that fit the code around them. Same features in all of them, nothing second-class.</p>
+        </div>
+    </div>
+    <div class="home-feature-grid">
+        <a class="home-feature-card" href="/docs/react/">
+            <h3>@lightgallery/react</h3>
+            <p>A real React component: props, children, refs and callbacks. Your state stays in React, and everything is typed.</p>
+        </a>
+        <a class="home-feature-card" href="/docs/vue/">
+            <h3>@lightgallery/vue</h3>
+            <p><code>v-model</code> for the open state, slots for captions and controls, <code>Teleport</code> for the overlay.</p>
+        </a>
+        <a class="home-feature-card" href="/docs/angular/">
+            <h3>@lightgallery/angular</h3>
+            <p>Standalone components, signals, zoneless change detection and a CDK overlay — nothing bolted on.</p>
+        </a>
+        <a class="home-feature-card" href="/docs/getting-started/">
+            <h3>lightgallery</h3>
+            <p>Plain JavaScript and TypeScript, with no dependencies. Point it at your markup or an array of items — from npm or a CDN tag.</p>
+        </a>
+    </div>
+</div>
+<div class="container-xl home-modular" id="modular">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <h2>Modular by design</h2>
+            <p>Every feature outside the core is a plugin with its own entry, in every package. Import what you use; the rest never reaches your bundle. Sizes below are measured from this site's build, minified and gzipped.</p>
+        </div>
+    </div>
+    <PluginSizes />
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+```js
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+
+// Two plugins, two imports — nothing else ships.
+lightGallery(el, { plugins: [lgZoom, lgThumbnail] });
+```
+
+        </div>
+    </div>
+</div>
+<div class="container-xl home-touch" id="gestures">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <h2>Built for hands</h2>
+            <p>Every gesture a native photo app has, on the web — and each one has a mouse equivalent on desktop.</p>
+        </div>
+    </div>
+    <div class="home-gesture-grid">
+        <div class="home-gesture-card">
+            <span class="home-gesture-kicker">Swipe</span>
+            <h3>Change slides</h3>
+            <p>Swipe to navigate. A quick flick advances even on a short swipe — it is judged by velocity, not distance.</p>
+        </div>
+        <div class="home-gesture-card">
+            <span class="home-gesture-kicker">Pinch</span>
+            <h3>Zoom, and close</h3>
+            <p>Pinch to zoom, anchored between your fingertips. Keep pinching inward past 1× and the gallery closes.</p>
+        </div>
+        <div class="home-gesture-card">
+            <span class="home-gesture-kicker">Double-tap</span>
+            <h3>Zoom to a point</h3>
+            <p>Double-tap to zoom in on that spot; double-tap again to go back.</p>
+        </div>
+        <div class="home-gesture-card">
+            <span class="home-gesture-kicker">Drag vertically</span>
+            <h3>Dismiss</h3>
+            <p>Drag a slide up or down to close. Let go early and it springs back into place.</p>
+        </div>
+        <div class="home-gesture-card">
+            <span class="home-gesture-kicker">Drag the strip</span>
+            <h3>Browse thumbnails</h3>
+            <p>Drag or fling the thumbnail strip. Turn on scrubbing and the gallery follows the strip as it moves.</p>
+        </div>
+        <div class="home-gesture-card">
+            <span class="home-gesture-kicker">Mouse</span>
+            <h3>The same on desktop</h3>
+            <p>Drag to swipe, drag to pan while zoomed, drag the strip. Nothing is touch-only.</p>
+        </div>
+    </div>
+</div>
+<div class="home-dark-band">
+    <div class="container-xl home-physics vertical-bg-inner" id="physics">
+        <div class="row justify-content-center home-section-header">
+            <div class="col-lg-7 text-center">
+                <h2>The physics of feel</h2>
+                <p>Every gesture release is a spring seeded with your finger's velocity, so nothing ever snaps — and it feels the same whichever package you use.</p>
+            </div>
+        </div>
+        <div class="home-physics-grid">
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-velocity" aria-hidden="true"><span class="physics-dot"></span></div>
+                <h3>Velocity carries over</h3>
+                <p>The last 100&nbsp;ms of your gesture seed the release spring. Motion continues from the speed you let go at — it never restarts from zero.</p>
+            </div>
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-momentum" aria-hidden="true"><span class="physics-dot"></span></div>
+                <h3>Momentum knows where it lands</h3>
+                <p>A fling projects its landing point with the same deceleration curve native scroll views use, then settles there.</p>
+            </div>
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-edge" aria-hidden="true"><span class="physics-bar"></span></div>
+                <h3>Edges push back</h3>
+                <p>Slides, the thumbnail strip and zoom panning resist at the boundary with friction instead of stopping dead, and return with a single soft bounce.</p>
+            </div>
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-pinch" aria-hidden="true"><span class="physics-ring"></span><span class="physics-dot"></span></div>
+                <h3>Zoom stays under your fingers</h3>
+                <p>Pinch anchors to the point between your fingertips, pan included, so what you zoom into is what you look at.</p>
+            </div>
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-interrupt" aria-hidden="true"><span class="physics-dot"></span></div>
+                <h3>Interruptible everywhere</h3>
+                <p>Catch a slide mid-spring and it hands you its live position and velocity; the next release starts a new spring from exactly there.</p>
+            </div>
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-parity" aria-hidden="true"><span class="physics-dot"></span><span class="physics-dot"></span><span class="physics-dot"></span><span class="physics-dot"></span></div>
+                <h3>Identical on every stack</h3>
+                <p>JavaScript, React, Vue and Angular share the same feel — not a port of it, so nothing is tuned differently in yours.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-9 text-center">
+                <GalleryDemo id="physics-gallery" />
+                <p class="open-gallery-text">Open a slide, then fling the thumbnail strip, drag past the last slide, or pinch on a touch screen.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-xl home-mobile" id="phones">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <h2>Phones first</h2>
+            <p>Most gallery views happen on a phone, so the defaults assume one.</p>
+            <ul class="home-checklist">
+                <li><strong>Separate mobile settings.</strong> A second settings object applies on small screens, so the toolbar can be lean where space is tight.</li>
+                <li><strong>CSS does the sizing.</strong> Images and videos fit by stylesheet rules, not per-slide measurement, so rotation and resize cost nothing.</li>
+                <li><strong>Phone-sized files.</strong> Responsive image ladders and <code>srcset</code> mean a phone never downloads the desktop original.</li>
+                <li><strong>Video on a budget.</strong> Facades keep cellular data for the videos people actually press play on.</li>
+                <li><strong>The native share sheet</strong> where the browser has one, social links where it doesn't.</li>
+            </ul>
+        </div>
+        <div class="col-lg-6">
+
+```js
+lightGallery(el, {
+    plugins: [lgZoom, lgThumbnail, lgShare],
+    mobileSettings: {
+        controls: false,
+        showCloseIcon: true,
+        download: false,
+    },
+});
+```
+
+        </div>
+    </div>
+</div>
+<div class="container-xl home-perf" id="performance">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <h2>Measured, not promised</h2>
+            <p>Numbers from the same demo galleries on this site, taken with the feature on and off.</p>
+        </div>
+    </div>
+    <div class="home-perf-grid">
+        <div class="home-perf-card">
+            <span class="home-perf-value">58&nbsp;KB <small>vs 1,047&nbsp;KB</small></span>
+            <span class="home-perf-label">transferred per YouTube slide at open, facade vs eager embed</span>
+        </div>
+        <div class="home-perf-card">
+            <span class="home-perf-value">3 <small>vs 17</small></span>
+            <span class="home-perf-label">requests per video slide until the visitor presses play</span>
+        </div>
+        <div class="home-perf-card">
+            <span class="home-perf-value">34 <small>vs 2,032</small></span>
+            <span class="home-perf-label">DOM nodes for a 1,000-slide gallery, virtualized vs not</span>
+        </div>
+        <div class="home-perf-card">
+            <span class="home-perf-value">1 <small>import per feature</small></span>
+            <span class="home-perf-label">plugins are separate entries — your bundle carries only what you use</span>
+        </div>
+    </div>
+</div>
+<div class="home-plain-band">
+    <div class="container-xl home-a11y vertical-bg-inner" id="accessibility">
+        <div class="row justify-content-center home-section-header">
+            <div class="col-lg-7 text-center">
+                <h2>Keyboard and screen readers</h2>
+                <p>A dialog, not a div. The gallery follows one accessibility contract in every package.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <dl class="home-keys">
+                    <div><dt><kbd>Esc</kbd></dt><dd>Close the gallery</dd></div>
+                    <div><dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>Previous and next slide — following the reading direction on RTL pages</dd></div>
+                    <div><dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Show and hide the thumbnail strip when toggling is enabled</dd></div>
+                    <div><dt><kbd>Tab</kbd></dt><dd>Cycles through the gallery's controls and never escapes to the page behind</dd></div>
+                </dl>
+            </div>
+            <div class="col-lg-7">
+                <div class="home-a11y-grid">
+                    <div class="home-a11y-card"><h3>Focus comes back</h3><p>Focus moves into the gallery on open and returns to the trigger that opened it on close.</p></div>
+                    <div class="home-a11y-card"><h3>Every slide is announced</h3><p>A polite live region announces slide changes once, from a template string you can localize.</p></div>
+                    <div class="home-a11y-card"><h3>Labelled controls</h3><p>Every button carries a label from the strings settings — translate them and the labels follow.</p></div>
+                    <div class="home-a11y-card"><h3>Reduced motion</h3><p>Honors the reduced-motion preference for transitions and the opening animation.</p></div>
+                </div>
+                <p class="home-section-link"><a href="/docs/accessibility/">The full accessibility contract →</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-xl feature-list-lg home-customize-gallery">
+    <div class="row">
+        <div class="col-lg-6 align-self-center">
+            <h2>Super Customizable</h2>
+            <p>Change how the gallery behaves through settings, how it looks through SCSS variables and your own icons, and what it does through the plugin API — without touching the core.</p>
+            <div class="features-grid row">
+                <div class="features-grid-item col-xl-6">
+                    <div class="features-grid-icon">
+                        <img src="/images/icons/options.svg" />
+                    </div>
+                    <div class="features-grid-content">
+                        <h4 class="features-grid-title">150+ settings</h4>
+                        <p class="features-grid-desc">Core and per-plugin options, with a separate set for mobile — every one documented in the generated reference</p>
+                    </div>
+                </div>
+                <div class="features-grid-item col-xl-6">
+                    <div class="features-grid-icon">
+                        <img src="/images/icons/variables.svg" />
+                    </div>
+                    <div class="features-grid-content">
+                        <h4 class="features-grid-title">SCSS variables</h4>
+                        <p class="features-grid-desc">Colors, spacing and transitions are variables — retheme the gallery from one file</p>
+                    </div>
+                </div>
+                <div class="features-grid-item col-xl-6">
+                    <div class="features-grid-icon">
+                        <img src="/images/icons/plugins.svg" />
+                    </div>
+                    <div class="features-grid-content">
+                        <h4 class="features-grid-title">Plugin API</h4>
+                        <p class="features-grid-desc">Thumbnails, zoom, video and the rest are plugins built on the same API you get — add your own</p>
+                    </div>
+                </div>
+                <div class="features-grid-item col-xl-6">
+                    <div class="features-grid-icon">
+                        <img src="/images/icons/html-markup.svg" />
+                    </div>
+                    <div class="features-grid-content">
+                        <h4 class="features-grid-title">Custom icons</h4>
+                        <p class="features-grid-desc">Every control icon is an inline SVG you can replace by name — bring your own set, no CSS required</p>
+                    </div>
+                </div>
+            </div>
+            <svg class="svg-bg" width="1421" height="1116" version="1" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient x1="70%" y1="20%" x2="53%" y2="69%" id="content-features-blob"><stop stop-color="rgba(255, 214, 195, 0.1)" offset="0%"></stop><stop stop-color="#FFF" offset="100%"></stop></linearGradient></defs><path d="M495 2359c102-82 112-116 158-224 76-169 289-299 376-193 87 107 67 181 262 235 196 55 206 370-13 606-220 236-373 245-461 234-89-11-267-67-459-75-192-7-440-157-296-377 145-220 331-125 433-206z" transform="matrix(-1 0 0 1 1440 -1904)" fill="url(#content-features-blob)" fill-rule="nonzero"></path></svg>
+        </div>
+        <div class="col-lg-6 align-self-center">
+            <div class="vertical-gallery row" id="gallery-demo-super-customizable">
+                <div class="vertical-gallery-row col-4 first-row">
+                    <a
+                        data-lg-size="480-475-480, 800-791-800, 1406-1390"
+                        class="gallery-item"
+                        data-src="https://images.unsplash.com/photo-1581894158358-5ecd2c518883?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1406&q=80"
+                        data-responsive="https://images.unsplash.com/photo-1581894158358-5ecd2c518883?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1581894158358-5ecd2c518883?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
+                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@entrycube' >Diego Guzmán </a></h4> <p> Location - <a href='https://unsplash.com/s/photos/fushimi-inari-taisha-shrine-senbontorii%2C-68%E7%95%AA%E5%9C%B0-fukakusa-yabunouchicho%2C-fushimi-ward%2C-kyoto%2C-japan'>Fushimi Ward, Kyoto, Japan</a></p>"
+                    >
+                        <img
+                            class="img-responsive"
+                            src="https://images.unsplash.com/photo-1581894158358-5ecd2c518883?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
+                        />
+                    </a>
+                    <a
+                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
+                        data-pinterest-text="Shinimamiya, Osaka, Japan"
+                        data-tweet-text="Shinimamiya, Osaka, Japan"
+                        class="gallery-item"
+                        data-src="https://images.unsplash.com/photo-1544550285-f813152fb2fd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
+                        data-responsive="https://images.unsplash.com/photo-1544550285-f813152fb2fd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1544550285-f813152fb2fd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
+                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@asoshiation' >Shah </a></h4><p> Location - <a href='https://unsplash.com/s/photos/shinimamiya%2C-osaka%2C-japan'>Shinimamiya, Osaka, Japan</a></p>"
+                    >
+                        <img
+                            class="img-responsive"
+                            src="https://images.unsplash.com/photo-1544550285-f813152fb2fd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
+                        />
+                    </a>
+                    <a
+                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
+                        data-pinterest-text="Pin it3"
+                        data-tweet-text="lightGallery slide  4"
+                        class="gallery-item"
+                        data-src="https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
+                        data-responsive="https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
+                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@katherine_xx11' >Katherine Gu </a></h4><p> For all those years we were alone and helpless.</p>"
+                    >
+                        <img
+                            class="img-responsive"
+                            src="https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
+                        />
+                    </a>
+                </div>
+                <div class="vertical-gallery-row col-4 second-row">
+                    <a
+                        data-lg-size="480-514-480, 800-856-800, 1368-1464"
+                        class="gallery-item"
+                        data-src="https://images.unsplash.com/photo-1595878805482-2f9cef4b58ce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1368&q=80"
+                        data-responsive="https://images.unsplash.com/photo-1595878805482-2f9cef4b58ce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1595878805482-2f9cef4b58ce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
+                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@einfachlaurenz' >Laurenz Heymann </a></h4><p> Location - <a href='https://unsplash.com/s/photos/%C3%B6resundbr%C3%BCcke%2C-t%C3%A5rnby%2C-denmark>Öresundbrücke, Tårnby, Denmark</a>Tunnel after Öresund birdge</p>"
+                    >
+                        <img
+                            class="img-responsive"
+                            src="https://images.unsplash.com/photo-1595878805482-2f9cef4b58ce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
+                        />
+                    </a>
+                    <a
+                        data-lg-size="480-481-480, 800-801-800, 1400-1402"
+                        class="gallery-item"
+                        data-src="https://images.unsplash.com/photo-1613541444699-39429d990353?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
+                        data-responsive="https://images.unsplash.com/photo-1613541444699-39429d990353?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1613541444699-39429d990353?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
+                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@dogancan' >Doğancan Özturan </a></h4><p> Location - <a href='https://unsplash.com/s/photos/ko%C3%A7-%C3%BCniversitesi%2C-rumelifeneri%2C-sar%C4%B1yer%2Fi%CC%87stanbul%2C-turkey'>Koç Üniversitesi, Rumelifeneri, Sarıyer/İstanbul, Turkey</a></p>"
+                    >
+                        <img
+                            class="img-responsive"
+                            src="https://images.unsplash.com/photo-1613541444699-39429d990353?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
+                        />
+                    </a>
+                    <a
+                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
+                        data-pinterest-text="Pin it2"
+                        data-tweet-text="lightGallery slide  2"
+                        class="gallery-item"
+                        data-src="https://images.unsplash.com/photo-1605814966843-7b90f1156878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80"
+                        data-responsive="https://images.unsplash.com/photo-1605814966843-7b90f1156878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1605814966843-7b90f1156878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800"
+                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@jeancarloemer' >Jean Carlo Emer </a></h4><p> Location - <a href='https://unsplash.com/s/photos/amsterdam%2C-netherlands'>Amsterdam, Netherlands</a></p>"
+                    >
+                        <img
+                            class="img-responsive"
+                            src="https://images.unsplash.com/photo-1605814966843-7b90f1156878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80"
+                        />
+                    </a>
+                    <a
+                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
+                        data-pinterest-text="Seoul, South Korea"
+                        data-tweet-text="Seoul, South Korea"
+                        class="gallery-item"
+                        data-src="https://images.unsplash.com/photo-1603456669596-2dc6f92705ba?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
+                        data-responsive="https://images.unsplash.com/photo-1603456669596-2dc6f92705ba?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1603456669596-2dc6f92705ba?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
+                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@akaunas' >Alexander Kaunas </a></h4><p> Location - <a href='https://unsplash.com/s/photos/seoul%2C-south-korea'>Seoul, South Korea</a></p>"
+                    >
+                        <img
+                            class="img-responsive"
+                            src="https://images.unsplash.com/photo-1603456669596-2dc6f92705ba?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
+                        />
+                    </a>
+                </div>
+                <div class="vertical-gallery-row col-4 third-row">
+                    <a
+                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
+                        class="gallery-item"
+                        data-src="https://images.unsplash.com/photo-1528650765831-7f2254800a83?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80"
+                        data-responsive="https://images.unsplash.com/photo-1528650765831-7f2254800a83?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1528650765831-7f2254800a83?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800"
+                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@danesduet' >Daniel Olah </a></h4><p> Location - <a href='https://unsplash.com/s/photos/st.-stephen's-basilica%2C-budapest%2C-hungary'>St. Stephen's Basilica, Budapest, Hungary</a>St. Stephans Basilika</p>"
+                    >
+                        <img
+                            class="img-responsive"
+                            src="https://images.unsplash.com/photo-1528650765831-7f2254800a83?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80"
+                        />
+                    </a>
+                    <a
+                        data-lg-size="480-442-480, 800-737-800, 1443-1329"
+                        class="gallery-item"
+                        data-src="https://images.unsplash.com/photo-1563502310703-1ffe473ad66d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1443&q=80"
+                        data-responsive="https://images.unsplash.com/photo-1563502310703-1ffe473ad66d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1563502310703-1ffe473ad66d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
+                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@mikeolion' >Michael oyesile </a></h4><p> Location - <a href='https://unsplash.com/s/photos/pizol%2C-mels%2C-schweiz'>Pizol, Mels, Schweiz</a></p>"
+                    >
+                        <img
+                            class="img-responsive"
+                            src="https://images.unsplash.com/photo-1563502310703-1ffe473ad66d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
+                        />
+                    </a>
+                    <a
+                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
+                        data-pinterest-text="Pin it2"
+                        data-tweet-text="lightGallery slide  2"
+                        class="gallery-item"
+                        data-src="https://images.unsplash.com/photo-1588093413519-17cec3f64e40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
+                        data-responsive="https://images.unsplash.com/photo-1588093413519-17cec3f64e40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1588093413519-17cec3f64e40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
+                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@neotronimz' >Nirmal Rajendharkumar </a></h4><p> Location - <a href='https://unsplash.com/s/photos/brooklyn%2C-ny%2C-usa'>Brooklyn, NY, USA</a></p>"
+                    >
+                        <img
+                            class="img-responsive"
+                            src="https://images.unsplash.com/photo-1588093413519-17cec3f64e40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
+                        />
+                    </a>
+                </div>
+            </div>
+            <p class="open-gallery-text"> Click on any thumbnail to open lightGallery</p>
+        </div>
+    </div>
+</div>
+<div class="container-xl home-theming" id="theming">
+    <div class="row align-items-center">
+        <div class="col-lg-5 order-lg-2">
+            <h2>Theme it in SCSS</h2>
+            <p>The stylesheet is built from variables. Set the ones you want before importing and the whole theme follows — or restyle the classes directly; nothing is generated at runtime.</p>
+            <p>Swap the artwork too: every control icon is an <a href="/docs/custom-icons/">inline SVG you can replace by name</a>.</p>
+        </div>
+        <div class="col-lg-7 order-lg-1">
+
+```scss
+$lg-theme-highlight: #3e7eff;
+$lg-icon-color: #fff;
+$lg-toolbar-bg: rgba(0, 0, 0, 0.45);
+$lg-border-radius-base: 6px;
+
+@import 'lightgallery/scss/lightgallery';
+@import 'lightgallery/scss/lg-zoom';
+@import 'lightgallery/scss/lg-thumbnail';
+```
+
+        </div>
+    </div>
+</div>
+<div class="gradient-bg-light-blue">
+    <div class="container-xl feature-list-lg home-mixed-gallery vertical-bg-inner">
+        <div class="row">
+            <div class="col-lg-5 align-self-center order-lg-1">
+                <h2>Mixed Contents</h2>
+                <p>You can mix all types of supported contents in a same gallery. lightGallery will automatically find the content type from source and create appropriate slides</p>
+                <div class="features-list-md row">
+                    <div class="features-list-md-item">
+                        <div class="features-list-md-icon">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>camera</title><path d="M24 19v-11c0-0.828-0.337-1.58-0.879-2.121s-1.293-0.879-2.121-0.879h-3.465l-1.703-2.555c-0.182-0.27-0.486-0.445-0.832-0.445h-6c-0.326 0.002-0.64 0.158-0.832 0.445l-1.703 2.555h-3.465c-0.828 0-1.58 0.337-2.121 0.879s-0.879 1.293-0.879 2.121v11c0 0.828 0.337 1.58 0.879 2.121s1.293 0.879 2.121 0.879h18c0.828 0 1.58-0.337 2.121-0.879s0.879-1.293 0.879-2.121zM22 19c0 0.276-0.111 0.525-0.293 0.707s-0.431 0.293-0.707 0.293h-18c-0.276 0-0.525-0.111-0.707-0.293s-0.293-0.431-0.293-0.707v-11c0-0.276 0.111-0.525 0.293-0.707s0.431-0.293 0.707-0.293h4c0.346 0 0.65-0.175 0.832-0.445l1.703-2.555h4.93l1.703 2.555c0.192 0.287 0.506 0.443 0.832 0.445h4c0.276 0 0.525 0.111 0.707 0.293s0.293 0.431 0.293 0.707zM17 13c0-1.38-0.561-2.632-1.464-3.536s-2.156-1.464-3.536-1.464-2.632 0.561-3.536 1.464-1.464 2.156-1.464 3.536 0.561 2.632 1.464 3.536 2.156 1.464 3.536 1.464 2.632-0.561 3.536-1.464 1.464-2.156 1.464-3.536zM15 13c0 0.829-0.335 1.577-0.879 2.121s-1.292 0.879-2.121 0.879-1.577-0.335-2.121-0.879-0.879-1.292-0.879-2.121 0.335-1.577 0.879-2.121 1.292-0.879 2.121-0.879 1.577 0.335 2.121 0.879 0.879 1.292 0.879 2.121z"></path></svg>
+                        </div>
+                        <div class="features-list-md-content">
+                            <h4 class="features-list-md-title">Images</h4>
+                            <p class="features-list-md-desc">Supports any kind of images including responsive images and webP with fallback jpg support</p>
+                        </div>
+                    </div>
+                    <div class="features-list-md-item">
+                        <div class="features-list-md-icon">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>video</title><path d="M22 8.943v6.114l-4.28-3.057zM3 4c-0.828 0-1.58 0.337-2.121 0.879s-0.879 1.293-0.879 2.121v10c0 0.828 0.337 1.58 0.879 2.121s1.293 0.879 2.121 0.879h11c0.828 0 1.58-0.337 2.121-0.879s0.879-1.293 0.879-2.121v-3.057l5.419 3.871c0.449 0.321 1.074 0.217 1.395-0.232 0.126-0.178 0.187-0.383 0.186-0.582v-10c0-0.552-0.448-1-1-1-0.218 0-0.42 0.070-0.581 0.186l-5.419 3.871v-3.057c0-0.828-0.337-1.58-0.879-2.121s-1.293-0.879-2.121-0.879zM3 6h11c0.276 0 0.525 0.111 0.707 0.293s0.293 0.431 0.293 0.707v10c0 0.276-0.111 0.525-0.293 0.707s-0.431 0.293-0.707 0.293h-11c-0.276 0-0.525-0.111-0.707-0.293s-0.293-0.431-0.293-0.707v-10c0-0.276 0.111-0.525 0.293-0.707s0.431-0.293 0.707-0.293z"></path></svg>
+                        </div>
+                        <div class="features-list-md-content">
+                            <h4 class="features-list-md-title">Videos</h4>
+                            <p class="features-list-md-desc">In-built support for YouTube, Vimeo, Wistia and all types of HTML5 video formats. Such as MP4, WebM and Ogg.</p>
+                        </div>
+                    </div>
+                    <div class="features-list-md-item">
+                        <div class="features-list-md-icon">
+                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>external-link</title><path d="M17 13v6c0 0.276-0.111 0.525-0.293 0.707s-0.431 0.293-0.707 0.293h-11c-0.276 0-0.525-0.111-0.707-0.293s-0.293-0.431-0.293-0.707v-11c0-0.276 0.111-0.525 0.293-0.707s0.431-0.293 0.707-0.293h6c0.552 0 1-0.448 1-1s-0.448-1-1-1h-6c-0.828 0-1.58 0.337-2.121 0.879s-0.879 1.293-0.879 2.121v11c0 0.828 0.337 1.58 0.879 2.121s1.293 0.879 2.121 0.879h11c0.828 0 1.58-0.337 2.121-0.879s0.879-1.293 0.879-2.121v-6c0-0.552-0.448-1-1-1s-1 0.448-1 1zM10.707 14.707l9.293-9.293v3.586c0 0.552 0.448 1 1 1s1-0.448 1-1v-6c0-0.136-0.027-0.265-0.076-0.383s-0.121-0.228-0.216-0.323c-0.001-0.001-0.001-0.001-0.002-0.002-0.092-0.092-0.202-0.166-0.323-0.216-0.118-0.049-0.247-0.076-0.383-0.076h-6c-0.552 0-1 0.448-1 1s0.448 1 1 1h3.586l-9.293 9.293c-0.391 0.391-0.391 1.024 0 1.414s1.024 0.391 1.414 0z"></path></svg>
+                        </div>
+                        <div class="features-list-md-content">
+                            <h4 class="features-list-md-title">Iframes</h4>
+                            <p class="features-list-md-desc">Easily embed external websites, display PDF files, google maps and more</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 order-lg-0">
+                <div class="contents-list">
+                    <div class="contents-list-item">
+                        <img class="content-list-logo" src="/images/logos/vimeo_icon_blue_on_white_rounded.png" />
+                    </div>
+                    <div class="contents-list-item">
+                        <img class="content-list-logo" src="/images/logos/youtube_social_icon_red.png" />
+                    </div>
+                    <div class="contents-list-item">
+                        <img class="content-list-logo" src="/images/logos/wistia-flags_color.png" />
+                    </div>
+                    <div class="contents-list-item">
+                        <img class="content-list-logo" src="/images/logos/HTML5_Badge.svg" />
+                    </div>
+                    <div class="contents-list-item">
+                        <img class="content-list-logo" title="Coming soon" src="/images/logos/dailymotion.png" />
+                    </div>
+                    <div class="contents-list-item">
+                        <img class="content-list-logo" src="/images/logos/google-map.png" />
+                    </div>
+                    <div class="contents-list-item">
+                        <img class="content-list-logo" src="/images/logos/pdf.svg" />
+                    </div>
+                    <div class="contents-list-item">
+                        <img class="content-list-logo" src="/images/logos/WebP-Icon.png" />
+                    </div>
+                    <div class="contents-list-item">
+                        <img class="content-list-logo" src="/images/logos/web.png" />
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+<div class="container-xl home-api" id="api">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <h2>Programmable</h2>
+            <p>Events for everything the gallery does, methods for everything you want it to do — with the same names in every package, so the docs apply whichever one you use.</p>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+<CodeTabs label="Stack">
+<Fragment slot="vanilla">
+
+```js
+const gallery = lightGallery(el, { plugins: [lgZoom] });
+
+el.addEventListener('lgAfterSlide', (event) => {
+    console.log('now on slide', event.detail.index);
+});
+
+gallery.openGallery(2); // open on the third slide
+gallery.refresh(); // after the trigger markup changed
+gallery.destroy();
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+const gallery = useRef<LightGalleryRefHandle>(null);
+
+<LightGallery
+    ref={gallery}
+    plugins={[Zoom]}
+    onAfterSlide={({ index }) => console.log('now on slide', index)}
+>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+
+<button onClick={() => gallery.current?.openGallery(2)}>Open</button>;
+```
+
+</Fragment>
+</CodeTabs>
+
+            <p class="home-section-link"><a href="/docs/events/">All events</a> · <a href="/docs/methods/">All methods</a> · <a href="/demos/dynamic-mode/">Dynamic mode</a></p>
+        </div>
+    </div>
+</div>
+<div class="vertical-bg">
+    <div class="container-xl home-inline-gallery text-center vertical-bg-inner">
+        <div class="row justify-content-center home-inline-gallery-header">
+            <div class="col-lg-7">
+                <h2>Inline Gallery</h2>
+                <p>Create both inline and lightBox galleries with one library. Convert inline to fullScreen by clicking on the maximize icon.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div id="inline-gallery-container" class="inline-gallery-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-xl home-share">
+    <div class="home-trust-grid">
+        <a class="home-trust-card" href="/docs/web-share/">
+            <h3>Share the way the device does</h3>
+            <p>On phones the share button opens the native share sheet — messages, AirDrop, whatever is installed. Elsewhere it falls back to the social links you configure.</p>
+            <span class="home-trust-link">Web Share →</span>
+        </a>
+        <a class="home-trust-card" href="/docs/hash-drivers/">
+            <h3>A URL for every slide</h3>
+            <p>Deep links open the gallery on the right slide, and browser back and forward move through it. Choose the hash driver or the history driver to match your router.</p>
+            <span class="home-trust-link">Hash and history drivers →</span>
+        </a>
+    </div>
+</div>
+<div class="container-xl home-faq" id="faq">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <h2>Questions people ask first</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <details class="home-faq-item"><summary>Is it free?</summary><p>lightGallery is open source under the GPLv3. If your project can't be distributed under the GPL, a <a href="/license/">commercial license</a> covers it — same code, no feature gates.</p></details>
+            <details class="home-faq-item"><summary>Does it need jQuery?</summary><p>No. lightGallery has no dependencies. The only jQuery on this site is for the two demos that integrate third-party jQuery carousels.</p></details>
+            <details class="home-faq-item"><summary>Which frameworks are supported?</summary><p>Plain JavaScript and TypeScript, plus native packages for React, Vue and Angular — the same features in all of them. For anything else, the gallery's core is available on its own as <code>@lightgallery/headless</code>.</p></details>
+            <details class="home-faq-item"><summary>Which browsers?</summary><p>Current evergreen browsers and iOS Safari. There are no polyfills and no legacy builds.</p></details>
+            <details class="home-faq-item"><summary>I'm on version 2. What changes?</summary><p>The vanilla API is unchanged. The framework wrappers are replaced by native packages and the icon font is gone. The <a href="/docs/migration/">migration guide</a> lists every step.</p></details>
+            <details class="home-faq-item"><summary>Are TypeScript types included?</summary><p>Yes — every package ships its own types; settings, events and plugin options are fully typed.</p></details>
+        </div>
+    </div>
+</div>
+<div class="container-xl home-trust" id="trust">
+    <div class="home-trust-grid">
+        <a class="home-trust-card" href="/license/">
+            <h3>Open source, with a commercial option</h3>
+            <p>lightGallery is GPLv3. Projects that can't ship under the GPL use the commercial license — same code, no feature gates.</p>
+            <span class="home-trust-link">Licensing →</span>
+        </a>
+        <a class="home-trust-card" href="/docs/migration/">
+            <h3>Coming from version 2?</h3>
+            <p>The vanilla API is unchanged; what moved is the packaging and the framework wrappers. The migration guide lists every step.</p>
+            <span class="home-trust-link">Migration guide →</span>
+        </a>
+        <a class="home-trust-card" href="/docs/accessibility/">
+            <h3>Accessible by default</h3>
+            <p>Focus trapping, labelled controls, keyboard navigation and live announcements — with everything customizable through settings.</p>
+            <span class="home-trust-link">Accessibility →</span>
+        </a>
+    </div>
+</div>
+<div class="container-xl home-custom">
+    <div class="home-trust-grid">
+        <a class="home-trust-card" href="/docs/custom-work/">
+            <h3>Need something built?</h3>
+            <p>A feature your project needs, an integration with your stack, or a fix on a deadline — the maintainer takes custom work.</p>
+            <span class="home-trust-link">Custom work →</span>
+        </a>
+        <a class="home-trust-card" href="https://github.com/sachinchoolur/lightGallery/issues" rel="noopener">
+            <h3>Found a bug?</h3>
+            <p>Issues and pull requests are welcome on GitHub. A reduced reproduction gets it fixed fastest.</p>
+            <span class="home-trust-link">GitHub issues →</span>
+        </a>
+    </div>
+</div>
+<div class="container-xl home-blog">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <h2>From the blog</h2>
+        </div>
+    </div>
+    <LatestPosts count={3} />
+</div>
+<div class="container-xl home-cdn" id="cdn">
+    <div class="row align-items-center">
+        <div class="col-lg-5">
+            <h2>No build step? No problem.</h2>
+            <p>Every bundle is also on the CDNs. Two tags and a call, and the gallery is on the page.</p>
+            <p class="home-browser-note">Runs in current evergreen browsers and iOS Safari — no polyfills, no jQuery.</p>
+        </div>
+        <div class="col-lg-7">
+
+```html
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/lightgallery@3/css/lightgallery-bundle.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@3/lightgallery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@3/plugins/zoom/lg-zoom.min.js"></script>
+<script>
+    lightGallery(document.getElementById('gallery'), {
+        plugins: [lgZoom],
+    });
+</script>
+```
+
+        </div>
+    </div>
+</div>
+<div class="container-xl home-cta" id="start">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 text-center">
+            <h2>Start with your stack</h2>
+            <div class="home-cta-actions">
+                <a href="/docs/getting-started/" class="btn btn-primary btn-lg" data-framework="vanilla">JavaScript</a>
+                <a href="/docs/react/" class="btn btn-outline-primary btn-lg" data-framework="react">React</a>
+                <a href="/docs/vue/" class="btn btn-outline-primary btn-lg" data-framework="vue">Vue</a>
+                <a href="/docs/angular/" class="btn btn-outline-primary btn-lg" data-framework="angular">Angular</a>
+            </div>
+            <p class="home-cta-secondary">or <a href="/demos/">browse the demos</a> first.</p>
+        </div>
+    </div>
+</div>
