@@ -47,7 +47,7 @@ function pathnameFor(file) {
             return `/blog/${frontmatterSlug(file) ?? id}/`;
         case 'pages':
             if (id === 'home') return '/';
-            if (id === 'home-v3') return '/home-v3/';
+            if (id === 'home-v2') return '/home-v2/';
             if (id === 'blog-index') return '/blog/';
             return `/${id}/`;
         default:

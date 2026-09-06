@@ -1,0 +1,42 @@
+---
+import { getEntry, render } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+/**
+ * The previous homepage (`pages/home-v2`), kept for reference at
+ * /home-v2/. Not indexed, not in the sitemap.
+ */
+const home = await getEntry('pages', 'home-v2');
+if (!home) throw new Error('pages/home-v2.mdx missing');
+const { Content } = await render(home);
+---
+
+<BaseLayout
+    bodyClass="home"
+    meta={{
+        title: home.data.title,
+        description: home.data.description,
+        isHome: true,
+        robots: 'noindex, nofollow',
+        software: {
+            name: 'lightGallery',
+            description: home.data.description,
+        },
+    }}
+>
+    <div class="container-fluid main-page">
+        <div class="row justify-content-center hero-section">
+            <div class="col-lg-6 text-center">
+                <h1 class="main-title">{home.data.title}</h1>
+                <h4 class="sub-title" set:html={home.data.lead ?? ''} />
+                <a
+                    href="https://github.com/sachinchoolur/lightGallery"
+                    class="btn btn-lg btn-outline-primary get-started-btn"
+                    >View on GitHub</a
+                >
+            </div>
+        </div>
+    </div>
+    <Content />
+</BaseLayout>

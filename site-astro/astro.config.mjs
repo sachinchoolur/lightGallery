@@ -39,7 +39,7 @@ export default defineConfig({
         // Review-only pages (noindex) stay out of the sitemap; every
         // content-backed URL carries its last git commit date.
         sitemap({
-            filter: (page) => !page.includes('/home-v3/'),
+            filter: (page) => !page.includes('/home-v2/'),
             serialize: withLastmod,
         }),
     ],

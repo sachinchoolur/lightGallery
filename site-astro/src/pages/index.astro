@@ -2,17 +2,22 @@
 import { getEntry, render } from 'astro:content';
 
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroTopBox from '../components/ds/HeroTopBox.astro';
+import PrimaryButton from '../components/ds/PrimaryButton.astro';
+import SecondaryButton from '../components/ds/SecondaryButton.astro';
 
-// Port of `layouts/index.html` — hero + the huge homepage body from
-// `content/_index.md`. Its embedded galleries/shortcodes come alive as
-// the shortcode components land in the demo-conversion pass.
+/**
+ * The homepage (`pages/home`): hero + gallery, stack switcher, feature
+ * grid, gestures and motion, customization, inline gallery, FAQ, CTA.
+ * The previous homepage is kept at /home-v2/ for reference.
+ */
 const home = await getEntry('pages', 'home');
-if (!home) throw new Error('pages/home.md missing');
+if (!home) throw new Error('pages/home.mdx missing');
 const { Content } = await render(home);
 ---
 
 <BaseLayout
-    bodyClass="home"
+    bodyClass="home home-v3"
     meta={{
         title: home.data.title,
         description: home.data.description,
@@ -23,18 +28,73 @@ const { Content } = await render(home);
         },
     }}
 >
-    <div class="container-fluid main-page">
-        <div class="row justify-content-center hero-section">
-            <div class="col-lg-6 text-center">
+    <div class="home-hero-band">
+        <div class="container-xl home-hero">
+            <div class="home-hero-decor" aria-hidden="true"><HeroTopBox /></div>
+            <div class="home-hero-inner">
                 <h1 class="main-title">{home.data.title}</h1>
-                <h4 class="sub-title" set:html={home.data.lead ?? ''} />
-                <a
-                    href="https://github.com/sachinchoolur/lightGallery"
-                    class="btn btn-lg btn-outline-primary get-started-btn"
-                    >View on GitHub</a
-                >
+                <p class="para1 home-hero-lead" set:html={home.data.lead ?? ''} />
+                <div class="hero-actions">
+                    <PrimaryButton
+                        href="/docs/getting-started/"
+                        data-stack-cta
+                        data-href-vanilla="/docs/getting-started/"
+                        data-href-react="/docs/react/"
+                        data-href-vue="/docs/vue/"
+                        data-href-angular="/docs/angular/"
+                    >
+                        Get started
+                    </PrimaryButton>
+                    <SecondaryButton href="https://github.com/sachinchoolur/lightGallery" rel="noopener">
+                        View on GitHub
+                    </SecondaryButton>
+                </div>
             </div>
         </div>
     </div>
     <Content />
+    <script>
+        // The page follows the visitor's stack: the hero CTA and the
+        // closing per-stack buttons track the framework the code tabs
+        // remember (the same localStorage key CodeTabs.astro uses), and
+        // update when a tab is clicked.
+        const LABELS: Record<string, string> = {
+            vanilla: 'Get started',
+            react: 'Get started with React',
+            vue: 'Get started with Vue',
+            angular: 'Get started with Angular',
+        };
+
+        function current(): string {
+            try {
+                return localStorage.getItem('lg-framework') ?? 'vanilla';
+            } catch {
+                return 'vanilla';
+            }
+        }
+
+        function follow(framework: string) {
+            document
+                .querySelectorAll<HTMLAnchorElement>('[data-stack-cta]')
+                .forEach((cta) => {
+                    const href = cta.dataset[`href${framework[0].toUpperCase()}${framework.slice(1)}`];
+                    if (href) cta.href = href;
+                    const label = cta.querySelector('.kq-btn-label') ?? cta;
+                    label.textContent = LABELS[framework] ?? LABELS.vanilla;
+                });
+            document
+                .querySelectorAll<HTMLAnchorElement>('.home-cta-actions a')
+                .forEach((link) => {
+                    const on = link.dataset.framework === framework;
+                    link.classList.toggle('btn-primary', on);
+                    link.classList.toggle('btn-outline-primary', !on);
+                });
+        }
+
+        follow(current());
+        document.addEventListener('click', (event) => {
+            const tab = (event.target as HTMLElement).closest<HTMLElement>('.code-tabs-tab');
+            if (tab?.dataset.framework) follow(tab.dataset.framework);
+        });
+    </script>
 </BaseLayout>

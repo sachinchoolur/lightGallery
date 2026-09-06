@@ -5,7 +5,7 @@
 
 User-agent: *
 Allow: /
-Disallow: /home-v3/
+Disallow: /home-v2/
 
 User-agent: GPTBot
 Allow: /
