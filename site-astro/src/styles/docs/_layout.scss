@@ -1,0 +1,446 @@
+// Docs and demo pages: a three-column reading layout — sticky sidebar,
+// a ~46rem content measure, and "On this page" on the right — inside a
+// 90rem frame. Type follows the design system (Inter, gray-800/700).
+
+$docs-frame: 90rem;
+$docs-sidebar: 16rem;
+$docs-toc: 14rem;
+$docs-measure: 46rem;
+$docs-gap: 3rem;
+$docs-top: 60px; // fixed header height
+$docs-column-top: 2.5rem; // shared top padding: kicker, first group and "On this page" align
+
+body.docs.single,
+body.demos.single {
+    // Full-width frame: sidebar pinned left, "On this page" pinned right,
+    // the reading column centered between them.
+    .page-wrap {
+        max-width: none;
+        padding: 0 2rem;
+        margin: $docs-top auto 0;
+        @media (max-width: 767px) {
+            padding: 0 1rem;
+        }
+    }
+
+    // Grid instead of Bootstrap's row/cols: sidebar | content | toc.
+    .page-wrap > .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        column-gap: $docs-gap;
+        margin: 0;
+        > * {
+            width: auto;
+            max-width: none;
+            flex: none;
+            padding: 0;
+        }
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: $docs-sidebar minmax(0, 1fr);
+        }
+        @include media-breakpoint-up(xl) {
+            grid-template-columns: $docs-sidebar minmax(0, 1fr) $docs-toc;
+        }
+    }
+    // Reading first on small screens; the sidebar becomes the page's index
+    // underneath. From lg up it takes the left column.
+    .page-wrap > .row > .docs-sidebar {
+        order: 2;
+        @include media-breakpoint-up(lg) {
+            order: 0;
+            grid-column: 1;
+        }
+    }
+    // Specific enough to beat the `> *` reset above.
+    .page-wrap > .row > .docs-content {
+        order: 1;
+        width: 100%;
+        max-width: $docs-measure;
+        margin: 0 auto;
+        padding: $docs-column-top 0 4rem;
+        @include media-breakpoint-up(lg) {
+            grid-column: 2;
+        }
+    }
+    .page-wrap > .row > .docs-toc {
+        order: 2;
+        grid-column: 3;
+    }
+
+    // ---- Sidebar ------------------------------------------------------------
+    .page-wrap > .row > .docs-sidebar {
+        @include media-breakpoint-up(lg) {
+            position: sticky;
+            top: $docs-top;
+            align-self: start;
+            height: calc(100vh - #{$docs-top});
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: $docs-column-top 0.75rem 3rem 0;
+            scrollbar-width: thin;
+        }
+        @media (max-width: 991px) {
+            padding: 1.5rem 0 0;
+            border-top: 1px solid $gray-100;
+            margin-top: 2rem;
+        }
+    }
+    .docs-links {
+        h3 {
+            margin: 1.75rem 0 0.5rem 0.75rem;
+            padding: 0;
+            border: 0;
+            font-family: $font-family-sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            color: $gray-800;
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+        ul {
+            margin: 0;
+        }
+        a.docs-link {
+            display: block;
+            margin: 0 0 2px;
+            padding: 6px 0.75rem;
+            border-radius: 8px;
+            color: $gray-600;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            transition:
+                color 0.12s ease,
+                background-color 0.12s ease;
+            &:hover {
+                color: $gray-900;
+                background: $gray-50;
+                text-decoration: none;
+            }
+            &.active {
+                color: $orange-700;
+                background: $orange-50;
+            }
+        }
+    }
+
+    // ---- Content ------------------------------------------------------------
+    .docs-content {
+        color: $gray-700;
+        font-size: 16px;
+        line-height: 28px;
+        letter-spacing: -0.1px;
+
+        .docs-kicker {
+            display: block;
+            margin-bottom: 8px;
+            color: $orange-700;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+        }
+        h1 {
+            margin: 0 0 12px;
+            font-size: 32px;
+            font-weight: 600;
+            line-height: 40px;
+            letter-spacing: -0.4px;
+            color: $gray-800;
+        }
+        .page-tools {
+            margin: 0 0 20px;
+        }
+        .lead {
+            margin: 0 0 32px;
+            color: $gray-500;
+            font-size: 17px;
+            font-weight: 400;
+            line-height: 28px;
+        }
+        p {
+            margin: 0 0 20px;
+        }
+        h2,
+        h3,
+        h4 {
+            color: $gray-800;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            scroll-margin-top: calc(#{$docs-top} + 1.5rem);
+        }
+        h2 {
+            margin: 48px 0 16px;
+            padding: 0;
+            border: 0;
+            font-size: 24px;
+            line-height: 32px;
+        }
+        h3 {
+            margin: 36px 0 12px;
+            font-size: 20px;
+            line-height: 28px;
+        }
+        h4,
+        h5 {
+            margin: 28px 0 8px;
+            font-size: 16px;
+            line-height: 24px;
+        }
+        h2 + h3 {
+            margin-top: 16px;
+        }
+        // Heading anchors: quiet until hovered.
+        .anchor {
+            padding-left: 0.4rem;
+            color: $gray-300;
+            font-weight: 400;
+            text-decoration: none;
+            &:hover {
+                color: $orange-700;
+            }
+        }
+        // The pre-Astro anchor offset trick is replaced by scroll-margin.
+        h2[id]::before,
+        h3[id]::before,
+        h4[id]::before {
+            display: none;
+        }
+        a:not(.btn):not(.page-tools-btn):not(.anchor) {
+            color: $orange-700;
+            text-decoration: none;
+            border-bottom: 1px solid rgba($orange-700, 0.3);
+            &:hover {
+                border-bottom-color: $orange-700;
+            }
+        }
+        ul,
+        ol {
+            margin: 0 0 20px;
+            padding-left: 1.5rem;
+        }
+        li {
+            margin-bottom: 6px;
+            line-height: 28px;
+            &::marker {
+                color: $gray-400;
+            }
+        }
+        strong {
+            color: $gray-800;
+            font-weight: 600;
+        }
+        hr {
+            margin: 40px 0;
+            background: $gray-200;
+        }
+        img {
+            border-radius: 12px;
+        }
+
+        // Inline code
+        :not(pre) > code {
+            padding: 2px 6px;
+            border: 1px solid $gray-200;
+            border-radius: 6px;
+            background: $gray-50;
+            color: $gray-800;
+            font-size: 13.5px;
+            font-weight: 500;
+        }
+        // Code blocks
+        pre {
+            margin: 20px 0 24px;
+            padding: 18px 22px;
+            border-radius: 12px;
+            font-size: 13.5px;
+            line-height: 24px;
+            tab-size: 4;
+            code {
+                border: 0;
+                background: none;
+                padding: 0;
+                font-size: inherit;
+                font-weight: 400;
+            }
+        }
+
+        // Callouts
+        .alert {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0 24px;
+            padding: 14px 16px;
+            border: 1px solid;
+            border-radius: 12px;
+            font-size: 14.5px;
+            line-height: 24px;
+            &::before {
+                content: '';
+                flex: 0 0 18px;
+                width: 18px;
+                height: 18px;
+                margin-top: 3px;
+                border-radius: 50%;
+                background: currentColor;
+                opacity: 0.85;
+                -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'><circle cx='12' cy='12' r='9'/><path d='M12 8v.5M12 11.5v5'/></svg>") center / contain no-repeat;
+                mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'><circle cx='12' cy='12' r='9'/><path d='M12 8v.5M12 11.5v5'/></svg>") center / contain no-repeat;
+            }
+            &.alert-info {
+                border-color: $blue-200;
+                background: $blue-50;
+                color: $blue-900;
+            }
+            &.alert-warning {
+                border-color: $yellow-300;
+                background: $yellow-50;
+                color: $yellow-900;
+            }
+            &.alert-danger {
+                border-color: $red-300;
+                background: $red-50;
+                color: $red-900;
+            }
+            a {
+                color: inherit;
+                font-weight: 600;
+            }
+        }
+
+        // Tables
+        table,
+        .options-table {
+            width: 100%;
+            margin: 20px 0 28px;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 14px;
+            line-height: 22px;
+            th,
+            td {
+                padding: 10px 14px;
+                border-bottom: 1px solid $gray-100;
+                vertical-align: top;
+                text-align: left;
+            }
+            th {
+                color: $gray-800;
+                font-weight: 600;
+                background: $gray-50;
+                border-bottom-color: $gray-200;
+            }
+            tr:last-child td {
+                border-bottom: 0;
+            }
+            code {
+                font-size: 13px;
+            }
+        }
+        .options-table {
+            border: 1px solid $gray-200;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        // Footer of the page: edit link + prev/next.
+        .edit-page {
+            margin: 48px 0 0;
+            padding-top: 24px;
+            border-top: 1px solid $gray-100;
+            font-size: 14px;
+            a {
+                color: $gray-500;
+                border: 0;
+                &:hover {
+                    color: $gray-800;
+                }
+            }
+        }
+        .docs-navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+            > a {
+                display: block;
+                border: 0;
+                &.ms-auto {
+                    text-align: right;
+                }
+                .card {
+                    border: 1px solid $gray-200;
+                    border-radius: 12px;
+                    transition: border-color 0.12s ease;
+                }
+                .card-body {
+                    padding: 14px 16px;
+                    color: $gray-800;
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+                &:hover .card {
+                    border-color: $orange-300;
+                }
+            }
+            @media (max-width: 575px) {
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+
+    // ---- On this page -------------------------------------------------------
+    .page-wrap > .row > .docs-toc {
+        position: sticky;
+        top: $docs-top;
+        align-self: start;
+        max-height: calc(100vh - #{$docs-top});
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: $docs-column-top 0 3rem 1rem;
+        scrollbar-width: thin;
+    }
+    .page-links {
+        h3 {
+            margin: 0 0 10px;
+            padding: 0;
+            font-family: $font-family-sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            color: $gray-800;
+        }
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            border-left: 1px solid $gray-100;
+        }
+        li {
+            margin: 0;
+            padding: 0;
+            border: 0 !important;
+            &.toc-h3 a {
+                padding-left: 24px;
+            }
+        }
+        a {
+            display: block;
+            margin-left: -1px;
+            padding: 4px 0 4px 12px;
+            border-left: 1px solid transparent;
+            color: $gray-500;
+            font-size: 14px;
+            line-height: 20px;
+            &:hover {
+                color: $gray-900;
+                text-decoration: none;
+            }
+            &.active {
+                color: $orange-700;
+                border-left-color: $orange-700;
+            }
+        }
+    }
+}

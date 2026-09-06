@@ -36,6 +36,8 @@ const pageUrl = (e: CollectionEntry<'docs'> | CollectionEntry<'demos'>) =>
 
 const editUrl = `${SITE.docsRepo}/site-astro/src/content/${section}/${entry.id}.md`;
 const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+// Group name above the title (the sidebar group the page belongs to).
+const kicker = (entry.data.menu as Record<string, { parent?: string }> | undefined)?.[section]?.parent;
 
 // Per-page vendor stylesheets, keyed by slug (the Hugo head conditionals
 // keyed off the title, which moves whenever a page is retitled). The
@@ -151,6 +153,7 @@ const hasVideo =
     <div class="wrap container-xxl page-wrap" role="document">
         <div class="row flex-xl-nowrap">
             <main class="docs-content col-lg-10 col-xl-8">
+                {kicker && <span class="docs-kicker">{kicker}</span>}
                 <h1>{entry.data.title}</h1>
                 <PageTools url={pageUrl(entry)} title={entry.data.title} />
                 <p class="lead" set:html={entry.data.lead ?? ''} />
@@ -236,4 +239,31 @@ const hasVideo =
             }
         </div>
     </div>
+    <script>
+        // "On this page": highlight the heading currently in view.
+        const links = [...document.querySelectorAll<HTMLAnchorElement>('#TableOfContents a[href^="#"]')];
+        if (links.length && 'IntersectionObserver' in window) {
+            const byId = new Map(links.map((a) => [a.getAttribute('href')!.slice(1), a]));
+            const targets = [...byId.keys()].map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el);
+            let current: HTMLAnchorElement | undefined;
+            const activate = (id: string) => {
+                const link = byId.get(id);
+                if (!link || link === current) return;
+                current?.classList.remove('active');
+                link.classList.add('active');
+                current = link;
+            };
+            const visible = new Set<string>();
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    for (const e of entries) e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id);
+                    const first = targets.find((t) => visible.has(t.id));
+                    if (first) activate(first.id);
+                },
+                { rootMargin: '-72px 0px -70% 0px', threshold: 0 },
+            );
+            targets.forEach((t) => observer.observe(t));
+            if (targets[0]) activate(targets[0].id);
+        }
+    </script>
 </BaseLayout>
