@@ -28,6 +28,7 @@ import {
     getOriginTransform,
     getSlidePoolIndexes,
     getSlideType,
+    onTransitionSettle,
     parseImageSize,
     resolveSettings,
     type CoreSettings,
@@ -402,6 +403,12 @@ function emitEvent<K extends keyof LgEventMap>(
 // ── Presentation state (phases, timeline, origin) ────────────────────────
 
 const timers = new LgTimeouts();
+// Disposer for the pending flight-landing gate (see runEntrance).
+let originSettle: (() => void) | null = null;
+function clearOriginSettle(): void {
+    originSettle?.();
+    originSettle = null;
+}
 const phase = ref<OpenPhase>('closed');
 /**
  * SSR/hydration guard: the overlay is client-only (React portal parity),
@@ -701,6 +708,7 @@ watch(store.isOpen, (isOpen) => {
     if (isOpen) {
         if (phase.value === 'closed' || phase.value === 'closing') {
             timers.clearAll();
+            clearOriginSettle();
             originAnim.value = null;
             phase.value = 'pre-open';
             everOpened.value = true;
@@ -740,14 +748,31 @@ function runEntrance(): void {
                 ...originAnim.value,
                 stage: 'run',
             };
+            const land = () => {
+                originSettle = null;
+                originAnim.value = null;
+                zoomOriginOpen.value = false;
+                // 2.x adds lg-visible once the start animation lands — the
+                // zoom-from-origin path was missing it entirely.
+                visible.value = true;
+            };
+            // Land on the flight's own transitionend (fixed offset as the
+            // no-transition fallback): the transition starts at the first
+            // style recalc after the transform reset, which the gallery's
+            // first layout can push past the offset — a cached image
+            // mounted on the offset swaps in over the still-scaling thumb.
+            const flying = outerEl.value?.querySelector('.lg-item.lg-current');
+            if (flying) {
+                originSettle = onTransitionSettle(
+                    flying,
+                    'transform',
+                    cfg.startAnimationDuration + 100,
+                    land,
+                );
+            } else {
+                timers.set(land, cfg.startAnimationDuration);
+            }
         }, 110);
-        timers.set(() => {
-            originAnim.value = null;
-            zoomOriginOpen.value = false;
-            // 2.x adds lg-visible once the start animation lands — the
-            // zoom-from-origin path was missing it entirely.
-            visible.value = true;
-        }, cfg.startAnimationDuration + 110);
     }
 
     timers.set(() => (phase.value = 'opening'), 10);
@@ -777,6 +802,7 @@ function runEntrance(): void {
 
 function beginClose(): void {
     const cfg = settings.value;
+    clearOriginSettle();
     emitEvent('beforeClose', undefined);
     unbindOpenListeners();
     phase.value = 'closing';
@@ -1331,6 +1357,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
     timers.clearAll();
+    clearOriginSettle();
     unbindOpenListeners();
     transformAbort?.abort();
 });

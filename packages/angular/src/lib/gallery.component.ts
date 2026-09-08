@@ -42,6 +42,7 @@ import {
     getSlidePoolIndexes,
     getSlideType,
     parseImageSize,
+    onTransitionSettle,
     resolveSettings,
     type CaptionPosition,
     type GalleryDirection,
@@ -626,6 +627,12 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     /** The portal's embedded view — flushed on reopen (see openOverlay). */
     private portalViewRef: EmbeddedViewRef<unknown> | null = null;
     private readonly timers = new LgTimeouts();
+    /** Disposer for the pending flight-landing gate (see runEntrance). */
+    private originSettle: (() => void) | null = null;
+    private clearOriginSettle(): void {
+        this.originSettle?.();
+        this.originSettle = null;
+    }
 
     // ── Settings resolution (headless merge order; ADR §2) ────────────────
 
@@ -1148,6 +1155,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                         this.phase() === 'closing'
                     ) {
                         this.timers.clearAll();
+                        this.clearOriginSettle();
                         this.originAnim.set(null);
                         this.openOverlay();
                     }
@@ -1242,6 +1250,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
     ngOnDestroy(): void {
         this.timers.clearAll();
+        this.clearOriginSettle();
         this.unbindOpenListeners();
         if (isPlatformBrowser(this.platformId)) {
             this.removeBodyState();
@@ -1514,14 +1523,34 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                 this.originAnim.update(
                     (anim) => anim && { ...anim, stage: 'run' },
                 );
+                const land = () => {
+                    this.originSettle = null;
+                    this.originAnim.set(null);
+                    this.runtime.zoomOriginOpen.set(false);
+                    // 2.x adds lg-visible once the start animation lands —
+                    // the zoom-from-origin path was missing it entirely.
+                    this.visible.set(true);
+                };
+                // Land on the flight's own transitionend (fixed offset as
+                // the no-transition fallback): the transition starts at
+                // the first style recalc after the transform reset, which
+                // the gallery's first layout can push past the offset — a
+                // cached image mounted on the offset swaps in over the
+                // still-scaling thumb.
+                const flying = this.outerEl()?.nativeElement.querySelector(
+                    '.lg-item.lg-current',
+                );
+                if (flying) {
+                    this.originSettle = onTransitionSettle(
+                        flying,
+                        'transform',
+                        settings.startAnimationDuration + 100,
+                        land,
+                    );
+                } else {
+                    this.timers.set(land, settings.startAnimationDuration);
+                }
             }, 110);
-            this.timers.set(() => {
-                this.originAnim.set(null);
-                this.runtime.zoomOriginOpen.set(false);
-                // 2.x adds lg-visible once the start animation lands —
-                // the zoom-from-origin path was missing it entirely.
-                this.visible.set(true);
-            }, settings.startAnimationDuration + 110);
         }
 
         this.timers.set(() => this.phase.set('opening'), 10);
@@ -1555,6 +1584,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
     private beginClose(): void {
         const settings = this.settings();
+        this.clearOriginSettle();
         this.emitEvent('beforeClose', undefined);
         this.unbindOpenListeners();
         this.removeBodyState();

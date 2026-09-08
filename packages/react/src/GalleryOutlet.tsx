@@ -12,6 +12,7 @@ import {
     formatSlideAnnouncement,
     getOriginTransform,
     getSlideType,
+    onTransitionSettle,
     parseImageSize,
     type SlideDirection,
 } from '@lightgallery/headless';
@@ -121,6 +122,13 @@ export function GalleryOutlet({
     // restarts the transition in Safari — visible reopen flicker when
     // a cached image loads instantly).
     const usedZoomRef = internal.zoomOriginOpenRef;
+    // Disposer for the pending flight-landing gate (see runEntrance).
+    const originSettleRef = useRef<(() => void) | null>(null);
+    const clearOriginSettle = () => {
+        originSettleRef.current?.();
+        originSettleRef.current = null;
+    };
+    useEffect(() => clearOriginSettle, []);
     const returnFocusRef = useRef<HTMLElement | null>(null);
     /** Latched at first open — the portal persists afterwards (v2). */
     const everOpenedRef = useRef(false);
@@ -194,6 +202,7 @@ export function GalleryOutlet({
     });
 
     const beginClose = useEventCallback(() => {
+        clearOriginSettle();
         internal.emit('onBeforeClose');
         setPhase('closing');
         setVisible(false);
@@ -240,6 +249,7 @@ export function GalleryOutlet({
         if (state.open) {
             if (phase === 'closed' || phase === 'closing') {
                 timers.clearAll();
+                clearOriginSettle();
                 setOriginAnim(null);
                 setPhase('pre-open');
             }
@@ -271,17 +281,35 @@ export function GalleryOutlet({
                 setZoomFromImage(true);
                 setOriginAnim((anim) => anim && { ...anim, stage: 'armed' });
             }, 10);
-            timers.set(
-                () =>
-                    setOriginAnim((anim) => anim && { ...anim, stage: 'run' }),
-                110,
-            );
             timers.set(() => {
-                setOriginAnim(null);
-                // 2.x adds lg-visible once the start animation lands —
-                // the zoom-from-origin path was missing it entirely.
-                setVisible(true);
-            }, settings.startAnimationDuration + 110);
+                setOriginAnim((anim) => anim && { ...anim, stage: 'run' });
+                const land = () => {
+                    originSettleRef.current = null;
+                    setOriginAnim(null);
+                    // 2.x adds lg-visible once the start animation lands —
+                    // the zoom-from-origin path was missing it entirely.
+                    setVisible(true);
+                };
+                // Land on the flight's own transitionend (fixed offset as
+                // the no-transition fallback): the transition starts at
+                // the first style recalc after the transform reset, which
+                // the gallery's first layout can push past the offset — a
+                // cached image mounted on the offset swaps in over the
+                // still-scaling thumb.
+                const flying = outerRef.current?.querySelector(
+                    '.lg-item.lg-current',
+                );
+                if (flying) {
+                    originSettleRef.current = onTransitionSettle(
+                        flying,
+                        'transform',
+                        settings.startAnimationDuration + 100,
+                        land,
+                    );
+                } else {
+                    timers.set(land, settings.startAnimationDuration);
+                }
+            }, 110);
         }
 
         timers.set(() => setPhase('opening'), 10);

@@ -158,6 +158,12 @@ export {
 } from './justified-layout';
 
 export {
+    onTransitionSettle,
+    type TransitionSettleEvent,
+    type TransitionSettleTarget,
+} from './transition';
+
+export {
     DECODE_TIMEOUT_MS,
     awaitDecode,
     getActualSizeWidth,

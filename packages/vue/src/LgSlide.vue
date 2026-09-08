@@ -238,6 +238,15 @@ function onLoad(event?: Event): void {
     if (store.loadedSlides.value.has(props.index)) {
         return;
     }
+    // A load from an <img> the template has already dropped must not
+    // complete the slide: the listener stays on the detached element,
+    // and the first slide's real image is dropped for the dummy the
+    // moment the origin flight arms — a cached load would otherwise
+    // drop the dummy and mount the real image mid-flight.
+    const source = event?.currentTarget ?? event?.target;
+    if (source instanceof Element && !source.isConnected) {
+        return;
+    }
     const isFirstSlide = !store.galleryOn.value;
     const complete = (): void => {
         store.dispatch({ type: 'SLIDE_LOADED', index: props.index });

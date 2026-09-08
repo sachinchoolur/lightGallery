@@ -9,6 +9,7 @@ import {
     getSwipeReleaseVerdict,
     getVerticalDragEffects,
     getWindowedVelocity,
+    onTransitionSettle,
     pushVelocitySample,
     resolveSwipeTarget,
     shouldCloseOnVerticalDrag,
@@ -1415,13 +1416,26 @@ export class LightGallery {
 
         // Only for first slide and zoomFromOrigin is enabled
         if (this.isFirstSlideWithZoomAnimation()) {
-            setTimeout(() => {
+            // The real image lands only once the zoom-from-origin flight
+            // has actually ended. The flight's transition starts at the
+            // first style recalc after the transform reset, which the
+            // gallery's own first layout can push well past the fixed
+            // offset, and a fast (cached) image appended on that offset then
+            // swaps in over the still-scaling thumbnail.
+            const settleFlight = (onLanded: () => void) =>
+                onTransitionSettle(
+                    $currentSlide.get(),
+                    'transform',
+                    this.settings.startAnimationDuration + 100,
+                    onLanded,
+                );
+            settleFlight(() => {
                 $currentSlide
                     .removeClass('lg-start-end-progress lg-start-progress')
                     .removeAttr('style');
-            }, this.settings.startAnimationDuration + 100);
+            });
             if (!$currentSlide.hasClass('lg-loaded')) {
-                setTimeout(() => {
+                settleFlight(() => {
                     if (this.getSlideType(currentGalleryItem) === 'image') {
                         const { alt } = currentGalleryItem;
                         const altAttr = alt ? 'alt="' + alt + '"' : '';
@@ -1477,7 +1491,7 @@ export class LightGallery {
                             },
                         );
                     }
-                }, this.settings.startAnimationDuration + 100);
+                });
             }
         }
 

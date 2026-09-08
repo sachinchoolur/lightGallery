@@ -416,6 +416,136 @@ describe('persistent container (v2 close contract)', () => {
 });
 
 describe('zoom-from-origin dummy image', () => {
+    it('ignores a load from the real image dropped for the dummy', async () => {
+        // The first slide mounts its real <img> for one tick before the
+        // flight arms the dummy and drops it; its listener stays on the
+        // detached element, and a cached image fires load right then.
+        // Completing on it would drop the dummy and mount the real image
+        // mid-flight.
+        const rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        const Host = defineComponent({
+            components: { LightGallery, LgItem },
+            setup: () => ({
+                items: ITEMS.map((item) => ({
+                    ...item,
+                    lgSize: '1600-1067',
+                })),
+            }),
+            template: `
+                <LightGallery>
+                    <LgItem
+                        v-for="item of items"
+                        :key="item.src"
+                        :item="item"
+                        class="trigger"
+                    >
+                        <img :src="item.thumb" :alt="item.alt" />
+                    </LgItem>
+                </LightGallery>
+            `,
+        });
+        mount(Host, { attachTo: document.body });
+        queryAll('.trigger')[0]!.click();
+        await nextTick();
+        const early = query('.lg-item.lg-current img.lg-image');
+        expect(early).not.toBeNull();
+        await settle();
+        await advance(20);
+        expect(early!.isConnected).toBe(false);
+        expect(query('img.lg-dummy-img')).not.toBeNull();
+
+        early!.dispatchEvent(new Event('load'));
+        await advance(310);
+        expect(query('.lg-item.lg-current.lg-complete')).toBeNull();
+        expect(query('img.lg-dummy-img')).not.toBeNull();
+        expect(query('.lg-item.lg-current img.lg-image')).toBeNull();
+
+        // The flight lands (fallback offset): the real image mounts and
+        // completes on its own load.
+        await advance(SPEED);
+        const real = query('.lg-item.lg-current img.lg-image');
+        expect(real).not.toBeNull();
+        real!.dispatchEvent(new Event('load'));
+        await nextTick();
+        expect(query('.lg-item.lg-current.lg-complete')).not.toBeNull();
+        rectSpy.mockRestore();
+    });
+
+    it('holds the real image until the flight transition actually ends', async () => {
+        // The landing is gated on the slide's own transitionend: a fixed
+        // offset lands mid-flight whenever the transition starts late
+        // (busy main thread) and the image is fast (cached).
+        const transitionEvent = (type: string, propertyName: string) =>
+            Object.assign(new Event(type, { bubbles: true }), {
+                propertyName,
+            });
+        const rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        const Host = defineComponent({
+            components: { LightGallery, LgItem },
+            setup: () => ({
+                items: ITEMS.map((item) => ({
+                    ...item,
+                    lgSize: '1600-1067',
+                })),
+            }),
+            template: `
+                <LightGallery>
+                    <LgItem
+                        v-for="item of items"
+                        :key="item.src"
+                        :item="item"
+                        class="trigger"
+                    >
+                        <img :src="item.thumb" :alt="item.alt" />
+                    </LgItem>
+                </LightGallery>
+            `,
+        });
+        mount(Host, { attachTo: document.body });
+        queryAll('.trigger')[0]!.click();
+        await settle();
+        await advance(20);
+        const item = query('.lg-item.lg-current')!;
+        expect(query('img.lg-dummy-img')).not.toBeNull();
+
+        // Late start, then well past the fixed offset: still flying.
+        await advance(280);
+        item.dispatchEvent(transitionEvent('transitionstart', 'transform'));
+        await advance(400);
+        expect(query('.lg-item.lg-current img.lg-image')).toBeNull();
+        expect(item.classList.contains('lg-start-end-progress')).toBe(true);
+
+        item.dispatchEvent(transitionEvent('transitionend', 'transform'));
+        await settle();
+        expect(query('.lg-item.lg-current img.lg-image')).not.toBeNull();
+        expect(item.classList.contains('lg-start-end-progress')).toBe(false);
+        rectSpy.mockRestore();
+    });
+
     it('flies the thumb as lg-dummy-img and drops it after the load settles', async () => {
         // jsdom rects are 0×0; a real-looking rect makes computeOrigin
         // produce a flight (lgSize is the other precondition).
@@ -468,7 +598,7 @@ describe('zoom-from-origin dummy image', () => {
         expect(query('.lg-outer.lg-first-slide-loading')).not.toBeNull();
 
         // Flight lands: the real image mounts, the dummy stays on top.
-        await advance(SPEED + 120);
+        await advance(SPEED + 220);
         const real = query('.lg-item.lg-current img.lg-image');
         expect(real).not.toBeNull();
         expect(query('img.lg-dummy-img')).not.toBeNull();
@@ -543,7 +673,7 @@ describe('zoom-from-origin dummy image', () => {
         expect(query('.lg-outer.lg-first-slide-loading')).not.toBeNull();
 
         // Flight lands: the poster mounts beneath the dummy.
-        await advance(SPEED + 120);
+        await advance(SPEED + 220);
         const posterEl = query('img.lg-video-poster');
         expect(posterEl).not.toBeNull();
         expect(query('img.lg-dummy-img')).not.toBeNull();

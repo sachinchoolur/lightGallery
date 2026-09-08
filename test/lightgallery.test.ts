@@ -358,3 +358,76 @@ describe('Plugins', () => {
         expect(LG.galleryItems[0].poster).not.toContain('img.youtube.com');
     });
 });
+
+describe('zoom-from-origin flight landing', () => {
+    // The first-slide real image must land only once the flight's
+    // transform transition has ended — a fixed offset lands mid-flight
+    // whenever the transition starts late (busy main thread) and the
+    // image is fast (cached), swapping it in over the scaling thumb.
+    const transitionEvent = (type: string, propertyName: string) =>
+        Object.assign(new Event(type, { bubbles: true }), { propertyName });
+    let rectSpy: jest.SpyInstance;
+    beforeEach(() => {
+        jest.useFakeTimers();
+        rectSpy = jest
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png" data-lg-size="1600-1067">
+                    <img src="a-thumb.png" />
+                </a>
+            </div>`;
+    });
+    afterEach(() => {
+        rectSpy.mockRestore();
+        jest.useRealTimers();
+    });
+    const open = () => {
+        lightGallery(document.getElementById('lightGallery') as HTMLElement, {
+            zoomFromOrigin: true,
+            startAnimationDuration: 400,
+        });
+        // Click the trigger: the flight needs the origin element.
+        (document.querySelector('#lightGallery a') as HTMLElement).click();
+        jest.advanceTimersByTime(20);
+        // Only the thumb dummy flies; the real image is held back.
+        expect(document.querySelector('.lg-dummy-img')).toHaveAttribute(
+            'src',
+            'a-thumb.png',
+        );
+        expect(document.querySelector('.lg-object')).toBeNull();
+        return document.querySelector('.lg-item.lg-current') as HTMLElement;
+    };
+
+    it('lands on the fixed offset when no transition ever starts', () => {
+        open();
+        jest.advanceTimersByTime(470);
+        expect(document.querySelector('.lg-object')).toBeNull();
+        jest.advanceTimersByTime(30);
+        expect(document.querySelector('.lg-object')).toBeInTheDocument();
+    });
+
+    it('holds the real image until the flight transition ends', () => {
+        const item = open();
+        jest.advanceTimersByTime(280);
+        item.dispatchEvent(transitionEvent('transitionstart', 'transform'));
+        // Past the fixed offset, still flying: nothing lands.
+        jest.advanceTimersByTime(400);
+        expect(document.querySelector('.lg-object')).toBeNull();
+        expect(document.querySelector('.lg-dummy-img')).toBeInTheDocument();
+        item.dispatchEvent(transitionEvent('transitionend', 'transform'));
+        expect(document.querySelector('.lg-object')).toBeInTheDocument();
+        expect(item).not.toHaveClass('lg-start-end-progress');
+        expect(item.getAttribute('style')).toBeNull();
+    });
+});

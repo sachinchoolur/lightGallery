@@ -169,6 +169,63 @@ describe('uncontrolled mode', () => {
 });
 
 describe('zoom-from-origin dummy image', () => {
+    it('holds the real image until the flight transition actually ends', () => {
+        // The landing is gated on the slide's own transitionend: a fixed
+        // offset lands mid-flight whenever the transition starts late
+        // (busy main thread) and the image is fast (cached).
+        const transitionEvent = (type: string, propertyName: string) =>
+            Object.assign(new Event(type, { bubbles: true }), {
+                propertyName,
+            });
+        const rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        render(
+            <LightGallery>
+                {items.map((item) => (
+                    <LightGalleryItem
+                        key={item.src}
+                        item={{ ...item, lgSize: '1600-1067' }}
+                        href={item.src}
+                        data-testid={`trigger-${item.alt}`}
+                    >
+                        <img src={item.thumb} alt={`${item.alt} thumbnail`} />
+                    </LightGalleryItem>
+                ))}
+            </LightGallery>,
+        );
+        fireEvent.click(screen.getByTestId('trigger-a'));
+        tick(20);
+        const item = document.querySelector('.lg-item.lg-current')!;
+        expect(document.querySelector('img.lg-dummy-img')).toBeInTheDocument();
+
+        // Late start, then well past the fixed offset: still flying.
+        tick(280);
+        act(() => {
+            item.dispatchEvent(transitionEvent('transitionstart', 'transform'));
+        });
+        tick(400);
+        expect(document.querySelector('img.lg-object')).toBeNull();
+        expect(item).toHaveClass('lg-start-end-progress');
+
+        act(() => {
+            item.dispatchEvent(transitionEvent('transitionend', 'transform'));
+        });
+        expect(document.querySelector('img.lg-object')).toBeInTheDocument();
+        expect(item).not.toHaveClass('lg-start-end-progress');
+        rectSpy.mockRestore();
+    });
+
     it('flies the thumb as lg-dummy-img and drops it after the load settles', () => {
         // jsdom rects are 0×0; a real-looking rect makes computeOrigin
         // produce a flight (lgSize is the other precondition).
@@ -215,8 +272,9 @@ describe('zoom-from-origin dummy image', () => {
             document.querySelector('.lg-outer.lg-first-slide-loading'),
         ).toBeInTheDocument();
 
-        // Flight lands: the real image mounts, the dummy stays on top.
-        tick(520);
+        // Flight lands (no transition here: the fallback offset), the
+        // real image mounts and the dummy stays on top.
+        tick(620);
         const real = document.querySelector('img.lg-object');
         expect(real).toBeInTheDocument();
         expect(document.querySelector('img.lg-dummy-img')).toBeInTheDocument();
