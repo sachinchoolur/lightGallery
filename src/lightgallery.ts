@@ -537,19 +537,33 @@ export class LightGallery {
         this.defaultIcons = { ...this.defaultIcons, ...icons };
     }
 
+    /**
+     * Cache the fitted (contain) size of a slide's media. Every consumer
+     * of `currentImageSize` measures against the CURRENT slide: the
+     * actual-size zoom divides the natural width by it, and the
+     * zoom-from-origin close flight positions against it. Recomputed on
+     * every slide change, not just at open — one cached landscape size
+     * makes a portrait slide zoom to the wrong scale and then snap to
+     * its real size when the natural-px swap lands.
+     */
+    private updateCurrentImageSize(index: number): void {
+        const { __slideVideoInfo } = this.galleryItems[index];
+        const { top, bottom } = this.mediaContainerPosition;
+        this.currentImageSize = utils.getSize(
+            this.items[index],
+            this.outer,
+            top + bottom,
+            __slideVideoInfo && this.settings.videoMaxSize,
+        );
+    }
+
     refreshOnResize(): void {
         if (this.lgOpened) {
             const currentGalleryItem = this.galleryItems[this.index];
             const { __slideVideoInfo } = currentGalleryItem;
 
             this.mediaContainerPosition = this.getMediaContainerPosition();
-            const { top, bottom } = this.mediaContainerPosition;
-            this.currentImageSize = utils.getSize(
-                this.items[this.index],
-                this.outer,
-                top + bottom,
-                __slideVideoInfo && this.settings.videoMaxSize,
-            );
+            this.updateCurrentImageSize(this.index);
             if (__slideVideoInfo) {
                 this.resizeVideoSlide(this.index, this.currentImageSize);
             }
@@ -1791,6 +1805,10 @@ export class LightGallery {
                 this.getSlideType(currentGalleryItem),
             );
             this.setDownloadValue(index);
+
+            // The fitted size belongs to the slide on screen; consumers
+            // (actual-size zoom, the close flight) measure against it.
+            this.updateCurrentImageSize(index);
 
             if (videoInfo) {
                 const { top, bottom } = this.mediaContainerPosition;

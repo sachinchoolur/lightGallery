@@ -571,3 +571,66 @@ describe('drag hand-back ordering', () => {
         ]);
     });
 });
+
+describe('fitted media size follows the current slide', () => {
+    // Everything that measures against the fitted size (actual-size
+    // zoom, the close flight) reads one cached value. Caching it only at
+    // open makes a portrait slide reached by navigation measure against
+    // the opening slide's landscape width: the zoom animates to the
+    // wrong scale and then snaps when the natural-px swap lands.
+    const STAGE = { width: 1000, height: 800 };
+    let widthSpy: jest.SpyInstance;
+    let heightSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+        jest.useFakeTimers();
+        widthSpy = jest
+            .spyOn(HTMLElement.prototype, 'clientWidth', 'get')
+            .mockImplementation(function (this: HTMLElement) {
+                return this.classList.contains('lg-outer') ? STAGE.width : 0;
+            });
+        heightSpy = jest
+            .spyOn(HTMLElement.prototype, 'clientHeight', 'get')
+            .mockImplementation(function (this: HTMLElement) {
+                return this.classList.contains('lg-outer') ? STAGE.height : 0;
+            });
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png" data-lg-size="1600-1067">
+                    <img src="a-t.png" />
+                </a>
+                <a href="b.png" data-lg-size="1067-1600">
+                    <img src="b-t.png" />
+                </a>
+            </div>`;
+    });
+    afterEach(() => {
+        widthSpy.mockRestore();
+        heightSpy.mockRestore();
+        jest.runOnlyPendingTimers();
+        jest.useRealTimers();
+        document.body.innerHTML = '';
+    });
+
+    it('recomputes the fit when the slide changes', () => {
+        const lg = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+            { zoomFromOrigin: false, speed: 0 },
+        );
+        const outer = document.querySelector<HTMLElement>('.lg-outer')!;
+        outer.style.padding = '0px';
+
+        lg.openGallery(0);
+        jest.advanceTimersByTime(500);
+        // Landscape: width-constrained by the 1000px stage.
+        const landscape = lg.currentImageSize!;
+        expect(Math.round(landscape.width)).toBe(1000);
+
+        lg.slide(1, false, false, 'next');
+        jest.advanceTimersByTime(500);
+        // Portrait: height-constrained, so a much narrower box.
+        const portrait = lg.currentImageSize!;
+        expect(Math.round(portrait.height)).toBe(800);
+        expect(Math.round(portrait.width)).toBe(534);
+        expect(portrait.width).toBeLessThan(landscape.width);
+    });
+});
