@@ -220,6 +220,46 @@ describe('useGalleryGestures', () => {
         wrapper.unmount();
     });
 
+    it('snaps the released slide home before transitions come back', async () => {
+        // The inline transform has to go while transition-property is
+        // still none. Handing back first animates the snap, and the
+        // outgoing slide is seen drifting toward the centre while its
+        // fade is still running.
+        // A non-slide mode: the forced lg-slide geometry must be gone by
+        // the hand-back too, or the slides animate between the two modes.
+        const wrapper = await openAndLoad([], { mode: 'lg-fade' });
+        const item = query('.lg-item.lg-current')!;
+        Object.defineProperty(item, 'offsetWidth', {
+            value: 400,
+            configurable: true,
+        });
+        firePointer(item, 'pointerdown', { x: 200, y: 100 });
+        await settle();
+        firePointer(window, 'pointermove', { x: 120, y: 100 });
+        firePointer(window, 'pointerup', { x: 120, y: 100 });
+
+        const outer = query('.lg-outer')!;
+        let transformAtHandback: string | undefined;
+        let slideModeAtHandback: boolean | undefined;
+        const realRemove = outer.classList.remove.bind(outer.classList);
+        vi.spyOn(outer.classList, 'remove').mockImplementation(
+            (...names: string[]) => {
+                if (names.includes('lg-dragging')) {
+                    transformAtHandback = item.style.transform;
+                    slideModeAtHandback = outer.classList.contains('lg-slide');
+                }
+                realRemove(...names);
+            },
+        );
+
+        vi.advanceTimersByTime(2000);
+        await settle();
+        expect(transformAtHandback).toBe('');
+        expect(slideModeAtHandback).toBe(false);
+        expect(item.style.transform).toBe('');
+        wrapper.unmount();
+    });
+
     it('snaps back below the swipe threshold', async () => {
         const wrapper = await openAndLoad();
 
@@ -341,6 +381,27 @@ describe('useGalleryGestures', () => {
         wrapper.unmount();
     });
 
+    it('does not move a vertical drag when the gallery cannot close', async () => {
+        // closable:false (the inline setup) forces swipeToClose off, so
+        // the drag applies nothing; springing on release would jump the
+        // slide to the drag offset and animate it back.
+        const wrapper = await openAndLoad([], { closable: false });
+
+        const item = query('.lg-item.lg-current')!;
+        firePointer(item, 'pointerdown', { x: 200, y: 100 });
+        await settle();
+        firePointer(window, 'pointermove', { x: 200, y: 180 });
+        firePointer(window, 'pointermove', { x: 200, y: 260 });
+        expect(item.style.transform).toBe('');
+        firePointer(window, 'pointerup', { x: 200, y: 260 });
+        vi.advanceTimersByTime(2000);
+        await settle();
+
+        expect(item.style.transform).toBe('');
+        expect(query('.lg-backdrop')!.style.opacity).toBe('');
+        wrapper.unmount();
+    });
+
     it('navigates on mousewheel (throttled) and arrow keys', async () => {
         const wrapper = await openAndLoad();
         const outer = query('.lg-outer')!;
@@ -381,27 +442,6 @@ describe('useGalleryGestures', () => {
         );
         await settle();
         expect(query('.lg-counter-current')!.textContent!.trim()).toBe('1');
-    it('does not move a vertical drag when the gallery cannot close', async () => {
-        // closable:false (the inline setup) forces swipeToClose off, so
-        // the drag applies nothing; springing on release would jump the
-        // slide to the drag offset and animate it back.
-        const wrapper = await openAndLoad([], { closable: false });
-
-        const item = query('.lg-item.lg-current')!;
-        firePointer(item, 'pointerdown', { x: 200, y: 100 });
-        await settle();
-        firePointer(window, 'pointermove', { x: 200, y: 180 });
-        firePointer(window, 'pointermove', { x: 200, y: 260 });
-        expect(item.style.transform).toBe('');
-        firePointer(window, 'pointerup', { x: 200, y: 260 });
-        vi.advanceTimersByTime(2000);
-        await settle();
-
-        expect(item.style.transform).toBe('');
-        expect(query('.lg-backdrop')!.style.opacity).toBe('');
-        wrapper.unmount();
-    });
-
         wrapper.unmount();
     });
 

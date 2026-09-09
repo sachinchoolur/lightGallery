@@ -136,7 +136,6 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
     /** Return every mid-drag DOM mutation to what Vue last rendered. */
     function restoreDragVisuals(drag: DragSession): void {
         const el = outer.value;
-        el?.classList.remove('lg-dragging');
         el?.parentElement?.classList.remove('lg-dragging-vertical');
         if (drag.hidUi) {
             el?.classList.remove('lg-hide-items');
@@ -151,13 +150,31 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
         // pointerup), and real events drain microtasks between the two
         // listeners — the closing transform is already painted and this
         // wipe would kill the exit flight in place.
-        el?.querySelectorAll<HTMLElement>('.lg-item').forEach((slide) => {
-            if (slide.classList.contains('lg-start-end-progress')) {
-                return;
-            }
+        // Drop the transforms while the inline `transition-property:
+        // none` still holds, so each slide snaps to its resting place in
+        // a single frame. Clearing that first animates the snap instead,
+        // and the outgoing slide is seen travelling back toward the
+        // centre while its fade is still running.
+        const settled = Array.from(
+            el?.querySelectorAll<HTMLElement>('.lg-item') ?? [],
+        ).filter((slide) => !slide.classList.contains('lg-start-end-progress'));
+        settled.forEach((slide) => {
             slide.style.transform = '';
+        });
+        // The gesture forced lg-slide geometry onto whatever mode is
+        // configured; drop it inside the same suppressed frame. The
+        // framework's own state flip lands a render later, once
+        // transitions are live, and every slide then animates from the
+        // slide-mode resting place to the configured one.
+        if (settings().mode !== 'lg-slide') {
+            el?.classList.remove('lg-slide');
+        }
+        // Flush the snap before transitions come back.
+        void el?.offsetHeight;
+        settled.forEach((slide) => {
             slide.style.transitionProperty = '';
         });
+        el?.classList.remove('lg-dragging');
         if (drag.els?.backdrop) {
             drag.els.backdrop.style.opacity = '';
         }

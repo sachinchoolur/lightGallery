@@ -2102,8 +2102,7 @@ export class LightGallery {
             },
             () => {
                 this.cancelSlideSpring = undefined;
-                this.outer.removeClass('lg-dragging');
-                this.outer.find('.lg-item').removeAttr('style');
+                this.endDragVisuals();
             },
         );
         return true;
@@ -2161,17 +2160,36 @@ export class LightGallery {
             },
             () => {
                 this.cancelSlideSpring = undefined;
-                this.outer.removeClass('lg-dragging');
-                this.outer.find('.lg-item').removeAttr('style');
-                // The gesture forced lg-slide geometry; restore the
-                // configured mode for the next button navigation (the
-                // timer-based restore skips while lg-dragging is on).
-                if (this.settings.mode !== 'lg-slide') {
-                    this.outer.removeClass('lg-slide');
-                }
+                // Hands the slides back AND drops the forced lg-slide
+                // geometry (the timer-based restore skips while
+                // lg-dragging is on).
+                this.endDragVisuals();
             },
         );
         return true;
+    }
+
+    /**
+     * Hand the slides back to CSS after a gesture. The inline transforms
+     * go first, while lg-dragging still pins transition-duration to 0s,
+     * so the snap from the released position to the slide's resting
+     * place lands in a single frame. Dropping the class first animates
+     * that snap instead, and the outgoing slide is seen travelling back
+     * toward the centre while its fade is still running.
+     */
+    private endDragVisuals(): void {
+        this.outer.find('.lg-item').removeAttr('style');
+        // The gesture forced lg-slide geometry onto whatever mode is
+        // configured; drop it inside the same suppressed frame. Restoring
+        // the mode after the hand-back animates every slide from the
+        // slide-mode resting place to the configured one, which is the
+        // outgoing slide gliding back to the centre as it fades.
+        if (this.settings.mode !== 'lg-slide') {
+            this.outer.removeClass('lg-slide');
+        }
+        // Flush the snap before transitions come back.
+        void this.outer.get().offsetHeight;
+        this.outer.removeClass('lg-dragging');
     }
 
     /**
@@ -2199,8 +2217,7 @@ export class LightGallery {
             () => {
                 this.cancelSlideSpring = undefined;
                 this.$container.removeClass('lg-dragging-vertical');
-                this.outer.removeClass('lg-dragging');
-                this.outer.find('.lg-item').removeAttr('style');
+                this.endDragVisuals();
                 this.$backdrop.css('opacity', 1);
             },
         );
@@ -2291,8 +2308,7 @@ export class LightGallery {
                 }
             }
             if (!springing) {
-                this.outer.removeClass('lg-dragging');
-                this.outer.find('.lg-item').removeAttr('style');
+                this.endDragVisuals();
                 this.$backdrop.css('opacity', 1);
             }
 

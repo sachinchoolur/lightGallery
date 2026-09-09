@@ -127,7 +127,6 @@ export function useGalleryGestures({
     /** Return every mid-drag DOM mutation to what React last rendered. */
     const restoreDragVisuals = (session: DragSession) => {
         const outer = outerRef.current;
-        outer?.classList.remove('lg-dragging');
         outer?.parentElement?.classList.remove('lg-dragging-vertical');
         if (session.hidUi) {
             outer?.classList.remove('lg-hide-items');
@@ -142,13 +141,31 @@ export function useGalleryGestures({
         // pointerup), and real events drain microtasks between the two
         // listeners — the closing transform is already painted and this
         // wipe would kill the exit flight in place.
-        outer?.querySelectorAll<HTMLElement>('.lg-item').forEach((el) => {
-            if (el.classList.contains('lg-start-end-progress')) {
-                return;
-            }
+        // Drop the transforms while the inline `transition-property:
+        // none` still holds, so each slide snaps to its resting place in
+        // a single frame. Clearing that first animates the snap instead,
+        // and the outgoing slide is seen travelling back toward the
+        // centre while its fade is still running.
+        const settled = Array.from(
+            outer?.querySelectorAll<HTMLElement>('.lg-item') ?? [],
+        ).filter((el) => !el.classList.contains('lg-start-end-progress'));
+        settled.forEach((el) => {
             el.style.transform = '';
+        });
+        // The gesture forced lg-slide geometry onto whatever mode is
+        // configured; drop it inside the same suppressed frame. The
+        // framework's own state flip lands a render later, once
+        // transitions are live, and every slide then animates from the
+        // slide-mode resting place to the configured one.
+        if (settingsRef.current.mode !== 'lg-slide') {
+            outer?.classList.remove('lg-slide');
+        }
+        // Flush the snap before transitions come back.
+        void outer?.offsetHeight;
+        settled.forEach((el) => {
             el.style.transitionProperty = '';
         });
+        outer?.classList.remove('lg-dragging');
         if (session.els?.backdrop) {
             session.els.backdrop.style.opacity = '';
         }

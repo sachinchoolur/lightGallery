@@ -522,3 +522,52 @@ describe('per-property transition durations', () => {
         expect(inner.style.getPropertyValue('--lg-speed')).toBe('250ms');
     });
 });
+
+describe('drag hand-back ordering', () => {
+    // Everything that changes a slide's resting place has to happen
+    // while lg-dragging still pins transition-duration to 0s. Anything
+    // done after it animates, and the outgoing slide is seen gliding
+    // back toward the centre as it fades.
+    const endDragVisuals = (
+        LightGallery.prototype as unknown as Record<string, () => void>
+    )['endDragVisuals'];
+
+    const record = (mode: string): string[] => {
+        const order: string[] = [];
+        const outer = {
+            find: () => ({
+                removeAttr: () => {
+                    order.push('clear-inline-styles');
+                },
+            }),
+            get: () => ({
+                get offsetHeight() {
+                    order.push('flush');
+                    return 0;
+                },
+            }),
+            removeClass: (name: string) => {
+                order.push(`remove:${name}`);
+            },
+        };
+        endDragVisuals.call({ settings: { mode }, outer });
+        return order;
+    };
+
+    it('drops the styles and the forced mode before handing back', () => {
+        expect(record('lg-fade')).toEqual([
+            'clear-inline-styles',
+            'remove:lg-slide',
+            'flush',
+            'remove:lg-dragging',
+        ]);
+    });
+
+    it('leaves the mode class alone when slide IS the mode', () => {
+        expect(record('lg-slide')).toEqual([
+            'clear-inline-styles',
+            'flush',
+            'remove:lg-dragging',
+        ]);
+    });
+});

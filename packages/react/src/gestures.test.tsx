@@ -214,6 +214,43 @@ describe('horizontal swipe', () => {
         expect(item.style.transform).toBe('');
     });
 
+    it('snaps the released slide home before transitions come back', () => {
+        // The inline transform has to go while transition-property is
+        // still none. Handing back first animates the snap, and the
+        // outgoing slide is seen drifting toward the centre while its
+        // fade is still running.
+        // A non-slide mode: the forced lg-slide geometry must be gone by
+        // the hand-back too, or the slides animate between the two modes.
+        openAndLoad({ mode: 'lg-fade' });
+        const item = currentSlide();
+        Object.defineProperty(item, 'offsetWidth', {
+            value: 400,
+            configurable: true,
+        });
+        firePointer(item, 'pointerdown', { x: 200, y: 100 });
+        firePointer(window, 'pointermove', { x: 120, y: 100 });
+        firePointer(window, 'pointerup', { x: 120, y: 100 });
+
+        const outer = document.querySelector('.lg-outer')!;
+        let transformAtHandback: string | undefined;
+        let slideModeAtHandback: boolean | undefined;
+        const realRemove = outer.classList.remove.bind(outer.classList);
+        vi.spyOn(outer.classList, 'remove').mockImplementation(
+            (...names: string[]) => {
+                if (names.includes('lg-dragging')) {
+                    transformAtHandback = item.style.transform;
+                    slideModeAtHandback = outer.classList.contains('lg-slide');
+                }
+                realRemove(...names);
+            },
+        );
+
+        tick(2000);
+        expect(transformAtHandback).toBe('');
+        expect(slideModeAtHandback).toBe(false);
+        expect(item.style.transform).toBe('');
+    });
+
     it('snaps back below the threshold', () => {
         openAndLoad();
         const item = currentSlide();
