@@ -4,7 +4,7 @@ All notable changes to lightGallery. The format follows
 [Keep a Changelog](https://keepachangelog.com/); versions follow
 [Semantic Versioning](https://semver.org/).
 
-## 3.0.0 — unreleased
+## 3.0.0 (unreleased)
 
 Version 3 restructures lightGallery around a shared, framework-free core
 and ships native packages for React, Vue and Angular. The vanilla API is
@@ -12,18 +12,18 @@ unchanged; what moved is the packaging and the framework integrations.
 
 ### Packages
 
-- **`@lightgallery/headless`** — new. The gallery's logic without a DOM:
+- **`@lightgallery/headless`**, new. The gallery's logic without a DOM:
   state machine, settings resolution, gesture and zoom math, thumbnail
   windowing, URL drivers, video URL helpers. Every package below builds on it.
-- **`@lightgallery/react`** — new native React package. Components, render
+- **`@lightgallery/react`**, new native React package. Components, render
   slots, callbacks and an imperative handle; React owns every DOM node.
   Replaces the `lightgallery/react` wrapper.
-- **`@lightgallery/vue`** — new native Vue 3 package. `v-model` for the open
+- **`@lightgallery/vue`**, new native Vue 3 package. `v-model` for the open
   state, slots, `Teleport`. Replaces the `lightgallery/vue` wrapper.
-- **`@lightgallery/angular`** — new native Angular package. Standalone
+- **`@lightgallery/angular`**, new native Angular package. Standalone
   components, signal inputs, zoneless change detection, CDK overlay.
   Replaces the `lightgallery/angular` wrapper.
-- **`lightgallery`** — the vanilla package, modernized build with an
+- **`lightgallery`**, the vanilla package, modernized build with an
   `exports` map; plugins remain separate entries under `lightgallery/plugins/*`.
 
 ### Added

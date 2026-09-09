@@ -1,7 +1,7 @@
 ---
 title: 'Justified layout'
-description: 'Lay gallery thumbnails out in justified rows — equal heights, varying widths, filling the container edge to edge — in vanilla JavaScript, React, Vue and Angular.'
-lead: 'Justified thumbnail rows for every lightGallery package — no extra dependencies.'
+description: 'Lay gallery thumbnails out in justified rows, equal heights, varying widths, filling the container edge to edge, in vanilla JavaScript, React, Vue and Angular.'
+lead: 'Justified thumbnail rows for every lightGallery package, no extra dependencies.'
 date: 2026-08-07T00:00:00.000Z
 draft: false
 images: []
@@ -34,7 +34,7 @@ How it works, in every package:
 -   `maxScale` clamps how tall a sparse row may grow, as a multiple
     of the target row height.
 
-All packages share one stylesheet — it is not part of the bundle, so
+All packages share one stylesheet, it is not part of the bundle, so
 galleries that do not use the layout pay zero bytes:
 
 ```js
@@ -182,5 +182,4 @@ const { boxes, containerHeight } = getJustifiedLayout({
 // boxes: [{ top, start, width, height }, ...] in reading order.
 ```
 
-`start` offsets are logical — measured from the reading-start edge —
-so the same output positions a grid in LTR and RTL.
+`start` offsets are logical, measured from the reading-start edge, so the same output positions a grid in LTR and RTL.

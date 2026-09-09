@@ -1,7 +1,7 @@
 ---
 title: 'Web Share'
-description: 'The share plugin opens the native OS share sheet on touch devices and falls back to the classic dropdown — plus the X share target.'
-lead: 'Native OS share sheet first, classic dropdown as the fallback — and sharing targets brought up to date.'
+description: 'The share plugin opens the native OS share sheet on touch devices and falls back to the classic dropdown, plus the X share target.'
+lead: 'Native OS share sheet first, classic dropdown as the fallback, and sharing targets brought up to date.'
 date: 2026-08-07T00:00:00.000Z
 draft: false
 images: []
@@ -12,7 +12,7 @@ toc: true
 
 The share plugin in v3 is a **hybrid**: where the
 [Web Share API](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share)
-is available, the share button opens the native OS share sheet — the
+is available, the share button opens the native OS share sheet, the
 user shares to any app on their device, not just the networks in a
 dropdown. Everywhere else (and whenever the browser vetoes the
 payload) the classic dropdown appears, exactly as before.
@@ -30,7 +30,7 @@ lightGallery(el, {
     keeps the dropdown. Set `preferNativeShare` explicitly to
     override in either direction.
 -   If the browser rejects the payload (`navigator.canShare`), the
-    click falls back to the dropdown — which stays rendered
+    click falls back to the dropdown, which stays rendered
     underneath, so there is always a working share path.
 -   A user dismissing the OS sheet is not an error; nothing else
     happens.
@@ -60,8 +60,7 @@ The native payload is assembled per slide:
 | `title` | item `title` → `alt` |
 | `text` | `tweetText` → `pinterestText` |
 
-`shareUrl` is a new item field (`data-share-url` in vanilla markup) —
-one canonical share link per slide, used by the native sheet and
+`shareUrl` is a new item field (`data-share-url` in vanilla markup), one canonical share link per slide, used by the native sheet and
 available to custom targets.
 
 ```html

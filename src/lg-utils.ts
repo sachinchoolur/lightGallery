@@ -330,7 +330,7 @@ const utils = {
     ): string | undefined {
         // Degenerate measurement (zero-sized/hidden viewport, offsets
         // taller than the stage): the shared math would emit a mirrored
-        // flight — fall back to the startClass fade instead (the sibling
+        // flight, fall back to the startClass fade instead (the sibling
         // bindings guard the same way).
         if (!imageSize || imageSize.width <= 0 || imageSize.height <= 0) {
             return;
@@ -344,8 +344,8 @@ const utils = {
 
         // Viewport coords straight from the rect. `offset()` folds in a
         // body-margin correction that shifts the origin on any centered
-        // body (`margin: auto`) — the long-standing "flight starts beside
-        // the thumbnail" bug — and the old padding/border terms adjusted
+        // body (`margin: auto`), the long-standing "flight starts beside
+        // the thumbnail" bug, and the old padding/border terms adjusted
         // in the wrong direction on styled thumbnails.
         const rect = LGel.get().getBoundingClientRect();
         const triggerRect = {
@@ -361,7 +361,7 @@ const utils = {
                 left: containerRect.left,
                 top: containerRect.top,
                 width: containerRect.width,
-                // Element height, not rect height — includes the mobile
+                // Element height, not rect height, includes the mobile
                 // safari bottom bar handling this always had.
                 height: container.height(),
             },
@@ -601,7 +601,7 @@ const utils = {
         }
 
         // Documented deviation from the shared helper: 2.x ignores the
-        // html5 flag once a src is present — a URL matching no provider
+        // html5 flag once a src is present, a URL matching no provider
         // is not a video, video payload or not.
         return getVideoInfo(src, false);
     },

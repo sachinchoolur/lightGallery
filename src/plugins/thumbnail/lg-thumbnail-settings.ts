@@ -73,7 +73,7 @@ export interface ThumbnailsSettings {
      * Scrub the gallery with the thumbnail strip: while the strip is
      * dragged (or gliding after a fling), the slide under the strip's
      * travel position becomes current immediately, without slide
-     * transitions — the strip works like a scrubber instead of an
+     * transitions, the strip works like a scrubber instead of an
      * independent scroll area. The full strip travel spans the whole
      * gallery, so the first and last slides are always reachable.
      * Requires `animateThumb`; taps still navigate normally.
@@ -95,7 +95,7 @@ export interface ThumbnailsSettings {
 
     /**
      * Custom translation strings for aria-labels
-     * @deprecated Set these labels on the core `strings` object instead —
+     * @deprecated Set these labels on the core `strings` object instead,
      * every user-facing string lives in that one contract. An explicitly set
      * key here still wins (alias).
      */

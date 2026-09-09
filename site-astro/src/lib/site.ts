@@ -36,7 +36,7 @@ export interface MenuItem {
 
 /**
  * Top navigation (Hugo `menus.toml` [[main]]). The three framework items
- * share weight 50, which Hugo breaks alphabetically — hence
+ * share weight 50, which Hugo breaks alphabetically, hence
  * Angular/React/Vue order.
  */
 export const MAIN_MENU: MenuItem[] = [

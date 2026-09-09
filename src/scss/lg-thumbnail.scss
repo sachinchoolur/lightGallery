@@ -5,7 +5,7 @@ $thumbnails-margin: 5px;
 
 .lg-outer {
     // Scrub session (scrubThumbnails): the strip drives the gallery
-    // frame by frame — slide swaps must land instantly, so every slide
+    // frame by frame, slide swaps must land instantly, so every slide
     // transition is off while the session runs.
     &.lg-thumb-scrubbing {
         .lg-item {

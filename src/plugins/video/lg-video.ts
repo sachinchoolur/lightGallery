@@ -54,7 +54,7 @@ declare global {
     }
 }
 
-// One in-flight/settled promise per provider script URL, page-wide — the
+// One in-flight/settled promise per provider script URL, page-wide, the
 // player APIs load on demand at first play (lite-embed) instead of being
 // a documented include for the integrator. Never rejects: consumers check
 // the provider global afterwards, matching the old error-log behavior.
@@ -418,7 +418,7 @@ export default class Video {
     }
 
     /**
-     * Queue a Wistia command and load E-v1.js on demand — `_wq` is
+     * Queue a Wistia command and load E-v1.js on demand, `_wq` is
      * Wistia's own pre-load command queue, drained when the script lands.
      */
     private pushWistiaCommand(command: unknown): void {

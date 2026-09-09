@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 /**
- * The /demos/ index — grouped by what a visitor is looking for rather
+ * The /demos/ index, grouped by what a visitor is looking for rather
  * than one flat alphabetical list. Slugs, not titles, key the groups so
  * retitling a page never moves it (and never silently drops it: anything
  * unlisted falls into "More demos").
@@ -122,9 +122,9 @@ const all = leftovers.length
 <BaseLayout
     bodyClass="demos list"
     meta={{
-        title: `Demos — ${entries.length} JavaScript gallery examples`,
+        title: `Demos: ${entries.length} JavaScript gallery examples`,
         description:
-            'Live lightGallery demos: thumbnails, zoom, video, captions, carousels, React, justified layout and more — each with the code to copy.',
+            'Live lightGallery demos: thumbnails, zoom, video, captions, carousels, React, justified layout and more, each with the code to copy.',
         breadcrumbs: [{ name: 'Demos', url: '/demos/' }],
     }}
 >

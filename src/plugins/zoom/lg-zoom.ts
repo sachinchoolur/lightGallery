@@ -195,7 +195,7 @@ export default class Zoom {
             // Rendered size, transform-independent: the actual-size
             // machinery rewrites the element's layout after a zoom
             // (reset-transition !important transform, natural-px swap),
-            // so a rect read races it — the fitted size scaled by the
+            // so a rect read races it, the fitted size scaled by the
             // live zoom is stable in every mode.
             const visual = this.getVisualImageSize(
                 $image,
@@ -360,7 +360,7 @@ export default class Zoom {
             .first();
 
         // The natural-px swap must wait out the running zoom animation
-        // (button bounce or gesture settle) — firing mid-flight cuts it.
+        // (button bounce or gesture settle), firing mid-flight cuts it.
         // Both timers also stand down if a NEW gesture grabbed the image
         // meanwhile: swapping to natural px (and the reset-transition
         // !important rules) mid-pinch freezes the visible zoom and
@@ -387,7 +387,7 @@ export default class Zoom {
                 const dragAllowedAxises = this.getDragAllowedAxises(this.scale);
 
                 // The natural-px swap uses the same actual-size
-                // reference as the scale — `naturalWidth` is density-
+                // reference as the scale, `naturalWidth` is density-
                 // corrected under srcset/sizes and would swap to
                 // roughly the fitted size. Height follows the rendered
                 // aspect ratio (ratios don't lie).
@@ -494,7 +494,7 @@ export default class Zoom {
 
     getNaturalWidth(index: number): number {
         const $image = this.core.getSlideItem(index).find('.lg-image').first();
-        // Declared tiers first — `img.naturalWidth` lies under
+        // Declared tiers first, `img.naturalWidth` lies under
         // srcset/sizes (density-corrected to roughly the slot width;
         // actual-size zoom collapses to ~1 on phones): data-width, the
         // ladder's largest candidate, lg-size, then the element.
@@ -529,7 +529,7 @@ export default class Zoom {
             .first();
         const image = $image.get() as HTMLImageElement;
         // The FITTED width is the stable denominator in every mode. The
-        // element's offsetWidth reads the current layout — after the
+        // element's offsetWidth reads the current layout, after the
         // actual-size swap that IS naturalWidth, and dividing by it
         // returns 1: settleIntoBounds would then clamp a tap on a
         // zoomed image into a full animated un-zoom back to fit.
@@ -537,7 +537,7 @@ export default class Zoom {
         if (!width) {
             if (this.core.outer.hasClass('lg-actual-size')) {
                 // zoomFromOrigin:false, dynamic mode and items without
-                // lg-size never populate currentImageSize — recompute the
+                // lg-size never populate currentImageSize, recompute the
                 // contain-fit analytically from the stage box instead of
                 // trusting the swapped element's layout.
                 if (!this.containerRect) {
@@ -662,7 +662,7 @@ export default class Zoom {
                 ) {
                     return;
                 }
-                // A release spring runs with touchAction unset — left
+                // A release spring runs with touchAction unset, left
                 // running it would overwrite the reset below from its
                 // next frame and finish at the OLD layout's clamp target.
                 this.stopZoomSpring();
@@ -812,14 +812,14 @@ export default class Zoom {
     /**
      * Any gesture end must leave the image inside its pan bounds: a tap
      * interrupts a settling spring (stopZoomSpring at its touchstart),
-     * and if it never turns into a drag nothing else re-clamps — the
+     * and if it never turns into a drag nothing else re-clamps, the
      * fused pinch pan can legitimately be far outside mid-settle.
      * Springs home from wherever the interruption stopped it; a no-op
      * when already in bounds (the common tap).
      */
     settleIntoBounds(): void {
         // Absolute bounds from the transform-inclusive rendered size
-        // (position-independent — the interrupted position may be far
+        // (position-independent, the interrupted position may be far
         // out of bounds). Per axis the LEGAL ANCHOR range is
         // ±|imageSize − containerSize| / 2 whether or not the image
         // overflows: button/double-tap zooms deliberately park a
@@ -839,8 +839,7 @@ export default class Zoom {
         // the rendered sizes to the clamped target scale
         // (transform-invariant: rect × target / current).
         const actualSizeScale = this.getCurrentImageActualSizeScale();
-        // infiniteZoom lifts the actual-size ceiling everywhere else —
-        // a tap interrupting a glide above it must not spring the scale
+        // infiniteZoom lifts the actual-size ceiling everywhere else, // a tap interrupting a glide above it must not spring the scale
         // back down to the cap.
         const targetScale = this.settings.infiniteZoom
             ? Math.max(this.scale, 1)
@@ -901,7 +900,7 @@ export default class Zoom {
     }
 
     /**
-     * Pinch midpoint relative to the stage centre — the focal anchor the
+     * Pinch midpoint relative to the stage centre, the focal anchor the
      * whole gesture projects through.
      */
     private getPinchMidPoint(e: TouchEvent): Coords {
@@ -926,7 +925,7 @@ export default class Zoom {
      */
     /**
      * Bounds-relevant size of the image: layout offsets swapped and
-     * shrunk by the rotate plugin's wrapper transform when present —
+     * shrunk by the rotate plugin's wrapper transform when present,
      * at 90°/270° the visual width runs along the layout height, and
      * offsets don't see transforms.
      */
@@ -971,7 +970,7 @@ export default class Zoom {
         let startMaxScale = 1;
         let startPan: Coords = { x: 0, y: 0 };
         let startMid: Coords = { x: 0, y: 0 };
-        // Largest scale the gesture reached — the pinch-to-close guard
+        // Largest scale the gesture reached, the pinch-to-close guard
         // (an over-then-under pinch is a correction, not a dismissal).
         let maxGestureScale = 1;
         // The midpoint's live position and velocity samples: two fingers
@@ -1042,7 +1041,7 @@ export default class Zoom {
                 if (pinchStarted) {
                     // With pinch-to-close armed (setting on, closable,
                     // gesture never over fit) the under-fit squeeze is
-                    // free — the shrink is the close affordance;
+                    // free, the shrink is the close affordance;
                     // otherwise it resists with friction.
                     const closeArmed =
                         this.core.settings.pinchToClose &&
@@ -1062,8 +1061,7 @@ export default class Zoom {
                     const scale =
                         Math.round((_scale + Number.EPSILON) * 10000) / 10000;
                     // Project from the gesture-start state so the image
-                    // point under the fingers stays put on every frame —
-                    // and follows the fingers: the midpoint's travel pans
+                    // point under the fingers stays put on every frame, // and follows the fingers: the midpoint's travel pans
                     // 1:1 (fused zoom-and-pan).
                     const mid = this.getPinchMidPoint(e);
                     lastMid = mid;
@@ -1079,8 +1077,7 @@ export default class Zoom {
                         initScale,
                         scale,
                     );
-                    // The pan stays FREE while the pinch is live —
-                    // iOS keeps the focal point glued under the fingers
+                    // The pan stays FREE while the pinch is live, // iOS keeps the focal point glued under the fingers
                     // with no bounds interference during the gesture
                     // (live-clamping against scale-dependent bounds
                     // reads as a drift wobble); the release spring
@@ -1147,9 +1144,9 @@ export default class Zoom {
                     );
                 } else {
                     // Snap into [1, actual size] and re-project the pan
-                    // through the same focal anchor — carried to the
+                    // through the same focal anchor, carried to the
                     // midpoint's last position and projected along its
-                    // momentum — clamped into the exact bounds for the
+                    // momentum, clamped into the exact bounds for the
                     // landed scale. The gesture-start snapshot keeps the
                     // cap identical to the live frames'. Velocity-seeded
                     // springs animate the snap (bounce only where the
@@ -1288,7 +1285,7 @@ export default class Zoom {
             return;
         }
 
-        // The spring drives every frame — CSS transitions stand down
+        // The spring drives every frame, CSS transitions stand down
         // until it settles.
         this.core.outer.addClass('lg-zoom-dragging');
         this.stopZoomSpring();
@@ -1408,7 +1405,7 @@ export default class Zoom {
         // VACATES when zoomed, so the visible stage extends below the
         // content box to the screen bottom. The `+ bottom` floor stops
         // the pan-up exactly where the image's bottom edge meets the
-        // SCREEN bottom — a symmetric content-box clamp would strand a
+        // SCREEN bottom, a symmetric content-box clamp would strand a
         // strip-height gap of black where the thumbnails were.
         const { bottom } = this.core.mediaContainerPosition;
         const minY = (imageHeight - this.containerRect.height) / 2;
@@ -1470,7 +1467,7 @@ export default class Zoom {
                 e.preventDefault();
                 this.stopZoomSpring();
                 // A previous swipe hijacked by a pinch never reaches its
-                // touchend — stale isMoved/endCoords would make the NEXT
+                // touchend, stale isMoved/endCoords would make the NEXT
                 // tap run touchendZoom on garbage deltas.
                 isMoved = false;
                 endCoords = {} as Coords;
@@ -1545,7 +1542,7 @@ export default class Zoom {
                 this.core.touchAction = undefined;
                 this.core.outer.removeClass('lg-zoom-dragging');
                 if (!isMoved) {
-                    // The touchstart stopped any settling spring — a tap
+                    // The touchstart stopped any settling spring, a tap
                     // must not strand an out-of-bounds position.
                     this.settleIntoBounds();
                     return;
@@ -1591,7 +1588,7 @@ export default class Zoom {
                 $item.get().contains(e.target)
             ) {
                 // Only a drag that can actually take over may kill a
-                // settling spring — an (often emulated) mousedown on an
+                // settling spring, an (often emulated) mousedown on an
                 // un-zoomed image would strand the under-fit reset
                 // mid-flight (zoomSwipe guards the same way).
                 if (this.core.outer.hasClass('lg-zoomed')) {
@@ -1677,7 +1674,7 @@ export default class Zoom {
                         getWindowedVelocity(dragSamples, Date.now()),
                     );
                 } else {
-                    // The mousedown stopped any settling spring — a
+                    // The mousedown stopped any settling spring, a
                     // click must not strand an out-of-bounds position.
                     this.settleIntoBounds();
                 }
@@ -1691,7 +1688,7 @@ export default class Zoom {
 
     closeGallery(): void {
         // A settled actual-size zoom swapped the image to natural px and
-        // added the reset-transition !important rules — resetZoom's style
+        // added the reset-transition !important rules, resetZoom's style
         // strip alone would leave the image at natural size, and the
         // zoom-from-origin close would shrink toward the wrong rect.
         if (this.imageReset) {

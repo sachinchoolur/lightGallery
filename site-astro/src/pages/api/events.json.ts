@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 
 import { commentOf, findReflection, interfaceProps, tagText } from '../../lib/apidocs';
 
-/** /api/events.json — custom events with their detail fields, from the events page's blocks. */
+/** /api/events.json, custom events with their detail fields, from the events page's blocks. */
 export const GET: APIRoute = async () => {
     // The page's own blocks decide what is listed, so JSON and HTML agree.
     const page = (await getEntry('docs', 'events'))?.body ?? '';

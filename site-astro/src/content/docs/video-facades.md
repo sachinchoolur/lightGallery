@@ -1,6 +1,6 @@
 ---
 title: 'Video facades'
-description: 'Provider video slides load as lightweight poster facades — the YouTube, Vimeo or Wistia iframe is created only when the user presses play.'
+description: 'Provider video slides load as lightweight poster facades, the YouTube, Vimeo or Wistia iframe is created only when the user presses play.'
 lead: 'Poster-first video slides: the provider iframe loads only when the user presses play.'
 date: 2026-08-07T00:00:00.000Z
 draft: false
@@ -14,13 +14,12 @@ A provider video embed (YouTube, Vimeo, Wistia) drags a lot of
 JavaScript into the page the moment its iframe mounts. In v3 the
 video plugin renders provider slides as **lite facades** by default: a
 poster image with a play button, visually identical to the loaded
-player. The real iframe is created only when the user presses play —
-sliding past a video costs nothing.
+player. The real iframe is created only when the user presses play, sliding past a video costs nothing.
 
 ```js
 lightGallery(el, {
     plugins: [lgVideo],
-    // Facades are the default — set false for the classic
+    // Facades are the default, set false for the classic
     // eager-iframe behavior on all provider slides.
     videoFacade: true,
 });
@@ -36,20 +35,20 @@ The facade needs an image. It resolves, in order:
 
 1.  The item's `poster`.
 2.  For YouTube slides, the thumbnail endpoint
-    (`img.youtube.com`) — controlled by the existing
+    (`img.youtube.com`), controlled by the existing
     `loadYouTubePoster` setting (default `true`).
 3.  The item's `thumb`.
 
 A slide with **no resolvable poster** keeps the previous
-eager-iframe behavior — a facade never renders as an empty box.
+eager-iframe behavior, a facade never renders as an empty box.
 Vimeo and Wistia posters are not synthesized from provider endpoints
 (those need authenticated APIs); give those slides a `poster` or rely
-on the `thumb` chain — with the vimeoThumbnail plugin active, the
+on the `thumb` chain, with the vimeoThumbnail plugin active, the
 fetched Vimeo thumb feeds the chain automatically.
 
 Two settings intentionally bypass the facade: `autoplayFirstVideo`
 (default `true`) and `autoplayVideoOnSlide` materialize the iframe
-immediately — an autoplaying facade would defeat both.
+immediately, an autoplaying facade would defeat both.
 
 HTML5 `<video>` slides are unaffected: they already load metadata
 lazily and keep their native poster handling.

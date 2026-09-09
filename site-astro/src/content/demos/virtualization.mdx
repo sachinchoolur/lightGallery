@@ -1,13 +1,12 @@
 ---
-title: 'Virtualization — 1,000 slide stress test'
+title: 'Virtualization, 1,000 slide stress test'
 description:
     'Open a JavaScript lightbox gallery with 1,000 slides. Virtualization
     keeps the DOM small: only a window of slides and thumbnails render.'
 lead:
     'lightGallery virtualization bounds the number of slides and thumbnails
     that exist in the DOM at any moment, so galleries with thousands of items
-    open instantly and stay smooth. The gallery below holds 1,000 slides —
-    watch the mounted-slide counter while you navigate. Read how it works in
+    open instantly and stay smooth. The gallery below holds 1,000 slides, watch the mounted-slide counter while you navigate. Read how it works in
     the <a href="/docs/virtualization/">virtualization guide</a>.'
 date: 2026-08-08T08:00:00+00:00
 draft: false
@@ -27,7 +26,7 @@ import VirtualizationStress from '../../components/shortcodes/VirtualizationStre
 The slide pool and the thumbnail strip are both windowed: only the slides
 around the active index and the visible thumbnails (plus an overscan) are in
 the DOM, with spacers preserving the strip geometry. The window advances at
-commit points — release, slide change, resize — never per pointer move.
+commit points, release, slide change, resize, never per pointer move.
 
 ##### Setup
 
@@ -106,6 +105,6 @@ import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 </Fragment>
 </CodeTabs>
 
-Virtualization is off when the `virtualization` setting is `undefined` — the
+Virtualization is off when the `virtualization` setting is `undefined`, the
 classic behavior, where every thumbnail renders. See all the knobs in the
 <a href="/docs/settings/#virtualization">settings reference</a>.

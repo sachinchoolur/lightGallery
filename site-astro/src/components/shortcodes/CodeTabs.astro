@@ -1,13 +1,13 @@
 ---
 /**
- * Framework code tabs — the same example in vanilla JavaScript, React,
+ * Framework code tabs, the same example in vanilla JavaScript, React,
  * Vue and Angular.
  *
  * Every panel is rendered into the HTML (crawlers and no-JS readers get
  * all four); the client script only toggles visibility. Picking a tab
  * switches every group on the page and is remembered across pages via
  * localStorage, so a React reader stays on React. `?framework=react` and
- * `#react` deep-link into a tab — the canonical URL is unaffected, so
+ * `#react` deep-link into a tab, the canonical URL is unaffected, so
  * the variants never split the page's ranking.
  *
  * Usage in MDX (omit a slot and its tab disappears):
@@ -139,7 +139,7 @@ const initial = panels[0]?.key;
             const stored = localStorage.getItem(STORAGE_KEY);
             if (stored && VALID.includes(stored)) return stored;
         } catch {
-            /* storage blocked — fall back to the default tab */
+            /* storage blocked, fall back to the default tab */
         }
         return null;
     }
@@ -149,7 +149,7 @@ const initial = panels[0]?.key;
         try {
             localStorage.setItem(STORAGE_KEY, framework);
         } catch {
-            /* storage blocked — the choice just does not persist */
+            /* storage blocked, the choice just does not persist */
         }
     }
 
@@ -161,7 +161,7 @@ const initial = panels[0]?.key;
         if (initial) apply(initial);
         // The pre-paint CSS did the visual half; hand visibility back to
         // `data-hidden` now that it matches (see _code-tabs.scss). Pages
-        // with no tab group keep the attribute — nothing matches it.
+        // with no tab group keep the attribute, nothing matches it.
         delete document.documentElement.dataset.lgFramework;
 
         groups.forEach((group) => {

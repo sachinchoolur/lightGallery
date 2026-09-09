@@ -11,7 +11,7 @@ export interface HashSettings {
      * @description 'auto' uses the Navigation API where the browser
      * supports it and falls back to the History API everywhere else;
      * 'history' and 'navigation' force an engine (an unsupported
-     * 'navigation' quietly falls back — the enhancement is never
+     * 'navigation' quietly falls back, the enhancement is never
      * load-bearing). The deep-link URL format is identical either way.
      * See <a href="/docs/hash-drivers/">Hash drivers</a>.
      * @version V3.0.0

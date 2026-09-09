@@ -1,8 +1,8 @@
 /**
- * Icon injection: the gallery's icons are inline SVG strings — built-in
+ * Icon injection: the gallery's icons are inline SVG strings, built-in
  * defaults (registered by the core and by each plugin, so a plugin's
  * icons ship in its own bundle) merged under the consumer's
- * `settings.icons` overrides. One generic pass over the built structure —
+ * `settings.icons` overrides. One generic pass over the built structure,
  * every icon button (core and plugins alike) is an empty classed element
  * by the end of `buildStructure`, so a name→selector table covers them
  * all without touching the individual templates.
@@ -11,7 +11,7 @@
  * enter/exit) render BOTH icons of the pair; state classes (`lg-inline`,
  * `lg-show-autoplay`, `lg-fullscreen-on`) toggle their visibility in
  * CSS. A consumer override applies only when it answers every name of a
- * pair — a half-provided pair keeps the defaults so no state ends up
+ * pair, a half-provided pair keeps the defaults so no state ends up
  * iconless.
  */
 
@@ -30,7 +30,7 @@ interface IconTarget {
 }
 
 // The dropdown lives INSIDE the share button, and future markup may nest
-// too — injection always PREPENDS, never replaces the element's HTML.
+// too, injection always PREPENDS, never replaces the element's HTML.
 const ICON_TARGETS: IconTarget[] = [
     { selector: '.lg-close', names: ['close'] },
     { selector: '.lg-prev', names: ['prev'] },
@@ -40,7 +40,7 @@ const ICON_TARGETS: IconTarget[] = [
     { selector: '.lg-maximize', names: ['maximize', 'minimize'] },
     // The actual-size button's CLASS toggles between the two zoom
     // classes as the zoom state changes (2.x swapped the glyph that
-    // way) — it carries BOTH zoom icons and the class picks one in
+    // way), it carries BOTH zoom icons and the class picks one in
     // CSS. Listed before the class-based zoom targets so the id match
     // claims it first (the pass skips already-processed elements).
     { selector: '[id^="lg-actual-size-"]', names: ['zoomIn', 'zoomOut'] },
@@ -92,7 +92,7 @@ function getCustomIconMarkup(icons: LgIcons, names: LgIconName[]): string {
  * Inject the gallery's icons into the built structure: per target, the
  * consumer's overrides apply when they answer every name (pairs must be
  * complete), else the registered defaults render. Elements keep their
- * classes and listeners — the icons are prepended children.
+ * classes and listeners, the icons are prepended children.
  */
 export function applyCustomIcons(
     container: HTMLElement,

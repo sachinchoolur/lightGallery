@@ -21,7 +21,7 @@ import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import RtlGallery from '../../components/shortcodes/RtlGallery.astro';
 
 <div class="alert alert-info" role="alert">
-    <b>direction: 'auto'</b> — the gallery below inherits its direction from
+    <b>direction: 'auto'</b>, the gallery below inherits its direction from
     the <code>dir="rtl"</code> attribute on the gallery element. You can also
     force it with <code>direction: 'rtl'</code> regardless of the markup.
 </div>
@@ -62,7 +62,7 @@ import lightGallery from 'lightgallery';
 
 lightGallery(document.getElementById('gallery-rtl-demo'), {
     // 'auto' inherits the computed direction of the gallery
-    // element — dir="rtl" in the markup above.
+    // element, dir="rtl" in the markup above.
     // Use 'rtl' to force it regardless of the markup.
     direction: 'auto',
 });

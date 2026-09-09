@@ -1,6 +1,6 @@
 ---
 title: 'Localization & RTL'
-description: 'Localize every lightGallery label from one strings object and mirror the gallery for right-to-left pages — in vanilla JavaScript, React, Vue and Angular.'
+description: 'Localize every lightGallery label from one strings object and mirror the gallery for right-to-left pages, in vanilla JavaScript, React, Vue and Angular.'
 lead: 'One strings contract for every label, and an opt-in RTL layer that mirrors the whole gallery.'
 date: 2026-08-07T00:00:00.000Z
 draft: false
@@ -12,8 +12,8 @@ toc: true
 
 ## The `strings` object
 
-Every user-facing label in lightGallery v3 — core controls **and**
-plugin buttons — lives in a single `strings` setting. Pass a partial
+Every user-facing label in lightGallery v3, core controls **and**
+plugin buttons, lives in a single `strings` setting. Pass a partial
 object; the keys you provide merge over the English defaults. The same
 contract works in all four packages.
 
@@ -68,13 +68,13 @@ lightGallery(el, {
 
 `galleryLabel` names the gallery dialog for assistive technology when
 `ariaLabelledby` is not set. `slideAnnouncement` is announced politely
-on every slide change — `{index}` and `{total}` are replaced with the
+on every slide change, `{index}` and `{total}` are replaced with the
 1-based position and the slide count, and the slide caption, when
 present, is appended.
 
 ### Plugin labels
 
-Plugin buttons read from the same object — no per-plugin
+Plugin buttons read from the same object, no per-plugin
 configuration needed:
 
 | Key | Default | Plugin |
@@ -104,7 +104,7 @@ behavior. New code should use `strings` only.
 
 ## Right-to-left galleries
 
-Set `direction: 'rtl'` and load the opt-in RTL stylesheet — keyboard
+Set `direction: 'rtl'` and load the opt-in RTL stylesheet, keyboard
 arrows, swipe advance, the slide transforms and the thumbnail strip
 all mirror. The layer is a separate file, so LTR galleries pay zero
 CSS bytes.
@@ -140,8 +140,7 @@ import 'lightgallery/css/lg-rtl.css';
 <lg-gallery [slides]="slides" direction="rtl" />
 ```
 
-In Angular, `withRtl()` is the same setting as feature-list sugar —
-`[features]="[withRtl(), withThumbnail()]"` — and an explicit
+In Angular, `withRtl()` is the same setting as feature-list sugar, `[features]="[withRtl(), withThumbnail()]"`, and an explicit
 `[direction]` input still wins.
 
 ### The `direction` setting
@@ -156,7 +155,7 @@ In Angular, `withRtl()` is the same setting as feature-list sugar —
 vanilla JavaScript, and from the nearest `dir` attribute
 (`document.documentElement` / `document.body`) in the framework
 packages. The default stays `'ltr'` so upgrading never changes
-behavior on existing pages — RTL pages opt in with `'rtl'` or
+behavior on existing pages, RTL pages opt in with `'rtl'` or
 `'auto'`.
 
 ### What the RTL layer covers
@@ -172,7 +171,7 @@ behavior on existing pages — RTL pages opt in with `'rtl'` or
     keeps internal LTR geometry (the mirroring lives in the
     transforms).
 
-Everything is scoped to `.lg-container[dir='rtl']` — a forced-LTR
+Everything is scoped to `.lg-container[dir='rtl']`, a forced-LTR
 gallery inside an RTL page stays untouched. The decorative horizontal
 transitions (`lg-slide-skew`, `lg-tube`, …) intentionally keep their
 LTR choreography.

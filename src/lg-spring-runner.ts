@@ -14,7 +14,7 @@ import {
 
 export interface SpringTrack extends SpringConfig {
     from: number;
-    /** Seed velocity, px/ms — the gesture's windowed release velocity. */
+    /** Seed velocity, px/ms, the gesture's windowed release velocity. */
     velocity: number;
     target: number;
 }

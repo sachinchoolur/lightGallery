@@ -55,7 +55,7 @@ export interface LightGalleryCoreStrings {
 
     // Plugin labels: every user-facing string lives in this one contract.
     // The legacy per-plugin *PluginStrings objects remain as deprecated
-    // aliases — an explicitly set legacy key wins.
+    // aliases, an explicitly set legacy key wins.
     /** Share plugin: share button label. */
     share: string;
     /** Thumbnail plugin: strip toggle button label. */
@@ -97,7 +97,7 @@ export type LightGalleryAllSettings = LightGalleryCoreSettings &
     MediumZoomSettings;
 
 // User-facing input: everything optional, strings mergeable per-key
-// (headless UserSettings parity — a partial strings object merges over
+// (headless UserSettings parity, a partial strings object merges over
 // the defaults instead of replacing the whole contract).
 export type LightGallerySettings = Partial<
     Omit<LightGalleryAllSettings, 'strings'>
@@ -309,12 +309,12 @@ export interface LightGalleryCoreSettings {
     ariaDescribedby: string;
 
     /**
-     * Large-gallery virtualization. Off when undefined — the classic
+     * Large-gallery virtualization. Off when undefined, the classic
      * behavior: every thumbnail renders and the mounted-slide window is
      * numberOfSlideItemsInDom.
      * @description slides overrides the mounted-slide pool size; thumbs
      * turns on thumbnail-strip windowing (only the visible thumbs plus an
-     * overscan render, with spacers preserving the strip geometry) — a
+     * overscan render, with spacers preserving the strip geometry), a
      * number is the overscan thumb count per side, 'auto' derives one
      * extra viewport per side. The window advances at commit points
      * (release, slide change, resize), never per pointer move.
@@ -327,7 +327,7 @@ export interface LightGalleryCoreSettings {
      * Announce slide changes to assistive technology through a dedicated
      * polite live region (strings.slideAnnouncement + the slide caption).
      * @description While enabled, the counter and caption bar are not
-     * separate live regions — the announcer is the single source of
+     * separate live regions, the announcer is the single source of
      * slide-change announcements. Set to false to restore the previous
      * behavior (live counter and caption, no announcer).
      * See <a href="/docs/accessibility/">Accessibility</a>.
@@ -542,7 +542,7 @@ export interface LightGalleryCoreSettings {
 
     /**
      * Release velocity (px/ms, measured over the gesture's final ~100ms)
-     * at which a short swipe still changes slides — a flick.
+     * at which a short swipe still changes slides, a flick.
      * @version V3.0.0
      */
     flickVelocity: number;
@@ -642,7 +642,7 @@ export interface LightGalleryCoreSettings {
      * @description This can be useful if you want to localize the lightGallery strings to other languages.
      * Use your own service to translate the strings and pass it via settings.strings
      * You can find dedicated strings option for all lightGallery modules in their respective documentation.
-     * Strings merge per-key over the defaults — override only the keys
+     * Strings merge per-key over the defaults, override only the keys
      * you need (the old provide-everything requirement is gone).
      * See <a href="/docs/localization-rtl/">Localization &amp; RTL</a>.
      */
@@ -650,7 +650,7 @@ export interface LightGalleryCoreSettings {
 
     /**
      * Custom icons: SVG markup per icon name, rendered instead of the
-     * built-in SVG icon set — bring your own icons without touching CSS.
+     * built-in SVG icon set, bring your own icons without touching CSS.
      * @description Omitted names keep the built-in icon. State-pair
      * buttons (`maximize`/`minimize`, `autoplayPlay`/`autoplayPause`,
      * `fullscreen`/`fullscreenExit`) need both names provided; a

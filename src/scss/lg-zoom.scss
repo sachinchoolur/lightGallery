@@ -44,7 +44,7 @@
         }
         // Gesture releases settle the image scale on the same monotonic
         // ease as the wrap pan. The default bouncy bezier below overshoots
-        // by ~19% of the delta — fine for one-step button zooms, a violent
+        // by ~19% of the delta, fine for one-step button zooms, a violent
         // excursion when an infinite-zoom pinch releases far above actual
         // size. Both :not() guards keep this high-specificity rule from
         // outranking the two !important kill switches it must lose to:
@@ -65,7 +65,7 @@
 
     // Close-while-zoomed: the core starts the zoom-from-origin shrink on
     // the slide item and resetZoom strips the pan/scale styles in the
-    // same frame. The strip has to land instantly — animated through the
+    // same frame. The strip has to land instantly, animated through the
     // transitions above it composes with the slide shrink, and the image
     // never reaches the trigger rect before the close timeout hides the
     // gallery.

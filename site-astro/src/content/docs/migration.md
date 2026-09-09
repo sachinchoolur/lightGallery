@@ -1,6 +1,6 @@
 ---
 title: 'Migrating to lightGallery 3'
-description: 'Upgrade guide for lightGallery 3 — changed defaults and settings for vanilla users, and wrapper-to-native tables for React, Vue and Angular.'
+description: 'Upgrade guide for lightGallery 3, changed defaults and settings for vanilla users, and wrapper-to-native tables for React, Vue and Angular.'
 lead: 'What changes when you upgrade, framework by framework. Vanilla galleries keep working as documented; the framework wrappers are replaced by native packages.'
 date: 2026-08-11T00:00:00.000Z
 draft: false
@@ -12,8 +12,8 @@ toc: true
 
 lightGallery 3 restructures the project around a framework-free core plus
 native packages for React, Vue and Angular. The vanilla library keeps its
-runtime and its API; the framework wrappers — which embedded that runtime
-and mirrored its DOM — are replaced by components that render natively.
+runtime and its API; the framework wrappers, which embedded that runtime
+and mirrored its DOM, are replaced by components that render natively.
 
 | You were using | You now install |
 | --- | --- |
@@ -27,7 +27,7 @@ and mirrored its DOM — are replaced by components that render natively.
 Nothing in the gallery's behavior changed. The upgrade is packaging and a
 handful of new settings:
 
--   **Imports are unchanged** — `import lightGallery from 'lightgallery'`,
+-   **Imports are unchanged**, `import lightGallery from 'lightgallery'`,
     plugins from `lightgallery/plugins/<name>`, CSS from
     `lightgallery/css/<name>.css`. The package now ships modern ESM
     alongside the existing builds with proper export maps, so bundlers and
@@ -47,17 +47,17 @@ handful of new settings:
 
 | Setting | 2.x | 3.0 | Effect |
 | --- | --- | --- | --- |
-| `videoFacade` | — (eager iframe) | `true` | Provider video slides render a poster with a play button; the iframe mounts on play. Set `false` for the old behavior |
-| `youTubeNoCookie` | — (`youtube.com`) | `true` | YouTube embeds go through `youtube-nocookie.com`. URLs that already point there always keep it |
-| `preferNativeShare` | — | touch: `true`, desktop: `false` | On touch devices the share button opens the system share sheet, with the branded dropdown as the fallback |
-| `hashDriver` | — (History API) | `'auto'` | Deep links use the Navigation API where the browser has it, History everywhere else. Force the old engine with `'history'` |
+| `videoFacade` |, (eager iframe) | `true` | Provider video slides render a poster with a play button; the iframe mounts on play. Set `false` for the old behavior |
+| `youTubeNoCookie` |, (`youtube.com`) | `true` | YouTube embeds go through `youtube-nocookie.com`. URLs that already point there always keep it |
+| `preferNativeShare` |, | touch: `true`, desktop: `false` | On touch devices the share button opens the system share sheet, with the branded dropdown as the fallback |
+| `hashDriver` |, (History API) | `'auto'` | Deep links use the Navigation API where the browser has it, History everywhere else. Force the old engine with `'history'` |
 
 `direction` stays `'ltr'`, so nothing mirrors until you opt in with
 `'rtl'` or `'auto'`.
 
 ### Strings are unified
 
-Every user-facing label — core controls *and* plugin buttons — now lives in
+Every user-facing label, core controls *and* plugin buttons, now lives in
 one `strings` object:
 
 ```js
@@ -90,7 +90,7 @@ every node itself. The archived wrapper docs stay at
 npm install @lightgallery/react lightgallery
 ```
 
-Keep `lightgallery` installed — the CSS still ships from it, unchanged.
+Keep `lightgallery` installed, the CSS still ships from it, unchanged.
 
 | 2.x wrapper | 3.0 native package |
 | --- | --- |
@@ -110,7 +110,7 @@ uses the same field names, with `size` renamed to `lgSize`.
 Two behaviors are worth knowing about:
 
 -   **Controlled mode is available**: `open`, `index`, `onClose` and
-    `onIndexChange` let React own the state — the wrapper had no equivalent.
+    `onIndexChange` let React own the state, the wrapper had no equivalent.
 -   **Updating slides needs no `refresh()`**: rendering different children
     or a different `slides` array is the update. The `refresh()` method
     remains on the handle for API parity.
@@ -128,7 +128,7 @@ npm install @lightgallery/vue @lightgallery/headless lightgallery
 | --- | --- |
 | `import Lightgallery from 'lightgallery/vue'` | `import { LightGallery, LgItem } from '@lightgallery/vue'` |
 | Anchor children with `data-*` attributes | `<LgItem :item="item">` children, or a `:slides` array |
-| `:settings="{ speed: 500, plugins }"` — one settings object | Core settings as individual props (`:speed="500"`), `:plugins` on its own |
+| `:settings="{ speed: 500, plugins }"`, one settings object | Core settings as individual props (`:speed="500"`), `:plugins` on its own |
 | `:onBeforeSlide="handler"` props | Kebab-case emits: `@before-slide`, `@after-slide`, … |
 | Plugin settings inside `settings` | One object prop per plugin (`:zoom="{ scale: 1.5 }"`) |
 | `subHtml` HTML strings | `caption` values, or the `#caption` scoped slot |
@@ -154,7 +154,7 @@ npm install @lightgallery/angular @lightgallery/headless @angular/cdk lightgalle
 | `<lightgallery [settings]="settings">` | `<lg-gallery>` with same-named signal inputs (`[speed]`, `[loop]`, …) |
 | `settings.plugins: [lgZoom]` | `[features]="[withZoom()]"` from `@lightgallery/angular/plugins/zoom` |
 | `settings.dynamicEl` | `[slides]`, or `[lgGalleryItem]` triggers |
-| `[onBeforeSlide]="handler"` inputs | `(beforeSlide)` outputs — no `on` prefix |
+| `[onBeforeSlide]="handler"` inputs | `(beforeSlide)` outputs, no `on` prefix |
 | `subHtml` HTML strings | `caption` values, or the `lgCaption` `ng-template` |
 
 Two-way `[(index)]`, `[open]`/`(closed)`, the `ng-template` slots and the
@@ -165,5 +165,5 @@ Two-way `[(index)]`, `[open]`/`(closed)`, the `ng-template` slots and the
 All four packages share the same headless core, so settings, gesture
 thresholds and plugin semantics match everywhere. If a gallery behaves
 differently after migrating, that is a bug worth
-[reporting](https://github.com/sachinchoolur/lightGallery/issues) — please
+[reporting](https://github.com/sachinchoolur/lightGallery/issues), please
 include which package and which setting.

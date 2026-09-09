@@ -12,13 +12,13 @@ toc: true
 
 Framework-free core logic for lightGallery 3.x: the gallery state
 machine, settings resolution, slide windowing/preload math, gesture
-verdicts, zoom/thumbnail/rotate math and video URL builders — everything
+verdicts, zoom/thumbnail/rotate math and video URL builders, everything
 a renderer needs, with **no DOM and no framework** (the tsconfig excludes
 the DOM lib, so `window`/`document` do not even typecheck here).
 
 Shared by [`@lightgallery/react`](/docs/react/),
 [`@lightgallery/vue`](/docs/vue/) and
-[`@lightgallery/angular`](/docs/angular/) — build your own binding on the
+[`@lightgallery/angular`](/docs/angular/), build your own binding on the
 same package.
 
 ```ts
@@ -41,5 +41,5 @@ all DOM concerns.
 
 ## License
 
-GPL-3.0-only, matching lightGallery's licensing model — commercial
+GPL-3.0-only, matching lightGallery's licensing model, commercial
 licenses via [lightgalleryjs.com](https://www.lightgalleryjs.com/docs/license/).

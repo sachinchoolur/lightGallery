@@ -1,7 +1,7 @@
 ---
 title: 'Hash drivers'
-description: 'The hash plugin syncs deep links through the modern Navigation API where available, with an automatic History API fallback — same URLs everywhere.'
-lead: 'Deep-link syncing rides the Navigation API where the browser has it — same URLs, cleaner history.'
+description: 'The hash plugin syncs deep links through the modern Navigation API where available, with an automatic History API fallback, same URLs everywhere.'
+lead: 'Deep-link syncing rides the Navigation API where the browser has it, same URLs, cleaner history.'
 date: 2026-08-07T00:00:00.000Z
 draft: false
 images: []
@@ -31,7 +31,7 @@ lightGallery(el, {
 
 Guarantees, whichever engine runs:
 
--   **The URL format is identical** — deep links produced by one
+-   **The URL format is identical**, deep links produced by one
     engine open correctly under the other. Nothing about your links
     changes.
 -   All updates use **replace semantics**, so stepping through slides
@@ -63,5 +63,5 @@ the settings in the Hash plugin's options object:
 | --- | --- | --- |
 | `hash` | `true` | Enable URL syncing |
 | `hashDriver` | `'auto'` | URL engine: `'auto'`, `'history'` or `'navigation'` |
-| `galleryId` | `'1'` | Unique id per gallery — mandatory with multiple galleries on one page |
+| `galleryId` | `'1'` | Unique id per gallery, mandatory with multiple galleries on one page |
 | `customSlideName` | `false` | Use the item's `slideName` in the URL instead of the index |

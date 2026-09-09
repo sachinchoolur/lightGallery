@@ -1,6 +1,6 @@
 ---
 title: 'React image gallery component'
-description: 'Native React image gallery and lightbox component — thumbnails, pinch zoom, captions and sharing, with SSR support and full TypeScript types.'
+description: 'Native React image gallery and lightbox component, thumbnails, pinch zoom, captions and sharing, with SSR support and full TypeScript types.'
 lead:
     '@lightgallery/react is a native React image gallery: React renders every
     node, there is no wrapper around the vanilla library, and it works in
@@ -25,7 +25,7 @@ import ReactMasonryGallery from '../../components/islands/ReactMasonryGallery';
 
 #### Demo
 
-The gallery below is an actual `@lightgallery/react` component — every node
+The gallery below is an actual `@lightgallery/react` component, every node
 in the grid and in the lightbox is rendered by React.
 
 <ReactMasonryGallery client:load />
@@ -38,7 +38,7 @@ in the grid and in the lightbox is rendered by React.
 npm install @lightgallery/react lightgallery
 ```
 
-The React package ships no CSS — the stylesheets come from the `lightgallery`
+The React package ships no CSS, the stylesheets come from the `lightgallery`
 package and are shared by every binding:
 
 ```tsx
@@ -104,7 +104,7 @@ one settings prop named after it, typed through the plugin's own entry point:
 />
 ```
 
-Enabling a plugin is the `plugins` array — a bare `thumbnail` boolean prop
+Enabling a plugin is the `plugins` array, a bare `thumbnail` boolean prop
 does nothing on its own.
 
 ##### Controlled mode
@@ -132,7 +132,7 @@ const [index, setIndex] = useState(0);
 
 ##### TypeScript
 
-The package is written in TypeScript and ships its own types — `GalleryItem`
+The package is written in TypeScript and ships its own types, `GalleryItem`
 for slide data, `LightGalleryRefHandle` for the imperative handle:
 
 ```tsx
@@ -154,7 +154,7 @@ const gallery = useRef<LightGalleryRefHandle>(null);
 
 The handle covers `openGallery(index?)`, `closeGallery()`, `goToSlide(i)`,
 `nextSlide()`, `prevSlide()` and `refresh()`. Lifecycle events are callback
-props with the documented names — `onBeforeSlide`, `onAfterSlide`,
+props with the documented names, `onBeforeSlide`, `onAfterSlide`,
 `onSlideItemLoad`, and the rest.
 
 ##### Next.js and SSR
@@ -170,7 +170,7 @@ the CSS from your root layout:
 import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 ```
 
-More in the [React package docs](/docs/react/) — SSR notes, the full prop
+More in the [React package docs](/docs/react/), SSR notes, the full prop
 surface and the accessibility behavior. See also the
 [React video gallery](/demos/react-video-gallery/) and
 [React carousel](/demos/react-carousel/) demos.

@@ -10,7 +10,7 @@ weight: 64
 toc: true
 ---
 
-Native Angular lightGallery over `@lightgallery/headless` — every DOM node
+Native Angular lightGallery over `@lightgallery/headless`, every DOM node
 rendered by Angular. Standalone components, signal inputs/outputs, zoneless
 change detection, CDK overlay/a11y, Angular Package Format with a secondary
 entry point per plugin. The framework-free state machine, gesture math and
@@ -38,7 +38,7 @@ import 'lightgallery/css/lg-thumbnail.css';
 import 'lightgallery/css/lg-zoom.css';
 ```
 
-## Quick start — uncontrolled
+## Quick start, uncontrolled
 
 Thumbnails on the page open the lightbox; mount order defines slide order.
 
@@ -105,17 +105,17 @@ factory for the `[features]` input:
 | zoom | `withZoom()` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom` |
 | video | `withVideo()` | `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
 | autoplay | `withAutoplay()` | `slideShowInterval`, `slideShowAutoplay`, `progressBar` |
-| fullscreen | `withFullscreen()` | — |
+| fullscreen | `withFullscreen()` |, |
 | hash | `withHash()` | `galleryId`, `customSlideName` |
-| pager | `withPager()` | — |
+| pager | `withPager()` |, |
 | share | `withShare()` | `facebook`/`twitter`/`pinterest`, `additionalShareOptions` (typed) |
 | rotate | `withRotate()` | `rotateSpeed`, per-button toggles |
 | comment | `withComment()` | `commentBox`, `commentsTemplate: TemplateRef` |
 | mediumZoom | `withMediumZoom()` | `margin`, `backgroundColor` (presets a minimal UI) |
-| relativeCaption | `withRelativeCaption()` | — (presets `captionPosition: 'slide'`) |
+| relativeCaption | `withRelativeCaption()` |, (presets `captionPosition: 'slide'`) |
 | vimeoThumbnail | `withVimeoThumbnail()` | `showThumbnailWithPlayButton` |
 
-Features compose per gallery instance — two galleries on one page can have
+Features compose per gallery instance, two galleries on one page can have
 different feature sets. Order matters for slide wrappers: put `withZoom()`
 before `withRotate()` (zoom outermost, 2.x DOM order).
 
@@ -159,5 +159,5 @@ renames (full table in the project ADRs):
 
 ## License
 
-GPL-3.0-only — commercial license available, see
+GPL-3.0-only, commercial license available, see
 [lightgalleryjs.com/license](https://www.lightgalleryjs.com/license/).

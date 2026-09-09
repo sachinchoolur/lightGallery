@@ -10,7 +10,7 @@ weight: 63
 toc: true
 ---
 
-Native Vue 3 lightGallery over `@lightgallery/headless` — every DOM node
+Native Vue 3 lightGallery over `@lightgallery/headless`, every DOM node
 rendered by Vue. `<script setup>` SFCs, `v-model` open/index, typed emits
 and scoped slots, Teleport overlay, a tree-shakable subpath per plugin. The
 framework-free state machine, gesture math and plugin logic are shared with
@@ -35,7 +35,7 @@ import 'lightgallery/css/lg-thumbnail.css';
 import 'lightgallery/css/lg-zoom.css';
 ```
 
-## Quick start — uncontrolled
+## Quick start, uncontrolled
 
 Thumbnails on the page open the lightbox; mount order defines slide order.
 
@@ -94,17 +94,17 @@ Each plugin is its own tree-shakable subpath
 | zoom | `plugins/zoom` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom` |
 | video | `plugins/video` | `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
 | autoplay | `plugins/autoplay` | `slideShowInterval`, `slideShowAutoplay`, `progressBar` |
-| fullscreen | `plugins/fullscreen` | — |
+| fullscreen | `plugins/fullscreen` |, |
 | hash | `plugins/hash` | `galleryId`, `customSlideName` |
-| pager | `plugins/pager` | — |
+| pager | `plugins/pager` |, |
 | share | `plugins/share` | `facebook`/`twitter`/`pinterest`, `additionalShareOptions` (typed) |
 | rotate | `plugins/rotate` | `rotateSpeed`, per-button toggles |
 | comment | `plugins/comment` | `commentBox`; comment body via the `#comments` gallery slot |
 | mediumZoom | `plugins/mediumZoom` | `margin`, `backgroundColor` (presets a minimal UI) |
-| relativeCaption | `plugins/relativeCaption` | — (presets `captionPosition: 'slide'`) |
+| relativeCaption | `plugins/relativeCaption` |, (presets `captionPosition: 'slide'`) |
 | vimeoThumbnail | `plugins/vimeoThumbnail` | `showThumbnailWithPlayButton` |
 
-Plugins compose per gallery instance — two galleries on one page can have
+Plugins compose per gallery instance, two galleries on one page can have
 different plugin sets. Order matters for slide wrappers: put `Zoom` before
 `Rotate` (zoom outermost, 2.x DOM order).
 
@@ -112,11 +112,11 @@ different plugin sets. Order matters for slide wrappers: put `Zoom` before
 
 - Server-safe: every entry imports without browser globals, and the closed
   gallery server-renders only your trigger markup. The lightbox overlay
-  **never server-renders** (even with `open` true at first render) — the
+  **never server-renders** (even with `open` true at first render), the
   `<Teleport>` mounts client-side only, so there is no teleport buffer to
   wire up and no hydration mismatch surface. Verified with
   `vue/server-renderer` render + hydrate tests (zero hydration warnings).
-- In Nuxt, use the component directly in server-rendered pages — no
+- In Nuxt, use the component directly in server-rendered pages, no
   `<ClientOnly>` wrapper needed. Deep-link flows (hash plugin) run after
   hydration.
 - Import the CSS globally (`nuxt.config` `css: ['lightgallery/css/...']`).
@@ -151,5 +151,5 @@ renames (full table in the project ADRs):
 
 ## License
 
-GPL-3.0-only — commercial license available, see
+GPL-3.0-only, commercial license available, see
 [lightgalleryjs.com/license](https://www.lightgalleryjs.com/license/).

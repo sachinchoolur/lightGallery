@@ -1,6 +1,6 @@
 ---
 title: 'Vue image gallery component'
-description: 'Native Vue 3 image gallery and lightbox component — v-model, scoped slots and Teleport, with animated thumbnails, pinch zoom and Nuxt SSR support.'
+description: 'Native Vue 3 image gallery and lightbox component, v-model, scoped slots and Teleport, with animated thumbnails, pinch zoom and Nuxt SSR support.'
 lead:
     '@lightgallery/vue is a native Vue 3 image gallery: every node is
     rendered by Vue, with <code>v-model</code> for the open state and the
@@ -24,7 +24,7 @@ import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
 #### Demo
 
 Click any thumbnail. The Vue component renders the same markup and runs the
-same gallery logic — the shared headless core guarantees identical behavior
+same gallery logic, the shared headless core guarantees identical behavior
 across all four packages.
 
 <GalleryDemo size="xl" id="gallery-demo-animated-thumbnails" />
@@ -36,7 +36,7 @@ npm install @lightgallery/vue @lightgallery/headless lightgallery
 ```
 
 Peer range is `vue >=3.4` (the component uses `defineModel`). The CSS ships
-from the `lightgallery` package and is shared by every binding — import it
+from the `lightgallery` package and is shared by every binding, import it
 globally, in `main.ts` or your root stylesheet:
 
 ```ts
@@ -102,7 +102,7 @@ and events are kebab-case emits with no `on` prefix:
 />
 ```
 
-Adding a plugin to `:plugins` is what enables it — a bare `:thumbnail` prop
+Adding a plugin to `:plugins` is what enables it, a bare `:thumbnail` prop
 only configures one that is already loaded.
 
 ##### Controlled and imperative
@@ -138,8 +138,7 @@ The handle covers `openGallery(index?)`, `closeGallery()`, `goToSlide(i)`,
 
 ##### Slots
 
-Captions, the counter and the navigation buttons are named scoped slots —
-`#caption`, `#counter`, `#prev-button`, `#next-button` — so you render them
+Captions, the counter and the navigation buttons are named scoped slots, `#caption`, `#counter`, `#prev-button`, `#next-button`, so you render them
 with your own components instead of HTML strings:
 
 ```vue
@@ -153,7 +152,7 @@ with your own components instead of HTML strings:
 ##### Nuxt and SSR
 
 Every entry imports without browser globals, and the overlay never
-server-renders — the `<Teleport>` mounts on the client, so there is no
+server-renders, the `<Teleport>` mounts on the client, so there is no
 hydration mismatch and no `<ClientOnly>` wrapper needed. Your trigger markup
 still server-renders, so the grid stays crawlable. Import the CSS through
 `nuxt.config`:
@@ -164,6 +163,6 @@ export default defineNuxtConfig({
 });
 ```
 
-More in the [Vue package docs](/docs/vue/) — the full prop surface, all 13
+More in the [Vue package docs](/docs/vue/), the full prop surface, all 13
 plugins and the accessibility behavior. See also the
 [Vue video gallery](/demos/vue-video-gallery/) demo.

@@ -102,7 +102,7 @@ export default class Share {
                 );
                 if (canNativeShare(navigator, payload)) {
                     // Rejection = the user dismissed the sheet (AbortError)
-                    // or the OS refused — nothing to clean up either way.
+                    // or the OS refused, nothing to clean up either way.
                     navigator.share(payload).catch(() => undefined);
                     return;
                 }

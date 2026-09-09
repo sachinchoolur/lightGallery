@@ -10,7 +10,7 @@ weight: 62
 toc: true
 ---
 
-A ground-up, native React implementation of lightGallery — React owns
+A ground-up, native React implementation of lightGallery, React owns
 every DOM node; no runtime dependency on the vanilla `lightgallery` JS.
 Styling reuses the published `lightgallery/css/*` files unchanged. State
 and pure gallery logic live in
@@ -24,7 +24,7 @@ npm install @lightgallery/react lightgallery
 ```
 
 ```tsx
-// CSS is a consumer import — the React package ships no CSS.
+// CSS is a consumer import, the React package ships no CSS.
 import 'lightgallery/css/lightgallery.css';
 // Per-plugin styles as needed:
 import 'lightgallery/css/lg-thumbnail.css';
@@ -90,7 +90,7 @@ prevSlide(), refresh() }`.
 
 The gallery is SSR-safe by construction: every entry point imports cleanly
 in bare Node (ESM and CJS), and `renderToString` emits nothing for the
-gallery itself — the portal mounts client-side after hydration. Trigger
+gallery itself, the portal mounts client-side after hydration. Trigger
 children (`<LightGalleryItem>`) server-render as static markup, so grids
 are crawlable.
 
@@ -160,7 +160,7 @@ Coming from `lightgallery/react` (the wrapper inside the vanilla package)
 or the old CRA wrapper:
 
 - Items are data: `dynamic`/`dynamicEl` and every DOM-scraping option
-  (`selector`, `extraProps`, `exThumbImage`, …) are gone — pass `slides`
+  (`selector`, `extraProps`, `exThumbImage`, …) are gone, pass `slides`
   or wrap thumbnails in `<LightGalleryItem item={…}>`.
 - HTML-string options became typed render props: `subHtml` →
   `item.caption` (ReactNode) or `item.captionHtml` (explicit raw HTML);
@@ -172,11 +172,11 @@ or the old CRA wrapper:
   as a `zoom={{ … }}` prop instead of flat settings keys.
 - Events keep their documented `onXxx` names and payloads; `updateSlides`
   is gone (changing `slides` is the update). The `videojs` option was
-  dropped — bring custom players through `render.slide`.
+  dropped, bring custom players through `render.slide`.
 
 ## License
 
 GPL-3.0-only, matching lightGallery's licensing model. For commercial
-projects a commercial license is available — see
+projects a commercial license is available, see
 [lightgalleryjs.com](https://www.lightgalleryjs.com/docs/license/) or use
 `0000-0000-000-0000` as a temporary `licenseKey` for evaluation.

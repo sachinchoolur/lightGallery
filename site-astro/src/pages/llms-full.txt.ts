@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 
 import { docsGroup, docsMarkdown } from '../lib/markdown-twin';
 
-/** /llms-full.txt — every docs page as markdown, in sidebar order. */
+/** /llms-full.txt, every docs page as markdown, in sidebar order. */
 export const GET: APIRoute = async () => {
     const docs = (await getCollection('docs', ({ data }) => !data.draft)).sort(
         (a, b) => (a.data.weight ?? 999) - (b.data.weight ?? 999),

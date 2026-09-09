@@ -1,6 +1,6 @@
 ---
 title: Image and video gallery for React
-description: 'Native React image and video gallery component — thumbnails, pinch zoom, YouTube and Vimeo support, SSR-safe, fully typed, no jQuery.'
+description: 'Native React image and video gallery component, thumbnails, pinch zoom, YouTube and Vimeo support, SSR-safe, fully typed, no jQuery.'
 lead: Full featured image and video gallery lightbox component for react.
 date: 2020-10-06T08:48:57.000Z
 draft: false
@@ -10,7 +10,7 @@ weight: 7
 toc: true
 ---
 
-lightGallery 3 ships **`@lightgallery/react`** — a native React component,
+lightGallery 3 ships **`@lightgallery/react`**, a native React component,
 not a wrapper. React renders every node, in the trigger grid and in the
 lightbox, so there is no second runtime mutating your DOM and no jQuery
 anywhere. State and gallery logic come from the shared headless core, which
@@ -23,7 +23,7 @@ packages.
 npm install @lightgallery/react lightgallery
 ```
 
-The React package ships no CSS of its own — stylesheets come from the
+The React package ships no CSS of its own, stylesheets come from the
 `lightgallery` package:
 
 ```tsx
@@ -68,9 +68,9 @@ your own UI. Both modes are documented in the
 
 ## What you get
 
--   **All 13 plugins** as tree-shakable imports — thumbnails, zoom, video,
+-   **All 13 plugins** as tree-shakable imports, thumbnails, zoom, video,
     autoplay, fullscreen, hash deep links, pager, share, rotate, comments,
-    medium-style zoom, relative captions and Vimeo thumbnails — plus the
+    medium-style zoom, relative captions and Vimeo thumbnails, plus the
     justified layout.
 -   **Settings and events as props**: core settings keep their documented
     names, per-plugin settings are one object prop per plugin
@@ -78,7 +78,7 @@ your own UI. Both modes are documented in the
     (`onBeforeSlide`, `onAfterSlide`, …).
 -   **TypeScript throughout**, including `GalleryItem` for slide data and a
     `LightGalleryRefHandle` for imperative control.
--   **SSR-safe by construction** — works in the Next.js App Router without a
+-   **SSR-safe by construction**, works in the Next.js App Router without a
     `dynamic(() => …, { ssr: false })` wrapper; trigger markup
     server-renders, so galleries stay crawlable.
 -   **Accessibility**: dialog semantics, focus trap and restore, keyboard
@@ -86,14 +86,14 @@ your own UI. Both modes are documented in the
 
 ## Next steps
 
--   [React package docs](/docs/react/) — the full prop surface, plugins,
+-   [React package docs](/docs/react/), the full prop surface, plugins,
     SSR and accessibility notes.
 -   [React image gallery demo](/demos/react-image-gallery/) and
-    [React video gallery demo](/demos/react-video-gallery/) — live galleries
+    [React video gallery demo](/demos/react-video-gallery/), live galleries
     with the code behind them.
--   [React carousel demo](/demos/react-carousel/) — the inline variant that
+-   [React carousel demo](/demos/react-carousel/), the inline variant that
     expands into the lightbox.
--   [Settings reference](/docs/settings/) — every setting, shared by all
+-   [Settings reference](/docs/settings/), every setting, shared by all
     four packages.
 
 > **Using the 2.x wrapper?** The old `lightgallery/react` component is

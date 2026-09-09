@@ -1,7 +1,7 @@
 ---
 title: 'Custom icons'
-description: 'Replace any of the gallery controls'' inline SVG icons with your own, per icon name — in vanilla JavaScript, React, Vue, and Angular.'
-lead: 'Every control icon is an inline SVG you can swap per name — bring your own icon set without touching CSS.'
+description: 'Replace any of the gallery controls'' inline SVG icons with your own, per icon name, in vanilla JavaScript, React, Vue, and Angular.'
+lead: 'Every control icon is an inline SVG you can swap per name, bring your own icon set without touching CSS.'
 date: 2026-09-03T00:00:00.000Z
 draft: false
 images: []
@@ -10,7 +10,7 @@ weight: 74
 toc: true
 ---
 
-lightGallery's controls render inline SVG icons — there is no icon
+lightGallery's controls render inline SVG icons, there is no icon
 font to load, and every icon follows the button's `color` through
 `currentColor`. The **`icons`** setting swaps any of them by name:
 
@@ -26,15 +26,15 @@ lightGallery(el, {
 
 How overrides resolve:
 
--   **Omitted names keep the built-in icon** — override a single
+-   **Omitted names keep the built-in icon**, override a single
     button or the whole set.
 -   **State pairs apply together.** Buttons that swap icons with
-    state — `maximize`/`minimize`, `autoplayPlay`/`autoplayPause`,
-    `fullscreen`/`fullscreenExit` — render both icons and CSS toggles
+    state, `maximize`/`minimize`, `autoplayPlay`/`autoplayPause`,
+    `fullscreen`/`fullscreenExit`, render both icons and CSS toggles
     which one shows. Provide both names of a pair; a half-provided
     pair keeps the built-ins so no state ends up iconless.
 -   **Size and color come from the button.** Icons render at the
-    button's font size and inherit its color — SVGs that fill their
+    button's font size and inherit its color, SVGs that fill their
     viewBox and draw with `currentColor` (via `fill` or `stroke`)
     drop in with no CSS changes.
 -   **Plugin icons ship with their plugin.** A name renders only when
@@ -49,7 +49,7 @@ demo</a>.
 Each framework package takes custom icons in its own idiomatic form;
 the resolution rules above are identical everywhere.
 
-React — the `render.icon` slot returns a node per name; return
+React, the `render.icon` slot returns a node per name; return
 `undefined` for names that should keep the built-in icon:
 
 ```tsx
@@ -61,7 +61,7 @@ React — the `render.icon` slot returns a node per name; return
 />
 ```
 
-Vue — the `:icons` prop maps names to SVG components or raw SVG
+Vue, the `:icons` prop maps names to SVG components or raw SVG
 strings:
 
 ```vue
@@ -71,7 +71,7 @@ strings:
 />
 ```
 
-Angular — an `lgIcon` template declares the names it covers and
+Angular, an `lgIcon` template declares the names it covers and
 renders an SVG per name:
 
 ```html
@@ -86,8 +86,7 @@ renders an SVG per name:
 </lg-gallery>
 ```
 
-The template's `lgIcon` name list plays the role of the object keys —
-a state pair must have both names listed (and rendered) for the pair
+The template's `lgIcon` name list plays the role of the object keys, a state pair must have both names listed (and rendered) for the pair
 to apply.
 
 ## Icon names

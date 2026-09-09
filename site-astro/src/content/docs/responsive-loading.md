@@ -14,7 +14,7 @@ toc: true
 
 Every package renders full responsive markup for image slides: the
 main image carries `srcset`/`sizes`, and `sources` renders a real
-`<picture>` element — art direction, format negotiation
+`<picture>` element, art direction, format negotiation
 (`type="image/avif"`, …) and DPR selection all work exactly as they
 do in page markup, because it *is* that markup.
 
@@ -58,7 +58,7 @@ array), and the classic `data-responsive` list
 ## Responsive `data-lg-size`
 
 `data-lg-size` (the natural size that drives the zoom-from-origin
-animation) accepts a comma-separated responsive list — each entry is
+animation) accepts a comma-separated responsive list, each entry is
 `width-height-breakpoint`, the last entry (no breakpoint) is the
 default:
 
@@ -74,7 +74,7 @@ attribute for its aspect ratios.
 ## The decode gate
 
 A slide now reports *loaded* only after the browser has **decoded**
-the image — not merely fetched it. The completion state
+the image, not merely fetched it. The completion state
 (`lg-complete`, the loading spinner, the dummy-image drop in the
 zoom-from-origin flight) waits for `img.decode()` to settle, capped
 at 500 ms so a slow decoder can never strand the UI. The result: the
@@ -82,13 +82,13 @@ full-resolution image appears sharp in one paint instead of flashing
 half-decoded.
 
 Browsers without `decode()` (and error paths) behave exactly as
-before — the gate is progressive enhancement.
+before, the gate is progressive enhancement.
 
 ## Precise `sizes` from the layouts
 
 When the [justified layout](/docs/justified-layout/) positions a
 trigger whose thumbnail carries `srcset`, it writes the rendered
-width as the thumbnail's `sizes` attribute — the browser downloads
+width as the thumbnail's `sizes` attribute, the browser downloads
 the smallest candidate that actually covers the box.
 
 ## Headless utilities

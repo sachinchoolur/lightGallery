@@ -52,11 +52,11 @@ export default class Thumbnail {
     private dragSamples: VelocitySample[] = [];
     private liveTranslateX = 0;
     private cancelThumbSpring?: () => void;
-    // Last rendered window (windowed strips) — the mid-drag top-up
+    // Last rendered window (windowed strips), the mid-drag top-up
     // check compares the live translate against this coverage.
     private renderedThumbWindow?: ThumbWindow;
     // Scrub session (scrubThumbnails): while the strip moves it drives
-    // the gallery — slide changes are instant and the strip must not
+    // the gallery, slide changes are instant and the strip must not
     // re-center itself against the finger.
     private scrubActive = false;
     private scrubIndex = -1;
@@ -255,7 +255,7 @@ export default class Thumbnail {
             } else {
                 this.thumbClickable = true;
                 // A press that took over a scrub glide and released
-                // without moving ends the session here — no spring runs.
+                // without moving ends the session here, no spring runs.
                 this.endScrub();
             }
 
@@ -303,7 +303,7 @@ export default class Thumbnail {
             } else {
                 this.thumbClickable = true;
                 // A tap that took over a scrub glide ends the session
-                // here — no spring runs.
+                // here, no spring runs.
                 this.endScrub();
             }
         });
@@ -485,11 +485,10 @@ export default class Thumbnail {
         }
 
         // Windowed strips: a long finger drag can outrun the rendered
-        // window — one rebuild recenters it (rare; routine moves only
+        // window, one rebuild recenters it (rare; routine moves only
         // write the transform).
         if (this.isThumbWindowed() && this.renderedThumbWindow) {
-            // Rendered coverage in px straight from the window's pads —
-            // [leadingPad, totalWidth - trailingPad].
+            // Rendered coverage in px straight from the window's pads, // [leadingPad, totalWidth - trailingPad].
             const rendered = this.renderedThumbWindow;
             if (
                 this.liveTranslateX < rendered.leadingPad ||
@@ -512,8 +511,7 @@ export default class Thumbnail {
         this.$thumbOuter.removeClass('lg-dragging');
 
         // Release physics (plan 010): project the windowed velocity to a
-        // fling target, clamp into the strip bounds, and spring there —
-        // bounces off the edge on overshoot, pulls back when released
+        // fling target, clamp into the strip bounds, and spring there, // bounces off the edge on overshoot, pulls back when released
         // inside the rubber band. (Replaces the 2.x magic-numbers
         // momentum, whose transition-duration carried an invalid
         // '<n>settings' unit and silently never glided.)
@@ -530,7 +528,7 @@ export default class Thumbnail {
         );
         this.$lgThumb.css('transition-duration', '0ms');
         // Windowed strips: render the whole flight corridor before the
-        // glide starts — the destination is known at release, so the
+        // glide starts, the destination is known at release, so the
         // spring never crosses unrendered thumbs.
         if (this.isThumbWindowed()) {
             this.renderThumbItems(this.core.index, { from, to: target });
@@ -540,7 +538,7 @@ export default class Thumbnail {
             ([value]) => {
                 this.liveTranslateX = value!;
                 this.setTranslate(value!);
-                // The glide keeps scrubbing — a flicked strip drives the
+                // The glide keeps scrubbing, a flicked strip drives the
                 // gallery all the way to where it decelerates.
                 if (this.scrubActive) {
                     this.scrubTo(value!);
@@ -607,7 +605,7 @@ export default class Thumbnail {
 
     /**
      * True when the strip renders only a window of thumbs
-     * (virtualization.thumbs — plan 010).
+     * (virtualization.thumbs, plan 010).
      */
     private isThumbWindowed(): boolean {
         return this.core.settings.virtualization?.thumbs !== undefined;
@@ -617,7 +615,7 @@ export default class Thumbnail {
      * (Re)build the strip contents. Classic mode appends every thumb once;
      * windowed mode renders the visible range plus overscan with spacers
      * preserving the strip geometry, and re-runs at commit points only
-     * (open, slide change, drag release, resize, updateSlides) — never per
+     * (open, slide change, drag release, resize, updateSlides), never per
      * pointer move.
      */
     private renderThumbItems(

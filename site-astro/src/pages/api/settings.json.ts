@@ -4,7 +4,7 @@ import type { APIRoute } from 'astro';
 import { interfaceProps, settingsDefaults, tagText } from '../../lib/apidocs';
 
 /**
- * /api/settings.json — every documented setting, per interface, with type,
+ * /api/settings.json, every documented setting, per interface, with type,
  * default and description. The interfaces come from the settings page
  * itself (its `<Options>` blocks), so the JSON and the HTML never disagree.
  */

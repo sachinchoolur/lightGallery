@@ -4,7 +4,7 @@ description:
     'Embed YouTube and Vimeo videos as lightweight facades. The provider
     iframe loads only when the user presses play.'
 lead:
-    'lightGallery renders provider video slides — YouTube, Vimeo, Wistia — as
+    'lightGallery renders provider video slides, YouTube, Vimeo, Wistia, as
     lite facades: a poster with a play button, with the heavy provider iframe
     created only when the user presses play. YouTube embeds go through the
     privacy-enhanced youtube-nocookie.com host by default. Read more in the
@@ -68,13 +68,13 @@ import lgVideo from 'lightgallery/plugins/video';
 
 lightGallery(document.getElementById('gallery-video-facades-demo'), {
     plugins: [lgVideo],
-    // Defaults shown for clarity — facades and the
+    // Defaults shown for clarity, facades and the
     // privacy-enhanced YouTube host are on out of the box.
     videoFacade: true,
     youTubeNoCookie: true,
     // autoplayFirstVideo defaults to true and, like
     // autoplayVideoOnSlide, forces an immediate embed by
-    // design — turn it off to see the facade on every slide.
+    // design, turn it off to see the facade on every slide.
     autoplayFirstVideo: false,
 });
 ```
@@ -145,7 +145,7 @@ the previous eager-iframe behavior, as do slides shown with
 
 ### Opting out
 
-Set `videoFacade: false` to restore the 2.x behavior — the provider iframe is
+Set `videoFacade: false` to restore the 2.x behavior, the provider iframe is
 created as soon as the slide loads:
 
 <CodeTabs>

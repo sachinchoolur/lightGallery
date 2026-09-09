@@ -3,7 +3,7 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 
 import { docsMarkdown, docsSlug } from '../../../lib/markdown-twin';
 
-/** Markdown twin of every demo page — `/demos/<slug>/index.md`. */
+/** Markdown twin of every demo page, `/demos/<slug>/index.md`. */
 export const getStaticPaths: GetStaticPaths = async () => {
     const entries = await getCollection('demos', ({ data }) => !data.draft);
     return entries.map((entry) => ({ params: { slug: docsSlug(entry) }, props: { entry } }));

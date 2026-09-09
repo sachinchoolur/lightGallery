@@ -1,6 +1,6 @@
 ---
 title: 'Angular image gallery component'
-description: 'Native Angular image gallery and lightbox — standalone component, signal inputs, zoneless change detection, animated thumbnails and pinch zoom.'
+description: 'Native Angular image gallery and lightbox, standalone component, signal inputs, zoneless change detection, animated thumbnails and pinch zoom.'
 lead:
     '@lightgallery/angular is a native Angular image gallery: a standalone
     component with signal inputs and outputs, zoneless change detection and
@@ -25,7 +25,7 @@ import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
 #### Demo
 
 Click any thumbnail. The Angular component renders the same markup and runs
-the same gallery logic — the shared headless core guarantees identical
+the same gallery logic, the shared headless core guarantees identical
 behavior across all four packages.
 
 <GalleryDemo size="xl" id="gallery-demo-animated-thumbnails" />
@@ -38,8 +38,7 @@ npm install @lightgallery/angular @lightgallery/headless @angular/cdk lightgalle
 
 Peer ranges are `@angular/core`, `@angular/common` and `@angular/cdk`
 `>=21 <23`. There is no `zone.js` anywhere in the package, so it works with
-zoneless change detection. The CSS comes from the `lightgallery` package —
-add it to the `styles` array in `angular.json` or import it in your root
+zoneless change detection. The CSS comes from the `lightgallery` package, add it to the `styles` array in `angular.json` or import it in your root
 stylesheet:
 
 ```ts
@@ -141,7 +140,7 @@ The instance covers `openGallery(index?)`, `closeGallery()`,
 ##### Templates instead of HTML strings
 
 Captions, the counter and the navigation buttons are `ng-template`
-directives — `lgCaption`, `lgCounter`, `lgPrevButton`, `lgNextButton` — so
+directives, `lgCaption`, `lgCounter`, `lgPrevButton`, `lgNextButton`, so
 the gallery chrome is your markup:
 
 ```html
@@ -153,7 +152,7 @@ the gallery chrome is your markup:
 </lg-gallery>
 ```
 
-The directives are separate imports — add `LgCaptionDirective` (and its
+The directives are separate imports, add `LgCaptionDirective` (and its
 siblings) to the component's `imports` alongside `LgGalleryComponent`.
 
 ##### SSR
@@ -163,6 +162,6 @@ through the CDK overlay after hydration, so Angular SSR works without a
 browser-only guard. Trigger markup server-renders, keeping the grid
 crawlable.
 
-More in the [Angular package docs](/docs/angular/) — the full input
+More in the [Angular package docs](/docs/angular/), the full input
 surface, all 13 features and the accessibility behavior. See also the
 [Angular video gallery](/demos/angular-video-gallery/) demo.

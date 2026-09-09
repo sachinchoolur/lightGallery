@@ -3,7 +3,7 @@ import { getCollection, render } from 'astro:content';
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-/** /changelog/ — the repo's CHANGELOG.md, one source of truth. */
+/** /changelog/, the repo's CHANGELOG.md, one source of truth. */
 const [entry] = await getCollection('changelog');
 if (!entry) throw new Error('CHANGELOG.md not found (site-astro/../CHANGELOG.md)');
 const { Content } = await render(entry);
@@ -14,7 +14,7 @@ const { Content } = await render(entry);
     meta={{
         title: 'Changelog',
         description:
-            'What changed in each lightGallery release — new features, changed defaults and removals, with links to the docs.',
+            'What changed in each lightGallery release, new features, changed defaults and removals, with links to the docs.',
         breadcrumbs: [{ name: 'Changelog', url: '/changelog/' }],
     }}
 >

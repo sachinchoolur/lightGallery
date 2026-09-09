@@ -29,7 +29,7 @@ export default class MediumZoom {
 
         // Override some of lightGallery default settings
         // Typed against the resolved settings shape (strings is the
-        // full contract there) — this object never sets strings.
+        // full contract there), this object never sets strings.
         const defaultSettings: Partial<LightGalleryAllSettings> = {
             controls: false,
             download: false,

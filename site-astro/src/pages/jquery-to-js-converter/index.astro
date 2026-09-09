@@ -7,7 +7,7 @@ import replaceJqueryUrl from '../../scripts/tools/replaceJquery.js?url';
 
 // Converter tooling: CodeMirror + prettier from CDN plus the two local
 // converter scripts, exactly as the Hugo head/script-footer loaded them
-// (classic scripts — they attach to globals, order matters).
+// (classic scripts, they attach to globals, order matters).
 const page = await getEntry('pages', 'jquery-to-js-converter');
 if (!page) throw new Error('pages/jquery-to-js-converter.md missing');
 const { Content } = await render(page);

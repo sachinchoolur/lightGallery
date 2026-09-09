@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 
 import { publicMethods, tagText } from '../../lib/apidocs';
 
-/** /api/methods.json — the gallery instance's public methods. */
+/** /api/methods.json, the gallery instance's public methods. */
 export const GET: APIRoute = () => {
     const strip = (html: string) => html.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
     const methods = publicMethods().map((m) => ({

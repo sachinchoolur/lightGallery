@@ -23,7 +23,7 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const header = bundleImage(entry, 'header.png');
 
-// Hugo `.Site.RegularPages.Related . | first 2` — tag-related, newest
+// Hugo `.Site.RegularPages.Related . | first 2`, tag-related, newest
 // first, never the page itself.
 const related = (await getCollection('blog'))
     .filter((post) => post.id !== entry.id)

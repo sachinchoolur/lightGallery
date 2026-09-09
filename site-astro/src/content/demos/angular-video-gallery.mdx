@@ -1,6 +1,6 @@
 ---
 title: 'Angular video gallery component'
-description: 'Native Angular video gallery — YouTube, Vimeo, Wistia and HTML5 video in a lightbox, with poster facades so the provider iframe loads only on play.'
+description: 'Native Angular video gallery, YouTube, Vimeo, Wistia and HTML5 video in a lightbox, with poster facades so the provider iframe loads only on play.'
 lead:
     '@lightgallery/angular plays YouTube, Vimeo, Wistia and self-hosted HTML5
     video (MP4, WebM, Ogg) in a full-screen lightbox, from a standalone
@@ -40,7 +40,7 @@ import 'lightgallery/css/lg-video.css';
 
 ##### Provider videos
 
-Point a slide's `src` at a YouTube, Vimeo or Wistia URL — the video feature
+Point a slide's `src` at a YouTube, Vimeo or Wistia URL, the video feature
 recognises it and builds the embed. `poster` supplies the facade image;
 YouTube posters are fetched for you when you leave it out.
 
@@ -122,7 +122,7 @@ features = [
         // both are the defaults
         videoFacade: true,
         youTubeNoCookie: true,
-        // autoplay forces an immediate embed by design — turn it off
+        // autoplay forces an immediate embed by design, turn it off
         // to keep the facade on the first slide too
         autoplayFirstVideo: false,
         gotoNextSlideOnVideoEnd: true,
@@ -131,7 +131,7 @@ features = [
 ```
 
 Facades cut roughly 990 KB and 14 requests per YouTube slide until playback
-starts — the poster chain is described in the
+starts, the poster chain is described in the
 [video facades guide](/docs/video-facades/). Vimeo thumbnails need
 `withVimeoThumbnail()`.
 

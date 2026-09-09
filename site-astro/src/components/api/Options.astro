@@ -7,7 +7,7 @@ import {
     tagText,
 } from '../../lib/apidocs';
 
-/** Settings table — port of `shortcodes/options.html`. */
+/** Settings table, port of `shortcodes/options.html`. */
 interface Props {
     interface: string;
     variable?: string;
@@ -75,7 +75,7 @@ const defaults = variable ? settingsDefaults(variable) : undefined;
                         ))}
                         {tagText(prop.comment, 'deprecated').map((text) => (
                             <p class="alert alert-warning" role="alert">
-                                <b>Deprecated</b> — <span set:html={text} />
+                                <b>Deprecated</b>, <span set:html={text} />
                             </p>
                         ))}
                         {tagText(prop.comment, 'version').map((text) => (

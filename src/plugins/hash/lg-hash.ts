@@ -15,7 +15,7 @@ export default class Hash {
     oldHash!: string;
     private $LG!: LgQuery;
     // URL engine (plan 012): History API today, Navigation API where the
-    // browser has it — same URLs either way.
+    // browser has it, same URLs either way.
     private driver!: HashDriver;
     private unsubscribeDriver?: () => void;
     constructor(instance: LightGallery, $LG: LgQuery) {

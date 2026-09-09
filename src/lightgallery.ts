@@ -166,8 +166,7 @@ export class LightGallery {
         this.settings = {
             ...lightGalleryCoreSettings,
             ...options,
-            // Strings merge per-key (headless resolveSettings parity) —
-            // a partial override keeps every other default.
+            // Strings merge per-key (headless resolveSettings parity), // a partial override keeps every other default.
             strings: {
                 ...lightGalleryCoreSettings.strings,
                 ...(options?.strings ?? {}),
@@ -205,8 +204,7 @@ export class LightGallery {
     }
 
     private normalizeSettings() {
-        // Resolve direction 'auto' against the gallery element once —
-        // every direction-aware call site reads the resolved value.
+        // Resolve direction 'auto' against the gallery element once, // every direction-aware call site reads the resolved value.
         if (this.settings.direction === 'auto') {
             this.settings.direction =
                 typeof window !== 'undefined' &&
@@ -516,7 +514,7 @@ export class LightGallery {
         this.initModules();
 
         // Icons: one pass after the plugins have appended their buttons
-        // and registered their default sets — every icon element exists
+        // and registered their default sets, every icon element exists
         // by now. `settings.icons` overrides per name; pairs fall back
         // whole (see lg-icons.ts).
         applyCustomIcons(
@@ -808,7 +806,7 @@ export class LightGallery {
 
         // Remember where focus came from so it can be returned on close
         // (dialog pattern). Captured under the same condition that moves
-        // focus into the gallery — never touched otherwise.
+        // focus into the gallery, never touched otherwise.
         if (
             this.settings.trapFocus &&
             document.body === this.settings.container
@@ -944,7 +942,7 @@ export class LightGallery {
      */
     counter(): void {
         if (this.settings.counter) {
-            // With the announcer active the counter is decorative — the
+            // With the announcer active the counter is decorative, the
             // announcer already conveys the position in a friendlier form.
             const counterA11yAttrs = this.settings.ariaAnnouncements
                 ? 'aria-hidden="true"'
@@ -1156,7 +1154,7 @@ export class LightGallery {
         const mediaObject = $slide.find('.lg-object').first();
         const media = mediaObject.get() as HTMLImageElement;
         // Decode gate (shared contract with the bindings): completion
-        // flips only once the browser can paint the FULL image — a
+        // flips only once the browser can paint the FULL image, a
         // loaded-but-undecoded flip paints partially on slow devices.
         // Synchronous when `decode()` is unavailable; the timeout
         // fallback keeps a stalling decode from stranding the spinner.
@@ -1283,7 +1281,7 @@ export class LightGallery {
                 !element.poster &&
                 videoInfo.youtube
             ) {
-                // videoFacade:false — 2.x behavior: only the YouTube
+                // videoFacade:false, 2.x behavior: only the YouTube
                 // poster is synthesized.
                 element.poster = getYouTubePosterUrl(videoInfo);
             }
@@ -1900,7 +1898,7 @@ export class LightGallery {
      * Plain-text caption of a slide for the aria-live announcer. Resolves
      * the same sources addHtml uses (inline subHtml markup or a selector)
      * and strips the markup down to readable text. Remote captions
-     * (subHtmlUrl) are skipped — announcing can't wait on a fetch.
+     * (subHtmlUrl) are skipped, announcing can't wait on a fetch.
      */
     private getSlideCaptionText(index: number): string {
         const currentGalleryItem = this.galleryItems[index];
@@ -1937,7 +1935,7 @@ export class LightGallery {
 
     /**
      * Update the polite live region with the shown slide's position and
-     * caption ("Image X of Y, caption"). The single announcement source —
+     * caption ("Image X of Y, caption"). The single announcement source,
      * counter and caption bar are not live regions while this is enabled.
      */
     private announceSlide(index: number): void {
@@ -2110,10 +2108,10 @@ export class LightGallery {
     /**
      * Carry the release velocity into a gesture navigation: navigate
      * immediately (events, counter and busy-lock on time; fromTouch
-     * classes flip underneath — inline transforms keep the visuals),
+     * classes flip underneath, inline transforms keep the visuals),
      * then spring the same drag geometry until the arriving slide lands
      * at rest. Falls back to a snap-back when navigation declines
-     * (busy, or an edge without loop — the 2.x end animation plays).
+     * (busy, or an edge without loop, the 2.x end animation plays).
      */
     private springSlideNavigation(
         verdict: 'next' | 'prev',
@@ -2173,7 +2171,7 @@ export class LightGallery {
     }
 
     /**
-     * Spring a non-closing vertical drag back to rest — slide transform
+     * Spring a non-closing vertical drag back to rest, slide transform
      * and backdrop opacity together, seeded with the release velocity.
      */
     private springVerticalRestore(deltaY: number, velocityY: number): boolean {
@@ -2206,7 +2204,7 @@ export class LightGallery {
     }
 
     touchEnd(endCoords: Coords, startCoords: Coords, event: TouchEvent): void {
-        // Read the release velocity NOW — the work below is deferred a
+        // Read the release velocity NOW, the work below is deferred a
         // tick, and velocity is defined at the moment the finger lifts.
         const releaseVelocity = getWindowedVelocity(
             this.swipeSamples,
@@ -2230,7 +2228,7 @@ export class LightGallery {
 
             if (this.swipeDirection === 'horizontal') {
                 // Navigate past swipeThreshold, a quick flick, or a
-                // momentum projection past the midpoint — shared release
+                // momentum projection past the midpoint, shared release
                 // verdict, all runtimes.
                 const verdict = getSwipeReleaseVerdict({
                     deltaX: endCoords.pageX - startCoords.pageX,
@@ -2240,7 +2238,7 @@ export class LightGallery {
                     viewportWidth: this.outer.get().offsetWidth,
                     direction: this.getDirection(),
                 });
-                // Springs start from the RENDERED delta — rubber-banded
+                // Springs start from the RENDERED delta, rubber-banded
                 // at the gallery ends, identical to raw elsewhere.
                 const renderedDeltaX = this.getEdgeDragDelta(
                     endCoords.pageX - startCoords.pageX,
@@ -2332,7 +2330,7 @@ export class LightGallery {
                     isSwiping = true;
                     this.touchAction = 'swipe';
                     // A swipe hijacked by a pinch never reaches its
-                    // touchend — stale isMoved/endCoords would make the
+                    // touchend, stale isMoved/endCoords would make the
                     // NEXT tap run touchEnd on garbage deltas (same
                     // pattern zoomSwipe had).
                     isMoved = false;

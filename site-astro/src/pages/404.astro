@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// Port of `layouts/404.html` — docs + demos card lists as a directory.
+// Port of `layouts/404.html`, docs + demos card lists as a directory.
 const docs = (await getCollection('docs')).sort((a, b) =>
     a.id.localeCompare(b.id),
 );

@@ -1,4 +1,4 @@
-# lightGallery — https://www.lightgalleryjs.com
+# lightGallery: https://www.lightgalleryjs.com
 # Everything public is crawlable, for search engines and AI assistants
 # alike. Machine-readable entry points: /llms.txt, /llms-full.txt, and a
 # markdown twin of every docs page at /docs/<page>/index.md.

@@ -5,7 +5,7 @@
  * pages use, so a new page is picked up automatically.
  *
  * Plain `.md` pages pass through as written. `.mdx` pages carry Astro
- * components — the API blocks (settings tables, events, methods,
+ * components, the API blocks (settings tables, events, methods,
  * attributes, callbacks) are re-rendered here as markdown from the same
  * TypeDoc data, and the remaining presentational components are reduced
  * to their text.
@@ -54,7 +54,7 @@ function inline(html: string): string {
 
 const cell = (text: string): string => inline(text).replace(/\|/g, '\\|');
 
-/** Type names contain `<>` — keep them literal inside backticks. */
+/** Type names contain `<>`, keep them literal inside backticks. */
 const typeCell = (type: string): string => `\`${type.replace(/\|/g, '\\|')}\``;
 
 function describe(comment: ApiComment): string {

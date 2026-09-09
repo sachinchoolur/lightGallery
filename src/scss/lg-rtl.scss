@@ -2,8 +2,8 @@
 
 // Opt-in RTL layer: load this stylesheet (after the theme and any plugin
 // styles) whenever the gallery's `direction` setting resolves to 'rtl'.
-// Every rule is scoped to `.lg-container[dir='rtl']` — the attribute the
-// core sets from the resolved direction — so LTR galleries pay nothing
+// Every rule is scoped to `.lg-container[dir='rtl']`, the attribute the
+// core sets from the resolved direction, so LTR galleries pay nothing
 // and a forced-LTR gallery inside an RTL page stays untouched.
 //
 // Scope note: the default lg-slide mode, chrome, thumbnails, share
@@ -59,7 +59,7 @@
     }
 
     // Slide-level captions (captionPosition: 'slide') sit inside the
-    // rail — restore their reading direction.
+    // rail, restore their reading direction.
     .lg-inner .lg-sub-html {
         direction: rtl;
     }
@@ -92,7 +92,7 @@
     .lg-counter {
         padding-left: 0;
         padding-right: 20px;
-        // "3 / 5" must not bidi-reorder into "5 / 3" — the counter is a
+        // "3 / 5" must not bidi-reorder into "5 / 3", the counter is a
         // number pair, not prose.
         direction: ltr;
         unicode-bidi: isolate;

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 
 /**
- * Build-time access to the library API docs — replaces Hugo's
+ * Build-time access to the library API docs, replaces Hugo's
  * `.Site.Data.doc` (TypeDoc JSON, regenerate with `pnpm -w run docs`).
  * The modern TypeDoc no longer inlines settings-object literals, so the
  * per-option defaults are read from the settings sources with the
@@ -47,7 +47,7 @@ function doc(): DocNode {
             docCache = JSON.parse(readFileSync(DOC_JSON, 'utf8')) as DocNode;
         } catch {
             throw new Error(
-                `${DOC_JSON} missing or unreadable — run \`pnpm run docs\` at the repo root first.`,
+                `${DOC_JSON} missing or unreadable, run \`pnpm run docs\` at the repo root first.`,
             );
         }
     }
@@ -210,8 +210,7 @@ export function settingsDefaults(variableName: string): Map<string, string> {
                 }
                 for (const property of declaration.initializer.properties) {
                     if (ts.isPropertyAssignment(property)) {
-                        // `{...} as SomeType` casts are noise in the table —
-                        // show only the value.
+                        // `{...} as SomeType` casts are noise in the table, // show only the value.
                         let initializer = property.initializer;
                         while (ts.isAsExpression(initializer)) {
                             initializer = initializer.expression;

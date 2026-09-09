@@ -8,7 +8,7 @@ import SidebarMenu from '../components/SidebarMenu.astro';
 import { SITE } from '../lib/site';
 
 /**
- * Shared docs/demos page shell — port of `layouts/docs/single.html` and
+ * Shared docs/demos page shell, port of `layouts/docs/single.html` and
  * `layouts/demos/single.html` (identical apart from the sidebar source
  * and the docs-only TOC column).
  */
@@ -110,7 +110,7 @@ const hasVideo =
                         rel="stylesheet"
                     />
                     {/* Player APIs the video plugin drives. Loaded on the
-                        first interaction instead of eagerly — playing a
+                        first interaction instead of eagerly, playing a
                         video needs a click on a trigger plus the open
                         animation, so the scripts are always in flight
                         before a video slide can append. The plugin

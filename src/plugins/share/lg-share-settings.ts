@@ -15,7 +15,7 @@ export interface ShareSettings {
      * when the browser supports it. The share button then opens the native
      * sheet with the slide's URL (per-item `shareUrl`, falling back to the
      * network share URLs, then the page URL); the dropdown remains as the
-     * automatic fallback. URL-sharing only — the image file itself is never
+     * automatic fallback. URL-sharing only, the image file itself is never
      * attached.
      * @description Defaults to true on touch devices and false on desktop,
      * where the branded dropdown is kept for consistency.
@@ -65,7 +65,7 @@ export interface ShareSettings {
 
     /**
      * Custom translation strings for aria-labels
-     * @deprecated Set these labels on the core `strings` object instead —
+     * @deprecated Set these labels on the core `strings` object instead,
      * every user-facing string lives in that one contract. An explicitly set
      * key here still wins (alias).
      */

@@ -430,7 +430,7 @@
 // Custom icons (settings.icons): user SVGs replace the font glyphs. The
 // wrapper spans center the SVG in the button; sizing follows the
 // button's font-size so custom icons land where the glyphs did. Color
-// is deliberately NOT forced — currentColor-based SVGs inherit the
+// is deliberately NOT forced, currentColor-based SVGs inherit the
 // button color, and fills/strokes authored into the SVG are respected.
 .lg-icon-custom {
     &::after {

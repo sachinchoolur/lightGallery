@@ -4,7 +4,7 @@ import type { APIRoute } from 'astro';
 import { SITE, docsGroup, docsMarkdownUrl, docsUrl } from '../lib/markdown-twin';
 
 /**
- * /llms.txt — the machine-readable index of the site (llmstxt.org).
+ * /llms.txt, the machine-readable index of the site (llmstxt.org).
  * Generated from the content collections, so it never drifts from the
  * sidebar.
  */
@@ -28,7 +28,7 @@ export const GET: APIRoute = async () => {
     const out = [
         '# lightGallery',
         '',
-        '> A lightweight, modular JavaScript lightbox and gallery for images and video, with native React, Vue and Angular packages. Plugins (thumbnails, zoom, video, autoplay, fullscreen, share, hash, rotate, pager, comments, justified layout) are separate entries — import only what you use.',
+        '> A lightweight, modular JavaScript lightbox and gallery for images and video, with native React, Vue and Angular packages. Plugins (thumbnails, zoom, video, autoplay, fullscreen, share, hash, rotate, pager, comments, justified layout) are separate entries, import only what you use.',
         '',
         'Packages: `lightgallery` (vanilla JavaScript/TypeScript), `@lightgallery/react`, `@lightgallery/vue`, `@lightgallery/angular`, `@lightgallery/headless` (the framework-free core).',
         '',
