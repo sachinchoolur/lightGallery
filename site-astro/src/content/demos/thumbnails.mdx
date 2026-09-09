@@ -26,7 +26,7 @@ import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
 
 ### Animated thumbnails
 
-<GalleryDemo size="xl" id="animated-thumbnails-gallery" />
+<GalleryDemo size="xl" id="animated-thumbnails-gallery" photos="street,alley" />
 
 <DemoButtons js="https://codepen.io/sachinchoolur/pen/poebzpV" react="https://stackblitz.com/edit/stackblitz-starters-p5ngcb?file=src%2Findex.tsx" />
 
@@ -115,11 +115,11 @@ import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 
 Turn the strip into a scrubber with
 [`scrubThumbnails`](/docs/thumbnail-scrubbing/): drag it and the
-gallery follows instantly — the slide under the strip's travel
+gallery follows instantly, the slide under the strip's travel
 position becomes current with no transitions, and a flick keeps
 scrubbing through the glide. Taps still navigate normally.
 
-<GalleryDemo size="xl" id="scrub-thumbnails-gallery" />
+<GalleryDemo size="xl" id="scrub-thumbnails-gallery" photos="morocco" />
 
 ##### Setup
 
@@ -189,7 +189,7 @@ import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 ### Static thumbnails
 
 <div class="lg-masonry-gallery">
-    <GalleryDemo size="xl" id="static-thumbnails-gallery" />
+    <GalleryDemo size="xl" id="static-thumbnails-gallery" photos="desert,warm" />
 </div>
 
 ##### Setup
@@ -266,7 +266,7 @@ You can customize the look and feel of the thumbnails however you want just by
 updating the css files. Let's see how we can place the thumbnails on the right
 hand side of the slide.
 
-<GalleryDemo size="xl" id="customize-thumbnails-gallery" />
+<GalleryDemo size="xl" id="customize-thumbnails-gallery" photos="alley,street" />
 
 ##### Setup
 
@@ -308,7 +308,7 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
 
 ```tsx
 // The native packages render the strip in one place and leave the
-// placement to CSS — scope it with a class of your own.
+// placement to CSS, scope it with a class of your own.
 <LightGallery
     plugins={[Thumbnail]}
     className="lg-custom-thumbnails"

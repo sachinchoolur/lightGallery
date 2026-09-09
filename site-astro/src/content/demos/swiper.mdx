@@ -1,6 +1,6 @@
 ---
 title: 'Swiper.js demo with lightbox gallery'
-description: 'Swiper slider demo with a lightbox gallery on every slide — open any slide full-screen with thumbnails, zoom and video support.'
+description: 'Swiper slider demo with a lightbox gallery on every slide, open any slide full-screen with thumbnails, zoom and video support.'
 lead:
     '<a href="https://swiperjs.com/" target="_blank">SwiperJs</a> is one of the most popular JavaScript carousel/slider.
 Swiper can be used for creating beautiful image galleries with thumbnails.
@@ -15,6 +15,7 @@ toc: true
 
 import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
 import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
+import { photos } from '../../lib/photos';
 
 <DemoRuntime />
 
@@ -22,37 +23,12 @@ import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 #### Demo
 <div class="swiper-lg-wrap">
     <div class="swiper">
-    <div class="swiper-wrapper"  id="lg-swipper">
-        <a
-                data-lg-size="1600-1144"
-                class="swiper-slide"
-                data-src="https://images.unsplash.com/photo-1476842384041-a57a4f124e2e?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"
-            >
-                <img
-                    class="img-responsive"
-                    src="https://images.unsplash.com/photo-1476842384041-a57a4f124e2e?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1200&q=80"
-                />
+    <div class="swiper-wrapper" id="lg-swipper">
+        {photos('street', 4).map((p) => (
+            <a data-lg-size={`${p.width}-${p.height}`} class="swiper-slide" data-src={p.src} data-sub-html={p.caption}>
+                <img class="img-responsive" alt={p.alt} src={p.sizes[1].src} />
             </a>
-            <a
-                data-lg-size="1600-1067"
-                class="swiper-slide"
-                data-src="https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"
-            >
-                <img
-                    class="img-responsive"
-                    src="https://images.unsplash.com/photo-1505820013142-f86a3439c5b2?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1200&q=80"
-                />
-            </a>
-            <a
-                data-lg-size="1600-1067"
-                class="swiper-slide"
-                data-src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"
-            >
-                <img
-                    class="img-responsive"
-                    src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1200&q=80"
-                />
-            </a>
+        ))}
     </div>
     
     <div class="swiper-button-prev"></div>

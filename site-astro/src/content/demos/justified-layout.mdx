@@ -30,7 +30,7 @@ import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
 The default settings target a 180px row height with the last row aligned to
 the reading start.
 
-<GalleryDemo size="xl" id="gallery-justified-layout-demo" />
+<GalleryDemo size="xl" id="gallery-justified-layout-demo" photos="alley,desert" />
 
 Provide the natural image size via `data-lg-size` so the rows can be laid out
 before the thumbnails finish loading. Without it, the layout falls back to the
@@ -142,11 +142,11 @@ import 'lightgallery/css/lg-justified.css';
 
 ### Customize the layout
 
-Tune the target row height, the gap, and the last-row policy — `'justify'`
+Tune the target row height, the gap, and the last-row policy, `'justify'`
 stretches the leftover row to fill the width, `'start'` keeps it at row
 height, `'hide'` hides the leftover thumbnails.
 
-<GalleryDemo size="xl" id="gallery-justified-custom-demo" />
+<GalleryDemo size="xl" id="gallery-justified-custom-demo" photos="morocco,warm" />
 
 ##### Setup
 

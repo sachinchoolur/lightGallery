@@ -1,0 +1,2189 @@
+{
+  "license": "Unsplash License, https://unsplash.com/license",
+  "collections": {
+    "hero": {
+      "title": "Golden hour architecture",
+      "photos": [
+        {
+          "id": "oFNFhxx08_g",
+          "alt": "a view of a city with tall buildings",
+          "photographer": "Zack Nichols",
+          "page": "https://unsplash.com/photos/oFNFhxx08_g",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 721,
+              "src": "/img/photos/hero/01-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1804,
+              "src": "/img/photos/hero/01-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2405,
+              "src": "/img/photos/hero/01-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "BvMqoxAEvIw",
+          "alt": "a building with many windows reflecting the sky",
+          "photographer": "Jonas",
+          "page": "https://unsplash.com/photos/BvMqoxAEvIw",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 749,
+              "src": "/img/photos/hero/02-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1872,
+              "src": "/img/photos/hero/02-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2495,
+              "src": "/img/photos/hero/02-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "xA-SSDUZnhk",
+          "alt": "a view of a clock tower through a circular window",
+          "photographer": "Pavel Okrema",
+          "page": "https://unsplash.com/photos/xA-SSDUZnhk",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 853,
+              "src": "/img/photos/hero/03-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 2133,
+              "src": "/img/photos/hero/03-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2843,
+              "src": "/img/photos/hero/03-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "YmStDya1HSU",
+          "alt": "brown concrete building",
+          "photographer": "Llibert Losada",
+          "page": "https://unsplash.com/photos/YmStDya1HSU",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/hero/04-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/hero/04-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/hero/04-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "xUWxij-zHu4",
+          "alt": "a building with columns and a clock",
+          "photographer": "Alex Damske",
+          "page": "https://unsplash.com/photos/xUWxij-zHu4",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 263,
+              "src": "/img/photos/hero/05-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 657,
+              "src": "/img/photos/hero/05-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 876,
+              "src": "/img/photos/hero/05-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "Nta3rjmyy4Y",
+          "alt": "a building with a lot of windows",
+          "photographer": "Crawford Passy",
+          "page": "https://unsplash.com/photos/Nta3rjmyy4Y",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/hero/06-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/hero/06-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/hero/06-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "An9P-EMm7rU",
+          "alt": "black and brown building during daytime",
+          "photographer": "Melina Kiefer",
+          "page": "https://unsplash.com/photos/An9P-EMm7rU",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/hero/07-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/hero/07-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/hero/07-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "4U2kSoQxCv0",
+          "alt": "the sun setting over a city with tall buildings",
+          "photographer": "Harshit Suryawanshi",
+          "page": "https://unsplash.com/photos/4U2kSoQxCv0",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/hero/08-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/hero/08-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2399,
+              "src": "/img/photos/hero/08-1600.avif"
+            }
+          ]
+        }
+      ]
+    },
+    "warm": {
+      "title": "Warm light",
+      "photos": [
+        {
+          "id": "Wm3DCN_ydR0",
+          "alt": "yellow hallway",
+          "photographer": "Pierre Châtel-Innocenti",
+          "page": "https://unsplash.com/photos/Wm3DCN_ydR0",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/warm/01-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/warm/01-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/warm/01-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "cgLPVVmaMq4",
+          "alt": "the top of a tall building",
+          "photographer": "Hossein Nasr",
+          "page": "https://unsplash.com/photos/cgLPVVmaMq4",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/warm/02-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/warm/02-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/warm/02-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "GL_e7TForNY",
+          "alt": "a very tall building lit up at night",
+          "photographer": "avechenri",
+          "page": "https://unsplash.com/photos/GL_e7TForNY",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 853,
+              "src": "/img/photos/warm/03-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 2132,
+              "src": "/img/photos/warm/03-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2843,
+              "src": "/img/photos/warm/03-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "vK0PSXaUmdU",
+          "alt": "historic facade with golden light in the windows",
+          "photographer": "Pranit Patel",
+          "page": "https://unsplash.com/photos/vK0PSXaUmdU",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/warm/04-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/warm/04-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/warm/04-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "kHhUzZ8tINA",
+          "alt": "golden sunlight on a stone building",
+          "photographer": "ANGIE BAONGOC",
+          "page": "https://unsplash.com/photos/kHhUzZ8tINA",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/warm/05-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/warm/05-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/warm/05-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "ZoYutZrqAlg",
+          "alt": "classic building in warm golden sunlight",
+          "photographer": "David Salamanca",
+          "page": "https://unsplash.com/photos/ZoYutZrqAlg",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 640,
+              "src": "/img/photos/warm/06-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1601,
+              "src": "/img/photos/warm/06-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2134,
+              "src": "/img/photos/warm/06-1600.avif"
+            }
+          ]
+        }
+      ]
+    },
+    "stone": {
+      "title": "Sandstone and carved detail",
+      "photos": [
+        {
+          "id": "YtrNtsgUIyo",
+          "alt": "an old building with a clock on the front",
+          "photographer": "Andreas Haubold",
+          "page": "https://unsplash.com/photos/YtrNtsgUIyo",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/stone/01-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/stone/01-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3600,
+              "src": "/img/photos/stone/01-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "ICXMkhRdquA",
+          "alt": "gray stone columns worm's-eye view",
+          "photographer": "Jesse Collins",
+          "page": "https://unsplash.com/photos/ICXMkhRdquA",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/stone/02-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/stone/02-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 1600,
+              "src": "/img/photos/stone/02-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "2uj2Pf6sobg",
+          "alt": "intricate carvings on red sandstone architecture",
+          "photographer": "Zoshua Colah",
+          "page": "https://unsplash.com/photos/2uj2Pf6sobg",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 333,
+              "src": "/img/photos/stone/03-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 833,
+              "src": "/img/photos/stone/03-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 1665,
+              "src": "/img/photos/stone/03-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "fLna0uxEIy4",
+          "alt": "a close up of a brick wall with small holes",
+          "photographer": "Kaffeebart",
+          "page": "https://unsplash.com/photos/fLna0uxEIy4",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 318,
+              "src": "/img/photos/stone/04-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 795,
+              "src": "/img/photos/stone/04-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 1590,
+              "src": "/img/photos/stone/04-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "GaCNIy8gas8",
+          "alt": "ornate red and white column with intricate patterns",
+          "photographer": "Zoshua Colah",
+          "page": "https://unsplash.com/photos/GaCNIy8gas8",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 475,
+              "src": "/img/photos/stone/05-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1188,
+              "src": "/img/photos/stone/05-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 2375,
+              "src": "/img/photos/stone/05-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "lUEH1snvF3Y",
+          "alt": "ancient red sandstone archway ruins",
+          "photographer": "Subhashis Das",
+          "page": "https://unsplash.com/photos/lUEH1snvF3Y",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/stone/06-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/stone/06-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3600,
+              "src": "/img/photos/stone/06-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "8sZ_Wt3EIu4",
+          "alt": "ornate architectural detail on a brick building",
+          "photographer": "Alexandr Popadin",
+          "page": "https://unsplash.com/photos/8sZ_Wt3EIu4",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/stone/07-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/stone/07-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3600,
+              "src": "/img/photos/stone/07-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "ScG-gXAd1X8",
+          "alt": "old stone building facade with multiple windows",
+          "photographer": "Jez Timms",
+          "page": "https://unsplash.com/photos/ScG-gXAd1X8",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/stone/08-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/stone/08-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3600,
+              "src": "/img/photos/stone/08-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "YF9pGnc4IUg",
+          "alt": "stone gargoyle face on an old fountain",
+          "photographer": "martin lea",
+          "page": "https://unsplash.com/photos/YF9pGnc4IUg",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 640,
+              "src": "/img/photos/stone/09-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1601,
+              "src": "/img/photos/stone/09-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3201,
+              "src": "/img/photos/stone/09-2400.avif"
+            }
+          ]
+        }
+      ]
+    },
+    "facade": {
+      "title": "Facades and patterns",
+      "photos": [
+        {
+          "id": "3lKFHLCKark",
+          "alt": "office building with symmetrical gray textured walls",
+          "photographer": "Khara Woods",
+          "page": "https://unsplash.com/photos/3lKFHLCKark",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 672,
+              "src": "/img/photos/facade/01-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1681,
+              "src": "/img/photos/facade/01-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3361,
+              "src": "/img/photos/facade/01-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "o7xm8E8R4_U",
+          "alt": "gray and black architectural design",
+          "photographer": "Carlos Torres",
+          "page": "https://unsplash.com/photos/o7xm8E8R4_U",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/facade/02-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/facade/02-1200.avif"
+            },
+            {
+              "width": 2333,
+              "height": 3500,
+              "src": "/img/photos/facade/02-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "B1yRgQ2zAaw",
+          "alt": "a very tall building with lots of windows",
+          "photographer": "Marcus Lenk",
+          "page": "https://unsplash.com/photos/B1yRgQ2zAaw",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 724,
+              "src": "/img/photos/facade/03-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1811,
+              "src": "/img/photos/facade/03-1200.avif"
+            },
+            {
+              "width": 2214,
+              "height": 3341,
+              "src": "/img/photos/facade/03-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "IcEKJ7KHZUM",
+          "alt": "gray and black wall",
+          "photographer": "Wengang Zhai",
+          "page": "https://unsplash.com/photos/IcEKJ7KHZUM",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/facade/04-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/facade/04-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 1600,
+              "src": "/img/photos/facade/04-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "74gOWpJznFU",
+          "alt": "landscape photography of building",
+          "photographer": "Oleg Savenok",
+          "page": "https://unsplash.com/photos/74gOWpJznFU",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/facade/05-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/facade/05-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 1600,
+              "src": "/img/photos/facade/05-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "CqIXtyyrNVg",
+          "alt": "white and orange building",
+          "photographer": "Bernard Hermant",
+          "page": "https://unsplash.com/photos/CqIXtyyrNVg",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/facade/06-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/facade/06-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 1600,
+              "src": "/img/photos/facade/06-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "vVvzCqDzquM",
+          "alt": "a black and white photo of a building",
+          "photographer": "Parrish Freeman",
+          "page": "https://unsplash.com/photos/vVvzCqDzquM",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 600,
+              "src": "/img/photos/facade/07-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1500,
+              "src": "/img/photos/facade/07-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3000,
+              "src": "/img/photos/facade/07-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "yzfb9H00ZIY",
+          "alt": "black and white checkered textile",
+          "photographer": "Parrish Freeman",
+          "page": "https://unsplash.com/photos/yzfb9H00ZIY",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/facade/08-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/facade/08-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3600,
+              "src": "/img/photos/facade/08-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "X2BhpoC-MDk",
+          "alt": "a close up of a building with a lot of windows",
+          "photographer": "Brice Cooper",
+          "page": "https://unsplash.com/photos/X2BhpoC-MDk",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/facade/09-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/facade/09-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3600,
+              "src": "/img/photos/facade/09-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "AgWDBLaWJY0",
+          "alt": "gray digital wallpaper",
+          "photographer": "Ricardo Gomez Angel",
+          "page": "https://unsplash.com/photos/AgWDBLaWJY0",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 280,
+              "src": "/img/photos/facade/10-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 699,
+              "src": "/img/photos/facade/10-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 1398,
+              "src": "/img/photos/facade/10-2400.avif"
+            }
+          ]
+        }
+      ]
+    },
+    "macro": {
+      "title": "Macro textures",
+      "photos": [
+        {
+          "id": "MyQ8Re-OqzI",
+          "alt": "a close up of an eye",
+          "photographer": "Yukon Haughton",
+          "page": "https://unsplash.com/photos/MyQ8Re-OqzI",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/macro/01-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/macro/01-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3600,
+              "src": "/img/photos/macro/01-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "gKK1iQABv24",
+          "alt": "textured tree bark in forest",
+          "photographer": "Volodymyr Leush",
+          "page": "https://unsplash.com/photos/gKK1iQABv24",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 721,
+              "src": "/img/photos/macro/02-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1804,
+              "src": "/img/photos/macro/02-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3607,
+              "src": "/img/photos/macro/02-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "rWmlQwd_TEo",
+          "alt": "a brown leather chair close up",
+          "photographer": "Sawyer Bergeron",
+          "page": "https://unsplash.com/photos/rWmlQwd_TEo",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/macro/03-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/macro/03-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 1600,
+              "src": "/img/photos/macro/03-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "Zn5ZY8Jzmc0",
+          "alt": "weathered concrete surface with shadows",
+          "photographer": "Severina Seidl",
+          "page": "https://unsplash.com/photos/Zn5ZY8Jzmc0",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 624,
+              "src": "/img/photos/macro/04-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1559,
+              "src": "/img/photos/macro/04-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3118,
+              "src": "/img/photos/macro/04-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "moYTBiiY3W4",
+          "alt": "dark woven fabric with turquoise beads",
+          "photographer": "Hans-Peter Traunig",
+          "page": "https://unsplash.com/photos/moYTBiiY3W4",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/macro/05-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/macro/05-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3600,
+              "src": "/img/photos/macro/05-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "-kzmdlIDB4I",
+          "alt": "textured layered material with green accents",
+          "photographer": "Hayk Badalyan",
+          "page": "https://unsplash.com/photos/-kzmdlIDB4I",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/macro/06-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/macro/06-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3600,
+              "src": "/img/photos/macro/06-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "tuGNCfFIeNE",
+          "alt": "a woven material",
+          "photographer": "Dom Labo",
+          "page": "https://unsplash.com/photos/tuGNCfFIeNE",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 853,
+              "src": "/img/photos/macro/07-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 2133,
+              "src": "/img/photos/macro/07-1200.avif"
+            },
+            {
+              "width": 2268,
+              "height": 4032,
+              "src": "/img/photos/macro/07-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "jG8ZiXv5kdc",
+          "alt": "a tree trunk with an interesting pattern",
+          "photographer": "Christian J.",
+          "page": "https://unsplash.com/photos/jG8ZiXv5kdc",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/macro/08-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/macro/08-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 1600,
+              "src": "/img/photos/macro/08-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "M7ho2fjOpjE",
+          "alt": "brown and black rock formation",
+          "photographer": "Sergio Lapunin",
+          "page": "https://unsplash.com/photos/M7ho2fjOpjE",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/macro/09-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/macro/09-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 1600,
+              "src": "/img/photos/macro/09-2400.avif"
+            }
+          ]
+        },
+        {
+          "id": "DOT1QbKNlOA",
+          "alt": "water droplets on a dark feather",
+          "photographer": "Charlotte Kirkland",
+          "page": "https://unsplash.com/photos/DOT1QbKNlOA",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 640,
+              "src": "/img/photos/macro/10-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1600,
+              "src": "/img/photos/macro/10-1200.avif"
+            },
+            {
+              "width": 2400,
+              "height": 3200,
+              "src": "/img/photos/macro/10-2400.avif"
+            }
+          ]
+        }
+      ]
+    },
+    "street": {
+      "title": "Street color",
+      "photos": [
+        {
+          "id": "9RIFeVL73sk",
+          "alt": "man sitting on wall with artwork and lamp",
+          "photographer": "Luis Vaz",
+          "page": "https://unsplash.com/photos/9RIFeVL73sk",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 640,
+              "src": "/img/photos/street/01-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1600,
+              "src": "/img/photos/street/01-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2133,
+              "src": "/img/photos/street/01-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "7H05dWs1hOk",
+          "alt": "paintings on a wall",
+          "photographer": "Mauro Lima",
+          "page": "https://unsplash.com/photos/7H05dWs1hOk",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/street/02-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/street/02-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/street/02-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "xFfdF580dh4",
+          "alt": "blue yellow red and pink balloons",
+          "photographer": "Dave George",
+          "page": "https://unsplash.com/photos/xFfdF580dh4",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/street/03-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/street/03-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/street/03-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "CoxV5SiNMXA",
+          "alt": "assorted color clothes in a box",
+          "photographer": "charley pangus",
+          "page": "https://unsplash.com/photos/CoxV5SiNMXA",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 384,
+              "src": "/img/photos/street/04-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 960,
+              "src": "/img/photos/street/04-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1280,
+              "src": "/img/photos/street/04-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "SVz13VF06ls",
+          "alt": "a bicycle by a colorful graffiti wall",
+          "photographer": "Zuzana Kacerová",
+          "page": "https://unsplash.com/photos/SVz13VF06ls",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/street/05-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/street/05-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/street/05-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "2X-xgvNOVE8",
+          "alt": "man walking on road during daytime",
+          "photographer": "Dennis Schrader",
+          "page": "https://unsplash.com/photos/2X-xgvNOVE8",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 600,
+              "src": "/img/photos/street/06-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1500,
+              "src": "/img/photos/street/06-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2000,
+              "src": "/img/photos/street/06-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "HQ_NXRvvXds",
+          "alt": "a street with flags hanging",
+          "photographer": "Hoyoun Lee",
+          "page": "https://unsplash.com/photos/HQ_NXRvvXds",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/street/07-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/street/07-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/street/07-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "GqvF3l7-pTo",
+          "alt": "a yellow car next to tall buildings",
+          "photographer": "Daniel Silva",
+          "page": "https://unsplash.com/photos/GqvF3l7-pTo",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 318,
+              "src": "/img/photos/street/08-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 796,
+              "src": "/img/photos/street/08-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1061,
+              "src": "/img/photos/street/08-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "9RjqwxIAOBI",
+          "alt": "people walking under umbrellas",
+          "photographer": "Sandra-Beatrice Molnar",
+          "page": "https://unsplash.com/photos/9RjqwxIAOBI",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/street/09-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/street/09-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/street/09-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "ZUN8oFRqhLA",
+          "alt": "a white building with multicolored windows",
+          "photographer": "Airlangga Jati",
+          "page": "https://unsplash.com/photos/ZUN8oFRqhLA",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/street/10-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/street/10-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/street/10-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "Isoef_35S08",
+          "alt": "a book store with lots of books",
+          "photographer": "Egemen Şahin",
+          "page": "https://unsplash.com/photos/Isoef_35S08",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 598,
+              "src": "/img/photos/street/11-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1496,
+              "src": "/img/photos/street/11-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1995,
+              "src": "/img/photos/street/11-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "E3Vr3vFZmDA",
+          "alt": "a man walking next to tall buildings",
+          "photographer": "Jack Prommel",
+          "page": "https://unsplash.com/photos/E3Vr3vFZmDA",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/street/12-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/street/12-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/street/12-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "BNm6Kx0pQxg",
+          "alt": "colorful houses with graffiti on a city street",
+          "photographer": "Alexander Kaufmann",
+          "page": "https://unsplash.com/photos/BNm6Kx0pQxg",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/street/13-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/street/13-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/street/13-1600.avif"
+            }
+          ]
+        }
+      ]
+    },
+    "alley": {
+      "title": "Old town alleys",
+      "photos": [
+        {
+          "id": "A1Zjr7DC_zE",
+          "alt": "brown woven basket beside brown concrete wall",
+          "photographer": "Hert Niks",
+          "page": "https://unsplash.com/photos/A1Zjr7DC_zE",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 723,
+              "src": "/img/photos/alley/01-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1807,
+              "src": "/img/photos/alley/01-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2409,
+              "src": "/img/photos/alley/01-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "ciy6i3oy_0g",
+          "alt": "a street with cars parked on it",
+          "photographer": "Alex Slav",
+          "page": "https://unsplash.com/photos/ciy6i3oy_0g",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 640,
+              "src": "/img/photos/alley/02-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1600,
+              "src": "/img/photos/alley/02-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2133,
+              "src": "/img/photos/alley/02-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "DGJcdW96qW0",
+          "alt": "white and yellow building",
+          "photographer": "Sebastian Malecki",
+          "page": "https://unsplash.com/photos/DGJcdW96qW0",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/alley/03-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/alley/03-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/alley/03-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "mDcK3rz7lCQ",
+          "alt": "narrow cobblestone street with gas lamps at dusk",
+          "photographer": "Rosalie Gdy",
+          "page": "https://unsplash.com/photos/mDcK3rz7lCQ",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/alley/04-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/alley/04-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/alley/04-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "JYYp91BHG1c",
+          "alt": "a narrow alleyway between tall buildings",
+          "photographer": "Anna Sz",
+          "page": "https://unsplash.com/photos/JYYp91BHG1c",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 640,
+              "src": "/img/photos/alley/05-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1600,
+              "src": "/img/photos/alley/05-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2133,
+              "src": "/img/photos/alley/05-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "sQaYJWv8sQA",
+          "alt": "arched passage leading to a narrow cobblestone street",
+          "photographer": "Luisa Linkous",
+          "page": "https://unsplash.com/photos/sQaYJWv8sQA",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 640,
+              "src": "/img/photos/alley/06-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1600,
+              "src": "/img/photos/alley/06-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2133,
+              "src": "/img/photos/alley/06-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "fjhi4fRNV9I",
+          "alt": "narrow street with yellow buildings and a bell tower",
+          "photographer": "Denis Gorbuleac",
+          "page": "https://unsplash.com/photos/fjhi4fRNV9I",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/alley/07-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/alley/07-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/alley/07-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "oyVDnNYhuDU",
+          "alt": "cobblestone street lined with traditional houses",
+          "photographer": "Aysegul Aytören",
+          "page": "https://unsplash.com/photos/oyVDnNYhuDU",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 722,
+              "src": "/img/photos/alley/08-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1806,
+              "src": "/img/photos/alley/08-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2408,
+              "src": "/img/photos/alley/08-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "_ocZAj4J4a4",
+          "alt": "cobblestone street under cloudy sky",
+          "photographer": "Sergei Gussev",
+          "page": "https://unsplash.com/photos/_ocZAj4J4a4",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 640,
+              "src": "/img/photos/alley/09-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1600,
+              "src": "/img/photos/alley/09-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2133,
+              "src": "/img/photos/alley/09-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "71JC15lA1WM",
+          "alt": "cobblestone alleyway between brick and white walls",
+          "photographer": "Annie Spratt",
+          "page": "https://unsplash.com/photos/71JC15lA1WM",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/alley/10-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/alley/10-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/alley/10-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "tGufKi7d5V8",
+          "alt": "narrow alley with old buildings and archway",
+          "photographer": "Artan",
+          "page": "https://unsplash.com/photos/tGufKi7d5V8",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 722,
+              "src": "/img/photos/alley/11-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1806,
+              "src": "/img/photos/alley/11-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2408,
+              "src": "/img/photos/alley/11-1600.avif"
+            }
+          ]
+        }
+      ]
+    },
+    "desert": {
+      "title": "Desert landscapes",
+      "photos": [
+        {
+          "id": "4cloovdyuvw",
+          "alt": "sand dunes during sunset",
+          "photographer": "Fabian Struwe",
+          "page": "https://unsplash.com/photos/4cloovdyuvw",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 318,
+              "src": "/img/photos/desert/01-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 795,
+              "src": "/img/photos/desert/01-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1060,
+              "src": "/img/photos/desert/01-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "RySPDa0FdcQ",
+          "alt": "the sun setting over a desert landscape",
+          "photographer": "NEOM",
+          "page": "https://unsplash.com/photos/RySPDa0FdcQ",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/desert/02-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/desert/02-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/desert/02-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "RvQkuwC-eL8",
+          "alt": "a sunset in the desert with sand dunes",
+          "photographer": "Giovanni Nicolini",
+          "page": "https://unsplash.com/photos/RvQkuwC-eL8",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/desert/03-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/desert/03-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/desert/03-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "g3-eeBDiUbc",
+          "alt": "bush and stone covered field",
+          "photographer": "Roberto Nickson",
+          "page": "https://unsplash.com/photos/g3-eeBDiUbc",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/desert/04-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/desert/04-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/desert/04-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "-1vLgdOqydw",
+          "alt": "a person riding a horse in the desert",
+          "photographer": "Wolfgang Hasselmann",
+          "page": "https://unsplash.com/photos/-1vLgdOqydw",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/desert/05-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/desert/05-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/desert/05-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "VfuJpt81JZo",
+          "alt": "brown sand under blue sky",
+          "photographer": "kevin turcios",
+          "page": "https://unsplash.com/photos/VfuJpt81JZo",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 672,
+              "src": "/img/photos/desert/06-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1680,
+              "src": "/img/photos/desert/06-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2240,
+              "src": "/img/photos/desert/06-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "RBRkrO9GY_Q",
+          "alt": "brown trees under blue sky",
+          "photographer": "frank mckenna",
+          "page": "https://unsplash.com/photos/RBRkrO9GY_Q",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 319,
+              "src": "/img/photos/desert/07-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 799,
+              "src": "/img/photos/desert/07-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1065,
+              "src": "/img/photos/desert/07-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "-RlktmDy3Ec",
+          "alt": "the sun setting over a mountain range",
+          "photographer": "NEOM",
+          "page": "https://unsplash.com/photos/-RlktmDy3Ec",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 359,
+              "src": "/img/photos/desert/08-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 899,
+              "src": "/img/photos/desert/08-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1198,
+              "src": "/img/photos/desert/08-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "iJrexd5j7PI",
+          "alt": "snow covered field during sunset",
+          "photographer": "Gopal Krishna",
+          "page": "https://unsplash.com/photos/iJrexd5j7PI",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/desert/09-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/desert/09-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/desert/09-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "Lzc4zCgMj60",
+          "alt": "brown rocky mountain under blue sky",
+          "photographer": "Gary Yost",
+          "page": "https://unsplash.com/photos/Lzc4zCgMj60",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/desert/10-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/desert/10-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/desert/10-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "3nfunuyxNdU",
+          "alt": "bird's eye view of mountain",
+          "photographer": "Will Truettner",
+          "page": "https://unsplash.com/photos/3nfunuyxNdU",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/desert/11-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 801,
+              "src": "/img/photos/desert/11-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1068,
+              "src": "/img/photos/desert/11-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "oe796n6M1k8",
+          "alt": "bird's eye view of brown mountain",
+          "photographer": "Patrick Rosenberger",
+          "page": "https://unsplash.com/photos/oe796n6M1k8",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/desert/12-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/desert/12-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/desert/12-1600.avif"
+            }
+          ]
+        }
+      ]
+    },
+    "morocco": {
+      "title": "A Morocco travel series",
+      "photos": [
+        {
+          "id": "NncAbldgViA",
+          "alt": "blue and white painted houses on the cliff",
+          "photographer": "Pretty Pink",
+          "page": "https://unsplash.com/photos/NncAbldgViA",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/morocco/01-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/morocco/01-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/morocco/01-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "i-P1lmY_e1w",
+          "alt": "concrete houses surrounded by trees",
+          "photographer": "Sergey Pesterev",
+          "page": "https://unsplash.com/photos/i-P1lmY_e1w",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 321,
+              "src": "/img/photos/morocco/02-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 803,
+              "src": "/img/photos/morocco/02-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1071,
+              "src": "/img/photos/morocco/02-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "CBfUGtVP0QE",
+          "alt": "blue stairs in Chefchaouen market",
+          "photographer": "Mohammed",
+          "page": "https://unsplash.com/photos/CBfUGtVP0QE",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 640,
+              "src": "/img/photos/morocco/03-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1600,
+              "src": "/img/photos/morocco/03-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2133,
+              "src": "/img/photos/morocco/03-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "aqJfoLKFz6c",
+          "alt": "boats docked near houses",
+          "photographer": "Louis Hansel",
+          "page": "https://unsplash.com/photos/aqJfoLKFz6c",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 360,
+              "src": "/img/photos/morocco/04-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 900,
+              "src": "/img/photos/morocco/04-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1200,
+              "src": "/img/photos/morocco/04-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "LhVJaRPweJc",
+          "alt": "textiles hanged beside concrete buildings",
+          "photographer": "Frida Aguilar Estrada",
+          "page": "https://unsplash.com/photos/LhVJaRPweJc",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/morocco/05-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/morocco/05-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/morocco/05-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "pcbSQTQr2-I",
+          "alt": "bird's eye view of town",
+          "photographer": "Toa Heftiba",
+          "page": "https://unsplash.com/photos/pcbSQTQr2-I",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/morocco/06-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/morocco/06-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/morocco/06-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "mhJml7Fusfs",
+          "alt": "group of people riding on camels",
+          "photographer": "Y K",
+          "page": "https://unsplash.com/photos/mhJml7Fusfs",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 270,
+              "src": "/img/photos/morocco/07-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 676,
+              "src": "/img/photos/morocco/07-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 901,
+              "src": "/img/photos/morocco/07-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "dnLmApcmNHg",
+          "alt": "man walking with camels in desert",
+          "photographer": "Sergey Pesterev",
+          "page": "https://unsplash.com/photos/dnLmApcmNHg",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/morocco/08-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 801,
+              "src": "/img/photos/morocco/08-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1068,
+              "src": "/img/photos/morocco/08-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "VdwtvEUj8HM",
+          "alt": "brown castle beside body of water",
+          "photographer": "Nicolas Cool",
+          "page": "https://unsplash.com/photos/VdwtvEUj8HM",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 294,
+              "src": "/img/photos/morocco/09-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 736,
+              "src": "/img/photos/morocco/09-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 981,
+              "src": "/img/photos/morocco/09-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "MNxFb17V6vk",
+          "alt": "people riding camels on desert",
+          "photographer": "Y K",
+          "page": "https://unsplash.com/photos/MNxFb17V6vk",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 270,
+              "src": "/img/photos/morocco/10-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 675,
+              "src": "/img/photos/morocco/10-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 900,
+              "src": "/img/photos/morocco/10-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "I2YeucCFOmw",
+          "alt": "woman sitting on sand during sunset",
+          "photographer": "zakariae daoui",
+          "page": "https://unsplash.com/photos/I2YeucCFOmw",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 486,
+              "src": "/img/photos/morocco/11-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1216,
+              "src": "/img/photos/morocco/11-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1621,
+              "src": "/img/photos/morocco/11-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "upJFoyr7BBA",
+          "alt": "textiles hanging on roof",
+          "photographer": "Annie Spratt",
+          "page": "https://unsplash.com/photos/upJFoyr7BBA",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 438,
+              "src": "/img/photos/morocco/12-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1096,
+              "src": "/img/photos/morocco/12-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1461,
+              "src": "/img/photos/morocco/12-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "9UdGLlw-Sfk",
+          "alt": "people walking near brown concrete building",
+          "photographer": "rigel",
+          "page": "https://unsplash.com/photos/9UdGLlw-Sfk",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/morocco/13-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/morocco/13-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/morocco/13-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "vXoWmtiyEpY",
+          "alt": "brown wooden table and chairs on a sunny day",
+          "photographer": "rigel",
+          "page": "https://unsplash.com/photos/vXoWmtiyEpY",
+          "sizes": [
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/morocco/14-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/morocco/14-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/morocco/14-1600.avif"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,608 @@
+{
+  "license": "Unsplash License, https://unsplash.com/license",
+  "collections": {
+    "hero": {
+      "title": "Golden hour architecture",
+      "photos": [
+        {
+          "id": "oFNFhxx08_g",
+          "cdn": "photo-1685760248065-2ef5b4fc7415",
+          "alt": "a view of a city with tall buildings",
+          "photographer": "Zack Nichols"
+        },
+        {
+          "id": "BvMqoxAEvIw",
+          "cdn": "photo-1696470553784-4f28d59b305d",
+          "alt": "a building with many windows reflecting the sky",
+          "photographer": "Jonas"
+        },
+        {
+          "id": "xA-SSDUZnhk",
+          "cdn": "photo-1729592668230-c487889c7311",
+          "alt": "a view of a clock tower through a circular window",
+          "photographer": "Pavel Okrema"
+        },
+        {
+          "id": "YmStDya1HSU",
+          "cdn": "photo-1564846150099-53c29882d4d4",
+          "alt": "brown concrete building",
+          "photographer": "Llibert Losada"
+        },
+        {
+          "id": "xUWxij-zHu4",
+          "cdn": "photo-1738994682391-9ec4b77935ec",
+          "alt": "a building with columns and a clock",
+          "photographer": "Alex Damske"
+        },
+        {
+          "id": "Nta3rjmyy4Y",
+          "cdn": "photo-1632735463999-e6da6b860163",
+          "alt": "a building with a lot of windows",
+          "photographer": "Crawford Passy"
+        },
+        {
+          "id": "An9P-EMm7rU",
+          "cdn": "photo-1631369233561-05ff42155b8b",
+          "alt": "black and brown building during daytime",
+          "photographer": "Melina Kiefer"
+        },
+        {
+          "id": "4U2kSoQxCv0",
+          "cdn": "photo-1697135376181-f6b7aac6caf6",
+          "alt": "the sun setting over a city with tall buildings",
+          "photographer": "Harshit Suryawanshi"
+        }
+      ]
+    },
+    "warm": {
+      "title": "Warm light",
+      "photos": [
+        {
+          "id": "Wm3DCN_ydR0",
+          "cdn": "photo-1541861534-9ec15bf2c1c2",
+          "alt": "yellow hallway",
+          "photographer": "Pierre Châtel-Innocenti"
+        },
+        {
+          "id": "cgLPVVmaMq4",
+          "cdn": "photo-1671917263494-7a6eb222095e",
+          "alt": "the top of a tall building",
+          "photographer": "Hossein Nasr"
+        },
+        {
+          "id": "GL_e7TForNY",
+          "cdn": "photo-1701889054107-72649f6b7c43",
+          "alt": "a very tall building lit up at night",
+          "photographer": "avechenri"
+        },
+        {
+          "id": "vK0PSXaUmdU",
+          "cdn": "photo-1787000639931-81c50e093876",
+          "alt": "historic facade with golden light in the windows",
+          "photographer": "Pranit Patel"
+        },
+        {
+          "id": "kHhUzZ8tINA",
+          "cdn": "photo-1781826735692-7da407a2c191",
+          "alt": "golden sunlight on a stone building",
+          "photographer": "ANGIE BAONGOC"
+        },
+        {
+          "id": "ZoYutZrqAlg",
+          "cdn": "photo-1741712243993-c76921001a91",
+          "alt": "classic building in warm golden sunlight",
+          "photographer": "David Salamanca"
+        }
+      ]
+    },
+    "stone": {
+      "title": "Sandstone and carved detail",
+      "photos": [
+        {
+          "id": "YtrNtsgUIyo",
+          "cdn": "photo-1691337896746-18a8316a4f3f",
+          "alt": "an old building with a clock on the front",
+          "photographer": "Andreas Haubold"
+        },
+        {
+          "id": "ICXMkhRdquA",
+          "cdn": "photo-1483600516620-7254872369ae",
+          "alt": "gray stone columns worm's-eye view",
+          "photographer": "Jesse Collins"
+        },
+        {
+          "id": "2uj2Pf6sobg",
+          "cdn": "photo-1763295492760-b3bf4794bbdf",
+          "alt": "intricate carvings on red sandstone architecture",
+          "photographer": "Zoshua Colah"
+        },
+        {
+          "id": "fLna0uxEIy4",
+          "cdn": "photo-1635602678578-ab6b6f99daab",
+          "alt": "a close up of a brick wall with small holes",
+          "photographer": "Kaffeebart"
+        },
+        {
+          "id": "GaCNIy8gas8",
+          "cdn": "photo-1763766501084-54e3c6428584",
+          "alt": "ornate red and white column with intricate patterns",
+          "photographer": "Zoshua Colah"
+        },
+        {
+          "id": "lUEH1snvF3Y",
+          "cdn": "photo-1781084692048-b5428c78e0bb",
+          "alt": "ancient red sandstone archway ruins",
+          "photographer": "Subhashis Das"
+        },
+        {
+          "id": "8sZ_Wt3EIu4",
+          "cdn": "photo-1773242567389-9b4a86164eb8",
+          "alt": "ornate architectural detail on a brick building",
+          "photographer": "Alexandr Popadin"
+        },
+        {
+          "id": "ScG-gXAd1X8",
+          "cdn": "photo-1784466505256-48942f06d927",
+          "alt": "old stone building facade with multiple windows",
+          "photographer": "Jez Timms"
+        },
+        {
+          "id": "YF9pGnc4IUg",
+          "cdn": "photo-1757409976243-278de1f5ac67",
+          "alt": "stone gargoyle face on an old fountain",
+          "photographer": "martin lea"
+        }
+      ]
+    },
+    "facade": {
+      "title": "Facades and patterns",
+      "photos": [
+        {
+          "id": "3lKFHLCKark",
+          "cdn": "photo-1478979464727-af7d24e18554",
+          "alt": "office building with symmetrical gray textured walls",
+          "photographer": "Khara Woods"
+        },
+        {
+          "id": "o7xm8E8R4_U",
+          "cdn": "photo-1536501483244-925da0b87089",
+          "alt": "gray and black architectural design",
+          "photographer": "Carlos Torres"
+        },
+        {
+          "id": "B1yRgQ2zAaw",
+          "cdn": "photo-1567886389617-5a63707fff43",
+          "alt": "a very tall building with lots of windows",
+          "photographer": "Marcus Lenk"
+        },
+        {
+          "id": "IcEKJ7KHZUM",
+          "cdn": "photo-1578735546632-9ff1f1e7518e",
+          "alt": "gray and black wall",
+          "photographer": "Wengang Zhai"
+        },
+        {
+          "id": "74gOWpJznFU",
+          "cdn": "photo-1469539188336-fcd3b39d5efb",
+          "alt": "landscape photography of building",
+          "photographer": "Oleg Savenok"
+        },
+        {
+          "id": "CqIXtyyrNVg",
+          "cdn": "photo-1524347056892-b804ce62bf38",
+          "alt": "white and orange building",
+          "photographer": "Bernard Hermant"
+        },
+        {
+          "id": "vVvzCqDzquM",
+          "cdn": "photo-1649939929524-681f8b1faa07",
+          "alt": "a black and white photo of a building",
+          "photographer": "Parrish Freeman"
+        },
+        {
+          "id": "yzfb9H00ZIY",
+          "cdn": "photo-1620483474144-23931ab57ecd",
+          "alt": "black and white checkered textile",
+          "photographer": "Parrish Freeman"
+        },
+        {
+          "id": "X2BhpoC-MDk",
+          "cdn": "photo-1690381529568-6bb94ed73469",
+          "alt": "a close up of a building with a lot of windows",
+          "photographer": "Brice Cooper"
+        },
+        {
+          "id": "AgWDBLaWJY0",
+          "cdn": "photo-1504075763897-39608dcb6306",
+          "alt": "gray digital wallpaper",
+          "photographer": "Ricardo Gomez Angel"
+        }
+      ]
+    },
+    "macro": {
+      "title": "Macro textures",
+      "photos": [
+        {
+          "id": "MyQ8Re-OqzI",
+          "cdn": "photo-1647467531235-f4c07dd1b386",
+          "alt": "a close up of an eye",
+          "photographer": "Yukon Haughton"
+        },
+        {
+          "id": "gKK1iQABv24",
+          "cdn": "photo-1763452453356-9b7074a342cc",
+          "alt": "textured tree bark in forest",
+          "photographer": "Volodymyr Leush"
+        },
+        {
+          "id": "rWmlQwd_TEo",
+          "cdn": "photo-1732505294791-2c1cb57b9f9f",
+          "alt": "a brown leather chair close up",
+          "photographer": "Sawyer Bergeron"
+        },
+        {
+          "id": "Zn5ZY8Jzmc0",
+          "cdn": "photo-1775498728548-b721f27ea6b9",
+          "alt": "weathered concrete surface with shadows",
+          "photographer": "Severina Seidl"
+        },
+        {
+          "id": "moYTBiiY3W4",
+          "cdn": "photo-1776164951073-ad3f7de265c9",
+          "alt": "dark woven fabric with turquoise beads",
+          "photographer": "Hans-Peter Traunig"
+        },
+        {
+          "id": "-kzmdlIDB4I",
+          "cdn": "photo-1769325318810-2d2c73188119",
+          "alt": "textured layered material with green accents",
+          "photographer": "Hayk Badalyan"
+        },
+        {
+          "id": "tuGNCfFIeNE",
+          "cdn": "photo-1673387752683-465ba7e1bcf3",
+          "alt": "a woven material",
+          "photographer": "Dom Labo"
+        },
+        {
+          "id": "jG8ZiXv5kdc",
+          "cdn": "photo-1692372919685-8416b3d122e5",
+          "alt": "a tree trunk with an interesting pattern",
+          "photographer": "Christian J."
+        },
+        {
+          "id": "M7ho2fjOpjE",
+          "cdn": "photo-1592751854593-299b40a8f969",
+          "alt": "brown and black rock formation",
+          "photographer": "Sergio Lapunin"
+        },
+        {
+          "id": "DOT1QbKNlOA",
+          "cdn": "photo-1760905653286-274716bc711d",
+          "alt": "water droplets on a dark feather",
+          "photographer": "Charlotte Kirkland"
+        }
+      ]
+    },
+    "street": {
+      "title": "Street color",
+      "photos": [
+        {
+          "id": "9RIFeVL73sk",
+          "cdn": "photo-1484136199491-6603c473c88b",
+          "alt": "man sitting on wall with artwork and lamp",
+          "photographer": "Luis Vaz"
+        },
+        {
+          "id": "7H05dWs1hOk",
+          "cdn": "photo-1679748075210-62ef0de22488",
+          "alt": "paintings on a wall",
+          "photographer": "Mauro Lima"
+        },
+        {
+          "id": "xFfdF580dh4",
+          "cdn": "photo-1603729210683-21a3763c1233",
+          "alt": "blue yellow red and pink balloons",
+          "photographer": "Dave George"
+        },
+        {
+          "id": "CoxV5SiNMXA",
+          "cdn": "photo-1543541471-65f7c3678ff3",
+          "alt": "assorted color clothes in a box",
+          "photographer": "charley pangus"
+        },
+        {
+          "id": "SVz13VF06ls",
+          "cdn": "photo-1754462642749-200ce41c11df",
+          "alt": "a bicycle by a colorful graffiti wall",
+          "photographer": "Zuzana Kacerová"
+        },
+        {
+          "id": "2X-xgvNOVE8",
+          "cdn": "photo-1547995885-84a1f9ba5c15",
+          "alt": "man walking on road during daytime",
+          "photographer": "Dennis Schrader"
+        },
+        {
+          "id": "HQ_NXRvvXds",
+          "cdn": "photo-1700635360181-02fbac466cbc",
+          "alt": "a street with flags hanging",
+          "photographer": "Hoyoun Lee"
+        },
+        {
+          "id": "GqvF3l7-pTo",
+          "cdn": "photo-1705251464627-7bd4f6c07c45",
+          "alt": "a yellow car next to tall buildings",
+          "photographer": "Daniel Silva"
+        },
+        {
+          "id": "9RjqwxIAOBI",
+          "cdn": "photo-1720116761658-36d649168871",
+          "alt": "people walking under umbrellas",
+          "photographer": "Sandra-Beatrice Molnar"
+        },
+        {
+          "id": "ZUN8oFRqhLA",
+          "cdn": "photo-1712155444326-ac6ecf91a9ae",
+          "alt": "a white building with multicolored windows",
+          "photographer": "Airlangga Jati"
+        },
+        {
+          "id": "Isoef_35S08",
+          "cdn": "photo-1723772752807-01f72229deb5",
+          "alt": "a book store with lots of books",
+          "photographer": "Egemen Şahin"
+        },
+        {
+          "id": "E3Vr3vFZmDA",
+          "cdn": "photo-1641736047590-c48b75614d7e",
+          "alt": "a man walking next to tall buildings",
+          "photographer": "Jack Prommel"
+        },
+        {
+          "id": "BNm6Kx0pQxg",
+          "cdn": "photo-1784471396718-d142b2b91716",
+          "alt": "colorful houses with graffiti on a city street",
+          "photographer": "Alexander Kaufmann"
+        }
+      ]
+    },
+    "alley": {
+      "title": "Old town alleys",
+      "photos": [
+        {
+          "id": "A1Zjr7DC_zE",
+          "cdn": "photo-1602521519815-85c4548bff5e",
+          "alt": "brown woven basket beside brown concrete wall",
+          "photographer": "Hert Niks"
+        },
+        {
+          "id": "ciy6i3oy_0g",
+          "cdn": "photo-1663785011787-edf47928c6ad",
+          "alt": "a street with cars parked on it",
+          "photographer": "Alex Slav"
+        },
+        {
+          "id": "DGJcdW96qW0",
+          "cdn": "photo-1577552265365-d54b725a7d2c",
+          "alt": "white and yellow building",
+          "photographer": "Sebastian Malecki"
+        },
+        {
+          "id": "mDcK3rz7lCQ",
+          "cdn": "photo-1761752890000-8b3813a00cab",
+          "alt": "narrow cobblestone street with gas lamps at dusk",
+          "photographer": "Rosalie Gdy"
+        },
+        {
+          "id": "JYYp91BHG1c",
+          "cdn": "photo-1783546941669-65bae6eedc23",
+          "alt": "a narrow alleyway between tall buildings",
+          "photographer": "Anna Sz"
+        },
+        {
+          "id": "sQaYJWv8sQA",
+          "cdn": "photo-1764345023757-7774b3851d17",
+          "alt": "arched passage leading to a narrow cobblestone street",
+          "photographer": "Luisa Linkous"
+        },
+        {
+          "id": "fjhi4fRNV9I",
+          "cdn": "photo-1785962973168-199391d4820e",
+          "alt": "narrow street with yellow buildings and a bell tower",
+          "photographer": "Denis Gorbuleac"
+        },
+        {
+          "id": "oyVDnNYhuDU",
+          "cdn": "photo-1774537238341-1def95a6a84e",
+          "alt": "cobblestone street lined with traditional houses",
+          "photographer": "Aysegul Aytören"
+        },
+        {
+          "id": "_ocZAj4J4a4",
+          "cdn": "photo-1767948003426-91229f64b682",
+          "alt": "cobblestone street under cloudy sky",
+          "photographer": "Sergei Gussev"
+        },
+        {
+          "id": "71JC15lA1WM",
+          "cdn": "photo-1787068235643-8f104c18cc7c",
+          "alt": "cobblestone alleyway between brick and white walls",
+          "photographer": "Annie Spratt"
+        },
+        {
+          "id": "tGufKi7d5V8",
+          "cdn": "photo-1782564173895-1f49d7b5c8b5",
+          "alt": "narrow alley with old buildings and archway",
+          "photographer": "Artan"
+        }
+      ]
+    },
+    "desert": {
+      "title": "Desert landscapes",
+      "photos": [
+        {
+          "id": "4cloovdyuvw",
+          "cdn": "photo-1486314030120-d5ab85fe58cd",
+          "alt": "sand dunes during sunset",
+          "photographer": "Fabian Struwe"
+        },
+        {
+          "id": "RySPDa0FdcQ",
+          "cdn": "photo-1682687980961-78fa83781450",
+          "alt": "the sun setting over a desert landscape",
+          "photographer": "NEOM"
+        },
+        {
+          "id": "RvQkuwC-eL8",
+          "cdn": "photo-1723124695882-906dda1cd2c7",
+          "alt": "a sunset in the desert with sand dunes",
+          "photographer": "Giovanni Nicolini"
+        },
+        {
+          "id": "g3-eeBDiUbc",
+          "cdn": "photo-1528351145810-e6b5107d8dfb",
+          "alt": "bush and stone covered field",
+          "photographer": "Roberto Nickson"
+        },
+        {
+          "id": "-1vLgdOqydw",
+          "cdn": "photo-1703942924556-c67fd23ef783",
+          "alt": "a person riding a horse in the desert",
+          "photographer": "Wolfgang Hasselmann"
+        },
+        {
+          "id": "VfuJpt81JZo",
+          "cdn": "photo-1617892294139-00fbccc39702",
+          "alt": "brown sand under blue sky",
+          "photographer": "kevin turcios"
+        },
+        {
+          "id": "RBRkrO9GY_Q",
+          "cdn": "photo-1470095108684-735fe1f71ab7",
+          "alt": "brown trees under blue sky",
+          "photographer": "frank mckenna"
+        },
+        {
+          "id": "-RlktmDy3Ec",
+          "cdn": "photo-1682687220566-5599dbbebf11",
+          "alt": "the sun setting over a mountain range",
+          "photographer": "NEOM"
+        },
+        {
+          "id": "iJrexd5j7PI",
+          "cdn": "photo-1580051859262-017717989ae8",
+          "alt": "snow covered field during sunset",
+          "photographer": "Gopal Krishna"
+        },
+        {
+          "id": "Lzc4zCgMj60",
+          "cdn": "photo-1620786298381-438737a81c58",
+          "alt": "brown rocky mountain under blue sky",
+          "photographer": "Gary Yost"
+        },
+        {
+          "id": "3nfunuyxNdU",
+          "cdn": "photo-1536772352522-6f715556f25f",
+          "alt": "bird's eye view of mountain",
+          "photographer": "Will Truettner"
+        },
+        {
+          "id": "oe796n6M1k8",
+          "cdn": "photo-1537212429608-6b5f5449cdf8",
+          "alt": "bird's eye view of brown mountain",
+          "photographer": "Patrick Rosenberger"
+        }
+      ]
+    },
+    "morocco": {
+      "title": "A Morocco travel series",
+      "photos": [
+        {
+          "id": "NncAbldgViA",
+          "cdn": "photo-1569383746724-6f1b882b8f46",
+          "alt": "blue and white painted houses on the cliff",
+          "photographer": "Pretty Pink"
+        },
+        {
+          "id": "i-P1lmY_e1w",
+          "cdn": "photo-1489749798305-4fea3ae63d43",
+          "alt": "concrete houses surrounded by trees",
+          "photographer": "Sergey Pesterev"
+        },
+        {
+          "id": "CBfUGtVP0QE",
+          "cdn": "photo-1538600838042-6a0c694ffab5",
+          "alt": "blue stairs in Chefchaouen market",
+          "photographer": "Mohammed"
+        },
+        {
+          "id": "aqJfoLKFz6c",
+          "cdn": "photo-1515386474292-47555758ef2e",
+          "alt": "boats docked near houses",
+          "photographer": "Louis Hansel"
+        },
+        {
+          "id": "LhVJaRPweJc",
+          "cdn": "photo-1536237717235-0acadb345d8c",
+          "alt": "textiles hanged beside concrete buildings",
+          "photographer": "Frida Aguilar Estrada"
+        },
+        {
+          "id": "pcbSQTQr2-I",
+          "cdn": "photo-1527338611623-4e242563220a",
+          "alt": "bird's eye view of town",
+          "photographer": "Toa Heftiba"
+        },
+        {
+          "id": "mhJml7Fusfs",
+          "cdn": "photo-1535191059345-c16453b851b2",
+          "alt": "group of people riding on camels",
+          "photographer": "Y K"
+        },
+        {
+          "id": "dnLmApcmNHg",
+          "cdn": "photo-1510952267577-fc96d5ca660a",
+          "alt": "man walking with camels in desert",
+          "photographer": "Sergey Pesterev"
+        },
+        {
+          "id": "VdwtvEUj8HM",
+          "cdn": "photo-1527960299979-ae13298358b6",
+          "alt": "brown castle beside body of water",
+          "photographer": "Nicolas Cool"
+        },
+        {
+          "id": "MNxFb17V6vk",
+          "cdn": "photo-1535191198992-fe460a2d0af1",
+          "alt": "people riding camels on desert",
+          "photographer": "Y K"
+        },
+        {
+          "id": "I2YeucCFOmw",
+          "cdn": "photo-1581353458680-6dae683fcc6c",
+          "alt": "woman sitting on sand during sunset",
+          "photographer": "zakariae daoui"
+        },
+        {
+          "id": "upJFoyr7BBA",
+          "cdn": "photo-1517821099606-cef63a9bcda6",
+          "alt": "textiles hanging on roof",
+          "photographer": "Annie Spratt"
+        },
+        {
+          "id": "9UdGLlw-Sfk",
+          "cdn": "photo-1624802357760-5e1fdc9def34",
+          "alt": "people walking near brown concrete building",
+          "photographer": "rigel"
+        },
+        {
+          "id": "vXoWmtiyEpY",
+          "cdn": "photo-1624805098931-098c0d918b34",
+          "alt": "brown wooden table and chairs on a sunny day",
+          "photographer": "rigel"
+        }
+      ]
+    }
+  }
+}

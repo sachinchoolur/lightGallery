@@ -12,12 +12,13 @@ images: []
 ---
 
 import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
+import { photos } from '../../lib/photos';
 import TrustedBy from '../../components/shortcodes/TrustedBy.astro';
 
 <div class="container-fluid">
     <div class="row justify-content-center clip-path-bg">
         <div class="col-lg-8 text-center clip-path-bg-inner">
-            <GalleryDemo size="xl" id="animated-thumbnails-gallery" />
+            <GalleryDemo size="xl" id="animated-thumbnails-gallery" photos="hero,warm" />
             <p class="open-gallery-text"> Click on any thumbnail to open lightGallery</p>
         </div>
     </div>
@@ -90,140 +91,49 @@ import TrustedBy from '../../components/shortcodes/TrustedBy.astro';
         <div class="col-lg-6 align-self-center">
             <div class="vertical-gallery row" id="gallery-demo-super-customizable">
                 <div class="vertical-gallery-row col-4 first-row">
-                    <a
-                        data-lg-size="480-475-480, 800-791-800, 1406-1390"
-                        class="gallery-item"
-                        data-src="https://images.unsplash.com/photo-1581894158358-5ecd2c518883?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1406&q=80"
-                        data-responsive="https://images.unsplash.com/photo-1581894158358-5ecd2c518883?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1581894158358-5ecd2c518883?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
-                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@entrycube' >Diego Guzmán </a></h4> <p> Location - <a href='https://unsplash.com/s/photos/fushimi-inari-taisha-shrine-senbontorii%2C-68%E7%95%AA%E5%9C%B0-fukakusa-yabunouchicho%2C-fushimi-ward%2C-kyoto%2C-japan'>Fushimi Ward, Kyoto, Japan</a></p>"
-                    >
-                        <img
-                            class="img-responsive"
-                            src="https://images.unsplash.com/photo-1581894158358-5ecd2c518883?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
-                        />
-                    </a>
-                    <a
-                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
-                        data-pinterest-text="Shinimamiya, Osaka, Japan"
-                        data-tweet-text="Shinimamiya, Osaka, Japan"
-                        class="gallery-item"
-                        data-src="https://images.unsplash.com/photo-1544550285-f813152fb2fd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-                        data-responsive="https://images.unsplash.com/photo-1544550285-f813152fb2fd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1544550285-f813152fb2fd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
-                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@asoshiation' >Shah </a></h4><p> Location - <a href='https://unsplash.com/s/photos/shinimamiya%2C-osaka%2C-japan'>Shinimamiya, Osaka, Japan</a></p>"
-                    >
-                        <img
-                            class="img-responsive"
-                            src="https://images.unsplash.com/photo-1544550285-f813152fb2fd?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
-                        />
-                    </a>
-                    <a
-                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
-                        data-pinterest-text="Pin it3"
-                        data-tweet-text="lightGallery slide  4"
-                        class="gallery-item"
-                        data-src="https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-                        data-responsive="https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
-                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@katherine_xx11' >Katherine Gu </a></h4><p> For all those years we were alone and helpless.</p>"
-                    >
-                        <img
-                            class="img-responsive"
-                            src="https://images.unsplash.com/photo-1584592740039-cddf0671f3d4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
-                        />
-                    </a>
+                    {photos('morocco').slice(0, 3).map((p) => (
+            <a
+                data-lg-size={p.size}
+                data-pinterest-text={p.title}
+                data-tweet-text={p.title}
+                class="gallery-item"
+                data-src={p.src}
+                data-responsive={p.responsive}
+                data-sub-html={p.caption}
+            >
+                <img class="img-responsive" alt={p.alt} src={p.thumb} />
+            </a>
+                    ))}
                 </div>
                 <div class="vertical-gallery-row col-4 second-row">
-                    <a
-                        data-lg-size="480-514-480, 800-856-800, 1368-1464"
-                        class="gallery-item"
-                        data-src="https://images.unsplash.com/photo-1595878805482-2f9cef4b58ce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1368&q=80"
-                        data-responsive="https://images.unsplash.com/photo-1595878805482-2f9cef4b58ce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1595878805482-2f9cef4b58ce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
-                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@einfachlaurenz' >Laurenz Heymann </a></h4><p> Location - <a href='https://unsplash.com/s/photos/%C3%B6resundbr%C3%BCcke%2C-t%C3%A5rnby%2C-denmark>Öresundbrücke, Tårnby, Denmark</a>Tunnel after Öresund birdge</p>"
-                    >
-                        <img
-                            class="img-responsive"
-                            src="https://images.unsplash.com/photo-1595878805482-2f9cef4b58ce?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1368&q=80"
-                        />
-                    </a>
-                    <a
-                        data-lg-size="480-481-480, 800-801-800, 1400-1402"
-                        class="gallery-item"
-                        data-src="https://images.unsplash.com/photo-1613541444699-39429d990353?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-                        data-responsive="https://images.unsplash.com/photo-1613541444699-39429d990353?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1613541444699-39429d990353?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
-                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@dogancan' >Doğancan Özturan </a></h4><p> Location - <a href='https://unsplash.com/s/photos/ko%C3%A7-%C3%BCniversitesi%2C-rumelifeneri%2C-sar%C4%B1yer%2Fi%CC%87stanbul%2C-turkey'>Koç Üniversitesi, Rumelifeneri, Sarıyer/İstanbul, Turkey</a></p>"
-                    >
-                        <img
-                            class="img-responsive"
-                            src="https://images.unsplash.com/photo-1613541444699-39429d990353?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
-                        />
-                    </a>
-                    <a
-                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
-                        data-pinterest-text="Pin it2"
-                        data-tweet-text="lightGallery slide  2"
-                        class="gallery-item"
-                        data-src="https://images.unsplash.com/photo-1605814966843-7b90f1156878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80"
-                        data-responsive="https://images.unsplash.com/photo-1605814966843-7b90f1156878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1605814966843-7b90f1156878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800"
-                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@jeancarloemer' >Jean Carlo Emer </a></h4><p> Location - <a href='https://unsplash.com/s/photos/amsterdam%2C-netherlands'>Amsterdam, Netherlands</a></p>"
-                    >
-                        <img
-                            class="img-responsive"
-                            src="https://images.unsplash.com/photo-1605814966843-7b90f1156878?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80"
-                        />
-                    </a>
-                    <a
-                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
-                        data-pinterest-text="Seoul, South Korea"
-                        data-tweet-text="Seoul, South Korea"
-                        class="gallery-item"
-                        data-src="https://images.unsplash.com/photo-1603456669596-2dc6f92705ba?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-                        data-responsive="https://images.unsplash.com/photo-1603456669596-2dc6f92705ba?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1603456669596-2dc6f92705ba?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
-                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@akaunas' >Alexander Kaunas </a></h4><p> Location - <a href='https://unsplash.com/s/photos/seoul%2C-south-korea'>Seoul, South Korea</a></p>"
-                    >
-                        <img
-                            class="img-responsive"
-                            src="https://images.unsplash.com/photo-1603456669596-2dc6f92705ba?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
-                        />
-                    </a>
+                    {photos('morocco').slice(3, 7).map((p) => (
+            <a
+                data-lg-size={p.size}
+                data-pinterest-text={p.title}
+                data-tweet-text={p.title}
+                class="gallery-item"
+                data-src={p.src}
+                data-responsive={p.responsive}
+                data-sub-html={p.caption}
+            >
+                <img class="img-responsive" alt={p.alt} src={p.thumb} />
+            </a>
+                    ))}
                 </div>
                 <div class="vertical-gallery-row col-4 third-row">
-                    <a
-                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
-                        class="gallery-item"
-                        data-src="https://images.unsplash.com/photo-1528650765831-7f2254800a83?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1400&q=80"
-                        data-responsive="https://images.unsplash.com/photo-1528650765831-7f2254800a83?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1528650765831-7f2254800a83?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80 800"
-                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@danesduet' >Daniel Olah </a></h4><p> Location - <a href='https://unsplash.com/s/photos/st.-stephen's-basilica%2C-budapest%2C-hungary'>St. Stephen's Basilica, Budapest, Hungary</a>St. Stephans Basilika</p>"
-                    >
-                        <img
-                            class="img-responsive"
-                            src="https://images.unsplash.com/photo-1528650765831-7f2254800a83?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=240&q=80"
-                        />
-                    </a>
-                    <a
-                        data-lg-size="480-442-480, 800-737-800, 1443-1329"
-                        class="gallery-item"
-                        data-src="https://images.unsplash.com/photo-1563502310703-1ffe473ad66d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1443&q=80"
-                        data-responsive="https://images.unsplash.com/photo-1563502310703-1ffe473ad66d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1563502310703-1ffe473ad66d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
-                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@mikeolion' >Michael oyesile </a></h4><p> Location - <a href='https://unsplash.com/s/photos/pizol%2C-mels%2C-schweiz'>Pizol, Mels, Schweiz</a></p>"
-                    >
-                        <img
-                            class="img-responsive"
-                            src="https://images.unsplash.com/photo-1563502310703-1ffe473ad66d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
-                        />
-                    </a>
-                    <a
-                        data-lg-size="480-480-480, 800-800-800, 1400-1400"
-                        data-pinterest-text="Pin it2"
-                        data-tweet-text="lightGallery slide  2"
-                        class="gallery-item"
-                        data-src="https://images.unsplash.com/photo-1588093413519-17cec3f64e40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-                        data-responsive="https://images.unsplash.com/photo-1588093413519-17cec3f64e40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=480&q=80 480, https://images.unsplash.com/photo-1588093413519-17cec3f64e40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80 800"
-                        data-sub-html="<h4>Photo by - <a href='https://unsplash.com/@neotronimz' >Nirmal Rajendharkumar </a></h4><p> Location - <a href='https://unsplash.com/s/photos/brooklyn%2C-ny%2C-usa'>Brooklyn, NY, USA</a></p>"
-                    >
-                        <img
-                            class="img-responsive"
-                            src="https://images.unsplash.com/photo-1588093413519-17cec3f64e40?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80"
-                        />
-                    </a>
+                    {photos('morocco').slice(7, 10).map((p) => (
+            <a
+                data-lg-size={p.size}
+                data-pinterest-text={p.title}
+                data-tweet-text={p.title}
+                class="gallery-item"
+                data-src={p.src}
+                data-responsive={p.responsive}
+                data-sub-html={p.caption}
+            >
+                <img class="img-responsive" alt={p.alt} src={p.thumb} />
+            </a>
+                    ))}
                 </div>
             </div>
             <p class="open-gallery-text"> Click on any thumbnail to open lightGallery</p>
