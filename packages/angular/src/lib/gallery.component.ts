@@ -790,7 +790,10 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
     // ── Open/close + transition presentation state ────────────────────────
 
-    private readonly phase = signal<OpenPhase>('closed');
+    // Read by the template (the slide pool unmounts once a close
+    // settles), so protected rather than private: the library build
+    // type-checks templates and cannot reach a private member.
+    protected readonly phase = signal<OpenPhase>('closed');
     private readonly visible = signal(false);
     private readonly componentsOpen = signal(false);
     private readonly useStartClass = signal(false);
