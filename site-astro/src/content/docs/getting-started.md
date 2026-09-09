@@ -1,6 +1,6 @@
 ---
-title: 'JavaScript image gallery — get started'
-description: 'Install lightGallery with npm or a CDN and build a responsive image and video gallery in a few lines of JavaScript — no dependencies, 13 plugins.'
+title: 'JavaScript image gallery, get started'
+description: 'Install lightGallery with npm or a CDN and build a responsive image and video gallery in a few lines of JavaScript, no dependencies, 13 plugins.'
 lead: lightGallery is a lightweight, modular, JavaScript library for creating beautiful image & video galleries for the web and the mobile.
 date: 2020-10-06T08:48:57.000Z
 draft: false
@@ -185,7 +185,24 @@ plugins names as follows.
 
 ## Browser support
 
-lightGallery supports all major browsers including IE 10 and above.
+lightGallery works in all modern browsers and well beyond them. The
+builds target ES2015, so any browser that understands classes, arrow
+functions and template literals runs it without transpiling or polyfills:
+Chrome, Edge, Firefox and Safari on desktop, Safari on iOS and Chrome on
+Android, going back many years.
+
+-   **ES module and UMD builds.** Import it in a bundler, load it as a
+    native `<script type="module">`, or drop the UMD file into a plain
+    `<script>` tag. Nothing is module-only.
+-   **Newer APIs are optional.** Features that rely on newer browser
+    APIs, such as the native share sheet or observer-based relayout, are
+    feature-detected and fall back cleanly where they are missing.
+-   **No Internet Explorer.** IE is not supported. If you still need it,
+    lightGallery v2 ships ES5 builds and remains available.
+
+If something misbehaves in a browser you care about, please
+[open an issue](https://github.com/sachinchoolur/lightGallery/issues)
+with the browser and version.
 
 ## License
 
