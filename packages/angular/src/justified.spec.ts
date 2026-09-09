@@ -22,6 +22,7 @@ const SIZES = [
             [rowHeight]="200"
             [gap]="10"
             [direction]="direction()"
+            [reveal]="reveal()"
         >
             @for (size of sizes; track $index) {
             <a [href]="$index + '.png'" [attr.data-lg-size]="size">
@@ -40,6 +41,7 @@ const SIZES = [
 class JustifiedHost {
     readonly sizes = SIZES;
     readonly direction = signal<'ltr' | 'rtl' | 'auto'>('auto');
+    readonly reveal = signal<'row' | 'image'>('row');
     protected readonly String = String;
 }
 
@@ -58,6 +60,25 @@ function grid(): HTMLElement {
 function triggers(): HTMLElement[] {
     return Array.from(grid().querySelectorAll<HTMLElement>('a'));
 }
+
+/** Positioned triggers grouped by row (style.top), hidden ones skipped. */
+function rowsOf(items: HTMLElement[]): HTMLElement[][] {
+    const byTop = new Map<string, HTMLElement[]>();
+    items.forEach((trigger) => {
+        if (trigger.classList.contains('lg-justified-item-hidden')) {
+            return;
+        }
+        const row = byTop.get(trigger.style.top) ?? [];
+        row.push(trigger);
+        byTop.set(trigger.style.top, row);
+    });
+    return Array.from(byTop.values());
+}
+const load = (trigger: HTMLElement): void => {
+    trigger.querySelector('img')!.dispatchEvent(new Event('load'));
+};
+const visible = (trigger: HTMLElement): boolean =>
+    trigger.classList.contains('lg-justified-item-visible');
 
 // jsdom has no layout — the grid measures clientWidth on its host.
 const originalClientWidth = Object.getOwnPropertyDescriptor(
@@ -107,12 +128,61 @@ describe('LgJustifiedGridComponent', () => {
         expect(items[0]!.classList.contains('lg-justified-item')).toBe(true);
     });
 
+    it('marks the container so the reveal rules stay off other layouts', async () => {
+        // The stylesheet holds a thumbnail invisible until this grid
+        // reveals it; the marker keeps those rules away from a grid
+        // whose geometry is written by other code.
+        await renderHost();
+        expect(grid().classList.contains('lg-justified-reveal')).toBe(true);
+    });
+
     it('writes a precise sizes hint for srcset thumbnails', async () => {
         await renderHost();
         const first = triggers()[0]!;
         expect(first.querySelector('img')!.getAttribute('sizes')).toBe(
             `${first.style.width.replace('px', '')}px`,
         );
+    });
+
+    it('reveals each trigger once its thumbnail has loaded', async () => {
+        const fixture = await renderHost();
+        fixture.componentInstance.reveal.set('image');
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        const items = triggers();
+        // jsdom never loads images: positioned, still invisible.
+        expect(items[0]!.style.width).not.toBe('');
+        expect(items[0]!.classList.contains('lg-justified-item-visible')).toBe(
+            false,
+        );
+        items[1]!.querySelector('img')!.dispatchEvent(new Event('load'));
+        expect(items[1]!.classList.contains('lg-justified-item-visible')).toBe(
+            true,
+        );
+        expect(items[0]!.classList.contains('lg-justified-item-visible')).toBe(
+            false,
+        );
+        items[2]!.querySelector('img')!.dispatchEvent(new Event('error'));
+        expect(items[2]!.classList.contains('lg-justified-item-visible')).toBe(
+            true,
+        );
+    });
+
+    it('reveals rows top to bottom, each once every thumbnail in it loaded', async () => {
+        await renderHost();
+        const rows = rowsOf(triggers());
+        expect(rows.length).toBeGreaterThanOrEqual(2);
+        // The whole second row loads first: it waits for the row above.
+        rows[1]!.forEach(load);
+        expect(rows[1]!.some(visible)).toBe(false);
+        rows[0]!.slice(1).forEach(load);
+        expect(rows[0]!.some(visible)).toBe(false);
+        // The last one lands: row one shows, and row two right behind it.
+        load(rows[0]![0]!);
+        expect(rows[0]!.every(visible)).toBe(true);
+        expect(rows[1]!.every(visible)).toBe(true);
+        rows.slice(2).forEach((row) => expect(row.some(visible)).toBe(false));
     });
 
     it('maps the start offset to the right edge in rtl', async () => {

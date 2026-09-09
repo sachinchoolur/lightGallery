@@ -198,3 +198,55 @@ export function getJustifiedLayout(
             firstIndex > 0 || row.length > 0 ? Math.max(top - gap, 0) : 0,
     };
 }
+
+/**
+ * Reveal policy for laid-out thumbnails: 'image' shows each one as it
+ * loads, 'row' shows whole rows top to bottom, a row only once every
+ * thumbnail in it (and every row above it) has loaded.
+ */
+export type JustifiedReveal = 'row' | 'image';
+
+/**
+ * Group laid-out boxes into rows by their top offset, in layout order.
+ * Hidden boxes (0×0, the 'hide' last-row policy) belong to no row.
+ * Returns item indexes per row.
+ */
+export function getJustifiedRows(boxes: JustifiedBox[]): number[][] {
+    const rows: number[][] = [];
+    let rowTop = -1;
+    boxes.forEach((box, index) => {
+        if (box.width === 0 && box.height === 0) {
+            return;
+        }
+        if (!rows.length || box.top !== rowTop) {
+            rows.push([]);
+            rowTop = box.top;
+        }
+        rows[rows.length - 1]!.push(index);
+    });
+    return rows;
+}
+
+/**
+ * Which laid-out items may show now, given which have loaded: per
+ * image, or per row in reading order (see JustifiedReveal). The result
+ * is cumulative — callers reveal every returned item that is not
+ * already showing.
+ */
+export function getRevealableItems<T>(
+    rows: T[][],
+    isLoaded: (item: T) => boolean,
+    reveal: JustifiedReveal,
+): T[] {
+    if (reveal === 'image') {
+        return ([] as T[]).concat(...rows).filter(isLoaded);
+    }
+    const revealable: T[] = [];
+    for (const row of rows) {
+        if (!row.every(isLoaded)) {
+            break;
+        }
+        revealable.push(...row);
+    }
+    return revealable;
+}

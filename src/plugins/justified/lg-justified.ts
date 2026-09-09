@@ -1,4 +1,9 @@
-import { getJustifiedLayout, parseImageSize } from '@lightgallery/headless';
+import {
+    getJustifiedLayout,
+    getJustifiedRows,
+    getRevealableItems,
+    parseImageSize,
+} from '@lightgallery/headless';
 import { lGEvents } from '../../lg-events';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
@@ -15,6 +20,12 @@ import { JustifiedSettings, justifiedSettings } from './lg-justified-settings';
  * attribute, the thumbnail's `width`/`height` attributes, and finally
  * the loaded image's natural size (one relayout when the last unknown
  * resolves).
+ *
+ * Triggers stay invisible (stylesheet) until they are positioned; each
+ * box then shows as a placeholder and the thumbnails fade in as they
+ * load, row by row in reading order or one by one (`justifiedReveal`),
+ * so the grid is never seen unorganized. Ship `class="lg-justified"`
+ * on the container markup to cover the time before the script runs.
  */
 export default class Justified {
     core: LightGallery;
@@ -25,6 +36,9 @@ export default class Justified {
     private resizeObserver?: ResizeObserver;
     private layoutWidth = 0;
     private pendingLoads: (() => void)[] = [];
+    private rows: HTMLElement[][] = [];
+    private loaded = new Set<HTMLElement>();
+    private loadWatchers = new Map<HTMLElement, () => void>();
     private originalContainerStyle = '';
     private originalTriggerStyles = new Map<HTMLElement, string>();
 
@@ -45,15 +59,20 @@ export default class Justified {
             return;
         }
         this.originalContainerStyle = this.core.el.getAttribute('style') || '';
-        this.core.el.classList.add('lg-justified');
+        // The reveal marker gates the stylesheet's placeholder + fade
+        // rules: they hold a thumbnail invisible until this plugin
+        // reveals it, so they must never apply to a grid positioned by
+        // other code.
+        this.core.el.classList.add('lg-justified', 'lg-justified-reveal');
         this.resolveRatios();
         this.layout();
 
         // refresh()/updateSlides() re-collect the core's items before
-        // firing this event — the grid follows the new trigger set.
+        // firing this event, the grid follows the new trigger set.
         this.core.LGel.on(`${lGEvents.updateSlides}.justified`, () => {
             this.pendingLoads.forEach((cancel) => cancel());
             this.pendingLoads = [];
+            this.cancelLoadWatchers();
             this.collectTriggers();
             this.resolveRatios();
             this.layout();
@@ -171,22 +190,75 @@ export default class Justified {
             if (img && img.hasAttribute('srcset')) {
                 img.setAttribute('sizes', `${box.width}px`);
             }
+            this.watchLoad(trigger, img);
+        });
+        this.rows = getJustifiedRows(boxes).map((row) =>
+            row.map((index) => this.triggers[index]!),
+        );
+        this.reveal();
+    }
+
+    /** Track when the trigger's thumbnail has settled (loaded or failed). */
+    private watchLoad(
+        trigger: HTMLElement,
+        img: HTMLImageElement | null,
+    ): void {
+        if (this.loaded.has(trigger) || this.loadWatchers.has(trigger)) {
+            return;
+        }
+        if (!img || img.complete) {
+            this.loaded.add(trigger);
+            return;
+        }
+        const onDone = (): void => {
+            cancel();
+            this.loaded.add(trigger);
+            this.reveal();
+        };
+        const cancel = (): void => {
+            img.removeEventListener('load', onDone);
+            img.removeEventListener('error', onDone);
+            this.loadWatchers.delete(trigger);
+        };
+        img.addEventListener('load', onDone);
+        img.addEventListener('error', onDone);
+        this.loadWatchers.set(trigger, cancel);
+    }
+
+    /**
+     * Fade in what may show now (see `justifiedReveal`). Never re-hides:
+     * a relayout regroups the rows, already visible triggers stay.
+     */
+    private reveal(): void {
+        getRevealableItems(
+            this.rows,
+            (trigger) => this.loaded.has(trigger),
+            this.settings.justifiedReveal,
+        ).forEach((trigger) => {
+            trigger.classList.add('lg-justified-item-visible');
         });
     }
 
+    private cancelLoadWatchers(): void {
+        Array.from(this.loadWatchers.values()).forEach((cancel) => cancel());
+    }
+
     public closeGallery(): void {
-        // Nothing to do — the layout lives outside the lightbox.
+        // Nothing to do, the layout lives outside the lightbox.
     }
 
     public destroy(): void {
         this.resizeObserver?.disconnect();
         this.pendingLoads.forEach((cancel) => cancel());
         this.pendingLoads = [];
+        this.cancelLoadWatchers();
+        this.loaded.clear();
+        this.rows = [];
         if (!this.triggers.length) {
             return;
         }
         this.core.LGel.off('.justified');
-        this.core.el.classList.remove('lg-justified');
+        this.core.el.classList.remove('lg-justified', 'lg-justified-reveal');
         if (this.originalContainerStyle) {
             this.core.el.setAttribute('style', this.originalContainerStyle);
         } else {
@@ -196,6 +268,7 @@ export default class Justified {
             trigger.classList.remove(
                 'lg-justified-item',
                 'lg-justified-item-hidden',
+                'lg-justified-item-visible',
             );
             const original = this.originalTriggerStyles.get(trigger);
             if (original) {

@@ -117,6 +117,22 @@ describe('justified layout (vanilla)', () => {
         expect(first.style.left).toBe('auto');
     });
 
+    it('marks the container so the reveal rules stay off other layouts', () => {
+        instance = initGallery();
+        const el = document.getElementById('lightGallery')!;
+        // The stylesheet holds a thumbnail invisible until this plugin
+        // reveals it. The marker keeps those rules away from a grid
+        // whose geometry is written by other code: such code adds the
+        // positioning classes but never the per-item reveal class.
+        expect(el).toHaveClass('lg-justified');
+        expect(el).toHaveClass('lg-justified-reveal');
+
+        instance.destroy();
+        jest.runOnlyPendingTimers();
+        instance = undefined;
+        expect(el).not.toHaveClass('lg-justified-reveal');
+    });
+
     it('restores the original markup on destroy', () => {
         instance = initGallery();
         instance.destroy();
@@ -166,6 +182,93 @@ describe('justified layout (vanilla)', () => {
         instance = undefined;
         expect(added).not.toHaveClass('lg-justified-item');
         expect(added.getAttribute('style')).toBeNull();
+    });
+
+    it('reveals each trigger once positioned and its thumbnail loaded', () => {
+        instance = initGallery({ justifiedReveal: 'image' });
+        const items = triggers();
+        // jsdom never loads images: every thumbnail is still pending, so
+        // the positioned triggers stay invisible (stylesheet opacity 0).
+        for (const item of items) {
+            expect(item.style.width).not.toBe('');
+            expect(item).not.toHaveClass('lg-justified-item-visible');
+        }
+        // Each thumbnail reveals its own trigger as it arrives.
+        items[1]!.querySelector('img')!.dispatchEvent(new Event('load'));
+        expect(items[1]).toHaveClass('lg-justified-item-visible');
+        expect(items[0]).not.toHaveClass('lg-justified-item-visible');
+        // A broken thumbnail still reveals (alt text instead of a hole).
+        items[2]!.querySelector('img')!.dispatchEvent(new Event('error'));
+        expect(items[2]).toHaveClass('lg-justified-item-visible');
+        // A relayout never re-hides, and never double-arms a pending one.
+        Object.defineProperty(
+            document.getElementById('lightGallery')!,
+            'clientWidth',
+            {
+                configurable: true,
+                value: CONTAINER_WIDTH - 100,
+            },
+        );
+        (instance as unknown as { plugins: { layout: () => void }[] }).plugins
+            .filter((plugin) => 'layout' in plugin)
+            .forEach((plugin) => plugin.layout());
+        expect(items[1]).toHaveClass('lg-justified-item-visible');
+        expect(items[0]).not.toHaveClass('lg-justified-item-visible');
+
+        instance.destroy();
+        jest.runOnlyPendingTimers();
+        instance = undefined;
+        expect(items[1]).not.toHaveClass('lg-justified-item-visible');
+        // Cancelled on destroy: a late load changes nothing.
+        items[0]!.querySelector('img')!.dispatchEvent(new Event('load'));
+        expect(items[0]).not.toHaveClass('lg-justified-item-visible');
+    });
+
+    it('reveals rows top to bottom, each once every thumbnail in it loaded', () => {
+        instance = initGallery();
+        const rowsByTop = new Map<string, HTMLElement[]>();
+        triggers().forEach((item) => {
+            if (item.classList.contains('lg-justified-item-hidden')) {
+                return;
+            }
+            const row = rowsByTop.get(item.style.top) ?? [];
+            row.push(item);
+            rowsByTop.set(item.style.top, row);
+        });
+        const rows = Array.from(rowsByTop.values());
+        expect(rows.length).toBeGreaterThanOrEqual(2);
+        const load = (item: HTMLElement): void => {
+            item.querySelector('img')!.dispatchEvent(new Event('load'));
+        };
+        const visible = (item: HTMLElement): boolean =>
+            item.classList.contains('lg-justified-item-visible');
+
+        // The whole second row loads first: it waits for the row above.
+        rows[1]!.forEach(load);
+        expect(rows[1]!.some(visible)).toBe(false);
+        // The first row minus one thumbnail: still nothing.
+        rows[0]!.slice(1).forEach(load);
+        expect(rows[0]!.some(visible)).toBe(false);
+        // The last one lands: row one shows, and row two right behind it.
+        load(rows[0]![0]!);
+        expect(rows[0]!.every(visible)).toBe(true);
+        expect(rows[1]!.every(visible)).toBe(true);
+        rows.slice(2).forEach((row) => {
+            expect(row.some(visible)).toBe(false);
+        });
+    });
+
+    it('reveals an already-loaded thumbnail immediately', () => {
+        const el = buildDom();
+        const img = el.querySelector('img')!;
+        Object.defineProperty(img, 'complete', { value: true });
+        instance = lightGallery(el, {
+            plugins: [Justified],
+            justifiedRowHeight: 200,
+            justifiedReveal: 'image',
+        });
+        expect(triggers()[0]).toHaveClass('lg-justified-item-visible');
+        expect(triggers()[1]).not.toHaveClass('lg-justified-item-visible');
     });
 
     it('stays inert in dynamic mode', () => {

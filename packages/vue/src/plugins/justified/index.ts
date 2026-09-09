@@ -7,7 +7,13 @@ import {
     watch,
     type PropType,
 } from 'vue';
-import { getJustifiedLayout, parseImageSize } from '@lightgallery/headless';
+import {
+    getJustifiedLayout,
+    getJustifiedRows,
+    getRevealableItems,
+    parseImageSize,
+    type JustifiedReveal,
+} from '@lightgallery/headless';
 
 /**
  * lightGallery justified layout: lays the gallery's trigger thumbnails
@@ -65,6 +71,43 @@ function getTriggerRatio(trigger: HTMLElement): number | null {
     return null;
 }
 
+/**
+ * Track when the trigger's thumbnail has settled (loaded or failed) and
+ * report it, so the grid can reveal what may show: the stylesheet keeps
+ * thumbnails invisible until then, so the grid is never seen
+ * unorganized.
+ */
+function watchThumbnailLoad(
+    trigger: HTMLElement,
+    loaded: Set<HTMLElement>,
+    pending: Set<HTMLElement>,
+    cancels: (() => void)[],
+    onLoaded: () => void,
+): void {
+    if (loaded.has(trigger) || pending.has(trigger)) {
+        return;
+    }
+    const img = trigger.querySelector('img');
+    if (!img || img.complete) {
+        loaded.add(trigger);
+        return;
+    }
+    const onDone = (): void => {
+        cancel();
+        loaded.add(trigger);
+        onLoaded();
+    };
+    const cancel = (): void => {
+        img.removeEventListener('load', onDone);
+        img.removeEventListener('error', onDone);
+        pending.delete(trigger);
+    };
+    img.addEventListener('load', onDone);
+    img.addEventListener('error', onDone);
+    pending.add(trigger);
+    cancels.push(cancel);
+}
+
 export const JustifiedGrid = defineComponent({
     name: 'LgJustifiedGrid',
     props: {
@@ -83,6 +126,15 @@ export const JustifiedGrid = defineComponent({
         },
         /** Row-height clamp as a multiple of `rowHeight`. */
         maxScale: { type: Number, default: 1.75 },
+        /**
+         * How thumbnails appear as they load: 'row' reveals whole rows
+         * top to bottom, each once every thumbnail in it has loaded;
+         * 'image' reveals each thumbnail on its own.
+         */
+        reveal: {
+            type: String as PropType<JustifiedReveal>,
+            default: 'row',
+        },
         /**
          * Reading direction of the grid; 'auto' inherits the nearest
          * ancestor `dir` attribute.
@@ -115,6 +167,18 @@ export const JustifiedGrid = defineComponent({
                 (child): child is HTMLElement => child instanceof HTMLElement,
             );
             const ratios = triggers.map(getTriggerRatio);
+            const revealPending = new Set<HTMLElement>();
+            const loadedTriggers = new Set<HTMLElement>();
+            let rows: HTMLElement[][] = [];
+            const revealLoaded = (): void => {
+                getRevealableItems(
+                    rows,
+                    (trigger) => loadedTriggers.has(trigger),
+                    props.reveal,
+                ).forEach((trigger) => {
+                    trigger.classList.add('lg-justified-item-visible');
+                });
+            };
 
             const layout = (): void => {
                 const containerWidth = el.clientWidth;
@@ -159,7 +223,18 @@ export const JustifiedGrid = defineComponent({
                     if (img && img.hasAttribute('srcset')) {
                         img.setAttribute('sizes', `${box.width}px`);
                     }
+                    watchThumbnailLoad(
+                        trigger,
+                        loadedTriggers,
+                        revealPending,
+                        cancels,
+                        revealLoaded,
+                    );
                 });
+                rows = getJustifiedRows(boxes).map((row) =>
+                    row.map((index) => triggers[index]!),
+                );
+                revealLoaded();
             };
 
             // Unknown ratios relayout once, when the last one resolves.
@@ -217,6 +292,7 @@ export const JustifiedGrid = defineComponent({
                 props.gap,
                 props.lastRow,
                 props.maxScale,
+                props.reveal,
                 props.direction,
             ],
             attach,
@@ -224,9 +300,11 @@ export const JustifiedGrid = defineComponent({
         onBeforeUnmount(detach);
 
         return () =>
-            h('div', { ref: container, class: 'lg-justified' }, [
-                slots.default?.(),
-            ]);
+            h(
+                'div',
+                { ref: container, class: 'lg-justified lg-justified-reveal' },
+                [slots.default?.()],
+            );
     },
 });
 

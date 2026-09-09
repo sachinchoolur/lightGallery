@@ -6,7 +6,13 @@ import {
     type ReactElement,
     type ReactNode,
 } from 'react';
-import { getJustifiedLayout, parseImageSize } from '@lightgallery/headless';
+import {
+    getJustifiedLayout,
+    getJustifiedRows,
+    getRevealableItems,
+    parseImageSize,
+    type JustifiedReveal,
+} from '@lightgallery/headless';
 
 import { cx } from '../../cx';
 
@@ -32,6 +38,12 @@ export interface JustifiedGridProps {
     lastRow?: 'justify' | 'start' | 'hide';
     /** Row-height clamp as a multiple of `rowHeight`. */
     maxScale?: number;
+    /**
+     * How thumbnails appear as they load: 'row' reveals whole rows top
+     * to bottom, each once every thumbnail in it has loaded; 'image'
+     * reveals each thumbnail on its own.
+     */
+    reveal?: JustifiedReveal;
     /**
      * Reading direction of the grid; 'auto' inherits the nearest
      * ancestor `dir` attribute.
@@ -89,11 +101,49 @@ function getTriggerRatio(trigger: HTMLElement): number | null {
     return null;
 }
 
+/**
+ * Track when the trigger's thumbnail has settled (loaded or failed) and
+ * report it, so the grid can reveal what may show: the stylesheet keeps
+ * thumbnails invisible until then, so the grid is never seen
+ * unorganized.
+ */
+function watchThumbnailLoad(
+    trigger: HTMLElement,
+    loaded: Set<HTMLElement>,
+    pending: Set<HTMLElement>,
+    cancels: (() => void)[],
+    onLoaded: () => void,
+): void {
+    if (loaded.has(trigger) || pending.has(trigger)) {
+        return;
+    }
+    const img = trigger.querySelector('img');
+    if (!img || img.complete) {
+        loaded.add(trigger);
+        return;
+    }
+    const onDone = (): void => {
+        cancel();
+        loaded.add(trigger);
+        onLoaded();
+    };
+    const cancel = (): void => {
+        img.removeEventListener('load', onDone);
+        img.removeEventListener('error', onDone);
+        pending.delete(trigger);
+    };
+    img.addEventListener('load', onDone);
+    img.addEventListener('error', onDone);
+    pending.add(trigger);
+    cancels.push(cancel);
+}
+
 export function JustifiedGrid({
     rowHeight = 180,
     gap = 8,
     lastRow = 'start',
     maxScale = 1.75,
+    reveal = 'row',
     direction = 'auto',
     className,
     style,
@@ -111,6 +161,18 @@ export function JustifiedGrid({
             (child): child is HTMLElement => child instanceof HTMLElement,
         );
         const ratios = triggers.map(getTriggerRatio);
+        const revealPending = new Set<HTMLElement>();
+        const loadedTriggers = new Set<HTMLElement>();
+        let rows: HTMLElement[][] = [];
+        const revealLoaded = (): void => {
+            getRevealableItems(
+                rows,
+                (trigger) => loadedTriggers.has(trigger),
+                reveal,
+            ).forEach((trigger) => {
+                trigger.classList.add('lg-justified-item-visible');
+            });
+        };
         const cancels: (() => void)[] = [];
         let layoutWidth = 0;
 
@@ -154,7 +216,18 @@ export function JustifiedGrid({
                 if (img && img.hasAttribute('srcset')) {
                     img.setAttribute('sizes', `${box.width}px`);
                 }
+                watchThumbnailLoad(
+                    trigger,
+                    loadedTriggers,
+                    revealPending,
+                    cancels,
+                    revealLoaded,
+                );
             });
+            rows = getJustifiedRows(boxes).map((row) =>
+                row.map((index) => triggers[index]!),
+            );
+            revealLoaded();
         };
 
         // Unknown ratios relayout once, when the last one resolves.
@@ -207,12 +280,12 @@ export function JustifiedGrid({
             observer?.disconnect();
             cancels.forEach((cancel) => cancel());
         };
-    }, [rowHeight, gap, lastRow, maxScale, direction, childCount]);
+    }, [rowHeight, gap, lastRow, maxScale, reveal, direction, childCount]);
 
     return (
         <div
             ref={containerRef}
-            className={cx('lg-justified', className)}
+            className={cx('lg-justified', 'lg-justified-reveal', className)}
             style={style}
         >
             {children}

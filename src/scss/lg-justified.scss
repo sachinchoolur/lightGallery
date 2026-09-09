@@ -1,14 +1,32 @@
-// lightGallery justified layout — trigger-grid styles. Its own entry
+// lightGallery justified layout, trigger-grid styles. Its own entry
 // on purpose: galleries that do not use the layout never load it.
+
+// Box shown in a thumbnail's place until it has loaded. Translucent so
+// it reads on light and dark pages alike; override the rules below to
+// theme it.
+$lg-justified-placeholder: rgba(128, 128, 128, 0.2) !default;
+$lg-justified-fade-duration: 0.35s !default;
 
 .lg-justified {
     position: relative;
     display: block;
+    overflow: hidden;
+
+    // Children stay invisible and out of flow until the layout has
+    // positioned them, so the grid is never seen unorganized and a
+    // natural-size thumbnail cannot widen the page meanwhile. Put the
+    // class in the markup itself to cover the time before the script
+    // runs.
+    > * {
+        position: absolute;
+        opacity: 0;
+    }
 
     .lg-justified-item {
         position: absolute;
         display: block;
         overflow: hidden;
+        opacity: 1;
 
         img {
             width: 100%;
@@ -20,5 +38,26 @@
 
     .lg-justified-item-hidden {
         display: none;
+    }
+}
+
+// Reveal layer, scoped to the marker class the runtime adds to the
+// container at init: the box shows at once as a placeholder and its
+// thumbnail fades in once loaded. Gated on purpose. Layout code that
+// positions the items itself adds the geometry classes but never the
+// per-item reveal class, and would otherwise hold its images invisible
+// forever.
+.lg-justified-reveal {
+    .lg-justified-item {
+        background-color: $lg-justified-placeholder;
+
+        img {
+            opacity: 0;
+            transition: opacity $lg-justified-fade-duration ease;
+        }
+    }
+
+    .lg-justified-item-visible img {
+        opacity: 1;
     }
 }

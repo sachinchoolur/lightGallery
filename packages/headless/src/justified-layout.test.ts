@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { getJustifiedLayout, type JustifiedLayout } from './justified-layout';
+import {
+    getJustifiedLayout,
+    getJustifiedRows,
+    getRevealableItems,
+    type JustifiedLayout,
+} from './justified-layout';
 
 /** Group boxes into rows by their top offset (zero-size boxes excluded). */
 function rowsOf(layout: JustifiedLayout): number[][] {
@@ -201,5 +206,59 @@ describe('getJustifiedLayout', () => {
                 }
             }
         }
+    });
+});
+
+describe('reveal order', () => {
+    const box = (top: number, width = 100, height = 50) => ({
+        top,
+        start: 0,
+        width,
+        height,
+    });
+
+    it('groups boxes into rows by top offset, skipping hidden ones', () => {
+        expect(
+            getJustifiedRows([
+                box(0),
+                box(0),
+                box(60),
+                box(0, 0, 0),
+                box(120),
+            ]),
+        ).toEqual([[0, 1], [2], [4]]);
+        expect(getJustifiedRows([])).toEqual([]);
+    });
+
+    it("'image' reveals every loaded item regardless of order", () => {
+        const loaded = new Set(['b', 'e']);
+        expect(
+            getRevealableItems(
+                [
+                    ['a', 'b'],
+                    ['c', 'd'],
+                    ['e'],
+                ],
+                (item) => loaded.has(item),
+                'image',
+            ),
+        ).toEqual(['b', 'e']);
+    });
+
+    it("'row' reveals whole rows top to bottom and stops at the first pending one", () => {
+        const rows = [
+            ['a', 'b'],
+            ['c', 'd'],
+            ['e'],
+        ];
+        const loaded = new Set(['a', 'c', 'd', 'e']);
+        // Row 0 is incomplete: nothing shows, not even the loaded rows below.
+        expect(
+            getRevealableItems(rows, (item) => loaded.has(item), 'row'),
+        ).toEqual([]);
+        loaded.add('b');
+        expect(
+            getRevealableItems(rows, (item) => loaded.has(item), 'row'),
+        ).toEqual(['a', 'b', 'c', 'd', 'e']);
     });
 });

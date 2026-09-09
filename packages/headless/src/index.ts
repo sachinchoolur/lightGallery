@@ -152,9 +152,12 @@ export {
 } from './thumb-math';
 export {
     getJustifiedLayout,
+    getJustifiedRows,
+    getRevealableItems,
     type JustifiedBox,
     type JustifiedLayout,
     type JustifiedLayoutOptions,
+    type JustifiedReveal,
 } from './justified-layout';
 
 export {
