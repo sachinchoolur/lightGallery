@@ -124,10 +124,11 @@ interface Scenario {
 const gridScenario = (
     html: string,
     settings: Parameters<typeof lightGallery>[1],
+    gridClass = 'demo-grid',
 ) => {
     return (host: HTMLElement): (() => void) => {
         const grid = document.createElement('div');
-        grid.className = 'demo-grid';
+        grid.className = gridClass;
         grid.innerHTML = html;
         host.appendChild(grid);
         const instance = lightGallery(grid, { selector: 'a', ...settings });
@@ -347,11 +348,17 @@ const SCENARIOS: Scenario[] = [
         id: 'justified',
         title: 'Justified',
         note: 'Justified trigger rows — resize/rotate the device to re-flow.',
-        mount: gridScenario(SOURCES.map(imageAnchor).join(''), {
-            plugins: [Justified, Thumbnail, Zoom],
-            justifiedRowHeight: 140,
-            justifiedGap: 8,
-        }),
+        mount: gridScenario(
+            SOURCES.map(imageAnchor).join(''),
+            {
+                plugins: [Justified, Thumbnail, Zoom],
+                justifiedRowHeight: 140,
+                justifiedGap: 8,
+            },
+            // The class in the markup keeps the grid hidden until the
+            // layout runs, as a server-rendered page would ship it.
+            'demo-grid lg-justified',
+        ),
     },
     {
         id: 'rtl',
