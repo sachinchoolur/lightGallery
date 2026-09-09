@@ -2274,10 +2274,17 @@ export class LightGallery {
                     this.closeGallery();
                     return;
                 }
-                springing = this.springVerticalRestore(
-                    endCoords.pageY - startCoords.pageY,
-                    releaseVelocity.y,
-                );
+                // Only spring back what actually moved. With
+                // swipeToClose off (a non-closable gallery, inline being
+                // the common case) the drag applied nothing, so springing
+                // here would jump the slide to the drag offset and
+                // animate it back.
+                if (this.settings.swipeToClose) {
+                    springing = this.springVerticalRestore(
+                        endCoords.pageY - startCoords.pageY,
+                        releaseVelocity.y,
+                    );
+                }
             }
             if (!springing) {
                 this.outer.removeClass('lg-dragging');

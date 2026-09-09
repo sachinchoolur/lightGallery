@@ -431,3 +431,66 @@ describe('zoom-from-origin flight landing', () => {
         expect(item.getAttribute('style')).toBeNull();
     });
 });
+
+describe('vertical drag when the gallery cannot close', () => {
+    // closable:false (the inline-gallery setup) forces swipeToClose off,
+    // so a vertical drag applies nothing. The release must not spring
+    // either: springing jumps the slide to the drag offset first.
+    const fireTouch = (target: Element, type: string, pageY: number) => {
+        const event = new Event(type, { bubbles: true, cancelable: true });
+        const touch = { pageX: 200, pageY };
+        Object.defineProperty(event, 'touches', {
+            value: type === 'touchend' ? [] : [touch],
+        });
+        Object.defineProperty(event, 'changedTouches', { value: [touch] });
+        target.dispatchEvent(event);
+    };
+    const dragDown = (): HTMLElement => {
+        const slide = document.querySelector('.lg-item.lg-current')!;
+        fireTouch(slide, 'touchstart', 100);
+        fireTouch(slide, 'touchmove', 180);
+        fireTouch(slide, 'touchmove', 260);
+        fireTouch(slide, 'touchend', 260);
+        jest.advanceTimersByTime(50);
+        return document.querySelector('.lg-container')!;
+    };
+    const open = (settings: Record<string, unknown>) => {
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png"><img src="a-t.png" /></a>
+                <a href="b.png"><img src="b-t.png" /></a>
+                <a href="c.png"><img src="c-t.png" /></a>
+            </div>`;
+        const lg = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+            { zoomFromOrigin: false, ...settings },
+        );
+        lg.openGallery(0);
+        jest.advanceTimersByTime(500);
+        return lg;
+    };
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+    afterEach(() => {
+        jest.runOnlyPendingTimers();
+        jest.useRealTimers();
+        document.body.innerHTML = '';
+    });
+
+    it('leaves the slide alone when closable is false', () => {
+        open({ closable: false });
+        const container = dragDown();
+        // springVerticalRestore marks the container as it starts; the
+        // slide keeps no inline transform either.
+        expect(container).not.toHaveClass('lg-dragging-vertical');
+        expect(
+            document.querySelector<HTMLElement>('.lg-item.lg-current')!.style
+                .transform,
+        ).toBe('');
+    });
+
+    it('still springs the drag back when the gallery can close', () => {
+        open({});
+        expect(dragDown()).toHaveClass('lg-dragging-vertical');
+    });
+});

@@ -91,6 +91,7 @@ const Host = defineComponent({
         mode: { type: String, default: 'lg-slide' },
         mousewheel: { type: Boolean, default: true },
         direction: { type: String, default: undefined },
+        closable: { type: Boolean, default: true },
         log: { type: Array, required: true },
     },
     setup: () => ({ items: ITEMS }),
@@ -101,6 +102,7 @@ const Host = defineComponent({
             :mode="mode"
             :mousewheel="mousewheel"
             :direction="direction"
+            :closable="closable"
             @after-slide="log.push('afterSlide:' + $event.index + ':' + $event.fromTouch)"
         >
             <StoreProbe />
@@ -379,6 +381,27 @@ describe('useGalleryGestures', () => {
         );
         await settle();
         expect(query('.lg-counter-current')!.textContent!.trim()).toBe('1');
+    it('does not move a vertical drag when the gallery cannot close', async () => {
+        // closable:false (the inline setup) forces swipeToClose off, so
+        // the drag applies nothing; springing on release would jump the
+        // slide to the drag offset and animate it back.
+        const wrapper = await openAndLoad([], { closable: false });
+
+        const item = query('.lg-item.lg-current')!;
+        firePointer(item, 'pointerdown', { x: 200, y: 100 });
+        await settle();
+        firePointer(window, 'pointermove', { x: 200, y: 180 });
+        firePointer(window, 'pointermove', { x: 200, y: 260 });
+        expect(item.style.transform).toBe('');
+        firePointer(window, 'pointerup', { x: 200, y: 260 });
+        vi.advanceTimersByTime(2000);
+        await settle();
+
+        expect(item.style.transform).toBe('');
+        expect(query('.lg-backdrop')!.style.opacity).toBe('');
+        wrapper.unmount();
+    });
+
         wrapper.unmount();
     });
 

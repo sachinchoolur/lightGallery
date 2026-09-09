@@ -187,6 +187,33 @@ describe('horizontal swipe', () => {
         expect(document.querySelector('.lg-outer')).not.toHaveClass('lg-slide');
     });
 
+    it('does not spring a vertical drag when the gallery cannot close', () => {
+        // closable:false (the inline setup) forces swipeToClose off, so
+        // the drag applied nothing; springing would jump the slide to the
+        // drag offset and animate it back.
+        openAndLoad({ closable: false });
+        const item = currentSlide();
+        firePointer(item, 'pointerdown', { x: 200, y: 100 });
+        firePointer(window, 'pointermove', { x: 200, y: 260 });
+        expect(item.style.transform).toBe('');
+        firePointer(window, 'pointerup', { x: 200, y: 260 });
+        expect(item.style.transform).toBe('');
+        tick(2000);
+        expect(item.style.transform).toBe('');
+    });
+
+    it('still springs a vertical drag back when it can close', () => {
+        openAndLoad();
+        const item = currentSlide();
+        firePointer(item, 'pointerdown', { x: 200, y: 100 });
+        firePointer(window, 'pointermove', { x: 200, y: 260 });
+        expect(item.style.transform).not.toBe('');
+        firePointer(window, 'pointerup', { x: 200, y: 260 });
+        expect(item.style.transform).not.toBe('');
+        tick(2000);
+        expect(item.style.transform).toBe('');
+    });
+
     it('snaps back below the threshold', () => {
         openAndLoad();
         const item = currentSlide();

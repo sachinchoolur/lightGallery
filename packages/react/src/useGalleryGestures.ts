@@ -491,7 +491,11 @@ export function useGalleryGestures({
         ) {
             restoreDragVisuals(session);
             actionsRef.current.closeGallery();
-        } else {
+        } else if (currentSettings.swipeToClose) {
+            // Only spring back what actually moved: with swipeToClose off
+            // (a non-closable gallery, inline being the common case) the
+            // drag applied nothing, so springing here would jump the
+            // slide to the drag offset and animate it back.
             springVerticalBack(session, deltaY, releaseVelocity.y);
         }
     };

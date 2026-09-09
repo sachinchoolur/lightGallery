@@ -504,7 +504,13 @@ export class LgGesturesDirective implements OnDestroy {
             this.restoreDragVisuals(session);
             this.runtime.actions.closeGallery();
         } else {
-            this.springVerticalBack(session, deltaY, releaseVelocity.y);
+            // Only spring back what actually moved: with swipeToClose
+            // off (a non-closable gallery, inline being the common case)
+            // the drag applied nothing, so springing here would jump the
+            // slide to the drag offset and animate it back.
+            if (settings.swipeToClose) {
+                this.springVerticalBack(session, deltaY, releaseVelocity.y);
+            }
         }
     };
 

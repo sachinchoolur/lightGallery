@@ -44,6 +44,7 @@ class CdProbe implements DoCheck {
             [mode]="mode()"
             [mousewheel]="true"
             [direction]="direction()"
+            [closable]="closable()"
             (afterSlide)="afterSlides.push($event)"
         />
     `,
@@ -53,6 +54,7 @@ class GestureHost {
     readonly items = ITEMS;
     readonly mode = signal<GalleryMode>('lg-slide');
     readonly direction = signal<'ltr' | 'rtl' | 'auto' | undefined>(undefined);
+    readonly closable = signal(true);
     readonly afterSlides: SlideEventDetail[] = [];
 }
 
@@ -328,6 +330,28 @@ describe('LgGesturesDirective', () => {
         const fixture = TestBed.createComponent(GestureHost);
         await openAndLoad(fixture);
         const outer = query('.lg-outer')!;
+    it('does not move a vertical drag when the gallery cannot close', async () => {
+        // closable:false (the inline setup) forces swipeToClose off, so
+        // the drag applies nothing; springing on release would jump the
+        // slide to the drag offset and animate it back.
+        const fixture = TestBed.createComponent(GestureHost);
+        fixture.componentInstance.closable.set(false);
+        await openAndLoad(fixture);
+
+        const item = currentSlide();
+        firePointer(item, 'pointerdown', { x: 200, y: 100 });
+        await flush(fixture);
+        firePointer(window, 'pointermove', { x: 200, y: 180 });
+        firePointer(window, 'pointermove', { x: 200, y: 260 });
+        expect(item.style.transform).toBe('');
+        firePointer(window, 'pointerup', { x: 200, y: 260 });
+        vi.advanceTimersByTime(2000);
+        await flush(fixture);
+
+        expect(item.style.transform).toBe('');
+        expect(query('.lg-backdrop')!.style.opacity).toBe('');
+    });
+
 
         outer.dispatchEvent(
             new WheelEvent('wheel', { deltaY: 100, cancelable: true }),
