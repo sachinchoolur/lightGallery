@@ -28,32 +28,52 @@ const picsum = (id: number, w: number, h: number) =>
 
 // Rig-only responsive ladder: real w-descriptor srcset so device passes
 // exercise the plan-002 selection math end to end.
-const picsumSrcset = (id: number) =>
+const picsumSrcset = (id: number, w: number, h: number) =>
     [640, 960, 1280, 1600]
-        .map((w) => `${picsum(id, w, Math.round((w * 1067) / 1600))} ${w}w`)
+        .map(
+            (tier) =>
+                `${picsum(id, tier, Math.round((tier * h) / w))} ${tier}w`,
+        )
         .join(', ');
 
-const SOURCES = [
+/**
+ * Portrait entries are deliberate: anything that measures the fitted
+ * size per slide (actual-size zoom, the origin flight) only misbehaves
+ * when the aspect ratio changes between slides.
+ */
+interface Source {
+    id: number;
+    title: string;
+    portrait?: boolean;
+}
+
+const SOURCES: Source[] = [
     { id: 1015, title: 'River between mountains' },
     { id: 1016, title: 'Canyon walls' },
+    { id: 1025, title: 'Pug portrait', portrait: true },
     { id: 1018, title: 'Snowy peak' },
     { id: 1019, title: 'Lakeside cliffs' },
+    { id: 1027, title: 'Woman portrait', portrait: true },
     { id: 1039, title: 'Waterfall in the forest' },
     { id: 1043, title: 'Village at dusk' },
     { id: 1044, title: 'Foggy shore' },
     { id: 1051, title: 'Ridge line' },
 ];
 
-const imageAnchor = ({ id, title }: { id: number; title: string }) => `
+const imageAnchor = ({ id, title, portrait }: Source) => {
+    const [w, h] = portrait ? [1067, 1600] : [1600, 1067];
+    const [tw, th] = portrait ? [160, 240] : [240, 160];
+    return `
     <a
-        href="${picsum(id, 1600, 1067)}"
-        data-srcset="${picsumSrcset(id)}"
+        href="${picsum(id, w, h)}"
+        data-srcset="${picsumSrcset(id, w, h)}"
         data-sizes="100vw"
-        data-lg-size="1600-1067"
+        data-lg-size="${w}-${h}"
         data-sub-html="<h4>${title} <small>(#${id})</small></h4>"
     >
-        <img src="${picsum(id, 240, 160)}" alt="${title}" />
+        <img src="${picsum(id, tw, th)}" alt="${title}" />
     </a>`;
+};
 
 // Video matrix for device passes: YouTube (endpoint poster), Vimeo +
 // Wistia (posterless — the thumb-fallback facade) and a self-hosted
@@ -155,6 +175,31 @@ const buttonScenario = (
     };
 };
 
+/** Inline scenario: the gallery lives inside the page, never closes. */
+const inlineScenario = (settings: Parameters<typeof lightGallery>[1]) => {
+    return (host: HTMLElement): (() => void) => {
+        const container = document.createElement('div');
+        container.className = 'demo-inline';
+        host.appendChild(container);
+        const instance = lightGallery(container, {
+            container,
+            dynamic: true,
+            dynamicEl: SOURCES.map(({ id, title, portrait }) => ({
+                src: portrait ? picsum(id, 1067, 1600) : picsum(id, 1600, 1067),
+                thumb: portrait ? picsum(id, 160, 240) : picsum(id, 240, 160),
+                subHtml: `<h4>${title}</h4>`,
+            })),
+            addClass: 'lg-inline',
+            closable: false,
+            hash: false,
+            ...settings,
+        });
+        (window as unknown as { lg: unknown }).lg = instance;
+        instance.openGallery(0);
+        return () => instance.destroy();
+    };
+};
+
 const dynamicHost = () => {
     const el = document.createElement('div');
     document.body.appendChild(el);
@@ -207,7 +252,8 @@ const SCENARIOS: Scenario[] = [
         note: 'Candidate icon sets over the full chrome via settings.icons — glyphs a set lacks fall back to the built-ins (visible as style mismatches).',
         mount: (host) => {
             const picker = document.createElement('div');
-            picker.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;';
+            picker.style.cssText =
+                'display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;';
             const grid = document.createElement('div');
             grid.className = 'demo-grid';
             grid.innerHTML = SOURCES.map(imageAnchor).join('');
@@ -218,7 +264,14 @@ const SCENARIOS: Scenario[] = [
                 grid.innerHTML = SOURCES.map(imageAnchor).join('');
                 instance = lightGallery(grid, {
                     selector: 'a',
-                    plugins: [Thumbnail, Zoom, Rotate, Share, Autoplay, Fullscreen],
+                    plugins: [
+                        Thumbnail,
+                        Zoom,
+                        Rotate,
+                        Share,
+                        Autoplay,
+                        Fullscreen,
+                    ],
                     showZoomInOutIcons: true,
                     actualSize: true,
                     icons: name === 'original' ? {} : ICON_SETS[name],
@@ -361,6 +414,12 @@ const SCENARIOS: Scenario[] = [
         ),
     },
     {
+        id: 'inline',
+        title: 'Inline',
+        note: 'Inline container, closable:false — a vertical drag must not move the slide (the gallery cannot close).',
+        mount: inlineScenario({ plugins: [Thumbnail, Zoom] }),
+    },
+    {
         id: 'rtl',
         title: 'RTL',
         note: 'direction: rtl — arrows/keys/swipe mirror, chrome flips.',
@@ -381,23 +440,20 @@ const SCENARIOS: Scenario[] = [
         id: 'kitchen-sink',
         title: 'Kitchen sink',
         note: 'Images + videos, most plugins at once.',
-        mount: gridScenario(
-            SOURCES.map(imageAnchor).join('') + videoAnchors,
-            {
-                plugins: [
-                    Thumbnail,
-                    Zoom,
-                    Video,
-                    Rotate,
-                    Share,
-                    Autoplay,
-                    Fullscreen,
-                    Pager,
-                ],
-                showZoomInOutIcons: true,
-                actualSize: true,
-            },
-        ),
+        mount: gridScenario(SOURCES.map(imageAnchor).join('') + videoAnchors, {
+            plugins: [
+                Thumbnail,
+                Zoom,
+                Video,
+                Rotate,
+                Share,
+                Autoplay,
+                Fullscreen,
+                Pager,
+            ],
+            showZoomInOutIcons: true,
+            actualSize: true,
+        }),
     },
 ];
 
