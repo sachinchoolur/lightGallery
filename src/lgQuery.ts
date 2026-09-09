@@ -100,6 +100,12 @@ export class lgQuery {
         cssProperty: string,
         value?: string | number,
     ): void {
+        // Custom properties are case sensitive and never vendor prefixed,
+        // and `style[name]` silently drops them.
+        if (cssProperty.startsWith('--')) {
+            el.style.setProperty(cssProperty, String(value));
+            return;
+        }
         // prettier-ignore
         const property = cssProperty.replace(/-([a-z])/gi, function (
             s,

@@ -115,13 +115,20 @@
         opacity: 1;
     }
 
-    // Set transition speed and timing function
+    // Set transition speed and timing function. The duration is a list:
+    // the mode transitions all declare `transform` then `opacity`, and a
+    // single inherited value would stretch the crossfade to the whole
+    // slide, leaving the outgoing image ghosting across it. Modes whose
+    // effect IS the fade opt back in with --lg-opacity-speed.
     &.lg-css3 {
         .lg-item:not(.lg-start-end-progress) {
             &.lg-prev-slide,
             &.lg-next-slide,
             &.lg-current {
-                @include transition-duration(inherit !important);
+                @include transition-duration(
+                    var(--lg-speed, 400ms),
+                    var(--lg-opacity-speed, 100ms) !important
+                );
                 @include transition-timing-function(inherit !important);
             }
         }

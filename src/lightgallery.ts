@@ -486,6 +486,10 @@ export class LightGallery {
 
         this.$inner.css('transition-timing-function', this.settings.easing);
         this.$inner.css('transition-duration', this.settings.speed + 'ms');
+        // Slides read the speed per property: the transform runs for the
+        // full duration while the crossfade stays short (see the mode
+        // transitions in the stylesheet).
+        this.$inner.css('--lg-speed', this.settings.speed + 'ms');
 
         if (this.settings.download) {
             this.$toolbar.append(

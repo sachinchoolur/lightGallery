@@ -494,3 +494,31 @@ describe('vertical drag when the gallery cannot close', () => {
         expect(dragDown()).toHaveClass('lg-dragging-vertical');
     });
 });
+
+describe('per-property transition durations', () => {
+    // The mode transitions declare `transform` then `opacity`; the
+    // runtime publishes the speed so the stylesheet can give each its
+    // own duration instead of one inherited value stretching the fade.
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+    afterEach(() => {
+        jest.runOnlyPendingTimers();
+        jest.useRealTimers();
+        document.body.innerHTML = '';
+    });
+
+    it('publishes the slide speed to the slides', () => {
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png"><img src="a-t.png" /></a>
+            </div>`;
+        const lg = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+            { zoomFromOrigin: false, speed: 250 },
+        );
+        lg.openGallery(0);
+        jest.advanceTimersByTime(500);
+        const inner = document.querySelector<HTMLElement>('.lg-inner')!;
+        expect(inner.style.getPropertyValue('--lg-speed')).toBe('250ms');
+    });
+});

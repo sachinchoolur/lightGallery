@@ -219,6 +219,7 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                             [style.transition-duration]="
                                 settings().speed + 'ms'
                             "
+                            [style.--lg-speed]="settings().speed + 'ms'"
                         >
                             <!-- 2.x \`$inner.empty()\`: the persistent
                                  shell keeps .lg-inner, but the items

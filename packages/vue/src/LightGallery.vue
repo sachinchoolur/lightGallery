@@ -1412,6 +1412,10 @@ onBeforeUnmount(() => {
                         :style="{
                             transitionTimingFunction: settings.easing,
                             transitionDuration: `${settings.speed}ms`,
+                            // Per-property durations: the transform runs
+                            // for the full speed while the crossfade stays
+                            // short (see the mode transitions).
+                            '--lg-speed': `${settings.speed}ms`,
                             touchAction: 'none',
                         }"
                     >

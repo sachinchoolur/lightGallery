@@ -3,6 +3,12 @@
 .lg-css3 {
     &.lg-zoom-in {
         .lg-item {
+            // The crossfade IS the effect here, so it runs for the
+            // whole slide instead of the short default swap. Declared on
+            // the item: --lg-speed is published on .lg-inner, so only its
+            // descendants can resolve it.
+            --lg-opacity-speed: var(--lg-speed, 400ms);
+
             opacity: 0;
 
             &.lg-prev-slide {

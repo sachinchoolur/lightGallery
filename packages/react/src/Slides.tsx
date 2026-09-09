@@ -68,6 +68,10 @@ export function Slides({
             style={{
                 transitionTimingFunction: settings.easing,
                 transitionDuration: `${settings.speed}ms`,
+                // Per-property durations: the transform runs for the full
+                // speed while the crossfade stays short (see the mode
+                // transitions in the stylesheet).
+                ['--lg-speed' as string]: `${settings.speed}ms`,
                 // Pointer events cannot preventDefault scrolling; this is
                 // what keeps the page still during swipes. Pinch is handled
                 // by the zoom plugin (005), never by the browser.
