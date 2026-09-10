@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>lightgallery — small image sizes</title>
+        <style>
+            body {
+                font-family: system-ui, sans-serif;
+                margin: 0 auto;
+                max-width: 960px;
+                padding: 24px;
+            }
+            .knobs {
+                color: #667;
+                font-size: 14px;
+                margin: 0 0 12px;
+            }
+            .knobs a {
+                margin-right: 12px;
+            }
+            .size-grid {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: flex-end;
+                gap: 12px;
+            }
+            /* Triggers keep their natural size: the point is that the
+               slides differ in both aspect ratio and absolute size. */
+            .size-grid a {
+                display: block;
+                line-height: 0;
+            }
+            .size-grid img {
+                display: block;
+                border-radius: 3px;
+            }
+            .size-grid figcaption {
+                color: #667;
+                font: 11px/1.6 ui-monospace, monospace;
+                text-align: center;
+            }
+            /* Readout: devtools are not available on a phone. */
+            .readout {
+                /* Top left, clear of the caption and the thumb strip so
+                   it never hides the chrome it is meant to explain. */
+                position: fixed;
+                top: 44px;
+                left: 12px;
+                max-width: 60vw;
+                z-index: 2000;
+                background: rgba(0, 0, 0, 0.82);
+                color: #eee;
+                font: 12px/1.5 ui-monospace, monospace;
+                padding: 8px 12px;
+                border-radius: 4px;
+                white-space: pre-wrap;
+                pointer-events: none;
+            }
+            .demo-spacer {
+                height: 40vh;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>lightgallery — small image sizes</h1>
+        <p>
+            Every slide is smaller than a desktop stage, in a spread of
+            aspect ratios, so nothing here should ever scale up past its
+            natural size. Open one and watch the readout: the fitted box
+            must follow the slide, and actual-size zoom must stay at 1
+            whenever the image is already shown at (or below) its natural
+            size — a double tap on those is a no-op by design.
+        </p>
+        <p class="knobs">
+            <a href="/small-images.html">default (zoom + thumbnails)</a>
+            <a href="/small-images.html?actual=0">actualSize off</a>
+            <a href="/small-images.html?origin=0">zoomFromOrigin off</a>
+            <a href="/small-images.html?infinite=1">infiniteZoom on</a>
+            <a href="/">back to the scenarios</a>
+        </p>
+
+        <div class="size-grid" id="small-images"></div>
+        <pre class="readout" id="readout">open a slide…</pre>
+        <div class="demo-spacer">(spacer to verify scroll lock/restore)</div>
+        <script type="module" src="/small-images.ts"></script>
+    </body>
+</html>
