@@ -248,9 +248,6 @@ export default class Zoom {
             this.positionChanged = false;
         }
 
-        const dragAllowedAxises = this.getDragAllowedAxises(0, scaleDiff);
-
-        const { allowY, allowX } = dragAllowedAxises;
         if (this.positionChanged) {
             originalX = this.left / (this.scale - scaleDiff);
             originalY = this.top / (this.scale - scaleDiff);
@@ -259,8 +256,6 @@ export default class Zoom {
 
             this.positionChanged = false;
         }
-
-        const possibleSwipeCords = this.getPossibleSwipeDragCords(scaleDiff);
 
         let x;
         let y;
@@ -284,43 +279,16 @@ export default class Zoom {
         }
 
         if (reposition) {
-            if (allowX) {
-                if (this.isBeyondPossibleLeft(x, possibleSwipeCords.minX)) {
-                    x = possibleSwipeCords.minX;
-                } else if (
-                    this.isBeyondPossibleRight(x, possibleSwipeCords.maxX)
-                ) {
-                    x = possibleSwipeCords.maxX;
-                }
-            } else {
-                if (scale > 1) {
-                    if (x < possibleSwipeCords.minX) {
-                        x = possibleSwipeCords.minX;
-                    } else if (x > possibleSwipeCords.maxX) {
-                        x = possibleSwipeCords.maxX;
-                    }
-                }
-            }
-            // @todo fix this
-            if (allowY) {
-                if (this.isBeyondPossibleTop(y, possibleSwipeCords.minY)) {
-                    y = possibleSwipeCords.minY;
-                } else if (
-                    this.isBeyondPossibleBottom(y, possibleSwipeCords.maxY)
-                ) {
-                    y = possibleSwipeCords.maxY;
-                }
-            } else {
-                // If the translate value based on index of beyond the viewport, utilize the available space to prevent image being cut out
-                if (scale > 1) {
-                    //If image goes beyond viewport top, use the minim possible translate value
-                    if (y < possibleSwipeCords.minY) {
-                        y = possibleSwipeCords.minY;
-                    } else if (y > possibleSwipeCords.maxY) {
-                        y = possibleSwipeCords.maxY;
-                    }
-                }
-            }
+            // Clamp with the shared bounds, the same ones the release
+            // settle and every pinch run through. The local window is
+            // wider than those on an axis the image barely overflows, so
+            // a zoom aimed near an edge parked the image where the next
+            // tap immediately yanked it back from — a wide, short image
+            // zoomed near its bottom edge jumped up on the following
+            // tap.
+            const clamped = this.clampPinchPan({ x, y }, scale);
+            x = clamped.x;
+            y = clamped.y;
         }
 
         this.setZoomStyles({

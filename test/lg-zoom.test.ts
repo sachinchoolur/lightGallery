@@ -214,3 +214,66 @@ describe('close while zoomed', () => {
         expect(ctx.calls).toEqual(['resetZoom']);
     });
 });
+
+describe('zoom reposition clamp', () => {
+    // A repositioning zoom has to land inside the SAME bounds the
+    // release settle and every pinch use. The plugin's own window is
+    // wider on an axis the image barely overflows, so a zoom aimed near
+    // an edge parked the image where the next tap yanked it back from:
+    // a wide, short image zoomed near its bottom edge jumped up on the
+    // following tap.
+    const zoomImage = Zoom.prototype.zoomImage as (
+        this: unknown,
+        scale: number,
+        scaleDiff: number,
+        reposition: boolean,
+        resetToMax: boolean,
+    ) => void;
+
+    const makeThis = () => {
+        const applied: { x: number; y: number; scale: number }[] = [];
+        const clampCalls: { pan: { x: number; y: number }; scale: number }[] =
+            [];
+        return {
+            applied,
+            clampCalls,
+            containerRect: { width: 620, height: 277, left: 0, top: 0 },
+            scrollTop: 0,
+            scale: 1,
+            left: 0,
+            top: 0,
+            pageX: 310,
+            pageY: 430,
+            positionChanged: false,
+            clampPinchPan(pan: { x: number; y: number }, scale: number) {
+                clampCalls.push({ pan, scale });
+                return { x: 4, y: 7 };
+            },
+            setZoomStyles(style: { x: number; y: number; scale: number }) {
+                applied.push(style);
+            },
+            setZoomImageSize() {
+                /* the natural-px swap is out of scope here */
+            },
+        };
+    };
+
+    it('lands a repositioning zoom on the shared clamp', () => {
+        const ctx = makeThis();
+        zoomImage.call(ctx, 1.45, 0.45, true, false);
+        expect(ctx.clampCalls).toHaveLength(1);
+        expect(ctx.clampCalls[0]!.scale).toBe(1.45);
+        expect(ctx.applied[0]).toMatchObject({ x: 4, y: 7, scale: 1.45 });
+        // The pan the plugin tracks has to agree with what it painted,
+        // or the next gesture starts from a stale origin.
+        expect(ctx.left).toBe(4);
+        expect(ctx.top).toBe(7);
+    });
+
+    it('leaves a non-repositioning zoom unclamped', () => {
+        const ctx = makeThis();
+        zoomImage.call(ctx, 1.45, 0.45, false, false);
+        expect(ctx.clampCalls).toHaveLength(0);
+        expect(ctx.applied[0]!.scale).toBe(1.45);
+    });
+});
