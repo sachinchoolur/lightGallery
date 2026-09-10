@@ -249,8 +249,14 @@ export default class Zoom {
         }
 
         if (this.positionChanged) {
-            originalX = this.left / (this.scale - scaleDiff);
-            originalY = this.top / (this.scale - scaleDiff);
+            // A rotate asks for a fresh origin, and the previous scale is
+            // 0 on the first step out of 1: dividing by it handed pageX
+            // and pageY NaN, which voids the transform string outright,
+            // so the pan silently stopped tracking until something else
+            // reset it. No previous scale means no previous offset.
+            const previousScale = this.scale - scaleDiff;
+            originalX = previousScale ? this.left / previousScale : 0;
+            originalY = previousScale ? this.top / previousScale : 0;
             this.pageX = offsetX - originalX;
             this.pageY = offsetY - originalY;
 
