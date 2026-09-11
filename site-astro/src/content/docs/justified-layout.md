@@ -41,6 +41,41 @@ galleries that do not use the layout pay zero bytes:
 import 'lightgallery/css/lg-justified.css';
 ```
 
+## How the grid loads
+
+A justified grid cannot be positioned until the script has measured
+the container, so the stylesheet keeps the thumbnails out of flow and
+invisible until the layout has run. Nothing is ever seen unorganised,
+and an oversized thumbnail cannot widen the page in the meantime.
+
+Put the container class in your **markup**, not just in the script.
+The plugin adds it too, but only once it runs, and the flash you are
+avoiding happens before that:
+
+```html
+<div id="gallery" class="lg-justified">
+    <a href="full-1.jpg" data-lg-size="1600-1067">
+        <img src="thumb-1.jpg" alt="" />
+    </a>
+</div>
+```
+
+Once the layout has positioned a trigger, its box shows immediately as
+a placeholder and the thumbnail fades in on top when it has loaded, so
+the rows fill in as the images arrive. `justifiedReveal` picks the
+order:
+
+-   `'row'` (default) reveals whole rows top to bottom, each once
+    every thumbnail in it has loaded.
+-   `'image'` reveals each thumbnail on its own, as soon as it has
+    loaded.
+
+Two details worth knowing. Before the layout runs the container has no
+height, so content below it shifts down when the rows appear; give the
+container a `min-height` if that matters on your page. And the
+placeholder and fade only apply to grids lightGallery lays out, so
+your own layout code using the same class names is left alone.
+
 ## Vanilla JavaScript
 
 The layout ships as a regular plugin. Adding it to `plugins` lays the
@@ -163,6 +198,7 @@ The three framework components share one prop surface:
 | `gap` | `8` | Gap between thumbnails and between rows (px) |
 | `lastRow` | `'start'` | Leftover-row policy: `'justify'`, `'start'` or `'hide'` |
 | `maxScale` | `1.75` | Row-height clamp as a multiple of `rowHeight` |
+| `reveal` | `'row'` | Reveal order as thumbnails load: `'row'` or `'image'` |
 | `direction` | `'auto'` | Reading direction; `'auto'` inherits the nearest ancestor `dir` attribute |
 
 ## Standalone grids

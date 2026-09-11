@@ -33,6 +33,8 @@ export interface JustifiedSettings {
      * How thumbnails appear as they load: 'row' reveals whole rows top
      * to bottom, each once every thumbnail in it has loaded; 'image'
      * reveals each thumbnail on its own as soon as it has loaded.
+     * Until a thumbnail is revealed its box shows as a placeholder.
+     * See <a href="/docs/justified-layout/">Justified layout</a>.
      * @version V3.0.0
      */
     justifiedReveal: 'row' | 'image';

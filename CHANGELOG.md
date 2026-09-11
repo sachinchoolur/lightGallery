@@ -30,7 +30,12 @@ unchanged; what moved is the packaging and the framework integrations.
 
 - **Justified layout** plugin: row-justified trigger grids from the gallery
   itself (`lightgallery/plugins/justified`, and grid components in each
-  framework package).
+  framework package). The grid is never seen unorganised: thumbnails stay
+  out of flow until the layout has positioned them, each box then shows as
+  a placeholder and its thumbnail fades in once loaded. `justifiedReveal`
+  picks whether rows fill in top to bottom or each thumbnail appears on
+  its own. Ship `class="lg-justified"` in the container markup so the
+  hiding also covers the window before the script runs.
 - **Virtualization**: `virtualization` setting keeps a window of slides and
   thumbnails mounted for very large galleries.
 - **Video facades**: video slides render a poster and load the player on
@@ -63,6 +68,21 @@ unchanged; what moved is the packaging and the framework integrations.
 - Plugin labels (aria-labels and titles) come from the core `strings`
   setting; the per-plugin `*PluginStrings` settings are deprecated aliases.
 - The share plugin's Twitter target is now X (`shareX` icon name).
+
+### Fixed
+
+Long-standing bugs, all of them present in 2.x:
+
+- Slide transitions crossfaded for the whole slide instead of the brief
+  fade the modes ask for, so the outgoing image ghosted across the
+  transition. Transform and opacity now keep their own durations, and the
+  modes whose effect is the fade keep the long one.
+- Zoom clamped a repositioning zoom against a wider window than its own
+  release settle uses. Zooming near an edge parked the image where the
+  next tap immediately moved it away from.
+- Rotating an image and then zooming divided by a zero previous scale,
+  handing the pan origin `NaN` and voiding the transform, so panning
+  silently stopped tracking.
 
 ### Removed
 
