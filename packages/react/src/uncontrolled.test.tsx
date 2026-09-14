@@ -226,6 +226,47 @@ describe('zoom-from-origin dummy image', () => {
         rectSpy.mockRestore();
     });
 
+    it('flies the dummy at the natural size when the image is smaller than the stage', () => {
+        // Same flight preconditions as the test below; a 40×30 image fits
+        // the 100×80 stage unscaled, so the dummy must not fill the stage.
+        const rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        render(
+            <LightGallery>
+                {items.map((item) => (
+                    <LightGalleryItem
+                        key={item.src}
+                        item={{ ...item, lgSize: '40-30' }}
+                        href={item.src}
+                        data-testid={`trigger-${item.alt}`}
+                    >
+                        <img src={item.thumb} alt={`${item.alt} thumbnail`} />
+                    </LightGalleryItem>
+                ))}
+            </LightGallery>,
+        );
+        fireEvent.click(screen.getByTestId('trigger-a'));
+        tick(20);
+
+        const dummy =
+            document.querySelector<HTMLImageElement>('img.lg-dummy-img');
+        expect(dummy).toBeInTheDocument();
+        expect(dummy!.style.width).toBe('40px');
+        expect(dummy!.style.height).toBe('30px');
+        rectSpy.mockRestore();
+    });
+
     it('flies the thumb as lg-dummy-img and drops it after the load settles', () => {
         // jsdom rects are 0×0; a real-looking rect makes computeOrigin
         // produce a flight (lgSize is the other precondition).

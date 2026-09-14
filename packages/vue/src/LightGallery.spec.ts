@@ -546,6 +546,52 @@ describe('zoom-from-origin dummy image', () => {
         rectSpy.mockRestore();
     });
 
+    it('flies the dummy at the natural size when the image is smaller than the stage', async () => {
+        // Same flight preconditions as the test below; a 40×30 image fits
+        // the 100×80 stage unscaled, so the dummy must not fill the stage.
+        const rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        const Host = defineComponent({
+            components: { LightGallery, LgItem },
+            setup: () => ({
+                items: ITEMS.map((item) => ({ ...item, lgSize: '40-30' })),
+            }),
+            template: `
+                <LightGallery>
+                    <LgItem
+                        v-for="item of items"
+                        :key="item.src"
+                        :item="item"
+                        class="trigger"
+                    >
+                        <img :src="item.thumb" :alt="item.alt" />
+                    </LgItem>
+                </LightGallery>
+            `,
+        });
+        mount(Host, { attachTo: document.body });
+        queryAll('.trigger')[0]!.click();
+        await settle();
+        await advance(20);
+
+        const dummy = query('img.lg-dummy-img') as HTMLImageElement | null;
+        expect(dummy).not.toBeNull();
+        expect(dummy!.style.width).toBe('40px');
+        expect(dummy!.style.height).toBe('30px');
+        rectSpy.mockRestore();
+    });
+
     it('flies the thumb as lg-dummy-img and drops it after the load settles', async () => {
         // jsdom rects are 0×0; a real-looking rect makes computeOrigin
         // produce a flight (lgSize is the other precondition).

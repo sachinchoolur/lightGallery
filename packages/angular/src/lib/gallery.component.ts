@@ -55,6 +55,7 @@ import {
     type SlideDirection,
     type UserSettings,
     coreDefaultIcons,
+    type ImageSize,
 } from '@lightgallery/headless';
 
 import { LgCaptionComponent } from './caption.component';
@@ -1507,14 +1508,16 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         this.runtime.gestureSeam.pointers = [];
 
         const currentIndex = this.store.currentIndex();
-        const transform = this.computeOrigin(currentIndex);
+        const origin = this.computeOrigin(currentIndex);
+        const transform = origin?.transform ?? null;
         this.usedZoom = transform !== null;
         this.runtime.zoomOriginOpen.set(this.usedZoom);
         this.useStartClass.set(transform === null);
-        if (transform !== null) {
+        if (origin) {
             this.originAnim.set({
                 index: currentIndex,
-                transform,
+                transform: origin.transform,
+                imageSize: origin.imageSize,
                 stage: 'init',
             });
             this.timers.set(() => {
@@ -1598,13 +1601,14 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         this.barsHidden.set(false);
 
         let closeDuration = settings.backdropDuration;
-        const transform = this.usedZoom
+        const origin = this.usedZoom
             ? this.computeOrigin(this.store.currentIndex())
             : null;
-        if (transform) {
+        if (origin) {
             this.originAnim.set({
                 index: this.store.currentIndex(),
-                transform,
+                transform: origin.transform,
+                imageSize: origin.imageSize,
                 stage: 'run',
                 closing: true,
             });
@@ -1841,7 +1845,9 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         };
     }
 
-    private computeOrigin(index: number): string | null {
+    private computeOrigin(
+        index: number,
+    ): { transform: string; imageSize: ImageSize } | null {
         const settings = this.settings();
         if (!settings.zoomFromOrigin) {
             return null;
@@ -1878,13 +1884,18 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         if (imageSize.width <= 0 || imageSize.height <= 0) {
             return null;
         }
-        return getOriginTransform({
-            triggerRect,
-            containerRect,
-            top,
-            bottom,
+        return {
+            transform: getOriginTransform({
+                triggerRect,
+                containerRect,
+                top,
+                bottom,
+                imageSize,
+            }),
+            // The dummy flies at this box: capped at the natural size, so
+            // an image smaller than the stage never flies stage-sized.
             imageSize,
-        });
+        };
     }
 
     // ── Slide transition timeline (2.x makeSlideAnimation) ────────────────

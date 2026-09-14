@@ -15,6 +15,7 @@ import {
     onTransitionSettle,
     parseImageSize,
     type SlideDirection,
+    type ImageSize,
 } from '@lightgallery/headless';
 
 import { Caption } from './Caption';
@@ -51,6 +52,8 @@ type OpenPhase = 'closed' | 'pre-open' | 'opening' | 'open' | 'closing';
 export interface OriginAnimation {
     index: number;
     transform: string;
+    /** Fitted image box the flight lands on (capped at the natural size). */
+    imageSize: ImageSize;
     /**
      * `init`  — slide parked on the trigger rect, no transition classes yet
      * `armed` — transition classes + duration applied, still on the rect
@@ -156,50 +159,57 @@ export function GalleryOutlet({
         return { top, bottom };
     });
 
-    const computeOrigin = useEventCallback((index: number): string | null => {
-        if (!settings.zoomFromOrigin) {
-            return null;
-        }
-        const item = internal.items[index];
-        const outerEl = outerRef.current;
-        if (!item?.lgSize || !outerEl) {
-            return null;
-        }
-        const triggerRect = internal.getOriginRect(index);
-        if (!triggerRect) {
-            return null;
-        }
-        const natural = parseImageSize(item.lgSize, window.innerWidth);
-        if (!natural) {
-            return null;
-        }
-        const rect = outerEl.getBoundingClientRect();
-        const containerRect = {
-            left: rect.left,
-            top: rect.top,
-            width: rect.width,
-            height: rect.height,
-        };
-        const { top, bottom } = measureOffsets();
-        const imageSize = fitImageSize(
-            natural,
-            containerRect.width,
-            containerRect.height - (top + bottom),
-        );
-        // Degenerate measurement (zero-sized/hidden viewport, offsets
-        // taller than the stage): the shared math would emit a
-        // mirrored flight — fall back to the startClass fade instead.
-        if (imageSize.width <= 0 || imageSize.height <= 0) {
-            return null;
-        }
-        return getOriginTransform({
-            triggerRect,
-            containerRect,
-            top,
-            bottom,
-            imageSize,
-        });
-    });
+    const computeOrigin = useEventCallback(
+        (index: number): { transform: string; imageSize: ImageSize } | null => {
+            if (!settings.zoomFromOrigin) {
+                return null;
+            }
+            const item = internal.items[index];
+            const outerEl = outerRef.current;
+            if (!item?.lgSize || !outerEl) {
+                return null;
+            }
+            const triggerRect = internal.getOriginRect(index);
+            if (!triggerRect) {
+                return null;
+            }
+            const natural = parseImageSize(item.lgSize, window.innerWidth);
+            if (!natural) {
+                return null;
+            }
+            const rect = outerEl.getBoundingClientRect();
+            const containerRect = {
+                left: rect.left,
+                top: rect.top,
+                width: rect.width,
+                height: rect.height,
+            };
+            const { top, bottom } = measureOffsets();
+            const imageSize = fitImageSize(
+                natural,
+                containerRect.width,
+                containerRect.height - (top + bottom),
+            );
+            // Degenerate measurement (zero-sized/hidden viewport, offsets
+            // taller than the stage): the shared math would emit a
+            // mirrored flight — fall back to the startClass fade instead.
+            if (imageSize.width <= 0 || imageSize.height <= 0) {
+                return null;
+            }
+            return {
+                transform: getOriginTransform({
+                    triggerRect,
+                    containerRect,
+                    top,
+                    bottom,
+                    imageSize,
+                }),
+                // The dummy flies at this box: capped at the natural size, so
+                // an image smaller than the stage never flies stage-sized.
+                imageSize,
+            };
+        },
+    );
 
     const beginClose = useEventCallback(() => {
         clearOriginSettle();
@@ -209,13 +219,14 @@ export function GalleryOutlet({
         setComponentsOpen(false);
 
         let closeDuration = settings.backdropDuration;
-        const transform = usedZoomRef.current
+        const origin = usedZoomRef.current
             ? computeOrigin(state.currentIndex)
             : null;
-        if (transform) {
+        if (origin) {
             setOriginAnim({
                 index: state.currentIndex,
-                transform,
+                transform: origin.transform,
+                imageSize: origin.imageSize,
                 stage: 'run',
                 closing: true,
             });
@@ -271,12 +282,18 @@ export function GalleryOutlet({
         internal.gestureSeam.claim(null);
         internal.gestureSeam.pointers = [];
 
-        const transform = computeOrigin(state.currentIndex);
+        const origin = computeOrigin(state.currentIndex);
+        const transform = origin?.transform ?? null;
         usedZoomRef.current = transform !== null;
         setUseStartClass(transform === null);
-        if (transform !== null) {
+        if (origin) {
             const index = state.currentIndex;
-            setOriginAnim({ index, transform, stage: 'init' });
+            setOriginAnim({
+                index,
+                transform: origin.transform,
+                imageSize: origin.imageSize,
+                stage: 'init',
+            });
             timers.set(() => {
                 setZoomFromImage(true);
                 setOriginAnim((anim) => anim && { ...anim, stage: 'armed' });

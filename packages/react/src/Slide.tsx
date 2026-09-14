@@ -11,6 +11,7 @@ import {
     awaitDecode,
     getPreloadIndexes,
     getSlideType,
+    type ImageSize,
 } from '@lightgallery/headless';
 
 import { CaptionContent } from './Caption';
@@ -212,6 +213,7 @@ export function Slide({
     // load settles (`loadContentOnFirstSlideLoad`). Layout effect: the
     // dummy must be in the flight's FIRST painted frame.
     const [dummySrc, setDummySrc] = useState<string | null>(null);
+    const [dummySize, setDummySize] = useState<ImageSize | null>(null);
     const dummyDoneRef = useRef(false);
     useIsoLayoutEffect(() => {
         if (
@@ -227,6 +229,7 @@ export function Slide({
         const src = internal.getDummySrc(index);
         if (src) {
             setDummySrc(src);
+            setDummySize(originAnim.imageSize);
         } else {
             dummyDoneRef.current = true;
         }
@@ -269,6 +272,7 @@ export function Slide({
                         item={item}
                         index={index}
                         dummySrc={dummySrc}
+                        dummySize={dummySize}
                         // v2 appends the real image only once the flight
                         // lands (startAnimationDuration + 100): its fetch
                         // and decode must never jank the flight's frames.

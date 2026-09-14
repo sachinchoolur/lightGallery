@@ -36,6 +36,7 @@ import {
     type SlideDirection,
     type UserSettings,
     coreDefaultIcons,
+    type ImageSize,
 } from '@lightgallery/headless';
 
 import { getFocusableElements, useBodyLock, useHideBars } from './composables';
@@ -656,7 +657,9 @@ const firstSlideLoading = shallowRef(false);
 /** Reactive twin of React's `zoomOriginOpenRef` (plugins consume it). */
 const zoomOriginOpen = shallowRef(false);
 
-function computeOrigin(slideIndex: number): string | null {
+function computeOrigin(
+    slideIndex: number,
+): { transform: string; imageSize: ImageSize } | null {
     const cfg = settings.value;
     if (!cfg.zoomFromOrigin) {
         return null;
@@ -693,13 +696,18 @@ function computeOrigin(slideIndex: number): string | null {
     if (imageSize.width <= 0 || imageSize.height <= 0) {
         return null;
     }
-    return getOriginTransform({
-        triggerRect,
-        containerRect,
-        top,
-        bottom,
+    return {
+        transform: getOriginTransform({
+            triggerRect,
+            containerRect,
+            top,
+            bottom,
+            imageSize,
+        }),
+        // The dummy flies at this box: capped at the natural size, so an
+        // image smaller than the stage never flies stage-sized.
         imageSize,
-    });
+    };
 }
 
 // ── Open/close machinery (React GalleryOutlet phase machine twin) ────────
@@ -730,12 +738,18 @@ function runEntrance(): void {
     gestureSeam.pointers = [];
 
     const current = store.currentIndex.value;
-    const transform = computeOrigin(current);
+    const origin = computeOrigin(current);
+    const transform = origin?.transform ?? null;
     usedZoom = transform !== null;
     zoomOriginOpen.value = usedZoom;
     useStartClass.value = transform === null;
-    if (transform !== null) {
-        originAnim.value = { index: current, transform, stage: 'init' };
+    if (origin) {
+        originAnim.value = {
+            index: current,
+            transform: origin.transform,
+            imageSize: origin.imageSize,
+            stage: 'init',
+        };
         timers.set(() => {
             zoomFromImage.value = true;
             originAnim.value = originAnim.value && {
@@ -810,11 +824,12 @@ function beginClose(): void {
     componentsOpen.value = false;
 
     let closeDuration = cfg.backdropDuration;
-    const transform = usedZoom ? computeOrigin(store.currentIndex.value) : null;
-    if (transform) {
+    const origin = usedZoom ? computeOrigin(store.currentIndex.value) : null;
+    if (origin) {
         originAnim.value = {
             index: store.currentIndex.value,
-            transform,
+            transform: origin.transform,
+            imageSize: origin.imageSize,
             stage: 'run',
             closing: true,
         };

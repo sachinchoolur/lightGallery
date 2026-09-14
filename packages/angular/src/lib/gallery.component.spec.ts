@@ -482,6 +482,22 @@ describe('persistent container (v2 close contract)', () => {
         </lg-gallery>
     `,
 })
+class SmallDummyFlightHost {
+    readonly items = ITEMS.map((item) => ({ ...item, lgSize: '40-30' }));
+}
+
+@Component({
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery>
+            @for (item of items; track item.src) {
+            <a href="#" class="trigger" [lgGalleryItem]="item">
+                <img [src]="item.thumb" [alt]="item.alt" />
+            </a>
+            }
+        </lg-gallery>
+    `,
+})
 class DummyFlightHost {
     readonly items = ITEMS.map((item) => ({
         ...item,
@@ -562,6 +578,35 @@ describe('zoom-from-origin dummy image', () => {
         await flush(fixture);
         expect(query('.lg-item.lg-current img.lg-image')).not.toBeNull();
         expect(item.classList.contains('lg-start-end-progress')).toBe(false);
+        rectSpy.mockRestore();
+    });
+
+    it('flies the dummy at the natural size when the image is smaller than the stage', async () => {
+        // Same flight preconditions as the test below; a 40×30 image fits
+        // the 100×80 stage unscaled, so the dummy must not fill the stage.
+        const rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        const fixture = TestBed.createComponent(SmallDummyFlightHost);
+        await flush(fixture);
+        queryAll('.trigger')[0]!.click();
+        await flush(fixture);
+        await advance(fixture, 20);
+
+        const dummy = query('img.lg-dummy-img');
+        expect(dummy).not.toBeNull();
+        expect(dummy!.style.width).toBe('40px');
+        expect(dummy!.style.height).toBe('30px');
         rectSpy.mockRestore();
     });
 

@@ -19,6 +19,7 @@ import {
     awaitDecode,
     getPreloadIndexes,
     getSlideType,
+    type ImageSize,
 } from '@lightgallery/headless';
 
 import { LgCaptionContent } from './caption-content';
@@ -31,6 +32,8 @@ import type { LgGalleryItem } from './types';
 export interface OriginAnimation {
     index: number;
     transform: string;
+    /** Fitted image box the flight lands on (capped at the natural size). */
+    imageSize: ImageSize;
     stage: 'init' | 'armed' | 'run';
     closing?: boolean;
 }
@@ -124,6 +127,7 @@ const slideType = computed(() =>
 // the load settles (`loadContentOnFirstSlideLoad`). The arming watch is
 // pre-flush so the dummy is in the flight's first painted frame.
 const dummySrc = ref<string | null>(null);
+const dummySize = ref<ImageSize | null>(null);
 let dummyDone = false;
 let dummyDropTimer: ReturnType<typeof setTimeout> | null = null;
 watch(
@@ -142,6 +146,7 @@ watch(
         const src = runtime.getDummySrc(props.index);
         if (src) {
             dummySrc.value = src;
+            dummySize.value = anim.imageSize;
             runtime.firstSlideLoading.value = true;
         } else {
             dummyDone = true;
@@ -203,6 +208,7 @@ const SlideContent = (): VNodeChild => {
             item,
             index: props.index,
             dummySrc: dummySrc.value,
+            dummySize: dummySize.value,
             deferSrc: deferSrc.value,
             onMediaLoad: onLoad,
             onMediaError: onError,

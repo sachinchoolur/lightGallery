@@ -17,6 +17,7 @@ import {
     awaitDecode,
     getPreloadIndexes,
     getSlideType,
+    type ImageSize,
 } from '@lightgallery/headless';
 
 import { LgCaptionContentComponent } from './caption.component';
@@ -38,6 +39,8 @@ import type { LgGalleryItem } from './types';
 export interface OriginAnimation {
     index: number;
     transform: string;
+    /** Fitted image box the flight lands on (capped at the natural size). */
+    imageSize: ImageSize;
     stage: 'init' | 'armed' | 'run';
     closing?: boolean;
 }
@@ -82,6 +85,7 @@ export interface OriginAnimation {
                 [item]="item()!"
                 [index]="index()"
                 [dummySrc]="dummySrc()"
+                [dummySize]="dummySize()"
                 [deferSrc]="deferSrc()"
                 (mediaLoad)="onLoad($event)"
                 (mediaError)="onError()"
@@ -214,6 +218,7 @@ export class LgSlideComponent {
     // real image mounts only once the flight lands and the dummy drops
     // shortly after the load settles (`loadContentOnFirstSlideLoad`).
     protected readonly dummySrc = signal<string | null>(null);
+    protected readonly dummySize = signal<ImageSize | null>(null);
     private dummyDone = false;
     private dummyDropTimer: ReturnType<typeof setTimeout> | null = null;
     private destroyed = false;
@@ -247,6 +252,7 @@ export class LgSlideComponent {
                 const src = this.runtime.getDummySrc(this.index());
                 if (src) {
                     this.dummySrc.set(src);
+                    this.dummySize.set(anim.imageSize);
                     this.runtime.firstSlideLoading.set(true);
                 } else {
                     this.dummyDone = true;
