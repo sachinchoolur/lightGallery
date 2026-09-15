@@ -51,6 +51,27 @@
     margin: -0.25rem 0 1.25rem;
 }
 
+// A copyable prompt for coding agents: the button sits over the block's
+// top-right corner, and the prose wraps so phones need no sideways scroll.
+.agent-prompt {
+    position: relative;
+}
+
+// Matches the docs layout's own `pre` selector plus one class, so the extra
+// top padding that clears the button wins over its `padding` shorthand.
+body.docs.single .docs-content .agent-prompt pre {
+    padding-top: 3.25rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.agent-prompt-copy {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    z-index: 1;
+}
+
 .page-tools-btn {
     display: inline-flex;
     align-items: center;

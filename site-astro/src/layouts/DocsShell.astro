@@ -266,4 +266,26 @@ const hasVideo =
             if (targets[0]) activate(targets[0].id);
         }
     </script>
+    <script>
+        // Copy button for agent prompt blocks (`<div class="agent-prompt">`
+        // around a fenced block in the page markdown).
+        document.querySelectorAll<HTMLPreElement>('.agent-prompt pre').forEach((pre) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'page-tools-btn agent-prompt-copy';
+            button.textContent = 'Copy prompt';
+            button.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(pre.textContent?.trim() ?? '');
+                    button.textContent = 'Copied';
+                } catch {
+                    button.textContent = 'Copy failed';
+                }
+                setTimeout(() => {
+                    button.textContent = 'Copy prompt';
+                }, 1800);
+            });
+            pre.parentElement?.insertBefore(button, pre);
+        });
+    </script>
 </BaseLayout>

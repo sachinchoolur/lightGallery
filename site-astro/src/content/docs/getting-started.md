@@ -38,6 +38,55 @@ toc: true
 -   Rotate, flip images.
 -   And many more.
 
+## Ask your coding agent
+
+Working with a coding agent? Paste the prompt below into it and replace
+the first line with the gallery you want. It points the agent at the
+markdown version of these docs, so it picks the right package for your
+stack and avoids the setup mistakes behind most bug reports.
+
+<div class="agent-prompt">
+
+```text
+Add lightGallery to this project: [describe the gallery you want, for
+example "a product photo grid that opens a lightbox with thumbnails and
+zoom"].
+
+1. Detect the stack and use the matching package:
+   - React: @lightgallery/react
+   - Vue 3: @lightgallery/vue
+   - Angular: @lightgallery/angular
+   - Anything else (plain JavaScript, TypeScript, server-rendered HTML):
+     lightgallery
+2. Before writing code, read the docs index at
+   https://www.lightgalleryjs.com/llms.txt and the guide for that stack:
+   - React: https://www.lightgalleryjs.com/docs/react/index.md
+   - Vue: https://www.lightgalleryjs.com/docs/vue/index.md
+   - Angular: https://www.lightgalleryjs.com/docs/angular/index.md
+   - Plain JavaScript:
+     https://www.lightgalleryjs.com/docs/getting-started/index.md
+   Use the install command from that guide exactly. The framework
+   packages also need the lightgallery package, which ships the CSS.
+3. Import the CSS yourself: lightgallery/css/lightgallery.css plus one
+   file per plugin you use, such as lightgallery/css/lg-thumbnail.css.
+   The framework packages ship no styles.
+4. Plugins are opt-in. Import each one from its plugins/<name> entry and
+   add it to the plugins list (in Angular, the features input with
+   withThumbnail(), withZoom() and so on). A plugin's settings do
+   nothing until the plugin is added.
+5. Give every item the full-size image URL, a thumbnail and alt text.
+   When the image dimensions are known, set lgSize to "WIDTH-HEIGHT"
+   (data-lg-size in HTML markup) so the image opens from its thumbnail.
+6. Check every option name against
+   https://www.lightgalleryjs.com/docs/settings/index.md instead of
+   guessing. Commercial projects also need the licenseKey setting.
+7. When you are done, run the project's build or type check, open the
+   gallery in a browser, and confirm the styles are applied and the
+   console shows no errors.
+```
+
+</div>
+
 ## Installation
 
 lightGallery is available on NPM, Yarn, Bower, CDNs, and GitHub. You can use any
