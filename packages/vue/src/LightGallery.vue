@@ -617,8 +617,12 @@ function measureOffsets(): { top: number; bottom: number } {
     const caption = outerEl.value?.querySelector<HTMLElement>(
         '.lg-components .lg-sub-html',
     );
-    const bottom =
+    const captionHeight =
         settings.value.defaultCaptionHeight || caption?.clientHeight || 0;
+    // 2.x reserves the thumbnail strip as well as the caption, so the
+    // media centers in the space left between the bars.
+    const thumbs = outerEl.value?.querySelector<HTMLElement>('.lg-thumb-outer');
+    const bottom = (thumbs?.clientHeight ?? 0) + captionHeight;
     return { top, bottom };
 }
 

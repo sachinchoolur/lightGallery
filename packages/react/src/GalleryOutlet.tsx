@@ -140,7 +140,7 @@ export function GalleryOutlet({
         typeof document !== 'undefined' &&
         (container ?? document.body) === document.body;
 
-    /** Toolbar/caption offsets for media positioning (2.x parity). */
+    /** Toolbar, caption and thumbnail-strip offsets for media (2.x parity). */
     const measureOffsets = useEventCallback(() => {
         // mediumZoom overrides the measurement entirely (ADR §5 layout).
         const override = internal.mediaPositionOverrideRef.current;
@@ -154,8 +154,13 @@ export function GalleryOutlet({
         const caption = outerRef.current?.querySelector<HTMLElement>(
             '.lg-components .lg-sub-html',
         );
-        const bottom =
+        const captionHeight =
             settings.defaultCaptionHeight || caption?.clientHeight || 0;
+        // 2.x reserves the thumbnail strip as well as the caption, so the
+        // media centers in the space left between the bars.
+        const thumbs =
+            outerRef.current?.querySelector<HTMLElement>('.lg-thumb-outer');
+        const bottom = (thumbs?.clientHeight ?? 0) + captionHeight;
         return { top, bottom };
     });
 

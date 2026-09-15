@@ -1805,7 +1805,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
     // ── Measurements (zoom-from-origin + media position) ──────────────────
 
-    /** Toolbar/caption offsets for media positioning (2.x parity). */
+    /** Toolbar, caption and thumbnail-strip offsets for media (2.x parity). */
     private measureOffsets(): { top: number; bottom: number } {
         // mediumZoom overrides the measurement entirely (ADR §5 layout).
         if (this.mediaPositionOverride) {
@@ -1814,13 +1814,17 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         if (this.settings().allowMediaOverlap) {
             return { top: 0, bottom: 0 };
         }
+        const outer = this.outerEl()?.nativeElement;
         const top = this.toolbarEl()?.nativeElement.clientHeight ?? 0;
-        const caption =
-            this.outerEl()?.nativeElement.querySelector<HTMLElement>(
-                '.lg-components .lg-sub-html',
-            );
-        const bottom =
+        const caption = outer?.querySelector<HTMLElement>(
+            '.lg-components .lg-sub-html',
+        );
+        const captionHeight =
             this.settings().defaultCaptionHeight || caption?.clientHeight || 0;
+        // 2.x reserves the thumbnail strip as well as the caption, so the
+        // media centers in the space left between the bars.
+        const thumbs = outer?.querySelector<HTMLElement>('.lg-thumb-outer');
+        const bottom = (thumbs?.clientHeight ?? 0) + captionHeight;
         return { top, bottom };
     }
 

@@ -56,6 +56,11 @@ function hasCaption(item: LgGalleryItem | undefined): boolean {
     selector: 'lg-caption',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [LgCaptionContentComponent],
+    // The host stands in for vanilla's `<div class="lg-sub-html">`. An
+    // unknown element defaults to inline, which collapses its clientHeight
+    // to 0 and drops the caption from the media offsets. The low
+    // specificity keeps the stylesheet's hide rules in charge.
+    styles: [':host { display: block; }'],
     host: {
         '[class.lg-sub-html]': 'true',
         '[class.lg-empty-html]': 'empty()',

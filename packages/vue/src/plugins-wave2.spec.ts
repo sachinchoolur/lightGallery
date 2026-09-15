@@ -491,6 +491,30 @@ describe('wave-2 plugins', () => {
         ).toBe(false);
     });
 
+    it('media position: reserves the toolbar, caption and thumbnail strip', async () => {
+        // jsdom has no layout: give the bars real-looking heights.
+        const heights = vi
+            .spyOn(Element.prototype, 'clientHeight', 'get')
+            .mockImplementation(function (this: Element) {
+                if (this.classList.contains('lg-toolbar')) return 40;
+                if (this.classList.contains('lg-thumb-outer')) return 100;
+                // A caption only takes space once it has content.
+                if (this.classList.contains('lg-sub-html')) {
+                    return this.textContent?.trim() ? 30 : 0;
+                }
+                return 0;
+            });
+        try {
+            const { wrapper } = mountHost([Thumbnail]);
+            await openAndLoad(wrapper);
+            const content = query('.lg-content') as HTMLElement;
+            expect(content.style.top).toBe('40px');
+            expect(content.style.bottom).toBe('130px');
+        } finally {
+            heights.mockRestore();
+        }
+    });
+
     it('mediumZoom: presets strip the chrome, margin overrides media position', async () => {
         const { wrapper } = mountHost([MediumZoom]);
         await openAndLoad(wrapper);
