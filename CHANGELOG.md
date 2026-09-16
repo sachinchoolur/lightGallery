@@ -101,7 +101,9 @@ Long-standing bugs, all of them present in 2.x:
   button, so on narrow screens it opened nowhere near the control (and its
   arrow pointed at the wrong one). Button and menu now share a wrapper that
   anchors the menu under the button, which also gets the list out of the
-  `<button>` it was nested in.
+  `<button>` it was nested in. Closing the gallery with the dropdown open
+  left it open on the next open; it now closes with the gallery, and the
+  share button's `aria-expanded` tracks it.
 
 ### Removed
 

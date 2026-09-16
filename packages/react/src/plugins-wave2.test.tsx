@@ -281,6 +281,32 @@ describe('share plugin', () => {
         );
     });
 
+    it('closes the dropdown when the gallery closes', () => {
+        const { rerender } = renderGallery({ plugins: [Share] });
+        fireEvent.click(screen.getByLabelText('Share'));
+        expect(document.querySelector('.lg-outer')).toHaveClass(
+            'lg-dropdown-active',
+        );
+
+        // Closing with the dropdown open must not leave it open for the
+        // next open.
+        const gallery = (open: boolean) => (
+            <LightGallery
+                slides={slides}
+                open={open}
+                onClose={() => undefined}
+                plugins={[Share]}
+            />
+        );
+        rerender(gallery(false));
+        tick(600);
+        rerender(gallery(true));
+        tick(600);
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-dropdown-active',
+        );
+    });
+
     it('prefers the native share sheet when enabled and available', () => {
         const share = vi.fn().mockResolvedValue(undefined);
         Object.defineProperty(window.navigator, 'share', {

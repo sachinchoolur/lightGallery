@@ -303,6 +303,30 @@ describe('wave-2 features', () => {
         ).toBe(false);
     });
 
+    it('share: dropdown closes with the gallery', async () => {
+        const fixture = TestBed.createComponent(Wave2Host);
+        const host = fixture.componentInstance;
+        host.features.set([withShare()]);
+        await flush(fixture);
+        await openAndLoad(fixture);
+
+        query('.lg-share')!.click();
+        await flush(fixture);
+        expect(
+            query('.lg-outer')!.classList.contains('lg-dropdown-active'),
+        ).toBe(true);
+
+        // Closing with the dropdown open must not leave it open for the
+        // next open.
+        host.gallery().closeGallery();
+        await flush(fixture);
+        await advance(fixture, 450);
+        await openAndLoad(fixture);
+        expect(
+            query('.lg-outer')!.classList.contains('lg-dropdown-active'),
+        ).toBe(false);
+    });
+
     it('share: native sheet preferred when enabled and available', async () => {
         const share = vi.fn().mockResolvedValue(undefined);
         Object.defineProperty(window.navigator, 'share', {

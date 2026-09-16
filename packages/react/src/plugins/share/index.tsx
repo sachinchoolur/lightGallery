@@ -1,4 +1,4 @@
-import { type ReactElement } from 'react';
+import { useEffect, type ReactElement } from 'react';
 import {
     canNativeShare,
     getFacebookShareLink,
@@ -123,6 +123,14 @@ function ShareButton(): ReactElement | null {
     const state = useGalleryState();
     const internal = useGalleryInternal();
     const settings = usePluginSettings<ShareSettings>();
+    // The open state lives on the outer element, which outlives a close:
+    // without this an open dropdown would still be open on the next open.
+    const { layout } = internal;
+    useEffect(() => {
+        if (!state.open) {
+            layout.setOuterClass('lg-dropdown-active', false);
+        }
+    }, [state.open, layout]);
     if (!settings.share) {
         return null;
     }

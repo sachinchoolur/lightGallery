@@ -120,8 +120,19 @@ function useShareState(ctx: LgPluginContext): Ref<boolean> {
     if (!state) {
         state = ref(false);
         shareStates.set(ctx, state);
+        const open = state;
         watch(state, (active) =>
             ctx.layout.setOuterClass('lg-dropdown-active', active),
+        );
+        // The state outlives a close, so an open dropdown would still be
+        // open on the next open.
+        watch(
+            () => ctx.store.isOpen.value,
+            (isOpen) => {
+                if (!isOpen) {
+                    open.value = false;
+                }
+            },
         );
     }
     return state;

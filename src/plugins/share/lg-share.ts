@@ -55,6 +55,9 @@ export default class Share {
             `${lGEvents.afterSlide}.share`,
             this.onAfterSlide.bind(this),
         );
+        this.core.LGel.on(`${lGEvents.beforeClose}.share`, () => {
+            this.setDropdownOpen(false);
+        });
     }
 
     private getShareListHtml() {
@@ -107,21 +110,33 @@ export default class Share {
                     return;
                 }
             }
-            this.core.outer.toggleClass('lg-dropdown-active');
-            if (this.core.outer.hasClass('lg-dropdown-active')) {
-                this.core.outer.attr('aria-expanded', true);
-            } else {
-                this.core.outer.attr('aria-expanded', false);
-            }
+            this.setDropdownOpen(
+                !this.core.outer.hasClass('lg-dropdown-active'),
+            );
         });
 
         this.core.outer
             .find('.lg-dropdown-overlay')
             .first()
             .on('click.lg', () => {
-                this.core.outer.removeClass('lg-dropdown-active');
-                this.core.outer.attr('aria-expanded', false);
+                this.setDropdownOpen(false);
             });
+    }
+
+    /**
+     * Open state lives on the outer element, which outlives a close, so an
+     * open dropdown would still be open on the next open.
+     */
+    private setDropdownOpen(open: boolean): void {
+        if (open) {
+            this.core.outer.addClass('lg-dropdown-active');
+        } else {
+            this.core.outer.removeClass('lg-dropdown-active');
+        }
+        this.core.outer
+            .find('.lg-share')
+            .first()
+            .attr('aria-expanded', open ? 'true' : 'false');
     }
 
     private onAfterSlide(event: CustomEvent) {

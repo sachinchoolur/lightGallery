@@ -131,6 +131,13 @@ export class LgShareStateService {
         effect(() => {
             ctx.layout.setOuterClass('lg-dropdown-active', this.active());
         });
+        // The service outlives a close, so an open dropdown would still be
+        // open on the next open.
+        effect(() => {
+            if (!ctx.state().open) {
+                this.active.set(false);
+            }
+        });
     }
 }
 

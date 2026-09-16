@@ -353,6 +353,26 @@ describe('wave-2 plugins', () => {
         return wrapper;
     }
 
+    it('share: dropdown closes with the gallery', async () => {
+        const { wrapper } = mountHost([Share]);
+        await openAndLoad(wrapper);
+
+        query('.lg-share')!.click();
+        await settle();
+        expect(
+            query('.lg-outer')!.classList.contains('lg-dropdown-active'),
+        ).toBe(true);
+
+        // Closing with the dropdown open must not leave it open for the
+        // next open.
+        galleryVm(wrapper).closeGallery();
+        await advance(600);
+        await openAndLoad(wrapper);
+        expect(
+            query('.lg-outer')!.classList.contains('lg-dropdown-active'),
+        ).toBe(false);
+    });
+
     it('share: native sheet preferred when enabled and available', async () => {
         const share = vi.fn().mockResolvedValue(undefined);
         Object.defineProperty(window.navigator, 'share', {

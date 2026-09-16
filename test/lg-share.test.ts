@@ -84,6 +84,31 @@ describe('share plugin (vanilla)', () => {
         expect(xLink.textContent).toContain('X');
     });
 
+    it('closes the dropdown when the gallery closes', () => {
+        instance = initGallery({ preferNativeShare: false });
+        instance.openGallery(0);
+        jest.advanceTimersByTime(500);
+
+        const button = document.querySelector<HTMLElement>('.lg-share')!;
+        button.click();
+        const outer = document.querySelector('.lg-outer')!;
+        expect(outer).toHaveClass('lg-dropdown-active');
+        expect(button).toHaveAttribute('aria-expanded', 'true');
+
+        // Closing with the dropdown open must not leave it open for the
+        // next open.
+        instance.closeGallery(true);
+        jest.advanceTimersByTime(500);
+        expect(outer).not.toHaveClass('lg-dropdown-active');
+        expect(button).toHaveAttribute('aria-expanded', 'false');
+
+        instance.openGallery(0);
+        jest.advanceTimersByTime(500);
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-dropdown-active',
+        );
+    });
+
     it('prefers the native share sheet when enabled and available', () => {
         const share = jest.fn().mockResolvedValue(undefined);
         const restore = stubNavigatorShare(share);
