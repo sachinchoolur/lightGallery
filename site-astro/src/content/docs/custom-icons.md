@@ -93,7 +93,7 @@ to apply.
 
 | Feature | Names |
 | --- | --- |
-| Core | `close`, `prev`, `next`, `download`, `maximize` / `minimize` (pair) |
+| Core | `close`, `prev`, `next`, `download`, `more`, `maximize` / `minimize` (pair) |
 | Zoom plugin | `zoomIn`, `zoomOut`, `actualSize` |
 | Rotate plugin | `rotateLeft`, `rotateRight`, `flipHorizontal`, `flipVertical` |
 | Share plugin | `share`, `shareFacebook`, `shareX`, `sharePinterest` |

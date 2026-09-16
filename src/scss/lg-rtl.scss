@@ -89,6 +89,13 @@
         float: left;
     }
 
+    // The overflow menu opens from the toolbar's inline end.
+    .lg-toolbar-menu {
+        right: auto;
+        left: 8px;
+        text-align: right;
+    }
+
     .lg-counter {
         padding-left: 0;
         padding-right: 20px;

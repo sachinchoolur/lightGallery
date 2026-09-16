@@ -54,6 +54,8 @@ describe('resolveSettings', () => {
         expect(mobile.controls).toBe(false);
         expect(mobile.showCloseIcon).toBe(false);
         expect(mobile.download).toBe(false);
+        expect(mobile.showGestureButtons).toBe(false);
+        expect(resolveSettings(user).showGestureButtons).toBe(true);
     });
 
     it('honors user mobileSettings on mobile', () => {

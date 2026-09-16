@@ -120,10 +120,13 @@ function ZoomToolbar(): ReactElement | null {
     if (!settings.zoom) {
         return null;
     }
+    // Zoom in/out and actual size repeat pinch and double-tap; touch
+    // devices leave them out through mobileSettings.
+    const gestureButtons = settings.showGestureButtons !== false;
     const emit = (name: string) => internal.events.emit(name, undefined);
     return (
         <>
-            {settings.showZoomInOutIcons && (
+            {gestureButtons && settings.showZoomInOutIcons && (
                 <button
                     type="button"
                     aria-label={
@@ -139,7 +142,7 @@ function ZoomToolbar(): ReactElement | null {
                     {zoomInIcon.content}
                 </button>
             )}
-            {settings.showZoomInOutIcons && (
+            {gestureButtons && settings.showZoomInOutIcons && (
                 <button
                     type="button"
                     aria-label={
@@ -155,7 +158,7 @@ function ZoomToolbar(): ReactElement | null {
                     {zoomOutIcon.content}
                 </button>
             )}
-            {settings.actualSize && (
+            {gestureButtons && settings.actualSize && (
                 <button
                     type="button"
                     aria-label={

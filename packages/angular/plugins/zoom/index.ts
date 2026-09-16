@@ -128,7 +128,8 @@ type ZoomResolved = ZoomSettings &
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [LgCiComponent],
     template: `
-        @if (settings().zoom) { @if (settings().showZoomInOutIcons) {
+        @if (settings().zoom) { @if (settings().showGestureButtons !== false &&
+        settings().showZoomInOutIcons) {
         <button
             type="button"
             [attr.aria-label]="
@@ -161,7 +162,8 @@ type ZoomResolved = ZoomSettings &
                 [icons]="defaultIcons"
             />
         </button>
-        } @if (settings().actualSize) {
+        } @if (settings().showGestureButtons !== false && settings().actualSize)
+        {
         <button
             type="button"
             [attr.aria-label]="

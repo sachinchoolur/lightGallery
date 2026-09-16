@@ -52,6 +52,8 @@ export interface LightGalleryCoreStrings {
      * and the slide count; the slide caption, when present, is appended.
      */
     slideAnnouncement: string;
+    /** Label of the toolbar's More options menu button. */
+    moreOptions: string;
 
     // Plugin labels: every user-facing string lives in this one contract.
     // The legacy per-plugin *PluginStrings objects remain as deprecated
@@ -376,6 +378,26 @@ export interface LightGalleryCoreSettings {
      * Useful for creating inline galleries.
      */
     showMaximizeIcon: boolean;
+
+    /**
+     * Keep the toolbar on one row.
+     * @description When the toolbar buttons do not fit beside the counter,
+     * the lowest-priority ones move into a "More options" menu. Set to
+     * false to let the buttons wrap onto a second row instead.
+     * See <a href="/docs/settings/#toolbarOverflow">toolbarOverflow</a>.
+     * @version V3.0.0
+     */
+    toolbarOverflow: boolean;
+
+    /**
+     * Show the toolbar buttons that repeat a touch gesture.
+     * @description Zoom in, zoom out and actual size do what pinch and
+     * double-tap already do. On by default, and turned off on touch
+     * devices through mobileSettings.
+     * See <a href="/docs/settings/#showGestureButtons">showGestureButtons</a>.
+     * @version V3.0.0
+     */
+    showGestureButtons: boolean;
 
     /**
      * If false, will disable the ability to loop back to the beginning of the gallery from the last slide.
@@ -730,11 +752,14 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     dynamicEl: [],
     extraProps: [],
     exThumbImage: '',
+    toolbarOverflow: true,
+    showGestureButtons: true,
     isMobile: undefined,
     mobileSettings: {
         controls: false,
         showCloseIcon: false,
         download: false,
+        showGestureButtons: false,
     } as MobileSettings,
     plugins: [],
     strings: {
@@ -747,6 +772,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
         mediaLoadingFailed: 'Oops... Failed to load content...',
         galleryLabel: 'Gallery',
         slideAnnouncement: 'Image {index} of {total}',
+        moreOptions: 'More options',
         share: 'Share',
         toggleThumbnails: 'Toggle thumbnails',
         toggleAutoplay: 'Toggle Autoplay',

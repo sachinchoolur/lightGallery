@@ -151,6 +151,15 @@ export {
     type ThumbWindow,
 } from './thumb-math';
 export {
+    TOOLBAR_DEFAULT_PRIORITY,
+    TOOLBAR_PINNED,
+    getToolbarItemPriority,
+    getToolbarOverflow,
+    isToolbarEventPath,
+    type ToolbarOverflowInput,
+    type ToolbarOverflowItem,
+} from './toolbar-overflow';
+export {
     getJustifiedLayout,
     getJustifiedRows,
     getRevealableItems,

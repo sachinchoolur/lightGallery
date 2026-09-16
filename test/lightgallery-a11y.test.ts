@@ -124,9 +124,13 @@ describe('accessibility (vanilla core)', () => {
             tick(200);
 
             const container = query('.lg-container')!;
+            // Hidden buttons (the toolbar's More button until something
+            // overflows) are not focusable, same rule as the trap.
             const buttons = [
                 ...container.querySelectorAll<HTMLElement>('button'),
-            ];
+            ].filter(
+                (button) => !button.closest('[hidden], [data-lg-overflow]'),
+            );
             const first = buttons[0];
             const last = buttons[buttons.length - 1];
 

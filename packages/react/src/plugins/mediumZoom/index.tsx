@@ -1,3 +1,4 @@
+import { isToolbarEventPath } from '@lightgallery/headless';
 import { useEffect, useRef } from 'react';
 
 import type { LgPlugin, PluginContext } from '../types';
@@ -52,7 +53,12 @@ function useMediumZoomPlugin(ctx: PluginContext): void {
         }
         let outerEl: HTMLElement | null = null;
         let backdropEl: HTMLElement | null = null;
-        const close = () => ctxRef.current.actions.closeGallery();
+        const close = (event: Event) => {
+            // Toolbar buttons are controls, not a tap on the backdrop.
+            if (!isToolbarEventPath(event.composedPath())) {
+                ctxRef.current.actions.closeGallery();
+            }
+        };
         const apply = () => {
             const { refs, items, state, settings: cfg } = ctxRef.current;
             outerEl = refs.getOuter();

@@ -50,6 +50,7 @@ import {
 import { useGalleryGestures } from './gestures';
 import LgCaption from './LgCaption.vue';
 import LgSlide, { type OriginAnimation } from './LgSlide.vue';
+import LgToolbarOverflow from './LgToolbarOverflow.vue';
 import {
     createGestureSeam,
     createRegistrationList,
@@ -125,6 +126,8 @@ const props = withDefaults(
         showMaximizeIcon: undefined,
         loop: undefined,
         escKey: undefined,
+        toolbarOverflow: undefined,
+        showGestureButtons: undefined,
         keyPress: undefined,
         trapFocus: undefined,
         controls: undefined,
@@ -230,6 +233,8 @@ const SETTING_KEYS = [
     'showMaximizeIcon',
     'loop',
     'escKey',
+    'toolbarOverflow',
+    'showGestureButtons',
     'keyPress',
     'trapFocus',
     'controls',
@@ -1521,6 +1526,7 @@ onBeforeUnmount(() => {
                     >
                         <LgCi :names="['close']" :defaults="iconDefaults" />
                     </button>
+                    <LgToolbarOverflow v-if="settings.toolbarOverflow" />
                     <a
                         v-if="showDownload"
                         target="_blank"

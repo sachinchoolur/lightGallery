@@ -82,8 +82,10 @@ export interface GalleryCoreStrings {
      * and the slide count; the slide caption, when present, is appended.
      */
     slideAnnouncement: string;
+    /** Label of the toolbar's More options menu button. */
+    moreOptions: string;
 
-    // Plugin labels (plan 011): every user-facing string lives in this
+    // Plugin labels: every user-facing string lives in this
     // one contract. The legacy per-plugin `*PluginStrings` objects remain
     // as deprecated aliases — an explicitly set legacy key wins.
     /** Share plugin: share button label. */
@@ -197,6 +199,20 @@ export interface CoreSettings {
 
     /** Show the maximize button (inline galleries). */
     showMaximizeIcon: boolean;
+
+    /**
+     * Keep the toolbar on one row: when its buttons do not fit beside the
+     * counter, the lowest-priority ones move into a "More options" menu.
+     * Set to `false` to let the buttons wrap onto a second row instead.
+     */
+    toolbarOverflow: boolean;
+
+    /**
+     * Show the toolbar buttons that repeat a touch gesture: zoom in, zoom
+     * out and actual size (pinch and double-tap do the same). On by
+     * default; `mobileSettings` turns it off on touch devices.
+     */
+    showGestureButtons: boolean;
 
     /** Loop back to the first slide from the last. */
     loop: boolean;
@@ -353,6 +369,8 @@ export const coreSettingsDefaults: CoreSettings = {
     closeOnTap: true,
     showCloseIcon: true,
     showMaximizeIcon: false,
+    toolbarOverflow: true,
+    showGestureButtons: true,
     loop: true,
     escKey: true,
     keyPress: true,
@@ -382,6 +400,7 @@ export const coreSettingsDefaults: CoreSettings = {
         controls: false,
         showCloseIcon: false,
         download: false,
+        showGestureButtons: false,
     },
     strings: {
         closeGallery: 'Close gallery',
@@ -393,6 +412,7 @@ export const coreSettingsDefaults: CoreSettings = {
         mediaLoadingFailed: 'Oops... Failed to load content...',
         galleryLabel: 'Gallery',
         slideAnnouncement: 'Image {index} of {total}',
+        moreOptions: 'More options',
         share: 'Share',
         toggleThumbnails: 'Toggle thumbnails',
         toggleAutoplay: 'Toggle Autoplay',

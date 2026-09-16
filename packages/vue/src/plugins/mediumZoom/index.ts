@@ -1,3 +1,4 @@
+import { isToolbarEventPath } from '@lightgallery/headless';
 import { computed, watch } from 'vue';
 
 import type { LgPluginContext, LgVuePlugin } from '../types';
@@ -29,10 +30,7 @@ function setupMediumZoom(ctx: LgPluginContext): void {
         ctx.settings.value as unknown as MediumZoomSettings;
 
     watch(
-        [
-            computed(() => cfg().mediumZoom),
-            computed(() => cfg().margin),
-        ],
+        [computed(() => cfg().mediumZoom), computed(() => cfg().margin)],
         ([enabled, margin], _prev, onCleanup) => {
             if (!enabled) {
                 return;
@@ -60,7 +58,12 @@ function setupMediumZoom(ctx: LgPluginContext): void {
             }
             let outerEl: HTMLElement | null = null;
             let backdropEl: HTMLElement | null = null;
-            const close = (): void => ctx.actions.closeGallery();
+            const close = (event: Event): void => {
+                // Toolbar buttons are controls, not a tap on the backdrop.
+                if (!isToolbarEventPath(event.composedPath())) {
+                    ctx.actions.closeGallery();
+                }
+            };
             const apply = (): void => {
                 outerEl = ctx.refs.getOuter();
                 backdropEl =

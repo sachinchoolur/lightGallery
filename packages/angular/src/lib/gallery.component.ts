@@ -87,6 +87,7 @@ import {
     type LgIconName,
 } from './icons';
 import { LightGalleryStore } from './store';
+import { LgToolbarOverflowComponent } from './toolbar-overflow.component';
 import { LgTimeouts } from './timeouts';
 import type {
     HasVideoDetail,
@@ -162,6 +163,7 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
         LgCiComponent,
         LgGesturesDirective,
         LgSlideComponent,
+        LgToolbarOverflowComponent,
         NgComponentOutlet,
         NgTemplateOutlet,
     ],
@@ -328,6 +330,8 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                                 [icons]="coreIcons"
                             />
                         </button>
+                        } @if (settings().toolbarOverflow) {
+                        <lg-toolbar-overflow />
                         } @if (showDownload()) {
                         <a
                             target="_blank"
@@ -500,6 +504,8 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     readonly showMaximizeIcon = input<boolean | undefined>(undefined);
     readonly loop = input<boolean | undefined>(undefined);
     readonly escKey = input<boolean | undefined>(undefined);
+    readonly toolbarOverflow = input<boolean | undefined>(undefined);
+    readonly showGestureButtons = input<boolean | undefined>(undefined);
     readonly keyPress = input<boolean | undefined>(undefined);
     readonly trapFocus = input<boolean | undefined>(undefined);
     readonly controls = input<boolean | undefined>(undefined);
@@ -677,6 +683,8 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         showMaximizeIcon: this.showMaximizeIcon(),
         loop: this.loop(),
         escKey: this.escKey(),
+        toolbarOverflow: this.toolbarOverflow(),
+        showGestureButtons: this.showGestureButtons(),
         keyPress: this.keyPress(),
         trapFocus: this.trapFocus(),
         controls: this.controls(),

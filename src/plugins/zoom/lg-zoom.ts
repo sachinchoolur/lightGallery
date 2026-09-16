@@ -78,21 +78,25 @@ export default class Zoom {
 
     // Append Zoom controls. Actual size, Zoom-in, Zoom-out
     buildTemplates(): void {
-        let zoomIcons = this.settings.showZoomInOutIcons
-            ? `<button id="${this.core.getIdName(
-                  'lg-zoom-in',
-              )}" type="button" aria-label="${
-                  this.settings.zoomPluginStrings?.zoomIn ??
-                  this.core.settings.strings.zoomIn
-              }" class="lg-zoom-in lg-icon"></button><button id="${this.core.getIdName(
-                  'lg-zoom-out',
-              )}" type="button" aria-label="${
-                  this.settings.zoomPluginStrings?.zoomOut ??
-                  this.core.settings.strings.zoomOut
-              }" class="lg-zoom-out lg-icon"></button>`
-            : '';
+        // Zoom in/out and actual size repeat pinch and double-tap; touch
+        // devices leave them out through mobileSettings.
+        const gestureButtons = this.core.settings.showGestureButtons !== false;
+        let zoomIcons =
+            gestureButtons && this.settings.showZoomInOutIcons
+                ? `<button id="${this.core.getIdName(
+                      'lg-zoom-in',
+                  )}" type="button" aria-label="${
+                      this.settings.zoomPluginStrings?.zoomIn ??
+                      this.core.settings.strings.zoomIn
+                  }" class="lg-zoom-in lg-icon"></button><button id="${this.core.getIdName(
+                      'lg-zoom-out',
+                  )}" type="button" aria-label="${
+                      this.settings.zoomPluginStrings?.zoomOut ??
+                      this.core.settings.strings.zoomOut
+                  }" class="lg-zoom-out lg-icon"></button>`
+                : '';
 
-        if (this.settings.actualSize) {
+        if (gestureButtons && this.settings.actualSize) {
             zoomIcons += `<button id="${this.core.getIdName(
                 'lg-actual-size',
             )}" type="button" aria-label="${

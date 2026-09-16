@@ -11,6 +11,7 @@ import {
 import { cx } from './cx';
 import { useCustomIcons } from './icons';
 import { PluginSlots } from './plugins/runtime';
+import { ToolbarOverflow } from './ToolbarOverflow';
 
 export interface ToolbarProps {
     toolbarRef: RefObject<HTMLDivElement>;
@@ -59,6 +60,7 @@ export function Toolbar({
                     {closeIcon.content}
                 </button>
             )}
+            {settings.toolbarOverflow && <ToolbarOverflow />}
             {showDownload && (
                 <a
                     target="_blank"

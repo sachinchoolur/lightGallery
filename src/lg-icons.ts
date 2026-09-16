@@ -36,6 +36,7 @@ const ICON_TARGETS: IconTarget[] = [
     { selector: '.lg-prev', names: ['prev'] },
     { selector: '.lg-next', names: ['next'] },
     { selector: '.lg-download', names: ['download'] },
+    { selector: '.lg-more', names: ['more'] },
     // Shown while `.lg-inline` (prompting maximize) / after maximizing.
     { selector: '.lg-maximize', names: ['maximize', 'minimize'] },
     // The actual-size button's CLASS toggles between the two zoom

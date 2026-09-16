@@ -36,6 +36,13 @@ unchanged; what moved is the packaging and the framework integrations.
   picks whether rows fill in top to bottom or each thumbnail appears on
   its own. Ship `class="lg-justified"` in the container markup so the
   hiding also covers the window before the script runs.
+- **Toolbar overflow**: the toolbar stays on one row. When its buttons do
+  not fit beside the counter, the lowest-priority ones move into a "More
+  options" menu (`toolbarOverflow`, on by default), labelled by
+  `strings.moreOptions` and drawn with the replaceable `more` icon. Touch
+  devices also leave out the zoom in, zoom out and actual size buttons,
+  which repeat pinch and double-tap (`showGestureButtons`, turned off
+  through `mobileSettings`).
 - **Virtualization**: `virtualization` setting keeps a window of slides and
   thumbnails mounted for very large galleries.
 - **Video facades**: video slides render a poster and load the player on
@@ -83,6 +90,9 @@ Long-standing bugs, all of them present in 2.x:
 - Rotating an image and then zooming divided by a zero previous scale,
   handing the pan origin `NaN` and voiding the transform, so panning
   silently stopped tracking.
+- Medium zoom closed the gallery on every click, toolbar buttons included,
+  so rotating or sharing dismissed the image. Toolbar clicks now leave it
+  open; a click on the slide or backdrop still closes.
 
 ### Removed
 

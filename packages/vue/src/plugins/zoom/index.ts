@@ -133,6 +133,10 @@ export const ZoomToolbar = defineComponent({
             if (!cfg.zoom) {
                 return null;
             }
+            // Zoom in/out and actual size repeat pinch and double-tap;
+            // touch devices leave them out through mobileSettings.
+            const gestureButtons =
+                ctx.settings.value.showGestureButtons !== false;
             const ciZoomIn = resolveCustomIcons(
                 lgIcons?.value,
                 ['zoomIn'],
@@ -149,7 +153,7 @@ export const ZoomToolbar = defineComponent({
                 zoomDefaultIcons,
             );
             return [
-                cfg.showZoomInOutIcons
+                gestureButtons && cfg.showZoomInOutIcons
                     ? h(
                           'button',
                           {
@@ -166,7 +170,7 @@ export const ZoomToolbar = defineComponent({
                           ciZoomIn?.children,
                       )
                     : null,
-                cfg.showZoomInOutIcons
+                gestureButtons && cfg.showZoomInOutIcons
                     ? h(
                           'button',
                           {
@@ -183,7 +187,7 @@ export const ZoomToolbar = defineComponent({
                           ciZoomOut?.children,
                       )
                     : null,
-                cfg.actualSize
+                gestureButtons && cfg.actualSize
                     ? h(
                           'button',
                           {

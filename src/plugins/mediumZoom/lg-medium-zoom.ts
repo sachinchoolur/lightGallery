@@ -1,3 +1,5 @@
+import { isToolbarEventPath } from '@lightgallery/headless';
+
 import { lGEvents } from '../../lg-events';
 import {
     LightGalleryAllSettings,
@@ -75,8 +77,11 @@ export default class MediumZoom {
         });
         this.toggleItemClass();
 
-        this.core.outer.on('click.lg.medium', () => {
-            this.core.closeGallery();
+        this.core.outer.on('click.lg.medium', (event: Event) => {
+            // Toolbar buttons are controls, not a tap on the backdrop.
+            if (!isToolbarEventPath(event.composedPath())) {
+                this.core.closeGallery();
+            }
         });
     }
 

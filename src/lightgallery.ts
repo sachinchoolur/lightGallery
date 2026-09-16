@@ -29,6 +29,7 @@ import {
     lightGalleryCoreSettings,
     LightGallerySettings,
 } from './lg-settings';
+import { ToolbarOverflow } from './lg-toolbar-overflow';
 import { applyCustomIcons, LgIcons } from './lg-icons';
 import { runSprings } from './lg-spring-runner';
 import utils, { GalleryItem, ImageSize } from './lg-utils';
@@ -72,6 +73,7 @@ export class LightGallery {
     // Built-in icon SVGs: core defaults + whatever the instantiated
     // plugins register; `settings.icons` overrides per name at apply.
     private defaultIcons: LgIcons = { ...coreDefaultIcons };
+    private toolbarOverflow?: ToolbarOverflow;
 
     // Type of touch action - {swipe, zoomSwipe, pinch}
     public touchAction?: 'swipe' | 'zoomSwipe' | 'pinch';
@@ -516,6 +518,22 @@ export class LightGallery {
         this.toggleMaximize();
 
         this.initModules();
+
+        // After the plugins have appended their buttons, and before the
+        // icon pass, so the More options button gets its icon too.
+        if (this.settings.toolbarOverflow) {
+            this.toolbarOverflow = new ToolbarOverflow(this.$toolbar.get(), {
+                id: this.getIdName('lg-more'),
+                label: this.settings.strings.moreOptions,
+            });
+            const update = () => this.toolbarOverflow?.update();
+            this.LGel.on(`${lGEvents.afterOpen}.lg`, update);
+            this.LGel.on(`${lGEvents.afterSlide}.lg`, update);
+            this.LGel.on(`${lGEvents.containerResize}.lg`, update);
+            this.LGel.on(`${lGEvents.beforeClose}.lg`, () =>
+                this.toolbarOverflow?.close(false),
+            );
+        }
 
         // Icons: one pass after the plugins have appended their buttons
         // and registered their default sets, every icon element exists
@@ -3036,6 +3054,8 @@ export class LightGallery {
         }
         $LG(window).off(`.lg.global${this.lgId}`);
         this.LGel.off('.lg');
+        this.toolbarOverflow?.destroy();
+        this.toolbarOverflow = undefined;
         this.$container.remove();
     }
 

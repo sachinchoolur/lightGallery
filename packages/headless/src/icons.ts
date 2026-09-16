@@ -20,6 +20,7 @@ export type LgIconName =
     | 'download'
     | 'maximize'
     | 'minimize'
+    | 'more'
     | 'zoomIn'
     | 'zoomOut'
     | 'actualSize'
@@ -41,6 +42,8 @@ export type LgIconName =
 
 export const coreDefaultIcons = {
     close: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor"><path transform="translate(0, 960) scale(1, -1)" d="M810 664.667l-238-238 238-238-60-60-238 238-238-238-60 60 238 238-238 238 60 60 238-238 238 238z"/></svg>',
+    // Three dots for the toolbar's More options menu button.
+    more: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor"><circle cx="232" cy="512" r="80"/><circle cx="512" cy="512" r="80"/><circle cx="792" cy="512" r="80"/></svg>',
     prev: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor"><path transform="translate(0, 960) scale(1, -1)" d="M426.667 768q17.667 0 30.167-12.5t12.5-30.167q0-18-12.667-30.333l-225.667-225.667h665q17.667 0 30.167-12.5t12.5-30.167-12.5-30.167-30.167-12.5h-665l225.667-225.667q12.667-12.333 12.667-30.333 0-17.667-12.5-30.167t-30.167-12.5q-18 0-30.333 12.333l-298.667 298.667q-12.333 13-12.333 30.333t12.333 30.333l298.667 298.667q12.667 12.333 30.333 12.333z"/></svg>',
     next: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor"><path transform="translate(0, 960) scale(1, -1)" d="M597.333 768q18 0 30.333-12.333l298.667-298.667q12.333-12.333 12.333-30.333t-12.333-30.333l-298.667-298.667q-12.333-12.333-30.333-12.333-18.333 0-30.5 12.167t-12.167 30.5q0 18 12.333 30.333l226 225.667h-665q-17.667 0-30.167 12.5t-12.5 30.167 12.5 30.167 30.167 12.5h665l-226 225.667q-12.333 12.333-12.333 30.333 0 18.333 12.167 30.5t30.5 12.167z"/></svg>',
     download:

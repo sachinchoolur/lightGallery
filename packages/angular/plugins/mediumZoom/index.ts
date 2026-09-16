@@ -4,6 +4,7 @@ import {
     Injectable,
     untracked,
 } from '@angular/core';
+import { isToolbarEventPath } from '@lightgallery/headless';
 import {
     LG_FEATURE_INIT,
     LG_PLUGIN_CONTEXT,
@@ -67,8 +68,12 @@ export class LgMediumZoomService {
             untracked(() => {
                 let outerEl: HTMLElement | null = null;
                 let backdropEl: HTMLElement | null = null;
-                const close = (): void =>
-                    this.ctx.actions.closeGallery();
+                const close = (event: Event): void => {
+                    // Toolbar buttons are controls, not a tap on the backdrop.
+                    if (!isToolbarEventPath(event.composedPath())) {
+                        this.ctx.actions.closeGallery();
+                    }
+                };
                 const apply = (): void => {
                     const state = untracked(this.ctx.state);
                     const cfg = untracked(

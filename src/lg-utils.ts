@@ -511,10 +511,19 @@ const utils = {
         const elements = container.querySelectorAll(
             'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])',
         );
-        const visibleElements = [].filter.call(elements, (element) => {
-            const style = window.getComputedStyle(element);
-            return style.display !== 'none' && style.visibility !== 'hidden';
-        });
+        const visibleElements = [].filter.call(
+            elements,
+            (element: HTMLElement) => {
+                const style = window.getComputedStyle(element);
+                return (
+                    style.display !== 'none' &&
+                    style.visibility !== 'hidden' &&
+                    // Hidden or moved into the toolbar's More menu, whatever
+                    // the stylesheet says about their display.
+                    !element.closest('[hidden], [data-lg-overflow]')
+                );
+            },
+        );
         return visibleElements as unknown as NodeListOf<Element>;
     },
 

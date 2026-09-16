@@ -141,7 +141,13 @@ export function getFocusableElements(container: HTMLElement): HTMLElement[] {
     );
     return [...elements].filter((element) => {
         const style = window.getComputedStyle(element);
-        return style.display !== 'none' && style.visibility !== 'hidden';
+        return (
+            style.display !== 'none' &&
+            style.visibility !== 'hidden' &&
+            // Hidden or moved into the toolbar's More menu, whatever the
+            // stylesheet says about their display.
+            !element.closest('[hidden], [data-lg-overflow]')
+        );
     });
 }
 
