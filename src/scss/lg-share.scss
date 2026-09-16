@@ -104,7 +104,10 @@
             width: auto;
         }
     }
-    .lg-share {
+    // The button and its dropdown share a wrapper, so the menu hangs
+    // under the control that opened it instead of the toolbar's corner.
+    .lg-share-outer {
+        float: right;
         position: relative;
     }
     .lg-share-facebook {
@@ -114,7 +117,7 @@
     }
     .lg-share-twitter {
         .lg-icon {
-            color: #00aced;
+            color: #000;
         }
     }
     .lg-share-pinterest {

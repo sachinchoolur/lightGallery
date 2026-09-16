@@ -99,16 +99,19 @@ describe('custom icons (settings.icons)', () => {
     });
 
     it('prepends into the share button without destroying its dropdown', () => {
-        // The dropdown ul lives INSIDE .lg-share — injection must keep it.
+        // The dropdown is the button's sibling inside .lg-share-outer, so
+        // injection into the button must leave it alone.
         lightGallery(setup(), {
             plugins: [Share],
             icons: { share: SVG('share') },
         });
-        const share = document.querySelector('.lg-share')!;
+        const wrapper = document.querySelector('.lg-share-outer')!;
+        const share = wrapper.querySelector('.lg-share')!;
         expect(
             share.querySelector('.lg-ci-share svg[data-lg-test="share"]'),
         ).toBeInTheDocument();
-        expect(share.querySelector('.lg-dropdown')).toBeInTheDocument();
+        expect(share.querySelector('.lg-dropdown')).toBeNull();
+        expect(wrapper.querySelector('.lg-dropdown')).toBeInTheDocument();
     });
 
     it('covers the comment plugin buttons', () => {

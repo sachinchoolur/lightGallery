@@ -257,7 +257,12 @@ describe('share plugin', () => {
     it('renders per-slide share links and toggles the dropdown', () => {
         renderGallery({ plugins: [Share] });
         const button = screen.getByLabelText('Share');
-        // The dropdown is a sibling of the button (valid interactive DOM).
+        // The dropdown is the button's sibling inside the wrapper that
+        // anchors it, so it hangs under the button (nesting the list in
+        // the button would be invalid).
+        const wrapper = document.querySelector('.lg-toolbar .lg-share-outer')!;
+        expect(wrapper.contains(button)).toBe(true);
+        expect(wrapper.querySelector(':scope > .lg-dropdown')).not.toBeNull();
         const links = document.querySelectorAll('.lg-dropdown a');
         expect(links.length).toBe(3);
         expect(links[0]!.getAttribute('href')).toContain('facebook.com');

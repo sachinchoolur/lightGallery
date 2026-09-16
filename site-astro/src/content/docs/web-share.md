@@ -76,10 +76,13 @@ available to custom targets.
 ## Updated share targets
 
 -   The Twitter target is now **X**: links use the
-    `x.com/intent/post` endpoint and the dropdown label defaults to
-    `'X'`. Setting names, CSS classes and icons are unchanged
-    (`lg-share-twitter`), so existing customizations keep working.
+    `x.com/intent/post` endpoint, the dropdown label defaults to `'X'` and
+    the icon is the X mark (`shareX`). Setting names and CSS classes are
+    unchanged (`lg-share-twitter`), so existing customizations keep working.
 -   The share text is URL-encoded properly in the intent link.
+-   The share button and its dropdown sit together in `.lg-share-outer`,
+    which anchors the menu under the button. Custom CSS that positioned
+    `.lg-dropdown` against the toolbar should target that wrapper instead.
 
 ## Settings
 

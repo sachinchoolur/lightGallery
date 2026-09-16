@@ -48,7 +48,7 @@ export default class Share {
         ];
         this.setLgShareMarkup();
         this.core.outer
-            .find('.lg-share .lg-dropdown')
+            .find('.lg-share-outer .lg-dropdown')
             .append(this.getShareListHtml());
 
         this.core.LGel.on(
@@ -85,11 +85,11 @@ export default class Share {
             ? ''
             : 'aria-haspopup="true" aria-expanded="false"';
         this.core.$toolbar.append(
-            `<button type="button" aria-label="${
+            `<div class="lg-share-outer"><button type="button" aria-label="${
                 this.settings.sharePluginStrings?.share ??
                 this.core.settings.strings.share
-            }" ${popupAttrs} class="lg-share lg-icon">
-                <ul class="lg-dropdown" style="position: absolute;"></ul></button>`,
+            }" ${popupAttrs} class="lg-share lg-icon"></button>
+                <ul class="lg-dropdown" style="position: absolute;"></ul></div>`,
         );
 
         this.core.outer.append('<div class="lg-dropdown-overlay"></div>');
@@ -187,7 +187,7 @@ export default class Share {
 
     public destroy(): void {
         this.core.outer.find('.lg-dropdown-overlay').remove();
-        this.core.outer.find('.lg-share').remove();
+        this.core.outer.find('.lg-share-outer').remove();
         this.core.LGel.off('.lg.share');
         this.core.LGel.off('.share');
     }

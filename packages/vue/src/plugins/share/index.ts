@@ -13,10 +13,7 @@ import {
     type LgPluginContext,
     type LgVuePlugin,
 } from '../types';
-import {
-    LG_ICONS,
-    resolveCustomIcons,
-} from '../../icons';
+import { LG_ICONS, resolveCustomIcons } from '../../icons';
 import type { LgGalleryItem } from '../../types';
 
 /**
@@ -181,7 +178,11 @@ export const ShareButton = defineComponent({
                     shareDefaultIcons,
                 ),
             };
-            return [
+            // Button and dropdown share a wrapper: it is the dropdown's
+            // positioning context, so the menu hangs under the control
+            // that opened it (nesting the list inside the button would be
+            // invalid).
+            return h('div', { class: 'lg-share-outer' }, [
                 h(
                     'button',
                     {
@@ -198,9 +199,7 @@ export const ShareButton = defineComponent({
                             cfg.sharePluginStrings?.share ??
                             ctx.settings.value.strings.share,
                         'aria-haspopup': nativeFirst ? undefined : 'true',
-                        'aria-expanded': nativeFirst
-                            ? undefined
-                            : active.value,
+                        'aria-expanded': nativeFirst ? undefined : active.value,
                         onClick,
                     },
                     resolveCustomIcons(
@@ -209,9 +208,6 @@ export const ShareButton = defineComponent({
                         shareDefaultIcons,
                     )?.children,
                 ),
-                // Sibling of the button (vanilla nested it inside, which
-                // is invalid interactive nesting); the CSS does not depend
-                // on the nesting.
                 h(
                     'ul',
                     {
@@ -239,8 +235,7 @@ export const ShareButton = defineComponent({
                                                   class: [
                                                       'lg-icon',
                                                       socialIcons[
-                                                          option.className ??
-                                                              ''
+                                                          option.className ?? ''
                                                       ]?.cls,
                                                   ],
                                               },
@@ -261,7 +256,7 @@ export const ShareButton = defineComponent({
                           )
                         : [],
                 ),
-            ];
+            ]);
         };
     },
 });

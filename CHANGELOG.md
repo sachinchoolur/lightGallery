@@ -74,7 +74,8 @@ unchanged; what moved is the packaging and the framework integrations.
 - Icons are inline SVG; the `lg` icon font and its files are removed.
 - Plugin labels (aria-labels and titles) come from the core `strings`
   setting; the per-plugin `*PluginStrings` settings are deprecated aliases.
-- The share plugin's Twitter target is now X (`shareX` icon name).
+- The share plugin's Twitter target is now X: the `shareX` icon name, and
+  the X mark in place of the old bird.
 
 ### Fixed
 
@@ -96,6 +97,11 @@ Long-standing bugs, all of them present in 2.x:
 - The thumbnail strip animated its first positioning, so opening the
   gallery from a thumbnail far along the strip slid it across while the
   image was still flying in. That first positioning is now instant.
+- The share dropdown hung from the toolbar's corner instead of the share
+  button, so on narrow screens it opened nowhere near the control (and its
+  arrow pointed at the wrong one). Button and menu now share a wrapper that
+  anchors the menu under the button, which also gets the list out of the
+  `<button>` it was nested in.
 
 ### Removed
 

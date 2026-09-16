@@ -85,7 +85,8 @@
     }
 
     // Toolbar icons flow from the left; the counter pads on its right.
-    .lg-toolbar .lg-icon {
+    .lg-toolbar .lg-icon,
+    .lg-toolbar .lg-share-outer {
         float: left;
     }
 
@@ -119,6 +120,11 @@
         right: auto;
         left: 0;
         text-align: right;
+
+        &:after {
+            right: auto;
+            left: 16px;
+        }
 
         .lg-icon {
             margin-right: 0;

@@ -110,9 +110,15 @@ function getShareOptions(settings: ShareSettings): ShareOption[] {
 function ShareButton(): ReactElement | null {
     const shareIcon = useCustomIcons(['share'], shareDefaultIcons);
     const socialIcons: Record<string, CustomIconResult> = {
-        'lg-share-facebook': useCustomIcons(['shareFacebook'], shareDefaultIcons),
+        'lg-share-facebook': useCustomIcons(
+            ['shareFacebook'],
+            shareDefaultIcons,
+        ),
         'lg-share-twitter': useCustomIcons(['shareX'], shareDefaultIcons),
-        'lg-share-pinterest': useCustomIcons(['sharePinterest'], shareDefaultIcons),
+        'lg-share-pinterest': useCustomIcons(
+            ['sharePinterest'],
+            shareDefaultIcons,
+        ),
     };
     const state = useGalleryState();
     const internal = useGalleryInternal();
@@ -144,16 +150,15 @@ function ShareButton(): ReactElement | null {
         }
         toggle();
     };
-    // The dropdown is a sibling of the button (vanilla nested it inside,
-    // which is invalid interactive nesting); `.lg-outer .lg-dropdown` CSS
-    // does not depend on the nesting.
+    // Button and dropdown share a wrapper: it is the dropdown's
+    // positioning context, so the menu hangs under the control that opened
+    // it (nesting the list inside the button would be invalid).
     return (
-        <>
+        <div className="lg-share-outer">
             <button
                 type="button"
                 aria-label={
-                    settings.sharePluginStrings?.share ??
-                    settings.strings.share
+                    settings.sharePluginStrings?.share ?? settings.strings.share
                 }
                 aria-haspopup={nativeFirst ? undefined : 'true'}
                 aria-expanded={nativeFirst ? undefined : active}
@@ -191,7 +196,7 @@ function ShareButton(): ReactElement | null {
                         </li>
                     ))}
             </ul>
-        </>
+        </div>
     );
 }
 

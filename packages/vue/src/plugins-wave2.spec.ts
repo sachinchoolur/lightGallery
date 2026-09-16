@@ -295,6 +295,14 @@ describe('wave-2 plugins', () => {
         const { wrapper } = mountHost([Share]);
         await openAndLoad(wrapper);
 
+        // The dropdown is the button's sibling inside the wrapper that
+        // anchors it, so it hangs under the button.
+        const shareOuter = query('.lg-toolbar .lg-share-outer')!;
+        expect(shareOuter.querySelector(':scope > .lg-share')).not.toBeNull();
+        expect(
+            shareOuter.querySelector(':scope > .lg-dropdown'),
+        ).not.toBeNull();
+
         const links = [
             ...document.querySelectorAll<HTMLAnchorElement>('.lg-dropdown a'),
         ];

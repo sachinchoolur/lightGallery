@@ -140,47 +140,50 @@ export class LgShareStateService {
     imports: [LgCiComponent],
     template: `
         @if (settings().share) {
-        <button
-            type="button"
-            class="lg-share lg-icon lg-icon-custom"
-            [attr.aria-label]="
-                settings().sharePluginStrings?.share ?? coreStrings().share
-            "
-            [attr.aria-haspopup]="nativeFirst() ? null : 'true'"
-            [attr.aria-expanded]="nativeFirst() ? null : state.active()"
-            (click)="onShareClick()"
-        >
-            <lg-ci
-                [slot]="ciShare()"
-                [names]="['share']"
-                [icons]="defaultIcons"
-            />
-        </button>
-        <!-- Sibling of the button (vanilla nested it inside, which is
-                 invalid interactive nesting); the .lg-outer .lg-dropdown
-                 CSS does not depend on the nesting. -->
-        <ul class="lg-dropdown" [style.position]="'absolute'">
-            @if (currentItem(); as item) { @for (option of options(); track
-            $index) {
-            <li>
-                <a
-                    [class]="option.className ?? ''"
-                    rel="noopener"
-                    target="_blank"
-                    [attr.href]="option.generateLink(item, currentUrl())"
-                >
-                    <span class="lg-icon lg-icon-custom">
-                        <lg-ci
-                            [slot]="socialIcon(option.className)"
-                            [names]="[socialName(option.className)]"
-                            [icons]="defaultIcons"
-                        />
-                    </span>
-                    <span class="lg-dropdown-text">{{ option.text }}</span>
-                </a>
-            </li>
-            } }
-        </ul>
+        <!-- Button and dropdown share a wrapper: it is the dropdown's
+                 positioning context, so the menu hangs under the control
+                 that opened it (nesting the list inside the button would
+                 be invalid). -->
+        <div class="lg-share-outer">
+            <button
+                type="button"
+                class="lg-share lg-icon lg-icon-custom"
+                [attr.aria-label]="
+                    settings().sharePluginStrings?.share ?? coreStrings().share
+                "
+                [attr.aria-haspopup]="nativeFirst() ? null : 'true'"
+                [attr.aria-expanded]="nativeFirst() ? null : state.active()"
+                (click)="onShareClick()"
+            >
+                <lg-ci
+                    [slot]="ciShare()"
+                    [names]="['share']"
+                    [icons]="defaultIcons"
+                />
+            </button>
+            <ul class="lg-dropdown" [style.position]="'absolute'">
+                @if (currentItem(); as item) { @for (option of options(); track
+                $index) {
+                <li>
+                    <a
+                        [class]="option.className ?? ''"
+                        rel="noopener"
+                        target="_blank"
+                        [attr.href]="option.generateLink(item, currentUrl())"
+                    >
+                        <span class="lg-icon lg-icon-custom">
+                            <lg-ci
+                                [slot]="socialIcon(option.className)"
+                                [names]="[socialName(option.className)]"
+                                [icons]="defaultIcons"
+                            />
+                        </span>
+                        <span class="lg-dropdown-text">{{ option.text }}</span>
+                    </a>
+                </li>
+                } }
+            </ul>
+        </div>
         }
     `,
 })
@@ -194,12 +197,10 @@ export class LgShareButtonComponent {
         return cls === 'lg-share-facebook'
             ? 'shareFacebook'
             : cls === 'lg-share-pinterest'
-              ? 'sharePinterest'
-              : 'shareX';
+            ? 'sharePinterest'
+            : 'shareX';
     }
-    protected socialIcon(
-        cls: string | undefined,
-    ): LgIconDirective | undefined {
+    protected socialIcon(cls: string | undefined): LgIconDirective | undefined {
         return resolveIconSlot(this.ctx.icons?.(), [this.socialName(cls)]);
     }
     protected readonly state = inject(LgShareStateService);
