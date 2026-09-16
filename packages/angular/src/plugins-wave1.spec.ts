@@ -137,6 +137,22 @@ describe('wave-1 features', () => {
         vi.useRealTimers();
     });
 
+    it('does not animate the thumbnail strip while the gallery opens', async () => {
+        // Opening from the end of the strip would otherwise slide it
+        // across while the image is still flying in.
+        const fixture = TestBed.createComponent(Wave1Host);
+        await flush(fixture);
+        fixture.componentInstance.gallery().openGallery(0);
+        await flush(fixture);
+        await advance(fixture, 50);
+        const track = query('.lg-thumb')!;
+        expect(track.style.transitionDuration).toBe('0ms');
+
+        await advance(fixture, 600);
+        await flush(fixture);
+        expect(track.style.transitionDuration).toBe('400ms');
+    });
+
     it('composes all three without ordering bugs and sets outer classes', async () => {
         const fixture = TestBed.createComponent(Wave1Host);
         await flush(fixture);

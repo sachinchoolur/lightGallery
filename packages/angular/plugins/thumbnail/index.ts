@@ -9,6 +9,7 @@ import {
     inject,
     Injectable,
     signal,
+    untracked,
     viewChild,
 } from '@angular/core';
 import {
@@ -130,7 +131,7 @@ type ThumbnailResolved = ThumbnailSettings & {
                 [style.position]="animate() ? 'relative' : null"
                 [style.transition-duration]="
                     animate()
-                        ? dragging()
+                        ? dragging() || instantOpen()
                             ? '0ms'
                             : settings().speed + 'ms'
                         : null
@@ -208,6 +209,11 @@ export class LgThumbnailStripComponent {
     }
     protected readonly translate = signal(0);
     protected readonly dragging = signal(false);
+    // The strip's first positioning belongs to the open flight: a
+    // gallery opened from a thumbnail far down the strip would slide
+    // it across while the image is still flying in.
+    protected readonly instantOpen = signal(true);
+    private instantTimer?: ReturnType<typeof setTimeout>;
     // Fling corridor (plan 010): set at release so the window covers the
     // whole flight path; cleared at settle.
     private readonly corridor = signal<{ from: number; to: number } | null>(
@@ -225,9 +231,7 @@ export class LgThumbnailStripComponent {
     // the visible thumbs plus overscan render; spacers preserve the strip
     // geometry. Keys off the COMMITTED translate — advances at release/
     // slide-change/resize, never per pointermove.
-    protected readonly animate = computed(
-        () => this.settings().animateThumb,
-    );
+    protected readonly animate = computed(() => this.settings().animateThumb);
 
     protected readonly thumbWindow = computed(() => {
         const overscan = this.settings().virtualization?.thumbs;
@@ -309,7 +313,19 @@ export class LgThumbnailStripComponent {
             }
             this.measureTimer = setTimeout(() => this.measure(), 50);
         });
+        effect(() => {
+            const open = this.ctx.state().open;
+            this.instantOpen.set(true);
+            clearTimeout(this.instantTimer);
+            if (open) {
+                this.instantTimer = setTimeout(
+                    () => this.instantOpen.set(false),
+                    untracked(this.settings).speed,
+                );
+            }
+        });
         inject(DestroyRef).onDestroy(() => {
+            clearTimeout(this.instantTimer);
             window.removeEventListener('resize', this.resizeListener);
             if (this.measureTimer) {
                 clearTimeout(this.measureTimer);

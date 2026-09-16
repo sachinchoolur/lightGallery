@@ -135,6 +135,25 @@ afterEach(() => {
 });
 
 describe('plugin runtime + wave-1', () => {
+    it('does not animate the thumbnail strip while the gallery opens', async () => {
+        // Opening from the end of the strip would otherwise slide it
+        // across while the image is still flying in.
+        const { wrapper } = mountHost([Thumbnail]);
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                openGallery(i?: number): void;
+            }
+        ).openGallery(0);
+        await settle();
+        await advance(50);
+        const track = query('.lg-thumb')!;
+        expect(track.style.transitionDuration).toBe('0ms');
+
+        await advance(600);
+        await settle();
+        expect(track.style.transitionDuration).toBe('400ms');
+    });
+
     it('merges plugin defaults/presets/per-plugin attrs without mutating inputs', async () => {
         const defaults = Object.freeze({ probeOption: 'default' });
         const presets = Object.freeze({ loop: false });

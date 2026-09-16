@@ -33,10 +33,7 @@ import {
     type LgPluginContext,
     type LgVuePlugin,
 } from '../types';
-import {
-    LG_ICONS,
-    resolveCustomIcons,
-} from '../../icons';
+import { LG_ICONS, resolveCustomIcons } from '../../icons';
 import type { LgGalleryItem } from '../../types';
 
 /**
@@ -133,6 +130,25 @@ export const ThumbnailStrip = defineComponent({
         const stripWidth = ref(0);
         const translate = ref(0);
         const dragging = ref(false);
+        // The strip's first positioning belongs to the open flight: a
+        // gallery opened from a thumbnail far down the strip would
+        // slide it across while the image is still flying in.
+        const instantOpen = ref(true);
+        let instantTimer: ReturnType<typeof setTimeout> | undefined;
+        watch(
+            () => ctx.store.isOpen.value,
+            (isOpen) => {
+                instantOpen.value = true;
+                clearTimeout(instantTimer);
+                if (isOpen) {
+                    instantTimer = setTimeout(() => {
+                        instantOpen.value = false;
+                    }, settings.value.speed);
+                }
+            },
+            { immediate: true },
+        );
+        onScopeDispose(() => clearTimeout(instantTimer));
         // Fling corridor (plan 010): set at release so the window covers
         // the whole flight path; cleared at settle.
         const corridor = ref<{ from: number; to: number } | null>(null);
@@ -522,9 +538,10 @@ export const ThumbnailStrip = defineComponent({
                             ? {
                                   width: `${totalWidth.value}px`,
                                   position: 'relative',
-                                  transitionDuration: dragging.value
-                                      ? '0ms'
-                                      : `${cfg.speed}ms`,
+                                  transitionDuration:
+                                      dragging.value || instantOpen.value
+                                          ? '0ms'
+                                          : `${cfg.speed}ms`,
                                   transform: `translate3d(${toTrackX(
                                       dragging.value
                                           ? liveTranslate

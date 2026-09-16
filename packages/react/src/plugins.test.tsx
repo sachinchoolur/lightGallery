@@ -218,6 +218,25 @@ describe('plugin runtime', () => {
 });
 
 describe('thumbnail plugin', () => {
+    it('does not animate the strip while the gallery opens', () => {
+        // Opening from the end of the strip would otherwise slide it
+        // across while the image is still flying in.
+        render(
+            <LightGallery
+                slides={slides}
+                open={true}
+                onClose={() => undefined}
+                plugins={[Thumbnail]}
+            />,
+        );
+        tick(50);
+        const track = document.querySelector<HTMLElement>('.lg-thumb')!;
+        expect(track.style.transitionDuration).toBe('0ms');
+
+        tick(600);
+        expect(track.style.transitionDuration).toBe('400ms');
+    });
+
     it('renders the strip with active sync and click navigation', () => {
         renderGallery({ plugins: [Thumbnail] });
         loadCurrent();

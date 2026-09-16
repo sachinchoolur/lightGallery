@@ -47,6 +47,10 @@ export default class Thumbnail {
     private thumbTotalWidth = 0;
     private translateX = 0;
     private thumbClickable = false;
+    // The strip's first positioning belongs to the open flight: a
+    // gallery opened from a thumbnail far down the strip would slide it
+    // across while the image is still flying in.
+    private instantThumb = false;
     // Strip physics (plan 010): velocity samples for the release fling,
     // the live (frame-written) translate, and the running spring cancel.
     private dragSamples: VelocitySample[] = [];
@@ -144,6 +148,10 @@ export default class Thumbnail {
         });
         this.core.LGel.on(`${lGEvents.beforeOpen}.thumb`, () => {
             this.thumbOuterWidth = this.core.outer.get().offsetWidth;
+            this.instantThumb = true;
+        });
+        this.core.LGel.on(`${lGEvents.afterOpen}.thumb`, () => {
+            this.instantThumb = false;
         });
 
         this.core.LGel.on(`${lGEvents.updateSlides}.thumb`, () => {
@@ -360,7 +368,7 @@ export default class Thumbnail {
         }
         this.$lgThumb.css(
             'transition-duration',
-            this.core.settings.speed + 'ms',
+            this.instantThumb ? '0ms' : this.core.settings.speed + 'ms',
         );
         if (this.settings.animateThumb) {
             this.translateX = getActiveThumbTranslate(

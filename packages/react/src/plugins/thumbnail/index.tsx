@@ -121,6 +121,10 @@ function ThumbnailStrip(): ReactElement | null {
     const [stripWidth, setStripWidth] = useState(0);
     const [translate, setTranslate] = useState(0);
     const [dragging, setDragging] = useState(false);
+    // The strip's first positioning belongs to the open flight: a
+    // gallery opened from a thumbnail far down the strip would slide it
+    // across while the image is still flying in.
+    const [instantOpen, setInstantOpen] = useState(true);
     // Fling corridor (plan 010): set at release so the window covers the
     // whole flight path; cleared at settle.
     const [corridor, setCorridor] = useState<{
@@ -249,6 +253,15 @@ function ThumbnailStrip(): ReactElement | null {
         actions.navigate(index, direction);
         actions.dispatch({ type: 'TRANSITION_END' });
     };
+
+    useEffect(() => {
+        setInstantOpen(true);
+        if (!state.open) {
+            return;
+        }
+        const timer = setTimeout(() => setInstantOpen(false), settings.speed);
+        return () => clearTimeout(timer);
+    }, [state.open, settings.speed]);
 
     // Keep the active thumbnail at the pager position.
     useEffect(() => {
@@ -500,9 +513,10 @@ function ThumbnailStrip(): ReactElement | null {
                         ? {
                               width: `${totalWidth}px`,
                               position: 'relative',
-                              transitionDuration: dragging
-                                  ? '0ms'
-                                  : `${settings.speed}ms`,
+                              transitionDuration:
+                                  dragging || instantOpen
+                                      ? '0ms'
+                                      : `${settings.speed}ms`,
                               transform: `translate3d(${toTrackX(
                                   dragging ? translateRef.current : translate,
                               )}px, 0px, 0px)`,

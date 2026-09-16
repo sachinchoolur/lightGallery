@@ -93,6 +93,9 @@ Long-standing bugs, all of them present in 2.x:
 - Medium zoom closed the gallery on every click, toolbar buttons included,
   so rotating or sharing dismissed the image. Toolbar clicks now leave it
   open; a click on the slide or backdrop still closes.
+- The thumbnail strip animated its first positioning, so opening the
+  gallery from a thumbnail far along the strip slid it across while the
+  image was still flying in. That first positioning is now instant.
 
 ### Removed
 
