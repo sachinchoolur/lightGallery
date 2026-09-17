@@ -27,16 +27,15 @@ import TrustedBy from '../../components/shortcodes/TrustedBy.astro';
     </div>
 </div>
 <TrustedBy />
-<div class="container-xl home-stack" id="stack">
-    <div class="row justify-content-center home-section-header">
-        <div class="col-lg-7 text-center">
+<div class="container-xl home-stack home-split" id="stack">
+    <div class="row home-split-row">
+        <div class="col-lg-4 home-section-header home-section-header-left">
             <span class="label1 home-kicker">Frameworks</span>
             <h2>Native, not <span class="serif-accent">wrapped</span></h2>
             <p>Real components for React, Vue and Angular, and plain JavaScript, each written for its framework, with the same features in every one of them.</p>
+            <p class="home-section-link home-stack-note">Building for something else? The gallery's core ships standalone, without a renderer, <a href="/docs/headless/">@lightgallery/headless</a>.</p>
         </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-lg-9">
+        <div class="col-lg-8">
 
 <CodeTabs label="Stack">
 <Fragment slot="vanilla">
@@ -128,7 +127,6 @@ npm install @lightgallery/angular
 </Fragment>
 </CodeTabs>
 
-            <p class="home-section-link home-stack-note">Building for something else? The gallery's core ships standalone, without a renderer, <a href="/docs/headless/">@lightgallery/headless</a>.</p>
         </div>
     </div>
 </div>
@@ -354,9 +352,9 @@ npm install @lightgallery/angular
 </div>
 <div class="vertical-bg">
     <div class="container-xl home-inline-gallery text-center vertical-bg-inner">
-        <div class="row justify-content-center home-inline-gallery-header">
+        <div class="row justify-content-center home-section-header home-inline-gallery-header">
             <div class="col-lg-7">
-                <h2>Inline Gallery</h2>
+                <h2>Inline <span class="serif-accent">Gallery</span></h2>
                 <p>Create both inline and lightBox galleries with one library. Convert inline to fullScreen by clicking on the maximize icon.</p>
             </div>
         </div>
@@ -367,17 +365,15 @@ npm install @lightgallery/angular
         </div>
     </div>
 </div>
-<div class="container-xl home-modular" id="modular">
-    <div class="row justify-content-center home-section-header">
-        <div class="col-lg-7 text-center">
+<div class="container-xl home-modular home-split" id="modular">
+    <div class="row home-split-row">
+        <div class="col-lg-4 home-section-header home-section-header-left">
             <span class="label1 home-kicker">Bundle size</span>
             <h2>Modular by <span class="serif-accent">design</span></h2>
             <p>Every feature outside the core is a plugin with its own entry, in every package. Import what you use; the rest never reaches your bundle. Sizes below are measured from this site's build, minified and gzipped.</p>
         </div>
-    </div>
-    <PluginSizes />
-    <div class="row justify-content-center">
-        <div class="col-lg-9">
+        <div class="col-lg-8">
+            <PluginSizes />
 
 ```js
 import lightGallery from 'lightgallery';
@@ -440,14 +436,12 @@ lightGallery(el, {
         </div>
     </div>
 </div>
-<div class="container-xl home-faq" id="faq">
-    <div class="row justify-content-center home-section-header">
-        <div class="col-lg-7 text-center">
+<div class="container-xl home-faq home-split" id="faq">
+    <div class="row home-split-row">
+        <div class="col-lg-4 home-section-header home-section-header-left">
             <span class="label1 home-kicker">FAQ</span>
             <h2>Questions people ask <span class="serif-accent">first</span></h2>
         </div>
-    </div>
-    <div class="row justify-content-center">
         <div class="col-lg-8">
             <details class="home-faq-item"><summary>Is it free?</summary><p>lightGallery is open source under the GPLv3. If your project can't be distributed under the GPL, a <a href="/license/">commercial license</a> covers it, same code, no feature gates.</p></details>
             <details class="home-faq-item"><summary>Does it need jQuery?</summary><p>No. lightGallery has no dependencies. The only jQuery on this site is for the two demos that integrate third-party jQuery carousels.</p></details>

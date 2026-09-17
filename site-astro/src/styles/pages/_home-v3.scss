@@ -7,8 +7,8 @@
 // Sections kept from the live homepage (Super Customizable, Mixed
 // Contents, Inline Gallery) are re-skinned here too.
 
-$home-section-y: 80px;
-$home-section-y-m: 56px;
+$home-section-y: 96px;
+$home-section-y-m: 64px;
 
 body.home-v3 {
     overflow-x: clip;
@@ -25,6 +25,51 @@ body.home-v3 {
             padding-top: $home-section-y-m;
             padding-bottom: $home-section-y-m;
         }
+    }
+    // Structure behind the sections: a full-bleed hairline along each
+    // section's top edge and, from xl up, the two 1px rails of the
+    // 1080px column (the hero card sits exactly between them). The
+    // colors are custom properties so the dark band can dim them.
+    --home-hairline: #{$gray-100};
+    --home-rail: #{$gray-100};
+    .container-xl:not(.home-hero),
+    .trusted-by {
+        z-index: 0;
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 100vw;
+            margin-left: -50vw;
+            z-index: -1;
+            pointer-events: none;
+            border-top: 1px solid var(--home-hairline);
+            @include media-breakpoint-up(xl) {
+                background:
+                    linear-gradient(var(--home-rail), var(--home-rail)) no-repeat
+                        calc(50% - 540px) 0 / 1px 100%,
+                    linear-gradient(var(--home-rail), var(--home-rail)) no-repeat
+                        calc(50% + 539px) 0 / 1px 100%;
+            }
+        }
+    }
+    // Once the rails show, the sections live inside them: the 1080px
+    // container puts every column 24px in from the lines, the same
+    // inset the hero card has.
+    @include media-breakpoint-up(xl) {
+        .container-xl:not(.home-hero) {
+            max-width: 1080px;
+        }
+    }
+    .home-dark-band {
+        --home-hairline: transparent;
+        --home-rail: rgba(255, 255, 255, 0.07);
+    }
+    // The band's first section abuts the hero gallery, which has no line.
+    .trusted-by::after {
+        border-top-color: var(--home-hairline);
     }
     // Full-viewport background behind a section, without touching markup.
     @mixin full-bleed-bg {
@@ -189,17 +234,46 @@ body.home-v3 {
         }
         .home-kicker {
             display: block;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
         h2 {
             max-width: 620px;
-            margin: 0 auto 24px;
+            margin: 0 auto 20px;
         }
         p {
             max-width: 660px;
             margin: 0 auto;
             @extend .para1;
             color: $gray-500;
+        }
+    }
+    // Split sections: the header sits in a left column next to the
+    // content, and stays in view while the taller content scrolls.
+    .home-section-header-left {
+        text-align: left;
+        h2,
+        p {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        p {
+            max-width: 440px;
+        }
+        .home-section-link {
+            margin-top: 20px;
+            text-align: left;
+        }
+    }
+    .home-split-row {
+        align-items: flex-start;
+        row-gap: 40px;
+        @include media-breakpoint-up(lg) {
+            .home-section-header {
+                position: sticky;
+                top: 108px;
+                margin-bottom: 0;
+                padding-right: 48px;
+            }
         }
     }
     // Optimized for everyone: two columns under a centered header.
@@ -293,8 +367,7 @@ body.home-v3 {
         }
     }
     .home-stack-note {
-        margin: 32px 0 0;
-        text-align: center;
+        margin: 20px 0 0;
         @extend .para3;
         color: $gray-500;
         a {
@@ -537,10 +610,9 @@ body.home-v3 {
     .home-plugin-chips {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
         gap: 8px;
         list-style: none;
-        margin: 0 0 40px;
+        margin: 0 0 24px;
         padding: 0;
     }
     .home-plugin-chip {
@@ -776,12 +848,10 @@ body.home-v3 {
     }
 
     // ---- Legacy sections re-skinned -----------------------------------------------
-    .feature-list-lg h2,
-    .home-inline-gallery h2 {
-        margin-bottom: 24px;
+    .feature-list-lg h2 {
+        margin-bottom: 16px;
     }
-    .feature-list-lg > .row > div > p,
-    .home-inline-gallery-header p {
+    .feature-list-lg > .row > div > p {
         @extend .para1;
         color: $gray-500;
     }
