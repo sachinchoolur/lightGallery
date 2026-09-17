@@ -12,18 +12,33 @@ interface Props {
     size?: string;
     photos?: string;
     limit?: number;
+    /**
+     * Put the justified plugin's container class in the markup so the
+     * thumbnails stay hidden until the layout has run (no unorganized
+     * flash). Only for galleries the runtime lays out with the plugin.
+     */
+    justified?: boolean;
+    /**
+     * Items from this index on are marked `gallery-item-phone-hidden`;
+     * the page's stylesheet and runtime decide what that means (the
+     * homepage hero keeps its grid to three rows on phones).
+     */
+    phoneLimit?: number;
 }
-const { id, class: className, size, limit } = Astro.props;
+const { id, class: className, size, limit, justified, phoneLimit } = Astro.props;
 const items = pick(Astro.props.photos ?? (size === 'xl' ? 'street,alley' : 'street'), limit);
 ---
 <div class={`gallery-demo ${className ?? ''}`}>
-    <div id={id}>
+    <div id={id} class:list={[{ 'lg-justified': justified }]}>
         {items.map((p, i) => (
             <a
                 data-lg-size={`${p.width}-${p.height}`}
                 data-pinterest-text={p.title}
                 data-tweet-text={`lightGallery slide ${i + 1}`}
-                class="gallery-item"
+                class:list={[
+                    'gallery-item',
+                    { 'gallery-item-phone-hidden': phoneLimit !== undefined && i >= phoneLimit },
+                ]}
                 href={p.src}
                 data-src={p.src}
                 data-sub-html={p.caption}

@@ -108,17 +108,76 @@ body.home-v3 {
             }
         }
     }
-    // The hero gallery: flush under the hero, no side padding beyond the rail.
+    // The hero gallery: the product itself, framed as a card on the
+    // 1080px rail. The runtime lays the tiles out with the justified
+    // plugin (row height follows the width, phones show ten photos in
+    // three rows); the container-query min-heights reserve roughly that
+    // space so nothing below shifts while the layout runs.
     .home-hero-gallery {
         padding-top: 0;
         padding-bottom: 24px;
+        .clip-path-bg-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
         .gallery-demo {
+            container-type: inline-size;
+            padding: 8px;
+            border: 1px solid $gray-100;
             border-radius: 24px;
-            overflow: hidden;
+            background: #fff;
+            box-shadow: 5px 6px 40px -4px rgba(9, 18, 36, 0.06);
+            @media (max-width: 767px) {
+                padding: 6px;
+                border-radius: 16px;
+            }
+        }
+        .lg-justified {
+            min-height: 80cqw;
+            border-radius: 16px;
+            @media (max-width: 767px) {
+                min-height: 40cqw;
+                border-radius: 10px;
+            }
+            @media (max-width: 480px) {
+                min-height: 90cqw;
+            }
+        }
+        .gallery-item {
+            border-radius: 6px;
+            @media (max-width: 767px) {
+                border-radius: 4px;
+            }
+            img {
+                transition:
+                    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                    opacity 0.35s ease;
+            }
+            &:hover img,
+            &:focus-visible img {
+                transform: scale(1.04);
+            }
+            &:focus-visible {
+                outline: 2px solid $orange-500;
+                outline-offset: -2px;
+            }
+        }
+        .gallery-item-phone-hidden {
+            @media (max-width: 767px) {
+                display: none;
+            }
         }
         .open-gallery-text {
             margin: 12px 0 0;
             color: $gray-500;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .home-hero-gallery .gallery-item img {
+            transition: none;
+        }
+        .home-hero-gallery .gallery-item:hover img {
+            transform: none;
         }
     }
 

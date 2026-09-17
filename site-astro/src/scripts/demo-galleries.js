@@ -227,32 +227,141 @@ lightGalleryJustified('animated-thumbnails-wp', {
         rotate: false,
     },
 });
-lightGalleryJustified('animated-thumbnails-gallery', {
-    justifiedLastRow: 'justify',
-    autoplayFirstVideo: false,
-    pager: false,
-    galleryId: 'nature',
-    plugins: [
-        lgZoom,
-        lgAutoplay,
-        lgHash,
-        lgFullscreen,
-        lgPager,
-        lgRotate,
-        lgShare,
-        lgThumbnail,
-        lgVideo,
-    ],
-    ...getResponsiveThumbnailsSettings(),
-    preload: 3,
-    videoMaxWidth: '1400px',
-    mobileSettings: {
-        controls: false,
-        showCloseIcon: false,
-        download: false,
-        rotate: false,
-    },
-});
+// Homepage hero grid. The row height follows the container width so
+// the 24 photos always land in four rows on wide screens, and phones
+// show the first ten in three rows instead of a column of large tiles
+// (the rest carry `gallery-item-phone-hidden` and stay out of the
+// gallery there). Crossing a breakpoint rebuilds the gallery with the
+// matching settings; if the lightbox is open the rebuild waits for it
+// to close.
+const heroGalleryEl = document.getElementById('animated-thumbnails-gallery');
+if (heroGalleryEl) {
+    const phone = window.matchMedia('(max-width: 767.98px)');
+    const tablet = window.matchMedia('(max-width: 991.98px)');
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    // Aspect ratios of the triggers the gallery will use, from their
+    // `data-lg-size`, the same source the plugin reads.
+    const heroRatios = (selector) =>
+        Array.from(heroGalleryEl.querySelectorAll(selector)).map((item) => {
+            const size = parseImageSize(
+                item.getAttribute('data-lg-size') || undefined,
+                window.innerWidth,
+            );
+            return size ? size.width / size.height : 1;
+        });
+    // The row height nearest `base` (within ±15%) whose last row still
+    // fills the width without stretching past 20% of the target, tried
+    // largest first, so the grid never ends on a ragged or oversized
+    // row. Falls back to the least-stretched candidate.
+    const pickRowHeight = (ratios, width, gap, base) => {
+        let fallback = null;
+        for (
+            let rowHeight = Math.round(base * 1.15);
+            rowHeight >= Math.round(base * 0.85);
+            rowHeight -= 2
+        ) {
+            const { boxes } = getJustifiedLayout({
+                ratios,
+                containerWidth: width,
+                targetRowHeight: rowHeight,
+                gap,
+                lastRow: 'justify',
+                maxScale: 1.75,
+            });
+            const lastTop = Math.max(...boxes.map((box) => box.top));
+            const last = boxes.filter((box) => box.top === lastTop);
+            const filled =
+                last.reduce((sum, box) => sum + box.width, 0) +
+                gap * (last.length - 1);
+            const drift =
+                filled < width - 1
+                    ? Infinity
+                    : Math.abs(last[0].height - rowHeight) / rowHeight;
+            if (drift <= 0.2) {
+                return rowHeight;
+            }
+            if (!fallback || drift < fallback.drift) {
+                fallback = { rowHeight, drift };
+            }
+        }
+        return fallback.rowHeight;
+    };
+    let heroGallery = null;
+    let heroRebuildPending = false;
+    const createHeroGallery = () => {
+        const width = heroGalleryEl.clientWidth || window.innerWidth;
+        const selector = phone.matches
+            ? '.gallery-item:not(.gallery-item-phone-hidden)'
+            : '.gallery-item';
+        const gap = phone.matches ? 4 : 6;
+        heroGallery = lightGalleryJustified('animated-thumbnails-gallery', {
+            selector,
+            justifiedRowHeight: pickRowHeight(
+                heroRatios(selector),
+                width,
+                gap,
+                phone.matches
+                    ? clamp(width * 0.3, 96, 130)
+                    : clamp(width * 0.17, 100, 190),
+            ),
+            justifiedGap: gap,
+            justifiedLastRow: 'justify',
+            autoplayFirstVideo: false,
+            pager: false,
+            galleryId: 'nature',
+            plugins: [
+                lgZoom,
+                lgAutoplay,
+                lgHash,
+                lgFullscreen,
+                lgPager,
+                lgRotate,
+                lgShare,
+                lgThumbnail,
+                lgVideo,
+            ],
+            ...getResponsiveThumbnailsSettings(),
+            preload: 3,
+            videoMaxWidth: '1400px',
+            mobileSettings: {
+                controls: false,
+                showCloseIcon: false,
+                download: false,
+                rotate: false,
+            },
+        });
+        heroGallery.LGel.on('lgAfterClose.hero', () => {
+            // The instance still counts as open while this fires;
+            // rebuild once the close has fully settled.
+            if (heroRebuildPending) {
+                setTimeout(initHeroGallery, 0);
+            }
+        });
+    };
+    const initHeroGallery = () => {
+        heroRebuildPending = false;
+        // destroy() finishes asynchronously when a close animation is
+        // still running and would wipe a grid created before then.
+        const wait = heroGallery ? heroGallery.destroy() : 0;
+        heroGallery = null;
+        if (wait) {
+            setTimeout(createHeroGallery, wait + 50);
+        } else {
+            createHeroGallery();
+        }
+    };
+    const rebuildHeroGallery = () => {
+        if (heroGallery && heroGallery.lgOpened) {
+            heroRebuildPending = true;
+            return;
+        }
+        initHeroGallery();
+    };
+    initHeroGallery();
+    [phone, tablet].forEach((query) =>
+        query.addEventListener('change', rebuildHeroGallery),
+    );
+}
 
 lightGalleryJustified('scrub-thumbnails-gallery', {
     justifiedLastRow: 'hide',
