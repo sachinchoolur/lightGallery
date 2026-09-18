@@ -202,7 +202,7 @@ const hasVideo =
                             stroke-width="2"
                             stroke-linecap="round"
                             stroke-linejoin="round"
-                            class="feather feather-edit-2"
+                            aria-hidden="true"
                         >
                             <path
                                 d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"
@@ -212,26 +212,20 @@ const hasVideo =
                 </p>
                 {
                     (prev || next) && (
-                        <div class="docs-navigation d-flex justify-content-between">
+                        <nav class="page-nav" aria-label="Previous and next page">
                             {prev && (
-                                <a href={pageUrl(prev)}>
-                                    <div class="card my-1">
-                                        <div class="card-body py-2">
-                                            &larr; {prev.data.title}
-                                        </div>
-                                    </div>
+                                <a class="page-nav-card" href={pageUrl(prev)}>
+                                    <span class="page-nav-dir">Previous</span>
+                                    <strong>&larr;&nbsp;{prev.data.title}</strong>
                                 </a>
                             )}
                             {next && (
-                                <a class="ms-auto" href={pageUrl(next)}>
-                                    <div class="card my-1">
-                                        <div class="card-body py-2">
-                                            {next.data.title} &rarr;
-                                        </div>
-                                    </div>
+                                <a class="page-nav-card page-nav-next" href={pageUrl(next)}>
+                                    <span class="page-nav-dir">Next</span>
+                                    <strong>{next.data.title}&nbsp;&rarr;</strong>
                                 </a>
                             )}
-                        </div>
+                        </nav>
                     )
                 }
             </main>

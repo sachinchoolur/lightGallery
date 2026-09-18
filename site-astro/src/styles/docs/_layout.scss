@@ -353,49 +353,72 @@ body.demos.single {
             overflow: hidden;
         }
 
-        // Footer of the page: edit link + prev/next.
+        // Footer of the page: the edit link, then previous/next as
+        // labelled cards (the next one right-aligned in its column).
         .edit-page {
-            margin: 48px 0 0;
+            margin: 48px 0 16px;
             padding-top: 24px;
             border-top: 1px solid $gray-100;
             font-size: 14px;
+            line-height: 20px;
+            text-align: right;
             a {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
                 color: $gray-500;
                 border: 0;
                 &:hover {
                     color: $gray-800;
                 }
             }
+            svg {
+                margin: 0;
+            }
         }
-        .docs-navigation {
+        .page-nav {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-top: 24px;
-            > a {
-                display: block;
-                border: 0;
-                &.ms-auto {
-                    text-align: right;
-                }
-                .card {
-                    border: 1px solid $gray-200;
-                    border-radius: 12px;
-                    transition: border-color 0.12s ease;
-                }
-                .card-body {
-                    padding: 14px 16px;
-                    color: $gray-800;
-                    font-size: 14px;
-                    font-weight: 500;
-                }
-                &:hover .card {
-                    border-color: $orange-300;
-                }
-            }
             @media (max-width: 575px) {
                 grid-template-columns: 1fr;
             }
+        }
+        .page-nav-card {
+            display: block;
+            padding: 16px 18px;
+            border: 1px solid $gray-200;
+            border-radius: 12px;
+            color: $gray-800;
+            transition: border-color 0.12s ease;
+            strong {
+                display: block;
+                font-size: 15px;
+                font-weight: 600;
+                line-height: 22px;
+                letter-spacing: -0.16px;
+            }
+            &:hover {
+                border-color: $orange-300;
+                color: $gray-800;
+            }
+            &.page-nav-next {
+                grid-column: 2;
+                text-align: right;
+                @media (max-width: 575px) {
+                    grid-column: auto;
+                }
+            }
+        }
+        .page-nav-dir {
+            display: block;
+            margin-bottom: 4px;
+            font-family: $font-family-monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: $gray-500;
         }
     }
 

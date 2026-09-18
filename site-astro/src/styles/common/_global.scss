@@ -164,27 +164,6 @@ a:focus {
     order: 1;
 }
 
-.docs-navigation {
-    border-top: 1px solid $gray-200;
-    margin-top: 2rem;
-    margin-bottom: 0;
-    padding-top: 2rem;
-}
-
-.docs-navigation a {
-    font-size: $font-size-base * 0.9;
-}
-
-@include media-breakpoint-up(lg) {
-    .docs-navigation {
-        margin-bottom: -1rem;
-    }
-
-    .docs-navigation a {
-        font-size: $font-size-base;
-    }
-}
-
 .navbar a:hover,
 .navbar a:focus,
 a.btn:hover,
