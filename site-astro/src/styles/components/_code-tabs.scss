@@ -36,6 +36,28 @@
   }
 }
 
+/* Demo links (CodeTabs `js` / `react`) sit on the tab row, to the right. */
+.code-tabs-with-demos {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  justify-content: space-between;
+
+  .code-tabs-list {
+    flex: 0 1 auto;
+  }
+
+  .demo-btns-container {
+    margin: 0;
+  }
+
+  .code-tabs-panel {
+    flex: 0 0 100%;
+    min-width: 0;
+  }
+}
+
 .code-tabs-panel[data-hidden] {
   display: none;
 }

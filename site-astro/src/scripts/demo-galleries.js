@@ -435,27 +435,18 @@ lightGalleryJustified('physics-gallery', {
     },
 });
 
-const masonryElMixed = document.getElementById('static-thumbnails-gallery');
-if (masonryElMixed) {
-    imagesLoaded(
-        document.getElementById('static-thumbnails-gallery'),
-        function () {
-            new Masonry(masonryElMixed, {
-                temSelector: '.gallery-item',
-                percentPosition: true,
-                gutter: 0,
-            });
-            window.lightGallery(masonryElMixed, {
-                animateThumb: false,
-                pager: false,
-                plugins: [lgZoom, lgAutoplay, lgFullscreen, lgThumbnail],
-                hash: false,
-                zoomFromOrigin: false,
-                toggleThumb: true,
-                allowMediaOverlap: true,
-            });
-        },
-    );
+// Static thumbnails: the page lays the grid out with CSS columns.
+const staticThumbnails = document.getElementById('static-thumbnails-gallery');
+if (staticThumbnails) {
+    window.lightGallery(staticThumbnails, {
+        animateThumb: false,
+        pager: false,
+        plugins: [lgZoom, lgAutoplay, lgFullscreen, lgThumbnail],
+        hash: false,
+        zoomFromOrigin: false,
+        toggleThumb: true,
+        allowMediaOverlap: true,
+    });
 }
 
 lightGalleryJustified('customize-thumbnails-gallery', {

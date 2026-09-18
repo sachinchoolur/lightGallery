@@ -6,6 +6,7 @@ import BaseLayout from './BaseLayout.astro';
 import PageTools from '../components/PageTools.astro';
 import SidebarMenu from '../components/SidebarMenu.astro';
 import { SITE } from '../lib/site';
+import { demoGroupOf, demoPhoto } from '../lib/demo-groups';
 
 /**
  * Shared docs/demos page shell, port of `layouts/docs/single.html` and
@@ -38,6 +39,20 @@ const editUrl = `${SITE.docsRepo}/site-astro/src/content/${section}/${entry.id}.
 const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 // Group name above the title (the sidebar group the page belongs to).
 const kicker = (entry.data.menu as Record<string, { parent?: string }> | undefined)?.[section]?.parent;
+
+// Demo pages end with the other demos of their group, at most three,
+// in the group's own order (lib/demo-groups).
+const slug = entry.id.replace(/\/index$/, '');
+const group = section === 'demos' ? demoGroupOf(slug) : undefined;
+const label = (e: CollectionEntry<'docs'> | CollectionEntry<'demos'>) =>
+    (e.data.menu as Record<string, { name?: string }> | undefined)?.[section]?.name ?? e.data.title;
+const related = group
+    ? group.slugs
+          .filter((s) => s !== slug.toLowerCase())
+          .map((s) => entries.find((e) => e.id.replace(/\/index$/, '').toLowerCase() === s))
+          .filter((e): e is CollectionEntry<'demos'> => !!e)
+          .slice(0, 3)
+    : [];
 
 // Per-page vendor stylesheets, keyed by slug (the Hugo head conditionals
 // keyed off the title, which moves whenever a page is retitled). The
@@ -158,6 +173,23 @@ const hasVideo =
                 <PageTools url={pageUrl(entry)} title={entry.data.title} />
                 <p class="lead" set:html={entry.data.lead ?? ''} />
                 <slot />
+                {
+                    group && related.length > 0 && (
+                        <section class="demo-related" id="more-demos" aria-label="Related demos">
+                            <h2>More in {group.name}</h2>
+                            <div class="demo-related-grid">
+                                {related.map((e) => (
+                                    <a class="demo-related-card" href={pageUrl(e)}>
+                                        <span class="demo-related-thumb">
+                                            <img src={demoPhoto(e.id).thumb} alt="" loading="lazy" />
+                                        </span>
+                                        <span>{label(e)}</span>
+                                    </a>
+                                ))}
+                            </div>
+                        </section>
+                    )
+                }
                 <p class="edit-page">
                     <a href={editUrl}>
                         <svg

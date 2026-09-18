@@ -16,12 +16,21 @@
  *     <Fragment slot="vanilla">```js …```</Fragment>
  *     <Fragment slot="react">```tsx …```</Fragment>
  *   </CodeTabs>
+ *
+ * `codepen` and `stackblitz` put the page's demo links on the tab row,
+ * where the setup for a demo starts.
  */
+import DemoButtons from './DemoButtons.astro';
+
 interface Props {
     /** Overrides the content-derived id. */
     id?: string;
     /** Tablist label for assistive tech. */
     label?: string;
+    /** Live demo on CodePen, shown beside the tabs. */
+    codepen?: string;
+    /** Live demo on StackBlitz, shown beside the tabs. */
+    stackblitz?: string;
 }
 
 const FRAMEWORKS = [
@@ -31,7 +40,8 @@ const FRAMEWORKS = [
     { key: 'angular', label: 'Angular' },
 ] as const;
 
-const { id: idProp, label = 'Framework' } = Astro.props;
+const { id: idProp, label = 'Framework', codepen, stackblitz } = Astro.props;
+const withDemos = Boolean(codepen || stackblitz);
 
 const panels = await Promise.all(
     FRAMEWORKS.filter((f) => Astro.slots.has(f.key)).map(async (f) => ({
@@ -60,7 +70,7 @@ const id =
 const initial = panels[0]?.key;
 ---
 
-<div class="code-tabs" data-code-tabs>
+<div class:list={['code-tabs', { 'code-tabs-with-demos': withDemos }]} data-code-tabs>
     <div class="code-tabs-list" role="tablist" aria-label={label}>
         {
             panels.map((f) => (
@@ -79,6 +89,7 @@ const initial = panels[0]?.key;
             ))
         }
     </div>
+    {withDemos && <DemoButtons js={codepen} react={stackblitz} />}
     {
         panels.map((f) => (
             <div

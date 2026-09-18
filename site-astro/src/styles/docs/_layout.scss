@@ -77,7 +77,13 @@ body.demos.single {
             overflow-y: auto;
             overflow-x: hidden;
             padding: $docs-column-top 0.75rem 3rem 0;
-            scrollbar-width: thin;
+            // Scrolls, but without a bar: the fade at the bottom says there is more.
+            scrollbar-width: none;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+            mask-image: linear-gradient(#000 calc(100% - 56px), transparent);
+            -webkit-mask-image: linear-gradient(#000 calc(100% - 56px), transparent);
         }
         @media (max-width: 991px) {
             padding: 1.5rem 0 0;
@@ -164,7 +170,8 @@ body.demos.single {
         }
         h2,
         h3,
-        h4 {
+        h4,
+        h5 {
             color: $gray-800;
             font-weight: 600;
             letter-spacing: -0.2px;
@@ -207,7 +214,9 @@ body.demos.single {
         h4[id]::before {
             display: none;
         }
-        a:not(.btn):not(.page-tools-btn):not(.anchor) {
+        // Prose links. `:where()` keeps this at element specificity, so the
+        // footer, callout and card link styles below win as written.
+        a:where(:not(.btn):not(.page-tools-btn):not(.anchor)) {
             color: $orange-700;
             text-decoration: none;
             border-bottom: 1px solid rgba($orange-700, 0.3);
@@ -399,7 +408,10 @@ body.demos.single {
         overflow-y: auto;
         overflow-x: hidden;
         padding: $docs-column-top 0 3rem 1rem;
-        scrollbar-width: thin;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
     .page-links {
         h3 {

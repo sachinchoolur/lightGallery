@@ -1,7 +1,15 @@
+// Static thumbnails demo: three CSS columns (no layout script), items
+// flow top to bottom with the same gutter between and below them.
 .lg-masonry-gallery {
+    .gallery-demo > div {
+        columns: 3;
+        column-gap: 12px;
+    }
     .gallery-item {
-        width: 30%;
-        margin-bottom: 10px;
+        display: block;
+        width: 100%;
+        margin: 0 0 12px;
+        break-inside: avoid;
     }
 }
 
@@ -164,6 +172,156 @@
     .owl-carousel-item {
         img {
             height: 500px;
+        }
+    }
+}
+
+// ---- Demo pages: the demo links sit on the column's left edge -------------
+body.demos.single .docs-content .demo-btns-container {
+    justify-content: flex-start;
+    margin: 16px 0 32px;
+}
+
+// ---- Demo pages: the framework tabs as one segmented control -------------
+// The code-tab groups already switch together and remember the stack, so
+// the tabs read as a page-level switch rather than per-block underlines.
+body.demos.single .docs-content {
+    .code-tabs-list {
+        display: inline-grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        gap: 0;
+        margin: 0 0 16px;
+        padding: 3px;
+        border: 1px solid $gray-100;
+        border-radius: 999px;
+        background: $gray-50;
+    }
+    // With the demo links on the row, the row's gap does the spacing.
+    .code-tabs-with-demos {
+        row-gap: 16px;
+        .code-tabs-list,
+        .demo-btns-container {
+            margin: 0;
+        }
+        .demo-btns-container {
+            justify-content: flex-end;
+        }
+    }
+    .demo-btn a {
+        border-bottom: 0;
+    }
+    .code-tabs-tab {
+        height: 30px;
+        margin: 0;
+        padding: 0 16px;
+        border: 0;
+        border-radius: 999px;
+        color: $gray-500;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 30px;
+        white-space: nowrap;
+        transition:
+            color 0.15s ease,
+            background-color 0.15s ease,
+            box-shadow 0.15s ease;
+        &:hover {
+            color: $gray-800;
+        }
+        &:focus-visible {
+            outline-offset: 0;
+        }
+        &[aria-selected='true'] {
+            background: #fff;
+            color: $gray-800;
+            box-shadow:
+                0 1px 2px rgba($gray-800, 0.12),
+                0 0 0 1px rgba($gray-800, 0.05);
+        }
+    }
+    @media (max-width: 575px) {
+        .code-tabs-list {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+        .code-tabs-tab {
+            padding: 0 8px;
+            font-size: 12px;
+        }
+    }
+}
+// Pre-paint: a remembered or deep-linked stack is applied as a root
+// attribute before the tabs module syncs the aria state (see
+// _code-tabs.scss); the same look, so nothing shifts once it does.
+@each $fw in vanilla, react, vue, angular {
+    :root[data-lg-framework='#{$fw}']
+        body.demos.single
+        .docs-content
+        .code-tabs:has(.code-tabs-panel[data-framework='#{$fw}']) {
+        .code-tabs-tab {
+            background: none;
+            color: $gray-500;
+            box-shadow: none;
+        }
+        .code-tabs-tab[data-framework='#{$fw}'] {
+            background: #fff;
+            color: $gray-800;
+            box-shadow:
+                0 1px 2px rgba($gray-800, 0.12),
+                0 0 0 1px rgba($gray-800, 0.05);
+        }
+    }
+}
+
+// ---- Demo pages: the other demos of the page's group, after the content ---
+body.demos.single .docs-content .demo-related {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid $gray-100;
+    h2 {
+        margin: 0 0 16px;
+    }
+    .demo-related-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        @media (max-width: 575px) {
+            grid-template-columns: 1fr;
+        }
+    }
+    .demo-related-card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+        border: 1px solid $gray-100;
+        border-radius: 14px;
+        color: $gray-800;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        text-decoration: none;
+        transition: border-color 0.15s ease;
+        &:hover {
+            border-color: $orange-300;
+            color: $gray-800;
+            text-decoration: none;
+        }
+        > span:last-child {
+            padding: 0 4px 2px;
+        }
+    }
+    .demo-related-thumb {
+        display: block;
+        overflow: hidden;
+        border-radius: 8px;
+        img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            border-radius: 0;
         }
     }
 }

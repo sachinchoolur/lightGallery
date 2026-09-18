@@ -2,98 +2,13 @@
 import { getCollection } from 'astro:content';
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { DEMO_GROUPS as GROUPS, demoFramework as FRAMEWORK } from '../../lib/demo-groups';
 
 /**
  * The /demos/ index, grouped by what a visitor is looking for rather
- * than one flat alphabetical list. Slugs, not titles, key the groups so
- * retitling a page never moves it (and never silently drops it: anything
- * unlisted falls into "More demos").
+ * than one flat alphabetical list (the groups live in lib/demo-groups,
+ * shared with the demo sidebar).
  */
-const GROUPS: { name: string; blurb: string; slugs: string[] }[] = [
-    {
-        name: 'Image galleries',
-        blurb: 'Thumbnails, zoom, captions and the layouts around them.',
-        slugs: [
-            'thumbnails',
-            'justified-layout',
-            'responsive',
-            'zoom-from-origin',
-            'medium-zoom',
-            'captions',
-            'mixed-contents',
-            'html-markup',
-            'iframe',
-            'infinite-scrolling',
-            'virtualization',
-            'rtl',
-        ],
-    },
-    {
-        name: 'Video galleries',
-        blurb: 'YouTube, Vimeo, Wistia and self-hosted HTML5 video.',
-        slugs: ['video-gallery', 'video-facades', 'video-carousel'],
-    },
-    {
-        name: 'Carousels',
-        blurb: 'Inline galleries that expand into the lightbox.',
-        slugs: ['carousel-gallery'],
-    },
-    {
-        name: 'React, Vue and Angular',
-        blurb: 'The native framework packages, each with its own component API.',
-        slugs: [
-            'react-image-gallery',
-            'react-video-gallery',
-            'react-carousel',
-            'react-video-carousel',
-            'vue-image-gallery',
-            'vue-video-gallery',
-            'angular-image-gallery',
-            'angular-video-gallery',
-        ],
-    },
-    {
-        name: 'Integrations',
-        blurb: 'Adding a lightbox to a slider or grid you already use.',
-        slugs: [
-            'slick-carousel-demo',
-            'owl-carousel-with-lightbox',
-            'swiper',
-            'flickity-demo',
-            'bootstrap-image-gallery',
-            'bootstrap-image-carousel',
-            'bootstrap-video-gallery',
-            'bootstrap-video-carousel',
-        ],
-    },
-    {
-        name: 'Behavior and API',
-        blurb: 'Events, methods, deep links, sharing, custom icons and dynamic slides.',
-        slugs: [
-            'events',
-            'methods',
-            'dynamic-mode',
-            'update-slides',
-            'hash',
-            'share',
-            'comment-box',
-            'custom-icons',
-            'transitions',
-            'custom-easing',
-        ],
-    },
-];
-
-/** Framework badge for the packages that have their own demo pages. */
-const FRAMEWORK = (slug: string) =>
-    slug.startsWith('react-')
-        ? 'React'
-        : slug.startsWith('vue-')
-          ? 'Vue'
-          : slug.startsWith('angular-')
-            ? 'Angular'
-            : null;
-
 const entries = await getCollection('demos');
 const bySlug = new Map(
     entries.map((entry) => [entry.id.replace(/\/index$/, '').toLowerCase(), entry]),
