@@ -136,47 +136,63 @@ npm install @lightgallery/angular
             <span class="label1 home-kicker">Features</span>
             <h2>Everything a gallery <span class="serif-accent">needs</span></h2>
             <p>Each of these has a page with a live demo and the settings behind it.</p>
+            <span class="home-feature-legend"><i class="home-new-dot" aria-hidden="true"></i>New in v3</span>
         </div>
     </div>
     <div class="home-feature-grid">
-        <a class="home-feature-card" href="/demos/thumbnails/">
-            <FeatureIcon name="thumbnails" />
-            <h3>Thumbnails</h3>
-            <p>Animated or static strips, fetched automatically for YouTube and Vimeo, draggable on every device.</p>
+        <a class="home-feature-card home-feature-card-lg" href="/demos/thumbnails/">
+            <div class="home-feature-visual home-feature-visual-thumbs" aria-hidden="true">
+                <div class="home-feature-strip">
+                    {photos('street').slice(0, 9).map((p) => (
+                        <img src={p.thumb} alt="" loading="lazy" width="64" height="48" />
+                    ))}
+                </div>
+            </div>
+            <div class="home-feature-body">
+                <FeatureIcon name="thumbnails" />
+                <h3>Thumbnails</h3>
+                <p>Animated or static strips, fetched automatically for YouTube and Vimeo, draggable on every device.</p>
+            </div>
         </a>
-        <a class="home-feature-card" href="/demos/zoom-from-origin/">
-            <FeatureIcon name="zoom" />
-            <h3>Zoom</h3>
-            <p>Pinch and double-tap to zoom. Slides open from the thumbnail's position and close back to it.</p>
+        <a class="home-feature-card home-feature-card-lg" href="/demos/zoom-from-origin/">
+            <div class="home-feature-visual home-feature-visual-zoom" aria-hidden="true">
+                <img src={photos('street')[3].thumb} alt="" loading="lazy" width="320" height="200" />
+                <span class="home-feature-lens"></span>
+            </div>
+            <div class="home-feature-body">
+                <FeatureIcon name="zoom" />
+                <h3>Zoom</h3>
+                <p>Pinch and double-tap to zoom. Slides open from the thumbnail's position and close back to it.</p>
+            </div>
         </a>
         <a class="home-feature-card" href="/demos/video-gallery/">
             <FeatureIcon name="video" />
-            <h3>Video <span class="home-badge">Facades new</span></h3>
+            <h3>Video <i class="home-new-dot"><span class="visually-hidden">Facades new</span></i></h3>
             <p>YouTube, Vimeo, Wistia and HTML5 video, with autoplay-on-slide and posters. Facades load the player only when someone presses play.</p>
         </a>
         <a class="home-feature-card" href="/docs/justified-layout/">
             <FeatureIcon name="justified" />
-            <h3>Justified layout <span class="home-badge">New in v3</span></h3>
+            <h3>Justified layout <i class="home-new-dot"><span class="visually-hidden">New in v3</span></i></h3>
             <p>Row-justified trigger grids from one plugin, no layout library in front of the lightbox.</p>
         </a>
         <a class="home-feature-card" href="/docs/virtualization/">
             <FeatureIcon name="virtualization" />
-            <h3>Virtualization <span class="home-badge">New in v3</span></h3>
+            <h3>Virtualization <i class="home-new-dot"><span class="visually-hidden">New in v3</span></i></h3>
             <p>Thousand-slide galleries keep a few dozen nodes in the DOM; slides and thumbnails mount as they come into view.</p>
         </a>
         <a class="home-feature-card" href="/docs/thumbnail-scrubbing/">
             <FeatureIcon name="scrubbing" />
-            <h3>Thumbnail scrubbing <span class="home-badge">New in v3</span></h3>
+            <h3>Thumbnail scrubbing <i class="home-new-dot"><span class="visually-hidden">New in v3</span></i></h3>
             <p>Drag the thumbnail strip and the gallery follows instantly, all the way through the release glide.</p>
         </a>
         <a class="home-feature-card" href="/docs/custom-icons/">
             <FeatureIcon name="icons" />
-            <h3>Custom icons <span class="home-badge">New in v3</span></h3>
+            <h3>Custom icons <i class="home-new-dot"><span class="visually-hidden">New in v3</span></i></h3>
             <p>Every control icon is an inline SVG you can replace by name, bring your own set without touching CSS.</p>
         </a>
         <a class="home-feature-card" href="/docs/localization-rtl/">
             <FeatureIcon name="localization" />
-            <h3>Localization &amp; RTL <span class="home-badge">New in v3</span></h3>
+            <h3>Localization &amp; RTL <i class="home-new-dot"><span class="visually-hidden">New in v3</span></i></h3>
             <p>Every string is a setting, and the gallery mirrors for right-to-left pages, navigation, swipe direction and chrome.</p>
         </a>
     </div>

@@ -450,6 +450,27 @@ body.home-v3 {
         gap: 8px 24px;
         margin-top: 24px;
     }
+    // Bento: two large cards with a visual across the top, then rows
+    // of three. Six tracks so both shapes divide evenly.
+    .home-feature-grid {
+        @media (min-width: 481px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @include media-breakpoint-up(md) {
+            grid-template-columns: repeat(6, 1fr);
+            > * {
+                grid-column: span 2;
+            }
+        }
+    }
+    .home-feature-card-lg {
+        @media (min-width: 481px) {
+            grid-column: span 2;
+        }
+        @include media-breakpoint-up(md) {
+            grid-column: span 3;
+        }
+    }
 
     // ---- Cards ------------------------------------------------------------------
     .home-feature-card,
@@ -499,12 +520,6 @@ body.home-v3 {
     }
     .home-feature-card {
         position: relative;
-        h3 .home-badge {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            margin: 0;
-        }
     }
     .feature-icon {
         display: inline-flex;
@@ -517,12 +532,148 @@ body.home-v3 {
         }
     }
     .home-feature-card .feature-icon {
-        width: 40px;
-        height: 40px;
-        margin-bottom: 16px;
-        padding: 9px;
+        width: 44px;
+        height: 44px;
+        margin-bottom: 18px;
+        padding: 10px;
         border-radius: 12px;
         background: $orange-50;
+    }
+    .home-feature-card-lg {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        overflow: hidden;
+        .home-feature-body {
+            padding: 24px;
+        }
+    }
+    // A small live illustration across the top of the two large cards.
+    .home-feature-visual {
+        position: relative;
+        height: 168px;
+        overflow: hidden;
+        background: $gray-50;
+        border-bottom: 1px solid $gray-100;
+    }
+    // Thumbnails: a strip that slides on hover, the active frame ringed.
+    .home-feature-visual-thumbs {
+        display: flex;
+        align-items: center;
+        .home-feature-strip {
+            display: flex;
+            gap: 8px;
+            padding: 0 24px;
+            transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        img {
+            flex: 0 0 auto;
+            width: 72px;
+            height: 54px;
+            object-fit: cover;
+            border-radius: 6px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            &:nth-child(3) {
+                opacity: 1;
+                outline: 2px solid $orange-500;
+                outline-offset: 2px;
+                border-radius: 5px;
+            }
+        }
+    }
+    a:hover .home-feature-visual-thumbs .home-feature-strip,
+    a:focus-visible .home-feature-visual-thumbs .home-feature-strip {
+        transform: translateX(-160px);
+    }
+    // Zoom: the photo scales under a lens ring on hover.
+    .home-feature-visual-zoom {
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .home-feature-lens {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 64px;
+            height: 64px;
+            margin: -32px 0 0 -32px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 1px rgba(0, 0, 0, 0.2),
+                0 6px 20px rgba(0, 0, 0, 0.25);
+            transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            &::after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: 14px;
+                height: 2px;
+                margin: -1px 0 0 -7px;
+                background: #fff;
+                box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+            }
+            &::before {
+                content: '';
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: 2px;
+                height: 14px;
+                margin: -7px 0 0 -1px;
+                background: #fff;
+                box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+            }
+        }
+    }
+    a:hover .home-feature-visual-zoom img,
+    a:focus-visible .home-feature-visual-zoom img {
+        transform: scale(1.25);
+    }
+    a:hover .home-feature-visual-zoom .home-feature-lens,
+    a:focus-visible .home-feature-visual-zoom .home-feature-lens {
+        transform: scale(1.15);
+    }
+    // The new-in-v3 marker: one legend in the header, a dot on each card.
+    .home-new-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin: 0 0 2px 6px;
+        border-radius: 50%;
+        background: $orange-500;
+        vertical-align: middle;
+        font-style: normal;
+    }
+    .home-feature-legend {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        padding: 6px 12px 6px 10px;
+        border: 1px solid $gray-100;
+        border-radius: 999px;
+        background: #fff;
+        color: $gray-600;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 16px;
+        .home-new-dot {
+            margin: 0;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .home-feature-strip,
+        .home-feature-visual-zoom img,
+        .home-feature-lens {
+            transition: none !important;
+            transform: none !important;
+        }
     }
     .home-more-grid a {
         display: grid;
