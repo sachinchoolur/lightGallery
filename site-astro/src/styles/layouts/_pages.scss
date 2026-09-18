@@ -25,34 +25,6 @@ h4:hover a {
     margin-top: 2.25rem;
 }
 
-// Grouped /demos/ index.
-.demo-group {
-    margin-top: 3rem;
-
-    h2 {
-        margin-bottom: 0.25rem;
-    }
-
-    .card-list {
-        margin-top: 1rem;
-    }
-}
-
-.demo-group-blurb {
-    color: $gray-dark;
-    margin-bottom: 0;
-}
-
-.demo-badge {
-    background: $gray-200;
-    border-radius: 1rem;
-    color: $gray-darker;
-    float: right;
-    font-size: $font-size-sm;
-    line-height: 1.4;
-    padding: 0.1rem 0.6rem;
-}
-
 .edit-page {
     margin-top: 3rem;
     font-size: $font-size-base;
