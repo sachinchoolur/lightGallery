@@ -20,11 +20,12 @@ import 'lightgallery/css/lg-transitions.css';
  * partial chain. Body class mirrors Hugo's Kind/Type mapping
  * (`home`, `error404`, `docs single`, `demos list`, ...).
  *
- * Global JS is Bootstrap only (navbar collapse) plus PostHog analytics in
- * production. Deviations from the Hugo script-footer, by design: the
- * v2 lightGallery UMD bundle + carousel vendors are loaded per demo page
- * (not globally), lazysizes is replaced by native lazy loading, and the
- * dead Google Analytics (UA) tag is dropped.
+ * Global JS is Bootstrap only (the Bootstrap carousel demos) plus PostHog
+ * analytics in production; the header carries its own small script.
+ * Deviations from the Hugo script-footer, by design: the v2 lightGallery
+ * UMD bundle + carousel vendors are loaded per demo page (not globally),
+ * lazysizes is replaced by native lazy loading, and the dead Google
+ * Analytics (UA) tag is dropped.
  */
 interface Props {
     bodyClass: string;
@@ -84,15 +85,6 @@ const { bodyClass, meta } = Astro.props;
         <Footer />
         <script>
             import 'bootstrap/dist/js/bootstrap.min.js';
-
-            // Fixed-header treatment on scroll (app.js header, de-jQueryfied).
-            window.addEventListener('scroll', () => {
-                const fixed = window.scrollY > 50;
-                document.body.classList.toggle('has-fixed-header', fixed);
-                document
-                    .getElementById('nav-header')
-                    ?.classList.toggle('fixed-header', fixed);
-            });
         </script>
     </body>
 </html>

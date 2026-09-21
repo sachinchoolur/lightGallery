@@ -2,11 +2,16 @@
 import { FRAMEWORK_NAV_SLUGS, MAIN_MENU, SOCIAL_MENU } from '../lib/site';
 
 /**
- * Top navigation, port of `partials/header/header.html` (same markup,
- * same Bootstrap classes; collapse behavior comes from bootstrap.js in
- * the base layout). Active-state rules match the Hugo template: Docs is
- * active anywhere under /docs/ except the framework pages, which light up
- * their own nav items; Demos anywhere under /demos/.
+ * Top navigation: the logo and wordmark, Docs and Demos, a Frameworks menu
+ * (the framework docs pages), License; GitHub and Get started on the right.
+ * Fixed and 60px tall (docs/_layout.scss `$docs-top` matches). Links take
+ * an orange underline that grows on hover and marks the current page. The
+ * Frameworks menu opens on hover for a mouse and on its button for touch
+ * and keyboard; below lg the toggle opens a sheet with the same links.
+ *
+ * Active-state rules: Docs is active anywhere under /docs/ except the
+ * framework pages, which light up Frameworks and their own item; Demos
+ * anywhere under /demos/; License under /license/.
  */
 const path = Astro.url.pathname;
 
@@ -22,73 +27,150 @@ function isActive(name: string, url: string): boolean {
     if (name === 'License') return path.startsWith('/license/');
     return false;
 }
+
+const frameworks = MAIN_MENU.filter((item) => item.name in FRAMEWORK_NAV_SLUGS);
+const pages = MAIN_MENU.filter((item) => !(item.name in FRAMEWORK_NAV_SLUGS));
+const pagesBefore = pages.slice(0, 2);
+const pagesAfter = pages.slice(2);
+const onFramework = frameworks.some((item) => isActive(item.name, item.url));
+const github = SOCIAL_MENU.find((item) => item.name === 'GitHub');
+const current = (item: { name: string; url: string }) => (isActive(item.name, item.url) ? 'page' : undefined);
+
+const GITHUB_PATH =
+    'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12';
+const MENU_PATH =
+    'M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z';
 ---
 
-<header id="nav-header" class="navbar fixed-top navbar-expand-lg navbar-light">
-    <div class="container-xxl">
-        <a class="navbar-brand monospace" href="/">lightGallery</a>
-        <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-        >
-            <svg
-                class="navbar-toggler-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                fill="currentColor"
-                viewBox="0 0 16 16"
-            >
-                <path
-                    fill-rule="evenodd"
-                    d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                ></path>
-            </svg>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                {
-                    MAIN_MENU.map((item) => (
-                        <li class="nav-item">
-                            <a
-                                class:list={[
-                                    'nav-link',
-                                    { active: isActive(item.name, item.url) },
-                                ]}
-                                href={item.url}
-                            >
+<header id="nav-header" class="site-header">
+    <div class="site-header-bar">
+        <div class="container-xxl site-header-inner">
+            <a class="site-header-brand" href="/"><img src="/images/lightgallery-logo.png" alt="" width="294" height="312" />lightGallery</a>
+            <nav class="site-header-nav" aria-label="Main">
+                {pagesBefore.map((item) => (
+                    <a class:list={['site-header-link', { 'is-active': isActive(item.name, item.url) }]} href={item.url} aria-current={current(item)}>
+                        {item.name}
+                    </a>
+                ))}
+                <div class="site-header-menu" data-site-menu>
+                    <button class:list={['site-header-link', { 'is-active': onFramework }]} type="button" aria-expanded="false" aria-controls="site-header-frameworks">
+                        Frameworks
+                        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </button>
+                    <div class="site-header-menu-panel" id="site-header-frameworks">
+                        {frameworks.map((item) => (
+                            <a class:list={['site-header-menu-item', { 'is-active': isActive(item.name, item.url) }]} href={item.url} aria-current={current(item)}>
+                                <i class={`site-header-fw site-header-fw-${item.name.toLowerCase()}`} />
                                 {item.name}
                             </a>
-                        </li>
-                    ))
-                }
-                {
-                    SOCIAL_MENU.map((item) => (
-                        <li class="nav-item nav-item-social">
-                            <a
-                                target="_blank"
-                                class="nav-link"
-                                href={item.url}
-                            >
-                                {item.name === 'GitHub' && (
-                                    <svg
-                                        role="img"
-                                        viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-                                    </svg>
-                                )}
-                            </a>
-                        </li>
-                    ))
-                }
-            </ul>
+                        ))}
+                    </div>
+                </div>
+                {pagesAfter.map((item) => (
+                    <a class:list={['site-header-link', { 'is-active': isActive(item.name, item.url) }]} href={item.url} aria-current={current(item)}>
+                        {item.name}
+                    </a>
+                ))}
+            </nav>
+            <div class="site-header-actions">
+                {github && (
+                    <a class="site-header-github" href={github.url} target="_blank" rel="noopener" aria-label="GitHub">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d={GITHUB_PATH} /></svg>
+                    </a>
+                )}
+                <a class="site-header-cta" href="/docs/getting-started/">Get started</a>
+            </div>
+            <button class="site-header-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-header-sheet">
+                <svg class="site-header-icon-menu" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d={MENU_PATH} /></svg>
+                <svg class="site-header-icon-close" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" /></svg>
+            </button>
         </div>
     </div>
+    <div class="site-header-scrim" data-site-scrim></div>
+    <div class="site-header-sheet" id="site-header-sheet">
+        <nav class="container-xxl site-header-sheet-inner" aria-label="Main">
+            {pagesBefore.map((item) => (
+                <a class:list={['site-header-sheet-link', { 'is-active': isActive(item.name, item.url) }]} href={item.url} aria-current={current(item)}>
+                    <span>{item.name}</span>
+                </a>
+            ))}
+            <div class="site-header-sheet-group">
+                <span class="site-header-sheet-label">Frameworks</span>
+                <div class="site-header-sheet-frameworks">
+                    {frameworks.map((item) => (
+                        <a class:list={['site-header-sheet-framework', { 'is-active': isActive(item.name, item.url) }]} href={item.url} aria-current={current(item)}>
+                            <i class={`site-header-fw site-header-fw-${item.name.toLowerCase()}`} />
+                            <span>{item.name}</span>
+                        </a>
+                    ))}
+                </div>
+            </div>
+            {pagesAfter.map((item) => (
+                <a class:list={['site-header-sheet-link', { 'is-active': isActive(item.name, item.url) }]} href={item.url} aria-current={current(item)}>
+                    <span>{item.name}</span>
+                </a>
+            ))}
+            {github && (
+                <a class="site-header-sheet-github" href={github.url} target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d={GITHUB_PATH} /></svg>
+                    GitHub
+                </a>
+            )}
+        </nav>
+    </div>
 </header>
+
+<script>
+    const header = document.getElementById('nav-header');
+    const menu = header?.querySelector<HTMLElement>('[data-site-menu]');
+    const trigger = menu?.querySelector<HTMLButtonElement>('button');
+    const toggle = header?.querySelector<HTMLButtonElement>('.site-header-toggle');
+    const scrim = header?.querySelector<HTMLElement>('[data-site-scrim]');
+
+    if (header && menu && trigger && toggle && scrim) {
+        // Frameworks: hover opens it for a mouse (CSS); the button toggles
+        // it for touch and keyboard.
+        const setMenu = (open: boolean) => {
+            menu.classList.toggle('is-open', open);
+            trigger.setAttribute('aria-expanded', String(open));
+        };
+        trigger.addEventListener('click', () => setMenu(!menu.classList.contains('is-open')));
+        menu.addEventListener('focusout', (event) => {
+            const next = event.relatedTarget as Node | null;
+            if (next && !menu.contains(next)) setMenu(false);
+        });
+
+        // Below lg: the toggle opens the sheet and holds the page still.
+        const setSheet = (open: boolean) => {
+            header.classList.toggle('is-sheet-open', open);
+            toggle.setAttribute('aria-expanded', String(open));
+            document.documentElement.classList.toggle('site-header-locked', open);
+        };
+        toggle.addEventListener('click', () => setSheet(!header.classList.contains('is-sheet-open')));
+        scrim.addEventListener('click', () => setSheet(false));
+        matchMedia('(min-width: 992px)').addEventListener('change', (event) => {
+            if (event.matches) setSheet(false);
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!menu.contains(event.target as Node)) setMenu(false);
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key !== 'Escape') return;
+            if (menu.classList.contains('is-open')) {
+                setMenu(false);
+                trigger.focus();
+            }
+            if (header.classList.contains('is-sheet-open')) {
+                setSheet(false);
+                toggle.focus();
+            }
+        });
+        // A page restored from the back-forward cache comes back closed.
+        window.addEventListener('pageshow', (event) => {
+            if (!event.persisted) return;
+            setMenu(false);
+            setSheet(false);
+        });
+    }
+</script>

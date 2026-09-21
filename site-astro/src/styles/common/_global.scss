@@ -164,8 +164,6 @@ a:focus {
     order: 1;
 }
 
-.navbar a:hover,
-.navbar a:focus,
 a.btn:hover,
 a.btn:focus,
 .footer a:hover,
@@ -213,10 +211,6 @@ table {
     @extend .table;
 
     font-size: 1rem;
-}
-
-.navbar {
-    width: 100%;
 }
 
 button:focus {

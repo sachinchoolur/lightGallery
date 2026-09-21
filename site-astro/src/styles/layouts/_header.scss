@@ -1,81 +1,416 @@
-.banner .nav li {
-    @extend .nav-item;
-}
+// Site header (components/Header.astro). Fixed, 60px tall; the docs layout's
+// `$docs-top` matches. Links take an orange underline that grows on hover
+// and marks the current page; hover effects apply only where there is a
+// hover, so a tap never leaves one stuck.
 
-.banner .nav a {
-    @extend .nav-link;
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: $zindex-fixed;
 }
-
-.navbar-text {
-    margin-left: 1rem;
-}
-.navbar-nav {
-    font-size: $navbar-font-size;
-}
-.navbar {
-    background-color: #fff;
+.site-header-bar {
+    position: relative;
+    height: 60px;
+    background: #fff;
     border-bottom: 1px solid $gray-100;
-    box-shadow: none;
-    padding-top: 0;
-    padding-bottom: 0;
-    min-height: 60px;
-    transition: none;
-    .navbar-brand {
-        font-family: $font-family-sans-serif;
-        font-size: 20px;
-        font-weight: 700;
-        color: $gray-800;
-        &.monospace {
-            font-family: $font-family-sans-serif;
-        }
-    }
-    .nav-link {
-        padding: 18px 12px;
-        color: $gray-800;
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: -0.16px;
-        &:hover,
-        &.active {
-            color: $orange-700;
-        }
-    }
-    .docs &,
-    .demos &,
-    &.fixed-header {
-        box-shadow: none;
-        background-color: #fff;
-        padding-top: 0;
-        padding-bottom: 0;
-    }
 }
-
-@include media-breakpoint-down(sm) {
-    .navbar .container {
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-    }
-}
-
-@include media-breakpoint-up(md) {
-    .navbar-brand {
-        font-size: $font-size-xl;
-    }
-
-    .navbar-text {
-        margin-left: 1.25rem;
-    }
-}
-
-.nav-item svg {
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
-}
-
-.nav-item-social > a {
+.site-header-inner {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
     height: 100%;
+}
+.site-header-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: $gray-800;
+    text-decoration: none;
+    &:hover {
+        color: $gray-800;
+        text-decoration: none;
+    }
+    img {
+        width: auto;
+        height: 26px;
+    }
+}
+
+// ---- Links: Docs, Demos, the Frameworks button, License ------------------
+.site-header-nav {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+.site-header-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0 12px;
+    padding: 18px 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: inherit;
+    letter-spacing: -0.16px;
+    color: $gray-800;
+    text-decoration: none;
+    cursor: pointer;
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 17px;
+        height: 2px;
+        border-radius: 2px;
+        background: $orange-700;
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    &:hover,
+    &:focus {
+        color: $gray-800;
+        text-decoration: none;
+    }
+    &.is-active::after {
+        transform: scaleX(1);
+    }
+    @media (hover: hover) {
+        &:hover::after {
+            transform: scaleX(1);
+        }
+    }
+    svg {
+        width: 12px;
+        height: 12px;
+    }
+}
+
+// ---- Frameworks menu -------------------------------------------------------
+@mixin site-header-menu-open {
+    .site-header-menu-panel {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        transition-delay: 0s;
+    }
+    > .site-header-link::after {
+        transform: scaleX(1);
+    }
+}
+.site-header-menu {
+    position: relative;
+    display: inline-flex;
+    // The underline sits under the label, not the chevron.
+    > .site-header-link::after {
+        right: 16px;
+    }
+    &.is-open {
+        @include site-header-menu-open;
+    }
+    @media (hover: hover) {
+        &:hover {
+            @include site-header-menu-open;
+        }
+    }
+}
+.site-header-menu-panel {
+    position: absolute;
+    top: calc(100% - 8px);
+    left: 4px;
+    z-index: 3;
+    min-width: 180px;
+    padding: 6px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid $gray-100;
+    box-shadow: 0 12px 32px rgba($gray-800, 0.12);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease,
+        visibility 0s 0.15s;
+}
+.site-header-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: $gray-800;
+    text-decoration: none;
+    &:hover,
+    &:focus,
+    &.is-active {
+        background: $gray-50;
+        color: $gray-800;
+        text-decoration: none;
+    }
+}
+.site-header-fw {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    background: center / contain no-repeat;
+    &.site-header-fw-angular {
+        background-image: url('/images/logos/angular.svg');
+    }
+    &.site-header-fw-react {
+        background-image: url('/images/logos/react.svg');
+    }
+    &.site-header-fw-vue {
+        background-image: url('/images/logos/vue.png');
+    }
+}
+
+// ---- GitHub and the call to action -----------------------------------------
+.site-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+.site-header-github {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: $gray-800;
+    svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+    }
+    &:hover {
+        color: $orange-700;
+    }
+}
+.site-header-cta {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 10px;
+    background: $orange-700;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.16px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+    &:hover,
+    &:focus {
+        background: $orange-800;
+        color: #fff;
+        text-decoration: none;
+    }
+}
+
+// ---- Below lg: the toggle and the sheet under the bar ---------------------
+.site-header-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: $gray-800;
+    svg {
+        width: 28px;
+        height: 28px;
+    }
+}
+.site-header-icon-close,
+.is-sheet-open .site-header-icon-menu {
+    display: none;
+}
+.is-sheet-open .site-header-icon-close {
+    display: block;
+}
+.site-header-scrim {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba($gray-800, 0.24);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.18s ease,
+        visibility 0s 0.18s;
+}
+.site-header-sheet {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: calc(100dvh - 60px);
+    overflow-y: auto;
+    padding: 8px 0 20px;
+    background: #fff;
+    border-bottom: 1px solid $gray-100;
+    box-shadow: 0 24px 48px -16px rgba($gray-800, 0.18);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        visibility 0s 0.18s;
+}
+.is-sheet-open {
+    .site-header-scrim,
+    .site-header-sheet {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        transition-delay: 0s;
+    }
+}
+.site-header-sheet-inner {
+    display: flex;
+    flex-direction: column;
+}
+// The sheet's labels carry the same underline for the current page.
+.site-header-sheet-link span,
+.site-header-sheet-framework span {
+    position: relative;
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -5px;
+        height: 2px;
+        border-radius: 2px;
+        background: $orange-700;
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+.site-header-sheet-link.is-active span::after,
+.site-header-sheet-framework.is-active span::after {
+    transform: scaleX(1);
+}
+.site-header-sheet-link {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.16px;
+    color: $gray-800;
+    text-decoration: none;
+    &:hover,
+    &:focus,
+    &:active {
+        color: $gray-800;
+        text-decoration: none;
+    }
+    &:active span::after {
+        transform: scaleX(1);
+    }
+}
+.site-header-sheet-group {
+    padding: 8px 0 12px;
+}
+.site-header-sheet-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $gray-500;
+}
+.site-header-sheet-frameworks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+.site-header-sheet-framework {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid $gray-100;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.16px;
+    color: $gray-800;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+    &:hover,
+    &:focus,
+    &:active {
+        background: $gray-50;
+        color: $gray-800;
+        text-decoration: none;
+    }
+}
+.site-header-sheet-github {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid $gray-100;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.16px;
+    color: $gray-800;
+    text-decoration: none;
+    svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+    }
+    &:hover,
+    &:active {
+        color: $orange-700;
+        text-decoration: none;
+    }
+}
+html.site-header-locked {
+    overflow: hidden;
+}
+
+@include media-breakpoint-down(lg) {
+    .site-header-nav,
+    .site-header-github {
+        display: none;
+    }
+    .site-header-toggle {
+        display: inline-flex;
+    }
+}
+@include media-breakpoint-up(lg) {
+    .site-header-scrim,
+    .site-header-sheet {
+        display: none;
+    }
 }
