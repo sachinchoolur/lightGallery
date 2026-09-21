@@ -27,15 +27,16 @@ import TrustedBy from '../../components/shortcodes/TrustedBy.astro';
     </div>
 </div>
 <TrustedBy />
-<div class="container-xl home-stack home-split" id="stack">
-    <div class="row home-split-row">
-        <div class="col-lg-4 home-section-header home-section-header-left">
+<div class="container-xl home-stack" id="stack">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
             <span class="label1 home-kicker">Frameworks</span>
             <h2>Native, not <span class="serif-accent">wrapped</span></h2>
             <p>Real components for React, Vue and Angular, and plain JavaScript, each written for its framework, with the same features in every one of them.</p>
-            <p class="home-section-link home-stack-note">Building for something else? The gallery's core ships standalone, without a renderer, <a href="/docs/headless/">@lightgallery/headless</a>.</p>
         </div>
-        <div class="col-lg-8">
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
 
 <CodeTabs label="Stack">
 <Fragment slot="vanilla">
@@ -126,6 +127,8 @@ npm install @lightgallery/angular
 
 </Fragment>
 </CodeTabs>
+
+<p class="home-section-link home-stack-note">Building for something else? The gallery's core ships standalone, without a renderer, <a href="/docs/headless/">@lightgallery/headless</a>.</p>
 
         </div>
     </div>

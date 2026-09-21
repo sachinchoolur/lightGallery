@@ -375,43 +375,113 @@ body.home-v3 {
         border-radius: 16px;
         overflow-x: auto;
     }
+    // The stack section: logo pills switch the samples, which sit in a white
+    // panel over a soft orange glow. The pills are CodeTabs' own tabs, so the
+    // choice follows the visitor across the page and between visits.
     .home-stack {
         .code-tabs {
             margin: 0;
-            padding: 12px;
-            background: $gray-50;
-            border: 1px solid $gray-100;
-            border-radius: 24px;
         }
         .code-tabs-list {
             justify-content: center;
-            gap: 4px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 28px;
             border-bottom: 0;
         }
         .code-tabs-tab {
-            padding: 8px 16px;
-            border: 1px solid transparent;
-            border-radius: 12px;
-            background: transparent;
-            color: $gray-800;
-            @extend .para3-semibold;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            padding: 10px 18px 10px 12px;
+            border: 1px solid $gray-100;
+            border-radius: 999px;
+            background: #fff;
+            color: $gray-700;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 24px;
+            box-shadow: 0 0 0 0 rgba($orange-500, 0.18);
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                transform 0.2s ease;
+            &::before {
+                content: '';
+                flex: 0 0 24px;
+                width: 24px;
+                height: 24px;
+                background: center / contain no-repeat;
+            }
+            &[data-framework='vanilla']::before {
+                background-image: url('/images/logos/javascript.svg');
+                border-radius: 5px;
+            }
+            &[data-framework='react']::before {
+                background-image: url('/images/logos/react.svg');
+            }
+            &[data-framework='vue']::before {
+                background-image: url('/images/logos/vue.png');
+            }
+            &[data-framework='angular']::before {
+                background-image: url('/images/logos/angular.svg');
+            }
+            &:hover {
+                color: $gray-700;
+                transform: translateY(-1px);
+            }
+            &:focus-visible {
+                outline: 2px solid $orange-500;
+                outline-offset: 2px;
+            }
             &[aria-selected='true'] {
-                background: #fff;
-                border-color: $gray-100;
-                color: $gray-800;
+                border-color: $orange-500;
+                color: $gray-700;
+                box-shadow: 0 0 0 3px rgba($orange-500, 0.18);
             }
         }
         .code-tabs-panel {
+            position: relative;
             display: flex;
             flex-direction: column;
             gap: 8px;
+            padding: 16px;
+            border: 1px solid $gray-100;
+            border-radius: 24px;
+            background: #fff;
             &[data-hidden] {
                 display: none;
+            }
+            // The glow behind the panel
+            &::before {
+                content: '';
+                position: absolute;
+                inset: -40px -60px;
+                z-index: -1;
+                background: radial-gradient(60% 60% at 50% 40%, rgba($orange-500, 0.16), transparent 70%);
+                pointer-events: none;
             }
         }
         pre {
             margin: 0;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    }
+    // A remembered framework is painted before the tabs script runs (see
+    // components/_code-tabs.scss); the pills follow the same rule.
+    @each $fw in vanilla, react, vue, angular {
+        @at-root :root[data-lg-framework='#{$fw}'] body.home-v3 .home-stack .code-tabs:has(.code-tabs-panel[data-framework='#{$fw}']) {
+            .code-tabs-tab {
+                border-color: $gray-100;
+                box-shadow: 0 0 0 0 rgba($orange-500, 0.18);
+            }
+            .code-tabs-tab[data-framework='#{$fw}'] {
+                border-color: $orange-500;
+                box-shadow: 0 0 0 3px rgba($orange-500, 0.18);
+            }
         }
     }
     .home-stack-desc {
@@ -424,6 +494,7 @@ body.home-v3 {
     }
     .home-stack-note {
         margin: 20px 0 0;
+        text-align: center;
         @extend .para3;
         color: $gray-500;
         a {
