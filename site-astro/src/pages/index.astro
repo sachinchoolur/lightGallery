@@ -60,9 +60,9 @@ const GITHUB_PATH =
     <Content />
     <script>
         // The page follows the visitor's stack: the hero CTA and the
-        // closing per-stack buttons track the framework the code tabs
-        // remember (the same localStorage key CodeTabs.astro uses), and
-        // update when a tab is clicked.
+        // closing stack tiles track the framework the code tabs remember
+        // (the same localStorage key CodeTabs.astro uses), and update when
+        // a tab is clicked.
         const LABELS: Record<string, string> = {
             vanilla: 'Get started',
             react: 'Get started with React',
@@ -90,9 +90,7 @@ const GITHUB_PATH =
             document
                 .querySelectorAll<HTMLAnchorElement>('.home-cta-actions a')
                 .forEach((link) => {
-                    const on = link.dataset.framework === framework;
-                    link.classList.toggle('btn-primary', on);
-                    link.classList.toggle('btn-outline-primary', !on);
+                    link.classList.toggle('is-current', link.dataset.framework === framework);
                 });
         }
 

@@ -1192,52 +1192,95 @@ body.home-v3 {
     }
 
     // ---- Closing CTA ----------------------------------------------------------------
+    // Split: the call on the left, four stack tiles on the right. The tile of
+    // the visitor's stack (the one the code tabs remember) carries the same
+    // orange ring as the framework pills.
     .home-cta {
-        text-align: center;
         .home-kicker {
             display: block;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
         h2 {
-            margin-bottom: 32px;
+            margin: 0 0 16px;
+        }
+    }
+    .home-cta-split {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+        align-items: center;
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+            gap: 64px;
         }
     }
     .home-cta-actions {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
-        justify-content: center;
-        .btn {
-            padding: 13px 24px;
-            border-radius: 12px;
-            @extend .para2-medium;
-        }
-        .btn-outline-primary {
-            border-color: $gray-100;
-            background: #fff;
+    }
+    .home-cta-tile {
+        @extend .kq-card;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 20px;
+        color: inherit;
+        text-decoration: none;
+        transition:
+            border-color 0.15s ease,
+            box-shadow 0.15s ease,
+            transform 0.15s ease;
+        strong {
             color: $gray-800;
-            &:hover {
-                background: $gray-10;
-                border-color: $gray-200;
-                color: $gray-800;
-            }
+            font-size: 16px;
         }
-        .btn-primary {
-            background: $orange-700;
-            border-color: $orange-700;
-            color: #fff;
-            &:hover {
-                background: $orange-800;
-                border-color: $orange-800;
-            }
+        &:hover {
+            border-color: $gray-200;
+            color: inherit;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+        &.is-current {
+            border-color: $orange-500;
+            box-shadow:
+                0 0 0 3px rgba($orange-500, 0.18),
+                5px 6px 40px -4px rgba(9, 18, 36, 0.03);
+        }
+    }
+    .home-cta-tile-cta {
+        color: $orange-700;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .home-cta-logo {
+        display: inline-block;
+        flex: 0 0 22px;
+        width: 22px;
+        height: 22px;
+        margin-bottom: 6px;
+        background: center / contain no-repeat;
+        &.home-cta-logo-vanilla {
+            background-image: url('/images/logos/javascript.svg');
+            border-radius: 5px;
+        }
+        &.home-cta-logo-react {
+            background-image: url('/images/logos/react.svg');
+        }
+        &.home-cta-logo-vue {
+            background-image: url('/images/logos/vue.png');
+        }
+        &.home-cta-logo-angular {
+            background-image: url('/images/logos/angular.svg');
         }
     }
     .home-cta-secondary {
-        margin-top: 20px;
+        margin: 20px 0 0;
         @extend .para3;
         color: $gray-500;
         a {
             color: $orange-700;
+            font-weight: 600;
         }
     }
 }
