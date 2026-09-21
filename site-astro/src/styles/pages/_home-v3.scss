@@ -102,9 +102,37 @@ body.home-v3 {
 
     // ---- Hero -------------------------------------------------------------
     .home-hero-band {
+        position: relative;
         display: flex;
         justify-content: center;
         width: 100%;
+        // Dots in the margins: the site's dot grid fills the empty sides and
+        // fades out beside the gallery, leaving the text on plain white.
+        // It sits behind everything; the gallery card is above it.
+        &::before {
+            --home-hero-clear: radial-gradient(ellipse 620px 360px at 50% 316px, transparent 50%, #000 100%);
+            --home-hero-fade: linear-gradient(#000 0, #000 516px, transparent 816px);
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+            height: 840px;
+            pointer-events: none;
+            background-image: radial-gradient($gray-300 1px, transparent 1.5px);
+            background-size: 16px 16px;
+            background-position: center 0;
+            -webkit-mask-image: var(--home-hero-clear), var(--home-hero-fade);
+            -webkit-mask-composite: source-in;
+            mask-image: var(--home-hero-clear), var(--home-hero-fade);
+            mask-composite: intersect;
+            @media (max-width: 767px) {
+                --home-hero-clear: radial-gradient(ellipse 240px 330px at 50% 296px, transparent 55%, #000 100%);
+                --home-hero-fade: linear-gradient(#000 0, #000 556px, transparent 756px);
+                height: 780px;
+            }
+        }
     }
     .home-hero {
         padding: 0;
@@ -129,14 +157,42 @@ body.home-v3 {
             padding: 108px 16px 48px;
         }
     }
+    // The v3 pill over the title
+    .home-hero-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        padding: 6px 14px 6px 10px;
+        border: 1px solid $gray-100;
+        border-radius: 999px;
+        background: #fff;
+        color: $gray-600;
+        font-size: 13px;
+        font-weight: 600;
+        i {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: $orange-500;
+        }
+    }
+    // Balanced lines, so a wrapped title never leaves one word alone
     .main-title {
         max-width: 860px;
         margin: 0 0 24px;
+        text-wrap: balance;
     }
     .home-hero-lead {
         max-width: 600px;
         margin: 0 0 32px;
         color: $gray-600;
+    }
+    .home-hero-github {
+        flex: none;
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
     }
     .hero-actions {
         display: flex;
