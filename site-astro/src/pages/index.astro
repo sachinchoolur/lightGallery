@@ -99,5 +99,25 @@ const GITHUB_PATH =
             const tab = (event.target as HTMLElement).closest<HTMLElement>('.code-tabs-tab');
             if (tab?.dataset.framework) follow(tab.dataset.framework);
         });
+
+        // The copy button on the bundle-size sample: the code to the
+        // clipboard, then a short "Copied".
+        document.querySelectorAll<HTMLButtonElement>('[data-home-copy]').forEach((button) => {
+            const label = button.textContent;
+            button.addEventListener('click', async () => {
+                const code = button.parentElement?.querySelector('pre')?.textContent ?? '';
+                try {
+                    await navigator.clipboard.writeText(code.trim());
+                    button.textContent = 'Copied';
+                    button.classList.add('is-done');
+                } catch {
+                    button.textContent = 'Copy failed';
+                }
+                setTimeout(() => {
+                    button.textContent = label;
+                    button.classList.remove('is-done');
+                }, 1800);
+            });
+        });
     </script>
 </BaseLayout>

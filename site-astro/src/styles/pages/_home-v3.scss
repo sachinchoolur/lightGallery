@@ -884,6 +884,100 @@ body.home-v3 {
         }
     }
 
+    // ---- Bundle size: the sample in a card, a caption under it ------------------
+    .home-modular .home-plugin-chips {
+        margin-bottom: 20px;
+    }
+    .home-code-card {
+        @extend .kq-card;
+        margin: 0;
+        padding: 12px 12px 4px;
+    }
+    .home-code-card-inner {
+        position: relative;
+        overflow: hidden;
+        border-radius: 14px;
+        pre {
+            margin: 0;
+            padding: 20px 24px;
+            border-radius: 0;
+            font-size: 13px;
+            line-height: 1.65;
+            // Where the copy button is always on, the code starts under it.
+            @media (hover: none) {
+                padding-top: 52px;
+            }
+        }
+    }
+    .home-code-card-caption {
+        margin: 0;
+        padding: 12px 8px;
+        @extend .para3;
+        color: $gray-500;
+    }
+    // The copy button floats top right on the code and shows on hover or
+    // keyboard focus; touch screens, with no hover, always show it.
+    .home-code-copy {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border: 1px solid rgba(#fff, 0.14);
+        border-radius: 8px;
+        background: rgba(#fff, 0.08);
+        color: rgba(#fff, 0.75);
+        font-family: $font-family-sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 16px;
+        cursor: pointer;
+        opacity: 0;
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease,
+            color 0.15s ease,
+            opacity 0.15s ease;
+        &::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            margin: 0 2px 0 0;
+            border: 1.5px solid currentColor;
+            border-radius: 3px;
+            box-shadow: 2px -2px 0 -0.5px currentColor;
+        }
+        &:hover {
+            border-color: rgba(#fff, 0.3);
+            background: rgba(#fff, 0.14);
+            color: #fff;
+        }
+        &.is-done {
+            border-color: rgba($green-700, 0.6);
+            color: #7ee2a0;
+            &::before {
+                width: 6px;
+                height: 10px;
+                border: 0;
+                border-right: 2px solid currentColor;
+                border-bottom: 2px solid currentColor;
+                border-radius: 0;
+                box-shadow: none;
+                transform: rotate(45deg) translate(-1px, -2px);
+            }
+        }
+        @media (hover: none) {
+            opacity: 1;
+        }
+    }
+    .home-code-card-inner:hover .home-code-copy,
+    .home-code-card-inner:focus-within .home-code-copy {
+        opacity: 1;
+    }
+
     // ---- Plugin chips -----------------------------------------------------------
     .home-plugin-chips {
         display: flex;

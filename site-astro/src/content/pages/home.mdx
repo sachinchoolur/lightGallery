@@ -393,6 +393,9 @@ npm install @lightgallery/angular
         </div>
         <div class="col-lg-8">
             <PluginSizes />
+            <figure class="home-code-card">
+                <div class="home-code-card-inner">
+                    <button type="button" class="home-code-copy" data-home-copy aria-label="Copy code">Copy</button>
 
 ```js
 import lightGallery from 'lightgallery';
@@ -403,6 +406,9 @@ import lgZoom from 'lightgallery/plugins/zoom';
 lightGallery(el, { plugins: [lgZoom, lgThumbnail] });
 ```
 
+                </div>
+                <figcaption class="home-code-card-caption">Two plugins, two imports. Everything else stays out of the bundle.</figcaption>
+            </figure>
         </div>
     </div>
 </div>
