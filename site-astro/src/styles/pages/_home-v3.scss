@@ -343,20 +343,362 @@ body.home-v3 {
             }
         }
     }
-    // Optimized for everyone: two columns under a centered header.
+    // Optimized for everyone: two columns under a centered header, each led
+    // by a picture of its point, a phone on the left and a keyboard on the
+    // right. From lg up the columns share their rows, so the two panels are
+    // one height and the headings under them line up.
     .home-everyone-cols {
-        row-gap: 40px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 48px;
         h3 {
             margin-bottom: 16px;
         }
         .home-checklist {
             margin-top: 0;
         }
-        pre {
-            margin: 24px 0 0;
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            column-gap: 48px;
+            row-gap: 0;
         }
-        .home-keys {
-            margin-top: 24px;
+    }
+    .home-everyone-col {
+        min-width: 0;
+        @include media-breakpoint-up(lg) {
+            display: grid;
+            grid-row: span 2;
+            grid-template-rows: subgrid;
+        }
+    }
+    .home-everyone-phone-panel,
+    .home-everyone-keys {
+        margin-bottom: 28px;
+    }
+    // The phone: the gallery as it opens on one, with the mobile settings'
+    // effect as a tag.
+    .home-everyone-phone-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 28px 24px;
+        border: 1px solid $gray-100;
+        border-radius: 24px;
+        background: $gray-50;
+    }
+    // An iPhone, drawn at 216x444 and scaled down under lg: a titanium rim,
+    // thin black bezels, the side buttons, and on screen the photo viewer
+    // as iOS shows it, black, with the status bar, glass buttons, a
+    // filmstrip and the home indicator.
+    .home-everyone-phone {
+        position: relative;
+        flex: none;
+        width: 216px;
+        height: 444px;
+        padding: 3px;
+        border-radius: 40px;
+        background: linear-gradient(150deg, #a3a4a8 0%, #57585c 22%, #8d8e92 48%, #46474b 74%, #9c9da1 100%);
+        box-shadow:
+            0 0 0 1px rgba(0, 0, 0, 0.35),
+            0 30px 60px -20px rgba(0, 0, 0, 0.45);
+        @include media-breakpoint-down(lg) {
+            zoom: 0.75;
+        }
+    }
+    .home-everyone-phone-button {
+        position: absolute;
+        width: 3px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, #5a5b5f, #9a9ba0);
+        &.is-action {
+            left: -2px;
+            top: 92px;
+            height: 22px;
+        }
+        &.is-volume-up {
+            left: -2px;
+            top: 128px;
+            height: 38px;
+        }
+        &.is-volume-down {
+            left: -2px;
+            top: 174px;
+            height: 38px;
+        }
+        &.is-side {
+            right: -2px;
+            top: 140px;
+            height: 62px;
+            background: linear-gradient(90deg, #9a9ba0, #5a5b5f);
+        }
+    }
+    .home-everyone-screen {
+        position: relative;
+        height: 100%;
+        overflow: hidden;
+        border: 5px solid #000;
+        border-radius: 37px;
+        background: #000;
+        color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, $font-family-sans-serif;
+    }
+    .home-everyone-photo {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        object-fit: cover;
+        transform: translateY(-50%);
+    }
+    // The time and the icons each sit centered beside the island, as on iOS.
+    .home-everyone-status {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 34px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr);
+        align-items: center;
+        padding: 1px 6px 0;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: -0.1px;
+    }
+    .home-everyone-time {
+        grid-column: 1;
+        justify-self: center;
+    }
+    .home-everyone-island {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        width: 64px;
+        height: 19px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: #000;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+        // the front camera, at the island's right end
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            width: 6px;
+            height: 6px;
+            margin-top: -3px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #3a3f55, #0b0c12 70%);
+        }
+    }
+    .home-everyone-status-icons {
+        grid-column: 3;
+        justify-self: center;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        svg:nth-child(1) {
+            width: 14px;
+            height: 9px;
+        }
+        svg:nth-child(2) {
+            width: 12px;
+            height: 9px;
+        }
+        svg:nth-child(3) {
+            width: 20px;
+            height: 10px;
+        }
+    }
+    .home-everyone-viewer-bar {
+        position: absolute;
+        top: 38px;
+        left: 12px;
+        right: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .home-everyone-glass {
+        width: 26px;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(118, 118, 128, 0.34);
+        backdrop-filter: blur(12px);
+        svg {
+            width: 13px;
+            height: 13px;
+        }
+    }
+    .home-everyone-title {
+        font-size: 11px;
+        font-weight: 600;
+    }
+    .home-everyone-filmstrip {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 22px;
+        display: flex;
+        justify-content: center;
+        gap: 2px;
+        img {
+            width: 12px;
+            height: 26px;
+            object-fit: cover;
+            border-radius: 2px;
+            opacity: 0.75;
+            &.is-current {
+                width: 22px;
+                margin: 0 3px;
+                opacity: 1;
+            }
+        }
+    }
+    .home-everyone-home-bar {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        width: 76px;
+        height: 4px;
+        margin-left: -38px;
+        border-radius: 2px;
+        background: rgba(#fff, 0.9);
+    }
+    .home-everyone-tag {
+        padding: 4px 10px;
+        border: 1px solid $gray-200;
+        border-radius: 999px;
+        background: #fff;
+        color: $gray-600;
+        font-family: $font-family-monospace;
+        font-size: 11px;
+    }
+    // The keyboard: the gallery's keys on a board, each with its line of the
+    // legend. Point at a key and its line lights up, point at a line and its
+    // key does.
+    .home-everyone-keys {
+        @extend .kq-card;
+        padding: 24px;
+    }
+    .home-everyone-board {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 18px;
+        border: 1px solid $gray-100;
+        border-radius: 16px;
+        background: $gray-50;
+        kbd {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 10px;
+            border: 1px solid $gray-200;
+            border-bottom-width: 3px;
+            border-radius: 8px;
+            background: #fff;
+            color: $gray-500;
+            font-family: $font-family-monospace;
+            font-size: 13px;
+            font-weight: 500;
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
+            &.is-live {
+                border-color: $orange-200;
+                color: $gray-800;
+            }
+            &.is-wide {
+                min-width: 84px;
+            }
+            // A phone gets the short rows, the long ones would not fit.
+            &.is-extra {
+                @include media-breakpoint-down(sm) {
+                    display: none;
+                }
+            }
+        }
+    }
+    .home-everyone-keyrow {
+        display: flex;
+        gap: 8px;
+        &.is-arrows {
+            margin-top: 10px;
+        }
+    }
+    .home-everyone-legend {
+        display: grid;
+        gap: 4px;
+        margin: 18px 0 0;
+        > div {
+            display: flex;
+            gap: 12px;
+            align-items: baseline;
+            padding: 8px 10px;
+            border-radius: 10px;
+            transition: background-color 0.2s ease;
+        }
+        dt {
+            flex: 0 0 96px;
+            white-space: nowrap;
+            kbd {
+                display: inline-block;
+                min-width: 1.9em;
+                padding: 2px 8px;
+                border: 1px solid $gray-200;
+                border-bottom-width: 2px;
+                border-radius: 6px;
+                background: #fff;
+                color: $gray-800;
+                font-family: $font-family-monospace;
+                font-size: 12px;
+                text-align: center;
+            }
+        }
+        dd {
+            @extend .para3;
+            margin: 0;
+            color: $gray-500;
+            transition: color 0.2s ease;
+        }
+    }
+    .home-everyone-hint {
+        margin: 10px 0 0;
+        color: $gray-400;
+        font-family: $font-family-monospace;
+        font-size: 11px;
+        text-align: right;
+        // Nothing to point at without a pointer.
+        @media (hover: none) {
+            display: none;
+        }
+    }
+    @each $key in esc, tab, lr, ud {
+        .home-everyone-keys:has([data-key='#{$key}']:hover) {
+            .home-everyone-legend [data-key='#{$key}'] {
+                background: $orange-50;
+                dd {
+                    color: $gray-800;
+                }
+            }
+            .home-everyone-board [data-key='#{$key}'] {
+                border-color: $orange-800;
+                background: $orange-700;
+                color: #fff;
+                transform: translateY(1px);
+            }
         }
     }
     // Two-column prose blocks
@@ -1028,7 +1370,7 @@ body.home-v3 {
         font-weight: 400;
     }
 
-    // ---- Checklist / keyboard map / a11y cards ------------------------------------
+    // ---- Checklist / a11y cards ------------------------------------------------------
     .home-checklist {
         list-style: none;
         margin: 24px 0 0;
@@ -1052,39 +1394,6 @@ body.home-v3 {
             strong {
                 color: $gray-800;
             }
-        }
-    }
-    .home-keys {
-        margin: 0;
-        > div {
-            display: flex;
-            gap: 16px;
-            align-items: baseline;
-            padding: 14px 0;
-            border-bottom: 1px solid $gray-100;
-        }
-        dt {
-            flex: 0 0 104px;
-            white-space: nowrap;
-        }
-        dd {
-            margin: 0;
-            @extend .para2;
-            color: $gray-500;
-        }
-        kbd {
-            display: inline-block;
-            min-width: 1.9em;
-            padding: 2px 8px;
-            border: 1px solid $gray-200;
-            border-bottom-width: 2px;
-            border-radius: 6px;
-            background: #fff;
-            color: $gray-800;
-            font-family: $font-family-monospace;
-            font-size: 12px;
-            font-weight: 500;
-            text-align: center;
         }
     }
     .home-a11y-grid {

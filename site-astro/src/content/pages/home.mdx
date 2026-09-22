@@ -438,8 +438,37 @@ lightGallery(el, { plugins: [lgZoom, lgThumbnail] });
             <p>Most gallery views happen on a phone, and some happen without a mouse or a screen. The defaults assume both.</p>
         </div>
     </div>
-    <div class="row home-everyone-cols">
-        <div class="col-lg-6">
+    <div class="home-everyone-cols">
+        <div class="home-everyone-col">
+            <div class="home-everyone-phone-panel" aria-hidden="true">
+                <div class="home-everyone-phone">
+                    <span class="home-everyone-phone-button is-action"></span>
+                    <span class="home-everyone-phone-button is-volume-up"></span>
+                    <span class="home-everyone-phone-button is-volume-down"></span>
+                    <span class="home-everyone-phone-button is-side"></span>
+                    <div class="home-everyone-screen">
+                        <img class="home-everyone-photo" src={photos('street')[8].thumb} alt="" loading="lazy" />
+                        <div class="home-everyone-status">
+                            <span class="home-everyone-time">9:41</span>
+                            <span class="home-everyone-island"></span>
+                            <span class="home-everyone-status-icons">
+                                <svg viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.8" /><rect x="4.6" y="5" width="3" height="6" rx="0.8" /><rect x="9.2" y="2.6" width="3" height="8.4" rx="0.8" /><rect x="13.8" y="0" width="3" height="11" rx="0.8" /></svg>
+                                <svg viewBox="0 0 15 11" fill="currentColor"><path d="M7.5 2.1a8 8 0 0 1 5.6 2.3l1.3-1.3A9.8 9.8 0 0 0 7.5.3 9.8 9.8 0 0 0 .6 3.1l1.3 1.3a8 8 0 0 1 5.6-2.3zm0 3.2a4.9 4.9 0 0 1 3.4 1.4l1.3-1.3a6.7 6.7 0 0 0-9.4 0l1.3 1.3a4.9 4.9 0 0 1 3.4-1.4zm0 3.1c.5 0 1 .2 1.3.5L7.5 10.2 6.2 8.9c.3-.3.8-.5 1.3-.5z" /></svg>
+                                <svg viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="3.3" fill="none" stroke="currentColor" stroke-opacity="0.45" /><rect x="2" y="2" width="19" height="8" rx="2" fill="currentColor" /><path d="M24 4.2v3.6c.8-.3 1.4-1 1.4-1.8s-.6-1.5-1.4-1.8z" fill="currentColor" fill-opacity="0.45" /></svg>
+                            </span>
+                        </div>
+                        <div class="home-everyone-viewer-bar">
+                            <span class="home-everyone-glass"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 3.4L5 8l4.6 4.6" /></svg></span>
+                            <span class="home-everyone-title">3 of 24</span>
+                            <span class="home-everyone-glass"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.8v8.4M5.2 4.4L8 1.6l2.8 2.8" /><path d="M5.6 6.6H4.4a1 1 0 0 0-1 1v5.6a1 1 0 0 0 1 1h7.2a1 1 0 0 0 1-1V7.6a1 1 0 0 0-1-1h-1.2" /></svg></span>
+                        </div>
+                        <div class="home-everyone-filmstrip">{photos('street').slice(4, 13).map((p, i) => <img class={i === 4 ? 'is-current' : undefined} src={p.thumb} alt="" loading="lazy" />)}</div>
+                        <span class="home-everyone-home-bar"></span>
+                    </div>
+                </div>
+                <span class="home-everyone-tag">controls off · close on · download off</span>
+            </div>
+            <div class="home-everyone-body">
             <h3>On a phone</h3>
             <ul class="home-checklist">
                 <li><strong>Separate mobile settings.</strong> A second settings object applies on small screens, so the toolbar can be lean where space is tight.</li>
@@ -448,20 +477,24 @@ lightGallery(el, { plugins: [lgZoom, lgThumbnail] });
                 <li><strong>Video on a budget.</strong> Facades keep cellular data for the videos people actually press play on.</li>
                 <li><strong>The native share sheet</strong> where the browser has one, social links where it doesn't.</li>
             </ul>
-
-```js
-lightGallery(el, {
-    plugins: [lgZoom, lgThumbnail, lgShare],
-    mobileSettings: {
-        controls: false,
-        showCloseIcon: true,
-        download: false,
-    },
-});
-```
-
+            </div>
         </div>
-        <div class="col-lg-6">
+        <div class="home-everyone-col">
+            <div class="home-everyone-keys">
+                <div class="home-everyone-board" aria-hidden="true">
+                    <div class="home-everyone-keyrow"><kbd class="is-live" data-key="esc">Esc</kbd><kbd>F1</kbd><kbd>F2</kbd><kbd>F3</kbd><kbd class="is-extra">F4</kbd><kbd class="is-extra">F5</kbd><kbd class="is-extra">F6</kbd></div>
+                    <div class="home-everyone-keyrow"><kbd class="is-live is-wide" data-key="tab">Tab ⇥</kbd><kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd class="is-extra">R</kbd><kbd class="is-extra">T</kbd></div>
+                    <div class="home-everyone-keyrow is-arrows"><kbd class="is-live" data-key="lr">←</kbd><kbd class="is-live" data-key="ud">↑</kbd><kbd class="is-live" data-key="ud">↓</kbd><kbd class="is-live" data-key="lr">→</kbd></div>
+                </div>
+                <dl class="home-everyone-legend">
+                    <div data-key="esc"><dt><kbd>Esc</kbd></dt><dd>Close the gallery</dd></div>
+                    <div data-key="lr"><dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>Previous and next slide, following the reading direction on RTL pages</dd></div>
+                    <div data-key="ud"><dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Show and hide the thumbnail strip when toggling is enabled</dd></div>
+                    <div data-key="tab"><dt><kbd>Tab</kbd></dt><dd>Cycles through the gallery's controls and never escapes to the page behind</dd></div>
+                </dl>
+                <p class="home-everyone-hint" aria-hidden="true">Hover a key</p>
+            </div>
+            <div class="home-everyone-body">
             <h3>With a keyboard or a screen reader</h3>
             <ul class="home-checklist">
                 <li><strong>A dialog, not a div.</strong> Focus moves into the gallery on open and returns to the trigger that opened it on close.</li>
@@ -469,13 +502,8 @@ lightGallery(el, {
                 <li><strong>Labelled controls.</strong> Every button carries a label from the strings settings, translate them and the labels follow.</li>
                 <li><strong>Reduced motion</strong> is honored for transitions and the opening animation.</li>
             </ul>
-            <dl class="home-keys">
-                <div><dt><kbd>Esc</kbd></dt><dd>Close the gallery</dd></div>
-                <div><dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>Previous and next slide, following the reading direction on RTL pages</dd></div>
-                <div><dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Show and hide the thumbnail strip when toggling is enabled</dd></div>
-                <div><dt><kbd>Tab</kbd></dt><dd>Cycles through the gallery's controls and never escapes to the page behind</dd></div>
-            </dl>
             <p class="home-section-link"><a href="/docs/accessibility/">The full accessibility contract →</a></p>
+            </div>
         </div>
     </div>
 </div>
