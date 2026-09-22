@@ -18,6 +18,14 @@ import FeatureIcon from '../../components/home/FeatureIcon.astro';
 import PluginSizes from '../../components/home/PluginSizes.astro';
 import TrustedBy from '../../components/shortcodes/TrustedBy.astro';
 
+{/* Customization demos, in the order their galleries open: the listing's
+    whole set (five in the mosaic, the rest behind "+N photos"), the
+    print's four views, the portfolio grid. */}
+
+export const customizeHotel = [...photos('morocco').slice(2), ...photos('morocco').slice(0, 2)];
+export const customizeShop = photos('hero').slice(2, 6);
+export const customizePortfolio = [0, 3, 4, 6, 7, 9, 10].map((i) => photos('street')[i]);
+
 <div class="container-fluid home-hero-gallery">
     <div class="row justify-content-center clip-path-bg">
         <div class="col-lg-10 text-center clip-path-bg-inner">
@@ -271,101 +279,115 @@ npm install @lightgallery/angular
         </div>
     </div>
 </div>
-<div class="container-xl feature-list-lg home-customize-gallery" id="customize">
-    <div class="row">
-        <div class="col-lg-6 align-self-center">
+<div class="container-xl home-customize-gallery" id="customize">
+    <div class="home-customize-layout">
+        <div class="home-customize-text">
             <span class="label1 home-kicker">Customization</span>
             <h2>Super <span class="serif-accent">customizable</span></h2>
-            <p>Change how the gallery behaves through settings, how it looks through SCSS variables and your own icons, and what it does through the plugin API, without touching the core.</p>
-            <div class="features-grid row">
-                <div class="features-grid-item col-xl-6">
-                    <div class="features-grid-icon">
-                        <img src="/images/icons/options.svg" />
-                    </div>
-                    <div class="features-grid-content">
-                        <h4 class="features-grid-title">150+ settings</h4>
-                        <p class="features-grid-desc">Core and per-plugin options, with a separate set for mobile, every one documented in the generated reference</p>
+            <p class="home-customize-lead">Change how the gallery behaves through settings, how it looks through SCSS variables and your own icons, and what it does through the plugin API, without touching the core.</p>
+            <div class="home-customize-points">
+                <div class="home-customize-point">
+                    <span class="home-customize-point-icon"><img src="/images/icons/options.svg" alt="" /></span>
+                    <div>
+                        <h3>150+ settings</h3>
+                        <p>Core and per-plugin options, with a separate set for mobile, every one documented in the generated reference</p>
                     </div>
                 </div>
-                <div class="features-grid-item col-xl-6">
-                    <div class="features-grid-icon">
-                        <img src="/images/icons/variables.svg" />
-                    </div>
-                    <div class="features-grid-content">
-                        <h4 class="features-grid-title">SCSS variables</h4>
-                        <p class="features-grid-desc">Colors, spacing and transitions are variables, retheme the gallery from one file</p>
+                <div class="home-customize-point">
+                    <span class="home-customize-point-icon"><img src="/images/icons/variables.svg" alt="" /></span>
+                    <div>
+                        <h3>SCSS variables</h3>
+                        <p>Colors, spacing and transitions are variables, retheme the gallery from one file</p>
                     </div>
                 </div>
-                <div class="features-grid-item col-xl-6">
-                    <div class="features-grid-icon">
-                        <img src="/images/icons/plugins.svg" />
-                    </div>
-                    <div class="features-grid-content">
-                        <h4 class="features-grid-title">Plugin API</h4>
-                        <p class="features-grid-desc">Thumbnails, zoom, video and the rest are plugins built on the same API you get, add your own</p>
+                <div class="home-customize-point">
+                    <span class="home-customize-point-icon"><img src="/images/icons/plugins.svg" alt="" /></span>
+                    <div>
+                        <h3>Plugin API</h3>
+                        <p>Thumbnails, zoom, video and the rest are plugins built on the same API you get, add your own</p>
                     </div>
                 </div>
-                <div class="features-grid-item col-xl-6">
-                    <div class="features-grid-icon">
-                        <img src="/images/icons/html-markup.svg" />
-                    </div>
-                    <div class="features-grid-content">
-                        <h4 class="features-grid-title">Custom icons</h4>
-                        <p class="features-grid-desc">Every control icon is an inline SVG you can replace by name, bring your own set, no CSS required</p>
+                <div class="home-customize-point">
+                    <span class="home-customize-point-icon"><img src="/images/icons/html-markup.svg" alt="" /></span>
+                    <div>
+                        <h3>Custom icons</h3>
+                        <p>Every control icon is an inline SVG you can replace by name, bring your own set, no CSS required</p>
                     </div>
                 </div>
             </div>
-            <svg class="svg-bg" width="1421" height="1116" version="1" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient x1="70%" y1="20%" x2="53%" y2="69%" id="content-features-blob"><stop stop-color="rgba(255, 214, 195, 0.1)" offset="0%"></stop><stop stop-color="#FFF" offset="100%"></stop></linearGradient></defs><path d="M495 2359c102-82 112-116 158-224 76-169 289-299 376-193 87 107 67 181 262 235 196 55 206 370-13 606-220 236-373 245-461 234-89-11-267-67-459-75-192-7-440-157-296-377 145-220 331-125 433-206z" transform="matrix(-1 0 0 1 1440 -1904)" fill="url(#content-features-blob)" fill-rule="nonzero"></path></svg>
         </div>
-        <div class="col-lg-6 align-self-center">
-            <div class="vertical-gallery row" id="gallery-demo-super-customizable">
-                <div class="vertical-gallery-row col-4 first-row">
-                    {photos('morocco').slice(0, 3).map((p) => (
-            <a
-                data-lg-size={p.size}
-                data-pinterest-text={p.title}
-                data-tweet-text={p.title}
-                class="gallery-item"
-                data-src={p.src}
-                data-responsive={p.responsive}
-                data-sub-html={p.caption}
-            >
-                <img class="img-responsive" alt={p.alt} src={p.thumb} />
-            </a>
-                    ))}
+        <div class="home-customize-stage">
+            <div class="home-customize-demos">
+                <input type="radio" class="home-customize-in-1" name="home-customize-demo" id="home-customize-hotel" checked />
+                <input type="radio" class="home-customize-in-2" name="home-customize-demo" id="home-customize-shop" />
+                <input type="radio" class="home-customize-in-3" name="home-customize-demo" id="home-customize-portfolio" />
+                <div class="home-customize-tabs">
+                    <label for="home-customize-hotel">Hotel</label>
+                    <label for="home-customize-shop">E-commerce</label>
+                    <label for="home-customize-portfolio">Portfolio</label>
                 </div>
-                <div class="vertical-gallery-row col-4 second-row">
-                    {photos('morocco').slice(3, 7).map((p) => (
-            <a
-                data-lg-size={p.size}
-                data-pinterest-text={p.title}
-                data-tweet-text={p.title}
-                class="gallery-item"
-                data-src={p.src}
-                data-responsive={p.responsive}
-                data-sub-html={p.caption}
-            >
-                <img class="img-responsive" alt={p.alt} src={p.thumb} />
-            </a>
-                    ))}
-                </div>
-                <div class="vertical-gallery-row col-4 third-row">
-                    {photos('morocco').slice(7, 10).map((p) => (
-            <a
-                data-lg-size={p.size}
-                data-pinterest-text={p.title}
-                data-tweet-text={p.title}
-                class="gallery-item"
-                data-src={p.src}
-                data-responsive={p.responsive}
-                data-sub-html={p.caption}
-            >
-                <img class="img-responsive" alt={p.alt} src={p.thumb} />
-            </a>
-                    ))}
+                <div class="home-customize-stack">
+                    <div class="home-customize-scene" data-customize-demo="hotel">
+                        <div class="home-customize-page home-customize-hotel">
+                            <div class="home-customize-hotel-head">
+                                <div>
+                                    <strong>Riad Dar Azul</strong>
+                                    <span>Chefchaouen · ★ 4.9 · Superhost</span>
+                                </div>
+                                <span class="home-customize-hotel-price">$128 <em>/ night</em></span>
+                            </div>
+                            <div class="home-customize-mosaic">
+                                {customizeHotel.map((p, i) => (
+                                    <a class={i === 4 ? 'gallery-item home-customize-more' : 'gallery-item'} href={p.src} data-src={p.src} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title} hidden={i > 4}>
+                                        <img src={p.thumb} alt={p.alt} loading="lazy" />
+                                        {i === 4 && <b>+{customizeHotel.length - 5} photos</b>}
+                                    </a>
+                                ))}
+                            </div>
+                            <div class="home-customize-lines" aria-hidden="true"><span style="--w: 70%"></span><span style="--w: 52%"></span></div>
+                        </div>
+                        <code class="home-customize-legend"><span>$lg-theme-color: <em>#fff</em>;</span> <span>$lg-icon-color: <em>#555</em>;</span> <span>$lg-theme-highlight: <em>#333</em>;</span></code>
+                    </div>
+                    <div class="home-customize-scene" data-customize-demo="shop">
+                        <div class="home-customize-page home-customize-shop">
+                            <div class="home-customize-shop-thumbs">
+                                {customizeShop.map((p, i) => (
+                                    <a class="gallery-item" href={p.src} data-src={p.src} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title}>
+                                        <img class={i === 0 ? 'is-current' : undefined} src={p.thumb} alt={p.alt} loading="lazy" />
+                                    </a>
+                                ))}
+                            </div>
+                            <a class="home-customize-shop-main" href={customizeShop[0].src} data-customize-open="0">
+                                <img src={customizeShop[0].thumb} alt={customizeShop[0].alt} loading="lazy" />
+                                <span class="home-customize-shop-zoom"><FeatureIcon name="zoom" /></span>
+                            </a>
+                            <div class="home-customize-shop-info">
+                                <span class="home-customize-shop-kicker">Fine art print</span>
+                                <strong>Golden Hour, No. 12</strong>
+                                <span class="home-customize-shop-price">$48.00</span>
+                                <div class="home-customize-shop-sizes"><b class="is-current">A3</b><b>A2</b><b>A1</b></div>
+                                <span class="home-customize-shop-button">Add to cart</span>
+                                <div class="home-customize-lines" aria-hidden="true"><span style="--w: 90%"></span><span style="--w: 70%"></span></div>
+                            </div>
+                        </div>
+                        <code class="home-customize-legend"><span>plugins: [lgZoom, <em>buyNow</em>]</span> <span>icons: <em>boldIcons</em></span> <span>download: <em>false</em></span> <span>.lg-icon {'{'} border-radius: <em>50%</em> {'}'}</span></code>
+                    </div>
+                    <div class="home-customize-scene" data-customize-demo="portfolio">
+                        <div class="home-customize-page home-customize-portfolio">
+                            <div class="home-customize-portfolio-nav"><b>STUDIO NORTH</b><span>Work</span><span>About</span><span>Contact</span></div>
+                            <div class="home-customize-portfolio-grid">
+                                {customizePortfolio.map((p, i) => (
+                                    <a class={i === 1 || i === 4 ? 'gallery-item is-tall' : 'gallery-item'} href={p.src} data-src={p.src} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title}>
+                                        <img src={p.thumb} alt={p.alt} loading="lazy" />
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                        <code class="home-customize-legend"><span>mode: <em>'lg-fade'</em></span> <span>icons: <em>tileIcons</em></span> <span>$lg-theme-color: <em>#2b2118</em>;</span></code>
+                    </div>
                 </div>
             </div>
-            <p class="open-gallery-text"> Click on any thumbnail to open lightGallery</p>
+            <p class="open-gallery-text home-customize-note">Click on any thumbnail to open lightGallery</p>
         </div>
     </div>
 </div>

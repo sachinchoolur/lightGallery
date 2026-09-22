@@ -380,8 +380,8 @@ lightGalleryJustified('scrub-thumbnails-gallery', {
 // Custom-icons demo: a thin-stroke set drawn for this page on a 24px
 // grid, applied per name via `settings.icons`. Names not listed keep
 // the built-in artwork, exactly the fallback visitors should see.
-const strokeIcon = (content) =>
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${content}</svg>`;
+const strokeIcon = (content, weight = 1.8) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${weight}" stroke-linecap="round" stroke-linejoin="round">${content}</svg>`;
 
 lightGalleryJustified('custom-icons-gallery', {
     justifiedLastRow: 'hide',
@@ -926,6 +926,104 @@ lightGallery(document.getElementById('gallery-demo-super-customizable'), {
         rotate: false,
     },
 });
+
+// Homepage customization section: three demo pages, each page's photos
+// opening a real gallery in its own look. The hotel changes only colors
+// (the white theme); the shop has round buttons, bold icons and a Buy now
+// button from a small plugin; the portfolio a warm theme, tile buttons and
+// a fade. The looks' CSS is in pages/_home-v3.scss.
+const customizeScenes = document.querySelectorAll('[data-customize-demo]');
+if (customizeScenes.length) {
+    // The custom-icons demo's line artwork, drawn at a given weight.
+    const paths = {
+        close: '<path d="M6 6l12 12M18 6L6 18"/>',
+        prev: '<path d="M14.5 5.5L8 12l6.5 6.5"/>',
+        next: '<path d="M9.5 5.5L16 12l-6.5 6.5"/>',
+        zoomIn: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M8 10.5h5M10.5 8v5"/>',
+        zoomOut: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M8 10.5h5"/>',
+        share: '<circle cx="6" cy="12" r="2.3"/><circle cx="17.5" cy="6" r="2.3"/><circle cx="17.5" cy="18" r="2.3"/><path d="M8.1 10.9l7.3-3.8M8.1 13.1l7.3 3.8"/>',
+    };
+    const iconSet = (weight) =>
+        Object.fromEntries(
+            Object.entries(paths).map(([name, d]) => [name, strokeIcon(d, weight)]),
+        );
+
+    // A plugin in the shape of the built-in ones: it adds one button to
+    // the toolbar, the way zoom and share add theirs.
+    class BuyNow {
+        constructor(core) {
+            this.core = core;
+            this.timer = 0;
+        }
+        init() {
+            const bag = strokeIcon(
+                '<path d="M5.5 8.5h13l-1 11.5h-11z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/>',
+                2,
+            );
+            this.core.$toolbar.append(
+                `<button type="button" class="lg-icon home-lg-buy-now" aria-label="Buy now">${bag}<span>Buy now</span></button>`,
+            );
+            const button = this.core.$toolbar.find('.home-lg-buy-now').get();
+            const label = button.querySelector('span');
+            button.addEventListener('click', () => {
+                button.classList.add('is-done');
+                label.textContent = 'Added';
+                clearTimeout(this.timer);
+                this.timer = setTimeout(() => {
+                    button.classList.remove('is-done');
+                    label.textContent = 'Buy now';
+                }, 1800);
+            });
+        }
+        destroy() {
+            clearTimeout(this.timer);
+        }
+    }
+
+    const looks = {
+        hotel: {
+            plugins: [lgZoom, lgThumbnail],
+            addClass: 'lightGallery-white-theme',
+            ...getResponsiveThumbnailsSettings(),
+        },
+        shop: {
+            plugins: [lgZoom, BuyNow],
+            addClass: 'home-lg-round',
+            download: false,
+            icons: iconSet(2.6),
+        },
+        portfolio: {
+            plugins: [lgZoom, lgShare],
+            addClass: 'home-lg-warm',
+            mode: 'lg-fade',
+            download: false,
+            icons: iconSet(2),
+        },
+    };
+    customizeScenes.forEach((scene) => {
+        const page = scene.querySelector('.home-customize-page');
+        const gallery = lightGallery(page, {
+            selector: '.gallery-item',
+            hash: false,
+            pager: false,
+            // The controls are what the demos show, keep them on phones,
+            // where the library default hides them.
+            mobileSettings: {
+                controls: true,
+                showCloseIcon: true,
+                download: false,
+            },
+            ...looks[scene.dataset.customizeDemo],
+        });
+        // The shop's big print opens the gallery at its view.
+        scene.querySelectorAll('[data-customize-open]').forEach((trigger) =>
+            trigger.addEventListener('click', (event) => {
+                event.preventDefault();
+                gallery.openGallery(Number(trigger.dataset.customizeOpen));
+            }),
+        );
+    });
+}
 
 const infiniteScrollEl = document.getElementById('infinite-scroll-gallery');
 if (infiniteScrollEl) {

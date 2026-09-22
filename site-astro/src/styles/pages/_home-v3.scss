@@ -4,11 +4,22 @@
 // separated by hairlines, content inside a 1080px rail with 1px edges,
 // dotted backgrounds on selected sections, one dark developer-voice
 // section, kickers + serif-accent headings, 24px cards.
-// Sections kept from the live homepage (Super Customizable, Mixed
-// Contents, Inline Gallery) are re-skinned here too.
+// Sections kept from the live homepage (Mixed Contents, Inline Gallery)
+// are re-skinned here too.
 
 $home-section-y: 96px;
 $home-section-y-m: 64px;
+
+// Customization demos: a demo that is not the chosen one. From lg up the
+// three share one grid cell, so it only fades out and the section keeps
+// its height; below lg, where the stage sits under the text, it collapses.
+@mixin home-customize-off {
+    visibility: hidden;
+    opacity: 0;
+    @include media-breakpoint-down(lg) {
+        display: none;
+    }
+}
 
 body.home-v3 {
     overflow-x: clip;
@@ -1223,70 +1234,613 @@ body.home-v3 {
         }
     }
 
-    // ---- Legacy sections re-skinned -----------------------------------------------
-    .feature-list-lg h2 {
-        margin-bottom: 16px;
+    // ---- Super customizable ----------------------------------------------------------
+    // The copy and its four points on the left; on the right three demo
+    // pages (a hotel listing, a print shop, a portfolio) under one row of
+    // tabs, each page's photos opening a real gallery in its own look (set
+    // up in scripts/demo-galleries.js). The tabs are radios, so they work
+    // before any script runs.
+    .home-customize-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+        align-items: center;
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+            gap: 64px;
+        }
     }
-    .feature-list-lg > .row > div > p {
-        @extend .para1;
-        color: $gray-500;
-    }
-    // Super Customizable: text + four mini cards on the left, the vertical
-    // gallery on the right.
-    .home-customize-gallery {
+    .home-customize-text {
         .home-kicker {
             display: block;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
-        .row {
-            row-gap: 40px;
+        h2 {
+            margin: 0 0 16px;
         }
-        .features-grid {
-            margin-top: 32px;
-            row-gap: 24px;
+    }
+    .home-customize-lead {
+        @extend .para2;
+        margin: 0 0 28px;
+        color: $gray-500;
+    }
+    .home-customize-points {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px 20px;
+        @media (min-width: 481px) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
-        .features-grid-item {
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
+    }
+    .home-customize-point {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        h3 {
+            margin: 0 0 2px;
+            color: $gray-800;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 22px;
+            letter-spacing: inherit;
         }
-        .features-grid-icon {
-            flex: 0 0 40px;
-            width: 40px;
-            height: 40px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            background: $orange-50;
-            img {
-                width: 20px;
-                height: 20px;
+        p {
+            @extend .para3;
+            margin: 0;
+            color: $gray-500;
+            // From md up the lines keep the body's spacing, a touch looser
+            // than para3's.
+            @include media-breakpoint-up(md) {
+                line-height: 1.45 * $font-size-md;
             }
         }
-        .features-grid-title {
-            margin: 0 0 4px;
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 600;
-            color: $gray-800;
+    }
+    .home-customize-point-icon {
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: $orange-50;
+        img {
+            width: 18px;
+            height: 18px;
         }
-        .features-grid-desc {
-            margin: 0;
+    }
+    .home-customize-note {
+        margin-top: 12px;
+        color: $gray-500;
+        text-align: center;
+    }
+
+    // Tabs, underlined in orange like the header links.
+    .home-customize-demos {
+        position: relative;
+        > input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        @for $i from 1 through 3 {
+            > .home-customize-in-#{$i}:checked ~ .home-customize-tabs label:nth-child(#{$i}) {
+                color: $gray-800;
+                &::after {
+                    transform: scaleX(1);
+                }
+            }
+            > .home-customize-in-#{$i}:focus-visible ~ .home-customize-tabs label:nth-child(#{$i}) {
+                outline: 2px solid $orange-500;
+                outline-offset: 4px;
+                border-radius: 4px;
+            }
+            > .home-customize-in-#{$i}:checked ~ .home-customize-stack > :not(:nth-child(#{$i})) {
+                @include home-customize-off;
+            }
+        }
+    }
+    .home-customize-tabs {
+        display: flex;
+        gap: 28px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid $gray-100;
+        label {
+            position: relative;
+            padding-bottom: 12px;
+            color: $gray-500;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 22px;
+            cursor: pointer;
+            transition: color 0.15s ease;
+            &::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -1px;
+                height: 2px;
+                border-radius: 2px;
+                background: $orange-700;
+                transform: scaleX(0);
+                transform-origin: left center;
+                transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            @media (hover: hover) {
+                &:hover {
+                    color: $gray-800;
+                }
+            }
+        }
+    }
+
+    // The three demos share one grid cell (see home-customize-off).
+    .home-customize-stack {
+        display: grid;
+    }
+    .home-customize-scene {
+        grid-area: 1 / 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        transition:
+            opacity 0.25s ease,
+            visibility 0.25s;
+    }
+    // Every photo on a page is a gallery item.
+    .home-customize-page {
+        flex: 1 1 auto;
+        min-width: 0;
+        a {
+            display: block;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        img {
+            transition:
+                transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+                filter 0.3s ease;
+        }
+        @media (hover: hover) {
+            a:hover img {
+                transform: scale(1.04);
+            }
+            .home-customize-more:hover img {
+                filter: brightness(0.42);
+            }
+        }
+        a:focus-visible {
+            outline: 2px solid $orange-500;
+            outline-offset: 2px;
+        }
+    }
+    // Under each page, the settings that give its gallery the look.
+    .home-customize-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px 18px;
+        margin-top: 12px;
+        padding: 9px 14px;
+        border: 1px solid $gray-100;
+        border-radius: 10px;
+        background: $gray-50;
+        color: $gray-600;
+        font-size: 12px;
+        line-height: 20px;
+        span {
+            white-space: nowrap;
+        }
+        em {
+            color: $orange-700;
+            font-style: normal;
+        }
+    }
+    // Page copy stand-ins.
+    .home-customize-lines span {
+        display: block;
+        width: var(--w, 100%);
+        height: 8px;
+        margin: 10px 0;
+        border-radius: 4px;
+        background: $gray-100;
+    }
+
+    // Hotel listing: a mosaic of five, the rest of the set behind the last.
+    .home-customize-hotel {
+        @extend .kq-card;
+        padding: 20px;
+        .home-customize-lines {
+            margin-top: 14px;
+        }
+    }
+    .home-customize-hotel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 14px;
+        strong {
+            display: block;
+            color: $gray-800;
+            font-size: 18px;
+            line-height: 26px;
+        }
+        span {
             @extend .para3;
             color: $gray-500;
         }
-        .vertical-gallery .gallery-item img {
-            border-radius: 12px;
-        }
-        .open-gallery-text {
-            margin-top: 12px;
-            color: $gray-500;
-            text-align: center;
+        .home-customize-hotel-price {
+            color: $gray-800;
+            font-size: 18px;
+            font-weight: 600;
+            em {
+                font-style: normal;
+                font-weight: 400;
+                color: $gray-500;
+                font-size: 13px;
+            }
         }
     }
-    .svg-bg {
-        display: none; // the blob belonged to the old look
+    .home-customize-mosaic {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 6px;
+        height: 260px;
+        border-radius: 12px;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        > a:first-child {
+            grid-row: span 2;
+        }
+        .home-customize-more {
+            position: relative;
+            img {
+                filter: brightness(0.5);
+            }
+            b {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 600;
+            }
+        }
+    }
+
+    // Print shop: four views down the side, the print, the buy box.
+    .home-customize-shop {
+        @extend .kq-card;
+        display: grid;
+        grid-template-columns: 56px minmax(0, 1fr) 190px;
+        gap: 16px;
+        padding: 20px;
+        align-items: start;
+    }
+    .home-customize-shop-thumbs {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        a {
+            border-radius: 6px;
+            overflow: visible;
+        }
+        img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 6px;
+            opacity: 0.6;
+            &.is-current {
+                opacity: 1;
+                outline: 2px solid $orange-500;
+                outline-offset: 1px;
+            }
+        }
+    }
+    .home-customize-shop-main {
+        position: relative;
+        display: block;
+        aspect-ratio: 4 / 5;
+        border-radius: 10px;
+        overflow: hidden;
+        background: $gray-50;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    .home-customize-shop-zoom {
+        position: absolute;
+        right: 12px;
+        bottom: 12px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+        .feature-icon {
+            width: 18px;
+            height: 18px;
+            color: $gray-800;
+        }
+    }
+    .home-customize-shop-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        strong {
+            color: $gray-800;
+            font-size: 18px;
+            line-height: 26px;
+        }
+        .home-customize-lines {
+            display: contents;
+        }
+    }
+    .home-customize-shop-kicker {
+        @extend .label1;
+        font-size: 11px;
+        color: $gray-500;
+    }
+    .home-customize-shop-price {
+        color: $gray-800;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .home-customize-shop-sizes {
+        display: flex;
+        gap: 6px;
+        b {
+            padding: 4px 10px;
+            border: 1px solid $gray-200;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: $gray-600;
+            &.is-current {
+                border-color: $gray-800;
+                color: $gray-800;
+            }
+        }
+    }
+    .home-customize-shop-button {
+        margin-top: 4px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: $gray-800;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    // Photographer's portfolio: a dark page, a dense grid.
+    .home-customize-portfolio {
+        padding: 20px;
+        border-radius: 16px;
+        background: #111;
+        color: #fff;
+    }
+    .home-customize-portfolio-nav {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 16px;
+        b {
+            margin-right: auto;
+            letter-spacing: 0.16em;
+            font-size: 12px;
+        }
+        span {
+            font-size: 12px;
+            color: rgba(#fff, 0.55);
+        }
+    }
+    .home-customize-portfolio-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-auto-rows: 100px;
+        grid-auto-flow: dense;
+        gap: 6px;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        > a.is-tall {
+            grid-row: span 2;
+        }
+    }
+
+    // On a phone the shop drops its side views and the hotel and portfolio
+    // pages get shorter.
+    @include media-breakpoint-down(md) {
+        .home-customize-mosaic {
+            height: 200px;
+        }
+        .home-customize-portfolio-nav {
+            gap: 14px;
+            b {
+                white-space: nowrap;
+            }
+        }
+        .home-customize-portfolio-grid {
+            grid-auto-rows: 80px;
+        }
+        .home-customize-shop {
+            grid-template-columns: minmax(0, 44fr) minmax(0, 56fr);
+            gap: 14px;
+        }
+        .home-customize-shop-thumbs {
+            display: none;
+        }
+        .home-customize-shop-info strong {
+            font-size: 16px;
+            line-height: 22px;
+        }
+    }
+    // From lg up the three pages fill the tallest one: the mosaic, the print
+    // and the portfolio grid grow, and photos never size a row.
+    @include media-breakpoint-up(lg) {
+        .home-customize-hotel,
+        .home-customize-portfolio {
+            display: flex;
+            flex-direction: column;
+        }
+        .home-customize-mosaic {
+            flex: 1 1 auto;
+            height: auto;
+            min-height: 240px;
+        }
+        .home-customize-portfolio-grid {
+            flex: 1 1 auto;
+            grid-auto-rows: minmax(90px, 1fr);
+        }
+        .home-customize-shop {
+            grid-template-rows: 1fr;
+        }
+        .home-customize-shop-main {
+            align-self: stretch;
+            aspect-ratio: auto;
+            min-height: 240px;
+        }
+        .home-customize-mosaic img,
+        .home-customize-portfolio-grid img,
+        .home-customize-shop-main img {
+            contain: size;
+        }
+    }
+
+    // The demos' galleries. lightGallery's container carries `addClass`: the
+    // hotel uses the site's white theme, the shop and portfolio these.
+    // The shop: every action a round button, bold icons, and the Buy now
+    // button its plugin adds, as a pill.
+    .home-lg-round {
+        .lg-toolbar {
+            padding: 6px 8px 0 0;
+            .lg-icon {
+                width: 40px;
+                height: 40px;
+                margin: 4px 0 0 8px;
+                padding: 0;
+                border-radius: 50%;
+                background: rgba(#fff, 0.12);
+                color: #fff;
+                font-size: 20px;
+                transition: background-color 0.2s ease;
+                &:hover {
+                    background: rgba(#fff, 0.22);
+                }
+            }
+        }
+        .lg-counter {
+            padding-top: 18px;
+        }
+        .lg-prev,
+        .lg-next {
+            width: 48px;
+            height: 48px;
+            margin-top: -24px;
+            padding: 0;
+            border-radius: 50%;
+            background: rgba(#fff, 0.12);
+            color: #fff;
+            font-size: 22px;
+            &:hover:not(.disabled) {
+                background: rgba(#fff, 0.22);
+                color: #fff;
+            }
+        }
+    }
+    .lg-toolbar .lg-icon.home-lg-buy-now {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        width: auto;
+        height: 40px;
+        padding: 0 16px 0 14px;
+        border-radius: 999px;
+        background: $orange-700;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1;
+        transition: background-color 0.2s ease;
+        svg {
+            width: 17px;
+            height: 17px;
+        }
+        &:hover {
+            background: $orange-500;
+            color: #fff;
+        }
+        &.is-done {
+            background: $green-700;
+        }
+    }
+    // The portfolio: a warm backdrop, tile buttons, gold arrows.
+    .home-lg-warm {
+        $warm: #2b2118;
+        $cream: #f6e7d2;
+        $gold: #e0a458;
+        .lg-backdrop {
+            background-color: $warm;
+        }
+        .lg-counter,
+        .lg-sub-html,
+        .lg-sub-html a {
+            color: $cream;
+        }
+        .lg-toolbar {
+            padding: 6px 8px 0 0;
+            .lg-icon {
+                width: 40px;
+                height: 40px;
+                margin: 4px 0 0 6px;
+                padding: 0;
+                border-radius: 10px;
+                background: rgba($cream, 0.12);
+                color: $cream;
+                font-size: 20px;
+                transition: background-color 0.2s ease;
+                &:hover {
+                    background: rgba($cream, 0.22);
+                    color: #fff;
+                }
+            }
+        }
+        .lg-counter {
+            padding-top: 18px;
+        }
+        .lg-prev,
+        .lg-next {
+            width: 44px;
+            height: 44px;
+            margin-top: -22px;
+            padding: 0;
+            border-radius: 12px;
+            background: $gold;
+            color: $warm;
+            font-size: 22px;
+            &:hover:not(.disabled) {
+                background: lighten($gold, 6%);
+                color: $warm;
+            }
+        }
     }
 
     // ---- Closing CTA ----------------------------------------------------------------
