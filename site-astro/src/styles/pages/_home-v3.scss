@@ -379,6 +379,10 @@ body.home-v3 {
     // panel over a soft orange glow. The pills are CodeTabs' own tabs, so the
     // choice follows the visitor across the page and between visits.
     .home-stack {
+        // The panel's glow reaches 60px past its sides; below lg the panel
+        // spans the container, so the glow stops at the container's edge
+        // instead of widening the page.
+        overflow-x: clip;
         .code-tabs {
             margin: 0;
         }
