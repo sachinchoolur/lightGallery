@@ -1843,6 +1843,121 @@ body.home-v3 {
         }
     }
 
+    // ---- Inline gallery --------------------------------------------------------------
+    // The live inline gallery rail to rail under the centered header: a
+    // rounded frame with a deep shadow, the strip laid over the photo, line
+    // icons, and the maximize button the copy points at in orange. Set up
+    // in scripts/demo-galleries.js.
+    // Maximized, the gallery leaves its frame for the whole window; every
+    // section is its own layer (z-index 0), so lift this one above the
+    // sections after it and the fixed header while that lasts.
+    .home-inline-gallery:has(.home-inline-embed .lg-container:not(.lg-inline)) {
+        z-index: $zindex-fixed + 1;
+    }
+    .home-inline-embed {
+        position: relative;
+        aspect-ratio: 8 / 7;
+        overflow: hidden;
+        border-radius: 20px;
+        background: #111;
+        box-shadow: 0 40px 80px -30px rgba(9, 18, 36, 0.4);
+        text-align: left;
+        // The photos are 3:2, so from sm up they fill the frame.
+        @include media-breakpoint-up(sm) {
+            aspect-ratio: 3 / 2;
+        }
+        .lg-backdrop {
+            background-color: #111;
+        }
+        .lg-counter {
+            padding: 16px 0 0 18px;
+            color: rgba(#fff, 0.9);
+            font-family: $font-family-monospace;
+            font-size: 12px;
+        }
+        .lg-toolbar {
+            padding-right: 6px;
+            .lg-icon {
+                width: 44px;
+                color: rgba(#fff, 0.85);
+                font-size: 20px;
+                &:hover {
+                    color: #fff;
+                }
+            }
+            .lg-maximize {
+                width: 36px;
+                height: 36px;
+                margin: 8px 8px 0 4px;
+                padding: 0;
+                border-radius: 9px;
+                background: $orange-700;
+                color: #fff;
+                box-shadow: 0 0 0 4px rgba($orange-500, 0.25);
+                transition: background-color 0.2s ease;
+                &:hover {
+                    background: $orange-500;
+                    color: #fff;
+                }
+            }
+        }
+        .lg-prev,
+        .lg-next {
+            width: 40px;
+            height: 40px;
+            margin-top: -20px;
+            padding: 0;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-size: 20px;
+            &:hover:not(.disabled) {
+                background: rgba(0, 0, 0, 0.6);
+                color: #fff;
+            }
+        }
+        .lg-prev {
+            left: 16px;
+        }
+        .lg-next {
+            right: 16px;
+        }
+        // One gradient behind the caption and the strip together.
+        .lg-components {
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+        }
+        .lg-sub-html {
+            background: none;
+        }
+        .lg-thumb-outer {
+            padding: 0 12px;
+            background: none;
+        }
+        .lg-thumb {
+            padding: 12px 0 14px;
+        }
+        .lg-thumb-item {
+            border: 0;
+            border-radius: 3px;
+            opacity: 0.65;
+            outline: 2px solid transparent;
+            outline-offset: 1px;
+            transition:
+                opacity 0.2s ease,
+                outline-color 0.2s ease;
+            &:hover {
+                opacity: 1;
+            }
+            &.active {
+                opacity: 1;
+                outline-color: $orange-500;
+            }
+        }
+        .lg-progress-bar .lg-progress {
+            background-color: $orange-500;
+        }
+    }
+
     // ---- Closing CTA ----------------------------------------------------------------
     // Split: the call on the left, four stack tiles on the right. The tile of
     // the visitor's stack (the one the code tabs remember) carries the same

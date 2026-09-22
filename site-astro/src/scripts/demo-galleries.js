@@ -932,21 +932,72 @@ lightGallery(document.getElementById('gallery-demo-super-customizable'), {
 // (the white theme); the shop has round buttons, bold icons and a Buy now
 // button from a small plugin; the portfolio a warm theme, tile buttons and
 // a fade. The looks' CSS is in pages/_home-v3.scss.
+// The custom-icons demo's line artwork, for the homepage galleries, drawn
+// at a given weight.
+const LINE_ICONS = {
+    close: '<path d="M6 6l12 12M18 6L6 18"/>',
+    prev: '<path d="M14.5 5.5L8 12l6.5 6.5"/>',
+    next: '<path d="M9.5 5.5L16 12l-6.5 6.5"/>',
+    zoomIn: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M8 10.5h5M10.5 8v5"/>',
+    zoomOut: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M8 10.5h5"/>',
+    share: '<circle cx="6" cy="12" r="2.3"/><circle cx="17.5" cy="6" r="2.3"/><circle cx="17.5" cy="18" r="2.3"/><path d="M8.1 10.9l7.3-3.8M8.1 13.1l7.3 3.8"/>',
+    autoplayPlay: '<path d="M9 5.8v12.4L19 12z"/>',
+    autoplayPause: '<path d="M8.5 6v12M15.5 6v12"/>',
+    maximize: '<path d="M4.5 9V4.5H9M15 4.5h4.5V9M19.5 15v4.5H15M9 19.5H4.5V15"/>',
+    minimize: '<path d="M9 4.5V9H4.5M15 4.5V9h4.5M19.5 15H15v4.5M4.5 15H9v4.5"/>',
+};
+const lineIcons = (weight = 1.8) =>
+    Object.fromEntries(
+        Object.entries(LINE_ICONS).map(([name, d]) => [name, strokeIcon(d, weight)]),
+    );
+
+// Homepage inline gallery: wide, rail to rail, the strip over the photo
+// and an orange maximize button (the looks' CSS is in pages/_home-v3.scss).
+// Landscape photos only, so every slide fills the wide frame.
+const homeInline = document.getElementById('home-inline-gallery');
+if (homeInline) {
+    const phone = window.innerWidth < 768;
+    const homeInlineGallery = window.lightGallery(homeInline, {
+        container: homeInline,
+        dynamic: true,
+        addClass: 'lg-inline',
+        closable: false,
+        showMaximizeIcon: true,
+        swipeToClose: false,
+        hash: false,
+        pager: false,
+        download: false,
+        mode: 'lg-scale-up',
+        slideShowAutoplay: true,
+        slideDelay: 400,
+        allowMediaOverlap: true,
+        plugins: [lgZoom, lgAutoplay, lgShare, lgThumbnail],
+        alignThumbnails: 'left',
+        thumbWidth: phone ? 40 : 56,
+        thumbHeight: phone ? '30px' : '40px',
+        thumbMargin: 4,
+        icons: lineIcons(),
+        // The controls are the demo, keep them on phones, where the library
+        // default hides them.
+        mobileSettings: {
+            controls: true,
+            showCloseIcon: false,
+            download: false,
+        },
+        dynamicEl: photos('desert,hero')
+            .filter((p) => p.width > p.height)
+            .map((p) => ({
+                src: p.src,
+                responsive: p.responsive,
+                thumb: p.thumb,
+                subHtml: `<div class="lightGallery-captions">${p.caption}</div>`,
+            })),
+    });
+    homeInlineGallery.openGallery();
+}
+
 const customizeScenes = document.querySelectorAll('[data-customize-demo]');
 if (customizeScenes.length) {
-    // The custom-icons demo's line artwork, drawn at a given weight.
-    const paths = {
-        close: '<path d="M6 6l12 12M18 6L6 18"/>',
-        prev: '<path d="M14.5 5.5L8 12l6.5 6.5"/>',
-        next: '<path d="M9.5 5.5L16 12l-6.5 6.5"/>',
-        zoomIn: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M8 10.5h5M10.5 8v5"/>',
-        zoomOut: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20M8 10.5h5"/>',
-        share: '<circle cx="6" cy="12" r="2.3"/><circle cx="17.5" cy="6" r="2.3"/><circle cx="17.5" cy="18" r="2.3"/><path d="M8.1 10.9l7.3-3.8M8.1 13.1l7.3 3.8"/>',
-    };
-    const iconSet = (weight) =>
-        Object.fromEntries(
-            Object.entries(paths).map(([name, d]) => [name, strokeIcon(d, weight)]),
-        );
 
     // A plugin in the shape of the built-in ones: it adds one button to
     // the toolbar, the way zoom and share add theirs.
@@ -990,14 +1041,14 @@ if (customizeScenes.length) {
             plugins: [lgZoom, BuyNow],
             addClass: 'home-lg-round',
             download: false,
-            icons: iconSet(2.6),
+            icons: lineIcons(2.6),
         },
         portfolio: {
             plugins: [lgZoom, lgShare],
             addClass: 'home-lg-warm',
             mode: 'lg-fade',
             download: false,
-            icons: iconSet(2),
+            icons: lineIcons(2),
         },
     };
     customizeScenes.forEach((scene) => {
