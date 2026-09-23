@@ -968,9 +968,6 @@ body.home-v3 {
             grid-template-columns: repeat(3, 1fr);
         }
     }
-    .home-physics-grid {
-        margin-bottom: 48px;
-    }
     .home-share .home-trust-grid {
         @include media-breakpoint-up(md) {
             grid-template-columns: repeat(2, 1fr);
