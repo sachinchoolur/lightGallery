@@ -1,32 +1,80 @@
+// Site footer (components/Footer.astro): dark surface under an orange
+// rule, brand column plus four link columns, then the bottom line.
 .footer {
-    padding-top: 56px;
-    padding-bottom: 40px;
-    background-color: $dark-surface;
+    position: relative;
     margin-top: 0;
+    padding: 64px 0 40px;
+    border-top: 4px solid $orange-700;
+    background-color: $dark-surface;
     @include kq-lines-dark;
-
-    ul.footer-menu {
-        padding-left: 0;
-        list-style-type: none;
-        font-size: 1rem;
-        line-height: 1.9rem;
-        margin-bottom: 3rem;
-        @include media-breakpoint-up(sm) {
-            margin-bottom: 0;
+}
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(4, 1fr);
+    gap: 32px 24px;
+    @include media-breakpoint-down(lg) {
+        grid-template-columns: repeat(2, 1fr);
+        .footer-brandcol {
+            grid-column: 1 / -1;
         }
     }
-    h4 {
-        font-size: 12px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        font-weight: 600;
-        color: $gray-400;
-        margin: 0 0 16px;
+}
+.footer-brand {
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: #fff;
+    text-decoration: none;
+    &:hover {
+        color: #fff;
     }
-    .footer-menu-item a {
-        color: $gray-300;
+}
+.footer-tagline {
+    max-width: 300px;
+    margin: 12px 0 0;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: -0.16px;
+    color: rgba(#fff, 0.6);
+}
+.footer-gh {
+    display: inline-flex;
+    margin-top: 20px;
+    color: $gray-300;
+    svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+    }
+    &:hover {
+        color: #fff;
+    }
+}
+.footer .footer-h {
+    // An h2 for the outline; the page heading styles must not reach it.
+    margin: 0 0 14px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: inherit;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: $gray-400;
+}
+.footer-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    li {
+        margin: 0 0 8px;
+    }
+    a {
         font-size: 14px;
-        transition: color 0.2s;
+        letter-spacing: -0.16px;
+        color: $gray-300;
+        text-decoration: none;
+        transition: color 0.15s ease;
         &:hover {
             color: #fff;
         }
@@ -116,14 +164,16 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 0.5rem 2rem;
-    margin-top: 2.5rem;
-    padding-top: 1.25rem;
+    gap: 8px 32px;
+    margin-top: 48px;
+    padding-top: 20px;
     border-top: 1px solid rgba(#fff, 0.12);
-    color: rgba(#fff, 0.7);
-    font-size: 0.85rem;
+    font-size: 13px;
+    letter-spacing: -0.1px;
+    color: rgba(#fff, 0.6);
     a {
         color: rgba(#fff, 0.85);
+        text-decoration: none;
         &:hover {
             color: #fff;
         }
