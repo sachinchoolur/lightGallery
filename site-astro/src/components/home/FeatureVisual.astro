@@ -1,0 +1,181 @@
+---
+/**
+ * The illustration at the top of a homepage Features card, one per
+ * feature key. Three families, told apart by class prefix: `fv-visual-*`
+ * still scenes, `fb-*` and `fc-*` animations (styles in
+ * `pages/_home-features.scss`). Decorative: every wrapper is aria-hidden.
+ */
+import FeatureIcon from './FeatureIcon.astro';
+import { photos } from '../../lib/photos';
+
+interface Props {
+    name: string;
+}
+const { name } = Astro.props;
+
+const street = photos('street');
+const morocco = photos('morocco');
+const alley = photos('alley');
+const rowsTop = [street[0], street[1], street[2]];
+const rowsBottom = [street[3], street[4], street[5], street[6]];
+const virtualWindow = [street[7], street[8], street[9]];
+const strings = [
+    { text: 'Next slide', rtl: false },
+    { text: 'Nächste Folie', rtl: false },
+    { text: '次のスライド', rtl: false },
+    { text: 'الشريحة التالية', rtl: true },
+    { text: 'Diapositiva siguiente', rtl: false },
+];
+const altIcons = ['zoom', 'sharing', 'rotate', 'video'] as const;
+const altIconsB = ['icons', 'links', 'updates', 'captions'] as const;
+---
+
+{name === 'thumbnails' && (
+    <div class="home-feature-visual fb-thumbs" aria-hidden="true">
+        <div class="fb-thumbs-main"><img src={street[2].thumb} alt="" loading="lazy" /><img src={street[3].thumb} alt="" loading="lazy" /></div>
+        <div class="fb-thumbs-strip">{street.slice(0, 6).map((p) => <img src={p.thumb} alt="" loading="lazy" />)}<span class="fb-thumbs-ring" /></div>
+    </div>
+)}
+{name === 'zoom' && (
+    <div class="home-feature-visual fb-pinch" aria-hidden="true">
+        <img src={morocco[8].thumb} alt="" loading="lazy" />
+        <span class="fb-finger fb-finger-a" /><span class="fb-finger fb-finger-b" />
+    </div>
+)}
+{name === 'video' && (
+    <div class="home-feature-visual fb-facade" aria-hidden="true">
+        <img src={street[10].thumb} alt="" loading="lazy" />
+        <span class="fb-facade-play" />
+        <div class="fb-facade-bar"><i /><b /><em>0:00 / 2:14</em></div>
+    </div>
+)}
+{name === 'justified' && (
+    <div class="home-feature-visual fv-visual-rows" aria-hidden="true">
+        <div class="fv-visual-row">{rowsTop.map((p) => <img src={p.thumb} alt="" loading="lazy" style={`--w:${(p.width / p.height).toFixed(2)}`} />)}</div>
+        <div class="fv-visual-row">{rowsBottom.map((p) => <img src={p.thumb} alt="" loading="lazy" style={`--w:${(p.width / p.height).toFixed(2)}`} />)}</div>
+    </div>
+)}
+{name === 'virtualization' && (
+    <div class="home-feature-visual fv-visual-virtual" aria-hidden="true">
+        <div class="fv-virtual-stack">
+            <span class="fv-virtual-ghost" />
+            <span class="fv-virtual-ghost" />
+            {virtualWindow.map((p) => <img src={p.thumb} alt="" loading="lazy" />)}
+            <span class="fv-virtual-ghost" />
+            <span class="fv-virtual-ghost" />
+        </div>
+        <span class="fv-virtual-window" />
+    </div>
+)}
+{name === 'scrubbing' && (
+    <div class="home-feature-visual fb-scrubber" aria-hidden="true">
+        <div class="fb-scrubber-deck">
+            <img src={street[6].thumb} alt="" loading="lazy" />
+            <img src={street[7].thumb} alt="" loading="lazy" />
+            <img src={street[8].thumb} alt="" loading="lazy" />
+        </div>
+        <div class="fb-scrubber-track"><i /><b /></div>
+    </div>
+)}
+{name === 'icons' && (
+    <div class="home-feature-visual fb-flip" aria-hidden="true">
+        {altIcons.map((icon, i) => (
+            <span class="fb-flip-tile">
+                <span class="fb-flip-face fb-flip-front"><FeatureIcon name={icon} /></span>
+                <span class="fb-flip-face fb-flip-back"><FeatureIcon name={altIconsB[i]} /></span>
+            </span>
+        ))}
+    </div>
+)}
+{name === 'localization' && (
+    <div class="home-feature-visual fv-visual-strings" aria-hidden="true">
+        {strings.map((str) => <span class:list={['fv-string', { 'fv-string-rtl': str.rtl }]} dir={str.rtl ? 'rtl' : undefined}>{str.text}</span>)}
+    </div>
+)}
+{name === 'accessibility' && (
+    <div class="home-feature-visual fc-speech" aria-hidden="true">
+        <span class="fc-speech-btn">Close</span>
+        <span class="fc-speech-bubble"><i /><i /><i /><i /><i /><i /><i /><em>Close gallery, button</em></span>
+    </div>
+)}
+{name === 'responsive' && (
+    <div class="home-feature-visual fv-visual-devices" aria-hidden="true">
+        <span class="fv-device fv-device-phone"><img src={morocco[0].thumb} alt="" loading="lazy" /><i>480</i></span>
+        <span class="fv-device fv-device-tablet"><img src={morocco[0].thumb} alt="" loading="lazy" /><i>1024</i></span>
+        <span class="fv-device fv-device-desktop"><img src={morocco[0].thumb} alt="" loading="lazy" /><i>1920</i></span>
+    </div>
+)}
+{name === 'sharing' && (
+    <div class="home-feature-visual fb-burst" aria-hidden="true">
+        <span class="fb-burst-core"><FeatureIcon name="sharing" /></span>
+        <span class="fb-burst-dot fb-burst-1" /><span class="fb-burst-dot fb-burst-2" /><span class="fb-burst-dot fb-burst-3" /><span class="fb-burst-dot fb-burst-4" />
+    </div>
+)}
+{name === 'links' && (
+    <div class="home-feature-visual fb-history" aria-hidden="true">
+        <div class="fb-history-bar"><span class="fb-history-nav">‹ ›</span><span class="fb-history-url">/gallery/<em class="fb-hash"><b>#slide-3</b><b>#slide-4</b></em></span></div>
+        <div class="fb-history-slides"><img src={alley[6].thumb} alt="" loading="lazy" /><img src={alley[7].thumb} alt="" loading="lazy" /></div>
+    </div>
+)}
+{name === 'dynamic' && (
+    <div class="home-feature-visual fc-objflip" aria-hidden="true">
+        {alley.slice(0, 3).map((p, i) => (
+            <span class="fc-objflip-tile" style={`--d:${i * 90}ms`}>
+                <span class="fc-objflip-front">{'{ }'}</span>
+                <img class="fc-objflip-back" src={p.thumb} alt="" loading="lazy" />
+            </span>
+        ))}
+    </div>
+)}
+{name === 'updates' && (
+    <div class="home-feature-visual fc-drop" aria-hidden="true">
+        <div class="fc-drop-row">{alley.slice(3, 6).map((p) => <img src={p.thumb} alt="" loading="lazy" />)}<img class="fc-drop-new" src={alley[9].thumb} alt="" loading="lazy" /></div>
+        <span class="fc-drop-count">1 / <b class="fc-drop-n"><i>12</i><i>13</i></b></span>
+    </div>
+)}
+{name === 'transitions' && (
+    <div class="home-feature-visual fc-four" aria-hidden="true">
+        <span class="fc-four-tile fc-four-fade"><img src={morocco[9].thumb} alt="" loading="lazy" /><img src={morocco[10].thumb} alt="" loading="lazy" /><b>fade</b></span>
+        <span class="fc-four-tile fc-four-slide"><img src={morocco[9].thumb} alt="" loading="lazy" /><img src={morocco[10].thumb} alt="" loading="lazy" /><b>slide</b></span>
+        <span class="fc-four-tile fc-four-zoom"><img src={morocco[9].thumb} alt="" loading="lazy" /><img src={morocco[10].thumb} alt="" loading="lazy" /><b>zoom</b></span>
+        <span class="fc-four-tile fc-four-flip"><img src={morocco[9].thumb} alt="" loading="lazy" /><img src={morocco[10].thumb} alt="" loading="lazy" /><b>flip</b></span>
+    </div>
+)}
+{name === 'captions' && (
+    <div class="home-feature-visual fv-visual-caption" aria-hidden="true">
+        <img src={morocco[3].thumb} alt="" loading="lazy" />
+        <span class="fv-caption"><strong>Kasbah at dusk</strong><span>Photo on Unsplash</span></span>
+    </div>
+)}
+{name === 'comments' && (
+    <div class="home-feature-visual fv-visual-comments" aria-hidden="true">
+        <img src={morocco[4].thumb} alt="" loading="lazy" />
+        <div class="fv-comment-panel">
+            <span class="fv-comment"><i /><b style="--w:70%" /></span>
+            <span class="fv-comment"><i /><b style="--w:45%" /></span>
+            <span class="fv-comment"><i /><b style="--w:60%" /></span>
+        </div>
+    </div>
+)}
+{name === 'rotate' && (
+    <div class="home-feature-visual fb-dial" aria-hidden="true">
+        <span class="fb-dial-ring"><i /></span>
+        <img src={morocco[5].thumb} alt="" loading="lazy" />
+        <span class="fb-dial-deg"><b>0°</b><b>90°</b></span>
+    </div>
+)}
+{name === 'autoplay' && (
+    <div class="home-feature-visual fv-visual-autoplay" aria-hidden="true">
+        <div class="fv-player">
+            <span class="fv-progress"><i /></span>
+            <img src={morocco[6].thumb} alt="" loading="lazy" />
+            <span class="fv-corner fv-corner-tl" /><span class="fv-corner fv-corner-tr" /><span class="fv-corner fv-corner-bl" /><span class="fv-corner fv-corner-br" />
+        </div>
+    </div>
+)}
+{name === 'pagers' && (
+    <div class="home-feature-visual fb-pager" aria-hidden="true">
+        <span class="fb-pager-pop"><img src={morocco[7].thumb} alt="" loading="lazy" /><img src={morocco[11].thumb} alt="" loading="lazy" /></span>
+        <div class="fb-pager-dots"><span /><span /><span /><span /><span /><i class="fb-pager-pill" /></div>
+    </div>
+)}

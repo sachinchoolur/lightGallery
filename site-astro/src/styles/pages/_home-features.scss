@@ -1,0 +1,1257 @@
+// Homepage Features: a stagger grid of cards, each with a small
+// illustration across the top that moves on hover. The illustrations come
+// in three families, told apart by prefix: `fv-visual-*` (a still scene
+// with a light hover), `fb-*` and `fc-*` (fuller animations). The fb/fc
+// families keep their own `[class^=…]` rules, so don't merge the prefixes.
+// Markup: components/home/FeatureGrid.astro and FeatureVisual.astro.
+
+$fb-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+$fc-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+body.home-v3 {
+    // ---- Grid: reads left to right, the middle column set lower ---------
+    .home-feature-grid {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: 1fr;
+        @media (min-width: 481px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(3, 1fr);
+            padding-bottom: 40px;
+            > :nth-child(3n + 2) {
+                margin-top: 40px;
+                margin-bottom: -40px;
+            }
+        }
+    }
+
+    // ---- Card -----------------------------------------------------------
+    .home-feature-card {
+        @extend .kq-card;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        overflow: hidden;
+        color: inherit;
+        text-decoration: none;
+        transition:
+            border-color 0.18s ease,
+            box-shadow 0.18s ease,
+            transform 0.18s ease;
+        h3 {
+            font-size: 18px;
+            line-height: 28px;
+            margin: 0 0 8px;
+        }
+        p {
+            @extend .para2;
+            color: $gray-500;
+            margin: 0;
+            code {
+                font-size: 0.9em;
+            }
+        }
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            margin-bottom: 18px;
+            padding: 10px;
+            border-radius: 12px;
+            background: $orange-50;
+        }
+        &:hover,
+        &:focus-visible {
+            border-color: $gray-200;
+            box-shadow: 5px 6px 40px -4px rgba(9, 18, 36, 0.08);
+            color: inherit;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+        &:focus-visible {
+            outline: 2px solid $orange-500;
+            outline-offset: 2px;
+        }
+    }
+    .home-feature-body {
+        padding: 24px;
+    }
+    .home-feature-visual {
+        position: relative;
+        height: 150px;
+        overflow: hidden;
+        background: $gray-50;
+        border-bottom: 1px solid $gray-100;
+    }
+
+    // ---- fv-visual-*: still scenes ---------------------------------------
+    // Justified layout: two real rows, widths from the aspect ratios.
+    .fv-visual-rows {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+        padding: 16px 20px;
+        .fv-visual-row {
+            display: flex;
+            gap: 6px;
+            height: 52px;
+        }
+        img {
+            flex: var(--w) 1 0;
+            min-width: 0;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+    }
+    // Virtualization: a tall stack where only the window is mounted.
+    .fv-visual-virtual {
+        .fv-virtual-stack {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 140px;
+            transform: translate(-50%, -50%);
+            transition: transform 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        img,
+        .fv-virtual-ghost {
+            display: block;
+            width: 100%;
+            height: 16px;
+            border-radius: 3px;
+        }
+        img {
+            object-fit: cover;
+        }
+        .fv-virtual-ghost {
+            border: 1px dashed $gray-300;
+            background: transparent;
+        }
+        .fv-virtual-window {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 152px;
+            height: 68px;
+            transform: translate(-50%, -50%);
+            border: 2px solid $orange-500;
+            border-radius: 6px;
+        }
+    }
+    a:hover .fv-visual-virtual .fv-virtual-stack {
+        transform: translate(-50%, calc(-50% - 20px));
+    }
+    // Localization: the same string in five languages, one of them RTL.
+    .fv-visual-strings {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 20px 24px;
+        .fv-string {
+            padding: 6px 12px;
+            border: 1px solid $gray-200;
+            border-radius: 999px;
+            background: #fff;
+            color: $gray-600;
+            font-size: 13px;
+            line-height: 18px;
+            white-space: nowrap;
+        }
+        .fv-string-rtl {
+            border-color: $orange-300;
+            background: $orange-50;
+            color: $orange-900;
+        }
+    }
+    // Responsive loading: three frames, three sizes of the same photo.
+    .fv-visual-devices {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 12px;
+        padding-bottom: 22px;
+        .fv-device {
+            position: relative;
+            display: block;
+            border: 2px solid $gray-300;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #fff;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            i {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -20px;
+                color: $gray-500;
+                font-family: $font-family-monospace;
+                font-size: 10px;
+                font-style: normal;
+                text-align: center;
+            }
+        }
+        .fv-device-phone {
+            width: 34px;
+            height: 60px;
+            border-color: $orange-500;
+            border-radius: 8px;
+        }
+        .fv-device-tablet {
+            width: 62px;
+            height: 78px;
+        }
+        .fv-device-desktop {
+            width: 130px;
+            height: 84px;
+        }
+    }
+    // Captions: the caption band over the photo.
+    .fv-visual-caption {
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .fv-caption {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 28px 16px 12px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            color: #fff;
+            strong {
+                display: block;
+                font-size: 13px;
+                font-weight: 600;
+                line-height: 18px;
+            }
+            span {
+                display: block;
+                font-size: 11px;
+                line-height: 16px;
+                opacity: 0.75;
+            }
+        }
+    }
+    // Comments: the photo with a comment panel beside it.
+    .fv-visual-comments {
+        display: flex;
+        img {
+            width: 45%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .fv-comment-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px;
+            background: #fff;
+            border-left: 1px solid $gray-100;
+        }
+        .fv-comment {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            i {
+                flex: 0 0 18px;
+                height: 18px;
+                border-radius: 50%;
+                background: $orange-100;
+            }
+            b {
+                display: block;
+                width: var(--w);
+                height: 8px;
+                border-radius: 4px;
+                background: $gray-200;
+            }
+        }
+    }
+    // Autoplay & fullscreen: a progress bar over a player, corners marked.
+    .fv-visual-autoplay {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .fv-player {
+            position: relative;
+            width: 180px;
+            height: 104px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: $gray-800;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                opacity: 0.85;
+            }
+        }
+        .fv-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(#fff, 0.25);
+            z-index: 1;
+            i {
+                display: block;
+                width: 45%;
+                height: 100%;
+                background: $orange-500;
+                transition: width 1.6s linear;
+            }
+        }
+        .fv-corner {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #fff;
+            opacity: 0.9;
+        }
+        .fv-corner-tl {
+            top: 8px;
+            left: 8px;
+            border-right: 0;
+            border-bottom: 0;
+        }
+        .fv-corner-tr {
+            top: 8px;
+            right: 8px;
+            border-left: 0;
+            border-bottom: 0;
+        }
+        .fv-corner-bl {
+            bottom: 8px;
+            left: 8px;
+            border-right: 0;
+            border-top: 0;
+        }
+        .fv-corner-br {
+            bottom: 8px;
+            right: 8px;
+            border-left: 0;
+            border-top: 0;
+        }
+    }
+    a:hover .fv-visual-autoplay .fv-progress i {
+        width: 100%;
+    }
+}
+
+// ---- fb-*: animated -------------------------------------------------------
+body.home-v3 .home-feature-card {
+    // Shared bits.
+    .fb-thumbs,
+    .fb-pinch,
+    .fb-facade,
+    .fb-scrubber,
+    .fb-flip,
+    .fb-burst,
+    .fb-history,
+    .fb-dial,
+    .fb-pager {
+        position: relative;
+        overflow: hidden;
+    }
+    %fb-photo {
+        object-fit: cover;
+        border-radius: 6px;
+    }
+    %fb-label {
+        font-family: $font-family-monospace;
+        font-size: 11px;
+        color: $gray-500;
+    }
+
+    // Thumbnails: click a thumb, the slide changes.
+    .fb-thumbs {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        padding-bottom: 14px;
+        .fb-thumbs-main {
+            position: relative;
+            width: 120px;
+            height: 72px;
+            img {
+                @extend %fb-photo;
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                transition: opacity 0.5s ease;
+                &:last-child {
+                    opacity: 0;
+                }
+            }
+        }
+        .fb-thumbs-strip {
+            position: relative;
+            display: flex;
+            gap: 4px;
+            img {
+                @extend %fb-photo;
+                width: 36px;
+                height: 28px;
+                border-radius: 3px;
+                opacity: 0.7;
+            }
+        }
+        .fb-thumbs-ring {
+            position: absolute;
+            top: -3px;
+            left: 77px;
+            width: 42px;
+            height: 34px;
+            border: 2px solid $orange-500;
+            border-radius: 5px;
+            transition: transform 0.6s $fb-ease;
+        }
+    }
+    &:hover .fb-thumbs .fb-thumbs-main img:last-child {
+        opacity: 1;
+    }
+    &:hover .fb-thumbs .fb-thumbs-ring {
+        transform: translateX(40px);
+    }
+
+    // Zoom: a pinch, two fingertips spread and the photo follows.
+    .fb-pinch {
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1s $fb-ease;
+        }
+        .fb-finger {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 26px;
+            height: 26px;
+            margin: -13px 0 0 -13px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: rgba(#fff, 0.35);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 1s $fb-ease;
+        }
+        .fb-finger-a {
+            transform: translate(-16px, 10px);
+        }
+        .fb-finger-b {
+            transform: translate(16px, -10px);
+        }
+    }
+    &:hover .fb-pinch img {
+        transform: scale(1.35);
+    }
+    &:hover .fb-pinch .fb-finger-a {
+        transform: translate(-48px, 30px);
+    }
+    &:hover .fb-pinch .fb-finger-b {
+        transform: translate(48px, -30px);
+    }
+
+    // Video: the facade becomes a player.
+    .fb-facade {
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: filter 0.5s ease;
+        }
+        .fb-facade-play {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 48px;
+            height: 48px;
+            margin: -24px 0 0 -24px;
+            border-radius: 50%;
+            background: rgba(#fff, 0.92);
+            transition:
+                transform 0.5s $fb-ease,
+                opacity 0.4s ease;
+            &::after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                margin: -7px 0 0 -4px;
+                border-style: solid;
+                border-width: 7px 0 7px 12px;
+                border-color: transparent transparent transparent $orange-700;
+            }
+        }
+        .fb-facade-bar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+            transform: translateY(100%);
+            transition: transform 0.5s $fb-ease;
+            i {
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 5px 0 5px 8px;
+                border-color: transparent transparent transparent #fff;
+            }
+            b {
+                flex: 1;
+                height: 3px;
+                border-radius: 2px;
+                background: rgba(#fff, 0.35);
+                position: relative;
+                &::after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    width: 0;
+                    border-radius: 2px;
+                    background: $orange-500;
+                    transition: width 2.4s linear;
+                }
+            }
+            em {
+                @extend %fb-label;
+                color: rgba(#fff, 0.85);
+                font-style: normal;
+            }
+        }
+    }
+    &:hover .fb-facade img {
+        filter: brightness(0.8);
+    }
+    &:hover .fb-facade .fb-facade-play {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+    &:hover .fb-facade .fb-facade-bar {
+        transform: translateY(0);
+    }
+    &:hover .fb-facade .fb-facade-bar b::after {
+        width: 60%;
+    }
+
+    // Scrubbing: drag the handle, the deck shuffles.
+    .fb-scrubber {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 16px;
+        padding-bottom: 18px;
+        .fb-scrubber-deck {
+            position: relative;
+            width: 110px;
+            height: 70px;
+            img {
+                @extend %fb-photo;
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+                transition: transform 0.7s $fb-ease, opacity 0.5s ease;
+                &:nth-child(1) {
+                    transform: translateX(-14px) scale(0.9);
+                    opacity: 0.6;
+                }
+                &:nth-child(2) {
+                    transform: translateX(0) scale(1);
+                }
+                &:nth-child(3) {
+                    transform: translateX(14px) scale(0.9);
+                    opacity: 0.6;
+                }
+            }
+        }
+        .fb-scrubber-track {
+            position: relative;
+            width: 150px;
+            height: 4px;
+            border-radius: 2px;
+            background: $gray-200;
+            i {
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 35%;
+                border-radius: 2px;
+                background: $orange-500;
+                transition: width 0.8s $fb-ease;
+            }
+            b {
+                position: absolute;
+                top: 50%;
+                left: 35%;
+                width: 16px;
+                height: 16px;
+                margin: -8px 0 0 -8px;
+                border-radius: 50%;
+                background: #fff;
+                border: 2px solid $orange-500;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+                transition: left 0.8s $fb-ease;
+            }
+        }
+    }
+    &:hover .fb-scrubber .fb-scrubber-track i {
+        width: 72%;
+    }
+    &:hover .fb-scrubber .fb-scrubber-track b {
+        left: 72%;
+    }
+    &:hover .fb-scrubber .fb-scrubber-deck img:nth-child(1) {
+        transform: translateX(-28px) scale(0.8);
+        opacity: 0;
+    }
+    &:hover .fb-scrubber .fb-scrubber-deck img:nth-child(2) {
+        transform: translateX(-14px) scale(0.9);
+        opacity: 0.6;
+    }
+    &:hover .fb-scrubber .fb-scrubber-deck img:nth-child(3) {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+
+    // Custom icons: tiles flip to a different icon set.
+    .fb-flip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        perspective: 600px;
+        .fb-flip-tile {
+            position: relative;
+            width: 48px;
+            height: 48px;
+            transform-style: preserve-3d;
+            transition: transform 0.7s $fb-ease;
+            @for $i from 1 through 4 {
+                &:nth-child(#{$i}) {
+                    transition-delay: ($i - 1) * 60ms;
+                }
+            }
+        }
+        .fb-flip-face {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            backface-visibility: hidden;
+            background: #fff;
+            box-shadow: 0 4px 14px rgba(9, 18, 36, 0.1);
+        }
+        .fb-flip-back {
+            transform: rotateY(180deg);
+            background: $orange-700;
+        }
+        .fb-flip-front .feature-icon {
+            color: $gray-700;
+        }
+        .fb-flip-back .feature-icon {
+            color: #fff;
+        }
+    }
+    .fb-flip .fb-flip-face .feature-icon {
+        width: 22px;
+        height: 22px;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        border-radius: 0;
+    }
+    &:hover .fb-flip .fb-flip-tile {
+        transform: rotateY(180deg);
+    }
+
+    // Sharing: targets burst out of the share icon.
+    .fb-burst {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .fb-burst-core {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: $orange-700;
+            box-shadow: 0 6px 18px rgba($orange-700, 0.35);
+            transition: transform 0.5s $fb-ease;
+        }
+        .fb-burst-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 26px;
+            height: 26px;
+            margin: -13px 0 0 -13px;
+            border-radius: 50%;
+            opacity: 0;
+            transform: translate(0, 0) scale(0.4);
+            transition:
+                transform 0.7s $fb-ease,
+                opacity 0.4s ease;
+        }
+        .fb-burst-1 {
+            background: $blue-600;
+        }
+        .fb-burst-2 {
+            background: $green-700;
+        }
+        .fb-burst-3 {
+            background: $gray-800;
+        }
+        .fb-burst-4 {
+            background: $yellow-300;
+        }
+    }
+    .fb-burst .fb-burst-core .feature-icon {
+        width: 24px;
+        height: 24px;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        color: #fff;
+    }
+    &:hover .fb-burst .fb-burst-core {
+        transform: scale(0.9);
+    }
+    &:hover .fb-burst .fb-burst-dot {
+        opacity: 1;
+    }
+    &:hover .fb-burst .fb-burst-1 {
+        transform: translate(-62px, -22px) scale(1);
+    }
+    &:hover .fb-burst .fb-burst-2 {
+        transform: translate(62px, -22px) scale(1);
+    }
+    &:hover .fb-burst .fb-burst-3 {
+        transform: translate(-40px, 34px) scale(1);
+    }
+    &:hover .fb-burst .fb-burst-4 {
+        transform: translate(40px, 34px) scale(1);
+    }
+
+    // Deep links: the hash changes and the slide follows.
+    .fb-history {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        .fb-history-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border: 1px solid $gray-200;
+            border-radius: 999px;
+            background: #fff;
+            font-family: $font-family-monospace;
+            font-size: 11px;
+            color: $gray-600;
+        }
+        .fb-history-nav {
+            color: $gray-400;
+            letter-spacing: 3px;
+        }
+        .fb-hash {
+            position: relative;
+            display: inline-block;
+            width: 66px;
+            height: 16px;
+            white-space: nowrap;
+            vertical-align: middle;
+            font-style: normal;
+            b {
+                position: absolute;
+                inset: 0;
+                padding: 0 5px;
+                border-radius: 4px;
+                background: $orange-50;
+                color: $orange-700;
+                font-weight: 600;
+                line-height: 16px;
+                transition: opacity 0.4s ease, transform 0.5s $fb-ease;
+                &:last-child {
+                    opacity: 0;
+                    transform: translateY(6px);
+                }
+            }
+        }
+        .fb-history-slides {
+            position: relative;
+            width: 120px;
+            height: 64px;
+            img {
+                @extend %fb-photo;
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                transition: transform 0.6s $fb-ease, opacity 0.5s ease;
+                &:last-child {
+                    opacity: 0;
+                    transform: translateX(40px);
+                }
+            }
+        }
+    }
+    &:hover .fb-history .fb-hash b:first-child {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    &:hover .fb-history .fb-hash b:last-child {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    &:hover .fb-history .fb-history-slides img:first-child {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    &:hover .fb-history .fb-history-slides img:last-child {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    // Rotate & flip: a dial turns the photo a quarter.
+    .fb-dial {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .fb-dial-ring {
+            position: absolute;
+            width: 112px;
+            height: 112px;
+            border: 1px dashed $gray-300;
+            border-radius: 50%;
+            transition: transform 1s $fb-ease;
+            i {
+                position: absolute;
+                top: -5px;
+                left: 50%;
+                width: 10px;
+                height: 10px;
+                margin-left: -5px;
+                border-radius: 50%;
+                background: $orange-500;
+            }
+        }
+        img {
+            @extend %fb-photo;
+            width: 72px;
+            height: 54px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+            transition: transform 1s $fb-ease;
+        }
+        .fb-dial-deg {
+            @extend %fb-label;
+            position: absolute;
+            right: 14px;
+            bottom: 10px;
+            width: 28px;
+            height: 14px;
+            b {
+                position: absolute;
+                inset: 0;
+                text-align: right;
+                transition: opacity 0.4s ease;
+                &:last-child {
+                    opacity: 0;
+                    color: $orange-700;
+                }
+            }
+        }
+    }
+    &:hover .fb-dial .fb-dial-ring {
+        transform: rotate(90deg);
+    }
+    &:hover .fb-dial img {
+        transform: rotate(90deg);
+    }
+    &:hover .fb-dial .fb-dial-deg b:first-child {
+        opacity: 0;
+    }
+    &:hover .fb-dial .fb-dial-deg b:last-child {
+        opacity: 1;
+    }
+
+    // Pagers: the pill moves to the next dot, the preview follows.
+    .fb-pager {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        padding-bottom: 22px;
+        .fb-pager-pop {
+            position: relative;
+            width: 64px;
+            height: 48px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+            transition: transform 0.7s $fb-ease;
+            img {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: opacity 0.5s ease;
+                &:last-child {
+                    opacity: 0;
+                }
+            }
+        }
+        .fb-pager-dots {
+            position: relative;
+            display: flex;
+            gap: 8px;
+            span {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: $gray-300;
+            }
+            .fb-pager-pill {
+                position: absolute;
+                top: 0;
+                left: 32px;
+                width: 22px;
+                height: 8px;
+                border-radius: 999px;
+                background: $orange-500;
+                transition: transform 0.7s $fb-ease;
+            }
+        }
+    }
+    &:hover .fb-pager .fb-pager-pop {
+        transform: translateX(16px);
+    }
+    &:hover .fb-pager .fb-pager-pop img:last-child {
+        opacity: 1;
+    }
+    &:hover .fb-pager .fb-pager-pill {
+        transform: translateX(16px);
+    }
+}
+
+// ---- fc-*: animated -------------------------------------------------------
+body.home-v3 .home-feature-card {
+    [class^='fc-'] {
+        position: relative;
+    }
+    %fc-photo {
+        object-fit: cover;
+        border-radius: 6px;
+    }
+    %fc-mono {
+        font-family: $font-family-monospace;
+        font-size: 11px;
+        color: $gray-500;
+    }
+    // Accessibility: the screen reader speaks the focused control.
+    .fc-speech {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        .fc-speech-btn {
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: $gray-800;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            outline: 2px solid transparent;
+            outline-offset: 3px;
+            transition: outline-color 0.3s ease;
+        }
+        .fc-speech-bubble {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 40px;
+            padding: 0 14px;
+            border-radius: 12px 12px 12px 3px;
+            background: #fff;
+            border: 1px solid $gray-200;
+            box-shadow: 0 4px 14px rgba(9, 18, 36, 0.08);
+            i {
+                width: 3px;
+                height: 8px;
+                border-radius: 2px;
+                background: $orange-300;
+                transition: height 0.3s ease;
+                animation: fc-wave 0.9s ease-in-out infinite;
+                animation-play-state: paused;
+                @for $i from 1 through 7 {
+                    &:nth-child(#{$i}) {
+                        animation-delay: $i * 0.08s;
+                    }
+                }
+            }
+            em {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -20px;
+                @extend %fc-mono;
+                font-style: normal;
+                white-space: nowrap;
+                text-align: center;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            }
+        }
+    }
+    &:hover .fc-speech .fc-speech-btn {
+        outline-color: $orange-500;
+    }
+    &:hover .fc-speech .fc-speech-bubble i {
+        animation-play-state: running;
+        background: $orange-500;
+    }
+    &:hover .fc-speech .fc-speech-bubble em {
+        opacity: 1;
+    }
+
+    // Dynamic mode: objects flip into slides.
+    .fc-objflip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        perspective: 600px;
+        .fc-objflip-tile {
+            position: relative;
+            width: 50px;
+            height: 66px;
+            transform-style: preserve-3d;
+            transition: transform 0.8s $fc-ease;
+            transition-delay: var(--d);
+        }
+        .fc-objflip-front,
+        .fc-objflip-back {
+            position: absolute;
+            inset: 0;
+            border-radius: 6px;
+            backface-visibility: hidden;
+        }
+        .fc-objflip-front {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: $gray-800;
+            color: $orange-400;
+            font-family: $font-family-monospace;
+            font-size: 13px;
+        }
+        .fc-objflip-back {
+            @extend %fc-photo;
+            width: 100%;
+            height: 100%;
+            transform: rotateY(180deg);
+        }
+    }
+    &:hover .fc-objflip .fc-objflip-tile {
+        transform: rotateY(180deg);
+    }
+
+    // Live updates: a new slide drops in, the count ticks up.
+    .fc-drop {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        .fc-drop-row {
+            display: flex;
+            gap: 6px;
+            img {
+                @extend %fc-photo;
+                width: 44px;
+                height: 44px;
+            }
+            .fc-drop-new {
+                width: 0;
+                opacity: 0;
+                transform: translateY(-24px);
+                transition: width 0.5s $fc-ease, opacity 0.4s ease 0.2s, transform 0.6s $fc-ease 0.2s;
+            }
+        }
+        .fc-drop-count {
+            @extend %fc-mono;
+            color: $gray-700;
+            .fc-drop-n {
+                position: relative;
+                display: inline-block;
+                width: 18px;
+                height: 14px;
+                overflow: hidden;
+                vertical-align: bottom;
+                i {
+                    position: absolute;
+                    inset: 0;
+                    font-style: normal;
+                    font-weight: 600;
+                    transition: transform 0.5s $fc-ease 0.3s;
+                    &:last-child {
+                        transform: translateY(100%);
+                        color: $orange-700;
+                    }
+                }
+            }
+        }
+    }
+    &:hover .fc-drop .fc-drop-new {
+        width: 44px;
+        opacity: 1;
+        transform: translateY(0);
+    }
+    &:hover .fc-drop .fc-drop-n i:first-child {
+        transform: translateY(-100%);
+    }
+    &:hover .fc-drop .fc-drop-n i:last-child {
+        transform: translateY(0);
+    }
+
+    // Transitions: four tiles, four different moves.
+    .fc-four {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        perspective: 500px;
+        .fc-four-tile {
+            position: relative;
+            width: 62px;
+            height: 62px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+            img {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: opacity 0.7s ease, transform 0.7s $fc-ease;
+            }
+            b {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                padding: 2px 0;
+                background: rgba(0, 0, 0, 0.55);
+                color: #fff;
+                font-family: $font-family-monospace;
+                font-size: 9px;
+                font-weight: 500;
+                text-align: center;
+                z-index: 1;
+            }
+        }
+        .fc-four-fade img:last-of-type {
+            opacity: 0;
+        }
+        .fc-four-slide img:last-of-type {
+            transform: translateX(100%);
+        }
+        .fc-four-zoom img:last-of-type {
+            opacity: 0;
+            transform: scale(0.4);
+        }
+        .fc-four-flip {
+            transform-style: preserve-3d;
+            transition: transform 0.8s $fc-ease;
+            img:last-of-type {
+                transform: rotateY(180deg);
+                backface-visibility: hidden;
+            }
+            img:first-of-type {
+                backface-visibility: hidden;
+            }
+        }
+    }
+    &:hover .fc-four .fc-four-fade img:last-of-type {
+        opacity: 1;
+    }
+    &:hover .fc-four .fc-four-slide img:first-of-type {
+        transform: translateX(-100%);
+    }
+    &:hover .fc-four .fc-four-slide img:last-of-type {
+        transform: translateX(0);
+    }
+    &:hover .fc-four .fc-four-zoom img:last-of-type {
+        opacity: 1;
+        transform: scale(1);
+    }
+    &:hover .fc-four .fc-four-flip {
+        transform: rotateY(180deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.home-v3 .home-feature-card [class^='fb-'] * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+@keyframes fc-wave {
+    0%,
+    100% {
+        height: 8px;
+    }
+    50% {
+        height: 22px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.home-v3 .home-feature-card [class^='fc-'] * {
+        transition: none !important;
+        animation: none !important;
+    }
+}

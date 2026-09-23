@@ -1,0 +1,58 @@
+---
+/**
+ * The homepage Features grid: twenty cards, each linking to the page
+ * that demos the feature, with an illustration across the top
+ * (FeatureVisual). `isNew` marks what arrived in v3; the section header
+ * in home.mdx carries the matching legend.
+ */
+import FeatureIcon from './FeatureIcon.astro';
+import FeatureVisual from './FeatureVisual.astro';
+
+const FEATURES = [
+    { icon: 'thumbnails', href: '/demos/thumbnails/', title: 'Thumbnails', desc: 'Animated or static strips, fetched automatically for YouTube and Vimeo, draggable on every device.', isNew: false },
+    { icon: 'zoom', href: '/demos/zoom-from-origin/', title: 'Zoom', desc: "Pinch and double-tap to zoom. Slides open from the thumbnail's position and close back to it.", isNew: false },
+    { icon: 'video', href: '/demos/video-gallery/', title: 'Video', desc: 'YouTube, Vimeo, Wistia and HTML5 video, with autoplay-on-slide and posters. Facades load the player only when someone presses play.', isNew: true },
+    { icon: 'justified', href: '/docs/justified-layout/', title: 'Justified layout', desc: 'Row-justified trigger grids from one plugin, no layout library in front of the lightbox.', isNew: true },
+    { icon: 'virtualization', href: '/docs/virtualization/', title: 'Virtualization', desc: 'Thousand-slide galleries keep a few dozen nodes in the DOM; slides and thumbnails mount as they come into view.', isNew: true },
+    { icon: 'scrubbing', href: '/docs/thumbnail-scrubbing/', title: 'Thumbnail scrubbing', desc: 'Drag the thumbnail strip and the gallery follows instantly, all the way through the release glide.', isNew: true },
+    { icon: 'icons', href: '/docs/custom-icons/', title: 'Custom icons', desc: 'Every control icon is an inline SVG you can replace by name, bring your own set without touching CSS.', isNew: true },
+    { icon: 'localization', href: '/docs/localization-rtl/', title: 'Localization & RTL', desc: 'Every string is a setting, and the gallery mirrors for right-to-left pages, navigation, swipe direction and chrome.', isNew: true },
+] as const;
+
+const MORE = [
+    { icon: 'accessibility', href: '/docs/accessibility/', title: 'Accessibility', desc: 'Keyboard navigation, focus management and screen-reader announcements out of the box.' },
+    { icon: 'responsive', href: '/docs/responsive-loading/', title: 'Responsive loading', desc: 'Size ladders and <code>srcset</code> for the lightbox image, so phones never download the desktop original.' },
+    { icon: 'sharing', href: '/docs/web-share/', title: 'Sharing', desc: "The device's native share sheet where it exists, social links where it doesn't." },
+    { icon: 'links', href: '/docs/hash-drivers/', title: 'Deep links', desc: 'A URL for every slide, with browser back and forward, on hash or history drivers.' },
+    { icon: 'dynamic', href: '/demos/dynamic-mode/', title: 'Dynamic mode', desc: 'Open a gallery from an array of items, no trigger markup required.' },
+    { icon: 'updates', href: '/demos/update-slides/', title: 'Live updates', desc: 'Add, edit and remove slides while the gallery is open.' },
+    { icon: 'transitions', href: '/demos/transitions/', title: 'Transitions', desc: 'Twenty-plus slide transitions, hardware accelerated, plus your own easing.' },
+    { icon: 'captions', href: '/demos/captions/', title: 'Captions', desc: 'HTML captions per slide, from markup or data, with animated and relative-position variants.' },
+    { icon: 'comments', href: '/demos/comment-box/', title: 'Comments', desc: 'A per-slide comment panel with Facebook and Disqus adapters, or your own widget.' },
+    { icon: 'rotate', href: '/docs/settings/#rotate-plugin', title: 'Rotate & flip', desc: 'Rotate and flip any image, with hooks to persist the result.' },
+    { icon: 'autoplay', href: '/docs/settings/#autoplay-plugin', title: 'Autoplay & fullscreen', desc: 'Slideshow with a progress bar that pauses on interaction, and native fullscreen from the toolbar.' },
+    { icon: 'pagers', href: '/docs/settings/#pager-plugin', title: 'Pagers', desc: 'Minimal dot navigation instead of a strip, with thumbnails on hover.' },
+] as const;
+
+const ALL = [...FEATURES, ...MORE] as const;
+---
+
+<div class="home-feature-grid">
+    {ALL.map((f) => (
+        <a class="home-feature-card" href={f.href}>
+            <FeatureVisual name={f.icon} />
+            <div class="home-feature-body">
+                <FeatureIcon name={f.icon} />
+                <h3>
+                    {f.title}
+                    {'isNew' in f && f.isNew && (
+                        <i class="home-new-dot">
+                            <span class="visually-hidden">New in v3</span>
+                        </i>
+                    )}
+                </h3>
+                <p set:html={f.desc} />
+            </div>
+        </a>
+    ))}
+</div>

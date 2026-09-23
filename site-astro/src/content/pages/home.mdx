@@ -15,6 +15,7 @@ import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
 import { photos } from '../../lib/photos';
 import FeatureIcon from '../../components/home/FeatureIcon.astro';
+import FeatureGrid from '../../components/home/FeatureGrid.astro';
 import PluginSizes from '../../components/home/PluginSizes.astro';
 import TrustedBy from '../../components/shortcodes/TrustedBy.astro';
 
@@ -150,77 +151,7 @@ npm install @lightgallery/angular
             <span class="home-feature-legend"><i class="home-new-dot" aria-hidden="true"></i>New in v3</span>
         </div>
     </div>
-    <div class="home-feature-grid">
-        <a class="home-feature-card home-feature-card-lg" href="/demos/thumbnails/">
-            <div class="home-feature-visual home-feature-visual-thumbs" aria-hidden="true">
-                <div class="home-feature-strip">
-                    {photos('street').slice(0, 9).map((p) => (
-                        <img src={p.thumb} alt="" loading="lazy" width="64" height="48" />
-                    ))}
-                </div>
-            </div>
-            <div class="home-feature-body">
-                <FeatureIcon name="thumbnails" />
-                <h3>Thumbnails</h3>
-                <p>Animated or static strips, fetched automatically for YouTube and Vimeo, draggable on every device.</p>
-            </div>
-        </a>
-        <a class="home-feature-card home-feature-card-lg" href="/demos/zoom-from-origin/">
-            <div class="home-feature-visual home-feature-visual-zoom" aria-hidden="true">
-                <img src={photos('street')[3].thumb} alt="" loading="lazy" width="320" height="200" />
-                <span class="home-feature-lens"></span>
-            </div>
-            <div class="home-feature-body">
-                <FeatureIcon name="zoom" />
-                <h3>Zoom</h3>
-                <p>Pinch and double-tap to zoom. Slides open from the thumbnail's position and close back to it.</p>
-            </div>
-        </a>
-        <a class="home-feature-card" href="/demos/video-gallery/">
-            <FeatureIcon name="video" />
-            <h3>Video <i class="home-new-dot"><span class="visually-hidden">Facades new</span></i></h3>
-            <p>YouTube, Vimeo, Wistia and HTML5 video, with autoplay-on-slide and posters. Facades load the player only when someone presses play.</p>
-        </a>
-        <a class="home-feature-card" href="/docs/justified-layout/">
-            <FeatureIcon name="justified" />
-            <h3>Justified layout <i class="home-new-dot"><span class="visually-hidden">New in v3</span></i></h3>
-            <p>Row-justified trigger grids from one plugin, no layout library in front of the lightbox.</p>
-        </a>
-        <a class="home-feature-card" href="/docs/virtualization/">
-            <FeatureIcon name="virtualization" />
-            <h3>Virtualization <i class="home-new-dot"><span class="visually-hidden">New in v3</span></i></h3>
-            <p>Thousand-slide galleries keep a few dozen nodes in the DOM; slides and thumbnails mount as they come into view.</p>
-        </a>
-        <a class="home-feature-card" href="/docs/thumbnail-scrubbing/">
-            <FeatureIcon name="scrubbing" />
-            <h3>Thumbnail scrubbing <i class="home-new-dot"><span class="visually-hidden">New in v3</span></i></h3>
-            <p>Drag the thumbnail strip and the gallery follows instantly, all the way through the release glide.</p>
-        </a>
-        <a class="home-feature-card" href="/docs/custom-icons/">
-            <FeatureIcon name="icons" />
-            <h3>Custom icons <i class="home-new-dot"><span class="visually-hidden">New in v3</span></i></h3>
-            <p>Every control icon is an inline SVG you can replace by name, bring your own set without touching CSS.</p>
-        </a>
-        <a class="home-feature-card" href="/docs/localization-rtl/">
-            <FeatureIcon name="localization" />
-            <h3>Localization &amp; RTL <i class="home-new-dot"><span class="visually-hidden">New in v3</span></i></h3>
-            <p>Every string is a setting, and the gallery mirrors for right-to-left pages, navigation, swipe direction and chrome.</p>
-        </a>
-    </div>
-    <ul class="home-more-grid">
-        <li><a href="/docs/accessibility/"><FeatureIcon name="accessibility" /><strong>Accessibility</strong><span>Keyboard navigation, focus management and screen-reader announcements out of the box.</span></a></li>
-        <li><a href="/docs/responsive-loading/"><FeatureIcon name="responsive" /><strong>Responsive loading</strong><span>Size ladders and <code>srcset</code> for the lightbox image, so phones never download the desktop original.</span></a></li>
-        <li><a href="/docs/web-share/"><FeatureIcon name="sharing" /><strong>Sharing</strong><span>The device's native share sheet where it exists, social links where it doesn't.</span></a></li>
-        <li><a href="/docs/hash-drivers/"><FeatureIcon name="links" /><strong>Deep links</strong><span>A URL for every slide, with browser back and forward, on hash or history drivers.</span></a></li>
-        <li><a href="/demos/dynamic-mode/"><FeatureIcon name="dynamic" /><strong>Dynamic mode</strong><span>Open a gallery from an array of items, no trigger markup required.</span></a></li>
-        <li><a href="/demos/update-slides/"><FeatureIcon name="updates" /><strong>Live updates</strong><span>Add, edit and remove slides while the gallery is open.</span></a></li>
-        <li><a href="/demos/transitions/"><FeatureIcon name="transitions" /><strong>Transitions</strong><span>Twenty-plus slide transitions, hardware accelerated, plus your own easing.</span></a></li>
-        <li><a href="/demos/captions/"><FeatureIcon name="captions" /><strong>Captions</strong><span>HTML captions per slide, from markup or data, with animated and relative-position variants.</span></a></li>
-        <li><a href="/demos/comment-box/"><FeatureIcon name="comments" /><strong>Comments</strong><span>A per-slide comment panel with Facebook and Disqus adapters, or your own widget.</span></a></li>
-        <li><a href="/docs/settings/#rotate-plugin"><FeatureIcon name="rotate" /><strong>Rotate &amp; flip</strong><span>Rotate and flip any image, with hooks to persist the result.</span></a></li>
-        <li><a href="/docs/settings/#autoplay-plugin"><FeatureIcon name="autoplay" /><strong>Autoplay &amp; fullscreen</strong><span>Slideshow with a progress bar that pauses on interaction, and native fullscreen from the toolbar.</span></a></li>
-        <li><a href="/docs/settings/#pager-plugin"><FeatureIcon name="pagers" /><strong>Pagers</strong><span>Minimal dot navigation instead of a strip, with thumbnails on hover.</span></a></li>
-    </ul>
+    <FeatureGrid />
 </div>
 <div class="home-dark-band">
     <div class="container-xl home-physics vertical-bg-inner" id="physics">
