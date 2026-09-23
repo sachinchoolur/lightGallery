@@ -1,0 +1,62 @@
+---
+/**
+ * License page plans: the title, the three commercial plans as columns of
+ * one card, the Extended license as the card's footer row, and a note for
+ * v1 and v2 license holders. One-time payments only. Prices and checkout
+ * links match the Kelviq plan identifiers; `data-kq-price` marks each
+ * amount.
+ */
+import PlanCard, { type Plan } from './PlanCard.astro';
+
+const TITLE = 'Pricing and commercial license';
+const LEAD =
+    'lightGallery is a free and open-source library, however, if you are using the library for business, commercial sites, projects, and applications, choose the commercial license to keep your source proprietary, to yourself.';
+const ONCE = 'https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/';
+const buy = (key: string) => `${ONCE}?enabled=${key}&plan_identifier=${key}&charge_period=ONE_TIME`;
+
+const PLANS: Plan[] = [
+    { key: 'hobby', name: 'Hobby', desc: 'For personal use.', price: 48, terms: ['For <b>one</b> developer', 'For <b>one</b> product', "Can't be used in a product for sale", 'GitHub support only'] },
+    { key: 'team', name: 'Team', desc: 'For small teams.', price: 118, terms: ['For upto <b>8</b> developers', 'For upto <b>5</b> products', 'Can be used in a product for sale', 'GitHub and email support'], featured: true },
+    { key: 'organization', name: 'Organization', desc: 'For large teams and organizations', price: 188, terms: ['For <b>unlimited</b> developers', 'For <b>unlimited</b> products', 'Can be used in a product for sale', 'GitHub, Email and Skype support'] },
+];
+const EXT_TITLE = 'Extended Commercial license';
+const EXT_DESC =
+    'If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Extended Commercial license.';
+const EMAIL = 'contact@lightgalleryjs.com';
+const EXTENDED: Plan = { key: 'extended', name: 'Extended', desc: EXT_DESC, price: 99, terms: ['For <b>unlimited</b> developers', 'For <b>one</b> product'] };
+---
+
+<div class="license-section" id="plans">
+    <div class="license-inner">
+        <div class="plans-head">
+            <h1 class="plans-title">{TITLE}</h1>
+            <p class="plans-lead">{LEAD}</p>
+        </div>
+
+        <div class="plans-onecard">
+            <div class="plans-onecard-cols">{PLANS.map((p) => <PlanCard plan={p} />)}</div>
+            <div class="plans-onecard-ext">
+                <div>
+                    <h3 class="plans-h3">{EXT_TITLE}</h3>
+                    <p>{EXT_DESC}</p>
+                </div>
+                <div class="plans-onecard-buy">
+                    <div class="plans-price">
+                        <span class="plans-amount" data-kq-price="extended" data-kq-period="ONE_TIME">${EXTENDED.price}</span><span class="plans-per"> / lifetime</span>
+                    </div>
+                    <ul class="plans-terms">{EXTENDED.terms.map((t) => <li set:html={t} />)}</ul>
+                    <a class="license-btn license-btn-primary" href={buy('extended')} target="_blank">Purchase Now</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="plans-upgrade">
+            <h2 class="plans-upgrade-title">Upgrading from v1 or v2</h2>
+            <p>
+                If you have a v1 or v2 license, you need to purchase a new license for version 3. It's a full rewrite from
+                scratch. If you purchased a license in the last 6 months, email us at <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+                to get a license.
+            </p>
+        </div>
+    </div>
+</div>

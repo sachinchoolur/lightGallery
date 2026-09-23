@@ -1,0 +1,29 @@
+---
+/**
+ * License page student note: free licenses for enrolled students, asked
+ * for by DM on X.
+ */
+const TITLE = 'Student discount';
+const HTML =
+    'If you are a student currently enrolled in a College or University, DM me on <a href="https://twitter.com/SachinNeravath">Twitter</a> to get a free license.';
+const DM = 'https://twitter.com/SachinNeravath';
+const CAP = '<path d="M2 9l10-5 10 5-10 5z" /><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5" /><path d="M22 9v6" />';
+// The X (formerly Twitter) mark.
+const X_PATH =
+    'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z';
+---
+
+<div class="license-section student-section" id="students">
+    <div class="license-inner">
+        <div class="student-row">
+            <span class="student-icon" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={CAP} /></span>
+            <div>
+                <h3 class="student-h3">{TITLE}</h3>
+                <p class="student-body" set:html={HTML} />
+            </div>
+            <a class="license-btn" href={DM} target="_blank" rel="noopener" aria-label="DM on X">
+                DM on <svg viewBox="0 0 24 24" aria-hidden="true"><path d={X_PATH} /></svg>
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,117 +1,434 @@
-////// Pricing
+// License page (pages/license): the plans, the key points and the student
+// note, each a full-width section. Components in components/license/.
 
-.pricing-list-item {
-    width: 100%;
-    padding: 15px;
-    margin: 20px;
-    color: $brand-dark;
-    border-radius: 5px;
-    @media (min-width: 768px) {
-        width: 290px;
-    }
-    &.pricing-list-item-colored {
-        border: 2px solid;
-        color: white;
-        border-radius: 8px;
-        width: 340px;
-        padding: 50px 30px;
-        background-image: linear-gradient(
-            to right top,
-            $brand-dark,
-            #0066b5,
-            #0095c8,
-            #00c2ba,
-            #00ea95
-        );
-        .pricing-original {
-            color: #f0f0f0;
+body.license {
+    overflow-x: clip;
+
+    // ---- Section shell ----------------------------------------------------
+    // The page body is a centered eight-column article; each section
+    // breaks out to the full viewport and lays out its own 1080px rail.
+    .license-section {
+        position: relative;
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        padding: 96px 0;
+        border-top: 1px solid $gray-100;
+        background: #fff;
+        text-align: left;
+        color: $gray-800;
+        @media (max-width: 767px) {
+            padding: 64px 0;
         }
     }
-}
-.pricing-original {
-    text-decoration: line-through;
-    font-size: 20px;
-    font-weight: normal;
-    color: #6f83ac;
-    margin-left: 5px;
-}
-
-.pricing-list {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.pricing-type {
-    font-size: 12px;
-    margin-bottom: 5px;
-}
-
-.pricing-cost {
-    font-size: 2rem;
-    font-weight: 600;
-}
-
-.pricing-cost-label {
-    font-weight: normal;
-    font-size: 1rem;
-}
-
-ul.pricing-terms {
-    list-style-type: none;
-    padding-left: 0;
-    margin-top: 30px;
-}
-
-ul.pricing-terms li {
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-.pricing-tabs {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-    gap: 0;
-}
-
-.pricing-tab {
-    background: none;
-    border: none;
-    padding: 10px 24px;
-    font-size: 1rem;
-    color: $brand-shade;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s ease;
-    &:hover {
-        color: $brand-dark;
+    .license-inner {
+        position: relative;
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: 0 24px;
     }
-    &.active {
-        color: $brand-dark;
-        border-bottom: 2px solid $brand-dark;
+
+    // ---- Type ------------------------------------------------------------
+    .plans-title {
+        margin: 0 0 20px;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 56px;
+        letter-spacing: -0.96px;
+        color: $gray-800;
+        @media (max-width: 767px) {
+            font-size: 34px;
+            line-height: 42px;
+            letter-spacing: -0.5px;
+        }
     }
-}
+    .plans-lead {
+        @extend .para1;
+        max-width: 640px;
+        margin: 0 0 32px;
+        color: $gray-600;
+    }
+    .plans-h3 {
+        margin: 0 0 12px;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 32px;
+        letter-spacing: -0.4px;
+        color: $gray-800;
+    }
+    .plans-head {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 48px;
+        text-align: center;
+        .plans-lead {
+            margin: 0 auto;
+        }
+    }
 
-.pricing-desc {
-    color: $brand-shade;
-    margin: 5px 0;
-    font-size: 14px;
-}
-.pricing-btn-wrap {
-    margin: 20px 0;
-}
-.license .hero-section {
-    padding-bottom: 3rem;
-}
-.pricing-section {
-    color: $brand-dark;
-    margin-top: 5rem;
-}
+    // ---- Plan pieces -----------------------------------------------------
+    .plans-card-name {
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: $gray-500;
+    }
+    .plans-card-desc {
+        @extend .para3;
+        margin: 0 0 20px;
+        color: $gray-500;
+    }
+    .plans-price {
+        margin-bottom: 20px;
+        .plans-amount {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 48px;
+            letter-spacing: -0.8px;
+            color: $gray-800;
+        }
+        .plans-per {
+            font-size: 14px;
+            color: $gray-500;
+        }
+    }
+    .plans-terms {
+        list-style: none;
+        margin: 0 0 24px;
+        padding: 0;
+        li {
+            position: relative;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            font-size: 14px;
+            line-height: 22px;
+            letter-spacing: -0.16px;
+            color: $gray-600;
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 8px;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: $orange-500;
+            }
+            b {
+                font-weight: 600;
+                color: $gray-800;
+            }
+        }
+    }
+    .license-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 44px;
+        padding: 0 20px;
+        border-radius: 12px;
+        border: 1px solid $gray-200;
+        background: #fff;
+        color: $gray-800;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.16px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease,
+            color 0.15s ease;
+        &:hover {
+            background: $gray-10;
+            border-color: $gray-300;
+            color: $gray-800;
+            text-decoration: none;
+        }
+        &.license-btn-primary {
+            background: $orange-700;
+            border-color: $orange-700;
+            color: #fff;
+            &:hover {
+                background: $orange-800;
+                border-color: $orange-800;
+                color: #fff;
+            }
+        }
+    }
+    .plans-card {
+        display: flex;
+        flex-direction: column;
+        padding: 28px;
+        border-radius: 20px;
+        border: 1px solid $gray-100;
+        background: #fff;
+        .license-btn {
+            margin-top: auto;
+        }
+        &.plans-card-featured {
+            border-color: $orange-200;
+            box-shadow: 0 0 0 3px $orange-50;
+        }
+    }
+    // ---- One card, the plans as columns on rails ---------------------------
+    .plans-onecard {
+        border: 1px solid $gray-100;
+        border-radius: 24px;
+        background: #fff;
+        overflow: hidden;
+        .plans-onecard-cols {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            .plans-card {
+                padding: 32px;
+                border: 0;
+                border-radius: 0;
+                border-left: 1px solid $gray-100;
+                &:first-child {
+                    border-left: 0;
+                }
+                &.plans-card-featured {
+                    box-shadow: none;
+                    background: $gray-10;
+                }
+            }
+            @include media-breakpoint-down(md) {
+                grid-template-columns: 1fr;
+                .plans-card {
+                    border-left: 0;
+                    border-top: 1px solid $gray-100;
+                    &:first-child {
+                        border-top: 0;
+                    }
+                }
+            }
+        }
+        .plans-onecard-ext {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 40px;
+            padding: 32px;
+            border-top: 1px solid $gray-100;
+            background: $gray-10;
+            p {
+                @extend .para3;
+                max-width: 560px;
+                margin: 0;
+                color: $gray-500;
+            }
+            .plans-onecard-buy {
+                text-align: right;
+                .plans-price {
+                    margin-bottom: 8px;
+                }
+                .plans-terms {
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 16px;
+                    margin: 0 0 16px;
+                    li {
+                        margin: 0;
+                    }
+                }
+            }
+            @include media-breakpoint-down(md) {
+                grid-template-columns: 1fr;
+                .plans-onecard-buy {
+                    text-align: left;
+                    .plans-terms {
+                        justify-content: flex-start;
+                    }
+                }
+            }
+        }
+    }
 
-.pricing-points-item {
-    text-align: left;
-    h4 {
-        font-size: 1.3rem;
-        margin: 3rem 0 0.5rem;
+    // ---- Upgrading from v1 or v2: an orange rule under the plans card ----
+    .plans-upgrade {
+        max-width: 760px;
+        margin-top: 40px;
+        padding: 2px 0 2px 20px;
+        border-left: 3px solid $orange-700;
+        .plans-upgrade-title {
+            margin: 0 0 6px;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 26px;
+            letter-spacing: -0.2px;
+            color: $gray-800;
+        }
+        p {
+            @extend .para3;
+            margin: 0;
+            color: $gray-500;
+            a {
+                color: $orange-700;
+                font-weight: 500;
+            }
+        }
+    }
+
+    // ==== Key points =========================================================
+    .points-h2 {
+        margin: 0 0 16px;
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 48px;
+        letter-spacing: -0.8px;
+        color: $gray-800;
+        @media (max-width: 767px) {
+            font-size: 32px;
+            line-height: 40px;
+            letter-spacing: -0.5px;
+        }
+    }
+    .points-intro {
+        @extend .para1;
+        max-width: 620px;
+        margin: 0;
+        color: $gray-600;
+        a {
+            color: $orange-700;
+            font-weight: 500;
+        }
+    }
+    .points-h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 26px;
+        letter-spacing: -0.2px;
+        color: $gray-800;
+    }
+    .points-body {
+        p {
+            @extend .para3;
+            margin: 0 0 10px;
+            color: $gray-500;
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+        a {
+            color: $orange-700;
+            font-weight: 500;
+        }
+    }
+
+    // ---- Heading left, the points numbered on the right --------------------
+    .points-split {
+        display: grid;
+        grid-template-columns: 4fr 8fr;
+        gap: 56px;
+        .points-split-head {
+            position: sticky;
+            top: 108px;
+            align-self: start;
+        }
+        .points-list-item {
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 16px;
+            padding: 24px 0;
+            border-top: 1px solid $gray-100;
+            &:first-child {
+                padding-top: 0;
+                border-top: 0;
+            }
+            .points-num {
+                font-family: $font-family-monospace;
+                font-size: 13px;
+                line-height: 26px;
+                color: $orange-700;
+            }
+        }
+        @include media-breakpoint-down(lg) {
+            grid-template-columns: 1fr;
+            gap: 40px;
+            .points-split-head {
+                position: static;
+            }
+        }
+    }
+
+    // ==== Student note ======================================================
+    .student-section {
+        padding: 80px 0;
+    }
+    .student-h3 {
+        margin: 0 0 10px;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 28px;
+        letter-spacing: -0.3px;
+        color: $gray-800;
+    }
+    .student-body {
+        @extend .para2;
+        margin: 0;
+        color: $gray-500;
+        a {
+            color: $orange-700;
+            font-weight: 500;
+        }
+    }
+    .student-icon {
+        display: inline-flex;
+        flex: 0 0 auto;
+        width: 44px;
+        height: 44px;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 12px;
+        background: $orange-50;
+        color: $orange-700;
+        svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    }
+
+    // ---- Icon, text and button in a row, on a gray bar --------------------
+    .student-row {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 28px 32px;
+        border: 1px solid $gray-100;
+        border-radius: 20px;
+        background: $gray-10;
+        .student-icon {
+            margin: 0;
+        }
+        .student-h3 {
+            margin-bottom: 4px;
+        }
+        .license-btn {
+            gap: 8px;
+            margin-left: auto;
+            svg {
+                width: 15px;
+                height: 15px;
+                fill: currentColor;
+            }
+        }
+        @include media-breakpoint-down(md) {
+            flex-direction: column;
+            align-items: flex-start;
+            .license-btn {
+                margin-left: 0;
+            }
+        }
     }
 }

@@ -1,0 +1,35 @@
+---
+/**
+ * One commercial plan as a column of the plans card: a one-time payment.
+ * `data-kq-price` marks the amount for a price script keyed by plan
+ * identifier.
+ */
+export interface Plan {
+    key: string;
+    name: string;
+    desc: string;
+    price: number;
+    terms: string[];
+    featured?: boolean;
+}
+interface Props {
+    plan: Plan;
+}
+const ONCE = 'https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/';
+const { plan } = Astro.props;
+const button = plan.featured ? 'primary' : 'outline';
+const buy = `${ONCE}?enabled=${plan.key}&plan_identifier=${plan.key}&charge_period=ONE_TIME`;
+---
+
+<div class:list={['plans-card', `plans-card-${plan.key}`, { 'plans-card-featured': plan.featured }]}>
+    <div class="plans-card-name">{plan.name}</div>
+    <p class="plans-card-desc">{plan.desc}</p>
+    <div class="plans-price">
+        <span class="plans-amount" data-kq-price={plan.key} data-kq-period="ONE_TIME">${plan.price}</span><span class="plans-per"> / lifetime</span>
+    </div>
+    <ul class="plans-terms">
+        {plan.terms.map((t) => <li set:html={t} />)}
+        <li>Lifetime free updates</li>
+    </ul>
+    <a class:list={['license-btn', `license-btn-${button}`]} href={buy} target="_blank">Purchase Now</a>
+</div>
