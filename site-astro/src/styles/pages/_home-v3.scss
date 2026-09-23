@@ -701,6 +701,54 @@ body.home-v3 {
             }
         }
     }
+    // The keyboard box on the dark surface; the text under it stays light.
+    .home-everyone-keys.is-dark {
+        border-color: $dark-surface;
+        border-radius: 24px;
+        @include kq-dots-dark;
+        box-shadow: none;
+        .home-everyone-board {
+            border-color: rgba(#fff, 0.1);
+            background: rgba(#fff, 0.04);
+            kbd {
+                border-color: rgba(#fff, 0.14);
+                background: rgba(#fff, 0.06);
+                color: rgba(#fff, 0.45);
+                &.is-live {
+                    border-color: rgba($orange-500, 0.6);
+                    color: #fff;
+                }
+            }
+        }
+        .home-everyone-legend {
+            dt kbd {
+                border-color: rgba(#fff, 0.2);
+                background: rgba(#fff, 0.08);
+                color: #fff;
+            }
+            dd {
+                color: rgba(#fff, 0.65);
+            }
+        }
+        .home-everyone-hint {
+            color: rgba(#fff, 0.35);
+        }
+        @each $key in esc, tab, lr, ud {
+            &:has([data-key='#{$key}']:hover) {
+                .home-everyone-legend [data-key='#{$key}'] {
+                    background: rgba($orange-500, 0.16);
+                    dd {
+                        color: #fff;
+                    }
+                }
+                .home-everyone-board [data-key='#{$key}'] {
+                    border-color: $orange-800;
+                    background: $orange-700;
+                    color: #fff;
+                }
+            }
+        }
+    }
     // Two-column prose blocks
     .home-mobile,
     .home-cdn {
