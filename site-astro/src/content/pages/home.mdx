@@ -18,6 +18,8 @@ import FeatureIcon from '../../components/home/FeatureIcon.astro';
 import FeatureGrid from '../../components/home/FeatureGrid.astro';
 import PluginSizes from '../../components/home/PluginSizes.astro';
 import TrustedBy from '../../components/shortcodes/TrustedBy.astro';
+import CustomerQueue from '../../components/home/CustomerQueue.astro';
+import { LOGOS } from '../../data/customer-logos';
 
 {/* Customization demos, in the order their galleries open: the listing's
     whole set (five in the mosaic, the rest behind "+N photos"), the
@@ -449,17 +451,17 @@ lightGallery(el, { plugins: [lgZoom, lgThumbnail] });
     </div>
 </div>
 <div class="container-xl home-cta" id="start">
-    <div class="home-cta-split">
-        <div class="home-cta-side">
-            <span class="label1 home-kicker">Get started</span>
-            <h2>Start with your <span class="serif-accent">stack</span></h2>
-            <p class="home-cta-secondary">or <a href="/demos/">browse the demos</a> first.</p>
-        </div>
-        <div class="home-cta-actions">
-            <a href="/docs/getting-started/" class="home-cta-tile is-current" data-framework="vanilla"><span class="home-cta-logo home-cta-logo-vanilla" aria-hidden="true"></span><strong>JavaScript</strong><span class="home-cta-tile-cta">Get started →</span></a>
-            <a href="/docs/react/" class="home-cta-tile" data-framework="react"><span class="home-cta-logo home-cta-logo-react" aria-hidden="true"></span><strong>React</strong><span class="home-cta-tile-cta">Get started →</span></a>
-            <a href="/docs/vue/" class="home-cta-tile" data-framework="vue"><span class="home-cta-logo home-cta-logo-vue" aria-hidden="true"></span><strong>Vue</strong><span class="home-cta-tile-cta">Get started →</span></a>
-            <a href="/docs/angular/" class="home-cta-tile" data-framework="angular"><span class="home-cta-logo home-cta-logo-angular" aria-hidden="true"></span><strong>Angular</strong><span class="home-cta-tile-cta">Get started →</span></a>
-        </div>
+    <div class="home-cta-head">
+        <span class="label1 home-kicker">Get started</span>
+        <h2>Start with your <span class="serif-accent">stack</span></h2>
+        <p class="home-cta-lede">{LOGOS.length} of the world's top brands are already in. You're next.</p>
     </div>
+    <CustomerQueue />
+    <div class="home-cta-actions">
+        <a href="/docs/getting-started/" class="home-cta-tile is-current" data-framework="vanilla"><span class="home-cta-logo home-cta-logo-vanilla" aria-hidden="true"></span><strong>JavaScript</strong><span class="home-cta-tile-cta">Get started →</span></a>
+        <a href="/docs/react/" class="home-cta-tile" data-framework="react"><span class="home-cta-logo home-cta-logo-react" aria-hidden="true"></span><strong>React</strong><span class="home-cta-tile-cta">Get started →</span></a>
+        <a href="/docs/vue/" class="home-cta-tile" data-framework="vue"><span class="home-cta-logo home-cta-logo-vue" aria-hidden="true"></span><strong>Vue</strong><span class="home-cta-tile-cta">Get started →</span></a>
+        <a href="/docs/angular/" class="home-cta-tile" data-framework="angular"><span class="home-cta-logo home-cta-logo-angular" aria-hidden="true"></span><strong>Angular</strong><span class="home-cta-tile-cta">Get started →</span></a>
+    </div>
+    <p class="home-cta-secondary">or <a href="/demos/">browse the demos</a> first.</p>
 </div>

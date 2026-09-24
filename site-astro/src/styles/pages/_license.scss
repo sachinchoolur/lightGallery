@@ -1,5 +1,5 @@
-// License page (pages/license): the plans, the key points and the student
-// note, each a full-width section. Components in components/license/.
+// License page (pages/license): the plans, the key points, the student
+// note and the customers, each a full-width section. Components in components/license/.
 
 body.license {
     overflow-x: clip;
@@ -429,6 +429,118 @@ body.license {
             .license-btn {
                 margin-left: 0;
             }
+        }
+    }
+
+    // ---- Customers ----------------------------------------------------------
+    // One card per logo; hover lifts the logo and brings up the name.
+    .customers-heading {
+        @extend .label1;
+        margin: 0 0 24px;
+        text-align: center;
+    }
+    .customers-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        @media (max-width: 480px) {
+            gap: 8px;
+        }
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+        }
+    }
+    .customers-card {
+        @extend .kq-card;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 104px;
+        border-radius: 16px;
+        color: $gray-400;
+        transition:
+            border-color 0.2s ease,
+            transform 0.2s ease;
+        @media (max-width: 480px) {
+            height: 96px;
+            border-radius: 14px;
+        }
+        .customer-logo {
+            width: 110px;
+            height: 48px;
+            max-width: 100%;
+            &.customer-logo-wide {
+                width: 124px;
+                height: 36px;
+            }
+            // Phones: leave room for the zoom on the padded files.
+            @media (max-width: 480px) {
+                width: 76px;
+                height: 40px;
+                &.customer-logo-wide {
+                    width: 92px;
+                    height: 30px;
+                }
+            }
+        }
+        &:hover {
+            border-color: $gray-200;
+            color: $gray-800;
+            transform: translateY(-2px);
+            .customers-logo {
+                transform: translateY(-10px);
+            }
+            .customers-name {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    }
+    .customers-logo {
+        display: flex;
+        transition: transform 0.3s ease;
+    }
+    .customers-name {
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        bottom: 14px;
+        overflow: hidden;
+        color: $gray-600;
+        font-size: 12px;
+        font-weight: 500;
+        text-align: center;
+        @media (max-width: 480px) {
+            bottom: 12px;
+            font-size: 11px;
+        }
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        opacity: 0;
+        transform: translateY(6px);
+        transition:
+            opacity 0.3s ease,
+            transform 0.3s ease;
+    }
+    // Touch screens have no hover: every name shows.
+    @media (hover: none) {
+        .customers-logo {
+            transform: translateY(-10px);
+        }
+        .customers-name {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .customers-card,
+        .customers-logo,
+        .customers-name {
+            transition: none;
         }
     }
 }

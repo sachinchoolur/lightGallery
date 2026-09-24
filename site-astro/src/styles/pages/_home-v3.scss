@@ -2142,20 +2142,122 @@ body.home-v3 {
             margin: 0 0 16px;
         }
     }
-    .home-cta-split {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 40px;
+    .home-cta-head {
+        max-width: 640px;
+        margin: 0 auto 32px;
+        text-align: center;
+    }
+    .home-cta-lede {
+        max-width: 440px;
+        margin: 0 auto;
+        color: $gray-600;
+        font-size: 18px;
+        line-height: 28px;
+    }
+    // The queue: customers move up a line (right to left) that ends at the
+    // visitor's empty slot.
+    .home-cta-queue {
+        display: flex;
         align-items: center;
-        @include media-breakpoint-up(lg) {
-            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-            gap: 64px;
+        gap: 12px;
+        margin-bottom: 32px;
+        @media (max-width: 767px) {
+            gap: 8px;
         }
     }
+    .home-cta-queue-line {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        color: $gray-400;
+        mask-image: linear-gradient(to right, transparent, #000 18%);
+        &:hover .home-cta-queue-track {
+            animation-play-state: paused;
+        }
+    }
+    .home-cta-queue-track {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: max-content;
+        animation: home-cta-queue 70s linear infinite;
+    }
+    @keyframes home-cta-queue {
+        to {
+            transform: translateX(-50%);
+        }
+    }
+    .home-cta-pill {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 56px;
+        padding: 0 18px;
+        border: 1px solid $gray-100;
+        border-radius: 999px;
+        background: #fff;
+        .customer-logo {
+            width: 92px;
+            height: 34px;
+            &.customer-logo-wide {
+                width: 104px;
+                height: 26px;
+            }
+        }
+        @media (max-width: 767px) {
+            height: 48px;
+            padding: 0 12px;
+            .customer-logo,
+            .customer-logo.customer-logo-wide {
+                width: 72px;
+                height: 26px;
+            }
+        }
+    }
+    .home-cta-you {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        height: 56px;
+        padding: 0 22px;
+        border: 1.5px dashed $orange-500;
+        border-radius: 999px;
+        background: rgba($orange-500, 0.05);
+        color: $gray-800;
+        font-weight: 600;
+        @media (max-width: 767px) {
+            height: 48px;
+            padding: 0 16px;
+        }
+    }
+    .home-cta-caret {
+        display: inline-block;
+        width: 2px;
+        height: 1.1em;
+        margin-left: 3px;
+        vertical-align: -0.15em;
+        background: $orange-700;
+        animation: home-cta-blink 1s steps(1) infinite;
+    }
+    @keyframes home-cta-blink {
+        50% {
+            opacity: 0;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .home-cta-queue-track,
+        .home-cta-caret {
+            animation: none;
+        }
+    }
+    // Four stacks in a row from md, 2 x 2 below.
     .home-cta-actions {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
+        @include media-breakpoint-up(md) {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
     }
     .home-cta-tile {
         @extend .kq-card;
@@ -2214,6 +2316,7 @@ body.home-v3 {
     }
     .home-cta-secondary {
         margin: 20px 0 0;
+        text-align: center;
         @extend .para3;
         color: $gray-500;
         a {

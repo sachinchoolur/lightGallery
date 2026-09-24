@@ -1,0 +1,30 @@
+---
+/**
+ * One customer logo: a currentColor mask, or the file itself for logos
+ * flagged `img`. `decorative` drops the name for duplicated marquee copies.
+ */
+import type { CustomerLogo } from '../data/customer-logos';
+
+interface Props {
+    logo: CustomerLogo;
+    class?: string;
+    decorative?: boolean;
+}
+
+const { logo, class: extra, decorative = false } = Astro.props;
+const src = `/images/customer-logos/${logo.file}`;
+const classes = ['customer-logo', extra, { 'customer-logo-wide': logo.wide }];
+---
+
+{
+    logo.img ? (
+        <img class:list={[...classes, 'customer-logo-img']} style={`--zoom:${logo.zoom}`} src={src} alt={decorative ? '' : logo.name} loading="lazy" />
+    ) : (
+        <span
+            class:list={classes}
+            style={`--logo:url(${src});--zoom:${logo.zoom}`}
+            role={decorative ? undefined : 'img'}
+            aria-label={decorative ? undefined : logo.name}
+        />
+    )
+}
