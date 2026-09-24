@@ -1,0 +1,20 @@
+// TEMPORARY: the "Variation N of M" pill on the homepage design-exploration
+// sets. Delete with the last of them.
+
+body.home-v3 {
+    .fv-label {
+        position: absolute;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 4px 12px;
+        border-radius: 999px;
+        background: $gray-800;
+        color: #fff;
+        font-family: $font-family-monospace;
+        font-size: 12px;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+        z-index: 1;
+    }
+}
