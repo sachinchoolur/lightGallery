@@ -366,7 +366,8 @@ body.home-v3 .home-feature-card {
     .fb-burst,
     .fb-history,
     .fb-dial,
-    .fb-pager {
+    .fb-pager,
+    .fb-mixed {
         position: relative;
         overflow: hidden;
     }
@@ -971,6 +972,108 @@ body.home-v3 .home-feature-card {
     }
     &:hover .fb-pager .fb-pager-pill {
         transform: translateX(16px);
+    }
+
+    // Mixed content: a map, a PDF and a video slide fan out.
+    .fb-mixed {
+        .fb-mixed-stack {
+            position: absolute;
+            inset: 0;
+        }
+        .fb-mixed-slide {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 84px;
+            height: 100px;
+            margin: -50px 0 0 -42px;
+            overflow: hidden;
+            border: 1px solid $gray-100;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 6px 18px rgba(9, 18, 36, 0.1);
+            transition: transform 0.6s $fb-ease;
+        }
+        .fb-mixed-line {
+            display: block;
+            width: var(--w);
+            height: 6px;
+            border-radius: 3px;
+            background: $gray-200;
+        }
+        .fb-mixed-map {
+            transform: rotate(-6deg) translateX(-8px);
+            background:
+                linear-gradient(115deg, transparent 46%, rgba($orange-300, 0.55) 46% 54%, transparent 54%),
+                repeating-linear-gradient(0deg, $gray-100 0 1px, transparent 1px 16px),
+                repeating-linear-gradient(90deg, $gray-100 0 1px, transparent 1px 16px),
+                $gray-10;
+            // The pin.
+            i {
+                position: absolute;
+                left: 46%;
+                top: 34%;
+                width: 12px;
+                height: 12px;
+                border-radius: 50% 50% 50% 0;
+                background: $orange-500;
+                transform: rotate(-45deg);
+            }
+        }
+        .fb-mixed-pdf {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 12px 10px;
+            transform: rotate(4deg) translateX(6px);
+            b {
+                align-self: flex-start;
+                margin-bottom: 4px;
+                padding: 1px 5px;
+                border-radius: 3px;
+                background: $orange-50;
+                color: $orange-700;
+                font-size: 9px;
+                font-weight: 700;
+            }
+        }
+        .fb-mixed-photo {
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            // A play button: the slide is a video.
+            em {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: 26px;
+                height: 26px;
+                margin: -13px 0 0 -13px;
+                border-radius: 50%;
+                background: rgba(#fff, 0.92);
+                &::after {
+                    content: '';
+                    position: absolute;
+                    left: 10px;
+                    top: 8px;
+                    border: 5px solid transparent;
+                    border-left: 8px solid $gray-800;
+                }
+            }
+        }
+    }
+    &:hover .fb-mixed {
+        .fb-mixed-map {
+            transform: rotate(-10deg) translateX(-78px) translateY(4px);
+        }
+        .fb-mixed-pdf {
+            transform: rotate(10deg) translateX(78px) translateY(4px);
+        }
+        .fb-mixed-photo {
+            transform: translateY(-4px) scale(1.04);
+        }
     }
 }
 

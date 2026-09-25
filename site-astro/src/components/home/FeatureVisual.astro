@@ -179,3 +179,12 @@ const altIconsB = ['icons', 'links', 'updates', 'captions'] as const;
         <div class="fb-pager-dots"><span /><span /><span /><span /><span /><i class="fb-pager-pill" /></div>
     </div>
 )}
+{name === 'mixed' && (
+    <div class="home-feature-visual fb-mixed" aria-hidden="true">
+        <div class="fb-mixed-stack">
+            <span class="fb-mixed-slide fb-mixed-map"><i /></span>
+            <span class="fb-mixed-slide fb-mixed-pdf"><b>PDF</b><span class="fb-mixed-line" style="--w:70%" /><span class="fb-mixed-line" style="--w:85%" /><span class="fb-mixed-line" style="--w:60%" /></span>
+            <span class="fb-mixed-slide fb-mixed-photo"><img src={street[11].thumb} alt="" loading="lazy" /><em /></span>
+        </div>
+    </div>
+)}
