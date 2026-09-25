@@ -171,15 +171,15 @@ slides: LgGalleryItem[] = [
     <!-- HTML5 Video --->
     <a
         data-lg-size="1280-720"
-        data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "tracks": [{"src": "{/videos/title.txt", "kind":"captions", "srclang": "en", "label": "English", "default": "true"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}'
-        data-poster="/images/demo/youtube-video-poster.jpg"
+        data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "tracks": [{"src": "/videos/title.txt", "kind":"captions", "srclang": "en", "label": "English", "default": "true"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}'
+        data-poster="/images/demo/html5-video-poster.jpg"
         data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
     >
         <img
             width="300"
             height="100"
             class="img-responsive"
-            src="/images/demo/youtube-video-poster.jpg"
+            src="/images/demo/html5-video-poster.jpg"
         />
     </a>
 </div>
@@ -234,7 +234,8 @@ import Video from '@lightgallery/vue/plugins/video';
 <Fragment slot="angular">
 
 ```html
-<lg-gallery [features]="[withVideo()]">
+<!-- In the component class: features = [withVideo()]; -->
+<lg-gallery [features]="features">
     @for (item of items; track item.src) {
         <a [lgGalleryItem]="item">
             <img [src]="item.poster" [alt]="item.alt" />
@@ -267,14 +268,14 @@ Note - Make sure that you pass proper JSON object in data-video attribute
     <a
         data-lg-size="1280-720"
         data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "controls": true}}'
-        data-poster="/images/demo/youtube-video-poster.jpg"
+        data-poster="/images/demo/html5-video-poster.jpg"
         data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
     >
         <img
             width="300"
             height="100"
             class="img-responsive"
-            src="/images/demo/youtube-video-poster.jpg"
+            src="/images/demo/html5-video-poster.jpg"
         />
     </a>
     <!-- more items -->
@@ -299,19 +300,19 @@ custom players to your own slide markup.
 
 #### Video Autoplay
 
-Autoplay might be blocked in some environments, such as IOS, Chrome 66+, and Safari 11+ due to their predefined auto-play policy.
+Browsers block autoplay with sound, and whether a video may start on its
+own depends on [several conditions](https://developer.chrome.com/blog/autoplay/).
+To stay within the policy, lightGallery mutes the video when it autoplays the
+first slide. To unmute, pass `?mute=0` (YouTube) or `?muted=false` (Vimeo) in
+the video URL; lightGallery forwards query parameters to the player.
 
-It is  dependent on [many scenarios](https://developer.chrome.com/blog/autoplay/).
-By default, lightGallery mute the video and enable autoplay for the first slide if it contains videos.
-Since version 2.3.0, lightGallery allows you to pass query parameters via YouTube or Vimeo videos.
-If you want, you can unmute the video by passing `?mute=0` or `?muted=false` respectively via video URL params
-
-Also, [on IOS](https://stackoverflow.com/questions/43570460/html5-video-autoplay-on-iphone), you might need to set `"playsinline": true,` for HTML5 videos
+On iOS, HTML5 videos may also need `"playsinline": true` to play inside the
+page rather than full screen.
 
 ##### HTML structure
 
 ```html
-<div id="gallery-videojs-demo">
+<div id="gallery-autoplay-demo">
     <!-- YouTube Video --->
     <a
         data-lg-size="1280-720"
@@ -345,14 +346,14 @@ Also, [on IOS](https://stackoverflow.com/questions/43570460/html5-video-autoplay
     <a
         data-lg-size="1280-720"
         data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}'
-        data-poster="/images/demo/youtube-video-poster.jpg"
+        data-poster="/images/demo/html5-video-poster.jpg"
         data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
     >
         <img
             width="300"
             height="100"
             class="img-responsive"
-            src="/images/demo/youtube-video-poster.jpg"
+            src="/images/demo/html5-video-poster.jpg"
         />
     </a>
     <!-- more items -->

@@ -121,15 +121,10 @@ import Video from '@lightgallery/vue/plugins/video';
 <Fragment slot="angular">
 
 ```html
+<!-- In the component class: features = [withVideo({ videoFacade: true, youTubeNoCookie: true, autoplayFirstVideo: false })]; -->
 <lg-gallery
     [slides]="slides"
-    [features]="[
-        withVideo({
-            videoFacade: true,
-            youTubeNoCookie: true,
-            autoplayFirstVideo: false,
-        }),
-    ]"
+    [features]="features"
 />
 ```
 
@@ -178,7 +173,8 @@ lightGallery(document.getElementById('gallery-eager-videos'), {
 <Fragment slot="angular">
 
 ```html
-<lg-gallery [slides]="slides" [features]="[withVideo({ videoFacade: false })]" />
+<!-- In the component class: features = [withVideo({ videoFacade: false })]; -->
+<lg-gallery [slides]="slides" [features]="features" />
 ```
 
 </Fragment>

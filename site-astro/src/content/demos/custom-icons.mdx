@@ -131,7 +131,8 @@ import PlayIcon from './icons/PlayIcon.vue';
 <Fragment slot="angular">
 
 ```html
-<lg-gallery [features]="[withZoom(), withAutoplay()]">
+<!-- In the component class: features = [withZoom(), withAutoplay()]; -->
+<lg-gallery [features]="features">
     @for (item of items; track item.src) {
         <a [lgGalleryItem]="item">
             <img [src]="item.thumb" [alt]="item.alt" />

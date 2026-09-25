@@ -1,6 +1,6 @@
 ---
-title: 'Update Slides'
-description: 'LightGallery add, edit or delete slides while gallery is open.'
+title: 'Update slides'
+description: 'Update slides demo: add and remove slides while the gallery is open with updateSlides().'
 lead:
     'lightGallery supports, adding, editing, deleting slides even if the gallery
     is opened. You just need to modify the current gallery items and pass it via
@@ -21,10 +21,10 @@ import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
 Let's see how we can add and delete slides dynamically.
 
-In this demo, we'll be using some of lightGallery's built-in DOM utilities,
-such as `append`, `find` and `on`.
+The demo adds two buttons to the gallery toolbar and calls `updateSlides()`
+from them.
 
-First, we need to add delete and add buttons into the gallery toolbar.
+First, add the delete and add buttons to the toolbar.
 
 <CodeTabs>
 <Fragment slot="vanilla">
@@ -46,24 +46,21 @@ First, we need to add delete and add buttons into the gallery toolbar.
 **JavaScript**
 
 ```js
-const $lgDemoUpdateSlides = document.getElementById(
-    'gallery-update-slides-demo',
-);
+const gallery = document.getElementById('gallery-update-slides-demo');
 
-// make use on lightGallery init event to add custom buttons into the toolbar
-$lgDemoUpdateSlides.addEventListener('lgInit', (event) => {
-    let updateSlideInstance = event.detail.instance;
-    const addBtn =
-        '<button type="button" aria-label="Add slide" class="lg-icon" id="lg-add"><svg>...</svg></button>';
-    const deleteBtn =
-        '<button type="button" aria-label="Remove slide" class="lg-icon" id="lg-delete"> <svg>...</svg></button>';
-
-    updateSlideInstance.outer.find('.lg-toolbar').append(deleteBtn);
-    updateSlideInstance.outer.find('.lg-toolbar').append(addBtn);
+// lgInit fires once the gallery markup exists: add the buttons there.
+gallery.addEventListener('lgInit', (event) => {
+    const toolbar = event.detail.instance.outer.get().querySelector('.lg-toolbar');
+    toolbar.insertAdjacentHTML(
+        'beforeend',
+        '<button type="button" aria-label="Remove slide" class="lg-icon" id="lg-delete"><svg>...</svg></button>' +
+            '<button type="button" aria-label="Add slide" class="lg-icon" id="lg-add"><svg>...</svg></button>',
+    );
+    toolbar.querySelector('#lg-delete').addEventListener('click', removeFirstSlide);
+    toolbar.querySelector('#lg-add').addEventListener('click', addSlide);
 });
 
-// Initialize lightGallery
-updateSlideInstance = lightGallery($lgDemoUpdateSlides, {
+const lg = lightGallery(gallery, {
     addClass: 'lg-update-slide-demo',
 });
 ```
@@ -112,52 +109,38 @@ remove(index: number) {
 </Fragment>
 </CodeTabs>
 
-Delete the first slide on clicking on the delete button
+Delete the first slide when the delete button is clicked.
 
-Note :
+Note:
 
--   Do not mutate existing lightGallery items directly.
--   Always pass new list of gallery items
--   You need to take care of thumbnails outside the gallery if any You can use
-    refresh() method to update lightGallery after updating thumbnails -
-    [Docs](../../docs/methods/#refresh) -
-    [Demo](../../demos/infinite-scrolling/)
+-   Do not mutate the existing gallery items directly; always pass a new
+    list.
+-   Thumbnails outside the gallery are yours to update. Call
+    [`refresh()`](../../docs/methods/#refresh) after changing them, as in the
+    [infinite scrolling demo](../../demos/infinite-scrolling/).
 
 ```js
-updateSlideInstance.outer.find('#lg-delete').on('click', () => {
-    let galleryItems = JSON.parse(
-        JSON.stringify(updateSlideInstance.galleryItems),
-    );
+function removeFirstSlide() {
+    const galleryItems = lg.galleryItems.slice(1);
 
-    // Delete first item
-    galleryItems.shift();
-
-    // Pass the modified gallery items via updateSlides method
-    // the second parameter is the index of the slide
-    // to determine which slide lightGallery should navigate to after deleting current items
-    updateSlideInstance.updateSlides(galleryItems, 1);
-
-    let slidesUpdated = false;
-});
+    // The second argument is the slide to show after the update:
+    // stay on the one being viewed.
+    lg.updateSlides(galleryItems, Math.max(lg.index - 1, 0));
+}
 ```
 
-Add a new slide on clicking on the add button
+Add a new slide when the add button is clicked.
 
 ```js
-updateSlideInstance.outer.find('#lg-add').on('click', () => {
-    let galleryItems = [
-        ...updateSlideInstance.galleryItems,
-        ...[
-            {
-                src: 'img/img.1jpg',
-                thumb: 'img/thumb.1jpg',
-            },
-        ],
+function addSlide() {
+    const galleryItems = [
+        ...lg.galleryItems,
+        { src: 'img/img3.jpg', thumb: 'img/thumb3.jpg' },
     ];
 
-    // instead of first slide, this time lets persist the current index
-    updateSlideInstance.updateSlides(galleryItems, updateSlideInstance.index);
-});
+    // Keep the current slide.
+    lg.updateSlides(galleryItems, lg.index);
+}
 ```
 
 ##### SCSS (Optional)

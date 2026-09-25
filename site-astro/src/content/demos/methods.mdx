@@ -1,6 +1,6 @@
 ---
 title: 'Methods'
-description: 'LightGallery methods.'
+description: 'Gallery methods demo: drive lightGallery from your own buttons with methods such as goToNextSlide, goToPrevSlide and openGallery.'
 lead:
     'You can use lightGallery plugin instance public methods to trigger specific
     lightGallery actions. lightGallery provides several useful methods which can
@@ -49,7 +49,8 @@ buttons using lightGallery methods.
 ```js
 const $lgGalleryMethodsDemo = document.getElementById('gallery-methods-demo');
 let methodsInstance;
-$lgGalleryMethodsDemo.addEventListener('lgAfterOpen', () => {
+// lgInit fires once, when the gallery markup is created.
+$lgGalleryMethodsDemo.addEventListener('lgInit', () => {
     const previousBtn =
         '<button type="button" aria-label="Previous slide" class="lg-prev"> Prev Slide </button>';
     const nextBtn =

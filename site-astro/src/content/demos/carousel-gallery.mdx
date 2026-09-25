@@ -128,13 +128,14 @@ const container = ref(null);
 
 ```html
 <div class="inline-gallery-container" #host></div>
+<!-- In the component class: features = [withThumbnail(), withZoom()]; -->
 <lg-gallery
     [container]="host"
     [open]="true"
     [closable]="false"
     [showMaximizeIcon]="true"
     [slides]="slides"
-    [features]="[withThumbnail(), withZoom()]"
+    [features]="features"
 />
 ```
 

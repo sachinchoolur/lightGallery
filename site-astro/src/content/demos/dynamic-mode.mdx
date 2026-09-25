@@ -1,6 +1,6 @@
 ---
-title: 'Dynamic Mode'
-description: 'Create dynamic JavaScript galleries with lightGallery.'
+title: 'Dynamic mode'
+description: 'Dynamic mode demo: open a gallery from a JavaScript array of items, with no trigger markup on the page.'
 lead:
     'LightGallery can be instantiated and launched programmatically by setting
     dynamic option to true and populating dynamicEl option by passing array of
@@ -41,25 +41,26 @@ Gallery</button>
 
 ```js
 const $dynamicGallery = document.getElementById('dynamic-gallery-demo');
+const dynamicEl = [
+    {
+        src: 'img/1.jpg',
+        thumb: 'img/thumb-1.jpg',
+        subHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',
+    },
+    {
+        src: 'img/2.jpg',
+        thumb: 'img/thumb-2.jpg',
+        subHtml: '<h4>Image 2 title</h4><p>Image 2 descriptions.</p>',
+    },
+    {
+        src: 'img/3.jpg',
+        thumb: 'img/thumb-3.jpg',
+        subHtml: '<h4>Image 3 title</h4><p>Image 3 descriptions.</p>',
+    },
+];
 const dynamicGallery = lightGallery($dynamicGallery, {
     dynamic: true,
-    dynamicEl: [
-        {
-            src: 'img/1.jpg',
-            thumb: 'img/thumb-1.jpg',
-            subHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',
-        },
-        {
-            src: 'img/2.jpg',
-            thumb: 'img/thumb-2.jpg',
-            subHtml: '<h4>Image 2 title</h4><p>Image 2 descriptions.</p>',
-        },
-        {
-            src: 'img/3.jpg',
-            thumb: 'img/thumb-3.jpg',
-            subHtml: '<h4>Image 3 title</h4><p>Image 3 descriptions.</p>',
-        },
-    ],
+    dynamicEl,
 });
 $dynamicGallery.addEventListener('click', function () {
     // Starts with third item.(Optional).
@@ -218,13 +219,13 @@ loadMore() {
 
 ### Load more slides with images
 
-You can use the dynamic mode to display a few thumbnails and show all the images by clicking on a button.
+You can use dynamic mode to show a grid of thumbnails and open the full set from a button.
 
 <div class="dynamic-mode-images">
     <GalleryDemoSm id="gallery-dynamic-thumbnails" />
     <button type="button" class="btn btn-dynamic"
         id="dynamic-mode-images" >
-        See 15 photos
+        See all 14 photos
     </button>
 </div>
 

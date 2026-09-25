@@ -1,6 +1,6 @@
 ---
-title: Mixed contents
-description: lightGallery mixed contents demo.
+title: 'Mixed contents'
+description: 'Mixed content gallery demo: images, YouTube, Vimeo and HTML5 video and iframes together in one lightbox.'
 lead: Create beautiful galleries with images, HTML5 videos, external videos such as YouTube, Vimeo videos and iframes. You can mix all types of supported contents in a same gallery. lightGallery will automatically find the content type from source and create appropriate slides
 date: 2020-10-06T08:48:57.000Z
 draft: false
@@ -46,7 +46,7 @@ import MinimalGallery from '../../components/shortcodes/MinimalGallery.astro';
         />
     </a>
 
-    <!-- VImeo Video --->
+    <!-- Vimeo Video --->
     <a
         data-lg-size="1280-720"
         data-src="//vimeo.com/112836958"
@@ -96,7 +96,9 @@ import MinimalGallery from '../../components/shortcodes/MinimalGallery.astro';
 **JavaScript**
 
 ```js
-lightGallery(document.getElementById('gallery-mixed-content-demo'));
+lightGallery(document.getElementById('gallery-mixed-content-demo'), {
+    plugins: [lgVideo],
+});
 ```
 
 </Fragment>
@@ -125,7 +127,8 @@ const slides = [
 <Fragment slot="angular">
 
 ```html
-<lg-gallery [slides]="slides" [features]="[withThumbnail(), withVideo()]" />
+<!-- In the component class: features = [withThumbnail(), withVideo()]; -->
+<lg-gallery [slides]="slides" [features]="features" />
 ```
 
 </Fragment>

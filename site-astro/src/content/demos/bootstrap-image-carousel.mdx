@@ -58,13 +58,19 @@ import { photos } from '../../lib/photos';
 <div id="bootstrap-gallery-carousel" class="carousel slide">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="..." class="d-block w-100" alt="..." />
+            <a class="lg-item" data-src="img/img1.jpg">
+                <img src="img/img1-800.jpg" class="d-block w-100" alt="..." />
+            </a>
         </div>
         <div class="carousel-item">
-            <img src="..." class="d-block w-100" alt="..." />
+            <a class="lg-item" data-src="img/img2.jpg">
+                <img src="img/img2-800.jpg" class="d-block w-100" alt="..." />
+            </a>
         </div>
         <div class="carousel-item">
-            <img src="..." class="d-block w-100" alt="..." />
+            <a class="lg-item" data-src="img/img3.jpg">
+                <img src="img/img3-800.jpg" class="d-block w-100" alt="..." />
+            </a>
         </div>
     </div>
     <button
@@ -91,22 +97,18 @@ import { photos } from '../../lib/photos';
 ##### JavaScript
 
 ```js
-// Get the carousel element by its ID
-let carouselEl = document.getElementById('bootstrap-gallery-carousel');
+const carouselEl = document.getElementById('bootstrap-gallery-carousel');
 
-// Create a new Bootstrap 5 Carousel instance with specified options
-const carousel = new bootstrap.Carousel(carouselEl, {
+// The Bootstrap 5 carousel
+new bootstrap.Carousel(carouselEl, {
     interval: 2000,
     wrap: false,
 });
 
-// Add an event listener for the 'slide.bs.carousel' event, fires immediately when the slide instance method is invoked.
-carouselEl.addEventListener('slide.bs.carousel', (event) => {
-    const container = document.querySelector('.carousel-inner');
-    window.lightGallery(container, {
-        plugins: [lgThumbnail],
-        selector: '.lg-item',
-    });
+// One gallery over the carousel items, created once
+lightGallery(carouselEl.querySelector('.carousel-inner'), {
+    plugins: [lgThumbnail],
+    selector: '.lg-item',
 });
 ```
 

@@ -219,7 +219,7 @@ lightGalleryJustified('animated-thumbnails-wp', {
     ],
     ...getResponsiveThumbnailsSettings(),
     preload: 3,
-    videoMaxWidth: '1400px',
+    videoMaxSize: '1400-788',
     mobileSettings: {
         controls: false,
         showCloseIcon: false,
@@ -322,7 +322,7 @@ if (heroGalleryEl) {
             ],
             ...getResponsiveThumbnailsSettings(),
             preload: 3,
-            videoMaxWidth: '1400px',
+            videoMaxSize: '1400-788',
             mobileSettings: {
                 controls: false,
                 showCloseIcon: false,
@@ -511,10 +511,12 @@ initCustomEasing('cubic-bezier(0.680, -0.550, 0.265, 1.550)');
 document
     .getElementById('select-easing')
     ?.addEventListener('change', (event) => {
-        const val = event.target.value;
-        prompt('You can copy cubic-bezier from here', val);
+        const easing = 'cubic-bezier(' + event.target.value + ')';
+        // Show the curve for copying, next to the menu.
+        const value = document.getElementById('select-easing-value');
+        if (value) value.textContent = easing;
         customEasingGallery.destroy();
-        initCustomEasing('cubic-bezier(' + val + ')');
+        initCustomEasing(easing);
     });
 
 let methodsInstance;
@@ -568,11 +570,11 @@ if (lgDemoUpdateSlides) {
         const addBtn =
             '<button type="button" aria-label="Add slide" class="lg-icon" id="lg-add"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M23 12c0-3.037-1.232-5.789-3.222-7.778s-4.741-3.222-7.778-3.222-5.789 1.232-7.778 3.222-3.222 4.741-3.222 7.778 1.232 5.789 3.222 7.778 4.741 3.222 7.778 3.222 5.789-1.232 7.778-3.222 3.222-4.741 3.222-7.778zM21 12c0 2.486-1.006 4.734-2.636 6.364s-3.878 2.636-6.364 2.636-4.734-1.006-6.364-2.636-2.636-3.878-2.636-6.364 1.006-4.734 2.636-6.364 3.878-2.636 6.364-2.636 4.734 1.006 6.364 2.636 2.636 3.878 2.636 6.364zM8 13h3v3c0 0.552 0.448 1 1 1s1-0.448 1-1v-3h3c0.552 0 1-0.448 1-1s-0.448-1-1-1h-3v-3c0-0.552-0.448-1-1-1s-1 0.448-1 1v3h-3c-0.552 0-1 0.448-1 1s0.448 1 1 1z"></path></svg></button>';
         const deleteBtn =
-            '<button class="lg-icon" type="button" aria-label="Remove slide" class="lg-icon" id="lg-delete"> <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M23 12c0-3.037-1.232-5.789-3.222-7.778s-4.741-3.222-7.778-3.222-5.789 1.232-7.778 3.222-3.222 4.741-3.222 7.778 1.232 5.789 3.222 7.778 4.741 3.222 7.778 3.222 5.789-1.232 7.778-3.222 3.222-4.741 3.222-7.778zM21 12c0 2.486-1.006 4.734-2.636 6.364s-3.878 2.636-6.364 2.636-4.734-1.006-6.364-2.636-2.636-3.878-2.636-6.364 1.006-4.734 2.636-6.364 3.878-2.636 6.364-2.636 4.734 1.006 6.364 2.636 2.636 3.878 2.636 6.364zM8 13h8c0.552 0 1-0.448 1-1s-0.448-1-1-1h-8c-0.552 0-1 0.448-1 1s0.448 1 1 1z"></path></svg></button>';
+            '<button type="button" aria-label="Remove slide" class="lg-icon" id="lg-delete"> <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M23 12c0-3.037-1.232-5.789-3.222-7.778s-4.741-3.222-7.778-3.222-5.789 1.232-7.778 3.222-3.222 4.741-3.222 7.778 1.232 5.789 3.222 7.778 4.741 3.222 7.778 3.222 5.789-1.232 7.778-3.222 3.222-4.741 3.222-7.778zM21 12c0 2.486-1.006 4.734-2.636 6.364s-3.878 2.636-6.364 2.636-4.734-1.006-6.364-2.636-2.636-3.878-2.636-6.364 1.006-4.734 2.636-6.364 3.878-2.636 6.364-2.636 4.734 1.006 6.364 2.636 2.636 3.878 2.636 6.364zM8 13h8c0.552 0 1-0.448 1-1s-0.448-1-1-1h-8c-0.552 0-1 0.448-1 1s0.448 1 1 1z"></path></svg></button>';
 
-        updateSlideInstance.outer.find('.lg-toolbar').append(deleteBtn);
-        updateSlideInstance.outer.find('.lg-toolbar').append(addBtn);
-        updateSlideInstance.outer.find('#lg-add').on('click', () => {
+        const toolbar = updateSlideInstance.outer.get().querySelector('.lg-toolbar');
+        toolbar.insertAdjacentHTML('beforeend', deleteBtn + addBtn);
+        toolbar.querySelector('#lg-add').addEventListener('click', () => {
             const added = photos('alley')[
                 updateSlideInstance.galleryItems.length % photos('alley').length
             ];
@@ -596,7 +598,7 @@ if (lgDemoUpdateSlides) {
             );
             slidesUpdated = true;
         });
-        updateSlideInstance.outer.find('#lg-delete').on('click', () => {
+        toolbar.querySelector('#lg-delete').addEventListener('click', () => {
             let galleryItems = JSON.parse(
                 JSON.stringify(updateSlideInstance.galleryItems),
             );
@@ -1121,46 +1123,6 @@ lightGallery(document.querySelector('.blog-wrapper'), {
     backgroundColor: '#FFF',
     plugins: [lgMediumZoom],
 });
-
-// var Airtable = require('airtable');
-
-// function subscribe() {
-//     const email = $('#subscribe-email').val();
-
-//     var base = new Airtable({ apiKey: 'keyaUjHRn2iCSdyIu' }).base(
-//         'appeau7igth6rETjo',
-//     );
-
-//     $subscribeBtn.attr('disabled', 'disabled');
-
-//     base('Subscribers').create(
-//         [
-//             {
-//                 fields: {
-//                     Email: email,
-//                 },
-//             },
-//         ],
-//         function (err) {
-//             $subscribeBtn.removeAttr('disabled');
-//             $('#subscribe-email').val('');
-//             if (err) {
-//                 console.error(err);
-//                 $('#subscribe').addClass('subscribed-error');
-//                 return;
-//             }
-//             $('#subscribe').addClass('subscribed');
-//         },
-//     );
-// }
-
-// const $subscribeBtn = $('#subscribe-btn');
-// $('#subscribe-btn').on('click', subscribe);
-// $('#subscribe-email').on('keypress', function (e) {
-//     if (e.which == 13) {
-//         subscribe();
-//     }
-// });
 
 let $lgSwiper = document.getElementById('lg-swipper');
 if ($lgSwiper) {

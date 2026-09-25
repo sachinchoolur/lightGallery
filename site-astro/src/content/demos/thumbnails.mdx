@@ -95,7 +95,8 @@ import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 <Fragment slot="angular">
 
 ```html
-<lg-gallery [features]="[withThumbnail({ animateThumb: true })]">
+<!-- In the component class: features = [withThumbnail({ animateThumb: true })]; -->
+<lg-gallery [features]="features">
     @for (item of items; track item.src) {
         <a [lgGalleryItem]="item">
             <img [src]="item.thumb" [alt]="item.alt" />
@@ -168,7 +169,8 @@ import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 <Fragment slot="angular">
 
 ```html
-<lg-gallery [features]="[withThumbnail({ scrubThumbnails: true })]">
+<!-- In the component class: features = [withThumbnail({ scrubThumbnails: true })]; -->
+<lg-gallery [features]="features">
     @for (item of items; track item.src) {
         <a [lgGalleryItem]="item">
             <img [src]="item.thumb" [alt]="item.alt" />
@@ -207,6 +209,7 @@ import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 
 ```js
 lightGallery(document.getElementById('static-thumbnails'), {
+    plugins: [lgThumbnail],
     animateThumb: false,
     zoomFromOrigin: false,
     allowMediaOverlap: true,
@@ -242,8 +245,9 @@ lightGallery(document.getElementById('static-thumbnails'), {
 <Fragment slot="angular">
 
 ```html
+<!-- In the component class: features = [withThumbnail({ animateThumb: false, toggleThumb: true })]; -->
 <lg-gallery
-    [features]="[withThumbnail({ animateThumb: false, toggleThumb: true })]"
+    [features]="features"
     [zoomFromOrigin]="false"
     [allowMediaOverlap]="true"
 />
@@ -281,13 +285,14 @@ hand side of the slide.
 
 ```js
 lightGallery(document.getElementById('customize-thumbnails-gallery'), {
+    plugins: [lgThumbnail],
     // Add a custom class to apply style only for the particular gallery
     addClass: 'lg-custom-thumbnails',
 
-    // Remove the starting animations.
-    // This can be done by overriding CSS as well
     appendThumbnailsTo: '.lg-outer',
 
+    // Remove the starting animations.
+    // This can be done by overriding CSS as well
     animateThumb: false,
     allowMediaOverlap: true,
 });
@@ -323,9 +328,10 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
 <Fragment slot="angular">
 
 ```html
+<!-- In the component class: features = [withThumbnail({ animateThumb: false })]; -->
 <lg-gallery
     className="lg-custom-thumbnails"
-    [features]="[withThumbnail({ animateThumb: false })]"
+    [features]="features"
     [allowMediaOverlap]="true"
 />
 ```
@@ -370,13 +376,10 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
             // Also, add a tiny opacity transition to look better
             transform: translate3d(30%, 0, 0);
             opacity: 0;
-            will-change: transform opacity;
-            transition: transform 0.15s cubic-bezier(0, 0, 0.25, 1) 0s, cubic-bezier(
-                        0,
-                        0,
-                        0.25,
-                        1
-                    ) 0.15s;
+            will-change: transform, opacity;
+            transition:
+                transform 0.15s cubic-bezier(0, 0, 0.25, 1) 0s,
+                opacity 0.15s cubic-bezier(0, 0, 0.25, 1) 0.15s;
         }
 
         &.lg-thumb-open {
@@ -386,7 +389,7 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
             }
         }
 
-        // Add hove effect (Optional)
+        // Add a hover effect (optional)
         .lg-thumb-item {
             filter: grayscale(100%);
             will-change: filter;

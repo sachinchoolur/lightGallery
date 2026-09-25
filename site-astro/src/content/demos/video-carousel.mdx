@@ -1,7 +1,6 @@
 ---
-title: Video carousel
-description:
-    Demo of javascript video carousel gallery.
+title: 'Video carousel'
+description: 'Video carousel demo: an inline gallery of YouTube and HTML5 videos embedded in the page, with thumbnails.'
 lead:
     With lightGallery, you can create both carousel slider and lightBox
     galleries. You can create inline gallery by passing the container element
@@ -41,6 +40,7 @@ const lgContainer = document.getElementById('inline-gallery-container');
 const inlineGallery = lightGallery(lgContainer, {
     container: lgContainer,
     dynamic: true,
+    plugins: [lgVideo],
     // Turn off hash plugin in case if you are using it
     // as we don't want to change the url on slide change
     hash: false,
@@ -62,9 +62,8 @@ const inlineGallery = lightGallery(lgContainer, {
         },
         {
             src: 'https://www.youtube.com/watch?v=ttLu7ygaN6I',
-            subHtml: `<h4>'Peck Pocketed' by Kevin Herron</h4>`,
-            thumb:
-                'https://img.youtube.com/vi/your_youtube_video_id/mqdefault.jpg',
+            subHtml: `<h4>Second video</h4>`,
+            thumb: 'https://img.youtube.com/vi/ttLu7ygaN6I/mqdefault.jpg',
         },
         {
             src: 'https://www.youtube.com/watch?v=C3vyugaBhSs',
@@ -134,13 +133,14 @@ const container = ref(null);
 
 ```html
 <div class="inline-gallery-container" #host></div>
+<!-- In the component class: features = [withThumbnail(), withVideo()]; -->
 <lg-gallery
     [container]="host"
     [open]="true"
     [closable]="false"
     [showMaximizeIcon]="true"
     [slides]="slides"
-    [features]="[withThumbnail(), withVideo()]"
+    [features]="features"
 />
 ```
 

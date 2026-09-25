@@ -10,4 +10,11 @@
         display: inline-block;
         vertical-align: middle;
     }
+    // The chosen curve, selectable for copying.
+    .easing-value {
+        display: block;
+        margin-top: 10px;
+        font-size: 13px;
+        user-select: all;
+    }
 }

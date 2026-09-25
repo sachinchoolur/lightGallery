@@ -93,9 +93,10 @@ import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 <Fragment slot="angular">
 
 ```html
+<!-- In the component class: features = [withThumbnail()]; -->
 <lg-gallery
     [slides]="slides"
-    [features]="[withThumbnail()]"
+    [features]="features"
     [virtualization]="{ slides: 7, thumbs: 'auto' }"
 />
 ```

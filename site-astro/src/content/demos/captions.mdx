@@ -1,6 +1,6 @@
 ---
-title: Captions
-description: lightGallery captions demo.
+title: 'Captions'
+description: 'Gallery captions demo: HTML captions from data attributes or elements on the page, captions relative to each thumbnail, and animated captions.'
 lead: You can directly pass image caption html via data-sub-html attribute or just pass id or class name of any html object (div) which contains your caption html.
 date: 2020-10-06T08:48:57.000Z
 draft: false
@@ -55,7 +55,103 @@ import ImageGalleryCaptions from '../../components/shortcodes/ImageGalleryCaptio
 </div>
 ```
 
-### Caption relative to current element.
+**JavaScript**
+
+```js
+import lightGallery from 'lightgallery';
+import lgZoom from 'lightgallery/plugins/zoom';
+
+lightGallery(document.getElementById('gallery-captions-demo'), {
+    plugins: [lgZoom],
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery } from '@lightgallery/react';
+
+// `caption` takes JSX; `captionHtml` takes an HTML string, like
+// data-sub-html.
+const slides = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        caption: (
+            <>
+                <h4>Fading Light</h4>
+                <p>Classic view from Rigwood Jetty on Coniston Water.</p>
+            </>
+        ),
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        captionHtml: '<h4>Bowness Bay</h4><p>A beautiful sunrise.</p>',
+    },
+];
+
+<LightGallery slides={slides} />;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery } from '@lightgallery/vue';
+
+const slides = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        captionHtml: '<h4>Fading Light</h4><p>Classic view from Rigwood Jetty.</p>',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        captionHtml: '<h4>Bowness Bay</h4><p>A beautiful sunrise.</p>',
+    },
+];
+</script>
+
+<template>
+    <LightGallery :slides="slides" />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import { Component } from '@angular/core';
+import { LgGalleryComponent, type LgGalleryItem } from '@lightgallery/angular';
+
+@Component({
+    imports: [LgGalleryComponent],
+    template: `<lg-gallery [slides]="slides" />`,
+})
+export class Gallery {
+    slides: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            captionHtml: '<h4>Fading Light</h4><p>Classic view from Rigwood Jetty.</p>',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            captionHtml: '<h4>Bowness Bay</h4><p>A beautiful sunrise.</p>',
+        },
+    ];
+}
+```
+
+</Fragment>
+</CodeTabs>
+
+### Captions relative to the current element
 
 If you already have captions associated with the thumbnails, you can instruct
 lightGallery to pick up captions from the element within the selector by passing
@@ -127,7 +223,8 @@ import RelativeCaption from '@lightgallery/vue/plugins/relativeCaption';
 <Fragment slot="angular">
 
 ```html
-<lg-gallery [slides]="slides" [features]="[withRelativeCaption()]" />
+<!-- In the component class: features = [withRelativeCaption()]; -->
+<lg-gallery [slides]="slides" [features]="features" />
 ```
 
 </Fragment>
@@ -145,7 +242,10 @@ interval to animate captions before the next slide transition starts.
 
 <DemoButtons js="https://codepen.io/sachinchoolur/pen/poebjrm" react="https://stackblitz.com/edit/stackblitz-starters-5qyqkx" />
 
-##### HTML
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="gallery-animated-captions-demo">

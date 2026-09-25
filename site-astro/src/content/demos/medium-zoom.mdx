@@ -1,6 +1,6 @@
 ---
 title: 'Medium like image zoom'
-description: 'Easily create image zooming experience as seen on medium. '
+description: 'Medium-style image zoom: click an image in an article and it grows in place, with no lightbox chrome.'
 lead:
     "Add a zoom feature to your blog images just like on Medium.
     With lightGallery's mediumZoom plugin, it's easy to give your readers a closer look at your pictures, straight away"
@@ -73,7 +73,8 @@ lightGallery(document.querySelector('.medium-zoom-demo'), {
 ```tsx
 import MediumZoom from '@lightgallery/react/plugins/mediumZoom';
 
-// Triggers are components here, so there is no `selector` to match, // wrap the images you want zoomable.
+// Triggers are components here, so there is no `selector` to match:
+// wrap the images you want zoomable.
 <LightGallery plugins={[MediumZoom]} mediumZoom={{ margin: 24 }}>
     {images.map((image) => (
         <LightGalleryItem key={image.src} item={image}>
@@ -104,7 +105,8 @@ import MediumZoom from '@lightgallery/vue/plugins/mediumZoom';
 <Fragment slot="angular">
 
 ```html
-<lg-gallery [features]="[withMediumZoom({ margin: 24 })]">
+<!-- In the component class: features = [withMediumZoom({ margin: 24 })]; -->
+<lg-gallery [features]="features">
     @for (image of images; track image.src) {
         <a [lgGalleryItem]="image">
             <img [src]="image.thumb" [alt]="image.alt" />
@@ -132,7 +134,7 @@ mi ut, lobortis metus. Etiam vel pretium ipsum. Vestibulum consequat varius
 odio, sed rutrum purus laoreet id. Mauris vitae urna nec ligula vulputate
 tincidunt.
 
-<figure lg-background-color="#FFF" class="blog-images" data-src="/img/photos/facade/01-2400.avif"  data-lg-size="1600-1126" >
+<figure lg-background-color="#FFF" class="blog-images" data-src="/img/photos/facade/01-2400.avif" data-lg-size="2400-3361" >
 <img alt="office building with symmetrical gray textured walls" src="/img/photos/facade/01-1200.avif"/>
 </figure>
 
@@ -158,7 +160,7 @@ lectus, ut pulvinar lectus nunc id risus. Nullam porta aliquet ipsum, in iaculis
 diam bibendum non. Aenean at lectus turpis. Fusce nec leo et nisi porta
 consectetur at et metus.
 
-<figure lg-background-color="rgb(22 37 44)" style="float:left" class="blog-images" data-src="/img/photos/facade/02-2400.avif"  data-lg-size="1600-1067" >
+<figure lg-background-color="rgb(22 37 44)" style="float:left" class="blog-images" data-src="/img/photos/facade/02-2400.avif" data-lg-size="2333-3500" >
 <img alt="gray and black architectural design" src="/img/photos/facade/02-1200.avif"/>
 </figure>
 

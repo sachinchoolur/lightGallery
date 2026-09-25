@@ -14,7 +14,6 @@ toc: true
 ---
 
 import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
-import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 
 <DemoRuntime />
 
@@ -85,8 +84,6 @@ import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
     <span class="visually-hidden">Next</span>
   </button>
 </div>
-
-<DemoButtons js="https://codepen.io/light-gallery/pen/ZEwqJqX" />
 
 ##### HTML
 
@@ -170,21 +167,17 @@ import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 ##### JavaScript
 
 ```js
-// Get the carousel element by its ID
-let carouselEl = document.getElementById('bootstrap-video-carousel');
+const carouselEl = document.getElementById('bootstrap-video-carousel');
 
-// Create a new Bootstrap 5 Carousel instance with specified options
-const carousel = new bootstrap.Carousel(carouselEl, {
+// The Bootstrap 5 carousel
+new bootstrap.Carousel(carouselEl, {
     interval: 2000,
     wrap: false,
 });
 
-// Add an event listener for the 'slide.bs.carousel' event, fires immediately when the slide instance method is invoked.
-carouselEl.addEventListener('slide.bs.carousel', (event) => {
-    const container = document.querySelector('.carousel-inner');
-    window.lightGallery(container, {
-        plugins: [lgVideo],
-        selector: '.lg-item',
-    });
+// One gallery over the carousel items, created once
+lightGallery(carouselEl.querySelector('.carousel-inner'), {
+    plugins: [lgVideo],
+    selector: '.lg-item',
 });
 ```

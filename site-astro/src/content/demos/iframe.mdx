@@ -1,6 +1,6 @@
 ---
 title: 'Iframe lightbox'
-description: 'Open iframe in lightGallery.'
+description: 'Iframe lightbox demo: open a website, a Google map or a PDF inside the gallery as an iframe slide.'
 lead:
     'Create simple lightbox iframe gallery with lightGallery. If you want to display a webpage, google map, PDF file or any other iframe within the gallery, you just need to set
     data-iframe attribute true for the slide item. lightGallery will
@@ -21,9 +21,9 @@ import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 <DemoRuntime />
 
 
-<button class="btn btn-success mrb50" data-iframe="true" id="open-website" data-iframe-title="All new time tracking. Greater insight." data-src="https://www.paritydeals.com/">Open
+<button class="btn btn-success mrb50" data-iframe="true" id="open-website" data-iframe-title="ParityDeals" data-src="https://www.paritydeals.com/">Open
 website</button>
-<button class="btn btn-success mrb50" data-iframe="true" id="open-google-map" data-src="https://www.google.com/maps/embed">Google
+<button class="btn btn-success mrb50" data-iframe="true" id="open-google-map" data-src="https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1sChefchaouen,+Morocco">Google
 map</button>
 <button class="btn btn-success mrb50" data-iframe="true" id="open-pdf" data-src="/pdf/sample.pdf">Open
 PDF file</button>
@@ -38,8 +38,8 @@ PDF file</button>
     class="btn btn-success btn-lg mrb50"
     data-iframe="true"
     id="open-website"
-    data-src="https://tack.one/"
-    data-iframe-title="All new time tracking. Greater insight."
+    data-src="https://www.paritydeals.com/"
+    data-iframe-title="ParityDeals"
 >
     Open website
 </button>
@@ -47,7 +47,7 @@ PDF file</button>
     class="btn btn-success btn-lg mrb50"
     data-iframe="true"
     id="open-google-map"
-    data-src="https://www.google.com/maps/embed"
+    data-src="https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1sChefchaouen,+Morocco"
 >
     Google map
 </button>
@@ -55,7 +55,7 @@ PDF file</button>
     class="btn btn-success btn-lg mrb50"
     data-iframe="true"
     id="open-pdf"
-    data-src="https://file-examples-com.github.io/uploads/2017/10/file-sample_150kB.pdf"
+    data-src="pdf/sample.pdf"
 >
     Open PDF file
 </button>

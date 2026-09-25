@@ -52,6 +52,7 @@ if ($flickityLG) {
             ready: function () {
                 const container = document.querySelector('.flickity-slider');
                 window.lightGallery(container, {
+                    plugins: [lgZoom, lgThumbnail],
                     selector: '.carousel-cell',
                 });
             },

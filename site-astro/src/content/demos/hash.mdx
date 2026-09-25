@@ -1,10 +1,10 @@
 ---
 title: 'Hash'
 description:
-    'lightGallery hash plugin lets you to provide unique url for each gallery
+    'lightGallery hash plugin lets you provide a unique URL for each gallery
     slides.'
 lead:
-    'lightGallery hash plugin allows you create unique url for each gallery
+    'lightGallery hash plugin allows you to create a unique URL for each gallery
     images. You can provide custom names for each slides too. If you have
     multiple galleries on a page, you have to provide unique id for each gallery
     via galleryId setting.'
@@ -105,9 +105,10 @@ import Hash from '@lightgallery/vue/plugins/hash';
 <Fragment slot="angular">
 
 ```html
+<!-- In the component class: features = [withHash({ galleryId: '1', hashDriver: 'auto' })]; -->
 <lg-gallery
     [slides]="slides"
-    [features]="[withHash({ galleryId: '1', hashDriver: 'auto' })]"
+    [features]="features"
 />
 ```
 
@@ -142,6 +143,7 @@ You can provide custom slide names for each slide by providing slide name via
 
 ```js
 lightGallery(document.getElementById('gallery-hash-demo'), {
+    plugins: [lgHash],
     customSlideName: true,
 });
 ```
@@ -186,9 +188,10 @@ const slides = [
 <Fragment slot="angular">
 
 ```html
+<!-- In the component class: features = [withHash({ customSlideName: true })]; -->
 <lg-gallery
     [slides]="slides"
-    [features]="[withHash({ customSlideName: true })]"
+    [features]="features"
 />
 ```
 

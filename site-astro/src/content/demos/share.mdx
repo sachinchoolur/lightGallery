@@ -135,9 +135,10 @@ import Share from '@lightgallery/vue/plugins/share';
 <Fragment slot="angular">
 
 ```html
+<!-- In the component class: features = [withShare({ preferNativeShare: true })]; -->
 <lg-gallery
     [slides]="slides"
-    [features]="[withShare({ preferNativeShare: true })]"
+    [features]="features"
 />
 ```
 
@@ -146,7 +147,7 @@ import Share from '@lightgallery/vue/plugins/share';
 
 #### Add new share options
 
-By default, lightGallery supports sharing on Facebook, Twitter and pinterest.
+By default, lightGallery supports sharing on Facebook, X (Twitter) and Pinterest.
 Missing something? you can easily add your own share buttons in lightGallery.
 
 Let's see how we can add
@@ -220,7 +221,7 @@ lightGallery(document.getElementById('gallery-share-reddit-demo'), {
 
                 // The prop data-reddit-title is converted to redditTitle and added to the gallery item
                 const title = galleryItem.redditTitle;
-                const redditShareLink = `//reddit.com/submit?url=${url}&title=${title}`;
+                const redditShareLink = `https://reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
                 return redditShareLink;
             },
         },
@@ -245,9 +246,9 @@ import Share from '@lightgallery/react/plugins/share';
                 text: 'Reddit',
                 className: 'lg-share-reddit',
                 generateLink: (item, currentUrl) =>
-                    `//reddit.com/submit?url=${encodeURIComponent(
+                    `https://reddit.com/submit?url=${encodeURIComponent(
                         currentUrl,
-                    )}&title=${item.title ?? ''}`,
+                    )}&title=${encodeURIComponent(item.title ?? '')}`,
             },
         ],
     }}
@@ -265,9 +266,9 @@ const reddit = {
     text: 'Reddit',
     className: 'lg-share-reddit',
     generateLink: (item, currentUrl) =>
-        `//reddit.com/submit?url=${encodeURIComponent(currentUrl)}&title=${
-            item.title ?? ''
-        }`,
+        `https://reddit.com/submit?url=${encodeURIComponent(currentUrl)}&title=${encodeURIComponent(
+            item.title ?? '',
+        )}`,
 };
 </script>
 
@@ -293,9 +294,9 @@ features = [
                 text: 'Reddit',
                 className: 'lg-share-reddit',
                 generateLink: (item, currentUrl) =>
-                    `//reddit.com/submit?url=${encodeURIComponent(
+                    `https://reddit.com/submit?url=${encodeURIComponent(
                         currentUrl,
-                    )}&title=${item.title ?? ''}`,
+                    )}&title=${encodeURIComponent(item.title ?? '')}`,
             },
         ],
     }),

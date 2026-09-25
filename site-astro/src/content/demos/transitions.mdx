@@ -1,7 +1,7 @@
 ---
 title: Transitions
-description: Create beautiful image and video galleries with CSS transitions.
-lead: 'Create beautiful image and video galleries with built in CSS transitions. You can change the type of transitions by passing the transition name via mode option.  lightGallery uses Hardware-Accelerated CSS3 transitions for faster animation performance.  You can easily create your own beautiful custom transitions by updating the CSS transform values. '
+description: 'Twenty-plus slide transitions for image and video galleries, switched with the mode setting, plus how to build your own.'
+lead: 'Create beautiful image and video galleries with built in CSS transitions. You can change the type of transitions by passing the transition name via mode option.  lightGallery uses hardware-accelerated CSS transitions for smooth animation. You can create your own beautiful custom transitions by updating the CSS transform values. '
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
@@ -18,8 +18,9 @@ import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 <ImageGallery id="gallery-transitions-demo" photos="facade" />
 
 <div class="alert alert-warning" role="alert">
-    Note: You need to include the <a href="https://github.com/sachinchoolur/lightGallery/blob/master/dist/css/lg-transitions.css
-">lg-transitions.css</a> file in your document to enable custom transitions
+    Note: the transitions other than the default slide and fade need
+    <code>lg-transitions.css</code>: <code>import 'lightgallery/css/lg-transitions.css';</code>
+    or load it from the package's <code>css</code> folder.
 </div>
 
 <div class="choose-select-option-wrap">

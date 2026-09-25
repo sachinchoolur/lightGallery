@@ -1,9 +1,9 @@
 ---
-title: 'Responsive Image Gallery'
-description: 'lightGallery responsive image gallery demo.'
+title: 'Responsive image gallery'
+description: 'Responsive image gallery demo: serve smaller images to smaller screens with data-responsive breakpoints, srcset and sizes, or picture sources.'
 lead:
     "Create beautiful responsive html image gallery with lightGallery. You can provide different images for different screen sizes, resolution or
-    devices. Other than it's own mechanism, lightGallery supports HTML5 picture
+    devices. Other than its own mechanism, lightGallery supports HTML5 picture
     tag, srcset and sizes for responsive images."
 date: 2020-10-06T08:48:57+00:00
 draft: false
@@ -29,7 +29,7 @@ can use native srcset and sizes attributes. Please refer the next demo, and the
 sizes and picture sources on slides, plus the decode gate for flash-free
 first paint.
 
-<ImageGallery id="gallery-captions-demo" />
+<ImageGallery id="responsive-images-demo" />
 
 <CodeTabs codepen="https://codepen.io/sachinchoolur/pen/OJpXJda" stackblitz="https://stackblitz.com/edit/stackblitz-starters-v7wpeb">
 <Fragment slot="vanilla">
@@ -37,13 +37,12 @@ first paint.
 **HTML**
 
 ```html
-<!-- above 757px default href/data-src will be used -->
-<div
-    id="responsive-images-demo"
-    data-responsive="img/1-375.jpg 375, img/1-480.jpg 480, img/1-757.jpg 757"
-    data-src="img/img.jpg"
->
-    <a href="img/img1.jpg">
+<!-- above 757px the default href/data-src is used -->
+<div id="responsive-images-demo">
+    <a
+        href="img/img1.jpg"
+        data-responsive="img/1-375.jpg 375, img/1-480.jpg 480, img/1-757.jpg 757"
+    >
         <img src="img/thumb1.jpg" />
     </a>
     <a
@@ -66,11 +65,13 @@ lightGallery(document.getElementById('responsive-images-demo'));
 <Fragment slot="react">
 
 ```tsx
-// Per-item breakpoints, the same contract as data-responsive.
+// The framework packages take native srcset and sizes per item; see
+// the responsive loading guide for picture sources.
 const slides = [
     {
         src: 'img/1-1600.jpg',
-        responsive: 'img/1-480.jpg 480, img/1-800.jpg 800',
+        srcset: 'img/1-480.jpg 480w, img/1-800.jpg 800w, img/1-1600.jpg 1600w',
+        sizes: '90vw',
         thumb: 'img/1-240.jpg',
         lgSize: '1600-1067',
     },
@@ -101,10 +102,6 @@ const slides = [
 You can use native srcset and sizes attributes in lightGallery. Pass srcset and
 sizes via data-srcset and data-sizes attributes respectively. lightGallery will
 automatically create image with srcset and sizes.
-
-<div class="alert alert-info" role="alert">If you want srcset to be supported for older browser please include <a href="http://caniuse.com/#feat=video" target="_blank">picturefil</a> javascript library in your document.</div>
-
-lightGallery will automatically call picturefil library if it is available
 
 <ImageGallerySrcset id="gallery-srcset-demo" />
 
@@ -185,7 +182,7 @@ attribute is specified. You can specify sources in the form of an array of
 picture source objects.
 
 For example, if you want to construct picture element in lightGallery as shown
-bellow,
+below,
 
 ```html
 <picture>
@@ -195,7 +192,7 @@ bellow,
 </picture>
 ```
 
-You need to use `data-source` (or sources if you are using dynamic mode) as
+You need to use `data-sources` (or `sources` if you are using dynamic mode) as
 shown below.
 
 ```html
@@ -257,6 +254,6 @@ For example, if you have similar html structure,
 </div>
 ```
 
-Up to `375` width, `img.240.jpg` and `lg-size` `240-160` will be used.
+Up to `375` width, `img-240.jpg` and `lg-size` `240-160` will be used.
 Similarly, up to `480` pixel width, size `400-267` and `img-400.jpg` will be
 used. And above `480`, `lg-size` `1600-1067` and `img-1600.jpg` will be used
