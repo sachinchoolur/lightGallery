@@ -21,7 +21,7 @@ renderings.
 ## Install
 
 ```bash
-npm install @lightgallery/angular @lightgallery/headless @angular/cdk
+npm install @lightgallery/angular @angular/cdk
 # CSS ships from the vanilla package:
 npm install lightgallery
 ```
@@ -93,7 +93,7 @@ Settings are same-named signal inputs (`[mode]`, `[speed]`, `[loop]`,
 directives: `*lgCaption`, `lgCounter`, `lgPrevButton`, `lgNextButton`.
 Inline gallery: `[container]="element"`.
 
-## Features (all 13)
+## Features (all 13, plus the justified layout)
 
 Each feature is its own tree-shakable entry point
 `@lightgallery/angular/plugins/<name>` exposing a `with<Name>(options?)`
@@ -114,6 +114,7 @@ factory for the `[features]` input:
 | mediumZoom | `withMediumZoom()` | `margin`, `backgroundColor` (presets a minimal UI) |
 | relativeCaption | `withRelativeCaption()` |, (presets `captionPosition: 'slide'`) |
 | vimeoThumbnail | `withVimeoThumbnail()` | `showThumbnailWithPlayButton` |
+| justified | `LgJustifiedGridComponent` | Not a feature: the `<lg-justified-grid>` component wraps the triggers, with `rowHeight`, `gap`, `lastRow` ([justified layout](/docs/justified-layout/)) |
 
 Features compose per gallery instance, two galleries on one page can have
 different feature sets. Order matters for slide wrappers: put `withZoom()`
@@ -144,7 +145,7 @@ violations.
 
 The old wrapper (`lightgallery-angular*` folders / `lightgallery` v2 with
 `lgQuery`) wrapped the vanilla runtime; this package renders natively. Key
-renames (full table in the project ADRs):
+renames (the full list is in the [migration guide](/docs/migration/#angular)):
 
 - `dynamicEl` → `[slides]` (typed `LgGalleryItem[]`), or `[lgGalleryItem]`
   trigger directives for uncontrolled galleries.

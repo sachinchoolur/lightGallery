@@ -131,7 +131,7 @@ The open gallery passes axe WCAG A/AA checks (automated in CI).
 
 ## Plugins
 
-All 13 vanilla plugins ship as subpath imports; pass them via `plugins={[]}`
+All 13 plugins ship as subpath imports, plus the justified layout; pass them via `plugins={[]}`
 and configure each with the prop named after it. Import the matching
 `lightgallery/css/lg-*.css` where one exists.
 
@@ -150,6 +150,7 @@ and configure each with the prop named after it. Import the matching
 | MediumZoom | `@lightgallery/react/plugins/mediumZoom` | `margin`, `backgroundColor` (+ per-item `lgBackgroundColor`) |
 | RelativeCaption | `@lightgallery/react/plugins/relativeCaption` | `relativeCaption` |
 | VimeoThumbnail | `@lightgallery/react/plugins/vimeoThumbnail` | `showVimeoThumbnails`, `showThumbnailWithPlayButton` |
+| Justified | `@lightgallery/react/plugins/justified` | Not a plugin: the `<JustifiedGrid>` component wraps the triggers, with `rowHeight`, `gap`, `lastRow` ([justified layout](/docs/justified-layout/)) |
 
 Order matters for slide wrappers: put `Zoom` before `Rotate` so zoom stays
 the outermost transform (matching 2.x DOM order).

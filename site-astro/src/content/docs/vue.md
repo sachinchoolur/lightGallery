@@ -20,7 +20,7 @@ package: one product, four renderings.
 ## Install
 
 ```bash
-npm install @lightgallery/vue @lightgallery/headless
+npm install @lightgallery/vue
 # CSS ships from the vanilla package:
 npm install lightgallery
 ```
@@ -81,7 +81,7 @@ prefix (`@before-open`, `@after-slide`, `@slide-item-load`, …). Slots are
 named scoped slots: `#caption`, `#counter`, `#prev-button`, `#next-button`.
 Inline gallery: `:container="element"`.
 
-## Plugins (all 13)
+## Plugins (all 13, plus the justified layout)
 
 Each plugin is its own tree-shakable subpath
 `@lightgallery/vue/plugins/<name>` exporting a plugin object for the
@@ -103,6 +103,7 @@ Each plugin is its own tree-shakable subpath
 | mediumZoom | `plugins/mediumZoom` | `margin`, `backgroundColor` (presets a minimal UI) |
 | relativeCaption | `plugins/relativeCaption` |, (presets `captionPosition: 'slide'`) |
 | vimeoThumbnail | `plugins/vimeoThumbnail` | `showThumbnailWithPlayButton` |
+| justified | `plugins/justified` | Not a plugin: the `<JustifiedGrid>` component wraps the triggers, with `row-height`, `gap`, `last-row` ([justified layout](/docs/justified-layout/)) |
 
 Plugins compose per gallery instance, two galleries on one page can have
 different plugin sets. Order matters for slide wrappers: put `Zoom` before
@@ -134,7 +135,7 @@ violations.
 
 The old wrapper (`lightgallery-vue*` folders / `lightgallery` v2 with
 `lgQuery`) wrapped the vanilla runtime; this package renders natively. Key
-renames (full table in the project ADRs):
+renames (the full list is in the [migration guide](/docs/migration/#vue)):
 
 - `dynamicEl` → `:slides` (typed `LgGalleryItem[]`), or `<LgItem>` trigger
   components for uncontrolled galleries.

@@ -53,7 +53,7 @@ export const lGEvents: {
  *      pluginInstance = event.detail.instance;
  *   });
  *   lightGallery(lg);
- * @see <a href="/docs/methods">Methods<a>
+ * @see <a href="/docs/methods/">Methods</a>
  */
 export interface InitDetail {
     /**

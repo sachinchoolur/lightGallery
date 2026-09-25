@@ -24,14 +24,22 @@ and mirrored its DOM, are replaced by components that render natively.
 
 ## Vanilla JavaScript
 
-Nothing in the gallery's behavior changed. The upgrade is packaging and a
-handful of new settings:
+The API is unchanged. The upgrade is packaging, a handful of new settings,
+a few changed defaults and two removals:
 
 -   **Imports are unchanged**, `import lightGallery from 'lightgallery'`,
     plugins from `lightgallery/plugins/<name>`, CSS from
-    `lightgallery/css/<name>.css`. The package now ships modern ESM
-    alongside the existing builds with proper export maps, so bundlers and
-    Node resolve subpaths without deep-path workarounds.
+    `lightgallery/css/<name>.css`. The package now has proper export maps,
+    so bundlers and Node resolve subpaths without deep-path workarounds.
+-   **The icon font is gone.** Controls render inline SVG icons, and the
+    `fonts/lg.*` files and their `@font-face` rule no longer ship. If you
+    self-hosted the font or restyled icons through font glyphs on
+    `.lg-icon`, replace them with [custom icons](/docs/custom-icons/).
+-   **No Internet Explorer.** The ES module and UMD builds target ES2017
+    for current evergreen browsers and iOS Safari, with no ES5 build (the
+    ES module keeps its historical `*.es5.js` file name). See
+    [browser support](/docs/getting-started/#browser-support); v2 remains
+    available for IE.
 -   **New settings are opt-in** unless listed under
     [changed defaults](#changed-defaults) below:
     [`strings`](/docs/localization-rtl/) and
@@ -121,7 +129,7 @@ The 2.x wrapper is documented at [/docs/v2/vue/](/docs/v2/vue/).
 `@lightgallery/vue` needs `vue >=3.4`.
 
 ```bash
-npm install @lightgallery/vue @lightgallery/headless lightgallery
+npm install @lightgallery/vue lightgallery
 ```
 
 | 2.x wrapper | 3.0 native package |
@@ -145,7 +153,7 @@ The 2.x wrapper is documented at [/docs/v2/angular/](/docs/v2/angular/).
 `@angular/cdk` `>=21 <23`, and runs without `zone.js`.
 
 ```bash
-npm install @lightgallery/angular @lightgallery/headless @angular/cdk lightgallery
+npm install @lightgallery/angular @angular/cdk lightgallery
 ```
 
 | 2.x wrapper | 3.0 native package |

@@ -66,3 +66,14 @@ event section represents the event detail object.
     <Events interface="FlipHorizontalDetail" />
     <Events interface="FlipVerticalDetail" />
 </div>
+
+## More events
+
+These events have no detail interface of their own:
+
+| Event | Fires | Detail |
+| --- | --- | --- |
+| `lgUpdateSlides` | After the slides change, through `updateSlides()` or `refresh()` | none |
+| `lgAutoplayStart` | When the autoplay slideshow starts (autoplay plugin) | `{ index }` |
+| `lgAutoplay` | Before autoplay moves to the next slide (autoplay plugin) | `{ index }`, the slide it moves to |
+| `lgAutoplayStop` | When the autoplay slideshow stops (autoplay plugin) | `{ index }` |

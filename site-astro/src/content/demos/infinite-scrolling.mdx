@@ -39,83 +39,78 @@ import { photos } from '../../lib/photos';
 ### Javascript
 
 ```js
-const $infiniteScrollGallery = document.getElementById(
-    'infinite-scroll-gallery',
-);
-const lg = lightGallery($infiniteScrollGallery, {
+const gallery = document.getElementById('infinite-scroll-gallery');
+const lg = lightGallery(gallery, {
     speed: 500,
 });
 ```
 
-Since, we are already using jQuery on this website, let's make use of jQuery to
-find out when user scrolls till the bottom of the page. Or if you prefer, you
-can use any of the JavaScript infinite scrolling plugin.
+Put an element after the gallery, a status line works well, and watch it
+with an `IntersectionObserver`. It reports when the element scrolls within
+200px of the viewport, with no scroll listener to throttle and no library.
 
-```js
-const $window = $(window);
-$window.scroll(function () {
-    if ($window.scrollTop() >= $(document).height() - $window.height() - 10) {
-        // User scrolled till the bottom the page
-    }
-});
+```html
+<p id="infinite-scroll-status">Scroll for more</p>
 ```
 
-Then, append thumbnails to the existing gallery.
-
 ```js
-const thumbnails = `
-    <a href="img/img1.jpg">
-        <img src="img/thumb1.jpg" />
-    </a>
-    <a href="img/img2.jpg">
-        <img src="img/thumb2.jpg" />
-    </a>
-    `;
-$('#infinite-scroll-gallery').append(thumbnails);
+const status = document.getElementById('infinite-scroll-status');
+const observer = new IntersectionObserver(
+    ([entry]) => {
+        if (entry.isIntersecting) {
+            // The status line is in view: load the next page
+        }
+    },
+    { rootMargin: '200px' },
+);
+observer.observe(status);
 ```
 
-Finally, you need to destroy the current lightGallery instance and re-initiate
-lightGallery
+Then append the new thumbnails and call `refresh()`. The gallery picks up
+the new items as they are; there is no need to destroy and re-create it.
 
 ```js
-lg.destroy();
-setTimeout(() => {
-    lg = lightGallery($infiniteScrollGallery, {
-        speed: 500,
-    });
-}, 500);
+gallery.insertAdjacentHTML('beforeend', thumbnails);
+lg.refresh();
 ```
 
-That's it. Here the full example
+That's it. Here is the full example: a `loading` flag keeps one request in
+flight at a time, and the observer disconnects after the last page.
 
 <CodeTabs>
 <Fragment slot="vanilla">
 
 ```js
-const $infiniteScrollGallery = document.getElementById(
-    'infinite-scroll-gallery',
-);
-let infiniteScrollingGallery = lightGallery($infiniteScrollGallery, {
+const gallery = document.getElementById('infinite-scroll-gallery');
+const status = document.getElementById('infinite-scroll-status');
+const lg = lightGallery(gallery, {
     speed: 500,
 });
 
-const thumbnails = `
-    <a href="img/img3.jpg">
-        <img src="img/thumb3.jpg" />
-    </a>
-    <a href="img/img4.jpg">
-        <img src="img/thumb4.jpg" />
-    </a>
-    `;
+let loading = false;
+const observer = new IntersectionObserver(
+    async ([entry]) => {
+        if (!entry.isIntersecting || loading) return;
+        loading = true;
+        status.textContent = 'Loading more photos…';
 
-const $window = $(window);
-let shouldReInit = true;
-$window.scroll(function () {
-    if ($window.scrollTop() >= $(document).height() - $window.height() - 10) {
-        $('#infinite-scroll-gallery').append(images);
-        infiniteScrollingGallery.refresh();
-    }
-});
+        // Your request; resolves to the next page's thumbnails as HTML,
+        // or null when there are no more.
+        const thumbnails = await fetchNextPage();
+        if (!thumbnails) {
+            status.textContent = "That's everything.";
+            observer.disconnect();
+            return;
+        }
+
+        gallery.insertAdjacentHTML('beforeend', thumbnails);
+        lg.refresh();
+        status.textContent = 'Scroll for more';
+        loading = false;
+    },
+    { rootMargin: '200px' },
+);
+observer.observe(status);
 ```
 
 </Fragment>
@@ -187,3 +182,4 @@ async onScroll() {
         </a>
     ))}
 </div>
+<p class="infinite-scroll-status" id="infinite-scroll-status" aria-live="polite">Scroll for more</p>

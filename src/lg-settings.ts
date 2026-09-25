@@ -663,7 +663,7 @@ export interface LightGalleryCoreSettings {
      * Customize string.
      * @description This can be useful if you want to localize the lightGallery strings to other languages.
      * Use your own service to translate the strings and pass it via settings.strings
-     * You can find dedicated strings option for all lightGallery modules in their respective documentation.
+     * Every core and plugin label lives here; the per-plugin `*PluginStrings` objects are deprecated.
      * Strings merge per-key over the defaults, override only the keys
      * you need (the old provide-everything requirement is gone).
      * See <a href="/docs/localization-rtl/">Localization &amp; RTL</a>.

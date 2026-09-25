@@ -4,10 +4,10 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 // Port of `layouts/404.html`, docs + demos card lists as a directory.
-const docs = (await getCollection('docs')).sort((a, b) =>
+const docs = (await getCollection('docs', ({ data }) => !data.draft)).sort((a, b) =>
     a.id.localeCompare(b.id),
 );
-const demos = (await getCollection('demos')).sort((a, b) =>
+const demos = (await getCollection('demos', ({ data }) => !data.draft)).sort((a, b) =>
     a.id.localeCompare(b.id),
 );
 ---

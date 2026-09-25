@@ -4,7 +4,7 @@ import { getCollection, render } from 'astro:content';
 import DocsShell from '../../layouts/DocsShell.astro';
 
 export async function getStaticPaths() {
-    const entries = await getCollection('docs');
+    const entries = await getCollection('docs', ({ data }) => !data.draft);
     return entries.map((entry) => ({
         params: { slug: entry.id.replace(/\/index$/, '') },
         props: { entry },
@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const entries = await getCollection('docs');
+const entries = await getCollection('docs', ({ data }) => !data.draft);
 const { Content, headings } = await render(entry);
 ---
 

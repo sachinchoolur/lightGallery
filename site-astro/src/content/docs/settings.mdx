@@ -29,8 +29,8 @@ lightGallery(document.getElementById('gallery-container'), {
 ## lightGallery core
 
 LightGallery comes with modular architecture. All the basic functionalities are
-available in the core module. You need to include plugins such if you need
-additional functionalities such as thumbnails, vide support, zoom, etc. Here you
+available in the core module. You need to include plugins if you need
+additional functionalities such as thumbnails, video support, zoom, etc. Here you
 can find all lightGallery core settings. If you think something is missing,
 please check the respective plugins settings as well.
 
@@ -78,10 +78,10 @@ frameworks.
 ## Video plugin
 
 Video plugin is required to display videos in lightGallery. Video plugin
-supports, YouTube, Vimeo, Wistia,and HTML5 videos.
+supports YouTube, Vimeo, Wistia and HTML5 videos.
 
 <div class="alert alert-info" role="alert">
-    <b>Dependency</b> - You need to include <a href="https://github.com/vimeo/player.js/">player.js</a> for Vimeo videos and <a href="https://wistia.com/support/developers/player-api">Wistia player API</a> for Wistia videos on your docment to enable video player feature like automatic play pause, automatically navigate to next slide when video ended.
+    <b>Dependency</b> - You need to include <a href="https://github.com/vimeo/player.js/">player.js</a> for Vimeo videos and <a href="https://wistia.com/support/developers/player-api">Wistia player API</a> for Wistia videos on your document to enable video player feature like automatic play pause, automatically navigate to next slide when video ended.
 </div>
 
 <Options pluginName="Video" interface="VideoSettings" variable="videoSettings" />
@@ -128,7 +128,7 @@ horizontal, flip vertical with single click.
 ## Share plugin
 
 lightGallery share plugin allows you to share your images/videos to social media
-platforms such as Twitter or Facebook with unique url. It supports adding your
+platforms such as X (Twitter) or Facebook with unique url. It supports adding your
 own social share button too.
 
 <Options pluginName="Share" interface="ShareSettings" variable="shareSettings" />
@@ -191,5 +191,17 @@ Vimeo thumbnails plugin helps you load thumbnails automatically for Vimeo videos
 <span class="badge rounded-pill bg-danger font-12" title="Available since version 2.5.0">v2.5.0</span>
 
 <Options pluginName="Vimeo Thumbnails" interface="VimeoThumbnailSettings" variable="vimeoSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Relative caption plugin
+
+Relative caption plugin places each caption relative to its image instead of
+at the bottom of the gallery.
+<span class="badge rounded-pill bg-danger font-12" title="Available since version 2.1.5">v2.1.5</span>
+
+<Options pluginName="Relative caption" interface="RelativeCaptionSettings" variable="relativeCaptionSettings" />
 
 </div>

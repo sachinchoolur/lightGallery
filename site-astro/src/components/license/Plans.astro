@@ -16,7 +16,7 @@ const buy = (key: string) => `${ONCE}?enabled=${key}&plan_identifier=${key}&char
 
 const PLANS: Plan[] = [
     { key: 'hobby', name: 'Hobby', desc: 'For personal use.', price: 48, terms: ['For <b>one</b> developer', 'For <b>one</b> product', "Can't be used in a product for sale", 'GitHub support only'] },
-    { key: 'team', name: 'Team', desc: 'For small teams.', price: 118, terms: ['For upto <b>8</b> developers', 'For upto <b>5</b> products', 'Can be used in a product for sale', 'GitHub and email support'], featured: true },
+    { key: 'team', name: 'Team', desc: 'For small teams.', price: 118, terms: ['For up to <b>8</b> developers', 'For up to <b>5</b> products', 'Can be used in a product for sale', 'GitHub and email support'], featured: true },
     { key: 'organization', name: 'Organization', desc: 'For large teams and organizations', price: 188, terms: ['For <b>unlimited</b> developers', 'For <b>unlimited</b> products', 'Can be used in a product for sale', 'GitHub, Email and Skype support'] },
 ];
 const EXT_TITLE = 'Extended Commercial license';

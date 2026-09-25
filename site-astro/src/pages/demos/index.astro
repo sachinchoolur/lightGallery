@@ -10,7 +10,7 @@ import { DEMO_GROUPS, demoFramework, demoPhoto } from '../../lib/demo-groups';
  * CSS-only chips: the radios at the top of the page decide which cards
  * show. Anything unlisted lands in "More demos".
  */
-const entries = await getCollection('demos');
+const entries = await getCollection('demos', ({ data }) => !data.draft);
 const bySlug = new Map(
     entries.map((entry) => [entry.id.replace(/\/index$/, '').toLowerCase(), entry]),
 );

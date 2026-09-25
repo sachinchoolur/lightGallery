@@ -1,6 +1,6 @@
 ---
 title: 'JavaScript image gallery, get started'
-description: 'Install lightGallery with npm or a CDN and build a responsive image and video gallery in a few lines of JavaScript, no dependencies, 13 plugins.'
+description: 'Install lightGallery with npm or a CDN and build a responsive image and video gallery in a few lines of JavaScript, no dependencies, 14 plugins.'
 lead: lightGallery is a lightweight, modular, JavaScript library for creating beautiful image & video galleries for the web and the mobile.
 date: 2020-10-06T08:48:57.000Z
 draft: false
@@ -89,8 +89,8 @@ zoom"].
 
 ## Installation
 
-lightGallery is available on NPM, Yarn, Bower, CDNs, and GitHub. You can use any
-of the following method to download lightGallery
+lightGallery is available on NPM, Yarn, CDNs, and GitHub. You can use any
+of the following methods to download lightGallery
 
 -   [NPM](https://www.npmjs.com/) - NPM is a package manager for the JavaScript
     programming language. You can install `lightgallery` using the following
@@ -108,18 +108,11 @@ of the following method to download lightGallery
     yarn add lightgallery
     ```
 
--   [Bower](http://bower.io) - You can find lightGallery on Bower package
-    manager as well
-
-    ```sh
-    bower install lightgallery --save
-    ```
-
 -   [GitHub](https://github.com/sachinchoolur/lightGallery/archive/master.zip) -
     You can also directly download lightgallery from GitHub
 
 -   CDN - If you prefer to use a CDN, you can load files via
-    [jsdelivr](https://www.jsdelivr.com/projects/lightgallery),
+    [jsdelivr](https://www.jsdelivr.com/package/npm/lightgallery),
     [cdnjs](https://cdnjs.com/libraries/lightgallery) or
     [unpkg](https://unpkg.com/browse/lightgallery@latest/)
 
@@ -157,13 +150,13 @@ any lightgallery plugin you can include it after `lightgallery.umd.js`.
 <body>
     ....
 
-    <script src="js/lightgallery.umd.js"></script>
+    <script src="lightgallery.umd.js"></script>
     <!-- Or use the minified version -->
-    <script src="js/lightgallery.min.js"></script>
+    <script src="lightgallery.min.js"></script>
 
     <!-- lightgallery plugins -->
-    <script src="js/plugins/lg-thumbnail.umd.js"></script>
-    <script src="js/plugins/lg-zoom.umd.js"></script>
+    <script src="plugins/thumbnail/lg-thumbnail.umd.js"></script>
+    <script src="plugins/zoom/lg-zoom.umd.js"></script>
 </body>
 ```
 
@@ -219,7 +212,7 @@ Finally, you need to initiate the gallery by adding the following code.
 
 #### License Key
 
-You'll receive a license key via email one you purchase a license [More info](https://www.lightgalleryjs.com/docs/settings/#licenseKey)
+You'll receive a license key via email once you purchase a license [More info](https://www.lightgalleryjs.com/docs/settings/#licenseKey)
 
 #### Plugins
 
@@ -229,16 +222,15 @@ lightGallery plugins.
 If you are including lightGallery files via script tag, please use the same
 plugins names as follows.
 
-`lgZoom`, `lgAutoplay`, ` lgComment`, `lgFullscreen `, `lgHash`, `lgPager`,
-`lgRotate`, `lgShare`, `lgThumbnail`, `lgVideo`, `lgMediumZoom`
+`lgZoom`, `lgAutoplay`, `lgComment`, `lgFullscreen`, `lgHash`, `lgJustified`,
+`lgPager`, `lgRelativeCaption`, `lgRotate`, `lgShare`, `lgThumbnail`, `lgVideo`,
+`lgVimeoThumbnail`, `lgMediumZoom`
 
 ## Browser support
 
-lightGallery works in all modern browsers and well beyond them. The
-builds target ES2015, so any browser that understands classes, arrow
-functions and template literals runs it without transpiling or polyfills:
-Chrome, Edge, Firefox and Safari on desktop, Safari on iOS and Chrome on
-Android, going back many years.
+lightGallery supports current evergreen browsers and iOS Safari: Chrome,
+Edge, Firefox and Safari on desktop, Safari on iOS and Chrome on Android.
+The builds target ES2017 and run without transpiling or polyfills.
 
 -   **ES module and UMD builds.** Import it in a bundler, load it as a
     native `<script type="module">`, or drop the UMD file into a plain

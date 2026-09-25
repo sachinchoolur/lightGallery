@@ -1062,28 +1062,52 @@ if (customizeScenes.length) {
 
 const infiniteScrollEl = document.getElementById('infinite-scroll-gallery');
 if (infiniteScrollEl) {
-    let infiniteScrollingGallery = lightGallery(infiniteScrollEl, {
+    const infiniteScrollingGallery = lightGallery(infiniteScrollEl, {
         plugins: [lgThumbnail, lgZoom],
     });
 
-    const images = photos('desert')
-        .slice(6)
-        .map(
-            (p) => `<a data-lg-size="${p.width}-${p.height}" class="gallery-item" data-src="${p.src}" data-sub-html="${p.caption.replace(/"/g, '&quot;')}">
+    // The first six photos are in the page; four more pages of six follow.
+    const pages = [
+        photos('desert').slice(6, 12),
+        photos('morocco').slice(0, 6),
+        photos('morocco').slice(6, 12),
+        photos('street').slice(0, 6),
+    ];
+    const toItem = (p) =>
+        `<a data-lg-size="${p.width}-${p.height}" class="gallery-item" data-src="${p.src}" data-sub-html="${p.caption.replace(/"/g, '&quot;')}">
             <img class="img-responsive" alt="${p.alt}" src="${p.thumb}" />
-        </a>`,
-        )
-        .join('');
-    window.addEventListener('scroll', function () {
-        // Load more once the gallery's bottom edge scrolls into view.
-        if (
-            infiniteScrollEl.getBoundingClientRect().bottom <=
-            window.innerHeight
-        ) {
-            infiniteScrollEl.insertAdjacentHTML('beforeend', images);
+        </a>`;
+    // Stands in for a network request.
+    const fetchNextPage = () =>
+        new Promise((resolve) => setTimeout(() => resolve(pages.shift()), 400));
+
+    // A status line after the gallery doubles as the scroll sentinel: when
+    // it comes within 200px of the viewport, the next page loads.
+    const status = document.getElementById('infinite-scroll-status');
+    let loading = false;
+    const observer = new IntersectionObserver(
+        async ([entry]) => {
+            if (!entry.isIntersecting || loading) return;
+            loading = true;
+            status.textContent = 'Loading more photos…';
+            const next = await fetchNextPage();
+            infiniteScrollEl.insertAdjacentHTML('beforeend', next.map(toItem).join(''));
+            // Picks up the new items; no destroy and re-init needed.
             infiniteScrollingGallery.refresh();
-        }
-    });
+            loading = false;
+            if (pages.length) {
+                status.textContent = 'Scroll for more';
+                // Still in view after a short page? Keep going.
+                observer.unobserve(status);
+                observer.observe(status);
+            } else {
+                status.textContent = `That's all ${infiniteScrollEl.children.length} photos.`;
+                observer.disconnect();
+            }
+        },
+        { rootMargin: '200px' },
+    );
+    observer.observe(status);
 }
 
 lightGallery(document.querySelector('.medium-zoom-demo'), {
