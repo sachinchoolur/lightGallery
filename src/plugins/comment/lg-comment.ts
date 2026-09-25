@@ -129,7 +129,7 @@ export default class CommentBox {
                                         index
                                     ].disqusIdentifier;
                                 this.page.url =
-                                    _this.core.galleryItems[index].disqusURL;
+                                    _this.core.galleryItems[index].disqusUrl;
                                 this.page.title =
                                     _this.settings.disqusConfig.title;
                                 this.language =
@@ -138,7 +138,7 @@ export default class CommentBox {
                         });
                     } catch (err) {
                         console.error(
-                            'lightGallery: make sure you have included the Disqus JavaScript code in your document. Ex - https://lg-disqus.disqus.com/admin/install/platforms/universalcode/',
+                            'lightGallery: make sure you have included the Disqus JavaScript code in your document. See https://www.lightgalleryjs.com/demos/comment-box/',
                         );
                     }
                 },

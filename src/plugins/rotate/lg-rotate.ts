@@ -276,6 +276,8 @@ export default class Rotate {
     }
 
     closeGallery(): void {
+        // Nothing to reset when the plugin was switched off at init.
+        if (!this.settings.rotate) return;
         if (this.isImageOrientationChanged()) {
             this.core.getSlideItem(this.core.index).css('opacity', 0);
         }
