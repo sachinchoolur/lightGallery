@@ -33,6 +33,9 @@ export default defineConfig({
         '/docs/v3/hash-drivers/': '/docs/hash-drivers/',
         '/docs/v3/responsive-loading/': '/docs/responsive-loading/',
     },
+    // Quick tunnels for device testing; the preview server refuses
+    // unknown hosts otherwise.
+    server: { allowedHosts: ['.trycloudflare.com'] },
     integrations: [
         mdx(),
         react(),

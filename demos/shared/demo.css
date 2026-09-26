@@ -1,0 +1,150 @@
+/* Shared page chrome for the three consumer apps: same layout in every
+   framework, sized so the controls stay usable on a phone. */
+:root {
+    color-scheme: light;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+body {
+    margin: 0;
+    background: #f6f6f8;
+    color: #1d1d20;
+}
+.demo {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+}
+.demo h1 {
+    font-size: 1.25rem;
+    margin: 0 0 4px;
+}
+.demo h2 {
+    font-size: 1.1rem;
+    margin: 0 0 4px;
+}
+.demo-nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 12px 0 16px;
+    padding: 8px 0;
+    background: #f6f6f8;
+    border-bottom: 1px solid #e1e1e8;
+}
+.demo-nav a {
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: #e8e8ee;
+    color: #2a2a30;
+    font-size: 14px;
+    text-decoration: none;
+}
+.demo-nav a.active {
+    background: #1d1d20;
+    color: #fff;
+}
+.note {
+    color: #5c5c68;
+    margin: 4px 0 12px;
+    line-height: 1.45;
+}
+.panel {
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border: 1px solid #dcdce4;
+    border-radius: 8px;
+    background: #fff;
+}
+.panel summary {
+    cursor: pointer;
+    font-weight: 600;
+    min-height: 28px;
+}
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+}
+.control-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 14px;
+}
+.control-group > strong {
+    width: 100%;
+    color: #5c5c68;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.control-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 34px;
+    font-size: 14px;
+}
+.control-group select,
+.control-group button {
+    min-height: 32px;
+    font-size: 14px;
+}
+.readout {
+    margin: 0 0 12px;
+    color: #5c5c68;
+    font-size: 13px;
+    word-break: break-word;
+}
+.readout code {
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: #e8e8ee;
+}
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 8px;
+}
+.grid a {
+    display: block;
+    line-height: 0;
+}
+.grid img {
+    display: block;
+    width: auto;
+    height: 120px;
+    max-width: 100%;
+    border-radius: 4px;
+    background: #dcdce4;
+    object-fit: cover;
+}
+.grid-dense img {
+    height: 64px;
+}
+.tile {
+    margin: 0;
+}
+.tile figcaption {
+    max-width: 220px;
+    margin-top: 4px;
+    color: #5c5c68;
+    font-size: 11px;
+    line-height: 1.25;
+}
+@media (max-width: 600px) {
+    .demo {
+        padding: 10px;
+    }
+    .grid img {
+        height: 88px;
+    }
+    .grid-dense img {
+        height: 52px;
+    }
+}

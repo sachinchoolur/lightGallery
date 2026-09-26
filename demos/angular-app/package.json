@@ -1,0 +1,29 @@
+{
+  "name": "lg-demo-angular-app",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --config vite.config.mts --port 3005 --host",
+    "build": "vite build --config vite.config.mts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@angular/cdk": "^21.2.0",
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@lightgallery/angular": "link:../../packages/angular/dist",
+    "lightgallery": "workspace:*",
+    "rxjs": "^7.8.0",
+    "tslib": "^2.6.0",
+    "zone.js": "^0.15.0",
+    "@lightgallery/headless": "workspace:*"
+  },
+  "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^2.6.3",
+    "@angular/compiler-cli": "^21.2.0",
+    "typescript": "~5.9.0",
+    "vite": "^7.0.0"
+  }
+}

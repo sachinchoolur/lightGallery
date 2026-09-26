@@ -1,0 +1,24 @@
+{
+  "name": "lg-demo-react-app",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --port 3003 --host",
+    "build": "vite build",
+    "preview": "vite preview --port 3003",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@lightgallery/react": "workspace:*",
+    "lightgallery": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.4.5",
+    "vite": "^5.4.11"
+  }
+}
