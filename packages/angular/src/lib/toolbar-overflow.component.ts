@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import {
+    consumeBackdropPress,
     coreDefaultIcons,
     getToolbarItemPriority,
     getToolbarOverflow,
@@ -398,6 +399,7 @@ export class LgToolbarOverflowComponent {
         ) {
             return;
         }
+        consumeBackdropPress(event);
         this.close(false);
     };
 }

@@ -84,6 +84,22 @@ available to custom targets.
     which anchors the menu under the button. Custom CSS that positioned
     `.lg-dropdown` against the toolbar should target that wrapper instead.
 
+## Dismissing the dropdown
+
+The dropdown dismisses the way the toolbar's More options menu does:
+
+-   A press anywhere outside it closes it. On another toolbar button the
+    press goes through, so one click both closes the dropdown and runs
+    that button. On the backdrop around the slide the press only closes
+    the dropdown; it does not close the gallery.
+-   Escape closes the dropdown and returns focus to the share button. The
+    gallery stays open.
+-   Tabbing out of the dropdown closes it.
+
+The dimming `.lg-dropdown-overlay` element that 2.x placed behind an open
+dropdown is gone; nothing in the gallery is covered while the dropdown is
+open.
+
 ## Settings
 
 | Setting | Default | Description |

@@ -1,8 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
     TOOLBAR_DEFAULT_PRIORITY,
     TOOLBAR_PINNED,
+    consumeBackdropPress,
     getToolbarItemPriority,
     getToolbarOverflow,
     isToolbarEventPath,
@@ -118,5 +119,38 @@ describe('isToolbarEventPath', () => {
         expect(
             isToolbarEventPath([node('lg-image'), node('lg-outer'), {}]),
         ).toBe(false);
+    });
+});
+
+describe('consumeBackdropPress', () => {
+    const press = (target: unknown) => ({
+        target,
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+    });
+    const node = (...classes: string[]) => ({
+        classList: { contains: (name: string) => classes.includes(name) },
+    });
+
+    it('consumes a press on the backdrop around the slide', () => {
+        ['lg-outer', 'lg-item', 'lg-img-wrap', 'lg-img-rotate'].forEach(
+            (name) => {
+                const event = press(node(name));
+                expect(consumeBackdropPress(event)).toBe(true);
+                expect(event.preventDefault).toHaveBeenCalledTimes(1);
+                expect(event.stopPropagation).toHaveBeenCalledTimes(1);
+            },
+        );
+    });
+
+    it('lets a press on a control, the image or a bare target through', () => {
+        [node('lg-icon', 'lg-close'), node('lg-image'), {}, null].forEach(
+            (target) => {
+                const event = press(target);
+                expect(consumeBackdropPress(event)).toBe(false);
+                expect(event.preventDefault).not.toHaveBeenCalled();
+                expect(event.stopPropagation).not.toHaveBeenCalled();
+            },
+        );
     });
 });

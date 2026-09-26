@@ -1,6 +1,15 @@
-import { defineComponent, h, inject, ref, watch, type Ref } from 'vue';
+import {
+    defineComponent,
+    h,
+    inject,
+    onBeforeUnmount,
+    ref,
+    watch,
+    type Ref,
+} from 'vue';
 import {
     canNativeShare,
+    consumeBackdropPress,
     getFacebookShareLink,
     getPinterestShareLink,
     getSharePayload,
@@ -109,10 +118,10 @@ function getShareOptions(settings: ShareSettings): ShareOption[] {
 }
 
 /**
- * Dropdown open-state shared between the button and the overlay, keyed
- * per gallery instance (the Vue analog of React reading its outer-class
- * string / the Angular per-gallery service). The creator also mirrors the
- * state to the `lg-dropdown-active` outer class.
+ * Dropdown open state, keyed per gallery instance (the Vue analog of
+ * React reading its outer-class string / the Angular per-gallery
+ * service). The creator also mirrors the state to the
+ * `lg-dropdown-active` outer class.
  */
 const shareStates = new WeakMap<LgPluginContext, Ref<boolean>>();
 function useShareState(ctx: LgPluginContext): Ref<boolean> {
@@ -144,6 +153,76 @@ export const ShareButton = defineComponent({
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
         const lgIcons = inject(LG_ICONS, undefined);
         const active = useShareState(ctx);
+        const outerEl = ref<HTMLElement | null>(null);
+        const buttonEl = ref<HTMLElement | null>(null);
+        const close = (returnFocus: boolean) => {
+            active.value = false;
+            if (returnFocus) {
+                buttonEl.value?.focus();
+            }
+        };
+        const onPointerDown = (event: Event) => {
+            const target = event.target as Node | null;
+            if (target && outerEl.value?.contains(target)) {
+                return;
+            }
+            consumeBackdropPress(event);
+            close(false);
+        };
+        const onKeydown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                // The dropdown is the topmost layer: Escape closes it,
+                // not the gallery behind it.
+                event.preventDefault();
+                event.stopPropagation();
+                close(true);
+                return;
+            }
+            if (event.key !== 'Tab') {
+                return;
+            }
+            // Tabbing between the button and its links keeps the
+            // dropdown; tabbing out of it closes it.
+            const focusable = outerEl.value
+                ? Array.from(
+                      outerEl.value.querySelectorAll<HTMLElement>(
+                          'button, a[href]',
+                      ),
+                  )
+                : [];
+            const index = focusable.indexOf(
+                document.activeElement as HTMLElement,
+            );
+            if (
+                index !== -1 &&
+                (event.shiftKey ? index === 0 : index === focusable.length - 1)
+            ) {
+                close(false);
+            }
+        };
+        // While open, the dropdown dismisses like the More options menu:
+        // on a press anywhere outside it, on Escape (the gallery stays
+        // open) and when focus tabs out of it.
+        let listening = false;
+        const listenOutside = (on: boolean) => {
+            if (on === listening) {
+                return;
+            }
+            listening = on;
+            if (on) {
+                document.addEventListener('pointerdown', onPointerDown, true);
+                document.addEventListener('keydown', onKeydown, true);
+            } else {
+                document.removeEventListener(
+                    'pointerdown',
+                    onPointerDown,
+                    true,
+                );
+                document.removeEventListener('keydown', onKeydown, true);
+            }
+        };
+        watch(active, listenOutside, { immediate: true });
+        onBeforeUnmount(() => listenOutside(false));
         return () => {
             const cfg = ctx.settings.value as unknown as ShareSettings;
             if (!cfg.share) {
@@ -193,10 +272,11 @@ export const ShareButton = defineComponent({
             // positioning context, so the menu hangs under the control
             // that opened it (nesting the list inside the button would be
             // invalid).
-            return h('div', { class: 'lg-share-outer' }, [
+            return h('div', { class: 'lg-share-outer', ref: outerEl }, [
                 h(
                     'button',
                     {
+                        ref: buttonEl,
                         type: 'button',
                         class: [
                             'lg-share lg-icon',
@@ -272,30 +352,11 @@ export const ShareButton = defineComponent({
     },
 });
 
-export const ShareOverlay = defineComponent({
-    name: 'LgShareOverlay',
-    setup() {
-        const ctx = inject(LG_PLUGIN_CONTEXT)!;
-        const active = useShareState(ctx);
-        return () => {
-            const cfg = ctx.settings.value as unknown as ShareSettings;
-            if (!cfg.share) {
-                return null;
-            }
-            return h('div', {
-                class: 'lg-dropdown-overlay',
-                onClick: () => (active.value = false),
-            });
-        };
-    },
-});
-
 const Share: LgVuePlugin<ShareSettings> = {
     name: 'share',
     defaults: shareSettings,
     slots: {
         toolbar: ShareButton,
-        outer: ShareOverlay,
     },
 };
 

@@ -113,3 +113,49 @@ export function isToolbarEventPath(path: readonly unknown[]): boolean {
             ).classList?.contains('lg-toolbar'),
     );
 }
+
+/**
+ * Class names of the backdrop around the slide, where a tap closes the
+ * gallery (`closeOnTap`) and a drag starts a swipe.
+ */
+const BACKDROP_CLASS_NAMES = [
+    'lg-outer',
+    'lg-item',
+    'lg-img-wrap',
+    'lg-img-rotate',
+];
+
+/** What the dismissal of a toolbar menu reads from the dismissing press. */
+export interface MenuDismissEvent {
+    target: unknown;
+    preventDefault(): void;
+    stopPropagation(): void;
+}
+
+/**
+ * A press outside an open toolbar menu (the More options menu, the share
+ * dropdown) dismisses it. A press on a control passes through, so one
+ * click on another toolbar button both dismisses the menu and runs the
+ * button. A press on the backdrop around the slide is consumed instead:
+ * there the gallery's own tap-to-close and drag would fire, and
+ * dismissing a menu must not also close the gallery. Cancelling the
+ * pointerdown suppresses the compatibility mouse events the vanilla
+ * runtime listens to; stopping it keeps the pointer-driven runtimes'
+ * handlers from arming. Returns whether the press was consumed.
+ */
+export function consumeBackdropPress(event: MenuDismissEvent): boolean {
+    const classList = (
+        event.target as {
+            classList?: { contains(name: string): boolean };
+        } | null
+    )?.classList;
+    if (
+        !classList ||
+        !BACKDROP_CLASS_NAMES.some((name) => classList.contains(name))
+    ) {
+        return false;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    return true;
+}

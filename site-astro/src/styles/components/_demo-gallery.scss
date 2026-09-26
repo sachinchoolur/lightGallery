@@ -178,8 +178,10 @@
         }
     }
 
+    // The toolbar's buttons only: the share dropdown's social icons are
+    // `.lg-icon` spans inside the toolbar and keep their own colors.
     .lg-toolbar {
-        .lg-icon {
+        .lg-icon:not(.lg-dropdown .lg-icon) {
             color: $lg-toolbar-icon-color;
             &:hover {
                 color: $lg-toolbar-icon-hover-color;

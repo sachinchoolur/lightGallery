@@ -1,4 +1,5 @@
 import {
+    consumeBackdropPress,
     coreDefaultIcons,
     getToolbarItemPriority,
     getToolbarOverflow,
@@ -307,6 +308,7 @@ export function ToolbarOverflow(): ReactElement {
             ) {
                 return;
             }
+            consumeBackdropPress(event);
             close(false);
         };
         menu.addEventListener('keydown', onKeyDown);

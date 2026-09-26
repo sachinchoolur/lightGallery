@@ -139,6 +139,25 @@ describe('toolbar overflow', () => {
         expect(onClose).not.toHaveBeenCalled();
     });
 
+    it('consumes a press on the backdrop so the gallery stays open', () => {
+        const { onClose } = renderGallery(300);
+        const more = query('.lg-more')!;
+        fireEvent.click(more);
+        // Another control: the press passes through (not cancelled), so
+        // one click both dismisses the menu and runs the control.
+        expect(fireEvent.pointerDown(query('.lg-close')!)).toBe(true);
+        expect(query('.lg-toolbar-menu')).toBeNull();
+        fireEvent.click(more);
+        expect(query('.lg-toolbar-menu')).not.toBeNull();
+        // The backdrop: consumed, so closeOnTap never arms and the
+        // release does not close the gallery.
+        const item = query('.lg-item')!;
+        expect(fireEvent.pointerDown(item)).toBe(false);
+        fireEvent.pointerUp(item);
+        expect(query('.lg-toolbar-menu')).toBeNull();
+        expect(onClose).not.toHaveBeenCalled();
+    });
+
     it('leaves the row alone when every button fits', () => {
         renderGallery(1200);
         expect(moved()).toHaveLength(0);

@@ -25,7 +25,7 @@ and mirrored its DOM, are replaced by components that render natively.
 ## Vanilla JavaScript
 
 The API is unchanged. The upgrade is packaging, a handful of new settings,
-a few changed defaults and two removals:
+a few changed defaults and three removals:
 
 -   **Imports are unchanged**, `import lightGallery from 'lightgallery'`,
     plugins from `lightgallery/plugins/<name>`, CSS from
@@ -40,6 +40,12 @@ a few changed defaults and two removals:
     ES module keeps its historical `*.es5.js` file name). See
     [browser support](/docs/getting-started/#browser-support); v2 remains
     available for IE.
+-   **The share dropdown has no overlay.** It dismisses like the
+    toolbar's More options menu: on a press anywhere outside it, on
+    Escape and when focus tabs out of it. The `.lg-dropdown-overlay`
+    element that dimmed the gallery behind it is not rendered, so drop
+    any CSS that targeted it. See
+    [Web Share](/docs/web-share/#dismissing-the-dropdown).
 -   **New settings are opt-in** unless listed under
     [changed defaults](#changed-defaults) below:
     [`strings`](/docs/localization-rtl/) and

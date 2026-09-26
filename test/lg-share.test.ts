@@ -53,6 +53,13 @@ function stubNavigatorShare(
     };
 }
 
+/** jsdom has no PointerEvent constructor; listeners go by event type. */
+function press(target: Element): boolean {
+    return target.dispatchEvent(
+        new MouseEvent('pointerdown', { bubbles: true, cancelable: true }),
+    );
+}
+
 describe('share plugin (vanilla)', () => {
     let instance: LightGallery | undefined;
 
@@ -107,6 +114,81 @@ describe('share plugin (vanilla)', () => {
         expect(document.querySelector('.lg-outer')).not.toHaveClass(
             'lg-dropdown-active',
         );
+    });
+
+    function openDropdown(): { button: HTMLElement; outer: Element } {
+        instance = initGallery({ preferNativeShare: false });
+        instance.openGallery(0);
+        jest.advanceTimersByTime(500);
+        const button = document.querySelector<HTMLElement>('.lg-share')!;
+        button.click();
+        const outer = document.querySelector('.lg-outer')!;
+        expect(outer).toHaveClass('lg-dropdown-active');
+        return { button, outer };
+    }
+
+    it('closes on a press outside, which passes through to controls', () => {
+        const { button, outer } = openDropdown();
+        // Inside the dropdown: stays open.
+        press(document.querySelector('.lg-share-facebook')!);
+        expect(outer).toHaveClass('lg-dropdown-active');
+        // Another toolbar button: closes, and the press is not cancelled,
+        // so the same click runs that button.
+        expect(press(document.querySelector('.lg-close')!)).toBe(true);
+        expect(outer).not.toHaveClass('lg-dropdown-active');
+        expect(button).toHaveAttribute('aria-expanded', 'false');
+        expect(instance!.lgOpened).toBe(true);
+    });
+
+    it('consumes a press on the backdrop so the gallery stays open', () => {
+        const { outer } = openDropdown();
+        // Cancelled: the compatibility mousedown/mouseup that arm
+        // closeOnTap never fire.
+        expect(press(document.querySelector('.lg-item')!)).toBe(false);
+        expect(outer).not.toHaveClass('lg-dropdown-active');
+        expect(instance!.lgOpened).toBe(true);
+    });
+
+    it('closes on Escape without closing the gallery', () => {
+        const { button, outer } = openDropdown();
+        button.focus();
+        button.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'Escape',
+                keyCode: 27,
+                bubbles: true,
+                cancelable: true,
+            } as KeyboardEventInit),
+        );
+        expect(outer).not.toHaveClass('lg-dropdown-active');
+        expect(document.activeElement).toBe(button);
+        expect(instance!.lgOpened).toBe(true);
+    });
+
+    it('closes when focus tabs out of the dropdown', () => {
+        const { button, outer } = openDropdown();
+        const tab = (from: HTMLElement, shiftKey = false) => {
+            from.focus();
+            from.dispatchEvent(
+                new KeyboardEvent('keydown', {
+                    key: 'Tab',
+                    shiftKey,
+                    bubbles: true,
+                }),
+            );
+        };
+        // From the button into the links: still open.
+        tab(button);
+        expect(outer).toHaveClass('lg-dropdown-active');
+        // Out past the last link: closed.
+        const links = document.querySelectorAll<HTMLElement>('.lg-dropdown a');
+        tab(links[links.length - 1]);
+        expect(outer).not.toHaveClass('lg-dropdown-active');
+        // Backwards out of the button: closed too.
+        button.click();
+        expect(outer).toHaveClass('lg-dropdown-active');
+        tab(button, true);
+        expect(outer).not.toHaveClass('lg-dropdown-active');
     });
 
     it('prefers the native share sheet when enabled and available', () => {

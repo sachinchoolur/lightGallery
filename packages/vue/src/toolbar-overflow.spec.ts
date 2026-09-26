@@ -19,6 +19,13 @@ function query(selector: string): HTMLElement | null {
     return document.querySelector(selector);
 }
 
+/** jsdom has no PointerEvent constructor; listeners go by event type. */
+function press(target: Element): boolean {
+    return target.dispatchEvent(
+        new MouseEvent('pointerdown', { bubbles: true, cancelable: true }),
+    );
+}
+
 async function settle(): Promise<void> {
     for (let i = 0; i < 4; i++) {
         await nextTick();
@@ -165,6 +172,31 @@ describe('toolbar overflow', () => {
         await settle();
         expect(query('.lg-toolbar-menu')).toBeNull();
         expect(document.activeElement).toBe(more);
+        expect(
+            wrapper.findComponent(LightGallery).emitted('before-close'),
+        ).toBeUndefined();
+    });
+
+    it('consumes a press on the backdrop so the gallery stays open', async () => {
+        const wrapper = await openGallery(300);
+        const more = query('.lg-more')!;
+        more.click();
+        await settle();
+        // Another control: the press passes through (not cancelled), so
+        // one click both dismisses the menu and runs the control.
+        expect(press(query('.lg-close')!)).toBe(true);
+        await settle();
+        expect(query('.lg-toolbar-menu')).toBeNull();
+        more.click();
+        await settle();
+        expect(query('.lg-toolbar-menu')).not.toBeNull();
+        // The backdrop: consumed, so closeOnTap never arms and the
+        // release does not close the gallery.
+        const item = query('.lg-item')!;
+        expect(press(item)).toBe(false);
+        item.dispatchEvent(new MouseEvent('pointerup', { bubbles: true }));
+        await settle();
+        expect(query('.lg-toolbar-menu')).toBeNull();
         expect(
             wrapper.findComponent(LightGallery).emitted('before-close'),
         ).toBeUndefined();

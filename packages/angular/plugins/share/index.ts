@@ -2,13 +2,18 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    DestroyRef,
     effect,
+    ElementRef,
     inject,
     Injectable,
     signal,
+    untracked,
+    viewChild,
 } from '@angular/core';
 import {
     canNativeShare,
+    consumeBackdropPress,
     getFacebookShareLink,
     getPinterestShareLink,
     getSharePayload,
@@ -118,9 +123,9 @@ function getShareOptions(settings: ShareSettings): ShareOption[] {
 }
 
 /**
- * Dropdown open-state shared between the button and the outer overlay —
- * a per-gallery feature service (the Angular analog of React reading
- * `pluginOuterClassNames`); mirrored to the `lg-dropdown-active` class.
+ * Dropdown open state, a per-gallery feature service (the Angular analog
+ * of React reading `pluginOuterClassNames`); mirrored to the
+ * `lg-dropdown-active` class.
  */
 @Injectable()
 export class LgShareStateService {
@@ -151,8 +156,9 @@ export class LgShareStateService {
                  positioning context, so the menu hangs under the control
                  that opened it (nesting the list inside the button would
                  be invalid). -->
-        <div class="lg-share-outer">
+        <div class="lg-share-outer" #outer>
             <button
+                #button
                 type="button"
                 class="lg-share lg-icon lg-icon-custom"
                 [attr.aria-label]="
@@ -211,6 +217,22 @@ export class LgShareButtonComponent {
         return resolveIconSlot(this.ctx.icons?.(), [this.socialName(cls)]);
     }
     protected readonly state = inject(LgShareStateService);
+    private readonly outerRef = viewChild<ElementRef<HTMLElement>>('outer');
+    private readonly buttonRef =
+        viewChild<ElementRef<HTMLButtonElement>>('button');
+    private listening = false;
+
+    constructor() {
+        // While open, the dropdown dismisses like the More options menu:
+        // on a press anywhere outside it, on Escape (the gallery stays
+        // open) and when focus tabs out of it.
+        effect(() => {
+            const open = this.state.active();
+            untracked(() => this.listenOutside(open));
+        });
+        inject(DestroyRef).onDestroy(() => this.listenOutside(false));
+    }
+
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as ShareSettings,
     );
@@ -252,27 +274,67 @@ export class LgShareButtonComponent {
         }
         this.state.active.set(!this.state.active());
     }
-}
 
-@Component({
-    selector: 'lg-share-overlay',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [LgCiComponent],
-    template: `
-        @if (settings().share) {
-        <div
-            class="lg-dropdown-overlay"
-            (click)="state.active.set(false)"
-        ></div>
+    private close(returnFocus: boolean): void {
+        this.state.active.set(false);
+        if (returnFocus) {
+            this.buttonRef()?.nativeElement.focus();
         }
-    `,
-})
-export class LgShareOverlayComponent {
-    private readonly ctx = inject(LG_PLUGIN_CONTEXT);
-    protected readonly state = inject(LgShareStateService);
-    protected readonly settings = computed(
-        () => this.ctx.settings() as unknown as ShareSettings,
-    );
+    }
+
+    private listenOutside(on: boolean): void {
+        if (on === this.listening) {
+            return;
+        }
+        this.listening = on;
+        if (on) {
+            document.addEventListener('pointerdown', this.onPointerDown, true);
+            document.addEventListener('keydown', this.onKeydown, true);
+        } else {
+            document.removeEventListener(
+                'pointerdown',
+                this.onPointerDown,
+                true,
+            );
+            document.removeEventListener('keydown', this.onKeydown, true);
+        }
+    }
+
+    private readonly onPointerDown = (event: Event): void => {
+        const target = event.target as Node | null;
+        if (target && this.outerRef()?.nativeElement.contains(target)) {
+            return;
+        }
+        consumeBackdropPress(event);
+        this.close(false);
+    };
+
+    private readonly onKeydown = (event: KeyboardEvent): void => {
+        if (event.key === 'Escape') {
+            // The dropdown is the topmost layer: Escape closes it, not
+            // the gallery behind it.
+            event.preventDefault();
+            event.stopPropagation();
+            this.close(true);
+            return;
+        }
+        if (event.key !== 'Tab') {
+            return;
+        }
+        // Tabbing between the button and its links keeps the dropdown;
+        // tabbing out of it closes it.
+        const outer = this.outerRef()?.nativeElement;
+        const focusable = outer
+            ? Array.from(outer.querySelectorAll<HTMLElement>('button, a[href]'))
+            : [];
+        const index = focusable.indexOf(document.activeElement as HTMLElement);
+        if (
+            index !== -1 &&
+            (event.shiftKey ? index === 0 : index === focusable.length - 1)
+        ) {
+            this.close(false);
+        }
+    };
 }
 
 export function withShare(
@@ -284,7 +346,6 @@ export function withShare(
         options,
         slots: {
             toolbar: LgShareButtonComponent,
-            outer: LgShareOverlayComponent,
         },
         providers: [LgShareStateService],
     };

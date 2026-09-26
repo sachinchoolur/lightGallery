@@ -1,6 +1,7 @@
-import { useEffect, type ReactElement } from 'react';
+import { useEffect, useRef, type ReactElement } from 'react';
 import {
     canNativeShare,
+    consumeBackdropPress,
     getFacebookShareLink,
     getPinterestShareLink,
     getSharePayload,
@@ -123,6 +124,8 @@ function ShareButton(): ReactElement | null {
     const state = useGalleryState();
     const internal = useGalleryInternal();
     const settings = usePluginSettings<ShareSettings>();
+    const outerRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
     // The open state lives on the outer element, which outlives a close:
     // without this an open dropdown would still be open on the next open.
     const { layout } = internal;
@@ -131,16 +134,71 @@ function ShareButton(): ReactElement | null {
             layout.setOuterClass('lg-dropdown-active', false);
         }
     }, [state.open, layout]);
+    const active =
+        internal.pluginOuterClassNames.includes('lg-dropdown-active');
+    // While open, the dropdown dismisses like the More options menu: on a
+    // press anywhere outside it, on Escape (the gallery stays open) and
+    // when focus tabs out of it.
+    useEffect(() => {
+        const outer = outerRef.current;
+        if (!active || !outer) {
+            return;
+        }
+        const close = (returnFocus: boolean) => {
+            layout.setOuterClass('lg-dropdown-active', false);
+            if (returnFocus) {
+                buttonRef.current?.focus();
+            }
+        };
+        const onPointerDown = (event: Event) => {
+            const target = event.target as Node | null;
+            if (target && outer.contains(target)) {
+                return;
+            }
+            consumeBackdropPress(event);
+            close(false);
+        };
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                // The dropdown is the topmost layer: Escape closes it,
+                // not the gallery behind it.
+                event.preventDefault();
+                event.stopPropagation();
+                close(true);
+                return;
+            }
+            if (event.key !== 'Tab') {
+                return;
+            }
+            // Tabbing between the button and its links keeps the
+            // dropdown; tabbing out of it closes it.
+            const focusable = Array.from(
+                outer.querySelectorAll<HTMLElement>('button, a[href]'),
+            );
+            const index = focusable.indexOf(
+                document.activeElement as HTMLElement,
+            );
+            if (
+                index !== -1 &&
+                (event.shiftKey ? index === 0 : index === focusable.length - 1)
+            ) {
+                close(false);
+            }
+        };
+        document.addEventListener('pointerdown', onPointerDown, true);
+        document.addEventListener('keydown', onKeyDown, true);
+        return () => {
+            document.removeEventListener('pointerdown', onPointerDown, true);
+            document.removeEventListener('keydown', onKeyDown, true);
+        };
+    }, [active, layout]);
     if (!settings.share) {
         return null;
     }
     const item = internal.items[state.currentIndex];
     const currentUrl =
         typeof window !== 'undefined' ? window.location.href : '';
-    const active =
-        internal.pluginOuterClassNames.includes('lg-dropdown-active');
-    const toggle = () =>
-        internal.layout.setOuterClass('lg-dropdown-active', !active);
+    const toggle = () => layout.setOuterClass('lg-dropdown-active', !active);
     // Web Share hybrid: try the OS sheet first where preferred and
     // available; the dropdown stays rendered as the automatic fallback.
     const nativeFirst =
@@ -162,8 +220,9 @@ function ShareButton(): ReactElement | null {
     // positioning context, so the menu hangs under the control that opened
     // it (nesting the list inside the button would be invalid).
     return (
-        <div className="lg-share-outer">
+        <div ref={outerRef} className="lg-share-outer">
             <button
+                ref={buttonRef}
                 type="button"
                 aria-label={
                     settings.sharePluginStrings?.share ?? settings.strings.share
@@ -208,28 +267,11 @@ function ShareButton(): ReactElement | null {
     );
 }
 
-function ShareOverlay(): ReactElement | null {
-    const internal = useGalleryInternal();
-    const settings = usePluginSettings<ShareSettings>();
-    if (!settings.share) {
-        return null;
-    }
-    return (
-        <div
-            className="lg-dropdown-overlay"
-            onClick={() =>
-                internal.layout.setOuterClass('lg-dropdown-active', false)
-            }
-        />
-    );
-}
-
 const Share: LgPlugin<ShareSettings> = {
     name: 'share',
     defaults: shareSettings,
     slots: {
         toolbar: ShareButton,
-        outer: ShareOverlay,
     },
 };
 

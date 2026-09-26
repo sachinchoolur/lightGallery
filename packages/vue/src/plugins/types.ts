@@ -70,7 +70,7 @@ export interface LgPluginSlots {
     toolbar?: Component;
     /** Footer area (`.lg-components`): thumbnails, pager. */
     components?: Component;
-    /** Overlay panels inside `.lg-outer`: share dropdown, comment box. */
+    /** Overlay panels inside `.lg-outer`: the comment box. */
     outer?: Component;
     /**
      * Wraps slide content (zoom transform, rotate wrap). Receives

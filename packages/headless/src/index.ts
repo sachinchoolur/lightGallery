@@ -162,9 +162,11 @@ export {
 export {
     TOOLBAR_DEFAULT_PRIORITY,
     TOOLBAR_PINNED,
+    consumeBackdropPress,
     getToolbarItemPriority,
     getToolbarOverflow,
     isToolbarEventPath,
+    type MenuDismissEvent,
     type ToolbarOverflowInput,
     type ToolbarOverflowItem,
 } from './toolbar-overflow';

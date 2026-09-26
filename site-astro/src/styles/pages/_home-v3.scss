@@ -1898,12 +1898,15 @@ body.home-v3 {
 
     // The demos' galleries. lightGallery's container carries `addClass`: the
     // hotel uses the site's white theme, the shop and portfolio these.
+    // The toolbar rules below style its buttons only: the share dropdown
+    // hangs inside the toolbar and its social icons are `.lg-icon` spans
+    // too, which keep the library's look.
     // The shop: every action a round button, bold icons, and the Buy now
     // button its plugin adds, as a pill.
     .home-lg-round {
         .lg-toolbar {
             padding: 6px 8px 0 0;
-            .lg-icon {
+            .lg-icon:not(.lg-dropdown .lg-icon) {
                 width: 40px;
                 height: 40px;
                 margin: 4px 0 0 8px;
@@ -1978,7 +1981,7 @@ body.home-v3 {
         }
         .lg-toolbar {
             padding: 6px 8px 0 0;
-            .lg-icon {
+            .lg-icon:not(.lg-dropdown .lg-icon) {
                 width: 40px;
                 height: 40px;
                 margin: 4px 0 0 6px;
@@ -2048,7 +2051,7 @@ body.home-v3 {
         }
         .lg-toolbar {
             padding-right: 6px;
-            .lg-icon {
+            .lg-icon:not(.lg-dropdown .lg-icon) {
                 width: 44px;
                 color: rgba(#fff, 0.85);
                 font-size: 20px;

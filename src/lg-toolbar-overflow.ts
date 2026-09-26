@@ -1,4 +1,5 @@
 import {
+    consumeBackdropPress,
     getToolbarItemPriority,
     getToolbarOverflow,
 } from '@lightgallery/headless';
@@ -302,6 +303,7 @@ export class ToolbarOverflow {
         ) {
             return;
         }
+        consumeBackdropPress(event);
         this.close(false);
     };
 }

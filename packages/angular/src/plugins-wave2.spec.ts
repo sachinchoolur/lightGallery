@@ -35,6 +35,13 @@ function query(selector: string): HTMLElement | null {
     return document.querySelector(selector);
 }
 
+/** jsdom has no PointerEvent constructor; listeners go by event type. */
+function press(target: Element): boolean {
+    return target.dispatchEvent(
+        new MouseEvent('pointerdown', { bubbles: true, cancelable: true }),
+    );
+}
+
 async function flush<T>(fixture: ComponentFixture<T>): Promise<void> {
     fixture.detectChanges();
     await fixture.whenStable();
@@ -296,11 +303,58 @@ describe('wave-2 features', () => {
         expect(
             query('.lg-outer')!.classList.contains('lg-dropdown-active'),
         ).toBe(true);
-        (query('.lg-dropdown-overlay') as HTMLElement).click();
+        // A press inside the dropdown keeps it open; one on another
+        // control closes it and passes through (not cancelled), so the
+        // same click runs that control.
+        press(links[0]!);
+        await flush(fixture);
+        expect(
+            query('.lg-outer')!.classList.contains('lg-dropdown-active'),
+        ).toBe(true);
+        expect(press(query('.lg-close')!)).toBe(true);
         await flush(fixture);
         expect(
             query('.lg-outer')!.classList.contains('lg-dropdown-active'),
         ).toBe(false);
+        expect(query('.lg-share')!.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('share: backdrop press and Escape dismiss the dropdown, not the gallery', async () => {
+        const fixture = TestBed.createComponent(Wave2Host);
+        const host = fixture.componentInstance;
+        host.features.set([withShare()]);
+        await flush(fixture);
+        await openAndLoad(fixture);
+        const button = query('.lg-share') as HTMLButtonElement;
+        button.click();
+        await flush(fixture);
+        // The backdrop press is consumed: closeOnTap never arms, so the
+        // release that follows does not close the gallery.
+        const item = query('.lg-item')!;
+        expect(press(item)).toBe(false);
+        item.dispatchEvent(new MouseEvent('pointerup', { bubbles: true }));
+        await flush(fixture);
+        expect(
+            query('.lg-outer')!.classList.contains('lg-dropdown-active'),
+        ).toBe(false);
+        expect(query('.lg-container.lg-show')).not.toBeNull();
+
+        button.click();
+        await flush(fixture);
+        button.focus();
+        button.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'Escape',
+                bubbles: true,
+                cancelable: true,
+            }),
+        );
+        await flush(fixture);
+        expect(
+            query('.lg-outer')!.classList.contains('lg-dropdown-active'),
+        ).toBe(false);
+        expect(document.activeElement).toBe(button);
+        expect(query('.lg-container.lg-show')).not.toBeNull();
     });
 
     it('share: dropdown closes with the gallery', async () => {

@@ -16,6 +16,13 @@ function query(selector: string): HTMLElement | null {
     return document.querySelector(selector);
 }
 
+/** jsdom has no PointerEvent constructor; listeners go by event type. */
+function press(target: Element): boolean {
+    return target.dispatchEvent(
+        new MouseEvent('pointerdown', { bubbles: true, cancelable: true }),
+    );
+}
+
 async function flush<T>(fixture: ComponentFixture<T>): Promise<void> {
     fixture.detectChanges();
     await fixture.whenStable();
@@ -229,6 +236,29 @@ describe('toolbar overflow', () => {
         await flush(fixture);
         expect(query('.lg-toolbar-menu')).toBeNull();
         expect(document.activeElement).toBe(more);
+        expect(fixture.componentInstance.closed).toBe(false);
+    });
+
+    it('consumes a press on the backdrop so the gallery stays open', async () => {
+        const fixture = await open(OverflowHost, 300);
+        const more = query('.lg-more')!;
+        more.click();
+        await flush(fixture);
+        // Another control: the press passes through (not cancelled), so
+        // one click both dismisses the menu and runs the control.
+        expect(press(query('.lg-close')!)).toBe(true);
+        await flush(fixture);
+        expect(query('.lg-toolbar-menu')).toBeNull();
+        more.click();
+        await flush(fixture);
+        expect(query('.lg-toolbar-menu')).not.toBeNull();
+        // The backdrop: consumed, so closeOnTap never arms and the
+        // release does not close the gallery.
+        const item = query('.lg-item')!;
+        expect(press(item)).toBe(false);
+        item.dispatchEvent(new MouseEvent('pointerup', { bubbles: true }));
+        await flush(fixture);
+        expect(query('.lg-toolbar-menu')).toBeNull();
         expect(fixture.componentInstance.closed).toBe(false);
     });
 

@@ -1,5 +1,6 @@
 import {
     canNativeShare,
+    consumeBackdropPress,
     getSharePayload,
     shareDefaultIcons,
 } from '@lightgallery/headless';
@@ -28,6 +29,7 @@ export default class Share {
     core: LightGallery;
     settings: ShareSettings;
     private shareOptions: ShareOption[] = [];
+    private listening = false;
     constructor(instance: LightGallery) {
         // get lightGallery core plugin instance
         this.core = instance;
@@ -95,7 +97,6 @@ export default class Share {
                 <ul class="lg-dropdown" style="position: absolute;"></ul></div>`,
         );
 
-        this.core.outer.append('<div class="lg-dropdown-overlay"></div>');
         const $shareButton = this.core.outer.find('.lg-share');
         $shareButton.first().on('click.lg', () => {
             if (this.prefersNativeShare()) {
@@ -114,18 +115,14 @@ export default class Share {
                 !this.core.outer.hasClass('lg-dropdown-active'),
             );
         });
-
-        this.core.outer
-            .find('.lg-dropdown-overlay')
-            .first()
-            .on('click.lg', () => {
-                this.setDropdownOpen(false);
-            });
     }
 
     /**
      * Open state lives on the outer element, which outlives a close, so an
-     * open dropdown would still be open on the next open.
+     * open dropdown would still be open on the next open. While open, the
+     * dropdown dismisses like the More options menu: on a press anywhere
+     * outside it, on Escape (the gallery stays open) and when focus tabs
+     * out of it.
      */
     private setDropdownOpen(open: boolean): void {
         if (open) {
@@ -137,7 +134,74 @@ export default class Share {
             .find('.lg-share')
             .first()
             .attr('aria-expanded', open ? 'true' : 'false');
+        this.listenOutside(open);
     }
+
+    private listenOutside(on: boolean): void {
+        if (on === this.listening) {
+            return;
+        }
+        this.listening = on;
+        if (on) {
+            document.addEventListener(
+                'pointerdown',
+                this.onDocumentPointerDown,
+                true,
+            );
+            document.addEventListener('keydown', this.onDocumentKeydown, true);
+        } else {
+            document.removeEventListener(
+                'pointerdown',
+                this.onDocumentPointerDown,
+                true,
+            );
+            document.removeEventListener(
+                'keydown',
+                this.onDocumentKeydown,
+                true,
+            );
+        }
+    }
+
+    private readonly onDocumentPointerDown = (event: Event): void => {
+        const target = event.target as Node | null;
+        const shareOuter = this.core.outer.find('.lg-share-outer').get();
+        if (target && shareOuter && shareOuter.contains(target)) {
+            return;
+        }
+        consumeBackdropPress(event);
+        this.setDropdownOpen(false);
+    };
+
+    private readonly onDocumentKeydown = (event: KeyboardEvent): void => {
+        if (event.key === 'Escape') {
+            // The dropdown is the topmost layer: Escape closes it, not
+            // the gallery behind it.
+            event.preventDefault();
+            event.stopPropagation();
+            this.setDropdownOpen(false);
+            this.core.outer.find('.lg-share').get()?.focus();
+            return;
+        }
+        if (event.key !== 'Tab') {
+            return;
+        }
+        // Tabbing between the button and its links keeps the dropdown;
+        // tabbing out of it closes it.
+        const shareOuter = this.core.outer.find('.lg-share-outer').get();
+        const focusable = shareOuter
+            ? Array.from(
+                  shareOuter.querySelectorAll<HTMLElement>('button, a[href]'),
+              )
+            : [];
+        const index = focusable.indexOf(document.activeElement as HTMLElement);
+        if (
+            index !== -1 &&
+            (event.shiftKey ? index === 0 : index === focusable.length - 1)
+        ) {
+            this.setDropdownOpen(false);
+        }
+    };
 
     private onAfterSlide(event: CustomEvent) {
         const { index } = event.detail;
@@ -201,7 +265,7 @@ export default class Share {
     }
 
     public destroy(): void {
-        this.core.outer.find('.lg-dropdown-overlay').remove();
+        this.listenOutside(false);
         this.core.outer.find('.lg-share-outer').remove();
         this.core.LGel.off('.lg.share');
         this.core.LGel.off('.share');

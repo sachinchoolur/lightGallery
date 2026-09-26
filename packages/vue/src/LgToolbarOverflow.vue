@@ -11,6 +11,7 @@ let menuSeq = 0;
  * in a "More options" menu whose items click the hidden buttons.
  */
 import {
+    consumeBackdropPress,
     coreDefaultIcons,
     getToolbarItemPriority,
     getToolbarOverflow,
@@ -321,6 +322,7 @@ function onPointerDown(event: Event): void {
     ) {
         return;
     }
+    consumeBackdropPress(event);
     close(false);
 }
 </script>

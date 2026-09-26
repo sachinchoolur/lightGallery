@@ -112,7 +112,7 @@ export interface LgFeatureSlots {
     toolbar?: Type<unknown>;
     /** Footer area (`.lg-components`): thumbnails, pager. */
     components?: Type<unknown>;
-    /** Overlay panels inside `.lg-outer`: share dropdown, comment box. */
+    /** Overlay panels inside `.lg-outer`: the comment box. */
     outer?: Type<unknown>;
     /** Wraps slide content (zoom/rotate); see {@link LgSlideWrapperInputs}. */
     slideWrapper?: Type<unknown>;

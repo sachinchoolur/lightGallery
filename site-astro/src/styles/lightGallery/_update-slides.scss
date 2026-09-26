@@ -1,11 +1,12 @@
 .lg-update-slide-demo {
+    // The toolbar's buttons only, not the share dropdown's social icons.
     .lg-toolbar {
-        .lg-icon {
+        .lg-icon:not(.lg-dropdown .lg-icon) {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        svg {
+        .lg-icon:not(.lg-dropdown .lg-icon) svg {
             fill: #999;
             width: 22px;
             height: 22px;

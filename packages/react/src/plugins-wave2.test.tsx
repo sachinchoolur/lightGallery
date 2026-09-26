@@ -275,10 +275,45 @@ describe('share plugin', () => {
         expect(document.querySelector('.lg-outer')).toHaveClass(
             'lg-dropdown-active',
         );
-        fireEvent.click(document.querySelector('.lg-dropdown-overlay')!);
+        // A press inside the dropdown keeps it open; one on another
+        // control closes it and passes through (not cancelled), so the
+        // same click runs that control.
+        fireEvent.pointerDown(links[0]!);
+        expect(document.querySelector('.lg-outer')).toHaveClass(
+            'lg-dropdown-active',
+        );
+        expect(
+            fireEvent.pointerDown(document.querySelector('.lg-close')!),
+        ).toBe(true);
         expect(document.querySelector('.lg-outer')).not.toHaveClass(
             'lg-dropdown-active',
         );
+        expect(button).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('dismisses on a backdrop press and on Escape, keeping the gallery open', () => {
+        const onClose = vi.fn();
+        renderGallery({ plugins: [Share], onClose });
+        const button = screen.getByLabelText('Share');
+        fireEvent.click(button);
+        // The backdrop press is consumed: closeOnTap never arms, so the
+        // release that follows does not close the gallery.
+        const item = document.querySelector('.lg-item')!;
+        expect(fireEvent.pointerDown(item)).toBe(false);
+        fireEvent.pointerUp(item);
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-dropdown-active',
+        );
+        expect(onClose).not.toHaveBeenCalled();
+
+        fireEvent.click(button);
+        button.focus();
+        fireEvent.keyDown(button, { key: 'Escape' });
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-dropdown-active',
+        );
+        expect(document.activeElement).toBe(button);
+        expect(onClose).not.toHaveBeenCalled();
     });
 
     it('closes the dropdown when the gallery closes', () => {

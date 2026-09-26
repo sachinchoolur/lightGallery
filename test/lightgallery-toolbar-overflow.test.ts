@@ -63,6 +63,13 @@ function query(selector: string): HTMLElement | null {
     return document.querySelector<HTMLElement>(selector);
 }
 
+/** jsdom has no PointerEvent constructor; listeners go by event type. */
+function press(target: Element): boolean {
+    return target.dispatchEvent(
+        new MouseEvent('pointerdown', { bubbles: true, cancelable: true }),
+    );
+}
+
 function toolbarButtons(): HTMLElement[] {
     return Array.from(
         document.querySelectorAll<HTMLElement>('.lg-toolbar > .lg-icon'),
@@ -148,6 +155,23 @@ describe('toolbar overflow (vanilla core)', () => {
         );
         expect(query('.lg-toolbar-menu')).toBeNull();
         expect(document.activeElement).toBe(more);
+        expect(instance!.lgOpened).toBe(true);
+    });
+
+    it('consumes a press on the backdrop so the gallery stays open', () => {
+        open(300);
+        const more = query('.lg-more')!;
+        more.click();
+        // Another control: the press passes through (not cancelled), so
+        // one click both dismisses the menu and runs the control.
+        expect(press(query('.lg-close')!)).toBe(true);
+        expect(query('.lg-toolbar-menu')).toBeNull();
+        more.click();
+        expect(query('.lg-toolbar-menu')).not.toBeNull();
+        // The backdrop: dismissing the menu must not also close the
+        // gallery (closeOnTap), so the press is cancelled.
+        expect(press(query('.lg-item')!)).toBe(false);
+        expect(query('.lg-toolbar-menu')).toBeNull();
         expect(instance!.lgOpened).toBe(true);
     });
 

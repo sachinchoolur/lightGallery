@@ -104,11 +104,19 @@ Long-standing bugs, all of them present in 2.x:
   `<button>` it was nested in. Closing the gallery with the dropdown open
   left it open on the next open; it now closes with the gallery, and the
   share button's `aria-expanded` tracks it.
+- The share dropdown stayed open while the other toolbar buttons and the
+  arrows were used: its dimming overlay sat below the toolbar, so only a
+  click on the slide dismissed it, and Escape closed the whole gallery
+  instead. The dropdown now dismisses like the More options menu: on a
+  press anywhere outside it, on Escape (the gallery stays open) and when
+  focus tabs out of it. A dismissing tap on the backdrop no longer also
+  closes the gallery, for the More options menu as well.
 
 ### Removed
 
 - The `lightgallery/react`, `lightgallery/vue` and `lightgallery/angular`
   wrappers, replaced by the native packages above.
+- The share dropdown's `.lg-dropdown-overlay` element.
 
 See the [migration guide](https://www.lightgalleryjs.com/docs/migration/)
 for the upgrade steps.
