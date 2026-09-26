@@ -247,15 +247,23 @@ import Video from '@lightgallery/vue/plugins/video';
 </Fragment>
 </CodeTabs>
 
-#### Videojs example
+#### Video.js example
 
 <a href="https://videojs.com/" target="_blank">Video.js</a> is a web video
-player built from the ground up for an HTML5 world. lightGallery has inbuilt
-Video.js Support. To enable videojs in lightGallery you just need to pass
-`videojs`: `true` via lightGallery settings. You can also pass the videojs
-options via `videojsOptions`
+player built from the ground up for an HTML5 world. lightGallery has built-in
+Video.js support: include Video.js on the page, then pass `videojs: true`
+via lightGallery settings. You can also pass Video.js options via
+`videojsOptions`.
 
-Note - Make sure that you pass proper JSON object in data-video attribute
+```html
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/video.js@8/dist/video-js.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/video.js@8/dist/video.min.js"></script>
+```
+
+Note - Make sure that you pass a proper JSON object in the data-video attribute.
 
 ##### Demo
 

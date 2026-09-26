@@ -26,9 +26,6 @@ const items = pick(Astro.props.photos ?? 'desert', limit);
                 data-tweet-text={`lightGallery slide ${i + 1}`}
                 data-pinterest-text={p.title}
                 data-reddit-title={p.title}
-                data-disqus-identifier={p.id}
-                data-disqus-url={`https://www.lightgalleryjs.com/demos/comment-box/#lg=1&slide=${i}`}
-                data-fb-html={`<div class="fb-comments" data-href="https://www.lightgalleryjs.com/demos/comment-box/#lg=1&slide=${i}" data-width="400" data-numposts="5"></div>`}
             >
                 <img class="img-responsive" alt={p.alt} src={p.thumb} />
             </a>

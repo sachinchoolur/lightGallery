@@ -10,7 +10,6 @@
 import { getJustifiedLayout, parseImageSize } from '@lightgallery/headless';
 import lightGallery from 'lightgallery';
 import lgAutoplay from 'lightgallery/plugins/autoplay';
-import lgComment from 'lightgallery/plugins/comment';
 import lgFullscreen from 'lightgallery/plugins/fullscreen';
 import lgHash from 'lightgallery/plugins/hash';
 import lgJustified from 'lightgallery/plugins/justified';
@@ -63,6 +62,11 @@ if (document.getElementById('slick-carousel-gallery-demo')) {
 if (document.getElementById('owl-carousel-gallery-demo')) {
     await loadVendor(jQueryUrl);
     await loadVendor(owlUrl);
+}
+// Video.js drives the HTML5 player in the videojs demo only (the video
+// plugin picks it up from window.videojs).
+if (document.getElementById('gallery-videojs-demo')) {
+    await loadVendor('https://cdn.jsdelivr.net/npm/video.js@8/dist/video.min.js');
 }
 
 // Justified trigger grids: the justified layout plugin positions the
@@ -731,7 +735,6 @@ lightGalleryJustified('gallery-videos-demo', {
     preload: 0,
 });
 lightGalleryJustified('gallery-videojs-demo', {
-    //thumbnail: false,
     pager: false,
     hash: false,
     preload: 0,
@@ -814,24 +817,6 @@ lightGalleryJustified('responsive-images-demo', {
     pager: true,
     hash: true,
     plugins: [lgAutoplay, lgThumbnail],
-});
-lightGalleryJustified('gallery-fb-comments-demo', {
-    thumbnail: false,
-    pager: false,
-    hash: true,
-    plugins: [lgZoom, lgComment, lgShare, lgThumbnail],
-    commentBox: true,
-    disqusComments: false,
-    fbComments: true,
-});
-lightGalleryJustified('gallery-disqus-comments-demo', {
-    thumbnail: false,
-    pager: false,
-    hash: true,
-    plugins: [lgComment, lgRotate],
-    commentBox: true,
-    disqusComments: true,
-    fbComments: false,
 });
 lightGalleryJustified('gallery-mixed-content-demo', {
     thumbnail: false,

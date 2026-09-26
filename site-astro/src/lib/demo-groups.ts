@@ -80,7 +80,6 @@ export const DEMO_GROUPS: DemoGroup[] = [
             'update-slides',
             'hash',
             'share',
-            'comment-box',
             'custom-icons',
             'transitions',
             'custom-easing',

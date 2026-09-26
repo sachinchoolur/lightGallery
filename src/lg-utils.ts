@@ -200,7 +200,7 @@ export interface GalleryItem {
      * @example
      * <div
      *      class="fb-comments"
-     *      data-href="https://www.lightgalleryjs.com/demos/comment-box/#facebook-comments-demo"
+     *      data-href="https://www.example.com/your-page/#lg=1&slide=0"
      *      data-width="400"
      *      data-numposts="5">
      * </div>

@@ -138,7 +138,7 @@ export default class CommentBox {
                         });
                     } catch (err) {
                         console.error(
-                            'lightGallery: make sure you have included the Disqus JavaScript code in your document. See https://www.lightgalleryjs.com/demos/comment-box/',
+                            'lightGallery: make sure you have included the Disqus JavaScript code in your document. See https://www.lightgalleryjs.com/docs/settings/#comment-box-plugin',
                         );
                     }
                 },
