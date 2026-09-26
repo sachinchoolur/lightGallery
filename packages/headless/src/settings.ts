@@ -124,7 +124,10 @@ export interface CoreSettings {
     /** Transition duration in ms. */
     speed: number;
 
-    /** Commercial license key (`0000-0000-000-0000` for testing). */
+    /**
+     * Commercial license key. lightGallery 3 keys start with `LIG`;
+     * `0000-0000-000-0000` is the temporary testing key.
+     */
     licenseKey: string;
 
     /** Height of the gallery, e.g. '100%', '300px'. */

@@ -1,5 +1,6 @@
 export { LightGallery } from './LightGallery';
 export { LightGalleryItem } from './LightGalleryItem';
+export { setLicenseKey } from '@lightgallery/headless';
 export type { LightGalleryItemProps } from './LightGalleryItem';
 export type {
     GalleryItem,

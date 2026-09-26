@@ -21,6 +21,15 @@ export {
 } from './items';
 
 export { createEmitter, type TypedEmitter } from './emitter';
+export {
+    checkLicenseKey,
+    LICENSE_KEY_PREFIX,
+    resolveLicenseKey,
+    setLicenseKey,
+    takeLicenseNotice,
+    TESTING_LICENSE_KEY,
+    type LicenseNotice,
+} from './license';
 
 export {
     formatSlideAnnouncement,

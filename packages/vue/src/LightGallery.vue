@@ -21,6 +21,7 @@ import {
     watch,
 } from 'vue';
 import {
+    takeLicenseNotice,
     clampIndex,
     createEmitter,
     fitImageSize,
@@ -1377,6 +1378,9 @@ useGalleryGestures({
 
 onMounted(() => {
     isClientMounted.value = true;
+    // The same license notice as the vanilla gallery, once per page.
+    const notice = takeLicenseNotice(settings.value.licenseKey);
+    if (notice) console[notice.level](notice.message);
     emitEvent('init', { instance: actions });
 });
 onBeforeUnmount(() => {

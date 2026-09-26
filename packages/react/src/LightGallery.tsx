@@ -9,6 +9,7 @@ import {
     useState,
 } from 'react';
 import {
+    takeLicenseNotice,
     clampIndex,
     createGalleryState,
     galleryReducer,
@@ -615,9 +616,12 @@ export const LightGallery = forwardRef<
     );
     useImperativeHandle(ref, () => handle, [handle]);
 
-    const emitInit = useEventCallback(() =>
-        emit('onInit', { instance: handle }),
-    );
+    const emitInit = useEventCallback(() => {
+        // The same license notice as the vanilla gallery, once per page.
+        const notice = takeLicenseNotice(settings.licenseKey);
+        if (notice) console[notice.level](notice.message);
+        emit('onInit', { instance: handle });
+    });
     useEffect(() => {
         emitInit();
     }, [emitInit]);

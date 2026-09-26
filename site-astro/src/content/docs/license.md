@@ -52,6 +52,11 @@ lightGallery(document.getElementById('lightgallery'), {
 ```
 
 -   **Commercial licenses** come with a key by email once you purchase.
+    lightGallery 3 keys start with `LIG`.
+-   **Upgrading from v1 or v2?** Those keys don't start with `LIG` and
+    aren't valid for lightGallery 3. The gallery keeps working and logs a
+    console warning asking you to upgrade; see the
+    [upgrade note on the license page](/license/).
 -   **Open source projects** under a GPLv3-compatible license can get a key
     at [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com).
 -   **Trying it out?** Use `0000-0000-000-0000` as a temporary key. It
@@ -59,6 +64,26 @@ lightGallery(document.getElementById('lightgallery'), {
     does with a purchased key. The only difference is a console warning
     that the key is not for production use, so if you see an error, it
     comes from something else, not from licensing.
+
+### One key for every gallery on the page
+
+With several galleries on a page, set the key once with `setLicenseKey`
+before creating them. A gallery's own `licenseKey` still wins, and each
+license message is logged once per page, not once per gallery.
+
+```js
+// Vanilla JavaScript (script tag: window.lightGallery.setLicenseKey)
+import lightGallery from 'lightgallery';
+
+lightGallery.setLicenseKey('your_license_key');
+```
+
+```ts
+// React, Vue or Angular: once at app start, for example in main.ts
+import { setLicenseKey } from '@lightgallery/react'; // or /vue, /angular
+
+setLicenseKey('your_license_key');
+```
 
 The temporary key is also the default, so a gallery without a
 `licenseKey` shows the same warning. An empty `licenseKey` logs a console

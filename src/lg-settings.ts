@@ -157,7 +157,10 @@ export interface LightGalleryCoreSettings {
      * to get the license key. For projects that are compatible with GPLv3 license,
      * please contact us for getting a license key at <a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a>.
      * If you want to test lightGallery before purchasing a commercial license, you can
-     * use `0000-0000-000-0000` as a temporary license key
+     * use `0000-0000-000-0000` as a temporary license key. It does not limit any
+     * feature; it only logs a console warning. lightGallery 3 keys start with `LIG`;
+     * a key from v1 or v2 logs a warning asking you to upgrade.
+     * See <a href="/docs/license/">License</a>.
      */
 
     licenseKey: string;

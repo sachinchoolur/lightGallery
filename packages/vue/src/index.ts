@@ -1,6 +1,7 @@
 /** Public API surface of @lightgallery/vue. */
 export { default as LightGallery } from './LightGallery.vue';
 export { default as LgItem } from './LgItem.vue';
+export { setLicenseKey } from '@lightgallery/headless';
 export { default as LgSlide } from './LgSlide.vue';
 export type { OriginAnimation } from './LgSlide.vue';
 export { default as LgImageSlide } from './LgImageSlide.vue';

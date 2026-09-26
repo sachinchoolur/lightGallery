@@ -1,4 +1,5 @@
 import {
+    takeLicenseNotice,
     awaitDecode,
     formatSlideAnnouncement,
     getEdgeFrictionedDelta,
@@ -310,15 +311,8 @@ export class LightGallery {
     }
 
     validateLicense(): void {
-        if (!this.settings.licenseKey) {
-            console.error(
-                'lightGallery: please provide a valid license key. See https://www.lightgalleryjs.com/docs/license/',
-            );
-        } else if (this.settings.licenseKey === '0000-0000-000-0000') {
-            console.warn(
-                `lightGallery: ${this.settings.licenseKey} license key is not valid for production use. See https://www.lightgalleryjs.com/docs/license/`,
-            );
-        }
+        const notice = takeLicenseNotice(this.settings.licenseKey);
+        if (notice) console[notice.level](notice.message);
     }
 
     getSlideItem(index: number): lgQuery {

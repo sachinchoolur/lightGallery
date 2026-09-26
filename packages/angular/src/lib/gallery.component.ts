@@ -35,6 +35,7 @@ import {
     type Type,
 } from '@angular/core';
 import {
+    takeLicenseNotice,
     clampIndex,
     fitImageSize,
     formatSlideAnnouncement,
@@ -1190,6 +1191,9 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
         // React counterpart: the mount-time onInit emit.
         afterNextRender(() => {
+            // The same license notice as the vanilla gallery, once per page.
+            const notice = takeLicenseNotice(this.settings().licenseKey);
+            if (notice) console[notice.level](notice.message);
             this.emitEvent('init', { instance: this });
         });
     }

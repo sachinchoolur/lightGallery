@@ -1,6 +1,7 @@
 /** Public API surface of @lightgallery/angular. */
 export { LgGalleryComponent } from './lib/gallery.component';
 export { LgGalleryItemDirective } from './lib/item.directive';
+export { setLicenseKey } from '@lightgallery/headless';
 export { LgGesturesDirective } from './lib/gestures.directive';
 export {
     LgCaptionComponent,
