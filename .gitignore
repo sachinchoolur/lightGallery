@@ -47,3 +47,6 @@ skills-lock.json
 demos/**/.next/
 demos/**/.nuxt/
 demos/**/next-env.d.ts
+
+# Astro generated types
+.astro/
