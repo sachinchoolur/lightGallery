@@ -122,7 +122,9 @@ describe('uncontrolled mode', () => {
         );
 
         fireEvent.keyDown(document, { key: 'Escape' });
-        tick(450);
+        // No trigger to fly back to: the centre close runs for
+        // startAnimationDuration (400) before the container hides.
+        tick(550);
         expect(document.querySelector('.lg-container.lg-show')).toBeNull();
         // Triggers survive the close.
         expect(screen.getByTestId('trigger-a')).toBeInTheDocument();
@@ -163,7 +165,9 @@ describe('uncontrolled mode', () => {
         );
 
         act(() => ref.current!.closeGallery());
-        tick(450);
+        // No trigger to fly back to: the centre close runs for
+        // startAnimationDuration (400) before the container hides.
+        tick(550);
         expect(document.querySelector('.lg-container.lg-show')).toBeNull();
     });
 });
@@ -336,4 +340,118 @@ describe('zoom-from-origin dummy image', () => {
         ).toBeInTheDocument();
         rectSpy.mockRestore();
     });
+});
+
+describe('closing without a thumbnail to return to', () => {
+    // A collage hides its overflow items behind a "+N photos" tile: their
+    // triggers measure 0×0 at the viewport origin, and the close flight
+    // used to aim there, shrinking the slide into the top-left corner.
+    const CENTER = 'translate3d(0, 0, 0) scale3d(0.5, 0.5, 1)';
+    const rect = (left: number, top: number, width: number, height: number) =>
+        ({
+            left,
+            top,
+            width,
+            height,
+            right: left + width,
+            bottom: top + height,
+            x: left,
+            y: top,
+            toJSON: () => ({}),
+        } as DOMRect);
+    let rectSpy: ReturnType<typeof vi.spyOn>;
+    beforeEach(() => {
+        rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockImplementation(function (this: Element) {
+                return this.closest('[hidden]')
+                    ? rect(0, 0, 0, 0)
+                    : rect(10, 10, 100, 80);
+            });
+    });
+    afterEach(() => {
+        rectSpy.mockRestore();
+    });
+
+    const renderGallery = (
+        props: Partial<React.ComponentProps<typeof LightGallery>> = {},
+    ) => {
+        const ref = createRef<LightGalleryRefHandle>();
+        render(
+            <LightGallery ref={ref} {...props}>
+                {items.map((item) => (
+                    <LightGalleryItem
+                        key={item.src}
+                        item={{ ...item, lgSize: '1600-1067' }}
+                        href={item.src}
+                        data-testid={`trigger-${item.alt}`}
+                    >
+                        <img src={item.thumb} alt={`${item.alt} thumbnail`} />
+                    </LightGalleryItem>
+                ))}
+            </LightGallery>,
+        );
+        return ref;
+    };
+    const currentItem = () =>
+        document.querySelector('.lg-item.lg-current') as HTMLElement;
+    const expectCenterClose = () => {
+        const outer = document.querySelector('.lg-outer')!;
+        expect(outer).toHaveClass('lg-closing');
+        expect(outer).toHaveClass('lg-zoom-from-image');
+        expect(outer).toHaveClass('lg-close-to-center');
+        expect(currentItem()).toHaveClass('lg-start-end-progress');
+        expect(currentItem().style.transform).toBe(CENTER);
+    };
+
+    it('shrinks to the centre when the trigger it flew from is now hidden', () => {
+        const ref = renderGallery();
+        fireEvent.click(screen.getByTestId('trigger-a'));
+        tick(20);
+        expect(currentItem()).toHaveClass('lg-start-end-progress');
+        // Land the flight on its fixed offset.
+        tick(800);
+        expect(currentItem()).not.toHaveClass('lg-start-end-progress');
+
+        // The grid collapses behind a "+N photos" tile before the close.
+        screen.getByTestId('trigger-a').hidden = true;
+        act(() => ref.current!.closeGallery());
+        expectCenterClose();
+
+        tick(600);
+        expect(
+            document.querySelector('.lg-outer.lg-close-to-center'),
+        ).toBeNull();
+    });
+
+    it('shrinks to the centre after opening on a hidden trigger', () => {
+        const ref = renderGallery();
+        screen.getByTestId('trigger-b').hidden = true;
+        act(() => ref.current!.openGallery(1));
+        tick(20);
+        // No flight to aim: the start class scales up from the centre.
+        expect(document.querySelector('.lg-outer')).toHaveClass(
+            'lg-start-zoom',
+        );
+        expect(currentItem()).not.toHaveClass('lg-start-end-progress');
+        tick(400);
+
+        act(() => ref.current!.closeGallery());
+        expectCenterClose();
+    });
+
+    it('still flies back to a visible trigger', () => {
+        const ref = renderGallery();
+        fireEvent.click(screen.getByTestId('trigger-a'));
+        tick(820);
+
+        act(() => ref.current!.closeGallery());
+        const outer = document.querySelector('.lg-outer')!;
+        expect(outer).toHaveClass('lg-closing');
+        expect(outer).not.toHaveClass('lg-close-to-center');
+        expect(currentItem()).toHaveClass('lg-start-end-progress');
+        expect(currentItem().style.transform).toContain('scale3d(');
+        expect(currentItem().style.transform).not.toBe(CENTER);
+    });
+
 });

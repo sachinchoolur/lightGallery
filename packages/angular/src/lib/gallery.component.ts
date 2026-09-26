@@ -39,9 +39,11 @@ import {
     clampIndex,
     fitImageSize,
     formatSlideAnnouncement,
+    getCenterCloseTransform,
     getOriginTransform,
     getSlidePoolIndexes,
     getSlideType,
+    isUsableOriginRect,
     parseImageSize,
     onTransitionSettle,
     resolveSettings,
@@ -906,6 +908,9 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                 (this.phase() === 'closing' && !this.zoomClosing())) &&
                 'lg-hide-items',
             this.zoomClosing() && 'lg-closing',
+            this.zoomClosing() &&
+                !!this.originAnim()?.toCenter &&
+                'lg-close-to-center',
             this.timeline().noTrans && 'lg-no-trans',
             this.runtime.firstSlideLoading() && 'lg-first-slide-loading',
             this.touchSlideMode() &&
@@ -1612,26 +1617,25 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         this.componentsOpen.set(false);
         this.barsHidden.set(false);
 
-        let closeDuration = settings.backdropDuration;
         const origin = this.usedZoom
             ? this.computeOrigin(this.store.currentIndex())
             : null;
-        if (origin) {
-            this.originAnim.set({
-                index: this.store.currentIndex(),
-                transform: origin.transform,
-                imageSize: origin.imageSize,
-                stage: 'run',
-                closing: true,
-            });
-            closeDuration = Math.max(
-                settings.startAnimationDuration,
-                settings.backdropDuration,
-            );
-        } else {
-            this.originAnim.set(null);
-            this.zoomFromImage.set(false);
-        }
+        // Fly back to the thumbnail, or shrink about the stage centre when
+        // there is nothing to fly to (hidden or collapsed trigger, no
+        // lgSize, no trigger elements, zoomFromOrigin off).
+        this.originAnim.set({
+            index: this.store.currentIndex(),
+            transform: origin?.transform ?? getCenterCloseTransform(),
+            imageSize: origin?.imageSize,
+            stage: 'run',
+            closing: true,
+            toCenter: !origin,
+        });
+        this.zoomFromImage.set(true);
+        const closeDuration = Math.max(
+            settings.startAnimationDuration,
+            settings.backdropDuration,
+        );
 
         this.timers.set(() => this.finishClose(), closeDuration + 100);
     }
@@ -1844,7 +1848,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     private getOriginRect(index: number): RectLike | null {
         const explicit = this.originRect();
         if (explicit) {
-            return explicit;
+            return isUsableOriginRect(explicit) ? explicit : null;
         }
         const registration = this.runtime.registrations()[index];
         const element = registration?.element;
@@ -1853,6 +1857,12 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         }
         const target = element.querySelector('img') ?? element;
         const rect = target.getBoundingClientRect();
+        // A hidden or collapsed trigger (a collage's overflow items behind a
+        // "+N photos" tile) measures 0×0 at the viewport origin: no flight,
+        // the caller falls back to the centred animation.
+        if (!isUsableOriginRect(rect)) {
+            return null;
+        }
         return {
             left: rect.left,
             top: rect.top,

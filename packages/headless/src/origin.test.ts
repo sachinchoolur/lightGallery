@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { fitImageSize, getOriginTransform, parseImageSize } from './origin';
+import {
+    fitImageSize,
+    getCenterCloseTransform,
+    getOriginTransform,
+    isUsableOriginRect,
+    parseImageSize,
+} from './origin';
 import { getSlideType } from './items';
 
 describe('parseImageSize', () => {
@@ -69,6 +75,45 @@ describe('getOriginTransform', () => {
         // available height = 800-200 = 600; x = 450; y = 250 + top(50) = 300
         expect(transform).toBe(
             'translate3d(-450px, -300px, 0) scale3d(0.5, 0.5, 1)',
+        );
+    });
+});
+
+describe('isUsableOriginRect', () => {
+    it('accepts a rect with a positive size', () => {
+        expect(
+            isUsableOriginRect({ left: 10, top: 20, width: 100, height: 80 }),
+        ).toBe(true);
+    });
+
+    it('rejects the 0×0 rect a hidden trigger measures', () => {
+        expect(
+            isUsableOriginRect({ left: 0, top: 0, width: 0, height: 0 }),
+        ).toBe(false);
+        expect(
+            isUsableOriginRect({ left: 10, top: 20, width: 100, height: 0 }),
+        ).toBe(false);
+    });
+
+    it('rejects a missing or non-finite rect', () => {
+        expect(isUsableOriginRect(null)).toBe(false);
+        expect(isUsableOriginRect(undefined)).toBe(false);
+        expect(
+            isUsableOriginRect({ left: NaN, top: 0, width: 10, height: 10 }),
+        ).toBe(false);
+    });
+});
+
+describe('getCenterCloseTransform', () => {
+    it('shrinks in place to half size by default', () => {
+        expect(getCenterCloseTransform()).toBe(
+            'translate3d(0, 0, 0) scale3d(0.5, 0.5, 1)',
+        );
+    });
+
+    it('takes a custom scale', () => {
+        expect(getCenterCloseTransform(0.25)).toBe(
+            'translate3d(0, 0, 0) scale3d(0.25, 0.25, 1)',
         );
     });
 });

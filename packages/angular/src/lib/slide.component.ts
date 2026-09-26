@@ -39,10 +39,18 @@ import type { LgGalleryItem } from './types';
 export interface OriginAnimation {
     index: number;
     transform: string;
-    /** Fitted image box the flight lands on (capped at the natural size). */
-    imageSize: ImageSize;
+    /**
+     * Fitted image box the flight lands on (capped at the natural size).
+     * Absent for a centre close, which has no thumbnail to size against.
+     */
+    imageSize?: ImageSize;
     stage: 'init' | 'armed' | 'run';
     closing?: boolean;
+    /**
+     * Closing with no thumbnail to return to (hidden or collapsed trigger,
+     * no lgSize): shrink about the stage centre and fade instead.
+     */
+    toCenter?: boolean;
 }
 
 /**
@@ -252,7 +260,7 @@ export class LgSlideComponent {
                 const src = this.runtime.getDummySrc(this.index());
                 if (src) {
                     this.dummySrc.set(src);
-                    this.dummySize.set(anim.imageSize);
+                    this.dummySize.set(anim.imageSize ?? null);
                     this.runtime.firstSlideLoading.set(true);
                 } else {
                     this.dummyDone = true;

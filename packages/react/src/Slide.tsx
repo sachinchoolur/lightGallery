@@ -229,7 +229,7 @@ export function Slide({
         const src = internal.getDummySrc(index);
         if (src) {
             setDummySrc(src);
-            setDummySize(originAnim.imageSize);
+            setDummySize(originAnim.imageSize ?? null);
         } else {
             dummyDoneRef.current = true;
         }

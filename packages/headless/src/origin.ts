@@ -71,6 +71,38 @@ export function fitImageSize(
     return { width: size.width * ratio, height: size.height * ratio };
 }
 
+/**
+ * Whether a measured trigger rect can anchor the zoom-from-origin flight.
+ * A trigger that is hidden (`display: none`, the `hidden` attribute),
+ * detached or collapsed measures 0×0 at the viewport origin; a flight
+ * aimed at it would shrink the slide into the top-left corner.
+ */
+export function isUsableOriginRect(
+    rect: RectLike | null | undefined,
+): rect is RectLike {
+    return (
+        !!rect &&
+        Number.isFinite(rect.left) &&
+        Number.isFinite(rect.top) &&
+        rect.width > 0 &&
+        rect.height > 0
+    );
+}
+
+/** Scale the closing slide shrinks to when it has no trigger to return to. */
+export const CENTER_CLOSE_SCALE = 0.5;
+
+/**
+ * Close transform for a slide without a usable origin (hidden or
+ * collapsed trigger, no `lgSize`): shrink in place about the stage centre,
+ * the mirror of the `lg-start-zoom` open. The runtime pairs it with the
+ * `lg-close-to-center` class, which fades the slide out over the same
+ * duration.
+ */
+export function getCenterCloseTransform(scale = CENTER_CLOSE_SCALE): string {
+    return `translate3d(0, 0, 0) scale3d(${scale}, ${scale}, 1)`;
+}
+
 export interface OriginTransformInput {
     /** Bounding rect of the trigger thumbnail image, viewport coordinates. */
     triggerRect: RectLike;

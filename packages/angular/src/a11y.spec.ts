@@ -123,7 +123,7 @@ describe('accessibility', () => {
 
             host.gallery().closeGallery();
             await flush(fixture);
-            await advance(fixture, 200);
+            await advance(fixture, 550);
             expect(query('.lg-container.lg-show')).toBeNull();
             expect(document.activeElement).toBe(trigger);
         });

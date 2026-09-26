@@ -10,6 +10,7 @@ import { createPortal } from 'react-dom';
 import {
     fitImageSize,
     formatSlideAnnouncement,
+    getCenterCloseTransform,
     getOriginTransform,
     getSlideType,
     onTransitionSettle,
@@ -52,8 +53,11 @@ type OpenPhase = 'closed' | 'pre-open' | 'opening' | 'open' | 'closing';
 export interface OriginAnimation {
     index: number;
     transform: string;
-    /** Fitted image box the flight lands on (capped at the natural size). */
-    imageSize: ImageSize;
+    /**
+     * Fitted image box the flight lands on (capped at the natural size).
+     * Absent for a centre close, which has no thumbnail to size against.
+     */
+    imageSize?: ImageSize;
     /**
      * `init`  — slide parked on the trigger rect, no transition classes yet
      * `armed` — transition classes + duration applied, still on the rect
@@ -61,6 +65,11 @@ export interface OriginAnimation {
      */
     stage: 'init' | 'armed' | 'run';
     closing?: boolean;
+    /**
+     * Closing with no thumbnail to return to (hidden or collapsed trigger,
+     * no lgSize): shrink about the stage centre and fade instead.
+     */
+    toCenter?: boolean;
 }
 
 export interface SlideTimeline {
@@ -223,26 +232,25 @@ export function GalleryOutlet({
         setVisible(false);
         setComponentsOpen(false);
 
-        let closeDuration = settings.backdropDuration;
         const origin = usedZoomRef.current
             ? computeOrigin(state.currentIndex)
             : null;
-        if (origin) {
-            setOriginAnim({
-                index: state.currentIndex,
-                transform: origin.transform,
-                imageSize: origin.imageSize,
-                stage: 'run',
-                closing: true,
-            });
-            closeDuration = Math.max(
-                settings.startAnimationDuration,
-                settings.backdropDuration,
-            );
-        } else {
-            setOriginAnim(null);
-            setZoomFromImage(false);
-        }
+        // Fly back to the thumbnail, or shrink about the stage centre when
+        // there is nothing to fly to (hidden or collapsed trigger, no
+        // lgSize, no trigger elements, zoomFromOrigin off).
+        setOriginAnim({
+            index: state.currentIndex,
+            transform: origin?.transform ?? getCenterCloseTransform(),
+            imageSize: origin?.imageSize,
+            stage: 'run',
+            closing: true,
+            toCenter: !origin,
+        });
+        setZoomFromImage(true);
+        const closeDuration = Math.max(
+            settings.startAnimationDuration,
+            settings.backdropDuration,
+        );
 
         timers.set(() => {
             setPhase('closed');
@@ -746,6 +754,7 @@ export function GalleryOutlet({
         (barsHidden || (phase === 'closing' && !zoomClosing)) &&
             'lg-hide-items',
         zoomClosing && 'lg-closing',
+        zoomClosing && originAnim?.toCenter && 'lg-close-to-center',
         timeline.noTrans && 'lg-no-trans',
         touchSlideMode && settings.mode !== 'lg-slide' && 'lg-slide',
         internal.edgeBounce === 'right' && 'lg-right-end',

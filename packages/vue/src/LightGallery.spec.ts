@@ -16,6 +16,9 @@ const ITEMS: LgGalleryItem[] = [
 // Default core timings: backdropDuration 300, speed 400.
 const BACKDROP = 300;
 const SPEED = 400;
+// A close runs its exit motion for startAnimationDuration (400) and hides
+// once that or the backdrop is done.
+const CLOSE_EXIT = Math.max(400, BACKDROP) + 100;
 
 function query(selector: string): HTMLElement | null {
     return document.querySelector(selector);
@@ -173,10 +176,12 @@ describe('LightGallery (core gallery)', () => {
         (query('.lg-close') as HTMLButtonElement).click();
         await nextTick();
         expect(query('.lg-container')).not.toBeNull();
-        expect(query('.lg-outer')!.classList.contains('lg-hide-items')).toBe(
-            true,
-        );
-        await advance(BACKDROP + 100);
+        // zoomFromOrigin is off here, so the zoom close shrinks to the
+        // centre instead of flying.
+        expect(
+            query('.lg-outer')!.classList.contains('lg-close-to-center'),
+        ).toBe(true);
+        await advance(CLOSE_EXIT);
         // v2 parity: the container persists after close, hidden by
         // dropping lg-show (CSS display:none).
         expect(query('.lg-container.lg-show')).toBeNull();
@@ -272,7 +277,7 @@ describe('LightGallery (core gallery)', () => {
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         await nextTick();
         expect(opened.value).toBe(false);
-        await advance(BACKDROP + 100);
+        await advance(CLOSE_EXIT);
         expect(query('.lg-container.lg-show')).toBeNull();
         expect(query('.lg-container')).not.toBeNull();
         wrapper.unmount();
@@ -392,7 +397,7 @@ describe('persistent container (v2 close contract)', () => {
         // exit animation: the close flight on an empty item is invisible.
         expect(query('.lg-item')).not.toBeNull();
         expect(query('.lg-item img.lg-image')).not.toBeNull();
-        await advance(BACKDROP + 100);
+        await advance(CLOSE_EXIT);
         // 2.x `$inner.empty()`: the persistent shell keeps .lg-inner,
         // but the stale items — and their lg-current — unmount with the
         // close.
@@ -734,4 +739,133 @@ describe('zoom-from-origin dummy image', () => {
         expect(query('.lg-item.lg-current.lg-complete')).not.toBeNull();
         rectSpy.mockRestore();
     });
+});
+
+describe('closing without a thumbnail to return to', () => {
+    // A collage hides its overflow items behind a "+N photos" tile: their
+    // triggers measure 0×0 at the viewport origin, and the close flight
+    // used to aim there, shrinking the slide into the top-left corner.
+    const CENTER = 'translate3d(0, 0, 0) scale3d(0.5, 0.5, 1)';
+    const rect = (left: number, top: number, width: number, height: number) =>
+        ({
+            left,
+            top,
+            width,
+            height,
+            right: left + width,
+            bottom: top + height,
+            x: left,
+            y: top,
+            toJSON: () => ({}),
+        } as DOMRect);
+    let rectSpy: ReturnType<typeof vi.spyOn>;
+    beforeEach(() => {
+        rectSpy = vi
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockImplementation(function (this: Element) {
+                return this.closest('[hidden]')
+                    ? rect(0, 0, 0, 0)
+                    : rect(10, 10, 100, 80);
+            });
+    });
+    afterEach(() => {
+        rectSpy.mockRestore();
+    });
+
+    const Host = defineComponent({
+        components: { LightGallery, LgItem },
+        setup: () => ({
+            items: ITEMS.map((item) => ({ ...item, lgSize: '1600-1067' })),
+        }),
+        template: `
+            <LightGallery>
+                <LgItem
+                    v-for="item of items"
+                    :key="item.src"
+                    :item="item"
+                    class="trigger"
+                >
+                    <img :src="item.thumb" :alt="item.alt" />
+                </LgItem>
+            </LightGallery>
+        `,
+    });
+    const mountGallery = () => {
+        const wrapper = mount(Host, { attachTo: document.body });
+        return wrapper.findComponent(LightGallery).vm;
+    };
+    const currentItem = () => query('.lg-item.lg-current')!;
+    const expectCenterClose = () => {
+        const outer = query('.lg-outer')!;
+        expect(outer.classList.contains('lg-closing')).toBe(true);
+        expect(outer.classList.contains('lg-zoom-from-image')).toBe(true);
+        expect(outer.classList.contains('lg-close-to-center')).toBe(true);
+        expect(currentItem().classList.contains('lg-start-end-progress')).toBe(
+            true,
+        );
+        expect(currentItem().style.transform).toBe(CENTER);
+    };
+
+    it('shrinks to the centre when the trigger it flew from is now hidden', async () => {
+        const vm = mountGallery();
+        queryAll('.trigger')[0]!.click();
+        await settle();
+        await advance(20);
+        expect(currentItem().classList.contains('lg-start-end-progress')).toBe(
+            true,
+        );
+        // Land the flight on its fixed offset.
+        await advance(800);
+        expect(currentItem().classList.contains('lg-start-end-progress')).toBe(
+            false,
+        );
+
+        // The grid collapses behind a "+N photos" tile before the close.
+        queryAll('.trigger')[0]!.hidden = true;
+        vm.closeGallery();
+        await settle();
+        expectCenterClose();
+
+        await advance(600);
+        expect(query('.lg-outer.lg-close-to-center')).toBeNull();
+    });
+
+    it('shrinks to the centre after opening on a hidden trigger', async () => {
+        const vm = mountGallery();
+        queryAll('.trigger')[1]!.hidden = true;
+        vm.openGallery(1);
+        await settle();
+        await advance(20);
+        // No flight to aim: the start class scales up from the centre.
+        expect(query('.lg-outer')!.classList.contains('lg-start-zoom')).toBe(
+            true,
+        );
+        expect(currentItem().classList.contains('lg-start-end-progress')).toBe(
+            false,
+        );
+        await advance(400);
+
+        vm.closeGallery();
+        await settle();
+        expectCenterClose();
+    });
+
+    it('still flies back to a visible trigger', async () => {
+        const vm = mountGallery();
+        queryAll('.trigger')[0]!.click();
+        await settle();
+        await advance(820);
+
+        vm.closeGallery();
+        await settle();
+        const outer = query('.lg-outer')!;
+        expect(outer.classList.contains('lg-closing')).toBe(true);
+        expect(outer.classList.contains('lg-close-to-center')).toBe(false);
+        expect(currentItem().classList.contains('lg-start-end-progress')).toBe(
+            true,
+        );
+        expect(currentItem().style.transform).toContain('scale3d(');
+        expect(currentItem().style.transform).not.toBe(CENTER);
+    });
+
 });

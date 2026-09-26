@@ -94,8 +94,11 @@ export {
 } from './gestures';
 
 export {
+    CENTER_CLOSE_SCALE,
     fitImageSize,
+    getCenterCloseTransform,
     getOriginTransform,
+    isUsableOriginRect,
     parseImageSize,
     type ImageSize,
     type OriginTransformInput,

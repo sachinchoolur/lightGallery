@@ -26,9 +26,11 @@ import {
     createEmitter,
     fitImageSize,
     formatSlideAnnouncement,
+    getCenterCloseTransform,
     getOriginTransform,
     getSlidePoolIndexes,
     getSlideType,
+    isUsableOriginRect,
     onTransitionSettle,
     parseImageSize,
     resolveSettings,
@@ -592,6 +594,8 @@ const outerClasses = computed(() => [
             barsHidden.value ||
             (phase.value === 'closing' && !zoomClosing.value),
         'lg-closing': zoomClosing.value,
+        'lg-close-to-center':
+            zoomClosing.value && !!originAnim.value?.toCenter,
         'lg-no-trans': timeline.value.noTrans,
         'lg-slide': touchSlideMode.value && settings.value.mode !== 'lg-slide',
         ...pluginOuterClasses.value,
@@ -634,7 +638,7 @@ function measureOffsets(): { top: number; bottom: number } {
 
 function getOriginRect(slideIndex: number): RectLike | null {
     if (props.originRect) {
-        return props.originRect;
+        return isUsableOriginRect(props.originRect) ? props.originRect : null;
     }
     const registration = registry.registrations.value[slideIndex];
     const element = registration?.element;
@@ -643,6 +647,12 @@ function getOriginRect(slideIndex: number): RectLike | null {
     }
     const target = element.querySelector('img') ?? element;
     const rect = target.getBoundingClientRect();
+    // A hidden or collapsed trigger (a collage's overflow items behind a
+    // "+N photos" tile) measures 0×0 at the viewport origin: no flight,
+    // the caller falls back to the centred animation.
+    if (!isUsableOriginRect(rect)) {
+        return null;
+    }
     return {
         left: rect.left,
         top: rect.top,
@@ -833,24 +843,23 @@ function beginClose(): void {
     visible.value = false;
     componentsOpen.value = false;
 
-    let closeDuration = cfg.backdropDuration;
     const origin = usedZoom ? computeOrigin(store.currentIndex.value) : null;
-    if (origin) {
-        originAnim.value = {
-            index: store.currentIndex.value,
-            transform: origin.transform,
-            imageSize: origin.imageSize,
-            stage: 'run',
-            closing: true,
-        };
-        closeDuration = Math.max(
-            cfg.startAnimationDuration,
-            cfg.backdropDuration,
-        );
-    } else {
-        originAnim.value = null;
-        zoomFromImage.value = false;
-    }
+    // Fly back to the thumbnail, or shrink about the stage centre when
+    // there is nothing to fly to (hidden or collapsed trigger, no lgSize,
+    // no trigger elements, zoomFromOrigin off).
+    originAnim.value = {
+        index: store.currentIndex.value,
+        transform: origin?.transform ?? getCenterCloseTransform(),
+        imageSize: origin?.imageSize,
+        stage: 'run',
+        closing: true,
+        toCenter: !origin,
+    };
+    zoomFromImage.value = true;
+    const closeDuration = Math.max(
+        cfg.startAnimationDuration,
+        cfg.backdropDuration,
+    );
     timers.set(() => finishClose(), closeDuration + 100);
 }
 

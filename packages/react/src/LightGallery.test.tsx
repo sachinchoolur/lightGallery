@@ -14,6 +14,9 @@ const slides: GalleryItem[] = [
 
 // Defaults: backdropDuration 300, speed 400 → transition settles at 500.
 const BACKDROP = 300;
+// A close with no trigger to fly back to shrinks to the centre for
+// startAnimationDuration (400) and hides once that or the backdrop is done.
+const CLOSE_EXIT = Math.max(400, BACKDROP) + 100;
 const SLIDE_SETTLE = 400 + 100 + 50;
 
 function tick(ms: number) {
@@ -119,7 +122,7 @@ describe('open/close lifecycle (controlled)', () => {
         expect(container).not.toHaveClass('lg-show-in');
         expect(onAfterClose).not.toHaveBeenCalled();
 
-        tick(BACKDROP + 100);
+        tick(CLOSE_EXIT);
         // v2 parity: the container persists after close, hidden by
         // dropping lg-show (CSS display:none).
         expect(document.querySelector('.lg-container.lg-show')).toBeNull();
@@ -154,7 +157,7 @@ describe('open/close lifecycle (controlled)', () => {
         expect(
             document.querySelector('.lg-item img.lg-object'),
         ).toBeInTheDocument();
-        tick(BACKDROP + 100);
+        tick(CLOSE_EXIT);
         // 2.x `$inner.empty()`: the persistent shell keeps .lg-inner, but
         // the stale items — and their lg-current — unmount with the close.
         expect(document.querySelector('.lg-inner')).toBeInTheDocument();
@@ -218,7 +221,7 @@ describe('body state', () => {
         fireEvent.keyDown(document, { key: 'Escape' });
         expect(document.documentElement).not.toHaveClass('lg-on');
         expect(document.body).not.toHaveClass('lg-overlay-open');
-        tick(BACKDROP + 100);
+        tick(CLOSE_EXIT);
         expect(document.querySelector('.lg-container.lg-show')).toBeNull();
     });
 });

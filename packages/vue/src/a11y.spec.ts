@@ -139,7 +139,7 @@ describe('accessibility', () => {
                 new KeyboardEvent('keydown', { key: 'Escape' }),
             );
             await settle();
-            await advance(450);
+            await advance(550);
             expect(query('.lg-container.lg-show')).toBeNull();
             expect(document.activeElement).toBe(trigger);
             wrapper.unmount();

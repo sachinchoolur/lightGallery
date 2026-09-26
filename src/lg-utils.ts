@@ -1,6 +1,7 @@
 import {
     fitImageSize,
     getOriginTransform,
+    isUsableOriginRect,
     getVideoInfo,
     parseImageSize,
 } from '@lightgallery/headless';
@@ -354,6 +355,12 @@ const utils = {
             width: rect.width,
             height: rect.height,
         };
+        // A hidden or collapsed trigger (a collage's overflow items behind
+        // a "+N photos" tile) measures 0×0 at the viewport origin: no
+        // flight, the caller falls back to the centred animation.
+        if (!isUsableOriginRect(triggerRect)) {
+            return;
+        }
 
         return getOriginTransform({
             triggerRect,

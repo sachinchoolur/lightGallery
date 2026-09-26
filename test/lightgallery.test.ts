@@ -432,6 +432,137 @@ describe('zoom-from-origin flight landing', () => {
     });
 });
 
+describe('closing without a thumbnail to return to', () => {
+    // A collage hides its overflow items behind a "+N photos" tile: their
+    // triggers measure 0×0 at the viewport origin, and the close flight
+    // used to aim there, shrinking the slide into the top-left corner.
+    const CENTER = 'translate3d(0, 0, 0) scale3d(0.5, 0.5, 1)';
+    const rect = (left: number, top: number, width: number, height: number) =>
+        ({
+            left,
+            top,
+            width,
+            height,
+            right: left + width,
+            bottom: top + height,
+            x: left,
+            y: top,
+            toJSON: () => ({}),
+        } as DOMRect);
+    let spies: jest.SpyInstance[];
+    beforeEach(() => {
+        jest.useFakeTimers();
+        spies = [
+            jest
+                .spyOn(Element.prototype, 'getBoundingClientRect')
+                .mockImplementation(function (this: Element) {
+                    return this.closest('[hidden]')
+                        ? rect(0, 0, 0, 0)
+                        : rect(10, 10, 100, 80);
+                }),
+            jest
+                .spyOn(Element.prototype, 'clientWidth', 'get')
+                .mockReturnValue(100),
+            jest
+                .spyOn(Element.prototype, 'clientHeight', 'get')
+                .mockReturnValue(80),
+        ];
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png" data-lg-size="1600-1067">
+                    <img src="a-thumb.png" />
+                </a>
+                <a href="b.png" data-lg-size="1600-1067" hidden>
+                    <img src="b-thumb.png" />
+                </a>
+            </div>`;
+    });
+    afterEach(() => {
+        spies.forEach((spy) => spy.mockRestore());
+        jest.useRealTimers();
+    });
+    const init = (settings: Record<string, unknown> = {}) =>
+        lightGallery(document.getElementById('lightGallery') as HTMLElement, {
+            zoomFromOrigin: true,
+            startAnimationDuration: 400,
+            backdropDuration: 300,
+            ...settings,
+        });
+    const trigger = (index: number) =>
+        document.querySelectorAll('#lightGallery a')[index] as HTMLElement;
+
+    it('shrinks to the centre and fades when the current trigger is hidden', () => {
+        const lg = init();
+        trigger(0).click();
+        jest.advanceTimersByTime(1000);
+        lg.slide(1, false, false, 'next');
+        jest.advanceTimersByTime(1000);
+
+        lg.closeGallery();
+        const outer = document.querySelector('.lg-outer')!;
+        expect(outer).toHaveClass('lg-closing');
+        expect(outer).toHaveClass('lg-zoom-from-image');
+        expect(outer).toHaveClass('lg-close-to-center');
+        const item = document.querySelector(
+            '.lg-item.lg-current',
+        ) as HTMLElement;
+        expect(item).toHaveClass('lg-start-end-progress');
+        expect(item.style.transform).toBe(CENTER);
+        expect(item.style.transitionDuration).toBe('400ms');
+
+        jest.advanceTimersByTime(600);
+        expect(outer).not.toHaveClass('lg-close-to-center');
+        expect(outer).not.toHaveClass('lg-closing');
+        expect(outer).not.toHaveClass('lg-zoom-from-image');
+    });
+
+    it('still flies back to a visible trigger', () => {
+        const lg = init();
+        trigger(0).click();
+        jest.advanceTimersByTime(1000);
+
+        lg.closeGallery();
+        const outer = document.querySelector('.lg-outer')!;
+        expect(outer).toHaveClass('lg-closing');
+        expect(outer).not.toHaveClass('lg-close-to-center');
+        const item = document.querySelector(
+            '.lg-item.lg-current',
+        ) as HTMLElement;
+        expect(item).toHaveClass('lg-start-end-progress');
+        expect(item.style.transform).toContain('scale3d(');
+        expect(item.style.transform).not.toBe(CENTER);
+    });
+
+    it('opens from a hidden trigger with the start class, not a flight', () => {
+        const lg = init();
+        lg.openGallery(1, trigger(1));
+        jest.advanceTimersByTime(20);
+        const outer = document.querySelector('.lg-outer')!;
+        expect(outer).toHaveClass('lg-start-zoom');
+        const item = document.querySelector(
+            '.lg-item.lg-current',
+        ) as HTMLElement;
+        expect(item).not.toHaveClass('lg-start-end-progress');
+        expect(item.style.transform).toBe('');
+    });
+
+    it('shrinks to the centre when zoomFromOrigin is off', () => {
+        // The startClass open scales up from the centre; the zoom close
+        // mirrors it rather than cutting to the old fade.
+        const lg = init({ zoomFromOrigin: false });
+        lg.openGallery(1, trigger(1));
+        jest.advanceTimersByTime(1000);
+
+        lg.closeGallery();
+        const outer = document.querySelector('.lg-outer')!;
+        expect(outer).toHaveClass('lg-closing');
+        expect(outer).toHaveClass('lg-close-to-center');
+        const item = document.querySelector(
+            '.lg-item.lg-current',
+        ) as HTMLElement;
+        expect(item.style.transform).toBe(CENTER);
+    });
+});
+
 describe('vertical drag when the gallery cannot close', () => {
     // closable:false (the inline-gallery setup) forces swipeToClose off,
     // so a vertical drag applies nothing. The release must not spring

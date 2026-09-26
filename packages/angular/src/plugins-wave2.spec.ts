@@ -189,7 +189,7 @@ describe('wave-2 features', () => {
 
         host.gallery().closeGallery();
         await flush(fixture);
-        await advance(fixture, 450);
+        await advance(fixture, 550);
         expect(query('.lg-container.lg-show')).toBeNull();
         expect(window.location.hash).toBe('');
         expect(document.body.classList.contains('lg-from-hash')).toBe(false);

@@ -145,7 +145,11 @@ export interface CoreSettings {
     /**
      * Animate the opening slide from the trigger thumbnail's bounding rect.
      * Needs the natural image size via the item's `lgSize` field; falls back
-     * to `startClass` when unavailable.
+     * to `startClass` when unavailable. On close, a slide with no thumbnail
+     * to return to (its trigger is hidden or collapsed behind a "+9 photos"
+     * tile, it has no `lgSize`, or the items came without trigger elements)
+     * shrinks to the centre of the stage and fades instead of flying to a
+     * thumbnail it cannot reach.
      */
     zoomFromOrigin: boolean;
 

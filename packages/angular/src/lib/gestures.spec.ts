@@ -307,7 +307,7 @@ describe('LgGesturesDirective', () => {
         firePointer(window, 'pointerup', { x: 200, y: 460 });
         await flush(fixture);
         expect(backdrop.style.opacity).toBe('');
-        await advance(fixture, 450);
+        await advance(fixture, 550);
         expect(query('.lg-container.lg-show')).toBeNull();
     });
 

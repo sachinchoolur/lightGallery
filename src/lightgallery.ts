@@ -2,6 +2,7 @@ import {
     takeLicenseNotice,
     awaitDecode,
     formatSlideAnnouncement,
+    getCenterCloseTransform,
     getEdgeFrictionedDelta,
     getFacadePoster,
     getYouTubePosterUrl,
@@ -2884,7 +2885,14 @@ export class LightGallery {
                 imageSize,
             );
         }
-        if (this.zoomFromOrigin && transform) {
+        // No thumbnail to fly back to (hidden or collapsed trigger, no
+        // lg-size, zoomFromOrigin off, a dynamic gallery): shrink about the
+        // stage centre and fade, the mirror of the startClass open.
+        if (!transform) {
+            transform = getCenterCloseTransform();
+            this.outer.addClass('lg-close-to-center');
+        }
+        if (transform) {
             this.outer.addClass('lg-closing lg-zoom-from-image');
             this.getSlideItem(this.index)
                 .addClass('lg-start-end-progress')
@@ -2919,18 +2927,17 @@ export class LightGallery {
         // Resetting opacity to 0 isd required as  vertical swipe to close function adds inline opacity.
         this.$backdrop.removeClass('in').css('opacity', 0);
 
-        const removeTimeout =
-            this.zoomFromOrigin && transform
-                ? Math.max(
-                      this.settings.startAnimationDuration,
-                      this.settings.backdropDuration,
-                  )
-                : this.settings.backdropDuration;
+        const removeTimeout = transform
+            ? Math.max(
+                  this.settings.startAnimationDuration,
+                  this.settings.backdropDuration,
+              )
+            : this.settings.backdropDuration;
         this.$container.removeClass('lg-show-in');
 
         // Once the closign animation is completed and gallery is invisible
         setTimeout(() => {
-            if (this.zoomFromOrigin && transform) {
+            if (transform) {
                 this.outer.removeClass('lg-zoom-from-image');
             }
             this.$container.removeClass('lg-show');
@@ -2946,7 +2953,9 @@ export class LightGallery {
                     this.settings.backdropDuration + 'ms',
                 );
 
-            this.outer.removeClass(`lg-closing ${this.settings.startClass}`);
+            this.outer.removeClass(
+                `lg-closing lg-close-to-center ${this.settings.startClass}`,
+            );
 
             this.getSlideItem(this.index).removeClass('lg-start-end-progress');
             this.$inner.empty();

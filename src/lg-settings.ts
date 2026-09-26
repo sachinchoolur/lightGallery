@@ -213,9 +213,15 @@ export interface LightGalleryCoreSettings {
      * Similarly, upto 480 pixel width size 400-267 and img-400.jpg will be used
      * And above 480, lg-size 1600-1067 and img-1600.jpg will be used
      *
+     * When the gallery closes on a slide that has no thumbnail to return to
+     * (the trigger is hidden or collapsed, as with the overflow items behind a
+     * "+9 photos" tile, it has no data-lg-size, or the gallery is dynamic), the
+     * slide shrinks to the centre of the stage and fades out instead of flying
+     * to the thumbnail.
+     *
      * <ul>
      * <li>At the moment, zoomFromOrigin options is supported only for image slides.</li>
-     * <li>Will be false if dynamic option is enabled or galleryID found in the URL.</li>
+     * <li>The opening flight is skipped if dynamic option is enabled or galleryID found in the URL.</li>
      * <li>startClass will be empty if zoomFromOrigin is true to avoid css conflicts.</li>
      * </ul>
      */

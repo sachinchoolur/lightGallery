@@ -357,7 +357,7 @@ describe('useGalleryGestures', () => {
         firePointer(window, 'pointerup', { x: 200, y: 460 });
         await settle();
         expect(backdrop.style.opacity).toBe('');
-        await advance(450);
+        await advance(550);
         expect(query('.lg-container.lg-show')).toBeNull();
         wrapper.unmount();
     });

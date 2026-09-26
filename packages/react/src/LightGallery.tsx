@@ -13,6 +13,7 @@ import {
     clampIndex,
     createGalleryState,
     galleryReducer,
+    isUsableOriginRect,
     resolveSettings,
     type CoreSettings,
     type RectLike,
@@ -424,8 +425,9 @@ export const LightGallery = forwardRef<
     );
 
     const getOriginRect = useCallback((slideIndex: number): RectLike | null => {
-        if (originRectRef.current) {
-            return originRectRef.current;
+        const explicit = originRectRef.current;
+        if (explicit) {
+            return isUsableOriginRect(explicit) ? explicit : null;
         }
         const registration = registrationsRef.current[slideIndex];
         const element = registration?.element;
@@ -434,6 +436,12 @@ export const LightGallery = forwardRef<
         }
         const target = element.querySelector('img') ?? element;
         const rect = target.getBoundingClientRect();
+        // A hidden or collapsed trigger (a collage's overflow items behind a
+        // "+N photos" tile) measures 0×0 at the viewport origin: no flight,
+        // the caller falls back to the centred animation.
+        if (!isUsableOriginRect(rect)) {
+            return null;
+        }
         return {
             left: rect.left,
             top: rect.top,
