@@ -32,9 +32,12 @@ import flickityUrl from './vendor/flickity.pkgd.min.js?url';
 import slickUrl from './vendor/slick.min.js?url';
 import owlUrl from './vendor/owl.carousel.min.js?url';
 
+// One license key for every gallery on the site.
+lightGallery.setLicenseKey(SITE_LICENSE_KEY);
 window.lightGallery = lightGallery;
 await loadVendor(masonryUrl);
 import { photos } from '../lib/photos';
+import { SITE_LICENSE_KEY } from '../lib/license';
 
 const Masonry = window.Masonry;
 await loadVendor(imagesLoadedUrl);

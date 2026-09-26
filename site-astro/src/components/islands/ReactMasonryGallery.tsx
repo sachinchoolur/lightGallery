@@ -1,4 +1,8 @@
-import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import { LightGallery, LightGalleryItem, setLicenseKey } from '@lightgallery/react';
+
+import { SITE_LICENSE_KEY } from '../../lib/license';
+
+setLicenseKey(SITE_LICENSE_KEY);
 import Autoplay from '@lightgallery/react/plugins/autoplay';
 import Fullscreen from '@lightgallery/react/plugins/fullscreen';
 import Rotate from '@lightgallery/react/plugins/rotate';
