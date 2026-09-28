@@ -1906,7 +1906,7 @@ body.home-v3 {
     .home-lg-round {
         .lg-toolbar {
             padding: 6px 8px 0 0;
-            .lg-icon:not(.lg-dropdown .lg-icon) {
+            .lg-icon:not(.lg-dropdown .lg-icon):not(.home-lg-buy-now) {
                 width: 40px;
                 height: 40px;
                 margin: 4px 0 0 8px;
@@ -1918,6 +1918,37 @@ body.home-v3 {
                 transition: background-color 0.2s ease;
                 &:hover {
                     background: rgba(#fff, 0.22);
+                }
+            }
+            // Buy now is the one action with a label, so it stays a pill
+            // instead of a circle; the round rule above skips it.
+            .lg-icon.home-lg-buy-now {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                width: auto;
+                height: 40px;
+                margin: 4px 0 0 8px;
+                padding: 0 16px 0 14px;
+                border-radius: 999px;
+                background: $orange-700;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 1;
+                white-space: nowrap;
+                transition: background-color 0.2s ease;
+                svg {
+                    flex: none;
+                    width: 17px;
+                    height: 17px;
+                }
+                &:hover {
+                    background: $orange-500;
+                    color: #fff;
+                }
+                &.is-done {
+                    background: $green-700;
                 }
             }
         }
@@ -1938,32 +1969,6 @@ body.home-v3 {
                 background: rgba(#fff, 0.22);
                 color: #fff;
             }
-        }
-    }
-    .lg-toolbar .lg-icon.home-lg-buy-now {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        width: auto;
-        height: 40px;
-        padding: 0 16px 0 14px;
-        border-radius: 999px;
-        background: $orange-700;
-        color: #fff;
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 1;
-        transition: background-color 0.2s ease;
-        svg {
-            width: 17px;
-            height: 17px;
-        }
-        &:hover {
-            background: $orange-500;
-            color: #fff;
-        }
-        &.is-done {
-            background: $green-700;
         }
     }
     // The portfolio: a warm backdrop, tile buttons, gold arrows.
