@@ -7,18 +7,24 @@
         'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 // default theme
+// A square button that centres its arrow on both axes, and whose own
+// centre sits on the vertical middle of the gallery.
 .lg-next,
 .lg-prev {
+    align-items: center;
     background-color: $lg-next-prev-bg;
     border-radius: $lg-border-radius-base;
     color: $lg-next-prev-color;
     cursor: pointer;
-    display: block;
+    display: flex;
     font-size: 22px;
-    margin-top: -10px;
-    padding: 8px 10px 9px;
+    height: 42px;
+    justify-content: center;
+    margin-top: -21px;
+    padding: 0;
     position: absolute;
     top: 50%;
+    width: 42px;
     z-index: $zindex-controls;
     outline: none;
     border: none;
