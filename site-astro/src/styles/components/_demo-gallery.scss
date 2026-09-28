@@ -121,12 +121,14 @@
     $lg-theme-color: #fff;
     $lg-theme-highlight: #333;
     $lg-thumb-bg: #fcfcfc;
-    $lg-next-prev-bg: rgba(0, 0, 0, 0.03);
+    $lg-next-prev-bg: rgba(0, 0, 0, 0.1);
+    $lg-next-prev-hover-bg: rgba(0, 0, 0, 0.18);
     $lg-next-prev-color: #444;
     $lg-toolbar-icon-color: #555;
     $lg-icon-color: #555;
     $lg-next-prev-hover-color: #000;
     $lg-toolbar-icon-hover-color: #000;
+    $lg-focus-ring-color: rgba(0, 0, 0, 0.55);
     $lg-progress-bar-bg: #999;
     $lg-progress-bar-active-bg: $lg-theme-highlight;
 
@@ -169,13 +171,28 @@
     .lg-prev {
         background-color: $lg-next-prev-bg;
         color: $lg-next-prev-color;
-        &:hover {
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+        // The library styles its arrows through `:hover:not(.disabled)`, and
+        // its stylesheet loads after this one, so a plain `:hover` here loses
+        // the tie and the arrow turns white on a white backdrop.
+        &:hover:not(.disabled) {
+            background-color: $lg-next-prev-hover-bg;
             color: $lg-next-prev-hover-color;
         }
-        &:focus {
-            outline: none;
-            box-shadow: none;
-        }
+    }
+
+    // The library's focus ring is white, for its own dark backdrop; on white
+    // it needs a dark one, and the arrows need their color back.
+    .lg-icon:focus-visible {
+        color: $lg-toolbar-icon-hover-color;
+        outline: 1px dashed $lg-focus-ring-color;
+    }
+    .lg-next:focus-visible,
+    .lg-prev:focus-visible {
+        background-color: $lg-next-prev-hover-bg;
+        color: $lg-next-prev-hover-color;
     }
 
     // The toolbar's buttons only: the share dropdown's social icons are
@@ -183,7 +200,8 @@
     .lg-toolbar {
         .lg-icon:not(.lg-dropdown .lg-icon) {
             color: $lg-toolbar-icon-color;
-            &:hover {
+            &:hover,
+            &:focus-visible {
                 color: $lg-toolbar-icon-hover-color;
             }
         }
