@@ -430,6 +430,38 @@ describe('zoom-from-origin flight landing', () => {
         expect(item).not.toHaveClass('lg-start-end-progress');
         expect(item.getAttribute('style')).toBeNull();
     });
+
+    it('flies from the transform a plugin gives for the trigger', () => {
+        // getOriginTransform is the flight's hook: replaced on the
+        // instance, it sets where the opening flight starts and where the
+        // closing one ends.
+        const lg = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+            { zoomFromOrigin: true, startAnimationDuration: 400 },
+        );
+        const trigger = document.querySelector(
+            '#lightGallery a',
+        ) as HTMLElement;
+        const calls: HTMLElement[] = [];
+        lg.getOriginTransform = (element) => {
+            calls.push(element);
+            return 'translate3d(1px, 2px, 0) scale3d(0.5, 0.5, 1)';
+        };
+        trigger.click();
+        jest.advanceTimersByTime(20);
+        const item = document.querySelector(
+            '.lg-item.lg-current',
+        ) as HTMLElement;
+        expect(item.style.transform).toBe(
+            'translate3d(1px, 2px, 0) scale3d(0.5, 0.5, 1)',
+        );
+        jest.advanceTimersByTime(1000);
+        lg.closeGallery();
+        expect(item.style.transform).toBe(
+            'translate3d(1px, 2px, 0) scale3d(0.5, 0.5, 1)',
+        );
+        expect(calls).toEqual([trigger, trigger]);
+    });
 });
 
 describe('closing without a thumbnail to return to', () => {

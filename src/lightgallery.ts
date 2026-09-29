@@ -807,13 +807,7 @@ export class LightGallery {
                 top + bottom,
                 __slideVideoInfo && this.settings.videoMaxSize,
             );
-            transform = utils.getTransform(
-                element,
-                this.outer,
-                top,
-                bottom,
-                this.currentImageSize,
-            );
+            transform = this.getOriginTransform(element, this.currentImageSize);
         }
         if (!this.zoomFromOrigin || !transform) {
             this.outer.addClass(this.settings.startClass);
@@ -899,6 +893,21 @@ export class LightGallery {
         if (document.body === this.settings.container) {
             $LG('html').addClass('lg-on');
         }
+    }
+
+    /**
+     * The zoom-from-origin transform for a trigger: it lands the slide on
+     * the trigger's thumbnail, the start of the opening flight and the end
+     * of the closing one. Undefined when the trigger cannot anchor a flight,
+     * and the gallery opens or closes about the stage centre instead.
+     * Plugins may replace it on the instance to fly differently.
+     */
+    public getOriginTransform(
+        element: HTMLElement,
+        imageSize?: ImageSize,
+    ): string | undefined {
+        const { top, bottom } = this.mediaContainerPosition;
+        return utils.getTransform(element, this.outer, top, bottom, imageSize);
     }
 
     /**
@@ -2877,13 +2886,7 @@ export class LightGallery {
                 top + bottom,
                 __slideVideoInfo && poster && this.settings.videoMaxSize,
             );
-            transform = utils.getTransform(
-                currentItem,
-                this.outer,
-                top,
-                bottom,
-                imageSize,
-            );
+            transform = this.getOriginTransform(currentItem, imageSize);
         }
         // No thumbnail to fly back to (hidden or collapsed trigger, no
         // lg-size, zoomFromOrigin off, a dynamic gallery): shrink about the
