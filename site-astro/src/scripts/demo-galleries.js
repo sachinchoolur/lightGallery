@@ -14,6 +14,7 @@ import lgFullscreen from 'lightgallery/plugins/fullscreen';
 import lgHash from 'lightgallery/plugins/hash';
 import lgJustified from 'lightgallery/plugins/justified';
 import lgMediumZoom from 'lightgallery/plugins/mediumZoom';
+import lgOriginCrop from 'lightgallery/plugins/originCrop';
 import lgPager from 'lightgallery/plugins/pager';
 import lgRotate from 'lightgallery/plugins/rotate';
 import lgShare from 'lightgallery/plugins/share';
@@ -1005,20 +1006,22 @@ if (customizeScenes.length) {
         }
     }
 
+    // The tiles are cover-cropped: the origin crop plugin flies each from
+    // the part of the photo it shows.
     const looks = {
         hotel: {
-            plugins: [lgZoom, lgThumbnail],
+            plugins: [lgZoom, lgThumbnail, lgOriginCrop],
             addClass: 'lightGallery-white-theme',
             ...getResponsiveThumbnailsSettings(),
         },
         shop: {
-            plugins: [lgZoom, BuyNow],
+            plugins: [lgZoom, BuyNow, lgOriginCrop],
             addClass: 'home-lg-round',
             download: false,
             icons: lineIcons(2.6),
         },
         portfolio: {
-            plugins: [lgZoom, lgShare],
+            plugins: [lgZoom, lgShare, lgOriginCrop],
             addClass: 'home-lg-warm',
             mode: 'lg-fade',
             download: false,

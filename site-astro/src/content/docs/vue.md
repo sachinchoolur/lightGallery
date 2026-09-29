@@ -103,6 +103,7 @@ Each plugin is its own tree-shakable subpath
 | mediumZoom | `plugins/mediumZoom` | `margin`, `backgroundColor` (presets a minimal UI) |
 | relativeCaption | `plugins/relativeCaption` |, (presets `captionPosition: 'slide'`) |
 | vimeoThumbnail | `plugins/vimeoThumbnail` | `showThumbnailWithPlayButton` |
+| originCrop | `plugins/originCrop` | `originCrop`: flies a cropped thumbnail from its crop ([zoom from origin](/demos/zoom-from-origin/)) |
 | justified | `plugins/justified` | Not a plugin: the `<JustifiedGrid>` component wraps the triggers, with `row-height`, `gap`, `last-row` ([justified layout](/docs/justified-layout/)) |
 
 Plugins compose per gallery instance, two galleries on one page can have

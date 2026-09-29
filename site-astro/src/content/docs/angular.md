@@ -114,6 +114,7 @@ factory for the `[features]` input:
 | mediumZoom | `withMediumZoom()` | `margin`, `backgroundColor` (presets a minimal UI) |
 | relativeCaption | `withRelativeCaption()` |, (presets `captionPosition: 'slide'`) |
 | vimeoThumbnail | `withVimeoThumbnail()` | `showThumbnailWithPlayButton` |
+| originCrop | `withOriginCrop()` | `originCrop`: flies a cropped thumbnail from its crop ([zoom from origin](/demos/zoom-from-origin/)) |
 | justified | `LgJustifiedGridComponent` | Not a feature: the `<lg-justified-grid>` component wraps the triggers, with `rowHeight`, `gap`, `lastRow` ([justified layout](/docs/justified-layout/)) |
 
 Features compose per gallery instance, two galleries on one page can have

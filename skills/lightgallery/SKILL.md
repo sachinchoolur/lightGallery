@@ -16,8 +16,8 @@ One gallery, four packages with the same features and settings:
 
 Plugin names: `thumbnail`, `zoom`, `video`, `autoplay`, `fullscreen`, `share`,
 `hash`, `rotate`, `pager`, `comment`, `mediumZoom`, `relativeCaption`,
-`vimeoThumbnail`, `justified`. Each is a separate entry — import only what
-the project uses.
+`vimeoThumbnail`, `originCrop`, `justified`. Each is a separate entry — import
+only what the project uses.
 
 **Two rules that prevent most problems**
 

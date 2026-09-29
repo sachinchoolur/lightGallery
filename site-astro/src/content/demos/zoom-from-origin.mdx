@@ -26,6 +26,79 @@ On close, the slide flies back to its thumbnail. A slide with no thumbnail to re
 (the overflow photos behind a "+9 photos" tile in a collage) or because it has no data-lg-size, shrinks to the centre of the
 screen and fades out instead. The same happens when `zoomFromOrigin` is off or the gallery is dynamic.
 
+#### Cropped thumbnails
+
+A grid tile that shows only part of the photo, an `img` with `object-fit: cover` or an element with `background-size: cover`,
+flies as a whole by default, squashed into its box. The origin crop plugin flies it from its crop instead: the part the tile
+shows grows at a uniform scale and the rest of the photo is revealed around it, following `object-position` or
+`background-position`. Nothing is needed in the markup or the stylesheets; the plugin reads the thumbnail's computed fit, and
+thumbnails the built-in flight already lands exactly keep it. A thumbnail file that is itself a crop of the photo is taken as
+a centred crop.
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+```js
+import lightGallery from 'lightgallery';
+import lgOriginCrop from 'lightgallery/plugins/originCrop';
+
+lightGallery(document.getElementById('gallery-cropped-thumbnails'), {
+    plugins: [lgOriginCrop],
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import OriginCrop from '@lightgallery/react/plugins/originCrop';
+
+// The tiles crop their thumbnails with `object-fit: cover`.
+<LightGallery plugins={[OriginCrop]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img className="tile" src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import OriginCrop from '@lightgallery/vue/plugins/originCrop';
+</script>
+
+<template>
+    <LightGallery :plugins="[OriginCrop]">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img class="tile" :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<!-- In the component class: features = [withOriginCrop()]; -->
+<lg-gallery [features]="features">
+    @for (item of items; track item.src) {
+        <a [lgGalleryItem]="item">
+            <img class="tile" [src]="item.thumb" [alt]="item.alt" />
+        </a>
+    }
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
+
 #### Demo
 
 <ImageGallery id="gallery-zoom-from-origin-demo" photos="stone" />
