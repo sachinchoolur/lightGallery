@@ -10,6 +10,7 @@ import Justified from '../src/plugins/justified/lg-justified';
 import Autoplay from '../src/plugins/autoplay/lg-autoplay';
 import Fullscreen from '../src/plugins/fullscreen/lg-fullscreen';
 import Pager from '../src/plugins/pager/lg-pager';
+import OriginCrop from '../src/plugins/originCrop/lg-origin-crop';
 
 // Styles compile from the scss sources so plugin CSS edits hot-reload
 // too. The bundle covers fonts/theme/plugins/core; transitions ship
@@ -213,6 +214,14 @@ const SCENARIOS: Scenario[] = [
         note: 'Plain grid — thumbnails + zoom defaults, srcset ladder.',
         mount: gridScenario(SOURCES.map(imageAnchor).join(''), {
             plugins: [Thumbnail, Zoom],
+        }),
+    },
+    {
+        id: 'origin-crop',
+        title: 'Origin crop',
+        note: 'Same grid with the originCrop plugin: cover-cropped tiles fly from their crop.',
+        mount: gridScenario(SOURCES.map(imageAnchor).join(''), {
+            plugins: [Thumbnail, Zoom, OriginCrop],
         }),
     },
     {

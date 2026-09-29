@@ -101,6 +101,11 @@
       "import": "./dist/plugins/mediumZoom/lg-medium-zoom.es5.js",
       "require": "./dist/plugins/mediumZoom/lg-medium-zoom.umd.js"
     },
+    "./plugins/originCrop": {
+      "types": "./dist/types/plugins/originCrop/lg-origin-crop.d.ts",
+      "import": "./dist/plugins/originCrop/lg-origin-crop.es5.js",
+      "require": "./dist/plugins/originCrop/lg-origin-crop.umd.js"
+    },
     "./plugins/relativeCaption": {
       "types": "./dist/types/plugins/relativeCaption/lg-relative-caption.d.ts",
       "import": "./dist/plugins/relativeCaption/lg-relative-caption.es5.js",
