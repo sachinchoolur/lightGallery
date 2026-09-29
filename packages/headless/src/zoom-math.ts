@@ -110,7 +110,7 @@ export function clampPanToStage(
 /**
  * Pan during a pinch: the focal zoom projection translated by the
  * midpoint's travel — the image point between the fingers stays
- * between the fingers wherever they go (iOS/PhotoSwipe fused
+ * between the fingers wherever they go (iOS fused
  * zoom-and-pan; two fingers moving together pan without zooming).
  */
 export function getPinchPan(
