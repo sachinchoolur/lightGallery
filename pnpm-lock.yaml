@@ -16,25 +16,6 @@ packageExtensionsChecksum: 37d12dc3964ac27cd31b399329b99c5d
 importers:
 
   .:
-    dependencies:
-      '@types/picturefill':
-        specifier: ^3.0.0
-        version: 3.0.4
-      i:
-        specifier: ^0.3.6
-        version: 0.3.7
-      npm:
-        specifier: ^6.14.8
-        version: 6.14.18
-      react:
-        specifier: ^17.0.2
-        version: 17.0.2
-      react-dom:
-        specifier: ^17.0.2
-        version: 17.0.2(react@17.0.2)
-      video.js:
-        specifier: ^7.0.3
-        version: 7.21.7
     devDependencies:
       '@commitlint/cli':
         specifier: ^7.1.2
@@ -571,22 +552,22 @@ importers:
         version: 4.33.0(eslint@6.8.0)(typescript@4.1.6)
       '@vue/cli-plugin-babel':
         specifier: ~4.5.0
-        version: 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(core-js@3.49.0)(vue@3.5.39(typescript@4.1.6))
+        version: 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(core-js@3.49.0)(vue@3.5.39(typescript@4.1.6))
       '@vue/cli-plugin-e2e-cypress':
         specifier: ~4.5.0
-        version: 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(eslint@6.8.0)
+        version: 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(eslint@6.8.0)
       '@vue/cli-plugin-eslint':
         specifier: ~4.5.0
-        version: 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(eslint@6.8.0)
+        version: 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(eslint@6.8.0)
       '@vue/cli-plugin-typescript':
         specifier: ~4.5.0
-        version: 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(@vue/compiler-sfc@3.5.39)(eslint@6.8.0)(typescript@4.1.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
+        version: 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(@vue/compiler-sfc@3.5.39)(eslint@6.8.0)(typescript@4.1.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
       '@vue/cli-plugin-unit-jest':
         specifier: ~4.5.0
-        version: 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
+        version: 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
       '@vue/cli-service':
         specifier: ~4.5.0
-        version: 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
+        version: 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
       '@vue/compiler-sfc':
         specifier: ^3.0.0
         version: 3.5.39
@@ -627,7 +608,7 @@ importers:
   packages/angular:
     dependencies:
       '@lightgallery/headless':
-        specifier: ^3.0.0-alpha.1
+        specifier: ^3.0.0-beta.1
         version: link:../headless
       tslib:
         specifier: ^2.6.0
@@ -4626,9 +4607,6 @@ packages:
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
 
-  '@types/picturefill@3.0.4':
-    resolution: {integrity: sha512-iwNqlmMBrY57y3TKnG3HkHyN1gCIiDNOfnylZF4FMUsaRHpTgIh+JqPrE/ZbPlYV0cJJh76dezMTMwa049Z6CA==}
-
   '@types/prettier@2.7.3':
     resolution: {integrity: sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA==}
 
@@ -4989,19 +4967,6 @@ packages:
     resolution: {integrity: sha512-w+WyX5Ulmj4dtTZrxaulqrjaLZHSbnPzx75SJsTNYmotKsqn1JlLnDJa+lz5hn90HJofhl/2MAtw0mCrgM3qYw==}
     engines: {node: '>=20'}
     hasBin: true
-
-  '@videojs/http-streaming@2.16.3':
-    resolution: {integrity: sha512-91CJv5PnFBzNBvyEjt+9cPzTK/xoVixARj2g7ZAvItA+5bx8VKdk5RxCz/PP2kdzz9W+NiDUMPkdmTsosmy69Q==}
-    engines: {node: '>=8', npm: '>=5'}
-    peerDependencies:
-      video.js: ^6 || ^7
-
-  '@videojs/vhs-utils@3.0.5':
-    resolution: {integrity: sha512-PKVgdo8/GReqdx512F+ombhS+Bzogiofy1LgAj4tN8PfdBx3HSS7V5WfJotKTqtOWGwVfSWsrYN/t09/DSryrw==}
-    engines: {node: '>=8', npm: '>=5'}
-
-  '@videojs/xhr@2.6.0':
-    resolution: {integrity: sha512-7J361GiN1tXpm+gd0xz2QWr3xNWBE+rytvo8J3KuggFaLg+U37gZQ2BuPLcnkfGffy2e+ozY70RHC8jt7zjA6Q==}
 
   '@vitejs/plugin-basic-ssl@2.1.4':
     resolution: {integrity: sha512-HXciTXN/sDBYWgeAD4V4s0DN0g72x5mlxQhHxtYu3Tt8BLa6MzcJZUyDVFCdtjNs3bfENVHVzOsmooTVuNgAAw==}
@@ -5426,10 +5391,6 @@ packages:
   '@webassemblyjs/wast-printer@1.9.0':
     resolution: {integrity: sha512-2J0nE95rHXHyQ24cWjMKJ1tqB/ds8z/cyeOZxJhcb+rW+SQASVjuznUSmdz5GpVJTzU8JkhYut0D3siFDD6wsA==}
 
-  '@xmldom/xmldom@0.8.13':
-    resolution: {integrity: sha512-KRYzxepc14G/CEpEGc3Yn+JKaAeT63smlDr+vjB8jRfgTBBI9wRj/nkQEO+ucV8p8I9bfKLWp37uHgFrbntPvw==}
-    engines: {node: '>=10.0.0'}
-
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
 
@@ -5530,9 +5491,6 @@ packages:
   adjust-sourcemap-loader@3.0.0:
     resolution: {integrity: sha512-YBrGyT2/uVQ/c6Rr+t6ZJXniY03YtHGMJQYal368burRGYKqhx9qGTWqcBU5s1CwYY9E/ri63RYyG1IacMZtqw==}
     engines: {node: '>=8.9'}
-
-  aes-decrypter@3.1.3:
-    resolution: {integrity: sha512-VkG9g4BbhMBy+N5/XodDeV6F02chEk9IpgRTq/0bS80y4dzy79VH2Gtms02VXomf3HmyRe3yyJYkJ990ns+d6A==}
 
   agent-base@4.2.1:
     resolution: {integrity: sha512-JVwXMr9nHYTUXsBFKUqhJwvlcYU/blreOEUkhNR2eXZIvwd+c+o5V4MgDPKWnMS/56awN3TRzIP+KoPn+roQtg==}
@@ -8001,9 +7959,6 @@ packages:
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
 
-  dom-walk@0.1.2:
-    resolution: {integrity: sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==}
-
   domain-browser@1.2.0:
     resolution: {integrity: sha512-jnjyiM6eRyZl2H+W8Q/zLMA481hzi0eszAaBUzIVnmYVDBbnLxVNnfu1HgEBvCbL+71FrxMl3E6lpKH7Ge3OXA==}
     engines: {node: '>=0.4', npm: '>=1.2'}
@@ -9392,9 +9347,6 @@ packages:
     resolution: {integrity: sha512-awConJSVCHVGND6x3tmMaKcQvwXLhjdkmomy2W+Goaui8YPgYgXJZewhg3fWC+DlfqqQuWg8AwqjGTD2nAPVWg==}
     engines: {node: '>=6'}
 
-  global@4.4.0:
-    resolution: {integrity: sha512-wv/LAoHdRE3BeTGz53FAamhGlPLhlssK45usmGFThIi4XqnBmjKQ16u+RNbP7WvigRZDxUsM0J3gcQ5yicaL0w==}
-
   globals@12.4.0:
     resolution: {integrity: sha512-BWICuzzDvDoH54NHKCseDanAhE3CeDorgDL5MT6LMXXj2WCnd9UC2szdk4AWLfjdgNBCXLUanXYcpBBKOSWGwg==}
     engines: {node: '>=8'}
@@ -9806,10 +9758,6 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  i@0.3.7:
-    resolution: {integrity: sha512-FYz4wlXgkQwIPqhzC5TdNMLSE5+GS1IIDJZY/1ZiEPCT2S3COUVZeT5OW4BmW4r5LHLQuOosSwsvnroG9GR59Q==}
-    engines: {node: '>=0.4'}
-
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
     engines: {node: '>=0.10.0'}
@@ -9922,9 +9870,6 @@ packages:
 
   indexes-of@1.0.1:
     resolution: {integrity: sha512-bup+4tap3Hympa+JBJUG7XuOsdNQ6fxt0MHyXMKuLBKn0OqsTfvUxkUrroEX1+B2VsSHvCjiIcZVxRtYa4nllA==}
-
-  individual@2.0.0:
-    resolution: {integrity: sha512-pWt8hBCqJsUWI/HtcfWod7+N9SgAqyPEaF7JQjwzjn5vGrpg6aQ5qeAFQ7dx//UH4J1O+7xqew+gCeeFt6xN/g==}
 
   infer-owner@1.0.4:
     resolution: {integrity: sha512-IClj+Xz94+d7irH5qRyfJonOdfTzuDaifE6ZPWfx0N0+/ATZCbuTPq2prFl526urkQd90WyUKIh1DfBQ2hMz9A==}
@@ -10161,9 +10106,6 @@ packages:
   is-fullwidth-code-point@5.1.0:
     resolution: {integrity: sha512-5XHYaSyiqADb4RnZ1Bdad6cPp8Toise4TzEjcOYDHZkTCbKgiUl7WTUCpNWHuxmDt91wnsZBc9xinNzopv3JMQ==}
     engines: {node: '>=18'}
-
-  is-function@1.0.2:
-    resolution: {integrity: sha512-lw7DUp0aWXYg+CBCN+JKkcE0Q2RayZnSvnZBlwgxHBQhqt5pZNVy4Ri7H9GmmXkdu7LUthszM+Tor1u/2iBcpQ==}
 
   is-generator-fn@2.1.0:
     resolution: {integrity: sha512-cTIB4yPYL/Grw0EaSzASzg6bBy9gqCofvWN8okThAYIxKJZC+udlRAmGbM0XLeniEJSs8uEgHPGuHSe1XsOLSQ==}
@@ -11068,9 +11010,6 @@ packages:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
     engines: {node: '>=4.0'}
 
-  keycode@2.2.1:
-    resolution: {integrity: sha512-Rdgz9Hl9Iv4QKi8b0OlCRQEzp4AgVxyCtz5S/+VIHezDmrDhkp2N2TqBWOLz0/gbeREXOOiI9/4b8BY9uw2vFg==}
-
   keyv@3.1.0:
     resolution: {integrity: sha512-9ykJ/46SN/9KPM/sichzQ7OvXyGDYKGTaDlKMGCAlg2UK8KRy4jb0d8sFc+0Tt0YYnThq8X2RZgCg74RPxgcVA==}
 
@@ -11451,9 +11390,6 @@ packages:
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
-
-  m3u8-parser@4.8.0:
-    resolution: {integrity: sha512-UqA2a/Pw3liR6Df3gwxrqghCP17OpPlQj6RBPLYygf/ZSQ4MoSgvdvhvt35qV+3NaaA0FSZx93Ix+2brT1U7cA==}
 
   magic-string-ast@1.0.3:
     resolution: {integrity: sha512-CvkkH1i81zl7mmb94DsRiFeG9V2fR2JeuK8yDgS8oiZSFa++wWLEgZ5ufEOyLHbvSbD1gTRKv9NdX69Rnvr9JA==}
@@ -11858,9 +11794,6 @@ packages:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
     engines: {node: '>=10'}
 
-  min-document@2.19.2:
-    resolution: {integrity: sha512-8S5I8db/uZN8r9HSLFVWPdJCvYOejMcEC82VIzNUc6Zkklf/d1gg2psfE79/vyhWOj4+J8MtwmoOz3TmvaGu5A==}
-
   min-indent@1.0.1:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
@@ -12006,10 +11939,6 @@ packages:
     resolution: {integrity: sha512-hdrFxZOycD/g6A6SoI2bB5NA/5NEqD0569+S47WZhPvm46sD50ZHdYaFmnua5lndde9rCHGjmfK7Z8BuCt/PcQ==}
     deprecated: This package is no longer supported.
 
-  mpd-parser@0.22.1:
-    resolution: {integrity: sha512-fwBebvpyPUU8bOzvhX0VQZgSohncbgYwUyJJoTSNpmy7ccD2ryiCvM7oRkn/xQH5cv73/xU7rJSNCLjdGFor0Q==}
-    hasBin: true
-
   mrmime@2.0.1:
     resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
     engines: {node: '>=10'}
@@ -12049,11 +11978,6 @@ packages:
   mute-stream@2.0.0:
     resolution: {integrity: sha512-WWdIxpyjEn+FhQJQQv9aQAYlHoNVdzIzUySNV1gHUPDSdZJ3yZn7pAAbQcV7B56Mvu881q9FZV+0Vx2xC44VWA==}
     engines: {node: ^18.17.0 || >=20.5.0}
-
-  mux.js@6.0.1:
-    resolution: {integrity: sha512-22CHb59rH8pWGcPGW5Og7JngJ9s+z4XuSlYvnxhLuc58cA1WqGDQPzuG8I+sPm1/p0CdgpzVTaKW408k5DNn8w==}
-    engines: {node: '>=8', npm: '>=5'}
-    hasBin: true
 
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
@@ -13169,10 +13093,6 @@ packages:
     resolution: {integrity: sha512-9D3tPBayfoal6l9l4Y8NrMn1jkV718qJoYrla6P51+hh9h0Q+9/1c8KgEnoBQqhguyfgjay4biADI8HJG3pkoA==}
     engines: {node: '>=20.x'}
 
-  pkcs7@1.0.4:
-    resolution: {integrity: sha512-afRERtHn54AlwaF2/+LFszyAANTCggGilmcmILUzEjvs3XgFZT+xE6+QWQcAGmu4xajy+Xtj7acLOPdx5/eXWQ==}
-    hasBin: true
-
   pkg-conf@2.1.0:
     resolution: {integrity: sha512-C+VUP+8jis7EsQZIhDYmS5qlNtjv2yP4SNtjXK9AP1ZcTRlnSfuumaTnRfYZnYgUUYVIKqL0fRvmUGDV2fmp6g==}
     engines: {node: '>=4'}
@@ -14006,11 +13926,6 @@ packages:
       typescript:
         optional: true
 
-  react-dom@17.0.2:
-    resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
-    peerDependencies:
-      react: 17.0.2
-
   react-dom@18.3.1:
     resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
     peerDependencies:
@@ -14042,10 +13957,6 @@ packages:
 
   react-refresh@0.8.3:
     resolution: {integrity: sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==}
-    engines: {node: '>=0.10.0'}
-
-  react@17.0.2:
-    resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
     engines: {node: '>=0.10.0'}
 
   react@18.3.1:
@@ -14614,9 +14525,6 @@ packages:
   run-queue@1.0.3:
     resolution: {integrity: sha512-ntymy489o0/QQplUDnpYAYUsO50K9SBrIVaKCWDOJzYJts0f9WH9RFJkyagebkw5+y1oi00R7ynNW/d12GBumg==}
 
-  rust-result@1.0.0:
-    resolution: {integrity: sha512-6cJzSBU+J/RJCF063onnQf0cDUOHs9uZI1oroSGnHOph+CQTIJ5Pp2hK5kEQq1+7yE/EEWfulSNXAQ2jikPthA==}
-
   rxjs@5.5.12:
     resolution: {integrity: sha512-xx2itnL5sBbqeeiVgNPVuQQ1nC8Jp2WfNJhXWHmElW9YmrpS9UVnNzhP3EH3HFqexO5Tlp8GhYY+WEcqcVMvGw==}
     engines: {npm: '>=2.0.0'}
@@ -14637,9 +14545,6 @@ packages:
 
   safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
-
-  safe-json-parse@4.0.0:
-    resolution: {integrity: sha512-RjZPPHugjK0TOzFrLZ8inw44s9bKox99/0AZW9o/BEQVrJfhI+fIHMErnPyRa89/yRXUUr93q+tiN6zhoVV4wQ==}
 
   safe-push-apply@1.0.0:
     resolution: {integrity: sha512-iKE9w/Z7xCzUMIZqdBsp6pEQvwuEebH4vdpjcDWnyzaI6yl6O9FHvVpmGelvEHNsoY6wGblkxR6Zty/h00WiSA==}
@@ -14724,9 +14629,6 @@ packages:
   saxes@6.0.0:
     resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
     engines: {node: '>=v12.22.7'}
-
-  scheduler@0.20.2:
-    resolution: {integrity: sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ==}
 
   scheduler@0.23.2:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
@@ -16555,9 +16457,6 @@ packages:
   url-parse@1.5.10:
     resolution: {integrity: sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==}
 
-  url-toolkit@2.2.5:
-    resolution: {integrity: sha512-mtN6xk+Nac+oyJ/PrI7tzfmomRVNFIWKUbG8jdYFt52hxbiReFAXIjYskvu64/dvuW71IcB7lV8l0HvZMac6Jg==}
-
   url@0.11.0:
     resolution: {integrity: sha512-kbailJa29QrtXnxgq+DdCEGlbTeYM2eJUxsz6vjZavrCYPMIFHMKQmSKYAIuUK2i7hgPm28a8piX5NTUtM/LKQ==}
 
@@ -16649,15 +16548,6 @@ packages:
 
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
-
-  video.js@7.21.7:
-    resolution: {integrity: sha512-T2s3WFAht7Zjr2OSJamND9x9Dn2O+Z5WuHGdh8jI5SYh5mkMdVTQ7vSRmA5PYpjXJ2ycch6jpMjkJEIEU2xxqw==}
-
-  videojs-font@3.2.0:
-    resolution: {integrity: sha512-g8vHMKK2/JGorSfqAZQUmYYNnXmfec4MLhwtEFS+mMs2IDY398GLysy6BH6K+aS1KMNu/xWZ8Sue/X/mdQPliA==}
-
-  videojs-vtt.js@0.15.5:
-    resolution: {integrity: sha512-yZbBxvA7QMYn15Lr/ZfhhLPrNpI/RmCSCqgIff57GC2gIrV5YfyzLfLyZMj0NnZSAz8syB4N0nHXpZg9MyrMOQ==}
 
   vite-dev-rpc@2.0.0:
     resolution: {integrity: sha512-yKwbTwdHKSD2k/aGqyWpPHepo45OQc8lH3/6IfT4ZqeKE26ooKvi4WIEKzqWav8v+9Is8u1k8q54hvOmqASazA==}
@@ -22654,8 +22544,6 @@ snapshots:
 
   '@types/parse-json@4.0.2': {}
 
-  '@types/picturefill@3.0.4': {}
-
   '@types/prettier@2.7.3': {}
 
   '@types/prop-types@15.7.15': {}
@@ -23173,29 +23061,6 @@ snapshots:
       - rollup
       - supports-color
 
-  '@videojs/http-streaming@2.16.3(video.js@7.21.7)':
-    dependencies:
-      '@babel/runtime': 7.29.7
-      '@videojs/vhs-utils': 3.0.5
-      aes-decrypter: 3.1.3
-      global: 4.4.0
-      m3u8-parser: 4.8.0
-      mpd-parser: 0.22.1
-      mux.js: 6.0.1
-      video.js: 7.21.7
-
-  '@videojs/vhs-utils@3.0.5':
-    dependencies:
-      '@babel/runtime': 7.29.7
-      global: 4.4.0
-      url-toolkit: 2.2.5
-
-  '@videojs/xhr@2.6.0':
-    dependencies:
-      '@babel/runtime': 7.29.7
-      global: 4.4.0
-      is-function: 1.0.2
-
   '@vitejs/plugin-basic-ssl@2.1.4(vite@7.3.6(@types/node@24.13.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(stylus@0.59.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
     dependencies:
       vite: 7.3.6(@types/node@24.13.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(stylus@0.59.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
@@ -23552,11 +23417,11 @@ snapshots:
 
   '@vue/cli-overlay@4.5.19': {}
 
-  '@vue/cli-plugin-babel@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(core-js@3.49.0)(vue@3.5.39(typescript@4.1.6))':
+  '@vue/cli-plugin-babel@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(core-js@3.49.0)(vue@3.5.39(typescript@4.1.6))':
     dependencies:
       '@babel/core': 7.12.3
       '@vue/babel-preset-app': 4.5.19(@babel/core@7.12.3)(core-js@3.49.0)(vue@3.5.39(typescript@4.1.6))
-      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
+      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
       '@vue/cli-shared-utils': 4.5.19
       babel-loader: 8.1.0(@babel/core@7.12.3)(webpack@4.44.2)
       cache-loader: 4.1.0(webpack@4.44.2)
@@ -23569,18 +23434,18 @@ snapshots:
       - webpack-cli
       - webpack-command
 
-  '@vue/cli-plugin-e2e-cypress@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(eslint@6.8.0)':
+  '@vue/cli-plugin-e2e-cypress@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(eslint@6.8.0)':
     dependencies:
-      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
+      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
       '@vue/cli-shared-utils': 4.5.19
       cypress: 3.8.3
       eslint-plugin-cypress: 2.15.2(eslint@6.8.0)
     transitivePeerDependencies:
       - eslint
 
-  '@vue/cli-plugin-eslint@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(eslint@6.8.0)':
+  '@vue/cli-plugin-eslint@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(eslint@6.8.0)':
     dependencies:
-      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
+      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
       '@vue/cli-shared-utils': 4.5.19
       eslint: 6.8.0
       eslint-loader: 2.2.1(eslint@6.8.0)(webpack@4.44.2)
@@ -23593,16 +23458,16 @@ snapshots:
       - webpack-cli
       - webpack-command
 
-  '@vue/cli-plugin-router@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))':
+  '@vue/cli-plugin-router@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))':
     dependencies:
-      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
+      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
       '@vue/cli-shared-utils': 4.5.19
 
-  '@vue/cli-plugin-typescript@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(@vue/compiler-sfc@3.5.39)(eslint@6.8.0)(typescript@4.1.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))':
+  '@vue/cli-plugin-typescript@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(@vue/compiler-sfc@3.5.39)(eslint@6.8.0)(typescript@4.1.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))':
     dependencies:
       '@babel/core': 7.29.7
       '@types/webpack-env': 1.18.8
-      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
+      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
       '@vue/cli-shared-utils': 4.5.19
       babel-loader: 8.1.0(@babel/core@7.29.7)(webpack@4.44.2)
       cache-loader: 4.1.0(webpack@4.44.2)
@@ -23625,12 +23490,12 @@ snapshots:
       - webpack-cli
       - webpack-command
 
-  '@vue/cli-plugin-unit-jest@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))':
+  '@vue/cli-plugin-unit-jest@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))':
     dependencies:
       '@babel/core': 7.12.3
       '@babel/plugin-transform-modules-commonjs': 7.29.7(@babel/core@7.12.3)
       '@types/jest': 24.9.1
-      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
+      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
       '@vue/cli-shared-utils': 4.5.19
       babel-core: 7.0.0-bridge.0(@babel/core@7.12.3)
       babel-jest: 24.9.0(@babel/core@7.12.3)
@@ -23651,11 +23516,11 @@ snapshots:
       - vue
       - vue-template-compiler
 
-  '@vue/cli-plugin-vuex@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))':
+  '@vue/cli-plugin-vuex@4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))':
     dependencies:
-      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
+      '@vue/cli-service': 4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))
 
-  '@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))':
+  '@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6))':
     dependencies:
       '@intervolga/optimize-cssnano-plugin': 1.0.6(webpack@4.44.2)
       '@soda/friendly-errors-webpack-plugin': 1.8.1(webpack@4.44.2)
@@ -23664,10 +23529,10 @@ snapshots:
       '@types/webpack': 4.41.40
       '@types/webpack-dev-server': 3.11.6(debug@4.4.3)
       '@vue/cli-overlay': 4.5.19
-      '@vue/cli-plugin-router': 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))
-      '@vue/cli-plugin-vuex': 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))
+      '@vue/cli-plugin-router': 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))
+      '@vue/cli-plugin-vuex': 4.5.19(@vue/cli-service@4.5.19(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(sass-loader@8.0.2(sass@1.101.0)(webpack@4.44.2))(typescript@4.1.6)(underscore@1.13.6)(vue-template-compiler@2.7.16)(vue@3.5.39(typescript@4.1.6)))
       '@vue/cli-shared-utils': 4.5.19
-      '@vue/component-compiler-utils': 3.3.0(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(underscore@1.13.6)
+      '@vue/component-compiler-utils': 3.3.0(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(pug@3.0.4)(underscore@1.13.6)
       '@vue/preload-webpack-plugin': 1.1.2(html-webpack-plugin@3.2.0(webpack@4.44.2))(webpack@4.44.2)
       '@vue/web-component-wrapper': 1.3.0
       acorn: 7.4.1
@@ -23705,7 +23570,7 @@ snapshots:
       terser-webpack-plugin: 1.4.6(webpack@4.44.2)
       thread-loader: 2.1.3(webpack@4.44.2)
       url-loader: 2.3.0(file-loader@4.3.0(webpack@4.44.2))(webpack@4.44.2)
-      vue-loader: 15.11.1(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(cache-loader@4.1.0(webpack@4.44.2))(css-loader@3.6.0(webpack@4.44.2))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(underscore@1.13.6)(vue-template-compiler@2.7.16)(webpack@4.44.2)
+      vue-loader: 15.11.1(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(cache-loader@4.1.0(webpack@4.44.2))(css-loader@3.6.0(webpack@4.44.2))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(underscore@1.13.6)(vue-template-compiler@2.7.16)(webpack@4.44.2)
       vue-style-loader: 4.1.3
       webpack: 4.44.2
       webpack-bundle-analyzer: 3.9.0
@@ -23825,9 +23690,9 @@ snapshots:
       '@vue/compiler-dom': 3.5.39
       '@vue/shared': 3.5.39
 
-  '@vue/component-compiler-utils@3.3.0(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(underscore@1.13.6)':
+  '@vue/component-compiler-utils@3.3.0(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(pug@3.0.4)(underscore@1.13.6)':
     dependencies:
-      consolidate: 0.15.1(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(underscore@1.13.6)
+      consolidate: 0.15.1(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(pug@3.0.4)(underscore@1.13.6)
       hash-sum: 1.0.2
       lru-cache: 4.1.5
       merge-source-map: 1.1.0
@@ -24095,8 +23960,6 @@ snapshots:
       '@webassemblyjs/wast-parser': 1.9.0
       '@xtuc/long': 4.2.2
 
-  '@xmldom/xmldom@0.8.13': {}
-
   '@xtuc/ieee754@1.2.0': {}
 
   '@xtuc/long@4.2.2': {}
@@ -24174,13 +24037,6 @@ snapshots:
     dependencies:
       loader-utils: 2.0.4
       regex-parser: 2.3.1
-
-  aes-decrypter@3.1.3:
-    dependencies:
-      '@babel/runtime': 7.29.7
-      '@videojs/vhs-utils': 3.0.5
-      global: 4.4.0
-      pkcs7: 1.0.4
 
   agent-base@4.2.1:
     dependencies:
@@ -26197,7 +26053,7 @@ snapshots:
 
   console-control-strings@1.1.0: {}
 
-  consolidate@0.15.1(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(underscore@1.13.6):
+  consolidate@0.15.1(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(pug@3.0.4)(underscore@1.13.6):
     dependencies:
       bluebird: 3.7.2
     optionalDependencies:
@@ -26207,8 +26063,6 @@ snapshots:
       lodash: 4.18.1
       nunjucks: 3.2.4(chokidar@3.6.0)
       pug: 3.0.4
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
       underscore: 1.13.6
 
   constantinople@4.0.1:
@@ -27177,8 +27031,6 @@ snapshots:
       domelementtype: 2.3.0
       domhandler: 5.0.3
       entities: 4.5.0
-
-  dom-walk@0.1.2: {}
 
   domain-browser@1.2.0: {}
 
@@ -29168,11 +29020,6 @@ snapshots:
       kind-of: 6.0.3
       which: 1.3.1
 
-  global@4.4.0:
-    dependencies:
-      min-document: 2.19.2
-      process: 0.11.10
-
   globals@12.4.0:
     dependencies:
       type-fest: 0.8.1
@@ -29788,8 +29635,6 @@ snapshots:
       run-node: 1.0.0
       slash: 2.0.0
 
-  i@0.3.7: {}
-
   iconv-lite@0.4.24:
     dependencies:
       safer-buffer: 2.1.2
@@ -29894,8 +29739,6 @@ snapshots:
   indent-string@4.0.0: {}
 
   indexes-of@1.0.1: {}
-
-  individual@2.0.0: {}
 
   infer-owner@1.0.4: {}
 
@@ -30189,8 +30032,6 @@ snapshots:
   is-fullwidth-code-point@5.1.0:
     dependencies:
       get-east-asian-width: 1.6.0
-
-  is-function@1.0.2: {}
 
   is-generator-fn@2.1.0: {}
 
@@ -31855,8 +31696,6 @@ snapshots:
       object.assign: 4.1.7
       object.values: 1.2.1
 
-  keycode@2.2.1: {}
-
   keyv@3.1.0:
     dependencies:
       json-buffer: 3.0.0
@@ -32321,12 +32160,6 @@ snapshots:
   lunr@2.3.9: {}
 
   lz-string@1.5.0: {}
-
-  m3u8-parser@4.8.0:
-    dependencies:
-      '@babel/runtime': 7.29.7
-      '@videojs/vhs-utils': 3.0.5
-      global: 4.4.0
 
   magic-string-ast@1.0.3:
     dependencies:
@@ -33055,10 +32888,6 @@ snapshots:
   mimic-response@3.1.0:
     optional: true
 
-  min-document@2.19.2:
-    dependencies:
-      dom-walk: 0.1.2
-
   min-indent@1.0.1: {}
 
   mini-css-extract-plugin@0.11.3(webpack@4.44.2):
@@ -33208,13 +33037,6 @@ snapshots:
       rimraf: 2.7.1
       run-queue: 1.0.3
 
-  mpd-parser@0.22.1:
-    dependencies:
-      '@babel/runtime': 7.29.7
-      '@videojs/vhs-utils': 3.0.5
-      '@xmldom/xmldom': 0.8.13
-      global: 4.4.0
-
   mrmime@2.0.1: {}
 
   ms@2.0.0: {}
@@ -33254,11 +33076,6 @@ snapshots:
   mute-stream@0.0.8: {}
 
   mute-stream@2.0.0: {}
-
-  mux.js@6.0.1:
-    dependencies:
-      '@babel/runtime': 7.29.7
-      global: 4.4.0
 
   mz@2.7.0:
     dependencies:
@@ -34528,10 +34345,6 @@ snapshots:
     optionalDependencies:
       '@napi-rs/nice': 1.1.1
 
-  pkcs7@1.0.4:
-    dependencies:
-      '@babel/runtime': 7.29.7
-
   pkg-conf@2.1.0:
     dependencies:
       find-up: 2.1.0
@@ -35579,13 +35392,6 @@ snapshots:
       - supports-color
       - vue-template-compiler
 
-  react-dom@17.0.2(react@17.0.2):
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      react: 17.0.2
-      scheduler: 0.20.2
-
   react-dom@18.3.1(react@18.3.1):
     dependencies:
       loose-envify: 1.4.0
@@ -35610,11 +35416,6 @@ snapshots:
   react-refresh@0.17.0: {}
 
   react-refresh@0.8.3: {}
-
-  react@17.0.2:
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
 
   react@18.3.1:
     dependencies:
@@ -36384,10 +36185,6 @@ snapshots:
     dependencies:
       aproba: 1.2.0
 
-  rust-result@1.0.0:
-    dependencies:
-      individual: 2.0.0
-
   rxjs@5.5.12:
     dependencies:
       symbol-observable: 1.0.1
@@ -36411,10 +36208,6 @@ snapshots:
   safe-buffer@5.1.2: {}
 
   safe-buffer@5.2.1: {}
-
-  safe-json-parse@4.0.0:
-    dependencies:
-      rust-result: 1.0.0
 
   safe-push-apply@1.0.0:
     dependencies:
@@ -36502,11 +36295,6 @@ snapshots:
   saxes@6.0.0:
     dependencies:
       xmlchars: 2.2.0
-
-  scheduler@0.20.2:
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
 
   scheduler@0.23.2:
     dependencies:
@@ -38762,8 +38550,6 @@ snapshots:
       querystringify: 2.2.0
       requires-port: 1.0.0
 
-  url-toolkit@2.2.5: {}
-
   url@0.11.0:
     dependencies:
       punycode: 1.3.2
@@ -38874,28 +38660,6 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
-
-  video.js@7.21.7:
-    dependencies:
-      '@babel/runtime': 7.29.7
-      '@videojs/http-streaming': 2.16.3(video.js@7.21.7)
-      '@videojs/vhs-utils': 3.0.5
-      '@videojs/xhr': 2.6.0
-      aes-decrypter: 3.1.3
-      global: 4.4.0
-      keycode: 2.2.1
-      m3u8-parser: 4.8.0
-      mpd-parser: 0.22.1
-      mux.js: 6.0.1
-      safe-json-parse: 4.0.0
-      videojs-font: 3.2.0
-      videojs-vtt.js: 0.15.5
-
-  videojs-font@3.2.0: {}
-
-  videojs-vtt.js@0.15.5:
-    dependencies:
-      global: 4.4.0
 
   vite-dev-rpc@2.0.0(vite@6.4.3(@types/node@24.13.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(stylus@0.59.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)):
     dependencies:
@@ -39408,9 +39172,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vue-loader@15.11.1(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(cache-loader@4.1.0(webpack@4.44.2))(css-loader@3.6.0(webpack@4.44.2))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(underscore@1.13.6)(vue-template-compiler@2.7.16)(webpack@4.44.2):
+  vue-loader@15.11.1(@vue/compiler-sfc@3.5.39)(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(cache-loader@4.1.0(webpack@4.44.2))(css-loader@3.6.0(webpack@4.44.2))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(prettier@2.8.8)(pug@3.0.4)(underscore@1.13.6)(vue-template-compiler@2.7.16)(webpack@4.44.2):
     dependencies:
-      '@vue/component-compiler-utils': 3.3.0(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(pug@3.0.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(underscore@1.13.6)
+      '@vue/component-compiler-utils': 3.3.0(babel-core@7.0.0-bridge.0(@babel/core@7.12.3))(hamljs@0.6.2)(handlebars@4.7.9)(lodash@4.18.1)(nunjucks@3.2.4(chokidar@3.6.0))(pug@3.0.4)(underscore@1.13.6)
       css-loader: 3.6.0(webpack@4.44.2)
       hash-sum: 1.0.2
       loader-utils: 1.4.2

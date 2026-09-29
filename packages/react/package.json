@@ -1,6 +1,6 @@
 {
   "name": "@lightgallery/react",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-beta.1",
   "private": false,
   "type": "module",
   "sideEffects": false,
@@ -240,7 +240,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "tag": "alpha"
+    "tag": "next"
   },
   "typesVersions": {
     "*": {

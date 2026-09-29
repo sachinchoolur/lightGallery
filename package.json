@@ -1,6 +1,6 @@
 {
   "name": "lightgallery",
-  "version": "2.9.0",
+  "version": "3.0.0-beta.1",
   "packageManager": "pnpm@9.15.0",
   "pnpm": {
     "overrides": {
@@ -131,7 +131,7 @@
   "bugs": {
     "url": "https://github.com/sachinchoolur/lightGallery/issues"
   },
-  "license": "GPLv3",
+  "license": "GPL-3.0-only",
   "author": {
     "name": "Sachin Neravath",
     "email": "sachi77n@gmail.com",
@@ -186,7 +186,7 @@
     "prepush": "npm run test:prod && npm run build",
     "commitmsg": "commitlint -E HUSKY_GIT_PARAMS",
     "buildLibraries": "ts-node tools/build-libraries",
-    "publishToNpm": "ts-node tools/npm-publish"
+    "publishToNpm": "pnpm publish"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -205,9 +205,9 @@
     ]
   },
   "devDependencies": {
-    "@lightgallery/headless": "workspace:*",
     "@commitlint/cli": "^7.1.2",
     "@commitlint/config-conventional": "^7.1.2",
+    "@lightgallery/headless": "workspace:*",
     "@testing-library/dom": "^7.30.4",
     "@testing-library/jest-dom": "^5.12.0",
     "@types/jest": "^30.0.0",
@@ -255,14 +255,7 @@
     "typescript": "5.0.4",
     "vite": "^5.4.11"
   },
-  "dependencies": {
-    "@types/picturefill": "^3.0.0",
-    "i": "^0.3.6",
-    "npm": "^6.14.8",
-    "video.js": "^7.0.3"
-  },
-  "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+  "publishConfig": {
+    "tag": "next"
   }
 }

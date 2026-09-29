@@ -12,7 +12,7 @@
   "main": "lightgallery.umd.js",
   "min": "lightgallery.min.js",
   "module": "lightgallery.es5.js",
-  "typings": "index.d.ts",
+  "typings": "types/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/sachinchoolur/lightGallery"
@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/sachinchoolur/lightGallery/issues"
   },
-  "license": "GPLv3",
+  "license": "GPL-3.0-only",
   "author": {
     "name": "Sachin Neravath",
     "email": "sachi77n@gmail.com",

@@ -1,6 +1,6 @@
 {
   "name": "@lightgallery/angular",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-beta.1",
   "private": false,
   "description": "Native Angular lightGallery over @lightgallery/headless — standalone components, signals, zoneless-ready",
   "license": "GPL-3.0-only",
@@ -25,7 +25,7 @@
   "sideEffects": false,
   "publishConfig": {
     "access": "public",
-    "tag": "alpha"
+    "tag": "next"
   },
   "scripts": {
     "build": "ng-packagr -p ng-package.json -c tsconfig.lib.json",
@@ -36,7 +36,7 @@
     "lint": "eslint 'src/**/*.ts' 'plugins/**/*.ts' --quiet"
   },
   "dependencies": {
-    "@lightgallery/headless": "^3.0.0-alpha.1",
+    "@lightgallery/headless": "^3.0.0-beta.1",
     "tslib": "^2.6.0"
   },
   "peerDependencies": {
