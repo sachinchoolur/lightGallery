@@ -93,6 +93,7 @@ Each plugin is its own tree-shakable subpath
 | mediumZoom | `plugins/mediumZoom` | `margin`, `backgroundColor` (presets a minimal UI) |
 | relativeCaption | `plugins/relativeCaption` | — (presets `captionPosition: 'slide'`) |
 | vimeoThumbnail | `plugins/vimeoThumbnail` | `showThumbnailWithPlayButton` |
+| originCrop | `plugins/originCrop` | `originCrop`: flies a cropped thumbnail (`object-fit: cover`, `background-size: cover`) from its crop instead of squashing the whole image into the tile |
 
 Plugins compose per gallery instance — two galleries on one page can have
 different plugin sets. Order matters for slide wrappers: put `Zoom` before

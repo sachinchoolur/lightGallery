@@ -16,6 +16,8 @@ const props = defineProps<{
     dummySrc?: string | null;
     /** Box the dummy flies at: the fitted image size, capped at natural. */
     dummySize?: ImageSize | null;
+    /** Where the dummy's box sits, relative to the image centre (px). */
+    dummyOffset?: { x: number; y: number } | null;
     /** Hold back the real `<img>` while the origin flight runs (2.x). */
     deferSrc?: boolean;
 }>();
@@ -34,7 +36,9 @@ const dummyStyle = computed(() =>
         ? {
               width: `${props.dummySize.width}px`,
               height: `${props.dummySize.height}px`,
-              transform: 'translate(-50%, -50%)',
+              transform: props.dummyOffset
+                  ? `translate(calc(-50% + ${props.dummyOffset.x}px), calc(-50% + ${props.dummyOffset.y}px))`
+                  : 'translate(-50%, -50%)',
           }
         : {
               width: '100%',

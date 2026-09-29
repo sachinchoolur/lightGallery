@@ -5,6 +5,7 @@ export { setLicenseKey } from '@lightgallery/headless';
 export { default as LgSlide } from './LgSlide.vue';
 export type { OriginAnimation } from './LgSlide.vue';
 export { default as LgImageSlide } from './LgImageSlide.vue';
+export { default as LgStageWrappers } from './LgStageWrappers';
 export { default as LgCaption } from './LgCaption.vue';
 export { LgCaptionContent } from './caption-content';
 export type { LgIcon, LgIconName, LgIcons } from './icons';
@@ -40,5 +41,8 @@ export {
     type LgPluginSlots,
     type LgSlideRenderer,
     type LgVuePlugin,
+    type OriginFlightInput,
+    type OriginFlightOverride,
+    type OriginFlightResolver,
     type ResolvedPluginSettings,
 } from './plugins/types';

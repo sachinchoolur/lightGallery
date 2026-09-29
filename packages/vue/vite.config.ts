@@ -82,6 +82,12 @@ export default defineConfig({
                         import.meta.url,
                     ),
                 ),
+                'plugins/originCrop/index': fileURLToPath(
+                    new URL(
+                        './src/plugins/originCrop/index.ts',
+                        import.meta.url,
+                    ),
+                ),
                 'plugins/relativeCaption/index': fileURLToPath(
                     new URL(
                         './src/plugins/relativeCaption/index.ts',

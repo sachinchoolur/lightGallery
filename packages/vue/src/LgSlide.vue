@@ -20,6 +20,7 @@ import {
     getPreloadIndexes,
     getSlideType,
     type ImageSize,
+    type FractionRect,
 } from '@lightgallery/headless';
 
 import { LgCaptionContent } from './caption-content';
@@ -44,6 +45,15 @@ export interface OriginAnimation {
      * no lgSize): shrink about the stage centre and fade instead.
      */
     toCenter?: boolean;
+    /**
+     * A plugin's flight (`layout.overrideOriginFlight`, origin crop):
+     * transforms for a `slidesWrapper`'s stage boxes, the part of the
+     * image the dummy covers, and the dummy's source when the gallery
+     * has none.
+     */
+    boxes?: { outer: string; inner: string };
+    region?: FractionRect;
+    dummySrc?: string;
 }
 
 const props = withDefaults(
@@ -136,6 +146,7 @@ const slideType = computed(() =>
 // pre-flush so the dummy is in the flight's first painted frame.
 const dummySrc = ref<string | null>(null);
 const dummySize = ref<ImageSize | null>(null);
+const dummyOffset = ref<{ x: number; y: number } | null>(null);
 let dummyDone = false;
 let dummyDropTimer: ReturnType<typeof setTimeout> | null = null;
 watch(
@@ -151,10 +162,25 @@ watch(
         ) {
             return;
         }
-        const src = runtime.getDummySrc(props.index);
+        const src = anim.dummySrc ?? runtime.getDummySrc(props.index);
         if (src) {
             dummySrc.value = src;
-            dummySize.value = anim.imageSize ?? null;
+            // A plugin's flight may cover only a region of the image with
+            // the dummy (origin crop's pre-cropped thumbnail files).
+            const { imageSize, region } = anim;
+            if (imageSize && region) {
+                dummySize.value = {
+                    width: imageSize.width * region.width,
+                    height: imageSize.height * region.height,
+                };
+                dummyOffset.value = {
+                    x: imageSize.width * (region.x + region.width / 2 - 0.5),
+                    y: imageSize.height * (region.y + region.height / 2 - 0.5),
+                };
+            } else {
+                dummySize.value = imageSize ?? null;
+                dummyOffset.value = null;
+            }
             runtime.firstSlideLoading.value = true;
         } else {
             dummyDone = true;
@@ -217,6 +243,7 @@ const SlideContent = (): VNodeChild => {
             index: props.index,
             dummySrc: dummySrc.value,
             dummySize: dummySize.value,
+            dummyOffset: dummyOffset.value,
             deferSrc: deferSrc.value,
             onMediaLoad: onLoad,
             onMediaError: onError,

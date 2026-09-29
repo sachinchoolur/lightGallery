@@ -1,7 +1,10 @@
 import type { Component, ComputedRef, InjectionKey } from 'vue';
 import type {
     CoreSettings,
+    FractionRect,
     GalleryAction,
+    ImageSize,
+    RectLike,
     SlideDirection,
     TypedEmitter,
 } from '@lightgallery/headless';
@@ -25,6 +28,40 @@ export interface LgMediaPosition {
     bottom: number;
 }
 
+/** What a plugin sees when a zoom-from-origin flight is measured. */
+export interface OriginFlightInput {
+    index: number;
+    /**
+     * The element the flight was measured from (the trigger's img, else
+     * the trigger itself); null when an explicit `originRect` was given.
+     */
+    trigger: HTMLElement | null;
+    triggerRect: RectLike;
+    containerRect: RectLike;
+    /** Media container offsets (toolbar; caption + thumb strip), px. */
+    top: number;
+    bottom: number;
+    /** The fitted image box the flight lands on. */
+    imageSize: ImageSize;
+}
+
+/** A plugin's flight for a trigger, in place of the built-in one. */
+export interface OriginFlightOverride {
+    /** The slide's transform on the trigger. */
+    transform: string;
+    /** Transforms for a `slidesWrapper`'s outer and inner boxes. */
+    boxes?: { outer: string; inner: string };
+    /** The part of the image the flight's dummy covers (default: whole). */
+    region?: FractionRect;
+    /** Source of the flight's dummy when the gallery has none. */
+    dummySrc?: string;
+}
+
+/** Returning null or undefined keeps the built-in flight. */
+export type OriginFlightResolver = (
+    input: OriginFlightInput,
+) => OriginFlightOverride | null | undefined;
+
 export interface LgPluginLayout {
     /** Declaratively toggle a class on the `.lg-outer` element. */
     setOuterClass(className: string, active: boolean): void;
@@ -35,6 +72,11 @@ export interface LgPluginLayout {
      * position measurement. Pass `null` to restore the default.
      */
     overrideMediaPosition(fn: (() => LgMediaPosition) | null): void;
+    /**
+     * originCrop's core-method override: resolve the zoom-from-origin
+     * flight for a trigger. Pass `null` to restore the built-in flight.
+     */
+    overrideOriginFlight(fn: OriginFlightResolver | null): void;
 }
 
 export interface LgPluginRefs {
@@ -78,6 +120,12 @@ export interface LgPluginSlots {
      * its default slot; first plugin in the array = outermost wrapper.
      */
     slideWrapper?: Component;
+    /**
+     * Wraps the slide list (`.lg-inner`): origin crop's stage boxes.
+     * Receives the opening or closing slide's `originAnim` prop and the
+     * wrapped content through its default slot.
+     */
+    slidesWrapper?: Component;
 }
 
 /** Slide-content replacement (video): first plugin whose renderer owns

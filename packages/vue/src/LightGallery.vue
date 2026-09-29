@@ -40,6 +40,7 @@ import {
     type UserSettings,
     coreDefaultIcons,
     type ImageSize,
+    type FractionRect,
 } from '@lightgallery/headless';
 
 import { getFocusableElements, useBodyLock, useHideBars } from './composables';
@@ -53,6 +54,7 @@ import {
 import { useGalleryGestures } from './gestures';
 import LgCaption from './LgCaption.vue';
 import LgSlide, { type OriginAnimation } from './LgSlide.vue';
+import LgStageWrappers from './LgStageWrappers';
 import LgToolbarOverflow from './LgToolbarOverflow.vue';
 import {
     createGestureSeam,
@@ -74,6 +76,7 @@ import {
     type LgPluginContext,
     type LgVuePlugin,
     type ResolvedPluginSettings,
+    type OriginFlightResolver,
 } from './plugins/types';
 import { LgTimeouts } from './timeouts';
 import {
@@ -460,6 +463,14 @@ const toolbarEl = ref<HTMLDivElement | null>(null);
 const pluginOuterClasses = ref<Record<string, boolean>>({});
 /** mediumZoom's media-position override, read by measureOffsets. */
 let mediaPositionOverride: (() => LgMediaPosition) | null = null;
+/** originCrop's flight override, read by computeOrigin. */
+let originFlightOverride: OriginFlightResolver | null = null;
+/** Plugin `slidesWrapper` chain around .lg-inner, plugins order = outermost-first. */
+const stageWrappers = computed(() =>
+    runtime.plugins.value
+        .map((plugin) => plugin.slots?.slidesWrapper)
+        .filter((cmp): cmp is NonNullable<typeof cmp> => !!cmp),
+);
 
 const isBodyContainer = computed(
     () =>
@@ -636,16 +647,25 @@ function measureOffsets(): { top: number; bottom: number } {
     return { top, bottom };
 }
 
+// The element a flight is measured from: the trigger's img, else the
+// trigger itself (a background thumbnail); null for an explicit
+// `originRect`.
+function getOriginTrigger(slideIndex: number): HTMLElement | null {
+    if (props.originRect) {
+        return null;
+    }
+    const element = registry.registrations.value[slideIndex]?.element;
+    return element ? (element.querySelector('img') ?? element) : null;
+}
+
 function getOriginRect(slideIndex: number): RectLike | null {
     if (props.originRect) {
         return isUsableOriginRect(props.originRect) ? props.originRect : null;
     }
-    const registration = registry.registrations.value[slideIndex];
-    const element = registration?.element;
-    if (!element) {
+    const target = getOriginTrigger(slideIndex);
+    if (!target) {
         return null;
     }
-    const target = element.querySelector('img') ?? element;
     const rect = target.getBoundingClientRect();
     // A hidden or collapsed trigger (a collage's overflow items behind a
     // "+N photos" tile) measures 0×0 at the viewport origin: no flight,
@@ -677,9 +697,13 @@ const firstSlideLoading = shallowRef(false);
 /** Reactive twin of React's `zoomOriginOpenRef` (plugins consume it). */
 const zoomOriginOpen = shallowRef(false);
 
-function computeOrigin(
-    slideIndex: number,
-): { transform: string; imageSize: ImageSize } | null {
+function computeOrigin(slideIndex: number): {
+    transform: string;
+    imageSize: ImageSize;
+    boxes?: { outer: string; inner: string };
+    region?: FractionRect;
+    dummySrc?: string;
+} | null {
     const cfg = settings.value;
     if (!cfg.zoomFromOrigin) {
         return null;
@@ -715,6 +739,19 @@ function computeOrigin(
     // fall back to the startClass fade instead.
     if (imageSize.width <= 0 || imageSize.height <= 0) {
         return null;
+    }
+    // A plugin's flight (origin crop) in place of the built-in one.
+    const override = originFlightOverride?.({
+        index: slideIndex,
+        trigger: getOriginTrigger(slideIndex),
+        triggerRect,
+        containerRect,
+        top,
+        bottom,
+        imageSize,
+    });
+    if (override) {
+        return { ...override, imageSize };
     }
     return {
         transform: getOriginTransform({
@@ -768,6 +805,9 @@ function runEntrance(): void {
             index: current,
             transform: origin.transform,
             imageSize: origin.imageSize,
+            boxes: origin.boxes,
+            region: origin.region,
+            dummySrc: origin.dummySrc,
             stage: 'init',
         };
         timers.set(() => {
@@ -851,6 +891,7 @@ function beginClose(): void {
         index: store.currentIndex.value,
         transform: origin?.transform ?? getCenterCloseTransform(),
         imageSize: origin?.imageSize,
+        boxes: origin?.boxes,
         stage: 'run',
         closing: true,
         toCenter: !origin,
@@ -1337,6 +1378,9 @@ const pluginContext: LgPluginContext = {
         overrideMediaPosition(fn) {
             mediaPositionOverride = fn;
         },
+        overrideOriginFlight(fn) {
+            originFlightOverride = fn;
+        },
     },
     refs: {
         getOuter: () => outerEl.value,
@@ -1443,6 +1487,10 @@ onBeforeUnmount(() => {
                 @pointerup="onOuterPointerUp"
             >
                 <div class="lg-content" :style="contentStyle">
+                    <LgStageWrappers
+                        :wrappers="stageWrappers"
+                        :origin-anim="originAnim"
+                    >
                     <div
                         ref="innerEl"
                         class="lg-inner"
@@ -1479,6 +1527,7 @@ onBeforeUnmount(() => {
                             />
                         </template>
                     </div>
+                    </LgStageWrappers>
                     <template v-if="settings.controls">
                         <button
                             type="button"

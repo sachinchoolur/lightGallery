@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import {
-    LightGallery,
-    LgItem,
-    type LgGalleryItem,
-} from '@lightgallery/vue';
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
 import Autoplay from '@lightgallery/vue/plugins/autoplay';
 import Comment from '@lightgallery/vue/plugins/comment';
 import Fullscreen from '@lightgallery/vue/plugins/fullscreen';
@@ -15,37 +11,61 @@ import Share from '@lightgallery/vue/plugins/share';
 import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 import Video from '@lightgallery/vue/plugins/video';
 import Zoom from '@lightgallery/vue/plugins/zoom';
+import OriginCrop from '@lightgallery/vue/plugins/originCrop';
 import { JustifiedGrid } from '@lightgallery/vue/plugins/justified';
 
 const picsum = (id: number, w: number, h: number): string =>
     `https://picsum.photos/id/${id}/${w}/${h}`;
 // Rig-only responsive ladder: real w-descriptor srcset so device passes
 // exercise the plan-002 selection math end to end.
-const picsumSrcset = (id: number): string =>
+const picsumSrcset = (id: number, w: number, h: number): string =>
     [640, 960, 1280, 1600]
-        .map((w) => `${picsum(id, w, Math.round((w * 1067) / 1600))} ${w}w`)
+        .map(
+            (tier) =>
+                `${picsum(id, tier, Math.round((tier * h) / w))} ${tier}w`,
+        )
         .join(', ');
 
-const SOURCES = [
+/**
+ * Portrait entries are deliberate: anything that measures the fitted
+ * size per slide (actual-size zoom, the origin flight) only misbehaves
+ * when the aspect ratio changes between slides, and a cover-cropped tile
+ * shows only a band of them (the origin crop scenario).
+ */
+interface Source {
+    id: number;
+    title: string;
+    portrait?: boolean;
+}
+
+// Same images as dev-vanilla/main.ts: every rig runs the same scenario
+// matrix on the same slides so the packages compare side by side.
+const SOURCES: Source[] = [
     { id: 1015, title: 'River between mountains' },
     { id: 1016, title: 'Canyon walls' },
+    { id: 1025, title: 'Pug portrait', portrait: true },
     { id: 1018, title: 'Snowy peak' },
     { id: 1019, title: 'Lakeside cliffs' },
+    { id: 1027, title: 'Woman portrait', portrait: true },
     { id: 1039, title: 'Waterfall in the forest' },
     { id: 1043, title: 'Village at dusk' },
     { id: 1044, title: 'Foggy shore' },
     { id: 1051, title: 'Ridge line' },
 ];
 
-const items: LgGalleryItem[] = SOURCES.map((source) => ({
-    src: picsum(source.id, 1600, 1067),
-    srcset: picsumSrcset(source.id),
-    sizes: '100vw',
-    thumb: picsum(source.id, 240, 160),
-    lgSize: '1600-1067',
-    alt: source.title,
-    caption: source.title,
-}));
+const items: LgGalleryItem[] = SOURCES.map(({ id, title, portrait }) => {
+    const [w, h] = portrait ? [1067, 1600] : [1600, 1067];
+    const [tw, th] = portrait ? [160, 240] : [240, 160];
+    return {
+        src: picsum(id, w, h),
+        srcset: picsumSrcset(id, w, h),
+        sizes: '100vw',
+        thumb: picsum(id, tw, th),
+        lgSize: `${w}-${h}`,
+        alt: title,
+        caption: title,
+    };
+});
 
 // Video matrix for device passes: YouTube (endpoint poster), Vimeo with
 // an explicit poster, posterless Vimeo/Wistia (thumb-fallback facades)
@@ -138,6 +158,11 @@ const SCENARIOS = [
         id: 'images',
         title: 'Images',
         note: 'Plain grid — thumbnails + zoom defaults, srcset ladder.',
+    },
+    {
+        id: 'origin-crop',
+        title: 'Origin crop',
+        note: 'Same grid with the originCrop plugin: cover-cropped tiles fly from their crop.',
     },
     {
         id: 'thumbnails',
@@ -245,6 +270,16 @@ const lastEvent = ref('');
 
         <section v-if="current === 'images'">
             <LightGallery :plugins="[Thumbnail, Zoom]">
+                <div class="demo-grid">
+                    <LgItem v-for="item of items" :key="item.src" :item="item">
+                        <img :src="item.thumb" :alt="item.alt" />
+                    </LgItem>
+                </div>
+            </LightGallery>
+        </section>
+
+        <section v-else-if="current === 'origin-crop'">
+            <LightGallery :plugins="[Thumbnail, Zoom, OriginCrop]">
                 <div class="demo-grid">
                     <LgItem v-for="item of items" :key="item.src" :item="item">
                         <img :src="item.thumb" :alt="item.alt" />
@@ -437,10 +472,12 @@ const lastEvent = ref('');
                 </div>
                 <template #comments="{ item, index }">
                     <div style="padding: 1rem">
-                        <p><strong>{{ item?.caption }}</strong></p>
                         <p>
-                            Comment panel for slide {{ index + 1 }} — bring
-                            any comment system as a template.
+                            <strong>{{ item?.caption }}</strong>
+                        </p>
+                        <p>
+                            Comment panel for slide {{ index + 1 }} — bring any
+                            comment system as a template.
                         </p>
                     </div>
                 </template>
