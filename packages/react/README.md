@@ -219,6 +219,7 @@ and configure each with the prop named after it. Import the matching
 | MediumZoom | `@lightgallery/react/plugins/mediumZoom` | `margin`, `backgroundColor` (+ per-item `lgBackgroundColor`) |
 | RelativeCaption | `@lightgallery/react/plugins/relativeCaption` | `relativeCaption` |
 | VimeoThumbnail | `@lightgallery/react/plugins/vimeoThumbnail` | `showVimeoThumbnails`, `showThumbnailWithPlayButton` |
+| OriginCrop | `@lightgallery/react/plugins/originCrop` | `originCrop`: flies a cropped thumbnail (`object-fit: cover`, `background-size: cover`) from its crop instead of squashing the whole image into the tile |
 
 Order matters for slide wrappers: put `Zoom` before `Rotate` so zoom stays
 the outermost transform (matching 2.x DOM order).

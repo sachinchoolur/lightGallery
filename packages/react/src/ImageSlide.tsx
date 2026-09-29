@@ -10,6 +10,8 @@ export interface ImageSlideProps {
     dummySrc?: string | null;
     /** Box the dummy flies at: the fitted image size, capped at natural. */
     dummySize?: ImageSize | null;
+    /** Where the dummy's box sits, relative to the image centre (px). */
+    dummyOffset?: { x: number; y: number } | null;
     /** Hold back the real `<img>` while the origin flight runs (2.x). */
     deferSrc?: boolean;
     onLoad: () => void;
@@ -26,10 +28,14 @@ export function ImageSlide({
     index,
     dummySrc,
     dummySize,
+    dummyOffset,
     deferSrc,
     onLoad,
     onError,
 }: ImageSlideProps): ReactElement {
+    const dummyTransform = dummyOffset
+        ? `translate(calc(-50% + ${dummyOffset.x}px), calc(-50% + ${dummyOffset.y}px))`
+        : 'translate(-50%, -50%)';
     return (
         <picture className="lg-img-wrap">
             {!deferSrc &&
@@ -74,7 +80,7 @@ export function ImageSlide({
                             ? {
                                   width: `${dummySize.width}px`,
                                   height: `${dummySize.height}px`,
-                                  transform: 'translate(-50%, -50%)',
+                                  transform: dummyTransform,
                               }
                             : {
                                   width: '100%',

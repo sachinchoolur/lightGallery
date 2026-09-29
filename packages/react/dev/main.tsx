@@ -13,6 +13,7 @@ import Comment from '@lightgallery/react/plugins/comment';
 import Fullscreen from '@lightgallery/react/plugins/fullscreen';
 import Hash from '@lightgallery/react/plugins/hash';
 import MediumZoom from '@lightgallery/react/plugins/mediumZoom';
+import OriginCrop from '@lightgallery/react/plugins/originCrop';
 import Pager from '@lightgallery/react/plugins/pager';
 import Rotate from '@lightgallery/react/plugins/rotate';
 import Share from '@lightgallery/react/plugins/share';
@@ -55,33 +56,58 @@ const picsum = (id: number, w: number, h: number) =>
 
 // Rig-only responsive ladder: real w-descriptor srcset so device passes
 // exercise the plan-002 selection math end to end.
-const picsumSrcset = (id: number) =>
+const picsumSrcset = (id: number, w: number, h: number) =>
     [640, 960, 1280, 1600]
-        .map((w) => `${picsum(id, w, Math.round((w * 1067) / 1600))} ${w}w`)
+        .map(
+            (tier) =>
+                `${picsum(id, tier, Math.round((tier * h) / w))} ${tier}w`,
+        )
         .join(', ');
 
-const items: GalleryItem[] = [
+/**
+ * Portrait entries are deliberate: anything that measures the fitted
+ * size per slide (actual-size zoom, the origin flight) only misbehaves
+ * when the aspect ratio changes between slides, and a cover-cropped tile
+ * shows only a band of them (the origin crop scenario).
+ */
+interface Source {
+    id: number;
+    title: string;
+    portrait?: boolean;
+}
+
+// Same images as dev-vanilla/main.ts: every rig runs the same scenario
+// matrix on the same slides so the packages compare side by side.
+const SOURCES: Source[] = [
     { id: 1015, title: 'River between mountains' },
     { id: 1016, title: 'Canyon walls' },
+    { id: 1025, title: 'Pug portrait', portrait: true },
     { id: 1018, title: 'Snowy peak' },
     { id: 1019, title: 'Lakeside cliffs' },
+    { id: 1027, title: 'Woman portrait', portrait: true },
     { id: 1039, title: 'Waterfall in the forest' },
     { id: 1043, title: 'Village at dusk' },
     { id: 1044, title: 'Foggy shore' },
     { id: 1051, title: 'Ridge line' },
-].map(({ id, title }) => ({
-    src: picsum(id, 1600, 1067),
-    srcset: picsumSrcset(id),
-    sizes: '100vw',
-    thumb: picsum(id, 240, 160),
-    alt: title,
-    lgSize: '1600-1067',
-    caption: (
-        <h4 style={{ margin: '8px 0' }}>
-            {title} <small>(#{id})</small>
-        </h4>
-    ),
-}));
+];
+
+const items: GalleryItem[] = SOURCES.map(({ id, title, portrait }) => {
+    const [w, h] = portrait ? [1067, 1600] : [1600, 1067];
+    const [tw, th] = portrait ? [160, 240] : [240, 160];
+    return {
+        src: picsum(id, w, h),
+        srcset: picsumSrcset(id, w, h),
+        sizes: '100vw',
+        thumb: picsum(id, tw, th),
+        alt: title,
+        lgSize: `${w}-${h}`,
+        caption: (
+            <h4 style={{ margin: '8px 0' }}>
+                {title} <small>(#{id})</small>
+            </h4>
+        ),
+    };
+});
 
 // Video matrix for device passes: YouTube (endpoint poster), Vimeo with
 // an explicit poster, posterless Vimeo/Wistia (thumb-fallback facades)
@@ -145,16 +171,14 @@ const stressItems: GalleryItem[] = Array.from({ length: 1000 }, (_, i) => ({
 
 const rtlItems: GalleryItem[] = items.slice(0, 5).map((item, i) => ({
     ...item,
-    caption: <h4 style={{ margin: '8px 0' }}>شريحة {i + 1} — {item.alt}</h4>,
+    caption: (
+        <h4 style={{ margin: '8px 0' }}>
+            شريحة {i + 1} — {item.alt}
+        </h4>
+    ),
 }));
 
-function Grid({
-    slides,
-    onOpen,
-}: {
-    slides: GalleryItem[];
-    onOpen?: never;
-}) {
+function Grid({ slides, onOpen }: { slides: GalleryItem[]; onOpen?: never }) {
     return (
         <div className="demo-grid">
             {slides.map((item) => (
@@ -173,6 +197,14 @@ function Grid({
 function ImagesScenario() {
     return (
         <LightGallery plugins={[Thumbnail, Zoom]}>
+            <Grid slides={items} />
+        </LightGallery>
+    );
+}
+
+function OriginCropScenario() {
+    return (
+        <LightGallery plugins={[Thumbnail, Zoom, OriginCrop]}>
             <Grid slides={items} />
         </LightGallery>
     );
@@ -287,7 +319,10 @@ function VirtualizationScenario() {
     return (
         <>
             <div className="demo-controls">
-                <button type="button" onClick={() => ref.current?.openGallery(0)}>
+                <button
+                    type="button"
+                    onClick={() => ref.current?.openGallery(0)}
+                >
                     open 1,000-item gallery
                 </button>
                 <button
@@ -339,7 +374,10 @@ function RtlScenario() {
     return (
         <>
             <div className="demo-controls">
-                <button type="button" onClick={() => ref.current?.openGallery(0)}>
+                <button
+                    type="button"
+                    onClick={() => ref.current?.openGallery(0)}
+                >
                     open RTL gallery (direction: rtl)
                 </button>
             </div>
@@ -369,7 +407,10 @@ function KitchenSinkScenario() {
     return (
         <>
             <div className="demo-controls">
-                <button type="button" onClick={() => ref.current?.openGallery(3)}>
+                <button
+                    type="button"
+                    onClick={() => ref.current?.openGallery(3)}
+                >
                     openGallery(3) via ref
                 </button>
             </div>
@@ -414,6 +455,12 @@ const SCENARIOS: {
         title: 'Images',
         note: 'Plain grid — thumbnails + zoom defaults, srcset ladder.',
         Component: ImagesScenario,
+    },
+    {
+        id: 'origin-crop',
+        title: 'Origin crop',
+        note: 'Same grid with the originCrop plugin: cover-cropped tiles fly from their crop.',
+        Component: OriginCropScenario,
     },
     {
         id: 'thumbnails',
@@ -484,8 +531,7 @@ const SCENARIOS: {
 ];
 
 const readHash = () => window.location.hash.replace(/^#/, '');
-const isScenario = (id: string) =>
-    SCENARIOS.some((entry) => entry.id === id);
+const isScenario = (id: string) => SCENARIOS.some((entry) => entry.id === id);
 
 function App() {
     const [current, setCurrent] = useState(readHash());

@@ -6,6 +6,7 @@ import {
     useGallerySettings,
     useGalleryState,
 } from '../context';
+import type { OriginAnimation } from '../GalleryOutlet';
 import type { GalleryItem } from '../types';
 import type {
     LgPlugin,
@@ -93,6 +94,24 @@ export function resolvePluginSlideContent(
         }
     }
     return undefined;
+}
+
+/** Wrap the slide list with every plugin's slidesWrapper (first = outermost). */
+export function wrapSlides(
+    plugins: readonly LgPlugin[],
+    content: ReactNode,
+    originAnim: OriginAnimation | null,
+): ReactNode {
+    return plugins.reduceRight((acc, plugin) => {
+        const Wrapper = plugin.slots?.slidesWrapper;
+        return Wrapper ? (
+            <Wrapper key={plugin.name} originAnim={originAnim}>
+                {acc}
+            </Wrapper>
+        ) : (
+            acc
+        );
+    }, content);
 }
 
 /** Wrap slide content with every plugin's slideWrapper (first = outermost). */

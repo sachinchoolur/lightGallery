@@ -28,6 +28,7 @@ import type {
     MediaPosition,
     PluginLayout,
     PluginRefs,
+    OriginFlightResolver,
 } from './plugins/types';
 
 import {
@@ -335,6 +336,7 @@ export const LightGallery = forwardRef<
     const componentsToggleRef = useRef<() => void>(() => undefined);
     const zoomOriginOpenRef = useRef(false);
     const mediaPositionOverrideRef = useRef<(() => MediaPosition) | null>(null);
+    const originFlightOverrideRef = useRef<OriginFlightResolver | null>(null);
     const layout = useMemo<PluginLayout>(
         () => ({
             setOuterClass(cls, active) {
@@ -347,6 +349,9 @@ export const LightGallery = forwardRef<
             },
             overrideMediaPosition(fn) {
                 mediaPositionOverrideRef.current = fn;
+            },
+            overrideOriginFlight(fn) {
+                originFlightOverrideRef.current = fn;
             },
         }),
         [],
@@ -424,17 +429,29 @@ export const LightGallery = forwardRef<
         [timers],
     );
 
+    // The element a flight is measured from: the trigger's img, else the
+    // trigger itself (a background thumbnail); null for an explicit
+    // `originRect`.
+    const getOriginTrigger = useCallback(
+        (slideIndex: number): HTMLElement | null => {
+            if (originRectRef.current) {
+                return null;
+            }
+            const element = registrationsRef.current[slideIndex]?.element;
+            return element ? (element.querySelector('img') ?? element) : null;
+        },
+        [],
+    );
+
     const getOriginRect = useCallback((slideIndex: number): RectLike | null => {
         const explicit = originRectRef.current;
         if (explicit) {
             return isUsableOriginRect(explicit) ? explicit : null;
         }
-        const registration = registrationsRef.current[slideIndex];
-        const element = registration?.element;
-        if (!element) {
+        const target = getOriginTrigger(slideIndex);
+        if (!target) {
             return null;
         }
-        const target = element.querySelector('img') ?? element;
         const rect = target.getBoundingClientRect();
         // A hidden or collapsed trigger (a collage's overflow items behind a
         // "+N photos" tile) measures 0×0 at the viewport origin: no flight,
@@ -448,7 +465,7 @@ export const LightGallery = forwardRef<
             width: rect.width,
             height: rect.height,
         };
-    }, []);
+    }, [getOriginTrigger]);
 
     // 2.x getDummyImageContent src: the item's own thumb, else the
     // trigger's rendered img (`$currentItem.find('img').first()`).
@@ -661,6 +678,7 @@ export const LightGallery = forwardRef<
             registerItem,
             getItemIndex,
             getOriginRect,
+            getOriginTrigger,
             getDummySrc,
             edgeBounce,
             gestureSeam,
@@ -673,6 +691,7 @@ export const LightGallery = forwardRef<
             componentsToggleRef,
             zoomOriginOpenRef,
             mediaPositionOverrideRef,
+            originFlightOverrideRef,
         }),
         [
             items,
@@ -680,6 +699,7 @@ export const LightGallery = forwardRef<
             registerItem,
             getItemIndex,
             getOriginRect,
+            getOriginTrigger,
             getDummySrc,
             edgeBounce,
             gestureSeam,

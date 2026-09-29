@@ -114,6 +114,13 @@ export default defineConfig({
                 ),
             },
             {
+                find: '@lightgallery/react/plugins/originCrop',
+                replacement: path.resolve(
+                    __dirname,
+                    '../src/plugins/originCrop/index.tsx',
+                ),
+            },
+            {
                 find: '@lightgallery/react',
                 replacement: path.resolve(__dirname, '../src/index.ts'),
             },

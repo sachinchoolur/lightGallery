@@ -1,8 +1,15 @@
 import type { ComponentType, ReactNode } from 'react';
-import type { CoreSettings, GalleryState } from '@lightgallery/headless';
+import type {
+    CoreSettings,
+    FractionRect,
+    GalleryState,
+    ImageSize,
+    RectLike,
+} from '@lightgallery/headless';
 
 import type { GalleryActions, GestureSeam } from '../context';
 import type { LgEventEmitter } from '../events';
+import type { OriginAnimation } from '../GalleryOutlet';
 import type { GalleryItem } from '../types';
 
 /**
@@ -28,6 +35,50 @@ export interface SlideWrapperProps {
     children: ReactNode;
 }
 
+/**
+ * Props of a `slidesWrapper` slot: it wraps the whole slide list
+ * (`.lg-inner`) and follows the zoom-from-origin flight of the opening or
+ * closing slide (origin crop's stage boxes).
+ */
+export interface SlidesWrapperProps {
+    originAnim: OriginAnimation | null;
+    children: ReactNode;
+}
+
+/** What a plugin sees when a zoom-from-origin flight is measured. */
+export interface OriginFlightInput {
+    index: number;
+    /**
+     * The element the flight was measured from (the trigger's img, else
+     * the trigger itself); null when an explicit `originRect` was given.
+     */
+    trigger: HTMLElement | null;
+    triggerRect: RectLike;
+    containerRect: RectLike;
+    /** Media container offsets (toolbar; caption + thumb strip), px. */
+    top: number;
+    bottom: number;
+    /** The fitted image box the flight lands on. */
+    imageSize: ImageSize;
+}
+
+/** A plugin's flight for a trigger, in place of the built-in one. */
+export interface OriginFlightOverride {
+    /** The slide's transform on the trigger. */
+    transform: string;
+    /** Transforms for a `slidesWrapper`'s outer and inner boxes. */
+    boxes?: { outer: string; inner: string };
+    /** The part of the image the flight's dummy covers (default: whole). */
+    region?: FractionRect;
+    /** Source of the flight's dummy when the gallery has none. */
+    dummySrc?: string;
+}
+
+/** Returning null or undefined keeps the built-in flight. */
+export type OriginFlightResolver = (
+    input: OriginFlightInput,
+) => OriginFlightOverride | null | undefined;
+
 /** Flat settings bag: core settings + every plugin's merged settings. */
 export type ResolvedPluginSettings = CoreSettings & Record<string, unknown>;
 
@@ -46,6 +97,11 @@ export interface PluginLayout {
      * position measurement. Pass `null` to restore the default.
      */
     overrideMediaPosition(fn: (() => MediaPosition) | null): void;
+    /**
+     * originCrop's core-method override: resolve the zoom-from-origin
+     * flight for a trigger. Pass `null` to restore the built-in flight.
+     */
+    overrideOriginFlight(fn: OriginFlightResolver | null): void;
 }
 
 export interface PluginRefs {
@@ -74,6 +130,8 @@ export interface LgPluginSlots {
     outer?: ComponentType<PluginSlotProps>;
     /** Wraps slide content: zoom transform, rotate wrap. */
     slideWrapper?: ComponentType<SlideWrapperProps>;
+    /** Wraps the slide list (`.lg-inner`): origin crop's stage boxes. */
+    slidesWrapper?: ComponentType<SlidesWrapperProps>;
 }
 
 export interface LgPlugin<TSettings extends object = object> {

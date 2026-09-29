@@ -17,6 +17,7 @@ import {
     parseImageSize,
     type SlideDirection,
     type ImageSize,
+    type FractionRect,
 } from '@lightgallery/headless';
 
 import { Caption } from './Caption';
@@ -36,7 +37,7 @@ import {
     useIsoLayoutEffect,
     useTimeouts,
 } from './hooks';
-import { PluginSlots } from './plugins/runtime';
+import { PluginSlots, wrapSlides } from './plugins/runtime';
 import { Slides } from './Slides';
 import { Toolbar } from './Toolbar';
 import { useGalleryGestures } from './useGalleryGestures';
@@ -65,6 +66,15 @@ export interface OriginAnimation {
      */
     stage: 'init' | 'armed' | 'run';
     closing?: boolean;
+    /**
+     * A plugin's flight (`layout.overrideOriginFlight`, origin crop):
+     * transforms for a `slidesWrapper`'s stage boxes, the part of the
+     * image the dummy covers, and the dummy's source when the gallery
+     * has none.
+     */
+    boxes?: { outer: string; inner: string };
+    region?: FractionRect;
+    dummySrc?: string;
     /**
      * Closing with no thumbnail to return to (hidden or collapsed trigger,
      * no lgSize): shrink about the stage centre and fade instead.
@@ -174,7 +184,15 @@ export function GalleryOutlet({
     });
 
     const computeOrigin = useEventCallback(
-        (index: number): { transform: string; imageSize: ImageSize } | null => {
+        (
+            index: number,
+        ): {
+            transform: string;
+            imageSize: ImageSize;
+            boxes?: { outer: string; inner: string };
+            region?: FractionRect;
+            dummySrc?: string;
+        } | null => {
             if (!settings.zoomFromOrigin) {
                 return null;
             }
@@ -210,6 +228,19 @@ export function GalleryOutlet({
             if (imageSize.width <= 0 || imageSize.height <= 0) {
                 return null;
             }
+            // A plugin's flight (origin crop) in place of the built-in one.
+            const override = internal.originFlightOverrideRef.current?.({
+                index,
+                trigger: internal.getOriginTrigger(index),
+                triggerRect,
+                containerRect,
+                top,
+                bottom,
+                imageSize,
+            });
+            if (override) {
+                return { ...override, imageSize };
+            }
             return {
                 transform: getOriginTransform({
                     triggerRect,
@@ -242,6 +273,7 @@ export function GalleryOutlet({
             index: state.currentIndex,
             transform: origin?.transform ?? getCenterCloseTransform(),
             imageSize: origin?.imageSize,
+            boxes: origin?.boxes,
             stage: 'run',
             closing: true,
             toCenter: !origin,
@@ -305,6 +337,9 @@ export function GalleryOutlet({
                 index,
                 transform: origin.transform,
                 imageSize: origin.imageSize,
+                boxes: origin.boxes,
+                region: origin.region,
+                dummySrc: origin.dummySrc,
                 stage: 'init',
             });
             timers.set(() => {
@@ -828,11 +863,15 @@ export function GalleryOutlet({
                 onPointerUp={onOuterPointerUp}
             >
                 <div className="lg-content" style={contentStyle}>
-                    <Slides
-                        timeline={timeline}
-                        originAnim={originAnim}
-                        cleared={phase === 'closed'}
-                    />
+                    {wrapSlides(
+                        internal.plugins,
+                        <Slides
+                            timeline={timeline}
+                            originAnim={originAnim}
+                            cleared={phase === 'closed'}
+                        />,
+                        originAnim,
+                    )}
                     <Controls />
                 </div>
                 <Toolbar

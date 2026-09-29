@@ -53,6 +53,10 @@ export default defineConfig({
                     __dirname,
                     'src/plugins/mediumZoom/index.tsx',
                 ),
+                'plugins/originCrop/index': path.resolve(
+                    __dirname,
+                    'src/plugins/originCrop/index.tsx',
+                ),
                 'plugins/relativeCaption/index': path.resolve(
                     __dirname,
                     'src/plugins/relativeCaption/index.tsx',

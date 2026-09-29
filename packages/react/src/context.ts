@@ -20,6 +20,7 @@ import type {
     MediaPosition,
     PluginLayout,
     PluginRefs,
+    OriginFlightResolver,
 } from './plugins/types';
 import type {
     GalleryItem,
@@ -83,6 +84,11 @@ export interface GalleryInternal {
     /** Zoom-from-origin rect for a slide: `originRect` prop or trigger rect. */
     getOriginRect: (index: number) => RectLike | null;
     /**
+     * The element `getOriginRect` measured (the trigger's img, else the
+     * trigger); null for an explicit `originRect`.
+     */
+    getOriginTrigger: (index: number) => HTMLElement | null;
+    /**
      * Src for the first-slide dummy image (2.x `getDummyImageContent`):
      * the item's `thumb`, else the trigger's rendered img — pixels that
      * are already decoded and can fly without waiting on the network.
@@ -109,6 +115,8 @@ export interface GalleryInternal {
     zoomOriginOpenRef: MutableRefObject<boolean>;
     /** mediumZoom's media-position override (read by the outlet). */
     mediaPositionOverrideRef: MutableRefObject<(() => MediaPosition) | null>;
+    /** originCrop's flight override (read by the outlet). */
+    originFlightOverrideRef: MutableRefObject<OriginFlightResolver | null>;
 }
 
 export const StateContext = createContext<GalleryState | null>(null);

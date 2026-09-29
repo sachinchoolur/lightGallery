@@ -214,6 +214,10 @@ export function Slide({
     // dummy must be in the flight's FIRST painted frame.
     const [dummySrc, setDummySrc] = useState<string | null>(null);
     const [dummySize, setDummySize] = useState<ImageSize | null>(null);
+    const [dummyOffset, setDummyOffset] = useState<{
+        x: number;
+        y: number;
+    } | null>(null);
     const dummyDoneRef = useRef(false);
     useIsoLayoutEffect(() => {
         if (
@@ -226,10 +230,25 @@ export function Slide({
         ) {
             return;
         }
-        const src = internal.getDummySrc(index);
+        const src = originAnim.dummySrc ?? internal.getDummySrc(index);
         if (src) {
             setDummySrc(src);
-            setDummySize(originAnim.imageSize ?? null);
+            // A plugin's flight may cover only a region of the image with
+            // the dummy (origin crop's pre-cropped thumbnail files).
+            const { imageSize, region } = originAnim;
+            if (imageSize && region) {
+                setDummySize({
+                    width: imageSize.width * region.width,
+                    height: imageSize.height * region.height,
+                });
+                setDummyOffset({
+                    x: imageSize.width * (region.x + region.width / 2 - 0.5),
+                    y: imageSize.height * (region.y + region.height / 2 - 0.5),
+                });
+            } else {
+                setDummySize(imageSize ?? null);
+                setDummyOffset(null);
+            }
         } else {
             dummyDoneRef.current = true;
         }
@@ -273,6 +292,7 @@ export function Slide({
                         index={index}
                         dummySrc={dummySrc}
                         dummySize={dummySize}
+                        dummyOffset={dummyOffset}
                         // v2 appends the real image only once the flight
                         // lands (startAnimationDuration + 100): its fetch
                         // and decode must never jank the flight's frames.
