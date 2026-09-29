@@ -6,6 +6,9 @@ All notable changes to lightGallery. The format follows
 
 ## 3.0.0 (unreleased)
 
+First prerelease: `3.0.0-beta.1` (2026-09-29), published under the `next`
+tag for every package.
+
 Version 3 restructures lightGallery around a shared, framework-free core
 and ships native packages for React, Vue and Angular. The vanilla API is
 unchanged; what moved is the packaging and the framework integrations.
@@ -36,6 +39,14 @@ unchanged; what moved is the packaging and the framework integrations.
   picks whether rows fill in top to bottom or each thumbnail appears on
   its own. Ship `class="lg-justified"` in the container markup so the
   hiding also covers the window before the script runs.
+- **Origin crop** plugin (`lightgallery/plugins/originCrop`, and in each
+  framework package): the zoom-from-origin flight from a cropped thumbnail.
+  A tile cropped with `object-fit: cover` or `background-size: cover` shows
+  a window of the photo, and the built-in flight squashes the whole photo
+  into it; with the plugin that window grows from the tile at a uniform
+  scale while the rest of the photo is revealed around it, and the close
+  flies back the same way. It reads the thumbnail's computed fit, so no
+  markup or stylesheet is needed.
 - **Toolbar overflow**: the toolbar stays on one row. When its buttons do
   not fit beside the counter, the lowest-priority ones move into a "More
   options" menu (`toolbarOverflow`, on by default), labelled by
