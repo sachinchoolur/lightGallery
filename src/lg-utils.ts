@@ -567,6 +567,19 @@ const utils = {
                     }
                 }
             }
+            // `data-sources` is JSON on the element; the item carries the
+            // parsed array so every consumer (slide markup, the zoom
+            // plugin's actual-size lookup) sees the headless shape.
+            if (typeof dynamicEl.sources === 'string') {
+                try {
+                    dynamicEl.sources = JSON.parse(dynamicEl.sources);
+                } catch (e) {
+                    console.warn(
+                        'lightGallery :- data-sources must be a JSON array of picture source objects. See https://www.lightgalleryjs.com/docs/responsive-loading/',
+                    );
+                    delete dynamicEl.sources;
+                }
+            }
             const currentItem = $LG(item);
             const alt = currentItem.find('img').first().attr('alt');
             const title = currentItem.attr('title');

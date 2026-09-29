@@ -8,6 +8,7 @@ import { waitFor } from '@testing-library/dom';
 import '@testing-library/jest-dom';
 import lightGallery from '../src';
 import { LightGallery } from '../src/lightgallery';
+import utils from '../src/lg-utils';
 import Autoplay from '../src/plugins/autoplay/lg-autoplay';
 import Fullscreen from '../src/plugins/fullscreen/lg-fullscreen';
 import Pager from '../src/plugins/pager/lg-pager';
@@ -329,6 +330,49 @@ describe('Plugins', () => {
         // back to the item thumb (videoFacade default).
         expect(LG.galleryItems[0].poster).toBe('b.png');
         expect(LG.galleryItems[0].poster).not.toContain('img.youtube.com');
+    });
+    it('Should parse data-sources into an array of picture sources', () => {
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png" data-sources='[{"srcset":"a-m.png","media":"(min-width:481px)"},{"srcset":"a-s.png","media":"(min-width:376px)"}]'>
+                    <img src="b.png" />
+                </a>
+            </div>`;
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        expect(LG.galleryItems[0].sources).toEqual([
+            { srcset: 'a-m.png', media: '(min-width:481px)' },
+            { srcset: 'a-s.png', media: '(min-width:376px)' },
+        ]);
+        // The slide markup consumes the parsed array as-is.
+        const markup = utils.getImgMarkup(
+            0,
+            'a.png',
+            '',
+            undefined,
+            undefined,
+            LG.galleryItems[0].sources,
+        );
+        expect(markup.match(/<source /g)).toHaveLength(2);
+        expect(markup).toContain('srcset="a-m.png"');
+    });
+    it('Should drop malformed data-sources with a warning', () => {
+        const warn = jest
+            .spyOn(console, 'warn')
+            .mockImplementation(() => undefined);
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png" data-sources='not json'>
+                    <img src="b.png" />
+                </a>
+            </div>`;
+        const LG = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        expect(LG.galleryItems[0].sources).toBeUndefined();
+        expect(warn).toHaveBeenCalledWith(
+            expect.stringContaining('docs/responsive-loading/'),
+        );
+        warn.mockRestore();
     });
     it('Should not fetch poster from youtube videos for image slide', async () => {
         document.body.innerHTML = `<div id="lightGallery">

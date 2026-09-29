@@ -220,6 +220,30 @@ describe('actual-size reference width', () => {
         ).toBe(1600);
     });
 
+    it('survives un-normalised author data instead of throwing', () => {
+        // A raw `data-sources` JSON string, or a source without srcset,
+        // must fall through to the next tier rather than crash zoom.
+        expect(
+            getActualSizeWidth(
+                {
+                    sources:
+                        '[{"srcset":"big.jpg","media":"(min-width:481px)"}]' as never,
+                    srcset: 'a-1600.jpg 1600w',
+                },
+                viewport,
+                390,
+            ),
+        ).toBe(1600);
+        expect(
+            getActualSizeWidth(
+                { sources: [{ media: undefined } as never] },
+                viewport,
+                800,
+            ),
+        ).toBe(800);
+        expect(parseSrcset(undefined)).toEqual([]);
+    });
+
     it('uses lgSize when no ladder declares widths (optimizer recipes)', () => {
         // next/image & co. manage srcset internally — the item carries
         // no ladder, but lgSize (already set for zoom-from-origin)

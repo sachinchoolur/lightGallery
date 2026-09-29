@@ -31,8 +31,11 @@ export interface Viewport {
 
 /** Parse a `srcset` attribute string into candidates. Malformed entries
  * are skipped rather than thrown — item data is author-provided. */
-export function parseSrcset(srcset: string): SrcsetCandidate[] {
+export function parseSrcset(srcset: string | undefined): SrcsetCandidate[] {
     const candidates: SrcsetCandidate[] = [];
+    if (typeof srcset !== 'string') {
+        return candidates;
+    }
     for (const entry of srcset.split(',')) {
         const parts = entry.trim().split(/\s+/);
         const url = parts[0];
@@ -241,7 +244,10 @@ export function getActualSizeWidth(
         }
     }
     let candidates: SrcsetCandidate[] = [];
-    for (const source of item.sources ?? []) {
+    // Author data: a runtime may hand over `sources` before it has been
+    // normalised (a raw `data-sources` JSON string) — never iterate that.
+    const sources = Array.isArray(item.sources) ? item.sources : [];
+    for (const source of sources) {
         if (matchesMedia(source.media, viewport)) {
             candidates = parseSrcset(source.srcset);
             break;
