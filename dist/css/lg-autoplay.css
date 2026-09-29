@@ -25,11 +25,14 @@
   opacity: 1;
 }
 
-.lg-show-autoplay .lg-autoplay-button:after {
-  content: "\e01a";
+.lg-autoplay-button.lg-icon-custom .lg-ci-autoplay-pause {
+  display: none;
 }
-.lg-autoplay-button:after {
-  content: "\e01d";
+.lg-show-autoplay .lg-autoplay-button.lg-icon-custom .lg-ci-autoplay-play {
+  display: none;
+}
+.lg-show-autoplay .lg-autoplay-button.lg-icon-custom .lg-ci-autoplay-pause {
+  display: inline-flex;
 }
 .lg-single-item .lg-autoplay-button {
   opacity: 0.75;

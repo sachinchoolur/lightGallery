@@ -1,8 +1,11 @@
-.lg-fullscreen:after {
-  content: "\e20c";
+.lg-fullscreen.lg-icon-custom .lg-ci-fullscreen-exit {
+  display: none;
 }
-.lg-fullscreen-on .lg-fullscreen:after {
-  content: "\e20d";
+.lg-fullscreen-on .lg-fullscreen.lg-icon-custom .lg-ci-fullscreen {
+  display: none;
+}
+.lg-fullscreen-on .lg-fullscreen.lg-icon-custom .lg-ci-fullscreen-exit {
+  display: inline-flex;
 }
 
 /*# sourceMappingURL=lg-fullscreen.css.map */

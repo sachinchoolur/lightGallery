@@ -2,12 +2,16 @@
   typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, global.lgAutoplay = factory());
 })(this, function() {
   "use strict";/*!
- * lightgallery | 2.9.0 | July 21st 2026
+ * lightgallery | 3.0.0-beta.1 | September 29th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
  */
 
+  const autoplayDefaultIcons = {
+    autoplayPlay: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor"><path transform="translate(0, 960) scale(1, -1)" d="M512 84.667q140 0 241 101t101 241-101 241-241 101-241-101-101-241 101-241 241-101zM512 852.667q176 0 301-125t125-301-125-301-301-125-301 125-125 301 125 301 301 125zM426 234.667v384l256-192z"/></svg>',
+    autoplayPause: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor"><path transform="translate(0, 960) scale(1, -1)" d="M554 256.667v340h86v-340h-86zM512 84.667q140 0 241 101t101 241-101 241-241 101-241-101-101-241 101-241 241-101zM512 852.667q176 0 301-125t125-301-125-301-301-125-301 125-125 301 125 301 301 125zM384 256.667v340h86v-340h-86z"/></svg>'
+  };
   const lGEvents = {
     slideItemLoad: "lgSlideItemLoad",
     beforeSlide: "lgBeforeSlide",
@@ -25,10 +29,7 @@
     progressBar: true,
     forceSlideShowAutoplay: false,
     autoplayControls: true,
-    appendAutoplayControlsTo: ".lg-toolbar",
-    autoplayPluginStrings: {
-      toggleAutoplay: "Toggle Autoplay"
-    }
+    appendAutoplayControlsTo: ".lg-toolbar"
   };
   var __defProp = Object.defineProperty;
   var __getOwnPropSymbols = Object.getOwnPropertySymbols;
@@ -53,6 +54,7 @@
       return this;
     }
     init() {
+      this.core.registerDefaultIcons(autoplayDefaultIcons);
       if (!this.settings.autoplay) {
         return;
       }
@@ -128,7 +130,8 @@
     }
     // Manage autoplay via play/stop buttons
     controls() {
-      const _html = `<button aria-label="${this.settings.autoplayPluginStrings["toggleAutoplay"]}" type="button" class="lg-autoplay-button lg-icon"></button>`;
+      var _a, _b;
+      const _html = `<button aria-label="${(_b = (_a = this.settings.autoplayPluginStrings) == null ? void 0 : _a.toggleAutoplay) != null ? _b : this.core.settings.strings.toggleAutoplay}" type="button" class="lg-autoplay-button lg-icon"></button>`;
       this.core.outer.find(this.settings.appendAutoplayControlsTo).append(_html);
       this.core.outer.find(".lg-autoplay-button").first().on("click.lg.autoplay", () => {
         if (this.core.outer.hasClass("lg-show-autoplay")) {

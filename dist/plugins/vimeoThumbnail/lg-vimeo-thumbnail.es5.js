@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 2.9.0 | July 21st 2026
+ * lightgallery | 3.0.0-beta.1 | September 29th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3

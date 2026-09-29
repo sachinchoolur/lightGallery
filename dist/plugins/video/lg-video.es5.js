@@ -1,11 +1,13 @@
 /*!
- * lightgallery | 2.9.0 | July 21st 2026
+ * lightgallery | 3.0.0-beta.1 | September 29th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
  */
 const videoSettings = {
   autoplayFirstVideo: true,
+  videoFacade: true,
+  youTubeNoCookie: true,
   youTubePlayerParams: false,
   vimeoPlayerParams: false,
   wistiaPlayerParams: false,
@@ -14,13 +16,6 @@ const videoSettings = {
   videojs: false,
   videojsTheme: "",
   videojsOptions: {}
-};
-const lGEvents = {
-  hasVideo: "lgHasVideo",
-  slideItemLoad: "lgSlideItemLoad",
-  beforeSlide: "lgBeforeSlide",
-  afterSlide: "lgAfterSlide",
-  posterClick: "lgPosterClick"
 };
 var __defProp$1 = Object.defineProperty;
 var __getOwnPropSymbols$1 = Object.getOwnPropertySymbols;
@@ -38,60 +33,78 @@ var __spreadValues$1 = (a, b) => {
     }
   return a;
 };
-const param = (obj) => {
-  return Object.keys(obj).map(function(k) {
-    return encodeURIComponent(k) + "=" + encodeURIComponent(obj[k]);
-  }).join("&");
-};
-const paramsToObject = (url) => {
-  const paramas = url.slice(1).split("&").map((p) => p.split("=")).reduce((obj, pair) => {
+function toParamsObject(params) {
+  return typeof params === "object" && params ? params : {};
+}
+function param(obj) {
+  return Object.keys(obj).map(
+    (key) => `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`
+  ).join("&");
+}
+function paramsToObject(url) {
+  return url.slice(1).split("&").map((pair) => pair.split("=")).reduce((obj, pair) => {
     const [key, value] = pair.map(decodeURIComponent);
-    obj[key] = value;
+    if (key) {
+      obj[key] = value != null ? value : "";
+    }
     return obj;
   }, {});
-  return paramas;
-};
-const getYouTubeParams = (videoInfo, youTubePlayerParamsSettings) => {
-  if (!videoInfo.youtube) return "";
-  const slideUrlParams = videoInfo.youtube[2] ? paramsToObject(videoInfo.youtube[2]) : "";
-  const defaultYouTubePlayerParams = {
+}
+function isYouTubeNoCookie(url) {
+  return url.includes("youtube-nocookie.com");
+}
+function getYouTubeEmbedUrl(videoInfo, playerParamsSettings, srcUrl, preferNoCookie = true) {
+  if (!videoInfo.youtube) {
+    return void 0;
+  }
+  const slideUrlParams = videoInfo.youtube[2] ? paramsToObject(videoInfo.youtube[2]) : {};
+  const params = __spreadValues$1(__spreadValues$1({
     wmode: "opaque",
     autoplay: 0,
     mute: 1,
     enablejsapi: 1
-  };
-  const playerParamsSettings = youTubePlayerParamsSettings || {};
-  const youTubePlayerParams = __spreadValues$1(__spreadValues$1(__spreadValues$1({}, defaultYouTubePlayerParams), playerParamsSettings), slideUrlParams);
-  const youTubeParams = `?${param(youTubePlayerParams)}`;
-  return youTubeParams;
-};
-const isYouTubeNoCookie = (url) => {
-  return url.includes("youtube-nocookie.com");
-};
-const getVimeoURLParams = (defaultParams, videoInfo) => {
-  if (!videoInfo || !videoInfo.vimeo) return "";
+  }, toParamsObject(playerParamsSettings)), slideUrlParams);
+  const base = preferNoCookie || isYouTubeNoCookie(srcUrl) ? "//www.youtube-nocookie.com/" : "//www.youtube.com/";
+  return `${base}embed/${videoInfo.youtube[1]}?${param(params)}`;
+}
+const VIMEO_PLAYER_SCRIPT_URL = "https://player.vimeo.com/api/player.js";
+const WISTIA_PLAYER_SCRIPT_URL = "https://fast.wistia.com/assets/external/E-v1.js";
+function getVimeoEmbedUrl(videoInfo, playerParamsSettings) {
+  if (!videoInfo.vimeo) {
+    return void 0;
+  }
   let urlParams = videoInfo.vimeo[2] || "";
-  const defaultVimeoPlayerParams = Object.assign(
-    {},
-    {
-      autoplay: 0,
-      muted: 1
-    },
-    defaultParams
-  );
-  let defaultPlayerParams = defaultVimeoPlayerParams && Object.keys(defaultVimeoPlayerParams).length !== 0 ? param(defaultVimeoPlayerParams) : "";
+  const defaultPlayerParams = __spreadValues$1({
+    autoplay: 0,
+    muted: 1
+  }, toParamsObject(playerParamsSettings));
+  let defaultParams = param(defaultPlayerParams);
   const urlWithHash = videoInfo.vimeo[0].split("/").pop() || "";
-  const urlWithHashWithParams = urlWithHash.split("?")[0] || "";
-  const hash = urlWithHashWithParams.split("#")[0];
+  const urlWithHashWithoutParams = urlWithHash.split("?")[0] || "";
+  const hash = urlWithHashWithoutParams.split("#")[0];
   const isPrivate = videoInfo.vimeo[1] !== hash;
   if (isPrivate) {
     urlParams = urlParams.replace(`/${hash}`, "");
   }
-  urlParams = urlParams[0] == "?" ? "&" + urlParams.slice(1) : urlParams || "";
+  urlParams = urlParams[0] === "?" ? `&${urlParams.slice(1)}` : urlParams || "";
   const privateUrlParams = isPrivate ? `h=${hash}` : "";
-  defaultPlayerParams = privateUrlParams ? `&${defaultPlayerParams}` : defaultPlayerParams;
-  const vimeoPlayerParams = `?${privateUrlParams}${defaultPlayerParams}${urlParams}`;
-  return vimeoPlayerParams;
+  defaultParams = privateUrlParams ? `&${defaultParams}` : defaultParams;
+  return `//player.vimeo.com/video/${videoInfo.vimeo[1]}?${privateUrlParams}${defaultParams}${urlParams}`;
+}
+function getWistiaEmbedUrl(videoInfo, playerParamsSettings) {
+  if (!videoInfo.wistia) {
+    return void 0;
+  }
+  const paramsObject = toParamsObject(playerParamsSettings);
+  const params = Object.keys(paramsObject).length ? param(paramsObject) : "";
+  return `//fast.wistia.net/embed/iframe/${videoInfo.wistia[4]}${params ? `?${params}` : ""}`;
+}
+const lGEvents = {
+  hasVideo: "lgHasVideo",
+  slideItemLoad: "lgSlideItemLoad",
+  beforeSlide: "lgBeforeSlide",
+  afterSlide: "lgAfterSlide",
+  posterClick: "lgPosterClick"
 };
 var __defProp = Object.defineProperty;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
@@ -109,6 +122,20 @@ var __spreadValues = (a, b) => {
     }
   return a;
 };
+const providerScriptLoads = {};
+function loadProviderScript(url) {
+  if (!providerScriptLoads[url]) {
+    providerScriptLoads[url] = new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = url;
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => resolve();
+      document.head.appendChild(script);
+    });
+  }
+  return providerScriptLoads[url];
+}
 class Video {
   constructor(instance) {
     this.core = instance;
@@ -246,25 +273,27 @@ class Video {
             msallowfullscreen`;
     if (videoInfo.youtube) {
       const videoId = "lg-youtube" + index;
-      const youTubeParams = getYouTubeParams(
+      const embedUrl = getYouTubeEmbedUrl(
         videoInfo,
-        this.settings.youTubePlayerParams
+        this.settings.youTubePlayerParams,
+        src,
+        this.settings.youTubeNoCookie
       );
-      const isYouTubeNoCookieURL = isYouTubeNoCookie(src);
-      const youtubeURL = isYouTubeNoCookieURL ? "//www.youtube-nocookie.com/" : "//www.youtube.com/";
-      video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="${youtubeURL}embed/${videoInfo.youtube[1] + youTubeParams}" ${commonIframeProps}></iframe>`;
+      video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-youtube ${addClass}" ${videoTitle} src="${embedUrl}" ${commonIframeProps}></iframe>`;
     } else if (videoInfo.vimeo) {
       const videoId = "lg-vimeo" + index;
-      const playerParams = getVimeoURLParams(
-        this.settings.vimeoPlayerParams,
-        videoInfo
+      const embedUrl = getVimeoEmbedUrl(
+        videoInfo,
+        this.settings.vimeoPlayerParams
       );
-      video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-vimeo ${addClass}" ${videoTitle} src="//player.vimeo.com/video/${videoInfo.vimeo[1] + playerParams}" ${commonIframeProps}></iframe>`;
+      video = `<iframe allow="autoplay" id=${videoId} class="lg-video-object lg-vimeo ${addClass}" ${videoTitle} src="${embedUrl}" ${commonIframeProps}></iframe>`;
     } else if (videoInfo.wistia) {
       const wistiaId = "lg-wistia" + index;
-      let playerParams = param(this.settings.wistiaPlayerParams);
-      playerParams = playerParams ? "?" + playerParams : "";
-      video = `<iframe allow="autoplay" id="${wistiaId}" src="//fast.wistia.net/embed/iframe/${videoInfo.wistia[4] + playerParams}" ${videoTitle} class="wistia_embed lg-video-object lg-wistia ${addClass}" name="wistia_embed" ${commonIframeProps}></iframe>`;
+      const embedUrl = getWistiaEmbedUrl(
+        videoInfo,
+        this.settings.wistiaPlayerParams
+      );
+      video = `<iframe allow="autoplay" id="${wistiaId}" src="${embedUrl}" ${videoTitle} class="wistia_embed lg-video-object lg-wistia ${addClass}" name="wistia_embed" ${commonIframeProps}></iframe>`;
     } else if (videoInfo.html5) {
       let html5VideoMarkup = "";
       for (let i = 0; i < html5Video.source.length; i++) {
@@ -323,7 +352,7 @@ class Video {
         );
       } catch (e) {
         console.error(
-          "lightGallery:- Make sure you have included videojs"
+          "lightGallery:- Make sure you have included videojs. See https://www.lightgalleryjs.com/demos/video-gallery/"
         );
       }
     }
@@ -337,32 +366,60 @@ class Video {
           this.core.goToNextSlide();
         });
       } else if (videoInfo.vimeo) {
-        try {
+        this.withVimeoApi(() => {
           new Vimeo.Player($videoElement.get()).on("ended", () => {
             this.core.goToNextSlide();
           });
-        } catch (e) {
-          console.error(
-            "lightGallery:- Make sure you have included //github.com/vimeo/player.js"
-          );
-        }
+        });
       } else if (videoInfo.wistia) {
-        try {
-          window._wq = window._wq || [];
-          window._wq.push({
-            id: $videoElement.attr("id"),
-            onReady: (video) => {
-              video.bind("end", () => {
-                this.core.goToNextSlide();
-              });
-            }
-          });
-        } catch (e) {
-          console.error(
-            "lightGallery:- Make sure you have included //fast.wistia.com/assets/external/E-v1.js"
-          );
-        }
+        this.pushWistiaCommand({
+          id: $videoElement.attr("id"),
+          onReady: (video) => {
+            video.bind("end", () => {
+              this.core.goToNextSlide();
+            });
+          }
+        });
       }
+    }
+  }
+  /**
+   * Run a callback with the Vimeo player API available, loading
+   * player.js on demand at first use (lite-embed: no provider script
+   * before user intent). Errors keep the 2.x console message.
+   */
+  withVimeoApi(callback) {
+    const run = () => {
+      try {
+        callback();
+      } catch (e) {
+        console.error(
+          "lightGallery:- Make sure you have included //github.com/vimeo/player.js. See https://www.lightgalleryjs.com/demos/video-gallery/"
+        );
+      }
+    };
+    if (window.Vimeo && window.Vimeo.Player) {
+      run();
+      return;
+    }
+    loadProviderScript(VIMEO_PLAYER_SCRIPT_URL).then(run);
+  }
+  /**
+   * Queue a Wistia command and load E-v1.js on demand, `_wq` is
+   * Wistia's own pre-load command queue, drained when the script lands.
+   */
+  pushWistiaCommand(command) {
+    try {
+      window._wq = window._wq || [];
+      window._wq.push(command);
+    } catch (e) {
+      console.error(
+        "lightGallery:- Make sure you have included //fast.wistia.com/assets/external/E-v1.js. See https://www.lightgalleryjs.com/demos/video-gallery/"
+      );
+      return;
+    }
+    if (!window.Wistia) {
+      loadProviderScript(WISTIA_PLAYER_SCRIPT_URL);
     }
   }
   controlVideo(index, action) {
@@ -379,39 +436,28 @@ class Video {
         console.error(`lightGallery:- ${e}`);
       }
     } else if (videoInfo.vimeo) {
-      try {
+      this.withVimeoApi(() => {
         new Vimeo.Player($videoElement.get())[action]();
-      } catch (e) {
-        console.error(
-          "lightGallery:- Make sure you have included //github.com/vimeo/player.js"
-        );
-      }
+      });
     } else if (videoInfo.html5) {
       if (this.settings.videojs) {
         try {
           videojs($videoElement.get())[action]();
         } catch (e) {
           console.error(
-            "lightGallery:- Make sure you have included videojs"
+            "lightGallery:- Make sure you have included videojs. See https://www.lightgalleryjs.com/demos/video-gallery/"
           );
         }
       } else {
         $videoElement.get()[action]();
       }
     } else if (videoInfo.wistia) {
-      try {
-        window._wq = window._wq || [];
-        window._wq.push({
-          id: $videoElement.attr("id"),
-          onReady: (video) => {
-            video[action]();
-          }
-        });
-      } catch (e) {
-        console.error(
-          "lightGallery:- Make sure you have included //fast.wistia.com/assets/external/E-v1.js"
-        );
-      }
+      this.pushWistiaCommand({
+        id: $videoElement.attr("id"),
+        onReady: (video) => {
+          video[action]();
+        }
+      });
     }
   }
   loadVideoOnPosterClick($el, forcePlay) {

@@ -1,3 +1,6 @@
+.lg-outer.lg-thumb-scrubbing .lg-item {
+  transition: none !important;
+}
 .lg-outer .lg-thumb-outer {
   background-color: #0d0a0a;
   width: 100%;
@@ -52,6 +55,10 @@
     padding: 10px 0;
   }
 }
+.lg-outer .lg-thumb-spacer {
+  float: left;
+  height: 1px;
+}
 .lg-outer .lg-thumb-item {
   cursor: pointer;
   float: left;
@@ -81,9 +88,6 @@
 }
 .lg-outer.lg-can-toggle .lg-item {
   padding-bottom: 0;
-}
-.lg-outer .lg-toggle-thumb:after {
-  content: "\e1ff";
 }
 .lg-outer.lg-animate-thumb .lg-thumb {
   -webkit-transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);

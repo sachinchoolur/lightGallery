@@ -1,9 +1,17 @@
 /*!
- * lightgallery | 2.9.0 | July 21st 2026
+ * lightgallery | 3.0.0-beta.1 | September 29th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
  */
+function isToolbarEventPath(path) {
+  return path.some(
+    (node) => {
+      var _a;
+      return !!((_a = node.classList) == null ? void 0 : _a.contains("lg-toolbar"));
+    }
+  );
+}
 const lGEvents = {
   beforeOpen: "lgBeforeOpen"
 };
@@ -71,8 +79,10 @@ class MediumZoom {
       );
     });
     this.toggleItemClass();
-    this.core.outer.on("click.lg.medium", () => {
-      this.core.closeGallery();
+    this.core.outer.on("click.lg.medium", (event) => {
+      if (!isToolbarEventPath(event.composedPath())) {
+        this.core.closeGallery();
+      }
     });
   }
   destroy() {

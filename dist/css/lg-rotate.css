@@ -26,24 +26,8 @@
   vertical-align: middle;
 }
 
-.lg-rotate-left:after {
-  content: "\e900";
-}
-
-.lg-rotate-right:after {
-  content: "\e901";
-}
-
 .lg-icon.lg-flip-hor, .lg-icon.lg-flip-ver {
   font-size: 26px;
-}
-
-.lg-flip-ver:after {
-  content: "\e903";
-}
-
-.lg-flip-hor:after {
-  content: "\e902";
 }
 
 /*# sourceMappingURL=lg-rotate.css.map */

@@ -64,9 +64,6 @@
 .lg-comment-box .lg-comment-close:hover {
   color: #fff;
 }
-.lg-comment-box .lg-comment-close:after {
-  content: "\e070";
-}
 .lg-comment-box iframe {
   max-width: 100% !important;
   width: 100% !important;
@@ -90,9 +87,6 @@
   -webkit-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
   -o-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
   transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
-}
-.lg-outer .lg-comment-toggle:after {
-  content: "\e908";
 }
 .lg-outer.lg-comment-active .lg-comment-overlay {
   -webkit-transition-delay: 0s;

@@ -12,6 +12,18 @@
   display: block;
 }
 
+.lg-announcer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .lg-on {
   scroll-behavior: unset;
 }
@@ -91,8 +103,8 @@
   opacity: 1;
 }
 .lg-outer.lg-css3 .lg-item:not(.lg-start-end-progress).lg-prev-slide, .lg-outer.lg-css3 .lg-item:not(.lg-start-end-progress).lg-next-slide, .lg-outer.lg-css3 .lg-item:not(.lg-start-end-progress).lg-current {
-  -webkit-transition-duration: inherit !important;
-  transition-duration: inherit !important;
+  -webkit-transition-duration: var(--lg-speed, 400ms), var(--lg-opacity-speed, 100ms) !important;
+  transition-duration: var(--lg-speed, 400ms), var(--lg-opacity-speed, 100ms) !important;
   -webkit-transition-timing-function: inherit !important;
   transition-timing-function: inherit !important;
 }
@@ -279,6 +291,13 @@
   -o-transition: -o-transform 1s cubic-bezier(0, 0, 0.25, 1) 0s;
   transition: transform 1s cubic-bezier(0, 0, 0.25, 1) 0s;
 }
+.lg-css3.lg-use-css3.lg-closing.lg-close-to-center .lg-item.lg-current.lg-start-end-progress {
+  opacity: 0;
+  -webkit-transition: -webkit-transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s cubic-bezier(0, 0, 0.25, 1) 0s;
+  -moz-transition: -moz-transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s cubic-bezier(0, 0, 0.25, 1) 0s;
+  -o-transition: -o-transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s cubic-bezier(0, 0, 0.25, 1) 0s;
+  transition: transform 1s cubic-bezier(0, 0, 0.25, 1) 0s, opacity 1s cubic-bezier(0, 0, 0.25, 1) 0s;
+}
 .lg-css3.lg-slide.lg-use-css3 .lg-item {
   opacity: 0;
 }
@@ -328,8 +347,31 @@
 .lg-inline .lg-outer {
   z-index: 2;
 }
-.lg-inline .lg-maximize:after {
-  content: "\e909";
+
+.lg-icon-custom::after {
+  content: none !important;
+}
+.lg-icon-custom .lg-ci {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.lg-icon-custom svg {
+  width: 1em;
+  height: 1em;
+}
+
+.lg-maximize.lg-icon-custom .lg-ci-maximize {
+  display: none;
+}
+
+.lg-inline .lg-maximize.lg-icon-custom .lg-ci-maximize {
+  display: inline-flex;
+}
+.lg-inline .lg-maximize.lg-icon-custom .lg-ci-minimize {
+  display: none;
 }
 
 .lg-components {

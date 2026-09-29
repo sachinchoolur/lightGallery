@@ -1,14 +1,15 @@
 /*!
- * lightgallery | 2.9.0 | July 21st 2026
+ * lightgallery | 3.0.0-beta.1 | September 29th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
  */
+const fullscreenDefaultIcons = {
+  fullscreen: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor"><path transform="translate(0, 960) scale(1, -1)" d="M598 724.667h212v-212h-84v128h-128v84zM726 212.667v128h84v-212h-212v84h128zM214 512.667v212h212v-84h-128v-128h-84zM298 340.667v-128h128v-84h-212v212h84z"/></svg>',
+  fullscreenExit: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="currentColor"><path transform="translate(0, 960) scale(1, -1)" d="M682 596.667h128v-84h-212v212h84v-128zM598 128.667v212h212v-84h-128v-128h-84zM342 596.667v128h84v-212h-212v84h128zM214 256.667v84h212v-212h-84v128h-128z"/></svg>'
+};
 const fullscreenSettings = {
-  fullScreen: true,
-  fullscreenPluginStrings: {
-    toggleFullscreen: "Toggle Fullscreen"
-  }
+  fullScreen: true
 };
 var __defProp = Object.defineProperty;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
@@ -34,12 +35,14 @@ class FullScreen {
     return this;
   }
   init() {
+    var _a, _b;
+    this.core.registerDefaultIcons(fullscreenDefaultIcons);
     let fullScreen = "";
     if (this.settings.fullScreen) {
       if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled && !document.mozFullScreenEnabled && !document.msFullscreenEnabled) {
         return;
       } else {
-        fullScreen = `<button type="button" aria-label="${this.settings.fullscreenPluginStrings["toggleFullscreen"]}" class="lg-fullscreen lg-icon"></button>`;
+        fullScreen = `<button type="button" aria-label="${(_b = (_a = this.settings.fullscreenPluginStrings) == null ? void 0 : _a.toggleFullscreen) != null ? _b : this.core.settings.strings.toggleFullscreen}" class="lg-fullscreen lg-icon"></button>`;
         this.core.$toolbar.append(fullScreen);
         this.fullScreen();
       }
