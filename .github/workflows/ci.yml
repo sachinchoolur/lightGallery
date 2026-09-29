@@ -151,8 +151,11 @@ jobs:
 
       - name: Bare-Node import matrix (ESM + CJS, all 14 entries)
         run: |
+          # Run from the consumer so the bare specifiers resolve to the
+          # installed tarballs, not the workspace sources.
+          cp "$GITHUB_WORKSPACE/packages/vue/ci/import-matrix.mjs" /tmp/lg-vite/
           cd /tmp/lg-vite
-          node "$GITHUB_WORKSPACE/packages/vue/ci/import-matrix.mjs"
+          node import-matrix.mjs
 
       - name: Scratch consumer (Nuxt SSR prerender)
         run: |
