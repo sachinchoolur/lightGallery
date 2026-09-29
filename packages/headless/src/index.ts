@@ -106,6 +106,26 @@ export {
 } from './origin';
 
 export {
+    CSS_POSITION_CENTER,
+    WHOLE_IMAGE,
+    getOriginCropFlight,
+    getOriginWindow,
+    isWholeImage,
+    parseBackgroundFit,
+    parseCssPosition,
+    parseCssUrl,
+    parseObjectFit,
+    type CssPosition,
+    type CssPositionAxis,
+    type FractionRect,
+    type OriginCropFlight,
+    type OriginCropFlightInput,
+    type OriginWindow,
+    type OriginWindowInput,
+    type ThumbFit,
+} from './origin-crop';
+
+export {
     autoplayDefaultIcons,
     type LgIconName,
     commentDefaultIcons,

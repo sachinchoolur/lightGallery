@@ -30,6 +30,7 @@ npm install @lightgallery/headless
 | Layout | `getJustifiedLayout` | Row-justified box layout for trigger grids |
 | Responsive | `parseSrcset`, `resolveImageSource`, `resolveSizes`, `matchesMedia`, `awaitDecode` | `srcset`/`sizes` selection and decode gating |
 | Origin animation | `getOriginTransform`, `fitImageSize`, `parseImageSize` | Open-from-trigger transforms |
+| Origin crop | `getOriginWindow`, `getOriginCropFlight`, `parseObjectFit`, `parseBackgroundFit`, `parseCssPosition` | The origin crop plugin's flight from a cropped thumbnail |
 | Video | `getVideoInfo`, `getYouTubeEmbedUrl`, `getVimeoEmbedUrl`, `getWistiaEmbedUrl`, `getYouTubePosterUrl`, `getFacadePoster` | Provider detection, embed URLs, facade posters |
 | Share | `getSharePayload`, `canNativeShare`, `getXShareLink`, `getFacebookShareLink`, `getPinterestShareLink` | Web Share payload and social fallbacks |
 | URL drivers | `createHashDriver`, `createHistoryHashDriver`, `createNavigationHashDriver` | One interface over hash, history and the Navigation API |
