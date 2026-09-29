@@ -7,13 +7,17 @@ import {
 } from '@angular/core';
 import type {
     CoreSettings,
+    FractionRect,
     GalleryAction,
     GalleryState,
+    ImageSize,
+    RectLike,
     TypedEmitter,
 } from '@lightgallery/headless';
 
 import type { LgIconDirective } from './icons';
 import type { LgGalleryActions, LgGestureSeam } from './runtime';
+import type { OriginAnimation } from './slide.component';
 import type { LgEventMap, LgGalleryItem } from './types';
 
 /**
@@ -31,6 +35,40 @@ export interface LgMediaPosition {
     bottom: number;
 }
 
+/** What a feature sees when a zoom-from-origin flight is measured. */
+export interface OriginFlightInput {
+    index: number;
+    /**
+     * The element the flight was measured from (the trigger's img, else
+     * the trigger itself); null when an explicit `originRect` was given.
+     */
+    trigger: HTMLElement | null;
+    triggerRect: RectLike;
+    containerRect: RectLike;
+    /** Media container offsets (toolbar; caption + thumb strip), px. */
+    top: number;
+    bottom: number;
+    /** The fitted image box the flight lands on. */
+    imageSize: ImageSize;
+}
+
+/** A feature's flight for a trigger, in place of the built-in one. */
+export interface OriginFlightOverride {
+    /** The slide's transform on the trigger. */
+    transform: string;
+    /** Transforms for a `slidesWrapper`'s outer and inner boxes. */
+    boxes?: { outer: string; inner: string };
+    /** The part of the image the flight's dummy covers (default: whole). */
+    region?: FractionRect;
+    /** Source of the flight's dummy when the gallery has none. */
+    dummySrc?: string;
+}
+
+/** Returning null or undefined keeps the built-in flight. */
+export type OriginFlightResolver = (
+    input: OriginFlightInput,
+) => OriginFlightOverride | null | undefined;
+
 export interface LgFeatureLayout {
     /** Declaratively toggle a class on the `.lg-outer` element. */
     setOuterClass(className: string, active: boolean): void;
@@ -41,6 +79,11 @@ export interface LgFeatureLayout {
      * container position measurement. Pass `null` to restore the default.
      */
     overrideMediaPosition(fn: (() => LgMediaPosition) | null): void;
+    /**
+     * originCrop's core-method override: resolve the zoom-from-origin
+     * flight for a trigger. Pass `null` to restore the built-in flight.
+     */
+    overrideOriginFlight(fn: OriginFlightResolver | null): void;
 }
 
 export interface LgFeatureRefs {
@@ -99,6 +142,17 @@ export interface LgSlideWrapperInputs {
     content: TemplateRef<unknown>;
 }
 
+/**
+ * Inputs a `slots.slidesWrapper` component receives: it wraps the whole
+ * slide list (`.lg-inner`, the `content` template) and follows the
+ * zoom-from-origin flight of the opening or closing slide (origin crop's
+ * stage boxes).
+ */
+export interface LgSlidesWrapperInputs {
+    originAnim: OriginAnimation | null;
+    content: TemplateRef<unknown>;
+}
+
 /** Slide-content replacement (video): first matching feature wins. */
 export interface LgSlideRenderer {
     /** Rendered with `{ item, index }` inputs instead of the built-ins. */
@@ -116,6 +170,11 @@ export interface LgFeatureSlots {
     outer?: Type<unknown>;
     /** Wraps slide content (zoom/rotate); see {@link LgSlideWrapperInputs}. */
     slideWrapper?: Type<unknown>;
+    /**
+     * Wraps the slide list (`.lg-inner`): origin crop's stage boxes; see
+     * {@link LgSlidesWrapperInputs}.
+     */
+    slidesWrapper?: Type<unknown>;
 }
 
 export interface LgFeature<TSettings extends object = object> {

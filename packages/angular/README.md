@@ -103,6 +103,7 @@ factory for the `[features]` input:
 | mediumZoom | `withMediumZoom()` | `margin`, `backgroundColor` (presets a minimal UI) |
 | relativeCaption | `withRelativeCaption()` | — (presets `captionPosition: 'slide'`) |
 | vimeoThumbnail | `withVimeoThumbnail()` | `showThumbnailWithPlayButton` |
+| originCrop | `withOriginCrop()` | `originCrop`: flies a cropped thumbnail (`object-fit: cover`, `background-size: cover`) from its crop instead of squashing the whole image into the tile |
 
 Features compose per gallery instance — two galleries on one page can have
 different feature sets. Order matters for slide wrappers: put `withZoom()`

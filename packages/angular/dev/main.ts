@@ -27,6 +27,7 @@ import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
 import { LgJustifiedGridComponent } from '@lightgallery/angular/plugins/justified';
 import { withVideo } from '@lightgallery/angular/plugins/video';
 import { withZoom } from '@lightgallery/angular/plugins/zoom';
+import { withOriginCrop } from '@lightgallery/angular/plugins/originCrop';
 
 // CSS stays a consumer import (ADR 0001 §7) — never bundled by the package.
 import 'lightgallery/css/lightgallery.css';
@@ -47,36 +48,54 @@ const picsum = (id: number, w: number, h: number): string =>
     `https://picsum.photos/id/${id}/${w}/${h}`;
 // Rig-only responsive ladder: real w-descriptor srcset so device passes
 // exercise the plan-002 selection math end to end.
-const picsumSrcset = (id: number): string =>
+const picsumSrcset = (id: number, w: number, h: number): string =>
     [640, 960, 1280, 1600]
-        .map((w) => `${picsum(id, w, Math.round((w * 1067) / 1600))} ${w}w`)
+        .map(
+            (tier) =>
+                `${picsum(id, tier, Math.round((tier * h) / w))} ${tier}w`,
+        )
         .join(', ');
 
+/**
+ * Portrait entries are deliberate: anything that measures the fitted
+ * size per slide (actual-size zoom, the origin flight) only misbehaves
+ * when the aspect ratio changes between slides, and a cover-cropped tile
+ * shows only a band of them (the origin crop scenario).
+ */
 interface DemoSource {
     id: number;
     title: string;
+    portrait?: boolean;
 }
 
+// Same images as dev-vanilla/main.ts: every rig runs the same scenario
+// matrix on the same slides so the packages compare side by side.
 const SOURCES: DemoSource[] = [
     { id: 1015, title: 'River between mountains' },
     { id: 1016, title: 'Canyon walls' },
+    { id: 1025, title: 'Pug portrait', portrait: true },
     { id: 1018, title: 'Snowy peak' },
     { id: 1019, title: 'Lakeside cliffs' },
+    { id: 1027, title: 'Woman portrait', portrait: true },
     { id: 1039, title: 'Waterfall in the forest' },
     { id: 1043, title: 'Village at dusk' },
     { id: 1044, title: 'Foggy shore' },
     { id: 1051, title: 'Ridge line' },
 ];
 
-const ITEMS: LgGalleryItem[] = SOURCES.map((source) => ({
-    src: picsum(source.id, 1600, 1067),
-    srcset: picsumSrcset(source.id),
-    sizes: '100vw',
-    thumb: picsum(source.id, 240, 160),
-    lgSize: '1600-1067',
-    alt: source.title,
-    caption: source.title,
-}));
+const ITEMS: LgGalleryItem[] = SOURCES.map(({ id, title, portrait }) => {
+    const [w, h] = portrait ? [1067, 1600] : [1600, 1067];
+    const [tw, th] = portrait ? [160, 240] : [240, 160];
+    return {
+        src: picsum(id, w, h),
+        srcset: picsumSrcset(id, w, h),
+        sizes: '100vw',
+        thumb: picsum(id, tw, th),
+        lgSize: `${w}-${h}`,
+        alt: title,
+        caption: title,
+    };
+});
 
 // Video matrix for device passes: YouTube (endpoint poster), Vimeo with
 // an explicit poster, posterless Vimeo/Wistia (thumb-fallback facades)
@@ -156,6 +175,11 @@ const SCENARIOS = [
         note: 'Plain grid — thumbnails + zoom defaults, srcset ladder.',
     },
     {
+        id: 'origin-crop',
+        title: 'Origin crop',
+        note: 'Same grid with the originCrop plugin: cover-cropped tiles fly from their crop.',
+    },
+    {
         id: 'thumbnails',
         title: 'Thumbnails',
         note: 'Static strip + toggle button (animateThumb off, allowMediaOverlap).',
@@ -228,208 +252,182 @@ const readHash = (): ScenarioId => {
         <h1>&#64;lightgallery/angular dev demo</h1>
         <nav class="scenario-nav">
             @for (entry of scenarios; track entry.id) {
-                <a
-                    [href]="'#' + entry.id"
-                    [class.active]="entry.id === current()"
-                >
-                    {{ entry.title }}
-                </a>
+            <a [href]="'#' + entry.id" [class.active]="entry.id === current()">
+                {{ entry.title }}
+            </a>
             }
         </nav>
         <p class="scenario-note">{{ note() }}</p>
 
-        @switch (current()) {
-            @case ('images') {
-                <lg-gallery [features]="imagesFeatures">
-                    <div class="demo-grid">
-                        @for (item of items; track item.src) {
-                            <a [href]="item.src" [lgGalleryItem]="item">
-                                <img [src]="item.thumb" [alt]="item.alt" />
-                            </a>
-                        }
-                    </div>
-                </lg-gallery>
-            }
-            @case ('thumbnails') {
-                <lg-gallery
-                    [features]="thumbnailsFeatures"
-                    [allowMediaOverlap]="true"
+        @switch (current()) { @case ('images') {
+        <lg-gallery [features]="imagesFeatures">
+            <div class="demo-grid">
+                @for (item of items; track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+                }
+            </div>
+        </lg-gallery>
+        } @case ('origin-crop') {
+        <lg-gallery [features]="originCropFeatures">
+            <div class="demo-grid">
+                @for (item of items; track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+                }
+            </div>
+        </lg-gallery>
+        } @case ('thumbnails') {
+        <lg-gallery [features]="thumbnailsFeatures" [allowMediaOverlap]="true">
+            <div class="demo-grid">
+                @for (item of items; track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+                }
+            </div>
+        </lg-gallery>
+        } @case ('scrub') {
+        <lg-gallery [features]="scrubFeatures">
+            <div class="demo-grid">
+                @for (item of items; track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+                }
+            </div>
+        </lg-gallery>
+        } @case ('zoom') {
+        <lg-gallery [features]="zoomFeatures">
+            <div class="demo-grid">
+                @for (item of items; track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+                }
+            </div>
+        </lg-gallery>
+        } @case ('video') {
+        <lg-gallery [features]="videoFeatures">
+            <div class="demo-grid">
+                @for (item of videoItems; track item.alt) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+                }
+            </div>
+        </lg-gallery>
+        } @case ('share') {
+        <lg-gallery [features]="shareFeatures">
+            <div class="demo-grid">
+                @for (item of items.slice(0, 5); track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+                }
+            </div>
+        </lg-gallery>
+        } @case ('dynamic') {
+        <div class="demo-controls">
+            <button type="button" (click)="dynOpen.set(true)">
+                open gallery
+            </button>
+            <button type="button" (click)="addSlide()">add slide</button>
+            <button type="button" (click)="removeSlide()">remove slide</button>
+            <span>
+                {{ dynSlides().length }} slides · index
+                {{ dynIndex() }}
+            </span>
+        </div>
+        <lg-gallery
+            [slides]="dynSlides()"
+            [features]="imagesFeatures"
+            [open]="dynOpen()"
+            (closed)="dynOpen.set(false)"
+            [(index)]="dynIndex"
+        />
+        } @case ('virtualization') {
+        <div class="demo-controls">
+            <button type="button" (click)="stressGallery.openGallery(0)">
+                open 1,000-item gallery
+            </button>
+            <button type="button" (click)="stressGallery.openGallery(500)">
+                open at #500
+            </button>
+        </div>
+        <lg-gallery
+            #stressGallery="lgGallery"
+            [slides]="stressItems"
+            [features]="stressFeatures"
+            [virtualization]="{ slides: 7, thumbs: 'auto' }"
+            [zoomFromOrigin]="false"
+        />
+        } @case ('justified') {
+        <lg-gallery [features]="imagesFeatures">
+            <lg-justified-grid [rowHeight]="140" [gap]="8">
+                @for (item of items; track 'justified-' + item.src) {
+                <a
+                    [href]="item.src"
+                    [lgGalleryItem]="item"
+                    data-lg-size="1600-1067"
                 >
-                    <div class="demo-grid">
-                        @for (item of items; track item.src) {
-                            <a [href]="item.src" [lgGalleryItem]="item">
-                                <img [src]="item.thumb" [alt]="item.alt" />
-                            </a>
-                        }
-                    </div>
-                </lg-gallery>
-            }
-            @case ('scrub') {
-                <lg-gallery [features]="scrubFeatures">
-                    <div class="demo-grid">
-                        @for (item of items; track item.src) {
-                            <a [href]="item.src" [lgGalleryItem]="item">
-                                <img [src]="item.thumb" [alt]="item.alt" />
-                            </a>
-                        }
-                    </div>
-                </lg-gallery>
-            }
-            @case ('zoom') {
-                <lg-gallery [features]="zoomFeatures">
-                    <div class="demo-grid">
-                        @for (item of items; track item.src) {
-                            <a [href]="item.src" [lgGalleryItem]="item">
-                                <img [src]="item.thumb" [alt]="item.alt" />
-                            </a>
-                        }
-                    </div>
-                </lg-gallery>
-            }
-            @case ('video') {
-                <lg-gallery [features]="videoFeatures">
-                    <div class="demo-grid">
-                        @for (item of videoItems; track item.alt) {
-                            <a [lgGalleryItem]="item">
-                                <img [src]="item.thumb" [alt]="item.alt" />
-                            </a>
-                        }
-                    </div>
-                </lg-gallery>
-            }
-            @case ('share') {
-                <lg-gallery [features]="shareFeatures">
-                    <div class="demo-grid">
-                        @for (item of items.slice(0, 5); track item.src) {
-                            <a [href]="item.src" [lgGalleryItem]="item">
-                                <img [src]="item.thumb" [alt]="item.alt" />
-                            </a>
-                        }
-                    </div>
-                </lg-gallery>
-            }
-            @case ('dynamic') {
-                <div class="demo-controls">
-                    <button type="button" (click)="dynOpen.set(true)">
-                        open gallery
-                    </button>
-                    <button type="button" (click)="addSlide()">
-                        add slide
-                    </button>
-                    <button type="button" (click)="removeSlide()">
-                        remove slide
-                    </button>
-                    <span>
-                        {{ dynSlides().length }} slides · index
-                        {{ dynIndex() }}
-                    </span>
-                </div>
-                <lg-gallery
-                    [slides]="dynSlides()"
-                    [features]="imagesFeatures"
-                    [open]="dynOpen()"
-                    (closed)="dynOpen.set(false)"
-                    [(index)]="dynIndex"
-                />
-            }
-            @case ('virtualization') {
-                <div class="demo-controls">
-                    <button
-                        type="button"
-                        (click)="stressGallery.openGallery(0)"
-                    >
-                        open 1,000-item gallery
-                    </button>
-                    <button
-                        type="button"
-                        (click)="stressGallery.openGallery(500)"
-                    >
-                        open at #500
-                    </button>
-                </div>
-                <lg-gallery
-                    #stressGallery="lgGallery"
-                    [slides]="stressItems"
-                    [features]="stressFeatures"
-                    [virtualization]="{ slides: 7, thumbs: 'auto' }"
-                    [zoomFromOrigin]="false"
-                />
-            }
-            @case ('justified') {
-                <lg-gallery [features]="imagesFeatures">
-                    <lg-justified-grid [rowHeight]="140" [gap]="8">
-                        @for (item of items; track 'justified-' + item.src) {
-                            <a
-                                [href]="item.src"
-                                [lgGalleryItem]="item"
-                                data-lg-size="1600-1067"
-                            >
-                                <img [src]="item.thumb" [alt]="item.alt" />
-                            </a>
-                        }
-                    </lg-justified-grid>
-                </lg-gallery>
-            }
-            @case ('rtl') {
-                <div class="demo-controls">
-                    <button
-                        type="button"
-                        (click)="rtlGallery.openGallery(0)"
-                    >
-                        open RTL gallery (direction: rtl)
-                    </button>
-                </div>
-                <lg-gallery
-                    #rtlGallery="lgGallery"
-                    [slides]="rtlItems"
-                    direction="rtl"
-                    [features]="imagesFeatures"
-                />
-            }
-            @default {
-                <div class="demo-controls">
-                    <button
-                        type="button"
-                        (click)="sinkGallery.openGallery(2)"
-                    >
-                        Imperative: open at slide 3
-                    </button>
-                    <span class="event">{{ lastEvent() }}</span>
-                </div>
-                <lg-gallery
-                    #sinkGallery="lgGallery"
-                    [mousewheel]="true"
-                    [features]="kitchenSinkFeatures()"
-                    (beforeSlide)="
-                        lastEvent.set('beforeSlide → ' + $event.index)
-                    "
-                    (afterSlide)="
-                        lastEvent.set('afterSlide → ' + $event.index)
-                    "
-                >
-                    <div class="demo-grid">
-                        @for (item of sinkItems; track item.alt) {
-                            <a [lgGalleryItem]="item">
-                                <img [src]="item.thumb" [alt]="item.alt" />
-                            </a>
-                        }
-                    </div>
-                    <ng-template lgCaption let-item let-index="index">
-                        <h4>{{ item?.caption }}</h4>
-                        <p>Slide {{ index + 1 }} — template caption</p>
-                    </ng-template>
-                </lg-gallery>
-                <ng-template #commentsTpl let-item let-index="index">
-                    <div style="padding: 1rem">
-                        <p><strong>{{ item?.caption }}</strong></p>
-                        <p>
-                            Comment panel for slide {{ index + 1 }} — bring
-                            any comment system as a template.
-                        </p>
-                    </div>
-                </ng-template>
-            }
-        }
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+                }
+            </lg-justified-grid>
+        </lg-gallery>
+        } @case ('rtl') {
+        <div class="demo-controls">
+            <button type="button" (click)="rtlGallery.openGallery(0)">
+                open RTL gallery (direction: rtl)
+            </button>
+        </div>
+        <lg-gallery
+            #rtlGallery="lgGallery"
+            [slides]="rtlItems"
+            direction="rtl"
+            [features]="imagesFeatures"
+        />
+        } @default {
+        <div class="demo-controls">
+            <button type="button" (click)="sinkGallery.openGallery(2)">
+                Imperative: open at slide 3
+            </button>
+            <span class="event">{{ lastEvent() }}</span>
+        </div>
+        <lg-gallery
+            #sinkGallery="lgGallery"
+            [mousewheel]="true"
+            [features]="kitchenSinkFeatures()"
+            (beforeSlide)="lastEvent.set('beforeSlide → ' + $event.index)"
+            (afterSlide)="lastEvent.set('afterSlide → ' + $event.index)"
+        >
+            <div class="demo-grid">
+                @for (item of sinkItems; track item.alt) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+                }
+            </div>
+            <ng-template lgCaption let-item let-index="index">
+                <h4>{{ item?.caption }}</h4>
+                <p>Slide {{ index + 1 }} — template caption</p>
+            </ng-template>
+        </lg-gallery>
+        <ng-template #commentsTpl let-item let-index="index">
+            <div style="padding: 1rem">
+                <p>
+                    <strong>{{ item?.caption }}</strong>
+                </p>
+                <p>
+                    Comment panel for slide {{ index + 1 }} — bring any comment
+                    system as a template.
+                </p>
+            </div>
+        </ng-template>
+        } }
     `,
     styles: `
         :host {
@@ -491,6 +489,11 @@ class DemoRoot {
     );
 
     readonly imagesFeatures = [withThumbnail(), withZoom()];
+    readonly originCropFeatures = [
+        withThumbnail(),
+        withZoom(),
+        withOriginCrop(),
+    ];
     readonly scrubFeatures = [withThumbnail({ scrubThumbnails: true })];
     readonly thumbnailsFeatures = [
         withThumbnail({ animateThumb: false, toggleThumb: true }),

@@ -71,11 +71,14 @@ import {
     type LgFeature,
     type LgMediaPosition,
     type LgPluginContext,
+    type OriginFlightOverride,
+    type OriginFlightResolver,
     type ResolvedFeatureSettings,
 } from './features';
 import { LgGesturesDirective } from './gestures.directive';
 import { LgGalleryRuntime } from './runtime';
 import { LgSlideComponent, type OriginAnimation } from './slide.component';
+import { LgStageWrappersComponent } from './stage-wrappers.component';
 import {
     LgCaptionDirective,
     LgCounterDirective,
@@ -101,6 +104,11 @@ import type {
     SlideEventDetail,
     SlideItemLoadDetail,
 } from './types';
+
+/** A measured zoom-from-origin flight: the built-in one or a feature's. */
+interface OriginFlight extends OriginFlightOverride {
+    imageSize: ImageSize;
+}
 
 /**
  * Open/close lifecycle phases, mirroring the vanilla class timeline (and the
@@ -166,6 +174,7 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
         LgCiComponent,
         LgGesturesDirective,
         LgSlideComponent,
+        LgStageWrappersComponent,
         LgToolbarOverflowComponent,
         NgComponentOutlet,
         NgTemplateOutlet,
@@ -215,40 +224,57 @@ const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
                         [style.top]="contentTopStyle()"
                         [style.bottom]="contentBottomStyle()"
                     >
-                        <div
-                            #innerEl
-                            class="lg-inner"
-                            style="touch-action: none"
-                            [style.transition-timing-function]="
-                                settings().easing
-                            "
-                            [style.transition-duration]="
-                                settings().speed + 'ms'
-                            "
-                            [style.--lg-speed]="settings().speed + 'ms'"
-                        >
-                            <!-- 2.x \`$inner.empty()\`: the persistent
+                        <!-- The slide list renders through the feature
+                             slidesWrapper chain (origin crop's stage
+                             boxes); the arrows stay in the stage. Without
+                             a wrapper it renders bare, as it always has. -->
+                        @if (stageWrappers().length) {
+                        <lg-stage-wrappers
+                            [wrappers]="stageWrappers()"
+                            [originAnim]="originAnim()"
+                            [content]="innerTpl"
+                        />
+                        } @else {
+                        <ng-container *ngTemplateOutlet="innerTpl" />
+                        }
+                        <ng-template #innerTpl>
+                            <div
+                                #innerEl
+                                class="lg-inner"
+                                style="touch-action: none"
+                                [style.transition-timing-function]="
+                                    settings().easing
+                                "
+                                [style.transition-duration]="
+                                    settings().speed + 'ms'
+                                "
+                                [style.--lg-speed]="settings().speed + 'ms'"
+                            >
+                                <!-- 2.x \`$inner.empty()\`: the persistent
                                  shell keeps .lg-inner, but the items
                                  (and their lg-current) unmount once the
                                  close settles — stale items would flash
                                  into the next entrance. Mid-close they
                                  survive for the exit flight. -->
-                            @if (phase() !== 'closed') { @for (idx of
-                            slideIndexes(); track idx) {
-                            <lg-slide
-                                [index]="idx"
-                                [item]="items()[idx]"
-                                [isShown]="timeline().shownIndex === idx"
-                                [position]="timeline().positions[idx]"
-                                [inProgress]="timeline().progressIndex === idx"
-                                [originAnim]="
-                                    originAnim()?.index === idx
-                                        ? originAnim()
-                                        : null
-                                "
-                            />
-                            } }
-                        </div>
+                                @if (phase() !== 'closed') { @for (idx of
+                                slideIndexes(); track idx) {
+                                <lg-slide
+                                    [index]="idx"
+                                    [item]="items()[idx]"
+                                    [isShown]="timeline().shownIndex === idx"
+                                    [position]="timeline().positions[idx]"
+                                    [inProgress]="
+                                        timeline().progressIndex === idx
+                                    "
+                                    [originAnim]="
+                                        originAnim()?.index === idx
+                                            ? originAnim()
+                                            : null
+                                    "
+                                />
+                                } }
+                            </div>
+                        </ng-template>
                         @if (settings().controls) {
                         <button
                             type="button"
@@ -833,6 +859,15 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     private readonly featureOuterClasses = signal<Record<string, boolean>>({});
     /** mediumZoom's media-position override (wave 2), read by measureOffsets. */
     private mediaPositionOverride: (() => LgMediaPosition) | null = null;
+    /** originCrop's flight override, consulted by computeOrigin. */
+    private originFlightOverride: OriginFlightResolver | null = null;
+    /** slidesWrapper chain around `.lg-inner`, features order = outermost-first. */
+    protected readonly stageWrappers = computed(() =>
+        this.runtime
+            .features()
+            .map((feature) => feature.slots?.slidesWrapper)
+            .filter((cmp): cmp is Type<unknown> => !!cmp),
+    );
     private featureInjectorRef: Injector | null = null;
     private transformAbort: AbortController | null = null;
 
@@ -1077,6 +1112,9 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                 },
                 overrideMediaPosition: (fn) => {
                     this.mediaPositionOverride = fn;
+                },
+                overrideOriginFlight: (fn) => {
+                    this.originFlightOverride = fn;
                 },
             },
             refs: {
@@ -1535,6 +1573,9 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                 index: currentIndex,
                 transform: origin.transform,
                 imageSize: origin.imageSize,
+                boxes: origin.boxes,
+                region: origin.region,
+                dummySrc: origin.dummySrc,
                 stage: 'init',
             });
             this.timers.set(() => {
@@ -1627,6 +1668,9 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             index: this.store.currentIndex(),
             transform: origin?.transform ?? getCenterCloseTransform(),
             imageSize: origin?.imageSize,
+            boxes: origin?.boxes,
+            region: origin?.region,
+            dummySrc: origin?.dummySrc,
             stage: 'run',
             closing: true,
             toCenter: !origin,
@@ -1844,18 +1888,29 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         return { top, bottom };
     }
 
+    /**
+     * The element a flight is measured from: the trigger's img, else the
+     * trigger itself. Null for an explicit `originRect`, which has no
+     * thumbnail a feature could read.
+     */
+    private getOriginTrigger(index: number): HTMLElement | null {
+        if (this.originRect()) {
+            return null;
+        }
+        const element = this.runtime.registrations()[index]?.element;
+        return element ? element.querySelector('img') ?? element : null;
+    }
+
     /** Zoom-from-origin rect: `originRect` input or the trigger element. */
     private getOriginRect(index: number): RectLike | null {
         const explicit = this.originRect();
         if (explicit) {
             return isUsableOriginRect(explicit) ? explicit : null;
         }
-        const registration = this.runtime.registrations()[index];
-        const element = registration?.element;
-        if (!element) {
+        const target = this.getOriginTrigger(index);
+        if (!target) {
             return null;
         }
-        const target = element.querySelector('img') ?? element;
         const rect = target.getBoundingClientRect();
         // A hidden or collapsed trigger (a collage's overflow items behind a
         // "+N photos" tile) measures 0×0 at the viewport origin: no flight,
@@ -1871,9 +1926,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         };
     }
 
-    private computeOrigin(
-        index: number,
-    ): { transform: string; imageSize: ImageSize } | null {
+    private computeOrigin(index: number): OriginFlight | null {
         const settings = this.settings();
         if (!settings.zoomFromOrigin) {
             return null;
@@ -1909,6 +1962,20 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         // flight — fall back to the startClass fade instead.
         if (imageSize.width <= 0 || imageSize.height <= 0) {
             return null;
+        }
+        // A feature's flight for the trigger (origin crop) replaces the
+        // built-in one; the dummy still flies at the fitted box.
+        const override = this.originFlightOverride?.({
+            index,
+            trigger: this.getOriginTrigger(index),
+            triggerRect,
+            containerRect,
+            top,
+            bottom,
+            imageSize,
+        });
+        if (override) {
+            return { ...override, imageSize };
         }
         return {
             transform: getOriginTransform({

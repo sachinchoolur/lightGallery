@@ -11,6 +11,7 @@ export { LgImageSlideComponent } from './lib/image-slide.component';
 export { LgIframeSlideComponent } from './lib/iframe-slide.component';
 export { LgSlideComponent, type OriginAnimation } from './lib/slide.component';
 export { LgSlideWrappersComponent } from './lib/slide-wrappers.component';
+export { LgStageWrappersComponent } from './lib/stage-wrappers.component';
 export {
     dedupeFeatures,
     withRtl,
@@ -25,6 +26,10 @@ export {
     type LgPluginContext,
     type LgSlideRenderer,
     type LgSlideWrapperInputs,
+    type LgSlidesWrapperInputs,
+    type OriginFlightInput,
+    type OriginFlightOverride,
+    type OriginFlightResolver,
     type ResolvedFeatureSettings,
 } from './lib/features';
 export {

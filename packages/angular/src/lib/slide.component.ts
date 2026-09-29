@@ -17,6 +17,7 @@ import {
     awaitDecode,
     getPreloadIndexes,
     getSlideType,
+    type FractionRect,
     type ImageSize,
 } from '@lightgallery/headless';
 
@@ -51,6 +52,14 @@ export interface OriginAnimation {
      * no lgSize): shrink about the stage centre and fade instead.
      */
     toCenter?: boolean;
+    /**
+     * A feature's flight (origin crop): transforms for the stage boxes
+     * around the slides, the part of the image the dummy covers, and the
+     * dummy's source when the gallery has none.
+     */
+    boxes?: { outer: string; inner: string };
+    region?: FractionRect;
+    dummySrc?: string;
 }
 
 /**
@@ -94,6 +103,7 @@ export interface OriginAnimation {
                 [index]="index()"
                 [dummySrc]="dummySrc()"
                 [dummySize]="dummySize()"
+                [dummyOffset]="dummyOffset()"
                 [deferSrc]="deferSrc()"
                 (mediaLoad)="onLoad($event)"
                 (mediaError)="onError()"
@@ -227,6 +237,9 @@ export class LgSlideComponent {
     // shortly after the load settles (`loadContentOnFirstSlideLoad`).
     protected readonly dummySrc = signal<string | null>(null);
     protected readonly dummySize = signal<ImageSize | null>(null);
+    protected readonly dummyOffset = signal<{ x: number; y: number } | null>(
+        null,
+    );
     private dummyDone = false;
     private dummyDropTimer: ReturnType<typeof setTimeout> | null = null;
     private destroyed = false;
@@ -257,14 +270,35 @@ export class LgSlideComponent {
                 return;
             }
             untracked(() => {
-                const src = this.runtime.getDummySrc(this.index());
-                if (src) {
-                    this.dummySrc.set(src);
-                    this.dummySize.set(anim.imageSize ?? null);
-                    this.runtime.firstSlideLoading.set(true);
-                } else {
+                const src =
+                    anim.dummySrc ?? this.runtime.getDummySrc(this.index());
+                if (!src) {
                     this.dummyDone = true;
+                    return;
                 }
+                this.dummySrc.set(src);
+                // A feature's flight may cover only a region of the image
+                // with its dummy (a pre-cropped thumbnail file): size and
+                // offset the dummy to that region of the fitted box.
+                const { imageSize, region } = anim;
+                if (imageSize && region) {
+                    this.dummySize.set({
+                        width: imageSize.width * region.width,
+                        height: imageSize.height * region.height,
+                    });
+                    this.dummyOffset.set({
+                        x:
+                            imageSize.width *
+                            (region.x + region.width / 2 - 0.5),
+                        y:
+                            imageSize.height *
+                            (region.y + region.height / 2 - 0.5),
+                    });
+                } else {
+                    this.dummySize.set(imageSize ?? null);
+                    this.dummyOffset.set(null);
+                }
+                this.runtime.firstSlideLoading.set(true);
             });
         });
         effect(() => {

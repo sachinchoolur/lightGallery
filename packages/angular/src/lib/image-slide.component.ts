@@ -63,6 +63,8 @@ export class LgImageSlideComponent {
     readonly dummySrc = input<string | null>(null);
     /** Box the dummy flies at: the fitted image size, capped at natural. */
     readonly dummySize = input<ImageSize | null>(null);
+    /** Where the dummy's box sits, px from the centre of the fitted box. */
+    readonly dummyOffset = input<{ x: number; y: number } | null>(null);
     /** Hold back the real img while the origin flight runs (2.x). */
     readonly deferSrc = input(false);
 
@@ -74,17 +76,21 @@ export class LgImageSlideComponent {
      */
     protected readonly dummyStyle = computed(() => {
         const size = this.dummySize();
+        const offset = this.dummyOffset();
+        const transform = offset
+            ? `translate(calc(-50% + ${offset.x}px), calc(-50% + ${offset.y}px))`
+            : 'translate(-50%, -50%)';
         return size
             ? {
                   width: `${size.width}px`,
                   height: `${size.height}px`,
-                  transform: 'translate(-50%, -50%)',
+                  transform,
               }
             : {
                   width: '100%',
                   height: '100%',
                   'object-fit': 'contain',
-                  transform: 'translate(-50%, -50%)',
+                  transform,
               };
     });
     /** Native image dragging would swallow the swipe gesture. */
