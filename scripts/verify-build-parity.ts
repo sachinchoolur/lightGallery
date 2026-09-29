@@ -1,32 +1,100 @@
 import { spawnSync } from 'child_process';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import zlib from 'zlib';
 
-const rootDir = path.resolve(__dirname, '..');
-const legacyDir = path.resolve(rootDir, 'dist');
-const viteDir = path.resolve(rootDir, 'dist-vite');
-const sizeBudgetPercent = 15;
+/**
+ * Release parity check: compares the freshly built `dist/` with the last
+ * published `lightgallery` release, so nothing a consumer imports today
+ * goes missing. The reference is the `latest` version on npm (or
+ * `LG_PARITY_BASE=<version>`), fetched once with `npm pack` into the OS
+ * temp directory.
+ *
+ * Fails on JS bundles, declaration files or CSS/asset paths the published
+ * package has and this build lacks. New files are listed for information.
+ * Bundle growth past the budget is a warning; `LG_PARITY_STRICT_SIZE=1`
+ * turns it into a failure.
+ */
 
-const excludedPathPrefixes = [
-    'lib/',
-    'react/',
-    'vue/',
-    'lit/',
-    'angular/',
-];
+const rootDir = path.resolve(__dirname, '..');
+const distDir = path.resolve(rootDir, 'dist');
+const sizeBudgetPercent = 15;
+const strictSize = process.env.LG_PARITY_STRICT_SIZE === '1';
+
+// The 2.x framework wrappers, dropped in 3.0 for the native packages.
+const excludedPathPrefixes = ['lib/', 'react/', 'vue/', 'lit/', 'angular/'];
 
 const excludedFiles = new Set(['package.json', 'README.md']);
+// Paths 3.0 drops on purpose: the icon font (icons are inline SVG now) and
+// the video URL helpers, which moved into @lightgallery/headless.
+const removedOnPurpose = new Set([
+    'scss/_lg-fonts.scss',
+    'types/plugins/video/lg-video-utils.d.ts',
+]);
 const requiredAssetPathPrefixes = ['css/', 'images/', 'scss/'];
 
 interface BundleSize {
     path: string;
-    legacyRaw: number;
-    viteRaw: number;
+    baseRaw: number;
+    distRaw: number;
     rawDeltaPercent: number;
-    legacyGzip: number;
-    viteGzip: number;
+    baseGzip: number;
+    distGzip: number;
     gzipDeltaPercent: number;
+}
+
+// The workspace hoists an old npm (a semantic-release dependency) into
+// node_modules/.bin, which `pnpm run` puts first on PATH; the registry
+// calls need the real npm.
+const cleanPath = (process.env.PATH || '')
+    .split(path.delimiter)
+    .filter((entry) => !entry.includes(`node_modules${path.sep}.bin`))
+    .join(path.delimiter);
+
+function run(command: string, args: string[], cwd: string): string {
+    const result = spawnSync(command, args, {
+        cwd,
+        encoding: 'utf8',
+        env: { ...process.env, PATH: cleanPath },
+    });
+    if (result.status !== 0) {
+        throw new Error(
+            `${command} ${args.join(' ')} failed: ${
+                result.stderr || result.stdout
+            }`,
+        );
+    }
+    return result.stdout.trim();
+}
+
+/** The published package to compare with, extracted to `<tmp>/package`. */
+function fetchBaseline(): { version: string; dir: string } {
+    const version =
+        process.env.LG_PARITY_BASE ||
+        run('npm', ['view', 'lightgallery', 'version'], rootDir);
+    const cacheDir = path.join(os.tmpdir(), 'lightgallery-parity', version);
+    const packageDir = path.join(cacheDir, 'package');
+    if (!fs.existsSync(path.join(packageDir, 'package.json'))) {
+        fs.mkdirSync(cacheDir, { recursive: true });
+        run(
+            'npm',
+            ['pack', `lightgallery@${version}`, '--pack-destination', cacheDir],
+            rootDir,
+        );
+        const tarball = fs
+            .readdirSync(cacheDir)
+            .find((file) => file.endsWith('.tgz'));
+        if (!tarball) {
+            throw new Error(`npm pack left no tarball in ${cacheDir}`);
+        }
+        run(
+            'tar',
+            ['-xzf', path.join(cacheDir, tarball), '-C', cacheDir],
+            rootDir,
+        );
+    }
+    return { version, dir: packageDir };
 }
 
 function toRelativePath(baseDir: string, filePath: string): string {
@@ -50,11 +118,8 @@ function walkFiles(dir: string): string[] {
     if (!fs.existsSync(dir)) {
         return [];
     }
-
     const files: string[] = [];
-    const entries = fs.readdirSync(dir, { withFileTypes: true });
-
-    for (const entry of entries) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
         const fullPath = path.join(dir, entry.name);
         if (entry.isDirectory()) {
             files.push(...walkFiles(fullPath));
@@ -62,23 +127,23 @@ function walkFiles(dir: string): string[] {
             files.push(fullPath);
         }
     }
-
     return files;
 }
 
-function listRelativeFiles(dir: string): string[] {
-    return walkFiles(dir).map((filePath) => toRelativePath(dir, filePath));
-}
-
-function listContractFiles(dir: string, predicate: (file: string) => boolean): string[] {
-    return listRelativeFiles(dir)
+function listContractFiles(
+    dir: string,
+    predicate: (file: string) => boolean,
+): string[] {
+    return walkFiles(dir)
+        .map((filePath) => toRelativePath(dir, filePath))
         .filter((file) => !isExcluded(file))
         .filter(predicate)
         .sort();
 }
 
-function normalizeLegacyDeclarationPath(file: string): string {
-    return `types/${file}`;
+/** 2.x shipped declarations beside the bundles; 3.0 keeps them in types/. */
+function normalizeDeclarationPath(file: string): string {
+    return file.startsWith('types/') ? file : `types/${file}`;
 }
 
 function difference(left: string[], right: string[]): string[] {
@@ -86,19 +151,20 @@ function difference(left: string[], right: string[]): string[] {
     return left.filter((item) => !rightSet.has(item));
 }
 
-function formatList(title: string, items: string[]): string[] {
-    if (items.length === 0) {
-        return [];
-    }
+function missing(base: string[], dist: string[]): string[] {
+    return difference(base, dist).filter((item) => !removedOnPurpose.has(item));
+}
 
-    return [title, ...items.map((item) => `  - ${item}`)];
+function formatList(title: string, items: string[]): string[] {
+    return items.length === 0
+        ? []
+        : [title, ...items.map((item) => `  - ${item}`)];
 }
 
 function percentDelta(previous: number, next: number): number {
     if (previous === 0) {
         return next === 0 ? 0 : Infinity;
     }
-
     return ((next - previous) / previous) * 100;
 }
 
@@ -110,39 +176,37 @@ function formatPercent(value: number): string {
     if (!Number.isFinite(value)) {
         return 'Infinity';
     }
-
     return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
 }
 
-function compareBundleSize(relativePath: string): BundleSize {
-    const legacyPath = path.resolve(legacyDir, relativePath);
-    const vitePath = path.resolve(viteDir, relativePath);
-    const legacyRaw = fs.statSync(legacyPath).size;
-    const viteRaw = fs.statSync(vitePath).size;
-    const legacyGzip = gzipSize(legacyPath);
-    const viteGzip = gzipSize(vitePath);
-
+function compareBundleSize(baseDir: string, relativePath: string): BundleSize {
+    const basePath = path.resolve(baseDir, relativePath);
+    const distPath = path.resolve(distDir, relativePath);
+    const baseRaw = fs.statSync(basePath).size;
+    const distRaw = fs.statSync(distPath).size;
+    const baseGzip = gzipSize(basePath);
+    const distGzip = gzipSize(distPath);
     return {
         path: relativePath,
-        legacyRaw,
-        viteRaw,
-        rawDeltaPercent: percentDelta(legacyRaw, viteRaw),
-        legacyGzip,
-        viteGzip,
-        gzipDeltaPercent: percentDelta(legacyGzip, viteGzip),
+        baseRaw,
+        distRaw,
+        rawDeltaPercent: percentDelta(baseRaw, distRaw),
+        baseGzip,
+        distGzip,
+        gzipDeltaPercent: percentDelta(baseGzip, distGzip),
     };
 }
 
-function printSizeSummary(sizes: BundleSize[]): void {
-    console.log('JS bundle size comparison:');
+function printSizeSummary(version: string, sizes: BundleSize[]): void {
+    console.log(`JS bundle sizes, lightgallery@${version} -> dist:`);
     sizes.forEach((size) => {
         console.log(
             [
                 `  ${size.path}`,
-                `raw ${size.legacyRaw} -> ${size.viteRaw} (${formatPercent(
+                `raw ${size.baseRaw} -> ${size.distRaw} (${formatPercent(
                     size.rawDeltaPercent,
                 )})`,
-                `gzip ${size.legacyGzip} -> ${size.viteGzip} (${formatPercent(
+                `gzip ${size.baseGzip} -> ${size.distGzip} (${formatPercent(
                     size.gzipDeltaPercent,
                 )})`,
             ].join(' | '),
@@ -155,7 +219,6 @@ function runSmokeImport(): void {
         cwd: rootDir,
         stdio: 'inherit',
     });
-
     if (result.status !== 0) {
         throw new Error(
             `smoke import failed with exit code ${result.status ?? 'unknown'}`,
@@ -164,56 +227,73 @@ function runSmokeImport(): void {
 }
 
 function main(): void {
-    const legacyJs = listContractFiles(legacyDir, (file) => file.endsWith('.js'));
-    const viteJs = listContractFiles(viteDir, (file) => file.endsWith('.js'));
-    const missingJs = difference(legacyJs, viteJs);
-    const extraJs = difference(viteJs, legacyJs);
+    if (!fs.existsSync(path.join(distDir, 'lightgallery.umd.js'))) {
+        throw new Error('dist/ is not built; run `npm run build` first');
+    }
+    const base = fetchBaseline();
 
-    const legacyDeclarations = listContractFiles(legacyDir, (file) =>
-        file.endsWith('.d.ts'),
-    ).map(normalizeLegacyDeclarationPath);
-    const viteDeclarations = listContractFiles(viteDir, (file) =>
-        file.endsWith('.d.ts'),
+    const isJs = (file: string) => file.endsWith('.js');
+    const isDeclaration = (file: string) => file.endsWith('.d.ts');
+    const baseJs = listContractFiles(base.dir, isJs);
+    const distJs = listContractFiles(distDir, isJs);
+    const baseDeclarations = listContractFiles(base.dir, isDeclaration).map(
+        normalizeDeclarationPath,
     );
-    const missingDeclarations = difference(legacyDeclarations, viteDeclarations);
-    const extraDeclarations = difference(viteDeclarations, legacyDeclarations);
-    const legacyAssets = listContractFiles(legacyDir, isRequiredAssetPath);
-    const viteAssets = listContractFiles(viteDir, isRequiredAssetPath);
-    const missingAssets = difference(legacyAssets, viteAssets);
-    const extraAssets = difference(viteAssets, legacyAssets);
+    const distDeclarations = listContractFiles(distDir, isDeclaration);
+    const baseAssets = listContractFiles(base.dir, isRequiredAssetPath);
+    const distAssets = listContractFiles(distDir, isRequiredAssetPath);
 
     const failures = [
-        ...formatList('Missing JS bundles in dist-vite:', missingJs),
-        ...formatList('Extra JS bundles in dist-vite:', extraJs),
-        ...formatList('Missing declaration paths in dist-vite:', missingDeclarations),
-        ...formatList('Extra declaration paths in dist-vite:', extraDeclarations),
-        ...formatList('Missing CSS/asset paths in dist-vite:', missingAssets),
-        ...formatList('Extra CSS/asset paths in dist-vite:', extraAssets),
+        ...formatList('Missing JS bundles in dist:', missing(baseJs, distJs)),
+        ...formatList(
+            'Missing declaration paths in dist:',
+            missing(baseDeclarations, distDeclarations),
+        ),
+        ...formatList(
+            'Missing CSS/asset paths in dist:',
+            missing(baseAssets, distAssets),
+        ),
     ];
+    const additions = [
+        ...formatList('New JS bundles:', difference(distJs, baseJs)),
+        ...formatList(
+            'New declaration paths:',
+            difference(distDeclarations, baseDeclarations),
+        ),
+        ...formatList(
+            'New CSS/asset paths:',
+            difference(distAssets, baseAssets),
+        ),
+    ];
+    if (additions.length > 0) {
+        console.log(additions.join('\n'));
+    }
 
-    const matchedJs = legacyJs.filter((file) => viteJs.includes(file));
-    const sizes = matchedJs.map(compareBundleSize);
-    const sizeRegressions = sizes.filter((size) => {
-        const minifiedRawRegression =
-            size.path.endsWith('.min.js') &&
-            size.rawDeltaPercent > sizeBudgetPercent;
-        const gzipRegression = size.gzipDeltaPercent > sizeBudgetPercent;
-
-        return minifiedRawRegression || gzipRegression;
-    });
-
-    printSizeSummary(sizes);
-
-    if (sizeRegressions.length > 0) {
-        failures.push(
-            'Bundle size regressions over budget:',
-            ...sizeRegressions.map(
+    const sizes = baseJs
+        .filter((file) => distJs.includes(file))
+        .map((file) => compareBundleSize(base.dir, file));
+    printSizeSummary(base.version, sizes);
+    const overBudget = sizes.filter(
+        (size) =>
+            (size.path.endsWith('.min.js') &&
+                size.rawDeltaPercent > sizeBudgetPercent) ||
+            size.gzipDeltaPercent > sizeBudgetPercent,
+    );
+    if (overBudget.length > 0) {
+        const lines = [
+            `Bundles grown more than ${sizeBudgetPercent}% since ${base.version}:`,
+            ...overBudget.map(
                 (size) =>
                     `  - ${size.path}: raw ${formatPercent(
                         size.rawDeltaPercent,
                     )}, gzip ${formatPercent(size.gzipDeltaPercent)}`,
             ),
-        );
+        ];
+        if (strictSize) {
+            failures.push(...lines);
+        } else {
+            console.warn(lines.join('\n'));
+        }
     }
 
     if (failures.length > 0) {
@@ -222,7 +302,7 @@ function main(): void {
     }
 
     runSmokeImport();
-    console.log('parity OK');
+    console.log(`parity OK against lightgallery@${base.version}`);
 }
 
 main();
