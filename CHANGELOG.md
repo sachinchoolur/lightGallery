@@ -6,7 +6,7 @@ All notable changes to lightGallery. The format follows
 
 ## 3.0.0 (unreleased)
 
-Prerelease: `3.0.0-beta.2` (2026-10-01), published under the `next` tag for
+Prerelease: `3.0.0-beta.3` (2026-10-01), published under the `next` tag for
 every package. `@lightgallery/headless@3.0.0-beta.1` was published without
 its build output and is deprecated; no other package shipped that version.
 
