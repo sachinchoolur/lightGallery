@@ -1,6 +1,6 @@
 {
   "name": "@lightgallery/headless",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "private": false,
   "type": "module",
   "sideEffects": false,
@@ -41,7 +41,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "lint": "eslint src --quiet"
+    "lint": "eslint src --quiet",
+    "prepack": "node ../../scripts/assert-built.mjs dist/index.js dist/index.cjs dist/index.d.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

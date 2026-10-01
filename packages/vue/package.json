@@ -1,6 +1,6 @@
 {
   "name": "@lightgallery/vue",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "private": false,
   "description": "Native Vue 3 lightGallery over @lightgallery/headless",
   "type": "module",
@@ -181,7 +181,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
-    "lint": "eslint 'src/**/*.{ts,vue}' --quiet"
+    "lint": "eslint 'src/**/*.{ts,vue}' --quiet",
+    "prepack": "node ../../scripts/assert-built.mjs dist/index.js dist/index.cjs dist/index.d.ts"
   },
   "dependencies": {
     "@lightgallery/headless": "workspace:*"

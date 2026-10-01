@@ -1,6 +1,6 @@
 {
   "name": "lightgallery",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "packageManager": "pnpm@9.15.0",
   "pnpm": {
     "overrides": {
@@ -186,7 +186,8 @@
     "prepush": "npm run test:prod && npm run build",
     "commitmsg": "commitlint -E HUSKY_GIT_PARAMS",
     "buildLibraries": "ts-node tools/build-libraries",
-    "publishToNpm": "pnpm publish"
+    "publishToNpm": "pnpm publish",
+    "prepack": "node scripts/assert-built.mjs dist/lightgallery.umd.js dist/lightgallery.es5.js dist/lightgallery.min.js dist/css/lightgallery.css dist/types/index.d.ts"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
