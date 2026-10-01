@@ -29,6 +29,15 @@ npm run docs                              # TypeDoc JSON that the site's setting
 pnpm --filter lg-site-astro build         # the website (run `npm run docs` and package builds first)
 ```
 
+Releases go through one script. The five packages always ship together
+under one version.
+
+```bash
+npm run release:bump <version>   # set the version in every package, rebuild dist
+npm run release:check            # every release verification; publishes nothing
+npm run release                  # verify, publish, move dist-tags, tag the commit
+```
+
 ## Rules that matter
 
 - **Behavior parity.** A feature or fix in one stack must be mirrored in the
