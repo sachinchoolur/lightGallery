@@ -202,28 +202,48 @@ async function fetchJson(url, headers, missing = [404]) {
     return response.json();
 }
 
-async function registryInfo(name) {
-    const body = await fetchJson(
-        `https://registry.npmjs.org/${name.replace('/', '%2f')}`,
-        { accept: 'application/vnd.npm.install-v1+json' },
-    );
-    return {
-        versions: body?.versions ?? {},
-        tags: body?.['dist-tags'] ?? {},
-    };
+// Registry state is read from the per-version and dist-tags documents. The
+// package document is served from a cache for five minutes, so it keeps
+// showing the state from before an upload.
+const REGISTRY = 'https://registry.npmjs.org';
+const registryPath = (name) => name.replace('/', '%2f');
+
+/** The manifest the registry serves for `name@version`, or null. */
+function publishedVersion(name, version) {
+    return fetchJson(`${REGISTRY}/${registryPath(name)}/${version}`);
 }
 
-/** Polls until the registry serves `name@version`; returns its metadata. */
+async function distTags(name) {
+    const tags = await fetchJson(
+        `${REGISTRY}/-/package/${registryPath(name)}/dist-tags`,
+        undefined,
+        // 401: the registry's answer for a package that does not exist.
+        [401, 404],
+    );
+    return tags ?? {};
+}
+
+const REGISTRY_WAIT_MINUTES = 10;
+
+/** Polls until the registry serves `name@version`; returns its manifest. */
 async function waitForVersion(name, version) {
-    for (let attempt = 0; attempt < 30; attempt++) {
-        const registry = await registryInfo(name);
-        if (registry.versions[version]) {
-            return registry;
+    const deadline = Date.now() + REGISTRY_WAIT_MINUTES * 60 * 1000;
+    let announced = false;
+    while (Date.now() < deadline) {
+        const manifest = await publishedVersion(name, version);
+        if (manifest) {
+            return manifest;
         }
-        await new Promise((resolve) => setTimeout(resolve, 4000));
+        if (!announced) {
+            info(
+                'waiting for the registry to process the upload; this can take a few minutes',
+            );
+            announced = true;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 5000));
     }
     return fail(
-        `${name}@${version} did not appear on the registry within two minutes. Check \`npm view ${name} versions\` and run publish again.`,
+        `${name}@${version} was uploaded but the registry is not serving it after ${REGISTRY_WAIT_MINUTES} minutes. Check \`npm view ${name}@${version} version\`, then run the release again: packages already on the registry are skipped.`,
     );
 }
 
@@ -880,7 +900,8 @@ function tagsToMove(version, tag, tags) {
 }
 
 async function settleDistTags(pkg, version, tag, workDir) {
-    const { tags } = await waitForVersion(pkg.name, version);
+    await waitForVersion(pkg.name, version);
+    const tags = await distTags(pkg.name);
     for (const name of tagsToMove(version, tag, tags)) {
         run('npm', ['dist-tag', 'add', `${pkg.name}@${version}`, name], {
             cwd: workDir,
@@ -907,12 +928,16 @@ async function verify(options, publishing) {
     const tag = resolveTag(version, options.tag);
     const gitState = await step('Git', () => assertGitReady(version));
 
-    const registry = new Map();
+    const published = new Set();
     await step('Registry', async () => {
         for (const pkg of PACKAGES) {
-            const entry = await registryInfo(pkg.name);
-            registry.set(pkg.name, entry);
-            const state = entry.versions[version]
+            const isPublished = Boolean(
+                await publishedVersion(pkg.name, version),
+            );
+            if (isPublished) {
+                published.add(pkg.name);
+            }
+            const state = isPublished
                 ? 'already published'
                 : 'not published yet';
             info(`${pkg.name}@${version}: ${state}`);
@@ -928,9 +953,7 @@ async function verify(options, publishing) {
             info(`publishing as ${user}`);
         }
     });
-    const pending = PACKAGES.filter(
-        (pkg) => !registry.get(pkg.name).versions[version],
-    );
+    const pending = PACKAGES.filter((pkg) => !published.has(pkg.name));
     if (publishing && pending.length === 0) {
         return { version, tag, gitState, pending, tarballs: new Map() };
     }
@@ -1017,8 +1040,8 @@ async function publish(options) {
                     ['publish', tarball, '--tag', tag, '--access', 'public'],
                     { cwd: workDir },
                 );
-                const published = await waitForVersion(pkg.name, version);
-                const served = published.versions[version].dist?.integrity;
+                const manifest = await waitForVersion(pkg.name, version);
+                const served = manifest.dist?.integrity;
                 if (served !== integrityOf(tarball)) {
                     fail(
                         `${pkg.name}@${version} on the registry is not the tarball that was verified (integrity ${served}).`,
@@ -1033,7 +1056,7 @@ async function publish(options) {
     await step('Git tag', () => tagCommit(version, gitState));
     await step('Registry state', async () => {
         for (const pkg of PACKAGES) {
-            const { tags } = await registryInfo(pkg.name);
+            const tags = await distTags(pkg.name);
             const summary = Object.entries(tags)
                 .map(([name, value]) => `${name}=${value}`)
                 .join(', ');
