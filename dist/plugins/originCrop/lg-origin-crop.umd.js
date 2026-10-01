@@ -2,7 +2,7 @@
   typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, global.lgOriginCrop = factory());
 })(this, function() {
   "use strict";/*!
- * lightgallery | 3.0.0-beta.1 | September 29th 2026
+ * lightgallery | 3.0.0-beta.2 | October 1st 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3

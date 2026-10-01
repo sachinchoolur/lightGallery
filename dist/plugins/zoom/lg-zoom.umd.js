@@ -2,7 +2,7 @@
   typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, global.lgZoom = factory());
 })(this, function() {
   "use strict";/*!
- * lightgallery | 3.0.0-beta.1 | September 29th 2026
+ * lightgallery | 3.0.0-beta.2 | October 1st 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -142,6 +142,9 @@
   }
   function parseSrcset(srcset) {
     const candidates = [];
+    if (typeof srcset !== "string") {
+      return candidates;
+    }
     for (const entry of srcset.split(",")) {
       const parts = entry.trim().split(/\s+/);
       const url = parts[0];
@@ -179,7 +182,6 @@
     return condition[1] === "min" ? viewport.width >= bound : viewport.width <= bound;
   }
   function getActualSizeWidth(item, viewport, naturalWidth) {
-    var _a;
     if (item.width) {
       const declared = parseFloat(item.width);
       if (!Number.isNaN(declared) && declared > 0) {
@@ -187,7 +189,8 @@
       }
     }
     let candidates = [];
-    for (const source of (_a = item.sources) != null ? _a : []) {
+    const sources = Array.isArray(item.sources) ? item.sources : [];
+    for (const source of sources) {
       if (matchesMedia(source.media, viewport)) {
         candidates = parseSrcset(source.srcset);
         break;

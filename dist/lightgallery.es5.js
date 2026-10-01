@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 3.0.0-beta.1 | September 29th 2026
+ * lightgallery | 3.0.0-beta.2 | October 1st 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -1514,6 +1514,16 @@ const utils = {
           if (label) {
             dynamicEl[label] = attr.value;
           }
+        }
+      }
+      if (typeof dynamicEl.sources === "string") {
+        try {
+          dynamicEl.sources = JSON.parse(dynamicEl.sources);
+        } catch (e) {
+          console.warn(
+            "lightGallery :- data-sources must be a JSON array of picture source objects. See https://www.lightgalleryjs.com/docs/responsive-loading/"
+          );
+          delete dynamicEl.sources;
         }
       }
       const currentItem = $LG(item);
