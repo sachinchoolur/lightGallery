@@ -84,7 +84,21 @@ function counterText(): string | undefined {
 }
 
 beforeEach(() => {
-    vi.useFakeTimers();
+    // The gesture code reads performance.now for the release velocity.
+    // Faking it with the timers pins the clock, so a slow machine cannot
+    // turn a plain drag into a fling.
+    vi.useFakeTimers({
+        toFake: [
+            'setTimeout',
+            'clearTimeout',
+            'setInterval',
+            'clearInterval',
+            'setImmediate',
+            'clearImmediate',
+            'Date',
+            'performance',
+        ],
+    });
 });
 
 afterEach(() => {
@@ -256,8 +270,7 @@ describe('horizontal swipe', () => {
         const item = currentSlide();
         firePointer(item, 'pointerdown', { x: 200, y: 100 });
         // 18px: past the axis commit (10) but under both swipeThreshold and
-        // the flick minimum distance — must snap back. (Tests run on real
-        // performance.now, so any larger travel would count as a flick.)
+        // the flick minimum distance — must snap back.
         firePointer(window, 'pointermove', { x: 182, y: 100 });
         firePointer(window, 'pointerup', { x: 182, y: 100 });
         expect(counterText()).toBe('1');
