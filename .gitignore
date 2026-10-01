@@ -35,6 +35,7 @@ packages/*/dist/
 
 # local agent tooling (npx skills)
 .agents/
+.claude/
 skills-lock.json
 
 # private planning repo (symlinks -> ../lightGallery-plans, never publish)
