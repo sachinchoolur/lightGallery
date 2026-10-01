@@ -153,9 +153,7 @@ You do not need lightGallery's build system. Write the class in your own
 project, type it against the package, and pass it in `plugins`:
 
 ```ts
-import lightGallery from 'lightgallery';
-
-type LightGallery = ReturnType<typeof lightGallery>;
+import type { LightGallery } from 'lightgallery';
 
 export default class Ping {
     core: LightGallery;

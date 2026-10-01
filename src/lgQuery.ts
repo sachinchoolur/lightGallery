@@ -3,37 +3,6 @@ interface Offset {
     top: number;
 }
 
-function initLgPolyfills() {
-    (function () {
-        if (typeof window.CustomEvent === 'function') return false;
-
-        function CustomEvent(event: string, params: any) {
-            params = params || {
-                bubbles: false,
-                cancelable: false,
-                detail: null,
-            };
-            const evt = document.createEvent('CustomEvent');
-            evt.initCustomEvent(
-                event,
-                params.bubbles,
-                params.cancelable,
-                params.detail,
-            );
-            return evt;
-        }
-
-        window.CustomEvent = CustomEvent as any;
-    })();
-    (function () {
-        if (!Element.prototype.matches) {
-            Element.prototype.matches =
-                (Element.prototype as any).msMatchesSelector ||
-                Element.prototype.webkitMatchesSelector;
-        }
-    })();
-}
-
 export type LgQuery = (selector: any) => lgQuery;
 export class lgQuery {
     static eventListeners: { [key: string]: any[] } = {};
@@ -370,16 +339,10 @@ export class lgQuery {
     scrollTop(scrollTop: number): this;
     scrollTop(scrollTop?: number): number | this {
         if (scrollTop !== undefined) {
-            document.body.scrollTop = scrollTop;
-            document.documentElement.scrollTop = scrollTop;
+            window.scrollTo(window.scrollX, scrollTop);
             return this;
         } else {
-            return (
-                window.pageYOffset ||
-                document.documentElement.scrollTop ||
-                document.body.scrollTop ||
-                0
-            );
+            return window.scrollY;
         }
     }
     // Supports only window
@@ -387,16 +350,10 @@ export class lgQuery {
     scrollLeft(scrollLeft?: number): this;
     scrollLeft(scrollLeft?: number): number | this {
         if (scrollLeft !== undefined) {
-            document.body.scrollLeft = scrollLeft;
-            document.documentElement.scrollLeft = scrollLeft;
+            window.scrollTo(scrollLeft, window.scrollY);
             return this;
         } else {
-            return (
-                window.pageXOffset ||
-                document.documentElement.scrollLeft ||
-                document.body.scrollLeft ||
-                0
-            );
+            return window.scrollX;
         }
     }
     offset(): Offset {
@@ -445,6 +402,5 @@ export class lgQuery {
 }
 
 export function $LG(selector: any): lgQuery {
-    initLgPolyfills();
     return new lgQuery(selector);
 }

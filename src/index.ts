@@ -16,4 +16,5 @@ function lightGallery(
  */
 lightGallery.setLicenseKey = setLicenseKey;
 export default lightGallery;
+export type { LightGallery };
 export type { LgIconName, LgIcons } from './lg-icons';

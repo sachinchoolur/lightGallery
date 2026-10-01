@@ -268,13 +268,6 @@ export interface LightGalleryCoreSettings {
     slideDelay: number;
 
     /**
-     * Support legacy browsers
-     * @description Currently this is used only for adding support to srcset attribute via picturefill library
-     * If true lightGallery will show warning message to include picturefill library
-     */
-    supportLegacyBrowser: boolean;
-
-    /**
      * If true, toolbar, captions and thumbnails will not overlap with media element
      * This will not effect thumbnails if animateThumb is false
      * Also, toggle thumbnails button is not displayed if allowMediaOverlap is false
@@ -711,7 +704,6 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     hideBarsDelay: 0,
     showBarsAfter: 10000,
     slideDelay: 0,
-    supportLegacyBrowser: true,
     allowMediaOverlap: false,
     videoMaxSize: '1280-720',
     loadYouTubePoster: true,

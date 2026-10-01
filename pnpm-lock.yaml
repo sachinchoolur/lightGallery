@@ -204,6 +204,9 @@ importers:
       '@analogjs/vite-plugin-angular':
         specifier: ^2.6.3
         version: 2.6.3(@angular/build@21.2.19(unumeggarr2zaanfj5on3mcifu))(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.6(@types/node@24.13.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(stylus@0.59.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))
+      '@angular/build':
+        specifier: ^21.2.0
+        version: 21.2.19(unumeggarr2zaanfj5on3mcifu)
       '@angular/compiler-cli':
         specifier: ^21.2.0
         version: 21.2.18(@angular/compiler@21.2.18)(typescript@5.9.3)
@@ -17782,7 +17785,6 @@ snapshots:
       - terser
       - tsx
       - yaml
-    optional: true
 
   '@angular/cdk@21.2.14(@angular/common@21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.2.18(@angular/common@21.2.18(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.18(@angular/compiler@21.2.18)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)':
     dependencies:
@@ -23060,7 +23062,6 @@ snapshots:
   '@vitejs/plugin-basic-ssl@2.1.4(vite@7.3.6(@types/node@24.13.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(stylus@0.59.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
     dependencies:
       vite: 7.3.6(@types/node@24.13.2)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(stylus@0.59.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0)
-    optional: true
 
   '@vitejs/plugin-basic-ssl@2.1.4(vite@7.3.6(@types/node@24.13.2)(jiti@2.7.0)(less@4.6.7)(sass@1.97.3)(stylus@0.59.0)(terser@5.48.0)(tsx@4.23.0)(yaml@2.9.0))':
     dependencies:

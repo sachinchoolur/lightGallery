@@ -80,6 +80,8 @@ unchanged; what moved is the packaging and the framework integrations.
 - **Gesture physics**: releases run a velocity-seeded damped spring with
   momentum projection; boundary friction instead of hard clamps;
   pinch-to-close (`pinchToClose`); a `flickVelocity` setting.
+- **Instance type**: `lightgallery` exports the `LightGallery` type, for
+  typing a variable or a plugin's `core` without `ReturnType`.
 
 ### Changed
 
@@ -88,6 +90,8 @@ unchanged; what moved is the packaging and the framework integrations.
   setting; the per-plugin `*PluginStrings` settings are deprecated aliases.
 - The share plugin's Twitter target is now X: the `shareX` icon name, and
   the X mark in place of the old bird.
+- `lightgallery` declares Node 18 as its minimum in `engines`, matching
+  the other packages.
 
 ### Fixed
 
@@ -129,6 +133,10 @@ Long-standing bugs, all of them present in 2.x:
 - The `lightgallery/react`, `lightgallery/vue` and `lightgallery/angular`
   wrappers, replaced by the native packages above.
 - The share dropdown's `.lg-dropdown-overlay` element.
+- The `supportLegacyBrowser` setting and the responsive-image polyfill
+  hook behind it, along with the `CustomEvent` and `Element.matches`
+  polyfills and the old-browser scroll fallbacks. Galleries with `srcset`
+  or `<picture>` sources no longer log a warning asking for a polyfill.
 
 See the [migration guide](https://www.lightgalleryjs.com/docs/migration/)
 for the upgrade steps.

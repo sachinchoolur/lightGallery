@@ -25,7 +25,7 @@ and mirrored its DOM, are replaced by components that render natively.
 ## Vanilla JavaScript
 
 The API is unchanged. The upgrade is packaging, a handful of new settings,
-a few changed defaults and three removals:
+a few changed defaults and four removals:
 
 -   **Imports are unchanged**, `import lightGallery from 'lightgallery'`,
     plugins from `lightgallery/plugins/<name>`, CSS from
@@ -40,6 +40,12 @@ a few changed defaults and three removals:
     ES module keeps its historical `*.es5.js` file name). See
     [browser support](/docs/getting-started/#browser-support); v2 remains
     available for IE.
+-   **`supportLegacyBrowser` is gone.** It only hooked up a polyfill
+    for `srcset` and `<picture>`, which every supported browser handles
+    natively. Remove the setting from your options; TypeScript
+    reports it as an unknown property. The `CustomEvent` and
+    `Element.matches` polyfills the library used to install on the page
+    are removed with it.
 -   **The share dropdown has no overlay.** It dismisses like the
     toolbar's More options menu: on a press anywhere outside it, on
     Escape and when focus tabs out of it. The `.lg-dropdown-overlay`

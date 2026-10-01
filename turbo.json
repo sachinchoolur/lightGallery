@@ -16,7 +16,12 @@
     },
     "build:types": {
       "cache": true,
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/src/**"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/src/**",
+        "$TURBO_ROOT$/packages/headless/src/**",
+        "$TURBO_ROOT$/scripts/inline-headless-types.mjs"
+      ],
       "outputs": ["$TURBO_ROOT$/dist/types/**"]
     },
     "build:css": { "cache": true, "outputs": ["$TURBO_ROOT$/dist/css/**"] },

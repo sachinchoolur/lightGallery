@@ -43,8 +43,6 @@ import {
     VideoInfo,
 } from './types';
 
-declare let picturefill: any;
-
 // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
 // @ref - https://2ality.com/2017/04/setting-up-multi-platform-packages.html
 
@@ -962,20 +960,6 @@ export class LightGallery {
         }, this.settings.showBarsAfter);
     }
 
-    initPictureFill($img: lgQuery): void {
-        if (this.settings.supportLegacyBrowser) {
-            try {
-                picturefill({
-                    elements: [$img.get()],
-                });
-            } catch (e) {
-                console.warn(
-                    'lightGallery :- If you want srcset or picture tag to be supported for older browser please include picturefil javascript library in your document. See https://www.lightgalleryjs.com/docs/responsive-loading/',
-                );
-            }
-        }
-    }
-
     /**
      *  @desc Create image counter
      *  Ex: 1/10
@@ -1416,10 +1400,6 @@ export class LightGallery {
                 $currentSlide.prepend(markup);
             } else {
                 this.setImgMarkup(src as string, $currentSlide, index);
-                if (srcset || sources) {
-                    const $img = $currentSlide.find('.lg-object');
-                    this.initPictureFill($img);
-                }
             }
             if (poster || videoInfo) {
                 this.LGel.trigger(lGEvents.hasVideo, {
@@ -1490,10 +1470,6 @@ export class LightGallery {
                                     currentGalleryItem.sources,
                                 ),
                             );
-                        if (srcset || sources) {
-                            const $img = $currentSlide.find('.lg-object');
-                            this.initPictureFill($img);
-                        }
                     }
                     if (
                         this.getSlideType(currentGalleryItem) === 'image' ||
