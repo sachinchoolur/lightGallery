@@ -2,7 +2,7 @@
   typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, global.lightGallery = factory());
 })(this, function() {
   "use strict";/*!
- * lightgallery | 3.0.0-beta.2 | October 1st 2026
+ * lightgallery | 3.0.0-beta.3 | October 1st 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -484,7 +484,6 @@
     hideBarsDelay: 0,
     showBarsAfter: 1e4,
     slideDelay: 0,
-    supportLegacyBrowser: true,
     allowMediaOverlap: false,
     videoMaxSize: "1280-720",
     loadYouTubePoster: true,
@@ -921,32 +920,6 @@
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
   }
-  function initLgPolyfills() {
-    (function() {
-      if (typeof window.CustomEvent === "function") return false;
-      function CustomEvent2(event, params) {
-        params = params || {
-          bubbles: false,
-          cancelable: false,
-          detail: null
-        };
-        const evt = document.createEvent("CustomEvent");
-        evt.initCustomEvent(
-          event,
-          params.bubbles,
-          params.cancelable,
-          params.detail
-        );
-        return evt;
-      }
-      window.CustomEvent = CustomEvent2;
-    })();
-    (function() {
-      if (!Element.prototype.matches) {
-        Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
-      }
-    })();
-  }
   const _lgQuery = class _lgQuery2 {
     constructor(selector) {
       this.cssVenderPrefixes = [
@@ -1222,20 +1195,18 @@
     }
     scrollTop(scrollTop) {
       if (scrollTop !== void 0) {
-        document.body.scrollTop = scrollTop;
-        document.documentElement.scrollTop = scrollTop;
+        window.scrollTo(window.scrollX, scrollTop);
         return this;
       } else {
-        return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        return window.scrollY;
       }
     }
     scrollLeft(scrollLeft) {
       if (scrollLeft !== void 0) {
-        document.body.scrollLeft = scrollLeft;
-        document.documentElement.scrollLeft = scrollLeft;
+        window.scrollTo(scrollLeft, window.scrollY);
         return this;
       } else {
-        return window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0;
+        return window.scrollX;
       }
     }
     offset() {
@@ -1272,7 +1243,6 @@
   _lgQuery.eventListeners = {};
   let lgQuery = _lgQuery;
   function $LG(selector) {
-    initLgPolyfills();
     return new lgQuery(selector);
   }
   const defaultDynamicOptions = [
@@ -2221,19 +2191,6 @@
         }
       }, this.settings.showBarsAfter);
     }
-    initPictureFill($img) {
-      if (this.settings.supportLegacyBrowser) {
-        try {
-          picturefill({
-            elements: [$img.get()]
-          });
-        } catch (e) {
-          console.warn(
-            "lightGallery :- If you want srcset or picture tag to be supported for older browser please include picturefil javascript library in your document. See https://www.lightgalleryjs.com/docs/responsive-loading/"
-          );
-        }
-      }
-    }
     /**
      *  @desc Create image counter
      *  Ex: 1/10
@@ -2561,10 +2518,6 @@
           $currentSlide.prepend(markup);
         } else {
           this.setImgMarkup(src, $currentSlide, index);
-          if (srcset || sources) {
-            const $img = $currentSlide.find(".lg-object");
-            this.initPictureFill($img);
-          }
         }
         if (poster || videoInfo) {
           this.LGel.trigger(lGEvents.hasVideo, {
@@ -2611,10 +2564,6 @@
                   currentGalleryItem.sources
                 )
               );
-              if (srcset || sources) {
-                const $img = $currentSlide.find(".lg-object");
-                this.initPictureFill($img);
-              }
             }
             if (this.getSlideType(currentGalleryItem) === "image" || this.getSlideType(currentGalleryItem) === "video" && poster) {
               this.onLgObjectLoad(
