@@ -187,7 +187,8 @@
     "commitmsg": "commitlint -E HUSKY_GIT_PARAMS",
     "buildLibraries": "ts-node tools/build-libraries",
     "publishToNpm": "pnpm publish",
-    "prepack": "node scripts/assert-built.mjs dist/lightgallery.umd.js dist/lightgallery.es5.js dist/lightgallery.min.js dist/css/lightgallery.css dist/types/index.d.ts"
+    "prepack": "node scripts/assert-built.mjs dist/lightgallery.umd.js dist/lightgallery.es5.js dist/lightgallery.min.js dist/css/lightgallery.css dist/types/index.d.ts",
+    "prepublishOnly": "node scripts/assert-publish-tag.mjs"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [

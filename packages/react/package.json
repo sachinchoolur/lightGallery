@@ -181,7 +181,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src --quiet",
-    "prepack": "node ../../scripts/assert-built.mjs dist/index.js dist/index.cjs dist/index.d.ts"
+    "prepack": "node ../../scripts/assert-built.mjs dist/index.js dist/index.cjs dist/index.d.ts",
+    "prepublishOnly": "node ../../scripts/assert-publish-tag.mjs"
   },
   "dependencies": {
     "@lightgallery/headless": "workspace:*"
