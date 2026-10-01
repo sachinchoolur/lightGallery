@@ -43,7 +43,8 @@
   "peerDependencies": {
     "@angular/cdk": ">=21.0.0 <23.0.0",
     "@angular/common": ">=21.0.0 <23.0.0",
-    "@angular/core": ">=21.0.0 <23.0.0"
+    "@angular/core": ">=21.0.0 <23.0.0",
+    "@angular/platform-browser": ">=21.0.0 <23.0.0"
   },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^2.6.3",
