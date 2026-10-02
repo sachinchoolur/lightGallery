@@ -545,6 +545,17 @@ export default class Zoom {
             }
         });
 
+        this.core.outer.on('wheel.lg', (event) => {
+            if (event.deltaY < 0) {
+                this.zoomIn(Math.abs(event.deltaY) / 100);
+            } else {
+                this.zoomOut(Math.abs(event.deltaY) / 100);
+            }
+            event.preventDefault();
+
+            return;
+        });
+
         this.core.LGel.on(
             `${lGEvents.containerResize}.zoom ${lGEvents.rotateRight}.zoom ${lGEvents.rotateLeft}.zoom ${lGEvents.flipHorizontal}.zoom ${lGEvents.flipVertical}.zoom`,
             () => {
@@ -577,26 +588,7 @@ export default class Zoom {
             if (!this.isImageSlide(this.core.index)) {
                 return;
             }
-
-            let timeout = 0;
-            if (this.imageReset) {
-                this.resetImageTranslate(this.core.index);
-                timeout = 50;
-            }
-            setTimeout(() => {
-                let scale = this.scale - this.settings.scale;
-
-                if (scale < 1) {
-                    scale = 1;
-                }
-                this.beginZoom(scale);
-                this.zoomImage(
-                    scale,
-                    -this.settings.scale,
-                    true,
-                    !this.settings.infiniteZoom,
-                );
-            }, timeout);
+            this.zoomOut();
         });
 
         this.core.getElementById('lg-zoom-in').on('click.lg', () => {
@@ -649,24 +641,49 @@ export default class Zoom {
         this.zoomInProgress = false;
     }
 
-    zoomIn(): void {
+    zoomOut(zoomModifier = 1): void {
         // Allow zoom only on image
         if (!this.isImageSlide(this.core.index)) {
             return;
         }
 
-        let scale = this.scale + this.settings.scale;
+        let timeout = 0;
+        if (this.imageReset) {
+            this.resetImageTranslate(this.core.index);
+            timeout = 50;
+        }
+        setTimeout(() => {
+            let scale = this.scale - this.settings.scale * zoomModifier;
+            const scaleDiff =
+                zoomModifier === 1 ? -this.settings.scale : scale - this.scale;
+
+            if (scale < 1) {
+                scale = 1;
+            }
+            this.beginZoom(scale);
+
+            this.zoomImage(scale, scaleDiff, true, !this.settings.infiniteZoom);
+        }, timeout);
+    }
+
+    zoomIn(zoomModifier = 1): void {
+        // Allow zoom only on image
+        if (!this.isImageSlide(this.core.index)) {
+            return;
+        }
+
+        let scale = this.scale + this.settings.scale * zoomModifier;
 
         if (!this.settings.infiniteZoom) {
             scale = this.getScale(scale);
         }
+        const scaleDiff =
+            zoomModifier === 1
+                ? Math.min(this.settings.scale, scale - this.scale)
+                : scale - this.scale;
+
         this.beginZoom(scale);
-        this.zoomImage(
-            scale,
-            Math.min(this.settings.scale, scale - this.scale),
-            true,
-            !this.settings.infiniteZoom,
-        );
+        this.zoomImage(scale, scaleDiff, false, !this.settings.infiniteZoom);
     }
 
     // Reset zoom effect

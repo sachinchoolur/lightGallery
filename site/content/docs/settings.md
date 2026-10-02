@@ -39,7 +39,8 @@ please check the respective plugins settings as well.
 ## Zoom Plugin
 
 LightGallery zoom plugins enable functionalities like pinch to zoom, double-tap,
-or double click to see the actual size, zoom in, zoom out, and more.
+or double click to see the actual size, zoom in, zoom out, mouse wheel / trackpad
+zoom, and more.
 
 {{< options pluginName="Zoom" interface="ZoomSettings" variable="zoomSettings" >}}
 
