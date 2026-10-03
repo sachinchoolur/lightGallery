@@ -189,24 +189,22 @@ if ($lgInlineContainer) {
     inlineGallery.openGallery();
 }
 
-window.lightGallery(
-    document.getElementById('gallery-demo-animated-thumbnails'),
-    {
-        pager: false,
-        hash: false,
-        plugins: [
-            lgZoom,
-            lgAutoplay,
-            lgFullscreen,
-            lgPager,
-            lgRotate,
-            lgShare,
-            lgThumbnail,
-            lgVideo,
-        ],
-        ...getResponsiveThumbnailsSettings(),
-    },
-);
+// Framework demo pages (Vue and Angular image gallery) share this grid.
+lightGalleryJustified('gallery-demo-animated-thumbnails', {
+    pager: false,
+    hash: false,
+    plugins: [
+        lgZoom,
+        lgAutoplay,
+        lgFullscreen,
+        lgPager,
+        lgRotate,
+        lgShare,
+        lgThumbnail,
+        lgVideo,
+    ],
+    ...getResponsiveThumbnailsSettings(),
+});
 
 lightGalleryJustified('animated-thumbnails-wp', {
     justifiedRowHeight: 120,
