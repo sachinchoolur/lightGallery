@@ -16,7 +16,6 @@ toc: true
 ---
 
 import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
-import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
 Let's see how we can add and delete slides dynamically.
@@ -26,7 +25,7 @@ from them.
 
 First, add the delete and add buttons to the toolbar.
 
-<CodeTabs>
+<CodeTabs sandbox="update-slides">
 <Fragment slot="vanilla">
 
 **HTML**
@@ -119,6 +118,9 @@ Note:
     [`refresh()`](../../docs/methods/#refresh) after changing them, as in the
     [infinite scrolling demo](../../demos/infinite-scrolling/).
 
+<CodeTabs>
+<Fragment slot="vanilla">
+
 ```js
 function removeFirstSlide() {
     const galleryItems = lg.galleryItems.slice(1);
@@ -129,7 +131,44 @@ function removeFirstSlide() {
 }
 ```
 
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// There is no updateSlides(): a new array is the update. The gallery
+// keeps its index.
+const removeFirstSlide = () => setSlides((current) => current.slice(1));
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```js
+// There is no updateSlides(): a new array is the update. The gallery
+// keeps its index.
+const removeFirstSlide = () => {
+    slides.value = slides.value.slice(1);
+};
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+// There is no updateSlides(): a new array is the update. The gallery
+// keeps its index.
+removeFirstSlide() {
+    this.slides.update((current) => current.slice(1));
+}
+```
+
+</Fragment>
+</CodeTabs>
+
 Add a new slide when the add button is clicked.
+
+<CodeTabs>
+<Fragment slot="vanilla">
 
 ```js
 function addSlide() {
@@ -142,6 +181,44 @@ function addSlide() {
     lg.updateSlides(galleryItems, lg.index);
 }
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+const addSlide = () =>
+    setSlides((current) => [
+        ...current,
+        { src: 'img/img3.jpg', thumb: 'img/thumb3.jpg' },
+    ]);
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```js
+const addSlide = () => {
+    slides.value = [
+        ...slides.value,
+        { src: 'img/img3.jpg', thumb: 'img/thumb3.jpg' },
+    ];
+};
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+addSlide() {
+    this.slides.update((current) => [
+        ...current,
+        { src: 'img/img3.jpg', thumb: 'img/thumb3.jpg' },
+    ]);
+}
+```
+
+</Fragment>
+</CodeTabs>
 
 ##### SCSS (Optional)
 
@@ -166,4 +243,3 @@ function addSlide() {
 
 <ImageGallery id="gallery-update-slides-demo" />
 
-<DemoButtons js="https://codepen.io/sachinchoolur/pen/WNpxvXZ" react="https://stackblitz.com/edit/stackblitz-starters-spwz81" />

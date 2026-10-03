@@ -1,0 +1,3 @@
+@import 'lightgallery/css/lightgallery.css';
+/* Every mode other than lg-slide and lg-fade needs this stylesheet. */
+@import 'lightgallery/css/lg-transitions.css';

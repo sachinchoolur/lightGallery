@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>lightGallery with a Bootstrap video carousel example</title>
+    </head>
+    <body>
+        <h1>lightGallery with a Bootstrap video carousel</h1>
+
+        <!-- Every slide holds a video item: data-src is the video's URL and
+             data-poster the image shown before it plays. -->
+        <div
+            id="bootstrap-video-carousel"
+            class="carousel slide"
+            data-bs-ride="carousel"
+        >
+            <div class="carousel-indicators">
+                <button
+                    type="button"
+                    data-bs-target="#bootstrap-video-carousel"
+                    data-bs-slide-to="0"
+                    class="active"
+                    aria-current="true"
+                    aria-label="Slide 1"
+                ></button>
+                <button
+                    type="button"
+                    data-bs-target="#bootstrap-video-carousel"
+                    data-bs-slide-to="1"
+                    aria-label="Slide 2"
+                ></button>
+                <button
+                    type="button"
+                    data-bs-target="#bootstrap-video-carousel"
+                    data-bs-slide-to="2"
+                    aria-label="Slide 3"
+                ></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <a
+                        class="lg-item"
+                        data-lg-size="1280-720"
+                        data-src="https://www.youtube.com/watch?v=EIUJfXk3_3w"
+                        data-poster="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+                    >
+                        <img
+                            src="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+                            class="d-block w-100"
+                            alt="YouTube video"
+                        />
+                    </a>
+                </div>
+                <div class="carousel-item">
+                    <a
+                        class="lg-item"
+                        data-lg-size="1280-720"
+                        data-src="https://vimeo.com/112836958"
+                        data-poster="https://www.lightgalleryjs.com/images/demo/vimeo-video-poster.jpg"
+                    >
+                        <img
+                            src="https://www.lightgalleryjs.com/images/demo/vimeo-video-poster.jpg"
+                            class="d-block w-100"
+                            alt="Vimeo video"
+                        />
+                    </a>
+                </div>
+                <!-- An HTML5 video has no data-src; its sources go in
+                     data-video as JSON. -->
+                <div class="carousel-item">
+                    <a
+                        class="lg-item"
+                        data-lg-size="1280-720"
+                        data-video='{"source": [{"src": "https://www.lightgalleryjs.com/videos/video1.mp4", "type": "video/mp4"}], "attributes": {"preload": false, "controls": true}}'
+                        data-poster="https://www.lightgalleryjs.com/images/demo/html5-video-poster.jpg"
+                    >
+                        <img
+                            src="https://www.lightgalleryjs.com/images/demo/html5-video-poster.jpg"
+                            class="d-block w-100"
+                            alt="HTML5 video"
+                        />
+                    </a>
+                </div>
+            </div>
+            <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#bootstrap-video-carousel"
+                data-bs-slide="prev"
+            >
+                <span
+                    class="carousel-control-prev-icon"
+                    aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#bootstrap-video-carousel"
+                data-bs-slide="next"
+            >
+                <span
+                    class="carousel-control-next-icon"
+                    aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
+</html>

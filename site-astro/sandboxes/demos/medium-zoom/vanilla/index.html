@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>lightGallery medium zoom example</title>
+    </head>
+    <body>
+        <h1>lightGallery medium zoom</h1>
+
+        <!-- Click an image to zoom it in place. data-src is the full-size
+             image and data-lg-size its WIDTH-HEIGHT. lg-background-color
+             sets the backdrop color for one image; the default is black. -->
+        <article class="article">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
+                eleifend purus ligula, at gravida augue ullamcorper et. Cras
+                placerat eu lectus a condimentum. Nam hendrerit sem augue, ac
+                porta ante venenatis vel.
+            </p>
+            <figure
+                class="blog-images"
+                data-src="https://picsum.photos/id/15/1600/1000"
+                data-lg-size="1600-1000"
+                lg-background-color="#fff"
+            >
+                <img
+                    src="https://picsum.photos/id/15/800/500"
+                    alt="Sample photo 1"
+                />
+            </figure>
+            <p>
+                Maecenas aliquam lacinia elit, in vehicula enim pretium ut.
+                Aenean consequat urna in purus blandit rutrum efficitur at
+                tortor. Morbi aliquet lorem eget arcu rutrum commodo. Vestibulum
+                quis aliquet erat.
+            </p>
+            <figure
+                class="blog-images"
+                data-src="https://picsum.photos/id/28/1600/1000"
+                data-lg-size="1600-1000"
+                lg-background-color="rgb(28 62 74)"
+            >
+                <img
+                    src="https://picsum.photos/id/28/800/500"
+                    alt="Sample photo 2"
+                />
+            </figure>
+            <p>
+                Cras varius placerat nulla ut suscipit. Duis suscipit non mi a
+                sagittis. Vivamus in risus lacinia, rhoncus arcu imperdiet,
+                ultricies diam. Pellentesque pharetra congue nunc nec
+                sollicitudin.
+            </p>
+            <figure
+                class="blog-images"
+                data-src="https://picsum.photos/id/29/1600/1000"
+                data-lg-size="1600-1000"
+            >
+                <img
+                    src="https://picsum.photos/id/29/800/500"
+                    alt="Sample photo 3"
+                />
+            </figure>
+            <p>
+                Curabitur vitae interdum sem. Curabitur blandit massa quis elit
+                molestie dapibus. Mauris eget dolor ac sem tempor dapibus sit
+                amet et velit. Vestibulum laoreet finibus molestie.
+            </p>
+        </article>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
+</html>

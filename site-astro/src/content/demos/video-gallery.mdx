@@ -12,7 +12,6 @@ toc: true
 ---
 
 import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
-import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import Html5VideoGallery from '../../components/shortcodes/Html5VideoGallery.astro';
 import VideosGallery from '../../components/shortcodes/VideosGallery.astro';
 
@@ -29,7 +28,7 @@ import VideosGallery from '../../components/shortcodes/VideosGallery.astro';
 <p>For displaying HTML5 videos, you need to construct an object with array of video sources and types, and videos attributes objects as shown below and pass it via data-video attribute</p>
 Note - data-src should not be provided when you use html5 videos
 
-<CodeTabs>
+<CodeTabs sandbox="video-gallery">
 <Fragment slot="vanilla">
 
 ```js
@@ -116,7 +115,7 @@ slides: LgGalleryItem[] = [
 
 <VideosGallery id="gallery-videos-demo" />
 
-<CodeTabs codepen="https://codepen.io/sachinchoolur/pen/ExXxqPe" stackblitz="https://stackblitz.com/edit/stackblitz-starters-r3xycb">
+<CodeTabs>
 <Fragment slot="vanilla">
 
 **HTML**
@@ -255,23 +254,24 @@ Video.js support: include Video.js on the page, then pass `videojs: true`
 via lightGallery settings. You can also pass Video.js options via
 `videojsOptions`.
 
-```html
-<link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/video.js@8/dist/video-js.min.css"
-/>
-<script src="https://cdn.jsdelivr.net/npm/video.js@8/dist/video.min.js"></script>
-```
-
 Note - Make sure that you pass a proper JSON object in the data-video attribute.
 
 ##### Demo
 
 <Html5VideoGallery id="gallery-videojs-demo" />
 
-##### HTML structure
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/video.js@8/dist/video-js.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/video.js@8/dist/video.min.js"></script>
+
 <div id="gallery-videojs-demo">
     <a
         data-lg-size="1280-720"
@@ -290,7 +290,7 @@ Note - Make sure that you pass a proper JSON object in the data-video attribute.
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('gallery-videojs-demo'), {
@@ -301,6 +301,9 @@ lightGallery(document.getElementById('gallery-videojs-demo'), {
     },
 });
 ```
+
+</Fragment>
+</CodeTabs>
 
 The `videojs` bridge is vanilla-only. The React, Vue and Angular
 packages render HTML5 video with the native `<video>` element and leave
@@ -317,7 +320,8 @@ the video URL; lightGallery forwards query parameters to the player.
 On iOS, HTML5 videos may also need `"playsinline": true` to play inside the
 page rather than full screen.
 
-##### HTML structure
+<CodeTabs>
+<Fragment slot="vanilla">
 
 ```html
 <div id="gallery-autoplay-demo">
@@ -367,3 +371,94 @@ page rather than full screen.
     <!-- more items -->
 </div>
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// React spells the video attribute playsInline.
+const items = [
+    {
+        // YouTube: mute=0 is forwarded to the player
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w&mute=0',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        lgSize: '1280-720',
+    },
+    {
+        // Vimeo
+        src: '//vimeo.com/112836958?muted=false',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        lgSize: '1280-720',
+    },
+    {
+        // HTML5 video
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { playsInline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        lgSize: '1280-720',
+    },
+];
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```ts
+const items: LgGalleryItem[] = [
+    {
+        // YouTube: mute=0 is forwarded to the player
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w&mute=0',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        lgSize: '1280-720',
+    },
+    {
+        // Vimeo
+        src: '//vimeo.com/112836958?muted=false',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        lgSize: '1280-720',
+    },
+    {
+        // HTML5 video
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { playsinline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        lgSize: '1280-720',
+    },
+];
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+items: LgGalleryItem[] = [
+    {
+        // YouTube: mute=0 is forwarded to the player
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w&mute=0',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        lgSize: '1280-720',
+    },
+    {
+        // Vimeo
+        src: '//vimeo.com/112836958?muted=false',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        lgSize: '1280-720',
+    },
+    {
+        // HTML5 video
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { playsinline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        lgSize: '1280-720',
+    },
+];
+```
+
+</Fragment>
+</CodeTabs>

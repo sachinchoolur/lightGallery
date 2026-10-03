@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>lightGallery with a Bootstrap image gallery example</title>
+    </head>
+    <body>
+        <h1>lightGallery with a Bootstrap image gallery</h1>
+
+        <!-- A Bootstrap grid of three columns. Every .lg-item links to its
+             full-size image. data-lg-size is that image's WIDTH-HEIGHT; it
+             lets the image open from its thumbnail. -->
+        <div class="row g-2" id="bootstrap-image-gallery">
+            <div class="col-4">
+                <a
+                    class="lg-item d-block mb-2"
+                    href="https://picsum.photos/id/10/1600/1067"
+                    data-lg-size="1600-1067"
+                >
+                    <img
+                        src="https://picsum.photos/id/10/480/320"
+                        class="d-block w-100"
+                        alt="Sample photo 1"
+                    />
+                </a>
+                <a
+                    class="lg-item d-block"
+                    href="https://picsum.photos/id/11/1200/1600"
+                    data-lg-size="1200-1600"
+                >
+                    <img
+                        src="https://picsum.photos/id/11/480/640"
+                        class="d-block w-100"
+                        alt="Sample photo 2"
+                    />
+                </a>
+            </div>
+            <div class="col-4">
+                <a
+                    class="lg-item d-block mb-2"
+                    href="https://picsum.photos/id/15/1200/1600"
+                    data-lg-size="1200-1600"
+                >
+                    <img
+                        src="https://picsum.photos/id/15/480/640"
+                        class="d-block w-100"
+                        alt="Sample photo 3"
+                    />
+                </a>
+                <a
+                    class="lg-item d-block"
+                    href="https://picsum.photos/id/16/1600/1067"
+                    data-lg-size="1600-1067"
+                >
+                    <img
+                        src="https://picsum.photos/id/16/480/320"
+                        class="d-block w-100"
+                        alt="Sample photo 4"
+                    />
+                </a>
+            </div>
+            <div class="col-4">
+                <a
+                    class="lg-item d-block mb-2"
+                    href="https://picsum.photos/id/28/1200/1200"
+                    data-lg-size="1200-1200"
+                >
+                    <img
+                        src="https://picsum.photos/id/28/480/480"
+                        class="d-block w-100"
+                        alt="Sample photo 5"
+                    />
+                </a>
+                <a
+                    class="lg-item d-block"
+                    href="https://picsum.photos/id/29/1200/1200"
+                    data-lg-size="1200-1200"
+                >
+                    <img
+                        src="https://picsum.photos/id/29/480/480"
+                        class="d-block w-100"
+                        alt="Sample photo 6"
+                    />
+                </a>
+            </div>
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
+</html>

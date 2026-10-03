@@ -58,8 +58,14 @@
   }
 }
 
-.code-tabs-panel[data-hidden] {
+.code-tabs-panel[data-hidden],
+.code-tabs-sandbox[data-hidden] {
   display: none;
+}
+
+/* One link per framework, a single one visible: no sibling spacing. */
+.code-tabs-sandbox + .code-tabs-sandbox {
+  margin-left: 0;
 }
 
 .code-tabs-panel {
@@ -93,6 +99,14 @@
     }
 
     .code-tabs-panel[data-framework='#{$fw}'] {
+      display: block;
+    }
+
+    .code-tabs-sandbox {
+      display: none;
+    }
+
+    .code-tabs-sandbox[data-framework='#{$fw}'] {
       display: block;
     }
 

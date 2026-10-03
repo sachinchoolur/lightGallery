@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>lightGallery captions example</title>
+    </head>
+    <body>
+        <h1>lightGallery captions</h1>
+
+        <!-- data-sub-html is the caption: either the HTML itself, or the id
+             or class of an element on the page that holds it. -->
+        <div id="gallery" class="gallery">
+            <a
+                href="https://picsum.photos/id/10/1600/1067"
+                data-lg-size="1600-1067"
+                data-sub-html="<h4>Forest and sea</h4><p>Evergreen treetops in front of a calm blue bay.</p>"
+            >
+                <img
+                    src="https://picsum.photos/id/10/360/240"
+                    alt="Forest and sea"
+                />
+            </a>
+            <a
+                href="https://picsum.photos/id/11/1600/1067"
+                data-lg-size="1600-1067"
+                data-sub-html="#caption-2"
+            >
+                <img
+                    src="https://picsum.photos/id/11/360/240"
+                    alt="Misty valley"
+                />
+            </a>
+            <a
+                href="https://picsum.photos/id/15/1600/1067"
+                data-lg-size="1600-1067"
+                data-sub-html=".caption-3"
+            >
+                <img
+                    src="https://picsum.photos/id/15/360/240"
+                    alt="Waterfall"
+                />
+            </a>
+            <a
+                href="https://picsum.photos/id/16/1600/1067"
+                data-lg-size="1600-1067"
+                data-sub-html="<h4>Rocky shore</h4><p>Driftwood and boulders at the edge of clear water.</p>"
+            >
+                <img
+                    src="https://picsum.photos/id/16/360/240"
+                    alt="Rocky shore"
+                />
+            </a>
+        </div>
+
+        <div id="caption-2" hidden>
+            <h4>Misty valley</h4>
+            <p>A stream winds through a meadow under a grey sky.</p>
+        </div>
+        <div class="caption-3" hidden>
+            <h4>Waterfall</h4>
+            <p>A narrow waterfall drops into a rocky gorge.</p>
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
+</html>

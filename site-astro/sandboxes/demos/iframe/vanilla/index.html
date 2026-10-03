@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>lightGallery iframe example</title>
+    </head>
+    <body>
+        <h1>lightGallery iframe</h1>
+
+        <!-- data-iframe shows the page at data-src in an iframe. -->
+        <div class="gallery">
+            <button
+                type="button"
+                id="open-website"
+                data-iframe="true"
+                data-src="https://example.com/"
+                data-iframe-title="Website"
+            >
+                Open website
+            </button>
+            <button
+                type="button"
+                id="open-map"
+                data-iframe="true"
+                data-src="https://www.openstreetmap.org/export/embed.html?bbox=-5.2884,35.1588,-5.2484,35.1788"
+                data-iframe-title="Map"
+            >
+                Open map
+            </button>
+            <button
+                type="button"
+                id="open-pdf"
+                data-iframe="true"
+                data-src="https://www.lightgalleryjs.com/pdf/sample.pdf"
+                data-iframe-title="PDF file"
+            >
+                Open PDF file
+            </button>
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
+</html>

@@ -1,0 +1,15 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'lightgallery/css/lightgallery.css';
+@import 'lightgallery/css/lg-thumbnail.css';
+
+/* This file loads after demo.css, so Bootstrap would set the size of the
+   heading. Keep the one from demo.css. */
+h1 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+/* Optional: the size of the carousel on the page. */
+.carousel {
+    max-width: 960px;
+}

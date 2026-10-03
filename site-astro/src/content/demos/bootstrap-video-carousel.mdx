@@ -13,6 +13,7 @@ weight: 25
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
 
 <DemoRuntime />
@@ -85,7 +86,10 @@ import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
   </button>
 </div>
 
-##### HTML
+<CodeTabs sandbox="bootstrap-video-carousel">
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div
@@ -164,7 +168,7 @@ import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 const carouselEl = document.getElementById('bootstrap-video-carousel');
@@ -181,3 +185,170 @@ lightGallery(carouselEl.querySelector('.carousel-inner'), {
     selector: '.lg-item',
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { useEffect, useRef } from 'react';
+import Carousel from 'bootstrap/js/dist/carousel';
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Video from '@lightgallery/react/plugins/video';
+
+const carouselRef = useRef<HTMLDivElement>(null);
+
+// The Bootstrap 5 carousel
+useEffect(() => {
+    const carousel = new Carousel(carouselRef.current!, {
+        interval: 2000,
+        wrap: false,
+        // Start cycling right away, as data-bs-ride="carousel" does
+        ride: 'carousel',
+    });
+    return () => {
+        // dispose() leaves the cycle timer running, so stop it first
+        carousel.pause();
+        carousel.dispose();
+    };
+}, []);
+
+// One gallery over the carousel, every slide holds a video item
+<LightGallery plugins={[Video]}>
+    <div
+        id="bootstrap-video-carousel"
+        className="carousel slide"
+        ref={carouselRef}
+    >
+        <div className="carousel-inner">
+            {items.map((item, index) => (
+                <div
+                    key={item.poster}
+                    className={
+                        index === 0 ? 'carousel-item active' : 'carousel-item'
+                    }
+                >
+                    <LightGalleryItem item={item}>
+                        <img
+                            src={item.poster}
+                            className="d-block w-100"
+                            alt={item.alt}
+                        />
+                    </LightGalleryItem>
+                </div>
+            ))}
+        </div>
+        {/* The indicators and the previous and next buttons, as in the
+            Bootstrap markup */}
+    </div>
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import Carousel from 'bootstrap/js/dist/carousel';
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Video from '@lightgallery/vue/plugins/video';
+
+const carouselEl = ref<HTMLElement | null>(null);
+let carousel: Carousel | undefined;
+
+// The Bootstrap 5 carousel
+onMounted(() => {
+    carousel = new Carousel(carouselEl.value!, {
+        interval: 2000,
+        wrap: false,
+        // Start cycling right away, as data-bs-ride="carousel" does
+        ride: 'carousel',
+    });
+});
+onBeforeUnmount(() => {
+    // dispose() leaves the cycle timer running, so stop it first
+    carousel?.pause();
+    carousel?.dispose();
+});
+</script>
+
+<template>
+    <!-- One gallery over the carousel, every slide holds a video item -->
+    <LightGallery :plugins="[Video]">
+        <div
+            id="bootstrap-video-carousel"
+            ref="carouselEl"
+            class="carousel slide"
+        >
+            <div class="carousel-inner">
+                <div
+                    v-for="(item, index) of items"
+                    :key="item.poster"
+                    class="carousel-item"
+                    :class="{ active: index === 0 }"
+                >
+                    <LgItem :item="item">
+                        <img :src="item.poster" class="d-block w-100" :alt="item.alt" />
+                    </LgItem>
+                </div>
+            </div>
+            <!-- The indicators and the previous and next buttons, as in
+                 the Bootstrap markup -->
+        </div>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+**Template**
+
+```html
+<!-- One gallery over the carousel, every slide holds a video item -->
+<lg-gallery [features]="features">
+    <div #carousel id="bootstrap-video-carousel" class="carousel slide">
+        <div class="carousel-inner">
+            @for (item of items; track item.poster) {
+                <div class="carousel-item" [class.active]="$first">
+                    <a [lgGalleryItem]="item">
+                        <img [src]="item.poster" class="d-block w-100" [alt]="item.alt" />
+                    </a>
+                </div>
+            }
+        </div>
+        <!-- The indicators and the previous and next buttons, as in the
+             Bootstrap markup -->
+    </div>
+</lg-gallery>
+```
+
+**Component class**
+
+```ts
+// import Carousel from 'bootstrap/js/dist/carousel';
+features = [withVideo()];
+carouselEl = viewChild.required<ElementRef<HTMLElement>>('carousel');
+
+constructor() {
+    let carousel: Carousel | undefined;
+
+    // The Bootstrap 5 carousel
+    afterNextRender(() => {
+        carousel = new Carousel(this.carouselEl().nativeElement, {
+            interval: 2000,
+            wrap: false,
+            // Start cycling right away, as data-bs-ride="carousel" does
+            ride: 'carousel',
+        });
+    });
+    inject(DestroyRef).onDestroy(() => {
+        // dispose() leaves the cycle timer running, so stop it first
+        carousel?.pause();
+        carousel?.dispose();
+    });
+}
+```
+
+</Fragment>
+</CodeTabs>

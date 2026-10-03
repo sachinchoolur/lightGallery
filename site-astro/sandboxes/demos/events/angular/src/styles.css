@@ -1,0 +1,6 @@
+@import 'lightgallery/css/lightgallery.css';
+
+/* Optional: fade from one backdrop color to the next. */
+.lg-events-demo-outer .lg-backdrop {
+    transition: opacity 333ms ease-in 0s, background-color 333ms ease-in 0s;
+}

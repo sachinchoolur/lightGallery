@@ -18,9 +18,13 @@
  *   </CodeTabs>
  *
  * `codepen` and `stackblitz` put the page's demo links on the tab row,
- * where the setup for a demo starts.
+ * where the setup for a demo starts. `sandbox` names a folder under
+ * `site-astro/sandboxes/demos/` instead: the row then carries one
+ * "Open in StackBlitz" link that follows the selected framework.
  */
+import { sandboxFor, sandboxPath } from '../../lib/sandboxes';
 import DemoButtons from './DemoButtons.astro';
+import SandboxButton from './SandboxButton.astro';
 
 interface Props {
     /** Overrides the content-derived id. */
@@ -31,6 +35,8 @@ interface Props {
     codepen?: string;
     /** Live demo on StackBlitz, shown beside the tabs. */
     stackblitz?: string;
+    /** Runnable example for each framework, opened on StackBlitz. */
+    sandbox?: string;
 }
 
 const FRAMEWORKS = [
@@ -40,8 +46,13 @@ const FRAMEWORKS = [
     { key: 'angular', label: 'Angular' },
 ] as const;
 
-const { id: idProp, label = 'Framework', codepen, stackblitz } = Astro.props;
-const withDemos = Boolean(codepen || stackblitz);
+const {
+    id: idProp,
+    label = 'Framework',
+    codepen,
+    stackblitz,
+    sandbox,
+} = Astro.props;
 
 const panels = await Promise.all(
     FRAMEWORKS.filter((f) => Astro.slots.has(f.key)).map(async (f) => ({
@@ -68,6 +79,15 @@ const id =
 
 /** First available tab is the default; the script may switch it client-side. */
 const initial = panels[0]?.key;
+
+const sandboxLinks = panels.flatMap((panel) => {
+    const found = sandboxFor(sandbox, panel.key);
+    return found ? [found] : [];
+});
+if (sandbox && sandboxLinks.length === 0) {
+    throw new Error(`CodeTabs: no sandbox named "${sandbox}".`);
+}
+const withDemos = Boolean(codepen || stackblitz || sandboxLinks.length);
 ---
 
 <div class:list={['code-tabs', { 'code-tabs-with-demos': withDemos }]} data-code-tabs>
@@ -89,7 +109,22 @@ const initial = panels[0]?.key;
             ))
         }
     </div>
-    {withDemos && <DemoButtons js={codepen} react={stackblitz} />}
+    {(codepen || stackblitz) && <DemoButtons js={codepen} react={stackblitz} />}
+    {
+        sandboxLinks.length > 0 && (
+            <div class="demo-btns-container">
+                {sandboxLinks.map((link) => (
+                    <div
+                        class="demo-btn demo-btn-stackblits code-tabs-sandbox"
+                        data-framework={link.framework}
+                        data-hidden={link.framework === initial ? undefined : ''}
+                    >
+                        <SandboxButton href={sandboxPath(link)} />
+                    </div>
+                ))}
+            </div>
+        )
+    }
     {
         panels.map((f) => (
             <div
@@ -136,6 +171,15 @@ const initial = panels[0]?.key;
                     // stylesheet could not override it.
                     if (panel) panel.toggleAttribute('data-hidden', !on);
                 });
+                // The sandbox link follows the tab.
+                group
+                    .querySelectorAll<HTMLElement>('.code-tabs-sandbox')
+                    .forEach((link) =>
+                        link.toggleAttribute(
+                            'data-hidden',
+                            link.dataset.framework !== wanted.dataset.framework,
+                        ),
+                    );
             });
     }
 

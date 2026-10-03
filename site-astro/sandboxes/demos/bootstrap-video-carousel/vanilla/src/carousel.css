@@ -1,0 +1,9 @@
+/* Optional: the size of the carousel on the page. */
+.carousel {
+    max-width: 960px;
+}
+
+/* The video items are links without an href, so they need the cursor. */
+.lg-item {
+    cursor: pointer;
+}

@@ -14,7 +14,6 @@ toc: true
 ---
 
 import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
-import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
 You need to know the original image size upfront and provide it via data-lg-size attribute as data-lg-size="1920-1280"
@@ -35,7 +34,7 @@ shows grows at a uniform scale and the rest of the photo is revealed around it, 
 thumbnails the built-in flight already lands exactly keep it. A thumbnail file that is itself a crop of the photo is taken as
 a centred crop.
 
-<CodeTabs>
+<CodeTabs sandbox="zoom-from-origin">
 <Fragment slot="vanilla">
 
 ```js
@@ -103,7 +102,7 @@ import OriginCrop from '@lightgallery/vue/plugins/originCrop';
 
 <ImageGallery id="gallery-zoom-from-origin-demo" photos="stone" />
 
-<CodeTabs codepen="https://codepen.io/sachinchoolur/pen/GRWZbRv" stackblitz="https://stackblitz.com/edit/stackblitz-starters-cva7eb">
+<CodeTabs>
 <Fragment slot="vanilla">
 
 **HTML**

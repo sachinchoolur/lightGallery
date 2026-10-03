@@ -1,0 +1,83 @@
+---
+/**
+ * Opens a sandbox on StackBlitz. The project is posted as a form, so
+ * nothing is stored there until the reader saves it; the page submits
+ * itself, and the button is the fallback when scripts are off.
+ */
+import { sandboxes, type Sandbox } from '../../../lib/sandboxes';
+
+export function getStaticPaths() {
+    return sandboxes.map((sandbox) => ({
+        params: { demo: sandbox.demo, framework: sandbox.framework },
+        props: { sandbox },
+    }));
+}
+
+interface Props {
+    sandbox: Sandbox;
+}
+
+const { sandbox } = Astro.props;
+const action = `https://stackblitz.com/run?file=${encodeURIComponent(sandbox.open)}`;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="noindex, nofollow" />
+        <title>{sandbox.title}</title>
+        <style>
+            body {
+                align-items: center;
+                color: #1f2933;
+                display: flex;
+                font-family: system-ui, sans-serif;
+                justify-content: center;
+                margin: 0;
+                min-height: 100vh;
+                text-align: center;
+            }
+            button {
+                background: #0d0a0a;
+                border: 0;
+                border-radius: 6px;
+                color: #fff;
+                cursor: pointer;
+                font: inherit;
+                padding: 10px 18px;
+            }
+        </style>
+    </head>
+    <body>
+        <form id="sandbox" method="post" action={action}>
+            <input type="hidden" name="project[title]" value={sandbox.title} />
+            <input
+                type="hidden"
+                name="project[description]"
+                value={`${sandbox.title}, from the lightGallery docs.`}
+            />
+            <input type="hidden" name="project[template]" value="node" />
+            {
+                Object.entries(sandbox.files).map(([path, content]) => (
+                    <input
+                        type="hidden"
+                        name={`project[files][${path}]`}
+                        value={content}
+                    />
+                ))
+            }
+            <p>Opening the {sandbox.label} example on StackBlitz.</p>
+            <button type="submit">Open in StackBlitz</button>
+        </form>
+        <script is:inline>
+            // Coming back with the browser's Back button must not send the
+            // reader straight to StackBlitz again.
+            const [navigation] = performance.getEntriesByType('navigation');
+            if (navigation?.type !== 'back_forward') {
+                document.getElementById('sandbox').submit();
+            }
+        </script>
+    </body>
+</html>

@@ -16,7 +16,7 @@ toc: true
 import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 
 
-<CodeTabs>
+<CodeTabs sandbox="html-markup">
 <Fragment slot="vanilla">
 
 **HTML**
@@ -83,7 +83,10 @@ lightGallery(document.getElementById('anchor-tag'));
 
 ---
 
-##### HTML Structure
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <ul id="ul-li">
@@ -97,15 +100,73 @@ lightGallery(document.getElementById('anchor-tag'));
 </ul>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('ul-li'));
 ```
 
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// `as` sets the element a trigger renders; the default is a link.
+<LightGallery>
+    <ul>
+        {items.map((item) => (
+            <LightGalleryItem key={item.src} as="li" item={item}>
+                <img src={item.thumb} alt={item.alt} />
+            </LightGalleryItem>
+        ))}
+    </ul>
+</LightGallery>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<!-- LgItem renders the link; put it inside the markup you need. -->
+<LightGallery>
+    <ul>
+        <li v-for="item of items" :key="item.src">
+            <LgItem :item="item">
+                <img :src="item.thumb" :alt="item.alt" />
+            </LgItem>
+        </li>
+    </ul>
+</LightGallery>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<!-- The directive works on any element. -->
+<lg-gallery>
+    <ul>
+        @for (item of items; track item.src) {
+            <li [lgGalleryItem]="item">
+                <img [src]="item.thumb" [alt]="item.alt" />
+            </li>
+        }
+    </ul>
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
+
 ---
 
-##### HTML Structure
+The `selector` setting belongs to the vanilla package. In React, Vue and
+Angular a trigger is the element you mark as one, so other markup can sit
+next to the triggers and there is nothing to select.
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="selector1">
@@ -120,7 +181,7 @@ lightGallery(document.getElementById('ul-li'));
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('selector1'), {
@@ -128,18 +189,98 @@ lightGallery(document.getElementById('selector1'), {
 });
 ```
 
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+<LightGallery>
+    <h2>Gallery title</h2>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} as="div" className="item" item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<LightGallery>
+    <h2>Gallery title</h2>
+    <LgItem v-for="item of items" :key="item.src" class="item" :item="item">
+        <img :src="item.thumb" :alt="item.alt" />
+    </LgItem>
+</LightGallery>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery>
+    <h2>Gallery title</h2>
+    @for (item of items; track item.src) {
+        <div class="item" [lgGalleryItem]="item">
+            <img [src]="item.thumb" [alt]="item.alt" />
+        </div>
+    }
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
+
 ---
 
-##### HTML Structure
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <a id="selector2" href="img/img1.jpg"> Click to open </a>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('selector2'), {
     selector: 'this',
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+<LightGallery>
+    <LightGalleryItem item={{ src: 'img/img1.jpg' }} href="img/img1.jpg">
+        Click to open
+    </LightGalleryItem>
+</LightGallery>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<LightGallery>
+    <LgItem :item="{ src: 'img/img1.jpg' }">Click to open</LgItem>
+</LightGallery>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<lg-gallery>
+    <a href="img/img1.jpg" [lgGalleryItem]="{ src: 'img/img1.jpg' }">
+        Click to open
+    </a>
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>

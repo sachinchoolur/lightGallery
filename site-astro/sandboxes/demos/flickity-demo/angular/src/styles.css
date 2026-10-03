@@ -1,0 +1,18 @@
+@import 'flickity/css/flickity.css';
+@import 'lightgallery/css/lightgallery.css';
+@import 'lightgallery/css/lg-thumbnail.css';
+@import 'lightgallery/css/lg-zoom.css';
+
+/* Flickity reads the size of each cell when it starts, so the images get
+   their size here instead of from the loaded file. */
+.carousel-cell {
+    margin-right: 10px;
+}
+
+.carousel-cell img {
+    display: block;
+    width: 360px;
+    max-width: 80vw;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+}

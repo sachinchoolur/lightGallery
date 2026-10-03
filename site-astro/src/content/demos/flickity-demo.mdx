@@ -14,7 +14,7 @@ weight: 26
 toc: true
 ---
 
-import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import OwlCarouselGallery from '../../components/shortcodes/OwlCarouselGallery.astro';
 
 
@@ -22,9 +22,15 @@ import OwlCarouselGallery from '../../components/shortcodes/OwlCarouselGallery.a
 #### Demo
 
 <OwlCarouselGallery id="flickity-carousel-gallery-demo" />
-<DemoButtons js="https://codepen.io/light-gallery/pen/OJdBLLX" />
 
-##### HTML Structure
+Letting go of a mouse drag also clicks the cell under the pointer, so each
+example stops that click before it reaches the cell and only a plain click
+opens the gallery.
+
+<CodeTabs sandbox="flickity-demo">
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="flickity-carousel-gallery-demo" class="main-carousel">
@@ -38,29 +44,244 @@ import OwlCarouselGallery from '../../components/shortcodes/OwlCarouselGallery.a
 </div>
 ```
 
-##### Javascript
+**JavaScript**
 
 ```js
-var $flickityLG = document.querySelector('#flickity-carousel-gallery-demo');
-if ($flickityLG) {
-    var flkty = new Flickity($flickityLG, {
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+import Flickity from 'flickity';
+
+const carousel = document.getElementById('flickity-carousel-gallery-demo');
+
+// True from the start of a drag until the click that ends it
+let dragged = false;
+
+new Flickity(carousel, {
+    cellAlign: 'center',
+    pageDots: false,
+    contain: true,
+    autoPlay: true,
+    on: {
+        // Flickity moves the cells into its own slider element. Create
+        // the gallery on that element once the carousel is ready
+        ready() {
+            lightGallery(document.querySelector('.flickity-slider'), {
+                plugins: [lgZoom, lgThumbnail],
+                selector: '.carousel-cell',
+            });
+        },
+        pointerDown() {
+            dragged = false;
+        },
+        dragStart() {
+            dragged = true;
+        },
+    },
+});
+
+// Stop the click that ends a drag before it reaches the cell
+carousel.addEventListener(
+    'click',
+    (event) => {
+        if (dragged) {
+            dragged = false;
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    },
+    true,
+);
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { useEffect, useRef, type MouseEvent } from 'react';
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Zoom from '@lightgallery/react/plugins/zoom';
+import Flickity from 'flickity';
+
+const carousel = useRef<HTMLDivElement>(null);
+// True from the start of a drag until the click that ends it
+const dragged = useRef(false);
+
+// Create the carousel once its cells are in the page
+useEffect(() => {
+    const flickity = new Flickity(carousel.current!, {
         cellAlign: 'center',
         pageDots: false,
         contain: true,
         autoPlay: true,
         on: {
-            ready: function () {
-                const container = document.querySelector('.flickity-slider');
-                window.lightGallery(container, {
-                    plugins: [lgZoom, lgThumbnail],
-                    selector: '.carousel-cell',
-                });
+            pointerDown() {
+                dragged.current = false;
+            },
+            dragStart() {
+                dragged.current = true;
             },
         },
     });
-}
+    return () => flickity.destroy();
+}, []);
 
+// Stop the click that ends a drag before it reaches the cell
+const stopDragClick = (event: MouseEvent) => {
+    if (dragged.current) {
+        dragged.current = false;
+        event.preventDefault();
+        event.stopPropagation();
+    }
+};
+
+<LightGallery plugins={[Zoom, Thumbnail]}>
+    <div ref={carousel} className="main-carousel" onClickCapture={stopDragClick}>
+        {items.map((item) => (
+            <LightGalleryItem
+                key={item.src}
+                className="carousel-cell"
+                item={item}
+                href={item.src}
+            >
+                <img src={item.thumb} alt={item.alt} />
+            </LightGalleryItem>
+        ))}
+    </div>
+</LightGallery>;
 ```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue';
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+import Flickity from 'flickity';
+
+const plugins = [Zoom, Thumbnail];
+
+const carousel = useTemplateRef('carousel');
+let flickity: Flickity | undefined;
+// True from the start of a drag until the click that ends it
+let dragged = false;
+
+// Create the carousel once its cells are in the page
+onMounted(() => {
+    flickity = new Flickity(carousel.value!, {
+        cellAlign: 'center',
+        pageDots: false,
+        contain: true,
+        autoPlay: true,
+        on: {
+            pointerDown() {
+                dragged = false;
+            },
+            dragStart() {
+                dragged = true;
+            },
+        },
+    });
+});
+onBeforeUnmount(() => flickity?.destroy());
+
+// Stop the click that ends a drag before it reaches the cell
+function stopDragClick(event: MouseEvent) {
+    if (dragged) {
+        dragged = false;
+        event.preventDefault();
+        event.stopPropagation();
+    }
+}
+</script>
+
+<template>
+    <LightGallery :plugins="plugins">
+        <div ref="carousel" class="main-carousel" @click.capture="stopDragClick">
+            <LgItem
+                v-for="item of items"
+                :key="item.src"
+                class="carousel-cell"
+                :item="item"
+            >
+                <img :src="item.thumb" :alt="item.alt" />
+            </LgItem>
+        </div>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+**Template**
+
+```html
+<lg-gallery [features]="features">
+    <div #carousel class="main-carousel">
+        @for (item of items; track item.src) {
+            <a class="carousel-cell" [href]="item.src" [lgGalleryItem]="item">
+                <img [src]="item.thumb" [alt]="item.alt" />
+            </a>
+        }
+    </div>
+</lg-gallery>
+```
+
+**Component class**
+
+```ts
+// Flickity is imported from 'flickity'
+features = [withZoom(), withThumbnail()];
+carousel = viewChild.required<ElementRef<HTMLElement>>('carousel');
+
+constructor() {
+    let flickity: Flickity | undefined;
+    // True from the start of a drag until the click that ends it
+    let dragged = false;
+
+    // Create the carousel once its cells are in the page
+    afterNextRender(() => {
+        const element = this.carousel().nativeElement;
+
+        flickity = new Flickity(element, {
+            cellAlign: 'center',
+            pageDots: false,
+            contain: true,
+            autoPlay: true,
+            on: {
+                pointerDown() {
+                    dragged = false;
+                },
+                dragStart() {
+                    dragged = true;
+                },
+            },
+        });
+
+        // Stop the click that ends a drag before it reaches the cell
+        element.addEventListener(
+            'click',
+            (event) => {
+                if (dragged) {
+                    dragged = false;
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            },
+            true,
+        );
+    });
+    inject(DestroyRef).onDestroy(() => flickity?.destroy());
+}
+```
+
+</Fragment>
+</CodeTabs>
 
 ##### SCSS (Optional)
 

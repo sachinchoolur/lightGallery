@@ -13,8 +13,8 @@ weight: 25
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
-import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import { photos } from '../../lib/photos';
 
 <DemoRuntime />
@@ -36,61 +36,178 @@ import { photos } from '../../lib/photos';
     </div>
 </div>
 
-<DemoButtons js="https://codepen.io/sachinchoolur/pen/bGQGMXb" />
+<CodeTabs sandbox="swiper">
+<Fragment slot="vanilla">
 
-##### HTML Structure
+**HTML**
 
 ```html
 <div class="swiper">
-  <div class="swiper-wrapper"  id="lg-swipper">
-    <a
-        data-lg-size="1600-1200"
-        href="img/img1.jpg"
-        class="swiper-slide"
-    >
-        <img src="img/thumb1.jpg" />
-    </a>
-    <a
-        data-lg-size="1600-1200"
-        href="img/img2.jpg"
-        class="swiper-slide"
-    >
-        <img src="img/thumb2.jpg" />
-    </a>
-    <!-- more items -->
-  </div>
+    <div class="swiper-wrapper" id="lg-swiper">
+        <a class="swiper-slide" href="img/img1.jpg" data-lg-size="1600-1200">
+            <img src="img/thumb1.jpg" />
+        </a>
+        <a class="swiper-slide" href="img/img2.jpg" data-lg-size="1600-1200">
+            <img src="img/thumb2.jpg" />
+        </a>
+        <!-- more items -->
+    </div>
 
-  <!-- If we need navigation buttons -->
-  <div class="swiper-button-prev"></div>
-  <div class="swiper-button-next"></div>
+    <!-- If we need navigation buttons -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
-let $lgSwiper = document.getElementById('lg-swipper');
-const swiper = new Swiper('.swiper', {
+import Swiper from 'swiper';
+import { Navigation } from 'swiper/modules';
+import lightGallery from 'lightgallery';
+
+const slides = document.getElementById('lg-swiper');
+
+new Swiper('.swiper', {
     // other parameters
+    modules: [Navigation],
     navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
     },
-
-    // Init lightGallery once Swiper is initialized
     on: {
-        init: function () {
-            const lg = lightGallery($lgSwiper);
+        // Create the gallery once the carousel is ready
+        init(swiper) {
+            const gallery = lightGallery(slides);
 
-            // Before closing lightGallery, make sure swiper slide
-            // is aligned with the lightGallery active slide
-            $lgSwiper.addEventListener('lgBeforeClose', () => {
-                swiper.slideTo(lg.index, 0)
+            // Before the gallery closes, move the carousel to the slide
+            // the gallery is showing, so the image closes into its slide
+            slides.addEventListener('lgBeforeClose', () => {
+                swiper.slideTo(gallery.index, 0);
             });
         },
-    }
+    },
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { useRef } from 'react';
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import { Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide, type SwiperClass } from 'swiper/react';
+
+const swiper = useRef<SwiperClass | null>(null);
+
+// When the gallery goes to another slide, move the carousel to the same
+// slide, so the image closes into its slide
+<LightGallery onBeforeSlide={({ index }) => swiper.current?.slideTo(index, 0)}>
+    <Swiper
+        modules={[Navigation]}
+        navigation
+        onSwiper={(instance) => {
+            swiper.current = instance;
+        }}
+    >
+        {items.map((item) => (
+            <SwiperSlide key={item.src}>
+                <LightGalleryItem item={item} href={item.src}>
+                    <img src={item.thumb} alt={item.alt} />
+                </LightGalleryItem>
+            </SwiperSlide>
+        ))}
+    </Swiper>
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup lang="ts">
+import { LightGallery, LgItem, type SlideEventDetail } from '@lightgallery/vue';
+import { Navigation } from 'swiper/modules';
+import type { Swiper as SwiperClass } from 'swiper/types';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+
+const modules = [Navigation];
+
+let swiper: SwiperClass | undefined;
+
+function setSwiper(instance: SwiperClass) {
+    swiper = instance;
+}
+
+// When the gallery goes to another slide, move the carousel to the same
+// slide, so the image closes into its slide
+function followGallery({ index }: SlideEventDetail) {
+    swiper?.slideTo(index, 0);
+}
+</script>
+
+<template>
+    <LightGallery @before-slide="followGallery">
+        <Swiper :modules="modules" navigation @swiper="setSwiper">
+            <SwiperSlide v-for="item of items" :key="item.src">
+                <LgItem :item="item">
+                    <img :src="item.thumb" :alt="item.alt" />
+                </LgItem>
+            </SwiperSlide>
+        </Swiper>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+**Template**
+
+```html
+<!-- When the gallery goes to another slide, move the carousel to the same
+     slide, so the image closes into its slide -->
+<lg-gallery (beforeSlide)="swiper?.slideTo($event.index, 0)">
+    <div #carousel class="swiper">
+        <div class="swiper-wrapper">
+            @for (item of items; track item.src) {
+                <a class="swiper-slide" [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </div>
+
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+</lg-gallery>
+```
+
+**Component class**
+
+```ts
+// Swiper and Navigation are imported from 'swiper' and 'swiper/modules'
+swiper?: Swiper;
+carousel = viewChild.required<ElementRef<HTMLElement>>('carousel');
+
+constructor() {
+    // Create the carousel once its slides are in the page
+    afterNextRender(() => {
+        this.swiper = new Swiper(this.carousel().nativeElement, {
+            modules: [Navigation],
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    });
+    inject(DestroyRef).onDestroy(() => this.swiper?.destroy());
+}
+```
+
+</Fragment>
+</CodeTabs>
 
 ##### CSS (Optional)
 

@@ -16,12 +16,16 @@ toc: true
 ---
 
 import BootstrapVideosGallery from '../../components/shortcodes/BootstrapVideosGallery.astro';
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 
 ### Demo
 
 <BootstrapVideosGallery id="bootstrap-video-gallery" />
 
-##### HTML Structure
+<CodeTabs sandbox="bootstrap-video-gallery">
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div class="container">
@@ -51,7 +55,7 @@ import BootstrapVideosGallery from '../../components/shortcodes/BootstrapVideosG
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 window.lightGallery(document.getElementById('bootstrap-video-gallery'), {
@@ -59,3 +63,74 @@ window.lightGallery(document.getElementById('bootstrap-video-gallery'), {
     plugins: [lgThumbnail, lgVideo],
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Video from '@lightgallery/react/plugins/video';
+
+// The thumbnail plugin is optional
+<LightGallery plugins={[Thumbnail, Video]}>
+    <div className="row g-3">
+        {items.map((item) => (
+            <LightGalleryItem
+                key={item.poster}
+                item={item}
+                className="col-sm-4"
+            >
+                <img className="img-fluid" src={item.thumb} alt={item.alt} />
+            </LightGalleryItem>
+        ))}
+    </div>
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Video from '@lightgallery/vue/plugins/video';
+</script>
+
+<template>
+    <!-- The thumbnail plugin is optional -->
+    <LightGallery :plugins="[Thumbnail, Video]">
+        <div class="row g-3">
+            <LgItem
+                v-for="item of items"
+                :key="item.poster"
+                :item="item"
+                class="col-sm-4"
+            >
+                <img class="img-fluid" :src="item.thumb" :alt="item.alt" />
+            </LgItem>
+        </div>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<!-- In the component class: features = [withThumbnail(), withVideo()];
+     The thumbnail feature is optional. -->
+<lg-gallery [features]="features">
+    <div class="row g-3">
+        @for (item of items; track item.poster) {
+            <a class="col-sm-4" [lgGalleryItem]="item">
+                <img class="img-fluid" [src]="item.thumb" [alt]="item.alt" />
+            </a>
+        }
+    </div>
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>

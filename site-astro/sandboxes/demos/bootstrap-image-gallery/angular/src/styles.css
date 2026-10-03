@@ -1,0 +1,12 @@
+/* The grid needs Bootstrap's stylesheet only, none of its JavaScript. */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'lightgallery/css/lightgallery.css';
+@import 'lightgallery/css/lg-thumbnail.css';
+@import 'lightgallery/css/lg-zoom.css';
+
+/* This file loads after demo.css, so Bootstrap would set the size of the
+   heading. Keep the one from demo.css. */
+h1 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}

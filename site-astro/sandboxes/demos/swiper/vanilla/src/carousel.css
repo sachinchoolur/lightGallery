@@ -1,0 +1,12 @@
+/* Optional: the size of the carousel on the page. */
+.swiper {
+    max-width: 960px;
+    margin: 0;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+}

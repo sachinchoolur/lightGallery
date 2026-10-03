@@ -1,0 +1,3 @@
+@import 'lightgallery/css/lightgallery.css';
+/* Mirrors the gallery controls in a right-to-left gallery. */
+@import 'lightgallery/css/lg-rtl.css';

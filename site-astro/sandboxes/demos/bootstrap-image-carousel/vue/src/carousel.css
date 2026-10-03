@@ -1,0 +1,4 @@
+/* Optional: the size of the carousel on the page. */
+.carousel {
+    max-width: 960px;
+}

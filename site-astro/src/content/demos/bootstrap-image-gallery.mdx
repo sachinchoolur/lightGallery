@@ -9,6 +9,7 @@ menu: { demos: { parent: 'Demos', name: 'Bootstrap image gallery' } }
 weight: 24
 toc: true
 ---
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
 
 <DemoRuntime />
@@ -60,7 +61,10 @@ import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
     </div>
 </div>
 
-##### HTML Structure
+<CodeTabs sandbox="bootstrap-image-gallery">
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 
@@ -92,7 +96,7 @@ import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 const container = document.querySelector('#bootstrap-image-gallery');
@@ -104,3 +108,93 @@ window.lightGallery(container, {
     ],
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Zoom from '@lightgallery/react/plugins/zoom';
+
+// `columns` holds the items of each grid column. The items can sit at
+// any depth inside the gallery, so the Bootstrap grid keeps its own markup.
+<LightGallery plugins={[Zoom, Thumbnail]}>
+    <div className="row g-2">
+        {columns.map((column, index) => (
+            <div key={index} className="col-4">
+                {column.map((item) => (
+                    <LightGalleryItem
+                        key={item.src}
+                        item={item}
+                        className="d-block mb-2"
+                    >
+                        <img
+                            src={item.thumb}
+                            className="d-block w-100"
+                            alt={item.alt}
+                        />
+                    </LightGalleryItem>
+                ))}
+            </div>
+        ))}
+    </div>
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+</script>
+
+<template>
+    <!-- `columns` holds the items of each grid column. The items can sit
+         at any depth inside the gallery, so the Bootstrap grid keeps its
+         own markup. -->
+    <LightGallery :plugins="[Zoom, Thumbnail]">
+        <div class="row g-2">
+            <div v-for="(column, index) of columns" :key="index" class="col-4">
+                <LgItem
+                    v-for="item of column"
+                    :key="item.src"
+                    :item="item"
+                    class="d-block mb-2"
+                >
+                    <img :src="item.thumb" class="d-block w-100" :alt="item.alt" />
+                </LgItem>
+            </div>
+        </div>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```html
+<!-- In the component class: features = [withZoom(), withThumbnail()];
+     `columns` holds the items of each grid column. The items can sit at
+     any depth inside the gallery, so the Bootstrap grid keeps its own
+     markup. -->
+<lg-gallery [features]="features">
+    <div class="row g-2">
+        @for (column of columns; track $index) {
+            <div class="col-4">
+                @for (item of column; track item.src) {
+                    <a class="d-block mb-2" [lgGalleryItem]="item">
+                        <img [src]="item.thumb" class="d-block w-100" [alt]="item.alt" />
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>

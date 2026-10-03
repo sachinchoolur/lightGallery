@@ -64,7 +64,10 @@ npm run release                  # verify, publish, move dist-tags, tag the comm
 - Website: `npm run docs`, rebuild any package you changed, then
   `pnpm --filter lg-site-astro build`. `pnpm --filter lg-site-astro check:examples`
   compiles every code example in the docs against the real packages —
-  run it after editing documentation. The site's dev server does not
+  run it after editing documentation.
+  `pnpm --filter lg-site-astro check:sandboxes` installs every StackBlitz
+  sandbox (`site-astro/sandboxes/`) from npm and builds it; run it after
+  editing a sandbox or releasing a version. The site's dev server does not
   hydrate the React islands; verify those on the built site
   (`pnpm --filter lg-site-astro preview`).
 - Gesture feel (springs, fling, pinch) cannot be judged in a headless

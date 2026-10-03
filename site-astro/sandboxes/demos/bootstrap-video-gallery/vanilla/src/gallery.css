@@ -1,0 +1,4 @@
+/* The video items are links without an href, so they need the cursor. */
+#bootstrap-video-gallery a {
+    cursor: pointer;
+}

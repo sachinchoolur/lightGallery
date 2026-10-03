@@ -17,7 +17,6 @@ toc: true
 ---
 
 import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
-import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
 #### Demo
@@ -32,7 +31,7 @@ import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 
 <ImageGallery id="gallery-share-demo" photos="morocco" />
 
-<CodeTabs codepen="https://codepen.io/sachinchoolur/pen/GRWZbRv" stackblitz="https://stackblitz.com/edit/stackblitz-starters-uqetpy">
+<CodeTabs sandbox="share">
 <Fragment slot="vanilla">
 
 **HTML**
@@ -155,10 +154,6 @@ Let's see how we can add
 
 <ImageGallery id="gallery-share-reddit-demo" photos="street" />
 
-<div class="codepen-demo">
-    <a target="_blank" href="https://codepen.io/sachinchoolur/pen/mdWPZRq">View on CodePen</a>
-</div>
-
 To share a post on reddit, you need to create the following url structure
 
 ```
@@ -171,7 +166,10 @@ We need to fetch title attribute from each slide. lightGallery allows you to
 fetch custom props from the selector element by passing the prop name via
 extraProps settings
 
-#### HTML
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
 
 ```html
 <div id="gallery-share-reddit-demo">
@@ -185,13 +183,52 @@ extraProps settings
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 lightGallery(document.getElementById('gallery-share-reddit-demo'), {
     extraProps: ['redditTitle'],
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// There is no extraProps: generateLink receives the item itself, so
+// the title is a field on it.
+const slides = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', title: 'slide title' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', title: 'slide title - 2' },
+];
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```ts
+// There is no extraProps: generateLink receives the item itself, so
+// the title is a field on it.
+const slides: LgGalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', title: 'slide title' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', title: 'slide title - 2' },
+];
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+// There is no extraProps: generateLink receives the item itself, so
+// the title is a field on it.
+slides: LgGalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', title: 'slide title' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', title: 'slide title - 2' },
+];
+```
+
+</Fragment>
+</CodeTabs>
 
 **Step 2 -**
 

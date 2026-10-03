@@ -17,8 +17,8 @@ weight: 4
 toc: true
 ---
 
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
-import DemoButtons from '../../components/shortcodes/DemoButtons.astro';
 import { photos } from '../../lib/photos';
 
 <DemoRuntime />
@@ -50,9 +50,10 @@ import { photos } from '../../lib/photos';
   </button>
 </div>
 
-<DemoButtons js="https://codepen.io/light-gallery/pen/ZEwqJqX" />
+<CodeTabs sandbox="bootstrap-image-carousel">
+<Fragment slot="vanilla">
 
-##### HTML
+**HTML**
 
 ```html
 <div id="bootstrap-gallery-carousel" class="carousel slide">
@@ -94,7 +95,7 @@ import { photos } from '../../lib/photos';
 </div>
 ```
 
-##### JavaScript
+**JavaScript**
 
 ```js
 const carouselEl = document.getElementById('bootstrap-gallery-carousel');
@@ -111,6 +112,152 @@ lightGallery(carouselEl.querySelector('.carousel-inner'), {
     selector: '.lg-item',
 });
 ```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { useEffect, useRef } from 'react';
+import Carousel from 'bootstrap/js/dist/carousel';
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+
+const carouselRef = useRef<HTMLDivElement>(null);
+
+// The Bootstrap 5 carousel
+useEffect(() => {
+    const carousel = new Carousel(carouselRef.current!, {
+        interval: 2000,
+        wrap: false,
+    });
+    return () => carousel.dispose();
+}, []);
+
+// One gallery over the carousel, every slide holds an item
+<LightGallery plugins={[Thumbnail]}>
+    <div
+        id="bootstrap-gallery-carousel"
+        className="carousel slide"
+        ref={carouselRef}
+    >
+        <div className="carousel-inner">
+            {items.map((item, index) => (
+                <div
+                    key={item.src}
+                    className={
+                        index === 0 ? 'carousel-item active' : 'carousel-item'
+                    }
+                >
+                    <LightGalleryItem item={item}>
+                        <img
+                            src={item.thumb}
+                            className="d-block w-100"
+                            alt={item.alt}
+                        />
+                    </LightGalleryItem>
+                </div>
+            ))}
+        </div>
+        {/* The previous and next buttons, as in the Bootstrap markup */}
+    </div>
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import Carousel from 'bootstrap/js/dist/carousel';
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+
+const carouselEl = ref<HTMLElement | null>(null);
+let carousel: Carousel | undefined;
+
+// The Bootstrap 5 carousel
+onMounted(() => {
+    carousel = new Carousel(carouselEl.value!, {
+        interval: 2000,
+        wrap: false,
+    });
+});
+onBeforeUnmount(() => carousel?.dispose());
+</script>
+
+<template>
+    <!-- One gallery over the carousel, every slide holds an item -->
+    <LightGallery :plugins="[Thumbnail]">
+        <div
+            id="bootstrap-gallery-carousel"
+            ref="carouselEl"
+            class="carousel slide"
+        >
+            <div class="carousel-inner">
+                <div
+                    v-for="(item, index) of items"
+                    :key="item.src"
+                    class="carousel-item"
+                    :class="{ active: index === 0 }"
+                >
+                    <LgItem :item="item">
+                        <img :src="item.thumb" class="d-block w-100" :alt="item.alt" />
+                    </LgItem>
+                </div>
+            </div>
+            <!-- The previous and next buttons, as in the Bootstrap markup -->
+        </div>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+**Template**
+
+```html
+<!-- One gallery over the carousel, every slide holds an item -->
+<lg-gallery [features]="features">
+    <div #carousel id="bootstrap-gallery-carousel" class="carousel slide">
+        <div class="carousel-inner">
+            @for (item of items; track item.src) {
+                <div class="carousel-item" [class.active]="$first">
+                    <a [lgGalleryItem]="item">
+                        <img [src]="item.thumb" class="d-block w-100" [alt]="item.alt" />
+                    </a>
+                </div>
+            }
+        </div>
+        <!-- The previous and next buttons, as in the Bootstrap markup -->
+    </div>
+</lg-gallery>
+```
+
+**Component class**
+
+```ts
+// import Carousel from 'bootstrap/js/dist/carousel';
+features = [withThumbnail()];
+carouselEl = viewChild.required<ElementRef<HTMLElement>>('carousel');
+
+constructor() {
+    let carousel: Carousel | undefined;
+
+    // The Bootstrap 5 carousel
+    afterNextRender(() => {
+        carousel = new Carousel(this.carouselEl().nativeElement, {
+            interval: 2000,
+            wrap: false,
+        });
+    });
+    inject(DestroyRef).onDestroy(() => carousel?.dispose());
+}
+```
+
+</Fragment>
+</CodeTabs>
 
 ##### CSS (Optional)
 

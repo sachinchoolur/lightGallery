@@ -1,0 +1,10 @@
+/* The custom buttons, placed over the bottom of the gallery. */
+.gallery-nav {
+    position: absolute;
+    bottom: 56px;
+    left: 50%;
+    z-index: 1100;
+    display: flex;
+    gap: 8px;
+    transform: translateX(-50%);
+}

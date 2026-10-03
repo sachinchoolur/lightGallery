@@ -1,0 +1,13 @@
+.article {
+    max-width: 640px;
+    line-height: 1.6;
+}
+
+.article figure {
+    margin: 24px 0;
+}
+
+.article img {
+    display: block;
+    width: 100%;
+}

@@ -1,0 +1,27 @@
+---
+/**
+ * "Open in StackBlitz" link for one sandbox (`site-astro/sandboxes/demos/`).
+ * Pages with framework tabs get theirs from `<CodeTabs sandbox="…">`; this
+ * is for pages about a single framework.
+ */
+import { sandboxFor, sandboxPath, type SandboxFramework } from '../../lib/sandboxes';
+import SandboxButton from './SandboxButton.astro';
+
+interface Props {
+    demo: string;
+    framework: SandboxFramework;
+    class?: string;
+}
+
+const { demo, framework, class: className } = Astro.props;
+const sandbox = sandboxFor(demo, framework);
+if (!sandbox) {
+    throw new Error(`SandboxLink: no ${framework} sandbox named "${demo}".`);
+}
+---
+
+<div class:list={['demo-btns-container', className]}>
+    <div class="demo-btn demo-btn-stackblits">
+        <SandboxButton href={sandboxPath(sandbox)} />
+    </div>
+</div>
