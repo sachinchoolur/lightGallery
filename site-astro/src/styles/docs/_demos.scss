@@ -176,6 +176,76 @@
     }
 }
 
+// ---- Demo galleries: the homepage hero's card ----------------------------
+// Every thumbnail grid on a docs or blog page is framed like the hero:
+// one bordered card around the grid, square tiles inside it, and the
+// neighbours fading under a white veil on hover. The column's prose
+// link line and image radius stop at the card.
+body.demos.single .docs-content,
+.blog-wrap {
+    .gallery-demo,
+    .gallery-demo-sm,
+    .gallery-demo-videos,
+    .gallery-demo-tiles {
+        margin: 0 0 1.5rem;
+        padding: 8px;
+        border: 1px solid $gray-100;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 5px 6px 40px -4px rgba(9, 18, 36, 0.06);
+        @media (max-width: 767px) {
+            padding: 6px;
+            border-radius: 14px;
+        }
+        > div {
+            overflow: hidden;
+            border-radius: 12px;
+            @media (max-width: 767px) {
+                border-radius: 8px;
+            }
+        }
+        a {
+            border-bottom: 0;
+            background: none;
+            &:hover {
+                border-bottom: 0;
+            }
+        }
+        img {
+            border-radius: 0;
+        }
+        // No zoom on hover: the open/close flight measures the thumbnail,
+        // so a scaled tile would fly from a box a few percent off the one
+        // on screen. The neighbours fade under a white veil instead.
+        .lg-justified-item {
+            background: $gray-100;
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: #fff;
+                opacity: 0;
+                transition: opacity 0.25s ease;
+                pointer-events: none;
+            }
+            &:focus-visible {
+                outline: 2px solid $orange-500;
+                outline-offset: -2px;
+            }
+        }
+        @media (hover: hover) {
+            .lg-justified:hover .lg-justified-item:not(:hover)::after {
+                opacity: 0.3;
+            }
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .lg-justified-item::after {
+            transition: none;
+        }
+    }
+}
+
 // ---- Demo pages: the demo links sit on the column's left edge -------------
 body.demos.single .docs-content .demo-btns-container {
     justify-content: flex-start;

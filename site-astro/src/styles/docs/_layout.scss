@@ -312,6 +312,9 @@ body.demos.single {
                 background: $red-50;
                 color: $red-900;
             }
+            p {
+                margin: 0;
+            }
             a {
                 color: inherit;
                 font-weight: 600;
