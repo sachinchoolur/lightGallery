@@ -283,7 +283,14 @@ const reducedMotion =
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 let isMobileCache: boolean | null = null;
+// Plugin settings arrive as undeclared attributes, read below — nothing
+// falls through to the fragment root, and Vue would warn about each one.
+defineOptions({ inheritAttrs: false });
 const attrs = useAttrs();
+// Vue keeps an undeclared attribute's name as written, so a template's
+// `:medium-zoom` reaches `attrs` under the kebab-case key.
+const hyphenate = (name: string): string =>
+    name.replace(/\B([A-Z])/g, '-$1').toLowerCase();
 const plugins = computed(() => dedupePlugins(props.plugins ?? []));
 const settings = computed<ResolvedPluginSettings>(() => {
     // ADR §5 merge order (identical across the tracks; headless owns the
@@ -295,7 +302,7 @@ const settings = computed<ResolvedPluginSettings>(() => {
     }
     const registered = plugins.value;
     registered.forEach((plugin) => {
-        const own = attrs[plugin.name];
+        const own = attrs[plugin.name] ?? attrs[hyphenate(plugin.name)];
         if (own && typeof own === 'object') {
             Object.assign(user, own);
         }

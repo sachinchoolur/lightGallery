@@ -86,7 +86,8 @@ Inline gallery: `:container="element"`.
 Each plugin is its own tree-shakable subpath
 `@lightgallery/vue/plugins/<name>` exporting a plugin object for the
 `:plugins` prop. Per-plugin settings go on a same-named gallery prop
-(e.g. `:zoom="{ scale: 1.5 }"`):
+(e.g. `:zoom="{ scale: 1.5 }"`). A multi-word plugin name works in either
+spelling, `:medium-zoom="{ margin: 24 }"` or `:mediumZoom`:
 
 | Plugin | Subpath | Notable options |
 |---|---|---|
