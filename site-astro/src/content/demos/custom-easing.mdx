@@ -60,33 +60,86 @@ lightGallery(document.getElementById('gallery-custom-easing-demo'), {
 <Fragment slot="react">
 
 ```tsx
-<LightGallery
-    slides={slides}
-    easing="cubic-bezier(0.680, -0.550, 0.265, 1.550)"
-    speed={1000}
-/>
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// `easing` is any CSS timing function. The speed is slower than the
+// default 400, so the curve is easy to see.
+<LightGallery easing="cubic-bezier(0.680, -0.550, 0.265, 1.550)" speed={1000}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
 ```vue
-<LightGallery
-    :slides="slides"
-    easing="cubic-bezier(0.680, -0.550, 0.265, 1.550)"
-    :speed="1000"
-/>
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+</script>
+
+<template>
+    <!-- `easing` is any CSS timing function. The speed is slower than the
+         default 400, so the curve is easy to see. -->
+    <LightGallery
+        easing="cubic-bezier(0.680, -0.550, 0.265, 1.550)"
+        :speed="1000"
+    >
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<lg-gallery
-    [slides]="slides"
-    easing="cubic-bezier(0.680, -0.550, 0.265, 1.550)"
-    [speed]="1000"
-/>
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <!-- "easing" is any CSS timing function. The speed is slower than
+             the default 400, so the curve is easy to see. -->
+        <lg-gallery
+            easing="cubic-bezier(0.680, -0.550, 0.265, 1.550)"
+            [speed]="1000"
+        >
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    items: LgGalleryItem[] = [
+        { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+        { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+    ];
+}
 ```
 
 </Fragment>

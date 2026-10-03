@@ -71,6 +71,26 @@ import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 import Autoplay from '@lightgallery/react/plugins/autoplay';
 import Zoom from '@lightgallery/react/plugins/zoom';
 
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// Any SVG works; drawing with currentColor keeps the hover/active
+// colors of the buttons.
+const icon = (path: string) => (
+    <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+    >
+        <path d={path} />
+    </svg>
+);
+
 <LightGallery
     plugins={[Zoom, Autoplay]}
     render={{
@@ -78,11 +98,13 @@ import Zoom from '@lightgallery/react/plugins/zoom';
         icon: (name) => {
             switch (name) {
                 case 'close':
-                    return <CloseIcon />;
+                    return icon('M6 6l12 12M18 6L6 18');
+                // State pairs need both names, or the pair keeps the
+                // built-ins.
                 case 'autoplayPlay':
-                    return <PlayIcon />;
+                    return icon('M9 5.8v12.4L19 12z');
                 case 'autoplayPause':
-                    return <PauseIcon />;
+                    return icon('M8.5 6v12M15.5 6v12');
                 default:
                     return undefined;
             }
@@ -109,17 +131,25 @@ import Zoom from '@lightgallery/vue/plugins/zoom';
 import CloseIcon from './icons/CloseIcon.vue';
 import PauseIcon from './icons/PauseIcon.vue';
 import PlayIcon from './icons/PlayIcon.vue';
+
+const plugins = [Zoom, Autoplay];
+
+// Names left out keep the built-in icons. State pairs need both names,
+// or the pair keeps the built-ins.
+const icons = {
+    close: CloseIcon,
+    autoplayPlay: PlayIcon,
+    autoplayPause: PauseIcon,
+};
+
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
 </script>
 
 <template>
-    <LightGallery
-        :plugins="[Zoom, Autoplay]"
-        :icons="{
-            close: CloseIcon,
-            autoplayPlay: PlayIcon,
-            autoplayPause: PauseIcon,
-        }"
-    >
+    <LightGallery :plugins="plugins" :icons="icons">
         <LgItem v-for="item of items" :key="item.src" :item="item">
             <img :src="item.thumb" :alt="item.alt" />
         </LgItem>
@@ -130,42 +160,65 @@ import PlayIcon from './icons/PlayIcon.vue';
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<!-- In the component class: features = [withZoom(), withAutoplay()]; -->
-<lg-gallery [features]="features">
-    @for (item of items; track item.src) {
-        <a [lgGalleryItem]="item">
-            <img [src]="item.thumb" [alt]="item.alt" />
-        </a>
-    }
-    <!-- The template declares the names it covers; other names keep
-         the built-in icons. -->
-    <ng-template
-        [lgIcon]="['close', 'autoplayPlay', 'autoplayPause']"
-        let-name
-    >
-        @switch (name) {
-            @case ('close') {
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="1.8" stroke-linecap="round">
-                    <path d="M6 6l12 12M18 6L6 18" />
-                </svg>
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    LgIconDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withAutoplay } from '@lightgallery/angular/plugins/autoplay';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective, LgIconDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
             }
-            @case ('autoplayPlay') {
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="1.8" stroke-linejoin="round">
-                    <path d="M9 5.8v12.4L19 12z" />
-                </svg>
-            }
-            @case ('autoplayPause') {
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="1.8" stroke-linecap="round">
-                    <path d="M8.5 6v12M15.5 6v12" />
-                </svg>
-            }
-        }
-    </ng-template>
-</lg-gallery>
+            <!-- The template declares the names it covers; other names keep
+                 the built-in icons. -->
+            <ng-template
+                [lgIcon]="['close', 'autoplayPlay', 'autoplayPause']"
+                let-name
+            >
+                @switch (name) {
+                    @case ('close') {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round">
+                            <path d="M6 6l12 12M18 6L6 18" />
+                        </svg>
+                    }
+                    @case ('autoplayPlay') {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linejoin="round">
+                            <path d="M9 5.8v12.4L19 12z" />
+                        </svg>
+                    }
+                    @case ('autoplayPause') {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round">
+                            <path d="M8.5 6v12M15.5 6v12" />
+                        </svg>
+                    }
+                }
+            </ng-template>
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withZoom(), withAutoplay()];
+
+    items: LgGalleryItem[] = [
+        { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+        { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+    ];
+}
 ```
 
 </Fragment>

@@ -63,6 +63,12 @@ lightGallery(document.getElementById('animated-thumbnails-gallery'), {
 import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// The strip is built from each item's `thumb`.
 <LightGallery plugins={[Thumbnail]} thumbnail={{ animateThumb: true }}>
     {items.map((item) => (
         <LightGalleryItem key={item.src} item={item}>
@@ -79,10 +85,17 @@ import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 <script setup>
 import { LightGallery, LgItem } from '@lightgallery/vue';
 import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+
+const plugins = [Thumbnail];
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
 </script>
 
 <template>
-    <LightGallery :plugins="[Thumbnail]" :thumbnail="{ animateThumb: true }">
+    <!-- The strip is built from each item's `thumb`. -->
+    <LightGallery :plugins="plugins" :thumbnail="{ animateThumb: true }">
         <LgItem v-for="item of items" :key="item.src" :item="item">
             <img :src="item.thumb" :alt="item.alt" />
         </LgItem>
@@ -93,15 +106,37 @@ import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<!-- In the component class: features = [withThumbnail({ animateThumb: true })]; -->
-<lg-gallery [features]="features">
-    @for (item of items; track item.src) {
-        <a [lgGalleryItem]="item">
-            <img [src]="item.thumb" [alt]="item.alt" />
-        </a>
-    }
-</lg-gallery>
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withThumbnail({ animateThumb: true })];
+
+    // The strip is built from each item's `thumb`.
+    items: LgGalleryItem[] = [
+        { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+        { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+    ];
+}
 ```
 
 </Fragment>
@@ -153,10 +188,12 @@ import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 <script setup>
 import { LightGallery, LgItem } from '@lightgallery/vue';
 import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+
+const plugins = [Thumbnail];
 </script>
 
 <template>
-    <LightGallery :plugins="[Thumbnail]" :thumbnail="{ scrubThumbnails: true }">
+    <LightGallery :plugins="plugins" :thumbnail="{ scrubThumbnails: true }">
         <LgItem v-for="item of items" :key="item.src" :item="item">
             <img :src="item.thumb" :alt="item.alt" />
         </LgItem>
@@ -167,15 +204,11 @@ import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<!-- In the component class: features = [withThumbnail({ scrubThumbnails: true })]; -->
-<lg-gallery [features]="features">
-    @for (item of items; track item.src) {
-        <a [lgGalleryItem]="item">
-            <img [src]="item.thumb" [alt]="item.alt" />
-        </a>
-    }
-</lg-gallery>
+```ts
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+
+// The template stays as above: <lg-gallery [features]="features">
+features = [withThumbnail({ scrubThumbnails: true })];
 ```
 
 </Fragment>
@@ -225,31 +258,42 @@ lightGallery(document.getElementById('static-thumbnails'), {
     thumbnail={{ animateThumb: false, toggleThumb: true }}
     zoomFromOrigin={false}
     allowMediaOverlap
-/>
+>
+    {/* items as above */}
+</LightGallery>
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
 ```vue
-<LightGallery
-    :plugins="[Thumbnail]"
-    :thumbnail="{ animateThumb: false, toggleThumb: true }"
-    :zoom-from-origin="false"
-    :allow-media-overlap="true"
-/>
+<template>
+    <LightGallery
+        :plugins="plugins"
+        :thumbnail="{ animateThumb: false, toggleThumb: true }"
+        :zoom-from-origin="false"
+        :allow-media-overlap="true"
+    >
+        <!-- items as above -->
+    </LightGallery>
+</template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
+```ts
+features = [withThumbnail({ animateThumb: false, toggleThumb: true })];
+```
+
 ```html
-<!-- In the component class: features = [withThumbnail({ animateThumb: false, toggleThumb: true })]; -->
 <lg-gallery
     [features]="features"
     [zoomFromOrigin]="false"
     [allowMediaOverlap]="true"
-/>
+>
+    <!-- items as above -->
+</lg-gallery>
 ```
 
 </Fragment>
@@ -308,31 +352,46 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
     className="lg-custom-thumbnails"
     thumbnail={{ animateThumb: false }}
     allowMediaOverlap
-/>
+>
+    {/* items as above */}
+</LightGallery>
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
 ```vue
-<LightGallery
-    :plugins="[Thumbnail]"
-    class-name="lg-custom-thumbnails"
-    :thumbnail="{ animateThumb: false }"
-    :allow-media-overlap="true"
-/>
+<template>
+    <!-- The native packages render the strip in one place and leave the
+         placement to CSS, scope it with a class of your own. -->
+    <LightGallery
+        :plugins="plugins"
+        class-name="lg-custom-thumbnails"
+        :thumbnail="{ animateThumb: false }"
+        :allow-media-overlap="true"
+    >
+        <!-- items as above -->
+    </LightGallery>
+</template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
+```ts
+features = [withThumbnail({ animateThumb: false })];
+```
+
 ```html
-<!-- In the component class: features = [withThumbnail({ animateThumb: false })]; -->
+<!-- The native packages render the strip in one place and leave the
+     placement to CSS, scope it with a class of your own. -->
 <lg-gallery
     className="lg-custom-thumbnails"
     [features]="features"
     [allowMediaOverlap]="true"
-/>
+>
+    <!-- items as above -->
+</lg-gallery>
 ```
 
 </Fragment>

@@ -54,6 +54,14 @@ const lg = lightGallery(gallery, {
 <Fragment slot="react">
 
 ```tsx
+import { useState } from 'react';
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+
+const firstPage = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
 const [items, setItems] = useState(firstPage);
 
 <LightGallery speed={500}>
@@ -71,8 +79,14 @@ const [items, setItems] = useState(firstPage);
 ```vue
 <script setup>
 import { ref } from 'vue';
+import { LightGallery, LgItem } from '@lightgallery/vue';
 
-const items = ref(firstPage);
+const firstPage = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+const items = ref([...firstPage]);
 </script>
 
 <template>
@@ -87,15 +101,35 @@ const items = ref(firstPage);
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<!-- In the component class: items = signal(firstPage); -->
-<lg-gallery [speed]="500">
-    @for (item of items(); track item.src) {
-        <a [href]="item.src" [lgGalleryItem]="item">
-            <img [src]="item.thumb" [alt]="item.alt" />
-        </a>
-    }
-</lg-gallery>
+```ts
+import { Component, signal } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+
+const firstPage: LgGalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [speed]="500">
+            @for (item of items(); track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    items = signal(firstPage);
+}
 ```
 
 </Fragment>
@@ -282,42 +316,131 @@ observer.observe(status);
 <Fragment slot="react">
 
 ```tsx
-// Appending to the array is the whole integration; the gallery picks up
-// the new slides on the next render, no destroy/re-init cycle.
-const [slides, setSlides] = useState(firstPage);
+import { useEffect, useRef, useState } from 'react';
+import {
+    LightGallery,
+    LightGalleryItem,
+    type GalleryItem,
+} from '@lightgallery/react';
 
-useEffect(() => {
-    const onScroll = async () => {
-        if (!nearBottom()) return;
-        const next = await fetchNextPage();
-        setSlides((current) => [...current, ...next]);
-    };
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-}, []);
+const firstPage: GalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
 
-<LightGallery slides={slides} plugins={[Thumbnail]} />;
+// Your request; resolves to the next page's items, or null when there
+// are no more.
+declare function fetchNextPage(): Promise<GalleryItem[] | null>;
+
+export default function Gallery() {
+    const [items, setItems] = useState(firstPage);
+    const [done, setDone] = useState(false);
+    const status = useRef<HTMLParagraphElement>(null);
+
+    // The status line sits after the gallery. When it comes within 200px
+    // of the viewport, the next page loads. The effect runs again after
+    // every page, so a status line that is still in view after a short
+    // page loads the next one too.
+    useEffect(() => {
+        if (done) return;
+        const observer = new IntersectionObserver(
+            async ([entry]) => {
+                if (!entry.isIntersecting) return;
+                // One request at a time.
+                observer.disconnect();
+                const next = await fetchNextPage();
+                if (!next) {
+                    setDone(true);
+                    return;
+                }
+                // Appending to the list is the whole update: the gallery
+                // picks up the new slides on the next render.
+                setItems((current) => [...current, ...next]);
+            },
+            { rootMargin: '200px' },
+        );
+        observer.observe(status.current!);
+        return () => observer.disconnect();
+    }, [items, done]);
+
+    return (
+        <>
+            <LightGallery speed={500}>
+                {items.map((item) => (
+                    <LightGalleryItem key={item.src} item={item} href={item.src}>
+                        <img src={item.thumb} alt={item.alt} />
+                    </LightGalleryItem>
+                ))}
+            </LightGallery>
+            <p ref={status}>
+                {done ? "That's everything." : 'Scroll for more'}
+            </p>
+        </>
+    );
+}
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
 ```vue
-<script setup>
-import { onMounted, onUnmounted, ref } from 'vue';
+<script setup lang="ts">
+import { nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
 
-const slides = ref(firstPage);
-const onScroll = async () => {
-    if (!nearBottom()) return;
-    slides.value.push(...(await fetchNextPage()));
-};
+const firstPage: LgGalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
 
-onMounted(() => window.addEventListener('scroll', onScroll));
-onUnmounted(() => window.removeEventListener('scroll', onScroll));
+// Your request; resolves to the next page's items, or null when there
+// are no more.
+declare function fetchNextPage(): Promise<LgGalleryItem[] | null>;
+
+const items = ref([...firstPage]);
+const done = ref(false);
+const status = useTemplateRef('status');
+
+let loading = false;
+
+// The status line sits after the gallery. When it comes within 200px of
+// the viewport, the next page loads.
+const observer = new IntersectionObserver(
+    async ([entry]) => {
+        if (!entry.isIntersecting || loading) return;
+        loading = true;
+        const next = await fetchNextPage();
+        if (!next) {
+            done.value = true;
+            observer.disconnect();
+            return;
+        }
+        // Appending to the list is the whole update: the gallery picks up
+        // the new slides on the next render.
+        items.value.push(...next);
+        loading = false;
+
+        // Once the new thumbnails are on the page, observe again, so a
+        // status line that is still in view after a short page loads the
+        // next one too.
+        await nextTick();
+        observer.unobserve(status.value!);
+        observer.observe(status.value!);
+    },
+    { rootMargin: '200px' },
+);
+
+onMounted(() => observer.observe(status.value!));
+onUnmounted(() => observer.disconnect());
 </script>
 
 <template>
-    <LightGallery :slides="slides" :plugins="[Thumbnail]" />
+    <LightGallery :speed="500">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+    <p ref="status">{{ done ? "That's everything." : 'Scroll for more' }}</p>
 </template>
 ```
 
@@ -325,13 +448,88 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll));
 <Fragment slot="angular">
 
 ```ts
-slides = signal(firstPage);
+import {
+    afterRenderEffect,
+    Component,
+    DestroyRef,
+    ElementRef,
+    inject,
+    signal,
+    viewChild,
+} from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
 
-@HostListener('window:scroll')
-async onScroll() {
-    if (!nearBottom()) return;
-    const next = await fetchNextPage();
-    this.slides.update((current) => [...current, ...next]);
+const firstPage: LgGalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// Your request; resolves to the next page's items, or null when there
+// are no more.
+declare function fetchNextPage(): Promise<LgGalleryItem[] | null>;
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [speed]="500">
+            @for (item of items(); track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+        <p #status>{{ done() ? "That's everything." : 'Scroll for more' }}</p>
+    `,
+})
+export class Gallery {
+    items = signal(firstPage);
+    done = signal(false);
+
+    private status = viewChild.required<ElementRef<HTMLElement>>('status');
+    private loading = false;
+
+    constructor() {
+        // The status line sits after the gallery. When it comes within
+        // 200px of the viewport, the next page loads.
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    this.loadNextPage();
+                }
+            },
+            { rootMargin: '200px' },
+        );
+        // Runs after the first render and after each page is rendered.
+        // Observing again makes a status line that is still in view after
+        // a short page load the next one too.
+        afterRenderEffect(() => {
+            observer.disconnect();
+            if (!this.done()) {
+                observer.observe(this.status().nativeElement);
+            }
+        });
+        inject(DestroyRef).onDestroy(() => observer.disconnect());
+    }
+
+    private async loadNextPage(): Promise<void> {
+        // One request at a time.
+        if (this.loading) return;
+        this.loading = true;
+        const next = await fetchNextPage();
+        if (!next) {
+            this.done.set(true);
+            return;
+        }
+        // Appending to the list is the whole update: the gallery picks up
+        // the new slides on the next render.
+        this.items.update((current) => [...current, ...next]);
+        this.loading = false;
+    }
 }
 ```
 

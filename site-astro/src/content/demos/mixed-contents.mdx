@@ -104,30 +104,178 @@ lightGallery(document.getElementById('gallery-mixed-content-demo'), {
 <Fragment slot="react">
 
 ```tsx
-// One gallery, mixed slide kinds: images, video URLs and iframes are
-// item fields rather than markup.
-const slides = [
-    { src: 'img/1.jpg', thumb: 'img/1-t.jpg' },
-    { src: 'https://youtu.be/IUN664s7N-c', poster: 'img/yt-poster.jpg' },
-    { src: 'https://example.com', iframe: true, thumb: 'img/site-t.jpg' },
+import {
+    LightGallery,
+    LightGalleryItem,
+    type GalleryItem,
+} from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Video from '@lightgallery/react/plugins/video';
+
+// One gallery, a different kind of slide for each item: images, video
+// URLs and self-hosted video files are item fields rather than markup.
+const items: GalleryItem[] = [
+    // Image
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    // YouTube video
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        lgSize: '1280-720',
+    },
+    // Vimeo video
+    {
+        src: '//vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        lgSize: '1280-720',
+    },
+    // HTML5 video: no `src`; the files go in `video`.
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        lgSize: '1280-720',
+    },
 ];
 
-<LightGallery slides={slides} plugins={[Thumbnail, Video]} />;
+// Images work without a plugin; video slides need Video.
+<LightGallery plugins={[Thumbnail, Video]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.thumb} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
 ```vue
-<LightGallery :slides="slides" :plugins="[Thumbnail, Video]" />
+<script setup lang="ts">
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Video from '@lightgallery/vue/plugins/video';
+
+// Images work without a plugin; video slides need Video.
+const plugins = [Thumbnail, Video];
+
+// One gallery, a different kind of slide for each item: images, video
+// URLs and self-hosted video files are item fields rather than markup.
+const items: LgGalleryItem[] = [
+    // Image
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    // YouTube video
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        lgSize: '1280-720',
+    },
+    // Vimeo video
+    {
+        src: '//vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        lgSize: '1280-720',
+    },
+    // HTML5 video: no `src`; the files go in `video`.
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        lgSize: '1280-720',
+    },
+];
+</script>
+
+<template>
+    <LightGallery :plugins="plugins">
+        <LgItem v-for="item of items" :key="item.thumb" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<!-- In the component class: features = [withThumbnail(), withVideo()]; -->
-<lg-gallery [slides]="slides" [features]="features" />
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withVideo } from '@lightgallery/angular/plugins/video';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.thumb) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // Images work without a feature; video slides need withVideo().
+    features = [withThumbnail(), withVideo()];
+
+    // One gallery, a different kind of slide for each item: images, video
+    // URLs and self-hosted video files are item fields rather than markup.
+    items: LgGalleryItem[] = [
+        // Image
+        { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+        // YouTube video
+        {
+            src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+            poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+            thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+            alt: 'Puffin Hunts Fish To Feed Puffling',
+            lgSize: '1280-720',
+        },
+        // Vimeo video
+        {
+            src: '//vimeo.com/112836958',
+            poster: '/images/demo/vimeo-video-poster.jpg',
+            thumb: '/images/demo/vimeo-video-poster.jpg',
+            alt: 'Nature',
+            lgSize: '1280-720',
+        },
+        // HTML5 video: no `src`; the files go in `video`.
+        {
+            video: {
+                source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+                attributes: { preload: false, controls: true },
+            },
+            poster: '/images/demo/html5-video-poster.jpg',
+            thumb: '/images/demo/html5-video-poster.jpg',
+            alt: 'Peck Pocketed',
+            lgSize: '1280-720',
+        },
+    ];
+}
 ```
 
 </Fragment>

@@ -57,21 +57,86 @@ lightGallery(document.getElementById('custom-transition-demo'), {
 <Fragment slot="react">
 
 ```tsx
-<LightGallery slides={slides} mode="lg-fade" />
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+
+// Every mode other than lg-slide and lg-fade needs this stylesheet.
+import 'lightgallery/css/lg-transitions.css';
+
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// Try 'lg-zoom-in', 'lg-slide-vertical', 'lg-rotate' or 'lg-tube'.
+<LightGallery mode="lg-fade">
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
 ```vue
-<LightGallery :slides="slides" mode="lg-fade" />
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+
+// Every mode other than lg-slide and lg-fade needs this stylesheet.
+import 'lightgallery/css/lg-transitions.css';
+
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+</script>
+
+<template>
+    <!-- Try 'lg-zoom-in', 'lg-slide-vertical', 'lg-rotate' or 'lg-tube'. -->
+    <LightGallery mode="lg-fade">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<lg-gallery [slides]="slides" mode="lg-fade" />
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+
+// Every mode other than lg-slide and lg-fade needs
+// 'lightgallery/css/lg-transitions.css' in your global styles.
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <!-- Try 'lg-zoom-in', 'lg-slide-vertical', 'lg-rotate' or 'lg-tube'. -->
+        <lg-gallery mode="lg-fade">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    items: LgGalleryItem[] = [
+        { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+        { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+    ];
+}
 ```
 
 </Fragment>

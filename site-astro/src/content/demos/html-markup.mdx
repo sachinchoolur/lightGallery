@@ -43,39 +43,81 @@ lightGallery(document.getElementById('anchor-tag'));
 <Fragment slot="react">
 
 ```tsx
-// There is no markup to scrape: a trigger is a component, and its item
-// carries what the data-* attributes used to.
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// There is no markup to scrape: a trigger is a component that renders a
+// link, and its item carries what the data-* attributes used to.
 <LightGallery>
     {items.map((item) => (
         <LightGalleryItem key={item.src} item={item} href={item.src}>
             <img src={item.thumb} alt={item.alt} />
         </LightGalleryItem>
     ))}
-</LightGallery>
+</LightGallery>;
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
 ```vue
-<LightGallery>
-    <LgItem v-for="item of items" :key="item.src" :item="item">
-        <img :src="item.thumb" :alt="item.alt" />
-    </LgItem>
-</LightGallery>
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+</script>
+
+<template>
+    <!-- There is no markup to scrape: a trigger is a component that renders
+         a link, and its item carries what the data-* attributes used to. -->
+    <LightGallery>
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<lg-gallery>
-    @for (item of items; track item.src) {
-        <a [href]="item.src" [lgGalleryItem]="item">
-            <img [src]="item.thumb" [alt]="item.alt" />
-        </a>
-    }
-</lg-gallery>
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <!-- There is no markup to scrape: a trigger is a directive on your
+             own link, and its value carries what the data-* attributes
+             used to. -->
+        <lg-gallery>
+            @for (item of items; track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    items: LgGalleryItem[] = [
+        { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+        { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+    ];
+}
 ```
 
 </Fragment>

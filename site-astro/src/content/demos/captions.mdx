@@ -69,14 +69,15 @@ lightGallery(document.getElementById('gallery-captions-demo'), {
 <Fragment slot="react">
 
 ```tsx
-import { LightGallery } from '@lightgallery/react';
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 
 // `caption` takes JSX; `captionHtml` takes an HTML string, like
 // data-sub-html.
-const slides = [
+const items = [
     {
         src: 'img/img1.jpg',
         thumb: 'img/thumb1.jpg',
+        alt: 'Fading Light',
         caption: (
             <>
                 <h4>Fading Light</h4>
@@ -87,11 +88,18 @@ const slides = [
     {
         src: 'img/img2.jpg',
         thumb: 'img/thumb2.jpg',
+        alt: 'Bowness Bay',
         captionHtml: '<h4>Bowness Bay</h4><p>A beautiful sunrise.</p>',
     },
 ];
 
-<LightGallery slides={slides} />;
+<LightGallery>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
 ```
 
 </Fragment>
@@ -99,24 +107,31 @@ const slides = [
 
 ```vue
 <script setup>
-import { LightGallery } from '@lightgallery/vue';
+import { LightGallery, LgItem } from '@lightgallery/vue';
 
-const slides = [
+// `captionHtml` takes an HTML string, like data-sub-html.
+const items = [
     {
         src: 'img/img1.jpg',
         thumb: 'img/thumb1.jpg',
+        alt: 'Fading Light',
         captionHtml: '<h4>Fading Light</h4><p>Classic view from Rigwood Jetty.</p>',
     },
     {
         src: 'img/img2.jpg',
         thumb: 'img/thumb2.jpg',
+        alt: 'Bowness Bay',
         captionHtml: '<h4>Bowness Bay</h4><p>A beautiful sunrise.</p>',
     },
 ];
 </script>
 
 <template>
-    <LightGallery :slides="slides" />
+    <LightGallery>
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
 </template>
 ```
 
@@ -125,22 +140,38 @@ const slides = [
 
 ```ts
 import { Component } from '@angular/core';
-import { LgGalleryComponent, type LgGalleryItem } from '@lightgallery/angular';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
 
 @Component({
-    imports: [LgGalleryComponent],
-    template: `<lg-gallery [slides]="slides" />`,
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery>
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
 })
 export class Gallery {
-    slides: LgGalleryItem[] = [
+    // `captionHtml` takes an HTML string, like data-sub-html.
+    items: LgGalleryItem[] = [
         {
             src: 'img/img1.jpg',
             thumb: 'img/thumb1.jpg',
+            alt: 'Fading Light',
             captionHtml: '<h4>Fading Light</h4><p>Classic view from Rigwood Jetty.</p>',
         },
         {
             src: 'img/img2.jpg',
             thumb: 'img/thumb2.jpg',
+            alt: 'Bowness Bay',
             captionHtml: '<h4>Bowness Bay</h4><p>A beautiful sunrise.</p>',
         },
     ];
@@ -197,11 +228,34 @@ lightGallery(document.getElementById('relative-caption'), {
 <Fragment slot="react">
 
 ```tsx
-import { LightGallery } from '@lightgallery/react';
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 import RelativeCaption from '@lightgallery/react/plugins/relativeCaption';
 
-// The framework packages ship relative captions as a plugin.
-<LightGallery slides={slides} plugins={[RelativeCaption]} />;
+// There is no markup to scrape: the caption is an item field. The
+// framework packages ship relative captions as a plugin that places it
+// directly under the image instead of in the full-width bar.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        captionHtml: '<h4>Caption1</h4><p>Desc1</p>',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        captionHtml: '<h4>Caption2</h4><p>Desc2</p>',
+    },
+];
+
+<LightGallery plugins={[RelativeCaption]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
 ```
 
 </Fragment>
@@ -209,21 +263,86 @@ import RelativeCaption from '@lightgallery/react/plugins/relativeCaption';
 
 ```vue
 <script setup>
-import { LightGallery } from '@lightgallery/vue';
+import { LightGallery, LgItem } from '@lightgallery/vue';
 import RelativeCaption from '@lightgallery/vue/plugins/relativeCaption';
+
+// There is no markup to scrape: the caption is an item field. The
+// framework packages ship relative captions as a plugin that places it
+// directly under the image instead of in the full-width bar.
+const plugins = [RelativeCaption];
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        captionHtml: '<h4>Caption1</h4><p>Desc1</p>',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        captionHtml: '<h4>Caption2</h4><p>Desc2</p>',
+    },
+];
 </script>
 
 <template>
-    <LightGallery :slides="slides" :plugins="[RelativeCaption]" />
+    <LightGallery :plugins="plugins">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
 </template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<!-- In the component class: features = [withRelativeCaption()]; -->
-<lg-gallery [slides]="slides" [features]="features" />
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import {
+    withRelativeCaption,
+} from '@lightgallery/angular/plugins/relativeCaption';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // There is no markup to scrape: the caption is an item field. The
+    // framework packages ship relative captions as a plugin that places
+    // it directly under the image instead of in the full-width bar.
+    features = [withRelativeCaption()];
+
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Mountains',
+            captionHtml: '<h4>Caption1</h4><p>Desc1</p>',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Forest path',
+            captionHtml: '<h4>Caption2</h4><p>Desc2</p>',
+        },
+    ];
+}
 ```
 
 </Fragment>
@@ -288,38 +407,106 @@ lightGallery(document.getElementById('gallery-animated-captions-demo'), {
 <Fragment slot="react">
 
 ```tsx
+// The caption wrapper carries the class the CSS below animates.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        captionHtml:
+            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        captionHtml:
+            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+    },
+];
+
 // captionPosition 'slide' renders the caption inside the slide, so the
-// active-slide classes can drive your animation.
-<LightGallery
-    slides={slides}
-    speed={500}
-    captionPosition="slide"
-    slideDelay={400}
-/>
+// active-slide classes can drive your animation; slideDelay gives it
+// time before the next slide transition starts.
+<LightGallery speed={500} captionPosition="slide" slideDelay={400}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
 ```vue
-<LightGallery
-    :slides="slides"
-    :speed="500"
-    caption-position="slide"
-    :slide-delay="400"
-/>
+<script setup>
+// The caption wrapper carries the class the CSS below animates.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        captionHtml:
+            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        captionHtml:
+            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+    },
+];
+</script>
+
+<template>
+    <!-- caption-position 'slide' renders the caption inside the slide, so
+         the active-slide classes can drive your animation; slide-delay
+         gives it time before the next slide transition starts. -->
+    <LightGallery :speed="500" caption-position="slide" :slide-delay="400">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
+```ts
+// The caption wrapper carries the class the CSS below animates.
+items: LgGalleryItem[] = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        captionHtml:
+            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        captionHtml:
+            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+    },
+];
+```
+
 ```html
-<lg-gallery
-    [slides]="slides"
-    [speed]="500"
-    captionPosition="slide"
-    [slideDelay]="400"
-/>
+<!-- captionPosition 'slide' renders the caption inside the slide, so the
+     active-slide classes can drive your animation; slideDelay gives it
+     time before the next slide transition starts. -->
+<lg-gallery [speed]="500" captionPosition="slide" [slideDelay]="400">
+    @for (item of items; track item.src) {
+        <a [lgGalleryItem]="item">
+            <img [src]="item.thumb" [alt]="item.alt" />
+        </a>
+    }
+</lg-gallery>
 ```
 
 </Fragment>

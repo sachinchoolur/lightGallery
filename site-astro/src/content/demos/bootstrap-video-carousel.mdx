@@ -192,8 +192,29 @@ lightGallery(carouselEl.querySelector('.carousel-inner'), {
 ```tsx
 import { useEffect, useRef } from 'react';
 import Carousel from 'bootstrap/js/dist/carousel';
-import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import {
+    LightGallery,
+    LightGalleryItem,
+    type GalleryItem,
+} from '@lightgallery/react';
 import Video from '@lightgallery/react/plugins/video';
+
+// `src` is the address of the video page. `poster` is the image shown
+// before the video plays, and the image on the carousel slide.
+const items: GalleryItem[] = [
+    {
+        src: 'https://vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        lgSize: '1280-720',
+    },
+    {
+        src: 'https://private-sharing.wistia.com/medias/mwhrulrucj',
+        poster: '/images/demo/wistia-video-poster.jpeg',
+        alt: 'Thank You!',
+        lgSize: '1280-720',
+    },
+];
 
 const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -250,8 +271,27 @@ useEffect(() => {
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import Carousel from 'bootstrap/js/dist/carousel';
-import { LightGallery, LgItem } from '@lightgallery/vue';
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
 import Video from '@lightgallery/vue/plugins/video';
+
+const plugins = [Video];
+
+// `src` is the address of the video page. `poster` is the image shown
+// before the video plays, and the image on the carousel slide.
+const items: LgGalleryItem[] = [
+    {
+        src: 'https://vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        lgSize: '1280-720',
+    },
+    {
+        src: 'https://private-sharing.wistia.com/medias/mwhrulrucj',
+        poster: '/images/demo/wistia-video-poster.jpeg',
+        alt: 'Thank You!',
+        lgSize: '1280-720',
+    },
+];
 
 const carouselEl = ref<HTMLElement | null>(null);
 let carousel: Carousel | undefined;
@@ -274,7 +314,7 @@ onBeforeUnmount(() => {
 
 <template>
     <!-- One gallery over the carousel, every slide holds a video item -->
-    <LightGallery :plugins="[Video]">
+    <LightGallery :plugins="plugins">
         <div
             id="bootstrap-video-carousel"
             ref="carouselEl"
@@ -302,51 +342,89 @@ onBeforeUnmount(() => {
 </Fragment>
 <Fragment slot="angular">
 
-**Template**
-
-```html
-<!-- One gallery over the carousel, every slide holds a video item -->
-<lg-gallery [features]="features">
-    <div #carousel id="bootstrap-video-carousel" class="carousel slide">
-        <div class="carousel-inner">
-            @for (item of items; track item.poster) {
-                <div class="carousel-item" [class.active]="$first">
-                    <a [lgGalleryItem]="item">
-                        <img [src]="item.poster" class="d-block w-100" [alt]="item.alt" />
-                    </a>
-                </div>
-            }
-        </div>
-        <!-- The indicators and the previous and next buttons, as in the
-             Bootstrap markup -->
-    </div>
-</lg-gallery>
-```
-
-**Component class**
-
 ```ts
-// import Carousel from 'bootstrap/js/dist/carousel';
-features = [withVideo()];
-carouselEl = viewChild.required<ElementRef<HTMLElement>>('carousel');
+import {
+    afterNextRender,
+    Component,
+    DestroyRef,
+    ElementRef,
+    inject,
+    viewChild,
+} from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withVideo } from '@lightgallery/angular/plugins/video';
+import Carousel from 'bootstrap/js/dist/carousel';
 
-constructor() {
-    let carousel: Carousel | undefined;
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <!-- One gallery over the carousel, every slide holds a video item -->
+        <lg-gallery [features]="features">
+            <div #carousel id="bootstrap-video-carousel" class="carousel slide">
+                <div class="carousel-inner">
+                    @for (item of items; track item.poster) {
+                        <div class="carousel-item" [class.active]="$first">
+                            <a [lgGalleryItem]="item">
+                                <img
+                                    [src]="item.poster"
+                                    class="d-block w-100"
+                                    [alt]="item.alt"
+                                />
+                            </a>
+                        </div>
+                    }
+                </div>
+                <!-- The indicators and the previous and next buttons, as in
+                     the Bootstrap markup -->
+            </div>
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withVideo()];
 
-    // The Bootstrap 5 carousel
-    afterNextRender(() => {
-        carousel = new Carousel(this.carouselEl().nativeElement, {
-            interval: 2000,
-            wrap: false,
-            // Start cycling right away, as data-bs-ride="carousel" does
-            ride: 'carousel',
+    // `src` is the address of the video page. `poster` is the image shown
+    // before the video plays, and the image on the carousel slide.
+    items: LgGalleryItem[] = [
+        {
+            src: 'https://vimeo.com/112836958',
+            poster: '/images/demo/vimeo-video-poster.jpg',
+            alt: 'Nature',
+            lgSize: '1280-720',
+        },
+        {
+            src: 'https://private-sharing.wistia.com/medias/mwhrulrucj',
+            poster: '/images/demo/wistia-video-poster.jpeg',
+            alt: 'Thank You!',
+            lgSize: '1280-720',
+        },
+    ];
+
+    carouselEl = viewChild.required<ElementRef<HTMLElement>>('carousel');
+
+    constructor() {
+        let carousel: Carousel | undefined;
+
+        // The Bootstrap 5 carousel
+        afterNextRender(() => {
+            carousel = new Carousel(this.carouselEl().nativeElement, {
+                interval: 2000,
+                wrap: false,
+                // Start cycling right away, as data-bs-ride="carousel" does
+                ride: 'carousel',
+            });
         });
-    });
-    inject(DestroyRef).onDestroy(() => {
-        // dispose() leaves the cycle timer running, so stop it first
-        carousel?.pause();
-        carousel?.dispose();
-    });
+        inject(DestroyRef).onDestroy(() => {
+            // dispose() leaves the cycle timer running, so stop it first
+            carousel?.pause();
+            carousel?.dispose();
+        });
+    }
 }
 ```
 

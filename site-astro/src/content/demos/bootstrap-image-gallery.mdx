@@ -113,12 +113,49 @@ window.lightGallery(container, {
 <Fragment slot="react">
 
 ```tsx
-import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import {
+    LightGallery,
+    LightGalleryItem,
+    type GalleryItem,
+} from '@lightgallery/react';
 import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 import Zoom from '@lightgallery/react/plugins/zoom';
 
-// `columns` holds the items of each grid column. The items can sit at
-// any depth inside the gallery, so the Bootstrap grid keeps its own markup.
+// The items of each grid column. `lgSize` is the full-size image's
+// WIDTH-HEIGHT; it lets the image open from its thumbnail.
+const columns: GalleryItem[][] = [
+    [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Boat on Calm Water',
+            lgSize: '1600-1067',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Wintry Mountain Landscape',
+            lgSize: '1600-2400',
+        },
+    ],
+    [
+        {
+            src: 'img/img3.jpg',
+            thumb: 'img/thumb3.jpg',
+            alt: 'Mountains in the Clouds',
+            lgSize: '1600-2398',
+        },
+        {
+            src: 'img/img4.jpg',
+            thumb: 'img/thumb4.jpg',
+            alt: 'Boat on Calm Water',
+            lgSize: '1600-1065',
+        },
+    ],
+];
+
+// The items can sit at any depth inside the gallery, so the Bootstrap
+// grid keeps its own markup.
 <LightGallery plugins={[Zoom, Thumbnail]}>
     <div className="row g-2">
         {columns.map((column, index) => (
@@ -150,13 +187,47 @@ import Zoom from '@lightgallery/react/plugins/zoom';
 import { LightGallery, LgItem } from '@lightgallery/vue';
 import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 import Zoom from '@lightgallery/vue/plugins/zoom';
+
+const plugins = [Zoom, Thumbnail];
+
+// The items of each grid column. `lgSize` is the full-size image's
+// WIDTH-HEIGHT; it lets the image open from its thumbnail.
+const columns = [
+    [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Boat on Calm Water',
+            lgSize: '1600-1067',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Wintry Mountain Landscape',
+            lgSize: '1600-2400',
+        },
+    ],
+    [
+        {
+            src: 'img/img3.jpg',
+            thumb: 'img/thumb3.jpg',
+            alt: 'Mountains in the Clouds',
+            lgSize: '1600-2398',
+        },
+        {
+            src: 'img/img4.jpg',
+            thumb: 'img/thumb4.jpg',
+            alt: 'Boat on Calm Water',
+            lgSize: '1600-1065',
+        },
+    ],
+];
 </script>
 
 <template>
-    <!-- `columns` holds the items of each grid column. The items can sit
-         at any depth inside the gallery, so the Bootstrap grid keeps its
-         own markup. -->
-    <LightGallery :plugins="[Zoom, Thumbnail]">
+    <!-- The items can sit at any depth inside the gallery, so the Bootstrap
+         grid keeps its own markup. -->
+    <LightGallery :plugins="plugins">
         <div class="row g-2">
             <div v-for="(column, index) of columns" :key="index" class="col-4">
                 <LgItem
@@ -176,24 +247,77 @@ import Zoom from '@lightgallery/vue/plugins/zoom';
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<!-- In the component class: features = [withZoom(), withThumbnail()];
-     `columns` holds the items of each grid column. The items can sit at
-     any depth inside the gallery, so the Bootstrap grid keeps its own
-     markup. -->
-<lg-gallery [features]="features">
-    <div class="row g-2">
-        @for (column of columns; track $index) {
-            <div class="col-4">
-                @for (item of column; track item.src) {
-                    <a class="d-block mb-2" [lgGalleryItem]="item">
-                        <img [src]="item.thumb" class="d-block w-100" [alt]="item.alt" />
-                    </a>
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <!-- The items can sit at any depth inside the gallery, so the
+             Bootstrap grid keeps its own markup. -->
+        <lg-gallery [features]="features">
+            <div class="row g-2">
+                @for (column of columns; track $index) {
+                    <div class="col-4">
+                        @for (item of column; track item.src) {
+                            <a class="d-block mb-2" [lgGalleryItem]="item">
+                                <img
+                                    [src]="item.thumb"
+                                    class="d-block w-100"
+                                    [alt]="item.alt"
+                                />
+                            </a>
+                        }
+                    </div>
                 }
             </div>
-        }
-    </div>
-</lg-gallery>
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withZoom(), withThumbnail()];
+
+    // The items of each grid column. `lgSize` is the full-size image's
+    // WIDTH-HEIGHT; it lets the image open from its thumbnail.
+    columns: LgGalleryItem[][] = [
+        [
+            {
+                src: 'img/img1.jpg',
+                thumb: 'img/thumb1.jpg',
+                alt: 'Boat on Calm Water',
+                lgSize: '1600-1067',
+            },
+            {
+                src: 'img/img2.jpg',
+                thumb: 'img/thumb2.jpg',
+                alt: 'Wintry Mountain Landscape',
+                lgSize: '1600-2400',
+            },
+        ],
+        [
+            {
+                src: 'img/img3.jpg',
+                thumb: 'img/thumb3.jpg',
+                alt: 'Mountains in the Clouds',
+                lgSize: '1600-2398',
+            },
+            {
+                src: 'img/img4.jpg',
+                thumb: 'img/thumb4.jpg',
+                alt: 'Boat on Calm Water',
+                lgSize: '1600-1065',
+            },
+        ],
+    ];
+}
 ```
 
 </Fragment>

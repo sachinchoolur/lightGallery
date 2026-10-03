@@ -81,51 +81,164 @@ lightGallery(document.getElementById('gallery-video-facades-demo'), {
 <Fragment slot="react">
 
 ```tsx
-import { LightGallery } from '@lightgallery/react';
+import {
+    LightGallery,
+    LightGalleryItem,
+    type GalleryItem,
+} from '@lightgallery/react';
 import Video from '@lightgallery/react/plugins/video';
 
+// `poster` is the image the slide shows until play is pressed.
+const items: GalleryItem[] = [
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        captionHtml: '<h4>Puffin Hunts Fish To Feed Puffling</h4>',
+        lgSize: '1280-720',
+    },
+    {
+        src: '//vimeo.com/112836958',
+        poster: 'img/vimeo-poster.jpg',
+        thumb: 'img/vimeo-poster.jpg',
+        alt: 'Nature',
+        captionHtml: '<h4>Nature</h4>',
+        lgSize: '1280-720',
+    },
+];
+
 <LightGallery
-    slides={slides}
     plugins={[Video]}
     video={{
+        // Defaults shown for clarity, facades and the privacy-enhanced
+        // YouTube host are on out of the box.
         videoFacade: true,
         youTubeNoCookie: true,
+        // autoplayFirstVideo defaults to true and, like
+        // autoplayVideoOnSlide, forces an immediate embed by design,
+        // turn it off to see the facade on every slide.
         autoplayFirstVideo: false,
     }}
-/>;
+>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
 ```vue
-<script setup>
-import { LightGallery } from '@lightgallery/vue';
+<script setup lang="ts">
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
 import Video from '@lightgallery/vue/plugins/video';
+
+const plugins = [Video];
+
+const videoSettings = {
+    // Defaults shown for clarity, facades and the privacy-enhanced
+    // YouTube host are on out of the box.
+    videoFacade: true,
+    youTubeNoCookie: true,
+    // autoplayFirstVideo defaults to true and, like autoplayVideoOnSlide,
+    // forces an immediate embed by design, turn it off to see the facade
+    // on every slide.
+    autoplayFirstVideo: false,
+};
+
+// `poster` is the image the slide shows until play is pressed.
+const items: LgGalleryItem[] = [
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        captionHtml: '<h4>Puffin Hunts Fish To Feed Puffling</h4>',
+        lgSize: '1280-720',
+    },
+    {
+        src: '//vimeo.com/112836958',
+        poster: 'img/vimeo-poster.jpg',
+        thumb: 'img/vimeo-poster.jpg',
+        alt: 'Nature',
+        captionHtml: '<h4>Nature</h4>',
+        lgSize: '1280-720',
+    },
+];
 </script>
 
 <template>
-    <LightGallery
-        :slides="slides"
-        :plugins="[Video]"
-        :video="{
-            videoFacade: true,
-            youTubeNoCookie: true,
-            autoplayFirstVideo: false,
-        }"
-    />
+    <LightGallery :plugins="plugins" :video="videoSettings">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
 </template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<!-- In the component class: features = [withVideo({ videoFacade: true, youTubeNoCookie: true, autoplayFirstVideo: false })]; -->
-<lg-gallery
-    [slides]="slides"
-    [features]="features"
-/>
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withVideo } from '@lightgallery/angular/plugins/video';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [
+        withVideo({
+            // Defaults shown for clarity, facades and the privacy-enhanced
+            // YouTube host are on out of the box.
+            videoFacade: true,
+            youTubeNoCookie: true,
+            // autoplayFirstVideo defaults to true and, like
+            // autoplayVideoOnSlide, forces an immediate embed by design,
+            // turn it off to see the facade on every slide.
+            autoplayFirstVideo: false,
+        }),
+    ];
+
+    // `poster` is the image the slide shows until play is pressed.
+    items: LgGalleryItem[] = [
+        {
+            src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+            poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+            thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+            alt: 'Puffin Hunts Fish To Feed Puffling',
+            captionHtml: '<h4>Puffin Hunts Fish To Feed Puffling</h4>',
+            lgSize: '1280-720',
+        },
+        {
+            src: '//vimeo.com/112836958',
+            poster: 'img/vimeo-poster.jpg',
+            thumb: 'img/vimeo-poster.jpg',
+            alt: 'Nature',
+            captionHtml: '<h4>Nature</h4>',
+            lgSize: '1280-720',
+        },
+    ];
+}
 ```
 
 </Fragment>
@@ -155,26 +268,28 @@ lightGallery(document.getElementById('gallery-eager-videos'), {
 <Fragment slot="react">
 
 ```tsx
-<LightGallery slides={slides} plugins={[Video]} video={{ videoFacade: false }} />
+<LightGallery plugins={[Video]} video={{ videoFacade: false }}>
+    {/* items as above */}
+</LightGallery>
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
 ```vue
-<LightGallery
-    :slides="slides"
-    :plugins="[Video]"
-    :video="{ videoFacade: false }"
-/>
+<template>
+    <LightGallery :plugins="plugins" :video="{ videoFacade: false }">
+        <!-- items as above -->
+    </LightGallery>
+</template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<!-- In the component class: features = [withVideo({ videoFacade: false })]; -->
-<lg-gallery [slides]="slides" [features]="features" />
+```ts
+// The template stays as above: <lg-gallery [features]="features">
+features = [withVideo({ videoFacade: false })];
 ```
 
 </Fragment>

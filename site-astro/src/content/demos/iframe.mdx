@@ -79,32 +79,156 @@ lightGallery(document.getElementById('open-pdf'), {
 <Fragment slot="react">
 
 ```tsx
-// `iframe: true` on the item replaces the vanilla selector wiring.
-const slides = [
+import { useState } from 'react';
+import { LightGallery, type GalleryItem } from '@lightgallery/react';
+
+// `iframe: true` shows the page at `src` in an iframe; it replaces the
+// vanilla data-iframe attribute and selector wiring.
+const slides: GalleryItem[] = [
     {
-        src: 'https://www.lightgalleryjs.com/',
+        src: 'https://www.paritydeals.com/',
         iframe: true,
-        iframeTitle: 'lightGallery',
+        iframeTitle: 'ParityDeals',
     },
-    { src: 'https://maps.google.com/maps?q=…&output=embed', iframe: true },
-    { src: 'files/sample.pdf', iframe: true },
+    {
+        src: 'https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1sChefchaouen,+Morocco',
+        iframe: true,
+        iframeTitle: 'Google map',
+    },
+    {
+        src: 'pdf/sample.pdf',
+        iframe: true,
+        iframeTitle: 'PDF file',
+    },
 ];
 
-<LightGallery slides={slides} open={open} onClose={() => setOpen(false)} />;
+const [open, setOpen] = useState(false);
+const [index, setIndex] = useState(0);
+
+// Each button opens the gallery on one slide.
+const openSlide = (slide: number) => {
+    setIndex(slide);
+    setOpen(true);
+};
+
+<>
+    <button type="button" onClick={() => openSlide(0)}>
+        Open website
+    </button>
+    <button type="button" onClick={() => openSlide(1)}>
+        Google map
+    </button>
+    <button type="button" onClick={() => openSlide(2)}>
+        Open PDF file
+    </button>
+    <LightGallery
+        slides={slides}
+        open={open}
+        onClose={() => setOpen(false)}
+        index={index}
+        onIndexChange={setIndex}
+    />
+</>;
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
 ```vue
-<LightGallery v-model:open="open" :slides="slides" />
+<script setup>
+import { ref } from 'vue';
+import { LightGallery } from '@lightgallery/vue';
+
+// `iframe: true` shows the page at `src` in an iframe; it replaces the
+// vanilla data-iframe attribute and selector wiring.
+const slides = [
+    {
+        src: 'https://www.paritydeals.com/',
+        iframe: true,
+        iframeTitle: 'ParityDeals',
+    },
+    {
+        src: 'https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1sChefchaouen,+Morocco',
+        iframe: true,
+        iframeTitle: 'Google map',
+    },
+    {
+        src: 'pdf/sample.pdf',
+        iframe: true,
+        iframeTitle: 'PDF file',
+    },
+];
+
+const open = ref(false);
+const index = ref(0);
+
+// Each button opens the gallery on one slide.
+function openSlide(slide) {
+    index.value = slide;
+    open.value = true;
+}
+</script>
+
+<template>
+    <button type="button" @click="openSlide(0)">Open website</button>
+    <button type="button" @click="openSlide(1)">Google map</button>
+    <button type="button" @click="openSlide(2)">Open PDF file</button>
+    <LightGallery v-model:open="open" v-model:index="index" :slides="slides" />
+</template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<lg-gallery [slides]="slides" [open]="open()" (closed)="open.set(false)" />
+```ts
+import { Component, signal } from '@angular/core';
+import { LgGalleryComponent, type LgGalleryItem } from '@lightgallery/angular';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent],
+    template: `
+        <button type="button" (click)="openSlide(0)">Open website</button>
+        <button type="button" (click)="openSlide(1)">Google map</button>
+        <button type="button" (click)="openSlide(2)">Open PDF file</button>
+        <lg-gallery
+            [slides]="slides"
+            [open]="open()"
+            (closed)="open.set(false)"
+            [(index)]="index"
+        />
+    `,
+})
+export class Gallery {
+    // `iframe: true` shows the page at `src` in an iframe; it replaces
+    // the vanilla data-iframe attribute and selector wiring.
+    slides: LgGalleryItem[] = [
+        {
+            src: 'https://www.paritydeals.com/',
+            iframe: true,
+            iframeTitle: 'ParityDeals',
+        },
+        {
+            src: 'https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1sChefchaouen,+Morocco',
+            iframe: true,
+            iframeTitle: 'Google map',
+        },
+        {
+            src: 'pdf/sample.pdf',
+            iframe: true,
+            iframeTitle: 'PDF file',
+        },
+    ];
+
+    open = signal(false);
+    index = signal(0);
+
+    // Each button opens the gallery on one slide.
+    openSlide(slide: number) {
+        this.index.set(slide);
+        this.open.set(true);
+    }
+}
 ```
 
 </Fragment>

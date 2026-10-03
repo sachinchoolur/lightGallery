@@ -85,15 +85,54 @@ methodsInstance = lightGallery($lgGalleryMethodsDemo, {
 
 ```tsx
 import { useRef } from 'react';
-import { LightGallery } from '@lightgallery/react';
-import type { LightGalleryRefHandle } from '@lightgallery/react';
+import {
+    LightGallery,
+    LightGalleryItem,
+    type LightGalleryRefHandle,
+} from '@lightgallery/react';
 
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// The ref gives access to the gallery's methods.
 const gallery = useRef<LightGalleryRefHandle>(null);
 
+// controls={false} hides the built-in previous and next buttons;
+// render.caption puts your own in the caption area of every slide.
 <>
-    <button onClick={() => gallery.current?.nextSlide()}>Next slide</button>
-    <button onClick={() => gallery.current?.prevSlide()}>Prev slide</button>
-    <LightGallery ref={gallery} slides={slides} controls={false} />
+    <button type="button" onClick={() => gallery.current?.openGallery(1)}>
+        Open on the second photo
+    </button>
+    <LightGallery
+        ref={gallery}
+        controls={false}
+        render={{
+            caption: () => (
+                <>
+                    <button
+                        type="button"
+                        onClick={() => gallery.current?.prevSlide()}
+                    >
+                        Prev slide
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => gallery.current?.nextSlide()}
+                    >
+                        Next slide
+                    </button>
+                </>
+            ),
+        }}
+    >
+        {items.map((item) => (
+            <LightGalleryItem key={item.src} item={item}>
+                <img src={item.thumb} alt={item.alt} />
+            </LightGalleryItem>
+        ))}
+    </LightGallery>
 </>;
 ```
 
@@ -103,25 +142,89 @@ const gallery = useRef<LightGalleryRefHandle>(null);
 ```vue
 <script setup>
 import { ref } from 'vue';
-import { LightGallery } from '@lightgallery/vue';
+import { LightGallery, LgItem } from '@lightgallery/vue';
 
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// The template ref gives access to the gallery's methods.
 const gallery = ref();
 </script>
 
 <template>
-    <button @click="gallery.nextSlide()">Next slide</button>
-    <button @click="gallery.prevSlide()">Prev slide</button>
-    <LightGallery ref="gallery" :slides="slides" :controls="false" />
+    <button type="button" @click="gallery.openGallery(1)">
+        Open on the second photo
+    </button>
+    <!-- :controls="false" hides the built-in previous and next buttons. -->
+    <LightGallery ref="gallery" :controls="false">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+
+        <!-- The caption slot puts your own buttons in the caption area of
+             every slide. -->
+        <template #caption>
+            <button type="button" @click="gallery.prevSlide()">
+                Prev slide
+            </button>
+            <button type="button" @click="gallery.nextSlide()">
+                Next slide
+            </button>
+        </template>
+    </LightGallery>
 </template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<button (click)="gallery.nextSlide()">Next slide</button>
-<button (click)="gallery.prevSlide()">Prev slide</button>
-<lg-gallery #gallery [slides]="slides" [controls]="false" />
+```ts
+import { Component } from '@angular/core';
+import {
+    LgCaptionDirective,
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgCaptionDirective, LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <button type="button" (click)="gallery.openGallery(1)">
+            Open on the second photo
+        </button>
+        <!-- #gallery gives access to the gallery's methods.
+             [controls]="false" hides the built-in previous and next
+             buttons. -->
+        <lg-gallery #gallery="lgGallery" [controls]="false">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+
+            <!-- The lgCaption template puts your own buttons in the
+                 caption area of every slide. -->
+            <ng-template lgCaption>
+                <button type="button" (click)="gallery.prevSlide()">
+                    Prev slide
+                </button>
+                <button type="button" (click)="gallery.nextSlide()">
+                    Next slide
+                </button>
+            </ng-template>
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    items: LgGalleryItem[] = [
+        { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+        { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+    ];
+}
 ```
 
 </Fragment>

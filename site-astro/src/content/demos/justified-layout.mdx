@@ -77,6 +77,25 @@ import { JustifiedGrid } from '@lightgallery/react/plugins/justified';
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-justified.css';
 
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        // "WIDTH-HEIGHT" of the full-size image: the rows are laid out
+        // from it before the thumbnails load
+        lgSize: '1600-1067',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        lgSize: '1600-2400',
+    },
+];
+
+// JustifiedGrid lays the triggers out in rows of equal height that fill
+// its width.
 <LightGallery>
     <JustifiedGrid>
         {items.map((item) => (
@@ -102,10 +121,29 @@ import { JustifiedGrid } from '@lightgallery/vue/plugins/justified';
 
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-justified.css';
+
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        // "WIDTH-HEIGHT" of the full-size image: the rows are laid out
+        // from it before the thumbnails load
+        lgSize: '1600-1067',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        lgSize: '1600-2400',
+    },
+];
 </script>
 
 <template>
     <LightGallery>
+        <!-- JustifiedGrid lays the triggers out in rows of equal height
+             that fill its width. -->
         <JustifiedGrid>
             <LgItem
                 v-for="item of items"
@@ -123,16 +161,54 @@ import 'lightgallery/css/lg-justified.css';
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<lg-gallery>
-    <lg-justified-grid>
-        @for (item of items; track item.src) {
-            <a [lgGalleryItem]="item" [attr.data-lg-size]="item.lgSize">
-                <img [src]="item.thumb" [alt]="item.alt" />
-            </a>
-        }
-    </lg-justified-grid>
-</lg-gallery>
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { LgJustifiedGridComponent } from '@lightgallery/angular/plugins/justified';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [
+        LgGalleryComponent,
+        LgGalleryItemDirective,
+        LgJustifiedGridComponent,
+    ],
+    template: `
+        <lg-gallery>
+            <!-- lg-justified-grid lays the triggers out in rows of equal
+                 height that fill its width. -->
+            <lg-justified-grid>
+                @for (item of items; track item.src) {
+                    <a [lgGalleryItem]="item" [attr.data-lg-size]="item.lgSize">
+                        <img [src]="item.thumb" [alt]="item.alt" />
+                    </a>
+                }
+            </lg-justified-grid>
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Mountains',
+            // "WIDTH-HEIGHT" of the full-size image: the rows are laid out
+            // from it before the thumbnails load
+            lgSize: '1600-1067',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Forest path',
+            lgSize: '1600-2400',
+        },
+    ];
+}
 ```
 
 </Fragment>
@@ -163,7 +239,7 @@ lightGallery(document.getElementById('gallery-justified-custom-demo'), {
 
 ```tsx
 <JustifiedGrid rowHeight={120} gap={12} lastRow="justify">
-    {/* LightGalleryItem triggers */}
+    {/* LightGalleryItem triggers as above */}
 </JustifiedGrid>
 ```
 
@@ -172,7 +248,7 @@ lightGallery(document.getElementById('gallery-justified-custom-demo'), {
 
 ```vue
 <JustifiedGrid :row-height="120" :gap="12" last-row="justify">
-    <!-- LgItem triggers -->
+    <!-- LgItem triggers as above -->
 </JustifiedGrid>
 ```
 
@@ -181,7 +257,7 @@ lightGallery(document.getElementById('gallery-justified-custom-demo'), {
 
 ```html
 <lg-justified-grid [rowHeight]="120" [gap]="12" lastRow="justify">
-    <!-- lgGalleryItem triggers -->
+    <!-- lgGalleryItem triggers as above -->
 </lg-justified-grid>
 ```
 

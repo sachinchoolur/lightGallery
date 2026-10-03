@@ -75,12 +75,37 @@ $dynamicGallery.addEventListener('click', function () {
 import { useState } from 'react';
 import { LightGallery } from '@lightgallery/react';
 
+// The slides are data: there is no gallery markup on the page.
+const slides = [
+    {
+        src: 'img/1.jpg',
+        thumb: 'img/thumb-1.jpg',
+        alt: 'Image 1',
+        captionHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',
+    },
+    {
+        src: 'img/2.jpg',
+        thumb: 'img/thumb-2.jpg',
+        alt: 'Image 2',
+        captionHtml: '<h4>Image 2 title</h4><p>Image 2 descriptions.</p>',
+    },
+    {
+        src: 'img/3.jpg',
+        thumb: 'img/thumb-3.jpg',
+        alt: 'Image 3',
+        captionHtml: '<h4>Image 3 title</h4><p>Image 3 descriptions.</p>',
+    },
+];
+
 // Controlled mode is React's equivalent of dynamic mode: the
-// slides are data and you own the open/index state.
+// slides are data and you own the open state.
 const [open, setOpen] = useState(false);
 
 <>
-    <button onClick={() => setOpen(true)}>Open gallery</button>
+    <button type="button" onClick={() => setOpen(true)}>
+        Open gallery
+    </button>
+    {/* defaultIndex={2} opens on the third slide. */}
     <LightGallery
         slides={slides}
         open={open}
@@ -98,12 +123,35 @@ const [open, setOpen] = useState(false);
 import { ref } from 'vue';
 import { LightGallery } from '@lightgallery/vue';
 
+// The slides are data: there is no gallery markup on the page.
+const slides = [
+    {
+        src: 'img/1.jpg',
+        thumb: 'img/thumb-1.jpg',
+        alt: 'Image 1',
+        captionHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',
+    },
+    {
+        src: 'img/2.jpg',
+        thumb: 'img/thumb-2.jpg',
+        alt: 'Image 2',
+        captionHtml: '<h4>Image 2 title</h4><p>Image 2 descriptions.</p>',
+    },
+    {
+        src: 'img/3.jpg',
+        thumb: 'img/thumb-3.jpg',
+        alt: 'Image 3',
+        captionHtml: '<h4>Image 3 title</h4><p>Image 3 descriptions.</p>',
+    },
+];
+
 const open = ref(false);
+// Opens on the third slide.
 const index = ref(2);
 </script>
 
 <template>
-    <button @click="open = true">Open gallery</button>
+    <button type="button" @click="open = true">Open gallery</button>
     <LightGallery v-model:open="open" v-model:index="index" :slides="slides" />
 </template>
 ```
@@ -111,9 +159,51 @@ const index = ref(2);
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<button (click)="open.set(true)">Open gallery</button>
-<lg-gallery [slides]="slides" [open]="open()" (closed)="open.set(false)" />
+```ts
+import { Component, signal } from '@angular/core';
+import { LgGalleryComponent, type LgGalleryItem } from '@lightgallery/angular';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent],
+    template: `
+        <button type="button" (click)="open.set(true)">Open gallery</button>
+        <lg-gallery
+            [slides]="slides()"
+            [open]="open()"
+            (closed)="open.set(false)"
+            [(index)]="index"
+        />
+    `,
+})
+export class Gallery {
+    // The slides are data: there is no gallery markup on the page. A
+    // signal, so the next example can append to it.
+    slides = signal<LgGalleryItem[]>([
+        {
+            src: 'img/1.jpg',
+            thumb: 'img/thumb-1.jpg',
+            alt: 'Image 1',
+            captionHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',
+        },
+        {
+            src: 'img/2.jpg',
+            thumb: 'img/thumb-2.jpg',
+            alt: 'Image 2',
+            captionHtml: '<h4>Image 2 title</h4><p>Image 2 descriptions.</p>',
+        },
+        {
+            src: 'img/3.jpg',
+            thumb: 'img/thumb-3.jpg',
+            alt: 'Image 3',
+            captionHtml: '<h4>Image 3 title</h4><p>Image 3 descriptions.</p>',
+        },
+    ]);
+
+    open = signal(false);
+    // Opens on the third slide.
+    index = signal(2);
+}
 ```
 
 </Fragment>
@@ -172,11 +262,37 @@ document
 <Fragment slot="react">
 
 ```tsx
-// Appending is a state update, no refresh() call.
-const [slides, setSlides] = useState(initialSlides);
+import { useState } from 'react';
+import { LightGallery, type GalleryItem } from '@lightgallery/react';
+
+const moreSlides = [
+    {
+        src: 'img/4.jpg',
+        thumb: 'img/thumb-4.jpg',
+        alt: 'Image 4',
+        captionHtml: '<h4>Image 4 title</h4><p>Image 4 descriptions.</p>',
+    },
+    {
+        src: 'img/5.jpg',
+        thumb: 'img/thumb-5.jpg',
+        alt: 'Image 5',
+        captionHtml: '<h4>Image 5 title</h4><p>Image 5 descriptions.</p>',
+    },
+];
+
+// Appending is a state update, no refresh() call. The state starts
+// with the three slides of the first example.
+const [slides, setSlides] = useState<GalleryItem[]>([/* slides as above */]);
+const [open, setOpen] = useState(false);
+
+const loadMore = () => {
+    setSlides([...slides, ...moreSlides]);
+    // Open the gallery with the updated slides
+    setOpen(true);
+};
 
 <>
-    <button onClick={() => setSlides([...slides, ...newSlides])}>
+    <button type="button" onClick={loadMore}>
         Load more
     </button>
     <LightGallery slides={slides} open={open} onClose={() => setOpen(false)} />
@@ -189,13 +305,37 @@ const [slides, setSlides] = useState(initialSlides);
 ```vue
 <script setup>
 import { ref } from 'vue';
+import { LightGallery } from '@lightgallery/vue';
 
-const slides = ref(initialSlides);
+const moreSlides = [
+    {
+        src: 'img/4.jpg',
+        thumb: 'img/thumb-4.jpg',
+        alt: 'Image 4',
+        captionHtml: '<h4>Image 4 title</h4><p>Image 4 descriptions.</p>',
+    },
+    {
+        src: 'img/5.jpg',
+        thumb: 'img/thumb-5.jpg',
+        alt: 'Image 5',
+        captionHtml: '<h4>Image 5 title</h4><p>Image 5 descriptions.</p>',
+    },
+];
+
+// Appending is a state update, no refresh() call. The ref starts with
+// the three slides of the first example.
+const slides = ref([/* slides as above */]);
 const open = ref(false);
+
+function loadMore() {
+    slides.value.push(...moreSlides);
+    // Open the gallery with the updated slides
+    open.value = true;
+}
 </script>
 
 <template>
-    <button @click="slides.push(...newSlides)">Load more</button>
+    <button type="button" @click="loadMore">Load more</button>
     <LightGallery v-model:open="open" :slides="slides" />
 </template>
 ```
@@ -204,12 +344,33 @@ const open = ref(false);
 <Fragment slot="angular">
 
 ```ts
-// A signal update is the whole story on the Angular side too.
-slides = signal(initialSlides);
+// `slides` is the signal of the first example. A signal update is the
+// whole story on the Angular side too.
+moreSlides: LgGalleryItem[] = [
+    {
+        src: 'img/4.jpg',
+        thumb: 'img/thumb-4.jpg',
+        alt: 'Image 4',
+        captionHtml: '<h4>Image 4 title</h4><p>Image 4 descriptions.</p>',
+    },
+    {
+        src: 'img/5.jpg',
+        thumb: 'img/thumb-5.jpg',
+        alt: 'Image 5',
+        captionHtml: '<h4>Image 5 title</h4><p>Image 5 descriptions.</p>',
+    },
+];
 
 loadMore() {
-    this.slides.update((current) => [...current, ...newSlides]);
+    this.slides.update((current) => [...current, ...this.moreSlides]);
+    // Open the gallery with the updated slides
+    this.open.set(true);
 }
+```
+
+```html
+<button type="button" (click)="loadMore()">Load more</button>
+<lg-gallery [slides]="slides()" [open]="open()" (closed)="open.set(false)" />
 ```
 
 </Fragment>

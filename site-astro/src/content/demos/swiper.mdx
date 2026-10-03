@@ -99,6 +99,23 @@ import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide, type SwiperClass } from 'swiper/react';
 
+// `lgSize` is the full-size image's WIDTH-HEIGHT; it lets the image
+// open from its slide.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        lgSize: '1600-1200',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        lgSize: '1600-1200',
+    },
+];
+
 const swiper = useRef<SwiperClass | null>(null);
 
 // When the gallery goes to another slide, move the carousel to the same
@@ -127,10 +144,32 @@ const swiper = useRef<SwiperClass | null>(null);
 
 ```vue
 <script setup lang="ts">
-import { LightGallery, LgItem, type SlideEventDetail } from '@lightgallery/vue';
+import {
+    LightGallery,
+    LgItem,
+    type LgGalleryItem,
+    type SlideEventDetail,
+} from '@lightgallery/vue';
 import { Navigation } from 'swiper/modules';
 import type { Swiper as SwiperClass } from 'swiper/types';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+
+// `lgSize` is the full-size image's WIDTH-HEIGHT; it lets the image
+// open from its slide.
+const items: LgGalleryItem[] = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        lgSize: '1600-1200',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        lgSize: '1600-1200',
+    },
+];
 
 const modules = [Navigation];
 
@@ -163,46 +202,79 @@ function followGallery({ index }: SlideEventDetail) {
 </Fragment>
 <Fragment slot="angular">
 
-**Template**
-
-```html
-<!-- When the gallery goes to another slide, move the carousel to the same
-     slide, so the image closes into its slide -->
-<lg-gallery (beforeSlide)="swiper?.slideTo($event.index, 0)">
-    <div #carousel class="swiper">
-        <div class="swiper-wrapper">
-            @for (item of items; track item.src) {
-                <a class="swiper-slide" [href]="item.src" [lgGalleryItem]="item">
-                    <img [src]="item.thumb" [alt]="item.alt" />
-                </a>
-            }
-        </div>
-
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-    </div>
-</lg-gallery>
-```
-
-**Component class**
-
 ```ts
-// Swiper and Navigation are imported from 'swiper' and 'swiper/modules'
-swiper?: Swiper;
-carousel = viewChild.required<ElementRef<HTMLElement>>('carousel');
+import {
+    afterNextRender,
+    Component,
+    DestroyRef,
+    ElementRef,
+    inject,
+    viewChild,
+} from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import Swiper from 'swiper';
+import { Navigation } from 'swiper/modules';
 
-constructor() {
-    // Create the carousel once its slides are in the page
-    afterNextRender(() => {
-        this.swiper = new Swiper(this.carousel().nativeElement, {
-            modules: [Navigation],
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <!-- When the gallery goes to another slide, move the carousel to
+             the same slide, so the image closes into its slide -->
+        <lg-gallery (beforeSlide)="swiper?.slideTo($event.index, 0)">
+            <div #carousel class="swiper">
+                <div class="swiper-wrapper">
+                    @for (item of items; track item.src) {
+                        <a class="swiper-slide" [href]="item.src" [lgGalleryItem]="item">
+                            <img [src]="item.thumb" [alt]="item.alt" />
+                        </a>
+                    }
+                </div>
+
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // `lgSize` is the full-size image's WIDTH-HEIGHT; it lets the image
+    // open from its slide.
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Mountains',
+            lgSize: '1600-1200',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Forest path',
+            lgSize: '1600-1200',
+        },
+    ];
+
+    swiper?: Swiper;
+    carousel = viewChild.required<ElementRef<HTMLElement>>('carousel');
+
+    constructor() {
+        // Create the carousel once its slides are in the page
+        afterNextRender(() => {
+            this.swiper = new Swiper(this.carousel().nativeElement, {
+                modules: [Navigation],
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
         });
-    });
-    inject(DestroyRef).onDestroy(() => this.swiper?.destroy());
+        inject(DestroyRef).onDestroy(() => this.swiper?.destroy());
+    }
 }
 ```
 

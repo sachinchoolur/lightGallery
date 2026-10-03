@@ -70,14 +70,41 @@ lightGallery(document.getElementById('gallery-rtl-demo'), {
 <Fragment slot="react">
 
 ```tsx
-import { LightGallery } from '@lightgallery/react';
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 
 import 'lightgallery/css/lightgallery.css';
+// Mirrors the gallery controls in a right-to-left gallery.
 import 'lightgallery/css/lg-rtl.css';
+
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'طبقات من الأزرق',
+        captionHtml: '<h4>طبقات من الأزرق</h4>',
+        lgSize: '1600-1067',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'قصبة في الواحة',
+        captionHtml: '<h4>قصبة في الواحة</h4>',
+        lgSize: '1600-1067',
+    },
+];
 
 // 'auto' inherits the direction from the nearest dir attribute;
 // 'rtl' forces it regardless of the markup.
-<LightGallery slides={slides} direction="auto" />;
+<LightGallery direction="auto">
+    {/* dir="rtl" mirrors the grid on the page. */}
+    <div dir="rtl">
+        {items.map((item) => (
+            <LightGalleryItem key={item.src} item={item}>
+                <img src={item.thumb} alt={item.alt} />
+            </LightGalleryItem>
+        ))}
+    </div>
+</LightGallery>;
 ```
 
 </Fragment>
@@ -85,22 +112,95 @@ import 'lightgallery/css/lg-rtl.css';
 
 ```vue
 <script setup>
-import { LightGallery } from '@lightgallery/vue';
+import { LightGallery, LgItem } from '@lightgallery/vue';
 
 import 'lightgallery/css/lightgallery.css';
+// Mirrors the gallery controls in a right-to-left gallery.
 import 'lightgallery/css/lg-rtl.css';
+
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'طبقات من الأزرق',
+        captionHtml: '<h4>طبقات من الأزرق</h4>',
+        lgSize: '1600-1067',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'قصبة في الواحة',
+        captionHtml: '<h4>قصبة في الواحة</h4>',
+        lgSize: '1600-1067',
+    },
+];
 </script>
 
 <template>
-    <LightGallery :slides="slides" direction="auto" />
+    <!-- 'auto' inherits the direction from the nearest dir attribute;
+         'rtl' forces it regardless of the markup. -->
+    <LightGallery direction="auto">
+        <!-- dir="rtl" mirrors the grid on the page. -->
+        <div dir="rtl">
+            <LgItem v-for="item of items" :key="item.src" :item="item">
+                <img :src="item.thumb" :alt="item.alt" />
+            </LgItem>
+        </div>
+    </LightGallery>
 </template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<lg-gallery [slides]="slides" direction="auto" />
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+
+// The RTL chrome mirroring is an opt-in css layer: add
+// 'lightgallery/css/lg-rtl.css' to your global styles whenever the
+// direction resolves to rtl.
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <!-- 'auto' inherits the direction from the nearest dir attribute;
+             'rtl' forces it regardless of the markup. -->
+        <lg-gallery direction="auto">
+            <!-- dir="rtl" mirrors the grid on the page. -->
+            <div dir="rtl">
+                @for (item of items; track item.src) {
+                    <a [lgGalleryItem]="item">
+                        <img [src]="item.thumb" [alt]="item.alt" />
+                    </a>
+                }
+            </div>
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'طبقات من الأزرق',
+            captionHtml: '<h4>طبقات من الأزرق</h4>',
+            lgSize: '1600-1067',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'قصبة في الواحة',
+            captionHtml: '<h4>قصبة في الواحة</h4>',
+            lgSize: '1600-1067',
+        },
+    ];
+}
 ```
 
 </Fragment>
@@ -131,7 +231,6 @@ lightGallery(document.getElementById('gallery-rtl-demo'), {
 
 ```tsx
 <LightGallery
-    slides={slides}
     direction="auto"
     strings={{
         closeGallery: 'إغلاق المعرض',
@@ -139,7 +238,9 @@ lightGallery(document.getElementById('gallery-rtl-demo'), {
         nextSlide: 'الشريحة التالية',
         slideAnnouncement: 'صورة {index} من {total}',
     }}
-/>
+>
+    {/* items as above */}
+</LightGallery>
 ```
 
 </Fragment>
@@ -147,7 +248,6 @@ lightGallery(document.getElementById('gallery-rtl-demo'), {
 
 ```vue
 <LightGallery
-    :slides="slides"
     direction="auto"
     :strings="{
         closeGallery: 'إغلاق المعرض',
@@ -155,7 +255,9 @@ lightGallery(document.getElementById('gallery-rtl-demo'), {
         nextSlide: 'الشريحة التالية',
         slideAnnouncement: 'صورة {index} من {total}',
     }"
-/>
+>
+    <!-- items as above -->
+</LightGallery>
 ```
 
 </Fragment>
@@ -163,7 +265,6 @@ lightGallery(document.getElementById('gallery-rtl-demo'), {
 
 ```html
 <lg-gallery
-    [slides]="slides"
     direction="auto"
     [strings]="{
         closeGallery: 'إغلاق المعرض',
@@ -171,7 +272,9 @@ lightGallery(document.getElementById('gallery-rtl-demo'), {
         nextSlide: 'الشريحة التالية',
         slideAnnouncement: 'صورة {index} من {total}',
     }"
-/>
+>
+    <!-- items as above -->
+</lg-gallery>
 ```
 
 </Fragment>

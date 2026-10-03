@@ -100,16 +100,39 @@ lightGallery(document.getElementById('gallery-share-demo'), {
 <Fragment slot="react">
 
 ```tsx
-import { LightGallery } from '@lightgallery/react';
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 import Share from '@lightgallery/react/plugins/share';
 
-// preferNativeShare uses the device share sheet where available
-// and falls back to the network buttons everywhere else.
-<LightGallery
-    slides={slides}
-    plugins={[Share]}
-    share={{ preferNativeShare: true }}
-/>;
+// tweetText and pinterestText are the text the post on X and the pin on
+// Pinterest start with; facebookShareUrl, twitterShareUrl and
+// pinterestShareUrl replace the current page URL per item.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        tweetText: 'lightGallery slide 1',
+        pinterestText: 'Pin it1',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        tweetText: 'lightGallery slide 2',
+        pinterestText: 'Pin it2',
+    },
+];
+
+// Share adds a share button to the toolbar. On touch devices it opens the
+// device share sheet first; share={{ preferNativeShare: true }} (or false)
+// chooses one for every device.
+<LightGallery plugins={[Share]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
 ```
 
 </Fragment>
@@ -117,28 +140,95 @@ import Share from '@lightgallery/react/plugins/share';
 
 ```vue
 <script setup>
-import { LightGallery } from '@lightgallery/vue';
+import { LightGallery, LgItem } from '@lightgallery/vue';
 import Share from '@lightgallery/vue/plugins/share';
+
+// Share adds a share button to the toolbar. On touch devices it opens the
+// device share sheet first; :share="{ preferNativeShare: true }" (or
+// false) chooses one for every device.
+const plugins = [Share];
+
+// tweetText and pinterestText are the text the post on X and the pin on
+// Pinterest start with; facebookShareUrl, twitterShareUrl and
+// pinterestShareUrl replace the current page URL per item.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        tweetText: 'lightGallery slide 1',
+        pinterestText: 'Pin it1',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        tweetText: 'lightGallery slide 2',
+        pinterestText: 'Pin it2',
+    },
+];
 </script>
 
 <template>
-    <LightGallery
-        :slides="slides"
-        :plugins="[Share]"
-        :share="{ preferNativeShare: true }"
-    />
+    <LightGallery :plugins="plugins">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
 </template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<!-- In the component class: features = [withShare({ preferNativeShare: true })]; -->
-<lg-gallery
-    [slides]="slides"
-    [features]="features"
-/>
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withShare } from '@lightgallery/angular/plugins/share';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // withShare() adds a share button to the toolbar. On touch devices it
+    // opens the device share sheet first; withShare({ preferNativeShare:
+    // true }) (or false) chooses one for every device.
+    features = [withShare()];
+
+    // tweetText and pinterestText are the text the post on X and the pin
+    // on Pinterest start with; facebookShareUrl, twitterShareUrl and
+    // pinterestShareUrl replace the current page URL per item.
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Mountains',
+            tweetText: 'lightGallery slide 1',
+            pinterestText: 'Pin it1',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Forest path',
+            tweetText: 'lightGallery slide 2',
+            pinterestText: 'Pin it2',
+        },
+    ];
+}
 ```
 
 </Fragment>
@@ -197,9 +287,19 @@ lightGallery(document.getElementById('gallery-share-reddit-demo'), {
 ```tsx
 // There is no extraProps: generateLink receives the item itself, so
 // the title is a field on it.
-const slides = [
-    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', title: 'slide title' },
-    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', title: 'slide title - 2' },
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        title: 'slide title',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        title: 'slide title - 2',
+    },
 ];
 ```
 
@@ -209,9 +309,19 @@ const slides = [
 ```ts
 // There is no extraProps: generateLink receives the item itself, so
 // the title is a field on it.
-const slides: LgGalleryItem[] = [
-    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', title: 'slide title' },
-    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', title: 'slide title - 2' },
+const items: LgGalleryItem[] = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        title: 'slide title',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        title: 'slide title - 2',
+    },
 ];
 ```
 
@@ -221,9 +331,19 @@ const slides: LgGalleryItem[] = [
 ```ts
 // There is no extraProps: generateLink receives the item itself, so
 // the title is a field on it.
-slides: LgGalleryItem[] = [
-    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', title: 'slide title' },
-    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', title: 'slide title - 2' },
+items: LgGalleryItem[] = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        title: 'slide title',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        title: 'slide title - 2',
+    },
 ];
 ```
 
@@ -270,12 +390,12 @@ lightGallery(document.getElementById('gallery-share-reddit-demo'), {
 <Fragment slot="react">
 
 ```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 import Share from '@lightgallery/react/plugins/share';
 
 // The packages take typed options instead of dropdown HTML strings:
 // { text, className, generateLink }.
 <LightGallery
-    slides={slides}
     plugins={[Share]}
     share={{
         additionalShareOptions: [
@@ -289,7 +409,13 @@ import Share from '@lightgallery/react/plugins/share';
             },
         ],
     }}
-/>;
+>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
 ```
 
 </Fragment>
@@ -297,8 +423,13 @@ import Share from '@lightgallery/react/plugins/share';
 
 ```vue
 <script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
 import Share from '@lightgallery/vue/plugins/share';
 
+const plugins = [Share];
+
+// The packages take typed options instead of dropdown HTML strings:
+// { text, className, generateLink }.
 const reddit = {
     text: 'Reddit',
     className: 'lg-share-reddit',
@@ -311,10 +442,13 @@ const reddit = {
 
 <template>
     <LightGallery
-        :slides="slides"
-        :plugins="[Share]"
+        :plugins="plugins"
         :share="{ additionalShareOptions: [reddit] }"
-    />
+    >
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
 </template>
 ```
 
@@ -324,6 +458,8 @@ const reddit = {
 ```ts
 import { withShare } from '@lightgallery/angular/plugins/share';
 
+// The packages take typed options instead of dropdown HTML strings:
+// { text, className, generateLink }. The items are the ones above.
 features = [
     withShare({
         additionalShareOptions: [
@@ -338,6 +474,16 @@ features = [
         ],
     }),
 ];
+```
+
+```html
+<lg-gallery [features]="features">
+    @for (item of items; track item.src) {
+        <a [lgGalleryItem]="item">
+            <img [src]="item.thumb" [alt]="item.alt" />
+        </a>
+    }
+</lg-gallery>
 ```
 
 </Fragment>

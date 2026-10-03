@@ -104,6 +104,23 @@ import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 import Zoom from '@lightgallery/react/plugins/zoom';
 import Flickity from 'flickity';
 
+// `lgSize` is the full-size image's WIDTH-HEIGHT; it lets the image
+// open from its cell.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        lgSize: '1600-1200',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        lgSize: '1600-1200',
+    },
+];
+
 const carousel = useRef<HTMLDivElement>(null);
 // True from the start of a drag until the click that ends it
 const dragged = useRef(false);
@@ -158,12 +175,29 @@ const stopDragClick = (event: MouseEvent) => {
 ```vue
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue';
-import { LightGallery, LgItem } from '@lightgallery/vue';
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
 import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 import Zoom from '@lightgallery/vue/plugins/zoom';
 import Flickity from 'flickity';
 
 const plugins = [Zoom, Thumbnail];
+
+// `lgSize` is the full-size image's WIDTH-HEIGHT; it lets the image
+// open from its cell.
+const items: LgGalleryItem[] = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        lgSize: '1600-1200',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        lgSize: '1600-1200',
+    },
+];
 
 const carousel = useTemplateRef('carousel');
 let flickity: Flickity | undefined;
@@ -218,65 +252,100 @@ function stopDragClick(event: MouseEvent) {
 </Fragment>
 <Fragment slot="angular">
 
-**Template**
-
-```html
-<lg-gallery [features]="features">
-    <div #carousel class="main-carousel">
-        @for (item of items; track item.src) {
-            <a class="carousel-cell" [href]="item.src" [lgGalleryItem]="item">
-                <img [src]="item.thumb" [alt]="item.alt" />
-            </a>
-        }
-    </div>
-</lg-gallery>
-```
-
-**Component class**
-
 ```ts
-// Flickity is imported from 'flickity'
-features = [withZoom(), withThumbnail()];
-carousel = viewChild.required<ElementRef<HTMLElement>>('carousel');
+import {
+    afterNextRender,
+    Component,
+    DestroyRef,
+    ElementRef,
+    inject,
+    viewChild,
+} from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
+import Flickity from 'flickity';
 
-constructor() {
-    let flickity: Flickity | undefined;
-    // True from the start of a drag until the click that ends it
-    let dragged = false;
-
-    // Create the carousel once its cells are in the page
-    afterNextRender(() => {
-        const element = this.carousel().nativeElement;
-
-        flickity = new Flickity(element, {
-            cellAlign: 'center',
-            pageDots: false,
-            contain: true,
-            autoPlay: true,
-            on: {
-                pointerDown() {
-                    dragged = false;
-                },
-                dragStart() {
-                    dragged = true;
-                },
-            },
-        });
-
-        // Stop the click that ends a drag before it reaches the cell
-        element.addEventListener(
-            'click',
-            (event) => {
-                if (dragged) {
-                    dragged = false;
-                    event.preventDefault();
-                    event.stopPropagation();
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            <div #carousel class="main-carousel">
+                @for (item of items; track item.src) {
+                    <a class="carousel-cell" [href]="item.src" [lgGalleryItem]="item">
+                        <img [src]="item.thumb" [alt]="item.alt" />
+                    </a>
                 }
-            },
-            true,
-        );
-    });
-    inject(DestroyRef).onDestroy(() => flickity?.destroy());
+            </div>
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withZoom(), withThumbnail()];
+
+    // `lgSize` is the full-size image's WIDTH-HEIGHT; it lets the image
+    // open from its cell.
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Mountains',
+            lgSize: '1600-1200',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Forest path',
+            lgSize: '1600-1200',
+        },
+    ];
+
+    carousel = viewChild.required<ElementRef<HTMLElement>>('carousel');
+
+    constructor() {
+        let flickity: Flickity | undefined;
+        // True from the start of a drag until the click that ends it
+        let dragged = false;
+
+        // Create the carousel once its cells are in the page
+        afterNextRender(() => {
+            const element = this.carousel().nativeElement;
+
+            flickity = new Flickity(element, {
+                cellAlign: 'center',
+                pageDots: false,
+                contain: true,
+                autoPlay: true,
+                on: {
+                    pointerDown() {
+                        dragged = false;
+                    },
+                    dragStart() {
+                        dragged = true;
+                    },
+                },
+            });
+
+            // Stop the click that ends a drag before it reaches the cell
+            element.addEventListener(
+                'click',
+                (event) => {
+                    if (dragged) {
+                        dragged = false;
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                },
+                true,
+            );
+        });
+        inject(DestroyRef).onDestroy(() => flickity?.destroy());
+    }
 }
 ```
 

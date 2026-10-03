@@ -55,14 +55,30 @@ Note - data-src should not be provided when you use html5 videos
 <Fragment slot="react">
 
 ```tsx
-// The same object, as the item's `video` field.
-const slides = [
+import {
+    LightGallery,
+    LightGalleryItem,
+    type GalleryItem,
+} from '@lightgallery/react';
+import Video from '@lightgallery/react/plugins/video';
+
+const items: GalleryItem[] = [
+    // YouTube, Vimeo and Wistia: `src` is the address of the video page.
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        lgSize: '1280-720',
+    },
+    // HTML5 video: no `src`. The same object as the vanilla data-video
+    // attribute, as the item's `video` field.
     {
         video: {
             source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
             tracks: [
                 {
-                    src: '/videos/title.vtt',
+                    src: '/videos/title.txt',
                     kind: 'captions',
                     srclang: 'en',
                     label: 'English',
@@ -71,39 +87,137 @@ const slides = [
             ],
             attributes: { preload: false, controls: true },
         },
-        poster: 'img/html5-video-poster.jpg',
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        lgSize: '1280-720',
     },
 ];
+
+// Video slides need the Video plugin.
+<LightGallery plugins={[Video]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.poster} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
-```ts
-const slides: LgGalleryItem[] = [
+```vue
+<script setup lang="ts">
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+import Video from '@lightgallery/vue/plugins/video';
+
+// Video slides need the Video plugin.
+const plugins = [Video];
+
+const items: LgGalleryItem[] = [
+    // YouTube, Vimeo and Wistia: `src` is the address of the video page.
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        lgSize: '1280-720',
+    },
+    // HTML5 video: no `src`. The same object as the vanilla data-video
+    // attribute, as the item's `video` field.
     {
         video: {
             source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            tracks: [
+                {
+                    src: '/videos/title.txt',
+                    kind: 'captions',
+                    srclang: 'en',
+                    label: 'English',
+                    default: 'true',
+                },
+            ],
             attributes: { preload: false, controls: true },
         },
-        poster: 'img/html5-video-poster.jpg',
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        lgSize: '1280-720',
     },
 ];
+</script>
+
+<template>
+    <LightGallery :plugins="plugins">
+        <LgItem v-for="item of items" :key="item.poster" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
 ```ts
-slides: LgGalleryItem[] = [
-    {
-        video: {
-            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
-            attributes: { preload: false, controls: true },
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withVideo } from '@lightgallery/angular/plugins/video';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.poster) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // Video slides need the video feature.
+    features = [withVideo()];
+
+    items: LgGalleryItem[] = [
+        // YouTube, Vimeo and Wistia: `src` is the address of the video page.
+        {
+            src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+            poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+            thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+            alt: 'Puffin Hunts Fish To Feed Puffling',
+            lgSize: '1280-720',
         },
-        poster: 'img/html5-video-poster.jpg',
-    },
-];
+        // HTML5 video: no `src`. The same object as the vanilla data-video
+        // attribute, as the item's `video` field.
+        {
+            video: {
+                source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+                tracks: [
+                    {
+                        src: '/videos/title.txt',
+                        kind: 'captions',
+                        srclang: 'en',
+                        label: 'English',
+                        default: 'true',
+                    },
+                ],
+                attributes: { preload: false, controls: true },
+            },
+            poster: '/images/demo/html5-video-poster.jpg',
+            thumb: '/images/demo/html5-video-poster.jpg',
+            alt: 'Peck Pocketed',
+            lgSize: '1280-720',
+        },
+    ];
+}
 ```
 
 </Fragment>
@@ -199,48 +313,152 @@ lightGallery(document.getElementById('gallery-videos-demo'), {
 <Fragment slot="react">
 
 ```tsx
-import { LightGallery, LightGalleryItem } from '@lightgallery/react';
-import Video from '@lightgallery/react/plugins/video';
+// One item per provider; `captionHtml` is the data-sub-html string.
+const items: GalleryItem[] = [
+    // YouTube
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        captionHtml: '<h4>Puffin Hunts Fish To Feed Puffling</h4>',
+        lgSize: '1280-720',
+    },
+    // Vimeo
+    {
+        src: '//vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        captionHtml: '<h4>Nature</h4><p>Video by Charlie Kaye</p>',
+        lgSize: '1280-720',
+    },
+    // Wistia
+    {
+        src: 'https://private-sharing.wistia.com/medias/mwhrulrucj',
+        poster: '/images/demo/wistia-video-poster.jpeg',
+        thumb: '/images/demo/wistia-video-poster.jpeg',
+        alt: 'Thank You!',
+        captionHtml: '<h4>Thank You!</h4><p>Sample Wistia video</p>',
+        lgSize: '1280-720',
+    },
+    // HTML5 video
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, playsInline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        captionHtml: "<h4>'Peck Pocketed' by Kevin Herron</h4>",
+        lgSize: '1280-720',
+    },
+];
 
-<LightGallery plugins={[Video]}>
-    {items.map((item) => (
-        <LightGalleryItem key={item.src} item={item}>
-            <img src={item.poster} alt={item.alt} />
-        </LightGalleryItem>
-    ))}
-</LightGallery>;
+// Rendered as above: <LightGallery plugins={[Video]}> with a
+// LightGalleryItem per item.
 ```
 
 </Fragment>
 <Fragment slot="vue">
 
-```vue
-<script setup>
-import { LightGallery, LgItem } from '@lightgallery/vue';
-import Video from '@lightgallery/vue/plugins/video';
-</script>
+```ts
+// One item per provider; `captionHtml` is the data-sub-html string.
+const items: LgGalleryItem[] = [
+    // YouTube
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        captionHtml: '<h4>Puffin Hunts Fish To Feed Puffling</h4>',
+        lgSize: '1280-720',
+    },
+    // Vimeo
+    {
+        src: '//vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        captionHtml: '<h4>Nature</h4><p>Video by Charlie Kaye</p>',
+        lgSize: '1280-720',
+    },
+    // Wistia
+    {
+        src: 'https://private-sharing.wistia.com/medias/mwhrulrucj',
+        poster: '/images/demo/wistia-video-poster.jpeg',
+        thumb: '/images/demo/wistia-video-poster.jpeg',
+        alt: 'Thank You!',
+        captionHtml: '<h4>Thank You!</h4><p>Sample Wistia video</p>',
+        lgSize: '1280-720',
+    },
+    // HTML5 video
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, playsinline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        captionHtml: "<h4>'Peck Pocketed' by Kevin Herron</h4>",
+        lgSize: '1280-720',
+    },
+];
 
-<template>
-    <LightGallery :plugins="[Video]">
-        <LgItem v-for="item of items" :key="item.src" :item="item">
-            <img :src="item.poster" :alt="item.alt" />
-        </LgItem>
-    </LightGallery>
-</template>
+// Rendered as above: <LightGallery :plugins="plugins"> with an LgItem
+// per item.
 ```
 
 </Fragment>
 <Fragment slot="angular">
 
-```html
-<!-- In the component class: features = [withVideo()]; -->
-<lg-gallery [features]="features">
-    @for (item of items; track item.src) {
-        <a [lgGalleryItem]="item">
-            <img [src]="item.poster" [alt]="item.alt" />
-        </a>
-    }
-</lg-gallery>
+```ts
+// One item per provider; `captionHtml` is the data-sub-html string.
+items: LgGalleryItem[] = [
+    // YouTube
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        captionHtml: '<h4>Puffin Hunts Fish To Feed Puffling</h4>',
+        lgSize: '1280-720',
+    },
+    // Vimeo
+    {
+        src: '//vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        captionHtml: '<h4>Nature</h4><p>Video by Charlie Kaye</p>',
+        lgSize: '1280-720',
+    },
+    // Wistia
+    {
+        src: 'https://private-sharing.wistia.com/medias/mwhrulrucj',
+        poster: '/images/demo/wistia-video-poster.jpeg',
+        thumb: '/images/demo/wistia-video-poster.jpeg',
+        alt: 'Thank You!',
+        captionHtml: '<h4>Thank You!</h4><p>Sample Wistia video</p>',
+        lgSize: '1280-720',
+    },
+    // HTML5 video
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, playsinline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        captionHtml: "<h4>'Peck Pocketed' by Kevin Herron</h4>",
+        lgSize: '1280-720',
+    },
+];
+
+// Template and `features = [withVideo()]` as above.
 ```
 
 </Fragment>
@@ -377,17 +595,21 @@ page rather than full screen.
 
 ```tsx
 // React spells the video attribute playsInline.
-const items = [
+const items: GalleryItem[] = [
     {
         // YouTube: mute=0 is forwarded to the player
         src: '//www.youtube.com/watch?v=EIUJfXk3_3w&mute=0',
         poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
         lgSize: '1280-720',
     },
     {
         // Vimeo
         src: '//vimeo.com/112836958?muted=false',
         poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
         lgSize: '1280-720',
     },
     {
@@ -397,9 +619,14 @@ const items = [
             attributes: { playsInline: true, controls: true },
         },
         poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
         lgSize: '1280-720',
     },
 ];
+
+// Rendered as above: <LightGallery plugins={[Video]}> with a
+// LightGalleryItem per item.
 ```
 
 </Fragment>
@@ -411,12 +638,16 @@ const items: LgGalleryItem[] = [
         // YouTube: mute=0 is forwarded to the player
         src: '//www.youtube.com/watch?v=EIUJfXk3_3w&mute=0',
         poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
         lgSize: '1280-720',
     },
     {
         // Vimeo
         src: '//vimeo.com/112836958?muted=false',
         poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
         lgSize: '1280-720',
     },
     {
@@ -426,9 +657,14 @@ const items: LgGalleryItem[] = [
             attributes: { playsinline: true, controls: true },
         },
         poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
         lgSize: '1280-720',
     },
 ];
+
+// Rendered as above: <LightGallery :plugins="plugins"> with an LgItem
+// per item.
 ```
 
 </Fragment>
@@ -440,12 +676,16 @@ items: LgGalleryItem[] = [
         // YouTube: mute=0 is forwarded to the player
         src: '//www.youtube.com/watch?v=EIUJfXk3_3w&mute=0',
         poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
         lgSize: '1280-720',
     },
     {
         // Vimeo
         src: '//vimeo.com/112836958?muted=false',
         poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
         lgSize: '1280-720',
     },
     {
@@ -455,9 +695,13 @@ items: LgGalleryItem[] = [
             attributes: { playsinline: true, controls: true },
         },
         poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
         lgSize: '1280-720',
     },
 ];
+
+// Template and `features = [withVideo()]` as above.
 ```
 
 </Fragment>

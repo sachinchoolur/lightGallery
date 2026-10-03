@@ -68,14 +68,50 @@ const lg = lightGallery(gallery, {
 <Fragment slot="react">
 
 ```tsx
-// Rendering a different `slides` array is the update, no refresh() and
-// no updateSlides() call.
-const [slides, setSlides] = useState(initialSlides);
+import { useState } from 'react';
+import {
+    LightGallery,
+    LightGalleryItem,
+    type GalleryItem,
+} from '@lightgallery/react';
 
-const remove = (index: number) =>
-    setSlides(slides.filter((_, i) => i !== index));
+const firstItems: GalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
 
-<LightGallery slides={slides} index={index} onIndexChange={setIndex} />;
+export default function Gallery() {
+    // Rendering a different list is the update, also while the gallery is
+    // open: there is no updateSlides() to call.
+    const [items, setItems] = useState(firstItems);
+
+    // removeFirstSlide and addSlide: the next two steps.
+
+    return (
+        // There is no toolbar to append to; `render.caption` puts the
+        // buttons in the caption area of every slide instead.
+        <LightGallery
+            render={{
+                caption: () => (
+                    <div className="slide-actions">
+                        <button type="button" onClick={removeFirstSlide}>
+                            Remove slide
+                        </button>
+                        <button type="button" onClick={addSlide}>
+                            Add slide
+                        </button>
+                    </div>
+                ),
+            }}
+        >
+            {items.map((item) => (
+                <LightGalleryItem key={item.src} item={item}>
+                    <img src={item.thumb} alt={item.alt} />
+                </LightGalleryItem>
+            ))}
+        </LightGallery>
+    );
+}
 ```
 
 </Fragment>
@@ -84,13 +120,35 @@ const remove = (index: number) =>
 ```vue
 <script setup>
 import { ref } from 'vue';
+import { LightGallery, LgItem } from '@lightgallery/vue';
 
-const slides = ref(initialSlides);
-const remove = (index) => slides.value.splice(index, 1);
+// Changing the list is the update, also while the gallery is open: there
+// is no updateSlides() to call.
+const items = ref([
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+]);
+
+// removeFirstSlide and addSlide: the next two steps.
 </script>
 
 <template>
-    <LightGallery v-model:index="index" :slides="slides" />
+    <LightGallery>
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+
+        <!-- There is no toolbar to append to; the caption slot puts the
+             buttons in the caption area of every slide instead. -->
+        <template #caption>
+            <div class="slide-actions">
+                <button type="button" @click="removeFirstSlide">
+                    Remove slide
+                </button>
+                <button type="button" @click="addSlide">Add slide</button>
+            </div>
+        </template>
+    </LightGallery>
 </template>
 ```
 
@@ -98,10 +156,49 @@ const remove = (index) => slides.value.splice(index, 1);
 <Fragment slot="angular">
 
 ```ts
-slides = signal(initialSlides);
+import { Component, signal } from '@angular/core';
+import {
+    LgCaptionDirective,
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
 
-remove(index: number) {
-    this.slides.update((current) => current.filter((_, i) => i !== index));
+const firstItems: LgGalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgCaptionDirective, LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery>
+            @for (item of items(); track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+
+            <!-- There is no toolbar to append to; the lgCaption template
+                 puts the buttons in the caption area of every slide. -->
+            <ng-template lgCaption>
+                <div class="slide-actions">
+                    <button type="button" (click)="removeFirstSlide()">
+                        Remove slide
+                    </button>
+                    <button type="button" (click)="addSlide()">Add slide</button>
+                </div>
+            </ng-template>
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // Updating the signal is the update, also while the gallery is open:
+    // there is no updateSlides() to call.
+    items = signal(firstItems);
+
+    // removeFirstSlide() and addSlide(): the next two steps.
 }
 ```
 
@@ -137,7 +234,7 @@ function removeFirstSlide() {
 ```tsx
 // There is no updateSlides(): a new array is the update. The gallery
 // keeps its index.
-const removeFirstSlide = () => setSlides((current) => current.slice(1));
+const removeFirstSlide = () => setItems((current) => current.slice(1));
 ```
 
 </Fragment>
@@ -147,7 +244,7 @@ const removeFirstSlide = () => setSlides((current) => current.slice(1));
 // There is no updateSlides(): a new array is the update. The gallery
 // keeps its index.
 const removeFirstSlide = () => {
-    slides.value = slides.value.slice(1);
+    items.value = items.value.slice(1);
 };
 ```
 
@@ -158,7 +255,7 @@ const removeFirstSlide = () => {
 // There is no updateSlides(): a new array is the update. The gallery
 // keeps its index.
 removeFirstSlide() {
-    this.slides.update((current) => current.slice(1));
+    this.items.update((current) => current.slice(1));
 }
 ```
 
@@ -187,9 +284,9 @@ function addSlide() {
 
 ```tsx
 const addSlide = () =>
-    setSlides((current) => [
+    setItems((current) => [
         ...current,
-        { src: 'img/img3.jpg', thumb: 'img/thumb3.jpg' },
+        { src: 'img/img3.jpg', thumb: 'img/thumb3.jpg', alt: 'Lake' },
     ]);
 ```
 
@@ -198,9 +295,9 @@ const addSlide = () =>
 
 ```js
 const addSlide = () => {
-    slides.value = [
-        ...slides.value,
-        { src: 'img/img3.jpg', thumb: 'img/thumb3.jpg' },
+    items.value = [
+        ...items.value,
+        { src: 'img/img3.jpg', thumb: 'img/thumb3.jpg', alt: 'Lake' },
     ];
 };
 ```
@@ -210,9 +307,9 @@ const addSlide = () => {
 
 ```ts
 addSlide() {
-    this.slides.update((current) => [
+    this.items.update((current) => [
         ...current,
-        { src: 'img/img3.jpg', thumb: 'img/thumb3.jpg' },
+        { src: 'img/img3.jpg', thumb: 'img/thumb3.jpg', alt: 'Lake' },
     ]);
 }
 ```
