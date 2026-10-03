@@ -27,6 +27,7 @@ export function IframeSlide({
         >
             <iframe
                 className="lg-object"
+                frameBorder={0}
                 title={item.iframeTitle ?? item.title ?? 'Embedded content'}
                 src={item.src}
                 allowFullScreen={true}

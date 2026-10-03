@@ -368,6 +368,96 @@ describe('image loading', () => {
     });
 });
 
+describe('iframe slides', () => {
+    const iframeSlides: GalleryItem[] = [
+        { src: 'https://example.com/a', iframe: true, iframeTitle: 'Frame A' },
+        { src: 'https://example.com/b', iframe: true, title: 'Slide B' },
+        { src: 'https://example.com/c', iframe: true },
+    ];
+
+    it('renders the 2.x iframe markup and completes the slide on load', () => {
+        const onSlideItemLoad = vi.fn();
+        render(
+            <Harness
+                slides={iframeSlides}
+                zoomFromOrigin={false}
+                onSlideItemLoad={onSlideItemLoad}
+            />,
+        );
+        openSettled();
+
+        const current = document.querySelector('.lg-item.lg-current')!;
+        const cont = current.querySelector<HTMLElement>(
+            ':scope > .lg-media-cont.lg-has-iframe',
+        )!;
+        expect(cont).not.toBeNull();
+        expect(cont.style.width).toBe('100%');
+        expect(cont.style.maxWidth).toBe('100%');
+        expect(cont.style.height).toBe('100%');
+        expect(cont.style.maxHeight).toBe('100%');
+        const frame = cont.querySelector<HTMLIFrameElement>(
+            ':scope > iframe.lg-object',
+        )!;
+        expect(frame).not.toBeNull();
+        expect(frame.getAttribute('src')).toBe('https://example.com/a');
+        expect(frame.getAttribute('frameborder')).toBe('0');
+        expect(frame.hasAttribute('allowfullscreen')).toBe(true);
+
+        // Spinner state until the frame loads; neighbours wait for it.
+        expect(current).toHaveClass('lg-loaded');
+        expect(current).not.toHaveClass('lg-complete');
+        expect(document.querySelectorAll('.lg-item iframe').length).toBe(1);
+        expect(onSlideItemLoad).not.toHaveBeenCalled();
+
+        fireEvent.load(frame);
+        expect(current).toHaveClass('lg-complete');
+        expect(onSlideItemLoad).toHaveBeenCalledTimes(1);
+        expect(onSlideItemLoad.mock.calls[0]![0].index).toBe(0);
+        // The load releases the preload of the neighbouring slides.
+        expect(document.querySelectorAll('.lg-item iframe').length).toBe(3);
+    });
+
+    it('sizes the frame from the iframe settings', () => {
+        render(
+            <Harness
+                slides={iframeSlides}
+                iframeWidth="80%"
+                iframeHeight="75%"
+                iframeMaxWidth="960px"
+                iframeMaxHeight="600px"
+            />,
+        );
+        openSettled();
+
+        const cont = document.querySelector<HTMLElement>(
+            '.lg-media-cont.lg-has-iframe',
+        )!;
+        expect(cont.style.width).toBe('80%');
+        expect(cont.style.height).toBe('75%');
+        expect(cont.style.maxWidth).toBe('960px');
+        expect(cont.style.maxHeight).toBe('600px');
+    });
+
+    it('titles the frame from iframeTitle, then title, then a fallback', () => {
+        render(<Harness slides={iframeSlides} zoomFromOrigin={false} />);
+        openSettled();
+        fireEvent.load(screen.getByTitle('Frame A'));
+
+        expect(screen.getByTitle('Frame A')).toHaveAttribute(
+            'src',
+            'https://example.com/a',
+        );
+        expect(screen.getByTitle('Slide B')).toHaveAttribute(
+            'src',
+            'https://example.com/b',
+        );
+        expect(screen.getByTitle('Embedded content')).toHaveAttribute(
+            'src',
+            'https://example.com/c',
+        );
+    });
+});
+
 describe('captions', () => {
     it('renders ReactNode captions in the caption bar', () => {
         render(<Harness />);

@@ -838,3 +838,126 @@ describe('closing without a thumbnail to return to', () => {
     });
 
 });
+
+const IFRAME_ITEMS: LgGalleryItem[] = [
+    { src: 'https://example.com/a', iframe: true, iframeTitle: 'Frame A' },
+    { src: 'https://example.com/b', iframe: true, title: 'Slide B' },
+    { src: 'https://example.com/c', iframe: true },
+];
+
+@Component({
+    imports: [LgGalleryComponent],
+    template: `
+        <lg-gallery
+            [slides]="items"
+            [zoomFromOrigin]="false"
+            [iframeWidth]="size().width"
+            [iframeHeight]="size().height"
+            [iframeMaxWidth]="size().maxWidth"
+            [iframeMaxHeight]="size().maxHeight"
+            (slideItemLoad)="log.push('slideItemLoad:' + $event.index)"
+        />
+    `,
+})
+class IframeHost {
+    readonly gallery = viewChild.required(LgGalleryComponent);
+    readonly items = IFRAME_ITEMS;
+    readonly size = signal<{
+        width?: string;
+        height?: string;
+        maxWidth?: string;
+        maxHeight?: string;
+    }>({});
+    readonly log: string[] = [];
+}
+
+describe('iframe slides', () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+    });
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    function frameOf(src: string): HTMLIFrameElement | null {
+        return document.querySelector<HTMLIFrameElement>(
+            `.lg-item .lg-media-cont.lg-has-iframe > iframe[src="${src}"]`,
+        );
+    }
+
+    it('renders the 2.x iframe markup and completes the slide on load', async () => {
+        const fixture = TestBed.createComponent(IframeHost);
+        const host = fixture.componentInstance;
+        await flush(fixture);
+        // A plain string bound to an iframe's src is an unsafe resource
+        // URL to Angular (NG0904): the open itself must not throw.
+        host.gallery().openGallery(0);
+        await flush(fixture);
+        await advance(fixture, BACKDROP + 20);
+
+        const current = query('.lg-item.lg-current')!;
+        const cont = current.querySelector<HTMLElement>(
+            '.lg-media-cont.lg-has-iframe',
+        )!;
+        expect(cont).not.toBeNull();
+        expect(cont.style.width).toBe('100%');
+        expect(cont.style.maxWidth).toBe('100%');
+        expect(cont.style.height).toBe('100%');
+        expect(cont.style.maxHeight).toBe('100%');
+        const frame = cont.querySelector<HTMLIFrameElement>(
+            ':scope > iframe.lg-object',
+        )!;
+        expect(frame).not.toBeNull();
+        expect(frame.getAttribute('src')).toBe('https://example.com/a');
+        expect(frame.getAttribute('frameborder')).toBe('0');
+        expect(frame.hasAttribute('allowfullscreen')).toBe(true);
+
+        // Spinner state until the frame loads; neighbours wait for it.
+        expect(current.classList.contains('lg-loaded')).toBe(true);
+        expect(current.classList.contains('lg-complete')).toBe(false);
+        expect(queryAll('.lg-item iframe')).toHaveLength(1);
+        expect(host.log).toEqual([]);
+
+        frame.dispatchEvent(new Event('load'));
+        await flush(fixture);
+        expect(current.classList.contains('lg-complete')).toBe(true);
+        expect(host.log).toEqual(['slideItemLoad:0']);
+        // The load releases the preload of the neighbouring slides.
+        expect(queryAll('.lg-item iframe')).toHaveLength(3);
+    });
+
+    it('sizes the frame from the iframe settings', async () => {
+        const fixture = TestBed.createComponent(IframeHost);
+        const host = fixture.componentInstance;
+        host.size.set({
+            width: '80%',
+            height: '75%',
+            maxWidth: '960px',
+            maxHeight: '600px',
+        });
+        await flush(fixture);
+        host.gallery().openGallery(0);
+        await flush(fixture);
+
+        const cont = query('.lg-media-cont.lg-has-iframe')!;
+        expect(cont.style.width).toBe('80%');
+        expect(cont.style.height).toBe('75%');
+        expect(cont.style.maxWidth).toBe('960px');
+        expect(cont.style.maxHeight).toBe('600px');
+    });
+
+    it('titles the frame from iframeTitle, then title, then a fallback', async () => {
+        const fixture = TestBed.createComponent(IframeHost);
+        await flush(fixture);
+        fixture.componentInstance.gallery().openGallery(0);
+        await flush(fixture);
+        frameOf('https://example.com/a')!.dispatchEvent(new Event('load'));
+        await flush(fixture);
+
+        expect(frameOf('https://example.com/a')!.title).toBe('Frame A');
+        expect(frameOf('https://example.com/b')!.title).toBe('Slide B');
+        expect(frameOf('https://example.com/c')!.title).toBe(
+            'Embedded content',
+        );
+    });
+});

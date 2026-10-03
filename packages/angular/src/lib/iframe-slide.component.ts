@@ -1,10 +1,12 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     inject,
     input,
     output,
 } from '@angular/core';
+import { DomSanitizer, type SafeResourceUrl } from '@angular/platform-browser';
 
 import { LgGalleryRuntime } from './runtime';
 import type { LgGalleryItem } from './types';
@@ -23,10 +25,11 @@ import type { LgGalleryItem } from './types';
         >
             <iframe
                 class="lg-object"
+                frameborder="0"
                 [attr.title]="
                     item().iframeTitle ?? item().title ?? 'Embedded content'
                 "
-                [attr.src]="item().src ?? null"
+                [attr.src]="src()"
                 allowfullscreen
                 (load)="mediaLoad.emit()"
             ></iframe>
@@ -39,4 +42,13 @@ export class LgIframeSlideComponent {
     readonly mediaLoad = output<void>();
 
     protected readonly runtime = inject(LgGalleryRuntime);
+    private readonly sanitizer = inject(DomSanitizer);
+
+    // An iframe's src is a resource URL to Angular, which rejects a plain
+    // string there (NG0904). The item's `src` is the URL the application
+    // chose to embed, so it is trusted as given, like a video embed URL.
+    protected readonly src = computed<SafeResourceUrl | null>(() => {
+        const url = this.item().src;
+        return url ? this.sanitizer.bypassSecurityTrustResourceUrl(url) : null;
+    });
 }

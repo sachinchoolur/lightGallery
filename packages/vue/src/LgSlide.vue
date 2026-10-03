@@ -24,6 +24,7 @@ import {
 } from '@lightgallery/headless';
 
 import { LgCaptionContent } from './caption-content';
+import LgIframeSlide from './LgIframeSlide.vue';
 import LgImageSlide from './LgImageSlide.vue';
 import { LG_RUNTIME } from './runtime';
 import { LG_STORE } from './store';
@@ -218,9 +219,9 @@ const deferSrc = computed(
 /**
  * Slide content resolved through the plugin runtime (ADR §5): the first
  * plugin slide renderer that owns the item wins (video); otherwise the
- * built-in image renderer; then every plugin `slideWrapper` wraps the
- * result, first plugin outermost (2.x DOM order) — the direct Vue
- * expression of the React runtime's reduceRight.
+ * built-in image or iframe renderer; then every plugin `slideWrapper`
+ * wraps the result, first plugin outermost (2.x DOM order) — the direct
+ * Vue expression of the React runtime's reduceRight.
  */
 const SlideContent = (): VNodeChild => {
     const item = props.item;
@@ -248,8 +249,14 @@ const SlideContent = (): VNodeChild => {
             onMediaLoad: onLoad,
             onMediaError: onError,
         });
+    } else if (slideType.value === 'iframe') {
+        content = h(LgIframeSlide, {
+            item,
+            index: props.index,
+            onMediaLoad: () => onLoad(),
+        });
     }
-    // Video/iframe items render nothing without their plugin.
+    // Video items render nothing without the video plugin.
     return registered.reduceRight((acc, plugin) => {
         const Wrapper = plugin.slots?.slideWrapper;
         return Wrapper
