@@ -38,11 +38,18 @@ describe('SSR (vue/server-renderer)', () => {
         // Opening is a client-side phase transition (post-flush watcher +
         // rAF timeline) — on the server `open: true` must not teleport or
         // touch document/window; the client opens after hydration.
+        const events: string[] = [];
         const app = createSSRApp({
             render: () =>
                 h(
                     LightGallery,
-                    { slides: ITEMS, open: true, index: 1 },
+                    {
+                        slides: ITEMS,
+                        open: true,
+                        index: 1,
+                        onBeforeOpen: () => events.push('beforeOpen'),
+                        onAfterOpen: () => events.push('afterOpen'),
+                    },
                     {
                         default: () =>
                             h('a', { class: 'ssr-trigger' }, 'open me'),
@@ -56,6 +63,8 @@ describe('SSR (vue/server-renderer)', () => {
         expect(Object.values(teleports).join('')).not.toContain(
             'lg-container',
         );
+        // Nothing opens on the server, so no open event fires there either.
+        expect(events).toEqual([]);
     });
 
     it('imports every entry at module scope without browser globals', async () => {

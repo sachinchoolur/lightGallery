@@ -111,6 +111,41 @@ class InlineHost {
     readonly items = ITEMS;
 }
 
+@Component({
+    imports: [LgGalleryComponent],
+    template: `
+        <lg-gallery
+            [slides]="items"
+            [zoomFromOrigin]="false"
+            [open]="true"
+            [index]="1"
+            (beforeOpen)="log.push('beforeOpen')"
+            (afterOpen)="log.push('afterOpen')"
+        />
+    `,
+})
+class OpenAtMountHost {
+    readonly items = ITEMS;
+    readonly log: string[] = [];
+}
+
+@Component({
+    imports: [LgGalleryComponent],
+    template: `
+        <div #host class="inline-host"></div>
+        <lg-gallery
+            [container]="host"
+            [open]="true"
+            [closable]="false"
+            [slides]="items"
+            [zoomFromOrigin]="false"
+        />
+    `,
+})
+class CarouselHost {
+    readonly items = ITEMS;
+}
+
 function query(selector: string): HTMLElement | null {
     // CDK attaches the overlay to the document-level overlay container.
     return document.querySelector(selector);
@@ -406,6 +441,46 @@ describe('LgGalleryComponent (core gallery)', () => {
 
         fixture.destroy();
         expect(document.querySelector('.inline-host .lg-container')).toBeNull();
+    });
+
+    it('opens at mount when [open] is already true', async () => {
+        const fixture = TestBed.createComponent(OpenAtMountHost);
+        const host = fixture.componentInstance;
+        await flush(fixture);
+
+        const container = query('.lg-container')!;
+        expect(container).not.toBeNull();
+        expect(container.classList.contains('lg-show')).toBe(true);
+        expect(document.documentElement.classList.contains('lg-on')).toBe(true);
+        // Opens at the bound index.
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
+        expect(
+            query('.lg-item.lg-current img.lg-image')!.getAttribute('src'),
+        ).toBe('b.jpg');
+
+        // The same entrance timeline as an open after mount.
+        await advance(fixture, 10);
+        expect(container.classList.contains('lg-show-in')).toBe(true);
+        await advance(fixture, BACKDROP);
+        expect(query('.lg-outer')!.classList.contains('lg-visible')).toBe(true);
+        expect(host.log).toEqual(['beforeOpen', 'afterOpen']);
+    });
+
+    it('opens at mount inline in a [container] element (carousel pattern)', async () => {
+        const fixture = TestBed.createComponent(CarouselHost);
+        await flush(fixture);
+
+        const container = fixture.nativeElement.querySelector(
+            '.inline-host .lg-container',
+        ) as HTMLElement;
+        expect(container).not.toBeNull();
+        expect(container.classList.contains('lg-show')).toBe(true);
+        expect(container.classList.contains('lg-inline')).toBe(true);
+        expect(query('.lg-item.lg-current img.lg-image')).not.toBeNull();
+        // No body scroll-lock/classes in inline mode.
+        expect(document.documentElement.classList.contains('lg-on')).toBe(
+            false,
+        );
     });
 
     it('honors ends without loop: bounce class and no wrap', async () => {

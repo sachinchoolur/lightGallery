@@ -383,6 +383,108 @@ describe('LightGallery (core gallery)', () => {
     });
 });
 
+describe('open at mount', () => {
+    it('opens after mount when `open` is already true', async () => {
+        const log: string[] = [];
+        const Host = defineComponent({
+            components: { LightGallery },
+            setup: () => ({ items: ITEMS, log }),
+            template: `
+                <LightGallery
+                    :slides="items"
+                    :zoom-from-origin="false"
+                    :open="true"
+                    :index="1"
+                    @before-open="log.push('beforeOpen')"
+                    @after-open="log.push('afterOpen')"
+                />
+            `,
+        });
+        const wrapper = mount(Host, { attachTo: document.body });
+        await settle();
+
+        const container = query('.lg-container')!;
+        expect(container).not.toBeNull();
+        expect(container.classList.contains('lg-show')).toBe(true);
+        expect(document.documentElement.classList.contains('lg-on')).toBe(true);
+        // Opens at the bound index.
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
+        expect(
+            query('.lg-item.lg-current img.lg-image')!.getAttribute('src'),
+        ).toBe('b.jpg');
+
+        // The same entrance timeline as an open after mount.
+        await advance(10);
+        expect(container.classList.contains('lg-show-in')).toBe(true);
+        await advance(BACKDROP);
+        expect(query('.lg-outer')!.classList.contains('lg-visible')).toBe(true);
+        expect(log).toEqual(['beforeOpen', 'afterOpen']);
+        wrapper.unmount();
+    });
+
+    it('opens a v-model:open that starts true and still closes through it', async () => {
+        const opened = ref(true);
+        const Host = defineComponent({
+            components: { LightGallery },
+            setup: () => ({ opened, items: ITEMS }),
+            template: `
+                <LightGallery
+                    :slides="items"
+                    :zoom-from-origin="false"
+                    v-model:open="opened"
+                />
+            `,
+        });
+        const wrapper = mount(Host, { attachTo: document.body });
+        await settle();
+        expect(query('.lg-container.lg-show')).not.toBeNull();
+        expect(opened.value).toBe(true);
+
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+        await nextTick();
+        expect(opened.value).toBe(false);
+        await advance(CLOSE_EXIT);
+        expect(query('.lg-container.lg-show')).toBeNull();
+        wrapper.unmount();
+    });
+
+    it('opens inline in a container element (carousel pattern)', async () => {
+        const Host = defineComponent({
+            components: { LightGallery },
+            setup: () => ({
+                items: ITEMS,
+                host: ref<HTMLElement | null>(null),
+            }),
+            template: `
+                <div ref="host" class="inline-host" />
+                <LightGallery
+                    v-if="host"
+                    :container="host"
+                    :open="true"
+                    :closable="false"
+                    :slides="items"
+                    :zoom-from-origin="false"
+                />
+            `,
+        });
+        const wrapper = mount(Host, { attachTo: document.body });
+        // One turn for the template ref to mount the gallery, then its open.
+        await nextTick();
+        await settle();
+
+        const container = query('.inline-host .lg-container')!;
+        expect(container).not.toBeNull();
+        expect(container.classList.contains('lg-show')).toBe(true);
+        expect(container.classList.contains('lg-inline')).toBe(true);
+        expect(query('.lg-item.lg-current img.lg-image')).not.toBeNull();
+        // No body scroll-lock/classes in inline mode.
+        expect(document.documentElement.classList.contains('lg-on')).toBe(
+            false,
+        );
+        wrapper.unmount();
+    });
+});
+
 describe('persistent container (v2 close contract)', () => {
     it('keeps the shell, empties the items, and remounts on reopen', async () => {
         const { wrapper } = mountUncontrolled();

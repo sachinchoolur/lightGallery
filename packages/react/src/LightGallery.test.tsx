@@ -100,6 +100,37 @@ describe('open/close lifecycle (controlled)', () => {
         expect(calls).toEqual(['beforeOpen', 'afterOpen']);
     });
 
+    it('opens at mount inline in a container element (carousel pattern)', () => {
+        function Carousel() {
+            const [host, setHost] = useState<HTMLElement | null>(null);
+            return (
+                <>
+                    <div className="inline-host" ref={setHost} />
+                    {host && (
+                        <LightGallery
+                            container={host}
+                            open
+                            closable={false}
+                            index={1}
+                            slides={slides}
+                        />
+                    )}
+                </>
+            );
+        }
+        render(<Carousel />);
+
+        const container = document.querySelector('.inline-host .lg-container');
+        expect(container).toBeInTheDocument();
+        expect(container).toHaveClass('lg-show', 'lg-inline');
+        // Opens at the bound index.
+        expect(
+            document.querySelector('.lg-counter-current')?.textContent,
+        ).toBe('2');
+        // No body scroll-lock/classes in inline mode.
+        expect(document.documentElement).not.toHaveClass('lg-on');
+    });
+
     it('closes on ESC with the closing animation, then unmounts', () => {
         const onClose = vi.fn();
         const onBeforeClose = vi.fn();

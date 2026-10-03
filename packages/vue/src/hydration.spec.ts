@@ -85,4 +85,42 @@ describe('hydration', () => {
 
         app.unmount();
     });
+
+    it('opens after hydration when `open` is true on the server', async () => {
+        const Host = defineComponent({
+            setup: () => ({ items: ITEMS }),
+            render() {
+                return h(
+                    LightGallery,
+                    { slides: this.items, open: true, zoomFromOrigin: false },
+                    { default: () => h('a', { class: 'trigger' }, 'open') },
+                );
+            },
+        });
+
+        const serverHtml = await renderToString(createSSRApp(Host));
+        expect(serverHtml).not.toContain('lg-container');
+        const root = document.createElement('div');
+        root.innerHTML = serverHtml;
+        document.body.appendChild(root);
+
+        const warn = vi.spyOn(console, 'warn');
+        const error = vi.spyOn(console, 'error');
+        const app = createSSRApp(Host);
+        app.mount(root);
+        await nextTick();
+        await nextTick();
+
+        const hydrationMessages = [...warn.mock.calls, ...error.mock.calls]
+            .flat()
+            .filter(
+                (arg) =>
+                    typeof arg === 'string' &&
+                    arg.toLowerCase().includes('hydrat'),
+            );
+        expect(hydrationMessages).toEqual([]);
+        expect(document.querySelector('.lg-container.lg-show')).not.toBeNull();
+
+        app.unmount();
+    });
 });
