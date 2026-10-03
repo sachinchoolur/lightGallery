@@ -781,6 +781,32 @@ lightGalleryJustified('gallery-zoom-from-origin-demo', {
     hash: true,
     plugins: [lgZoom, lgShare, lgThumbnail, lgHash],
 });
+
+// Cropped thumbnails: square tiles that each show a window of their photo.
+// With the origin crop plugin the window grows out of the tile and the rest
+// of the photo is revealed around it; the checkbox drops the plugin, and
+// the default flight squashes the whole photo into the tile instead.
+let croppedThumbnailsGallery;
+function initCroppedThumbnails(originCrop) {
+    const el = document.getElementById('gallery-cropped-thumbnails');
+    if (!el) {
+        return;
+    }
+    croppedThumbnailsGallery = lightGallery(el, {
+        plugins: originCrop
+            ? [lgZoom, lgThumbnail, lgOriginCrop]
+            : [lgZoom, lgThumbnail],
+        pager: false,
+        hash: false,
+    });
+}
+initCroppedThumbnails(true);
+document
+    .getElementById('toggle-origin-crop')
+    ?.addEventListener('change', (event) => {
+        croppedThumbnailsGallery.destroy();
+        initCroppedThumbnails(event.target.checked);
+    });
 lightGalleryJustified('gallery-captions-demo', {
     thumbnail: false,
     plugins: [lgZoom, lgShare],
@@ -1475,6 +1501,15 @@ lightGalleryJustified('gallery-justified-custom-demo', {
     pager: false,
     hash: false,
     plugins: [lgZoom, lgThumbnail],
+});
+
+// The v3 release post: the justified grid with a full toolbar, so the
+// overflow menu shows on phones.
+lightGalleryJustified('blog-v3-gallery', {
+    justifiedRowHeight: 150,
+    justifiedGap: 6,
+    justifiedLastRow: 'justify',
+    plugins: [lgZoom, lgThumbnail, lgFullscreen, lgAutoplay, lgShare, lgRotate],
 });
 
 // RTL demo page: the grid carries dir="rtl"; direction 'auto' inherits it.

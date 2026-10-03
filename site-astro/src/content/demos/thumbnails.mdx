@@ -341,11 +341,12 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
 ##### CSS
 
 ```scss
+// `addClass` puts the class on the gallery's container, above `.lg-outer`.
 .lg-custom-thumbnails {
-    &.lg-outer {
+    .lg-outer {
         width: auto;
         // Set space for the container to occupy thumbnails
-        right: 225px;
+        right: 240px;
 
         // Add some spacing on the left to match with the right hand side spacing
         left: 10px;
@@ -354,7 +355,9 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
             // Set the position of the thumbnails
             left: auto;
             top: 0;
-            width: 225px;
+            // Room for two 100px thumbs, their 5px gaps, the padding
+            // and a thin scrollbar
+            width: 240px;
             bottom: 0;
             position: fixed;
             right: 0;
@@ -368,6 +371,7 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
             padding-right: 5px;
             margin: 0 -10px;
             overflow-y: auto;
+            scrollbar-width: thin;
 
             // Update transition values
             // By default thumbnails animates from bottom to top
@@ -381,7 +385,8 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
                 opacity 0.15s cubic-bezier(0, 0, 0.25, 1) 0.15s;
         }
 
-        &.lg-thumb-open {
+        // The strip is a component: it opens with the gallery's components
+        &.lg-components-open {
             .lg-thumb-outer {
                 transform: translate3d(0, 0, 0);
                 opacity: 1;
@@ -390,6 +395,7 @@ lightGallery(document.getElementById('customize-thumbnails-gallery'), {
 
         // Add a hover effect (optional)
         .lg-thumb-item {
+            float: left;
             filter: grayscale(100%);
             will-change: filter;
             transition: filter 0.12s ease-in, border-color 0.12s ease;

@@ -1,12 +1,16 @@
+// Thumbnails demo, "Customize more": the strip as a column on the right.
+// Two 100px thumbs plus their 5px gaps need 210px; the column is wide
+// enough for that with its padding and a thin scrollbar, so the strip
+// does not fall to one column where scrollbars take up space.
 .lg-custom-thumbnails {
     .lg-outer {
         width: auto;
-        right: 225px;
+        right: 240px;
         left: 10px;
         .lg-thumb-outer {
             left: auto;
             top: 0;
-            width: 225px;
+            width: 240px;
             max-height: none;
             bottom: 0;
             background-color: #999;
@@ -14,13 +18,15 @@
             padding-right: 5px;
             margin: 0 -10px;
             overflow-y: auto;
+            scrollbar-width: thin;
             position: fixed;
             right: 0;
             transform: translate3d(30%, 0, 0);
             opacity: 0;
-            will-change: transform opacity;
-            transition: transform 0.15s cubic-bezier(0, 0, 0.25, 1) 0s,
-                cubic-bezier(0, 0, 0.25, 1) 0.15s;
+            will-change: transform, opacity;
+            transition:
+                transform 0.15s cubic-bezier(0, 0, 0.25, 1) 0s,
+                opacity 0.15s cubic-bezier(0, 0, 0.25, 1) 0.15s;
         }
 
         &.lg-components-open {
