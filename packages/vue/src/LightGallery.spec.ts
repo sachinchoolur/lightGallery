@@ -395,6 +395,7 @@ describe('open at mount', () => {
                     :zoom-from-origin="false"
                     :open="true"
                     :index="1"
+                    @init="log.push('init')"
                     @before-open="log.push('beforeOpen')"
                     @after-open="log.push('afterOpen')"
                 />
@@ -418,7 +419,8 @@ describe('open at mount', () => {
         expect(container.classList.contains('lg-show-in')).toBe(true);
         await advance(BACKDROP);
         expect(query('.lg-outer')!.classList.contains('lg-visible')).toBe(true);
-        expect(log).toEqual(['beforeOpen', 'afterOpen']);
+        // Mounted open: the same order as React and Angular.
+        expect(log).toEqual(['beforeOpen', 'init', 'afterOpen']);
         wrapper.unmount();
     });
 

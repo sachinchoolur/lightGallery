@@ -7,7 +7,12 @@ import { withVideo } from '@lightgallery/angular/plugins/video';
 import { LgGalleryComponent } from './gallery.component';
 import { LgGalleryItemDirective } from './item.directive';
 import { LgCaptionDirective, LgCounterDirective } from './slots';
-import type { LgGalleryItem, SlideEventDetail } from './types';
+import type {
+    InitDetail,
+    LgGalleryHandle,
+    LgGalleryItem,
+    SlideEventDetail,
+} from './types';
 
 const ITEMS: LgGalleryItem[] = [
     { src: 'a.jpg', thumb: 'a-t.jpg', alt: 'a', caption: 'Caption A' },
@@ -119,14 +124,36 @@ class InlineHost {
             [zoomFromOrigin]="false"
             [open]="true"
             [index]="1"
+            (init)="onInit($event)"
             (beforeOpen)="log.push('beforeOpen')"
             (afterOpen)="log.push('afterOpen')"
         />
     `,
 })
 class OpenAtMountHost {
+    readonly gallery = viewChild.required(LgGalleryComponent);
     readonly items = ITEMS;
     readonly log: string[] = [];
+    initInstance: LgGalleryHandle | null = null;
+
+    onInit(detail: InitDetail): void {
+        this.log.push('init');
+        this.initInstance = detail.instance;
+    }
+}
+
+@Component({
+    imports: [LgGalleryComponent],
+    template: `
+        <lg-gallery
+            [slides]="items"
+            [zoomFromOrigin]="false"
+            (init)="$event.instance.openGallery(1)"
+        />
+    `,
+})
+class OpenFromInitHost {
+    readonly items = ITEMS;
 }
 
 @Component({
@@ -463,7 +490,20 @@ describe('LgGalleryComponent (core gallery)', () => {
         expect(container.classList.contains('lg-show-in')).toBe(true);
         await advance(fixture, BACKDROP);
         expect(query('.lg-outer')!.classList.contains('lg-visible')).toBe(true);
-        expect(host.log).toEqual(['beforeOpen', 'afterOpen']);
+        // Mounted open: the same order as React and Vue, with the
+        // component itself as the init payload.
+        expect(host.log).toEqual(['beforeOpen', 'init', 'afterOpen']);
+        expect(host.initInstance).toBe(host.gallery());
+    });
+
+    it('opens from the (init) handler through the emitted instance', async () => {
+        const fixture = TestBed.createComponent(OpenFromInitHost);
+        await flush(fixture);
+
+        const container = query('.lg-container')!;
+        expect(container).not.toBeNull();
+        expect(container.classList.contains('lg-show')).toBe(true);
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
     });
 
     it('opens at mount inline in a [container] element (carousel pattern)', async () => {

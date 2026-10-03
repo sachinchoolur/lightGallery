@@ -42,16 +42,23 @@ const ITEMS: LgGalleryItem[] = [
             }
             <ng-template lgCaption let-item>{{ item?.alt }}</ng-template>
         </lg-gallery>
-        <lg-gallery [slides]="items" [open]="true" />
+        <lg-gallery [slides]="items" [open]="true" (init)="onInit()" />
     `,
 })
 class SsrHost {
     readonly items = ITEMS;
     readonly features = [withThumbnail(), withZoom(), withHash()];
+
+    onInit(): void {
+        serverInits += 1;
+    }
 }
 
 const DOC =
     '<html><head><title>ssr</title></head><body><ssr-host></ssr-host></body></html>';
+
+/** `(init)` emissions seen on the server — a mount event, so none. */
+let serverInits = 0;
 
 describe('SSR (platform-server, zoneless)', () => {
     it('server-renders closed and open galleries without browser globals', async () => {
@@ -80,5 +87,8 @@ describe('SSR (platform-server, zoneless)', () => {
         expect(html).not.toContain('lg-outer');
         // No zone.js in the server bundle path.
         expect(html).toContain('ng-server-context');
+        // `init` is a mount event (React's effect, Vue's onMounted): the
+        // server never emits it, even for the gallery open at bootstrap.
+        expect(serverInits).toBe(0);
     });
 });

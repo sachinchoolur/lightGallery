@@ -89,15 +89,17 @@ describe('open/close lifecycle (controlled)', () => {
         expect(outer).toHaveClass('lg-visible');
     });
 
-    it('fires open lifecycle callbacks in order', () => {
+    it('fires init and the open lifecycle callbacks in order', () => {
         const calls: string[] = [];
         render(
             <Harness
+                onInit={() => calls.push('init')}
                 onBeforeOpen={() => calls.push('beforeOpen')}
                 onAfterOpen={() => calls.push('afterOpen')}
             />,
         );
-        expect(calls).toEqual(['beforeOpen', 'afterOpen']);
+        // Mounted open: the same order as Vue and Angular.
+        expect(calls).toEqual(['beforeOpen', 'init', 'afterOpen']);
     });
 
     it('opens at mount inline in a container element (carousel pattern)', () => {

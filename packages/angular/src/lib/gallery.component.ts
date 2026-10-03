@@ -11,7 +11,6 @@ import {
 } from '@angular/cdk/overlay';
 import { DomPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import {
-    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -1202,6 +1201,14 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                 }
             });
         });
+        // React counterpart: the mount-time onInit emit. A view effect in
+        // this position, not afterNextRender, so a gallery mounted with
+        // `open` already true fires beforeOpen → init → afterOpen like
+        // React and Vue: the controlled `open` effect above has run, the
+        // phase machine below has not. Nothing is tracked; it runs once.
+        effect(() => {
+            untracked(() => this.emitInit());
+        });
         // React counterpart: `state.open` → phase machine (GalleryOutlet).
         effect(() => {
             const open = this.store.isOpen();
@@ -1230,14 +1237,6 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             const open = this.store.isOpen();
             const current = this.store.currentIndex();
             untracked(() => this.onIndexCommit(open, current));
-        });
-
-        // React counterpart: the mount-time onInit emit.
-        afterNextRender(() => {
-            // The same license notice as the vanilla gallery, once per page.
-            const notice = takeLicenseNotice(this.settings().licenseKey);
-            if (notice) console[notice.level](notice.message);
-            this.emitEvent('init', { instance: this });
         });
     }
 
@@ -1462,6 +1461,18 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     ): void {
         this.outputRefs[name].emit(detail);
         this.runtime.events.emit(name, detail);
+    }
+
+    private emitInit(): void {
+        if (!isPlatformBrowser(this.platformId)) {
+            // `init` is a mount event (React's effect, Vue's onMounted):
+            // the server never emits it.
+            return;
+        }
+        // The same license notice as the vanilla gallery, once per page.
+        const notice = takeLicenseNotice(this.settings().licenseKey);
+        if (notice) console[notice.level](notice.message);
+        this.emitEvent('init', { instance: this });
     }
 
     protected toggleMaximize(): void {
