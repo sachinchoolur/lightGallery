@@ -21,6 +21,36 @@ $home-section-y-m: 64px;
     }
 }
 
+// Trusted-by swap for n logos sharing one cell: each is in for 1/n of
+// the loop, blurring in over the first quarter and out over the next
+// logo's.
+@mixin trusted-by-swap-keys($n) {
+    $f: math.div(100%, $n);
+    @keyframes trusted-by-swap-#{$n} {
+        0% {
+            opacity: 0;
+            filter: blur(8px);
+            transform: scale(0.96);
+        }
+        #{$f * 0.25},
+        #{$f} {
+            opacity: 1;
+            filter: blur(0);
+            transform: none;
+        }
+        #{$f * 1.25},
+        100% {
+            opacity: 0;
+            filter: blur(8px);
+            transform: scale(1.04);
+        }
+    }
+}
+// Desktop cells hold two logos, phone cells four.
+@each $n in 2, 4 {
+    @include trusted-by-swap-keys($n);
+}
+
 body.home-v3 {
     overflow-x: clip;
     background: #fff;
@@ -909,24 +939,78 @@ body.home-v3 {
     }
 
     // ---- Trusted by: the client strip ---------------------------------------
+    // Two rows of cells that swap their logo in place with a blur
+    // (components/home/TrustedBy.astro, which also sizes and groups the
+    // logos by shape). Every slot runs the same loop,
+    // offset by its index; the cell's --d shifts the whole cell along a
+    // diagonal. One loop is subtracted so every delay is negative and the
+    // first frame is full. Two grids: 2 x 6 from lg, 2 x 3 below it.
     .trusted-by {
-        padding-top: 32px;
-        padding-bottom: 32px;
-        .trusted-by-header {
-            margin-bottom: 24px;
-            h2 {
-                @extend .label1;
-                margin: 0;
-                text-align: center;
+        padding-top: 48px;
+        padding-bottom: 48px;
+        color: $gray-400;
+    }
+    .trusted-by-label {
+        @extend .label1;
+        margin: 0 0 24px;
+        text-align: center;
+    }
+    .trusted-by-grid {
+        display: grid;
+        grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+        // Scaled logos may poke past the page edge on phones.
+        overflow-x: clip;
+        &.trusted-by-grid-wide {
+            @include media-breakpoint-down(lg) {
+                display: none;
             }
         }
-        &.trusted-by-blue {
-            color: $gray-400;
+        &.trusted-by-grid-narrow {
+            @include media-breakpoint-up(lg) {
+                display: none;
+            }
         }
-        .contents-list-item {
-            transition: color 0.18s ease;
-            &:hover {
-                color: $gray-800;
+        // Each slot sizes its logo from the ink's ratio (--w, --h), one
+        // height per shape class, so the data's zoom does not apply.
+        // Phone columns are narrower, so everything scales down a step.
+        --trusted-by-scale: 1;
+        @include media-breakpoint-down(lg) {
+            --trusted-by-scale: 0.85;
+        }
+        .customer-logo {
+            width: calc(var(--w) * var(--trusted-by-scale));
+            height: calc(var(--h) * var(--trusted-by-scale));
+            transform: none;
+        }
+    }
+    .trusted-by-cell {
+        display: grid;
+        place-items: center;
+        height: 88px;
+    }
+    .trusted-by-slot {
+        grid-area: 1 / 1;
+        display: flex;
+        animation-duration: calc(var(--slot) * var(--n));
+        animation-timing-function: cubic-bezier(0.6, 0, 0.2, 1);
+        animation-iteration-count: infinite;
+        animation-fill-mode: both;
+        animation-delay: calc(
+            var(--i) * var(--slot) - var(--slot) * 0.3 + var(--d, 0s) - var(--slot) * var(--n)
+        );
+    }
+    @each $n in 2, 4 {
+        .trusted-by-n-#{$n} .trusted-by-slot {
+            animation-name: trusted-by-swap-#{$n};
+        }
+    }
+    // No swapping under reduced motion: each cell keeps its first logo.
+    @media (prefers-reduced-motion: reduce) {
+        .trusted-by-slot {
+            animation: none;
+            opacity: 0;
+            &:first-child {
+                opacity: 1;
             }
         }
     }

@@ -17,10 +17,9 @@ import { photos } from '../../lib/photos';
 import FeatureIcon from '../../components/home/FeatureIcon.astro';
 import FeatureGrid from '../../components/home/FeatureGrid.astro';
 import PluginSizes from '../../components/home/PluginSizes.astro';
-import TrustedBy from '../../components/shortcodes/TrustedBy.astro';
+import TrustedBy from '../../components/home/TrustedBy.astro';
 import CustomerQueue from '../../components/home/CustomerQueue.astro';
 import { LOGOS } from '../../data/customer-logos';
-import TrustedVariants from '../../components/home/TrustedVariants.astro';
 
 {/* Customization demos, in the order their galleries open: the listing's
     whole set (five in the mosaic, the rest behind "+N photos"), the
@@ -39,7 +38,6 @@ export const customizePortfolio = [0, 3, 4, 6, 7, 9, 10].map((i) => photos('stre
     </div>
 </div>
 <TrustedBy />
-<TrustedVariants />
 <div class="container-xl home-stack" id="stack">
     <div class="row justify-content-center home-section-header">
         <div class="col-lg-7 text-center">
