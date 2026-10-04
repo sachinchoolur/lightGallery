@@ -1,6 +1,6 @@
 ---
 title: 'JavaScript image gallery, get started'
-description: 'Install lightGallery with npm or a CDN and build a responsive image and video gallery in a few lines of JavaScript, no dependencies, 14 plugins.'
+description: 'Install lightGallery with npm or a CDN and build a responsive image and video gallery in a few lines of JavaScript, no dependencies, 15 plugins.'
 lead: lightGallery is a lightweight, modular, JavaScript library for creating beautiful image & video galleries for the web and the mobile.
 date: 2020-10-06T08:48:57.000Z
 draft: false
@@ -12,31 +12,72 @@ toc: true
 
 ## Core features
 
--   Fully responsive.
--   Modular architecture with built in plugins.
--   Highly optimized for touch devices.
--   Mouse drag support for desktops.
--   Double-click/Double-tap to see actual size of the image.
--   Animated thumbnails.
--   Social sharing.
--   YouTube, Vimeo, Wistia and HTML5 video support.
--   20+ Hardware-Accelerated CSS3 transitions.
--   Dynamic mode.
--   Inline gallery
--   Full screen support.
--   Zoom in/out, Pinch to zoom.
--   Swipe/Drag up/down support to close gallery
--   Browser history API(deep linking).
--   Responsive images.
--   HTML iframe support.
--   Multiple instances on one page.
--   Easily customizable via CSS (SCSS) and Settings.
--   Smart image preloading and code optimization.
--   Keyboard Navigation for desktop.
--   SVG icons.
--   Accessibility support.
--   Rotate, flip images.
--   And many more.
+#### Packages and build
+
+-   One gallery, four packages: `lightgallery` for plain JavaScript and
+    TypeScript, plus native [React](/docs/react/), [Vue 3](/docs/vue/) and
+    [Angular](/docs/angular/) packages that render their own DOM.
+-   A shared [headless core](/docs/headless/) behind every package, so
+    settings and behavior are identical in each stack.
+-   Zero dependencies, TypeScript types, ES module and UMD builds.
+    The core is about 19 KB minified and gzipped; plugins are separate
+    entries and cost nothing until you import them.
+-   Modular architecture with 15 built-in plugins, and an API for
+    [writing your own](/docs/creating-plugins/).
+-   Easily customizable via CSS (SCSS) and settings. Multiple instances
+    on one page.
+
+#### Layout and performance
+
+-   Fully responsive, with [srcset, sizes and picture
+    sources](/docs/responsive-loading/) on every slide.
+-   [Justified layout](/docs/justified-layout/) plugin: row-justified
+    trigger grids with no layout library in front of the lightbox.
+-   [Virtualization](/docs/virtualization/) keeps a small, constant DOM
+    for galleries with thousands of slides.
+-   [Dynamic mode](/demos/dynamic-mode/) opens a gallery from an array
+    of items, and [live updates](/demos/update-slides/) add, edit or
+    remove slides while it is open.
+-   Inline gallery and carousel modes.
+-   Smart preloading of neighboring slides.
+
+#### Interaction
+
+-   Highly optimized for touch devices, with mouse drag on desktops.
+-   Gesture physics: every release lands in a spring seeded with your
+    gesture's velocity, flings glide, edges resist with friction.
+-   Swipe, drag or pinch to close.
+-   Zoom in and out, pinch to zoom, double-click or double-tap for actual
+    size. Slides [open from the thumbnail's
+    position](/demos/zoom-from-origin/) and close back to it.
+-   Animated thumbnails, with [thumbnail
+    scrubbing](/docs/thumbnail-scrubbing/) to drag through the gallery.
+-   20+ hardware-accelerated CSS3 transitions, plus your own easing.
+-   Keyboard navigation and full screen support.
+-   A toolbar that fits: on narrow screens the lowest-priority buttons
+    move into a "More options" menu.
+-   [Accessibility](/docs/accessibility/): modal dialog semantics, focus
+    trap, screen-reader announcements, reduced-motion support.
+-   [Localization and RTL](/docs/localization-rtl/): every label is a
+    setting, and the gallery mirrors for right-to-left pages.
+
+#### Media and plugins
+
+-   YouTube, Vimeo, Wistia and HTML5 video, with [video
+    facades](/docs/video-facades/) that load the player only on play.
+-   HTML iframe support and [mixed content](/demos/mixed-contents/):
+    photos, videos, maps and PDFs in one gallery.
+-   HTML [captions](/demos/captions/) per slide, with animated and
+    relative-position variants.
+-   Rotate and flip images.
+-   [Sharing](/docs/web-share/) through the native share sheet where it
+    exists, social links where it does not.
+-   [Deep links](/docs/hash-drivers/) with browser back and forward,
+    through the Navigation API or the History API.
+-   Autoplay slideshow with a progress bar, pager dots, per-slide
+    comments, and a [medium-zoom](/demos/medium-zoom/) plugin for
+    in-page image zoom.
+-   Inline SVG icons, each [replaceable by name](/docs/custom-icons/).
 
 ## Ask your coding agent
 
@@ -128,7 +169,7 @@ lightGallery and all plugin styles instead of separate stylesheets.
 If you like you can also import scss files instead of css files from the `scss`
 folder.
 
-```HTML
+```html
 <head>
     <link type="text/css" rel="stylesheet" href="css/lightgallery.css" />
 
@@ -146,7 +187,7 @@ folder.
 Then include `lightgallery.umd.js` into your document. If you want to include
 any lightgallery plugin you can include it after `lightgallery.umd.js`.
 
-```HTML
+```html
 <body>
     ....
 
@@ -162,7 +203,7 @@ any lightgallery plugin you can include it after `lightgallery.umd.js`.
 
 lightGallery supports AMD, CommonJS and ES6 modules too.
 
-```JavaScript
+```javascript
 import lightGallery from 'lightgallery';
 
 // Plugins
@@ -181,7 +222,7 @@ If you know the original size of the media, you can pass it via
 `data-lg-size="${width}-${height}"` attribute for the initial
 [zoom](/docs/settings/#zoomFromOrigin) animation. But, this is completely optional.
 
-```HTML
+```html
 <div id="lightgallery">
     <a href="img/img1.jpg" data-lg-size="1600-2400">
         <img alt="img1" src="img/thumb1.jpg" />
@@ -207,8 +248,6 @@ Finally, you need to initiate the gallery by adding the following code.
     });
 </script>
 ```
-
-[CodePen Demos](https://codepen.io/collection/BNNjpR)
 
 #### License Key
 
@@ -238,8 +277,6 @@ The builds target ES2017 and run without transpiling or polyfills.
 -   **Newer APIs are optional.** Features that rely on newer browser
     APIs, such as the native share sheet or observer-based relayout, are
     feature-detected and fall back cleanly where they are missing.
--   **No Internet Explorer.** IE is not supported. If you still need it,
-    lightGallery v2 ships ES5 builds and remains available.
 
 If something misbehaves in a browser you care about, please
 [open an issue](https://github.com/sachinchoolur/lightGallery/issues)
@@ -261,8 +298,4 @@ the GNU GPL license v3, you may use this project under the terms of the GPLv3.
 
 ## Support
 
-If you have any questions, suggestions, feedback, please reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) or DM me on [twitter](https://twitter.com/SachinNeravath)
-
-## Custom work
-
-If you need any help with customizing lightGallery, adding new features, creating a new plugin, or need any other assistance that is beyond the scope of regular support, reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) with your requirements. We'll help you if we can or at least point you in the right direction.
+If you have any questions, suggestions, feedback, please reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) or DM me on [X](https://x.com/SachinNeravath)
