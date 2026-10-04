@@ -28,7 +28,7 @@ const props = interfaceProps(interfaceName);
             >
                 <td>
                     {data === 'true' ? (
-                        tagText(prop.comment, 'data-attr').map((attr) => (
+                        tagText(prop.comment, 'dataAttr').map((attr) => (
                             <p>
                                 <span class="anchor-id" id={attr}>
                                     <Fragment set:html={attr} />{' '}

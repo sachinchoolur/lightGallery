@@ -25,13 +25,13 @@ export interface ImageSources {
 export interface GalleryItem {
     /**
      * url of the media
-     * @data-attr data-src
+     * @dataAttr data-src
      */
     src?: string;
 
     /**
      * Source attributes for the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source#attributes">picture</a> element
-     * @data-attr data-sources
+     * @dataAttr data-sources
      */
     sources?: ImageSources[];
 
@@ -49,89 +49,89 @@ export interface GalleryItem {
      * lightGallery(document.getElementById('lightGallery'), {
      *     exThumbImage: 'data-external-thumb-image'
      * })
-     * @data-attr data-*
+     * @dataAttr data-*
      */
     thumb?: string;
 
     /**
      * alt attribute for the image
-     * @data-attr alt
+     * @dataAttr alt
      */
     alt?: string;
 
     /**
      * Title attribute for the video
-     * @data-attr title
+     * @dataAttr title
      */
     title?: string;
 
     /**
      * Title for iframe
-     * @data-attr data-iframe-title
+     * @dataAttr data-iframe-title
      */
     iframeTitle?: string;
 
     /**
      * Caption for the slide
      * @description You can either pass the HTML markup or the ID or class name of the element which contains the captions
-     * @data-attr data-sub-html
+     * @dataAttr data-sub-html
      */
     subHtml?: string;
 
     /**
      * url of the file which contain the sub html.
      * @description Note - Does not support Internet Explorer browser
-     * @data-attr data-sub-html-url
+     * @dataAttr data-sub-html-url
      */
     subHtmlUrl?: string;
 
     /**
      * Video source
-     * @data-attr data-video
+     * @dataAttr data-video
      */
     video?: VideoSource;
 
     /**
      * Poster url
-     * @data-attr data-poster
+     * @dataAttr data-poster
      */
     poster?: string;
 
     /**
      * Custom slide name to use in the url when hash plugin is enabled
-     * @data-attr data-slide-name
+     * @dataAttr data-slide-name
      */
     slideName?: string;
 
     /**
      * List of images and viewport's max width separated by comma.
      * @description Ex?: img/1-375.jpg 375, img/1-480.jpg 480, img/1-757.jpg 757.
-     * @data-attr data-responsive
+     * @dataAttr data-responsive
      */
     responsive?: string;
 
     /**
      * srcset attribute values for the main image
-     * @data-attr data-srcset
+     * @dataAttr data-srcset
      */
     srcset?: string;
 
     /**
      * srcset sizes attribute for the main image
-     * @data-attr data-sizes
+     * @dataAttr data-sizes
      */
     sizes?: string;
 
     /**
      * Set true is you want to open your url in an iframe
-     * @data-attr data-iframe
+     * @dataAttr data-iframe
      */
     iframe?: boolean;
 
     /**
      * Download url for your image/video.
      * @description Pass false if you want to disable the download button.
-     * @data-attr data-download-url
+     * @dataAttr data-download-url
      */
     downloadUrl?: string | boolean;
 
@@ -141,14 +141,14 @@ export interface GalleryItem {
      * There are no restrictions on allowed values, and the browser will automatically
      * detect the correct file extension and add it to the file (.img, .pdf, .txt, .html, etc.).
      * <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attr-download">More info</a>
-     * @data-attr data-download
+     * @dataAttr data-download
      */
     download?: string | boolean;
 
     /**
      * Actual size of the image in px.
      * @description This is used in zoom plugin to see the actual size of the image when double taped on the image.
-     * @data-attr data-width
+     * @dataAttr data-width
      */
     width?: string;
 
@@ -157,27 +157,27 @@ export interface GalleryItem {
      * @description Specify only if you want a separate URL for the specific
      * slide. Falls back to the network-specific share URLs, then the current
      * browser URL.
-     * @data-attr data-share-url
+     * @dataAttr data-share-url
      */
     shareUrl?: string;
 
     /**
      * Facebook share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL is taken.
-     * @data-attr data-facebook-share-url
+     * @dataAttr data-facebook-share-url
      */
     facebookShareUrl?: string;
 
     /**
      * Tweet text
-     * @data-attr data-tweet-text
+     * @dataAttr data-tweet-text
      */
     tweetText?: string;
 
     /**
      * Twitter share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL will be taken.
-     * @data-attr data-twitter-share-url
+     * @dataAttr data-twitter-share-url
      */
     twitterShareUrl?: string;
 
@@ -185,13 +185,13 @@ export interface GalleryItem {
      * Pinterest share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL will be taken.
      * Note?: Pinterest requires absolute URL
-     * @data-attr data-pinterest-share-url
+     * @dataAttr data-pinterest-share-url
      */
     pinterestShareUrl?: string;
 
     /**
      * Description for Pinterest post.
-     * @data-attr data-pinterest-text
+     * @dataAttr data-pinterest-text
      */
     pinterestText?: string;
 
@@ -205,21 +205,21 @@ export interface GalleryItem {
      *      data-width="400"
      *      data-numposts="5">
      * </div>
-     * @data-attr data-fb-html
+     * @dataAttr data-fb-html
      */
     fbHtml?: string;
 
     /**
      * Disqus page identifier
      * @description Please refer official <a href="https://help.disqus.com/en/articles/1717084-javascript-configuration-variables">disqus documentation</a> for more info
-     * @data-attr data-disqus-identifier
+     * @dataAttr data-disqus-identifier
      */
     disqusIdentifier?: string;
 
     /**
      * Disqus page url
      * @description Please refer official <a href="https://help.disqus.com/en/articles/1717084-javascript-configuration-variables">disqus documentation</a> for more info
-     * @data-attr data-disqus-url
+     * @dataAttr data-disqus-url
      */
     disqusUrl?: string;
 
