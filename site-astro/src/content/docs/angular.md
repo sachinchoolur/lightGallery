@@ -25,15 +25,18 @@ npm install @lightgallery/angular @angular/cdk lightgallery
 ```
 
 Peer ranges: `@angular/core`, `@angular/common`, `@angular/platform-browser`
-and `@angular/cdk` `>=21 <23`. Works with zoneless change detection (no `zone.js` anywhere in
-the package, tests included).
+and `@angular/cdk` `>=21 <23`. There is no `zone.js` in the package.
 
-```ts
-// Global styles (angular.json "styles" or your root stylesheet):
-import 'lightgallery/css/lightgallery.css';
-// plus the CSS of each feature you use, e.g.:
-import 'lightgallery/css/lg-thumbnail.css';
-import 'lightgallery/css/lg-zoom.css';
+The stylesheets ship from the `lightgallery` package. Import them in your
+root stylesheet, or add the same paths to the `styles` array in
+`angular.json`:
+
+```css
+/* src/styles.css */
+@import 'lightgallery/css/lightgallery.css';
+/* plus the CSS of each feature you use, e.g.: */
+@import 'lightgallery/css/lg-thumbnail.css';
+@import 'lightgallery/css/lg-zoom.css';
 ```
 
 ## Quick start, uncontrolled
@@ -66,7 +69,12 @@ import { withZoom } from '@lightgallery/angular/plugins/zoom';
 export class Gallery {
     features = [withThumbnail({ thumbWidth: 120 }), withZoom()];
     items: LgGalleryItem[] = [
-        { src: 'img/1.jpg', thumb: 'img/1-t.jpg', alt: '…', caption: '…' },
+        {
+            src: 'img/1.jpg',
+            thumb: 'img/1-t.jpg',
+            alt: 'Mountains',
+            caption: 'Mountains',
+        },
     ];
 
     onSlide(event: SlideEventDetail): void {
@@ -140,11 +148,22 @@ every one. Events are outputs of the documented
 [event names](/docs/events/) without the `on` prefix (`(beforeOpen)`,
 `(afterSlide)`, `(slideItemLoad)`, …).
 
-Template directives swap parts of the chrome for your own markup:
-`*lgCaption`, `lgCounter`, `lgPrevButton` and `lgNextButton`, plus an
-`lgIcon` template that replaces any [control icon](/docs/custom-icons/)
-by name. An inline gallery mounts into the element you pass as
-`[container]`.
+Templates swap parts of the chrome for your own markup. Each is an
+`ng-template` carrying one of the directives `lgCaption`
+(`let-item let-index="index"`), `lgCounter` (`let-current let-total="total"`),
+`lgPrevButton` or `lgNextButton`, placed inside `<lg-gallery>`:
+
+```html
+<lg-gallery [slides]="items">
+    <ng-template lgCaption let-item let-index="index">
+        <h4>{{ item?.caption }}</h4>
+        <p>Slide {{ index + 1 }}</p>
+    </ng-template>
+</lg-gallery>
+```
+
+An `lgIcon` template replaces any [control icon](/docs/custom-icons/) by
+name. An inline gallery mounts into the element you pass as `[container]`.
 
 ## Features (all 14, plus the justified layout)
 
@@ -181,9 +200,7 @@ before `withRotate()` so zoom stays the outermost transform.
   server-renders** (even with `[open]` true at bootstrap), so there is
   nothing to hydrate-mismatch. The overlay is created on open, in the
   browser only.
-- Deep-link flows (hash feature) run after hydration via a browser-only
-  timer; feature services are server-instantiated but guard `window` (the
-  built-ins already do).
+- Deep links (hash feature) resolve after hydration, in the browser only.
 
 ## Accessibility
 
@@ -205,7 +222,7 @@ vanilla 2.x package? The full list is in the
   trigger directives for uncontrolled galleries.
 - `onAfterSlide` etc. → outputs without the prefix: `(afterSlide)`.
 - `appendSubHtmlTo` → `captionPosition: 'bar' | 'slide' | 'outer'`;
-  `subHtml` strings → `caption` (plain string), `*lgCaption` template, or
+  `subHtml` strings → `caption` (plain string), an `lgCaption` template, or
   the explicit raw-HTML `captionHtml` opt-in (Angular-sanitized).
 - Plugin constructor arrays → `with*()` feature values on `[features]`.
 - Dropped (2.x DOM-scraping/HTML-string era): `selector`, `extraProps`,

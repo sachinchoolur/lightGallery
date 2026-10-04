@@ -24,13 +24,15 @@ npm install @lightgallery/angular @angular/cdk lightgallery
 ```
 
 Peer ranges are `@angular/core`, `@angular/common`, `@angular/platform-browser`
-and `@angular/cdk` `>=21 <23`. There is no `zone.js` in the package. Add the stylesheets to the
-`styles` array in `angular.json` or import them in your root stylesheet:
+and `@angular/cdk` `>=21 <23`. There is no `zone.js` in the package. Import
+the stylesheets in your root stylesheet, or add the same paths to the
+`styles` array in `angular.json`:
 
-```ts
-import 'lightgallery/css/lightgallery.css';
-import 'lightgallery/css/lg-thumbnail.css';
-import 'lightgallery/css/lg-zoom.css';
+```css
+/* src/styles.css */
+@import 'lightgallery/css/lightgallery.css';
+@import 'lightgallery/css/lg-thumbnail.css';
+@import 'lightgallery/css/lg-zoom.css';
 ```
 
 ## A gallery in one component
