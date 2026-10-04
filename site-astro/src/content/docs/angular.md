@@ -21,9 +21,7 @@ so the lightbox looks exactly like the vanilla one.
 ## Install
 
 ```bash
-npm install @lightgallery/angular @angular/cdk
-# CSS ships from the vanilla package:
-npm install lightgallery
+npm install @lightgallery/angular @angular/cdk lightgallery
 ```
 
 Peer ranges: `@angular/core`, `@angular/common`, `@angular/platform-browser`
@@ -154,21 +152,21 @@ Each feature is its own tree-shakable entry point
 `@lightgallery/angular/plugins/<name>` exposing a `with<Name>(options?)`
 factory for the `[features]` input:
 
-| Feature | Import | Notable options |
+| Feature | Import | Key options (passed to the factory) |
 |---|---|---|
-| thumbnail | `withThumbnail()` | `thumbWidth`, `thumbHeight`, `animateThumb`, `toggleThumb` |
-| zoom | `withZoom()` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom` |
-| video | `withVideo()` | `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
-| autoplay | `withAutoplay()` | `slideShowInterval`, `slideShowAutoplay`, `progressBar` |
-| fullscreen | `withFullscreen()` | |
+| thumbnail | `withThumbnail()` | `thumbWidth`, `thumbHeight`, `thumbMargin`, `animateThumb`, `toggleThumb` |
+| zoom | `withZoom()` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom`, `enableZoomAfter` |
+| video | `withVideo()` | `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams`, `vimeoPlayerParams`, `gotoNextSlideOnVideoEnd` |
+| autoplay | `withAutoplay()` | `slideShowAutoplay`, `slideShowInterval`, `progressBar`, `forceSlideShowAutoplay` |
+| fullscreen | `withFullscreen()` | `fullScreen` |
 | hash | `withHash()` | `galleryId`, `customSlideName` |
-| pager | `withPager()` | |
-| share | `withShare()` | `facebook`/`twitter`/`pinterest`, `additionalShareOptions` (typed) |
-| rotate | `withRotate()` | `rotateSpeed`, per-button toggles |
+| pager | `withPager()` | `pager` |
+| share | `withShare()` | `facebook`, `twitter`, `pinterest`, `additionalShareOptions` (typed objects) |
+| rotate | `withRotate()` | `rotateSpeed`, `rotateLeft/Right`, `flipHorizontal/Vertical` |
 | comment | `withComment()` | `commentBox`, `commentsTemplate: TemplateRef` |
-| mediumZoom | `withMediumZoom()` | `margin`, `backgroundColor` (presets a minimal UI) |
-| relativeCaption | `withRelativeCaption()` | (presets `captionPosition: 'slide'`) |
-| vimeoThumbnail | `withVimeoThumbnail()` | `showThumbnailWithPlayButton` |
+| mediumZoom | `withMediumZoom()` | `margin`, `backgroundColor` (+ per-item `lgBackgroundColor`) |
+| relativeCaption | `withRelativeCaption()` | `relativeCaption` (presets `captionPosition: 'slide'`) |
+| vimeoThumbnail | `withVimeoThumbnail()` | `showVimeoThumbnails`, `showThumbnailWithPlayButton` |
 | originCrop | `withOriginCrop()` | `originCrop`: flies a cropped thumbnail from its crop ([zoom from origin](/demos/zoom-from-origin/)) |
 | justified | `LgJustifiedGridComponent` | Not a feature: the `<lg-justified-grid>` component wraps the triggers, with `rowHeight`, `gap`, `lastRow` ([justified layout](/docs/justified-layout/)) |
 
@@ -186,8 +184,6 @@ before `withRotate()` so zoom stays the outermost transform.
 - Deep-link flows (hash feature) run after hydration via a browser-only
   timer; feature services are server-instantiated but guard `window` (the
   built-ins already do).
-- Verified against `@angular/platform-server` `renderApplication` and a
-  packed-artifact AOT + prerender consumer build.
 
 ## Accessibility
 
@@ -201,9 +197,9 @@ covers the live region, the labels and the settings involved.
 
 ## Migrating from the legacy `lightgallery` Angular wrapper
 
-The old wrapper (`lightgallery-angular*` folders / `lightgallery` v2 with
-`lgQuery`) wrapped the vanilla runtime; this package renders natively. Key
-renames (the full list is in the [migration guide](/docs/migration/#angular)):
+Coming from `lightgallery/angular`, the wrapper that shipped inside the
+vanilla 2.x package? The full list is in the
+[migration guide](/docs/migration/#angular); the key changes:
 
 - `dynamicEl` → `[slides]` (typed `LgGalleryItem[]`), or `[lgGalleryItem]`
   trigger directives for uncontrolled galleries.

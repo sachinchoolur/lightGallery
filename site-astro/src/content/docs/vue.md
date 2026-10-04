@@ -21,9 +21,7 @@ like the vanilla one.
 ## Install
 
 ```bash
-npm install @lightgallery/vue
-# CSS ships from the vanilla package:
-npm install lightgallery
+npm install @lightgallery/vue lightgallery
 ```
 
 Peer range: `vue >=3.4` (uses `defineModel`).
@@ -143,21 +141,21 @@ Each plugin is its own tree-shakable subpath
 (e.g. `:zoom="{ scale: 1.5 }"`). A multi-word plugin name works in either
 spelling, `:medium-zoom="{ margin: 24 }"` or `:mediumZoom`:
 
-| Plugin | Subpath | Notable options |
+| Plugin | Subpath | Key options (prop of the same name) |
 |---|---|---|
-| thumbnail | `plugins/thumbnail` | `thumbWidth`, `thumbHeight`, `animateThumb`, `toggleThumb` |
-| zoom | `plugins/zoom` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom` |
-| video | `plugins/video` | `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
-| autoplay | `plugins/autoplay` | `slideShowInterval`, `slideShowAutoplay`, `progressBar` |
-| fullscreen | `plugins/fullscreen` | n/a |
+| thumbnail | `plugins/thumbnail` | `thumbWidth`, `thumbHeight`, `thumbMargin`, `animateThumb`, `toggleThumb` |
+| zoom | `plugins/zoom` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom`, `enableZoomAfter` |
+| video | `plugins/video` | `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams`, `vimeoPlayerParams`, `gotoNextSlideOnVideoEnd` |
+| autoplay | `plugins/autoplay` | `slideShowAutoplay`, `slideShowInterval`, `progressBar`, `forceSlideShowAutoplay` |
+| fullscreen | `plugins/fullscreen` | `fullScreen` |
 | hash | `plugins/hash` | `galleryId`, `customSlideName` |
-| pager | `plugins/pager` | n/a |
-| share | `plugins/share` | `facebook`/`twitter`/`pinterest`, `additionalShareOptions` (typed) |
-| rotate | `plugins/rotate` | `rotateSpeed`, per-button toggles |
-| comment | `plugins/comment` | `commentBox`; comment body via the `#comments` gallery slot |
-| mediumZoom | `plugins/mediumZoom` | `margin`, `backgroundColor` (presets a minimal UI) |
-| relativeCaption | `plugins/relativeCaption` | n/a (presets `captionPosition: 'slide'`) |
-| vimeoThumbnail | `plugins/vimeoThumbnail` | `showThumbnailWithPlayButton` |
+| pager | `plugins/pager` | `pager` |
+| share | `plugins/share` | `facebook`, `twitter`, `pinterest`, `additionalShareOptions` (typed objects) |
+| rotate | `plugins/rotate` | `rotateSpeed`, `rotateLeft/Right`, `flipHorizontal/Vertical` |
+| comment | `plugins/comment` | `commentBox`; the comment body comes from the `#comments` slot |
+| mediumZoom | `plugins/mediumZoom` | `margin`, `backgroundColor` (+ per-item `lgBackgroundColor`) |
+| relativeCaption | `plugins/relativeCaption` | `relativeCaption` (presets `captionPosition: 'slide'`) |
+| vimeoThumbnail | `plugins/vimeoThumbnail` | `showVimeoThumbnails`, `showThumbnailWithPlayButton` |
 | originCrop | `plugins/originCrop` | `originCrop`: flies a cropped thumbnail from its crop ([zoom from origin](/demos/zoom-from-origin/)) |
 | justified | `plugins/justified` | Not a plugin: the `<JustifiedGrid>` component wraps the triggers, with `row-height`, `gap`, `last-row` ([justified layout](/docs/justified-layout/)) |
 
@@ -171,8 +169,7 @@ different plugin sets. Order matters for slide wrappers: put `Zoom` before
   gallery server-renders only your trigger markup. The lightbox overlay
   **never server-renders** (even with `open` true at first render), the
   `<Teleport>` mounts client-side only, so there is no teleport buffer to
-  wire up and no hydration mismatch surface. Verified with
-  `vue/server-renderer` render + hydrate tests (zero hydration warnings).
+  wire up and no hydration mismatch surface.
 - In Nuxt, use the component directly in server-rendered pages, no
   `<ClientOnly>` wrapper needed. Deep-link flows (hash plugin) run after
   hydration.
@@ -191,9 +188,9 @@ labels and the settings involved.
 
 ## Migrating from the legacy `lightgallery/vue` wrapper
 
-The old wrapper (`lightgallery-vue*` folders / `lightgallery` v2 with
-`lgQuery`) wrapped the vanilla runtime; this package renders natively. Key
-renames (the full list is in the [migration guide](/docs/migration/#vue)):
+Coming from `lightgallery/vue`, the wrapper that shipped inside the
+vanilla 2.x package? The full list is in the
+[migration guide](/docs/migration/#vue); the key changes:
 
 - `dynamicEl` → `:slides` (typed `LgGalleryItem[]`), or `<LgItem>` trigger
   components for uncontrolled galleries.
