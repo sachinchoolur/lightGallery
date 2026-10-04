@@ -69,6 +69,8 @@ lightGallery(document.getElementById('custom-icons-gallery'), {
 ```tsx
 import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 import Autoplay from '@lightgallery/react/plugins/autoplay';
+import Fullscreen from '@lightgallery/react/plugins/fullscreen';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 import Zoom from '@lightgallery/react/plugins/zoom';
 
 const items = [
@@ -92,7 +94,7 @@ const icon = (path: string) => (
 );
 
 <LightGallery
-    plugins={[Zoom, Autoplay]}
+    plugins={[Zoom, Fullscreen, Autoplay, Thumbnail]}
     render={{
         // A node per name; `undefined` keeps the built-in icon.
         icon: (name) => {
@@ -126,13 +128,15 @@ const icon = (path: string) => (
 <script setup>
 import { LightGallery, LgItem } from '@lightgallery/vue';
 import Autoplay from '@lightgallery/vue/plugins/autoplay';
+import Fullscreen from '@lightgallery/vue/plugins/fullscreen';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 import Zoom from '@lightgallery/vue/plugins/zoom';
 // SVG components or raw SVG strings, keyed by icon name.
 import CloseIcon from './icons/CloseIcon.vue';
 import PauseIcon from './icons/PauseIcon.vue';
 import PlayIcon from './icons/PlayIcon.vue';
 
-const plugins = [Zoom, Autoplay];
+const plugins = [Zoom, Fullscreen, Autoplay, Thumbnail];
 
 // Names left out keep the built-in icons. State pairs need both names,
 // or the pair keeps the built-ins.
@@ -169,6 +173,8 @@ import {
     type LgGalleryItem,
 } from '@lightgallery/angular';
 import { withAutoplay } from '@lightgallery/angular/plugins/autoplay';
+import { withFullscreen } from '@lightgallery/angular/plugins/fullscreen';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
 import { withZoom } from '@lightgallery/angular/plugins/zoom';
 
 @Component({
@@ -212,7 +218,12 @@ import { withZoom } from '@lightgallery/angular/plugins/zoom';
     `,
 })
 export class Gallery {
-    features = [withZoom(), withAutoplay()];
+    features = [
+        withZoom(),
+        withFullscreen(),
+        withAutoplay(),
+        withThumbnail(),
+    ];
 
     items: LgGalleryItem[] = [
         { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },

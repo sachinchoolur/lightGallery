@@ -8,7 +8,7 @@ export interface ThumbnailsSettings {
      */
     thumbnail: boolean;
 
-    /*
+    /**
      * Enable thumbnail animation.
      */
     animateThumb: boolean;
@@ -25,17 +25,17 @@ export interface ThumbnailsSettings {
     alignThumbnails: 'left' | 'middle' | 'right';
 
     /**
-     * Width of each thumbnails.
+     * Width of each thumbnail.
      */
     thumbWidth: number;
 
     /**
-     * Height of each thumbnails.
+     * Height of each thumbnail.
      */
     thumbHeight: string;
 
     /**
-     * Spacing between each thumbnails
+     * Spacing between each thumbnail
      */
     thumbMargin: number;
 
@@ -43,7 +43,7 @@ export interface ThumbnailsSettings {
      * control where the thumbnails should be appended.
      * By default, thumbnails are appended to '.lg-components' which has inbuilt open close transitions
      * If you don't want initial thumbnails transitions, or want to do more customization,
-     * you can append thumbnails to the lightGalley outer div -
+     * you can append thumbnails to the lightGallery outer div -
      * <a href="/demos/thumbnails/#static-thumbnails">Demo</a>
      */
     appendThumbnailsTo: '.lg-outer' | '.lg-components';

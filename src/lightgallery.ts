@@ -601,9 +601,9 @@ export class LightGallery {
      * Modify the current gallery items and pass it via updateSlides method
      * @note
      * - Do not mutate existing lightGallery items directly.
-     * - Always pass new list of gallery items
+     * - Always pass a new list of gallery items
      * - You need to take care of thumbnails outside the gallery if any
-     * - user this method only if you want to update slides when the gallery is opened. Otherwise, use `refresh()` method.
+     * - use this method only if you want to update slides when the gallery is opened. Otherwise, use `refresh()` method.
      * @param items Gallery items
      * @param index After the update operation, which slide gallery should navigate to
      * @category lGPublicMethods
@@ -631,10 +631,10 @@ export class LightGallery {
      *
      * // Remove slides dynamically
      * galleryItems = JSON.parse(
-     *   JSON.stringify(updateSlideInstance.galleryItems),
+     *   JSON.stringify(plugin.galleryItems),
      * );
      * galleryItems.shift();
-     * updateSlideInstance.updateSlides(galleryItems, 1);
+     * plugin.updateSlides(galleryItems, 1);
      * @see <a href="/demos/update-slides/">Demo</a>
      */
     updateSlides(items: GalleryItem[], index: number): void {
@@ -910,9 +910,9 @@ export class LightGallery {
 
     /**
      * Note - Changing the position of the media on every slide transition creates a flickering effect.
-     * Therefore, The height of the caption is calculated dynamically, only once based on the first slide caption.
+     * Therefore, the height of the caption is calculated dynamically, only once based on the first slide caption.
      * if you have dynamic captions for each media,
-     * you can provide an appropriate height for the captions via allowMediaOverlap option
+     * you can provide an appropriate height for the captions via defaultCaptionHeight option
      */
     public getMediaContainerPosition(): MediaContainerPosition {
         if (this.settings.allowMediaOverlap) {
@@ -2572,7 +2572,7 @@ export class LightGallery {
     }
 
     /**
-     * Go to previous slides
+     * Go to previous slide
      * @param {Boolean} fromTouch - true if slide function called via touch event
      * @category lGPublicMethods
      * @example
@@ -3045,9 +3045,9 @@ export class LightGallery {
      * Destroy lightGallery.
      * Destroy lightGallery and its plugin instances completely
      *
-     * @description This method also calls CloseGallery function internally. Returns the time takes to completely close and destroy the instance.
+     * @description This method also calls closeGallery function internally. Returns the time it takes to completely close and destroy the instance.
      * In case if you want to re-initialize lightGallery right after destroying it, initialize it only once the destroy process is completed.
-     * You can use refresh method most of the times.
+     * You can use refresh method most of the time.
      * @category lGPublicMethods
      * @example
      *  const plugin = lightGallery();

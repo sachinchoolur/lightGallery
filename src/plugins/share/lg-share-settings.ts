@@ -35,23 +35,22 @@ export interface ShareSettings {
     facebookDropdownText: string;
 
     /**
-     * Enable twitter share.
+     * Enable Twitter share.
      */
     twitter: boolean;
 
     /**
-     * Twitter dropdown text
+     * Twitter dropdown text.
      */
     twitterDropdownText: string;
 
     /**
-     * Enable pinterest share.
+     * Enable Pinterest share.
      */
     pinterest: boolean;
 
     /**
-     * Pinterest dropdown text
-
+     * Pinterest dropdown text.
      */
     pinterestDropdownText: string;
 

@@ -2,11 +2,11 @@
 title: 'Hash'
 description:
     'lightGallery hash plugin lets you provide a unique URL for each gallery
-    slides.'
+    slide.'
 lead:
     'lightGallery hash plugin allows you to create a unique URL for each gallery
-    images. You can provide custom names for each slides too. If you have
-    multiple galleries on a page, you have to provide unique id for each gallery
+    image. You can provide custom names for each slide too. If you have
+    multiple galleries on a page, you have to provide a unique id for each gallery
     via galleryId setting.'
 date: 2020-10-06T08:48:57+00:00
 draft: false
@@ -61,7 +61,7 @@ lightGallery(document.getElementById('gallery-hash-demo'), {
 /*
 lightGallery(document.getElementById('gallery-hash-demo-2'), {
     plugins: [lgHash],
-    galleryId: 2,
+    galleryId: '2',
 });
 */
 ```
@@ -174,7 +174,7 @@ You can provide custom slide names for each slide by providing slide name via
 **HTML**
 
 ```html
-<div id="gallery-hash-demo">
+<div id="gallery-custom-hash-demo">
     <a href="img/img1.jpg" data-slide-name="fading-light">
         <img src="img/thumb1.jpg" />
     </a>
@@ -188,7 +188,7 @@ You can provide custom slide names for each slide by providing slide name via
 **JavaScript**
 
 ```js
-lightGallery(document.getElementById('gallery-hash-demo'), {
+lightGallery(document.getElementById('gallery-custom-hash-demo'), {
     plugins: [lgHash],
     customSlideName: true,
 });
@@ -198,6 +198,9 @@ lightGallery(document.getElementById('gallery-hash-demo'), {
 <Fragment slot="react">
 
 ```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Hash from '@lightgallery/react/plugins/hash';
+
 // Slide names come from each item's `slideName`, so deep links read
 // /page/#lg=1&slide=fading-light instead of an index.
 const items = [
@@ -229,6 +232,11 @@ const items = [
 
 ```vue
 <script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Hash from '@lightgallery/vue/plugins/hash';
+
+const plugins = [Hash];
+
 // Slide names come from each item's `slideName`, so deep links read
 // /page/#lg=1&slide=fading-light instead of an index.
 const items = [
@@ -260,34 +268,47 @@ const items = [
 <Fragment slot="angular">
 
 ```ts
-features = [withHash({ customSlideName: true })];
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withHash } from '@lightgallery/angular/plugins/hash';
 
-// Slide names come from each item's `slideName`, so deep links read
-// /page/#lg=1&slide=fading-light instead of an index.
-items: LgGalleryItem[] = [
-    {
-        src: 'img/img1.jpg',
-        thumb: 'img/thumb1.jpg',
-        alt: 'Mountains',
-        slideName: 'fading-light',
-    },
-    {
-        src: 'img/img2.jpg',
-        thumb: 'img/thumb2.jpg',
-        alt: 'Forest path',
-        slideName: 'bowness-bay',
-    },
-];
-```
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withHash({ customSlideName: true })];
 
-```html
-<lg-gallery [features]="features">
-    @for (item of items; track item.src) {
-        <a [lgGalleryItem]="item">
-            <img [src]="item.thumb" [alt]="item.alt" />
-        </a>
-    }
-</lg-gallery>
+    // Slide names come from each item's `slideName`, so deep links read
+    // /page/#lg=1&slide=fading-light instead of an index.
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Mountains',
+            slideName: 'fading-light',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Forest path',
+            slideName: 'bowness-bay',
+        },
+    ];
+}
 ```
 
 </Fragment>

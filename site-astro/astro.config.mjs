@@ -39,12 +39,10 @@ export default defineConfig({
     integrations: [
         mdx(),
         react(),
-        // Review-only pages and the sandbox hand-off pages (noindex) stay
-        // out of the sitemap; every content-backed URL carries its last
-        // git commit date.
+        // The sandbox hand-off pages (noindex) stay out of the sitemap;
+        // every content-backed URL carries its last git commit date.
         sitemap({
-            filter: (page) =>
-                !page.includes('/home-v2/') && !page.includes('/sandbox/'),
+            filter: (page) => !page.includes('/sandbox/'),
             serialize: withLastmod,
         }),
     ],

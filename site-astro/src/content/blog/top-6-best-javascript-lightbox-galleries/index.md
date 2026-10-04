@@ -43,11 +43,11 @@ No matter if you're an expert or new to web design, these libraries will fit all
 
 - Not designed to display very large images
 
-- Learning curve: complex  in understanding and implementation
+- Learning curve: complex in understanding and implementation
 
-- Compared to other website it does not have video support,there may be issues when using iframe
+- Compared to other libraries, it does not have video support; there may be issues when using iframes
 
-- If your project requires a highly customized and complex user interface for image galleries, you might find that PhotoSwipe has limitation
+- If your project requires a highly customized and complex user interface for image galleries, you might find that PhotoSwipe has limitations
 
 
 
@@ -96,7 +96,7 @@ No matter if you're an expert or new to web design, these libraries will fit all
 
 - Responsive - works with any screen size
 
-- Video Support - Youtube, Vimeo and self hosted videos with autoplay
+- Video Support - YouTube, Vimeo and self hosted videos with autoplay
 
 - Support for mobile touch events like swipe, move, pinch, etc.
 
@@ -140,8 +140,7 @@ No matter if you're an expert or new to web design, these libraries will fit all
 
 - Learning Curve for Advanced Features: Advanced features and customization options might be more challenging to implement, requiring a deeper understanding of the library's documentation.
 
-- Performance Impact: Depending on the size and number of images or videos, there could be
-Performance impact
+- Performance Impact: Depending on the size and number of images or videos, there could be a performance impact.
 
 
 ### Lightbox2
@@ -193,7 +192,7 @@ Performance impact
 
 **Cons**
 
-- The theming options in Fluidbox may be more limited compared to other lightbox. Developers seeking highly customized designs may find this limiting.
+- The theming options in Fluidbox may be more limited compared to other lightboxes. Developers seeking highly customized designs may find this limiting.
 
 
 - Fluidbox is primarily designed for images, and it may lack built-in support for videos or other media types. If your project requires broader multimedia support, you might need additional customization.

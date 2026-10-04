@@ -5,7 +5,7 @@
         padding: 100px 75px;
     }
 
-    font-family: 'Inter';
+    font-family: $font-family-sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -14,6 +14,13 @@
 
     .docs-hero-image {
         margin-bottom: 60px;
+    }
+
+    // Tables carry setting names in code; let them wrap so a three-column
+    // table never widens the page on a phone.
+    table code {
+        white-space: normal;
+        overflow-wrap: anywhere;
     }
 
     .figure {
@@ -28,6 +35,21 @@
 
     .twitter-tweet {
         margin-bottom: 2rem !important;
+    }
+
+    // Inline code: the same pill as the docs content.
+    :not(pre) > code {
+        padding: 2px 6px;
+        border: 1px solid $gray-200;
+        border-radius: 6px;
+        background: $gray-50;
+        color: $gray-800;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    // A linked setting keeps the link colour so it still reads as a link.
+    a > code {
+        color: inherit;
     }
 
     .docs-hero-image {
@@ -88,7 +110,7 @@
 }
 
 .blog-meta {
-    font-family: 'Inter';
+    font-family: $font-family-sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -143,7 +165,7 @@
     }
 
     .blog-body {
-        font-family: 'Inter';
+        font-family: $font-family-sans-serif;
         font-style: normal;
         font-weight: 400;
         font-size: 16px;
@@ -162,8 +184,10 @@
     line-height: 16px;
     /* identical to box height, or 133% */
 
-    display: flex;
+    // Inline, so a post with several tags shows them side by side.
+    display: inline-flex;
     align-items: center;
+    margin-right: 6px;
 
     &:hover {
         color: #ffffff;

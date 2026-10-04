@@ -2,7 +2,7 @@ import { PlayerParams } from '@lightgallery/headless';
 
 export interface VideoSettings {
     /**
-     * Enable/DIsable first video autoplay.
+     * Enable/Disable first video autoplay.
      * @description Autoplay has to be managed using this setting.
      * Autoplay in PlayerParams doesn't have any effect.
      */
@@ -66,7 +66,7 @@ export interface VideoSettings {
     /**
      * Change Wistia player parameters.
      * You can find the list of Wistia player parameters from the following link
-     * <a href="https://wistia.com/support/developers/embed-options#using-embed-options">Vimeo player parameters</a>
+     * <a href="https://wistia.com/support/developers/embed-options#using-embed-options">Wistia player parameters</a>
      */
     wistiaPlayerParams: any;
 
@@ -83,7 +83,7 @@ export interface VideoSettings {
     autoplayVideoOnSlide: boolean;
 
     /**
-     * Enbale videojs custom video player
+     * Enable videojs custom video player
      * <div class="alert alert-info" role="alert">
      *     <b>Dependency</b> - You need to include <a href="https://videojs.com/">videoJs</a> on your document to enable videojs player
      * </div>

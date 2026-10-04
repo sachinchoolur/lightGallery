@@ -2,7 +2,7 @@
 title: 'Dynamic mode'
 description: 'Dynamic mode demo: open a gallery from a JavaScript array of items, with no trigger markup on the page.'
 lead:
-    'LightGallery can be instantiated and launched programmatically by setting
+    'lightGallery can be instantiated and launched programmatically by setting
     dynamic option to true and populating dynamicEl option by passing array of
     objects representing the gallery elements. See available dynamic options <a
     href="../../docs/dynamic-variables/">Docs.</a>'
@@ -212,7 +212,7 @@ export class Gallery {
 ### Load more slides dynamically
 
 You can add or remove slides of a dynamic gallery by passing the updated
-dynamicEl list via refresh method
+dynamicEl list via the refresh method.
 
 <button type="button" class="btn btn-success"
 id="dynamic-gallery-demo-load-more"> Launch Gallery with more images </button>
@@ -344,9 +344,10 @@ function loadMore() {
 <Fragment slot="angular">
 
 ```ts
-// `slides` is the signal of the first example. A signal update is the
-// whole story on the Angular side too.
-moreSlides: LgGalleryItem[] = [
+import { Component, signal } from '@angular/core';
+import { LgGalleryComponent, type LgGalleryItem } from '@lightgallery/angular';
+
+const moreSlides: LgGalleryItem[] = [
     {
         src: 'img/4.jpg',
         thumb: 'img/thumb-4.jpg',
@@ -361,16 +362,30 @@ moreSlides: LgGalleryItem[] = [
     },
 ];
 
-loadMore() {
-    this.slides.update((current) => [...current, ...this.moreSlides]);
-    // Open the gallery with the updated slides
-    this.open.set(true);
-}
-```
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent],
+    template: `
+        <button type="button" (click)="loadMore()">Load more</button>
+        <lg-gallery
+            [slides]="slides()"
+            [open]="open()"
+            (closed)="open.set(false)"
+        />
+    `,
+})
+export class Gallery {
+    // Appending is a signal update, no refresh() call. The signal starts
+    // with the three slides of the first example.
+    slides = signal<LgGalleryItem[]>([/* slides as above */]);
+    open = signal(false);
 
-```html
-<button type="button" (click)="loadMore()">Load more</button>
-<lg-gallery [slides]="slides()" [open]="open()" (closed)="open.set(false)" />
+    loadMore() {
+        this.slides.update((current) => [...current, ...moreSlides]);
+        // Open the gallery with the updated slides
+        this.open.set(true);
+    }
+}
 ```
 
 </Fragment>

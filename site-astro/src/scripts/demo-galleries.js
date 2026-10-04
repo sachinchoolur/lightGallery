@@ -183,6 +183,7 @@ if ($lgInlineContainer) {
             src: p.src,
             responsive: p.responsive,
             thumb: p.thumb,
+            alt: p.alt,
             subHtml: `<div class="lightGallery-captions">${p.caption}</div>`,
         })),
     });
@@ -631,6 +632,7 @@ const dynamicEl = photos('alley', 4).map((p) => ({
     src: p.src,
     responsive: p.responsive,
     thumb: p.thumb,
+    alt: p.alt,
 }));
 const dynamicGallery = window.lightGallery($dynamicGallery, {
     dynamic: true,
@@ -657,6 +659,7 @@ const $dynamicimgGallery = document.getElementById('dynamic-mode-images');
 const dynamicimgEl = photos('morocco').map((p) => ({
     src: p.src,
     thumb: p.thumb,
+    alt: p.alt,
 }));
 const dynamicimgGallery = window.lightGallery($dynamicimgGallery, {
     dynamic: true,
@@ -698,6 +701,7 @@ document
             src: p.src,
             responsive: p.responsive,
             thumb: p.thumb,
+            alt: p.alt,
         }));
         const updatedDynamicElements = [...dynamicEl, ...newItems];
         dynamicGallery.refresh(updatedDynamicElements);
@@ -989,6 +993,7 @@ if (homeInline) {
                 src: p.src,
                 responsive: p.responsive,
                 thumb: p.thumb,
+                alt: p.alt,
                 subHtml: `<div class="lightGallery-captions">${p.caption}</div>`,
             })),
     });
@@ -1536,6 +1541,7 @@ if (virtualizationStressHost) {
         return {
             src: p.src,
             thumb: p.thumb,
+            alt: p.alt,
             subHtml: `<h4>Slide ${i + 1} / 1000</h4>`,
         };
     });

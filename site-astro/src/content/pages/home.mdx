@@ -19,7 +19,6 @@ import FeatureGrid from '../../components/home/FeatureGrid.astro';
 import PluginSizes from '../../components/home/PluginSizes.astro';
 import TrustedBy from '../../components/home/TrustedBy.astro';
 import CustomerQueue from '../../components/home/CustomerQueue.astro';
-import { LOGOS } from '../../data/customer-logos';
 
 {/* Customization demos, in the order their galleries open: the listing's
     whole set (five in the mosaic, the rest behind "+N photos"), the
@@ -52,7 +51,7 @@ export const customizePortfolio = [0, 3, 4, 6, 7, 9, 10].map((i) => photos('stre
 <CodeTabs label="Stack">
 <Fragment slot="vanilla">
 
-<p class="home-stack-desc">Plain JavaScript and TypeScript, with no dependencies. Point it at your markup or an array of items, from npm or a CDN tag.</p>
+<p class="home-stack-desc">Plain JavaScript, no dependencies. Point it at your markup or an array of items, from npm or a CDN.</p>
 
 ```bash
 npm install lightgallery
@@ -72,7 +71,7 @@ lightGallery(document.getElementById('gallery'), {
 </Fragment>
 <Fragment slot="react">
 
-<p class="home-stack-desc">A real React component: props, children, refs and callbacks. Your state stays in React, and everything is typed.</p>
+<p class="home-stack-desc">A real React component: props, children, refs and callbacks, all typed. Your state stays in React.</p>
 
 ```bash
 npm install @lightgallery/react lightgallery
@@ -160,8 +159,8 @@ npm install @lightgallery/angular @angular/cdk lightgallery
         <div class="row justify-content-center home-section-header">
             <div class="col-lg-7 text-center">
                 <span class="label1 home-kicker">Gestures and motion</span>
-            <h2>The physics of feel</h2>
-                <p>Swipe, pinch, double-tap, drag to dismiss, fling the strip, every gesture a native photo app has, with a mouse equivalent on desktop. What sets them apart is the release: each one lands in a spring seeded with your finger's velocity, so nothing ever snaps.</p>
+                <h2>Physics, not transitions.</h2>
+                <p>Every release is a spring seeded with the user's velocity. Flings land where they should, edges push back, nothing snaps.</p>
             </div>
         </div>
         <ul class="home-gesture-chips" aria-label="Gestures">
@@ -210,8 +209,8 @@ npm install @lightgallery/angular @angular/cdk lightgallery
     <div class="home-customize-layout">
         <div class="home-customize-text">
             <span class="label1 home-kicker">Customization</span>
-            <h2>Super <span class="serif-accent">customizable</span></h2>
-            <p class="home-customize-lead">Change how the gallery behaves through settings, how it looks through SCSS variables and your own icons, and what it does through the plugin API, without touching the core.</p>
+            <h2>Looks like your site, not like a <span class="serif-accent">plugin</span></h2>
+            <p class="home-customize-lead">Settings for behavior, SCSS variables for looks, your own icons, and a plugin API for everything else. The core stays untouched.</p>
             <div class="home-customize-points">
                 <div class="home-customize-point">
                     <span class="home-customize-point-icon"><img src="/images/icons/options.svg" alt="" /></span>
@@ -323,7 +322,7 @@ npm install @lightgallery/angular @angular/cdk lightgallery
         <div class="row justify-content-center home-section-header home-inline-gallery-header">
             <div class="col-lg-7">
                 <h2>Inline <span class="serif-accent">Gallery</span></h2>
-                <p>Create both inline and lightBox galleries with one library. Convert inline to fullScreen by clicking on the maximize icon.</p>
+                <p>The same gallery, embedded in the page. One click on the maximize icon takes it fullscreen, same settings, same plugins.</p>
             </div>
         </div>
         <div id="home-inline-gallery" class="home-inline-embed"></div>
@@ -334,7 +333,7 @@ npm install @lightgallery/angular @angular/cdk lightgallery
         <div class="col-lg-4 home-section-header home-section-header-left">
             <span class="label1 home-kicker">Bundle size</span>
             <h2>Modular by <span class="serif-accent">design</span></h2>
-            <p>Every feature outside the core is a plugin with its own entry, in every package. Import what you use; the rest never reaches your bundle. Sizes below are measured from this site's build, minified and gzipped.</p>
+            <p>Every feature outside the core is a plugin with its own entry point. Import the two you use and the rest never reach your bundle. Sizes are from this site's build, minified and gzipped.</p>
         </div>
         <div class="col-lg-8">
             <PluginSizes />
@@ -454,7 +453,7 @@ lightGallery(el, { plugins: [lgZoom, lgThumbnail] });
     <div class="home-cta-head">
         <span class="label1 home-kicker">Get started</span>
         <h2>Start with your <span class="serif-accent">stack</span></h2>
-        <p class="home-cta-lede">{LOGOS.length} of the world's top brands are already in. You're next.</p>
+        <p class="home-cta-lede">In production at thousands of teams since 2014, from solo developers to the world's biggest brands. Live in minutes.</p>
     </div>
     <CustomerQueue />
     <div class="home-cta-actions">
@@ -465,3 +464,9 @@ lightGallery(el, { plugins: [lgZoom, lgThumbnail] });
     </div>
     <p class="home-cta-secondary">or <a href="/demos/">browse the demos</a> first.</p>
 </div>
+
+
+
+
+
+

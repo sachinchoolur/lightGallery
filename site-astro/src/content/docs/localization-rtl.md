@@ -65,6 +65,7 @@ lightGallery(el, {
 | `mediaLoadingFailed` | `'Oops... Failed to load content...'` |
 | `galleryLabel` | `'Gallery'` |
 | `slideAnnouncement` | `'Image {index} of {total}'` |
+| `moreOptions` | `'More options'` |
 
 `galleryLabel` names the gallery dialog for assistive technology when
 `ariaLabelledby` is not set. `slideAnnouncement` is announced politely

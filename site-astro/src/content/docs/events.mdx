@@ -17,7 +17,7 @@ import Events from '../../components/api/Events.astro';
 lightGallery custom events can be attached to the HTML element that you are
 using to initialize the gallery. Every custom event holds useful plugin data
 that can be used to control or customize lightGallery. Make sure that you attach
-event listeners before initializing lightGallery
+event listeners before initializing lightGallery.
 
 ```javascript
 const lg = document.getElementById('custom-events-demo');
@@ -30,7 +30,7 @@ lg.addEventListener('lgBeforeOpen', () => {
 // custom event with useful plugin data
 lg.addEventListener('lgBeforeSlide', (event) => {
     const { index, prevIndex } = event.detail;
-    alert(index, prevIndex);
+    console.log(index, prevIndex);
 });
 
 lightGallery(lg);

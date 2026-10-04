@@ -67,10 +67,10 @@ a few changed defaults and four removals:
 
 | Setting | 2.x | 3.0 | Effect |
 | --- | --- | --- | --- |
-| `videoFacade` |, (eager iframe) | `true` | Provider video slides render a poster with a play button; the iframe mounts on play. Set `false` for the old behavior |
-| `youTubeNoCookie` |, (`youtube.com`) | `true` | YouTube embeds go through `youtube-nocookie.com`. URLs that already point there always keep it |
-| `preferNativeShare` |, | touch: `true`, desktop: `false` | On touch devices the share button opens the system share sheet, with the branded dropdown as the fallback |
-| `hashDriver` |, (History API) | `'auto'` | Deep links use the Navigation API where the browser has it, History everywhere else. Force the old engine with `'history'` |
+| `videoFacade` | n/a (eager iframe) | `true` | Provider video slides render a poster with a play button; the iframe mounts on play. Set `false` for the old behavior |
+| `youTubeNoCookie` | n/a (`youtube.com`) | `true` | YouTube embeds go through `youtube-nocookie.com`. URLs that already point there always keep it |
+| `preferNativeShare` | n/a | touch: `true`, desktop: `false` | On touch devices the share button opens the system share sheet, with the branded dropdown as the fallback |
+| `hashDriver` | n/a (History API) | `'auto'` | Deep links use the Navigation API where the browser has it, History everywhere else. Force the old engine with `'history'` |
 
 `direction` stays `'ltr'`, so nothing mirrors until you opt in with
 `'rtl'` or `'auto'`.
@@ -161,8 +161,8 @@ template-ref handle (`openGallery`, `closeGallery`, `goToSlide`,
 ## Angular
 
 The 2.x wrapper is documented at [/docs/v2/angular/](/docs/v2/angular/).
-`@lightgallery/angular` requires `@angular/core`, `@angular/common` and
-`@angular/cdk` `>=21 <23`, and runs without `zone.js`.
+`@lightgallery/angular` requires `@angular/core`, `@angular/common`,
+`@angular/platform-browser` and `@angular/cdk` `>=21 <23`, and runs without `zone.js`.
 
 ```bash
 npm install @lightgallery/angular @angular/cdk lightgallery

@@ -35,7 +35,7 @@ const next = index >= 0 && index < sorted.length - 1
 const pageUrl = (e: CollectionEntry<'docs'> | CollectionEntry<'demos'>) =>
     `/${section}/${e.id.replace(/\/index$/, '')}/`;
 
-const editUrl = `${SITE.docsRepo}/site-astro/src/content/${section}/${entry.id}.md`;
+const editUrl = `${SITE.docsRepo}/site-astro/${entry.filePath ?? `src/content/${section}/${entry.id}.md`}`;
 const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 // Group name above the title (the sidebar group the page belongs to).
 const kicker = (entry.data.menu as Record<string, { parent?: string }> | undefined)?.[section]?.parent;

@@ -107,6 +107,7 @@ lightGallery(document.getElementById('gallery'), {
 | `justifiedGap` | `8` | Gap between thumbnails and between rows (px) |
 | `justifiedLastRow` | `'start'` | Leftover-row policy: `'justify'`, `'start'` or `'hide'` |
 | `justifiedMaxScale` | `1.75` | Row-height clamp as a multiple of `justifiedRowHeight` |
+| `justifiedReveal` | `'row'` | Reveal order as thumbnails load: `'row'` or `'image'` |
 
 ## React
 

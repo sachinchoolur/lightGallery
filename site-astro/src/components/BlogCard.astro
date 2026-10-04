@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 
 import {
+    CONTRIBUTOR_IMAGES,
     POST_DATE_FORMAT,
     blogUrl,
     bundleImage,
@@ -64,8 +65,11 @@ const header = bundleImage(entry, 'header.png');
                         {index > 0 && ' and '}
                         <div class="blog-contributors-list">
                             <span class="contributor-image">
-                                {contributor === 'Ujjwal Maheendran' && (
-                                    <img src="/images/ujjwal.jpg" />
+                                {CONTRIBUTOR_IMAGES[contributor] && (
+                                    <img
+                                        src={CONTRIBUTOR_IMAGES[contributor]}
+                                        alt=""
+                                    />
                                 )}
                             </span>
                             {contributor}

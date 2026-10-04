@@ -10,4 +10,4 @@ weight: 20
 toc: true
 ---
 
-If you need any help with customizing lightGallery, adding new features, create a new plugin, or need any other assistance that is beyond the scope of regular support, reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) with your requirements. We'll help you if we can or at least point you in the right direction.
+If you need any help with customizing lightGallery, adding new features, creating a new plugin, or need any other assistance that is beyond the scope of regular support, reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) with your requirements. We'll help you if we can or at least point you in the right direction.

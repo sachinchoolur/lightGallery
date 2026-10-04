@@ -131,7 +131,7 @@ The open gallery passes axe WCAG A/AA checks (automated in CI).
 
 ## Plugins
 
-All 13 plugins ship as subpath imports, plus the justified layout; pass them via `plugins={[]}`
+All 14 plugins ship as subpath imports, plus the justified layout; pass them via `plugins={[]}`
 and configure each with the prop named after it. Import the matching
 `lightgallery/css/lg-*.css` where one exists.
 
@@ -174,7 +174,7 @@ or the old CRA wrapper:
   as a `zoom={{ … }}` prop instead of flat settings keys.
 - Events keep their documented `onXxx` names and payloads; `updateSlides`
   is gone (changing `slides` is the update). The `videojs` option was
-  dropped, bring custom players through `render.slide`.
+  dropped, bring custom players through a plugin `slideRenderer`.
 
 ## License
 

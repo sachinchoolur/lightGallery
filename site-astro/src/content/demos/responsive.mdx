@@ -21,9 +21,9 @@ import ImageGallerySrcset from '../../components/shortcodes/ImageGallerySrcset.a
 ### Demo
 
 For cross browser responsive image support, lightGallery accepts a comma
-separated list of images sources, each with a max width descriptor for
+separated list of image sources, each with a max width descriptor for
 displaying different images for different screen sizes. For modern browsers you
-can use native srcset and sizes attributes. Please refer the next demo, and the
+can use native srcset and sizes attributes. Please refer to the next demo, and the
 <a href="/docs/responsive-loading/">responsive loading guide</a> for srcset,
 sizes and picture sources on slides, plus the decode gate for flash-free
 first paint.
@@ -198,7 +198,7 @@ export class Gallery {
 
 You can use native srcset and sizes attributes in lightGallery. Pass srcset and
 sizes via data-srcset and data-sizes attributes respectively. lightGallery will
-automatically create image with srcset and sizes.
+automatically create the image with srcset and sizes.
 
 <ImageGallerySrcset id="gallery-srcset-demo" />
 
@@ -428,10 +428,10 @@ items: LgGalleryItem[] = [
 
 Similarly you can pass all supported
 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source#attributes" target="_blank">attributes</a>
-in the form of an object
+in the form of an object.
 
 If you want to provide `webp` for supported browsers with `jpg` fallback image,
-You can use `data-sources` in the following way
+you can use `data-sources` in the following way
 
 <CodeTabs>
 <Fragment slot="vanilla">
@@ -494,7 +494,7 @@ items: LgGalleryItem[] = [
 
 ### Using zoomFromOrigin with responsive images
 
-If you want to use `zoomFromOrigin` option with responsive images, You can
+If you want to use `zoomFromOrigin` option with responsive images, you can
 provide specific `lg-size` values for specific screen size by providing a comma
 separated list of sizes combined with a max-width (up to what size the
 particular image should be used)
@@ -579,4 +579,4 @@ items: LgGalleryItem[] = [
 
 Up to `375` width, `img-240.jpg` and `lg-size` `240-160` will be used.
 Similarly, up to `480` pixel width, size `400-267` and `img-400.jpg` will be
-used. And above `480`, `lg-size` `1600-1067` and `img-1600.jpg` will be used
+used. And above `480`, `lg-size` `1600-1067` and `img-1600.jpg` will be used.

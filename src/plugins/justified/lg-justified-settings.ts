@@ -7,26 +7,31 @@ export interface JustifiedSettings {
      * fades in once loaded; put `class="lg-justified"` on the container
      * markup so nothing shows unorganized before the script runs.
      * See <a href="/docs/justified-layout/">Justified layout</a>.
+     * @version V3.0.0
      */
     justified: boolean;
     /**
      * Row height (px) the layout aims for; actual rows land as close to
      * it as the aspect ratios allow.
+     * @version V3.0.0
      */
     justifiedRowHeight: number;
     /**
      * Gap between thumbnails and between rows (px).
+     * @version V3.0.0
      */
     justifiedGap: number;
     /**
      * Last-row policy: 'justify' scales the leftover row to fill the
      * width like every other row, 'start' keeps the row height aligned
      * to the reading start, 'hide' hides the leftover thumbnails.
+     * @version V3.0.0
      */
     justifiedLastRow: 'justify' | 'start' | 'hide';
     /**
      * Row-height clamp as a multiple of justifiedRowHeight, a sparse
      * row never renders taller than this.
+     * @version V3.0.0
      */
     justifiedMaxScale: number;
     /**

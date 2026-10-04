@@ -1,7 +1,7 @@
 ---
 title: Image and video gallery for Angular
 description: 'Native Angular image and video gallery component, standalone, signal inputs, zoneless, CDK overlay, thumbnails, pinch zoom and SSR support.'
-lead: Full featured image and video lightbox gallery component for angular.
+lead: Full featured image and video lightbox gallery component for Angular.
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
@@ -23,8 +23,8 @@ vanilla, React and Vue packages exactly.
 npm install @lightgallery/angular @angular/cdk lightgallery
 ```
 
-Peer ranges are `@angular/core`, `@angular/common` and `@angular/cdk`
-`>=21 <23`. There is no `zone.js` in the package. Add the stylesheets to the
+Peer ranges are `@angular/core`, `@angular/common`, `@angular/platform-browser`
+and `@angular/cdk` `>=21 <23`. There is no `zone.js` in the package. Add the stylesheets to the
 `styles` array in `angular.json` or import them in your root stylesheet:
 
 ```ts
@@ -79,10 +79,10 @@ Prefer to own the state? Pass `[slides]` with `[open]`/`(closed)` and
 
 ## What you get
 
--   **All 13 features** as tree-shakable entry points with `with<Name>()`
+-   **All 14 features** as tree-shakable entry points with `with<Name>()`
     factories, thumbnails, zoom, video, autoplay, fullscreen, hash deep
     links, pager, share, rotate, comments, medium-style zoom, relative
-    captions and Vimeo thumbnails, plus the justified layout.
+    captions, Vimeo thumbnails and origin crop, plus the justified layout.
 -   **Idiomatic Angular API**: settings are same-named signal inputs
     (`[speed]`, `[loop]`, `[captionPosition]`), events are outputs without
     the `on` prefix (`(afterSlide)`), and the gallery chrome comes from

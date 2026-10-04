@@ -1,7 +1,7 @@
 ---
 title: 'Video gallery for YouTube, Vimeo and HTML5'
 description: 'Responsive video gallery demo, play YouTube, Vimeo, Wistia and self-hosted HTML5 video in a full-screen lightbox, with poster facades and thumbnails.'
-lead: lightGallery supports YouTube, Vimeo, Wistia and all other types of HTML5 video formats. Such as MP4, WebM, Ogg, etc.
+lead: lightGallery supports YouTube, Vimeo, Wistia and all other types of HTML5 video formats, such as MP4, WebM, Ogg, etc.
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
@@ -17,7 +17,7 @@ import VideosGallery from '../../components/shortcodes/VideosGallery.astro';
 
 #### External videos
 
-<p>To display YouTube, Vimeo and Wistia, videos, you just need to paste the video URL, or share URL of the video in the data-src attribute. The same way you display images in the gallery. lightGallery will check the data-src attribute and if it is a video URL, it will create the respective video slide.</p>
+<p>To display YouTube, Vimeo and Wistia videos, you just need to paste the video URL, or share URL of the video in the data-src attribute. The same way you display images in the gallery. lightGallery will check the data-src attribute and if it is a video URL, it will create the respective video slide.</p>
 
 <p>Provider videos render as lightweight facades by default: a poster with a play button, with the provider iframe created only when the user presses play. The poster falls back from the data-poster attribute to the YouTube thumbnail endpoint to the item thumb, so YouTube slides get a facade even without an explicit poster. Users can navigate to other slides by using mouse drag or swipe without loading any player code. See the <a href="/demos/video-facades/">video facades demo</a> for details and how to opt out.</p>
 
@@ -26,7 +26,7 @@ import VideosGallery from '../../components/shortcodes/VideosGallery.astro';
 #### HTML5 videos
 
 <p>For displaying HTML5 videos, you need to construct an object with array of video sources and types, and videos attributes objects as shown below and pass it via data-video attribute</p>
-Note - data-src should not be provided when you use html5 videos
+Note - data-src should not be provided when you use HTML5 videos.
 
 <CodeTabs sandbox="video-gallery">
 <Fragment slot="vanilla">
@@ -41,11 +41,11 @@ Note - data-src should not be provided when you use html5 videos
         // more items
     ],
     // Optional video tracks - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/track
-    tracks : [
+    tracks: [
         {
             src: '/videos/title.txt',
-            kind:'captions'
-        }
+            kind: 'captions',
+        },
     ],
     attributes: { preload: false, controls: true },
 };
@@ -224,7 +224,7 @@ export class Gallery {
 </CodeTabs>
 
 <div class="alert alert-warning" role="alert">
-    Note: You need to include the lightGallery videos plugin in the document to enable video slides
+    Note: You need to include the lightGallery video plugin in the document to enable video slides.
 </div>
 
 <VideosGallery id="gallery-videos-demo" />

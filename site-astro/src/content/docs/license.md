@@ -33,7 +33,7 @@ lightGallery in your commercial applications.
 
 ## Extended Commercial license
 
-If you want to include lightGallery as part of software developer kit (SDK), web application builder or website builder, downloadable or installable products like Wordpress themes, HTML templates,or something that produces copies that each use lightGallery, you need to choose the Extended Commercial license
+If you want to include lightGallery as part of software development kit (SDK), web application builder or website builder, downloadable or installable products like WordPress themes, HTML templates, or something that produces copies that each use lightGallery, you need to choose the Extended Commercial license.
 
 ## Open source license
 

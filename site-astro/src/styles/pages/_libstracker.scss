@@ -37,8 +37,10 @@
 }
 
 .libs-trackers-head-sections {
-    background-color: $brand-dark;
-    color: #fffdfd;
+    // The header cells float and paint their own white background, so a
+    // dark group background only shows through the gaps between them.
+    background-color: transparent;
+    color: inherit;
     text-align: center;
 }
 
@@ -57,6 +59,13 @@
     border: 1px solid;
     overflow: hidden;
     margin-bottom: 80px;
+
+    // The cells float at different widths; a flat background keeps the
+    // rows from showing as stepped boxes.
+    td,
+    th {
+        background-color: transparent;
+    }
 
     td,
     tr {

@@ -2,6 +2,12 @@ import type { CollectionEntry } from 'astro:content';
 
 /** Blog helpers shared by the list, single and related-posts views. */
 
+/** Contributor avatars, served from the site's static images. */
+export const CONTRIBUTOR_IMAGES: Record<string, string> = {
+    'Ujjwal Maheendran': '/images/ujjwal.jpg',
+    'Sachin Neravath': '/images/sachinNeravath.jpeg',
+};
+
 export function blogSlug(entry: CollectionEntry<'blog'>): string {
     // The glob loader already honors the frontmatter `slug` override.
     return entry.id.replace(/\/index$/, '');
@@ -11,7 +17,7 @@ export function blogUrl(entry: CollectionEntry<'blog'>): string {
     return `/blog/${blogSlug(entry)}/`;
 }
 
-/** Hugo `.ReadingTime` equivalent (words / 212, rounded up, min 1). */
+/** Hugo `.ReadingTime` equivalent (words / 213, rounded up, min 1). */
 export function readingTime(body: string): number {
     const words = body.split(/\s+/).filter(Boolean).length;
     return Math.max(1, Math.ceil(words / 213));
@@ -21,6 +27,8 @@ export function readingTime(body: string): number {
 export function teaser(body: string, length: number): string {
     const text = body
         .replace(/```[\s\S]*?```/g, ' ')
+        // MDX posts: import and export lines are not prose.
+        .replace(/^(import|export)\s.*$/gm, ' ')
         .replace(/<[^>]+>/g, ' ')
         .replace(/[#*_>\[\]()`]/g, ' ')
         .replace(/\s+/g, ' ')

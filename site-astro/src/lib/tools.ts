@@ -15,7 +15,9 @@ export function loadToolPage(raw: string): ToolPage {
     const fm = match[1];
     const field = (name: string): string => {
         const single = fm.match(new RegExp(`^${name}:\\s*(['"]?)([\\s\\S]*?)\\1\\s*$`, 'm'));
-        if (single && single[2].trim()) return single[2].trim();
+        if (single && single[2].trim()) {
+            return single[2].replace(/\s+/g, ' ').trim();
+        }
         // Indented continuation form (`description:\n    '...'`).
         const multi = fm.match(new RegExp(`^${name}:\\s*\\n((?:[ \\t]+.*\\n?)+)`, 'm'));
         return (multi?.[1] ?? '')

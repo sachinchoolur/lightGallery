@@ -2,7 +2,7 @@
 title: 'Zoom image from origin'
 description: 'Zoom-from-origin demo: slides open from the clicked thumbnail''s position and close back to it, from cropped thumbnails too.'
 lead:
-    'Zoom images from its origin while opening the image gallery.'
+    'Zoom images from their origin while opening the image gallery.'
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
@@ -17,10 +17,10 @@ import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 import TileGallery from '../../components/shortcodes/TileGallery.astro';
 
-You need to know the original image size upfront and provide it via data-lg-size attribute as data-lg-size="1920-1280"
+You need to know the original image size upfront and provide it via data-lg-size attribute as data-lg-size="1920-1280".
 
-If you don't know, the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides,
-lightGallery will show the default animation if data-lg-size is not available
+If you don't know the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides;
+lightGallery will show the default animation if data-lg-size is not available.
 
 On close, the slide flies back to its thumbnail. A slide with no thumbnail to return to, because its trigger is hidden or collapsed
 (the overflow photos behind a "+9 photos" tile in a collage) or because it has no data-lg-size, shrinks to the centre of the

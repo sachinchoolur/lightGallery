@@ -1,7 +1,7 @@
 ---
 slug: "7-best-react-image-gallery-components"
-title: "7 Best React image Gallery Libraries"
-description: "7 Best React image Gallery components"
+title: "7 Best React Image Gallery Libraries"
+description: "7 Best React Image Gallery components"
 lead: "7 Best React Image Gallery libraries"
 date: 2023-12-24T09:19:42+01:00
 tags: ["gallery"]
@@ -15,17 +15,17 @@ contributors: ["Ujjwal Maheendran"]
 
 Photo galleries play a crucial role in displaying images in a structured and engaging way, which is essential whether you're showcasing a portfolio, product images, or any other visual content.
 
-Given the popularity of React in front end development, picking the right photo gallery library is vital for not just the look and feel, but also for enhancing user interaction and engagement
+Given the popularity of React in front end development, picking the right photo gallery library is vital for not just the look and feel, but also for enhancing user interaction and engagement.
 
 In this concise guide, we present the top 7 React image gallery components, each meticulously handpicked and manually verified for quality and performance. We not only highlight their features but also discuss the pros and cons of each, ensuring you have all the information needed to make an informed choice for your projects.
 
-### React image Gallery
+### React Image Gallery
 
 <figure class="blog-images" data-src="./react-image-gallery.png" data-lg-size="1200-630">
-    <img src="./react-image-gallery.png" alt="React image Gallery"/>
+    <img src="./react-image-gallery.png" alt="React Image Gallery"/>
 </figure>
 
-<a href="https://linxtion.com/demo/react-image-gallery/" rel="nofollow">React image Gallery</a> is a versatile and user-friendly image gallery component for React applications, providing a seamless way to showcase and navigate through a collection of images. Leveraging the customizable options and responsive design, developers can easily create visually appealing galleries with features like thumbnails, captions, and lightbox functionality. React Image Gallery simplifies the process of integrating immersive image displays, making it a popular choice for building interactive and aesthetically pleasing galleries in React projects.
+<a href="https://linxtion.com/demo/react-image-gallery/" rel="nofollow">React Image Gallery</a> is a versatile and user-friendly image gallery component for React applications, providing a seamless way to showcase and navigate through a collection of images. Leveraging the customizable options and responsive design, developers can easily create visually appealing galleries with features like thumbnails, captions, and lightbox functionality. React Image Gallery simplifies the process of integrating immersive image displays, making it a popular choice for building interactive and aesthetically pleasing galleries in React projects.
 
 **Pros**
 
@@ -104,7 +104,7 @@ In this concise guide, we present the top 7 React image gallery components, each
 
 - Limited features. No Videos, Iframe, or thumbnails support
 
-- If your project requires a highly customized and complex user interface for image galleries, you might find that PhotoSwipe has limitation
+- If your project requires a highly customized and complex user interface for image galleries, you might find that PhotoSwipe has limitations
 
 
 
@@ -148,7 +148,7 @@ In this concise guide, we present the top 7 React image gallery components, each
     <img src="./swiper.png" alt="Swiper"/>
 </figure>
 
-<a href="https://swiperjs.com/" rel="nofollow">Swiper</a> is a powerful and touch-friendly carousel component built for React applications, providing a seamless way to create stunning and responsive slideshows. Leveraging the Swiper library, it offers a range of features like smooth transitions, navigation controls, and pagination, enhancing the user experience for dynamic content displays. Swiper flexibility and customization options make it a popular choice for implementing versatile and engaging sliders in React projects.
+<a href="https://swiperjs.com/" rel="nofollow">Swiper</a> is a powerful and touch-friendly carousel component built for React applications, providing a seamless way to create stunning and responsive slideshows. Leveraging the Swiper library, it offers a range of features like smooth transitions, navigation controls, and pagination, enhancing the user experience for dynamic content displays. Swiper's flexibility and customization options make it a popular choice for implementing versatile and engaging sliders in React projects.
 
 **Pros**
 
@@ -170,12 +170,9 @@ In this concise guide, we present the top 7 React image gallery components, each
 
 - Complexity for Simple Use Cases: For simple use cases, Swiper might be seen as overkill due to its extensive feature set. If you only need basic functionality, there are simpler alternatives available.
 
-- Bundle Size:  Depending on the features you include in your project, Swiper's bundle size can be relatively large. This might be a concern for developers prioritizing minimalism and optimizing page load times.
+- Bundle Size: Depending on the features you include in your project, Swiper's bundle size can be relatively large. This might be a concern for developers prioritizing minimalism and optimizing page load times.
 
 - Not Native Feel: Some developers might find that Swiper doesn't provide the exact native feel they desire, especially if they have specific UI/UX expectations.
-
-- Bundle Size: Depending on the features you include in your project, Swiper's bundle size can be relatively large. This may be a concern for projects aiming for minimal page load times.
-
 
 ### React Responsive Carousel
 

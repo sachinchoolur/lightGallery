@@ -144,12 +144,12 @@ export class Gallery {
 
 ### Create custom transition
 
-lightGallery comes with more than 30 transitions effects. If you need more, you
+lightGallery comes with more than 30 transition effects. If you need more, you
 can easily create your own custom transitions.
 
 Let's see how we can create custom transition effects. Before that we need to
 understand how transition works in lightGallery. Transitions happen based on 3
-CSS class names. `lg-prev-slide`, `lg-current` and `lg-next-slide` When user
+CSS class names: `lg-prev-slide`, `lg-current` and `lg-next-slide`. When user
 tries to navigate a different slide, lightGallery
 
 -   Removes all CSS transition effects from the slides.
@@ -159,7 +159,7 @@ tries to navigate a different slide, lightGallery
     current slide and next slide to determine how the current slide should
     disappear and the next slide should appear. If direction is `previous`,
     `lg-prev-slide` is added to the current slide and `lg-next-slide` is added
-    to the next slide. likewise If direction is `next`, `lg-next-slide` is added
+    to the next slide. Likewise, if direction is `next`, `lg-next-slide` is added
     to the current slide and `lg-prev-slide` is added to the next slide.
 -   50 ms timer starts to give some time for the browser to perform transitions.
 -   After 50 ms, remove `lg-current` class from the current slide.
@@ -171,7 +171,7 @@ Let's create a custom zoom-in-out transition.
 When user navigates to next slide, zoom in transition appears and when user
 navigates to the previous slide, zoom out transition appears.
 
-```css
+```scss
 .lg-zoom-in-out {
     .lg-item {
         // By default all slides should be hidden

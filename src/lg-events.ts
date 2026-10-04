@@ -47,7 +47,7 @@ export const lGEvents: {
  * @example
  *   const lg = document.getElementById('custom-events-demo');
  *   // Perform any action on lightGallery initialization.
- *   // Init event returns the plugin instance that can be used to call any lightGalley public method
+ *   // Init event returns the plugin instance that can be used to call any lightGallery public method
  *   let pluginInstance = null;
  *   lg.addEventListener('lgInit', (event) => {
  *      pluginInstance = event.detail.instance;
@@ -63,7 +63,7 @@ export interface InitDetail {
 }
 
 /**
- * Fired when the slide content has been inserted into it's slide container.
+ * Fired when the slide content has been inserted into its slide container.
  * @name lgAfterAppendSlide
  * @method onAfterAppendSlide
  */
@@ -89,7 +89,7 @@ export interface BeforeOpenDetail {}
 export interface AfterOpenDetail {}
 
 /**
- * Fired once the media inside the slide has been completely loaded .
+ * Fired once the media inside the slide has been completely loaded.
  * @name lgSlideItemLoad
  * @method onSlideItemLoad
  */
@@ -275,7 +275,7 @@ export interface ContainerResizeDetail {
  */
 export interface HasVideoDetail {
     /**
-     * Index of the slide,
+     * Index of the slide
      */
     index: number;
     /**

@@ -1,5 +1,5 @@
 ---
-title: "blog"
+title: "Blog"
 description: "A lightweight, modular, JavaScript image and video lightbox gallery plugin. Available for React.js, Vue.js, Angular, and TypeScript."
 heading: lightGallery
 lead: "A lightweight, modular, JavaScript image and video lightbox gallery plugin. Available for React.js, Vue.js, Angular, and TypeScript."

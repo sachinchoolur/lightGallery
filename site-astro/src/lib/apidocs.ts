@@ -55,18 +55,30 @@ function doc(): DocNode {
 }
 
 export function findReflection(name: string): DocNode | undefined {
+    // The `index` module re-exports the class as a reference reflection
+    // with no members; the declaration itself lives in its own module, so
+    // prefer the match that carries children.
+    let fallback: DocNode | undefined;
     for (const mod of doc().children ?? []) {
         for (const child of mod.children ?? []) {
-            if (child.name === name) return child;
+            if (child.name !== name) continue;
+            if (child.children?.length) return child;
+            fallback ??= child;
         }
     }
-    return undefined;
+    return fallback;
 }
 
+// Fenced blocks keep their language tag after the backticks; drop it with
+// the fence. Inline code only loses its backticks.
+const codeText = (text: string): string =>
+    text
+        .replace(/^```[\w-]*[ \t]*\r?\n?/, '')
+        .replace(/\r?\n?```$/, '')
+        .replace(/^`|`$/g, '');
+
 const partsToText = (parts?: { kind: string; text: string }[]): string =>
-    (parts ?? [])
-        .map((part) => (part.kind === 'code' ? part.text.replace(/^`+|`+$/g, '') : part.text))
-        .join('')
+    (parts ?? []).map((part) => (part.kind === 'code' ? codeText(part.text) : part.text)).join('')
         // JSDoc links written without trailing slashes relied on the old
         // host's directory redirects; normalize to the canonical form.
         .replace(/href="(\/[\w/-]*[\w-])"/g, 'href="$1/"');
@@ -126,7 +138,7 @@ export function interfaceProps(interfaceName: string): ApiProperty[] {
         unionValues:
             child.type?.type === 'union'
                 ? (child.type.types ?? []).map((t) =>
-                      t.type === 'literal' ? String(t.value) : (t.name ?? t.type),
+                      t.type === 'literal' ? String(t.value) : typeToString(t),
                   )
                 : undefined,
         typeName: typeToString(child.type),

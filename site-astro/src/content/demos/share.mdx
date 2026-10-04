@@ -37,17 +37,17 @@ import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 **HTML**
 
 ```html
-<div id="lg-share-demo">
+<div id="gallery-share-demo">
     <a
         data-pinterest-text="Pin it1"
-        data-tweet-text="lightGallery slide  1"
+        data-tweet-text="lightGallery slide 1"
         href="img/img1.jpg"
     >
         <img src="img/thumb1.jpg" />
     </a>
     <a
         data-pinterest-text="Pin it2"
-        data-tweet-text="lightGallery slide  2"
+        data-tweet-text="lightGallery slide 2"
         href="img/img2.jpg"
     >
         <img src="img/thumb2.jpg" />
@@ -56,14 +56,14 @@ import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 </div>
 ```
 
-Optionally you can pass separate url for each images instead of current browser
-url.
+Optionally you can pass a separate url for each image instead of the current
+browser url.
 
 ```html
 <div id="gallery-share-demo">
     <a
         data-pinterest-text="Pin it1"
-        data-tweet-text="lightGallery slide  1"
+        data-tweet-text="lightGallery slide 1"
         data-facebook-share-url="share/facebook-share-url"
         data-twitter-share-url="share/twitter-share-url"
         data-pinterest-share-url="share/pinterest-share-url"
@@ -72,8 +72,8 @@ url.
         <img src="img/thumb1.jpg" />
     </a>
     <a
-        data-pinterest-text="Pin it1"
-        data-tweet-text="lightGallery slide  1"
+        data-pinterest-text="Pin it2"
+        data-tweet-text="lightGallery slide 2"
         data-facebook-share-url="share/facebook-share-url"
         data-twitter-share-url="share/twitter-share-url"
         data-pinterest-share-url="share/pinterest-share-url"
@@ -237,14 +237,14 @@ export class Gallery {
 #### Add new share options
 
 By default, lightGallery supports sharing on Facebook, X (Twitter) and Pinterest.
-Missing something? you can easily add your own share buttons in lightGallery.
+Missing something? You can easily add your own share buttons in lightGallery.
 
 Let's see how we can add
-<a href="https://www.reddit.com/" target="_blank">reddit</a> share button.
+<a href="https://www.reddit.com/" target="_blank">Reddit</a> share button.
 
 <ImageGallery id="gallery-share-reddit-demo" photos="street" />
 
-To share a post on reddit, you need to create the following url structure
+To share a post on Reddit, you need to create the following url structure
 
 ```
 https://reddit.com/submit?url={url}&title={title}
@@ -374,7 +374,7 @@ lightGallery(document.getElementById('gallery-share-reddit-demo'), {
 
             // Construct url
             generateLink: (galleryItem) => {
-                const url = encodeURIComponent(window.location.href);
+                const url = window.location.href;
 
                 // The prop data-reddit-title is converted to redditTitle and added to the gallery item
                 const title = galleryItem.redditTitle;
@@ -489,6 +489,6 @@ features = [
 </Fragment>
 </CodeTabs>
 
-That's it. Now you can see additional reddit button in the share dropdown menu
+That's it. Now you can see the additional Reddit button in the share dropdown menu.
 
 Reference - https://github.com/bradvin/social-share-urls

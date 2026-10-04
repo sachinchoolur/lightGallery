@@ -1,7 +1,7 @@
 ---
 title: 'Captions'
 description: 'Gallery captions demo: HTML captions from data attributes or elements on the page, captions relative to each thumbnail, and animated captions.'
-lead: You can directly pass image caption html via data-sub-html attribute or just pass id or class name of any html object (div) which contains your caption html.
+lead: You can directly pass image caption HTML via the data-sub-html attribute, or pass the id or class name of any HTML element (div) which contains your caption HTML.
 date: 2020-10-06T08:48:57.000Z
 draft: false
 images: []
@@ -70,6 +70,7 @@ lightGallery(document.getElementById('gallery-captions-demo'), {
 
 ```tsx
 import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Zoom from '@lightgallery/react/plugins/zoom';
 
 // `caption` takes JSX; `captionHtml` takes an HTML string, like
 // data-sub-html.
@@ -93,7 +94,7 @@ const items = [
     },
 ];
 
-<LightGallery>
+<LightGallery plugins={[Zoom]}>
     {items.map((item) => (
         <LightGalleryItem key={item.src} item={item}>
             <img src={item.thumb} alt={item.alt} />
@@ -108,6 +109,9 @@ const items = [
 ```vue
 <script setup>
 import { LightGallery, LgItem } from '@lightgallery/vue';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+
+const plugins = [Zoom];
 
 // `captionHtml` takes an HTML string, like data-sub-html.
 const items = [
@@ -127,7 +131,7 @@ const items = [
 </script>
 
 <template>
-    <LightGallery>
+    <LightGallery :plugins="plugins">
         <LgItem v-for="item of items" :key="item.src" :item="item">
             <img :src="item.thumb" :alt="item.alt" />
         </LgItem>
@@ -145,12 +149,13 @@ import {
     LgGalleryItemDirective,
     type LgGalleryItem,
 } from '@lightgallery/angular';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
 
 @Component({
     selector: 'app-gallery',
     imports: [LgGalleryComponent, LgGalleryItemDirective],
     template: `
-        <lg-gallery>
+        <lg-gallery [features]="features">
             @for (item of items; track item.src) {
                 <a [lgGalleryItem]="item">
                     <img [src]="item.thumb" [alt]="item.alt" />
@@ -160,6 +165,8 @@ import {
     `,
 })
 export class Gallery {
+    features = [withZoom()];
+
     // `captionHtml` takes an HTML string, like data-sub-html.
     items: LgGalleryItem[] = [
         {
@@ -185,7 +192,7 @@ export class Gallery {
 
 If you already have captions associated with the thumbnails, you can instruct
 lightGallery to pick up captions from the element within the selector by passing
-`subHtmlSelectorRelative: true,` via lightGallery settings
+`subHtmlSelectorRelative: true` via lightGallery settings.
 
 <CodeTabs>
 <Fragment slot="vanilla">
@@ -351,7 +358,7 @@ export class Gallery {
 ### Caption animation
 
 If you like to have animated captions, you can easily create your own animations
-with the help of lightGallery `slideDelay` option
+with the help of the lightGallery `slideDelay` option.
 
 `slideDelay` adds a delay between slide transitions. You can use this time
 interval to animate captions before the next slide transition starts.
@@ -407,6 +414,8 @@ lightGallery(document.getElementById('gallery-animated-captions-demo'), {
 <Fragment slot="react">
 
 ```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+
 // The caption wrapper carries the class the CSS below animates.
 const items = [
     {
@@ -442,6 +451,8 @@ const items = [
 
 ```vue
 <script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+
 // The caption wrapper carries the class the CSS below animates.
 const items = [
     {
@@ -477,36 +488,49 @@ const items = [
 <Fragment slot="angular">
 
 ```ts
-// The caption wrapper carries the class the CSS below animates.
-items: LgGalleryItem[] = [
-    {
-        src: 'img/img1.jpg',
-        thumb: 'img/thumb1.jpg',
-        alt: 'Mountains',
-        captionHtml:
-            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
-    },
-    {
-        src: 'img/img2.jpg',
-        thumb: 'img/thumb2.jpg',
-        alt: 'Forest path',
-        captionHtml:
-            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
-    },
-];
-```
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
 
-```html
-<!-- captionPosition 'slide' renders the caption inside the slide, so the
-     active-slide classes can drive your animation; slideDelay gives it
-     time before the next slide transition starts. -->
-<lg-gallery [speed]="500" captionPosition="slide" [slideDelay]="400">
-    @for (item of items; track item.src) {
-        <a [lgGalleryItem]="item">
-            <img [src]="item.thumb" [alt]="item.alt" />
-        </a>
-    }
-</lg-gallery>
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <!-- captionPosition 'slide' renders the caption inside the slide,
+             so the active-slide classes can drive your animation;
+             slideDelay gives it time before the next slide transition
+             starts. -->
+        <lg-gallery [speed]="500" captionPosition="slide" [slideDelay]="400">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // The caption wrapper carries the class the CSS below animates.
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Mountains',
+            captionHtml:
+                '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Forest path',
+            captionHtml:
+                '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+        },
+    ];
+}
 ```
 
 </Fragment>

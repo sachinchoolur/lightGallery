@@ -8,11 +8,11 @@ export interface CommentSettings {
      */
     commentBox: boolean;
     /**
-     * Enable facebook comment box
+     * Enable Facebook comment box
      */
     fbComments: boolean;
     /**
-     * Enable disqus comment box
+     * Enable Disqus comment box
      */
     disqusComments: boolean;
 

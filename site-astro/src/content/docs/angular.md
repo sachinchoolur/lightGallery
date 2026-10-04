@@ -26,8 +26,8 @@ npm install @lightgallery/angular @angular/cdk
 npm install lightgallery
 ```
 
-Peer ranges: `@angular/core`, `@angular/common`, `@angular/cdk`
-`>=21 <23`. Works with zoneless change detection (no `zone.js` anywhere in
+Peer ranges: `@angular/core`, `@angular/common`, `@angular/platform-browser`
+and `@angular/cdk` `>=21 <23`. Works with zoneless change detection (no `zone.js` anywhere in
 the package, tests included).
 
 ```ts
@@ -43,10 +43,12 @@ import 'lightgallery/css/lg-zoom.css';
 Thumbnails on the page open the lightbox; mount order defines slide order.
 
 ```ts
+import { Component } from '@angular/core';
 import {
     LgGalleryComponent,
     LgGalleryItemDirective,
     type LgGalleryItem,
+    type SlideEventDetail,
 } from '@lightgallery/angular';
 import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
 import { withZoom } from '@lightgallery/angular/plugins/zoom';
@@ -68,6 +70,10 @@ export class Gallery {
     items: LgGalleryItem[] = [
         { src: 'img/1.jpg', thumb: 'img/1-t.jpg', alt: '…', caption: '…' },
     ];
+
+    onSlide(event: SlideEventDetail): void {
+        console.log(event.index, event.prevIndex);
+    }
 }
 ```
 
@@ -93,7 +99,7 @@ Settings are same-named signal inputs (`[mode]`, `[speed]`, `[loop]`,
 directives: `*lgCaption`, `lgCounter`, `lgPrevButton`, `lgNextButton`.
 Inline gallery: `[container]="element"`.
 
-## Features (all 13, plus the justified layout)
+## Features (all 14, plus the justified layout)
 
 Each feature is its own tree-shakable entry point
 `@lightgallery/angular/plugins/<name>` exposing a `with<Name>(options?)`
@@ -105,14 +111,14 @@ factory for the `[features]` input:
 | zoom | `withZoom()` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom` |
 | video | `withVideo()` | `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
 | autoplay | `withAutoplay()` | `slideShowInterval`, `slideShowAutoplay`, `progressBar` |
-| fullscreen | `withFullscreen()` |, |
+| fullscreen | `withFullscreen()` | |
 | hash | `withHash()` | `galleryId`, `customSlideName` |
-| pager | `withPager()` |, |
+| pager | `withPager()` | |
 | share | `withShare()` | `facebook`/`twitter`/`pinterest`, `additionalShareOptions` (typed) |
 | rotate | `withRotate()` | `rotateSpeed`, per-button toggles |
 | comment | `withComment()` | `commentBox`, `commentsTemplate: TemplateRef` |
 | mediumZoom | `withMediumZoom()` | `margin`, `backgroundColor` (presets a minimal UI) |
-| relativeCaption | `withRelativeCaption()` |, (presets `captionPosition: 'slide'`) |
+| relativeCaption | `withRelativeCaption()` | (presets `captionPosition: 'slide'`) |
 | vimeoThumbnail | `withVimeoThumbnail()` | `showThumbnailWithPlayButton` |
 | originCrop | `withOriginCrop()` | `originCrop`: flies a cropped thumbnail from its crop ([zoom from origin](/demos/zoom-from-origin/)) |
 | justified | `LgJustifiedGridComponent` | Not a feature: the `<lg-justified-grid>` component wraps the triggers, with `rowHeight`, `gap`, `lastRow` ([justified layout](/docs/justified-layout/)) |

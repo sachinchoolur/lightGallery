@@ -69,7 +69,7 @@ const videos: LgGalleryItem[] = [
 <template>
     <LightGallery :plugins="[Thumbnail, Video]">
         <LgItem v-for="video of videos" :key="video.src" :item="video">
-            <img :src="video.poster" alt="" />
+            <img :src="video.poster ?? 'img/youtube-thumb.jpg'" alt="" />
         </LgItem>
     </LightGallery>
 </template>

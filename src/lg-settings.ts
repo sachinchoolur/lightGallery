@@ -148,7 +148,7 @@ export interface LightGalleryCoreSettings {
     easing: string;
 
     /**
-     *Transition duration (in ms).
+     * Transition duration (in ms).
      */
     speed: number;
 
@@ -187,7 +187,7 @@ export interface LightGalleryCoreSettings {
      * Start animation class for the gallery.
      * @description
      * <ul>
-     * <li>startClass will be empty zoomFromOrigin is true.</li>
+     * <li>startClass will be empty if zoomFromOrigin is true.</li>
      * <li>This can be used to change the starting effect when the image is loaded</li>
      * <li>This is also applied when navigating to new slides</li>
      * </ul>
@@ -196,9 +196,9 @@ export interface LightGalleryCoreSettings {
 
     /**
      * Enable zoom from origin effect.
-     * @description You need to know the original image size upfront and provide it via data-lg-size attribute as <code> data-lg-size="1920-1280</code>"
+     * @description You need to know the original image size upfront and provide it via data-lg-size attribute as <code>data-lg-size="1920-1280"</code>
      *
-     * If you don't know, the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides,
+     * If you don't know the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides,
      * lightGallery will show the default animation if data-lg-size is not available
      *
      * If you are using responsive images,
@@ -209,8 +209,8 @@ export interface LightGalleryCoreSettings {
      * data-responsive="img-240.jpg 375, img-400.jpg 480"
      * data-src="img-1600.jpg" </code>
      *
-     * In the above example, upto 375 width img.240.jpg and lg-size 240-160 will be used.
-     * Similarly, upto 480 pixel width size 400-267 and img-400.jpg will be used
+     * In the above example, up to 375 width img-240.jpg and lg-size 240-160 will be used.
+     * Similarly, up to 480 pixel width size 400-267 and img-400.jpg will be used
      * And above 480, lg-size 1600-1067 and img-1600.jpg will be used
      *
      * When the gallery closes on a slide that has no thumbnail to return to
@@ -220,7 +220,7 @@ export interface LightGalleryCoreSettings {
      * to the thumbnail.
      *
      * <ul>
-     * <li>At the moment, zoomFromOrigin options is supported only for image slides.</li>
+     * <li>At the moment, the zoomFromOrigin option is supported only for image slides.</li>
      * <li>The opening flight is skipped if dynamic option is enabled or galleryID found in the URL.</li>
      * <li>startClass will be empty if zoomFromOrigin is true to avoid css conflicts.</li>
      * </ul>
@@ -269,7 +269,7 @@ export interface LightGalleryCoreSettings {
 
     /**
      * If true, toolbar, captions and thumbnails will not overlap with media element
-     * This will not effect thumbnails if animateThumb is false
+     * This will not affect thumbnails if animateThumb is false
      * Also, toggle thumbnails button is not displayed if allowMediaOverlap is false
      * <section>
      * Note - Changing the position of the media on every slide transition creates a flickering effect.
@@ -277,7 +277,7 @@ export interface LightGalleryCoreSettings {
      * </section>
      * <section>
      * if you have dynamic captions for each media,
-     * you can provide an appropriate height for the captions via allowMediaOverlap option
+     * you can provide an appropriate height for the captions via defaultCaptionHeight option
      * </section>
      */
     allowMediaOverlap: boolean;
@@ -285,7 +285,7 @@ export interface LightGalleryCoreSettings {
     /**
      * Video max size.
      * @description This can be over-written by passing specific size via data-lg-size attribute
-     * Recommended video resolution and & aspect ratios <a href="https://support.google.com/youtube/answer/6375112">https://support.google.com/youtube/answer/6375112</a>
+     * Recommended video resolution and aspect ratios <a href="https://support.google.com/youtube/answer/6375112">https://support.google.com/youtube/answer/6375112</a>
      */
     videoMaxSize: string;
 
@@ -303,7 +303,7 @@ export interface LightGalleryCoreSettings {
     defaultCaptionHeight: number;
 
     /**
-     * aria-labelledby attribute fot gallery
+     * aria-labelledby attribute for gallery
      */
     ariaLabelledby: string;
 
@@ -407,7 +407,7 @@ export interface LightGalleryCoreSettings {
     loop: boolean;
 
     /**
-     * Whether the LightGallery could be closed by pressing the "Esc" key.
+     * Whether the lightGallery could be closed by pressing the "Esc" key.
      */
     escKey: boolean;
 
@@ -463,7 +463,7 @@ export interface LightGalleryCoreSettings {
     /**
      * control where the sub-html should be appended.
      * If you choose '.lg-outer', you are responsible for placing the div at the right position.
-     * '.lg-outer' is useful if you want show custom HTML outside the normal gallery
+     * '.lg-outer' is useful if you want to show custom HTML outside the normal gallery
      */
     appendSubHtmlTo: '.lg-sub-html' | '.lg-item' | '.lg-outer';
 
@@ -474,9 +474,9 @@ export interface LightGalleryCoreSettings {
 
     /**
      * number of preload slides
-     * @description will exicute only after the current slide is fully loaded.
+     * @description will execute only after the current slide is fully loaded.
      * for example, if you click on 4th image and if preload = 1 then 3rd slide and 5th
-     * slide will be loaded in the background after the 4th slide is fully loaded..
+     * slide will be loaded in the background after the 4th slide is fully loaded.
      * if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.
      */
     preload: number;
@@ -499,10 +499,10 @@ export interface LightGalleryCoreSettings {
     selector: string | HTMLCollection[];
 
     /**
-     * By default selector element relative to the current gallery.
+     * By default the selector element is relative to the current gallery.
      * Instead of that you can tell lightGallery to select element relative to another element.
      * Example - '.my-selector-container' | '#my-selector-container'
-     * In the code this become selector =  document.querySelector(this.s.selectWithin ).querySelectorAll(this.s.selector);
+     * In the code this becomes selector = document.querySelector(this.s.selectWithin).querySelectorAll(this.s.selector);
      */
     selectWithin: string;
 
@@ -543,7 +543,7 @@ export interface LightGalleryCoreSettings {
 
     /**
      * Enable download button.
-     * @description By default download url will be taken from data-src/href attribute but it supports only for modern browsers.
+     * @description By default download url will be taken from data-src/href attribute but it is supported only in modern browsers.
      * If you want you can provide another url for download via data-download-url.
      * pass false in data-download-url if you want to hide download button for the particular slide.
      */
@@ -591,7 +591,7 @@ export interface LightGalleryCoreSettings {
     enableDrag: boolean;
 
     /**
-     * LightGallery can be instantiated and launched programmatically by setting this option to true and populating dynamicEl option (see below) with the definitions of images.
+     * lightGallery can be instantiated and launched programmatically by setting this option to true and populating dynamicEl option (see below) with the definitions of images.
      */
     dynamic: boolean;
 
@@ -603,10 +603,10 @@ export interface LightGalleryCoreSettings {
     /**
      * Fetch custom properties from the selector
      * @description this is useful for plugin development
-     * By default lightGallery fetches and store all the props selectors to
+     * By default lightGallery fetches and stores all the props selectors to
      * reduce frequent dom interaction for fetching props every time.
      *
-     * If you need any addition data to be fetched and stored in the galleryItems variable,
+     * If you need any additional data to be fetched and stored in the galleryItems variable,
      * you can do this just by passing the prop names via extraProps
      * @example
      * HTML:
@@ -656,13 +656,13 @@ export interface LightGalleryCoreSettings {
      * Separate settings for mobile devices
      * @description Note - this is applied only at the time of loading
      * by default controls and close buttons are disabled on mobile devices.
-     * use this options if you want to enable them or change any other settings for mobile devices
-     * Note - mobileSettings does not merge default values, You need to provide all mobileSettings including default values
+     * use this option if you want to enable them or change any other settings for mobile devices
+     * Note - mobileSettings does not merge default values, you need to provide all mobileSettings including default values
      */
     mobileSettings: Partial<MobileSettings>;
 
     /**
-     * Customize string.
+     * Customize strings.
      * @description This can be useful if you want to localize the lightGallery strings to other languages.
      * Use your own service to translate the strings and pass it via settings.strings
      * Every core and plugin label lives here; the per-plugin `*PluginStrings` objects are deprecated.

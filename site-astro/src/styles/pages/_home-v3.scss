@@ -55,6 +55,18 @@ body.home-v3 {
     overflow-x: clip;
     background: #fff;
 
+    // Inline code in prose: the same pill as the docs content. The
+    // customize legends are code elements with their own styling.
+    :not(pre) > code:not(.home-customize-legend) {
+        padding: 1px 5px;
+        border: 1px solid $gray-200;
+        border-radius: 6px;
+        background: $gray-50;
+        color: $gray-800;
+        font-size: 0.85em;
+        font-weight: 500;
+    }
+
     // ---- Sections: Bootstrap container widths, as on the original page ---
     .container-xl,
     .home-hero-gallery,
@@ -285,23 +297,30 @@ body.home-v3 {
                 min-height: 90cqw;
             }
         }
+        // Square tiles; the grid's own radius above rounds only the four
+        // outer corners.
         .gallery-item {
-            border-radius: 6px;
-            @media (max-width: 767px) {
-                border-radius: 4px;
-            }
-            img {
-                transition:
-                    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-                    opacity 0.35s ease;
-            }
-            &:hover img,
-            &:focus-visible img {
-                transform: scale(1.04);
+            // No zoom on hover: the open/close flight measures the
+            // thumbnail, so a scaled tile would fly from a box a few
+            // percent off the one on screen. The neighbours fade under
+            // a white veil instead.
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: #fff;
+                opacity: 0;
+                transition: opacity 0.25s ease;
+                pointer-events: none;
             }
             &:focus-visible {
                 outline: 2px solid $orange-500;
                 outline-offset: -2px;
+            }
+        }
+        @media (hover: hover) {
+            .lg-justified:hover .gallery-item:not(:hover)::after {
+                opacity: 0.3;
             }
         }
         .gallery-item-phone-hidden {
@@ -315,11 +334,8 @@ body.home-v3 {
         }
     }
     @media (prefers-reduced-motion: reduce) {
-        .home-hero-gallery .gallery-item img {
+        .home-hero-gallery .gallery-item::after {
             transition: none;
-        }
-        .home-hero-gallery .gallery-item:hover img {
-            transform: none;
         }
     }
 
@@ -364,6 +380,12 @@ body.home-v3 {
     .home-split-row {
         align-items: flex-start;
         row-gap: 40px;
+        // Stacked below lg, the row gap is the only space the header needs.
+        @include media-breakpoint-down(lg) {
+            .home-section-header {
+                margin-bottom: 0;
+            }
+        }
         @include media-breakpoint-up(lg) {
             .home-section-header {
                 position: sticky;
@@ -812,8 +834,12 @@ body.home-v3 {
     .home-stack {
         // The panel's glow reaches 60px past its sides; below lg the panel
         // spans the container, so the glow stops at the container's edge
-        // instead of widening the page.
-        overflow-x: clip;
+        // instead of widening the page. From xl the column is 1080px and
+        // the glow fits inside it; clipping there would also cut the
+        // section's full-bleed hairline and rails to the column.
+        @include media-breakpoint-down(xl) {
+            overflow-x: clip;
+        }
         .code-tabs {
             margin: 0;
         }
@@ -923,9 +949,8 @@ body.home-v3 {
         margin: 4px 8px 12px;
         @extend .para2;
         color: $gray-500;
-        code {
-            font-size: 0.9em;
-        }
+        // Never strand a single word on the second line.
+        text-wrap: pretty;
     }
     .home-stack-note {
         margin: 20px 0 0;
@@ -1077,9 +1102,6 @@ body.home-v3 {
             @extend .para2;
             color: $gray-500;
             margin: 0;
-        }
-        code {
-            font-size: 0.9em;
         }
     }
     a.home-trust-card,
@@ -1495,6 +1517,12 @@ body.home-v3 {
     // tabs, each page's photos opening a real gallery in its own look (set
     // up in scripts/demo-galleries.js). The tabs are radios, so they work
     // before any script runs.
+    // The v2 page clips this section for its rotated background. Nothing
+    // here overflows, and the clip would cut the rails and hairline that
+    // the section paints past its own column.
+    .home-customize-gallery {
+        overflow: visible;
+    }
     .home-customize-layout {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
@@ -1654,15 +1682,12 @@ body.home-v3 {
             overflow: hidden;
             cursor: pointer;
         }
+        // No hover zoom: the flight measures the thumbnail, so the tile
+        // must be still when it is clicked.
         img {
-            transition:
-                transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
-                filter 0.3s ease;
+            transition: filter 0.3s ease;
         }
         @media (hover: hover) {
-            a:hover img {
-                transform: scale(1.04);
-            }
             .home-customize-more:hover img {
                 filter: brightness(0.42);
             }
@@ -2240,7 +2265,7 @@ body.home-v3 {
         text-align: center;
     }
     .home-cta-lede {
-        max-width: 440px;
+        max-width: 520px;
         margin: 0 auto;
         color: $gray-600;
         font-size: 18px;

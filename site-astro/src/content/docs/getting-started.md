@@ -15,11 +15,11 @@ toc: true
 -   Fully responsive.
 -   Modular architecture with built in plugins.
 -   Highly optimized for touch devices.
--   Mouse drag supports for desktops.
+-   Mouse drag support for desktops.
 -   Double-click/Double-tap to see actual size of the image.
 -   Animated thumbnails.
 -   Social sharing.
--   YouTube Vimeo Wistia and html5 videos Support.
+-   YouTube, Vimeo, Wistia and HTML5 video support.
 -   20+ Hardware-Accelerated CSS3 transitions.
 -   Dynamic mode.
 -   Inline gallery
@@ -118,8 +118,8 @@ of the following methods to download lightGallery
 
 #### Include CSS and Javascript files
 
-First of all, include lightgallery.css in the &lt;head> of the document. If
-you want include any lightGallery plugin such as thumbnails or zoom, you need to
+First of all, include lightgallery.css in the &lt;head> of the document. If you
+want to include any lightGallery plugin such as thumbnails or zoom, you need to
 include respective css files as well.
 
 Alternatively you can include `lightgallery-bundle.css` which contains
@@ -173,13 +173,13 @@ import lgZoom from 'lightgallery/plugins/zoom'
 
 #### The markup
 
-lightgallery does not force you to use any kind of markup. you can use whatever
-markup you want. <a href="../../demos/html-markup/">Here</a> can find detailed
-examples of different kinds of markups.
+lightGallery does not force you to use any kind of markup. You can use whatever
+markup you want. <a href="../../demos/html-markup/">Here</a> you can find
+detailed examples of different kinds of markups.
 
 If you know the original size of the media, you can pass it via
 `data-lg-size="${width}-${height}"` attribute for the initial
-[zoom](../settings/#zoomFromOrigin) animation. But, this is completely optional.
+[zoom](/docs/settings/#zoomFromOrigin) animation. But, this is completely optional.
 
 ```HTML
 <div id="lightgallery">
@@ -224,7 +224,7 @@ plugins names as follows.
 
 `lgZoom`, `lgAutoplay`, `lgComment`, `lgFullscreen`, `lgHash`, `lgJustified`,
 `lgPager`, `lgRelativeCaption`, `lgRotate`, `lgShare`, `lgThumbnail`, `lgVideo`,
-`lgVimeoThumbnail`, `lgMediumZoom`
+`lgVimeoThumbnail`, `lgMediumZoom`, `lgOriginCrop`
 
 ## Browser support
 
@@ -265,4 +265,4 @@ If you have any questions, suggestions, feedback, please reach out to [contact@l
 
 ## Custom work
 
-If you need any help with customizing lightGallery, adding new features, create a new plugin, or need any other assistance that is beyond the scope of regular support, reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) with your requirements. We'll help you if we can or at least point you in the right direction.
+If you need any help with customizing lightGallery, adding new features, creating a new plugin, or need any other assistance that is beyond the scope of regular support, reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) with your requirements. We'll help you if we can or at least point you in the right direction.

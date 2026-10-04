@@ -41,7 +41,12 @@ Thumbnails on the page open the lightbox; mount order defines slide order.
 
 ```vue
 <script setup lang="ts">
-import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+import {
+    LightGallery,
+    LgItem,
+    type LgGalleryItem,
+    type SlideEventDetail,
+} from '@lightgallery/vue';
 import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 import Zoom from '@lightgallery/vue/plugins/zoom';
 
@@ -49,6 +54,10 @@ const plugins = [Thumbnail, Zoom];
 const items: LgGalleryItem[] = [
     { src: 'img/1.jpg', thumb: 'img/1-t.jpg', alt: '…', caption: '…' },
 ];
+
+function onSlide({ index }: SlideEventDetail) {
+    console.log('slide', index);
+}
 </script>
 
 <template>
@@ -81,7 +90,7 @@ prefix (`@before-open`, `@after-slide`, `@slide-item-load`, …). Slots are
 named scoped slots: `#caption`, `#counter`, `#prev-button`, `#next-button`.
 Inline gallery: `:container="element"`.
 
-## Plugins (all 13, plus the justified layout)
+## Plugins (all 14, plus the justified layout)
 
 Each plugin is its own tree-shakable subpath
 `@lightgallery/vue/plugins/<name>` exporting a plugin object for the
@@ -95,14 +104,14 @@ spelling, `:medium-zoom="{ margin: 24 }"` or `:mediumZoom`:
 | zoom | `plugins/zoom` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom` |
 | video | `plugins/video` | `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
 | autoplay | `plugins/autoplay` | `slideShowInterval`, `slideShowAutoplay`, `progressBar` |
-| fullscreen | `plugins/fullscreen` |, |
+| fullscreen | `plugins/fullscreen` | n/a |
 | hash | `plugins/hash` | `galleryId`, `customSlideName` |
-| pager | `plugins/pager` |, |
+| pager | `plugins/pager` | n/a |
 | share | `plugins/share` | `facebook`/`twitter`/`pinterest`, `additionalShareOptions` (typed) |
 | rotate | `plugins/rotate` | `rotateSpeed`, per-button toggles |
 | comment | `plugins/comment` | `commentBox`; comment body via the `#comments` gallery slot |
 | mediumZoom | `plugins/mediumZoom` | `margin`, `backgroundColor` (presets a minimal UI) |
-| relativeCaption | `plugins/relativeCaption` |, (presets `captionPosition: 'slide'`) |
+| relativeCaption | `plugins/relativeCaption` | n/a (presets `captionPosition: 'slide'`) |
 | vimeoThumbnail | `plugins/vimeoThumbnail` | `showThumbnailWithPlayButton` |
 | originCrop | `plugins/originCrop` | `originCrop`: flies a cropped thumbnail from its crop ([zoom from origin](/demos/zoom-from-origin/)) |
 | justified | `plugins/justified` | Not a plugin: the `<JustifiedGrid>` component wraps the triggers, with `row-height`, `gap`, `last-row` ([justified layout](/docs/justified-layout/)) |
