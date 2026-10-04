@@ -1,42 +1,158 @@
-.docs-common-section {
-    border-bottom: 2px solid #dae8ff;
-    padding-bottom: 40px;
-    margin-bottom: 40px;
-    p,
-    ul {
-        margin-bottom: 0.8rem;
-        font-size: 1rem;
+// API entries (events, methods, framework callbacks): a mono name with
+// a quiet anchor, the summary, then labelled blocks (detail table,
+// example, see also). Entries are separated by a hairline.
+body.docs.single .docs-content .api-entry {
+    padding: 28px 0 32px;
+    border-top: 1px solid $gray-200;
+    &:first-child {
+        border-top: 0;
+        padding-top: 8px;
     }
-    p {
-        > b {
-            margin-right: 0.3rem;
+    .api-entry-name {
+        margin: 0 0 8px;
+        font-size: 17px;
+        line-height: 28px;
+        code {
+            padding: 0;
+            border: 0;
+            background: none;
+            color: $gray-800;
+            font-family: $font-family-monospace;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .anchor {
+            opacity: 0;
+            transition: opacity 120ms ease;
+        }
+        &:hover .anchor,
+        .anchor:focus-visible {
+            opacity: 1;
         }
     }
-    li {
-        line-height: 1.5rem;
+    .api-entry-desc {
+        margin: 0 0 12px;
+        color: $gray-700;
     }
-    .chroma {
-        margin: 0 0 0.8rem 0;
-    }
-    .docs-common-name {
-        font-weight: bold;
-        margin-bottom: 6px;
-    }
-    .docs-common-tag {
-        font-size: 14px;
+    .api-entry-label {
         display: block;
         margin-bottom: 6px;
+        color: $gray-500;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 16px;
         text-transform: uppercase;
-        color: $brand-shade;
-        margin-top: 20px;
     }
-    .docs-common-highlight {
-        .chroma {
-            margin-top: 0;
+    .api-entry-block {
+        margin: 16px 0 0;
+        pre,
+        table {
+            margin: 0;
         }
     }
-    .docs-common-notes {
-        margin-top: 1rem;
+    .api-entry-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 10px;
+        margin: 16px 0 0;
+        font-size: 14.5px;
+        .api-entry-label {
+            margin: 0;
+        }
+    }
+    .alert {
+        margin: 16px 0 0;
+    }
+
+    // Detail table: mono name and type, prose description.
+    .api-detail-table {
+        width: 100%;
+        margin: 0;
+        border: 1px solid $gray-200;
+        border-radius: 12px;
+        border-collapse: separate;
+        border-spacing: 0;
+        overflow: hidden;
+        font-size: 14px;
+        line-height: 22px;
+        th,
+        td {
+            padding: 9px 16px;
+            border: 0;
+            border-bottom: 1px solid $gray-100;
+            vertical-align: top;
+            text-align: left;
+        }
+        thead th {
+            background: $gray-50;
+            border-bottom-color: $gray-200;
+            color: $gray-500;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            line-height: 16px;
+            text-transform: uppercase;
+        }
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+        .api-detail-name {
+            width: 28%;
+            font-family: $font-family-monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: $gray-800;
+            code {
+                padding: 0;
+                border: 0;
+                background: none;
+                color: inherit;
+                font-size: inherit;
+                font-weight: inherit;
+            }
+        }
+        .api-detail-type {
+            width: 22%;
+            color: $gray-600;
+            font-family: $font-family-monospace;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+        .api-detail-desc {
+            color: $gray-600;
+            p {
+                margin: 6px 0 0;
+            }
+        }
+        @media (max-width: 575px) {
+            thead {
+                display: none;
+            }
+            tbody,
+            tr,
+            td,
+            .api-detail-name,
+            .api-detail-type {
+                display: block;
+                width: auto;
+            }
+            tr {
+                padding: 10px 16px;
+                border-bottom: 1px solid $gray-100;
+                &:last-child {
+                    border-bottom: 0;
+                }
+            }
+            td {
+                padding: 0;
+                border: 0;
+            }
+            .api-detail-type {
+                margin-bottom: 4px;
+            }
+        }
     }
 }
 
@@ -86,9 +202,7 @@ body.docs.single .docs-content .agent-prompt pre {
     line-height: 1.2;
     text-decoration: none;
     cursor: pointer;
-    transition:
-        border-color 0.15s ease,
-        color 0.15s ease;
+    transition: border-color 0.15s ease, color 0.15s ease;
     &:hover,
     &:focus-visible {
         border-color: rgba($brand, 0.6);

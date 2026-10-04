@@ -276,21 +276,24 @@ body.demos.single {
         }
 
         // Callouts
+        // The icon is absolutely positioned so inline runs such as
+        // "<b>Label</b> - text" flow as one paragraph.
         .alert {
-            display: flex;
-            gap: 12px;
+            position: relative;
+            display: block;
             margin: 20px 0 24px;
-            padding: 14px 16px;
+            padding: 14px 16px 14px 46px;
             border: 1px solid;
             border-radius: 12px;
             font-size: 14.5px;
             line-height: 24px;
             &::before {
                 content: '';
-                flex: 0 0 18px;
+                position: absolute;
+                top: 17px;
+                left: 16px;
                 width: 18px;
                 height: 18px;
-                margin-top: 3px;
                 border-radius: 50%;
                 background: currentColor;
                 opacity: 0.85;
@@ -321,9 +324,19 @@ body.demos.single {
             }
         }
 
-        // Tables
-        table,
-        .options-table {
+        // Prose tables (markdown): the same frame as the API tables,
+        // scrolling sideways inside the column when they are wider.
+        .table-wrap {
+            margin: 20px 0 28px;
+            border: 1px solid $gray-200;
+            border-radius: 12px;
+            overflow-x: auto;
+            > table {
+                margin: 0;
+                border: 0;
+            }
+        }
+        table {
             width: 100%;
             margin: 20px 0 28px;
             border-collapse: separate;
@@ -332,28 +345,38 @@ body.demos.single {
             line-height: 22px;
             th,
             td {
-                padding: 10px 14px;
+                padding: 10px 16px;
                 border-bottom: 1px solid $gray-100;
                 vertical-align: top;
                 text-align: left;
             }
-            th {
-                color: $gray-800;
-                font-weight: 600;
+            thead th {
                 background: $gray-50;
                 border-bottom-color: $gray-200;
+                color: $gray-500;
+                font-size: 11.5px;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                line-height: 16px;
+                text-transform: uppercase;
             }
-            tr:last-child td {
+            td {
+                color: $gray-700;
+            }
+            tbody tr:last-child td {
                 border-bottom: 0;
             }
-            code {
-                font-size: 13px;
+            td:first-child {
+                font-weight: 500;
+                color: $gray-800;
             }
-        }
-        .options-table {
-            border: 1px solid $gray-200;
-            border-radius: 12px;
-            overflow: hidden;
+            // Import paths carry a <wbr> after each slash (see
+            // lib/rehype-table-wrap) so they break there when needed.
+            code {
+                font-size: 12.5px;
+                line-height: 20px;
+                padding: 1px 6px;
+            }
         }
 
         // Footer of the page: the edit link, then previous/next as

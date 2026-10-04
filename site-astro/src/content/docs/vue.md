@@ -1,7 +1,7 @@
 ---
 title: "@lightgallery/vue"
-description: "Native Vue 3 lightGallery component built on the shared headless core."
-lead: "Native Vue 3 lightGallery component built on the shared headless core."
+description: "A native Vue 3 lightGallery component. Vue renders the triggers and the lightbox, with v-model, typed emits, scoped slots and a subpath per plugin."
+lead: "A native Vue 3 lightGallery component. Vue renders the triggers and the lightbox, with v-model, typed emits, scoped slots and a subpath per plugin."
 date: 2026-07-24T00:00:00.000Z
 draft: false
 images: []
@@ -10,12 +10,13 @@ weight: 63
 toc: true
 ---
 
-Native Vue 3 lightGallery over `@lightgallery/headless`, every DOM node
-rendered by Vue. `<script setup>` SFCs, `v-model` open/index, typed emits
-and scoped slots, Teleport overlay, a tree-shakable subpath per plugin. The
-framework-free state machine, gesture math and plugin logic are shared with
-`@lightgallery/react` and `@lightgallery/angular` through the headless
-package: one product, four renderings.
+`@lightgallery/vue` is a native Vue 3 component, not a wrapper around the
+vanilla script. Vue renders every node, in the trigger grid and in the
+lightbox, so nothing else mutates your DOM. You get `<script setup>` SFCs,
+`v-model` for the open state and index, typed emits, scoped slots, a
+Teleport overlay and a tree-shakable subpath per plugin. Styling reuses
+the published `lightgallery/css/*` files, so the lightbox looks exactly
+like the vanilla one.
 
 ## Install
 
@@ -73,22 +74,66 @@ function onSlide({ index }: SlideEventDetail) {
 </template>
 ```
 
-## Controlled + imperative
+## Controlled
+
+Pass `:slides` instead of `<LgItem>` children and the component renders no
+triggers; `v-model:open` and `v-model:index` give you the state.
 
 ```vue
-<!-- Controlled: -->
-<LightGallery :slides="items" v-model:open="open" v-model:index="index" />
+<script setup lang="ts">
+import { ref } from 'vue';
+import { LightGallery, type LgGalleryItem } from '@lightgallery/vue';
 
-<!-- Imperative (template ref handle): -->
-<LightGallery ref="lg" :slides="items" />
-<button @click="lg?.openGallery(2)">Open at slide 3</button>
+const open = ref(false);
+const index = ref(0);
+const items: LgGalleryItem[] = [
+    { src: 'img/1.jpg', thumb: 'img/1-t.jpg', alt: 'Mountains' },
+    { src: 'img/2.jpg', thumb: 'img/2-t.jpg', alt: 'Forest' },
+];
+</script>
+
+<template>
+    <button @click="open = true">Open gallery</button>
+    <LightGallery :slides="items" v-model:open="open" v-model:index="index" />
+</template>
 ```
 
+## Imperative
+
+A template ref exposes `openGallery(index?)`, `closeGallery()`,
+`goToSlide(index)`, `nextSlide()`, `prevSlide()` and `refresh()`.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { LightGallery, type LgGalleryItem } from '@lightgallery/vue';
+
+const gallery = ref<InstanceType<typeof LightGallery> | null>(null);
+const items: LgGalleryItem[] = [
+    { src: 'img/1.jpg', thumb: 'img/1-t.jpg', alt: 'Mountains' },
+    { src: 'img/2.jpg', thumb: 'img/2-t.jpg', alt: 'Forest' },
+];
+</script>
+
+<template>
+    <button @click="gallery?.openGallery(1)">Open at slide 2</button>
+    <LightGallery ref="gallery" :slides="items" />
+</template>
+```
+
+## Settings, events and slots
+
 Settings are same-named props (`:mode`, `:speed`, `:loop`,
-`:caption-position`, …); events are kebab-case emits without the `on`
-prefix (`@before-open`, `@after-slide`, `@slide-item-load`, …). Slots are
-named scoped slots: `#caption`, `#counter`, `#prev-button`, `#next-button`.
-Inline gallery: `:container="element"`.
+`:caption-position`, …); the [settings reference](/docs/settings/) lists
+every one. Events are kebab-case emits of the documented
+[event names](/docs/events/) without the `on` prefix (`@before-open`,
+`@after-slide`, `@slide-item-load`, …).
+
+Scoped slots swap parts of the chrome for your own markup: `#caption`
+(`{ item, index }`), `#counter` (`{ current, total }`), `#prev-button`,
+`#next-button` and, with the comment plugin, `#comments` (`{ item, index }`).
+The `:icons` prop replaces any [control icon](/docs/custom-icons/) by
+name. An inline gallery mounts into the element you pass as `:container`.
 
 ## Plugins (all 14, plus the justified layout)
 
@@ -118,7 +163,7 @@ spelling, `:medium-zoom="{ margin: 24 }"` or `:mediumZoom`:
 
 Plugins compose per gallery instance, two galleries on one page can have
 different plugin sets. Order matters for slide wrappers: put `Zoom` before
-`Rotate` (zoom outermost, 2.x DOM order).
+`Rotate` so zoom stays the outermost transform.
 
 ## SSR / Nuxt
 
@@ -135,12 +180,14 @@ different plugin sets. Order matters for slide wrappers: put `Zoom` before
 
 ## Accessibility
 
-`role="dialog"`/`aria-modal` with accessible-name fallback
-(`:aria-labelledby` override supported), hand-rolled focus trap (focus in
-on open, Tab/Shift+Tab wrapped, returned to the trigger on close), labelled
-buttons everywhere, keyboard-operable thumbnails and pager dots,
-`prefers-reduced-motion` support. Automated axe run (WCAG A/AA): zero
-violations.
+The open gallery is a modal dialog (`role="dialog"`, `aria-modal`, an
+accessible name, with an `:aria-labelledby` override). Focus moves in on
+open, Tab and Shift+Tab are trapped while it is open and focus returns to
+the trigger on close. Every button is labelled, thumbnails and pager dots
+are keyboard-operable, and `prefers-reduced-motion` disables the
+animations. The open gallery passes axe WCAG A/AA checks in CI. The
+[accessibility page](/docs/accessibility/) covers the live region, the
+labels and the settings involved.
 
 ## Migrating from the legacy `lightgallery/vue` wrapper
 
@@ -161,7 +208,26 @@ renames (the full list is in the [migration guide](/docs/migration/#vue)):
   `getCaptionFromTitleOrAlt`, `nextHtml`/`prevHtml`, `appendCounterTo`,
   `videojs`.
 
+## Next steps
+
+- [Vue image gallery](/demos/vue-image-gallery/) and
+  [video gallery](/demos/vue-video-gallery/) demos, each with the code
+  behind it.
+- Features that work the same in every package:
+  [justified layout](/docs/justified-layout/),
+  [virtualization](/docs/virtualization/),
+  [thumbnail scrubbing](/docs/thumbnail-scrubbing/),
+  [video facades](/docs/video-facades/),
+  [custom icons](/docs/custom-icons/),
+  [localization and RTL](/docs/localization-rtl/) and
+  [responsive loading](/docs/responsive-loading/).
+- The [settings reference](/docs/settings/), every setting is a prop of
+  the same name, and the [events](/docs/events/) list, each one a
+  kebab-case emit here.
+
 ## License
 
-GPL-3.0-only, commercial license available, see
-[lightgalleryjs.com/license](https://www.lightgalleryjs.com/license/).
+GPL-3.0-only, matching lightGallery's licensing model. For commercial
+projects a commercial license is available, see the
+[license page](/license/), or use `0000-0000-000-0000` as a temporary
+`licenseKey` for evaluation.

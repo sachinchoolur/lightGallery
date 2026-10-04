@@ -3,6 +3,7 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeTableWrap from './src/lib/rehype-table-wrap.mjs';
 
 import { withLastmod } from './src/lib/lastmod.mjs';
 
@@ -58,6 +59,8 @@ export default defineConfig({
                     properties: { className: 'anchor', ariaHidden: 'true' },
                 },
             ],
+            // Scroll container around markdown tables, <wbr> in paths.
+            rehypeTableWrap,
         ],
     },
     vite: {

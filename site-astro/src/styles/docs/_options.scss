@@ -1,57 +1,315 @@
-.options-table {
+// Settings reference tables (`Options.astro`, `Attributes.astro`).
+//
+// Each setting is its own <tbody>: a head row (name / type / default)
+// followed by a description row that spans the table. The group reads
+// as one card-like entry inside a rounded frame; names, types and
+// defaults are set in the mono face so they scan like code.
+
+$options-radius: 12px;
+$options-pad-x: 18px;
+
+body.docs.single .docs-content .options-table {
     width: 100%;
     table-layout: fixed;
-    border-color: #dae8ff;
-    .options-table-tr-head {
-        background-color: #fafbff;
+    margin: 24px 0 32px;
+    border: 1px solid $gray-200;
+    border-radius: $options-radius;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    background: #fff;
+    font-size: 14.5px;
+    line-height: 24px;
+
+    th,
+    td {
+        padding: 0 $options-pad-x;
+        border: 0;
+        vertical-align: top;
+        text-align: left;
     }
 
-    .options-table-description {
-        td {
-            padding-bottom: 3.5rem;
-            padding-top: 1rem;
+    // Column header: small caps label strip.
+    thead th {
+        padding: 9px $options-pad-x;
+        background: #fff;
+        border-bottom: 1px solid $gray-200;
+        color: $gray-500;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 16px;
+        text-transform: uppercase;
+        &:first-child {
+            width: 36%;
         }
+        &:nth-child(2):last-child {
+            width: 64%;
+        }
+    }
+
+    // One entry: a tinted head band (name / type / default) over the
+    // description, with a hairline between entries.
+    .options-entry {
+        + .options-entry > tr:first-child > td {
+            border-top: 1px solid $gray-200;
+        }
+    }
+    .options-table-tr-head td {
+        padding-top: 11px;
+        padding-bottom: 11px;
+        border-bottom: 1px solid $gray-100;
+        background: $gray-50;
+        vertical-align: baseline;
+        transition: background-color 120ms ease;
+    }
+    .options-entry:hover .options-table-tr-head td,
+    .options-entry:focus-within .options-table-tr-head td {
+        background: $gray-100;
+    }
+    .options-table-description td {
+        padding-top: 14px;
+        padding-bottom: 20px;
+        color: $gray-600;
         p {
+            margin: 0 0 8px;
             white-space: pre-line;
             &:last-child {
                 margin-bottom: 0;
             }
         }
         section {
-            margin-bottom: 1rem;
-            margin-top: 1rem;
+            margin: 12px 0;
         }
-
-        &:last-child {
-            td {
-                padding-bottom: 0;
-                border-bottom-color: transparent;
-            }
+        pre {
+            margin: 12px 0 0;
+            padding: 14px 18px;
+            font-size: 13px;
+            line-height: 22px;
         }
-        .docs-minimum-version {
-            color: #666;
+        .alert {
+            margin: 12px 0 0;
+            padding: 10px 14px 10px 42px;
             font-size: 14px;
-            b {
-                margin-left: 3px;
-                color: #333;
+            line-height: 22px;
+            &::before {
+                top: 12px;
+                left: 14px;
             }
         }
     }
-}
-.options-section {
-    margin: 5rem 0;
+
+    // Name: mono, strong, with the quiet "#" anchor on hover.
+    .options-name {
+        font-family: $font-family-monospace;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: $gray-800;
+        word-break: break-word;
+        code {
+            padding: 0;
+            border: 0;
+            background: none;
+            color: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+        }
+        .anchor-id {
+            white-space: normal;
+        }
+        .anchor {
+            padding-left: 0.3rem;
+            opacity: 0;
+            transition: opacity 120ms ease;
+        }
+        &:hover .anchor,
+        .anchor:focus-visible {
+            opacity: 1;
+        }
+    }
+    // Scroll target offset for `#name` links under the fixed header.
+    .anchor-id {
+        scroll-margin-top: 5.5rem;
+        &::before {
+            display: none;
+        }
+    }
+
+    // Type: mono, muted. Union members are small chips.
+    .options-type {
+        font-family: $font-family-monospace;
+        font-size: 13px;
+        color: $gray-600;
+        overflow-wrap: anywhere;
+    }
+    .options-type-hint {
+        color: $gray-400;
+        font-family: $font-family-sans-serif;
+        font-size: 12.5px;
+        white-space: nowrap;
+    }
+    .options-union {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        vertical-align: top;
+        code {
+            padding: 0 6px;
+            border: 1px solid $gray-200;
+            border-radius: 5px;
+            background: #fff;
+            color: $gray-600;
+            font-family: $font-family-monospace;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 20px;
+            white-space: nowrap;
+        }
+    }
+
+    // Default: an inline code chip; objects point to the block below.
+    .options-default {
+        font-family: $font-family-monospace;
+        font-size: 13px;
+        overflow-wrap: anywhere;
+        code {
+            display: inline-block;
+            max-width: 100%;
+            padding: 1px 7px;
+            border: 1px solid $gray-200;
+            border-radius: 6px;
+            background: $gray-50;
+            color: $gray-700;
+            font-size: 12.5px;
+            font-weight: 500;
+            line-height: 20px;
+            white-space: pre-wrap;
+            vertical-align: 1px;
+        }
+    }
+    .options-default-empty,
+    .options-default-ref {
+        color: $gray-400;
+    }
+    .options-default-block {
+        margin-top: 12px;
+        .options-default-label {
+            display: block;
+            margin-bottom: 4px;
+            color: $gray-500;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            line-height: 16px;
+            text-transform: uppercase;
+        }
+        pre {
+            margin-top: 0;
+        }
+        .options-union {
+            display: flex;
+            gap: 6px;
+        }
+    }
+
+    // Meta line: version pill.
+    .options-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+    }
+    .options-version {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 9px;
+        border: 1px solid $orange-100;
+        border-radius: 999px;
+        background: $orange-50;
+        color: $orange-900;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 20px;
+        white-space: nowrap;
+    }
+
+    // Narrow screens: the three columns stack inside each entry, with
+    // the column names restored as small labels.
+    @media (max-width: 575px) {
+        thead {
+            display: none;
+        }
+        .options-entry,
+        .options-table-description,
+        .options-table-description td {
+            display: block;
+        }
+        // The entry separator moves from the cells to the stacked row.
+        .options-entry + .options-entry > .options-table-tr-head:first-child {
+            border-top: 1px solid $gray-200;
+            > td {
+                border-top: 0;
+            }
+        }
+        .options-table-tr-head {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 20px;
+            padding: 12px $options-pad-x;
+            background: $gray-50;
+            border-bottom: 1px solid $gray-100;
+            td {
+                width: auto;
+                padding: 0;
+                border-bottom: 0;
+                background: none;
+            }
+            .options-name {
+                flex: 0 0 100%;
+            }
+            [data-label]::before {
+                content: attr(data-label);
+                margin-right: 6px;
+                color: $gray-400;
+                font-family: $font-family-sans-serif;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+            }
+        }
+        .options-table-description td {
+            padding-top: 12px;
+        }
+    }
 }
 
-.options-stripe-table {
-    border: 1px solid #dae8ff;
-    font-size: 15px;
-    background-color: transparent;
+// Attribute tables: single rows of name / description, lightly striped.
+body.docs.single .docs-content .options-stripe-table {
     .options-table-tr-head {
-        &:nth-child(odd) {
-            background-color: #fafbff;
+        td {
+            padding: 14px $options-pad-x;
+            border-bottom: 1px solid $gray-100;
+            vertical-align: top;
+        }
+        &:last-child td {
+            border-bottom: 0;
         }
         &:nth-child(even) {
-            background-color: transparent;
+            background: $gray-10;
+        }
+        p:last-child {
+            margin-bottom: 0;
         }
     }
+    .anchor-id {
+        font-family: $font-family-monospace;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: $gray-800;
+    }
+}
+
+.options-section {
+    margin: 5rem 0;
 }

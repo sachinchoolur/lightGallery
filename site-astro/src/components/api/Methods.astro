@@ -10,52 +10,41 @@ const methods = publicMethods();
 <div class="docs-methods-section">
     {
         methods.map((method) => (
-            <div class="docs-common-section">
-                <p class="docs-common-desc">
-                    <span class="anchor-id" id={method.name}>
-                        <b>Name: </b>
-                        {method.name}{' '}
-                        <a
-                            href={`#${method.name}`}
-                            class="anchor"
-                            aria-hidden="true"
-                        >
-                            #
-                        </a>
-                        <span />
-                    </span>
-                </p>
-                <p class="docs-common-desc">
-                    <b>Description: </b> {method.comment.summary}
-                </p>
+            <section class="api-entry">
+                <h3 class="api-entry-name" id={method.name}>
+                    <code>{method.name}()</code>{' '}
+                    <a
+                        href={`#${method.name}`}
+                        class="anchor"
+                        aria-hidden="true"
+                    >
+                        #
+                    </a>
+                </h3>
+                <p class="api-entry-desc">{method.comment.summary}</p>
                 {tagText(method.comment, 'description').map((text) => (
-                    <p class="docs-common-desc" set:html={text} />
+                    <p class="api-entry-desc" set:html={text} />
                 ))}
                 {tagText(method.comment, 'example').map((example) => (
-                    <>
-                        <p class="docs-common-desc">
-                            <b>Example: </b>
-                        </p>
-                        <div class="docs-common-highlight">
-                            <Code code={example.trim()} lang="js" />
-                        </div>
-                    </>
-                ))}
-                {tagText(method.comment, 'note').map((note) => (
-                    <div class="docs-common-notes">
-                        <p class="docs-common-desc">
-                            <b>Note : </b>
-                            <Fragment set:html={note} />
-                        </p>
+                    <div class="api-entry-block">
+                        <span class="api-entry-label">Example</span>
+                        <Code code={example.trim()} lang="js" />
                     </div>
                 ))}
+                {tagText(method.comment, 'note').map((note) => (
+                    <p class="alert alert-info" role="alert">
+                        <span>
+                            <b>Note.</b> <Fragment set:html={note} />
+                        </span>
+                    </p>
+                ))}
                 {tagText(method.comment, 'see').map((text) => (
-                    <p class="docs-common-desc">
-                        <b>See also:</b>
+                    <p class="api-entry-meta">
+                        <span class="api-entry-label">See also</span>
                         <Fragment set:html={text} />
                     </p>
                 ))}
-            </div>
+            </section>
         ))
     }
 </div>

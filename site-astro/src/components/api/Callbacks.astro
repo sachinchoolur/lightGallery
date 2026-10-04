@@ -7,6 +7,7 @@ import {
     interfaceProps,
     tagText,
 } from '../../lib/apidocs';
+import DetailTable from './DetailTable.astro';
 
 /**
  * Framework callback doc block, port of `shortcodes/callbacks.html`
@@ -23,62 +24,32 @@ const detail = interfaceProps(interfaceName);
 const methods = tagText(meta, 'method');
 ---
 
-<div class="docs-common-section">
+<section class="api-entry">
     {
         methods.map((name) => (
-            <p class="docs-common-desc">
-                <span class="anchor-id" id={name}>
-                    <b>Name: </b>
-                    {name}{' '}
-                    <a href={`#${name}`} class="anchor" aria-hidden="true">
-                        #
-                    </a>
-                    <span />
-                </span>
-            </p>
+            <h3 class="api-entry-name" id={name}>
+                <code>{name}</code>{' '}
+                <a href={`#${name}`} class="anchor" aria-hidden="true">
+                    #
+                </a>
+            </h3>
         ))
     }
-    <p class="docs-common-desc">
-        <b>Description: </b>{meta.summary.replace(/Fired/g, 'Called')}
-    </p>
+    <p class="api-entry-desc">{meta.summary.replace(/Fired/g, 'Called')}</p>
     {
         detail.length > 0 && (
-            <>
-                <p class="docs-common-desc">
-                    <b>Detail:</b>
-                </p>
-                <table class="options table-blue" style="width:100%">
-                    <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Description</th>
-                    </tr>
-                    {detail.map((prop) => (
-                        <tr>
-                            <td>{prop.name}</td>
-                            <td>{prop.typeName}</td>
-                            <td>
-                                <Fragment set:html={prop.comment.summary} />
-                                {tagText(prop.comment, 'description').map(
-                                    (text) => (
-                                        <p>{text}</p>
-                                    ),
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-                </table>
-            </>
+            <div class="api-entry-block">
+                <span class="api-entry-label">Callback detail</span>
+                <DetailTable props={detail} />
+            </div>
         )
     }
     {
         tagText(meta, 'example').map((example) => (
-            <>
-                <p class="docs-common-desc">
-                    <b>Example:</b>
-                </p>
+            <div class="api-entry-block">
+                <span class="api-entry-label">Example</span>
                 <Code code={example.trim()} lang="js" />
-            </>
+            </div>
         ))
     }
-</div>
+</section>

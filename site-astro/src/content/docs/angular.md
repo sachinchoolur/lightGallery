@@ -1,7 +1,7 @@
 ---
 title: "@lightgallery/angular"
-description: "Native Angular lightGallery component built on the shared headless core."
-lead: "Native Angular lightGallery component built on the shared headless core."
+description: "A native Angular lightGallery component. Angular renders the triggers and the lightbox, with standalone components, signal inputs and outputs and zoneless change detection."
+lead: "A native Angular lightGallery component. Angular renders the triggers and the lightbox, with standalone components, signal inputs and outputs and zoneless change detection."
 date: 2026-07-24T00:00:00.000Z
 draft: false
 images: []
@@ -10,13 +10,13 @@ weight: 64
 toc: true
 ---
 
-Native Angular lightGallery over `@lightgallery/headless`, every DOM node
-rendered by Angular. Standalone components, signal inputs/outputs, zoneless
-change detection, CDK overlay/a11y, Angular Package Format with a secondary
-entry point per plugin. The framework-free state machine, gesture math and
-plugin logic are shared with `@lightgallery/react` and
-`@lightgallery/vue` through the headless package: one product, four
-renderings.
+`@lightgallery/angular` is a native Angular component, not a wrapper
+around the vanilla script. Angular renders every node, in the trigger grid
+and in the lightbox, so nothing else mutates your DOM. You get standalone
+components, signal inputs and outputs, zoneless change detection, CDK
+overlay and a11y, and a secondary entry point per plugin in Angular
+Package Format. Styling reuses the published `lightgallery/css/*` files,
+so the lightbox looks exactly like the vanilla one.
 
 ## Install
 
@@ -77,27 +77,76 @@ export class Gallery {
 }
 ```
 
-## Controlled + imperative
+## Controlled
 
-```html
-<!-- Controlled: -->
-<lg-gallery
-    [slides]="items"
-    [open]="open()"
-    (closed)="open.set(false)"
-    [(index)]="index"
-/>
+Pass `[slides]` instead of `[lgGalleryItem]` children and the component
+renders no triggers; `[open]` with `(closed)` and the two-way `[(index)]`
+give you the state.
 
-<!-- Imperative (template ref handle): -->
-<lg-gallery #lg="lgGallery" [slides]="items" />
-<button (click)="lg.openGallery(2)">Open at slide 3</button>
+```ts
+import { Component, signal } from '@angular/core';
+import { LgGalleryComponent, type LgGalleryItem } from '@lightgallery/angular';
+
+@Component({
+    imports: [LgGalleryComponent],
+    template: `
+        <button (click)="open.set(true)">Open gallery</button>
+        <lg-gallery
+            [slides]="items"
+            [open]="open()"
+            (closed)="open.set(false)"
+            [(index)]="index"
+        />
+    `,
+})
+export class Gallery {
+    open = signal(false);
+    index = signal(0);
+    items: LgGalleryItem[] = [
+        { src: 'img/1.jpg', thumb: 'img/1-t.jpg', alt: 'Mountains' },
+        { src: 'img/2.jpg', thumb: 'img/2-t.jpg', alt: 'Forest' },
+    ];
+}
 ```
 
+## Imperative
+
+A template reference (`#lg="lgGallery"`) exposes `openGallery(index?)`,
+`closeGallery()`, `goToSlide(index)`, `nextSlide()`, `prevSlide()` and
+`refresh()`.
+
+```ts
+import { Component } from '@angular/core';
+import { LgGalleryComponent, type LgGalleryItem } from '@lightgallery/angular';
+
+@Component({
+    imports: [LgGalleryComponent],
+    template: `
+        <button (click)="lg.openGallery(1)">Open at slide 2</button>
+        <lg-gallery #lg="lgGallery" [slides]="items" />
+    `,
+})
+export class Gallery {
+    items: LgGalleryItem[] = [
+        { src: 'img/1.jpg', thumb: 'img/1-t.jpg', alt: 'Mountains' },
+        { src: 'img/2.jpg', thumb: 'img/2-t.jpg', alt: 'Forest' },
+    ];
+}
+```
+
+## Settings, events and slots
+
 Settings are same-named signal inputs (`[mode]`, `[speed]`, `[loop]`,
-`[captionPosition]`, …); events are outputs without the `on` prefix
-(`(beforeOpen)`, `(afterSlide)`, `(slideItemLoad)`, …). Slots are template
-directives: `*lgCaption`, `lgCounter`, `lgPrevButton`, `lgNextButton`.
-Inline gallery: `[container]="element"`.
+`[captionPosition]`, …); the [settings reference](/docs/settings/) lists
+every one. Events are outputs of the documented
+[event names](/docs/events/) without the `on` prefix (`(beforeOpen)`,
+`(afterSlide)`, `(slideItemLoad)`, …).
+
+Template directives swap parts of the chrome for your own markup:
+`*lgCaption`, `lgCounter`, `lgPrevButton` and `lgNextButton`, plus an
+`lgIcon` template that replaces any [control icon](/docs/custom-icons/)
+by name. An inline gallery mounts into the element you pass as
+`[container]`.
 
 ## Features (all 14, plus the justified layout)
 
@@ -125,7 +174,7 @@ factory for the `[features]` input:
 
 Features compose per gallery instance, two galleries on one page can have
 different feature sets. Order matters for slide wrappers: put `withZoom()`
-before `withRotate()` (zoom outermost, 2.x DOM order).
+before `withRotate()` so zoom stays the outermost transform.
 
 ## SSR / hydration
 
@@ -142,11 +191,13 @@ before `withRotate()` (zoom outermost, 2.x DOM order).
 
 ## Accessibility
 
-`role="dialog"`/`aria-modal` with accessible-name fallback, CDK `FocusTrap`
-(focus in on open, Tab trapped, returned to the trigger on close), labelled
-buttons everywhere, keyboard-operable thumbnails and pager dots,
-`prefers-reduced-motion` support. Automated axe run (WCAG A/AA): zero
-violations.
+The open gallery is a modal dialog (`role="dialog"`, `aria-modal`, an
+accessible name). The CDK focus trap moves focus in on open, keeps Tab
+inside while it is open and returns focus to the trigger on close. Every
+button is labelled, thumbnails and pager dots are keyboard-operable, and
+`prefers-reduced-motion` disables the animations. The open gallery passes
+axe WCAG A/AA checks in CI. The [accessibility page](/docs/accessibility/)
+covers the live region, the labels and the settings involved.
 
 ## Migrating from the legacy `lightgallery` Angular wrapper
 
@@ -165,7 +216,26 @@ renames (the full list is in the [migration guide](/docs/migration/#angular)):
   `getCaptionFromTitleOrAlt`, `nextHtml`/`prevHtml`, `appendCounterTo`,
   `videojs`.
 
+## Next steps
+
+- [Angular image gallery](/demos/angular-image-gallery/) and
+  [video gallery](/demos/angular-video-gallery/) demos, each with the
+  code behind it.
+- Features that work the same in every package:
+  [justified layout](/docs/justified-layout/),
+  [virtualization](/docs/virtualization/),
+  [thumbnail scrubbing](/docs/thumbnail-scrubbing/),
+  [video facades](/docs/video-facades/),
+  [custom icons](/docs/custom-icons/),
+  [localization and RTL](/docs/localization-rtl/) and
+  [responsive loading](/docs/responsive-loading/).
+- The [settings reference](/docs/settings/), every setting is an input
+  of the same name, and the [events](/docs/events/) list, each one an
+  output here.
+
 ## License
 
-GPL-3.0-only, commercial license available, see
-[lightgalleryjs.com/license](https://www.lightgalleryjs.com/license/).
+GPL-3.0-only, matching lightGallery's licensing model. For commercial
+projects a commercial license is available, see the
+[license page](/license/), or use `0000-0000-000-0000` as a temporary
+`licenseKey` for evaluation.
