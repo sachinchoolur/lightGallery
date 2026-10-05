@@ -6,10 +6,9 @@ description:
     Commercial license is the appropriate license. With this option, your source
     code is kept proprietary.'
 lead:
-    'lightGallery is a free and open-source library, however, if you are using
-    the library for business, commercial sites, projects, and applications, the
-    Commercial license is the appropriate license. With this option, your source
-    code is kept proprietary. <a href="/license/">More info</a>'
+    'Which license applies to your project, how to pass your license key, and
+    what the temporary key does. Plans and pricing are on the
+    <a href="/license/">license page</a>.'
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
@@ -21,7 +20,7 @@ weight: 9
 toc: true
 ---
 
-## Commercial License
+## Commercial license
 
 lightGallery is a free and open-source library, however, if you are using the
 library for business, commercial sites, projects, and applications, the
@@ -31,7 +30,7 @@ code is kept proprietary.
 Once purchased, you’ll receive a commercial license PDF and be all set to use
 lightGallery in your commercial applications.
 
-## Extended Commercial license
+## Extended commercial license
 
 If you want to include lightGallery as part of software development kit (SDK), web application builder or website builder, downloadable or installable products like WordPress themes, HTML templates, or something that produces copies that each use lightGallery, you need to choose the Extended Commercial license.
 

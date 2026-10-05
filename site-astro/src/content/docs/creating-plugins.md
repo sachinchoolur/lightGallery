@@ -16,12 +16,15 @@ toc: true
 
 This page covers plugins for the vanilla `lightgallery` package. The
 native packages have their own plugin shapes that fit their frameworks:
-React plugins are objects with render slots and a hook, Vue plugins are
-similar, and Angular plugins are `withName()` feature functions. Their
-contracts are documented in the package guides for
-[React](/docs/react/), [Vue](/docs/vue/) and [Angular](/docs/angular/).
-Logic that has no DOM (math, state, URL handling) belongs in
-[`@lightgallery/headless`](/docs/headless/) so every package can share it.
+React and Vue plugins are objects with render slots and a hook, and
+Angular plugins are `withName()` feature functions. Each package exports
+the types for writing one, `LgPlugin`, `LgPluginSlots` and
+`PluginContext` in [React](/docs/react/), `LgVuePlugin`, `LgPluginSlots`
+and `LgPluginContext` in [Vue](/docs/vue/), `LgFeature` and
+`LgPluginContext` in [Angular](/docs/angular/), and its built-in plugins
+are the reference implementations. Logic that has no DOM (math, state,
+URL handling) belongs in [`@lightgallery/headless`](/docs/headless/) so
+every package can share it.
 
 ## The contract
 
