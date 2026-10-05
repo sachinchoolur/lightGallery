@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && cp ../site/CNAME dist/CNAME",
+    "build": "astro build && cp ../site/CNAME dist/CNAME && cp dist/sitemap-index.xml dist/sitemap.xml",
     "preview": "astro preview",
     "check": "astro check",
     "check:examples": "node scripts/check-examples.mjs",

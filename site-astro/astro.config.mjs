@@ -20,6 +20,16 @@ export default defineConfig({
     // framework and feature pages spent a short while under /docs/v3/;
     // these keep any link that was shared in the meantime working.
     redirects: {
+        // Pages the Hugo site had in its sitemap that the relaunch dropped or
+        // renamed. Static stubs (noindex + canonical) so old links and
+        // search results keep landing somewhere useful.
+        '/blog/7-best-react-image-gallery-libraries/':
+            '/blog/7-best-react-image-gallery-components/',
+        '/blog/top-6-javascript-lightbox-galleries./':
+            '/blog/top-6-best-javascript-lightbox-galleries/',
+        '/demos/comment-box/': '/docs/settings/#comment-box-plugin',
+        '/docs/custom-work/': '/license/',
+        '/docs/lg-query/': '/docs/creating-plugins/',
         '/docs/v3/': '/docs/getting-started/',
         '/docs/v3/react/': '/docs/react/',
         '/docs/v3/vue/': '/docs/vue/',
