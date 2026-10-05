@@ -48,7 +48,6 @@ import {
     createGalleryState,
     galleryReducer,
     getSlideIndexesInDom,
-    getSwipeReleaseVerdict,
     resolveSettings,
 } from '@lightgallery/headless';
 
@@ -58,8 +57,15 @@ let state = createGalleryState({ slidesCount: 5, loop: settings.loop });
 state = galleryReducer(state, { type: 'OPEN', index: 2 });
 state = galleryReducer(state, { type: 'NEXT' });
 
-// Which slides should be mounted right now (current ± preload window).
-const mounted = getSlideIndexesInDom(state.index, 5, settings);
+// Which slides to keep mounted right now: the current slide, its
+// neighbours, and the previous slide so an outgoing transition can finish.
+const mounted = getSlideIndexesInDom(
+    state.currentIndex,
+    state.previousIndex,
+    state.slidesCount,
+    settings.numberOfSlideItemsInDom,
+    settings.loop,
+);
 ```
 
 Every transition is pure and covered by node-environment tests. Renderers
