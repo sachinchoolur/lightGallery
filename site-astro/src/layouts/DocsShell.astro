@@ -215,15 +215,25 @@ const hasVideo =
                     (prev || next) && (
                         <nav class="page-nav" aria-label="Previous and next page">
                             {prev && (
-                                <a class="page-nav-card" href={pageUrl(prev)}>
-                                    <span class="page-nav-dir">Previous</span>
-                                    <strong>&larr;&nbsp;{prev.data.title}</strong>
+                                <a class="page-nav-card page-nav-prev" href={pageUrl(prev)}>
+                                    <span class="page-nav-arrow" aria-hidden="true">
+                                        &larr;
+                                    </span>
+                                    <span class="page-nav-text">
+                                        <span class="page-nav-dir">Previous</span>
+                                        <strong>{label(prev)}</strong>
+                                    </span>
                                 </a>
                             )}
                             {next && (
                                 <a class="page-nav-card page-nav-next" href={pageUrl(next)}>
-                                    <span class="page-nav-dir">Next</span>
-                                    <strong>{next.data.title}&nbsp;&rarr;</strong>
+                                    <span class="page-nav-text">
+                                        <span class="page-nav-dir">Next</span>
+                                        <strong>{label(next)}</strong>
+                                    </span>
+                                    <span class="page-nav-arrow" aria-hidden="true">
+                                        &rarr;
+                                    </span>
                                 </a>
                             )}
                         </nav>

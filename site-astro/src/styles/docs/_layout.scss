@@ -423,7 +423,9 @@ body.demos.single {
             }
         }
         .page-nav-card {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 14px;
             padding: 16px 18px;
             border: 1px solid $gray-200;
             border-radius: 12px;
@@ -435,10 +437,14 @@ body.demos.single {
                 font-weight: 600;
                 line-height: 22px;
                 letter-spacing: -0.16px;
+                text-wrap: pretty;
             }
             &:hover {
                 border-color: $orange-300;
                 color: $gray-800;
+                .page-nav-arrow {
+                    color: $orange-500;
+                }
             }
             &.page-nav-next {
                 grid-column: 2;
@@ -447,6 +453,26 @@ body.demos.single {
                     grid-column: auto;
                 }
             }
+        }
+        // The title wraps as a block; the arrow sits beside it instead of
+        // trailing the last line of a right-aligned title.
+        .page-nav-text {
+            display: block;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        .page-nav-arrow {
+            flex: 0 0 auto;
+            font-size: 18px;
+            line-height: 1;
+            color: $gray-400;
+            transition: color 0.12s ease, transform 0.12s ease;
+        }
+        .page-nav-prev:hover .page-nav-arrow {
+            transform: translateX(-2px);
+        }
+        .page-nav-next:hover .page-nav-arrow {
+            transform: translateX(2px);
         }
         .page-nav-dir {
             display: block;
