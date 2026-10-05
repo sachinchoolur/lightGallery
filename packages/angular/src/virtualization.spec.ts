@@ -111,6 +111,46 @@ describe('virtualization', () => {
         fixture.destroy();
     });
 
+    it('shows the loader again for a slide that left the pool', async () => {
+        const fixture = TestBed.createComponent(VirtualizationHost);
+        fixture.componentInstance.items.set(ITEMS.slice(0, 40));
+        fixture.componentInstance.virtualization.set({ slides: 3 });
+        await openGallery(fixture);
+        const item = (index: number) =>
+            document
+                .querySelector(`img.lg-image[data-index="${index}"]`)
+                ?.closest('.lg-item') ?? null;
+        const load = (index: number) =>
+            document
+                .querySelector(`img.lg-image[data-index="${index}"]`)!
+                .dispatchEvent(new Event('load'));
+        const jump = async (index: number) => {
+            fixture.componentInstance.gallery().goToSlide(index);
+            await flush(fixture);
+            vi.advanceTimersByTime(600);
+            await flush(fixture);
+        };
+        load(0);
+        await flush(fixture);
+        expect(item(0)!.classList.contains('lg-complete')).toBe(true);
+
+        // Two jumps on (the pool keeps the previous index), slide 0 has
+        // left the pool and unmounted.
+        await jump(4);
+        await jump(8);
+        expect(item(0)).toBeNull();
+
+        // Back on it, the image downloads again: the loader must show
+        // until it does, not a stale lg-complete.
+        await jump(0);
+        expect(item(0)).not.toBeNull();
+        expect(item(0)!.classList.contains('lg-complete')).toBe(false);
+        load(0);
+        await flush(fixture);
+        expect(item(0)!.classList.contains('lg-complete')).toBe(true);
+        fixture.destroy();
+    });
+
     it('advances the thumb window when opening mid-gallery', async () => {
         const fixture = TestBed.createComponent(VirtualizationHost);
         fixture.componentInstance.virtualization.set({

@@ -111,6 +111,48 @@ describe('autoplay plugin', () => {
             'lg-show-autoplay',
         );
     });
+
+    it('holds the countdown until the slide on screen has loaded', () => {
+        renderGallery({ plugins: [Autoplay] });
+        loadCurrent();
+        fireEvent.click(screen.getByLabelText('Toggle Autoplay'));
+        tick(5500);
+        expect(counterText()).toBe('2');
+
+        // Slide b is still downloading: the show holds and the progress
+        // bar sits at zero, however long that takes.
+        tick(25);
+        expect(document.querySelector('.lg-progress-bar')).not.toHaveClass(
+            'lg-start',
+        );
+        tick(20000);
+        expect(counterText()).toBe('2');
+
+        // Once it lands the full interval counts from there.
+        loadCurrent('b');
+        tick(25);
+        expect(document.querySelector('.lg-progress-bar')).toHaveClass(
+            'lg-start',
+        );
+        tick(5200);
+        expect(counterText()).toBe('2');
+        tick(300);
+        expect(counterText()).toBe('3');
+    });
+
+    it('moves on from a slide that failed to load', () => {
+        renderGallery({ plugins: [Autoplay] });
+        loadCurrent();
+        fireEvent.click(screen.getByLabelText('Toggle Autoplay'));
+        tick(5500);
+        expect(counterText()).toBe('2');
+        fireEvent.error(document.querySelector('img.lg-image[alt="b"]')!);
+        // Let the transition settle (its state must render before the
+        // next navigation inside a later act), then the countdown runs.
+        tick(600);
+        tick(5000);
+        expect(counterText()).toBe('3');
+    });
 });
 
 describe('fullscreen plugin', () => {

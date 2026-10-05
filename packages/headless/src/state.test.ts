@@ -122,11 +122,25 @@ describe('galleryReducer', () => {
         expect(reopened.loadedSlides.size).toBe(0);
     });
 
-    it('marks the gallery on after a slide error without recording a load', () => {
+    it('settles an errored slide like a loaded one', () => {
         let s = galleryReducer(state(), { type: 'OPEN' });
         s = galleryReducer(s, { type: 'SLIDE_ERROR', index: 0 });
         expect(s.galleryOn).toBe(true);
-        expect(s.loadedSlides.size).toBe(0);
+        expect([...s.loadedSlides]).toEqual([0]);
+    });
+
+    it('drops the loaded flag when a slide leaves the pool', () => {
+        let s = galleryReducer(state(), { type: 'OPEN' });
+        s = galleryReducer(s, { type: 'SLIDE_LOADED', index: 0 });
+        s = galleryReducer(s, { type: 'SLIDE_LOADED', index: 3 });
+        const untouched = galleryReducer(s, {
+            type: 'SLIDE_UNLOADED',
+            index: 2,
+        });
+        expect(untouched).toBe(s);
+        s = galleryReducer(s, { type: 'SLIDE_UNLOADED', index: 3 });
+        expect([...s.loadedSlides]).toEqual([0]);
+        expect(s.galleryOn).toBe(true);
     });
 
     it('prunes loaded slides beyond a shrunk slide count', () => {

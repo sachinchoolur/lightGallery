@@ -298,14 +298,9 @@ function onLoad(event?: Event): void {
     const isFirstSlide = !store.galleryOn.value;
     const complete = (): void => {
         store.dispatch({ type: 'SLIDE_LOADED', index: props.index });
-        const settings = runtime.settings.value;
         runtime.emit('slideItemLoad', {
             index: props.index,
-            delay: isFirstSlide
-                ? (settings.zoomFromOrigin
-                      ? settings.startAnimationDuration
-                      : settings.backdropDuration) + 10
-                : 0,
+            delay: loadDelay(isFirstSlide),
             isFirstSlide,
         });
     };
@@ -329,9 +324,30 @@ function onLoad(event?: Event): void {
     complete();
 }
 
+function loadDelay(isFirstSlide: boolean): number {
+    const settings = runtime.settings.value;
+    return isFirstSlide
+        ? (settings.zoomFromOrigin
+              ? settings.startAnimationDuration
+              : settings.backdropDuration) + 10
+        : 0;
+}
+
 function onError(): void {
+    if (store.loadedSlides.value.has(props.index)) {
+        return;
+    }
     error.value = true;
+    const isFirstSlide = !store.galleryOn.value;
     store.dispatch({ type: 'SLIDE_ERROR', index: props.index });
+    // A failed load settles the slide too (2.x fires slideItemLoad on
+    // error): the error message is on screen, neighbours may preload and
+    // the slideshow moves on instead of waiting forever.
+    runtime.emit('slideItemLoad', {
+        index: props.index,
+        delay: loadDelay(isFirstSlide),
+        isFirstSlide,
+    });
 }
 
 const classes = computed(() => ({

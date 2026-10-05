@@ -102,6 +102,45 @@ describe('virtualization', () => {
         ).toBeLessThanOrEqual(11);
     });
 
+    it('shows the loader again for a slide that left the pool', async () => {
+        const wrapper = await mountGallery(ITEMS.slice(0, 40), { slides: 3 });
+        const vm = wrapper.findComponent(LightGallery).vm as unknown as {
+            goToSlide(i: number): void;
+        };
+        const item = (index: number) =>
+            document
+                .querySelector(`img.lg-image[data-index="${index}"]`)
+                ?.closest('.lg-item') ?? null;
+        const load = (index: number) =>
+            document
+                .querySelector(`img.lg-image[data-index="${index}"]`)!
+                .dispatchEvent(new Event('load'));
+        const jump = async (index: number) => {
+            vm.goToSlide(index);
+            await settle();
+            vi.advanceTimersByTime(600);
+            await settle();
+        };
+        load(0);
+        await settle();
+        expect(item(0)!.classList.contains('lg-complete')).toBe(true);
+
+        // Two jumps on (the pool keeps the previous index), slide 0 has
+        // left the pool and unmounted.
+        await jump(4);
+        await jump(8);
+        expect(item(0)).toBeNull();
+
+        // Back on it, the image downloads again: the loader must show
+        // until it does, not a stale lg-complete.
+        await jump(0);
+        expect(item(0)).not.toBeNull();
+        expect(item(0)!.classList.contains('lg-complete')).toBe(false);
+        load(0);
+        await settle();
+        expect(item(0)!.classList.contains('lg-complete')).toBe(true);
+    });
+
     it('advances the thumb window when opening mid-gallery', async () => {
         await mountGallery(ITEMS, { slides: 7, thumbs: 2 }, 500);
         const ids = [

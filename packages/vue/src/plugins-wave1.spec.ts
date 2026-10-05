@@ -653,6 +653,48 @@ describe('plugin runtime + wave-1', () => {
         expect(panX()).toBeCloseTo(-600, 0);
     });
 
+    it('video: a poster that fails to load still settles the slide', async () => {
+        const PosterHost = defineComponent({
+            components: { LightGallery },
+            setup: () => ({
+                items: [
+                    {
+                        src: 'https://vimeo.com/112836958',
+                        alt: 'vimeo',
+                        poster: 'poster.jpg',
+                    },
+                ],
+                plugins: [Video],
+            }),
+            template: `
+                <LightGallery
+                    :slides="items"
+                    :zoom-from-origin="false"
+                    :plugins="plugins"
+                    :video="{ autoplayFirstVideo: false }"
+                />
+            `,
+        });
+        const wrapper = mount(PosterHost, { attachTo: document.body });
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                openGallery(i?: number): void;
+            }
+        ).openGallery(0);
+        await settle();
+        await advance(450);
+
+        const current = query('.lg-item.lg-current')!;
+        expect(current.classList.contains('lg-complete')).toBe(false);
+        current
+            .querySelector('img.lg-video-poster')!
+            .dispatchEvent(new Event('error'));
+        await settle();
+        expect(current.classList.contains('lg-complete')).toBe(true);
+        // The slide stays playable.
+        expect(current.querySelector('.lg-video-poster-wrap')).not.toBeNull();
+    });
+
     it('video: facades a posterless provider slide via the thumb fallback', async () => {
         const FacadeHost = defineComponent({
             components: { LightGallery },

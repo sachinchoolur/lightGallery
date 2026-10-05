@@ -1,5 +1,5 @@
 import { autoplayDefaultIcons } from '@lightgallery/headless';
-import { lGEvents } from '../../lg-events';
+import { lGEvents, SlideItemLoadDetail } from '../../lg-events';
 import { LightGallery } from '../../lightgallery';
 import { AutoplaySettings, autoplaySettings } from './lg-autoplay-settings';
 
@@ -10,10 +10,16 @@ import { AutoplaySettings, autoplaySettings } from './lg-autoplay-settings';
 export default class Autoplay {
     core: LightGallery;
     settings: AutoplaySettings;
-    interval!: any;
+    /** True while the slideshow runs (counting down, or waiting for the slide on screen to load). */
+    running = false;
     fromAuto!: boolean;
     pausedOnTouchDrag!: boolean;
     pausedOnSlideChange!: boolean;
+    private timer: ReturnType<typeof setTimeout> | null = null;
+    private progressTimer: ReturnType<typeof setTimeout> | null = null;
+    /** Index the countdown waits on; the slide has not loaded yet. */
+    private waitingFor: number | null = null;
+    private startedFromLoad = false;
 
     constructor(instance: LightGallery) {
         this.core = instance;
@@ -29,8 +35,6 @@ export default class Autoplay {
         if (!this.settings.autoplay) {
             return;
         }
-
-        this.interval = false;
 
         // Identify if slide happened from autoplay
         this.fromAuto = true;
@@ -52,18 +56,29 @@ export default class Autoplay {
             );
         }
 
-        // Start autoplay
-        if (this.settings.slideShowAutoplay) {
-            this.core.LGel.once(`${lGEvents.slideItemLoad}.autoplay`, () => {
-                this.startAutoPlay();
-            });
-        }
+        // Start autoplay once the first slide has loaded, and resume a
+        // countdown that waits for the slide on screen to load. A slide
+        // that failed to load settles the same way (vanilla fires
+        // slideItemLoad on error), so a broken image never stalls the show.
+        this.core.LGel.on(
+            `${lGEvents.slideItemLoad}.autoplay`,
+            (event: CustomEvent<SlideItemLoadDetail>) => {
+                if (this.settings.slideShowAutoplay && !this.startedFromLoad) {
+                    this.startedFromLoad = true;
+                    this.startAutoPlay();
+                    return;
+                }
+                if (this.running && this.waitingFor === event.detail.index) {
+                    this.countdown();
+                }
+            },
+        );
 
         // cancel interval on touchstart and dragstart
         this.core.LGel.on(
             `${lGEvents.dragStart}.autoplay touchstart.lg.autoplay`,
             () => {
-                if (this.interval) {
+                if (this.running) {
                     this.stopAutoPlay();
                     this.pausedOnTouchDrag = true;
                 }
@@ -74,7 +89,7 @@ export default class Autoplay {
         this.core.LGel.on(
             `${lGEvents.dragEnd}.autoplay touchend.lg.autoplay`,
             () => {
-                if (!this.interval && this.pausedOnTouchDrag) {
+                if (!this.running && this.pausedOnTouchDrag) {
                     this.startAutoPlay();
                     this.pausedOnTouchDrag = false;
                 }
@@ -82,8 +97,7 @@ export default class Autoplay {
         );
 
         this.core.LGel.on(`${lGEvents.beforeSlide}.autoplay`, () => {
-            this.showProgressBar();
-            if (!this.fromAuto && this.interval) {
+            if (!this.fromAuto && this.running) {
                 this.stopAutoPlay();
                 this.pausedOnSlideChange = true;
             } else {
@@ -96,37 +110,51 @@ export default class Autoplay {
         this.core.LGel.on(`${lGEvents.afterSlide}.autoplay`, () => {
             if (
                 this.pausedOnSlideChange &&
-                !this.interval &&
+                !this.running &&
                 this.settings.forceSlideShowAutoplay
             ) {
                 this.startAutoPlay();
                 this.pausedOnSlideChange = false;
             }
         });
-
-        // set progress
-        this.showProgressBar();
     }
 
+    private cycleDuration(): number {
+        return this.core.settings.speed + this.settings.slideShowInterval;
+    }
+
+    /**
+     * Restart the progress bar from zero. Two-phase: the bar must paint at
+     * width 0 before `lg-start` lands, or a bar that was already full
+     * renders full again instead of animating.
+     */
     private showProgressBar() {
-        if (this.settings.progressBar && this.fromAuto) {
-            const _$progressBar = this.core.outer.find('.lg-progress-bar');
-            const _$progress = this.core.outer.find('.lg-progress');
-            if (this.interval) {
-                _$progress.removeAttr('style');
-                _$progressBar.removeClass('lg-start');
-                setTimeout(() => {
-                    _$progress.css(
-                        'transition',
-                        'width ' +
-                            (this.core.settings.speed +
-                                this.settings.slideShowInterval) +
-                            'ms ease 0s',
-                    );
-                    _$progressBar.addClass('lg-start');
-                }, 20);
-            }
+        if (!this.settings.progressBar) {
+            return;
         }
+        this.resetProgressBar();
+        this.progressTimer = setTimeout(() => {
+            this.progressTimer = null;
+            if (!this.running || this.timer === null) {
+                return;
+            }
+            this.core.outer
+                .find('.lg-progress')
+                .css(
+                    'transition',
+                    'width ' + this.cycleDuration() + 'ms ease 0s',
+                );
+            this.core.outer.find('.lg-progress-bar').addClass('lg-start');
+        }, 20);
+    }
+
+    private resetProgressBar() {
+        if (this.progressTimer !== null) {
+            clearTimeout(this.progressTimer);
+            this.progressTimer = null;
+        }
+        this.core.outer.find('.lg-progress').removeAttr('style');
+        this.core.outer.find('.lg-progress-bar').removeClass('lg-start');
     }
 
     // Manage autoplay via play/stop buttons
@@ -148,64 +176,106 @@ export default class Autoplay {
                 if (this.core.outer.hasClass('lg-show-autoplay')) {
                     this.stopAutoPlay();
                 } else {
-                    if (!this.interval) {
+                    if (!this.running) {
                         this.startAutoPlay();
                     }
                 }
             });
     }
 
-    // Autostart gallery
-    public startAutoPlay(): void {
-        this.core.outer
-            .find('.lg-progress')
-            .css(
-                'transition',
-                'width ' +
-                    (this.core.settings.speed +
-                        this.settings.slideShowInterval) +
-                    'ms ease 0s',
-            );
-        this.core.outer.addClass('lg-show-autoplay');
-        this.core.outer.find('.lg-progress-bar').addClass('lg-start');
-        this.core.LGel.trigger(lGEvents.autoplayStart, {
+    private isSlideLoaded(index: number): boolean {
+        return this.core.getSlideItem(index).hasClass('lg-complete_');
+    }
+
+    private clearTimer() {
+        if (this.timer !== null) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
+        this.waitingFor = null;
+    }
+
+    /**
+     * Arm the countdown for the slide at `index`. A slide that is still
+     * loading holds the countdown (and the progress bar at zero) until its
+     * slideItemLoad arrives, so a slow connection never skips past images
+     * the viewer has not seen.
+     */
+    private schedule(index: number) {
+        this.clearTimer();
+        if (this.isSlideLoaded(index)) {
+            this.countdown();
+            return;
+        }
+        this.waitingFor = index;
+        this.resetProgressBar();
+    }
+
+    private countdown() {
+        this.clearTimer();
+        this.timer = setTimeout(() => {
+            this.timer = null;
+            this.advance();
+        }, this.cycleDuration());
+        this.showProgressBar();
+    }
+
+    private advance() {
+        // Mid-transition (a tiny interval, or a long slideDelay) the core
+        // ignores slide(); mutating index now would desync the counter
+        // from the slide on screen. Try again after another cycle.
+        if (this.core.lgBusy) {
+            this.countdown();
+            return;
+        }
+        if (this.core.index + 1 < this.core.galleryItems.length) {
+            this.core.index++;
+        } else {
+            this.core.index = 0;
+        }
+
+        this.core.LGel.trigger(lGEvents.autoplay, {
             index: this.core.index,
         });
 
-        this.interval = setInterval(() => {
-            if (this.core.index + 1 < this.core.galleryItems.length) {
-                this.core.index++;
-            } else {
-                this.core.index = 0;
-            }
+        this.fromAuto = true;
+        this.core.slide(this.core.index, false, false, 'next');
+        if (this.running) {
+            this.schedule(this.core.index);
+        }
+    }
 
-            this.core.LGel.trigger(lGEvents.autoplay, {
-                index: this.core.index,
-            });
-
-            this.fromAuto = true;
-            this.core.slide(this.core.index, false, false, 'next');
-        }, this.core.settings.speed + this.settings.slideShowInterval);
+    // Autostart gallery
+    public startAutoPlay(): void {
+        if (this.running) {
+            return;
+        }
+        this.running = true;
+        this.core.outer.addClass('lg-show-autoplay');
+        this.core.LGel.trigger(lGEvents.autoplayStart, {
+            index: this.core.index,
+        });
+        this.schedule(this.core.index);
     }
 
     // cancel Autostart
     public stopAutoPlay(): void {
-        if (this.interval) {
+        if (this.running) {
             this.core.LGel.trigger(lGEvents.autoplayStop, {
                 index: this.core.index,
             });
-            this.core.outer.find('.lg-progress').removeAttr('style');
             this.core.outer.removeClass('lg-show-autoplay');
-            this.core.outer.find('.lg-progress-bar').removeClass('lg-start');
         }
-        clearInterval(this.interval);
-        this.interval = false;
+        this.running = false;
+        this.clearTimer();
+        this.resetProgressBar();
     }
 
     public closeGallery(): void {
         this.stopAutoPlay();
     }
     public destroy(): void {
+        this.stopAutoPlay();
         if (this.settings.autoplay) {
             this.core.outer.find('.lg-progress-bar').remove();
         }

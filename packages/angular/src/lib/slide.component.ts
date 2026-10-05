@@ -346,14 +346,9 @@ export class LgSlideComponent {
         const isFirstSlide = !this.store.galleryOn();
         const complete = (): void => {
             this.store.dispatch({ type: 'SLIDE_LOADED', index });
-            const settings = this.runtime.settings();
             this.runtime.emit('slideItemLoad', {
                 index,
-                delay: isFirstSlide
-                    ? (settings.zoomFromOrigin
-                          ? settings.startAnimationDuration
-                          : settings.backdropDuration) + 10
-                    : 0,
+                delay: this.loadDelay(isFirstSlide),
                 isFirstSlide,
             });
         };
@@ -377,9 +372,31 @@ export class LgSlideComponent {
         complete();
     }
 
+    private loadDelay(isFirstSlide: boolean): number {
+        const settings = this.runtime.settings();
+        return isFirstSlide
+            ? (settings.zoomFromOrigin
+                  ? settings.startAnimationDuration
+                  : settings.backdropDuration) + 10
+            : 0;
+    }
+
     protected onError(): void {
+        const index = this.index();
+        if (this.store.loadedSlides().has(index)) {
+            return;
+        }
         this.error.set(true);
-        this.store.dispatch({ type: 'SLIDE_ERROR', index: this.index() });
+        const isFirstSlide = !this.store.galleryOn();
+        this.store.dispatch({ type: 'SLIDE_ERROR', index });
+        // A failed load settles the slide too (2.x fires slideItemLoad on
+        // error): the error message is on screen, neighbours may preload
+        // and the slideshow moves on instead of waiting forever.
+        this.runtime.emit('slideItemLoad', {
+            index,
+            delay: this.loadDelay(isFirstSlide),
+            isFirstSlide,
+        });
     }
 
     protected readonly hostClasses = computed(() =>

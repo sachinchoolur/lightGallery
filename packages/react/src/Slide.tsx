@@ -112,11 +112,7 @@ export function Slide({
                 actions.dispatch({ type: 'SLIDE_LOADED', index });
                 internal.emit('onSlideItemLoad', {
                     index,
-                    delay: isFirstSlide
-                        ? (settings.zoomFromOrigin
-                              ? settings.startAnimationDuration
-                              : settings.backdropDuration) + 10
-                        : 0,
+                    delay: loadDelay(isFirstSlide),
                     isFirstSlide,
                 });
             };
@@ -169,9 +165,42 @@ export function Slide({
     }, []);
     const loadSettleRef = useRef<number | undefined>(undefined);
     useEffect(() => () => window.clearTimeout(loadSettleRef.current), []);
+    const loadDelay = (isFirstSlide: boolean): number =>
+        isFirstSlide
+            ? (settings.zoomFromOrigin
+                  ? settings.startAnimationDuration
+                  : settings.backdropDuration) + 10
+            : 0;
     const handleError = useEventCallback(() => {
-        setError(true);
-        actions.dispatch({ type: 'SLIDE_ERROR', index });
+        if (state.loadedSlides.has(index)) {
+            return;
+        }
+        const isFirstSlide = !state.galleryOn;
+        // A failed load settles the slide too (2.x fires slideItemLoad on
+        // error): the error message is on screen, neighbours may preload
+        // and the slideshow moves on instead of waiting forever.
+        const complete = () => {
+            if (unmountedRef.current) {
+                return;
+            }
+            setError(true);
+            actions.dispatch({ type: 'SLIDE_ERROR', index });
+            internal.emit('onSlideItemLoad', {
+                index,
+                delay: loadDelay(isFirstSlide),
+                isFirstSlide,
+            });
+        };
+        // Same hold as a load: swapping the flying element's content
+        // mid-flight restarts the transition in Safari.
+        if (isFirstSlide && internal.zoomOriginOpenRef.current) {
+            loadSettleRef.current = window.setTimeout(
+                complete,
+                settings.startAnimationDuration + 120,
+            );
+            return;
+        }
+        complete();
     });
 
     let style: CSSProperties | undefined;

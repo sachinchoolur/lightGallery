@@ -1,7 +1,8 @@
-import { useMemo, type ReactElement } from 'react';
+import { useEffect, useMemo, useRef, type ReactElement } from 'react';
 import { getSlidePoolIndexes } from '@lightgallery/headless';
 
 import {
+    useGalleryActions,
     useGalleryInternal,
     useGallerySettings,
     useGalleryState,
@@ -36,6 +37,7 @@ export function Slides({
     const state = useGalleryState();
     const settings = useGallerySettings();
     const internal = useGalleryInternal();
+    const actions = useGalleryActions();
 
     // Pool size: virtualization.slides overrides the classic
     // numberOfSlideItemsInDom. The current slide is always in the window,
@@ -60,6 +62,20 @@ export function Slides({
             state.loop,
         ],
     );
+
+    // A slide that leaves the pool unmounts its media. Its loaded flag
+    // must go with it: a remount would otherwise land as `lg-complete`
+    // (no loader) while the image downloads again.
+    const mountedRef = useRef<number[]>([]);
+    useEffect(() => {
+        const previous = mountedRef.current;
+        mountedRef.current = indexes;
+        previous.forEach((index) => {
+            if (indexes.indexOf(index) === -1) {
+                actions.dispatch({ type: 'SLIDE_UNLOADED', index });
+            }
+        });
+    }, [indexes, actions]);
 
     return (
         <div

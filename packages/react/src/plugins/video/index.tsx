@@ -278,6 +278,32 @@ export function VideoSlide({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const settlePoster = () => {
+        if (state.loadedSlides.has(index)) {
+            return;
+        }
+        const isFirstSlide = !state.galleryOn;
+        const complete = () => {
+            actions.dispatch({ type: 'SLIDE_LOADED', index });
+            internal.emit('onSlideItemLoad', {
+                index,
+                delay: 0,
+                isFirstSlide,
+            });
+        };
+        // While the zoom-from-origin flight animates this slide, hold the
+        // completion — the state flip mid-transition restarts the flight
+        // in Safari (the image path holds the same way).
+        if (isFirstSlide && internal.zoomOriginOpenRef.current) {
+            loadSettleRef.current = window.setTimeout(
+                complete,
+                coreSettings.startAnimationDuration + 120,
+            );
+            return;
+        }
+        complete();
+    };
+
     // Autoplay + pause-on-leave via the event bus (2.x event wiring).
     useEffect(() => {
         const offLoad = internal.events.on('slideItemLoad', (detail) => {
@@ -469,38 +495,11 @@ export function VideoSlide({
                         src={poster}
                         alt={item.alt ?? ''}
                         draggable={false}
-                        onLoad={() => {
-                            if (state.loadedSlides.has(index)) {
-                                return;
-                            }
-                            const isFirstSlide = !state.galleryOn;
-                            const complete = () => {
-                                actions.dispatch({
-                                    type: 'SLIDE_LOADED',
-                                    index,
-                                });
-                                internal.emit('onSlideItemLoad', {
-                                    index,
-                                    delay: 0,
-                                    isFirstSlide,
-                                });
-                            };
-                            // While the zoom-from-origin flight animates
-                            // this slide, hold the completion — the state
-                            // flip mid-transition restarts the flight in
-                            // Safari (the image path holds the same way).
-                            if (
-                                isFirstSlide &&
-                                internal.zoomOriginOpenRef.current
-                            ) {
-                                loadSettleRef.current = window.setTimeout(
-                                    complete,
-                                    coreSettings.startAnimationDuration + 120,
-                                );
-                                return;
-                            }
-                            complete();
-                        }}
+                        onLoad={settlePoster}
+                        // A poster that fails still leaves a playable
+                        // slide: settle it so the slideshow (and the
+                        // neighbour preload) do not wait on it forever.
+                        onError={settlePoster}
                     />
                 </button>
             )}

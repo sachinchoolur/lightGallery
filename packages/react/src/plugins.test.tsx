@@ -357,6 +357,25 @@ describe('video plugin', () => {
         expect(frame!.src).toContain('player.vimeo.com/video/112836958');
     });
 
+    it('settles the slide when the poster fails to load', () => {
+        const onSlideItemLoad = vi.fn();
+        renderGallery({
+            slides: videoSlides,
+            plugins: [Video],
+            index: 2,
+            onSlideItemLoad,
+        });
+        fireEvent.error(document.querySelector('img.lg-video-poster')!);
+        expect(document.querySelector('.lg-item.lg-current')).toHaveClass(
+            'lg-complete',
+        );
+        expect(onSlideItemLoad).toHaveBeenCalledWith(
+            expect.objectContaining({ index: 2 }),
+        );
+        // The slide stays playable.
+        expect(document.querySelector('.lg-video-poster-wrap')).not.toBeNull();
+    });
+
     it('facades a posterless provider slide via the thumb fallback', () => {
         renderGallery({
             slides: [

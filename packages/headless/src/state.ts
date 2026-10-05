@@ -27,7 +27,12 @@ export interface GalleryState {
     transitioning: boolean;
     /** Direction of the last navigation; drives prev/next slide classes. */
     slideDirection?: SlideDirection;
-    /** Indexes whose media has fully loaded (`lg-complete`). */
+    /**
+     * Indexes whose slide has settled (`lg-complete`): the media loaded, or
+     * failed and shows the error message. An index drops out again when its
+     * slide leaves the mounted pool, so a remount shows the loader until the
+     * media is back.
+     */
     loadedSlides: ReadonlySet<number>;
 }
 
@@ -41,6 +46,8 @@ export type GalleryAction =
     | { type: 'SET_LOOP'; loop: boolean }
     | { type: 'SLIDE_LOADED'; index: number }
     | { type: 'SLIDE_ERROR'; index: number }
+    /** The slide left the mounted pool; its media must load again. */
+    | { type: 'SLIDE_UNLOADED'; index: number }
     | { type: 'TRANSITION_END' };
 
 export interface CreateGalleryStateOptions {
@@ -185,13 +192,26 @@ export function galleryReducer(
             loadedSlides.add(action.index);
             return { ...state, loadedSlides, galleryOn: true };
         }
-        case 'SLIDE_ERROR':
-            // The slide shows an error message instead of media; the gallery
-            // still counts as running so navigation animates normally.
-            if (state.galleryOn) {
+        case 'SLIDE_ERROR': {
+            // The slide shows an error message instead of media. It still
+            // settles like a load (`lg-complete`, neighbours preload, the
+            // slideshow moves on) and the gallery counts as running so
+            // navigation animates normally.
+            if (state.loadedSlides.has(action.index)) {
+                return state.galleryOn ? state : { ...state, galleryOn: true };
+            }
+            const loadedSlides = new Set(state.loadedSlides);
+            loadedSlides.add(action.index);
+            return { ...state, loadedSlides, galleryOn: true };
+        }
+        case 'SLIDE_UNLOADED': {
+            if (!state.loadedSlides.has(action.index)) {
                 return state;
             }
-            return { ...state, galleryOn: true };
+            const loadedSlides = new Set(state.loadedSlides);
+            loadedSlides.delete(action.index);
+            return { ...state, loadedSlides };
+        }
         case 'TRANSITION_END':
             if (!state.transitioning) {
                 return state;

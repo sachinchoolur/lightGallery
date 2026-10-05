@@ -142,6 +142,58 @@ describe('wave-2 features', () => {
         );
     });
 
+    it('autoplay: holds the countdown until the slide on screen has loaded', async () => {
+        const fixture = TestBed.createComponent(Wave2Host);
+        const host = fixture.componentInstance;
+        host.features.set([withAutoplay({ slideShowInterval: 100 })]);
+        await flush(fixture);
+        await openAndLoad(fixture);
+        (query('.lg-autoplay-button') as HTMLButtonElement).click();
+        await flush(fixture);
+        await advance(fixture, 500);
+        expect(host.log).toContain('autoplay:1');
+
+        // Slide 1 is still downloading: the show holds and the progress
+        // bar sits at zero, however long that takes.
+        await advance(fixture, 5000);
+        expect(host.log).not.toContain('autoplay:2');
+        expect(query('.lg-progress-bar')!.classList.contains('lg-start')).toBe(
+            false,
+        );
+
+        // Once it lands the full interval counts from there.
+        document
+            .querySelector<HTMLImageElement>('img.lg-image[data-index="1"]')!
+            .dispatchEvent(new Event('load'));
+        await flush(fixture);
+        await advance(fixture, 25);
+        expect(query('.lg-progress-bar')!.classList.contains('lg-start')).toBe(
+            true,
+        );
+        await advance(fixture, 400);
+        expect(host.log).not.toContain('autoplay:2');
+        await advance(fixture, 100);
+        expect(host.log).toContain('autoplay:2');
+    });
+
+    it('autoplay: moves on from a slide that failed to load', async () => {
+        const fixture = TestBed.createComponent(Wave2Host);
+        const host = fixture.componentInstance;
+        host.features.set([withAutoplay({ slideShowInterval: 100 })]);
+        await flush(fixture);
+        await openAndLoad(fixture);
+        (query('.lg-autoplay-button') as HTMLButtonElement).click();
+        await flush(fixture);
+        await advance(fixture, 500);
+        expect(host.log).toContain('autoplay:1');
+        document
+            .querySelector<HTMLImageElement>('img.lg-image[data-index="1"]')!
+            .dispatchEvent(new Event('error'));
+        await flush(fixture);
+        await advance(fixture, 500);
+        expect(host.log).toContain('autoplay:2');
+    });
+
     it('fullscreen: feature-detects, toggles via the browser API', async () => {
         const fixture = TestBed.createComponent(Wave2Host);
         const host = fixture.componentInstance;

@@ -517,6 +517,10 @@ export const VideoSlide = defineComponent({
                                       alt: props.item.alt ?? '',
                                       draggable: false,
                                       onLoad: markLoaded,
+                                      // A poster that fails still leaves
+                                      // a playable slide: settle it so the
+                                      // slideshow does not wait forever.
+                                      onError: markLoaded,
                                   }),
                               ],
                           )

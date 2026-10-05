@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LightGallery, type GalleryItem } from './index';
@@ -87,6 +87,48 @@ describe('virtualization', () => {
         expect(
             document.querySelectorAll('.lg-item').length,
         ).toBeLessThanOrEqual(11);
+    });
+
+    it('shows the loader again for a slide that left the pool', () => {
+        render(
+            <LightGallery
+                slides={slides.slice(0, 40)}
+                open={true}
+                onClose={() => undefined}
+                virtualization={{ slides: 3 }}
+            />,
+        );
+        tick(450);
+        const item = (index: number) =>
+            document
+                .querySelector(`img.lg-image[data-index="${index}"]`)
+                ?.closest('.lg-item') ?? null;
+        const load = (index: number) =>
+            fireEvent.load(
+                document.querySelector(`img.lg-image[data-index="${index}"]`)!,
+            );
+        const step = (label: string) => {
+            fireEvent.click(screen.getByLabelText(label));
+            tick(600);
+        };
+        load(0);
+        expect(item(0)).toHaveClass('lg-complete');
+
+        // Four slides on, index 0 has left the pool and unmounted.
+        for (let i = 0; i < 4; i++) {
+            step('Next slide');
+        }
+        expect(item(0)).toBeNull();
+
+        // Back on it, the image downloads again: the loader must show
+        // until it does, not a stale lg-complete.
+        for (let i = 0; i < 4; i++) {
+            step('Previous slide');
+        }
+        expect(item(0)).not.toBeNull();
+        expect(item(0)).not.toHaveClass('lg-complete');
+        load(0);
+        expect(item(0)).toHaveClass('lg-complete');
     });
 
     it('advances the thumb window when the slide changes', () => {

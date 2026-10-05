@@ -624,6 +624,27 @@ describe('wave-1 features', () => {
         fixture.destroy();
     });
 
+    it('video: a poster that fails to load still settles the slide', async () => {
+        const fixture = TestBed.createComponent(FacadeVideoHost);
+        const host = fixture.componentInstance;
+        await flush(fixture);
+        host.gallery().openGallery(0);
+        await flush(fixture);
+        vi.advanceTimersByTime(450);
+        await flush(fixture);
+
+        const current = query('.lg-item.lg-current')!;
+        expect(current.classList.contains('lg-complete')).toBe(false);
+        current
+            .querySelector('img.lg-video-poster')!
+            .dispatchEvent(new Event('error'));
+        await flush(fixture);
+        expect(current.classList.contains('lg-complete')).toBe(true);
+        // The slide stays playable.
+        expect(current.querySelector('.lg-video-poster-wrap')).not.toBeNull();
+        fixture.destroy();
+    });
+
     it('video: videoFacade:false keeps the eager iframe for posterless slides', async () => {
         const fixture = TestBed.createComponent(FacadeVideoHost);
         const host = fixture.componentInstance;

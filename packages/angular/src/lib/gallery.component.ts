@@ -1150,6 +1150,25 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         effect(() => {
             this.store.setSlidesCount(this.items().length);
         });
+        // A slide that leaves the pool unmounts its media. Its loaded flag
+        // must go with it: a remount would otherwise land as `lg-complete`
+        // (no loader) while the image downloads again.
+        let mounted: number[] = [];
+        effect(() => {
+            const next = this.slideIndexes();
+            const previous = mounted;
+            mounted = next;
+            untracked(() => {
+                previous.forEach((idx) => {
+                    if (next.indexOf(idx) === -1) {
+                        this.store.dispatch({
+                            type: 'SLIDE_UNLOADED',
+                            index: idx,
+                        });
+                    }
+                });
+            });
+        });
         // React counterpart: the SET_LOOP sync effect in the provider.
         effect(() => {
             this.store.setLoop(this.settings().loop);

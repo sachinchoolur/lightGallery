@@ -89,7 +89,8 @@ export interface BeforeOpenDetail {}
 export interface AfterOpenDetail {}
 
 /**
- * Fired once the media inside the slide has been completely loaded.
+ * Fired once the media inside the slide has been completely loaded, or has
+ * failed to load and the slide shows its error message instead.
  * @name lgSlideItemLoad
  * @method onSlideItemLoad
  */

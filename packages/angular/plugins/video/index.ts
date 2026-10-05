@@ -222,6 +222,7 @@ type VideoResolved = VideoSettings & {
                     [alt]="item().alt ?? ''"
                     draggable="false"
                     (load)="onPosterLoad()"
+                    (error)="onPosterLoad()"
                 />
             </button>
             } @if (dummySrc(); as dummy) {
@@ -566,6 +567,10 @@ export class LgVideoSlideComponent {
         this.activateAndPlay();
     }
 
+    /**
+     * Load and error alike: a poster that fails still leaves a playable
+     * slide, so it settles rather than holding the slideshow forever.
+     */
     protected onPosterLoad(): void {
         this.markLoaded();
     }

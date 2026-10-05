@@ -101,7 +101,16 @@ unchanged; what moved is the packaging and the framework integrations.
 
 ### Fixed
 
-Long-standing bugs, all of them present in 2.x:
+Long-standing bugs, nearly all of them present in 2.x:
+
+- The slideshow ran on a fixed interval, so on a slow connection it
+  advanced past images that had not loaded yet. The countdown (and the
+  progress bar) now starts once the slide on screen has loaded; a slide
+  that fails to load settles the same way, so a broken image does not
+  stall the show.
+- In the React, Vue and Angular packages a slide that left the mounted
+  pool kept its loaded flag, so returning to it in a large gallery showed
+  no loader while the image downloaded again.
 
 - Slide transitions crossfaded for the whole slide instead of the brief
   fade the modes ask for, so the outgoing image ghosted across the

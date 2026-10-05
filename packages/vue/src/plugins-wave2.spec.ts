@@ -159,6 +159,58 @@ describe('wave-2 plugins', () => {
         );
     });
 
+    it('autoplay: holds the countdown until the slide on screen has loaded', async () => {
+        const { wrapper, log } = mountHost([Autoplay]);
+        await openAndLoad(wrapper);
+        (query('.lg-autoplay-button') as HTMLButtonElement).click();
+        await settle();
+        await advance(500);
+        await settle();
+        expect(log).toContain('autoplay:1');
+
+        // Slide 1 is still downloading: the show holds and the progress
+        // bar sits at zero, however long that takes.
+        await advance(5000);
+        await settle();
+        expect(log).not.toContain('autoplay:2');
+        expect(query('.lg-progress-bar')!.classList.contains('lg-start')).toBe(
+            false,
+        );
+
+        // Once it lands the full interval counts from there.
+        document
+            .querySelector<HTMLImageElement>('img.lg-image[data-index="1"]')!
+            .dispatchEvent(new Event('load'));
+        await settle();
+        await advance(25);
+        expect(query('.lg-progress-bar')!.classList.contains('lg-start')).toBe(
+            true,
+        );
+        await advance(400);
+        await settle();
+        expect(log).not.toContain('autoplay:2');
+        await advance(100);
+        await settle();
+        expect(log).toContain('autoplay:2');
+    });
+
+    it('autoplay: moves on from a slide that failed to load', async () => {
+        const { wrapper, log } = mountHost([Autoplay]);
+        await openAndLoad(wrapper);
+        (query('.lg-autoplay-button') as HTMLButtonElement).click();
+        await settle();
+        await advance(500);
+        await settle();
+        expect(log).toContain('autoplay:1');
+        document
+            .querySelector<HTMLImageElement>('img.lg-image[data-index="1"]')!
+            .dispatchEvent(new Event('error'));
+        await settle();
+        await advance(500);
+        await settle();
+        expect(log).toContain('autoplay:2');
+    });
+
     it('fullscreen: no-ops without the API, toggles via it when present', async () => {
         // jsdom reports no Fullscreen API -> no-op (no button).
         const { wrapper: bare } = mountHost([Fullscreen]);

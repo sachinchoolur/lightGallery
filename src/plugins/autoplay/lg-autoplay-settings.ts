@@ -15,6 +15,8 @@ export interface AutoplaySettings {
 
     /**
      * The time (in ms) between each auto transition.
+     * The countdown starts once the slide on screen has loaded, so a slow
+     * connection never advances past an image before it is visible.
      */
     slideShowInterval: number;
 

@@ -545,6 +545,16 @@ const slideIndexes = computed(() =>
         loop: store.loop.value,
     }).sort((a, b) => a - b),
 );
+// A slide that leaves the pool unmounts its media. Its loaded flag must go
+// with it: a remount would otherwise land as `lg-complete` (no loader)
+// while the image downloads again.
+watch(slideIndexes, (next, previous) => {
+    previous.forEach((idx) => {
+        if (next.indexOf(idx) === -1) {
+            store.dispatch({ type: 'SLIDE_UNLOADED', index: idx });
+        }
+    });
+});
 const disablePrev = computed(
     () =>
         !store.loop.value &&

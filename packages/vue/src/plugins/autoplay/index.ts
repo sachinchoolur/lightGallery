@@ -32,7 +32,11 @@ export interface AutoplaySettings {
     autoplay: boolean;
     /** Start the slideshow as soon as the first slide loads. */
     slideShowAutoplay: boolean;
-    /** Time (ms) between transitions (added to `speed`). */
+    /**
+     * Time (ms) between transitions (added to `speed`). The countdown
+     * starts once the slide on screen has loaded, so a slow connection
+     * never advances past an image before it is visible.
+     */
     slideShowInterval: number;
     /** Show the progress bar. */
     progressBar: boolean;
@@ -57,6 +61,15 @@ export const autoplaySettings: AutoplaySettings = {
 };
 
 const TOGGLE_EVENT = 'lg-autoplay-toggle';
+/**
+ * Timer → progress bar: a countdown started (`counting`), or the timer is
+ * holding at zero for the slide on screen to load.
+ */
+const CYCLE_EVENT = 'lg-autoplay-cycle';
+
+interface AutoplayCycleDetail {
+    counting: boolean;
+}
 
 type AutoplayResolved = AutoplaySettings & { speed: number };
 
@@ -96,6 +109,9 @@ export const AutoplayProgress = defineComponent({
     setup() {
         const ctx = inject(LG_PLUGIN_CONTEXT)!;
         const running = ref(false);
+        // False while the timer waits for the slide on screen to load:
+        // the bar sits at zero until the countdown really starts.
+        const counting = ref(false);
         const cycle = ref(0);
         // Two-phase start: the remounted bar must PAINT at width 0 before
         // lg-start lands — a fresh element has no prior style, so flipping
@@ -103,13 +119,13 @@ export const AutoplayProgress = defineComponent({
         // animating (2.x staged this with a 20ms timer).
         const armed = ref(false);
         let armTimer: ReturnType<typeof setTimeout> | null = null;
-        watch([running, cycle], () => {
+        watch([running, counting, cycle], () => {
             armed.value = false;
             if (armTimer !== null) {
                 clearTimeout(armTimer);
                 armTimer = null;
             }
-            if (!running.value) {
+            if (!running.value || !counting.value) {
                 return;
             }
             armTimer = setTimeout(() => {
@@ -118,12 +134,15 @@ export const AutoplayProgress = defineComponent({
             }, 20);
         });
         const offs = [
-            ctx.events.on('autoplayStart', () => {
-                running.value = true;
+            ctx.events.on('autoplayStart', () => (running.value = true)),
+            ctx.events.on('autoplayStop', () => {
+                running.value = false;
+                counting.value = false;
+            }),
+            ctx.events.on(CYCLE_EVENT, (detail) => {
+                counting.value = (detail as AutoplayCycleDetail).counting;
                 cycle.value++;
             }),
-            ctx.events.on('autoplayStop', () => (running.value = false)),
-            ctx.events.on('beforeSlide', () => cycle.value++),
         ];
         onBeforeUnmount(() => {
             offs.forEach((off) => off());
@@ -137,12 +156,13 @@ export const AutoplayProgress = defineComponent({
                 return null;
             }
             const duration = cfg.speed + cfg.slideShowInterval;
+            const active = running.value && counting.value;
             return h(
                 'div',
                 {
                     class: [
                         'lg-progress-bar',
-                        { 'lg-start': running.value && armed.value },
+                        { 'lg-start': active && armed.value },
                     ],
                 },
                 // Recreating the element restarts the width transition
@@ -150,7 +170,7 @@ export const AutoplayProgress = defineComponent({
                 h('div', {
                     key: cycle.value,
                     class: 'lg-progress',
-                    style: running.value
+                    style: active
                         ? { transition: `width ${duration}ms ease 0s` }
                         : undefined,
                 }),
@@ -160,7 +180,10 @@ export const AutoplayProgress = defineComponent({
 });
 
 function setupAutoplay(ctx: LgPluginContext): void {
-    let interval: ReturnType<typeof setInterval> | null = null;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let running = false;
+    /** Index the countdown waits on; its slide has not loaded yet. */
+    let waitingFor: number | null = null;
     let fromAuto = false;
     let pausedOnDrag = false;
     let pausedOnSlideChange = false;
@@ -168,34 +191,72 @@ function setupAutoplay(ctx: LgPluginContext): void {
     const cfg = (): AutoplayResolved =>
         ctx.settings.value as unknown as AutoplayResolved;
 
-    const stop = (): void => {
-        if (interval !== null) {
-            clearInterval(interval);
-            interval = null;
-            ctx.layout.setOuterClass('lg-show-autoplay', false);
-            ctx.emit('autoplayStop', {
-                index: ctx.store.currentIndex.value,
-            });
+    const clearTimer = (): void => {
+        if (timer !== null) {
+            clearTimeout(timer);
+            timer = null;
         }
+        waitingFor = null;
     };
-    const start = (): void => {
-        if (interval !== null) {
+    const countdown = (): void => {
+        clearTimer();
+        timer = setTimeout(() => {
+            timer = null;
+            advance();
+        }, cfg().speed + cfg().slideShowInterval);
+        ctx.events.emit(CYCLE_EVENT, { counting: true });
+    };
+    // Arm the countdown for the slide at `index`. A slide still loading
+    // holds it (and the bar at zero) until its slideItemLoad arrives, so a
+    // slow connection never skips past images the viewer has not seen.
+    const schedule = (index: number): void => {
+        clearTimer();
+        if (ctx.store.state.value.loadedSlides.has(index)) {
+            countdown();
             return;
         }
-        ctx.layout.setOuterClass('lg-show-autoplay', true);
-        ctx.emit('autoplayStart', {
+        waitingFor = index;
+        ctx.events.emit(CYCLE_EVENT, { counting: false });
+    };
+    const advance = (): void => {
+        const state = ctx.store.state.value;
+        // Mid-transition (a tiny interval, or a long slideDelay) the core
+        // ignores navigation; try again after another cycle.
+        if (state.transitioning) {
+            countdown();
+            return;
+        }
+        const next =
+            state.currentIndex + 1 < state.slidesCount
+                ? state.currentIndex + 1
+                : 0;
+        fromAuto = true;
+        ctx.emit('autoplay', { index: next });
+        ctx.actions.navigate(next, 'next');
+        if (running) {
+            schedule(next);
+        }
+    };
+    const stop = (): void => {
+        if (!running) {
+            return;
+        }
+        running = false;
+        clearTimer();
+        ctx.layout.setOuterClass('lg-show-autoplay', false);
+        ctx.emit('autoplayStop', {
             index: ctx.store.currentIndex.value,
         });
-        interval = setInterval(() => {
-            const state = ctx.store.state.value;
-            const next =
-                state.currentIndex + 1 < state.slidesCount
-                    ? state.currentIndex + 1
-                    : 0;
-            fromAuto = true;
-            ctx.emit('autoplay', { index: next });
-            ctx.actions.navigate(next, 'next');
-        }, cfg().speed + cfg().slideShowInterval);
+    };
+    const start = (): void => {
+        if (running) {
+            return;
+        }
+        running = true;
+        ctx.layout.setOuterClass('lg-show-autoplay', true);
+        const index = ctx.store.currentIndex.value;
+        ctx.emit('autoplayStart', { index });
+        schedule(index);
     };
 
     // Narrow boolean sources: a re-run tears the running show down via
@@ -211,7 +272,7 @@ function setupAutoplay(ctx: LgPluginContext): void {
             }
             const offs = [
                 ctx.events.on(TOGGLE_EVENT, () => {
-                    if (interval !== null) {
+                    if (running) {
                         stop();
                     } else {
                         start();
@@ -219,7 +280,7 @@ function setupAutoplay(ctx: LgPluginContext): void {
                 }),
                 // Pause during drags; resume after (2.x behavior).
                 ctx.events.on('dragStart', () => {
-                    if (interval !== null) {
+                    if (running) {
                         stop();
                         pausedOnDrag = true;
                     }
@@ -232,7 +293,7 @@ function setupAutoplay(ctx: LgPluginContext): void {
                 }),
                 // User navigation stops the show unless forced.
                 ctx.events.on('beforeSlide', () => {
-                    if (!fromAuto && interval !== null) {
+                    if (!fromAuto && running) {
                         stop();
                         pausedOnSlideChange = true;
                     } else {
@@ -243,11 +304,18 @@ function setupAutoplay(ctx: LgPluginContext): void {
                 ctx.events.on('afterSlide', () => {
                     if (
                         pausedOnSlideChange &&
-                        interval === null &&
+                        !running &&
                         cfg().forceSlideShowAutoplay
                     ) {
                         pausedOnSlideChange = false;
                         start();
+                    }
+                }),
+                // The awaited slide settled (loaded, or failed and shows
+                // its error message): start its countdown.
+                ctx.events.on('slideItemLoad', (detail) => {
+                    if (running && waitingFor === detail.index) {
+                        countdown();
                     }
                 }),
             ];
