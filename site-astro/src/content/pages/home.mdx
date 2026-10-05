@@ -22,16 +22,16 @@ import CustomerQueue from '../../components/home/CustomerQueue.astro';
 
 {/* Customization demos, in the order their galleries open: the listing's
     whole set (five in the mosaic, the rest behind "+N photos"), the
-    print's four views, the portfolio grid. */}
+    backpack's four views, the portfolio grid. */}
 
-export const customizeHotel = [...photos('morocco').slice(2), ...photos('morocco').slice(0, 2)];
-export const customizeShop = photos('hero').slice(2, 6);
+export const customizeHotel = photos('hotel');
+export const customizeShop = photos('shop');
 export const customizePortfolio = [0, 3, 4, 6, 7, 9, 10].map((i) => photos('street')[i]);
 
 <div class="container-fluid home-hero-gallery">
     <div class="row justify-content-center clip-path-bg">
         <div class="col-lg-10 text-center clip-path-bg-inner">
-            <GalleryDemo size="xl" id="animated-thumbnails-gallery" photos="hero,warm,alley" limit={24} justified phoneLimit={10} />
+            <GalleryDemo size="xl" id="animated-thumbnails-gallery" photos="hero,warm,alley" limit={24} justified phoneLimit={10} rowHeights={{ phone: 100, desktop: 190 }} />
             <p class="open-gallery-text"> Click on any thumbnail to open lightGallery</p>
         </div>
     </div>
@@ -258,14 +258,14 @@ npm install @lightgallery/angular @angular/cdk lightgallery
                             <div class="home-customize-hotel-head">
                                 <div>
                                     <strong>Riad Dar Azul</strong>
-                                    <span>Chefchaouen · ★ 4.9 · Superhost</span>
+                                    <span>Marrakech · ★ 4.9 · Superhost</span>
                                 </div>
                                 <span class="home-customize-hotel-price">$128 <em>/ night</em></span>
                             </div>
                             <div class="home-customize-mosaic">
                                 {customizeHotel.map((p, i) => (
-                                    <a class={i === 4 ? 'gallery-item home-customize-more' : 'gallery-item'} href={p.src} data-src={p.src} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title} hidden={i > 4}>
-                                        <img src={p.thumb} alt={p.alt} loading="lazy" />
+                                    <a class={i === 4 ? 'gallery-item home-customize-more' : 'gallery-item'} href={p.src} data-src={p.src} data-thumb={p.thumbSmall} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title} hidden={i > 4}>
+                                        <img src={p.thumb} srcset={p.thumbSrcset} sizes="auto, 480px" alt={p.alt} loading="lazy" />
                                         {i === 4 && <b>+{customizeHotel.length - 5} photos</b>}
                                     </a>
                                 ))}
@@ -278,20 +278,20 @@ npm install @lightgallery/angular @angular/cdk lightgallery
                         <div class="home-customize-page home-customize-shop">
                             <div class="home-customize-shop-thumbs">
                                 {customizeShop.map((p, i) => (
-                                    <a class="gallery-item" href={p.src} data-src={p.src} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title}>
-                                        <img class={i === 0 ? 'is-current' : undefined} src={p.thumb} alt={p.alt} loading="lazy" />
+                                    <a class="gallery-item" href={p.src} data-src={p.src} data-thumb={p.thumbSmall} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title}>
+                                        <img class={i === 0 ? 'is-current' : undefined} src={p.thumbSmall} alt={p.alt} loading="lazy" />
                                     </a>
                                 ))}
                             </div>
                             <a class="home-customize-shop-main" href={customizeShop[0].src} data-customize-open="0">
-                                <img src={customizeShop[0].thumb} alt={customizeShop[0].alt} loading="lazy" />
+                                <img src={customizeShop[0].thumb} srcset={customizeShop[0].thumbSrcset} sizes="auto, 480px" alt={customizeShop[0].alt} loading="lazy" />
                                 <span class="home-customize-shop-zoom"><FeatureIcon name="zoom" /></span>
                             </a>
                             <div class="home-customize-shop-info">
-                                <span class="home-customize-shop-kicker">Fine art print</span>
-                                <strong>Golden Hour, No. 12</strong>
-                                <span class="home-customize-shop-price">$48.00</span>
-                                <div class="home-customize-shop-sizes"><b class="is-current">A3</b><b>A2</b><b>A1</b></div>
+                                <span class="home-customize-shop-kicker">Full-grain leather</span>
+                                <strong>Day Pack, Tan</strong>
+                                <span class="home-customize-shop-price">$168.00</span>
+                                <div class="home-customize-shop-sizes"><b class="is-current">Tan</b><b>Black</b><b>Oxblood</b></div>
                                 <span class="home-customize-shop-button">Add to cart</span>
                                 <div class="home-customize-lines" aria-hidden="true"><span style="--w: 90%"></span><span style="--w: 70%"></span></div>
                             </div>
@@ -303,8 +303,8 @@ npm install @lightgallery/angular @angular/cdk lightgallery
                             <div class="home-customize-portfolio-nav"><b>STUDIO NORTH</b><span>Work</span><span>About</span><span>Contact</span></div>
                             <div class="home-customize-portfolio-grid">
                                 {customizePortfolio.map((p, i) => (
-                                    <a class={i === 1 || i === 4 ? 'gallery-item is-tall' : 'gallery-item'} href={p.src} data-src={p.src} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title}>
-                                        <img src={p.thumb} alt={p.alt} loading="lazy" />
+                                    <a class={i === 1 || i === 4 ? 'gallery-item is-tall' : 'gallery-item'} href={p.src} data-src={p.src} data-thumb={p.thumbSmall} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title}>
+                                        <img src={p.thumb} srcset={p.thumbSrcset} sizes="auto, 480px" alt={p.alt} loading="lazy" />
                                     </a>
                                 ))}
                             </div>
@@ -373,7 +373,7 @@ lightGallery(el, { plugins: [lgZoom, lgThumbnail] });
                     <span class="home-everyone-phone-button is-volume-down"></span>
                     <span class="home-everyone-phone-button is-side"></span>
                     <div class="home-everyone-screen">
-                        <img class="home-everyone-photo" src={photos('street')[8].thumb} alt="" loading="lazy" />
+                        <img class="home-everyone-photo" src={photos('street')[8].thumb} srcset={photos('street')[8].thumbSrcset} sizes="auto, 480px" alt="" loading="lazy" />
                         <div class="home-everyone-status">
                             <span class="home-everyone-time">9:41</span>
                             <span class="home-everyone-island"></span>
@@ -388,7 +388,7 @@ lightGallery(el, { plugins: [lgZoom, lgThumbnail] });
                             <span class="home-everyone-title">3 of 24</span>
                             <span class="home-everyone-glass"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.8v8.4M5.2 4.4L8 1.6l2.8 2.8" /><path d="M5.6 6.6H4.4a1 1 0 0 0-1 1v5.6a1 1 0 0 0 1 1h7.2a1 1 0 0 0 1-1V7.6a1 1 0 0 0-1-1h-1.2" /></svg></span>
                         </div>
-                        <div class="home-everyone-filmstrip">{photos('street').slice(4, 13).map((p, i) => <img class={i === 4 ? 'is-current' : undefined} src={p.thumb} alt="" loading="lazy" />)}</div>
+                        <div class="home-everyone-filmstrip">{photos('street').slice(4, 13).map((p, i) => <img class={i === 4 ? 'is-current' : undefined} src={p.thumbSmall} alt="" loading="lazy" />)}</div>
                         <span class="home-everyone-home-bar"></span>
                     </div>
                 </div>

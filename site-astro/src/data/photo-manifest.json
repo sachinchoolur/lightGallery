@@ -11,6 +11,11 @@
           "page": "https://unsplash.com/photos/oFNFhxx08_g",
           "sizes": [
             {
+              "width": 240,
+              "height": 361,
+              "src": "/img/photos/hero/01-240.avif"
+            },
+            {
               "width": 480,
               "height": 721,
               "src": "/img/photos/hero/01-480.avif"
@@ -33,6 +38,11 @@
           "photographer": "Jonas",
           "page": "https://unsplash.com/photos/BvMqoxAEvIw",
           "sizes": [
+            {
+              "width": 240,
+              "height": 374,
+              "src": "/img/photos/hero/02-240.avif"
+            },
             {
               "width": 480,
               "height": 749,
@@ -57,6 +67,11 @@
           "page": "https://unsplash.com/photos/xA-SSDUZnhk",
           "sizes": [
             {
+              "width": 240,
+              "height": 427,
+              "src": "/img/photos/hero/03-240.avif"
+            },
+            {
               "width": 480,
               "height": 853,
               "src": "/img/photos/hero/03-480.avif"
@@ -79,6 +94,11 @@
           "photographer": "Llibert Losada",
           "page": "https://unsplash.com/photos/YmStDya1HSU",
           "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/hero/04-240.avif"
+            },
             {
               "width": 480,
               "height": 320,
@@ -103,6 +123,11 @@
           "page": "https://unsplash.com/photos/xUWxij-zHu4",
           "sizes": [
             {
+              "width": 240,
+              "height": 131,
+              "src": "/img/photos/hero/05-240.avif"
+            },
+            {
               "width": 480,
               "height": 263,
               "src": "/img/photos/hero/05-480.avif"
@@ -125,6 +150,11 @@
           "photographer": "Crawford Passy",
           "page": "https://unsplash.com/photos/Nta3rjmyy4Y",
           "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/hero/06-240.avif"
+            },
             {
               "width": 480,
               "height": 320,
@@ -149,6 +179,11 @@
           "page": "https://unsplash.com/photos/An9P-EMm7rU",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/hero/07-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/hero/07-480.avif"
@@ -171,6 +206,11 @@
           "photographer": "Harshit Suryawanshi",
           "page": "https://unsplash.com/photos/4U2kSoQxCv0",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/hero/08-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -200,6 +240,11 @@
           "page": "https://unsplash.com/photos/Wm3DCN_ydR0",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/warm/01-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/warm/01-480.avif"
@@ -222,6 +267,11 @@
           "photographer": "Hossein Nasr",
           "page": "https://unsplash.com/photos/cgLPVVmaMq4",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/warm/02-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -246,6 +296,11 @@
           "page": "https://unsplash.com/photos/GL_e7TForNY",
           "sizes": [
             {
+              "width": 240,
+              "height": 426,
+              "src": "/img/photos/warm/03-240.avif"
+            },
+            {
               "width": 480,
               "height": 853,
               "src": "/img/photos/warm/03-480.avif"
@@ -268,6 +323,11 @@
           "photographer": "Pranit Patel",
           "page": "https://unsplash.com/photos/vK0PSXaUmdU",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/warm/04-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -292,6 +352,11 @@
           "page": "https://unsplash.com/photos/kHhUzZ8tINA",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/warm/05-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/warm/05-480.avif"
@@ -314,6 +379,11 @@
           "photographer": "David Salamanca",
           "page": "https://unsplash.com/photos/ZoYutZrqAlg",
           "sizes": [
+            {
+              "width": 240,
+              "height": 320,
+              "src": "/img/photos/warm/06-240.avif"
+            },
             {
               "width": 480,
               "height": 640,
@@ -343,6 +413,11 @@
           "page": "https://unsplash.com/photos/YtrNtsgUIyo",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/stone/01-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/stone/01-480.avif"
@@ -365,6 +440,11 @@
           "photographer": "Jesse Collins",
           "page": "https://unsplash.com/photos/ICXMkhRdquA",
           "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/stone/02-240.avif"
+            },
             {
               "width": 480,
               "height": 320,
@@ -389,6 +469,11 @@
           "page": "https://unsplash.com/photos/2uj2Pf6sobg",
           "sizes": [
             {
+              "width": 240,
+              "height": 167,
+              "src": "/img/photos/stone/03-240.avif"
+            },
+            {
               "width": 480,
               "height": 333,
               "src": "/img/photos/stone/03-480.avif"
@@ -411,6 +496,11 @@
           "photographer": "Kaffeebart",
           "page": "https://unsplash.com/photos/fLna0uxEIy4",
           "sizes": [
+            {
+              "width": 240,
+              "height": 159,
+              "src": "/img/photos/stone/04-240.avif"
+            },
             {
               "width": 480,
               "height": 318,
@@ -435,6 +525,11 @@
           "page": "https://unsplash.com/photos/GaCNIy8gas8",
           "sizes": [
             {
+              "width": 240,
+              "height": 238,
+              "src": "/img/photos/stone/05-240.avif"
+            },
+            {
               "width": 480,
               "height": 475,
               "src": "/img/photos/stone/05-480.avif"
@@ -457,6 +552,11 @@
           "photographer": "Subhashis Das",
           "page": "https://unsplash.com/photos/lUEH1snvF3Y",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/stone/06-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -481,6 +581,11 @@
           "page": "https://unsplash.com/photos/8sZ_Wt3EIu4",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/stone/07-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/stone/07-480.avif"
@@ -504,6 +609,11 @@
           "page": "https://unsplash.com/photos/ScG-gXAd1X8",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/stone/08-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/stone/08-480.avif"
@@ -526,6 +636,11 @@
           "photographer": "martin lea",
           "page": "https://unsplash.com/photos/YF9pGnc4IUg",
           "sizes": [
+            {
+              "width": 240,
+              "height": 320,
+              "src": "/img/photos/stone/09-240.avif"
+            },
             {
               "width": 480,
               "height": 640,
@@ -555,6 +670,11 @@
           "page": "https://unsplash.com/photos/3lKFHLCKark",
           "sizes": [
             {
+              "width": 240,
+              "height": 336,
+              "src": "/img/photos/facade/01-240.avif"
+            },
+            {
               "width": 480,
               "height": 672,
               "src": "/img/photos/facade/01-480.avif"
@@ -577,6 +697,11 @@
           "photographer": "Carlos Torres",
           "page": "https://unsplash.com/photos/o7xm8E8R4_U",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/facade/02-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -601,6 +726,11 @@
           "page": "https://unsplash.com/photos/B1yRgQ2zAaw",
           "sizes": [
             {
+              "width": 240,
+              "height": 362,
+              "src": "/img/photos/facade/03-240.avif"
+            },
+            {
               "width": 480,
               "height": 724,
               "src": "/img/photos/facade/03-480.avif"
@@ -623,6 +753,11 @@
           "photographer": "Wengang Zhai",
           "page": "https://unsplash.com/photos/IcEKJ7KHZUM",
           "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/facade/04-240.avif"
+            },
             {
               "width": 480,
               "height": 320,
@@ -647,6 +782,11 @@
           "page": "https://unsplash.com/photos/74gOWpJznFU",
           "sizes": [
             {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/facade/05-240.avif"
+            },
+            {
               "width": 480,
               "height": 320,
               "src": "/img/photos/facade/05-480.avif"
@@ -669,6 +809,11 @@
           "photographer": "Bernard Hermant",
           "page": "https://unsplash.com/photos/CqIXtyyrNVg",
           "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/facade/06-240.avif"
+            },
             {
               "width": 480,
               "height": 320,
@@ -693,6 +838,11 @@
           "page": "https://unsplash.com/photos/vVvzCqDzquM",
           "sizes": [
             {
+              "width": 240,
+              "height": 300,
+              "src": "/img/photos/facade/07-240.avif"
+            },
+            {
               "width": 480,
               "height": 600,
               "src": "/img/photos/facade/07-480.avif"
@@ -715,6 +865,11 @@
           "photographer": "Parrish Freeman",
           "page": "https://unsplash.com/photos/yzfb9H00ZIY",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/facade/08-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -739,6 +894,11 @@
           "page": "https://unsplash.com/photos/X2BhpoC-MDk",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/facade/09-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/facade/09-480.avif"
@@ -761,6 +921,11 @@
           "photographer": "Ricardo Gomez Angel",
           "page": "https://unsplash.com/photos/AgWDBLaWJY0",
           "sizes": [
+            {
+              "width": 240,
+              "height": 140,
+              "src": "/img/photos/facade/10-240.avif"
+            },
             {
               "width": 480,
               "height": 280,
@@ -790,6 +955,11 @@
           "page": "https://unsplash.com/photos/MyQ8Re-OqzI",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/macro/01-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/macro/01-480.avif"
@@ -812,6 +982,11 @@
           "photographer": "Volodymyr Leush",
           "page": "https://unsplash.com/photos/gKK1iQABv24",
           "sizes": [
+            {
+              "width": 240,
+              "height": 361,
+              "src": "/img/photos/macro/02-240.avif"
+            },
             {
               "width": 480,
               "height": 721,
@@ -836,6 +1011,11 @@
           "page": "https://unsplash.com/photos/rWmlQwd_TEo",
           "sizes": [
             {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/macro/03-240.avif"
+            },
+            {
               "width": 480,
               "height": 320,
               "src": "/img/photos/macro/03-480.avif"
@@ -858,6 +1038,11 @@
           "photographer": "Severina Seidl",
           "page": "https://unsplash.com/photos/Zn5ZY8Jzmc0",
           "sizes": [
+            {
+              "width": 240,
+              "height": 312,
+              "src": "/img/photos/macro/04-240.avif"
+            },
             {
               "width": 480,
               "height": 624,
@@ -882,6 +1067,11 @@
           "page": "https://unsplash.com/photos/moYTBiiY3W4",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/macro/05-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/macro/05-480.avif"
@@ -904,6 +1094,11 @@
           "photographer": "Hayk Badalyan",
           "page": "https://unsplash.com/photos/-kzmdlIDB4I",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/macro/06-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -928,6 +1123,11 @@
           "page": "https://unsplash.com/photos/tuGNCfFIeNE",
           "sizes": [
             {
+              "width": 240,
+              "height": 427,
+              "src": "/img/photos/macro/07-240.avif"
+            },
+            {
               "width": 480,
               "height": 853,
               "src": "/img/photos/macro/07-480.avif"
@@ -950,6 +1150,11 @@
           "photographer": "Christian J.",
           "page": "https://unsplash.com/photos/jG8ZiXv5kdc",
           "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/macro/08-240.avif"
+            },
             {
               "width": 480,
               "height": 320,
@@ -974,6 +1179,11 @@
           "page": "https://unsplash.com/photos/M7ho2fjOpjE",
           "sizes": [
             {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/macro/09-240.avif"
+            },
+            {
               "width": 480,
               "height": 320,
               "src": "/img/photos/macro/09-480.avif"
@@ -996,6 +1206,11 @@
           "photographer": "Charlotte Kirkland",
           "page": "https://unsplash.com/photos/DOT1QbKNlOA",
           "sizes": [
+            {
+              "width": 240,
+              "height": 320,
+              "src": "/img/photos/macro/10-240.avif"
+            },
             {
               "width": 480,
               "height": 640,
@@ -1025,6 +1240,11 @@
           "page": "https://unsplash.com/photos/9RIFeVL73sk",
           "sizes": [
             {
+              "width": 240,
+              "height": 320,
+              "src": "/img/photos/street/01-240.avif"
+            },
+            {
               "width": 480,
               "height": 640,
               "src": "/img/photos/street/01-480.avif"
@@ -1047,6 +1267,11 @@
           "photographer": "Mauro Lima",
           "page": "https://unsplash.com/photos/7H05dWs1hOk",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/street/02-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -1071,6 +1296,11 @@
           "page": "https://unsplash.com/photos/xFfdF580dh4",
           "sizes": [
             {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/street/03-240.avif"
+            },
+            {
               "width": 480,
               "height": 320,
               "src": "/img/photos/street/03-480.avif"
@@ -1093,6 +1323,11 @@
           "photographer": "charley pangus",
           "page": "https://unsplash.com/photos/CoxV5SiNMXA",
           "sizes": [
+            {
+              "width": 240,
+              "height": 192,
+              "src": "/img/photos/street/04-240.avif"
+            },
             {
               "width": 480,
               "height": 384,
@@ -1117,6 +1352,11 @@
           "page": "https://unsplash.com/photos/SVz13VF06ls",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/street/05-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/street/05-480.avif"
@@ -1139,6 +1379,11 @@
           "photographer": "Dennis Schrader",
           "page": "https://unsplash.com/photos/2X-xgvNOVE8",
           "sizes": [
+            {
+              "width": 240,
+              "height": 300,
+              "src": "/img/photos/street/06-240.avif"
+            },
             {
               "width": 480,
               "height": 600,
@@ -1163,6 +1408,11 @@
           "page": "https://unsplash.com/photos/HQ_NXRvvXds",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/street/07-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/street/07-480.avif"
@@ -1185,6 +1435,11 @@
           "photographer": "Daniel Silva",
           "page": "https://unsplash.com/photos/GqvF3l7-pTo",
           "sizes": [
+            {
+              "width": 240,
+              "height": 159,
+              "src": "/img/photos/street/08-240.avif"
+            },
             {
               "width": 480,
               "height": 318,
@@ -1209,6 +1464,11 @@
           "page": "https://unsplash.com/photos/9RjqwxIAOBI",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/street/09-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/street/09-480.avif"
@@ -1231,6 +1491,11 @@
           "photographer": "Airlangga Jati",
           "page": "https://unsplash.com/photos/ZUN8oFRqhLA",
           "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/street/10-240.avif"
+            },
             {
               "width": 480,
               "height": 320,
@@ -1255,6 +1520,11 @@
           "page": "https://unsplash.com/photos/Isoef_35S08",
           "sizes": [
             {
+              "width": 240,
+              "height": 299,
+              "src": "/img/photos/street/11-240.avif"
+            },
+            {
               "width": 480,
               "height": 598,
               "src": "/img/photos/street/11-480.avif"
@@ -1278,6 +1548,11 @@
           "page": "https://unsplash.com/photos/E3Vr3vFZmDA",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/street/12-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/street/12-480.avif"
@@ -1300,6 +1575,11 @@
           "photographer": "Alexander Kaufmann",
           "page": "https://unsplash.com/photos/BNm6Kx0pQxg",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/street/13-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -1329,6 +1609,11 @@
           "page": "https://unsplash.com/photos/A1Zjr7DC_zE",
           "sizes": [
             {
+              "width": 240,
+              "height": 361,
+              "src": "/img/photos/alley/01-240.avif"
+            },
+            {
               "width": 480,
               "height": 723,
               "src": "/img/photos/alley/01-480.avif"
@@ -1351,6 +1636,11 @@
           "photographer": "Alex Slav",
           "page": "https://unsplash.com/photos/ciy6i3oy_0g",
           "sizes": [
+            {
+              "width": 240,
+              "height": 320,
+              "src": "/img/photos/alley/02-240.avif"
+            },
             {
               "width": 480,
               "height": 640,
@@ -1375,6 +1665,11 @@
           "page": "https://unsplash.com/photos/DGJcdW96qW0",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/alley/03-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/alley/03-480.avif"
@@ -1397,6 +1692,11 @@
           "photographer": "Rosalie Gdy",
           "page": "https://unsplash.com/photos/mDcK3rz7lCQ",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/alley/04-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -1421,6 +1721,11 @@
           "page": "https://unsplash.com/photos/JYYp91BHG1c",
           "sizes": [
             {
+              "width": 240,
+              "height": 320,
+              "src": "/img/photos/alley/05-240.avif"
+            },
+            {
               "width": 480,
               "height": 640,
               "src": "/img/photos/alley/05-480.avif"
@@ -1443,6 +1748,11 @@
           "photographer": "Luisa Linkous",
           "page": "https://unsplash.com/photos/sQaYJWv8sQA",
           "sizes": [
+            {
+              "width": 240,
+              "height": 320,
+              "src": "/img/photos/alley/06-240.avif"
+            },
             {
               "width": 480,
               "height": 640,
@@ -1467,6 +1777,11 @@
           "page": "https://unsplash.com/photos/fjhi4fRNV9I",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/alley/07-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/alley/07-480.avif"
@@ -1489,6 +1804,11 @@
           "photographer": "Aysegul Aytören",
           "page": "https://unsplash.com/photos/oyVDnNYhuDU",
           "sizes": [
+            {
+              "width": 240,
+              "height": 361,
+              "src": "/img/photos/alley/08-240.avif"
+            },
             {
               "width": 480,
               "height": 722,
@@ -1513,6 +1833,11 @@
           "page": "https://unsplash.com/photos/_ocZAj4J4a4",
           "sizes": [
             {
+              "width": 240,
+              "height": 320,
+              "src": "/img/photos/alley/09-240.avif"
+            },
+            {
               "width": 480,
               "height": 640,
               "src": "/img/photos/alley/09-480.avif"
@@ -1536,6 +1861,11 @@
           "page": "https://unsplash.com/photos/71JC15lA1WM",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/alley/10-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/alley/10-480.avif"
@@ -1558,6 +1888,11 @@
           "photographer": "Artan",
           "page": "https://unsplash.com/photos/tGufKi7d5V8",
           "sizes": [
+            {
+              "width": 240,
+              "height": 361,
+              "src": "/img/photos/alley/11-240.avif"
+            },
             {
               "width": 480,
               "height": 722,
@@ -1587,6 +1922,11 @@
           "page": "https://unsplash.com/photos/4cloovdyuvw",
           "sizes": [
             {
+              "width": 240,
+              "height": 159,
+              "src": "/img/photos/desert/01-240.avif"
+            },
+            {
               "width": 480,
               "height": 318,
               "src": "/img/photos/desert/01-480.avif"
@@ -1609,6 +1949,11 @@
           "photographer": "NEOM",
           "page": "https://unsplash.com/photos/RySPDa0FdcQ",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/desert/02-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -1633,6 +1978,11 @@
           "page": "https://unsplash.com/photos/RvQkuwC-eL8",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/desert/03-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/desert/03-480.avif"
@@ -1655,6 +2005,11 @@
           "photographer": "Roberto Nickson",
           "page": "https://unsplash.com/photos/g3-eeBDiUbc",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/desert/04-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -1679,6 +2034,11 @@
           "page": "https://unsplash.com/photos/-1vLgdOqydw",
           "sizes": [
             {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/desert/05-240.avif"
+            },
+            {
               "width": 480,
               "height": 320,
               "src": "/img/photos/desert/05-480.avif"
@@ -1701,6 +2061,11 @@
           "photographer": "kevin turcios",
           "page": "https://unsplash.com/photos/VfuJpt81JZo",
           "sizes": [
+            {
+              "width": 240,
+              "height": 336,
+              "src": "/img/photos/desert/06-240.avif"
+            },
             {
               "width": 480,
               "height": 672,
@@ -1725,6 +2090,11 @@
           "page": "https://unsplash.com/photos/RBRkrO9GY_Q",
           "sizes": [
             {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/desert/07-240.avif"
+            },
+            {
               "width": 480,
               "height": 319,
               "src": "/img/photos/desert/07-480.avif"
@@ -1747,6 +2117,11 @@
           "photographer": "NEOM",
           "page": "https://unsplash.com/photos/-RlktmDy3Ec",
           "sizes": [
+            {
+              "width": 240,
+              "height": 180,
+              "src": "/img/photos/desert/08-240.avif"
+            },
             {
               "width": 480,
               "height": 359,
@@ -1771,6 +2146,11 @@
           "page": "https://unsplash.com/photos/iJrexd5j7PI",
           "sizes": [
             {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/desert/09-240.avif"
+            },
+            {
               "width": 480,
               "height": 320,
               "src": "/img/photos/desert/09-480.avif"
@@ -1793,6 +2173,11 @@
           "photographer": "Gary Yost",
           "page": "https://unsplash.com/photos/Lzc4zCgMj60",
           "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/desert/10-240.avif"
+            },
             {
               "width": 480,
               "height": 320,
@@ -1817,6 +2202,11 @@
           "page": "https://unsplash.com/photos/3nfunuyxNdU",
           "sizes": [
             {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/desert/11-240.avif"
+            },
+            {
               "width": 480,
               "height": 320,
               "src": "/img/photos/desert/11-480.avif"
@@ -1839,6 +2229,11 @@
           "photographer": "Patrick Rosenberger",
           "page": "https://unsplash.com/photos/oe796n6M1k8",
           "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/desert/12-240.avif"
+            },
             {
               "width": 480,
               "height": 720,
@@ -1868,6 +2263,11 @@
           "page": "https://unsplash.com/photos/NncAbldgViA",
           "sizes": [
             {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/morocco/01-240.avif"
+            },
+            {
               "width": 480,
               "height": 320,
               "src": "/img/photos/morocco/01-480.avif"
@@ -1890,6 +2290,11 @@
           "photographer": "Sergey Pesterev",
           "page": "https://unsplash.com/photos/i-P1lmY_e1w",
           "sizes": [
+            {
+              "width": 240,
+              "height": 161,
+              "src": "/img/photos/morocco/02-240.avif"
+            },
             {
               "width": 480,
               "height": 321,
@@ -1914,6 +2319,11 @@
           "page": "https://unsplash.com/photos/CBfUGtVP0QE",
           "sizes": [
             {
+              "width": 240,
+              "height": 320,
+              "src": "/img/photos/morocco/03-240.avif"
+            },
+            {
               "width": 480,
               "height": 640,
               "src": "/img/photos/morocco/03-480.avif"
@@ -1936,6 +2346,11 @@
           "photographer": "Louis Hansel",
           "page": "https://unsplash.com/photos/aqJfoLKFz6c",
           "sizes": [
+            {
+              "width": 240,
+              "height": 180,
+              "src": "/img/photos/morocco/04-240.avif"
+            },
             {
               "width": 480,
               "height": 360,
@@ -1960,6 +2375,11 @@
           "page": "https://unsplash.com/photos/LhVJaRPweJc",
           "sizes": [
             {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/morocco/05-240.avif"
+            },
+            {
               "width": 480,
               "height": 320,
               "src": "/img/photos/morocco/05-480.avif"
@@ -1982,6 +2402,11 @@
           "photographer": "Toa Heftiba",
           "page": "https://unsplash.com/photos/pcbSQTQr2-I",
           "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/morocco/06-240.avif"
+            },
             {
               "width": 480,
               "height": 320,
@@ -2006,6 +2431,11 @@
           "page": "https://unsplash.com/photos/mhJml7Fusfs",
           "sizes": [
             {
+              "width": 240,
+              "height": 135,
+              "src": "/img/photos/morocco/07-240.avif"
+            },
+            {
               "width": 480,
               "height": 270,
               "src": "/img/photos/morocco/07-480.avif"
@@ -2028,6 +2458,11 @@
           "photographer": "Sergey Pesterev",
           "page": "https://unsplash.com/photos/dnLmApcmNHg",
           "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/morocco/08-240.avif"
+            },
             {
               "width": 480,
               "height": 320,
@@ -2052,6 +2487,11 @@
           "page": "https://unsplash.com/photos/VdwtvEUj8HM",
           "sizes": [
             {
+              "width": 240,
+              "height": 147,
+              "src": "/img/photos/morocco/09-240.avif"
+            },
+            {
               "width": 480,
               "height": 294,
               "src": "/img/photos/morocco/09-480.avif"
@@ -2074,6 +2514,11 @@
           "photographer": "Y K",
           "page": "https://unsplash.com/photos/MNxFb17V6vk",
           "sizes": [
+            {
+              "width": 240,
+              "height": 135,
+              "src": "/img/photos/morocco/10-240.avif"
+            },
             {
               "width": 480,
               "height": 270,
@@ -2098,6 +2543,11 @@
           "page": "https://unsplash.com/photos/I2YeucCFOmw",
           "sizes": [
             {
+              "width": 240,
+              "height": 243,
+              "src": "/img/photos/morocco/11-240.avif"
+            },
+            {
               "width": 480,
               "height": 486,
               "src": "/img/photos/morocco/11-480.avif"
@@ -2120,6 +2570,11 @@
           "photographer": "Annie Spratt",
           "page": "https://unsplash.com/photos/upJFoyr7BBA",
           "sizes": [
+            {
+              "width": 240,
+              "height": 219,
+              "src": "/img/photos/morocco/12-240.avif"
+            },
             {
               "width": 480,
               "height": 438,
@@ -2144,6 +2599,11 @@
           "page": "https://unsplash.com/photos/9UdGLlw-Sfk",
           "sizes": [
             {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/morocco/13-240.avif"
+            },
+            {
               "width": 480,
               "height": 720,
               "src": "/img/photos/morocco/13-480.avif"
@@ -2167,6 +2627,11 @@
           "page": "https://unsplash.com/photos/vXoWmtiyEpY",
           "sizes": [
             {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/morocco/14-240.avif"
+            },
+            {
               "width": 480,
               "height": 320,
               "src": "/img/photos/morocco/14-480.avif"
@@ -2180,6 +2645,520 @@
               "width": 1600,
               "height": 1067,
               "src": "/img/photos/morocco/14-1600.avif"
+            }
+          ]
+        }
+      ]
+    },
+    "hotel": {
+      "title": "A riad in Marrakech",
+      "photos": [
+        {
+          "id": "m_gTxMH0n-4",
+          "alt": "three sun loungers beside the courtyard pool",
+          "photographer": "Toa Heftiba",
+          "page": "https://unsplash.com/photos/m_gTxMH0n-4",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/hotel/01-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/hotel/01-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/hotel/01-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/hotel/01-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "tr3Uh_TJpsI",
+          "alt": "bedroom opening onto a terrace and pool",
+          "photographer": "Miltiadis Fragkidis",
+          "page": "https://unsplash.com/photos/tr3Uh_TJpsI",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/hotel/02-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/hotel/02-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/hotel/02-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/hotel/02-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "5UlAZ8GM6DU",
+          "alt": "the courtyard pool seen from the gallery above",
+          "photographer": "Toa Heftiba",
+          "page": "https://unsplash.com/photos/5UlAZ8GM6DU",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/hotel/03-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/hotel/03-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/hotel/03-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/hotel/03-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "4Tgjeh1fWCc",
+          "alt": "breakfast spread on a low table",
+          "photographer": "sour moha",
+          "page": "https://unsplash.com/photos/4Tgjeh1fWCc",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/hotel/04-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/hotel/04-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 801,
+              "src": "/img/photos/hotel/04-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1068,
+              "src": "/img/photos/hotel/04-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "iwe7ebNPJBA",
+          "alt": "guest sitting at the edge of the pool",
+          "photographer": "Toa Heftiba",
+          "page": "https://unsplash.com/photos/iwe7ebNPJBA",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/hotel/05-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/hotel/05-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/hotel/05-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/hotel/05-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "Ed-H6IrkrdM",
+          "alt": "green-tiled lounge with a wooden table",
+          "photographer": "Toa Heftiba",
+          "page": "https://unsplash.com/photos/Ed-H6IrkrdM",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/hotel/06-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/hotel/06-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/hotel/06-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/hotel/06-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "gCr0amJXOts",
+          "alt": "plunge pool by a green door under the palms",
+          "photographer": "Jessica Kantak Bailey",
+          "page": "https://unsplash.com/photos/gCr0amJXOts",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 218,
+              "src": "/img/photos/hotel/07-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 436,
+              "src": "/img/photos/hotel/07-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1090,
+              "src": "/img/photos/hotel/07-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1453,
+              "src": "/img/photos/hotel/07-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "4Q6KyTtIotc",
+          "alt": "small pool and daybed among the plants",
+          "photographer": "Polina Kocheva",
+          "page": "https://unsplash.com/photos/4Q6KyTtIotc",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/hotel/08-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 719,
+              "src": "/img/photos/hotel/08-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1799,
+              "src": "/img/photos/hotel/08-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2398,
+              "src": "/img/photos/hotel/08-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "6viJObrmnBw",
+          "alt": "white sitting room with a daybed and lanterns",
+          "photographer": "Maria Orlova",
+          "page": "https://unsplash.com/photos/6viJObrmnBw",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/hotel/09-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/hotel/09-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/hotel/09-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/hotel/09-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "msFZE7d9KB4",
+          "alt": "bed with a carved wooden headboard and lanterns",
+          "photographer": "Khadeeja Yasser",
+          "page": "https://unsplash.com/photos/msFZE7d9KB4",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 180,
+              "src": "/img/photos/hotel/10-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 360,
+              "src": "/img/photos/hotel/10-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 900,
+              "src": "/img/photos/hotel/10-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1200,
+              "src": "/img/photos/hotel/10-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "hNr3w7YjFnY",
+          "alt": "rooftop view over the medina",
+          "photographer": "Gunnar Ridderström",
+          "page": "https://unsplash.com/photos/hNr3w7YjFnY",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 180,
+              "src": "/img/photos/hotel/11-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 360,
+              "src": "/img/photos/hotel/11-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 901,
+              "src": "/img/photos/hotel/11-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1201,
+              "src": "/img/photos/hotel/11-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "V2zaAunY-yw",
+          "alt": "tiled plunge pool under the bamboo",
+          "photographer": "Maria Orlova",
+          "page": "https://unsplash.com/photos/V2zaAunY-yw",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/hotel/12-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 720,
+              "src": "/img/photos/hotel/12-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1800,
+              "src": "/img/photos/hotel/12-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2400,
+              "src": "/img/photos/hotel/12-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "_2wY3UwGBhE",
+          "alt": "patio table under a parasol at sunset",
+          "photographer": "Miltiadis Fragkidis",
+          "page": "https://unsplash.com/photos/_2wY3UwGBhE",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/hotel/13-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/hotel/13-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/hotel/13-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/hotel/13-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "v9wzOYPmD0k",
+          "alt": "courtyard with tilework and arched colonnades",
+          "photographer": "Gunnar Ridderström",
+          "page": "https://unsplash.com/photos/v9wzOYPmD0k",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/hotel/14-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/hotel/14-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 800,
+              "src": "/img/photos/hotel/14-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1067,
+              "src": "/img/photos/hotel/14-1600.avif"
+            }
+          ]
+        }
+      ]
+    },
+    "shop": {
+      "title": "A leather backpack, product shots",
+      "photos": [
+        {
+          "id": "3o-X8WJOP5E",
+          "alt": "tan leather backpack, front view",
+          "photographer": "Wiser by the Mile",
+          "page": "https://unsplash.com/photos/3o-X8WJOP5E",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/shop/01-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 719,
+              "src": "/img/photos/shop/01-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1798,
+              "src": "/img/photos/shop/01-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2397,
+              "src": "/img/photos/shop/01-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "OFHkPCkhYEY",
+          "alt": "tan leather backpack, three-quarter view",
+          "photographer": "Wiser by the Mile",
+          "page": "https://unsplash.com/photos/OFHkPCkhYEY",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/shop/02-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 719,
+              "src": "/img/photos/shop/02-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1798,
+              "src": "/img/photos/shop/02-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2397,
+              "src": "/img/photos/shop/02-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "IjDLL4EEDFg",
+          "alt": "close-up of the leather grain and zip",
+          "photographer": "Wiser by the Mile",
+          "page": "https://unsplash.com/photos/IjDLL4EEDFg",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 360,
+              "src": "/img/photos/shop/03-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 719,
+              "src": "/img/photos/shop/03-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 1798,
+              "src": "/img/photos/shop/03-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 2397,
+              "src": "/img/photos/shop/03-1600.avif"
+            }
+          ]
+        },
+        {
+          "id": "1Frndjy7tkM",
+          "alt": "the backpack in black and tan side by side",
+          "photographer": "Wiser by the Mile",
+          "page": "https://unsplash.com/photos/1Frndjy7tkM",
+          "sizes": [
+            {
+              "width": 240,
+              "height": 160,
+              "src": "/img/photos/shop/04-240.avif"
+            },
+            {
+              "width": 480,
+              "height": 320,
+              "src": "/img/photos/shop/04-480.avif"
+            },
+            {
+              "width": 1200,
+              "height": 801,
+              "src": "/img/photos/shop/04-1200.avif"
+            },
+            {
+              "width": 1600,
+              "height": 1068,
+              "src": "/img/photos/shop/04-1600.avif"
             }
           ]
         }

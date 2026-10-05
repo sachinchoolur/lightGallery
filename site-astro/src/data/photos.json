@@ -603,6 +603,124 @@
           "photographer": "rigel"
         }
       ]
+    },
+    "hotel": {
+      "title": "A riad in Marrakech",
+      "photos": [
+        {
+          "id": "m_gTxMH0n-4",
+          "cdn": "photo-1527534079274-21dc9147f3d0",
+          "alt": "three sun loungers beside the courtyard pool",
+          "photographer": "Toa Heftiba"
+        },
+        {
+          "id": "tr3Uh_TJpsI",
+          "cdn": "photo-1705765274642-a22317af9c7b",
+          "alt": "bedroom opening onto a terrace and pool",
+          "photographer": "Miltiadis Fragkidis"
+        },
+        {
+          "id": "5UlAZ8GM6DU",
+          "cdn": "photo-1527769668487-5804e45fed2a",
+          "alt": "the courtyard pool seen from the gallery above",
+          "photographer": "Toa Heftiba"
+        },
+        {
+          "id": "4Tgjeh1fWCc",
+          "cdn": "photo-1661081988119-58e40ee39201",
+          "alt": "breakfast spread on a low table",
+          "photographer": "sour moha"
+        },
+        {
+          "id": "iwe7ebNPJBA",
+          "cdn": "photo-1527769814692-b9066e3cbcf2",
+          "alt": "guest sitting at the edge of the pool",
+          "photographer": "Toa Heftiba"
+        },
+        {
+          "id": "Ed-H6IrkrdM",
+          "cdn": "photo-1527760127628-23c37a0c9af9",
+          "alt": "green-tiled lounge with a wooden table",
+          "photographer": "Toa Heftiba"
+        },
+        {
+          "id": "gCr0amJXOts",
+          "cdn": "photo-1628642004970-1da51c8c7dec",
+          "alt": "plunge pool by a green door under the palms",
+          "photographer": "Jessica Kantak Bailey"
+        },
+        {
+          "id": "4Q6KyTtIotc",
+          "cdn": "photo-1664346774672-6d2e062e088f",
+          "alt": "small pool and daybed among the plants",
+          "photographer": "Polina Kocheva"
+        },
+        {
+          "id": "6viJObrmnBw",
+          "cdn": "photo-1505577058444-a3dab90d4253",
+          "alt": "white sitting room with a daybed and lanterns",
+          "photographer": "Maria Orlova"
+        },
+        {
+          "id": "msFZE7d9KB4",
+          "cdn": "photo-1559841644-08984562005a",
+          "alt": "bed with a carved wooden headboard and lanterns",
+          "photographer": "Khadeeja Yasser"
+        },
+        {
+          "id": "hNr3w7YjFnY",
+          "cdn": "photo-1692089265184-f0941cbe333c",
+          "alt": "rooftop view over the medina",
+          "photographer": "Gunnar Ridderström"
+        },
+        {
+          "id": "V2zaAunY-yw",
+          "cdn": "photo-1549407978-68f928ad8eb5",
+          "alt": "tiled plunge pool under the bamboo",
+          "photographer": "Maria Orlova"
+        },
+        {
+          "id": "_2wY3UwGBhE",
+          "cdn": "photo-1705765273495-841158b21c8e",
+          "alt": "patio table under a parasol at sunset",
+          "photographer": "Miltiadis Fragkidis"
+        },
+        {
+          "id": "v9wzOYPmD0k",
+          "cdn": "photo-1759250451654-72ab594ba2c9",
+          "alt": "courtyard with tilework and arched colonnades",
+          "photographer": "Gunnar Ridderström"
+        }
+      ]
+    },
+    "shop": {
+      "title": "A leather backpack, product shots",
+      "photos": [
+        {
+          "id": "3o-X8WJOP5E",
+          "cdn": "photo-1622560480605-d83c853bc5c3",
+          "alt": "tan leather backpack, front view",
+          "photographer": "Wiser by the Mile"
+        },
+        {
+          "id": "OFHkPCkhYEY",
+          "cdn": "photo-1622560257067-108402fcedc0",
+          "alt": "tan leather backpack, three-quarter view",
+          "photographer": "Wiser by the Mile"
+        },
+        {
+          "id": "IjDLL4EEDFg",
+          "cdn": "photo-1622560482425-218f3a525aec",
+          "alt": "close-up of the leather grain and zip",
+          "photographer": "Wiser by the Mile"
+        },
+        {
+          "id": "1Frndjy7tkM",
+          "cdn": "photo-1622560481156-01fc7e1693e6",
+          "alt": "the backpack in black and tan side by side",
+          "photographer": "Wiser by the Mile"
+        }
+      ]
     }
   }
 }

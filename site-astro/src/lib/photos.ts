@@ -25,14 +25,18 @@ export interface Photo {
     photographer: string;
     /** The photo's page on Unsplash, the attribution target. */
     page: string;
-    /** Every encoded variant, smallest first. */
+    /** The slide variants, smallest first; the 240px thumbnail is only in `thumbSmall`. */
     sizes: PhotoSize[];
     /** Largest variant. */
     src: string;
     width: number;
     height: number;
-    /** Smallest variant, for grids and strips. */
+    /** 480px variant: grid thumbnails, sharp at 2x up to 240 CSS px. */
     thumb: string;
+    /** 240px variant: thumbnail strips and tiles up to 120 CSS px. */
+    thumbSmall: string;
+    /** `<img srcset>` of the thumbnail variants, for a `sizes` attribute to pick from. */
+    thumbSrcset: string;
     /** `<img srcset>` covering every variant. */
     srcset: string;
     /** lightGallery `data-responsive`: smaller variants keyed by viewport width. */
@@ -45,6 +49,9 @@ export interface Photo {
     credit: string;
 }
 
+/** Widest variant that counts as a thumbnail; slides pick from this width up. */
+const GRID_THUMB_WIDTH = 480;
+
 const sentence = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
 function escapeAttr(text: string) {
@@ -52,7 +59,9 @@ function escapeAttr(text: string) {
 }
 
 function build(collection: string, raw: (typeof manifest.collections)[CollectionName]['photos'][number]): Photo {
-    const sizes = [...raw.sizes].sort((a, b) => a.width - b.width);
+    const all = [...raw.sizes].sort((a, b) => a.width - b.width);
+    const sizes = all.filter((s) => s.width >= GRID_THUMB_WIDTH);
+    const thumbs = all.filter((s) => s.width <= GRID_THUMB_WIDTH);
     const largest = sizes[sizes.length - 1];
     const smaller = sizes.slice(0, -1);
     const title = sentence(raw.alt);
@@ -67,7 +76,9 @@ function build(collection: string, raw: (typeof manifest.collections)[Collection
         src: largest.src,
         width: largest.width,
         height: largest.height,
-        thumb: sizes[0].src,
+        thumb: thumbs[thumbs.length - 1].src,
+        thumbSmall: thumbs[0].src,
+        thumbSrcset: thumbs.map((s) => `${s.src} ${s.width}w`).join(', '),
         srcset: sizes.map((s) => `${s.src} ${s.width}w`).join(', '),
         responsive: smaller.map((s) => `${s.src} ${s.width}`).join(', '),
         size: [

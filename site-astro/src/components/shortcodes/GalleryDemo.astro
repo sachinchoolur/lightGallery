@@ -21,12 +21,26 @@ interface Props {
     /**
      * Items from this index on are marked `gallery-item-phone-hidden`;
      * the page's stylesheet and runtime decide what that means (the
-     * homepage hero keeps its grid to three rows on phones).
+     * homepage hero keeps its grid to three rows on phones). They load
+     * lazily, so a phone that hides them never downloads them.
      */
     phoneLimit?: number;
+    /**
+     * Row heights of the justified layout, in CSS px, on phones and from
+     * `md` up. With them each thumbnail gets a `srcset` and a `sizes`
+     * derived from its aspect ratio, so the browser fetches the 240px
+     * variant where a cell is small or the screen is 1x, and 480px only
+     * where it is needed.
+     */
+    rowHeights?: { phone: number; desktop: number };
 }
-const { id, class: className, size, limit, justified, phoneLimit } = Astro.props;
+const { id, class: className, size, limit, justified, phoneLimit, rowHeights } = Astro.props;
 const items = pick(Astro.props.photos ?? (size === 'xl' ? 'street,alley' : 'street'), limit);
+
+const sizesFor = (width: number, height: number) =>
+    rowHeights
+        ? `(max-width: 767px) ${Math.round((rowHeights.phone * width) / height)}px, ${Math.round((rowHeights.desktop * width) / height)}px`
+        : undefined;
 ---
 <div class={`gallery-demo ${className ?? ''}`}>
     <div id={id} class:list={[{ 'lg-justified': justified }]}>
@@ -41,6 +55,7 @@ const items = pick(Astro.props.photos ?? (size === 'xl' ? 'street,alley' : 'stre
                 ]}
                 href={p.src}
                 data-src={p.src}
+                data-thumb={p.thumbSmall}
                 data-sub-html={p.caption}
             >
                 <img
@@ -49,6 +64,9 @@ const items = pick(Astro.props.photos ?? (size === 'xl' ? 'street,alley' : 'stre
                     alt={p.alt}
                     class="img-responsive"
                     src={p.thumb}
+                    srcset={rowHeights ? p.thumbSrcset : undefined}
+                    sizes={sizesFor(p.width, p.height)}
+                    loading={phoneLimit !== undefined && i >= phoneLimit ? 'lazy' : undefined}
                 />
             </a>
         ))}

@@ -316,6 +316,13 @@ if (heroGalleryEl) {
             autoplayFirstVideo: false,
             pager: false,
             galleryId: 'nature',
+            // The strip and the open animation reuse a thumbnail the grid
+            // has already fetched: its srcset resolves to the 480px file on
+            // dense desktop screens and to the 240px data-thumb elsewhere.
+            exThumbImage:
+                window.devicePixelRatio >= 2 && !phone.matches
+                    ? ''
+                    : 'data-thumb',
             plugins: [
                 lgZoom,
                 lgAutoplay,
@@ -987,12 +994,14 @@ if (homeInline) {
             showCloseIcon: false,
             download: false,
         },
-        dynamicEl: photos('desert,hero')
+        // Enough landscape frames that the thumbnail strip overflows its
+        // container and scrolls with the slides.
+        dynamicEl: photos('desert,morocco,hero,street')
             .filter((p) => p.width > p.height)
             .map((p) => ({
                 src: p.src,
                 responsive: p.responsive,
-                thumb: p.thumb,
+                thumb: p.thumbSmall,
                 alt: p.alt,
                 subHtml: `<div class="lightGallery-captions">${p.caption}</div>`,
             })),
@@ -1063,6 +1072,8 @@ if (customizeScenes.length) {
             selector: '.gallery-item',
             hash: false,
             pager: false,
+            // The tiles carry a 240px thumbnail for the strip.
+            exThumbImage: 'data-thumb',
             // The controls are what the demos show, keep them on phones,
             // where the library default hides them.
             mobileSettings: {

@@ -24,9 +24,13 @@ const outDir = resolve(root, '../site/static/img/photos');
 const cacheDir = process.env.PHOTOS_CACHE ?? join(root, 'node_modules/.cache/photos');
 const force = process.argv.includes('--force');
 
-/** Variant widths; the zoom collections get a larger top size. */
-const WIDTHS = [480, 1200, 1600];
-const ZOOM_WIDTHS = [480, 1200, 2400];
+/**
+ * Variant widths: 240 for thumbnail strips and small tiles, 480 for grid
+ * thumbnails on high-density screens, then the slide sizes. The zoom
+ * collections get a larger top size.
+ */
+const WIDTHS = [240, 480, 1200, 1600];
+const ZOOM_WIDTHS = [240, 480, 1200, 2400];
 const ZOOM_COLLECTIONS = new Set(['stone', 'facade', 'macro']);
 
 mkdirSync(cacheDir, { recursive: true });
