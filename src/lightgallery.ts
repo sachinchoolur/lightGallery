@@ -223,13 +223,9 @@ export class LightGallery {
         }
 
         // And reset it on close to get the correct value next time
+        // A dynamic gallery flies too, from the element passed to
+        // openGallery, when that element or the item carries the media size.
         this.zoomFromOrigin = this.settings.zoomFromOrigin;
-
-        // At the moment, Zoom from image doesn't support dynamic options
-        // @todo add zoomFromOrigin support for dynamic images
-        if (this.settings.dynamic) {
-            this.zoomFromOrigin = false;
-        }
 
         if (this.settings.container) {
             const { container } = this.settings;
@@ -558,13 +554,14 @@ export class LightGallery {
      * its real size when the natural-px swap lands.
      */
     private updateCurrentImageSize(index: number): void {
-        const { __slideVideoInfo } = this.galleryItems[index];
+        const { __slideVideoInfo, lgSize } = this.galleryItems[index];
         const { top, bottom } = this.mediaContainerPosition;
         this.currentImageSize = utils.getSize(
             this.items[index],
             this.outer,
             top + bottom,
             __slideVideoInfo && this.settings.videoMaxSize,
+            lgSize,
         );
     }
 
@@ -797,13 +794,14 @@ export class LightGallery {
         if (!this.settings.allowMediaOverlap) {
             this.setMediaContainerPosition(top, bottom);
         }
-        const { __slideVideoInfo } = this.galleryItems[index];
+        const { __slideVideoInfo, lgSize } = this.galleryItems[index];
         if (this.zoomFromOrigin && element) {
             this.currentImageSize = utils.getSize(
                 element,
                 this.outer,
                 top + bottom,
                 __slideVideoInfo && this.settings.videoMaxSize,
+                lgSize,
             );
             transform = this.getOriginTransform(element, this.currentImageSize);
         }
@@ -1360,6 +1358,7 @@ export class LightGallery {
                     this.outer,
                     top + bottom,
                     videoInfo && this.settings.videoMaxSize,
+                    this.galleryItems[index].lgSize,
                 );
                 lgVideoStyle = this.getVideoContStyle(videoSize);
             }
@@ -1815,6 +1814,7 @@ export class LightGallery {
                     this.outer,
                     top + bottom,
                     videoInfo && this.settings.videoMaxSize,
+                    this.galleryItems[index].lgSize,
                 );
                 this.resizeVideoSlide(index, videoSize);
             }

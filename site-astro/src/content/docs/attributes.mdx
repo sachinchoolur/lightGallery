@@ -39,15 +39,13 @@ In the [React](/docs/react/), [Vue](/docs/vue/) and
 fields instead; the [dynamic variables page](/docs/dynamic-variables/)
 lists those.
 
-## On the item element
+## External thumbnails
 
-These two are read from the item element itself rather than becoming a
-field of the item.
-
-| Attribute | What it does |
-| --- | --- |
-| `data-lg-size` | The original width and height of the media as `"WIDTH-HEIGHT"`, for example `data-lg-size="1600-1067"`. With it, the slide opens from the thumbnail's position and closes back to it ([zoom from origin](/demos/zoom-from-origin/)). Without it, the gallery falls back to the default opening animation for that slide. |
-| any attribute you name in `exThumbImage` | An external thumbnail URL. By default the image inside the item is the thumbnail; set the `exThumbImage` setting to an attribute name, such as `data-external-thumb-image`, to read the thumbnail URL from that attribute instead. |
+By default the image inside the item is the thumbnail. To read the
+thumbnail URL from an attribute instead, set the `exThumbImage` setting
+to the attribute's name, such as `data-external-thumb-image`; that
+attribute is read from the item element rather than becoming a field of
+the item.
 
 ## Available attributes
 

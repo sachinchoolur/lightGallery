@@ -841,3 +841,100 @@ describe('fitted media size follows the current slide', () => {
         expect(portrait.width).toBeLessThan(landscape.width);
     });
 });
+
+describe('dynamic mode lgSize', () => {
+    // A dynamic gallery has no trigger markup, so the media size comes
+    // from the item's lgSize field; the element passed to openGallery
+    // only supplies the position to fly from.
+    let rectSpy: jest.SpyInstance;
+    beforeEach(() => {
+        jest.useFakeTimers();
+        rectSpy = jest
+            .spyOn(Element.prototype, 'getBoundingClientRect')
+            .mockReturnValue({
+                left: 10,
+                top: 10,
+                width: 100,
+                height: 80,
+                right: 110,
+                bottom: 90,
+                x: 10,
+                y: 10,
+                toJSON: () => ({}),
+            } as DOMRect);
+        document.body.innerHTML = `<div id="lightGallery"></div>
+            <img id="cover" src="a-thumb.png" />`;
+    });
+    afterEach(() => {
+        rectSpy.mockRestore();
+        jest.useRealTimers();
+    });
+    const open = (item: Record<string, string>) => {
+        const lg = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+            {
+                dynamic: true,
+                dynamicEl: [item],
+                zoomFromOrigin: true,
+                startAnimationDuration: 400,
+            },
+        );
+        lg.openGallery(0, document.getElementById('cover') as HTMLElement);
+        jest.advanceTimersByTime(20);
+        return lg;
+    };
+
+    it('flies from the origin element using the size on the item', () => {
+        const lg = open({
+            src: 'a.png',
+            thumb: 'a-thumb.png',
+            lgSize: '1600-1067',
+        });
+        expect(lg.currentImageSize).toBeDefined();
+        const item = document.querySelector(
+            '.lg-item.lg-current',
+        ) as HTMLElement;
+        expect(item.style.transform).toContain('scale3d');
+    });
+
+    it('keeps the default opening animation when the item has no size', () => {
+        const lg = open({ src: 'a.png', thumb: 'a-thumb.png' });
+        expect(lg.currentImageSize).toBeUndefined();
+        const item = document.querySelector(
+            '.lg-item.lg-current',
+        ) as HTMLElement;
+        expect(item.style.transform).toBe('');
+    });
+
+    it('still lands the image when opened without an origin element', () => {
+        const lg = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+            {
+                dynamic: true,
+                dynamicEl: [
+                    { src: 'a.png', thumb: 'a-thumb.png', lgSize: '1600-1067' },
+                ],
+                zoomFromOrigin: true,
+                startAnimationDuration: 400,
+            },
+        );
+        lg.openGallery(0);
+        jest.advanceTimersByTime(20);
+        const item = document.querySelector(
+            '.lg-item.lg-current',
+        ) as HTMLElement;
+        expect(item.style.transform).toBe('');
+        jest.advanceTimersByTime(600);
+        expect(document.querySelector('.lg-object')).toBeInTheDocument();
+    });
+
+    it('reads data-lg-size from markup into the item', () => {
+        document.body.innerHTML = `<div id="lightGallery">
+                <a href="a.png" data-lg-size="1600-1067"><img src="a-thumb.png" /></a>
+            </div>`;
+        const lg = lightGallery(
+            document.getElementById('lightGallery') as HTMLElement,
+        );
+        expect(lg.galleryItems[0].lgSize).toBe('1600-1067');
+    });
+});

@@ -44,23 +44,30 @@ gallery.openGallery(1);
 ```
 
 A dynamic gallery has no trigger markup, so the zoom-from-origin animation
-has nowhere to start from. To get it, pass the element the slide should
-grow out of as the second argument of `openGallery`, with the media size
-on its `data-lg-size` attribute:
-
-```html
-<img id="cover" src="img/thumb-1.jpg" alt="Mountains" data-lg-size="1600-1067" />
-```
+needs two things from you: the media size on the item as `lgSize`, and the
+element the slide should grow out of as the second argument of
+`openGallery`:
 
 ```javascript
+const gallery = lightGallery(document.getElementById('dynamic-gallery'), {
+    dynamic: true,
+    dynamicEl: [
+        { src: 'img/1.jpg', thumb: 'img/thumb-1.jpg', lgSize: '1600-1067' },
+    ],
+});
+
 document.getElementById('cover').addEventListener('click', () => {
     gallery.openGallery(0, document.getElementById('cover'));
 });
 ```
 
+A `data-lg-size` attribute on that element works too and takes
+precedence. Without a size or an element, the slide uses the default
+opening animation.
+
 In [React](/docs/react/), [Vue](/docs/vue/) and [Angular](/docs/angular/)
 the same fields describe an item or an entry of the `slides` array, with
-`caption` in place of `subHtml` and `lgSize` as an item field.
+`caption` in place of `subHtml`.
 
 ## Available fields
 

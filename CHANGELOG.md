@@ -55,6 +55,12 @@ unchanged; what moved is the packaging and the framework integrations.
   devices also leave out the zoom in, zoom out and actual size buttons,
   which repeat pinch and double-tap (`showGestureButtons`, turned off
   through `mobileSettings`).
+- **Zoom from origin in dynamic mode**: a dynamic gallery now flies open
+  from the element passed to `openGallery(index, element)`, and closes
+  with the centre fade, like the framework packages. The media size comes
+  from the new `lgSize` item field (`data-lg-size` on markup items fills
+  the same field), or from a `data-lg-size` attribute on that element.
+  Dynamic galleries used to force `zoomFromOrigin` off.
 - **Virtualization**: `virtualization` setting keeps a window of slides and
   thumbnails mounted for very large galleries.
 - **Video facades**: video slides render a poster and load the player on

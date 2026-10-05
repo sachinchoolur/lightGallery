@@ -225,6 +225,17 @@ export interface GalleryItem {
      */
     disqusUrl?: string;
 
+    /**
+     * Original size of the media as `"WIDTH-HEIGHT"`, for example `1600-1067`.
+     * @description Drives the zoom-from-origin opening and closing animation
+     * and the size of video slides. In a gallery built from markup it is read
+     * from the item element. In dynamic mode set it on the item and pass the
+     * element the slide should grow out of as the second argument of
+     * `openGallery`; a `data-lg-size` attribute on that element still wins.
+     * @dataAttr data-lg-size
+     */
+    lgSize?: string;
+
     __slideVideoInfo?: VideoInfo;
     [key: string]: any;
 }
@@ -255,11 +266,11 @@ const defaultDynamicOptions = [
     'fbHtml',
     'disqusIdentifier',
     'disqusUrl',
+    'lgSize',
 ];
 
 // Convert html data-attribute to camalcase
 export function convertToData(attr: string): string {
-    // FInd a way for lgsize
     if (attr === 'href') {
         return 'src';
     }
@@ -296,16 +307,19 @@ const utils = {
             });
     },
     /**
-     * get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
+     * Fit the media's original size into the container. The size comes from
+     * the element's `data-lg-size` attribute, then the item's `lgSize`
+     * field, then `defaultLgSize`. Used for the zoom-from-origin animation.
      */
     getSize(
         el: HTMLElement,
         container: lgQuery,
         spacing = 0,
         defaultLgSize?: string,
+        itemLgSize?: string,
     ): ImageSize | undefined {
         const LGel = $LG(el);
-        const lgSize = LGel.attr('data-lg-size') || defaultLgSize;
+        const lgSize = LGel.attr('data-lg-size') || itemLgSize || defaultLgSize;
 
         const parsed = parseImageSize(lgSize, window.innerWidth);
         if (!parsed) {
@@ -338,8 +352,10 @@ const utils = {
         if (!imageSize || imageSize.width <= 0 || imageSize.height <= 0) {
             return;
         }
-        const LGel = $LG(el).find('img').first();
-        if (!LGel.get()) {
+        // Measure the image inside the trigger, or the trigger itself when
+        // it is the image (the framework packages use the same rule).
+        const origin = $LG(el).find('img').first().get() || el;
+        if (!origin) {
             return;
         }
 
@@ -350,7 +366,7 @@ const utils = {
         // body (`margin: auto`), the long-standing "flight starts beside
         // the thumbnail" bug, and the old padding/border terms adjusted
         // in the wrong direction on styled thumbnails.
-        const rect = LGel.get().getBoundingClientRect();
+        const rect = origin.getBoundingClientRect();
         const triggerRect = {
             left: rect.left,
             top: rect.top,
