@@ -202,6 +202,12 @@ describe('wave-1 features', () => {
         expect(thumbs[2]!.querySelector('img')!.getAttribute('src')).toContain(
             'img.youtube.com/vi/abc123xyz90',
         );
+        // Strip images are lazy so a closed gallery fetches none of them.
+        for (const thumb of thumbs) {
+            const img = thumb.querySelector('img')!;
+            expect(img.getAttribute('loading')).toBe('lazy');
+            expect(img.getAttribute('decoding')).toBe('async');
+        }
 
         thumbs[1]!.click();
         await flush(fixture);

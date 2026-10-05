@@ -617,6 +617,8 @@ export const ThumbnailStrip = defineComponent({
                                     },
                                 },
                                 h('img', {
+                                    loading: 'lazy',
+                                    decoding: 'async',
                                     src: getThumbSrc(item, cfg),
                                     alt: item.alt ?? '',
                                     draggable: false,

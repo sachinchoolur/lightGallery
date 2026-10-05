@@ -82,6 +82,10 @@ describe('virtualization', () => {
         // Thumb window: 0-width jsdom strip → overscan-driven window (the
         // middle-pager translate of 49px keeps thumbs 0-2 mounted).
         expect(document.querySelectorAll('.lg-thumb-item').length).toBe(3);
+        // Windowed thumbs are lazy like the classic strip.
+        for (const img of document.querySelectorAll('.lg-thumb-item img')) {
+            expect(img.getAttribute('loading')).toBe('lazy');
+        }
         const spacers =
             document.querySelectorAll<HTMLElement>('.lg-thumb-spacer');
         expect(spacers.length).toBe(1);

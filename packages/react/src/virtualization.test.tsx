@@ -54,6 +54,13 @@ describe('virtualization', () => {
         // trailing spacer standing in for the rest.
         const thumbs = document.querySelectorAll('.lg-thumb-item');
         expect(thumbs.length).toBe(3);
+        // Windowed thumbs are lazy like the classic strip.
+        thumbs.forEach((thumb) =>
+            expect(thumb.querySelector('img')).toHaveAttribute(
+                'loading',
+                'lazy',
+            ),
+        );
         const spacers =
             document.querySelectorAll<HTMLElement>('.lg-thumb-spacer');
         expect(spacers.length).toBe(1);

@@ -250,6 +250,12 @@ describe('thumbnail plugin', () => {
             'lg-has-thumb',
             'lg-animate-thumb',
         );
+        // Strip images are lazy so a closed gallery fetches none of them.
+        thumbs.forEach((thumb) => {
+            const img = thumb.querySelector('img')!;
+            expect(img).toHaveAttribute('loading', 'lazy');
+            expect(img).toHaveAttribute('decoding', 'async');
+        });
 
         fireEvent.click(thumbs[2]!);
         expect(counterText()).toBe('3');

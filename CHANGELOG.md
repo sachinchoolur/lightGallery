@@ -119,6 +119,11 @@ Long-standing bugs, all of them present in 2.x:
 - The thumbnail strip animated its first positioning, so opening the
   gallery from a thumbnail far along the strip slid it across while the
   image was still flying in. That first positioning is now instant.
+- The thumbnail strip is built when the gallery initialises, and its
+  images loaded eagerly, so every page with a closed gallery downloaded
+  all of its strip thumbnails at load. Strip images are now lazy; nothing
+  is fetched until the gallery opens, and thumbs far along the strip load
+  as they scroll into view.
 - The share dropdown hung from the toolbar's corner instead of the share
   button, so on narrow screens it opened nowhere near the control (and its
   arrow pointed at the wrong one). Button and menu now share a wrapper that

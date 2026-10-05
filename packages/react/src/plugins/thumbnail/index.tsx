@@ -574,6 +574,8 @@ function ThumbnailStrip(): ReactElement | null {
                         }}
                     >
                         <img
+                            loading="lazy"
+                            decoding="async"
                             src={getThumbSrc(item, settings)}
                             alt={item.alt ?? ''}
                             draggable={false}

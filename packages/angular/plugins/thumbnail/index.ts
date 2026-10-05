@@ -170,6 +170,8 @@ type ThumbnailResolved = ThumbnailSettings & {
                     (keydown)="onThumbKeydown($event, entry.index)"
                 >
                     <img
+                        loading="lazy"
+                        decoding="async"
                         [src]="thumbSrc(entry.item)"
                         [alt]="entry.item.alt ?? ''"
                         draggable="false"

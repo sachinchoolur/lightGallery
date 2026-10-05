@@ -606,6 +606,12 @@ export default class Thumbnail {
         const img = document.createElement('img');
         img.alt = alt || '';
         img.setAttribute('data-lg-item-id', index + '');
+        // The strip is built while the gallery is still closed; without
+        // lazy loading every thumbnail would download at page load. The
+        // attributes must be set before src so the browser never starts an
+        // eager fetch.
+        img.setAttribute('loading', 'lazy');
+        img.setAttribute('decoding', 'async');
         img.src = thumbImg;
         div.appendChild(img);
         return div;

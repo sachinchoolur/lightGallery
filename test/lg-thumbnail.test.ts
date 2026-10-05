@@ -39,6 +39,19 @@ describe('thumbnail strip', () => {
         document.body.innerHTML = '';
     });
 
+    it('marks strip thumbnails lazy so a closed gallery fetches none', () => {
+        // The strip is built at init while the gallery is still hidden;
+        // an eager <img> would download every thumbnail at page load.
+        instance = initGallery();
+        const images =
+            document.querySelectorAll<HTMLImageElement>('.lg-thumb img');
+        expect(images.length).toBe(12);
+        images.forEach((img) => {
+            expect(img).toHaveAttribute('loading', 'lazy');
+            expect(img).toHaveAttribute('decoding', 'async');
+        });
+    });
+
     it('positions the strip without animating while the gallery opens', () => {
         instance = initGallery();
         // Opening from the end of the strip would otherwise slide it across
