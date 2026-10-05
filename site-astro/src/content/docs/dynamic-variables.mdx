@@ -1,11 +1,10 @@
 ---
 title: 'Dynamic variables'
-description: 'lightGallery dynamic variables.'
+description: 'Every field a lightGallery item can carry in dynamic mode, from src and thumb to captions, video, download and share URLs, with the matching data attributes.'
 lead:
-    'lightGallery can be instantiated and launched programmatically by setting
-    dynamic option to true and populating dynamicEl option by passing array of
-    objects representing the gallery elements. <a
-    href="../../demos/dynamic-mode/">more info.</a>'
+    'In dynamic mode you build the gallery from data instead of markup: set
+    the dynamic option and pass an array of item objects as dynamicEl. The
+    fields below are the ones each item can carry. <a href="/demos/dynamic-mode/">Demo</a>'
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
@@ -18,6 +17,54 @@ toc: true
 
 import Attributes from '../../components/api/Attributes.astro';
 
-### Available options
+## Passing items
+
+Each item is a plain object. Only `src` is required; the other fields
+switch on captions, video, downloads and sharing per slide.
+
+```javascript
+const gallery = lightGallery(document.getElementById('dynamic-gallery'), {
+    dynamic: true,
+    dynamicEl: [
+        {
+            src: 'img/1.jpg',
+            thumb: 'img/thumb-1.jpg',
+            subHtml: '<h4>Image 1</h4><p>Description of image 1.</p>',
+        },
+        {
+            src: 'img/2.jpg',
+            thumb: 'img/thumb-2.jpg',
+            subHtml: '<h4>Image 2</h4>',
+        },
+    ],
+});
+
+// Open at the second slide.
+gallery.openGallery(1);
+```
+
+A dynamic gallery has no trigger markup, so the zoom-from-origin animation
+has nowhere to start from. To get it, pass the element the slide should
+grow out of as the second argument of `openGallery`, with the media size
+on its `data-lg-size` attribute:
+
+```html
+<img id="cover" src="img/thumb-1.jpg" alt="Mountains" data-lg-size="1600-1067" />
+```
+
+```javascript
+document.getElementById('cover').addEventListener('click', () => {
+    gallery.openGallery(0, document.getElementById('cover'));
+});
+```
+
+In [React](/docs/react/), [Vue](/docs/vue/) and [Angular](/docs/angular/)
+the same fields describe an item or an entry of the `slides` array, with
+`caption` in place of `subHtml` and `lgSize` as an item field.
+
+## Available fields
+
+Every field has an HTML attribute twin for galleries built from markup; the
+[attributes page](/docs/attributes/) lists those.
 
 <Attributes interface="GalleryItem" />

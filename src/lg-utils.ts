@@ -60,7 +60,9 @@ export interface GalleryItem {
     alt?: string;
 
     /**
-     * Title attribute for the video
+     * Title attribute for the image or video. With the
+     * getCaptionFromTitleOrAlt setting, it is used as the caption when
+     * subHtml is not set.
      * @dataAttr title
      */
     title?: string;
@@ -147,7 +149,7 @@ export interface GalleryItem {
 
     /**
      * Actual size of the image in px.
-     * @description This is used in zoom plugin to see the actual size of the image when double taped on the image.
+     * @description This is used in zoom plugin to see the actual size of the image when double-tapped on the image.
      * @dataAttr data-width
      */
     width?: string;

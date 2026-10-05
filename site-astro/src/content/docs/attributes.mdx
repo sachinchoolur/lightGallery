@@ -1,9 +1,9 @@
 ---
 title: 'Attributes'
-description: 'lightGallery HTML attributes.'
+description: 'Every HTML attribute lightGallery reads from your gallery markup: the image, thumbnail, size, caption, video, download and share attributes.'
 lead:
-    'By default, lightGallery takes all required inputs from HTML attributes,
-    here you can find list of all supported HTML attributes'
+    'When you build a gallery from markup, lightGallery reads everything it
+    needs from attributes on each item. This page lists all of them.'
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
@@ -16,6 +16,39 @@ toc: true
 
 import Attributes from '../../components/api/Attributes.astro';
 
-### Available options
+## Where attributes go
+
+Attributes sit on the item element, usually an anchor whose `href` is the
+full-size image and whose child image is the thumbnail:
+
+```html
+<div id="gallery">
+    <a
+        href="img/1.jpg"
+        data-lg-size="1600-1067"
+        data-sub-html="<h4>Mountains</h4>"
+        data-download-url="img/1-original.jpg"
+    >
+        <img src="img/thumb-1.jpg" alt="Mountains" />
+    </a>
+</div>
+```
+
+In the [React](/docs/react/), [Vue](/docs/vue/) and
+[Angular](/docs/angular/) packages the same information is passed as item
+fields instead; the [dynamic variables page](/docs/dynamic-variables/)
+lists those.
+
+## On the item element
+
+These two are read from the item element itself rather than becoming a
+field of the item.
+
+| Attribute | What it does |
+| --- | --- |
+| `data-lg-size` | The original width and height of the media as `"WIDTH-HEIGHT"`, for example `data-lg-size="1600-1067"`. With it, the slide opens from the thumbnail's position and closes back to it ([zoom from origin](/demos/zoom-from-origin/)). Without it, the gallery falls back to the default opening animation for that slide. |
+| any attribute you name in `exThumbImage` | An external thumbnail URL. By default the image inside the item is the thumbnail; set the `exThumbImage` setting to an attribute name, such as `data-external-thumb-image`, to read the thumbnail URL from that attribute instead. |
+
+## Available attributes
 
 <Attributes data="true" interface="GalleryItem" />
