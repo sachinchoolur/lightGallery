@@ -1,0 +1,34 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+/**
+ * Screenshot figure inside a blog post. The inline image goes through the
+ * Astro image pipeline (sized, lazy, WebP) and the figure keeps the
+ * `blog-images` hook that `demo-galleries.js` turns into a lightbox, with
+ * the full-size render as the slide.
+ */
+interface Props {
+    image: ImageMetadata;
+    alt: string;
+}
+
+const { image, alt } = Astro.props;
+const full = await getImage({ src: image, width: 1200, format: 'webp' });
+---
+
+<figure
+    class="blog-images"
+    data-src={full.src}
+    data-lg-size={`${full.attributes.width}-${full.attributes.height}`}
+>
+    <Image
+        src={image}
+        alt={alt}
+        widths={[480, 820, 1200]}
+        sizes="(max-width: 767px) 100vw, 820px"
+        format="webp"
+        loading="lazy"
+        decoding="async"
+    />
+</figure>

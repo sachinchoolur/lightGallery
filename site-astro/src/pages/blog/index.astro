@@ -27,8 +27,12 @@ const posts = (await getCollection('blog')).sort(
                     <h1 class="visually-hidden">Blog</h1>
                     <div class="blog-list">
                         {
-                            posts.map((entry) => (
-                                <BlogCard entry={entry} teaserLength={350} />
+                            posts.map((entry, index) => (
+                                <BlogCard
+                                    entry={entry}
+                                    teaserLength={350}
+                                    eager={index === 0}
+                                />
                             ))
                         }
                     </div>

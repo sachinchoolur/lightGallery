@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection, render } from 'astro:content';
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -95,12 +96,16 @@ const related = (await getCollection('blog'))
                                                         {CONTRIBUTOR_IMAGES[
                                                             contributor
                                                         ] && (
-                                                            <img
+                                                            <Image
                                                                 src={
                                                                     CONTRIBUTOR_IMAGES[
                                                                         contributor
                                                                     ]
                                                                 }
+                                                                width={36}
+                                                                height={36}
+                                                                densities={[1, 2]}
+                                                                format="webp"
                                                                 alt=""
                                                             />
                                                         )}
@@ -113,13 +118,24 @@ const related = (await getCollection('blog'))
                                 }
                             </div>
                         </div>
-                        <div class="docs-hero-image">
-                            <img
-                                alt="blog header"
-                                class="img-fluid"
-                                src={header}
-                            />
-                        </div>
+                        {
+                            header && (
+                                <div class="docs-hero-image">
+                                    {/* The post's LCP element: eager, high
+                                        priority, sized for the bleed column. */}
+                                    <Image
+                                        alt="blog header"
+                                        class="img-fluid"
+                                        src={header}
+                                        widths={[480, 820, 1200]}
+                                        sizes="(max-width: 767px) 100vw, 1060px"
+                                        format="webp"
+                                        loading="eager"
+                                        fetchpriority="high"
+                                    />
+                                </div>
+                            )
+                        }
                         <Content />
                     </article>
                 </div>

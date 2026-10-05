@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 
 import {
@@ -17,9 +18,11 @@ import {
 interface Props {
     entry: CollectionEntry<'blog'>;
     teaserLength: number;
+    /** First card on the list page: it is the LCP image, so load it eagerly. */
+    eager?: boolean;
 }
 
-const { entry, teaserLength } = Astro.props;
+const { entry, teaserLength, eager = false } = Astro.props;
 const url = blogUrl(entry);
 const header = bundleImage(entry, 'header.png');
 ---
@@ -27,7 +30,18 @@ const header = bundleImage(entry, 'header.png');
 <div class="blog-list-item">
     <div class="blog-header">
         <a href={url} class="docs-hero-image">
-            <img alt="blog header" class="img-fluid" src={header} />
+            {header && (
+                <Image
+                    alt="blog header"
+                    class="img-fluid"
+                    src={header}
+                    widths={[480, 820]}
+                    sizes="(max-width: 767px) 100vw, 640px"
+                    format="webp"
+                    loading={eager ? 'eager' : 'lazy'}
+                    fetchpriority={eager ? 'high' : 'auto'}
+                />
+            )}
         </a>
         {
             entry.data.tags.length > 0 && (
@@ -66,8 +80,12 @@ const header = bundleImage(entry, 'header.png');
                         <div class="blog-contributors-list">
                             <span class="contributor-image">
                                 {CONTRIBUTOR_IMAGES[contributor] && (
-                                    <img
+                                    <Image
                                         src={CONTRIBUTOR_IMAGES[contributor]}
+                                        width={36}
+                                        height={36}
+                                        densities={[1, 2]}
+                                        format="webp"
                                         alt=""
                                     />
                                 )}

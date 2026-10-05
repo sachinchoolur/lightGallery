@@ -1,11 +1,15 @@
+import type { ImageMetadata } from 'astro';
 import type { CollectionEntry } from 'astro:content';
+
+import sachinNeravath from '../assets/contributors/sachin-neravath.jpeg';
+import ujjwalMaheendran from '../assets/contributors/ujjwal-maheendran.jpg';
 
 /** Blog helpers shared by the list, single and related-posts views. */
 
-/** Contributor avatars, served from the site's static images. */
-export const CONTRIBUTOR_IMAGES: Record<string, string> = {
-    'Ujjwal Maheendran': '/images/ujjwal.jpg',
-    'Sachin Neravath': '/images/sachinNeravath.jpeg',
+/** Contributor avatars; rendered through `<Image>` at 36px. */
+export const CONTRIBUTOR_IMAGES: Record<string, ImageMetadata> = {
+    'Ujjwal Maheendran': ujjwalMaheendran,
+    'Sachin Neravath': sachinNeravath,
 };
 
 export function blogSlug(entry: CollectionEntry<'blog'>): string {
@@ -37,18 +41,19 @@ export function teaser(body: string, length: number): string {
 }
 
 /**
- * Bundle-relative image URL (Hugo page-bundle resource). Images live next
- * to the content file; Vite serves them via import.meta.glob.
+ * Bundle image (Hugo page-bundle resource) as Astro image metadata. Images
+ * live next to the content file; callers render them through `<Image>` so
+ * they ship sized, lazy and in WebP.
  */
-const bundleImages = import.meta.glob<{ default: string }>(
+const bundleImages = import.meta.glob<{ default: ImageMetadata }>(
     '../content/blog/*/*.{png,jpg,jpeg,webp}',
-    { eager: true, query: '?url' },
+    { eager: true },
 );
 
 export function bundleImage(
     entry: CollectionEntry<'blog'>,
     name: string,
-): string | undefined {
+): ImageMetadata | undefined {
     // entry.id follows the frontmatter `slug` override, so the bundle
     // directory must come from the entry's file path instead.
     const dir = entry.filePath?.split('/').at(-2);
