@@ -105,7 +105,10 @@ export interface SlideItemLoadDetail {
      */
     delay: number;
 
-    // Will be true for the first slide
+    /**
+     * True when the loaded slide is the first one shown after the gallery
+     * opened.
+     */
     isFirstSlide: boolean;
 }
 
