@@ -26,7 +26,7 @@ export interface LightGalleryItemProps
 }
 
 /**
- * Uncontrolled-mode trigger (ADR 0001 §3): renders the thumbnail markup and
+ * Uncontrolled-mode trigger: renders the thumbnail markup and
  * opens the gallery at its slide on click. Mount order defines slide order.
  * The rendered element doubles as the zoom-from-origin measurement target
  * (the first `<img>` inside it, falling back to the element itself).

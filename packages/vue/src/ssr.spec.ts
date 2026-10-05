@@ -12,7 +12,7 @@ const ITEMS: LgGalleryItem[] = [
 ];
 
 /**
- * SSR rule (ADR §7): the closed gallery renders only its default slot
+ * SSR rule: the closed gallery renders only its default slot
  * (triggers) on the server — the Teleport body is `v-if`-gated on open
  * state, so nothing teleports and there is no SSR mismatch surface.
  */

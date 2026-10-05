@@ -1,5 +1,5 @@
 /**
- * RTL direction seam (plan 011): the resolved direction lands on the
+ * RTL direction seam: the resolved direction lands on the
  * container as a `dir` attribute (the hook for the opt-in lg-rtl.css
  * layer) and mirrors the physical arrow keys. The gesture/thumbnail
  * mirroring is covered by the headless direction tests; this suite pins

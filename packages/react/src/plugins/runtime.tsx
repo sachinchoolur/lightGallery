@@ -14,7 +14,7 @@ import type {
     ResolvedPluginSettings,
 } from './types';
 
-/** Build the per-render plugin context (ADR 0001 §5). */
+/** Build the per-render plugin context. */
 export function usePluginContext(): PluginContext {
     const state = useGalleryState();
     const actions = useGalleryActions();

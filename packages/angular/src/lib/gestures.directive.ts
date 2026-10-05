@@ -90,7 +90,7 @@ export class LgGesturesDirective implements OnDestroy {
     private navSpringActive = false;
 
     constructor() {
-        // The overlay view only ever attaches in the browser (ADR §8), so a
+        // The overlay view only ever attaches in the browser, so a
         // constructor-time native listener is SSR-safe here.
         this.host.addEventListener('pointerdown', this.onPointerDown);
         // React counterpart: useGalleryGestures' `active` cleanup effect —
@@ -559,7 +559,7 @@ export class LgGesturesDirective implements OnDestroy {
 
         const session = this.session;
         if (session) {
-            // Second pointer: core swipe stands down (pinch is 005's zoom).
+            // Second pointer: core swipe stands down (pinch belongs to zoom).
             registerPointer();
             session.suspended = true;
             this.restoreDragVisuals(session);

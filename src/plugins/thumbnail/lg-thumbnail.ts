@@ -51,7 +51,7 @@ export default class Thumbnail {
     // gallery opened from a thumbnail far down the strip would slide it
     // across while the image is still flying in.
     private instantThumb = false;
-    // Strip physics (plan 010): velocity samples for the release fling,
+    // Strip physics: velocity samples for the release fling,
     // the live (frame-written) translate, and the running spring cancel.
     private dragSamples: VelocitySample[] = [];
     private liveTranslateX = 0;
@@ -444,7 +444,7 @@ export default class Thumbnail {
     }
 
     /**
-     * Drag-start seam (plan 010 physics): a press mid-glide takes over
+     * Drag-start seam (strip physics): a press mid-glide takes over
      * from the live position, and the velocity window restarts.
      */
     private onThumbDragStart(pageX: number): void {
@@ -471,7 +471,7 @@ export default class Thumbnail {
         });
 
         // Elastic: overshoot past the edges compresses instead of
-        // clamping dead (plan 010 physics).
+        // clamping dead (strip physics).
         // Finger motion maps to the logical scroll offset; the mapping
         // mirrors in RTL together with the applied transform sign.
         const dragDelta =
@@ -518,7 +518,7 @@ export default class Thumbnail {
         thumbDragUtils.endTime = new Date();
         this.$thumbOuter.removeClass('lg-dragging');
 
-        // Release physics (plan 010): project the windowed velocity to a
+        // Release physics: project the windowed velocity to a
         // fling target, clamp into the strip bounds, and spring there, // bounces off the edge on overshoot, pulls back when released
         // inside the rubber band. (Replaces the 2.x magic-numbers
         // momentum, whose transition-duration carried an invalid
@@ -613,7 +613,7 @@ export default class Thumbnail {
 
     /**
      * True when the strip renders only a window of thumbs
-     * (virtualization.thumbs, plan 010).
+     * (virtualization.thumbs).
      */
     private isThumbWindowed(): boolean {
         return this.core.settings.virtualization?.thumbs !== undefined;

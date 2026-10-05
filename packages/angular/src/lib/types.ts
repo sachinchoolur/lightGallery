@@ -1,13 +1,13 @@
 import type { GalleryItem } from '@lightgallery/headless';
 
 /**
- * Gallery item with the caption narrowed to a plain string (ADR 0001 §4):
+ * Gallery item with the caption narrowed to a plain string:
  * rich captions use the `*lgCaption` template slot; raw HTML only via the
  * explicitly named `captionHtml` opt-in (Angular-sanitized `[innerHTML]`).
  */
 export type LgGalleryItem = GalleryItem<string>;
 
-/** Event payload shapes — identical to the React track's (ADR 0001 §6). */
+/** Event payload shapes — identical to the React track's. */
 export interface SlideEventDetail {
     index: number;
     prevIndex: number;
@@ -30,7 +30,7 @@ export interface HasVideoDetail {
 }
 
 /**
- * Imperative surface covering vanilla's public methods (ADR 0001 §3) —
+ * Imperative surface covering vanilla's public methods —
  * implemented by `LgGalleryComponent` and reachable in templates via
  * `#lg="lgGallery"`. Also the payload of `(init)` for parity with 2.x
  * `event.detail.instance`.
@@ -50,8 +50,8 @@ export interface InitDetail {
 }
 
 /**
- * All bus events and their payloads (ADR 0001 §6: outputs without the `on`
- * prefix, payload details identical to React). Core fires the
+ * All bus events and their payloads (outputs without the `on` prefix,
+ * payload details identical to React). Core fires the
  * lifecycle subset; gesture and plugin events fire from their layers.
  */
 export interface LgEventMap {

@@ -217,7 +217,7 @@ const deferSrc = computed(
 );
 
 /**
- * Slide content resolved through the plugin runtime (ADR §5): the first
+ * Slide content resolved through the plugin runtime: the first
  * plugin slide renderer that owns the item wins (video); otherwise the
  * built-in image or iframe renderer; then every plugin `slideWrapper`
  * wraps the result, first plugin outermost (2.x DOM order) — the direct

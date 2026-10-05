@@ -21,7 +21,7 @@ import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 import Video from '@lightgallery/react/plugins/video';
 import Zoom from '@lightgallery/react/plugins/zoom';
 
-// CSS stays a consumer import (ADR 0001 §8) — never bundled by the package.
+// CSS stays a consumer import — never bundled by the package.
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-transitions.css';
 import 'lightgallery/css/lg-rtl.css';
@@ -55,7 +55,7 @@ const picsum = (id: number, w: number, h: number) =>
     `https://picsum.photos/id/${id}/${w}/${h}`;
 
 // Rig-only responsive ladder: real w-descriptor srcset so device passes
-// exercise the plan-002 selection math end to end.
+// exercise the responsive-source selection math end to end.
 const picsumSrcset = (id: number, w: number, h: number) =>
     [640, 960, 1280, 1600]
         .map(

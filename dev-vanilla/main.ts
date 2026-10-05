@@ -17,7 +17,7 @@ import OriginCrop from '../src/plugins/originCrop/lg-origin-crop';
 // separately (same split the react demo consumes from dist/css).
 import '../src/scss/lightgallery-bundle.scss';
 import '../src/scss/lg-transitions.scss';
-// Opt-in RTL layer (plan 011) — the RTL scenario below exercises it.
+// Opt-in RTL layer — the RTL scenario below exercises it.
 import '../src/scss/lg-rtl.scss';
 import '../src/scss/lg-justified.scss';
 
@@ -28,7 +28,7 @@ const picsum = (id: number, w: number, h: number) =>
     `https://picsum.photos/id/${id}/${w}/${h}`;
 
 // Rig-only responsive ladder: real w-descriptor srcset so device passes
-// exercise the plan-002 selection math end to end.
+// exercise the responsive-source selection math end to end.
 const picsumSrcset = (id: number, w: number, h: number) =>
     [640, 960, 1280, 1600]
         .map(

@@ -8,7 +8,7 @@ import {
 } from '@lightgallery/headless';
 
 /**
- * Signals store over the shared headless reducer (ADR 0001 §2). Provided
+ * Signals store over the shared headless reducer. Provided
  * per gallery instance via the component's `providers` — never root.
  *
  * The reducer stays the single source of truth; this class is dispatch

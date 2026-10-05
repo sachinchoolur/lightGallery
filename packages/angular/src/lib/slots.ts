@@ -9,7 +9,7 @@ export interface LgCaptionContext {
 }
 
 /**
- * Caption slot (ADR 0001 §4): the Angular expression of the React
+ * Caption slot: the Angular expression of the React
  * `render.caption` render prop — a typed template the gallery renders in
  * the caption bar with the current item as context.
  */
@@ -34,7 +34,7 @@ export interface LgCounterContext {
     total: number;
 }
 
-/** Counter slot (ADR 0001 §4): replaces the default `1 / 10` markup. */
+/** Counter slot: replaces the default `1 / 10` markup. */
 @Directive({
     selector: 'ng-template[lgCounter]',
 })
@@ -49,7 +49,7 @@ export class LgCounterDirective {
     }
 }
 
-/** Prev-button content slot (ADR 0001 §4); empty template context. */
+/** Prev-button content slot; empty template context. */
 @Directive({
     selector: 'ng-template[lgPrevButton]',
 })
@@ -57,7 +57,7 @@ export class LgPrevButtonDirective {
     readonly templateRef = inject(TemplateRef<unknown>);
 }
 
-/** Next-button content slot (ADR 0001 §4); empty template context. */
+/** Next-button content slot; empty template context. */
 @Directive({
     selector: 'ng-template[lgNextButton]',
 })

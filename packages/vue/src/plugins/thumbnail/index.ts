@@ -149,7 +149,7 @@ export const ThumbnailStrip = defineComponent({
             { immediate: true },
         );
         onScopeDispose(() => clearTimeout(instantTimer));
-        // Fling corridor (plan 010): set at release so the window covers
+        // Fling corridor: set at release so the window covers
         // the whole flight path; cleared at settle.
         const corridor = ref<{ from: number; to: number } | null>(null);
         const stripOuter = ref<HTMLElement | null>(null);
@@ -163,7 +163,7 @@ export const ThumbnailStrip = defineComponent({
             ),
         );
 
-        // Plan-010 thumbnail windowing: with virtualization.thumbs set,
+        // Thumbnail windowing: with virtualization.thumbs set,
         // only the visible thumbs plus overscan render; spacers preserve
         // the strip geometry. Keys off the COMMITTED translate — advances
         // at release/slide-change/resize, never per pointermove.
@@ -192,7 +192,7 @@ export const ThumbnailStrip = defineComponent({
                   });
         });
 
-        // Strip drag + physics state (plan 010): frames write the DOM
+        // Strip drag + physics state: frames write the DOM
         // directly; the reactive translate commits once at settle
         // (windowed strips re-render there).
         let clickable = true;

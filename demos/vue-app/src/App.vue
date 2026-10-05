@@ -22,7 +22,7 @@ import Sizes from './pages/Sizes.vue';
 import Thumbnails from './pages/Thumbnails.vue';
 import Video from './pages/Video.vue';
 
-// CSS stays a consumer import (ADR 0001 §7) — never bundled by the package.
+// CSS stays a consumer import — never bundled by the package.
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-transitions.css';
 import 'lightgallery/css/lg-rtl.css';

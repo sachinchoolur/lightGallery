@@ -16,7 +16,7 @@ import type { OriginAnimation } from './slide.component';
 
 /**
  * Renders the slide list (`.lg-inner`) through the feature `slidesWrapper`
- * chain (ADR §5), first feature = outermost — the React runtime's
+ * chain, first feature = outermost — the React runtime's
  * `wrapSlides` reduceRight. Each wrapper receives
  * {@link LgSlidesWrapperInputs}: the opening or closing slide's
  * `originAnim`, and the rest of the chain as its `content` template.

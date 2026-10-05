@@ -63,8 +63,8 @@ export interface OriginAnimation {
 }
 
 /**
- * One `.lg-item` (the host element carries the class contract, per the ADR
- * §3 tree). Content mounts lazily (2.x parity): the current slide loads
+ * One `.lg-item` (the host element itself carries the class contract).
+ * Content mounts lazily (2.x parity): the current slide loads
  * immediately; neighbors within `preload` load once the current slide's
  * media completes; once loaded, a slide keeps its content for as long as it
  * stays in the DOM window. The vanilla CSS shows the loading spinner until
@@ -89,7 +89,7 @@ export interface OriginAnimation {
     template: `
         <ng-template #slideContent>
             @if (renderer(); as rendererCmp) {
-            <!-- Feature slide renderer wins (video); ADR §5. -->
+            <!-- Feature slide renderer wins (video). -->
             <ng-container
                 *ngComponentOutlet="
                     rendererCmp;
@@ -164,7 +164,7 @@ export class LgSlideComponent {
         () => this.store.currentIndex() === this.index(),
     );
 
-    /** First feature slide renderer that owns this item wins (ADR §5). */
+    /** First feature slide renderer that owns this item wins. */
     protected readonly renderer = computed<Type<unknown> | null>(() => {
         const item = this.item();
         if (!item) {

@@ -32,9 +32,9 @@ import {
 
 /**
  * Video feature: HTML5 / YouTube / Vimeo / Wistia slides (2.x `lg-video`) —
- * the slide-renderer template wave 2 copies. The `videojs` option is
- * dropped per the inherited ADR decision; custom players go through the
- * `lgSlide` template slot (wave 2).
+ * the slide-renderer template other features copy. The `videojs` option
+ * is intentionally dropped; custom players go through the `lgSlide`
+ * template slot.
  *
  * The embed URLs come from the headless builders (validated video ids), so
  * bypassing Angular's resource-URL sanitizer for them is deliberate and

@@ -149,7 +149,7 @@ function isSlideElement(target: EventTarget | null): boolean {
 const HIDE_BARS_ACTIVITY_EVENTS = ['mousemove', 'click', 'touchstart'] as const;
 
 /**
- * The core gallery (ADR 0001 §3): an invisible host that projects the
+ * The core gallery: an invisible host that projects the
  * uncontrolled triggers and opens the lightbox into a CDK overlay. Settings
  * are same-named signal inputs; events are outputs without the `on` prefix;
  * `[open]` + `(closed)` and `[(index)]` drive controlled mode; the
@@ -471,8 +471,8 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     readonly closed = output<void>();
 
     /**
-     * Two-way slide index (`[(index)]`). Deviation from React documented in
-     * the ADR: `model()` replaces the controlled/uncontrolled index split —
+     * Two-way slide index (`[(index)]`). Deliberate deviation from React:
+     * `model()` replaces the controlled/uncontrolled index split —
      * internal navigation writes the model, external writes navigate.
      */
     readonly index = model<number>(0);
@@ -495,13 +495,13 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     readonly originRect = input<RectLike | null | undefined>(undefined);
 
     /**
-     * Feature values (ADR §5): `[features]="[withThumbnail(), withZoom()]"`.
+     * Feature values: `[features]="[withThumbnail(), withZoom()]"`.
      * Registered behind the `LG_FEATURE` multi-token in a per-gallery
      * feature injector.
      */
     readonly features = input<readonly LgFeature[]>([]);
 
-    // ── Settings inputs (same-named, typed from headless — ADR §6) ────────
+    // ── Settings inputs (same-named, typed from headless) ─────────────────
 
     readonly mode = input<GalleryMode | undefined>(undefined);
     readonly easing = input<string | undefined>(undefined);
@@ -564,7 +564,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     readonly isMobile = input<(() => boolean) | undefined>(undefined);
     readonly mobileSettings = input<MobileSettings | undefined>(undefined);
 
-    // ── Outputs (ADR §6 naming table: all 25, `on` prefix dropped) ────────
+    // ── Outputs (all 25 vanilla events, `on` prefix dropped) ──────────────
 
     readonly init = output<InitDetail>();
     readonly beforeOpen = output<void>();
@@ -670,7 +670,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         this.originSettle = null;
     }
 
-    // ── Settings resolution (headless merge order; ADR §2) ────────────────
+    // ── Settings resolution (headless merge order) ────────────────────────
 
     // prefers-reduced-motion collapses every animation to 0ms and disables
     // the zoom-from-origin/bounce effects (a11y; checked once per instance).
@@ -751,7 +751,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                 ? user.isMobile()
                 : defaultIsMobile();
         }
-        // ADR §5 merge order (identical to React; headless owns the merge):
+        // Settings merge order (identical to React; headless owns the merge):
         // core defaults < feature presets < feature defaults < user settings
         // (core inputs + `withX()` options) < mobile overrides. Non-mutating.
         const features = this.dedupedFeatures();
@@ -801,7 +801,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             this.slides() ??
             this.runtime.registrations().map((entry) => entry.item()),
     );
-    /** Feature `transformItems` results (vimeoThumbnail-style, wave 2). */
+    /** Feature `transformItems` results (vimeoThumbnail-style). */
     private readonly transformedItems = signal<readonly LgGalleryItem[] | null>(
         null,
     );
@@ -856,7 +856,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
     /** Classes features toggled onto `.lg-outer` via `layout.setOuterClass`. */
     private readonly featureOuterClasses = signal<Record<string, boolean>>({});
-    /** mediumZoom's media-position override (wave 2), read by measureOffsets. */
+    /** mediumZoom's media-position override, read by measureOffsets. */
     private mediaPositionOverride: (() => LgMediaPosition) | null = null;
     /** originCrop's flight override, consulted by computeOrigin. */
     private originFlightOverride: OriginFlightResolver | null = null;
@@ -995,7 +995,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         });
     });
 
-    // Pool size: virtualization.slides (plan 010) overrides the classic
+    // Pool size: virtualization.slides overrides the classic
     // numberOfSlideItemsInDom. The current slide is always in the window,
     // and zoom resets when a slide stops being current, so the pool never
     // recycles live zoom state.
@@ -1089,7 +1089,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                 this.commitTouchNavigation(target, direction),
             settleTouchNavigation: () => this.touchSlideMode.set(false),
         };
-        // The LG_PLUGIN_CONTEXT value (ADR §5): the React PluginContext
+        // The LG_PLUGIN_CONTEXT value: the React PluginContext
         // mirrored field-for-field onto signals.
         this.runtime.pluginContext = {
             state: this.store.state,
@@ -1132,7 +1132,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
         // Feature injector lifecycle: rebuilt when the features array
         // changes; eager services (LG_FEATURE_INIT) instantiate immediately
-        // so features can act while the gallery is closed (hash, wave 2).
+        // so features can act while the gallery is closed (hash).
         effect(() => {
             const features = this.dedupedFeatures();
             untracked(() => this.rebuildFeatureInjector(features));
@@ -1240,7 +1240,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         });
     }
 
-    // ── Imperative surface (ADR §3; `#lg="lgGallery"`) ────────────────────
+    // ── Imperative surface (`#lg="lgGallery"`) ────────────────────────────
 
     openGallery(index?: number): void {
         if (this.store.isOpen() || this.open() !== undefined) {
@@ -1319,7 +1319,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         this.destroyFeatureInjector();
     }
 
-    // ── Feature runtime plumbing (ADR §5) ─────────────────────────────────
+    // ── Feature runtime plumbing ──────────────────────────────────────────
 
     private rebuildFeatureInjector(features: readonly LgFeature[]): void {
         this.destroyFeatureInjector();
@@ -1476,7 +1476,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     }
 
     protected toggleMaximize(): void {
-        // Meaningful for inline containers (007); kept for DOM/API parity.
+        // Meaningful for inline containers; kept for DOM/API parity.
         this.maximized.update((value) => !value);
     }
 
@@ -1508,7 +1508,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
     private openOverlay(): void {
         if (!isPlatformBrowser(this.platformId)) {
-            // SSR: the closed gallery renders only its triggers (ADR §8).
+            // SSR: the closed gallery renders only its triggers.
             return;
         }
         this.phase.set('pre-open');
@@ -1544,7 +1544,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
             this.portalViewRef = this.domOutlet.attach(portal);
             return;
         }
-        // CDK adopted per ADR §3: global position + scroll blocking replace
+        // CDK overlay by design: global position + scroll blocking replace
         // the hand-rolled portal/body-lock pair from the React outlet.
         this.scrollStrategy = this.overlay.scrollStrategies.block();
         this.overlayRef = this.overlay.create({
@@ -1648,7 +1648,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
         if (settings.trapFocus && this.isBodyContainer()) {
             // Remember where focus came from; restored when the overlay
-            // detaches (dialog pattern). CDK FocusTrap hardening lands in 007.
+            // detaches (dialog pattern). Tab cycling is `cdkTrapFocus`'s job.
             this.returnFocus =
                 document.activeElement instanceof HTMLElement
                     ? document.activeElement
@@ -1731,8 +1731,8 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
     // ── Document/window listeners while open ──────────────────────────────
 
     private bindOpenListeners(settings: CoreSettings): void {
-        // ESC close (2.x escKey) + arrow navigation (2.x keyPress). Focus
-        // trapping beyond CDK defaults is the 007 a11y pass.
+        // ESC close (2.x escKey) + arrow navigation (2.x keyPress). Tab
+        // cycling is handled by `cdkTrapFocus` on the overlay.
         this.keydownListener = (event: KeyboardEvent) => {
             if (this.settings().escKey && event.key === 'Escape') {
                 event.preventDefault();
@@ -1878,7 +1878,7 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
 
     /** Toolbar, caption and thumbnail-strip offsets for media (2.x parity). */
     private measureOffsets(): { top: number; bottom: number } {
-        // mediumZoom overrides the measurement entirely (ADR §5 layout).
+        // mediumZoom overrides the measurement entirely via the layout seam.
         if (this.mediaPositionOverride) {
             return this.mediaPositionOverride();
         }

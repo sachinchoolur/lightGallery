@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * The core gallery (ADR 0001 §3): renders uncontrolled triggers via the
+ * The core gallery: renders uncontrolled triggers via the
  * default slot and opens the lightbox through `<Teleport>`. Settings are
  * same-named camelCase props; events are kebab-case emits; `v-model:open`
  * and `v-model:index` drive controlled state; the template ref exposes the
@@ -293,7 +293,7 @@ const hyphenate = (name: string): string =>
     name.replace(/\B([A-Z])/g, '-$1').toLowerCase();
 const plugins = computed(() => dedupePlugins(props.plugins ?? []));
 const settings = computed<ResolvedPluginSettings>(() => {
-    // ADR §5 merge order (identical across the tracks; headless owns the
+    // Settings merge order (identical across the tracks; headless owns the
     // merge): core defaults < plugin presets < plugin defaults < user
     // settings (core props + per-plugin attr objects) < mobile overrides.
     const user: Record<string, unknown> = {};
@@ -405,7 +405,7 @@ watch(
     { immediate: true },
 );
 
-// ── Event fan-out: kebab emit + shared bus (ADR §5) ──────────────────────
+// ── Event fan-out: kebab emit + shared bus ───────────────────────────────
 
 const events = createEmitter<LgEventMap>();
 function emitEvent<K extends keyof LgEventMap>(
@@ -530,7 +530,7 @@ const announcement = computed(() => {
                 : undefined,
     });
 });
-// Pool size: virtualization.slides (plan 010) overrides the classic
+// Pool size: virtualization.slides overrides the classic
 // numberOfSlideItemsInDom. The current slide is always in the window, and
 // zoom resets when a slide stops being current, so the pool never
 // recycles live zoom state.
@@ -634,7 +634,7 @@ const contentStyle = computed(() => {
 // ── Measurements (zoom-from-origin + media position) ─────────────────────
 
 function measureOffsets(): { top: number; bottom: number } {
-    // mediumZoom overrides the measurement entirely (ADR §5 layout).
+    // mediumZoom overrides the measurement entirely via the layout seam.
     if (mediaPositionOverride) {
         return mediaPositionOverride();
     }
@@ -870,8 +870,8 @@ function runEntrance(): void {
 
     bindOpenListeners();
     if (cfg.trapFocus && isBodyContainer.value) {
-        // Focus in on open; returned on close. Tab-cycling trap is the 007
-        // a11y pass (hand-rolled per the ADR).
+        // Focus in on open; returned on close. The Tab-cycling trap below
+        // is hand-rolled (no focus-trap dependency).
         returnFocus =
             document.activeElement instanceof HTMLElement
                 ? document.activeElement

@@ -2,7 +2,7 @@
  * Cleanup-tracked timers: every timeout in the package goes through this
  * class so destroying a gallery (even mid-animation) never leaks a timer —
  * the Angular twin of the React track's `useTimeouts` discipline that the
- * 007 leak audit assumes.
+ * leak audit assumes.
  */
 export class LgTimeouts {
     private readonly ids = new Set<ReturnType<typeof setTimeout>>();

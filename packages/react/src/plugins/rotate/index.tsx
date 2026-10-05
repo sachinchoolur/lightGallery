@@ -21,8 +21,8 @@ import type { LgPlugin, SlideWrapperProps } from '../types';
 
 /**
  * Rotate plugin (2.x `lg-rotate`): rotate/flip the current image. Transform
- * ownership follows the 005 slide-wrapper pattern; compose with zoom as
- * `plugins={[Zoom, Rotate]}` so zoom stays outermost (2.x DOM order).
+ * ownership follows the zoom plugin's slide-wrapper pattern; compose with
+ * zoom as `plugins={[Zoom, Rotate]}` so zoom stays outermost (2.x DOM order).
  *
  * Deviation (noted): 2.x kept rotate values for every visited slide until
  * close; here values live in the slide's wrapper, so they reset if a slide

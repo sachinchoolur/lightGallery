@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Release verification battery (plan 008): packs @lightgallery/headless and
+ * Release verification battery: packs @lightgallery/headless and
  * @lightgallery/react with pnpm (applies publishConfig), installs both
  * tarballs into a scratch consumer, then:
  *   - imports AND requires every entry (core + all 13 plugin subpaths)

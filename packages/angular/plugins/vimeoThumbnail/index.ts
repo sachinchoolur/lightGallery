@@ -4,7 +4,7 @@ import type { LgFeature, LgGalleryItem } from '@lightgallery/angular';
 /**
  * vimeoThumbnail feature (2.x `lg-vimeo-thumbnail`): fetches Vimeo oEmbed
  * thumbnails for vimeo items. Implemented as an async `transformItems`
- * (ADR §5) — the gallery runtime aborts the fetches when the items change
+ * feature hook — the gallery runtime aborts the fetches when the items change
  * or the gallery is destroyed.
  */
 

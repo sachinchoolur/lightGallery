@@ -9,7 +9,7 @@ import {
 import type { OriginAnimation } from './LgSlide.vue';
 
 /**
- * Renders the slide list through every plugin `slidesWrapper` (ADR §5),
+ * Renders the slide list through every plugin `slidesWrapper`,
  * first plugin = outermost — the React runtime's `wrapSlides` reduceRight.
  * Each wrapper receives the opening or closing slide's `originAnim` and
  * the wrapped content through its default slot.

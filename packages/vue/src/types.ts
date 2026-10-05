@@ -1,13 +1,13 @@
 import type { GalleryItem, UserSettings } from '@lightgallery/headless';
 
 /**
- * Gallery item with the caption narrowed to a plain string (ADR 0001 §4):
+ * Gallery item with the caption narrowed to a plain string:
  * rich captions use the `#caption` scoped slot; raw HTML only via the
  * explicitly named `captionHtml` opt-in (`v-html`, consumer-sanitized).
  */
 export type LgGalleryItem = GalleryItem<string>;
 
-/** Event payload shapes — identical to the sibling tracks' (ADR 0001 §6). */
+/** Event payload shapes — identical to the sibling tracks'. */
 export interface SlideEventDetail {
     index: number;
     prevIndex: number;
@@ -42,7 +42,7 @@ export interface InitDetail {
 }
 
 /**
- * Bus events and their payloads (ADR 0001 §6). Bus names are camelCase
+ * Bus events and their payloads. Bus names are camelCase
  * (shared with the sibling tracks); component emits use the kebab-case
  * mirror (`beforeSlide` → `@before-slide`).
  */

@@ -29,7 +29,7 @@ import { withVideo } from '@lightgallery/angular/plugins/video';
 import { withZoom } from '@lightgallery/angular/plugins/zoom';
 import { withOriginCrop } from '@lightgallery/angular/plugins/originCrop';
 
-// CSS stays a consumer import (ADR 0001 §7) — never bundled by the package.
+// CSS stays a consumer import — never bundled by the package.
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-transitions.css';
 import 'lightgallery/css/lg-rtl.css';
@@ -47,7 +47,7 @@ import 'lightgallery/css/lg-justified.css';
 const picsum = (id: number, w: number, h: number): string =>
     `https://picsum.photos/id/${id}/${w}/${h}`;
 // Rig-only responsive ladder: real w-descriptor srcset so device passes
-// exercise the plan-002 selection math end to end.
+// exercise the responsive-source selection math end to end.
 const picsumSrcset = (id: number, w: number, h: number): string =>
     [640, 960, 1280, 1600]
         .map(

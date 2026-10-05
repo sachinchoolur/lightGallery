@@ -170,7 +170,7 @@ describe('accessibility (vanilla core)', () => {
 
         it('honors a localized announcement template', () => {
             // Partial override: strings merge per-key over the defaults
-            // (plan 011 — the provide-everything requirement is gone).
+            // (the provide-everything requirement is gone).
             instance = initGallery({
                 strings: {
                     galleryLabel: 'Galerie',

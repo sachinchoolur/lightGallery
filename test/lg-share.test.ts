@@ -1,7 +1,7 @@
 /**
  * Share plugin: Web Share hybrid (native sheet vs dropdown menu) and the
- * X target refresh — the vanilla half of the plan-005 parity matrix the
- * binding wave2 suites assert.
+ * X target refresh — the vanilla half of the parity matrix the framework
+ * suites assert.
  */
 import '@testing-library/jest-dom';
 

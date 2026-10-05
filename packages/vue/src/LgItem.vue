@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Uncontrolled-mode trigger (ADR 0001 §3): renders the thumbnail markup
+ * Uncontrolled-mode trigger: renders the thumbnail markup
  * (an anchor by default) and opens the gallery at its slide on click.
  * Mount order defines slide order — same registration caveat as the
  * sibling tracks. The rendered element doubles as the zoom-from-origin

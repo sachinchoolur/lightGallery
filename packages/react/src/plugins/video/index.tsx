@@ -30,7 +30,7 @@ import type { LgPlugin } from '../types';
 
 /**
  * Video plugin: HTML5 / YouTube / Vimeo / Wistia slides (2.x `lg-video`).
- * The `videojs` option is dropped per ADR 0001 §10 — custom players go
+ * The `videojs` option is intentionally dropped — custom players go
  * through `render.slide`.
  */
 

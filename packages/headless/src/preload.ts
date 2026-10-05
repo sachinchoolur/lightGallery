@@ -85,7 +85,7 @@ export function getSlideIndexesInDom(
 }
 
 /**
- * Slide-pool policy (plan 010 virtualization): the mounted-slide window
+ * Slide-pool policy (virtualization): the mounted-slide window
  * from `getSlideIndexesInDom`, plus any protected indexes that must never
  * be recycled while they hold live state — a zoomed slide keeps its
  * transform/gesture session, so recycling it would drop the user's zoom.

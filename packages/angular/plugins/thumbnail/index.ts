@@ -214,7 +214,7 @@ export class LgThumbnailStripComponent {
     // it across while the image is still flying in.
     protected readonly instantOpen = signal(true);
     private instantTimer?: ReturnType<typeof setTimeout>;
-    // Fling corridor (plan 010): set at release so the window covers the
+    // Fling corridor: set at release so the window covers the
     // whole flight path; cleared at settle.
     private readonly corridor = signal<{ from: number; to: number } | null>(
         null,
@@ -227,7 +227,7 @@ export class LgThumbnailStripComponent {
             this.settings().thumbMargin,
         ),
     );
-    // Plan-010 thumbnail windowing: with virtualization.thumbs set, only
+    // Thumbnail windowing: with virtualization.thumbs set, only
     // the visible thumbs plus overscan render; spacers preserve the strip
     // geometry. Keys off the COMMITTED translate — advances at release/
     // slide-change/resize, never per pointermove.
@@ -384,7 +384,7 @@ export class LgThumbnailStripComponent {
         return `translate3d(${this.toTrackX(value)}px, 0px, 0px)`;
     }
 
-    // Strip physics (plan 010): frames write the DOM directly; the
+    // Strip physics: frames write the DOM directly; the
     // translate signal commits once at settle (windowed strips re-render
     // there).
     private writeTrackTranslate(value: number): void {

@@ -121,7 +121,7 @@ export const LightGallery = forwardRef<
             typeof window.matchMedia === 'function' &&
             window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     );
-    // ADR §5 merge order: core defaults < plugin presets < plugin defaults <
+    // Settings merge order: core defaults < plugin presets < plugin defaults <
     // user settings (core + per-plugin props, flattened) < mobile overrides.
     // Non-mutating throughout — every input object is left untouched.
     const settings = useMemo(() => {
@@ -387,7 +387,7 @@ export const LightGallery = forwardRef<
         return () => offs.forEach((off) => off());
     }, [events]);
 
-    // Read-only element refs for plugin effects (ADR §5 `refs`).
+    // Read-only element refs for plugin effects (the plugin context's `refs`).
     const elementStoreRef = useRef<{
         outer: HTMLElement | null;
         inner: HTMLElement | null;

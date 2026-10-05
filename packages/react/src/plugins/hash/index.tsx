@@ -79,7 +79,7 @@ function useHashPlugin(ctx: PluginContext): void {
             return;
         }
         const marker = `lg=${galleryId}`;
-        // URL engine (plan 012): History API today, Navigation API where
+        // URL engine: History API today, Navigation API where
         // the browser has it — same URLs either way.
         const driver = createHashDriver(
             window as unknown as HashNavigationWindow,

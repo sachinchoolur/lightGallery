@@ -1,5 +1,5 @@
 /**
- * Hash plugin drivers (plan 012): the History engine (default/fallback)
+ * Hash plugin drivers: the History engine (default/fallback)
  * and the Navigation API engine produce identical URLs — the deep-link
  * format is frozen public API.
  */

@@ -14,7 +14,7 @@ import type { LgGestureSeam } from '../runtime';
 import type { LgEventMap, LgGalleryItem } from '../types';
 
 /**
- * The plugin contract (ADR 0001 §5), validated against all 13 vanilla
+ * The plugin contract, validated against all 13 vanilla
  * plugins. Plugins are VALUES on the `:plugins` prop — never `app.use()`
  * globals — so two galleries on a page can differ, each plugin subpath
  * tree-shakes independently, and SSR stays isolated.
@@ -136,7 +136,7 @@ export interface LgSlideRenderer {
 }
 
 export interface LgVuePlugin<TSettings extends object = object> {
-    /** Settings key (ADR naming table); also the duplicate-guard key. */
+    /** Settings key (the plugin's settings prop); also the duplicate-guard key. */
     name: string;
     /** Merged NON-mutating below user settings (headless owns the merge). */
     defaults?: TSettings;

@@ -36,7 +36,7 @@ import {
 
 /**
  * Rotate feature (2.x `lg-rotate`): rotate/flip the current image.
- * Transform ownership follows the 005 slide-wrapper pattern; compose with
+ * Transform ownership follows the zoom slide-wrapper pattern; compose with
  * zoom as `[withZoom(), withRotate()]` so zoom stays outermost (2.x DOM).
  *
  * Deviation (noted, shared with React): 2.x kept rotate values for every

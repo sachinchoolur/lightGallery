@@ -5,7 +5,7 @@ import { LightGallery, type GalleryItem } from './index';
 import Thumbnail from './plugins/thumbnail';
 
 /**
- * Plan 010: a 1,000-item gallery keeps its DOM bounded — the slide pool
+ * Virtualization: a 1,000-item gallery keeps its DOM bounded — the slide pool
  * caps mounted `.lg-item`s and the thumbnail strip renders only a window
  * (spacers preserve the strip geometry). jsdom reports a 0-width strip,
  * so the thumb window is overscan-driven and fully deterministic.
@@ -23,7 +23,7 @@ function tick(ms: number) {
     });
 }
 
-describe('virtualization (plan 010)', () => {
+describe('virtualization', () => {
     beforeEach(() => {
         vi.useFakeTimers();
     });
@@ -105,7 +105,7 @@ describe('virtualization (plan 010)', () => {
     });
 });
 
-describe('thumbnail strip physics (plan 010)', () => {
+describe('thumbnail strip physics', () => {
     beforeEach(() => {
         vi.useFakeTimers();
     });
@@ -195,7 +195,7 @@ describe('thumbnail strip physics (plan 010)', () => {
     });
 });
 
-describe('fling corridor on a windowed strip (plan 010)', () => {
+describe('fling corridor on a windowed strip', () => {
     beforeEach(() => {
         vi.useFakeTimers();
     });

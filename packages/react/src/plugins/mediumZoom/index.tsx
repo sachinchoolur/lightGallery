@@ -6,7 +6,7 @@ import type { LgPlugin, PluginContext } from '../types';
 /**
  * mediumZoom plugin (2.x `lg-medium-zoom`): a medium.com-like minimal
  * gallery. In 2.x this plugin mutated `core.settings` and monkey-patched
- * `getMediaContainerPosition`; here it is `presets` + the ADR §5
+ * `getMediaContainerPosition`; here it is `presets` + the layout seam's
  * `layout.overrideMediaPosition` — non-mutating by construction.
  */
 

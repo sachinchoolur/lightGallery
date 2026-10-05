@@ -11,7 +11,7 @@ import { LgGalleryRuntime, type LgItemRegistration } from './runtime';
 import type { LgGalleryItem } from './types';
 
 /**
- * Uncontrolled-mode trigger (ADR 0001 §3): put it on the thumbnail anchors
+ * Uncontrolled-mode trigger: put it on the thumbnail anchors
  * projected into `<lg-gallery>`; clicking opens the gallery at the trigger's
  * slide. Registration (mount) order defines slide order — the same caveat as
  * the React `<LightGalleryItem>` registry. The host element doubles as the

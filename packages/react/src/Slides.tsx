@@ -37,7 +37,7 @@ export function Slides({
     const settings = useGallerySettings();
     const internal = useGalleryInternal();
 
-    // Pool size: virtualization.slides (plan 010) overrides the classic
+    // Pool size: virtualization.slides overrides the classic
     // numberOfSlideItemsInDom. The current slide is always in the window,
     // and zoom resets when a slide stops being current, so the pool never
     // recycles live zoom state.
@@ -74,7 +74,7 @@ export function Slides({
                 ['--lg-speed' as string]: `${settings.speed}ms`,
                 // Pointer events cannot preventDefault scrolling; this is
                 // what keeps the page still during swipes. Pinch is handled
-                // by the zoom plugin (005), never by the browser.
+                // by the zoom plugin, never by the browser.
                 touchAction: 'none',
             }}
         >

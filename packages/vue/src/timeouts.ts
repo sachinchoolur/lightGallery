@@ -1,7 +1,7 @@
 /**
  * Cleanup-tracked timers: every timeout in the package goes through this
  * class so unmounting a gallery (even mid-animation) never leaks a timer —
- * the Vue twin of the sibling tracks' timer discipline that the 007 leak
+ * the Vue twin of the sibling tracks' timer discipline that the leak
  * audit assumes.
  */
 export class LgTimeouts {

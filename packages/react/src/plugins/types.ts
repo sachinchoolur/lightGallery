@@ -13,9 +13,9 @@ import type { OriginAnimation } from '../GalleryOutlet';
 import type { GalleryItem } from '../types';
 
 /**
- * The plugin contract (ADR 0001 §5), validated against all 13 vanilla
- * plugins during the architecture spike. Implementation notes vs the ADR
- * snippet:
+ * The plugin contract, validated against all 13 vanilla plugins during
+ * the architecture spike. Implementation notes vs the original design
+ * sketch:
  * - `gestureLock` is the full gesture seam (a superset of `{ claim }`): the
  *   zoom plugin also reads the live pointer records for pinch math.
  * - `PluginContext` additionally carries `items` (every vanilla plugin reads

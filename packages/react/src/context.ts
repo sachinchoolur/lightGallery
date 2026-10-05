@@ -29,7 +29,7 @@ import type {
 } from './types';
 
 /**
- * Context split per ADR 0001 §3: `StateContext` changes per slide/drag
+ * Context split: `StateContext` changes per slide/drag
  * commit; `ActionsContext`, `SettingsContext` and `SlotContext` are stable
  * (or change only with props) so toolbar/thumbnail consumers can subscribe
  * narrowly.
@@ -62,7 +62,7 @@ export interface ItemRegistration {
 }
 
 /**
- * The gesture seam plugins consume (ADR 0001 §5): the zoom plugin (005)
+ * The gesture seam plugins consume: the zoom plugin
  * claims the lock while pinching/zoom-dragging — core swipe stands down —
  * and reads the live pointer records for its multi-pointer math. Mutable by
  * design: it changes per pointer event and must never trigger renders.
@@ -97,7 +97,7 @@ export interface GalleryInternal {
     /** Slide-end bounce (`lg-left-end` / `lg-right-end`). */
     edgeBounce: 'left' | 'right' | null;
     gestureSeam: GestureSeam;
-    /** Plugin runtime (ADR 0001 §5). */
+    /** Plugin runtime. */
     plugins: readonly LgPlugin[];
     events: LgEventEmitter;
     layout: PluginLayout;

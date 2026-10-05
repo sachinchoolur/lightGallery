@@ -14,7 +14,7 @@ import type { LgCaptionContext } from './slots';
 import type { LgGalleryItem } from './types';
 
 /**
- * Caption content resolution (ADR 0001 §4): the `*lgCaption` slot template
+ * Caption content resolution: the `*lgCaption` slot template
  * wins, then the item's `caption` string; raw HTML only via the explicit
  * `captionHtml` opt-in — rendered with `[innerHTML]`, subject to Angular's
  * sanitizer (documented deviation vs React's `dangerouslySetInnerHTML`).

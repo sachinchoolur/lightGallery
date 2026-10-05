@@ -10,7 +10,7 @@ import {
 import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
 
 /**
- * Plan 010: a 1,000-item gallery keeps its DOM bounded — the slide pool
+ * Virtualization: a 1,000-item gallery keeps its DOM bounded — the slide pool
  * caps mounted `.lg-item`s and the thumbnail strip renders only a window
  * (spacers preserve the strip geometry). jsdom reports a 0-width strip,
  * so the thumb window is overscan-driven and fully deterministic.
@@ -63,7 +63,7 @@ async function openGallery(
     await flush(fixture);
 }
 
-describe('virtualization (plan 010)', () => {
+describe('virtualization', () => {
     beforeEach(() => {
         vi.useFakeTimers();
     });

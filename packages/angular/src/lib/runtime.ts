@@ -42,8 +42,8 @@ export interface LgGalleryActions extends LgGalleryHandle {
 }
 
 /**
- * The gesture seam plugins consume (ADR 0001 §5), mirroring the React
- * `GestureSeam` field-for-field: the zoom feature (005) claims the lock
+ * The gesture seam plugins consume, mirroring the React
+ * `GestureSeam` field-for-field: the zoom feature claims the lock
  * while pinching/zoom-dragging — core swipe stands down — and reads the
  * live pointer records for its multi-pointer math. Mutable by design: it
  * changes per pointer event and must never trigger change detection.
@@ -66,7 +66,7 @@ export interface LgGestureHooks {
     settleTouchNavigation(): void;
 }
 
-/** Template slots discovered by the gallery via content queries (ADR §4). */
+/** Template slots discovered by the gallery via content queries. */
 export interface LgGallerySlots {
     caption: Signal<LgCaptionDirective | undefined>;
     counter: Signal<LgCounterDirective | undefined>;
@@ -77,14 +77,14 @@ export interface LgGallerySlots {
 /**
  * Per-gallery-instance plumbing shared between `<lg-gallery>` and its inner
  * components/directives — the Angular analog of the React track's split
- * contexts (ADR 0001 §2/§3). Provided alongside `LightGalleryStore` on the
+ * contexts. Provided alongside `LightGalleryStore` on the
  * gallery component; the component assigns the late-bound fields once in its
  * constructor (single writer).
  */
 @Injectable()
 export class LgGalleryRuntime {
     /**
-     * The plugin/core event bus (ADR 0001 §5) — the shared headless emitter.
+     * The plugin/core event bus — the shared headless emitter.
      * Outputs fan out from the same events via `emit`.
      */
     readonly events: TypedEmitter<LgEventMap> = createEmitter<LgEventMap>();
@@ -97,7 +97,7 @@ export class LgGalleryRuntime {
 
     slots!: LgGallerySlots;
 
-    /** Emits the matching output AND the bus event (ADR 0001 §5). */
+    /** Emits the matching output AND the bus event. */
     emit!: <K extends keyof LgEventMap>(
         name: K,
         detail: LgEventMap[K],
@@ -108,7 +108,7 @@ export class LgGalleryRuntime {
     /** Assigned by the gallery; consumed by the gesture directive. */
     gestureHooks!: LgGestureHooks;
 
-    /** Registered features, deduped, in `[features]` order (ADR §5). */
+    /** Registered features, deduped, in `[features]` order. */
     features!: Signal<readonly LgFeature[]>;
 
     /**

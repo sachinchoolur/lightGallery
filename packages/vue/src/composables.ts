@@ -149,8 +149,8 @@ export function useHideBars(
 
 /**
  * Visible focusable elements within a container (2.x
- * `getFocusableElements`), for the hand-rolled dialog focus trap — the
- * ADR chose a small local trap over a micro-dependency (no Vue CDK).
+ * `getFocusableElements`), for the hand-rolled dialog focus trap — a
+ * small local trap was chosen over a micro-dependency (no Vue CDK).
  */
 export function getFocusableElements(
     container: HTMLElement,

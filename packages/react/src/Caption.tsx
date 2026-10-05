@@ -10,7 +10,7 @@ import {
 import type { GalleryItem } from './types';
 
 /**
- * Caption content resolution (ADR 0001 §4/§7): the `render.caption` slot
+ * Caption content resolution: the `render.caption` slot
  * wins, then the item's `caption` ReactNode; raw HTML only via the explicit
  * `captionHtml` opt-in, rendered with `dangerouslySetInnerHTML`.
  */

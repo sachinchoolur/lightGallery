@@ -15,8 +15,8 @@ import { LgGalleryRuntime } from './runtime';
 import type { LgGalleryItem } from './types';
 
 /**
- * Renders a slide's content through the feature `slideWrapper` chain (ADR
- * §5), first feature = outermost — the recursive Angular expression of the
+ * Renders a slide's content through the feature `slideWrapper` chain,
+ * first feature = outermost — the recursive Angular expression of the
  * React runtime's `wrapSlideContent` reduceRight. Each wrapper component
  * receives {@link LgSlideWrapperInputs}; the tail of the chain arrives as
  * the `content` template of the head wrapper.

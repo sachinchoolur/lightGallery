@@ -9,7 +9,7 @@ import type { HasVideoDetail } from './events';
 import type { LgIconName } from './icons';
 import type { LgPlugin } from './plugins/types';
 
-/** Gallery item with the caption narrowed to a React node (ADR 0001 §7). */
+/** Gallery item with the caption narrowed to a React node. */
 export type GalleryItem = HeadlessGalleryItem<ReactNode>;
 
 export interface SlideEventDetail {
@@ -31,7 +31,7 @@ export interface InitDetail {
 }
 
 /**
- * Imperative handle covering vanilla's public methods (ADR 0001 §3). Also
+ * Imperative handle covering vanilla's public methods. Also
  * passed to `onInit` for parity with `event.detail.instance`.
  */
 export interface LightGalleryRefHandle {
@@ -44,7 +44,7 @@ export interface LightGalleryRefHandle {
     refresh(): void;
 }
 
-/** Typed render props replacing 2.x HTML-string options (ADR 0001 §4). */
+/** Typed render props replacing 2.x HTML-string options. */
 export interface RenderSlots {
     caption?: (item: GalleryItem, index: number) => ReactNode;
     counter?: (current: number, total: number) => ReactNode;
@@ -97,7 +97,7 @@ export interface LightGalleryCallbacks {
 }
 
 /**
- * Per-plugin settings props, named by plugin (ADR 0001 §5) and typed via
+ * Per-plugin settings props, named by plugin and typed via
  * module augmentation from each plugin entry:
  * `<LightGallery plugins={[Zoom]} zoom={{ scale: 1.3 }} />`.
  */
@@ -108,7 +108,7 @@ export interface LightGalleryProps
     extends UserSettings,
         LightGalleryCallbacks,
         Partial<LightGalleryPluginSettings> {
-    /** Plugin modules (ADR 0001 §5): `plugins={[Thumbnail, Zoom, Video]}`. */
+    /** Plugin modules: `plugins={[Thumbnail, Zoom, Video]}`. */
     plugins?: LgPlugin[];
 
     /**

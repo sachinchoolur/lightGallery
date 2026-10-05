@@ -9,7 +9,7 @@ import type {
 } from './types';
 
 /**
- * The internal event bus (ADR 0001 §5): core lifecycle events fan out to it
+ * The internal event bus: core lifecycle events fan out to it
  * (alongside the public `onXxx` callback props), and plugins use it to talk
  * to each other (rotate → zoom) and to the core-adjacent components
  * (toolbar buttons → slide wrappers). The emitter implementation lives in

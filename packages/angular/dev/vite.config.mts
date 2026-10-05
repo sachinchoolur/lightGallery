@@ -6,7 +6,7 @@ import { defineConfig } from 'vite';
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
- * Dev-demo server for manual verification (plan 003 step 8) — the Angular
+ * Dev-demo server for manual verification — the Angular
  * twin of `packages/react/dev`. The demo imports styles as a consumer would
  * (`lightgallery/css/...`); the alias points that specifier at the repo's
  * built CSS. Run `npm run build:css` at the root first if `dist/css` is

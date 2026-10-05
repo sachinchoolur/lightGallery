@@ -123,7 +123,7 @@ class FeatureHost {
     readonly features = signal<readonly LgFeature[]>([]);
 }
 
-describe('feature runtime (ADR 0001 §5)', () => {
+describe('feature runtime', () => {
     beforeEach(() => {
         vi.useFakeTimers();
     });

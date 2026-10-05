@@ -22,7 +22,7 @@ import { SizesPage } from './pages/Sizes';
 import { ThumbnailsPage } from './pages/Thumbnails';
 import { VideoPage } from './pages/Video';
 
-// CSS stays a consumer import (ADR 0001 §8) — never bundled by the package.
+// CSS stays a consumer import — never bundled by the package.
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-transitions.css';
 import 'lightgallery/css/lg-rtl.css';

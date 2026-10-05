@@ -14,7 +14,7 @@ export default class Hash {
     settings: HashSettings;
     oldHash!: string;
     private $LG!: LgQuery;
-    // URL engine (plan 012): History API today, Navigation API where the
+    // URL engine: History API today, Navigation API where the
     // browser has it, same URLs either way.
     private driver!: HashDriver;
     private unsubscribeDriver?: () => void;

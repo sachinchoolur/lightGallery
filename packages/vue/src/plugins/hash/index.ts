@@ -80,7 +80,7 @@ function setupHash(ctx: LgPluginContext): void {
                 return;
             }
             const marker = `lg=${galleryId}`;
-            // URL engine (plan 012): History API today, Navigation API
+            // URL engine: History API today, Navigation API
             // where the browser has it — same URLs either way.
             const driver = createHashDriver(
                 window as unknown as HashNavigationWindow,

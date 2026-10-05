@@ -161,7 +161,7 @@ export function GalleryOutlet({
 
     /** Toolbar, caption and thumbnail-strip offsets for media (2.x parity). */
     const measureOffsets = useEventCallback(() => {
-        // mediumZoom overrides the measurement entirely (ADR §5 layout).
+        // mediumZoom overrides the measurement entirely via the layout seam.
         const override = internal.mediaPositionOverrideRef.current;
         if (override) {
             return override();

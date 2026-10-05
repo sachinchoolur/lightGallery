@@ -1,8 +1,7 @@
 /**
  * Framework-free typed event emitter — the plugin/core event bus shared by
- * every framework runtime (React ADR 0001 §1 boundary note; Angular ADR
- * 0001 §5). Each framework supplies its own event map type; unknown event
- * names stay usable for plugin-private events.
+ * every framework runtime. Each framework supplies its own event map type;
+ * unknown event names stay usable for plugin-private events.
  */
 
 type Listener = (detail: never) => void;

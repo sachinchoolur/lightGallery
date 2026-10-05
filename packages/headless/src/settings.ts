@@ -1,6 +1,6 @@
 /**
  * Typed core settings and the non-mutating merge, ported from
- * `src/lg-settings.ts` (2.x) with the ADR 0001 §7 renames applied:
+ * `src/lg-settings.ts` (2.x) with the 3.x renames applied:
  * `appendSubHtmlTo` → `captionPosition`; DOM-scraping options
  * (`selector`, `extraProps`, `getCaptionFromTitleOrAlt`, …), HTML-string
  * options (`nextHtml`, `prevHtml`, `appendCounterTo`) and
@@ -54,7 +54,7 @@ export type GalleryDirection = 'ltr' | 'rtl' | 'auto';
 /** `direction` with `'auto'` already resolved against the document. */
 export type ResolvedGalleryDirection = 'ltr' | 'rtl';
 
-/** Plan-010 virtualization knobs; the feature is off when the whole
+/** Virtualization knobs; the feature is off when the whole
  *  object is absent. */
 export interface VirtualizationSettings {
     /** Mounted-slide pool size (overrides `numberOfSlideItemsInDom`). */
@@ -308,7 +308,7 @@ export interface CoreSettings {
     enableDrag: boolean;
 
     /**
-     * Large-gallery virtualization (plan 010). Off when undefined — the
+     * Large-gallery virtualization. Off when undefined — the
      * 2.x behavior: every thumbnail renders and the mounted-slide window
      * is `numberOfSlideItemsInDom`. `slides` overrides the mounted-slide
      * pool size; `thumbs` turns on thumbnail-strip windowing (only the

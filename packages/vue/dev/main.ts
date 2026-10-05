@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 
 import App from './App.vue';
 
-// CSS stays a consumer import (ADR 0001 §7) — never bundled by the package.
+// CSS stays a consumer import — never bundled by the package.
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-transitions.css';
 import 'lightgallery/css/lg-rtl.css';

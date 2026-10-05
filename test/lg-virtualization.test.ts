@@ -1,5 +1,5 @@
 /**
- * Plan 010: a 1,000-item gallery keeps its DOM bounded — the slide pool
+ * Virtualization: a 1,000-item gallery keeps its DOM bounded — the slide pool
  * caps mounted `.lg-item`s and the thumbnail strip renders only a window
  * (spacers preserve the strip geometry). jsdom reports a 0-width strip,
  * so the thumb window is overscan-driven and fully deterministic.
@@ -39,7 +39,7 @@ function initGallery(
     );
 }
 
-describe('virtualization (plan 010, vanilla)', () => {
+describe('virtualization (vanilla)', () => {
     let instance: LightGallery | undefined;
 
     beforeEach(() => {
@@ -110,7 +110,7 @@ describe('virtualization (plan 010, vanilla)', () => {
     });
 });
 
-describe('thumbnail strip physics (plan 010, vanilla)', () => {
+describe('thumbnail strip physics (vanilla)', () => {
     let instance: LightGallery | undefined;
 
     beforeEach(() => {

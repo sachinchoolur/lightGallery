@@ -21,7 +21,7 @@ import type { OriginAnimation } from './slide.component';
 import type { LgEventMap, LgGalleryItem } from './types';
 
 /**
- * The feature-provider plugin contract (ADR 0001 §5). Features are VALUES on
+ * The feature-provider plugin contract. Features are VALUES on
  * the `[features]` input — never module/root providers — so two galleries on
  * a page can differ; the runtime registers them behind the `LG_FEATURE`
  * multi-token inside a per-gallery feature injector.
@@ -75,7 +75,7 @@ export interface LgFeatureLayout {
     /** Toggle the footer area (`lg-components-open`) — thumbnail toggle. */
     toggleComponents(): void;
     /**
-     * mediumZoom's core-method override (wave 2): replace the media
+     * mediumZoom's core-method override: replace the media
      * container position measurement. Pass `null` to restore the default.
      */
     overrideMediaPosition(fn: (() => LgMediaPosition) | null): void;
@@ -178,7 +178,7 @@ export interface LgFeatureSlots {
 }
 
 export interface LgFeature<TSettings extends object = object> {
-    /** Settings prop name (ADR naming table); also the duplicate-guard key. */
+    /** Settings prop name; also the duplicate-guard key. */
     name: string;
     /** Feature defaults, merged NON-mutating below user settings. */
     defaults?: TSettings;
@@ -195,7 +195,7 @@ export interface LgFeature<TSettings extends object = object> {
     slots?: LgFeatureSlots;
     slideRenderer?: LgSlideRenderer;
     /**
-     * Transform the item list (vimeoThumbnail, wave 2); may be async. The
+     * Transform the item list (vimeoThumbnail); may be async. The
      * signal aborts when the inputs change or the gallery is destroyed.
      */
     transformItems?: (
@@ -212,7 +212,7 @@ export const LG_FEATURE = new InjectionToken<LgFeature>('LG_FEATURE');
  * Eager-init multi-token: anything provided here is instantiated as soon as
  * the gallery builds its feature injector (while the gallery may still be
  * closed) — the home for feature effects that must run outside the overlay
- * (ADR §5; the hash feature's open-from-URL effect in wave 2).
+ * (the hash feature's open-from-URL effect).
  *
  * ```ts
  * providers: [
@@ -243,7 +243,7 @@ export function dedupeFeatures(features: readonly LgFeature[]): LgFeature[] {
 }
 
 /**
- * RTL sugar (plan 011): presets `direction: 'rtl'` so the whole feature
+ * RTL sugar: presets `direction: 'rtl'` so the whole feature
  * list reads naturally — `[withRtl(), withThumbnail()]`. An explicit
  * `[direction]` input still wins (presets merge below user settings).
  * Load the opt-in `lightgallery/css/lg-rtl.css` stylesheet alongside.

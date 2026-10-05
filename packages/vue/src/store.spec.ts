@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { createGalleryStore } from './store';
 
-describe('createGalleryStore (ADR spike)', () => {
+describe('createGalleryStore', () => {
     it('exposes reducer state through narrow selectors', () => {
         const store = createGalleryStore();
         store.setSlidesCount(3);

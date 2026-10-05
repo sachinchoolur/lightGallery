@@ -542,7 +542,7 @@ export function useGalleryGestures(options: GalleryGesturesOptions): void {
         };
 
         if (session) {
-            // Second pointer: core swipe stands down (pinch is 005's zoom).
+            // Second pointer: core swipe stands down (pinch belongs to zoom).
             registerPointer();
             session.suspended = true;
             restoreDragVisuals(session);

@@ -6,7 +6,7 @@ import type { LgPlugin } from '../types';
 /**
  * vimeoThumbnail plugin (2.x `lg-vimeo-thumbnail`): fetches Vimeo oEmbed
  * thumbnails for vimeo items. Implemented as an async `transformItems`
- * (ADR §5) — the runtime aborts the fetches when the items change or the
+ * plugin hook — the runtime aborts the fetches when the items change or the
  * gallery unmounts.
  */
 

@@ -125,7 +125,7 @@ function ThumbnailStrip(): ReactElement | null {
     // gallery opened from a thumbnail far down the strip would slide it
     // across while the image is still flying in.
     const [instantOpen, setInstantOpen] = useState(true);
-    // Fling corridor (plan 010): set at release so the window covers the
+    // Fling corridor: set at release so the window covers the
     // whole flight path; cleared at settle.
     const [corridor, setCorridor] = useState<{
         from: number;
@@ -160,7 +160,7 @@ function ThumbnailStrip(): ReactElement | null {
         settings.thumbMargin,
     );
 
-    // Plan-010 thumbnail windowing: with virtualization.thumbs set, only
+    // Thumbnail windowing: with virtualization.thumbs set, only
     // the visible thumbs plus overscan render; spacers preserve the strip
     // geometry. The window keys off the COMMITTED translate — it advances
     // at release/slide-change/resize, never per pointermove, so the
@@ -310,7 +310,7 @@ function ThumbnailStrip(): ReactElement | null {
         [],
     );
 
-    // Strip physics (plan 010): drags rubber-band past the edges, and the
+    // Strip physics: drags rubber-band past the edges, and the
     // release glides on a velocity-seeded spring (the same headless
     // project/spring stack the slide gestures ride). Frames write the DOM
     // directly; state commits once at settle — the windowed strip

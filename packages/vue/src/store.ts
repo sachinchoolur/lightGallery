@@ -14,7 +14,7 @@ import {
 } from '@lightgallery/headless';
 
 /**
- * Reactivity adapter over the shared headless reducer (Vue ADR 0001 §2).
+ * Reactivity adapter over the shared headless reducer.
  *
  * The state lives in a `shallowRef` replaced WHOLESALE per dispatch — the
  * exact semantic of the reducer. Deliberately not `reactive()`: a deep
@@ -79,7 +79,7 @@ export function createGalleryStore(): GalleryStore {
     };
 }
 
-/** Imperative surface exposed by `<LightGallery>` (ADR §3). */
+/** Imperative surface exposed by `<LightGallery>`. */
 export interface LgGalleryActions {
     openGallery(index?: number): void;
     closeGallery(): void;
@@ -91,7 +91,7 @@ export interface LgGalleryActions {
 }
 
 /**
- * Typed injection keys — the context split (ADR §2): selectors and actions
+ * Typed injection keys — the context split: selectors and actions
  * under separate keys so slot/plugin consumers inject only what they track.
  */
 export const LG_STORE: InjectionKey<GalleryStore> = Symbol('lgStore');

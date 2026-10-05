@@ -16,8 +16,8 @@ import type { LgEventMap, LgGalleryItem } from './types';
 import type { LgPluginContext, LgVuePlugin } from './plugins/types';
 
 /**
- * The gesture seam plugins consume (ADR 0001 §5), mirroring the sibling
- * tracks' field-for-field: the zoom plugin (005) claims the lock while
+ * The gesture seam plugins consume, mirroring the sibling tracks'
+ * field-for-field: the zoom plugin claims the lock while
  * pinching/zoom-dragging — core swipe stands down — and reads the live
  * pointer records for its multi-pointer math. Mutable by design: it
  * changes per pointer event and must never touch reactivity.
@@ -50,14 +50,14 @@ export interface LgItemRegistration {
 
 /**
  * Per-gallery-instance plumbing shared between `<LightGallery>` and its
- * inner components (ADR 0001 §2/§5) — the Vue expression of the sibling
+ * inner components — the Vue expression of the sibling
  * tracks' split contexts. Assembled by `<LightGallery>`'s setup and
  * provided under `LG_RUNTIME`.
  */
 export interface LgGalleryRuntime {
     readonly items: ComputedRef<readonly LgGalleryItem[]>;
     readonly settings: ComputedRef<CoreSettings>;
-    /** The plugin/core event bus (shared headless emitter, ADR §5). */
+    /** The plugin/core event bus (shared headless emitter). */
     readonly events: TypedEmitter<LgEventMap>;
     /** Emits the matching kebab-case component event AND the bus event. */
     emit<K extends keyof LgEventMap>(name: K, detail: LgEventMap[K]): void;
@@ -80,7 +80,7 @@ export interface LgGalleryRuntime {
     readonly zoomOriginOpen: ShallowRef<boolean>;
     /** Multi-pointer seam (consumed by the zoom plugin). */
     readonly gestureSeam: LgGestureSeam;
-    /** Registered plugins, deduped, in `:plugins` order (ADR §5). */
+    /** Registered plugins, deduped, in `:plugins` order. */
     readonly plugins: ComputedRef<readonly LgVuePlugin[]>;
     /** The context plugin `setup(ctx)` receives; also injectable. */
     readonly pluginContext: LgPluginContext;

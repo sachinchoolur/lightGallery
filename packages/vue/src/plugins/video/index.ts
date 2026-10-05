@@ -28,8 +28,8 @@ import type { LgGalleryItem } from '../../types';
 
 /**
  * Video plugin: HTML5 / YouTube / Vimeo / Wistia slides (2.x `lg-video`) —
- * the slide-renderer template. The `videojs` option is dropped per the
- * inherited ADR decision; custom players go through the `#slide` slot.
+ * the slide-renderer template. The `videojs` option is intentionally
+ * dropped; custom players go through the `#slide` slot.
  */
 
 export interface VideoSettings {

@@ -7,8 +7,7 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Test-only Vite config: the library builds with ng-packagr (APF); the
 // Analog plugin compiles Angular for Vitest without an Angular CLI
-// workspace (the official unit-test builder requires one — see the
-// plans-angular 001 toolchain notes).
+// workspace (the official unit-test builder requires one).
 export default defineConfig({
     plugins: [
         angular({

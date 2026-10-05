@@ -1,5 +1,5 @@
 /**
- * Typed per-plugin state slices (ADR 0001 §5). Framework layers hold these
+ * Typed per-plugin state slices. Framework layers hold these
  * in their own reactivity; the shapes and transitions live here so plugin
  * behavior matches across frameworks.
  */

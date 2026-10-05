@@ -1,5 +1,5 @@
 /**
- * URL-hash drivers for the hash plugin (plan 012). The plugin's history
+ * URL-hash drivers for the hash plugin. The plugin's history
  * side-effects — replace-write the deep link, restore/clear on close,
  * follow back/forward — sit behind one interface with two engines:
  *

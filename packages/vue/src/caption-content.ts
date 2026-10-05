@@ -4,7 +4,7 @@ import { LG_SLOTS } from './runtime';
 import type { LgGalleryItem } from './types';
 
 /**
- * Caption content resolution (ADR 0001 §4): the gallery's `#caption`
+ * Caption content resolution: the gallery's `#caption`
  * scoped slot wins, then the item's `caption` string; raw HTML only via
  * the explicit `captionHtml` opt-in (`v-html` semantics — consumer
  * sanitizes, same deliberately loud escape hatch as the siblings).

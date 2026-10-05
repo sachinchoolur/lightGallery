@@ -17,8 +17,8 @@ import {
  * Hash feature (2.x `lg-hash`): syncs the gallery to the URL hash
  * (`#lg=<galleryId>&slide=<index|slideName>`), opens from a deep link, and
  * follows back/forward navigation. Runs while the gallery is closed — the
- * `LG_FEATURE_INIT` eager service is exactly the runtime seam the ADR made
- * for it. Uses `history` directly, mirroring the React port (documented; an
+ * `LG_FEATURE_INIT` eager service is exactly the runtime seam built for
+ * it. Uses `history` directly, mirroring the React port (documented; an
  * Angular `Location` variant would route through the same URLs).
  *
  * Deviation fixed on purpose (shared with React): out-of-range `slide=`
@@ -108,7 +108,7 @@ export class LgHashService {
     ): void {
         const ctx = this.ctx;
         const marker = `lg=${galleryId}`;
-        // URL engine (plan 012): History API today, Navigation API where
+        // URL engine: History API today, Navigation API where
         // the browser has it — same URLs either way.
         const driver: HashDriver = createHashDriver(
             window as unknown as HashNavigationWindow,

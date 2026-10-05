@@ -3,9 +3,9 @@
  * (`src/lg-utils.ts`) as pure rect arithmetic. The framework layer measures
  * the DOM (trigger/container bounding rects) and passes plain numbers in.
  *
- * Note: this module is an addition to the ADR 0001 §1 table — it
- * follows the standing rule that pure functions needed by React live in
- * headless. It is distinct from `zoom-math.ts` (zoom plugin).
+ * Note: this module follows the standing rule that pure functions needed
+ * by the framework layers live in headless. It is distinct from
+ * `zoom-math.ts` (zoom plugin).
  */
 
 export interface ImageSize {

@@ -17,7 +17,7 @@ import { JustifiedGrid } from '@lightgallery/vue/plugins/justified';
 const picsum = (id: number, w: number, h: number): string =>
     `https://picsum.photos/id/${id}/${w}/${h}`;
 // Rig-only responsive ladder: real w-descriptor srcset so device passes
-// exercise the plan-002 selection math end to end.
+// exercise the responsive-source selection math end to end.
 const picsumSrcset = (id: number, w: number, h: number): string =>
     [640, 960, 1280, 1600]
         .map(

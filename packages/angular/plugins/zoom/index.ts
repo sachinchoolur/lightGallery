@@ -52,12 +52,12 @@ import {
 
 /**
  * Zoom feature (2.x `lg-zoom`): toolbar buttons, double-click/tap point
- * zoom, pinch, pan-when-zoomed — the gesture-consumer template wave 2
- * copies. Same performance contract as the core gestures:
+ * zoom, pinch, pan-when-zoomed — the gesture-consumer template other
+ * features copy. Same performance contract as the core gestures:
  * pinch/pan write transforms straight to the DOM; signals change only on
  * discrete commits (button step, gesture end).
  *
- * DOM deviation vs 2.x (noted for the 007 parity matrix, same as React):
+ * DOM deviation vs 2.x (deliberate, same as React):
  * transforms live on two plugin-owned wrapper divs with inline transitions
  * instead of `.lg-img-wrap`/`.lg-image` + `lg-zoomable` CSS.
  */

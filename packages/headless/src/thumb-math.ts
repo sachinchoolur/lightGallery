@@ -9,7 +9,7 @@ import type { ResolvedGalleryDirection } from './settings';
 export type ThumbPagerPosition = 'left' | 'middle' | 'right';
 
 /**
- * Rubber-band a raw strip translate (plan 010 physics): inside the
+ * Rubber-band a raw strip translate (strip physics): inside the
  * bounds it passes through; beyond an edge the overshoot compresses by
  * the shared edge friction so the strip resists like the slide gestures.
  * The release spring pulls the compressed overshoot back to the bound.
@@ -50,7 +50,7 @@ export function clampThumbTranslate(
 
 /**
  * The window of thumbnails that must exist in the DOM for a given strip
- * translate (plan 010 virtualization): the visible range plus `overscan`
+ * translate (virtualization): the visible range plus `overscan`
  * thumbs on each side, with leading/trailing pad widths so the strip keeps
  * its full scroll geometry while only the window renders.
  */
@@ -106,7 +106,7 @@ export function getThumbWindow(options: {
 }
 
 /**
- * Window covering a fling's whole flight path (plan 010): the union of
+ * Window covering a fling's whole flight path: the union of
  * the windows at the start and end translates, so a released strip never
  * glides over unrendered thumbs — the destination is known at release.
  */
