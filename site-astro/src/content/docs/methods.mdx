@@ -1,11 +1,9 @@
 ---
 title: 'Methods'
-description: 'lightGallery instance methods documentation.'
+description: 'Every public method on a lightGallery instance, with parameters and examples, and the matching handle methods in React, Vue and Angular.'
 lead:
-    'You can use lightGallery plugin instance public methods to trigger specific
-    lightGallery actions. lightGallery provides several useful methods which can
-    be used to customize the gallery or to build your own features. <a
-    href="../../demos/methods/">Demo</a>'
+    'Call methods on the gallery instance to open, close, move between slides
+    or update the gallery from your own code. <a href="/demos/methods/">Demo</a>'
 date: 2020-10-06T08:48:57+00:00
 draft: false
 images: []
@@ -18,27 +16,50 @@ toc: true
 
 import Methods from '../../components/api/Methods.astro';
 
-## Access plugin instance
+## Access the gallery instance
 
-lightGallery plugin instance can be accessed in two ways, through the
-lightGallery function and through the lightGallery custom `init` event.
+`lightGallery()` returns the gallery instance. Keep the reference and call
+its methods when you need them:
 
 ```javascript
-const lg = document.getElementById('lg-method-demo');
+const gallery = lightGallery(document.getElementById('lg-method-demo'));
 
-// Get the plugin instance through the lightGallery main function
-const plugin = lightGallery(lg);
-
-// or get thought init event
-// let plugin = null;
-// lg.addEventListener('lgInit', (event) => {
-//   plugin = event.detail.instance;
-// });
-
-// Go to third slide
-// Index starts from 0
-plugin.slide(2);
+// Go to the third slide. Indexes start from 0.
+gallery.slide(2);
 ```
+
+The `lgInit` event carries the same instance in its detail, which is useful
+when another part of your code initializes the gallery:
+
+```javascript
+const el = document.getElementById('lg-method-demo');
+
+el.addEventListener('lgInit', (event) => {
+    const gallery = event.detail.instance;
+    gallery.openGallery(0);
+});
+
+lightGallery(el);
+```
+
+## In React, Vue and Angular
+
+The framework packages expose the same actions through a handle: a `ref` in
+[React](/docs/react/), a template ref in [Vue](/docs/vue/) and a
+`#lg="lgGallery"` template reference in [Angular](/docs/angular/).
+
+| Vanilla method | Handle method |
+| --- | --- |
+| `openGallery(index?)` | `openGallery(index?)` |
+| `closeGallery()` | `closeGallery()` |
+| `slide(index)` | `goToSlide(index)` |
+| `goToNextSlide()` | `nextSlide()` |
+| `goToPrevSlide()` | `prevSlide()` |
+| `refresh()` | `refresh()` |
+
+`updateSlides()` and `destroy()` have no handle equivalent: rendering a
+different `slides` array is the update, and unmounting the component is the
+destroy.
 
 ## Available public methods
 

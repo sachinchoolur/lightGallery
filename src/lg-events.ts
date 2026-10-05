@@ -57,7 +57,7 @@ export const lGEvents: {
  */
 export interface InitDetail {
     /**
-     * lightGallery plugin instance
+     * The gallery instance, the same object `lightGallery()` returns.
      */
     instance: LightGallery;
 }
@@ -210,7 +210,7 @@ export interface BeforeCloseDetail {}
  */
 export interface AfterCloseDetail {
     /**
-     * lightGallery plugin instance
+     * The gallery instance, the same object `lightGallery()` returns.
      */
     instance: LightGallery;
 }

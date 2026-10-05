@@ -2745,8 +2745,9 @@ export class LightGallery {
     }
 
     /**
-     * Maximize minimize inline gallery.
-     * @category lGPublicMethods
+     * Bind the inline gallery's maximize button: each click toggles the
+     * gallery between its container and the full viewport. Called once
+     * during initialization.
      */
     toggleMaximize(): void {
         this.getElementById('lg-maximize').on('click.lg', () => {

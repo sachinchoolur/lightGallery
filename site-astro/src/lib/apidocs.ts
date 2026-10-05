@@ -20,6 +20,9 @@ interface DocNode {
     name: string;
     kind: number;
     children?: DocNode[];
+    parameters?: DocNode[];
+    flags?: { isOptional?: boolean };
+    defaultValue?: string;
     groups?: { title: string; children?: number[]; categories?: { title: string; children: number[] }[] }[];
     comment?: DocComment;
     type?: DocType;
@@ -148,6 +151,9 @@ export function interfaceProps(interfaceName: string): ApiProperty[] {
 
 export interface ApiMethod {
     name: string;
+    /** Call signature with parameter names, e.g. `openGallery(index?, element?)`. */
+    signature: string;
+    params: ApiProperty[];
     comment: ApiComment;
 }
 
@@ -164,10 +170,24 @@ export function publicMethods(): ApiMethod[] {
         .map((id) => byId.get(id))
         .filter((node): node is DocNode => !!node)
         .flatMap((node) =>
-            (node.signatures ?? []).map((signature) => ({
-                name: signature.name,
-                comment: commentOf(signature),
-            })),
+            (node.signatures ?? []).map((signature) => {
+                const parameters = signature.parameters ?? [];
+                const names = parameters.map((param) => {
+                    const optional =
+                        param.flags?.isOptional || param.defaultValue !== undefined;
+                    return `${param.name}${optional ? '?' : ''}`;
+                });
+                return {
+                    name: signature.name,
+                    signature: `${signature.name}(${names.join(', ')})`,
+                    params: parameters.map((param) => ({
+                        name: param.name,
+                        typeName: typeToString(param.type),
+                        comment: commentOf(param),
+                    })),
+                    comment: commentOf(signature),
+                };
+            }),
         );
 }
 

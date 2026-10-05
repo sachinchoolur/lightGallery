@@ -2,6 +2,7 @@
 import { Code } from 'astro:components';
 
 import { publicMethods, tagText } from '../../lib/apidocs';
+import DetailTable from './DetailTable.astro';
 
 /** Public method docs, port of `shortcodes/methods.html`. */
 const methods = publicMethods();
@@ -12,7 +13,7 @@ const methods = publicMethods();
         methods.map((method) => (
             <section class="api-entry">
                 <h3 class="api-entry-name" id={method.name}>
-                    <code>{method.name}()</code>{' '}
+                    <code>{method.signature}</code>{' '}
                     <a
                         href={`#${method.name}`}
                         class="anchor"
@@ -25,6 +26,12 @@ const methods = publicMethods();
                 {tagText(method.comment, 'description').map((text) => (
                     <p class="api-entry-desc" set:html={text} />
                 ))}
+                {method.params.length > 0 && (
+                    <div class="api-entry-block">
+                        <span class="api-entry-label">Parameters</span>
+                        <DetailTable props={method.params} />
+                    </div>
+                )}
                 {tagText(method.comment, 'example').map((example) => (
                     <div class="api-entry-block">
                         <span class="api-entry-label">Example</span>
