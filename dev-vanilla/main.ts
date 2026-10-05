@@ -322,6 +322,46 @@ const SCENARIOS: Scenario[] = [
         }),
     },
     {
+        id: 'dynamic-origin',
+        title: 'Dynamic, zoom from origin',
+        note: 'Dynamic mode with lgSize on each item; every cover opens the gallery with itself as the origin element.',
+        mount: (host) => {
+            const grid = document.createElement('div');
+            grid.className = 'demo-grid';
+            const sources = SOURCES.slice(0, 6);
+            grid.innerHTML = sources
+                .map(
+                    ({ id, title, portrait }, i) => `
+    <img data-index="${i}" src="${
+                        portrait ? picsum(id, 160, 240) : picsum(id, 240, 160)
+                    }" alt="${title}" style="cursor: pointer" />`,
+                )
+                .join('');
+            host.appendChild(grid);
+            const instance = lightGallery(dynamicHost(), {
+                dynamic: true,
+                dynamicEl: sources.map(({ id, title, portrait }) => ({
+                    src: portrait
+                        ? picsum(id, 1067, 1600)
+                        : picsum(id, 1600, 1067),
+                    thumb: portrait
+                        ? picsum(id, 160, 240)
+                        : picsum(id, 240, 160),
+                    lgSize: portrait ? '1067-1600' : '1600-1067',
+                    subHtml: `<h4>${title}</h4>`,
+                })),
+                plugins: [Thumbnail, Zoom],
+            });
+            (window as unknown as { lg: unknown }).lg = instance;
+            grid.addEventListener('click', (event) => {
+                const cover = (event.target as HTMLElement).closest('img');
+                if (!cover) return;
+                instance.openGallery(Number(cover.dataset.index), cover);
+            });
+            return () => instance.destroy();
+        },
+    },
+    {
         id: 'dynamic',
         title: 'Dynamic',
         note: 'Dynamic mode — button open, add/remove slides via refresh().',
