@@ -669,6 +669,7 @@ export interface LightGalleryCoreSettings {
      * Strings merge per-key over the defaults, override only the keys
      * you need (the old provide-everything requirement is gone).
      * See <a href="/docs/localization-rtl/">Localization &amp; RTL</a>.
+     * @version V3.0.0
      */
     strings: LightGalleryCoreStrings;
 
@@ -685,6 +686,12 @@ export interface LightGalleryCoreSettings {
      */
     icons: LgIcons;
 
+    /**
+     * The plugins to enable for this gallery, as the constructors exported
+     * by each plugin entry, for example `[lgZoom, lgThumbnail]`. A plugin's
+     * settings do nothing until the plugin is listed here.
+     * See <a href="/docs/getting-started/#plugins">Plugins</a>.
+     */
     plugins: (new (instance: LightGallery, $LG: LgQuery) => any)[];
 }
 

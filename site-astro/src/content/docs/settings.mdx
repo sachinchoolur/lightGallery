@@ -16,7 +16,7 @@ import Options from '../../components/api/Options.astro';
 
 lightGallery accepts two parameters, an HTML element as the first parameter and
 library settings as the second parameter. You need to pass settings only if you
-want to modify default behaviors
+want to modify default behaviors.
 
 ```javascript
 lightGallery(document.getElementById('gallery-container'), {
@@ -25,6 +25,12 @@ lightGallery(document.getElementById('gallery-container'), {
     // other settings
 });
 ```
+
+The same names apply in every package. In [React](/docs/react/) and
+[Vue](/docs/vue/) each core setting is a prop and each plugin's settings
+are one object prop named after the plugin, such as `zoom={{ scale: 1.5 }}`.
+In [Angular](/docs/angular/) core settings are signal inputs and plugin
+settings go to the plugin's factory, such as `withZoom({ scale: 1.5 })`.
 
 ## lightGallery core
 
@@ -38,7 +44,7 @@ please check the respective plugins settings as well.
 
 <div class="options-section">
 
-## Zoom Plugin
+## Zoom plugin
 
 lightGallery zoom plugins enable functionalities like pinch to zoom, double-tap,
 or double click to see the actual size, zoom in, zoom out, and more.
@@ -51,9 +57,9 @@ or double click to see the actual size, zoom in, zoom out, and more.
 
 ## Thumbnails plugin
 
-Thumbnails plugins is required to generate thumbnails for your gallery, it
-supports features like animated thumbnails, automatically load thumbnails from
-external videos, and more.
+The thumbnails plugin adds the thumbnail strip to your gallery. It supports
+animated thumbnails, thumbnail scrubbing, and loads thumbnails for YouTube
+videos automatically.
 
 <Options pluginName="Thumbnails" interface="ThumbnailsSettings" variable="thumbnailsSettings" />
 
@@ -81,7 +87,7 @@ Video plugin is required to display videos in lightGallery. Video plugin
 supports YouTube, Vimeo, Wistia and HTML5 videos.
 
 <div class="alert alert-info" role="alert">
-    <b>Dependency</b> - You need to include <a href="https://github.com/vimeo/player.js/">player.js</a> for Vimeo videos and <a href="https://wistia.com/support/developers/player-api">Wistia player API</a> for Wistia videos on your document to enable video player feature like automatic play pause, automatically navigate to next slide when video ended.
+    <b>Player scripts</b> - Vimeo and Wistia player control (automatic play and pause, moving to the next slide when a video ends) needs each provider's player script. The plugin loads <a href="https://github.com/vimeo/player.js/">player.js</a> and the <a href="https://wistia.com/support/developers/player-api">Wistia player API</a> on demand the first time a video plays, so there is nothing to include yourself.
 </div>
 
 <Options pluginName="Video" interface="VideoSettings" variable="videoSettings" />
@@ -116,8 +122,8 @@ of the current slide.
 
 ## Rotate plugin
 
-Rotate plugin support features like rotate clockwise, rotate anticlockwise, flip
-horizontal, flip vertical with single click.
+The rotate plugin adds rotate clockwise, rotate anticlockwise, flip horizontal
+and flip vertical, each with a single click.
 
 <Options pluginName="Rotate" interface="RotateSettings" variable="rotateSettings" />
 
@@ -151,8 +157,8 @@ slide, and hovering over each pager item, shows the correspondent thumbnails.
 
 ## FullScreen plugin
 
-lightGallery Fullscreen plugin supports native HTML5 fullscreen feature in the
-gallery. you can toggle fullscreen with one click
+The fullscreen plugin uses the browser's native fullscreen API. You can toggle
+fullscreen with one click.
 
 <Options pluginName="FullScreen" interface="FullscreenSettings" variable="fullscreenSettings" />
 
@@ -162,9 +168,9 @@ gallery. you can toggle fullscreen with one click
 
 ## Comment box plugin
 
-Comment plugin supports FaceBook and Disqus comments out of the box. Allows
-people to comment on slides using their Facebook or Disqus accounts. You can
-easily add your own comment widget as well.
+The comment plugin supports Facebook and Disqus comments out of the box, so
+people can comment on slides with their Facebook or Disqus accounts. You can
+add your own comment widget as well.
 
 <Options pluginName="Comment box" interface="CommentSettings" variable="commentSettings" />
 
@@ -174,10 +180,9 @@ easily add your own comment widget as well.
 
 ## Medium zoom plugin
 
-MediumZoom plugin helps you create similar zooming experience as seen on medium.
-This is a very basic plugin created just to demonstrate the customizability of
-lightGallery
-<span class="badge rounded-pill bg-danger font-12" title="Available since version 2.1.0">v2.1.0</span>
+The medium zoom plugin opens an image in place with a minimal interface, the
+zooming experience seen on Medium: no toolbar, no thumbnails, and a click
+closes it again.
 
 <Options pluginName="Medium zoom" interface="MediumZoomSettings" variable="mediumZoomSettings" />
 
@@ -187,8 +192,7 @@ lightGallery
 
 ## Vimeo thumbnails plugin
 
-Vimeo thumbnails plugin helps you load thumbnails automatically for Vimeo videos.
-<span class="badge rounded-pill bg-danger font-12" title="Available since version 2.5.0">v2.5.0</span>
+The Vimeo thumbnails plugin loads thumbnails for Vimeo videos automatically.
 
 <Options pluginName="Vimeo Thumbnails" interface="VimeoThumbnailSettings" variable="vimeoSettings" />
 
@@ -198,9 +202,8 @@ Vimeo thumbnails plugin helps you load thumbnails automatically for Vimeo videos
 
 ## Relative caption plugin
 
-Relative caption plugin places each caption relative to its image instead of
-at the bottom of the gallery.
-<span class="badge rounded-pill bg-danger font-12" title="Available since version 2.1.5">v2.1.5</span>
+The relative caption plugin places each caption relative to its image instead
+of at the bottom of the gallery.
 
 <Options pluginName="Relative caption" interface="RelativeCaptionSettings" variable="relativeCaptionSettings" />
 
