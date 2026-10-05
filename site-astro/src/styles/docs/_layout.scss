@@ -258,6 +258,18 @@ body.demos.single {
             font-size: 13.5px;
             font-weight: 500;
         }
+        // Inside a heading the pill scales with the heading instead of
+        // staying at body size.
+        h1 > code,
+        h2 > code,
+        h3 > code,
+        h4 > code,
+        h5 > code {
+            padding: 0 0.3em;
+            border-radius: 0.3em;
+            font-size: 0.85em;
+            font-weight: inherit;
+        }
         // Code blocks
         pre {
             margin: 20px 0 24px;

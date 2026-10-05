@@ -51,6 +51,17 @@
     a > code {
         color: inherit;
     }
+    // Inside a heading the pill scales with the heading.
+    h1 > code,
+    h2 > code,
+    h3 > code,
+    h4 > code,
+    h5 > code {
+        padding: 0 0.3em;
+        border-radius: 0.3em;
+        font-size: 0.85em;
+        font-weight: inherit;
+    }
 
     .docs-hero-image {
         display: block;
