@@ -52,8 +52,8 @@ a few changed defaults and four removals:
     element that dimmed the gallery behind it is not rendered, so drop
     any CSS that targeted it. See
     [Web Share](/docs/web-share/#dismissing-the-dropdown).
--   **New settings are opt-in** unless listed under
-    [changed defaults](#changed-defaults) below:
+-   **New settings keep the 2.x behavior by default**, except the ones
+    listed under [changed defaults](#changed-defaults) below:
     [`strings`](/docs/localization-rtl/) and
     [`direction`](/docs/localization-rtl/),
     [`virtualization`](/docs/virtualization/),
@@ -71,6 +71,8 @@ a few changed defaults and four removals:
 | `youTubeNoCookie` | n/a (`youtube.com`) | `true` | YouTube embeds go through `youtube-nocookie.com`. URLs that already point there always keep it |
 | `preferNativeShare` | n/a | touch: `true`, desktop: `false` | On touch devices the share button opens the system share sheet, with the branded dropdown as the fallback |
 | `hashDriver` | n/a (History API) | `'auto'` | Deep links use the Navigation API where the browser has it, History everywhere else. Force the old engine with `'history'` |
+| `toolbarOverflow` | n/a (buttons wrap) | `true` | When the toolbar buttons do not fit beside the counter, the lowest-priority ones move into a "More options" menu. Set `false` to let them wrap onto a second row as before |
+| `showGestureButtons` | n/a (always shown) | desktop: `true`, touch: `false` | Touch devices leave out the zoom in, zoom out and actual-size buttons, since pinch and double-tap do the same. Set `mobileSettings: { showGestureButtons: true }` to show them |
 
 `direction` stays `'ltr'`, so nothing mirrors until you opt in with
 `'rtl'` or `'auto'`.
@@ -99,6 +101,14 @@ The seven per-plugin objects still work and are **deprecated**:
 `strings` default, so mixed configurations keep working while you move
 across. The full key list is in the
 [localization guide](/docs/localization-rtl/).
+
+## License keys
+
+lightGallery 3 keys start with `LIG`. A v1 or v2 key is not valid for
+version 3: the gallery keeps working and logs a console warning asking
+you to upgrade. The [upgrade note on the license page](/license/)
+explains how to get a v3 key, and the [license docs](/docs/license/)
+cover open-source use and the temporary key for evaluation.
 
 ## React
 
