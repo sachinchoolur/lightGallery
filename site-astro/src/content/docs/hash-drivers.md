@@ -23,6 +23,10 @@ lightGallery(el, {
 });
 ```
 
+The [hash demo](/demos/hash/) shows deep links in action, and the
+[settings reference](/docs/settings/#hashDriver) carries the generated
+description.
+
 | Value | Engine |
 | --- | --- |
 | `'auto'` (default) | The [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API) where the browser supports it, the History API everywhere else |

@@ -15,7 +15,9 @@ toc: true
 Every user-facing label in lightGallery v3, core controls **and**
 plugin buttons, lives in a single `strings` setting. Pass a partial
 object; the keys you provide merge over the English defaults. The same
-contract works in all four packages.
+contract works in all four packages, and the
+[settings reference](/docs/settings/#strings) carries the generated
+description.
 
 ```js
 lightGallery(el, {
@@ -108,7 +110,8 @@ behavior. New code should use `strings` only.
 Set `direction: 'rtl'` and load the opt-in RTL stylesheet, keyboard
 arrows, swipe advance, the slide transforms and the thumbnail strip
 all mirror. The layer is a separate file, so LTR galleries pay zero
-CSS bytes.
+CSS bytes. The [RTL demo](/demos/rtl/) shows a mirrored gallery with
+the code for each stack.
 
 ```js
 import 'lightgallery/css/lg-rtl.css';

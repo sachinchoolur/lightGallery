@@ -25,6 +25,10 @@ lightGallery(el, {
 });
 ```
 
+The [video facades demo](/demos/video-facades/) shows a facade next to
+an eager embed, and the [settings reference](/docs/settings/#videoFacade)
+carries the generated description.
+
 The setting ships in the video plugin and works identically in all
 four packages (`videoFacade` prop/setting alongside the Video
 plugin).

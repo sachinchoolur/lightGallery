@@ -26,6 +26,10 @@ lightGallery(el, {
 });
 ```
 
+The [sharing demo](/demos/share/) shows both paths, and the
+[settings reference](/docs/settings/#preferNativeShare) carries the
+generated description.
+
 -   **Default behavior**: touch devices go native-first; desktop
     keeps the dropdown. Set `preferNativeShare` explicitly to
     override in either direction.

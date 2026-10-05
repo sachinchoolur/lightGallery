@@ -15,7 +15,9 @@ thumbnails: rows of equal height and varying widths that fill the
 container edge to edge, like the photo grids on popular photography
 sites. The row math lives in
 [`@lightgallery/headless`](/docs/headless/) and is shared by all
-four packages, so the same options produce the same grid everywhere.
+four packages, so the same options produce the same grid everywhere. The
+[justified layout demo](/demos/justified-layout/) shows it running with
+the code for each stack.
 
 How it works, in every package:
 
@@ -108,6 +110,9 @@ lightGallery(document.getElementById('gallery'), {
 | `justifiedLastRow` | `'start'` | Leftover-row policy: `'justify'`, `'start'` or `'hide'` |
 | `justifiedMaxScale` | `1.75` | Row-height clamp as a multiple of `justifiedRowHeight` |
 | `justifiedReveal` | `'row'` | Reveal order as thumbnails load: `'row'` or `'image'` |
+
+The [settings reference](/docs/settings/#justified-layout-plugin) carries
+the generated descriptions for the same six settings.
 
 ## React
 

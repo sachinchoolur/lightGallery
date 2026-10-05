@@ -27,7 +27,10 @@ slow to scroll and heavy on memory. lightGallery v3 adds an opt-in
 The setting is **off by default** (`undefined`), the classic
 behavior: every thumbnail renders and the mounted-slide window
 follows `numberOfSlideItemsInDom`. The shape is shared by all four
-packages:
+packages, and the [settings reference](/docs/settings/#virtualization)
+carries the generated description. The
+[1,000-slide stress demo](/demos/virtualization/) shows the mounted-slide
+counter while you navigate.
 
 ```ts
 virtualization: {

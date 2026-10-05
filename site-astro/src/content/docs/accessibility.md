@@ -82,6 +82,9 @@ animation settings.
 
 ## Settings
 
+Every setting below has its generated description in the
+[settings reference](/docs/settings/#ariaAnnouncements).
+
 | Setting | Default | Description |
 | --- | --- | --- |
 | `trapFocus` | `true` | Trap focus inside the open gallery; restore it to the trigger on close |

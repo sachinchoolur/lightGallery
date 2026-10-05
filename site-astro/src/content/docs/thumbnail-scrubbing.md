@@ -23,6 +23,10 @@ lightGallery(el, {
 });
 ```
 
+The [thumbnails demo](/demos/thumbnails/) has a scrubbing example, and
+the [settings reference](/docs/settings/#scrubThumbnails) carries the
+generated description.
+
 How a scrub session behaves:
 
 -   **The full strip travel spans the whole gallery**, the first and

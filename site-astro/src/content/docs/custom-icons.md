@@ -24,6 +24,10 @@ lightGallery(el, {
 });
 ```
 
+The [custom icons demo](/demos/custom-icons/) shows a replaced icon set,
+and the [settings reference](/docs/settings/#icons) carries the generated
+description.
+
 How overrides resolve:
 
 -   **Omitted names keep the built-in icon**, override a single

@@ -16,7 +16,10 @@ Every package renders full responsive markup for image slides: the
 main image carries `srcset`/`sizes`, and `sources` renders a real
 `<picture>` element, art direction, format negotiation
 (`type="image/avif"`, …) and DPR selection all work exactly as they
-do in page markup, because it *is* that markup.
+do in page markup, because it *is* that markup. The
+[responsive image demo](/demos/responsive/) shows it running, and the
+`srcset`, `sizes` and `sources` fields are described on the
+[dynamic variables page](/docs/dynamic-variables/#srcset).
 
 Vanilla (data attributes):
 
