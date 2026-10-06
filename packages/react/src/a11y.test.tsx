@@ -118,6 +118,32 @@ describe('accessibility', () => {
             expect(document.activeElement).toBe(trigger);
         });
 
+        it('links the default anchor trigger to item.src so it is focusable', () => {
+            const [a, b, c] = slides as [GalleryItem, GalleryItem, GalleryItem];
+            render(
+                <LightGallery>
+                    <LightGalleryItem item={a} data-testid="plain">
+                        <img src={a.thumb} alt={a.alt} />
+                    </LightGalleryItem>
+                    <LightGalleryItem item={b} href="#b" data-testid="explicit">
+                        <img src={b.thumb} alt={b.alt} />
+                    </LightGalleryItem>
+                    <LightGalleryItem item={c} as="button" data-testid="button">
+                        <img src={c.thumb} alt={c.alt} />
+                    </LightGalleryItem>
+                </LightGallery>,
+            );
+            const plain = screen.getByTestId('plain');
+            expect(plain).toHaveAttribute('href', 'a.jpg');
+            plain.focus();
+            expect(document.activeElement).toBe(plain);
+            expect(screen.getByTestId('explicit')).toHaveAttribute(
+                'href',
+                '#b',
+            );
+            expect(screen.getByTestId('button')).not.toHaveAttribute('href');
+        });
+
         it('announces slide changes with position and caption', () => {
             render(
                 <LightGallery

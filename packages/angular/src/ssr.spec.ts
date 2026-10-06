@@ -36,7 +36,7 @@ const ITEMS: LgGalleryItem[] = [
     template: `
         <lg-gallery [features]="features">
             @for (item of items; track item.src) {
-                <a [href]="item.src" class="ssr-trigger" [lgGalleryItem]="item">
+                <a class="ssr-trigger" [lgGalleryItem]="item">
                     <img [src]="item.thumb" [alt]="item.alt" />
                 </a>
             }
@@ -81,6 +81,9 @@ describe('SSR (platform-server, zoneless)', () => {
         expect(html).toContain('ssr-trigger');
         expect(html).toContain('alt="First slide"');
         expect(html).toContain('alt="Second slide"');
+        // Anchors without an href link to the image for no-JS visitors.
+        expect(html).toContain('href="a.jpg"');
+        expect(html).toContain('href="b.jpg"');
         // The lightbox itself never server-renders — even for the gallery
         // whose [open] is true at bootstrap (browser-only overlay).
         expect(html).not.toContain('lg-container');

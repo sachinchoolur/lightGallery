@@ -19,7 +19,11 @@ export interface LightGalleryItemProps
     extends Omit<ComponentPropsWithoutRef<'a'>, 'onClick'> {
     /** The slide this trigger opens (also the item data in uncontrolled mode). */
     item: GalleryItem;
-    /** Element to render; defaults to an anchor. */
+    /**
+     * Element to render; defaults to an anchor. The default anchor links to
+     * `item.src` unless you pass `href`, so it stays keyboard-focusable and
+     * still opens the image with scripts off.
+     */
     as?: ElementType;
     onClick?: (event: MouseEvent) => void;
     children?: ReactNode;
@@ -36,6 +40,7 @@ export function LightGalleryItem({
     as: Component = 'a',
     onClick,
     children,
+    href,
     ...rest
 }: LightGalleryItemProps): ReactElement {
     const internal = useGalleryInternal();
@@ -69,6 +74,7 @@ export function LightGalleryItem({
     return (
         <Component
             {...rest}
+            href={Component === 'a' ? (href ?? item.src) : href}
             ref={(element: HTMLElement | null) => {
                 registrationRef.current!.element = element;
             }}

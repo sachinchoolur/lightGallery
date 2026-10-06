@@ -128,6 +128,49 @@ describe('accessibility', () => {
             expect(document.activeElement).toBe(trigger);
         });
 
+        it('links an anchor trigger without href to item.src so it is focusable', async () => {
+            @Component({
+                imports: [LgGalleryComponent, LgGalleryItemDirective],
+                template: `
+                    <lg-gallery>
+                        <a class="plain" [lgGalleryItem]="items[0]">
+                            <img [src]="items[0].thumb" [alt]="items[0].alt" />
+                        </a>
+                        <a class="static" href="#b" [lgGalleryItem]="items[1]">
+                            <img [src]="items[1].thumb" [alt]="items[1].alt" />
+                        </a>
+                        <a
+                            class="bound"
+                            [href]="bound()"
+                            [lgGalleryItem]="items[1]"
+                        >
+                            <img [src]="items[1].thumb" [alt]="items[1].alt" />
+                        </a>
+                        <button class="button" [lgGalleryItem]="items[2]">
+                            <img [src]="items[2].thumb" [alt]="items[2].alt" />
+                        </button>
+                    </lg-gallery>
+                `,
+            })
+            class HrefHost {
+                readonly items = ITEMS;
+                readonly bound = signal('#bound');
+            }
+            const fixture = TestBed.createComponent(HrefHost);
+            await flush(fixture);
+
+            const plain = query('.plain')!;
+            expect(plain.getAttribute('href')).toBe('a.jpg');
+            plain.focus();
+            expect(document.activeElement).toBe(plain);
+            expect(query('.static')!.getAttribute('href')).toBe('#b');
+            expect(query('.bound')!.getAttribute('href')).toBe('#bound');
+            fixture.componentInstance.bound.set('#rebound');
+            await flush(fixture);
+            expect(query('.bound')!.getAttribute('href')).toBe('#rebound');
+            expect(query('.button')!.hasAttribute('href')).toBe(false);
+        });
+
         it('announces slide changes and demotes the counter/caption', async () => {
             const fixture = TestBed.createComponent(A11yHost);
             const host = fixture.componentInstance;

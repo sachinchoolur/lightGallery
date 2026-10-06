@@ -84,12 +84,15 @@ describe('SSR', () => {
     it('server-renders uncontrolled trigger children as static markup', () => {
         const html = renderToString(
             <LightGallery slides={[{ src: 'a.jpg' }]}>
-                <LightGalleryItem item={{ src: 'a.jpg' }} href="a.jpg">
+                <LightGalleryItem item={{ src: 'a.jpg' }}>
                     <img src="thumb.jpg" alt="thumb" />
                 </LightGalleryItem>
             </LightGallery>,
         );
         expect(html).toContain('thumb.jpg');
+        // The default anchor links to the image, so no-JS visitors and
+        // crawlers still reach it.
+        expect(html).toContain('<a href="a.jpg">');
         expect(html).not.toContain('lg-container');
     });
 });

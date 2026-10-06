@@ -111,6 +111,11 @@ Long-standing bugs, nearly all of them present in 2.x:
 - In the React, Vue and Angular packages a slide that left the mounted
   pool kept its loaded flag, so returning to it in a large gallery showed
   no loader while the image downloaded again.
+- The React `<LightGalleryItem>` and an Angular `[lgGalleryItem]` anchor
+  rendered without an `href` unless you passed one, so keyboard users
+  could not tab to the thumbnails and the server-rendered markup linked
+  nowhere. An anchor trigger now links to `item.src` by default, as the
+  Vue `<LgItem>` already did; an explicit `href` still wins.
 
 - Slide transitions crossfaded for the whole slide instead of the brief
   fade the modes ask for, so the outgoing image ghosted across the
