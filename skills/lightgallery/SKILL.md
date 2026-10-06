@@ -176,6 +176,8 @@ Settings are inputs (`[speed]`, `[loop]`); events are outputs without the
 - Slides added after init are not shown → call `refresh()` (vanilla) or
   update the reactive `items` (frameworks).
 - React: switching between controlled and uncontrolled `open` logs an error.
+- Every symptom with its fix per package:
+  https://www.lightgalleryjs.com/docs/troubleshooting/index.md
 
 ## Reference
 

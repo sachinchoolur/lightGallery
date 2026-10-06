@@ -174,7 +174,7 @@ export function dedupePlugins(
     for (const plugin of plugins) {
         if (seen.has(plugin.name)) {
             console.warn(
-                `lightGallery: duplicate plugin "${plugin.name}" ignored.`,
+                `lightGallery: duplicate plugin "${plugin.name}" ignored. See https://www.lightgalleryjs.com/docs/vue/`,
             );
             continue;
         }

@@ -302,4 +302,7 @@ your key.
 
 ## Support
 
+If the gallery misbehaves, the [troubleshooting guide](/docs/troubleshooting/)
+covers the symptoms behind most bug reports, with the fix for each package.
+
 If you have any questions, suggestions, feedback, please reach out to [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) or DM me on [X](https://x.com/SachinNeravath)

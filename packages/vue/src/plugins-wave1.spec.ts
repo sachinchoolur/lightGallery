@@ -187,7 +187,7 @@ describe('plugin runtime + wave-1', () => {
         ]);
         await openAndLoad(wrapper);
         expect(warn).toHaveBeenCalledWith(
-            'lightGallery: duplicate plugin "probe" ignored.',
+            'lightGallery: duplicate plugin "probe" ignored. See https://www.lightgalleryjs.com/docs/vue/',
         );
         warn.mockRestore();
     });
