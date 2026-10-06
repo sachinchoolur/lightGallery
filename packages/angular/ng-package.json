@@ -4,5 +4,6 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "allowedNonPeerDependencies": ["@lightgallery/headless", "tslib"]
+  "allowedNonPeerDependencies": ["@lightgallery/headless", "tslib"],
+  "assets": ["LICENSE-COMMERCIAL.md"]
 }

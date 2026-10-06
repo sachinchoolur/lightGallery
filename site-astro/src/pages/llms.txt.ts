@@ -32,6 +32,8 @@ export const GET: APIRoute = async () => {
         '',
         'Packages: `lightgallery` (vanilla JavaScript/TypeScript), `@lightgallery/react`, `@lightgallery/vue`, `@lightgallery/angular`, `@lightgallery/headless` (the framework-free core).',
         '',
+        'License: free and open source under the GPLv3 for any project distributed under GPLv3-compatible terms. Projects that keep their source proprietary buy a one-time commercial license; same code, every plugin, nothing gated. SPDX: `GPL-3.0-only OR LicenseRef-Commercial`.',
+        '',
         `Every docs page below links to its markdown version; the HTML page is the same URL without \`index.md\`. The complete docs in one file: ${SITE}/llms-full.txt`,
         '',
     ];
@@ -45,7 +47,7 @@ export const GET: APIRoute = async () => {
         out.push(`- [${entry.data.title}](${docsMarkdownUrl(entry)}): ${one(entry.data.description)}`);
     }
     out.push('', '## API (JSON)', '', `- [Settings](${SITE}/api/settings.json): every option with type, default and description, per interface`, `- [Events](${SITE}/api/events.json): custom events with their detail fields`, `- [Methods](${SITE}/api/methods.json): instance methods`);
-    out.push('', '## Optional', '', `- [Changelog](${SITE}/changelog/index.md): what changed in each release`, `- [Blog](${SITE}/blog/)`, `- [License](${SITE}/license/): GPLv3, with a commercial license available`, `- [GitHub](https://github.com/sachinchoolur/lightGallery)`, '');
+    out.push('', '## Optional', '', `- [Changelog](${SITE}/changelog/index.md): what changed in each release`, `- [Blog](${SITE}/blog/)`, `- [License](${SITE}/docs/license/index.md): free under the GPLv3; commercial license for proprietary projects, plans at ${SITE}/license/`, `- [GitHub](https://github.com/sachinchoolur/lightGallery)`, '');
     // Keep docsUrl referenced for consumers that want HTML links.
     void docsUrl;
     return new Response(out.join('\n'), {

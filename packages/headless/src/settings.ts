@@ -125,8 +125,9 @@ export interface CoreSettings {
     speed: number;
 
     /**
-     * Commercial license key. lightGallery 3 keys start with `LIG`;
-     * `0000-0000-000-0000` is the temporary testing key.
+     * License key: by email with a commercial license, on request for
+     * GPLv3 projects. lightGallery 3 keys start with `LIG`;
+     * `0000-0000-000-0000` is the temporary evaluation key.
      */
     licenseKey: string;
 

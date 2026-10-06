@@ -284,17 +284,16 @@ with the browser and version.
 
 ## License
 
-#### Commercial license
+lightGallery is free and open source under the
+[GPLv3](https://github.com/sachinchoolur/lightGallery/blob/master/LICENSE).
+Use it in any project, personal or commercial, that is distributed under
+GPLv3-compatible terms.
 
-If you want to use lightGallery to develop commercial sites, themes, projects,
-and applications, the Commercial license is the appropriate license. With this
-option, your source code is kept proprietary.
-[Read more about the commercial license](/license/)
-
-#### Open source license
-
-If you are creating an open source application under a license compatible with
-the GNU GPL license v3, you may use this project under the terms of the GPLv3.
+If you want to keep your own source proprietary, choose the
+[commercial license](/license/). It covers the same code with every feature
+and plugin included, nothing is gated, and it is a one-time payment. The
+[license docs](/docs/license/) explain which license applies and how to pass
+your key.
 
 ## Support
 

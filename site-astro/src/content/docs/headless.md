@@ -105,6 +105,6 @@ focus.
 
 ## License
 
-GPL-3.0-only, matching lightGallery's licensing model. For commercial
-projects a commercial license is available, see the
-[license page](/license/).
+Free and open source under the GPLv3, like every lightGallery package. If
+your project keeps its source proprietary, a [commercial license](/license/)
+covers it: same code, nothing gated.

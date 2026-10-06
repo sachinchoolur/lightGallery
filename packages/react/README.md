@@ -246,7 +246,8 @@ or the old CRA wrapper:
 
 ## License
 
-GPL-3.0-only, matching lightGallery's licensing model. For commercial
-projects a commercial license is available — see
-[lightgalleryjs.com](https://www.lightgalleryjs.com/docs/license/) or use
+Free and open source under the GPLv3, like every lightGallery package. If
+your project keeps its source proprietary, a
+[commercial license](https://www.lightgalleryjs.com/license/) covers it: same
+code, nothing gated. See `LICENSE-COMMERCIAL.md` in this package. Use
 `0000-0000-000-0000` as a temporary `licenseKey` for evaluation.

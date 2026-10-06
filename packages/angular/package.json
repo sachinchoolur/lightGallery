@@ -3,7 +3,7 @@
   "version": "3.0.0-beta.3",
   "private": false,
   "description": "Native Angular lightGallery over @lightgallery/headless — standalone components, signals, zoneless-ready",
-  "license": "GPL-3.0-only",
+  "license": "(GPL-3.0-only OR LicenseRef-Commercial)",
   "author": "Sachin Neravath <sachi77n@gmail.com>",
   "homepage": "https://www.lightgalleryjs.com/",
   "repository": {

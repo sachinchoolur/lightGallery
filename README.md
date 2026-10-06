@@ -189,7 +189,10 @@ Finally, you need to initiate the gallery by adding the following code.
 
 #### License Key
 
-You'll receive a license key via email once you purchase a license [More info](https://www.lightgalleryjs.com/docs/settings/#licenseKey)
+Commercial licenses come with a key by email. Open-source projects under
+the GPLv3 can request one at contact@lightgalleryjs.com, and
+`0000-0000-000-0000` is a temporary key for evaluation that limits nothing.
+[More info](https://www.lightgalleryjs.com/docs/license/)
 
 #### Plugins
 
@@ -212,17 +215,14 @@ Explorer is not supported; lightGallery v2 remains available for it.
 
 ## License
 
-#### Commercial license
+lightGallery is free and open source under the [GPLv3](LICENSE). Use it in
+any project, personal or commercial, that is distributed under
+GPLv3-compatible terms.
 
-If you want to use lightGallery to develop commercial sites, themes, projects,
-and applications, the Commercial license is the appropriate license. With this
-option, your source code is kept proprietary.
-[Read more about the commercial license](https://www.lightgalleryjs.com/license/)
-
-#### Open source license
-
-If you are creating an open source application under a license compatible with
-the GNU GPL license v3, you may use this project under the terms of the GPLv3.
+If you want to keep your own source proprietary, choose the
+[commercial license](https://www.lightgalleryjs.com/license/). It covers the
+same code with every feature and plugin included, nothing is gated, and it
+is a one-time payment. See [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md).
 
 ## Support
 

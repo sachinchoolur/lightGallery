@@ -173,7 +173,8 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE-COMMERCIAL.md"
   ],
   "scripts": {
     "build": "vite build && vue-tsc -p tsconfig.build.json && node ../../scripts/copy-dts-to-cts.mjs dist",
@@ -208,7 +209,7 @@
     "vue-eslint-parser": "^10.3.0",
     "vue-tsc": "^3.0.0"
   },
-  "license": "GPL-3.0-only",
+  "license": "(GPL-3.0-only OR LicenseRef-Commercial)",
   "engines": {
     "node": ">=18"
   },

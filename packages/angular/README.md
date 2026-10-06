@@ -232,5 +232,8 @@ renames (full table in the project ADRs):
 
 ## License
 
-GPL-3.0-only — commercial license available, see
-[lightgalleryjs.com/license](https://www.lightgalleryjs.com/license/).
+Free and open source under the GPLv3, like every lightGallery package. If
+your project keeps its source proprietary, a
+[commercial license](https://www.lightgalleryjs.com/license/) covers it: same
+code, nothing gated. See `LICENSE-COMMERCIAL.md` in this package. Use
+`0000-0000-000-0000` as a temporary `licenseKey` for evaluation.

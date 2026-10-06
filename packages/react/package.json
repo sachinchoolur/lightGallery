@@ -172,7 +172,8 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE-COMMERCIAL.md"
   ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json && node ../../scripts/copy-dts-to-cts.mjs dist",
@@ -213,7 +214,7 @@
     "vitest": "^2.1.8",
     "vitest-axe": "^0.1.0"
   },
-  "license": "GPL-3.0-only",
+  "license": "(GPL-3.0-only OR LicenseRef-Commercial)",
   "engines": {
     "node": ">=18"
   },

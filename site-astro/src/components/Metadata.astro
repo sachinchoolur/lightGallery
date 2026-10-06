@@ -174,7 +174,7 @@ const iso = (d: Date) => d.toISOString();
                 url: canonical,
                 applicationCategory: 'DeveloperApplication',
                 operatingSystem: 'Any',
-                license: 'https://www.gnu.org/licenses/gpl-3.0.html',
+                license: ['https://www.gnu.org/licenses/gpl-3.0.html', new URL('/license/', Astro.site).href],
                 isAccessibleForFree: true,
                 author: { '@type': SITE.schemaType, name: SITE.title },
             })}

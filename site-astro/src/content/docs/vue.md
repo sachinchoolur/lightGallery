@@ -224,7 +224,7 @@ vanilla 2.x package? The full list is in the
 
 ## License
 
-GPL-3.0-only, matching lightGallery's licensing model. For commercial
-projects a commercial license is available, see the
-[license page](/license/), or use `0000-0000-000-0000` as a temporary
+Free and open source under the GPLv3, like every lightGallery package. If
+your project keeps its source proprietary, a [commercial license](/license/)
+covers it: same code, nothing gated. Use `0000-0000-000-0000` as a temporary
 `licenseKey` for evaluation.

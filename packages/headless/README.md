@@ -78,5 +78,7 @@ wrap the reducer in their own reactivity and own all DOM concerns.
 
 ## License
 
-GPL-3.0-only, matching lightGallery's licensing model — commercial
-licenses via [lightgalleryjs.com](https://www.lightgalleryjs.com/docs/license/).
+Free and open source under the GPLv3, like every lightGallery package. If
+your project keeps its source proprietary, a
+[commercial license](https://www.lightgalleryjs.com/license/) covers it: same
+code, nothing gated. See `LICENSE-COMMERCIAL.md` in this package.
