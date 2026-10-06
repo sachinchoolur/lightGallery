@@ -9,7 +9,7 @@ import 'lightgallery/css/lg-video.css';
 
 import { photos } from './photos';
 
-// Images work without a plugin; video slides need Video.
+// Images and iframes work without a plugin; video slides need Video.
 const plugins = [Thumbnail, Video];
 
 // One gallery, a different kind of slide for each item.
@@ -50,6 +50,15 @@ const items: LgGalleryItem[] = [
         alt: 'Peck Pocketed',
         caption: 'HTML5 video: Peck Pocketed, by Kevin Herron',
         lgSize: '1280-720',
+    },
+    // Iframe: `iframe: true` shows the page at `src` inside the slide.
+    {
+        src: 'https://www.openstreetmap.org/export/embed.html?bbox=-5.2884,35.1588,-5.2484,35.1788',
+        iframe: true,
+        iframeTitle: 'Map',
+        thumb: 'https://picsum.photos/id/49/360/240',
+        alt: 'Map',
+        caption: 'Iframe: a map',
     },
     // Image
     photos[1],

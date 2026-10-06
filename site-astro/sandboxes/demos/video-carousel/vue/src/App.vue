@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-    LightGallery,
-    type InitDetail,
-    type LgGalleryItem,
-} from '@lightgallery/vue';
+import { LightGallery, type LgGalleryItem } from '@lightgallery/vue';
 import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 import Video from '@lightgallery/vue/plugins/video';
 
@@ -15,10 +11,6 @@ import './carousel.css';
 
 const container = ref<HTMLElement | null>(null);
 const plugins = [Thumbnail, Video];
-
-// The carousel has no thumbnails to click, so open it as soon as the
-// gallery is ready.
-const openCarousel = ({ instance }: InitDetail) => instance.openGallery();
 
 const videos: LgGalleryItem[] = [
     // YouTube and Vimeo: `src` is the address of the video page.
@@ -61,15 +53,15 @@ const videos: LgGalleryItem[] = [
     <!-- The gallery is rendered inside this element and takes its size,
          which is set in carousel.css. -->
     <div ref="container" class="inline-gallery-container" />
-    <!-- The carousel cannot be closed. The maximize icon expands it to the
-         whole window. -->
+    <!-- The carousel is always open and cannot be closed. The maximize icon
+         expands it to the whole window. -->
     <LightGallery
         v-if="container"
         :container="container"
+        :open="true"
         :closable="false"
         :show-maximize-icon="true"
         :slides="videos"
         :plugins="plugins"
-        @init="openCarousel"
     />
 </template>
