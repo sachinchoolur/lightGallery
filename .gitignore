@@ -51,3 +51,15 @@ demos/**/next-env.d.ts
 
 # Astro generated types
 .astro/
+
+# consumer apps, when run in place (the check uses a scratch copy)
+consumers/**/.next/
+consumers/**/.nuxt/
+consumers/**/.output/
+consumers/**/.angular/
+consumers/**/dist/
+consumers/**/next-env.d.ts
+consumers/**/public/photos/
+consumers/**/package-lock.json
+consumers/**/lg-declarations.ts
+consumers/**/tsconfig.lg-declarations.json

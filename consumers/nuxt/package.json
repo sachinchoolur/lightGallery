@@ -1,0 +1,20 @@
+{
+    "name": "lg-consumer-nuxt",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "nuxt build",
+        "typecheck": "nuxt prepare && vue-tsc --noEmit -p .nuxt/tsconfig.app.json",
+        "start": "node .output/server/index.mjs"
+    },
+    "dependencies": {
+        "@lightgallery/vue": "*",
+        "lightgallery": "*",
+        "nuxt": "^4.5.0",
+        "vue": "^3.5.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.6.0",
+        "vue-tsc": "^3.0.0"
+    }
+}

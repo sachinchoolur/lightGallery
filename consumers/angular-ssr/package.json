@@ -1,0 +1,31 @@
+{
+    "name": "lg-consumer-angular-ssr",
+    "private": true,
+    "scripts": {
+        "build": "ng build",
+        "start": "node dist/lg-consumer/server/server.mjs"
+    },
+    "dependencies": {
+        "@angular/cdk": "^22.2.0",
+        "@angular/common": "^22.2.0",
+        "@angular/compiler": "^22.2.0",
+        "@angular/core": "^22.2.0",
+        "@angular/platform-browser": "^22.2.0",
+        "@angular/platform-server": "^22.2.0",
+        "@angular/router": "^22.2.0",
+        "@angular/ssr": "^22.2.0",
+        "@lightgallery/angular": "*",
+        "express": "^5.1.0",
+        "lightgallery": "*",
+        "rxjs": "~7.8.0",
+        "tslib": "^2.3.0"
+    },
+    "devDependencies": {
+        "@angular/build": "^22.2.0",
+        "@angular/cli": "^22.2.0",
+        "@angular/compiler-cli": "^22.2.0",
+        "@types/express": "^5.0.1",
+        "@types/node": "^22.12.0",
+        "typescript": "~6.0.2"
+    }
+}

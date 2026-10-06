@@ -189,6 +189,7 @@
     "publishToNpm": "pnpm publish",
     "release": "node scripts/release.mjs publish",
     "release:check": "node scripts/release.mjs check",
+    "check:consumers": "node scripts/check-consumers.mjs",
     "release:bump": "node scripts/release.mjs bump",
     "prepack": "node scripts/assert-built.mjs dist/lightgallery.umd.js dist/lightgallery.es5.js dist/lightgallery.min.js dist/css/lightgallery.css dist/types/index.d.ts dist/types/headless/index.d.ts",
     "prepublishOnly": "node scripts/assert-publish-tag.mjs"

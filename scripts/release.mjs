@@ -13,6 +13,7 @@
  *                  prerelease, `latest` for a stable version)
  *   --skip-tests   skip typecheck, lint and the test suites
  *   --skip-ci      skip the check that CI passed on the release commit
+ *   --skip-consumers  skip building and driving the consumer apps
  *   --yes          publish without the confirmation prompt
  *
  * A release uploads the exact tarballs the verification inspected and
@@ -28,30 +29,13 @@ import path from 'node:path';
 import readline from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 
+import { checkConsumers } from './check-consumers.mjs';
+import { HEADLESS, PACKAGES } from './release-packages.mjs';
+
 const rootDir = path.resolve(
     path.dirname(fileURLToPath(import.meta.url)),
     '..',
 );
-
-const HEADLESS = '@lightgallery/headless';
-
-// Publish order: headless first, the framework packages depend on it.
-// `headless` is the range each package must carry for it once packed.
-const PACKAGES = [
-    { name: HEADLESS, dir: 'packages/headless' },
-    { name: '@lightgallery/react', dir: 'packages/react', headless: 'exact' },
-    { name: '@lightgallery/vue', dir: 'packages/vue', headless: 'exact' },
-    {
-        name: '@lightgallery/angular',
-        dir: 'packages/angular',
-        // ng-packagr writes the publishable package, manifest included.
-        packDir: 'packages/angular/dist',
-        headless: 'caret',
-        // Its entries need the Angular compiler; CI builds a scratch app.
-        skipImport: true,
-    },
-    { name: 'lightgallery', dir: '.' },
-];
 
 // Installed beside the tarballs so the framework entries can be imported.
 const CONSUMER_PEERS = ['react@^19', 'react-dom@^19', 'vue@^3'];
@@ -850,6 +834,23 @@ function verifyInConsumer(tarballs, manifests, version, workDir) {
     info(`${entries.length} entries load as ESM and CJS from a clean install`);
 }
 
+async function verifyConsumerApps(tarballs) {
+    let result;
+    try {
+        result = await checkConsumers({ source: { tarballs }, log: info });
+    } catch (error) {
+        fail(error.message);
+    }
+    result.warnings.forEach(warn);
+    if (result.failures.length > 0) {
+        fail(
+            `The consumer apps found problems:${result.failures
+                .map((failure) => `\n  - ${failure}`)
+                .join('')}`,
+        );
+    }
+}
+
 function integrityOf(file) {
     return `sha512-${createHash('sha512')
         .update(fs.readFileSync(file))
@@ -986,6 +987,13 @@ async function verify(options, publishing) {
     await step('Clean install and import', () =>
         verifyInConsumer(tarballs, manifests, version, workDir),
     );
+    if (options.skipConsumers) {
+        warn('The consumer apps were not checked (--skip-consumers).');
+    } else {
+        await step('Consumer apps (Next.js, Nuxt, Angular SSR)', () =>
+            verifyConsumerApps(tarballs),
+        );
+    }
     return { version, tag, gitState, pending, tarballs, workDir };
 }
 
@@ -1152,6 +1160,8 @@ function parseArgs(argv) {
             options.skipTests = true;
         } else if (arg === '--skip-ci') {
             options.skipCi = true;
+        } else if (arg === '--skip-consumers') {
+            options.skipConsumers = true;
         } else if (arg === '--yes') {
             options.yes = true;
         } else if (arg.startsWith('--')) {
@@ -1174,7 +1184,7 @@ async function main() {
         await publish(options);
     } else {
         fail(
-            'Usage: npm run release | release:check | release:bump <version>   options after `--`: --tag <name>, --skip-tests, --skip-ci, --yes',
+            'Usage: npm run release | release:check | release:bump <version>   options after `--`: --tag <name>, --skip-tests, --skip-ci, --skip-consumers, --yes',
         );
     }
 }
