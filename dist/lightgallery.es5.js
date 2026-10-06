@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 3.0.0-beta.3 | October 1st 2026
+ * lightgallery | 3.0.0-beta.4 | October 6th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -1266,7 +1266,8 @@ const defaultDynamicOptions = [
   "pinterestText",
   "fbHtml",
   "disqusIdentifier",
-  "disqusUrl"
+  "disqusUrl",
+  "lgSize"
 ];
 function convertToData(attr) {
   if (attr === "href") {
@@ -1296,11 +1297,13 @@ const utils = {
     });
   },
   /**
-   * get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
+   * Fit the media's original size into the container. The size comes from
+   * the element's `data-lg-size` attribute, then the item's `lgSize`
+   * field, then `defaultLgSize`. Used for the zoom-from-origin animation.
    */
-  getSize(el, container, spacing = 0, defaultLgSize) {
+  getSize(el, container, spacing = 0, defaultLgSize, itemLgSize) {
     const LGel = $LG(el);
-    const lgSize = LGel.attr("data-lg-size") || defaultLgSize;
+    const lgSize = LGel.attr("data-lg-size") || itemLgSize || defaultLgSize;
     const parsed = parseImageSize(lgSize, window.innerWidth);
     if (!parsed) {
       return;
@@ -1320,12 +1323,12 @@ const utils = {
     if (!imageSize || imageSize.width <= 0 || imageSize.height <= 0) {
       return;
     }
-    const LGel = $LG(el).find("img").first();
-    if (!LGel.get()) {
+    const origin = $LG(el).find("img").first().get() || el;
+    if (!origin) {
       return;
     }
     const containerRect = container.get().getBoundingClientRect();
-    const rect = LGel.get().getBoundingClientRect();
+    const rect = origin.getBoundingClientRect();
     const triggerRect = {
       left: rect.left,
       top: rect.top,
@@ -1623,9 +1626,6 @@ class LightGallery {
       this.settings.swipeToClose = false;
     }
     this.zoomFromOrigin = this.settings.zoomFromOrigin;
-    if (this.settings.dynamic) {
-      this.zoomFromOrigin = false;
-    }
     if (this.settings.container) {
       const { container } = this.settings;
       if (typeof container === "function") {
@@ -1863,13 +1863,14 @@ class LightGallery {
    * its real size when the natural-px swap lands.
    */
   updateCurrentImageSize(index) {
-    const { __slideVideoInfo } = this.galleryItems[index];
+    const { __slideVideoInfo, lgSize } = this.galleryItems[index];
     const { top, bottom } = this.mediaContainerPosition;
     this.currentImageSize = utils.getSize(
       this.items[index],
       this.outer,
       top + bottom,
-      __slideVideoInfo && this.settings.videoMaxSize
+      __slideVideoInfo && this.settings.videoMaxSize,
+      lgSize
     );
   }
   refreshOnResize() {
@@ -1899,9 +1900,9 @@ class LightGallery {
    * Modify the current gallery items and pass it via updateSlides method
    * @note
    * - Do not mutate existing lightGallery items directly.
-   * - Always pass new list of gallery items
+   * - Always pass a new list of gallery items
    * - You need to take care of thumbnails outside the gallery if any
-   * - user this method only if you want to update slides when the gallery is opened. Otherwise, use `refresh()` method.
+   * - use this method only if you want to update slides when the gallery is opened. Otherwise, use `refresh()` method.
    * @param items Gallery items
    * @param index After the update operation, which slide gallery should navigate to
    * @category lGPublicMethods
@@ -1929,10 +1930,10 @@ class LightGallery {
    *
    * // Remove slides dynamically
    * galleryItems = JSON.parse(
-   *   JSON.stringify(updateSlideInstance.galleryItems),
+   *   JSON.stringify(plugin.galleryItems),
    * );
    * galleryItems.shift();
-   * updateSlideInstance.updateSlides(galleryItems, 1);
+   * plugin.updateSlides(galleryItems, 1);
    * @see <a href="/demos/update-slides/">Demo</a>
    */
   updateSlides(items, index) {
@@ -2072,13 +2073,14 @@ class LightGallery {
     if (!this.settings.allowMediaOverlap) {
       this.setMediaContainerPosition(top, bottom);
     }
-    const { __slideVideoInfo } = this.galleryItems[index];
+    const { __slideVideoInfo, lgSize } = this.galleryItems[index];
     if (this.zoomFromOrigin && element) {
       this.currentImageSize = utils.getSize(
         element,
         this.outer,
         top + bottom,
-        __slideVideoInfo && this.settings.videoMaxSize
+        __slideVideoInfo && this.settings.videoMaxSize,
+        lgSize
       );
       transform = this.getOriginTransform(element, this.currentImageSize);
     }
@@ -2147,9 +2149,9 @@ class LightGallery {
   }
   /**
    * Note - Changing the position of the media on every slide transition creates a flickering effect.
-   * Therefore, The height of the caption is calculated dynamically, only once based on the first slide caption.
+   * Therefore, the height of the caption is calculated dynamically, only once based on the first slide caption.
    * if you have dynamic captions for each media,
-   * you can provide an appropriate height for the captions via allowMediaOverlap option
+   * you can provide an appropriate height for the captions via defaultCaptionHeight option
    */
   getMediaContainerPosition() {
     if (this.settings.allowMediaOverlap) {
@@ -2477,7 +2479,8 @@ class LightGallery {
           this.items[index],
           this.outer,
           top + bottom,
-          videoInfo && this.settings.videoMaxSize
+          videoInfo && this.settings.videoMaxSize,
+          this.galleryItems[index].lgSize
         );
         lgVideoStyle = this.getVideoContStyle(videoSize);
       }
@@ -2800,7 +2803,8 @@ class LightGallery {
           this.items[index],
           this.outer,
           top + bottom,
-          videoInfo && this.settings.videoMaxSize
+          videoInfo && this.settings.videoMaxSize,
+          this.galleryItems[index].lgSize
         );
         this.resizeVideoSlide(index, videoSize);
       }
@@ -3398,7 +3402,7 @@ class LightGallery {
     }
   }
   /**
-   * Go to previous slides
+   * Go to previous slide
    * @param {Boolean} fromTouch - true if slide function called via touch event
    * @category lGPublicMethods
    * @example
@@ -3525,8 +3529,9 @@ class LightGallery {
     return target.hasClass("lg-video-poster") || target.hasClass("lg-video-play-button") || playButton && playButton.contains(target.get());
   }
   /**
-   * Maximize minimize inline gallery.
-   * @category lGPublicMethods
+   * Bind the inline gallery's maximize button: each click toggles the
+   * gallery between its container and the full viewport. Called once
+   * during initialization.
    */
   toggleMaximize() {
     this.getElementById("lg-maximize").on("click.lg", () => {
@@ -3768,9 +3773,9 @@ class LightGallery {
    * Destroy lightGallery.
    * Destroy lightGallery and its plugin instances completely
    *
-   * @description This method also calls CloseGallery function internally. Returns the time takes to completely close and destroy the instance.
+   * @description This method also calls closeGallery function internally. Returns the time it takes to completely close and destroy the instance.
    * In case if you want to re-initialize lightGallery right after destroying it, initialize it only once the destroy process is completed.
-   * You can use refresh method most of the times.
+   * You can use refresh method most of the time.
    * @category lGPublicMethods
    * @example
    *  const plugin = lightGallery();

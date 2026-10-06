@@ -1,6 +1,6 @@
 {
   "name": "@lightgallery/vue",
-  "version": "3.0.0-beta.3",
+  "version": "3.0.0-beta.4",
   "private": false,
   "description": "Native Vue 3 lightGallery over @lightgallery/headless",
   "type": "module",

@@ -2,7 +2,7 @@
   typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, global.lgThumbnail = factory());
 })(this, function() {
   "use strict";/*!
- * lightgallery | 3.0.0-beta.3 | October 1st 2026
+ * lightgallery | 3.0.0-beta.4 | October 6th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -562,7 +562,7 @@
       this.core.slide(index, true, true, false);
     }
     /**
-     * Drag-start seam (plan 010 physics): a press mid-glide takes over
+     * Drag-start seam (strip physics): a press mid-glide takes over
      * from the live position, and the velocity window restarts.
      */
     onThumbDragStart(pageX) {
@@ -674,13 +674,15 @@
       const img = document.createElement("img");
       img.alt = alt || "";
       img.setAttribute("data-lg-item-id", index + "");
+      img.setAttribute("loading", "lazy");
+      img.setAttribute("decoding", "async");
       img.src = thumbImg;
       div.appendChild(img);
       return div;
     }
     /**
      * True when the strip renders only a window of thumbs
-     * (virtualization.thumbs, plan 010).
+     * (virtualization.thumbs).
      */
     isThumbWindowed() {
       var _a;

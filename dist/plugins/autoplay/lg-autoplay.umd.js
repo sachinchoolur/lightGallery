@@ -2,7 +2,7 @@
   typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, global.lgAutoplay = factory());
 })(this, function() {
   "use strict";/*!
- * lightgallery | 3.0.0-beta.3 | October 1st 2026
+ * lightgallery | 3.0.0-beta.4 | October 6th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -49,6 +49,11 @@
   };
   class Autoplay {
     constructor(instance) {
+      this.running = false;
+      this.timer = null;
+      this.progressTimer = null;
+      this.waitingFor = null;
+      this.startedFromLoad = false;
       this.core = instance;
       this.settings = __spreadValues(__spreadValues({}, autoplaySettings), this.core.settings);
       return this;
@@ -58,7 +63,6 @@
       if (!this.settings.autoplay) {
         return;
       }
-      this.interval = false;
       this.fromAuto = true;
       this.pausedOnTouchDrag = false;
       this.pausedOnSlideChange = false;
@@ -70,15 +74,23 @@
           '<div class="lg-progress-bar"><div class="lg-progress"></div></div>'
         );
       }
-      if (this.settings.slideShowAutoplay) {
-        this.core.LGel.once(`${lGEvents.slideItemLoad}.autoplay`, () => {
-          this.startAutoPlay();
-        });
-      }
+      this.core.LGel.on(
+        `${lGEvents.slideItemLoad}.autoplay`,
+        (event) => {
+          if (this.settings.slideShowAutoplay && !this.startedFromLoad) {
+            this.startedFromLoad = true;
+            this.startAutoPlay();
+            return;
+          }
+          if (this.running && this.waitingFor === event.detail.index) {
+            this.countdown();
+          }
+        }
+      );
       this.core.LGel.on(
         `${lGEvents.dragStart}.autoplay touchstart.lg.autoplay`,
         () => {
-          if (this.interval) {
+          if (this.running) {
             this.stopAutoPlay();
             this.pausedOnTouchDrag = true;
           }
@@ -87,15 +99,14 @@
       this.core.LGel.on(
         `${lGEvents.dragEnd}.autoplay touchend.lg.autoplay`,
         () => {
-          if (!this.interval && this.pausedOnTouchDrag) {
+          if (!this.running && this.pausedOnTouchDrag) {
             this.startAutoPlay();
             this.pausedOnTouchDrag = false;
           }
         }
       );
       this.core.LGel.on(`${lGEvents.beforeSlide}.autoplay`, () => {
-        this.showProgressBar();
-        if (!this.fromAuto && this.interval) {
+        if (!this.fromAuto && this.running) {
           this.stopAutoPlay();
           this.pausedOnSlideChange = true;
         } else {
@@ -104,29 +115,44 @@
         this.fromAuto = false;
       });
       this.core.LGel.on(`${lGEvents.afterSlide}.autoplay`, () => {
-        if (this.pausedOnSlideChange && !this.interval && this.settings.forceSlideShowAutoplay) {
+        if (this.pausedOnSlideChange && !this.running && this.settings.forceSlideShowAutoplay) {
           this.startAutoPlay();
           this.pausedOnSlideChange = false;
         }
       });
-      this.showProgressBar();
     }
+    cycleDuration() {
+      return this.core.settings.speed + this.settings.slideShowInterval;
+    }
+    /**
+     * Restart the progress bar from zero. Two-phase: the bar must paint at
+     * width 0 before `lg-start` lands, or a bar that was already full
+     * renders full again instead of animating.
+     */
     showProgressBar() {
-      if (this.settings.progressBar && this.fromAuto) {
-        const _$progressBar = this.core.outer.find(".lg-progress-bar");
-        const _$progress = this.core.outer.find(".lg-progress");
-        if (this.interval) {
-          _$progress.removeAttr("style");
-          _$progressBar.removeClass("lg-start");
-          setTimeout(() => {
-            _$progress.css(
-              "transition",
-              "width " + (this.core.settings.speed + this.settings.slideShowInterval) + "ms ease 0s"
-            );
-            _$progressBar.addClass("lg-start");
-          }, 20);
-        }
+      if (!this.settings.progressBar) {
+        return;
       }
+      this.resetProgressBar();
+      this.progressTimer = setTimeout(() => {
+        this.progressTimer = null;
+        if (!this.running || this.timer === null) {
+          return;
+        }
+        this.core.outer.find(".lg-progress").css(
+          "transition",
+          "width " + this.cycleDuration() + "ms ease 0s"
+        );
+        this.core.outer.find(".lg-progress-bar").addClass("lg-start");
+      }, 20);
+    }
+    resetProgressBar() {
+      if (this.progressTimer !== null) {
+        clearTimeout(this.progressTimer);
+        this.progressTimer = null;
+      }
+      this.core.outer.find(".lg-progress").removeAttr("style");
+      this.core.outer.find(".lg-progress-bar").removeClass("lg-start");
     }
     // Manage autoplay via play/stop buttons
     controls() {
@@ -137,53 +163,93 @@
         if (this.core.outer.hasClass("lg-show-autoplay")) {
           this.stopAutoPlay();
         } else {
-          if (!this.interval) {
+          if (!this.running) {
             this.startAutoPlay();
           }
         }
       });
     }
+    isSlideLoaded(index) {
+      return this.core.getSlideItem(index).hasClass("lg-complete_");
+    }
+    clearTimer() {
+      if (this.timer !== null) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+      this.waitingFor = null;
+    }
+    /**
+     * Arm the countdown for the slide at `index`. A slide that is still
+     * loading holds the countdown (and the progress bar at zero) until its
+     * slideItemLoad arrives, so a slow connection never skips past images
+     * the viewer has not seen.
+     */
+    schedule(index) {
+      this.clearTimer();
+      if (this.isSlideLoaded(index)) {
+        this.countdown();
+        return;
+      }
+      this.waitingFor = index;
+      this.resetProgressBar();
+    }
+    countdown() {
+      this.clearTimer();
+      this.timer = setTimeout(() => {
+        this.timer = null;
+        this.advance();
+      }, this.cycleDuration());
+      this.showProgressBar();
+    }
+    advance() {
+      if (this.core.lgBusy) {
+        this.countdown();
+        return;
+      }
+      if (this.core.index + 1 < this.core.galleryItems.length) {
+        this.core.index++;
+      } else {
+        this.core.index = 0;
+      }
+      this.core.LGel.trigger(lGEvents.autoplay, {
+        index: this.core.index
+      });
+      this.fromAuto = true;
+      this.core.slide(this.core.index, false, false, "next");
+      if (this.running) {
+        this.schedule(this.core.index);
+      }
+    }
     // Autostart gallery
     startAutoPlay() {
-      this.core.outer.find(".lg-progress").css(
-        "transition",
-        "width " + (this.core.settings.speed + this.settings.slideShowInterval) + "ms ease 0s"
-      );
+      if (this.running) {
+        return;
+      }
+      this.running = true;
       this.core.outer.addClass("lg-show-autoplay");
-      this.core.outer.find(".lg-progress-bar").addClass("lg-start");
       this.core.LGel.trigger(lGEvents.autoplayStart, {
         index: this.core.index
       });
-      this.interval = setInterval(() => {
-        if (this.core.index + 1 < this.core.galleryItems.length) {
-          this.core.index++;
-        } else {
-          this.core.index = 0;
-        }
-        this.core.LGel.trigger(lGEvents.autoplay, {
-          index: this.core.index
-        });
-        this.fromAuto = true;
-        this.core.slide(this.core.index, false, false, "next");
-      }, this.core.settings.speed + this.settings.slideShowInterval);
+      this.schedule(this.core.index);
     }
     // cancel Autostart
     stopAutoPlay() {
-      if (this.interval) {
+      if (this.running) {
         this.core.LGel.trigger(lGEvents.autoplayStop, {
           index: this.core.index
         });
-        this.core.outer.find(".lg-progress").removeAttr("style");
         this.core.outer.removeClass("lg-show-autoplay");
-        this.core.outer.find(".lg-progress-bar").removeClass("lg-start");
       }
-      clearInterval(this.interval);
-      this.interval = false;
+      this.running = false;
+      this.clearTimer();
+      this.resetProgressBar();
     }
     closeGallery() {
       this.stopAutoPlay();
     }
     destroy() {
+      this.stopAutoPlay();
       if (this.settings.autoplay) {
         this.core.outer.find(".lg-progress-bar").remove();
       }
