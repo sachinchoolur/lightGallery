@@ -1,0 +1,11 @@
+{
+    "name": "lg-consumer-vanilla-cdn",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "start": "node server.mjs"
+    },
+    "dependencies": {
+        "lightgallery": "*"
+    }
+}

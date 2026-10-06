@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>lightGallery consumer: script tags from a CDN</title>
+        <!-- The URLs a CDN user writes, with the host left off. -->
+        <link rel="stylesheet" href="/npm/lightgallery@3/dist/css/lightgallery.css" />
+        <link rel="stylesheet" href="/npm/lightgallery@3/dist/css/lg-zoom.css" />
+        <link rel="stylesheet" href="/npm/lightgallery@3/dist/css/lg-thumbnail.css" />
+        <style>
+            body { font-family: system-ui, sans-serif; margin: 24px; }
+            .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+            .grid img { width: 100%; height: auto; display: block; }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>lightGallery consumer</h1>
+            <!-- The same four photos in every consumer app; the check compares them. -->
+            <div class="grid" id="gallery">
+                <a href="/photos/1.png" data-lg-size="1600-1067" data-sub-html="Photo 1 caption"><img src="/photos/1-thumb.png" alt="Photo 1" /></a>
+                <a href="/photos/2.png" data-lg-size="1600-1067" data-sub-html="Photo 2 caption"><img src="/photos/2-thumb.png" alt="Photo 2" /></a>
+                <a href="/photos/3.png" data-lg-size="1600-1067" data-sub-html="Photo 3 caption"><img src="/photos/3-thumb.png" alt="Photo 3" /></a>
+                <a href="/photos/4.png" data-lg-size="1600-1067" data-sub-html="Photo 4 caption"><img src="/photos/4-thumb.png" alt="Photo 4" /></a>
+            </div>
+        </main>
+        <script src="/npm/lightgallery@3/dist/lightgallery.min.js"></script>
+        <script src="/npm/lightgallery@3/dist/plugins/zoom/lg-zoom.min.js"></script>
+        <script src="/npm/lightgallery@3/dist/plugins/thumbnail/lg-thumbnail.min.js"></script>
+        <script>
+            lightGallery(document.getElementById('gallery'), {
+                plugins: [lgZoom, lgThumbnail],
+                animateThumb: true,
+            });
+        </script>
+    </body>
+</html>

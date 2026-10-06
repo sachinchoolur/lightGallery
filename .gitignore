@@ -57,6 +57,9 @@ consumers/**/.next/
 consumers/**/.nuxt/
 consumers/**/.output/
 consumers/**/.angular/
+consumers/**/.astro/
+consumers/**/.react-router/
+consumers/**/build/
 consumers/**/dist/
 consumers/**/next-env.d.ts
 consumers/**/public/photos/

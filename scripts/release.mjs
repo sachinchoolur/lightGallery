@@ -990,9 +990,7 @@ async function verify(options, publishing) {
     if (options.skipConsumers) {
         warn('The consumer apps were not checked (--skip-consumers).');
     } else {
-        await step('Consumer apps (Next.js, Nuxt, Angular SSR)', () =>
-            verifyConsumerApps(tarballs),
-        );
+        await step('Consumer apps', () => verifyConsumerApps(tarballs));
     }
     return { version, tag, gitState, pending, tarballs, workDir };
 }

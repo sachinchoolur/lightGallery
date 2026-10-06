@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 /**
- * Consumer-app check. Builds the small Next.js, Nuxt and Angular SSR apps
- * in `consumers/` against the packed packages, the way a user installs
- * them, and drives each production server in headless Chrome.
+ * Consumer-app check. Builds the small apps in `consumers/` against the
+ * packed packages, the way a user installs them, and drives each one in
+ * headless Chrome: Next.js, Nuxt, Angular SSR, React Router (framework
+ * mode), an Astro page with a React island, Vite + React both as a
+ * production build and on the dev server (StrictMode), and the vanilla
+ * build from CDN-style script tags.
  *
  *   npm run check:consumers                       pack the current builds, check them
  *   npm run check:consumers -- --tarballs <dir>   check tarballs packed earlier
  *                                                 (release:check prints the folder)
  *   npm run check:consumers -- --version <v>      check a version on the registry
- *   npm run check:consumers -- --only <app>       next, nuxt or angular-ssr
+ *   npm run check:consumers -- --only <app>       one app, by its id in APPS
  *   npm run check:consumers -- --keep             keep the scratch folder
  *
  * Each app gets a clean `npm install`, a strict compile of every
@@ -20,7 +23,8 @@
  *     advances, Escape closes and focus returns to the trigger
  *   - axe: no WCAG 2.1 A/AA violations in the open lightbox or the triggers
  * Across the apps, the triggers and the open lightbox must carry the same
- * lg-* structure and ARIA (see PARITY_ALLOWED for the known differences).
+ * lg-* structure and ARIA (see PARITY_ALLOWED for accepted differences;
+ * the vanilla lightbox is compared as a warning, see APPS).
  *
  * Needs Chrome or Chromium; set CHROME_PATH when it is not in a usual place.
  */
@@ -47,30 +51,83 @@ const cleanPath = (process.env.PATH || '')
     .join(path.delimiter);
 const useShell = process.platform === 'win32';
 
+// No framework usage reporting from scratch builds.
+const QUIET_ENV = {
+    ASTRO_TELEMETRY_DISABLED: '1',
+    NEXT_TELEMETRY_DISABLED: '1',
+    NUXT_TELEMETRY_DISABLED: '1',
+    NG_CLI_ANALYTICS: 'false',
+};
+
 const PHOTOS = 4;
 const PHOTO_SIZE = [1600, 1067];
 const THUMB_SIZE = [400, 267];
 const LICENSE_NOTICE = /license key is not valid for production use/;
 
+// React marks rendered elements with its own expando properties.
+const REACT_READY = `Object.keys(document.querySelector('.grid a') || {}).some((k) => k.startsWith('__reactProps'))`;
+
+/**
+ * The apps. `scripts` run in order after install (default: typecheck and
+ * build when the app has them); `serve` is the npm script that serves it,
+ * given `PORT` and, through `serveArgs`, any flags it needs for the port.
+ * `ssr: false` skips the server-HTML check (client-rendered apps);
+ * `triggerParity: false` keeps the app's triggers out of the comparison
+ * (vanilla triggers are the user's own markup); `lightboxParity: 'warn'`
+ * reports its lightbox differences as warnings instead of failures.
+ */
 export const APPS = [
     {
         id: 'next',
         dir: 'consumers/next',
-        publicDir: 'public',
-        // React marks hydrated elements with its own expando properties.
-        hydrated: `Object.keys(document.querySelector('.grid a') || {}).some((k) => k.startsWith('__reactProps'))`,
+        hydrated: REACT_READY,
     },
     {
         id: 'nuxt',
         dir: 'consumers/nuxt',
-        publicDir: 'public',
         hydrated: `!!document.querySelector('#__nuxt')?.__vue_app__`,
     },
     {
         id: 'angular-ssr',
         dir: 'consumers/angular-ssr',
-        publicDir: 'public',
         hydrated: `!!document.querySelector('.grid a')?.__ngContext__`,
+    },
+    {
+        id: 'react-router',
+        dir: 'consumers/react-router',
+        hydrated: REACT_READY,
+    },
+    {
+        id: 'astro',
+        dir: 'consumers/astro',
+        serveArgs: (port) => ['--port', String(port)],
+        hydrated: REACT_READY,
+    },
+    {
+        id: 'vite-react',
+        dir: 'consumers/vite-react',
+        ssr: false,
+        serveArgs: (port) => ['--port', String(port), '--strictPort'],
+        hydrated: REACT_READY,
+    },
+    {
+        // The dev server, where StrictMode double-mounts every effect.
+        id: 'vite-react-dev',
+        dir: 'consumers/vite-react',
+        ssr: false,
+        scripts: ['typecheck'],
+        serve: 'dev',
+        serveArgs: (port) => ['--port', String(port), '--strictPort'],
+        hydrated: REACT_READY,
+    },
+    {
+        id: 'vanilla-cdn',
+        dir: 'consumers/vanilla-cdn',
+        triggerParity: false,
+        // Its lightbox differs from the framework packages in ways still
+        // to be settled; the differences are reported as warnings.
+        lightboxParity: 'warn',
+        hydrated: `!!document.querySelector('.grid a[data-lg-id]')`,
     },
 ];
 
@@ -88,7 +145,7 @@ function runAsync(command, args, { cwd, env = {}, logFile }) {
     return new Promise((resolve) => {
         const child = spawn(command, args, {
             cwd,
-            env: { ...process.env, PATH: cleanPath, ...env },
+            env: { ...process.env, ...QUIET_ENV, PATH: cleanPath, ...env },
             shell: useShell,
         });
         let output = '';
@@ -343,14 +400,26 @@ async function checkDeclarations(appDir, logFile) {
             files: ['lg-declarations.ts'],
         }),
     );
+    // The app's TypeScript, which knows its framework's declarations; the
+    // repository's for apps that install none.
+    const appTsc = path.join(appDir, 'node_modules/typescript/bin/tsc');
     const run = await runAsync(
-        'npx',
-        ['tsc', '-p', 'tsconfig.lg-declarations.json'],
+        process.execPath,
+        [
+            fs.existsSync(appTsc)
+                ? appTsc
+                : path.join(rootDir, 'node_modules/typescript/bin/tsc'),
+            '-p',
+            'tsconfig.lg-declarations.json',
+        ],
         {
             cwd: appDir,
             logFile,
         },
     );
+    // The app's own type check must not see the generated files.
+    fs.rmSync(path.join(appDir, 'lg-declarations.ts'));
+    fs.rmSync(path.join(appDir, 'tsconfig.lg-declarations.json'));
     return {
         count: new Set(specifiers).size,
         ok: run.code === 0,
@@ -814,7 +883,7 @@ export async function checkConsumers({
                             src,
                         ),
                 });
-                fs.cpSync(photos, path.join(appDir, app.publicDir, 'photos'), {
+                fs.cpSync(photos, path.join(appDir, 'public', 'photos'), {
                     recursive: true,
                 });
                 pinPackages(appDir, source);
@@ -844,7 +913,9 @@ export async function checkConsumers({
                 const headlessCopies = resolved.filter(
                     (entry) => entry.name === HEADLESS,
                 );
-                if (headlessCopies.length !== 1) {
+                // Two copies would split its module state (one license notice, one
+                // registry); the vanilla build bundles it and installs none.
+                if (headlessCopies.length > 1) {
                     failures.push(
                         `${app.id}: ${
                             headlessCopies.length
@@ -866,8 +937,10 @@ export async function checkConsumers({
                 const manifest = JSON.parse(
                     fs.readFileSync(path.join(appDir, 'package.json'), 'utf8'),
                 );
-                for (const script of ['typecheck', 'build']) {
-                    if (!manifest.scripts[script]) continue;
+                const scripts = (app.scripts ?? ['typecheck', 'build']).filter(
+                    (script) => manifest.scripts[script],
+                );
+                for (const script of scripts) {
                     const run = await runAsync('npm', ['run', script], {
                         cwd: appDir,
                         logFile,
@@ -893,7 +966,10 @@ export async function checkConsumers({
                     }
                 }
                 log(
-                    `${app.id}: installed, ${declarations.count} declaration entries compiled, built`,
+                    `${app.id}: installed, ${declarations.count} declaration entries compiled` +
+                        (scripts.length
+                            ? `, ${scripts.join(' and ')} passed`
+                            : ''),
                 );
             }),
         );
@@ -901,13 +977,16 @@ export async function checkConsumers({
         // Serve every app, then drive each one.
         for (const app of apps) {
             const port = await freePort();
-            const child = spawn('npm', ['start'], {
+            const serve = app.serve ?? 'start';
+            const args = app.serveArgs ? ['--', ...app.serveArgs(port)] : [];
+            const child = spawn('npm', ['run', serve, ...args], {
                 cwd: path.join(workDir, app.id),
                 env: {
                     ...process.env,
+                    ...QUIET_ENV,
                     PATH: cleanPath,
                     PORT: String(port),
-                    NODE_ENV: 'production',
+                    NODE_ENV: serve === 'dev' ? 'development' : 'production',
                 },
                 shell: useShell,
                 detached: !useShell,
@@ -946,7 +1025,11 @@ export async function checkConsumers({
         const results = [];
         for (const app of apps) {
             const result = { id: app.id, failures: [] };
-            await checkServerHtml(app.baseUrl, result);
+            if (app.ssr !== false) {
+                await checkServerHtml(app.baseUrl, result);
+                if (app.triggerParity === false)
+                    delete result.triggerAttributes;
+            }
             await checkInBrowser(
                 app,
                 app.baseUrl,
@@ -978,8 +1061,22 @@ export async function checkConsumers({
         )) {
             failures.push(`parity, trigger attribute: ${difference}`);
         }
-        for (const difference of parityDifferences(results, 'lightbox')) {
+        const lenient = new Set(
+            apps
+                .filter((app) => app.lightboxParity === 'warn')
+                .map((app) => app.id),
+        );
+        const strict = results.filter((result) => !lenient.has(result.id));
+        for (const difference of parityDifferences(strict, 'lightbox')) {
             failures.push(`parity, lightbox: ${difference}`);
+        }
+        for (const result of results.filter((entry) => lenient.has(entry.id))) {
+            for (const difference of parityDifferences(
+                [...strict, result],
+                'lightbox',
+            )) {
+                warnings.push(`parity, ${result.id} lightbox: ${difference}`);
+            }
         }
         if (apps.length > 1) log(`parity: compared ${results.length} apps`);
     } finally {

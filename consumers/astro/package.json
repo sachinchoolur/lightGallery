@@ -1,0 +1,24 @@
+{
+    "name": "lg-consumer-astro",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "typecheck": "astro check",
+        "build": "astro build",
+        "start": "astro preview"
+    },
+    "dependencies": {
+        "@astrojs/react": "^7.0.0",
+        "@lightgallery/react": "*",
+        "astro": "^7.3.0",
+        "lightgallery": "*",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0"
+    },
+    "devDependencies": {
+        "@astrojs/check": "^0.9.10",
+        "@types/react": "^19.2.0",
+        "@types/react-dom": "^19.2.0",
+        "typescript": "^5.9.0"
+    }
+}

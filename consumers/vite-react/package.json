@@ -1,0 +1,25 @@
+{
+    "name": "lg-consumer-vite-react",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "typecheck": "tsc -b",
+        "build": "vite build",
+        "start": "vite preview"
+    },
+    "dependencies": {
+        "@lightgallery/react": "*",
+        "lightgallery": "*",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0"
+    },
+    "devDependencies": {
+        "@types/node": "^24.0.0",
+        "@types/react": "^19.2.0",
+        "@types/react-dom": "^19.2.0",
+        "@vitejs/plugin-react": "^6.1.0",
+        "typescript": "~6.0.2",
+        "vite": "^8.3.0"
+    }
+}
