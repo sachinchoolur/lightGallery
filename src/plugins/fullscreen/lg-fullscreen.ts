@@ -27,12 +27,11 @@ export default class FullScreen {
         this.core.registerDefaultIcons(fullscreenDefaultIcons);
         let fullScreen = '';
         if (this.settings.fullScreen) {
-            // check for fullscreen browser support
+            // check for fullscreen browser support (Safari before 16.4
+            // exposes only the webkit-prefixed API)
             if (
                 !document.fullscreenEnabled &&
-                !document.webkitFullscreenEnabled &&
-                !document.mozFullScreenEnabled &&
-                !document.msFullscreenEnabled
+                !document.webkitFullscreenEnabled
             ) {
                 return;
             } else {
@@ -47,22 +46,13 @@ export default class FullScreen {
     }
 
     private isFullScreen(): boolean {
-        return (
-            document.fullscreenElement ||
-            document.mozFullScreenElement ||
-            document.webkitFullscreenElement ||
-            document.msFullscreenElement
-        );
+        return document.fullscreenElement || document.webkitFullscreenElement;
     }
 
     private requestFullscreen(): void {
         const el = document.documentElement;
         if (el.requestFullscreen) {
             el.requestFullscreen();
-        } else if (el.msRequestFullscreen) {
-            el.msRequestFullscreen();
-        } else if (el.mozRequestFullScreen) {
-            el.mozRequestFullScreen();
         } else if (el.webkitRequestFullscreen) {
             el.webkitRequestFullscreen();
         }
@@ -71,10 +61,6 @@ export default class FullScreen {
     private exitFullscreen(): void {
         if (document.exitFullscreen) {
             document.exitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
         } else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
         }
@@ -84,9 +70,7 @@ export default class FullScreen {
     private fullScreen(): void {
         this.$LG(document).on(
             `fullscreenchange.lg.global${this.core.lgId} 
-            webkitfullscreenchange.lg.global${this.core.lgId} 
-            mozfullscreenchange.lg.global${this.core.lgId} 
-            MSFullscreenChange.lg.global${this.core.lgId}`,
+            webkitfullscreenchange.lg.global${this.core.lgId}`,
             () => {
                 if (!this.core.lgOpened) return;
                 this.core.outer.toggleClass('lg-fullscreen-on');
@@ -115,9 +99,7 @@ export default class FullScreen {
     destroy(): void {
         this.$LG(document).off(
             `fullscreenchange.lg.global${this.core.lgId} 
-            webkitfullscreenchange.lg.global${this.core.lgId} 
-            mozfullscreenchange.lg.global${this.core.lgId} 
-            MSFullscreenChange.lg.global${this.core.lgId}`,
+            webkitfullscreenchange.lg.global${this.core.lgId}`,
         );
     }
 }

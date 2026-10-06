@@ -15,7 +15,6 @@
 
     .lg-has-iframe {
         .lg-video-cont {
-            -webkit-overflow-scrolling: touch;
             overflow: auto;
         }
     }
@@ -72,7 +71,6 @@
 
 @keyframes lg-play-rotate {
     100% {
-        -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
     }
 }

@@ -162,6 +162,17 @@ Long-standing bugs, nearly all of them present in 2.x:
   hook behind it, along with the `CustomEvent` and `Element.matches`
   polyfills and the old-browser scroll fallbacks. Galleries with `srcset`
   or `<picture>` sources no longer log a warning asking for a polyfill.
+- Vendor prefixes in the stylesheets. The CSS carried `-webkit-`, `-moz-`,
+  `-ms-` and `-o-` copies of every transform, transition, animation and
+  grab cursor; every supported browser reads the standard properties, so
+  the bundle is about a quarter smaller and Angular's critical-CSS step no
+  longer warns about the prefixed keyframes. `-webkit-backface-visibility`
+  stays for iOS Safari before 15.4. The SCSS mixins keep their names and
+  now emit the standard property, so stylesheets that include them still
+  compile.
+- The `moz` and `ms` fullscreen API fallbacks in the vanilla fullscreen
+  plugin. The `webkit` fallback stays for Safari before 16.4, as in the
+  framework packages.
 
 See the [migration guide](https://www.lightgalleryjs.com/docs/migration/)
 for the upgrade steps.
