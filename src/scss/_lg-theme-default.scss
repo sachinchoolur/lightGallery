@@ -48,7 +48,6 @@
 
 .lg-prev {
     left: 20px;
-
 }
 
 @include keyframes(lg-right-end) {
@@ -261,9 +260,9 @@
     .lg-sub-html {
         opacity: 0;
         @include transitionCustom(
-            transform 0.08 cubic-bezier(0, 0, 0.25, 1) 0s,
-            opacity 0.08 cubic-bezier(0, 0, 0.25, 1) 0s,
-            color 0.08 linear
+            transform 0.08s cubic-bezier(0, 0, 0.25, 1) 0s,
+            opacity 0.08s cubic-bezier(0, 0, 0.25, 1) 0s,
+            color 0.08s linear
         );
     }
 }
