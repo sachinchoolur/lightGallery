@@ -33,7 +33,7 @@ const items = [
         src: 'img/1-1600.jpg',
         thumb: 'img/1-240.jpg',
         alt: 'Mountains',
-        lgSize: '1600-1067', // enables the zoom-from-origin open animation
+        lgSize: '1600-1067', // natural size, enables the zoom-from-origin open animation
         caption: <h4>Mountains</h4>,
     },
 ];

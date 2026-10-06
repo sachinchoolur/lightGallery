@@ -37,7 +37,13 @@ import Zoom from '@lightgallery/vue/plugins/zoom';
 
 const plugins = [Thumbnail, Zoom];
 const items: LgGalleryItem[] = [
-    { src: 'img/1.jpg', thumb: 'img/1-t.jpg', alt: '…', caption: '…' },
+    {
+        src: 'img/1.jpg',
+        thumb: 'img/1-t.jpg',
+        alt: '…',
+        caption: '…',
+        lgSize: '1600-1067', // natural size, enables the zoom-from-origin open animation
+    },
 ];
 </script>
 

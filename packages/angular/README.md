@@ -55,7 +55,13 @@ import { withZoom } from '@lightgallery/angular/plugins/zoom';
 export class Gallery {
     features = [withThumbnail({ thumbWidth: 120 }), withZoom()];
     items: LgGalleryItem[] = [
-        { src: 'img/1.jpg', thumb: 'img/1-t.jpg', alt: '…', caption: '…' },
+        {
+            src: 'img/1.jpg',
+            thumb: 'img/1-t.jpg',
+            alt: '…',
+            caption: '…',
+            lgSize: '1600-1067', // natural size, enables the zoom-from-origin open animation
+        },
     ];
 }
 ```

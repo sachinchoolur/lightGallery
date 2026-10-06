@@ -153,10 +153,11 @@ markup you want.
 <a href="https://www.lightgalleryjs.com/demos/html-markup/">Here</a> can find
 detailed examples of different kinds of markups.
 
-If you know the original size of the media, you can pass it via
-`data-lg-size="${width}-${height}"` attribute for the initial
-[zoom](https://www.lightgalleryjs.com/docs/settings/#zoomFromOrigin) animation.
-But, this is completely optional.
+Give each anchor the natural size of its full image via
+`data-lg-size="${width}-${height}"`. It drives the
+[zoom-from-origin](https://www.lightgalleryjs.com/docs/settings/#zoomFromOrigin)
+animation: the slide opens from the clicked thumbnail and closes back to it.
+Without the attribute the slide fades in instead.
 
 ```HTML
 <div id="lightgallery">

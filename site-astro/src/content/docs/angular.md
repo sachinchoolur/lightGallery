@@ -74,6 +74,7 @@ export class Gallery {
             thumb: 'img/1-t.jpg',
             alt: 'Mountains',
             caption: 'Mountains',
+            lgSize: '1600-1067', // natural size, enables the zoom-from-origin open animation
         },
     ];
 

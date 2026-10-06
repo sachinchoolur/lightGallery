@@ -19,6 +19,15 @@ Plugin names: `thumbnail`, `zoom`, `video`, `autoplay`, `fullscreen`, `share`,
 `vimeoThumbnail`, `originCrop`, `justified`. Each is a separate entry — import
 only what the project uses.
 
+**Default recipe.** Unless the user asks for something else, every image
+gallery gets the `zoom` and `thumbnail` plugins, their two CSS files, and
+`lgSize: 'WIDTH-HEIGHT'` (`data-lg-size` in markup) on every image item.
+`lgSize` is the natural size of the full image; it drives the
+zoom-from-origin animation, where the slide opens from the clicked
+thumbnail and closes back to it. Without it the slide fades in. Read the
+dimensions from the image files, the image optimizer or the CMS rather than
+dropping the field. Leave a plugin out only when told to.
+
 **Two rules that prevent most problems**
 
 1. **CSS is a consumer import in every stack.** The framework packages ship
@@ -47,10 +56,11 @@ const gallery = lightGallery(document.getElementById('gallery'), {
 
 Markup mode: the container holds anchors; each anchor's `href` (or
 `data-src`) is the full image, the inner `<img>` is the thumbnail, and
-`data-lg-size="WIDTH-HEIGHT"` enables the open-from-thumbnail animation.
-Captions come from `data-sub-html`. If items are not direct children, set
-`selector`. Dynamic mode: `dynamic: true, dynamicEl: [{ src, thumb, subHtml }]`
-and call `gallery.openGallery(index)`.
+`data-lg-size="WIDTH-HEIGHT"` is the full image's natural size for the
+zoom-from-origin animation. Captions come from `data-sub-html`. If items are
+not direct children, set `selector`. Dynamic mode:
+`dynamic: true, dynamicEl: [{ src, thumb, lgSize, subHtml }]` and call
+`gallery.openGallery(index)`.
 
 Methods: `openGallery(index)`, `closeGallery()`, `refresh()` after the
 markup changed, `destroy()`. Events fire on the container element
@@ -65,6 +75,7 @@ import { LightGallery, LightGalleryItem } from '@lightgallery/react';
 import Thumbnail from '@lightgallery/react/plugins/thumbnail';
 import Zoom from '@lightgallery/react/plugins/zoom';
 
+// items: [{ src, thumb, alt, lgSize: '1600-1067' }, …]
 export function Gallery({ items }) {
     return (
         <LightGallery plugins={[Zoom, Thumbnail]} thumbnail={{ animateThumb: true }}>
@@ -93,6 +104,8 @@ both. The package is SSR-safe; no `dynamic(..., { ssr: false })` needed.
 import { LightGallery, LgItem } from '@lightgallery/vue';
 import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 import Zoom from '@lightgallery/vue/plugins/zoom';
+
+const items = [{ src: '/photos/1.jpg', thumb: '/photos/1-thumb.jpg', alt: 'One', lgSize: '1600-1067' }];
 </script>
 
 <template>
@@ -128,7 +141,7 @@ import { withZoom } from '@lightgallery/angular/plugins/zoom';
     `,
 })
 export class GalleryComponent {
-    items = [{ src: '/photos/1.jpg', thumb: '/photos/1-thumb.jpg', alt: 'One' }];
+    items = [{ src: '/photos/1.jpg', thumb: '/photos/1-thumb.jpg', alt: 'One', lgSize: '1600-1067' }];
     features = [withThumbnail({ animateThumb: true }), withZoom()];
 }
 ```
@@ -157,6 +170,8 @@ Settings are inputs (`[speed]`, `[loop]`); events are outputs without the
 
 - No styles → the CSS import is missing (see rule 1).
 - Thumbnails/zoom "not working" → the plugin is not in the plugins list.
+- The slide fades in instead of opening from its thumbnail → `lgSize`
+  (`data-lg-size`) is missing or does not match the image's natural size.
 - "data-src is not provided" → the `selector` does not match the anchors.
 - Slides added after init are not shown → call `refresh()` (vanilla) or
   update the reactive `items` (frameworks).

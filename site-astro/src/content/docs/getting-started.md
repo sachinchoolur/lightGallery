@@ -114,10 +114,13 @@ zoom"].
 4. Plugins are opt-in. Import each one from its plugins/<name> entry and
    add it to the plugins list (in Angular, the features input with
    withThumbnail(), withZoom() and so on). A plugin's settings do
-   nothing until the plugin is added.
+   nothing until the plugin is added. Unless I ask for something else,
+   include the zoom and thumbnail plugins and their CSS files.
 5. Give every item the full-size image URL, a thumbnail and alt text.
-   When the image dimensions are known, set lgSize to "WIDTH-HEIGHT"
-   (data-lg-size in HTML markup) so the image opens from its thumbnail.
+   Set lgSize to "WIDTH-HEIGHT" (data-lg-size in HTML markup) on every
+   image item, using the natural size of the full image; read it from
+   the image files, the image optimizer or the CMS. Without it the slide
+   fades in instead of opening from its thumbnail.
 6. Check every option name against
    https://www.lightgalleryjs.com/docs/settings/index.md instead of
    guessing. Commercial projects also need the licenseKey setting.
@@ -218,9 +221,11 @@ lightGallery does not force you to use any kind of markup. You can use whatever
 markup you want. <a href="../../demos/html-markup/">Here</a> you can find
 detailed examples of different kinds of markups.
 
-If you know the original size of the media, you can pass it via
-`data-lg-size="${width}-${height}"` attribute for the initial
-[zoom](/docs/settings/#zoomFromOrigin) animation. But, this is completely optional.
+Give each anchor the natural size of its full image via
+`data-lg-size="${width}-${height}"`. It drives the
+[zoom-from-origin](/docs/settings/#zoomFromOrigin) animation: the slide opens
+from the clicked thumbnail and closes back to it. Without the attribute the
+slide fades in instead.
 
 ```html
 <div id="lightgallery">

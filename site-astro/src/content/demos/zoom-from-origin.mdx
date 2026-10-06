@@ -17,7 +17,8 @@ import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
 import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
 import TileGallery from '../../components/shortcodes/TileGallery.astro';
 
-You need to know the original image size upfront and provide it via data-lg-size attribute as data-lg-size="1920-1280".
+You need to know the original image size upfront and provide it via data-lg-size attribute as data-lg-size="1920-1280"
+(`lgSize: '1920-1280'` on an item object). Image optimizers, build-time image plugins and CMS APIs all expose the natural width and height.
 
 If you don't know the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides;
 lightGallery will show the default animation if data-lg-size is not available.
