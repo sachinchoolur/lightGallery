@@ -53,7 +53,7 @@ export default {
 
 ```json
 // Angular: angular.json, under "styles"
-["node_modules/lightgallery/css/lightgallery.css", "node_modules/lightgallery/css/lg-thumbnail.css"]
+["lightgallery/css/lightgallery.css", "lightgallery/css/lg-thumbnail.css"]
 ```
 
 The framework packages depend on `lightgallery` only for these CSS files,
