@@ -95,7 +95,7 @@ describe('toolbar overflow', () => {
         expect(query('.lg-close')).not.toHaveAttribute('data-lg-overflow');
         expect(query('.lg-download')).not.toHaveAttribute('data-lg-overflow');
         document
-            .querySelectorAll('.lg-zoom-in, .lg-zoom-out, .lg-actual-size')
+            .querySelectorAll('.lg-zoom-in, .lg-zoom-out')
             .forEach((button) =>
                 expect(button).toHaveAttribute('data-lg-overflow'),
             );
@@ -174,7 +174,7 @@ describe('toolbar overflow', () => {
         renderGallery(1200, { isMobile: () => true });
         expect(query('.lg-zoom-in')).toBeNull();
         expect(query('.lg-zoom-out')).toBeNull();
-        expect(query('.lg-actual-size')).toBeNull();
+        expect(query('[aria-label="View actual size"]')).toBeNull();
         expect(query('.lg-rotate-left')).not.toBeNull();
     });
 

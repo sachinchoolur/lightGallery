@@ -246,6 +246,7 @@ export {
     applyZoom,
     flipHorizontal,
     flipVertical,
+    getActualSizeButtonClass,
     getRotateFitScale,
     getRotateTransform,
     getRotatedVisualSize,

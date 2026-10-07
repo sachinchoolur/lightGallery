@@ -165,7 +165,7 @@ describe('wave-1 features', () => {
             true,
         );
         expect(query('.lg-thumb-outer')).not.toBeNull();
-        expect(query('.lg-actual-size')).not.toBeNull();
+        expect(query('[aria-label="View actual size"]')).not.toBeNull();
     });
 
     it('thumbnail: static mode wraps instead of clipping (animateThumb: false)', async () => {
@@ -185,9 +185,9 @@ describe('wave-1 features', () => {
         expect(
             query('.lg-thumb-outer')!.getAttribute('style') ?? '',
         ).not.toContain('touch-action');
-        expect(
-            query('.lg-outer')!.classList.contains('lg-animate-thumb'),
-        ).toBe(false);
+        expect(query('.lg-outer')!.classList.contains('lg-animate-thumb')).toBe(
+            false,
+        );
     });
 
     it('thumbnail: renders every item, tracks the active index, navigates on click', async () => {
@@ -218,13 +218,105 @@ describe('wave-1 features', () => {
         ).toBe(true);
     });
 
+    it('zoom: the actual-size button follows the zoom state and carries both zoom icons', async () => {
+        const fixture = TestBed.createComponent(Wave1Host);
+        await flush(fixture);
+        await openAndLoad(fixture);
+        const actual = query('[aria-label="View actual size"]')!;
+        // Vanilla parity: the zoom-in class until the slide is zoomed,
+        // both zoom icons inside so the class can pick the one that shows.
+        expect(actual.classList.contains('lg-zoom-in')).toBe(true);
+        expect(actual.classList.contains('lg-actual-size')).toBe(false);
+        expect(actual.querySelector('.lg-ci-zoom-in')).not.toBeNull();
+        expect(actual.querySelector('.lg-ci-zoom-out')).not.toBeNull();
+
+        actual.click();
+        await flush(fixture);
+        expect(actual.classList.contains('lg-zoom-out')).toBe(true);
+        expect(actual.classList.contains('lg-zoom-in')).toBe(false);
+
+        actual.click();
+        await flush(fixture);
+        expect(actual.classList.contains('lg-zoom-in')).toBe(true);
+    });
+
+    it('zoom: keeps fixed classes on zoom in/out and follows actualSizeIcons on actual size', async () => {
+        const fixture = TestBed.createComponent(Wave1Host);
+        fixture.componentInstance.features = [
+            withZoom({
+                showZoomInOutIcons: true,
+                actualSizeIcons: {
+                    zoomIn: 'lg-actual-size',
+                    zoomOut: 'lg-zoom-out',
+                },
+            }),
+        ];
+        await flush(fixture);
+        await openAndLoad(fixture);
+        // actualSizeIcons never reaches the dedicated zoom buttons.
+        expect(
+            query('[aria-label="Zoom in"]')!.classList.contains('lg-zoom-in'),
+        ).toBe(true);
+        expect(
+            query('[aria-label="Zoom out"]')!.classList.contains('lg-zoom-out'),
+        ).toBe(true);
+        const actual = query('[aria-label="View actual size"]')!;
+        expect(actual.classList.contains('lg-actual-size')).toBe(true);
+
+        actual.click();
+        await flush(fixture);
+        expect(actual.classList.contains('lg-zoom-out')).toBe(true);
+        expect(actual.classList.contains('lg-actual-size')).toBe(false);
+
+        actual.click();
+        await flush(fixture);
+        expect(actual.classList.contains('lg-actual-size')).toBe(true);
+    });
+
+    it('thumbnail: treats a press below the swipe threshold as a click, not a glide', async () => {
+        const fixture = TestBed.createComponent(Wave1Host);
+        fixture.componentInstance.features = [
+            withThumbnail({ scrubThumbnails: true }),
+        ];
+        await flush(fixture);
+        await openAndLoad(fixture);
+        const track = query('.lg-thumb')!;
+        const outer = query('.lg-outer')!;
+        const thumb = queryAll('.lg-thumb-item')[1]!;
+        // A click with a 3px wobble: below the swipe threshold no scrub
+        // session starts and the gallery does not move...
+        firePointer(thumb, 'pointerdown', { x: 600, y: 0 });
+        await flush(fixture);
+        firePointer(window, 'pointermove', { x: 597, y: 0 });
+        await flush(fixture);
+        expect(outer.classList.contains('lg-thumb-scrubbing')).toBe(false);
+        expect(
+            query('.lg-thumb-item.active')!.getAttribute('data-lg-item-id'),
+        ).toBe('0');
+        firePointer(window, 'pointerup', { x: 597, y: 0 });
+        await flush(fixture);
+        // ...and the release runs no glide: the strip snaps back.
+        expect(outer.classList.contains('lg-thumb-scrubbing')).toBe(false);
+        await advance(fixture, 48);
+        expect(track.style.transform).toBe('translate3d(-49px, 0px, 0px)');
+
+        // The click then navigates and the strip centers on the slide
+        // (105px unit × 1 - 1 + 50 for the 0-width jsdom strip).
+        thumb.click();
+        await flush(fixture);
+        expect(
+            query('.lg-thumb-item.active')!.getAttribute('data-lg-item-id'),
+        ).toBe('1');
+        expect(track.style.transform).toBe('translate3d(-154px, 0px, 0px)');
+    });
+
     it('zoom: actual-size toggles committed scale, claims the seam, resets on navigation', async () => {
         const fixture = TestBed.createComponent(Wave1Host);
         await flush(fixture);
         await openAndLoad(fixture);
         const runtime = runtimeOf(fixture);
 
-        (query('.lg-actual-size') as HTMLButtonElement).click();
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
         await flush(fixture);
 
         const scaleEl = query(
@@ -237,13 +329,13 @@ describe('wave-1 features', () => {
         expect(runtime.gestureSeam.lockOwner).toBe('zoomSwipe');
 
         // Toggling back returns to identity and releases the lock.
-        (query('.lg-actual-size') as HTMLButtonElement).click();
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
         await flush(fixture);
         expect(runtime.gestureSeam.lockOwner).toBeNull();
         expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(false);
 
         // Zoom again, then navigate: the wrapper resets (2.x parity).
-        (query('.lg-actual-size') as HTMLButtonElement).click();
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
         await flush(fixture);
         expect(runtime.gestureSeam.lockOwner).toBe('zoomSwipe');
         fixture.componentInstance.gallery().nextSlide();
@@ -562,7 +654,7 @@ describe('wave-1 features', () => {
         Object.defineProperty(slide, 'offsetWidth', { value: 400 });
         Object.defineProperty(slide, 'offsetHeight', { value: 300 });
 
-        (query('.lg-actual-size') as HTMLButtonElement).click();
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
         await flush(fixture);
         const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
         expect(
@@ -722,7 +814,7 @@ describe('wave-1 features', () => {
         await flush(fixture);
         await openAndLoad(fixture);
         const runtime = runtimeOf(fixture);
-        (query('.lg-actual-size') as HTMLButtonElement).click();
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
         await flush(fixture);
         expect(runtime.gestureSeam.lockOwner).toBe('zoomSwipe');
 

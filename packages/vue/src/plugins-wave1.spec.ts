@@ -68,6 +68,7 @@ const Host = defineComponent({
             type: Object,
             default: () => ({ showZoomInOutIcons: true }),
         },
+        thumbnailSettings: { type: Object, default: () => ({}) },
     },
     setup: () => ({ items: ITEMS }),
     template: `
@@ -76,6 +77,7 @@ const Host = defineComponent({
             :zoom-from-origin="false"
             :plugins="plugins"
             :zoom="zoomSettings"
+            :thumbnail="thumbnailSettings"
             :pinch-to-close="pinchToClose"
             @poster-click="log.push('posterClick')"
             @has-video="log.push('hasVideo:' + $event.index)"
@@ -271,9 +273,96 @@ describe('plugin runtime + wave-1', () => {
         // drag machinery (which static mode disables).
         expect(query('.lg-thumb')!.getAttribute('style')).toBeNull();
         expect(query('.lg-thumb-outer')!.getAttribute('style')).toBeNull();
+        expect(query('.lg-outer')!.classList.contains('lg-animate-thumb')).toBe(
+            false,
+        );
+    });
+
+    it('zoom: the actual-size button follows the zoom state and carries both zoom icons', async () => {
+        const { wrapper } = mountHost([Zoom]);
+        await openAndLoad(wrapper);
+        const actual = query('[aria-label="View actual size"]')!;
+        // Vanilla parity: the zoom-in class until the slide is zoomed,
+        // both zoom icons inside so the class can pick the one that shows.
+        expect(actual.classList.contains('lg-zoom-in')).toBe(true);
+        expect(actual.classList.contains('lg-actual-size')).toBe(false);
+        expect(actual.querySelector('.lg-ci-zoom-in')).not.toBeNull();
+        expect(actual.querySelector('.lg-ci-zoom-out')).not.toBeNull();
+
+        actual.click();
+        await settle();
+        expect(actual.classList.contains('lg-zoom-out')).toBe(true);
+        expect(actual.classList.contains('lg-zoom-in')).toBe(false);
+
+        actual.click();
+        await settle();
+        expect(actual.classList.contains('lg-zoom-in')).toBe(true);
+    });
+
+    it('zoom: keeps fixed classes on zoom in/out and follows actualSizeIcons on actual size', async () => {
+        const { wrapper } = mountHost([Zoom], {
+            zoomSettings: {
+                showZoomInOutIcons: true,
+                actualSizeIcons: {
+                    zoomIn: 'lg-actual-size',
+                    zoomOut: 'lg-zoom-out',
+                },
+            },
+        });
+        await openAndLoad(wrapper);
+        // actualSizeIcons never reaches the dedicated zoom buttons.
         expect(
-            query('.lg-outer')!.classList.contains('lg-animate-thumb'),
-        ).toBe(false);
+            query('[aria-label="Zoom in"]')!.classList.contains('lg-zoom-in'),
+        ).toBe(true);
+        expect(
+            query('[aria-label="Zoom out"]')!.classList.contains('lg-zoom-out'),
+        ).toBe(true);
+        const actual = query('[aria-label="View actual size"]')!;
+        expect(actual.classList.contains('lg-actual-size')).toBe(true);
+
+        actual.click();
+        await settle();
+        expect(actual.classList.contains('lg-zoom-out')).toBe(true);
+        expect(actual.classList.contains('lg-actual-size')).toBe(false);
+
+        actual.click();
+        await settle();
+        expect(actual.classList.contains('lg-actual-size')).toBe(true);
+    });
+
+    it('thumbnail: treats a press below the swipe threshold as a click, not a glide', async () => {
+        const { wrapper } = mountHost([Thumbnail], {
+            thumbnailSettings: { scrubThumbnails: true },
+        });
+        await openAndLoad(wrapper);
+        const track = query('.lg-thumb')!;
+        const outer = query('.lg-outer')!;
+        const thumb = queryAll('.lg-thumb-item')[1]!;
+        // A click with a 3px wobble: below the swipe threshold no scrub
+        // session starts and the gallery does not move...
+        firePointer(thumb, 'pointerdown', { x: 600, y: 0 });
+        await settle();
+        firePointer(window, 'pointermove', { x: 597, y: 0 });
+        await settle();
+        expect(outer.classList.contains('lg-thumb-scrubbing')).toBe(false);
+        expect(
+            query('.lg-thumb-item.active')!.getAttribute('data-lg-item-id'),
+        ).toBe('0');
+        firePointer(window, 'pointerup', { x: 597, y: 0 });
+        await settle();
+        // ...and the release runs no glide: the strip snaps back.
+        expect(outer.classList.contains('lg-thumb-scrubbing')).toBe(false);
+        await advance(48);
+        expect(track.style.transform).toBe('translate3d(-49px, 0px, 0px)');
+
+        // The click then navigates and the strip centers on the slide
+        // (105px unit × 1 - 1 + 50 for the 0-width jsdom strip).
+        thumb.click();
+        await settle();
+        expect(
+            query('.lg-thumb-item.active')!.getAttribute('data-lg-item-id'),
+        ).toBe('1');
+        expect(track.style.transform).toBe('translate3d(-154px, 0px, 0px)');
     });
 
     it('zoom: actual-size toggles committed scale, claims the seam, resets on navigation', async () => {
@@ -281,7 +370,7 @@ describe('plugin runtime + wave-1', () => {
         await openAndLoad(wrapper);
         const runtime = runtimeOf(wrapper);
 
-        (query('.lg-actual-size') as HTMLButtonElement).click();
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
         await settle();
 
         const scaleEl = query(
@@ -292,13 +381,13 @@ describe('plugin runtime + wave-1', () => {
         expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(true);
         expect(runtime.gestureSeam.lockOwner).toBe('zoomSwipe');
 
-        (query('.lg-actual-size') as HTMLButtonElement).click();
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
         await settle();
         expect(runtime.gestureSeam.lockOwner).toBeNull();
         expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(false);
 
         // Zoom again, then navigate: the wrapper resets (2.x parity).
-        (query('.lg-actual-size') as HTMLButtonElement).click();
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
         await settle();
         expect(runtime.gestureSeam.lockOwner).toBe('zoomSwipe');
         (
@@ -616,7 +705,7 @@ describe('plugin runtime + wave-1', () => {
         Object.defineProperty(slide, 'offsetWidth', { value: 400 });
         Object.defineProperty(slide, 'offsetHeight', { value: 300 });
 
-        (query('.lg-actual-size') as HTMLButtonElement).click();
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
         await settle();
         const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
         expect(
@@ -839,7 +928,7 @@ describe('plugin runtime + wave-1', () => {
         const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
         await openAndLoad(wrapper);
         const runtime = runtimeOf(wrapper);
-        (query('.lg-actual-size') as HTMLButtonElement).click();
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
         await settle();
         expect(runtime.gestureSeam.lockOwner).toBe('zoomSwipe');
 

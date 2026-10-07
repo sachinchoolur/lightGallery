@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
     flipHorizontal,
     flipVertical,
+    getActualSizeButtonClass,
     getRotateFitScale,
     getRotateTransform,
     getRotatedVisualSize,
@@ -134,6 +135,21 @@ describe('rotate slice', () => {
                 'rotate(90deg) scale3d(-0.5, 0.5, 1)',
             ),
         ).toEqual({ width: 300, height: 400 });
+    });
+});
+
+describe('getActualSizeButtonClass', () => {
+    const icons = { zoomIn: 'lg-zoom-in', zoomOut: 'lg-zoom-out' };
+
+    it('carries the zoom-in class at scale 1 and zoom-out once zoomed', () => {
+        expect(getActualSizeButtonClass(icons, false)).toBe('lg-zoom-in');
+        expect(getActualSizeButtonClass(icons, true)).toBe('lg-zoom-out');
+    });
+
+    it('follows custom actualSizeIcons classes', () => {
+        const custom = { zoomIn: 'lg-actual-size', zoomOut: 'lg-zoom-out' };
+        expect(getActualSizeButtonClass(custom, false)).toBe('lg-actual-size');
+        expect(getActualSizeButtonClass(custom, true)).toBe('lg-zoom-out');
     });
 });
 

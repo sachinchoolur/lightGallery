@@ -28,10 +28,10 @@ const PRIORITY_BY_CLASS: ReadonlyArray<readonly [string, number]> = [
     ['lg-rotate-right', 10],
     ['lg-flip-hor', 10],
     ['lg-flip-ver', 10],
-    // Gesture duplicates go first: pinch and double-tap do the same.
+    // Gesture duplicates go first: pinch and double-tap do the same. The
+    // actual-size button carries one of these two classes as well.
     ['lg-zoom-in', 0],
     ['lg-zoom-out', 0],
-    ['lg-actual-size', 0],
 ];
 
 /** Overflow priority of a toolbar button from its class names. */

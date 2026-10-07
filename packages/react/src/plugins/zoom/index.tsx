@@ -10,6 +10,7 @@ import {
     applyZoom,
     clampPanToStage,
     clampScale,
+    getActualSizeButtonClass,
     getActualSizeScale,
     getActualSizeWidth,
     getPanBounds,
@@ -70,7 +71,12 @@ export interface ZoomSettings {
     actualSize: boolean;
     /** Show zoom in/out buttons. */
     showZoomInOutIcons: boolean;
-    /** Icon classes for the zoom in/out buttons. */
+    /**
+     * Actual size icons classnames.
+     * Specify classnames for both ZoomIn and ZoomOut states
+     * You can use `actualSizeIcons: { zoomIn: 'lg-actual-size', zoomOut: 'lg-zoom-out' }`
+     * to show actual size icons instead of zoom in and zoom out icons.
+     */
     actualSizeIcons: {
         zoomIn: 'lg-zoom-in' | 'lg-actual-size';
         zoomOut: 'lg-zoom-out' | 'lg-actual-size';
@@ -110,13 +116,30 @@ function isImageTarget(target: unknown): boolean {
 const ZOOM_IN_EVENT = 'lg-zoom-in';
 const ZOOM_OUT_EVENT = 'lg-zoom-out';
 const ACTUAL_SIZE_EVENT = 'lg-actual-size';
+/** Wrapper → toolbar: the current slide's zoom state changed. */
+const ZOOMED_EVENT = 'lg-zoomed';
+
+interface ZoomedDetail {
+    zoomed: boolean;
+}
 
 function ZoomToolbar(): ReactElement | null {
     const zoomInIcon = useCustomIcons(['zoomIn'], zoomDefaultIcons);
     const zoomOutIcon = useCustomIcons(['zoomOut'], zoomDefaultIcons);
-    const actualIcon = useCustomIcons(['actualSize'], zoomDefaultIcons);
+    // The actual-size button carries BOTH zoom icons; its class, which
+    // follows the zoom state, picks the one the CSS shows (vanilla
+    // swaps the class the same way).
+    const actualIcons = useCustomIcons(['zoomIn', 'zoomOut'], zoomDefaultIcons);
     const internal = useGalleryInternal();
     const settings = usePluginSettings<ZoomSettings>();
+    const [zoomed, setZoomed] = useState(false);
+    useEffect(
+        () =>
+            internal.events.on(ZOOMED_EVENT, (detail) =>
+                setZoomed((detail as ZoomedDetail).zoomed),
+            ),
+        [internal.events],
+    );
     if (!settings.zoom) {
         return null;
     }
@@ -133,10 +156,7 @@ function ZoomToolbar(): ReactElement | null {
                         settings.zoomPluginStrings?.zoomIn ??
                         settings.strings.zoomIn
                     }
-                    className={cx(
-                        `${settings.actualSizeIcons.zoomIn} lg-icon`,
-                        zoomInIcon.className,
-                    )}
+                    className={cx('lg-zoom-in lg-icon', zoomInIcon.className)}
                     onClick={() => emit(ZOOM_IN_EVENT)}
                 >
                     {zoomInIcon.content}
@@ -149,10 +169,7 @@ function ZoomToolbar(): ReactElement | null {
                         settings.zoomPluginStrings?.zoomOut ??
                         settings.strings.zoomOut
                     }
-                    className={cx(
-                        `${settings.actualSizeIcons.zoomOut} lg-icon`,
-                        zoomOutIcon.className,
-                    )}
+                    className={cx('lg-zoom-out lg-icon', zoomOutIcon.className)}
                     onClick={() => emit(ZOOM_OUT_EVENT)}
                 >
                     {zoomOutIcon.content}
@@ -165,10 +182,17 @@ function ZoomToolbar(): ReactElement | null {
                         settings.zoomPluginStrings?.viewActualSize ??
                         settings.strings.viewActualSize
                     }
-                    className={cx('lg-actual-size lg-icon', actualIcon.className)}
+                    className={cx(
+                        getActualSizeButtonClass(
+                            settings.actualSizeIcons,
+                            zoomed,
+                        ),
+                        'lg-icon',
+                        actualIcons.className,
+                    )}
                     onClick={() => emit(ACTUAL_SIZE_EVENT)}
                 >
-                    {actualIcon.content}
+                    {actualIcons.content}
                 </button>
             )}
         </>
@@ -362,9 +386,16 @@ function ZoomWrapper({
         // DOM write and strand the gesture's last live transform.
         applyLive(next);
         setZoom(next);
-        internal.layout.setOuterClass('lg-zoomed', next.zoomed);
+        publishZoomed(next.zoomed);
         // Core swipe stands down while zoomed (2.x `touchAction`).
         internal.gestureSeam.claim(next.zoomed ? 'zoomSwipe' : null);
+    };
+
+    // The outer's lg-zoomed class and the toolbar's actual-size button
+    // follow the same state (vanilla toggles both in beginZoom/resetZoom).
+    const publishZoomed = (zoomed: boolean) => {
+        internal.layout.setOuterClass('lg-zoomed', zoomed);
+        internal.events.emit(ZOOMED_EVENT, { zoomed } as ZoomedDetail);
     };
 
     const reset = () => {
@@ -378,7 +409,7 @@ function ZoomWrapper({
         detachRef.current = null;
         liveRef.current = initialZoomSlice;
         setZoom(initialZoomSlice);
-        internal.layout.setOuterClass('lg-zoomed', false);
+        publishZoomed(false);
         internal.gestureSeam.claim(null);
     };
 
@@ -513,7 +544,7 @@ function ZoomWrapper({
                 pinchRef.current ||
                 panDragRef.current
             ) {
-                internal.layout.setOuterClass('lg-zoomed', false);
+                publishZoomed(false);
                 internal.gestureSeam.claim(null);
             }
         },

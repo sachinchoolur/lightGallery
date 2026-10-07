@@ -7,10 +7,7 @@ import {
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-    LgGalleryComponent,
-    type LgGalleryItem,
-} from '@lightgallery/angular';
+import { LgGalleryComponent, type LgGalleryItem } from '@lightgallery/angular';
 import { withAutoplay } from '@lightgallery/angular/plugins/autoplay';
 import {
     withComment,
@@ -20,9 +17,7 @@ import { withFullscreen } from '@lightgallery/angular/plugins/fullscreen';
 import { withHash } from '@lightgallery/angular/plugins/hash';
 import { withMediumZoom } from '@lightgallery/angular/plugins/mediumZoom';
 import { withPager } from '@lightgallery/angular/plugins/pager';
-import {
-    withRelativeCaption,
-} from '@lightgallery/angular/plugins/relativeCaption';
+import { withRelativeCaption } from '@lightgallery/angular/plugins/relativeCaption';
 import { withRotate } from '@lightgallery/angular/plugins/rotate';
 import { withShare } from '@lightgallery/angular/plugins/share';
 import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
@@ -141,10 +136,7 @@ function trackListeners(): ListenerLedger {
             balance.set(type, (balance.get(type) ?? 0) + 1);
             return (add as (...a: unknown[]) => unknown)(type, ...rest);
         }) as typeof target.addEventListener;
-        target.removeEventListener = ((
-            type: string,
-            ...rest: unknown[]
-        ) => {
+        target.removeEventListener = ((type: string, ...rest: unknown[]) => {
             balance.set(type, (balance.get(type) ?? 0) - 1);
             return (remove as (...a: unknown[]) => unknown)(type, ...rest);
         }) as typeof target.removeEventListener;
@@ -195,9 +187,9 @@ describe('leak + CD audit, all 13 features', () => {
             await flush(fixture);
 
             // Thumbnail navigation.
-            (
-                document.querySelectorAll<HTMLElement>('.lg-thumb-item')[1]!
-            ).click();
+            document
+                .querySelectorAll<HTMLElement>('.lg-thumb-item')[1]!
+                .click();
             await flush(fixture);
             await advance(fixture, 500);
             // Keyboard navigation.
@@ -215,7 +207,9 @@ describe('leak + CD audit, all 13 features', () => {
             await flush(fixture);
             await advance(fixture, 600);
             // Zoom via the toolbar, then share dropdown, then autoplay.
-            (query('.lg-actual-size') as HTMLButtonElement).click();
+            (
+                query('[aria-label="View actual size"]') as HTMLButtonElement
+            ).click();
             await flush(fixture);
             (query('.lg-share') as HTMLButtonElement).click();
             await flush(fixture);
@@ -226,9 +220,9 @@ describe('leak + CD audit, all 13 features', () => {
 
             expect(query('.lg-container')).toBeNull();
             expect(query('.lg-outer')).toBeNull();
-            expect(
-                document.documentElement.classList.contains('lg-on'),
-            ).toBe(false);
+            expect(document.documentElement.classList.contains('lg-on')).toBe(
+                false,
+            );
             // Add/remove parity for every gallery-owned listener type. The
             // exact residue below is app-level singletons that outlive any
             // gallery instance (verified by stack trace):

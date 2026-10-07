@@ -98,19 +98,13 @@ to apply.
 | Feature | Names |
 | --- | --- |
 | Core | `close`, `prev`, `next`, `download`, `more`, `maximize` / `minimize` (pair) |
-| Zoom plugin | `zoomIn`, `zoomOut`, `actualSize` |
+| Zoom plugin | `zoomIn`, `zoomOut` (the actual-size button renders this pair and its zoom state picks one), `actualSize` (unused by any default rendering) |
 | Rotate plugin | `rotateLeft`, `rotateRight`, `flipHorizontal`, `flipVertical` |
 | Share plugin | `share`, `shareFacebook`, `shareX`, `sharePinterest` |
 | Autoplay plugin | `autoplayPlay` / `autoplayPause` (pair) |
 | Fullscreen plugin | `fullscreen` / `fullscreenExit` (pair) |
 | Comment plugin | `comment`, `commentClose` |
 | Thumbnail plugin | `toggleThumbnails` |
-
-One asymmetry worth knowing: the vanilla package's actual-size button
-renders the `zoomIn` / `zoomOut` pair and the active zoom state picks
-one, while the React, Vue, and Angular packages render the
-`actualSize` name on that button. Providing all three names covers
-every stack.
 
 ## Settings
 

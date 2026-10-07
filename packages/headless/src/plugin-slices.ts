@@ -153,6 +153,20 @@ export const initialAutoplaySlice: AutoplaySlice = {
     pausedOnSlideChange: false,
 };
 
+/**
+ * Class the zoom plugin's actual-size button carries for a zoom state.
+ * The button swaps its glyph by swapping its class (2.x behaviour): the
+ * `zoomIn` class while the slide sits at scale 1, the `zoomOut` class
+ * once it is zoomed. The button renders both zoom icons and the CSS
+ * shows the one matching the live class.
+ */
+export function getActualSizeButtonClass(
+    icons: { zoomIn: string; zoomOut: string },
+    zoomed: boolean,
+): string {
+    return zoomed ? icons.zoomOut : icons.zoomIn;
+}
+
 /** Commit a zoom change; scale 1 always recenters (2.x behavior). */
 export function applyZoom(
     _slice: ZoomSlice,

@@ -18,6 +18,7 @@ import {
     applyZoom,
     clampPanToStage,
     clampScale,
+    getActualSizeButtonClass,
     getActualSizeScale,
     getActualSizeWidth,
     getRotatedVisualSize,
@@ -79,7 +80,12 @@ export interface ZoomSettings {
     actualSize: boolean;
     /** Show zoom in/out buttons. */
     showZoomInOutIcons: boolean;
-    /** Icon classes for the zoom in/out buttons. */
+    /**
+     * Actual size icons classnames.
+     * Specify classnames for both ZoomIn and ZoomOut states
+     * You can use `actualSizeIcons: { zoomIn: 'lg-actual-size', zoomOut: 'lg-zoom-out' }`
+     * to show actual size icons instead of zoom in and zoom out icons.
+     */
     actualSizeIcons: {
         zoomIn: 'lg-zoom-in' | 'lg-actual-size';
         zoomOut: 'lg-zoom-out' | 'lg-actual-size';
@@ -109,6 +115,12 @@ export const zoomSettings: ZoomSettings = {
 const ZOOM_IN_EVENT = 'lg-zoom-in';
 const ZOOM_OUT_EVENT = 'lg-zoom-out';
 const ACTUAL_SIZE_EVENT = 'lg-actual-size';
+/** Wrapper → toolbar: the current slide's zoom state changed. */
+const ZOOMED_EVENT = 'lg-zoomed';
+
+interface ZoomedDetail {
+    zoomed: boolean;
+}
 const ZOOM_TRANSITION = 'transform 0.3s cubic-bezier(0, 0, 0.25, 1)';
 /** 2.x post-gesture settle ease (`lg-zoom-drag-transition`). */
 const SETTLE_TRANSITION = 'transform 0.8s cubic-bezier(0, 0, 0.25, 1)';
@@ -135,9 +147,7 @@ type ZoomResolved = ZoomSettings &
             [attr.aria-label]="
                 settings().zoomPluginStrings?.zoomIn ?? coreStrings().zoomIn
             "
-            [class]="
-                settings().actualSizeIcons.zoomIn + ' lg-icon lg-icon-custom'
-            "
+            class="lg-zoom-in lg-icon lg-icon-custom"
             (click)="emit(ZOOM_IN)"
         >
             <lg-ci
@@ -151,9 +161,7 @@ type ZoomResolved = ZoomSettings &
             [attr.aria-label]="
                 settings().zoomPluginStrings?.zoomOut ?? coreStrings().zoomOut
             "
-            [class]="
-                settings().actualSizeIcons.zoomOut + ' lg-icon lg-icon-custom'
-            "
+            class="lg-zoom-out lg-icon lg-icon-custom"
             (click)="emit(ZOOM_OUT)"
         >
             <lg-ci
@@ -170,12 +178,12 @@ type ZoomResolved = ZoomSettings &
                 settings().zoomPluginStrings?.viewActualSize ??
                 coreStrings().viewActualSize
             "
-            class="lg-actual-size lg-icon lg-icon-custom"
+            [class]="actualSizeClass() + ' lg-icon lg-icon-custom'"
             (click)="emit(ACTUAL)"
         >
             <lg-ci
                 [slot]="ciActual()"
-                [names]="['actualSize']"
+                [names]="['zoomIn', 'zoomOut']"
                 [icons]="defaultIcons"
             />
         </button>
@@ -191,11 +199,21 @@ export class LgZoomToolbarComponent {
     protected readonly ciZoomOut = computed(() =>
         resolveIconSlot(this.ctx.icons?.(), ['zoomOut']),
     );
+    // The actual-size button carries BOTH zoom icons; its class, which
+    // follows the zoom state, picks the one the CSS shows (vanilla swaps
+    // the class the same way).
     protected readonly ciActual = computed(() =>
-        resolveIconSlot(this.ctx.icons?.(), ['actualSize']),
+        resolveIconSlot(this.ctx.icons?.(), ['zoomIn', 'zoomOut']),
     );
     protected readonly settings = computed(
         () => this.ctx.settings() as unknown as ZoomResolved,
+    );
+    protected readonly zoomed = signal(false);
+    protected readonly actualSizeClass = computed(() =>
+        getActualSizeButtonClass(
+            this.settings().actualSizeIcons,
+            this.zoomed(),
+        ),
     );
     protected readonly coreStrings = computed(
         () => this.ctx.settings().strings,
@@ -203,6 +221,13 @@ export class LgZoomToolbarComponent {
     protected readonly ZOOM_IN = ZOOM_IN_EVENT;
     protected readonly ZOOM_OUT = ZOOM_OUT_EVENT;
     protected readonly ACTUAL = ACTUAL_SIZE_EVENT;
+
+    constructor() {
+        const off = this.ctx.events.on(ZOOMED_EVENT, (detail) => {
+            this.zoomed.set((detail as ZoomedDetail).zoomed);
+        });
+        inject(DestroyRef).onDestroy(off);
+    }
 
     protected emit(name: string): void {
         this.ctx.events.emit(name, undefined);
@@ -408,7 +433,7 @@ export class LgZoomWrapperComponent {
             // off-window slide unmounting cannot free another slide's
             // live claim.
             if (this.live.zoomed || this.pinch || this.panDrag) {
-                this.ctx.layout.setOuterClass('lg-zoomed', false);
+                this.publishZoomed(false);
                 this.ctx.gestureLock.claim(null);
             }
         });
@@ -564,9 +589,16 @@ export class LgZoomWrapperComponent {
         // later binding write lands on the same values.
         this.applyLive(next);
         this.zoom.set(next);
-        this.ctx.layout.setOuterClass('lg-zoomed', next.zoomed);
+        this.publishZoomed(next.zoomed);
         // Core swipe stands down while zoomed (2.x `touchAction`).
         this.ctx.gestureLock.claim(next.zoomed ? 'zoomSwipe' : null);
+    }
+
+    // The outer's lg-zoomed class and the toolbar's actual-size button
+    // follow the same state (vanilla toggles both in beginZoom/resetZoom).
+    private publishZoomed(zoomed: boolean): void {
+        this.ctx.layout.setOuterClass('lg-zoomed', zoomed);
+        this.ctx.events.emit(ZOOMED_EVENT, { zoomed } as ZoomedDetail);
     }
 
     private reset(): void {
@@ -580,7 +612,7 @@ export class LgZoomWrapperComponent {
         this.detachWindow = null;
         this.live = initialZoomSlice;
         this.zoom.set(initialZoomSlice);
-        this.ctx.layout.setOuterClass('lg-zoomed', false);
+        this.publishZoomed(false);
         this.ctx.gestureLock.claim(null);
     }
 

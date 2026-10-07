@@ -98,10 +98,31 @@ unchanged; what moved is the packaging and the framework integrations.
   the X mark in place of the old bird.
 - `lightgallery` declares Node 18 as its minimum in `engines`, matching
   the other packages.
+- In the React, Vue and Angular packages the zoom plugin's actual-size
+  button now follows the vanilla behaviour: it carries the `zoomIn` and
+  `zoomOut` icons and switches between the `actualSizeIcons` classes with
+  the zoom state, while the zoom in and zoom out buttons keep their fixed
+  `lg-zoom-in` and `lg-zoom-out` classes. The button is 24px like every
+  other toolbar icon in all packages. The `actualSize` icon name is no
+  longer used by any default rendering.
 
 ### Fixed
 
 Long-standing bugs, nearly all of them present in 2.x:
+
+- The vanilla focus trap counts every focusable element in the dialog,
+  including `tabindex` ones, so Tab cannot leave through plugin content.
+- A thumbnail click that moved by a few pixels started a strip drag: with
+  `scrubThumbnails` on, the release glide kept the scrub session alive and
+  the click's own slide change did not re-centre the strip, and on a long
+  strip the wobble itself navigated (one pixel is several slides). A press
+  that moves less than `thumbnailSwipeThreshold` is a click in every
+  package: it neither scrubs nor glides.
+  In a windowed vanilla strip (`virtualization.thumbs`) the previous
+  thumbnail also kept its active mark after a slide change, and a wobble
+  toward either end of the strip rebuilt it under the pointer (the elastic
+  overshoot read as travel past the rendered window), which swallowed the
+  click; the frameworks committed a translate mid-drag for the same reason.
 
 - The slideshow ran on a fixed interval, so on a slow connection it
   advanced past images that had not loaded yet. The countdown (and the

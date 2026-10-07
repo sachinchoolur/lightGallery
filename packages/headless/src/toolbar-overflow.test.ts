@@ -18,10 +18,10 @@ describe('getToolbarItemPriority', () => {
         );
         expect(getToolbarItemPriority(['lg-share', 'lg-icon'])).toBe(30);
         expect(getToolbarItemPriority(['lg-rotate-left', 'lg-icon'])).toBe(10);
-        expect(getToolbarItemPriority(['lg-actual-size', 'lg-icon'])).toBe(0);
+        expect(getToolbarItemPriority(['lg-zoom-out', 'lg-icon'])).toBe(0);
     });
 
-    it('ranks the vanilla actual-size button by its zoom class', () => {
+    it('ranks the actual-size button by its zoom class', () => {
         expect(getToolbarItemPriority(['lg-zoom-in', 'lg-icon'])).toBe(0);
     });
 

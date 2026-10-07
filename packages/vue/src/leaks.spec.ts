@@ -1,11 +1,5 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils';
-import {
-    defineComponent,
-    h,
-    inject,
-    nextTick,
-    onUpdated,
-} from 'vue';
+import { defineComponent, h, inject, nextTick, onUpdated } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import LightGallery from './LightGallery.vue';
@@ -142,10 +136,7 @@ function trackListeners(): ListenerLedger {
             balance.set(type, (balance.get(type) ?? 0) + 1);
             return (add as (...a: unknown[]) => unknown)(type, ...rest);
         }) as typeof target.addEventListener;
-        target.removeEventListener = ((
-            type: string,
-            ...rest: unknown[]
-        ) => {
+        target.removeEventListener = ((type: string, ...rest: unknown[]) => {
             balance.set(type, (balance.get(type) ?? 0) - 1);
             return (remove as (...a: unknown[]) => unknown)(type, ...rest);
         }) as typeof target.removeEventListener;
@@ -161,9 +152,7 @@ function trackListeners(): ListenerLedger {
     };
 }
 
-async function openAndLoad(
-    wrapper: ReturnType<typeof mount>,
-): Promise<void> {
+async function openAndLoad(wrapper: ReturnType<typeof mount>): Promise<void> {
     (
         wrapper.findComponent(LightGallery).vm as unknown as {
             openGallery(i?: number): void;
@@ -199,9 +188,9 @@ describe('leak + reactivity audit, all 13 plugins', () => {
             await openAndLoad(wrapper);
 
             // Touch every interaction surface once.
-            (
-                document.querySelectorAll<HTMLElement>('.lg-thumb-item')[1]!
-            ).click();
+            document
+                .querySelectorAll<HTMLElement>('.lg-thumb-item')[1]!
+                .click();
             await settle();
             await advance(500);
             document.dispatchEvent(
@@ -216,7 +205,9 @@ describe('leak + reactivity audit, all 13 plugins', () => {
             firePointer(window, 'pointerup', { x: 120, y: 100 });
             await settle();
             await advance(600);
-            (query('.lg-actual-size') as HTMLButtonElement).click();
+            (
+                query('[aria-label="View actual size"]') as HTMLButtonElement
+            ).click();
             await settle();
             (query('.lg-share') as HTMLButtonElement).click();
             await settle();
@@ -226,9 +217,9 @@ describe('leak + reactivity audit, all 13 plugins', () => {
             wrapper.unmount();
 
             expect(query('.lg-container')).toBeNull();
-            expect(
-                document.documentElement.classList.contains('lg-on'),
-            ).toBe(false);
+            expect(document.documentElement.classList.contains('lg-on')).toBe(
+                false,
+            );
             // Add/remove parity for every gallery-owned listener type.
             // The exact residue below is jsdom's selector engine (nwsapi)
             // attaching document mouseover/mouseout once per environment —

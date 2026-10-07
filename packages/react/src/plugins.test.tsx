@@ -524,23 +524,62 @@ describe('zoom plugin', () => {
 
     it('shows the actual-size button and zooms on double click', () => {
         renderGallery({ plugins: [Zoom] });
-        expect(screen.getByLabelText('View actual size')).toHaveClass(
-            'lg-actual-size',
-        );
-        // Zoom in/out buttons hidden by default (2.x showZoomInOutIcons).
-        expect(document.querySelector('.lg-zoom-in')).toBeNull();
+        const actual = screen.getByLabelText('View actual size');
+        // Vanilla parity: the button rides the zoom-in class until the
+        // slide is zoomed, and carries both zoom icons so the class can
+        // pick the one that shows.
+        expect(actual).toHaveClass('lg-zoom-in');
+        expect(actual).not.toHaveClass('lg-actual-size');
+        expect(actual.querySelector('.lg-ci-zoom-in')).not.toBeNull();
+        expect(actual.querySelector('.lg-ci-zoom-out')).not.toBeNull();
+        // Zoom in/out buttons hidden by default (2.x showZoomInOutIcons):
+        // the actual-size button is the only zoom-in classed element.
+        expect(document.querySelectorAll('.lg-zoom-in')).toHaveLength(1);
+        expect(screen.queryByLabelText('Zoom in')).toBeNull();
 
         zoomIn();
         const scaleEl = document.querySelector<HTMLElement>('.lg-zoom-scale')!;
         // jsdom has no layout → the actual-size fallback scale is 2.
         expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
         expect(document.querySelector('.lg-outer')).toHaveClass('lg-zoomed');
+        expect(actual).toHaveClass('lg-zoom-out');
+        expect(actual).not.toHaveClass('lg-zoom-in');
 
         // Double click again zooms back out.
         fireEvent.dblClick(
             document.querySelector('.lg-zoom-pan img.lg-image')!,
         );
         expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-zoomed',
+        );
+        expect(actual).toHaveClass('lg-zoom-in');
+    });
+
+    it('keeps fixed classes on zoom in/out and follows actualSizeIcons on actual size', () => {
+        renderGallery({
+            plugins: [Zoom],
+            zoom: {
+                showZoomInOutIcons: true,
+                actualSizeIcons: {
+                    zoomIn: 'lg-actual-size',
+                    zoomOut: 'lg-zoom-out',
+                },
+            },
+        });
+        // actualSizeIcons never reaches the dedicated zoom buttons.
+        expect(screen.getByLabelText('Zoom in')).toHaveClass('lg-zoom-in');
+        expect(screen.getByLabelText('Zoom out')).toHaveClass('lg-zoom-out');
+        const actual = screen.getByLabelText('View actual size');
+        expect(actual).toHaveClass('lg-actual-size');
+
+        zoomIn();
+        expect(actual).toHaveClass('lg-zoom-out');
+        expect(actual).not.toHaveClass('lg-actual-size');
+        expect(screen.getByLabelText('Zoom in')).toHaveClass('lg-zoom-in');
+
+        fireEvent.click(actual);
+        expect(actual).toHaveClass('lg-actual-size');
         expect(document.querySelector('.lg-outer')).not.toHaveClass(
             'lg-zoomed',
         );
