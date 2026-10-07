@@ -534,7 +534,7 @@ const utils = {
 
     getFocusableElements(container: HTMLElement): NodeListOf<Element> {
         const elements = container.querySelectorAll(
-            'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])',
+            'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])',
         );
         const visibleElements = [].filter.call(
             elements,
