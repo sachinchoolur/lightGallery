@@ -121,6 +121,43 @@ describe('thumbnail scrub (scrubThumbnails)', () => {
         expect(activeThumbId()).toBe('5');
     });
 
+    it('treats a press below the swipe threshold as a click, not a glide', () => {
+        const track = renderStrip(true);
+        const thumb = document.querySelector<HTMLElement>(
+            '.lg-thumb-item[data-lg-item-id="3"]',
+        )!;
+        // A click with a 3px wobble: below the swipe threshold no scrub
+        // session starts and the gallery does not move...
+        firePointer(thumb, 'pointerdown', 600);
+        tick(16);
+        firePointer(window, 'pointermove', 597);
+        expect(
+            document
+                .querySelector('.lg-outer')
+                ?.classList.contains('lg-thumb-scrubbing'),
+        ).toBe(false);
+        expect(activeThumbId()).toBe('0');
+        tick(16);
+        firePointer(window, 'pointerup', 597);
+        // ...and the release runs no glide: the strip snaps back.
+        expect(
+            document
+                .querySelector('.lg-outer')
+                ?.classList.contains('lg-thumb-scrubbing'),
+        ).toBe(false);
+        tick(48);
+        expect(track.style.transform).toBe('translate3d(-49px, 0px, 0px)');
+
+        // The click then navigates and the strip centers on the slide
+        // (105px unit × 3 - 1 + 50 for the 0-width jsdom strip).
+        act(() => {
+            thumb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        });
+        tick(16);
+        expect(activeThumbId()).toBe('3');
+        expect(track.style.transform).toBe('translate3d(-364px, 0px, 0px)');
+    });
+
     it('keeps scrubbing through the release glide', () => {
         const track = renderStrip(true);
         // A fast flick whose projection carries past the release point.

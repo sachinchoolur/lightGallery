@@ -39,6 +39,7 @@ interface ThumbDragUtils {
 interface ThumbnailGalleryItem extends GalleryItem {
     thumb: string;
 }
+
 export default class Thumbnail {
     private core: LightGallery;
     private $thumbOuter!: lgQuery;
@@ -487,7 +488,14 @@ export default class Thumbnail {
         this.setTranslate(thumbDragUtils.newTranslateX);
         this.$thumbOuter.addClass('lg-dragging');
 
-        if (this.canScrub()) {
+        // The scrub starts once the press has travelled the swipe
+        // threshold: below it the move is the wobble of a click, and on a
+        // long strip even one pixel of it would navigate.
+        if (
+            this.canScrub() &&
+            (this.scrubActive ||
+                Math.abs(dragDelta) >= this.settings.thumbnailSwipeThreshold)
+        ) {
             this.beginScrub();
             this.scrubTo(this.liveTranslateX);
         }
@@ -496,11 +504,16 @@ export default class Thumbnail {
         // window, one rebuild recenters it (rare; routine moves only
         // write the transform).
         if (this.isThumbWindowed() && this.renderedThumbWindow) {
-            // Rendered coverage in px straight from the window's pads, // [leadingPad, totalWidth - trailingPad].
+            // Rendered coverage in px straight from the window's pads,
+            // [leadingPad, totalWidth - trailingPad]. The live translate
+            // is clamped first: a rubber-band overshoot past either end
+            // needs no thumbs that are not already rendered, and a rebuild
+            // mid-press would replace the pressed thumb, killing its click.
             const rendered = this.renderedThumbWindow;
+            const covered = this.getPossibleTransformX(this.liveTranslateX);
             if (
-                this.liveTranslateX < rendered.leadingPad ||
-                this.liveTranslateX + this.thumbOuterWidth >
+                covered < rendered.leadingPad ||
+                covered + this.thumbOuterWidth >
                     this.thumbTotalWidth - rendered.trailingPad
             ) {
                 this.renderThumbItems(this.core.index, {
@@ -517,6 +530,26 @@ export default class Thumbnail {
         thumbDragUtils.isMoved = false;
         thumbDragUtils.endTime = new Date();
         this.$thumbOuter.removeClass('lg-dragging');
+
+        // A press that moved less than the swipe threshold is a click, not
+        // a drag: it must not leave a glide or a scrub session running,
+        // or the click's own slide change finds the scrub still active and
+        // skips re-centering the strip. Snap back to the committed
+        // position and let the click handler navigate.
+        if (
+            Math.abs(thumbDragUtils.cords.endX - thumbDragUtils.cords.startX) <
+            this.settings.thumbnailSwipeThreshold
+        ) {
+            this.thumbClickable = true;
+            this.endScrub();
+            this.liveTranslateX = this.translateX;
+            this.$lgThumb.css(
+                'transition-duration',
+                this.core.settings.speed + 'ms',
+            );
+            this.setTranslate(this.translateX);
+            return thumbDragUtils;
+        }
 
         // Release physics: project the windowed velocity to a
         // fling target, clamp into the strip bounds, and spring there, // bounces off the edge on overshoot, pulls back when released
@@ -566,17 +599,18 @@ export default class Thumbnail {
             },
         );
 
-        if (
-            Math.abs(thumbDragUtils.cords.endX - thumbDragUtils.cords.startX) <
-            this.settings.thumbnailSwipeThreshold
-        ) {
-            this.thumbClickable = true;
-        }
-
         return thumbDragUtils;
     }
 
-    getThumbHtml(thumb: string, index: number, alt?: string): HTMLElement {
+    getThumbHtml(
+        thumb: string,
+        index: number,
+        alt?: string,
+        // The strip re-renders inside beforeSlide, before the core has
+        // moved its index; the caller names the slide that is becoming
+        // current so no stale thumb keeps the active mark.
+        activeIndex = this.core.index,
+    ): HTMLElement {
         const slideVideoInfo =
             this.core.galleryItems[index].__slideVideoInfo || {};
         let thumbImg;
@@ -599,7 +633,7 @@ export default class Thumbnail {
         const div = document.createElement('div');
         div.setAttribute('data-lg-item-id', index + '');
         div.className = `lg-thumb-item ${
-            index === this.core.index ? 'active' : ''
+            index === activeIndex ? 'active' : ''
         }`;
         const marginSide = this.isRtl() ? 'margin-left' : 'margin-right';
         div.style.cssText = `width: ${this.settings.thumbWidth}px; height: ${this.settings.thumbHeight}; ${marginSide}: ${this.settings.thumbMargin}px;`;
@@ -662,11 +696,9 @@ export default class Thumbnail {
             );
         }
         for (let i = thumbWindow.start; i <= thumbWindow.end; i++) {
-            const thumb = this.getThumbHtml(items[i].thumb, i, items[i].alt);
-            if (i === activeIndex) {
-                thumb.classList.add('active');
-            }
-            this.$lgThumb.append(thumb);
+            this.$lgThumb.append(
+                this.getThumbHtml(items[i].thumb, i, items[i].alt, activeIndex),
+            );
         }
         if (thumbWindow.trailingPad > 0) {
             this.$lgThumb.append(

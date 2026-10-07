@@ -80,6 +80,62 @@ describe('virtualization (vanilla)', () => {
         ).toBe(`${1000 * 105}px`);
     });
 
+    it('marks exactly one thumb active after a windowed re-render', () => {
+        instance = initGallery(1000, {
+            virtualization: { slides: 7, thumbs: 2 },
+        });
+        instance.openGallery(0);
+        jest.advanceTimersByTime(300);
+
+        // The strip re-renders inside beforeSlide, before the core index
+        // moves: the previous thumb must not keep its active mark.
+        instance.slide(5, false, false, false);
+        jest.advanceTimersByTime(100);
+        const active = document.querySelectorAll<HTMLElement>(
+            '.lg-thumb-item.active',
+        );
+        expect(active).toHaveLength(1);
+        expect(active[0]).toHaveAttribute('data-lg-item-id', '5');
+    });
+
+    it('keeps the pressed thumb mounted through a rubber-band wobble', () => {
+        instance = initGallery(1000, {
+            virtualization: { slides: 7, thumbs: 2 },
+            scrubThumbnails: true,
+        });
+        instance.openGallery(0);
+        jest.advanceTimersByTime(300);
+        const thumb = document.querySelector<HTMLElement>(
+            '.lg-thumb-item[data-lg-item-id="1"] img',
+        )!;
+        const count = document.querySelectorAll('.lg-thumb-item').length;
+
+        // A click with a 3px wobble toward the leading edge: the elastic
+        // overshoot runs negative and must not be read as a drag past the
+        // rendered window, or the strip rebuilds under the pointer and the
+        // pressed thumb's click never happens.
+        const down = new MouseEvent('mousedown', {
+            bubbles: true,
+            cancelable: true,
+        });
+        Object.defineProperty(down, 'pageX', { value: 500 });
+        thumb.dispatchEvent(down);
+        jest.advanceTimersByTime(16);
+        const move = new MouseEvent('mousemove', { bubbles: true });
+        Object.defineProperty(move, 'pageX', { value: 503 });
+        window.dispatchEvent(move);
+        expect(thumb.isConnected).toBe(true);
+        // One pixel is four slides on this strip: a wobble must not scrub.
+        expect(instance.index).toBe(0);
+        expect(document.querySelectorAll('.lg-thumb-item')).toHaveLength(count);
+        const up = new MouseEvent('mouseup', { bubbles: true });
+        Object.defineProperty(up, 'pageX', { value: 503 });
+        window.dispatchEvent(up);
+        thumb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        jest.advanceTimersByTime(100);
+        expect(instance.index).toBe(1);
+    });
+
     it('renders every thumbnail when virtualization is off (default)', () => {
         instance = initGallery(100);
         instance.openGallery(0);
@@ -151,6 +207,39 @@ describe('thumbnail strip physics (vanilla)', () => {
             jest.advanceTimersByTime(16);
         }
     }
+
+    it('treats a press below the swipe threshold as a click, not a glide', () => {
+        instance = initGallery(10, { scrubThumbnails: true });
+        instance.openGallery(0);
+        jest.advanceTimersByTime(300);
+        const track = document.querySelector<HTMLElement>('.lg-thumb')!;
+        const outer = document.querySelector<HTMLElement>('.lg-outer')!;
+        const thumb = document.querySelector<HTMLElement>(
+            '.lg-thumb-item[data-lg-item-id="3"] img',
+        )!;
+        expect(trackX()).toBe(-49);
+
+        // A click with a 3px wobble: below the swipe threshold no scrub
+        // session starts and the gallery does not move...
+        fireMouse(thumb, 'mousedown', 500);
+        jest.advanceTimersByTime(16);
+        fireMouse(window, 'mousemove', 503);
+        expect(outer).not.toHaveClass('lg-thumb-scrubbing');
+        expect(instance.index).toBe(0);
+        jest.advanceTimersByTime(16);
+        fireMouse(window, 'mouseup', 503);
+        // ...and the release runs no glide: the strip snaps back.
+        expect(outer).not.toHaveClass('lg-thumb-scrubbing');
+        jest.advanceTimersByTime(48);
+        expect(trackX()).toBe(-49);
+
+        // The click then navigates and the strip centers on the slide
+        // (105px unit × 3 - 1 + 50 for the 0-width jsdom strip).
+        thumb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        jest.advanceTimersByTime(100);
+        expect(instance.index).toBe(3);
+        expect(trackX()).toBe(-364);
+    });
 
     it('glides on release and rubber-bands past the edges', () => {
         instance = initGallery(10);

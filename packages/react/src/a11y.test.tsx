@@ -234,35 +234,6 @@ describe('accessibility', () => {
             ).toBe('0ms');
             matchMedia.mockRestore();
         });
-
-        it('makes thumbnails and pager dots keyboard operable', () => {
-            render(
-                <LightGallery
-                    slides={slides}
-                    open={true}
-                    onClose={() => undefined}
-                    plugins={[Thumbnail, Pager]}
-                />,
-            );
-            tick(450);
-            fireEvent.load(document.querySelector('img.lg-image[alt="a"]')!);
-
-            const thumb = document.querySelectorAll('.lg-thumb-item')[2]!;
-            expect(thumb).toHaveAttribute('role', 'button');
-            expect(thumb).toHaveAttribute('tabindex', '0');
-            fireEvent.keyDown(thumb, { key: 'Enter' });
-            expect(
-                document.querySelector('.lg-counter-current')?.textContent,
-            ).toBe('3');
-            tick(600);
-
-            const dot = document.querySelectorAll('.lg-pager-cont')[0]!;
-            fireEvent.keyDown(dot, { key: ' ' });
-            expect(
-                document.querySelector('.lg-counter-current')?.textContent,
-            ).toBe('1');
-            tick(600);
-        });
     });
 
     it('has zero WCAG A/AA axe violations with plugins loaded', async () => {

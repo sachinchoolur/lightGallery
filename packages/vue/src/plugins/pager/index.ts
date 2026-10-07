@@ -1,10 +1,4 @@
-import {
-    defineComponent,
-    h,
-    inject,
-    onBeforeUnmount,
-    ref,
-} from 'vue';
+import { defineComponent, h, inject, onBeforeUnmount, ref } from 'vue';
 
 import { LG_PLUGIN_CONTEXT, type LgVuePlugin } from '../types';
 
@@ -50,10 +44,7 @@ export const PagerList = defineComponent({
                         hover.value = true;
                     },
                     onMouseout: () => {
-                        hoverTimer = setTimeout(
-                            () => (hover.value = false),
-                            0,
-                        );
+                        hoverTimer = setTimeout(() => (hover.value = false), 0);
                     },
                 },
                 ctx.items.value.map((item, index) =>
@@ -66,39 +57,20 @@ export const PagerList = defineComponent({
                                 'lg-pager-cont',
                                 {
                                     'lg-pager-active':
-                                        index ===
-                                        ctx.store.currentIndex.value,
+                                        index === ctx.store.currentIndex.value,
                                 },
                             ],
-                            role: 'button',
-                            tabindex: 0,
-                            'aria-label': `Go to slide ${index + 1}`,
-                            'aria-current':
-                                index === ctx.store.currentIndex.value,
                             onClick: () => ctx.actions.goToSlide(index),
-                            onKeydown: (event: KeyboardEvent) => {
-                                if (
-                                    event.key === 'Enter' ||
-                                    event.key === ' '
-                                ) {
-                                    event.preventDefault();
-                                    ctx.actions.goToSlide(index);
-                                }
-                            },
                         },
                         [
                             h('span', { class: 'lg-pager' }),
-                            h(
-                                'div',
-                                { class: 'lg-pager-thumb-cont' },
-                                [
-                                    h('span', { class: 'lg-caret' }),
-                                    h('img', {
-                                        src: item.thumb,
-                                        alt: item.alt ?? '',
-                                    }),
-                                ],
-                            ),
+                            h('div', { class: 'lg-pager-thumb-cont' }, [
+                                h('span', { class: 'lg-caret' }),
+                                h('img', {
+                                    src: item.thumb,
+                                    alt: item.alt ?? '',
+                                }),
+                            ]),
                         ],
                     ),
                 ),

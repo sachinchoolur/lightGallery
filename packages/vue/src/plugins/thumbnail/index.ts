@@ -367,12 +367,16 @@ export const ThumbnailStrip = defineComponent({
                 if (Math.abs(delta) > 2) {
                     drag.moved = true;
                     clickable = false;
-                    if (
-                        settings.value.scrubThumbnails &&
-                        settings.value.animateThumb
-                    ) {
-                        beginScrub();
-                    }
+                }
+                // The scrub starts once the press has travelled the swipe
+                // threshold: below it the move is the wobble of a click,
+                // and on a long strip even one pixel of it would navigate.
+                if (
+                    settings.value.scrubThumbnails &&
+                    settings.value.animateThumb &&
+                    Math.abs(delta) >= settings.value.thumbnailSwipeThreshold
+                ) {
+                    beginScrub();
                 }
                 samples = pushVelocitySample(samples, {
                     x: moveEvent.clientX,
@@ -398,16 +402,18 @@ export const ThumbnailStrip = defineComponent({
                 if (rendered) {
                     const unit =
                         settings.value.thumbWidth + settings.value.thumbMargin;
+                    // Clamped first: a rubber-band overshoot past either
+                    // end needs no thumbs that are not already rendered.
+                    const covered = clampThumbTranslate(
+                        liveTranslate,
+                        totalWidth.value,
+                        stripWidth.value,
+                    );
                     if (
-                        liveTranslate < rendered.start * unit ||
-                        liveTranslate + stripWidth.value >
-                            (rendered.end + 1) * unit
+                        covered < rendered.start * unit ||
+                        covered + stripWidth.value > (rendered.end + 1) * unit
                     ) {
-                        translate.value = clampThumbTranslate(
-                            liveTranslate,
-                            totalWidth.value,
-                            stripWidth.value,
-                        );
+                        translate.value = covered;
                     }
                 }
             };
@@ -421,6 +427,7 @@ export const ThumbnailStrip = defineComponent({
                     Math.abs(upEvent.clientX - drag.startX) <
                     settings.value.thumbnailSwipeThreshold;
                 const moved = drag.moved;
+                const startTranslate = drag.startTranslate;
                 drag = null;
 
                 // Fling: project the release velocity, clamp into the
@@ -438,16 +445,26 @@ export const ThumbnailStrip = defineComponent({
                     totalWidth.value,
                     stripWidth.value,
                 );
-                if (!moved) {
-                    // A press that took over a scrub glide and released
-                    // without moving ends the session — no spring runs.
+                // A press that released without moving, or moved less
+                // than the swipe threshold, is a click: no spring runs
+                // and the scrub session ends here, or the click's own
+                // slide change would find the scrub still active and
+                // skip re-centering.
+                if (!moved || clickable) {
                     endScrub();
                     dragging.value = false;
-                    translate.value = clampThumbTranslate(
-                        liveTranslate,
+                    // Back to where the press found the strip: a wobble
+                    // must not leave it offset by a few pixels. Written
+                    // to the DOM as well, since a binding value equal to
+                    // the last render's does not overwrite what the drag
+                    // frames wrote.
+                    const start = clampThumbTranslate(
+                        startTranslate,
                         totalWidth.value,
                         stripWidth.value,
                     );
+                    writeTrackTranslate(start);
+                    translate.value = start;
                     return;
                 }
                 // Windowed strips: render the whole flight corridor
@@ -599,22 +616,7 @@ export const ThumbnailStrip = defineComponent({
                                             ? 'marginLeft'
                                             : 'marginRight']: `${cfg.thumbMargin}px`,
                                     },
-                                    role: 'button',
-                                    tabindex: 0,
-                                    'aria-label':
-                                        item.alt ?? `Go to slide ${index + 1}`,
-                                    'aria-current':
-                                        index === ctx.store.currentIndex.value,
                                     onClick: () => onThumbClick(index),
-                                    onKeydown: (event: KeyboardEvent) => {
-                                        if (
-                                            event.key === 'Enter' ||
-                                            event.key === ' '
-                                        ) {
-                                            event.preventDefault();
-                                            ctx.actions.goToSlide(index);
-                                        }
-                                    },
                                 },
                                 h('img', {
                                     loading: 'lazy',

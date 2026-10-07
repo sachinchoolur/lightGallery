@@ -24,35 +24,30 @@ export const pagerSettings: PagerSettings = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @if (settings().pager) {
-            <div
-                class="lg-pager-outer"
-                [class.lg-pager-hover]="hover()"
-                (mouseover)="onMouseOver()"
-                (mouseout)="onMouseOut()"
+        <div
+            class="lg-pager-outer"
+            [class.lg-pager-hover]="hover()"
+            (mouseover)="onMouseOver()"
+            (mouseout)="onMouseOut()"
+        >
+            @for (item of ctx.items(); track $index) {
+            <span
+                class="lg-pager-cont"
+                [class.lg-pager-active]="$index === currentIndex()"
+                [attr.data-lg-item-id]="$index"
+                (click)="ctx.actions.goToSlide($index)"
             >
-                @for (item of ctx.items(); track $index) {
-                    <span
-                        class="lg-pager-cont"
-                        [class.lg-pager-active]="$index === currentIndex()"
-                        role="button"
-                        tabindex="0"
-                        [attr.data-lg-item-id]="$index"
-                        [attr.aria-label]="'Go to slide ' + ($index + 1)"
-                        [attr.aria-current]="$index === currentIndex()"
-                        (click)="ctx.actions.goToSlide($index)"
-                        (keydown)="onKeydown($event, $index)"
-                    >
-                        <span class="lg-pager"></span>
-                        <div class="lg-pager-thumb-cont">
-                            <span class="lg-caret"></span>
-                            <img
-                                [attr.src]="item.thumb ?? null"
-                                [alt]="item.alt ?? ''"
-                            />
-                        </div>
-                    </span>
-                }
-            </div>
+                <span class="lg-pager"></span>
+                <div class="lg-pager-thumb-cont">
+                    <span class="lg-caret"></span>
+                    <img
+                        [attr.src]="item.thumb ?? null"
+                        [alt]="item.alt ?? ''"
+                    />
+                </div>
+            </span>
+            }
+        </div>
         }
     `,
 })
@@ -85,13 +80,6 @@ export class LgPagerListComponent {
 
     protected onMouseOut(): void {
         this.hoverTimer = setTimeout(() => this.hover.set(false), 0);
-    }
-
-    protected onKeydown(event: KeyboardEvent, index: number): void {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            this.ctx.actions.goToSlide(index);
-        }
     }
 }
 

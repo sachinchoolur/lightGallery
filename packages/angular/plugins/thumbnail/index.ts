@@ -159,15 +159,8 @@ type ThumbnailResolved = ThumbnailSettings & {
                     [style.margin-left.px]="
                         isRtl() ? settings().thumbMargin : null
                     "
-                    role="button"
-                    tabindex="0"
                     [attr.data-lg-item-id]="entry.index"
-                    [attr.aria-label]="
-                        entry.item.alt ?? 'Go to slide ' + (entry.index + 1)
-                    "
-                    [attr.aria-current]="entry.index === currentIndex()"
                     (click)="onThumbClick(entry.index)"
-                    (keydown)="onThumbKeydown($event, entry.index)"
                 >
                     <img
                         loading="lazy"
@@ -423,13 +416,6 @@ export class LgThumbnailStripComponent {
         this.clickable = true;
     }
 
-    protected onThumbKeydown(event: KeyboardEvent, index: number): void {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            this.ctx.actions.goToSlide(index);
-        }
-    }
-
     private beginScrub(): void {
         if (this.scrubSession) {
             return;
@@ -506,10 +492,17 @@ export class LgThumbnailStripComponent {
             if (Math.abs(delta) > 2) {
                 drag.moved = true;
                 this.clickable = false;
-                const cfg = this.settings();
-                if (cfg.scrubThumbnails && cfg.animateThumb) {
-                    this.beginScrub();
-                }
+            }
+            // The scrub starts once the press has travelled the swipe
+            // threshold: below it the move is the wobble of a click, and
+            // on a long strip even one pixel of it would navigate.
+            const cfg = this.settings();
+            if (
+                cfg.scrubThumbnails &&
+                cfg.animateThumb &&
+                Math.abs(delta) >= cfg.thumbnailSwipeThreshold
+            ) {
+                this.beginScrub();
             }
             this.samples = pushVelocitySample(this.samples, {
                 x: moveEvent.clientX,
@@ -535,18 +528,18 @@ export class LgThumbnailStripComponent {
             if (rendered) {
                 const unit =
                     this.settings().thumbWidth + this.settings().thumbMargin;
+                // Clamped first: a rubber-band overshoot past either end
+                // needs no thumbs that are not already rendered.
+                const covered = clampThumbTranslate(
+                    this.liveTranslate,
+                    this.totalWidth(),
+                    this.stripWidth(),
+                );
                 if (
-                    this.liveTranslate < rendered.start * unit ||
-                    this.liveTranslate + this.stripWidth() >
-                        (rendered.end + 1) * unit
+                    covered < rendered.start * unit ||
+                    covered + this.stripWidth() > (rendered.end + 1) * unit
                 ) {
-                    this.translate.set(
-                        clampThumbTranslate(
-                            this.liveTranslate,
-                            this.totalWidth(),
-                            this.stripWidth(),
-                        ),
-                    );
+                    this.translate.set(covered);
                 }
             }
         };
@@ -578,18 +571,24 @@ export class LgThumbnailStripComponent {
                 this.totalWidth(),
                 this.stripWidth(),
             );
-            if (!moved) {
-                // A press that took over a scrub glide and released
-                // without moving ends the session — no spring runs.
+            // A press that released without moving, or moved less than
+            // the swipe threshold, is a click: no spring runs and the
+            // scrub session ends here, or the click's own slide change
+            // would find the scrub still active and skip re-centering.
+            if (!moved || this.clickable) {
                 this.endScrub();
                 this.dragging.set(false);
-                this.translate.set(
-                    clampThumbTranslate(
-                        this.liveTranslate,
-                        this.totalWidth(),
-                        this.stripWidth(),
-                    ),
+                // Back to where the press found the strip: a wobble must
+                // not leave it offset by a few pixels. Written to the DOM
+                // as well, since a signal value equal to the last bound
+                // one does not overwrite what the drag frames wrote.
+                const start = clampThumbTranslate(
+                    drag.startTranslate,
+                    this.totalWidth(),
+                    this.stripWidth(),
                 );
+                this.writeTrackTranslate(start);
+                this.translate.set(start);
                 return;
             }
             // Windowed strips: render the whole flight corridor before

@@ -360,9 +360,16 @@ function ThumbnailStrip(): ReactElement | null {
             if (Math.abs(delta) > 2) {
                 drag.moved = true;
                 clickableRef.current = false;
-                if (settings.scrubThumbnails && settings.animateThumb) {
-                    beginScrub();
-                }
+            }
+            // The scrub starts once the press has travelled the swipe
+            // threshold: below it the move is the wobble of a click, and
+            // on a long strip even one pixel of it would navigate.
+            if (
+                settings.scrubThumbnails &&
+                settings.animateThumb &&
+                Math.abs(delta) >= settings.thumbnailSwipeThreshold
+            ) {
+                beginScrub();
             }
             samplesRef.current = pushVelocitySample(samplesRef.current, {
                 x: moveEvent.clientX,
@@ -387,14 +394,18 @@ function ThumbnailStrip(): ReactElement | null {
             const rendered = thumbWindowRef.current;
             if (rendered) {
                 const unit = settings.thumbWidth + settings.thumbMargin;
-                const live = translateRef.current;
+                // Clamped first: a rubber-band overshoot past either end
+                // needs no thumbs that are not already rendered.
+                const live = clampThumbTranslate(
+                    translateRef.current,
+                    totalWidth,
+                    stripWidth,
+                );
                 if (
                     live < rendered.start * unit ||
                     live + stripWidth > (rendered.end + 1) * unit
                 ) {
-                    setTranslate(
-                        clampThumbTranslate(live, totalWidth, stripWidth),
-                    );
+                    setTranslate(live);
                 }
             }
         };
@@ -426,18 +437,24 @@ function ThumbnailStrip(): ReactElement | null {
                 totalWidth,
                 stripWidth,
             );
-            if (!drag.moved) {
-                // A press that took over a scrub glide and released
-                // without moving ends the session here — no spring runs.
+            // A press that released without moving, or moved less than
+            // the swipe threshold, is a click: no spring runs and the
+            // scrub session ends here, or the click's own slide change
+            // would find the scrub still active and skip re-centering.
+            if (!drag.moved || clickableRef.current) {
                 endScrub();
                 setDragging(false);
-                setTranslate(
-                    clampThumbTranslate(
-                        translateRef.current,
-                        totalWidth,
-                        stripWidth,
-                    ),
+                // Back to where the press found the strip: a wobble must
+                // not leave it offset by a few pixels. Written to the DOM
+                // as well, since a state value equal to the last render's
+                // does not overwrite what the drag frames wrote.
+                const start = clampThumbTranslate(
+                    drag.startTranslate,
+                    totalWidth,
+                    stripWidth,
                 );
+                writeTrackTranslate(start);
+                setTranslate(start);
                 return;
             }
             // Windowed strips: render the whole flight corridor before
@@ -555,16 +572,6 @@ function ThumbnailStrip(): ReactElement | null {
                             [isRtl
                                 ? 'marginLeft'
                                 : 'marginRight']: `${settings.thumbMargin}px`,
-                        }}
-                        role="button"
-                        tabIndex={0}
-                        aria-label={item.alt ?? `Go to slide ${index + 1}`}
-                        aria-current={index === state.currentIndex}
-                        onKeyDown={(event) => {
-                            if (event.key === 'Enter' || event.key === ' ') {
-                                event.preventDefault();
-                                actions.goToSlide(index);
-                            }
                         }}
                         onClick={() => {
                             if (clickableRef.current) {
