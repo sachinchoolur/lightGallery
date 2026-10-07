@@ -6,7 +6,7 @@
  * `lightgallery/plugins/<name>/lg-<name>.umd.js` on jsDelivr, unpkg and
  * cdnjs. The root package.json keeps `dist/` in its paths for the
  * workspace; this derives the published manifest from it by dropping that
- * prefix, copies the README and license beside it, and writes a manifest
+ * prefix, copies the README and both license files beside it, and writes a manifest
  * into every plugin folder so resolvers that ignore the exports map (older
  * bundlers, TypeScript's node10 resolution) still find the plugin entries.
  */
@@ -52,7 +52,7 @@ const PATH_FIELDS = new Set([
 ]);
 
 /** Files npm includes from the package root. */
-const ROOT_FILES = ['README.md', 'LICENSE'];
+const ROOT_FILES = ['README.md', 'LICENSE', 'LICENSE-COMMERCIAL.md'];
 
 type Manifest = Record<string, unknown>;
 

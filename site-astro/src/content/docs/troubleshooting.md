@@ -35,7 +35,7 @@ import 'lightgallery/css/lg-zoom.css';
 
 ```html
 <!-- Vanilla JavaScript, script tags -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery/css/lightgallery-bundle.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@3/css/lightgallery-bundle.css" />
 ```
 
 ```tsx

@@ -674,6 +674,17 @@ function inspectTarball(pkg, tarball, version, workDir) {
     if (!fileSet.has('README.md')) {
         problems.push('has no README.md');
     }
+    if (!fileSet.has('LICENSE')) {
+        problems.push('has no LICENSE');
+    }
+    if (
+        /LicenseRef-Commercial/.test(manifest.license ?? '') &&
+        !fileSet.has('LICENSE-COMMERCIAL.md')
+    ) {
+        problems.push(
+            'declares LicenseRef-Commercial but ships no LICENSE-COMMERCIAL.md',
+        );
+    }
     for (const field of [
         'dependencies',
         'peerDependencies',
