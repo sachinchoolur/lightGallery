@@ -738,7 +738,7 @@ function inspectTarball(pkg, tarball, version, workDir) {
 
     if (pkg.name === 'lightgallery') {
         const bundle = fs.readFileSync(
-            path.join(packageDir, 'dist/lightgallery.umd.js'),
+            path.join(packageDir, manifest.main),
             'utf8',
         );
         if (!bundle.includes(`lightgallery | ${version} |`)) {

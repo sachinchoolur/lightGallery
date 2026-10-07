@@ -19,6 +19,7 @@ lightgallery-lit/lib
 dist/vue/
 dist/lit/
 dist/package.json
+dist/LICENSE
 dist/plugins/**/*.json
 compiled
 .awcache

@@ -1,7 +1,0 @@
-{
-    "name": "lightgallery/plugins/relativeCaption",
-    "private": true,
-    "main": "lg-relative-caption.umd.js",
-    "module": "lg-relative-caption.es5.js",
-    "typings": "lg-relative-caption.d.ts"
-}

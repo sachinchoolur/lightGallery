@@ -31,6 +31,9 @@ a few changed defaults and four removals:
     plugins from `lightgallery/plugins/<name>`, CSS from
     `lightgallery/css/<name>.css`. The package now has proper export maps,
     so bundlers and Node resolve subpaths without deep-path workarounds.
+    The CDN paths are unchanged too: the package root is still the build
+    folder, so `css/lightgallery.css` and `plugins/zoom/lg-zoom.umd.js` are
+    where 2.x had them on jsDelivr, unpkg and cdnjs.
 -   **The icon font is gone.** Controls render inline SVG icons, and the
     `fonts/lg.*` files and their `@font-face` rule no longer ship. If you
     self-hosted the font or restyled icons through font glyphs on

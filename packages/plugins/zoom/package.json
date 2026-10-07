@@ -1,7 +1,0 @@
-{
-    "name": "lightgallery/plugins/zoom",
-    "private": true,
-    "main": "lg-zoom.umd.js",
-    "module": "lg-zoom.es5.js",
-    "typings": "lg-zoom.d.ts"
-}

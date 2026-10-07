@@ -28,6 +28,8 @@
   ],
   "main": "dist/lightgallery.umd.js",
   "min": "dist/lightgallery.min.js",
+  "unpkg": "dist/lightgallery.min.js",
+  "jsdelivr": "dist/lightgallery.min.js",
   "module": "dist/lightgallery.es5.js",
   "typings": "dist/types/index.d.ts",
   "sideEffects": [

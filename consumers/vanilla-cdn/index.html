@@ -5,9 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>lightGallery consumer: script tags from a CDN</title>
         <!-- The URLs a CDN user writes, with the host left off. -->
-        <link rel="stylesheet" href="/npm/lightgallery@3/dist/css/lightgallery.css" />
-        <link rel="stylesheet" href="/npm/lightgallery@3/dist/css/lg-zoom.css" />
-        <link rel="stylesheet" href="/npm/lightgallery@3/dist/css/lg-thumbnail.css" />
+        <link rel="stylesheet" href="/npm/lightgallery@3/css/lightgallery.css" />
+        <link rel="stylesheet" href="/npm/lightgallery@3/css/lg-zoom.css" />
+        <link rel="stylesheet" href="/npm/lightgallery@3/css/lg-thumbnail.css" />
         <style>
             body { font-family: system-ui, sans-serif; margin: 24px; }
             .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
@@ -25,9 +25,9 @@
                 <a href="/photos/4.png" data-lg-size="1600-1067" data-sub-html="Photo 4 caption"><img src="/photos/4-thumb.png" alt="Photo 4" /></a>
             </div>
         </main>
-        <script src="/npm/lightgallery@3/dist/lightgallery.min.js"></script>
-        <script src="/npm/lightgallery@3/dist/plugins/zoom/lg-zoom.min.js"></script>
-        <script src="/npm/lightgallery@3/dist/plugins/thumbnail/lg-thumbnail.min.js"></script>
+        <script src="/npm/lightgallery@3/lightgallery.min.js"></script>
+        <script src="/npm/lightgallery@3/plugins/zoom/lg-zoom.min.js"></script>
+        <script src="/npm/lightgallery@3/plugins/thumbnail/lg-thumbnail.min.js"></script>
         <script>
             lightGallery(document.getElementById('gallery'), {
                 plugins: [lgZoom, lgThumbnail],

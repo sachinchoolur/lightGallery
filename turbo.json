@@ -43,6 +43,7 @@
       "outputs": [
         "$TURBO_ROOT$/dist/package.json",
         "$TURBO_ROOT$/dist/README.md",
+        "$TURBO_ROOT$/dist/LICENSE",
         "$TURBO_ROOT$/dist/plugins/**/package.json"
       ]
     },

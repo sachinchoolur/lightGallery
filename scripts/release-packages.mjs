@@ -19,5 +19,12 @@ export const PACKAGES = [
         // Its entries need the Angular compiler; CI builds a scratch app.
         skipImport: true,
     },
-    { name: 'lightgallery', dir: '.' },
+    {
+        name: 'lightgallery',
+        dir: '.',
+        // The build writes the published manifest into dist/ (see
+        // scripts/assemble-vite-dist.ts), so the package packs from there
+        // and the CDN paths stay `lightgallery/css/…` as in 2.x.
+        packDir: 'dist',
+    },
 ];
