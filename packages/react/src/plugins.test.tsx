@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LightGallery, type GalleryItem } from './index';
@@ -938,5 +938,39 @@ describe('zoom plugin', () => {
         firePointer(window, 'pointerup', { x: 100, y: 100 });
         expect(counterText()).toBe('3');
         tick(600);
+    });
+
+    it('strips the zoom transform instantly when the gallery closes', () => {
+        // The shared harness pins `open`; this one lets the close land.
+        function Closable() {
+            const [open, setOpen] = useState(true);
+            return (
+                <LightGallery
+                    slides={slides}
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    plugins={[Zoom]}
+                />
+            );
+        }
+        render(<Closable />);
+        tick(450);
+        zoomIn();
+        const pan = document.querySelector<HTMLElement>('.lg-zoom-pan')!;
+        const scaleEl = document.querySelector<HTMLElement>('.lg-zoom-scale')!;
+        expect(scaleEl.style.transform).not.toBe('scale3d(1, 1, 1)');
+
+        // Vanilla parity: the close flight shrinks the slide item, so the
+        // zoom wrappers must be at identity in its first frame — with no
+        // transition composing with the flight.
+        fireEvent.click(screen.getByLabelText('Close gallery'));
+        expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
+        expect(pan.style.transform).toBe('translate3d(0px, 0px, 0)');
+        expect(scaleEl.style.transition).toBe('none');
+        expect(pan.style.transition).toBe('none');
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-zoomed',
+        );
+        tick(1000);
     });
 });

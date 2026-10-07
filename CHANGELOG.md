@@ -123,6 +123,11 @@ Long-standing bugs, nearly all of them present in 2.x:
   toward either end of the strip rebuilt it under the pointer (the elastic
   overshoot read as travel past the rendered window), which swallowed the
   click; the frameworks committed a translate mid-drag for the same reason.
+- Closing a zoomed image in the React, Vue and Angular packages left it
+  enlarged: the close flight shrank the slide around the zoom wrappers,
+  so the image flew back to its trigger at the zoomed scale, covering the
+  thumbnails and the page around it. The zoom now resets in the same frame
+  the close starts, as in vanilla, and the image lands on its thumbnail.
 
 - The slideshow ran on a fixed interval, so on a slow connection it
   advanced past images that had not loaded yet. The countdown (and the

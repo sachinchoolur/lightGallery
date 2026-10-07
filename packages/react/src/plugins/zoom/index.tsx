@@ -39,6 +39,7 @@ import {
     useGalleryState,
 } from '../../context';
 import { cx } from '../../cx';
+import { useIsoLayoutEffect } from '../../hooks';
 import { useCustomIcons } from '../../icons';
 import { usePluginSettings } from '../runtime';
 import type { LgPlugin, PluginContext, SlideWrapperProps } from '../types';
@@ -398,16 +399,23 @@ function ZoomWrapper({
         internal.events.emit(ZOOMED_EVENT, { zoomed } as ZoomedDetail);
     };
 
-    const reset = () => {
+    // `instant` strips the transform without animating it: the close
+    // flight shrinks the slide item around the wrappers, and a zoom
+    // transition composing with it would leave the image enlarged over
+    // the trigger (vanilla's `lg-closing` transition: none rule).
+    const reset = (instant = false) => {
         stopSpring();
         setTransitionMode('default');
-        setLiveTransition(TRANSITION);
+        setLiveTransition(instant ? 'none' : TRANSITION);
         pointersRef.current.clear();
         pinchRef.current = null;
         panDragRef.current = null;
         detachRef.current?.();
         detachRef.current = null;
-        liveRef.current = initialZoomSlice;
+        // Inline write first — React's style diffing skips a commit that
+        // matches its last render even when a gesture or spring left a
+        // different live transform in the DOM.
+        applyLive(initialZoomSlice);
         setZoom(initialZoomSlice);
         publishZoomed(false);
         internal.gestureSeam.claim(null);
@@ -486,6 +494,17 @@ function ZoomWrapper({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isCurrent]);
+    // Close while zoomed: vanilla strips the zoom styles in the same
+    // frame the zoom-from-origin shrink starts (closeGallery →
+    // resetZoom), so the image flies back to the trigger at fit scale.
+    // Layout effect: it must land before the outlet's close flight
+    // paints its first frame.
+    useIsoLayoutEffect(() => {
+        if (!state.open) {
+            reset(true);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state.open]);
     // v2 parity: a release spring finishing at the OLD geometry's clamp
     // target rests out of bounds after a resize/orientation change —
     // stop it and re-clamp into the fresh bounds.
@@ -1013,8 +1032,11 @@ function ZoomWrapper({
         return <>{children}</>;
     }
 
-    const transition =
-        transitionMode === 'settle' ? SETTLE_TRANSITION : TRANSITION;
+    const transition = !state.open
+        ? 'none'
+        : transitionMode === 'settle'
+        ? SETTLE_TRANSITION
+        : TRANSITION;
     return (
         <div
             ref={panRef}

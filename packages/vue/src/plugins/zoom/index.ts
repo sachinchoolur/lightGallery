@@ -437,16 +437,22 @@ export const ZoomWrapper = defineComponent({
             ctx.events.emit(ZOOMED_EVENT, { zoomed } as ZoomedDetail);
         }
 
-        function reset(): void {
+        // `instant` strips the transform without animating it: the close
+        // flight shrinks the slide item around the wrappers, and a zoom
+        // transition composing with it would leave the image enlarged
+        // over the trigger (vanilla's `lg-closing` transition: none rule).
+        function reset(instant = false): void {
             stopSpring();
             transitionMode.value = 'default';
-            setLiveTransition(ZOOM_TRANSITION);
+            setLiveTransition(instant ? 'none' : ZOOM_TRANSITION);
             pointers.clear();
             pinch = null;
             panDrag = null;
             detachWindow?.();
             detachWindow = null;
-            live = initialZoomSlice;
+            // Inline write first: a gesture or spring may have left a
+            // live transform the committed slice never saw.
+            applyLive(initialZoomSlice);
             zoom.value = initialZoomSlice;
             publishZoomed(false);
             ctx.gestureLock.claim(null);
@@ -996,6 +1002,20 @@ export const ZoomWrapper = defineComponent({
                 }
             },
         );
+        // Close while zoomed: vanilla strips the zoom styles in the same
+        // frame the zoom-from-origin shrink starts (closeGallery →
+        // resetZoom), so the image flies back to the trigger at fit
+        // scale. Sync flush: it must land in the same patch as the
+        // outlet's close flight.
+        watch(
+            () => ctx.store.isOpen.value,
+            (open) => {
+                if (!open) {
+                    reset(true);
+                }
+            },
+            { flush: 'sync' },
+        );
         // v2 parity: a release spring finishing at the OLD geometry's
         // clamp target rests out of bounds after a resize/orientation
         // change — stop it and re-clamp into the fresh bounds.
@@ -1052,6 +1072,13 @@ export const ZoomWrapper = defineComponent({
             }
         });
 
+        const transition = (): string =>
+            !ctx.store.isOpen.value
+                ? 'none'
+                : transitionMode.value === 'settle'
+                ? SETTLE_TRANSITION
+                : ZOOM_TRANSITION;
+
         return () => {
             if (!enabled.value) {
                 return slots.default?.();
@@ -1065,10 +1092,7 @@ export const ZoomWrapper = defineComponent({
                         position: 'absolute',
                         inset: '0',
                         transform: `translate3d(${zoom.value.pan.x}px, ${zoom.value.pan.y}px, 0)`,
-                        transition:
-                            transitionMode.value === 'settle'
-                                ? SETTLE_TRANSITION
-                                : ZOOM_TRANSITION,
+                        transition: transition(),
                     },
                     onPointerdown: onPointerDown,
                     onDblclick: onDoubleClick,
@@ -1083,10 +1107,7 @@ export const ZoomWrapper = defineComponent({
                             inset: '0',
                             transform: `scale3d(${zoom.value.scale}, ${zoom.value.scale}, 1)`,
                             transformOrigin: 'center center',
-                            transition:
-                                transitionMode.value === 'settle'
-                                    ? SETTLE_TRANSITION
-                                    : ZOOM_TRANSITION,
+                            transition: transition(),
                         },
                     },
                     slots.default?.(),

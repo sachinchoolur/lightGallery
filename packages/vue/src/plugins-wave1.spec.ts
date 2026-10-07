@@ -299,6 +299,29 @@ describe('plugin runtime + wave-1', () => {
         expect(actual.classList.contains('lg-zoom-in')).toBe(true);
     });
 
+    it('zoom: strips the zoom transform instantly when the gallery closes', async () => {
+        const { wrapper } = mountHost([Zoom]);
+        await openAndLoad(wrapper);
+        await advance(350); // enableZoomAfter
+        query('[aria-label="View actual size"]')!.click();
+        await settle();
+        const pan = query('.lg-zoom-pan')!;
+        const scaleEl = query('.lg-zoom-scale')!;
+        expect(scaleEl.style.transform).not.toBe('scale3d(1, 1, 1)');
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(true);
+
+        // Vanilla parity: the close flight shrinks the slide item, so the
+        // zoom wrappers must be at identity in its first frame — with no
+        // transition composing with the flight.
+        (query('.lg-close') as HTMLButtonElement).click();
+        await settle();
+        expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
+        expect(pan.style.transform).toBe('translate3d(0px, 0px, 0)');
+        expect(scaleEl.style.transition).toBe('none');
+        expect(pan.style.transition).toBe('none');
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(false);
+    });
+
     it('zoom: keeps fixed classes on zoom in/out and follows actualSizeIcons on actual size', async () => {
         const { wrapper } = mountHost([Zoom], {
             zoomSettings: {

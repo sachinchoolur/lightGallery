@@ -286,7 +286,9 @@ export class LgZoomWrapperComponent {
 
     private readonly transitionMode = signal<'default' | 'settle'>('default');
     protected readonly transition = computed(() =>
-        this.transitionMode() === 'settle'
+        !this.ctx.state().open
+            ? 'none'
+            : this.transitionMode() === 'settle'
             ? SETTLE_TRANSITION
             : ZOOM_TRANSITION,
     );
@@ -378,6 +380,15 @@ export class LgZoomWrapperComponent {
         effect(() => {
             if (!this.isCurrent()) {
                 untracked(() => this.reset());
+            }
+        });
+        // Close while zoomed: vanilla strips the zoom styles in the same
+        // frame the zoom-from-origin shrink starts (closeGallery →
+        // resetZoom), so the image flies back to the trigger at fit
+        // scale.
+        effect(() => {
+            if (!this.ctx.state().open) {
+                untracked(() => this.reset(true));
             }
         });
         // v2 parity: a release spring finishing at the OLD geometry's
@@ -601,16 +612,22 @@ export class LgZoomWrapperComponent {
         this.ctx.events.emit(ZOOMED_EVENT, { zoomed } as ZoomedDetail);
     }
 
-    private reset(): void {
+    // `instant` strips the transform without animating it: the close
+    // flight shrinks the slide item around the wrappers, and a zoom
+    // transition composing with it would leave the image enlarged over
+    // the trigger (vanilla's `lg-closing` transition: none rule).
+    private reset(instant = false): void {
         this.stopSpring();
         this.transitionMode.set('default');
-        this.setLiveTransition(ZOOM_TRANSITION);
+        this.setLiveTransition(instant ? 'none' : ZOOM_TRANSITION);
         this.pointers.clear();
         this.pinch = null;
         this.panDrag = null;
         this.detachWindow?.();
         this.detachWindow = null;
-        this.live = initialZoomSlice;
+        // Inline write first: a gesture or spring may have left a live
+        // transform the committed slice never saw.
+        this.applyLive(initialZoomSlice);
         this.zoom.set(initialZoomSlice);
         this.publishZoomed(false);
         this.ctx.gestureLock.claim(null);
