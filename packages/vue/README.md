@@ -1,18 +1,18 @@
 # @lightgallery/vue
 
-Native Vue 3 lightGallery over `@lightgallery/headless` — every DOM node
-rendered by Vue. `<script setup>` SFCs, `v-model` open/index, typed emits
-and scoped slots, Teleport overlay, a tree-shakable subpath per plugin. The
-framework-free state machine, gesture math and plugin logic are shared with
-`@lightgallery/react` and `@lightgallery/angular` through the headless
-package: one product, four renderings.
+A native Vue 3 component, not a wrapper around the vanilla script. Vue
+renders every node, in the trigger grid and in the lightbox, so nothing
+else touches your DOM. You get `<script setup>` components, `v-model` for
+the open state and index, typed emits, scoped slots, a Teleport overlay
+and a separate import per plugin. It shares its logic with the React,
+Angular and vanilla packages, so every feature and setting works the same
+way, and it uses the published `lightgallery/css/*` files, so the lightbox
+looks exactly like the vanilla one.
 
 ## Install
 
 ```bash
-npm install @lightgallery/vue
-# CSS ships from the vanilla package:
-npm install lightgallery
+npm install @lightgallery/vue lightgallery
 ```
 
 Peer range: `vue >=3.4` (uses `defineModel`).
@@ -31,7 +31,12 @@ Thumbnails on the page open the lightbox; mount order defines slide order.
 
 ```vue
 <script setup lang="ts">
-import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+import {
+    LightGallery,
+    LgItem,
+    type LgGalleryItem,
+    type SlideEventDetail,
+} from '@lightgallery/vue';
 import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
 import Zoom from '@lightgallery/vue/plugins/zoom';
 
@@ -45,6 +50,10 @@ const items: LgGalleryItem[] = [
         lgSize: '1600-1067', // natural size, enables the zoom-from-origin open animation
     },
 ];
+
+function onSlide({ index }: SlideEventDetail) {
+    console.log('slide', index);
+}
 </script>
 
 <template>
@@ -230,10 +239,18 @@ renames (full table in the
   `getCaptionFromTitleOrAlt`, `nextHtml`/`prevHtml`, `appendCounterTo`,
   `videojs`.
 
+## Documentation
+
+- Guide: https://www.lightgalleryjs.com/docs/vue/
+- Settings reference: https://www.lightgalleryjs.com/docs/settings/
+- Markdown index for tools and agents: https://www.lightgalleryjs.com/llms.txt
+
 ## License
 
 Free and open source under the GPLv3, like every lightGallery package. If
 your project keeps its source proprietary, a
 [commercial license](https://www.lightgalleryjs.com/license/) covers it: same
-code, nothing gated. See `LICENSE-COMMERCIAL.md` in this package. Use
-`0000-0000-000-0000` as a temporary `licenseKey` for evaluation.
+code, nothing gated. See `LICENSE-COMMERCIAL.md` in this package.
+Open-source projects can request a key at contact@lightgalleryjs.com so the
+gallery runs without the console notice, and `0000-0000-000-0000` is a
+temporary `licenseKey` for evaluation.

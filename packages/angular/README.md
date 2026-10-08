@@ -1,31 +1,33 @@
 # @lightgallery/angular
 
-Native Angular lightGallery over `@lightgallery/headless` — every DOM node
-rendered by Angular. Standalone components, signal inputs/outputs, zoneless
-change detection, CDK overlay/a11y, Angular Package Format with a secondary
-entry point per plugin. The framework-free state machine, gesture math and
-plugin logic are shared with `@lightgallery/react`, `@lightgallery/vue`
-and the vanilla package through the headless package: one product, four
-renderings.
+A native Angular component, not a wrapper around the vanilla script.
+Angular renders every node, in the trigger grid and in the lightbox, so
+nothing else touches your DOM. You get standalone components, signal
+inputs and outputs, zoneless change detection, CDK overlay and a11y, and
+a separate entry point per plugin. It shares its logic with the React,
+Vue and vanilla packages, so every feature and setting works the same
+way, and it uses the published `lightgallery/css/*` files, so the
+lightbox looks exactly like the vanilla one.
 
 ## Install
 
 ```bash
-npm install @lightgallery/angular @angular/cdk
-# CSS ships from the vanilla package:
-npm install lightgallery
+npm install @lightgallery/angular @angular/cdk lightgallery
 ```
 
-Peer ranges: `@angular/core`, `@angular/common`, `@angular/cdk`
-`>=21 <23`. Works with zoneless change detection (no `zone.js` anywhere in
-the package, tests included).
+Peer ranges: `@angular/core`, `@angular/common`, `@angular/platform-browser`
+and `@angular/cdk` `>=21 <23`. There is no `zone.js` in the package.
 
-```ts
-// Global styles (angular.json "styles" or your root stylesheet):
-import 'lightgallery/css/lightgallery.css';
-// plus the CSS of each feature you use, e.g.:
-import 'lightgallery/css/lg-thumbnail.css';
-import 'lightgallery/css/lg-zoom.css';
+The stylesheets ship from the `lightgallery` package. Import them in your
+root stylesheet, or add the same paths to the `styles` array in
+`angular.json`:
+
+```css
+/* src/styles.css */
+@import 'lightgallery/css/lightgallery.css';
+/* plus the CSS of each feature you use, e.g.: */
+@import 'lightgallery/css/lg-thumbnail.css';
+@import 'lightgallery/css/lg-zoom.css';
 ```
 
 ## Quick start — uncontrolled
@@ -33,10 +35,12 @@ import 'lightgallery/css/lg-zoom.css';
 Thumbnails on the page open the lightbox; mount order defines slide order.
 
 ```ts
+import { Component } from '@angular/core';
 import {
     LgGalleryComponent,
     LgGalleryItemDirective,
     type LgGalleryItem,
+    type SlideEventDetail,
 } from '@lightgallery/angular';
 import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
 import { withZoom } from '@lightgallery/angular/plugins/zoom';
@@ -64,6 +68,10 @@ export class Gallery {
             lgSize: '1600-1067', // natural size, enables the zoom-from-origin open animation
         },
     ];
+
+    onSlide(event: SlideEventDetail): void {
+        console.log('slide', event.index);
+    }
 }
 ```
 
@@ -238,10 +246,18 @@ renames (full table in the
   `getCaptionFromTitleOrAlt`, `nextHtml`/`prevHtml`, `appendCounterTo`,
   `videojs`.
 
+## Documentation
+
+- Guide: https://www.lightgalleryjs.com/docs/angular/
+- Settings reference: https://www.lightgalleryjs.com/docs/settings/
+- Markdown index for tools and agents: https://www.lightgalleryjs.com/llms.txt
+
 ## License
 
 Free and open source under the GPLv3, like every lightGallery package. If
 your project keeps its source proprietary, a
 [commercial license](https://www.lightgalleryjs.com/license/) covers it: same
-code, nothing gated. See `LICENSE-COMMERCIAL.md` in this package. Use
-`0000-0000-000-0000` as a temporary `licenseKey` for evaluation.
+code, nothing gated. See `LICENSE-COMMERCIAL.md` in this package.
+Open-source projects can request a key at contact@lightgalleryjs.com so the
+gallery runs without the console notice, and `0000-0000-000-0000` is a
+temporary `licenseKey` for evaluation.

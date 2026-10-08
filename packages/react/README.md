@@ -1,17 +1,20 @@
 # @lightgallery/react
 
-Native React lightGallery over `@lightgallery/headless` — React owns
-every DOM node; no runtime dependency on the vanilla `lightgallery` JS.
-Styling reuses the published `lightgallery/css/*` files unchanged. The
-framework-free state machine, gesture math and plugin logic are shared
-with `@lightgallery/vue`, `@lightgallery/angular` and the vanilla
-package through the headless package: one product, four renderings.
+A native React component, not a wrapper around the vanilla script.
+React renders every node, in the trigger grid and in the lightbox, so
+nothing else touches your DOM and the gallery behaves like the rest of
+your tree: props in, callbacks out. It shares its logic with the Vue,
+Angular and vanilla packages, so every feature and setting works the
+same way, and it uses the published `lightgallery/css/*` files, so the
+lightbox looks exactly like the vanilla one.
 
 ## Install & styles
 
 ```bash
 npm install @lightgallery/react lightgallery
 ```
+
+Peer range: React 18 or 19 (`react` and `react-dom`).
 
 ```tsx
 // CSS is a consumer import — the React package ships no CSS.
@@ -53,17 +56,35 @@ export function Gallery() {
 
 ## Controlled
 
-```tsx
-const [open, setOpen] = useState(false);
-const [index, setIndex] = useState(0);
+Pass `slides` instead of children and the component renders no triggers;
+you own `open` and `index` and open the gallery from anything you like.
 
-<LightGallery
-    slides={items}
-    open={open}
-    onClose={() => setOpen(false)}
-    index={index}
-    onIndexChange={setIndex}
-/>;
+```tsx
+import { useState } from 'react';
+import { LightGallery } from '@lightgallery/react';
+
+const items = [
+    { src: 'img/1-1600.jpg', thumb: 'img/1-240.jpg', alt: 'Mountains' },
+    { src: 'img/2-1600.jpg', thumb: 'img/2-240.jpg', alt: 'Forest' },
+];
+
+export function Gallery() {
+    const [open, setOpen] = useState(false);
+    const [index, setIndex] = useState(0);
+
+    return (
+        <>
+            <button onClick={() => setOpen(true)}>Open gallery</button>
+            <LightGallery
+                slides={items}
+                open={open}
+                onClose={() => setOpen(false)}
+                index={index}
+                onIndexChange={setIndex}
+            />
+        </>
+    );
+}
 ```
 
 Settings are flat props with the vanilla 2.x names (`mode`, `speed`, `loop`,
@@ -72,9 +93,33 @@ Settings are flat props with the vanilla 2.x names (`mode`, `speed`, `loop`,
 entry. Lifecycle callbacks use the documented 2.x event names
 (`onBeforeSlide`, `onAfterSlide`, `onSlideItemLoad`, …).
 
-An imperative handle is available via `ref`:
-`{ openGallery(index?), closeGallery(), goToSlide(i), nextSlide(),
-prevSlide(), refresh() }`.
+## Imperative
+
+A `ref` exposes `openGallery(index?)`, `closeGallery()`,
+`goToSlide(index)`, `nextSlide()`, `prevSlide()` and `refresh()`.
+
+```tsx
+import { useRef } from 'react';
+import { LightGallery, type LightGalleryRefHandle } from '@lightgallery/react';
+
+const items = [
+    { src: 'img/1-1600.jpg', thumb: 'img/1-240.jpg', alt: 'Mountains' },
+    { src: 'img/2-1600.jpg', thumb: 'img/2-240.jpg', alt: 'Forest' },
+];
+
+export function Gallery() {
+    const gallery = useRef<LightGalleryRefHandle>(null);
+
+    return (
+        <>
+            <button onClick={() => gallery.current?.openGallery(1)}>
+                Open at slide 2
+            </button>
+            <LightGallery ref={gallery} slides={items} />
+        </>
+    );
+}
+```
 
 ## Large galleries (virtualization)
 
@@ -243,10 +288,18 @@ or the old CRA wrapper:
   is gone (changing `slides` is the update). The `videojs` option was
   dropped — bring custom players through `render.slide`.
 
+## Documentation
+
+- Guide: https://www.lightgalleryjs.com/docs/react/
+- Settings reference: https://www.lightgalleryjs.com/docs/settings/
+- Markdown index for tools and agents: https://www.lightgalleryjs.com/llms.txt
+
 ## License
 
 Free and open source under the GPLv3, like every lightGallery package. If
 your project keeps its source proprietary, a
 [commercial license](https://www.lightgalleryjs.com/license/) covers it: same
-code, nothing gated. See `LICENSE-COMMERCIAL.md` in this package. Use
-`0000-0000-000-0000` as a temporary `licenseKey` for evaluation.
+code, nothing gated. See `LICENSE-COMMERCIAL.md` in this package.
+Open-source projects can request a key at contact@lightgalleryjs.com so the
+gallery runs without the console notice, and `0000-0000-000-0000` is a
+temporary `licenseKey` for evaluation.

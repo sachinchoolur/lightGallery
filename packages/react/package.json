@@ -1,6 +1,7 @@
 {
   "name": "@lightgallery/react",
   "version": "3.0.0-beta.5",
+  "description": "Native React lightGallery component: React renders the triggers and the lightbox over the framework-free @lightgallery/headless core",
   "private": false,
   "type": "module",
   "sideEffects": false,

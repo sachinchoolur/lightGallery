@@ -20,11 +20,16 @@
   },
   "description": "lightGallery is a feature-rich, modular JavaScript gallery plugin for building beautiful image and video galleries for the web and the mobile",
   "keywords": [
-    "JavaScript",
-    "Gallery",
-    "Video",
-    "slider",
-    "lightBox"
+    "lightgallery",
+    "gallery",
+    "lightbox",
+    "image-gallery",
+    "video-gallery",
+    "carousel",
+    "zoom",
+    "thumbnails",
+    "javascript",
+    "typescript"
   ],
   "main": "dist/lightgallery.umd.js",
   "min": "dist/lightgallery.min.js",
