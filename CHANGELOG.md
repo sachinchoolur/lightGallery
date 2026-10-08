@@ -86,8 +86,11 @@ unchanged; what moved is the packaging and the framework integrations.
 - **Gesture physics**: releases run a velocity-seeded damped spring with
   momentum projection; boundary friction instead of hard clamps;
   pinch-to-close (`pinchToClose`); a `flickVelocity` setting.
-- **Instance type**: `lightgallery` exports the `LightGallery` type, for
-  typing a variable or a plugin's `core` without `ReturnType`.
+- **Public types**: `lightgallery` exports the `LightGallery` instance
+  type (for a variable or a plugin's `core`, without `ReturnType`),
+  `LightGallerySettings`, `GalleryItem` and every event `detail` type
+  (`InitDetail`, `BeforeSlideDetail`, …) from the package entry:
+  `import type { LightGallerySettings } from 'lightgallery'`.
 
 ### Changed
 

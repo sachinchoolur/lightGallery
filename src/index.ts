@@ -18,3 +18,31 @@ lightGallery.setLicenseKey = setLicenseKey;
 export default lightGallery;
 export type { LightGallery };
 export type { LgIconName, LgIcons } from './lg-icons';
+// The options object (core and plugin settings) and a `dynamicEl` item.
+export type { LightGallerySettings } from './lg-settings';
+export type { GalleryItem } from './lg-utils';
+// Event `detail` payloads, as listed on the events docs page.
+export type {
+    AfterAppendSlideEventDetail,
+    AfterAppendSubHtmlDetail,
+    AfterCloseDetail,
+    AfterOpenDetail,
+    AfterSlideDetail,
+    BeforeCloseDetail,
+    BeforeNextSlideDetail,
+    BeforeOpenDetail,
+    BeforePrevSlideDetail,
+    BeforeSlideDetail,
+    ContainerResizeDetail,
+    DragEndDetail,
+    DragMoveDetail,
+    DragStartDetail,
+    FlipHorizontalDetail,
+    FlipVerticalDetail,
+    HasVideoDetail,
+    InitDetail,
+    PosterClickDetail,
+    RotateLeftDetail,
+    RotateRightDetail,
+    SlideItemLoadDetail,
+} from './lg-events';
