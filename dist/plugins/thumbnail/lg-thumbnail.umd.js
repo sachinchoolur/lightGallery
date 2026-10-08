@@ -2,7 +2,7 @@
   typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, global.lgThumbnail = factory());
 })(this, function() {
   "use strict";/*!
- * lightgallery | 3.0.0-beta.4 | October 6th 2026
+ * lightgallery | 3.0.0-beta.5 | October 8th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -595,13 +595,14 @@
       this.liveTranslateX = thumbDragUtils.newTranslateX;
       this.setTranslate(thumbDragUtils.newTranslateX);
       this.$thumbOuter.addClass("lg-dragging");
-      if (this.canScrub()) {
+      if (this.canScrub() && (this.scrubActive || Math.abs(dragDelta) >= this.settings.thumbnailSwipeThreshold)) {
         this.beginScrub();
         this.scrubTo(this.liveTranslateX);
       }
       if (this.isThumbWindowed() && this.renderedThumbWindow) {
         const rendered = this.renderedThumbWindow;
-        if (this.liveTranslateX < rendered.leadingPad || this.liveTranslateX + this.thumbOuterWidth > this.thumbTotalWidth - rendered.trailingPad) {
+        const covered = this.getPossibleTransformX(this.liveTranslateX);
+        if (covered < rendered.leadingPad || covered + this.thumbOuterWidth > this.thumbTotalWidth - rendered.trailingPad) {
           this.renderThumbItems(this.core.index, {
             from: this.liveTranslateX,
             to: this.liveTranslateX
@@ -614,6 +615,17 @@
       thumbDragUtils.isMoved = false;
       thumbDragUtils.endTime = /* @__PURE__ */ new Date();
       this.$thumbOuter.removeClass("lg-dragging");
+      if (Math.abs(thumbDragUtils.cords.endX - thumbDragUtils.cords.startX) < this.settings.thumbnailSwipeThreshold) {
+        this.thumbClickable = true;
+        this.endScrub();
+        this.liveTranslateX = this.translateX;
+        this.$lgThumb.css(
+          "transition-duration",
+          this.core.settings.speed + "ms"
+        );
+        this.setTranslate(this.translateX);
+        return thumbDragUtils;
+      }
       const pointerVelocityX = getWindowedVelocity(
         this.dragSamples,
         Date.now()
@@ -649,12 +661,9 @@
           }
         }
       );
-      if (Math.abs(thumbDragUtils.cords.endX - thumbDragUtils.cords.startX) < this.settings.thumbnailSwipeThreshold) {
-        this.thumbClickable = true;
-      }
       return thumbDragUtils;
     }
-    getThumbHtml(thumb, index, alt) {
+    getThumbHtml(thumb, index, alt, activeIndex = this.core.index) {
       const slideVideoInfo = this.core.galleryItems[index].__slideVideoInfo || {};
       let thumbImg;
       if (slideVideoInfo.youtube) {
@@ -668,7 +677,7 @@
       }
       const div = document.createElement("div");
       div.setAttribute("data-lg-item-id", index + "");
-      div.className = `lg-thumb-item ${index === this.core.index ? "active" : ""}`;
+      div.className = `lg-thumb-item ${index === activeIndex ? "active" : ""}`;
       const marginSide = this.isRtl() ? "margin-left" : "margin-right";
       div.style.cssText = `width: ${this.settings.thumbWidth}px; height: ${this.settings.thumbHeight}; ${marginSide}: ${this.settings.thumbMargin}px;`;
       const img = document.createElement("img");
@@ -718,11 +727,9 @@
         );
       }
       for (let i = thumbWindow.start; i <= thumbWindow.end; i++) {
-        const thumb = this.getThumbHtml(items[i].thumb, i, items[i].alt);
-        if (i === activeIndex) {
-          thumb.classList.add("active");
-        }
-        this.$lgThumb.append(thumb);
+        this.$lgThumb.append(
+          this.getThumbHtml(items[i].thumb, i, items[i].alt, activeIndex)
+        );
       }
       if (thumbWindow.trailingPad > 0) {
         this.$lgThumb.append(

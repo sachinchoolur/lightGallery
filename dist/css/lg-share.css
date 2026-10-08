@@ -1,10 +1,5 @@
 .lg-outer.lg-dropdown-active .lg-dropdown {
-  -webkit-transition-delay: 0s;
   transition-delay: 0s;
-  -moz-transform: translate3d(0, 0px, 0);
-  -o-transform: translate3d(0, 0px, 0);
-  -ms-transform: translate3d(0, 0px, 0);
-  -webkit-transform: translate3d(0, 0px, 0);
   transform: translate3d(0, 0px, 0);
   opacity: 1;
   visibility: visible;
@@ -25,15 +20,8 @@
   top: 50px;
   opacity: 0;
   visibility: hidden;
-  -moz-transform: translate3d(0, 5px, 0);
-  -o-transform: translate3d(0, 5px, 0);
-  -ms-transform: translate3d(0, 5px, 0);
-  -webkit-transform: translate3d(0, 5px, 0);
   transform: translate3d(0, 5px, 0);
   will-change: visibility, opacity, transform;
-  -webkit-transition: -webkit-transform 0.18s linear 0s, visibility 0s linear 0.5s, opacity 0.18s linear 0s;
-  -moz-transition: -moz-transform 0.18s linear 0s, visibility 0s linear 0.5s, opacity 0.18s linear 0s;
-  -o-transition: -o-transform 0.18s linear 0s, visibility 0s linear 0.5s, opacity 0.18s linear 0s;
   transition: transform 0.18s linear 0s, visibility 0s linear 0.5s, opacity 0.18s linear 0s;
 }
 .lg-outer .lg-dropdown:after {

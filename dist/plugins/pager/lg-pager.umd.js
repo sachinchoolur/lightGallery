@@ -2,7 +2,7 @@
   typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, global.lgPager = factory());
 })(this, function() {
   "use strict";/*!
- * lightgallery | 3.0.0-beta.4 | October 6th 2026
+ * lightgallery | 3.0.0-beta.5 | October 8th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -41,7 +41,7 @@
     getPagerHtml(items) {
       let pagerList = "";
       for (let i = 0; i < items.length; i++) {
-        pagerList += `<span  data-lg-item-id="${i}" class="lg-pager-cont"> 
+        pagerList += `<span data-lg-item-id="${i}" class="lg-pager-cont">
                     <span data-lg-item-id="${i}" class="lg-pager"></span>
                     <div class="lg-pager-thumb-cont"><span class="lg-caret"></span> <img src="${items[i].thumb}" alt="${items[i].alt || ""}" /></div>
                     </span>`;

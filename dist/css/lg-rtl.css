@@ -11,11 +11,9 @@
   transform: scaleX(-1);
 }
 .lg-container[dir=rtl].lg-show-in .lg-hide-items .lg-prev {
-  -webkit-transform: translate3d(10px, 0, 0);
   transform: translate3d(10px, 0, 0);
 }
 .lg-container[dir=rtl].lg-show-in .lg-hide-items .lg-next {
-  -webkit-transform: translate3d(-10px, 0, 0);
   transform: translate3d(-10px, 0, 0);
 }
 .lg-container[dir=rtl] .lg-outer.lg-right-end .lg-object {
@@ -31,15 +29,12 @@
   direction: rtl;
 }
 .lg-container[dir=rtl] .lg-outer.lg-slide.lg-use-css3 .lg-item.lg-prev-slide {
-  -webkit-transform: translate3d(100%, 0, 0);
   transform: translate3d(100%, 0, 0);
 }
 .lg-container[dir=rtl] .lg-outer.lg-slide.lg-use-css3 .lg-item.lg-next-slide {
-  -webkit-transform: translate3d(-100%, 0, 0);
   transform: translate3d(-100%, 0, 0);
 }
 .lg-container[dir=rtl] .lg-outer.lg-slide.lg-use-css3 .lg-item.lg-current {
-  -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
 .lg-container[dir=rtl] .lg-toolbar .lg-icon,
@@ -77,17 +72,9 @@
 .lg-container[dir=rtl] .lg-comment-box {
   right: auto;
   left: 0;
-  -moz-transform: translate3d(-100%, 0, 0);
-  -o-transform: translate3d(-100%, 0, 0);
-  -ms-transform: translate3d(-100%, 0, 0);
-  -webkit-transform: translate3d(-100%, 0, 0);
   transform: translate3d(-100%, 0, 0);
 }
 .lg-container[dir=rtl] .lg-outer.lg-comment-active .lg-comment-box {
-  -moz-transform: translate3d(0, 0, 0);
-  -o-transform: translate3d(0, 0, 0);
-  -ms-transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
 

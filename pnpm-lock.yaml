@@ -611,7 +611,7 @@ importers:
   packages/angular:
     dependencies:
       '@lightgallery/headless':
-        specifier: ^3.0.0-beta.4
+        specifier: ^3.0.0-beta.5
         version: link:../headless
       tslib:
         specifier: ^2.6.0
@@ -29549,7 +29549,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy-middleware@0.19.1(debug@4.4.3)(supports-color@6.1.0):
+  http-proxy-middleware@0.19.1(debug@4.4.3(supports-color@6.1.0))(supports-color@6.1.0):
     dependencies:
       http-proxy: 1.18.1(debug@4.4.3)
       is-glob: 4.0.3
@@ -39394,7 +39394,7 @@ snapshots:
       del: 4.1.1
       express: 4.22.2(supports-color@6.1.0)
       html-entities: 1.4.0
-      http-proxy-middleware: 0.19.1(debug@4.4.3)(supports-color@6.1.0)
+      http-proxy-middleware: 0.19.1(debug@4.4.3(supports-color@6.1.0))(supports-color@6.1.0)
       import-local: 2.0.0
       internal-ip: 4.3.0
       ip: 1.1.9

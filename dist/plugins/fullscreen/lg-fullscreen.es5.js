@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 3.0.0-beta.4 | October 6th 2026
+ * lightgallery | 3.0.0-beta.5 | October 8th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -39,7 +39,7 @@ class FullScreen {
     this.core.registerDefaultIcons(fullscreenDefaultIcons);
     let fullScreen = "";
     if (this.settings.fullScreen) {
-      if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled && !document.mozFullScreenEnabled && !document.msFullscreenEnabled) {
+      if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled) {
         return;
       } else {
         fullScreen = `<button type="button" aria-label="${(_b = (_a = this.settings.fullscreenPluginStrings) == null ? void 0 : _a.toggleFullscreen) != null ? _b : this.core.settings.strings.toggleFullscreen}" class="lg-fullscreen lg-icon"></button>`;
@@ -49,16 +49,12 @@ class FullScreen {
     }
   }
   isFullScreen() {
-    return document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+    return document.fullscreenElement || document.webkitFullscreenElement;
   }
   requestFullscreen() {
     const el = document.documentElement;
     if (el.requestFullscreen) {
       el.requestFullscreen();
-    } else if (el.msRequestFullscreen) {
-      el.msRequestFullscreen();
-    } else if (el.mozRequestFullScreen) {
-      el.mozRequestFullScreen();
     } else if (el.webkitRequestFullscreen) {
       el.webkitRequestFullscreen();
     }
@@ -66,10 +62,6 @@ class FullScreen {
   exitFullscreen() {
     if (document.exitFullscreen) {
       document.exitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
     } else if (document.webkitExitFullscreen) {
       document.webkitExitFullscreen();
     }
@@ -78,9 +70,7 @@ class FullScreen {
   fullScreen() {
     this.$LG(document).on(
       `fullscreenchange.lg.global${this.core.lgId} 
-            webkitfullscreenchange.lg.global${this.core.lgId} 
-            mozfullscreenchange.lg.global${this.core.lgId} 
-            MSFullscreenChange.lg.global${this.core.lgId}`,
+            webkitfullscreenchange.lg.global${this.core.lgId}`,
       () => {
         if (!this.core.lgOpened) return;
         this.core.outer.toggleClass("lg-fullscreen-on");
@@ -102,9 +92,7 @@ class FullScreen {
   destroy() {
     this.$LG(document).off(
       `fullscreenchange.lg.global${this.core.lgId} 
-            webkitfullscreenchange.lg.global${this.core.lgId} 
-            mozfullscreenchange.lg.global${this.core.lgId} 
-            MSFullscreenChange.lg.global${this.core.lgId}`
+            webkitfullscreenchange.lg.global${this.core.lgId}`
     );
   }
 }

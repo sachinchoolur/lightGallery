@@ -8,14 +8,7 @@
   z-index: 9999;
   background-color: #fff;
   will-change: transform;
-  -moz-transform: translate3d(100%, 0, 0);
-  -o-transform: translate3d(100%, 0, 0);
-  -ms-transform: translate3d(100%, 0, 0);
-  -webkit-transform: translate3d(100%, 0, 0);
   transform: translate3d(100%, 0, 0);
-  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0, 0, 0.25, 1) 0s;
-  -moz-transition: -moz-transform 0.4s cubic-bezier(0, 0, 0.25, 1) 0s;
-  -o-transition: -o-transform 0.4s cubic-bezier(0, 0, 0.25, 1) 0s;
   transition: transform 0.4s cubic-bezier(0, 0, 0.25, 1) 0s;
 }
 .lg-comment-box .lg-comment-title {
@@ -57,8 +50,6 @@
   font-size: 20px;
   color: #999;
   will-change: color;
-  -webkit-transition: color 0.2s linear;
-  -o-transition: color 0.2s linear;
   transition: color 0.2s linear;
 }
 .lg-comment-box .lg-comment-close:hover {
@@ -84,17 +75,10 @@
   opacity: 0;
   visibility: hidden;
   will-change: visibility, opacity;
-  -webkit-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
-  -o-transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
   transition: visibility 0s linear 0.18s, opacity 0.18s linear 0s;
 }
 .lg-outer.lg-comment-active .lg-comment-overlay {
-  -webkit-transition-delay: 0s;
   transition-delay: 0s;
-  -moz-transform: translate3d(0, 0px, 0);
-  -o-transform: translate3d(0, 0px, 0);
-  -ms-transform: translate3d(0, 0px, 0);
-  -webkit-transform: translate3d(0, 0px, 0);
   transform: translate3d(0, 0px, 0);
   opacity: 1;
   visibility: visible;
@@ -103,10 +87,6 @@
   color: #fff;
 }
 .lg-outer.lg-comment-active .lg-comment-box {
-  -moz-transform: translate3d(0, 0, 0);
-  -o-transform: translate3d(0, 0, 0);
-  -ms-transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
 

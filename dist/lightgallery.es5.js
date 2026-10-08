@@ -1,5 +1,5 @@
 /*!
- * lightgallery | 3.0.0-beta.4 | October 6th 2026
+ * lightgallery | 3.0.0-beta.5 | October 8th 2026
  * http://www.lightgalleryjs.com/
  * Copyright (c) 2020 Sachin Neravath;
  * @license GPLv3
@@ -310,10 +310,10 @@ const PRIORITY_BY_CLASS = [
   ["lg-rotate-right", 10],
   ["lg-flip-hor", 10],
   ["lg-flip-ver", 10],
-  // Gesture duplicates go first: pinch and double-tap do the same.
+  // Gesture duplicates go first: pinch and double-tap do the same. The
+  // actual-size button carries one of these two classes as well.
   ["lg-zoom-in", 0],
-  ["lg-zoom-out", 0],
-  ["lg-actual-size", 0]
+  ["lg-zoom-out", 0]
 ];
 function getToolbarItemPriority(classList) {
   const classes = new Set(classList);
@@ -1448,7 +1448,7 @@ const utils = {
   },
   getFocusableElements(container) {
     const elements = container.querySelectorAll(
-      'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])'
+      'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
     );
     const visibleElements = [].filter.call(
       elements,
