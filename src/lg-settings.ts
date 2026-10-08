@@ -11,10 +11,12 @@ import { HashSettings } from './plugins/hash/lg-hash-settings';
 import { JustifiedSettings } from './plugins/justified/lg-justified-settings';
 import { MediumZoomSettings } from './plugins/mediumZoom/lg-medium-zoom-settings';
 import { PagerSettings } from './plugins/pager/lg-pager-settings';
+import { RelativeCaptionSettings } from './plugins/relativeCaption/lg-relative-caption-settings';
 import { RotateSettings } from './plugins/rotate/lg-rotate-settings';
 import { ShareSettings } from './plugins/share/lg-share-settings';
 import { ThumbnailsSettings } from './plugins/thumbnail/lg-thumbnail-settings';
 import { VideoSettings } from './plugins/video/lg-video-settings';
+import { VimeoThumbnailSettings } from './plugins/vimeoThumbnail/lg-vimeo-thumbnail-settings';
 import { ZoomSettings } from './plugins/zoom/lg-zoom-settings';
 
 type LightGalleryCoreMobileSettings = Exclude<
@@ -94,8 +96,10 @@ export type LightGalleryAllSettings = LightGalleryCoreSettings &
     HashSettings &
     JustifiedSettings &
     PagerSettings &
+    RelativeCaptionSettings &
     RotateSettings &
     ShareSettings &
+    VimeoThumbnailSettings &
     MediumZoomSettings;
 
 // User-facing input: everything optional, strings mergeable per-key
