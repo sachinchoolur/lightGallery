@@ -105,6 +105,10 @@ unchanged; what moved is the packaging and the framework integrations.
   `lg-zoom-in` and `lg-zoom-out` classes. The button is 24px like every
   other toolbar icon in all packages. The `actualSize` icon name is no
   longer used by any default rendering.
+- In the React, Vue and Angular packages `init` is always the first event:
+  a gallery mounted already open fires `init`, then `beforeOpen` and
+  `afterOpen`, as the vanilla gallery does (the betas fired `beforeOpen`
+  first).
 
 ### Fixed
 

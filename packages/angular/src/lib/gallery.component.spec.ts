@@ -490,9 +490,9 @@ describe('LgGalleryComponent (core gallery)', () => {
         expect(container.classList.contains('lg-show-in')).toBe(true);
         await advance(fixture, BACKDROP);
         expect(query('.lg-outer')!.classList.contains('lg-visible')).toBe(true);
-        // Mounted open: the same order as React and Vue, with the
+        // Mounted open: init first, as in vanilla, React and Vue, with the
         // component itself as the init payload.
-        expect(host.log).toEqual(['beforeOpen', 'init', 'afterOpen']);
+        expect(host.log).toEqual(['init', 'beforeOpen', 'afterOpen']);
         expect(host.initInstance).toBe(host.gallery());
     });
 

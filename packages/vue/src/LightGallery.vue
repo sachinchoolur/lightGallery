@@ -1448,16 +1448,18 @@ useGalleryGestures({
 
 onMounted(() => {
     isClientMounted.value = true;
+    // The same license notice as the vanilla gallery, once per page.
+    const notice = takeLicenseNotice(settings.value.licenseKey);
+    if (notice) console[notice.level](notice.message);
+    // Before any open: `init` is the first event, as in vanilla, where it
+    // fires in the constructor.
+    emitEvent('init', { instance: actions });
     // `open` already true at mount: the watcher above only sees changes.
     // Opening here rather than in an immediate watcher keeps it off the
     // server — the gallery opens once the client has mounted or hydrated.
     if (open.value && !store.isOpen.value) {
         doOpen(index.value);
     }
-    // The same license notice as the vanilla gallery, once per page.
-    const notice = takeLicenseNotice(settings.value.licenseKey);
-    if (notice) console[notice.level](notice.message);
-    emitEvent('init', { instance: actions });
 });
 onBeforeUnmount(() => {
     timers.clearAll();

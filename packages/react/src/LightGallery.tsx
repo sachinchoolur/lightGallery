@@ -604,6 +604,32 @@ export const LightGallery = forwardRef<
         ],
     );
 
+    const handle = useMemo<LightGalleryRefHandle>(
+        () => ({
+            openGallery,
+            closeGallery,
+            goToSlide,
+            nextSlide,
+            prevSlide,
+            refresh,
+        }),
+        [openGallery, closeGallery, goToSlide, nextSlide, prevSlide, refresh],
+    );
+    useImperativeHandle(ref, () => handle, [handle]);
+
+    const emitInit = useEventCallback(() => {
+        // The same license notice as the vanilla gallery, once per page.
+        const notice = takeLicenseNotice(settings.licenseKey);
+        if (notice) console[notice.level](notice.message);
+        emit('onInit', { instance: handle });
+    });
+    // Declared before the controlled-`open` effect: effects run in order,
+    // so `init` is the first event even for a gallery mounted open, as in
+    // vanilla, where it fires in the constructor.
+    useEffect(() => {
+        emitInit();
+    }, [emitInit]);
+
     // Controlled `open` → reducer.
     useEffect(() => {
         if (open === undefined) {
@@ -627,29 +653,6 @@ export const LightGallery = forwardRef<
             dispatch({ type: 'GO_TO', index });
         }
     }, [index, state.open, state.currentIndex, state.transitioning]);
-
-    const handle = useMemo<LightGalleryRefHandle>(
-        () => ({
-            openGallery,
-            closeGallery,
-            goToSlide,
-            nextSlide,
-            prevSlide,
-            refresh,
-        }),
-        [openGallery, closeGallery, goToSlide, nextSlide, prevSlide, refresh],
-    );
-    useImperativeHandle(ref, () => handle, [handle]);
-
-    const emitInit = useEventCallback(() => {
-        // The same license notice as the vanilla gallery, once per page.
-        const notice = takeLicenseNotice(settings.licenseKey);
-        if (notice) console[notice.level](notice.message);
-        emit('onInit', { instance: handle });
-    });
-    useEffect(() => {
-        emitInit();
-    }, [emitInit]);
 
     const getItemIndex = useCallback(
         (registration: ItemRegistration) =>

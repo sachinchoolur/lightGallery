@@ -98,8 +98,8 @@ describe('open/close lifecycle (controlled)', () => {
                 onAfterOpen={() => calls.push('afterOpen')}
             />,
         );
-        // Mounted open: the same order as Vue and Angular.
-        expect(calls).toEqual(['beforeOpen', 'init', 'afterOpen']);
+        // Mounted open: init first, as in vanilla, Vue and Angular.
+        expect(calls).toEqual(['init', 'beforeOpen', 'afterOpen']);
     });
 
     it('opens at mount inline in a container element (carousel pattern)', () => {

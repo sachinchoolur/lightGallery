@@ -419,8 +419,8 @@ describe('open at mount', () => {
         expect(container.classList.contains('lg-show-in')).toBe(true);
         await advance(BACKDROP);
         expect(query('.lg-outer')!.classList.contains('lg-visible')).toBe(true);
-        // Mounted open: the same order as React and Angular.
-        expect(log).toEqual(['beforeOpen', 'init', 'afterOpen']);
+        // Mounted open: init first, as in vanilla, React and Angular.
+        expect(log).toEqual(['init', 'beforeOpen', 'afterOpen']);
         wrapper.unmount();
     });
 

@@ -1173,6 +1173,14 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
         effect(() => {
             this.store.setLoop(this.settings().loop);
         });
+        // React counterpart: the mount-time onInit emit. A view effect
+        // declared before the controlled `open` effect, not afterNextRender,
+        // so `init` is the first event even for a gallery mounted with `open`
+        // already true (init → beforeOpen → afterOpen), as in vanilla, React
+        // and Vue. Nothing is tracked; it runs once.
+        effect(() => {
+            untracked(() => this.emitInit());
+        });
         // React counterpart: the controlled `open` → reducer effect.
         effect(() => {
             const controlledOpen = this.open();
@@ -1219,14 +1227,6 @@ export class LgGalleryComponent implements LgGalleryHandle, OnDestroy {
                     this.index.set(this.store.currentIndex());
                 }
             });
-        });
-        // React counterpart: the mount-time onInit emit. A view effect in
-        // this position, not afterNextRender, so a gallery mounted with
-        // `open` already true fires beforeOpen → init → afterOpen like
-        // React and Vue: the controlled `open` effect above has run, the
-        // phase machine below has not. Nothing is tracked; it runs once.
-        effect(() => {
-            untracked(() => this.emitInit());
         });
         // React counterpart: `state.open` → phase machine (GalleryOutlet).
         effect(() => {
