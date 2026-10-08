@@ -10,7 +10,7 @@ package: one product, four renderings.
 ## Install
 
 ```bash
-npm install @lightgallery/vue @lightgallery/headless
+npm install @lightgallery/vue
 # CSS ships from the vanilla package:
 npm install lightgallery
 ```
@@ -77,7 +77,7 @@ prefix (`@before-open`, `@after-slide`, `@slide-item-load`, …). Slots are
 named scoped slots: `#caption`, `#counter`, `#prev-button`, `#next-button`.
 Inline gallery: `:container="element"`.
 
-## Plugins (all 13)
+## Plugins
 
 Each plugin is its own tree-shakable subpath
 `@lightgallery/vue/plugins/<name>` exporting a plugin object for the
@@ -136,7 +136,7 @@ For 1,000+ item galleries, `virtualization` bounds the DOM (default off):
 `role="dialog"`/`aria-modal` with accessible-name fallback
 (`:aria-labelledby` override supported), hand-rolled focus trap (focus in
 on open, Tab/Shift+Tab wrapped, returned to the trigger on close), labelled
-buttons everywhere, keyboard-operable thumbnails and pager dots,
+buttons everywhere, slide changes announced to screen readers,
 `prefers-reduced-motion` support. Automated axe run (WCAG A/AA): zero
 violations.
 
@@ -214,7 +214,8 @@ import 'lightgallery/css/lg-justified.css';
 
 The old wrapper (`lightgallery-vue*` folders / `lightgallery` v2 with
 `lgQuery`) wrapped the vanilla runtime; this package renders natively. Key
-renames (full table in the project ADRs):
+renames (full table in the
+[migration guide](https://www.lightgalleryjs.com/docs/migration/)):
 
 - `dynamicEl` → `:slides` (typed `LgGalleryItem[]`), or `<LgItem>` trigger
   components for uncontrolled galleries.

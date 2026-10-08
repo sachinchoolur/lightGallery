@@ -4,13 +4,14 @@ Native Angular lightGallery over `@lightgallery/headless` — every DOM node
 rendered by Angular. Standalone components, signal inputs/outputs, zoneless
 change detection, CDK overlay/a11y, Angular Package Format with a secondary
 entry point per plugin. The framework-free state machine, gesture math and
-plugin logic are shared with `@lightgallery/react` through the headless
-package: one product, three renderings.
+plugin logic are shared with `@lightgallery/react`, `@lightgallery/vue`
+and the vanilla package through the headless package: one product, four
+renderings.
 
 ## Install
 
 ```bash
-npm install @lightgallery/angular @lightgallery/headless @angular/cdk
+npm install @lightgallery/angular @angular/cdk
 # CSS ships from the vanilla package:
 npm install lightgallery
 ```
@@ -88,7 +89,7 @@ Settings are same-named signal inputs (`[mode]`, `[speed]`, `[loop]`,
 directives: `*lgCaption`, `lgCounter`, `lgPrevButton`, `lgNextButton`.
 Inline gallery: `[container]="element"`.
 
-## Features (all 13)
+## Features
 
 Each feature is its own tree-shakable entry point
 `@lightgallery/angular/plugins/<name>` exposing a `with<Name>(options?)`
@@ -144,7 +145,7 @@ For 1,000+ item galleries, `virtualization` bounds the DOM (default off):
 
 `role="dialog"`/`aria-modal` with accessible-name fallback, CDK `FocusTrap`
 (focus in on open, Tab trapped, returned to the trigger on close), labelled
-buttons everywhere, keyboard-operable thumbnails and pager dots,
+buttons everywhere, slide changes announced to screen readers,
 `prefers-reduced-motion` support. Automated axe run (WCAG A/AA): zero
 violations.
 
@@ -223,7 +224,8 @@ import 'lightgallery/css/lg-justified.css';
 
 The old wrapper (`lightgallery-angular*` folders / `lightgallery` v2 with
 `lgQuery`) wrapped the vanilla runtime; this package renders natively. Key
-renames (full table in the project ADRs):
+renames (full table in the
+[migration guide](https://www.lightgalleryjs.com/docs/migration/)):
 
 - `dynamicEl` → `[slides]` (typed `LgGalleryItem[]`), or `[lgGalleryItem]`
   trigger directives for uncontrolled galleries.

@@ -205,7 +205,7 @@ plugins names as follows.
 
 `lgZoom`, `lgAutoplay`, `lgComment`, `lgFullscreen`, `lgHash`, `lgJustified`,
 `lgPager`, `lgRelativeCaption`, `lgRotate`, `lgShare`, `lgThumbnail`, `lgVideo`,
-`lgVimeoThumbnail`, `lgMediumZoom`
+`lgVimeoThumbnail`, `lgMediumZoom`, `lgOriginCrop`
 
 ## Browser support
 

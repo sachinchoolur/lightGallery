@@ -1,11 +1,11 @@
 # @lightgallery/react
 
-> **Alpha.** A ground-up, native React implementation of
-> lightGallery — React owns every DOM node; no runtime dependency on the
-> vanilla `lightgallery` JS. Styling reuses the published
-> `lightgallery/css/*` files unchanged. State and pure gallery logic live
-> in [`@lightgallery/headless`](../headless), shared with the upcoming
-> Angular port.
+Native React lightGallery over `@lightgallery/headless` — React owns
+every DOM node; no runtime dependency on the vanilla `lightgallery` JS.
+Styling reuses the published `lightgallery/css/*` files unchanged. The
+framework-free state machine, gesture math and plugin logic are shared
+with `@lightgallery/vue`, `@lightgallery/angular` and the vanilla
+package through the headless package: one product, four renderings.
 
 ## Install & styles
 
@@ -118,8 +118,8 @@ No `dynamic(() => …, { ssr: false })` wrapper is needed.
 
 Beyond 2.x: dialog semantics (`role="dialog"`, `aria-modal`, accessible
 name), focus moves into the gallery on open, Tab is trapped while open and
-focus returns to the trigger on close, thumbnails and pager dots are
-keyboard-operable, and `prefers-reduced-motion` disables all animations.
+focus returns to the trigger on close, slide changes are announced to
+screen readers, and `prefers-reduced-motion` disables all animations.
 The open gallery passes axe WCAG A/AA checks (automated in CI).
 
 ## Localizing labels
@@ -196,11 +196,10 @@ import 'lightgallery/css/lg-justified.css';
 | `Esc` | close (`escKey`) |
 | `←` / `→` | previous / next slide (`keyPress`) |
 | `Tab` / `Shift+Tab` | cycle focus within the gallery (`trapFocus`) |
-| `Enter` / `Space` | activate focused thumbnail / pager dot |
 
 ## Plugins
 
-All 13 vanilla plugins ship as subpath imports; pass them via `plugins={[]}`
+Every vanilla plugin ships as a subpath import; pass them via `plugins={[]}`
 and configure each with the prop named after it. Import the matching
 `lightgallery/css/lg-*.css` where one exists.
 
