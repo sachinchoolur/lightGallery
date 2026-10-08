@@ -1,0 +1,78 @@
+---
+/**
+ * Justified thumbnail grid used by most demo pages. `photos` names one or
+ * more collections from `src/data/photos.json` (comma-separated); `size="xl"`
+ * defaults to a longer, mixed-orientation set.
+ */
+import { photos as pick } from '../../lib/photos';
+
+interface Props {
+    id: string;
+    class?: string;
+    size?: string;
+    photos?: string;
+    limit?: number;
+    /**
+     * Put the justified plugin's container class in the markup so the
+     * thumbnails stay hidden until the layout has run (no unorganized
+     * flash). Only for galleries the runtime lays out with the plugin.
+     */
+    justified?: boolean;
+    /**
+     * Items from this index on are marked `gallery-item-phone-hidden`;
+     * the page's stylesheet and runtime decide what that means (the
+     * homepage hero keeps its grid to three rows on phones). They load
+     * lazily, so a phone that hides them never downloads them.
+     */
+    phoneLimit?: number;
+    /**
+     * Row heights of the justified layout, in CSS px, on phones and from
+     * `md` up. With them each thumbnail gets a `srcset` and a `sizes`
+     * derived from its aspect ratio, so the browser fetches the 240px
+     * variant where a cell is small or the screen is 1x, and 480px only
+     * where it is needed.
+     */
+    rowHeights?: { phone: number; desktop: number };
+}
+const { id, class: className, size, limit, justified, phoneLimit, rowHeights } = Astro.props;
+const items = pick(Astro.props.photos ?? (size === 'xl' ? 'street,alley' : 'street'), limit);
+
+const sizesFor = (width: number, height: number) =>
+    rowHeights
+        ? `(max-width: 767px) ${Math.round((rowHeights.phone * width) / height)}px, ${Math.round((rowHeights.desktop * width) / height)}px`
+        : undefined;
+---
+<div class={`gallery-demo ${className ?? ''}`}>
+    <div id={id} class:list={[{ 'lg-justified': justified }]}>
+        {items.map((p, i) => (
+            <a
+                data-lg-size={`${p.width}-${p.height}`}
+                data-pinterest-text={p.title}
+                data-tweet-text={`lightGallery slide ${i + 1}`}
+                class:list={[
+                    'gallery-item',
+                    { 'gallery-item-phone-hidden': phoneLimit !== undefined && i >= phoneLimit },
+                ]}
+                href={p.src}
+                data-src={p.src}
+                data-thumb={p.thumbSmall}
+                data-sub-html={p.caption}
+            >
+                <img
+                    width="240"
+                    height={Math.round((240 * p.height) / p.width)}
+                    alt={p.alt}
+                    class="img-responsive"
+                    src={p.thumb}
+                    srcset={rowHeights ? p.thumbSrcset : undefined}
+                    sizes={sizesFor(p.width, p.height)}
+                    loading={phoneLimit !== undefined && i >= phoneLimit ? 'lazy' : undefined}
+                />
+            </a>
+        ))}
+    </div>
+</div>
+
+<script>
+    import '../../scripts/demo-galleries.js';
+</script>

@@ -1,0 +1,38 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "cli": { "packageManager": "npm", "analytics": false },
+    "newProjectRoot": "projects",
+    "projects": {
+        "lg-consumer": {
+            "projectType": "application",
+            "root": "",
+            "sourceRoot": "src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "browser": "src/main.ts",
+                        "server": "src/main.server.ts",
+                        "outputMode": "server",
+                        "ssr": { "entry": "src/server.ts" },
+                        "security": { "allowedHosts": ["localhost"] },
+                        "tsConfig": "tsconfig.app.json",
+                        "assets": [{ "glob": "**/*", "input": "public" }],
+                        "styles": [
+                            "lightgallery/css/lightgallery.css",
+                            "lightgallery/css/lg-zoom.css",
+                            "lightgallery/css/lg-thumbnail.css",
+                            "src/styles.css"
+                        ]
+                    },
+                    "configurations": {
+                        "production": { "outputHashing": "all" }
+                    },
+                    "defaultConfiguration": "production"
+                }
+            }
+        }
+    }
+}

@@ -1,7 +1,0 @@
-{
-    "name": "lightgallery/plugins/share",
-    "private": true,
-    "main": "lg-share.umd.js",
-    "module": "lg-share.es5.js",
-    "typings": "lg-share.d.ts"
-}

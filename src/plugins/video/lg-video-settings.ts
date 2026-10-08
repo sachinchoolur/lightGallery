@@ -1,12 +1,37 @@
-import { PlayerParams } from './lg-video-utils';
+import { PlayerParams } from '@lightgallery/headless';
 
 export interface VideoSettings {
     /**
-     * Enable/DIsable first video autoplay.
+     * Enable/Disable first video autoplay.
      * @description Autoplay has to be managed using this setting.
      * Autoplay in PlayerParams doesn't have any effect.
      */
     autoplayFirstVideo: boolean;
+
+    /**
+     * Render provider video slides (YouTube/Vimeo/Wistia) as lite facades:
+     * a poster with a play button, with the provider iframe created only
+     * when the user presses play.
+     * @description The facade poster falls back from the item poster to
+     * the YouTube thumbnail endpoint (see loadYouTubePoster) to the item
+     * thumb; a slide with no resolvable poster keeps the previous
+     * eager-iframe behavior. Note autoplayFirstVideo/autoplayVideoOnSlide
+     * force an immediate materialize by design. Set false for 2.x
+     * eager-iframe behavior on all provider slides.
+     * See <a href="/docs/video-facades/">Video facades</a>.
+     * @version V3.0.0
+     */
+    videoFacade: boolean;
+
+    /**
+     * Embed YouTube videos through the privacy-enhanced
+     * youtube-nocookie.com host.
+     * @description Set false to embed through youtube.com instead. Slide
+     * URLs that already point at youtube-nocookie.com always keep it.
+     * See <a href="/docs/video-facades/">Video facades</a>.
+     * @version V3.0.0
+     */
+    youTubeNoCookie: boolean;
 
     /**
      * Change YouTube player parameters.
@@ -41,7 +66,7 @@ export interface VideoSettings {
     /**
      * Change Wistia player parameters.
      * You can find the list of Wistia player parameters from the following link
-     * <a href="https://wistia.com/support/developers/embed-options#using-embed-options">Vimeo player parameters</a>
+     * <a href="https://wistia.com/support/developers/embed-options#using-embed-options">Wistia player parameters</a>
      */
     wistiaPlayerParams: any;
 
@@ -58,7 +83,7 @@ export interface VideoSettings {
     autoplayVideoOnSlide: boolean;
 
     /**
-     * Enbale videojs custom video player
+     * Enable videojs custom video player
      * <div class="alert alert-info" role="alert">
      *     <b>Dependency</b> - You need to include <a href="https://videojs.com/">videoJs</a> on your document to enable videojs player
      * </div>
@@ -79,6 +104,8 @@ export interface VideoSettings {
 }
 export const videoSettings: VideoSettings = {
     autoplayFirstVideo: true,
+    videoFacade: true,
+    youTubeNoCookie: true,
     youTubePlayerParams: false,
     vimeoPlayerParams: false,
     wistiaPlayerParams: false,

@@ -1,0 +1,36 @@
+---
+/** Arabic-captioned RTL demo grid, the gallery inherits `dir="rtl"`. */
+import { photos as pick } from '../../lib/photos';
+
+interface Props {
+    id: string;
+}
+const { id } = Astro.props;
+const captions = [
+    ['بيوت زرقاء', 'الشريحة الأولى, شفشاون، المغرب'],
+    ['قصبة في الواحة', 'الشريحة الثانية, وادي درعة'],
+    ['درج السوق', 'الشريحة الثالثة, المدينة القديمة'],
+    ['قوارب الصيادين', 'الشريحة الرابعة, على الساحل الأطلسي'],
+    ['منسوجات ملونة', 'الشريحة الخامسة, في السوق'],
+];
+const items = pick('morocco', captions.length);
+---
+
+<div class="gallery-demo">
+    <div id={id} dir="rtl">
+        {items.map((p, i) => (
+            <a
+                data-lg-size={`${p.width}-${p.height}`}
+                class="gallery-item"
+                data-src={p.src}
+                data-sub-html={`<h4>${captions[i][0]}</h4><p>${captions[i][1]}</p>`}
+            >
+                <img alt={captions[i][0]} class="img-responsive" src={p.thumb} />
+            </a>
+        ))}
+    </div>
+</div>
+
+<script>
+    import '../../scripts/demo-galleries.js';
+</script>

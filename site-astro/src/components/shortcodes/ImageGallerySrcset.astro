@@ -1,0 +1,31 @@
+---
+/** Responsive demo using `data-srcset` and `data-sizes` on each slide. */
+import { photos as pick } from '../../lib/photos';
+
+interface Props {
+    id: string;
+    photos?: string;
+    limit?: number;
+}
+const { id, limit = 4 } = Astro.props;
+const items = pick(Astro.props.photos ?? 'macro', limit);
+---
+<div class="gallery-demo-sm">
+    <div id={id} class="list-unstyled">
+        {items.map((p) => (
+            <a
+                data-lg-size={p.size}
+                data-src={p.src}
+                data-sizes="(min-width: 40em) 80vw, 100vw"
+                data-srcset={p.srcset}
+                data-sub-html={p.caption}
+            >
+                <img class="img-fluid" alt={p.alt} src={p.thumb} />
+            </a>
+        ))}
+    </div>
+</div>
+
+<script>
+    import '../../scripts/demo-galleries.js';
+</script>

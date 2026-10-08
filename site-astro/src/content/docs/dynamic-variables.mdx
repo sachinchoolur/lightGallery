@@ -1,0 +1,77 @@
+---
+title: 'Dynamic variables'
+description: 'Every field a lightGallery item can carry in dynamic mode, from src and thumb to captions, video, download and share URLs, with the matching data attributes.'
+lead:
+    'In dynamic mode you build the gallery from data instead of markup: set
+    the dynamic option and pass an array of item objects as dynamicEl. The
+    fields below are the ones each item can carry. <a href="/demos/dynamic-mode/">Demo</a>'
+date: 2020-10-06T08:48:57+00:00
+draft: false
+images: []
+menu:
+    docs:
+        parent: 'API Docs'
+weight: 5
+toc: true
+---
+
+import Attributes from '../../components/api/Attributes.astro';
+
+## Passing items
+
+Each item is a plain object. Only `src` is required; the other fields
+switch on captions, video, downloads and sharing per slide.
+
+```javascript
+const gallery = lightGallery(document.getElementById('dynamic-gallery'), {
+    dynamic: true,
+    dynamicEl: [
+        {
+            src: 'img/1.jpg',
+            thumb: 'img/thumb-1.jpg',
+            subHtml: '<h4>Image 1</h4><p>Description of image 1.</p>',
+        },
+        {
+            src: 'img/2.jpg',
+            thumb: 'img/thumb-2.jpg',
+            subHtml: '<h4>Image 2</h4>',
+        },
+    ],
+});
+
+// Open at the second slide.
+gallery.openGallery(1);
+```
+
+A dynamic gallery has no trigger markup, so the zoom-from-origin animation
+needs two things from you: the media size on the item as `lgSize`, and the
+element the slide should grow out of as the second argument of
+`openGallery`:
+
+```javascript
+const gallery = lightGallery(document.getElementById('dynamic-gallery'), {
+    dynamic: true,
+    dynamicEl: [
+        { src: 'img/1.jpg', thumb: 'img/thumb-1.jpg', lgSize: '1600-1067' },
+    ],
+});
+
+document.getElementById('cover').addEventListener('click', () => {
+    gallery.openGallery(0, document.getElementById('cover'));
+});
+```
+
+A `data-lg-size` attribute on that element works too and takes
+precedence. Without a size or an element, the slide uses the default
+opening animation.
+
+In [React](/docs/react/), [Vue](/docs/vue/) and [Angular](/docs/angular/)
+the same fields describe an item or an entry of the `slides` array, with
+`caption` in place of `subHtml`.
+
+## Available fields
+
+Every field has an HTML attribute twin for galleries built from markup; the
+[attributes page](/docs/attributes/) lists those.
+
+<Attributes interface="GalleryItem" />

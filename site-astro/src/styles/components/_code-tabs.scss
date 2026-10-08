@@ -1,0 +1,123 @@
+/** Framework code tabs (CodeTabs.astro). */
+.code-tabs {
+  margin: 1.5rem 0;
+}
+
+.code-tabs-list {
+  border-bottom: 1px solid $gray;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.code-tabs-tab {
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: $gray-darker;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  line-height: 1.5;
+  margin-bottom: -1px;
+  padding: 0.5rem 0.85rem;
+
+  &:hover {
+    color: $brand;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $brand-light;
+    outline-offset: -2px;
+  }
+
+  &[aria-selected='true'] {
+    border-bottom-color: $brand;
+    color: $brand;
+  }
+}
+
+/* Demo links (CodeTabs `js` / `react`) sit on the tab row, to the right. */
+.code-tabs-with-demos {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  justify-content: space-between;
+
+  .code-tabs-list {
+    flex: 0 1 auto;
+  }
+
+  .demo-btns-container {
+    margin: 0;
+  }
+
+  .code-tabs-panel {
+    flex: 0 0 100%;
+    min-width: 0;
+  }
+}
+
+.code-tabs-panel[data-hidden],
+.code-tabs-sandbox[data-hidden] {
+  display: none;
+}
+
+/* One link per framework, a single one visible: no sibling spacing. */
+.code-tabs-sandbox + .code-tabs-sandbox {
+  margin-left: 0;
+}
+
+.code-tabs-panel {
+  &:focus-visible {
+    outline: 2px solid $brand-light;
+    outline-offset: 2px;
+  }
+
+  > pre:first-child {
+    margin-top: 0;
+  }
+
+  > pre:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/**
+ * A remembered or deep-linked framework is applied by the inline head
+ * script (BaseLayout) as a root attribute, so the right panel paints
+ * first — swapping it from the deferred module would shift the page.
+ * The `:has()` guard leaves groups that lack the framework on their own
+ * default. The module drops the attribute once it has synced the
+ * panels and the aria state.
+ */
+@each $fw in vanilla, react, vue, angular {
+  :root[data-lg-framework='#{$fw}']
+    .code-tabs:has(.code-tabs-panel[data-framework='#{$fw}']) {
+    .code-tabs-panel {
+      display: none;
+    }
+
+    .code-tabs-panel[data-framework='#{$fw}'] {
+      display: block;
+    }
+
+    .code-tabs-sandbox {
+      display: none;
+    }
+
+    .code-tabs-sandbox[data-framework='#{$fw}'] {
+      display: block;
+    }
+
+    .code-tabs-tab {
+      border-bottom-color: transparent;
+      color: $gray-darker;
+    }
+
+    .code-tabs-tab[data-framework='#{$fw}'] {
+      border-bottom-color: $brand;
+      color: $brand;
+    }
+  }
+}

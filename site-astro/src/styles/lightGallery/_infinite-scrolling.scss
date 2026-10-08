@@ -1,0 +1,16 @@
+.infinite-scroll-gallery {
+    width: 240px;
+    .gallery-item {
+        margin-bottom: 20px;
+        display: block;
+        width: 100%;
+    }
+}
+.infinite-scroll-status {
+    width: 240px;
+    margin: 0;
+    padding: 8px 0 40px;
+    color: $gray-500;
+    font-size: 14px;
+    text-align: center;
+}

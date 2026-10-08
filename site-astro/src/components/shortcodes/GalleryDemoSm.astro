@@ -1,0 +1,26 @@
+---
+/** Small trigger grid without `href`, for demos that open the gallery themselves. */
+import { photos as pick } from '../../lib/photos';
+
+interface Props {
+    id: string;
+    class?: string;
+    photos?: string;
+    limit?: number;
+}
+const { id, class: className, limit } = Astro.props;
+const items = pick(Astro.props.photos ?? 'morocco', limit);
+---
+<div class={`gallery-demo ${className ?? ''}`}>
+    <div id={id}>
+        {items.map((p) => (
+            <a data-lg-size={`${p.width}-${p.height}`} class="gallery-item" data-src={p.src} data-sub-html={p.caption}>
+                <img alt={p.alt} class="img-responsive" src={p.thumb} />
+            </a>
+        ))}
+    </div>
+</div>
+
+<script>
+    import '../../scripts/demo-galleries.js';
+</script>

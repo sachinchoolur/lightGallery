@@ -1,0 +1,9 @@
+{
+  "name": "@lightgallery/core",
+  "private": true,
+  "scripts": {
+    "build:vite": "tsx ../../scripts/vite-build-all.ts",
+    "build:types": "tsc -p tsconfig.types.json && node ../../scripts/inline-headless-types.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

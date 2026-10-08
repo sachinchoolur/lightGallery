@@ -1,7 +1,254 @@
 {
-    "name": "lightgallery/vue",
-    "private": true,
-    "main": "LightGalleryVue.umd.js",
-    "module": "LightGalleryVue.common.js",
-    "typings": "LightGallery.vue.d.ts"
+  "name": "@lightgallery/vue",
+  "version": "3.0.0-beta.5",
+  "private": false,
+  "description": "Native Vue 3 lightGallery over @lightgallery/headless",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./plugins/thumbnail": {
+      "import": {
+        "types": "./dist/plugins/thumbnail/index.d.ts",
+        "default": "./dist/plugins/thumbnail/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/thumbnail/index.d.cts",
+        "default": "./dist/plugins/thumbnail/index.cjs"
+      }
+    },
+    "./plugins/zoom": {
+      "import": {
+        "types": "./dist/plugins/zoom/index.d.ts",
+        "default": "./dist/plugins/zoom/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/zoom/index.d.cts",
+        "default": "./dist/plugins/zoom/index.cjs"
+      }
+    },
+    "./plugins/video": {
+      "import": {
+        "types": "./dist/plugins/video/index.d.ts",
+        "default": "./dist/plugins/video/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/video/index.d.cts",
+        "default": "./dist/plugins/video/index.cjs"
+      }
+    },
+    "./plugins/autoplay": {
+      "import": {
+        "types": "./dist/plugins/autoplay/index.d.ts",
+        "default": "./dist/plugins/autoplay/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/autoplay/index.d.cts",
+        "default": "./dist/plugins/autoplay/index.cjs"
+      }
+    },
+    "./plugins/fullscreen": {
+      "import": {
+        "types": "./dist/plugins/fullscreen/index.d.ts",
+        "default": "./dist/plugins/fullscreen/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/fullscreen/index.d.cts",
+        "default": "./dist/plugins/fullscreen/index.cjs"
+      }
+    },
+    "./plugins/hash": {
+      "import": {
+        "types": "./dist/plugins/hash/index.d.ts",
+        "default": "./dist/plugins/hash/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/hash/index.d.cts",
+        "default": "./dist/plugins/hash/index.cjs"
+      }
+    },
+    "./plugins/pager": {
+      "import": {
+        "types": "./dist/plugins/pager/index.d.ts",
+        "default": "./dist/plugins/pager/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/pager/index.d.cts",
+        "default": "./dist/plugins/pager/index.cjs"
+      }
+    },
+    "./plugins/share": {
+      "import": {
+        "types": "./dist/plugins/share/index.d.ts",
+        "default": "./dist/plugins/share/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/share/index.d.cts",
+        "default": "./dist/plugins/share/index.cjs"
+      }
+    },
+    "./plugins/rotate": {
+      "import": {
+        "types": "./dist/plugins/rotate/index.d.ts",
+        "default": "./dist/plugins/rotate/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/rotate/index.d.cts",
+        "default": "./dist/plugins/rotate/index.cjs"
+      }
+    },
+    "./plugins/comment": {
+      "import": {
+        "types": "./dist/plugins/comment/index.d.ts",
+        "default": "./dist/plugins/comment/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/comment/index.d.cts",
+        "default": "./dist/plugins/comment/index.cjs"
+      }
+    },
+    "./plugins/mediumZoom": {
+      "import": {
+        "types": "./dist/plugins/mediumZoom/index.d.ts",
+        "default": "./dist/plugins/mediumZoom/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/mediumZoom/index.d.cts",
+        "default": "./dist/plugins/mediumZoom/index.cjs"
+      }
+    },
+    "./plugins/originCrop": {
+      "import": {
+        "types": "./dist/plugins/originCrop/index.d.ts",
+        "default": "./dist/plugins/originCrop/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/originCrop/index.d.cts",
+        "default": "./dist/plugins/originCrop/index.cjs"
+      }
+    },
+    "./plugins/relativeCaption": {
+      "import": {
+        "types": "./dist/plugins/relativeCaption/index.d.ts",
+        "default": "./dist/plugins/relativeCaption/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/relativeCaption/index.d.cts",
+        "default": "./dist/plugins/relativeCaption/index.cjs"
+      }
+    },
+    "./plugins/vimeoThumbnail": {
+      "import": {
+        "types": "./dist/plugins/vimeoThumbnail/index.d.ts",
+        "default": "./dist/plugins/vimeoThumbnail/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/vimeoThumbnail/index.d.cts",
+        "default": "./dist/plugins/vimeoThumbnail/index.cjs"
+      }
+    },
+    "./plugins/justified": {
+      "import": {
+        "types": "./dist/plugins/justified/index.d.ts",
+        "default": "./dist/plugins/justified/index.js"
+      },
+      "require": {
+        "types": "./dist/plugins/justified/index.d.cts",
+        "default": "./dist/plugins/justified/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE-COMMERCIAL.md"
+  ],
+  "scripts": {
+    "build": "vite build && vue-tsc -p tsconfig.build.json && node ../../scripts/copy-dts-to-cts.mjs dist",
+    "dev": "vite --config dev/vite.config.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "lint": "eslint 'src/**/*.{ts,vue}' --quiet",
+    "prepack": "node ../../scripts/assert-built.mjs dist/index.js dist/index.cjs dist/index.d.ts",
+    "prepublishOnly": "node ../../scripts/assert-publish-tag.mjs"
+  },
+  "dependencies": {
+    "@lightgallery/headless": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@vue/test-utils": "^2.4.6",
+    "axe-core": "^4.12.1",
+    "eslint": "^9.17.0",
+    "eslint-plugin-vue": "^10.0.0",
+    "jsdom": "^26.0.0",
+    "typescript": "~5.9.0",
+    "typescript-eslint": "^8.19.0",
+    "vite": "^7.0.0",
+    "vitest": "^4.1.0",
+    "vitest-axe": "^0.1.0",
+    "vue": "^3.5.0",
+    "vue-eslint-parser": "^10.3.0",
+    "vue-tsc": "^3.0.0"
+  },
+  "license": "(GPL-3.0-only OR LicenseRef-Commercial)",
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sachinchoolur/lightGallery.git",
+    "directory": "packages/vue"
+  },
+  "homepage": "https://www.lightgalleryjs.com/",
+  "bugs": {
+    "url": "https://github.com/sachinchoolur/lightGallery/issues"
+  },
+  "keywords": [
+    "lightgallery",
+    "vue",
+    "vue3",
+    "gallery",
+    "lightbox",
+    "image-gallery",
+    "video-gallery",
+    "carousel",
+    "zoom",
+    "thumbnails"
+  ],
+  "author": {
+    "name": "Sachin Neravath"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  },
+  "typesVersions": {
+    "*": {
+      "plugins/*": [
+        "./dist/plugins/*/index.d.ts"
+      ],
+      ".": [
+        "./dist/index.d.ts"
+      ]
+    }
+  }
 }

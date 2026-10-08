@@ -1,0 +1,543 @@
+import {
+    useEffect,
+    useRef,
+    useState,
+    type ReactElement,
+    type SyntheticEvent,
+} from 'react';
+import {
+    getFacadePoster,
+    getSlideType,
+    getVideoInfo,
+    getVimeoEmbedUrl,
+    getWistiaEmbedUrl,
+    getYouTubeEmbedUrl,
+    getYouTubePosterUrl,
+    type PlayerParams,
+    type VideoInfo,
+} from '@lightgallery/headless';
+
+import { cx } from '../../cx';
+import {
+    useGalleryActions,
+    useGalleryInternal,
+    useGallerySettings,
+    useGalleryState,
+} from '../../context';
+import { usePluginSettings } from '../runtime';
+import type { GalleryItem } from '../../types';
+import type { LgPlugin } from '../types';
+
+/**
+ * Video plugin: HTML5 / YouTube / Vimeo / Wistia slides (2.x `lg-video`).
+ * The `videojs` option is intentionally dropped — custom players go
+ * through `render.slide`.
+ */
+
+export interface VideoSettings {
+    /** Autoplay the first slide's video once it loads. */
+    autoplayFirstVideo: boolean;
+    /**
+     * Render provider video slides (YouTube/Vimeo/Wistia) as lite
+     * facades: a poster with a play button, with the provider iframe
+     * created only when the user presses play. The facade poster falls
+     * back from the item poster to the YouTube thumbnail endpoint (see
+     * `loadYouTubePoster`) to the item thumb; a slide with no resolvable
+     * poster keeps the eager-iframe behavior. `autoplayFirstVideo` /
+     * `autoplayVideoOnSlide` force an immediate materialize by design.
+     * Set false for 2.x eager iframes on all provider slides.
+     */
+    videoFacade: boolean;
+    /**
+     * Embed YouTube through the privacy-enhanced youtube-nocookie.com
+     * host. Set false to embed through youtube.com; slide URLs that
+     * already point at youtube-nocookie.com always keep it.
+     */
+    youTubeNoCookie: boolean;
+    /** Extra YouTube player parameters. */
+    youTubePlayerParams: PlayerParams;
+    /** Extra Vimeo player parameters. */
+    vimeoPlayerParams: PlayerParams;
+    /** Extra Wistia player parameters. */
+    wistiaPlayerParams: PlayerParams;
+    /** Go to the next slide when an HTML5 video ends. */
+    gotoNextSlideOnVideoEnd: boolean;
+    /** Autoplay videos when their slide becomes current. */
+    autoplayVideoOnSlide: boolean;
+}
+
+export const videoSettings: VideoSettings = {
+    autoplayFirstVideo: true,
+    videoFacade: true,
+    youTubeNoCookie: true,
+    youTubePlayerParams: false,
+    vimeoPlayerParams: false,
+    wistiaPlayerParams: false,
+    gotoNextSlideOnVideoEnd: true,
+    autoplayVideoOnSlide: false,
+};
+
+interface Html5VideoSource {
+    source?: Array<{ src: string; type?: string }>;
+    tracks?: Array<Record<string, string>>;
+    attributes?: Record<string, string | boolean>;
+}
+
+function parseHtml5Video(video: unknown): Html5VideoSource | undefined {
+    if (!video) {
+        return undefined;
+    }
+    if (typeof video === 'string') {
+        try {
+            return JSON.parse(video) as Html5VideoSource;
+        } catch {
+            return undefined;
+        }
+    }
+    return video as Html5VideoSource;
+}
+
+function providerClass(videoInfo: VideoInfo): string {
+    if (videoInfo.youtube) {
+        return 'lg-has-youtube';
+    }
+    if (videoInfo.vimeo) {
+        return 'lg-has-vimeo';
+    }
+    if (videoInfo.wistia) {
+        return 'lg-has-wistia';
+    }
+    return 'lg-has-html5';
+}
+
+function PlayButton({ label }: { label: string }): ReactElement {
+    return (
+        <div className="lg-video-play-button">
+            <svg
+                viewBox="0 0 20 20"
+                preserveAspectRatio="xMidYMid"
+                focusable="false"
+                aria-labelledby={label}
+                role="img"
+                className="lg-video-play-icon"
+            >
+                <title>{label}</title>
+                <polygon
+                    className="lg-video-play-icon-inner"
+                    points="1,0 20,10 1,20"
+                />
+            </svg>
+            <svg
+                className="lg-video-play-icon-bg"
+                viewBox="0 0 50 50"
+                focusable="false"
+            >
+                <circle cx="50%" cy="50%" r="20" />
+            </svg>
+            <svg
+                className="lg-video-play-icon-circle"
+                viewBox="0 0 50 50"
+                focusable="false"
+            >
+                <circle cx="50%" cy="50%" r="20" />
+            </svg>
+        </div>
+    );
+}
+
+export function VideoSlide({
+    item,
+    index,
+}: {
+    item: GalleryItem;
+    index: number;
+}): ReactElement | null {
+    const state = useGalleryState();
+    const actions = useGalleryActions();
+    const internal = useGalleryInternal();
+    const settings = usePluginSettings<VideoSettings>();
+
+    const html5Video = parseHtml5Video(item.video);
+    const videoInfo = getVideoInfo(item.src, !!html5Video);
+
+    // Lite-embed facade poster chain (headless): item poster → YouTube
+    // thumbnail endpoint (loadYouTubePoster) → item thumb. With
+    // videoFacade:false only the 2.x YouTube synthesis remains.
+    const poster = settings.videoFacade
+        ? getFacadePoster(item, videoInfo, settings.loadYouTubePoster)
+        : item.poster ??
+          (settings.loadYouTubePoster
+              ? getYouTubePosterUrl(videoInfo)
+              : undefined);
+    const hasPoster = !!poster;
+    const [activated, setActivated] = useState(!hasPoster);
+    const coreSettings = useGallerySettings();
+    // 2.x video-poster dummy (`getVideoPosterMarkup` + dummy content):
+    // the first zoom-from-origin slide flies the trigger's already-
+    // decoded thumb inside the video cont while the poster loads beneath
+    // it; the dummy drops shortly after the load settles. Armed at mount
+    // with v2's own condition (first slide + zoomFromOrigin + a sized
+    // item — the flight preconditions).
+    const [dummySrc, setDummySrc] = useState<string | null>(() =>
+        hasPoster &&
+        !state.galleryOn &&
+        state.currentIndex === index &&
+        coreSettings.zoomFromOrigin &&
+        item.lgSize &&
+        !state.loadedSlides.has(index)
+            ? internal.getDummySrc(index)
+            : null,
+    );
+    const loaded = state.loadedSlides.has(index);
+    useEffect(() => {
+        if (!dummySrc || !loaded) {
+            return;
+        }
+        const timeout = window.setTimeout(() => setDummySrc(null), 300);
+        return () => window.clearTimeout(timeout);
+    }, [dummySrc, loaded]);
+    useEffect(() => {
+        if (!dummySrc) {
+            return;
+        }
+        internal.layout.setOuterClass('lg-first-slide-loading', true);
+        return () =>
+            internal.layout.setOuterClass('lg-first-slide-loading', false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dummySrc]);
+    const loadSettleRef = useRef<number | undefined>(undefined);
+    useEffect(() => () => window.clearTimeout(loadSettleRef.current), []);
+    const pendingPlayRef = useRef(false);
+    const mediaRef = useRef<HTMLVideoElement | HTMLIFrameElement | null>(null);
+    const isCurrent = state.currentIndex === index;
+    const isCurrentRef = useRef(isCurrent);
+    isCurrentRef.current = isCurrent;
+    const settingsRef = useRef(settings);
+    settingsRef.current = settings;
+
+    const control = (action: 'play' | 'pause') => {
+        const el = mediaRef.current;
+        if (!el || !videoInfo) {
+            return;
+        }
+        if (videoInfo.html5) {
+            const video = el as HTMLVideoElement;
+            if (action === 'play') {
+                void video.play?.()?.catch?.(() => undefined);
+            } else {
+                video.pause?.();
+            }
+            return;
+        }
+        const frame = el as HTMLIFrameElement;
+        try {
+            if (videoInfo.youtube) {
+                frame.contentWindow?.postMessage(
+                    `{"event":"command","func":"${action}Video","args":""}`,
+                    '*',
+                );
+            } else if (videoInfo.vimeo) {
+                frame.contentWindow?.postMessage(
+                    JSON.stringify({ method: action }),
+                    '*',
+                );
+            }
+            // Wistia control needs its player API script — deliberately
+            // skipped (2.x pushed to window._wq; noted deviation).
+        } catch {
+            // Cross-origin messaging is best-effort.
+        }
+    };
+
+    const activateAndPlay = () => {
+        pendingPlayRef.current = true;
+        setActivated(true);
+        // Already activated → the media is (or soon is) ready.
+        control('play');
+    };
+
+    // hasVideo (informational) + load-state for slides without a poster:
+    // a video slide counts as loaded immediately (2.x
+    // `isHTML5VideoWithoutPoster` / video-cont path).
+    useEffect(() => {
+        internal.emit('onHasVideo', {
+            index,
+            src: item.src,
+            html5Video: item.video,
+            hasPoster,
+        });
+        if (!hasPoster && !state.loadedSlides.has(index)) {
+            const isFirstSlide = !state.galleryOn;
+            actions.dispatch({ type: 'SLIDE_LOADED', index });
+            internal.emit('onSlideItemLoad', {
+                index,
+                delay: 0,
+                isFirstSlide,
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const settlePoster = () => {
+        if (state.loadedSlides.has(index)) {
+            return;
+        }
+        const isFirstSlide = !state.galleryOn;
+        const complete = () => {
+            actions.dispatch({ type: 'SLIDE_LOADED', index });
+            internal.emit('onSlideItemLoad', {
+                index,
+                delay: 0,
+                isFirstSlide,
+            });
+        };
+        // While the zoom-from-origin flight animates this slide, hold the
+        // completion — the state flip mid-transition restarts the flight
+        // in Safari (the image path holds the same way).
+        if (isFirstSlide && internal.zoomOriginOpenRef.current) {
+            loadSettleRef.current = window.setTimeout(
+                complete,
+                coreSettings.startAnimationDuration + 120,
+            );
+            return;
+        }
+        complete();
+    };
+
+    // Autoplay + pause-on-leave via the event bus (2.x event wiring).
+    useEffect(() => {
+        const offLoad = internal.events.on('slideItemLoad', (detail) => {
+            if (detail.index !== index) {
+                return;
+            }
+            const current = isCurrentRef.current;
+            const cfg = settingsRef.current;
+            if (detail.isFirstSlide && cfg.autoplayFirstVideo && current) {
+                window.setTimeout(() => activateAndPlay(), 200);
+            } else if (
+                !detail.isFirstSlide &&
+                cfg.autoplayVideoOnSlide &&
+                current
+            ) {
+                activateAndPlay();
+            }
+        });
+        const offAfter = internal.events.on('afterSlide', (detail) => {
+            if (
+                settingsRef.current.autoplayVideoOnSlide &&
+                detail.index === index &&
+                detail.index !== detail.prevIndex
+            ) {
+                window.setTimeout(() => activateAndPlay(), 100);
+            }
+        });
+        const offBefore = internal.events.on('beforeSlide', (detail) => {
+            if (detail.prevIndex === index && detail.index !== index) {
+                control('pause');
+            }
+        });
+        return () => {
+            offLoad();
+            offAfter();
+            offBefore();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    if (!videoInfo) {
+        return null;
+    }
+
+    const [maxWidth = 1280, maxHeight = 720] = settings.videoMaxSize
+        .split('-')
+        .map((value) => parseInt(value, 10));
+
+    const onMediaReady = () => {
+        if (pendingPlayRef.current) {
+            pendingPlayRef.current = false;
+            control('play');
+        }
+    };
+
+    const title = item.title ?? item.alt ?? 'Embedded video player';
+    const iframeProps = {
+        allow: 'autoplay',
+        allowFullScreen: true,
+        frameBorder: 0,
+        title,
+        onLoad: onMediaReady,
+    } as const;
+
+    let player: ReactElement | null = null;
+    if (activated) {
+        if (videoInfo.youtube) {
+            player = (
+                <iframe
+                    {...iframeProps}
+                    ref={(el) => {
+                        mediaRef.current = el;
+                    }}
+                    className="lg-video-object lg-youtube"
+                    src={getYouTubeEmbedUrl(
+                        videoInfo,
+                        settings.youTubePlayerParams,
+                        item.src ?? '',
+                        settings.youTubeNoCookie,
+                    )}
+                />
+            );
+        } else if (videoInfo.vimeo) {
+            player = (
+                <iframe
+                    {...iframeProps}
+                    ref={(el) => {
+                        mediaRef.current = el;
+                    }}
+                    className="lg-video-object lg-vimeo"
+                    src={getVimeoEmbedUrl(
+                        videoInfo,
+                        settings.vimeoPlayerParams,
+                    )}
+                />
+            );
+        } else if (videoInfo.wistia) {
+            player = (
+                <iframe
+                    {...iframeProps}
+                    ref={(el) => {
+                        mediaRef.current = el;
+                    }}
+                    className="wistia_embed lg-video-object lg-wistia"
+                    name="wistia_embed"
+                    src={getWistiaEmbedUrl(
+                        videoInfo,
+                        settings.wistiaPlayerParams,
+                    )}
+                />
+            );
+        } else if (videoInfo.html5 && html5Video) {
+            const attributes: Record<string, string | boolean> = {};
+            Object.entries(html5Video.attributes ?? {}).forEach(
+                ([key, value]) => {
+                    attributes[key === 'controlslist' ? 'controlsList' : key] =
+                        value;
+                },
+            );
+            player = (
+                <video
+                    className="lg-video-object lg-html5"
+                    ref={(el) => {
+                        mediaRef.current = el;
+                    }}
+                    onLoadedMetadata={onMediaReady}
+                    onEnded={() => {
+                        if (settingsRef.current.gotoNextSlideOnVideoEnd) {
+                            actions.nextSlide();
+                        }
+                    }}
+                    // Keep clicks on the native controls from starting drags.
+                    onPointerDown={(event: SyntheticEvent) =>
+                        event.stopPropagation()
+                    }
+                    {...attributes}
+                >
+                    {html5Video.source?.map((source, sourceIndex) => (
+                        <source
+                            key={sourceIndex}
+                            src={source.src}
+                            type={source.type}
+                        />
+                    ))}
+                    {html5Video.tracks?.map((track, trackIndex) => (
+                        <track key={trackIndex} {...track} />
+                    ))}
+                    Your browser does not support HTML5 video.
+                </video>
+            );
+        }
+    }
+
+    return (
+        <div
+            className={cx(
+                'lg-video-cont',
+                providerClass(videoInfo),
+                activated && 'lg-video-loaded',
+            )}
+            style={{
+                width: '100%',
+                maxWidth: `${maxWidth}px`,
+                maxHeight: '100%',
+                aspectRatio: `${maxWidth} / ${maxHeight}`,
+            }}
+        >
+            {player}
+            {!activated && hasPoster && (
+                <button
+                    type="button"
+                    className="lg-video-poster-wrap"
+                    style={{
+                        all: 'unset',
+                        cursor: 'pointer',
+                        display: 'block',
+                        width: '100%',
+                        height: '100%',
+                    }}
+                    aria-label={settings.strings.playVideo}
+                    onClick={() => {
+                        internal.emit('onPosterClick');
+                        activateAndPlay();
+                    }}
+                >
+                    <PlayButton label={settings.strings.playVideo} />
+                    <img
+                        className="lg-object lg-video-poster"
+                        src={poster}
+                        alt={item.alt ?? ''}
+                        draggable={false}
+                        onLoad={settlePoster}
+                        // A poster that fails still leaves a playable
+                        // slide: settle it so the slideshow (and the
+                        // neighbour preload) do not wait on it forever.
+                        onError={settlePoster}
+                    />
+                </button>
+            )}
+            {dummySrc && (
+                <img
+                    className="lg-dummy-img"
+                    src={dummySrc}
+                    alt=""
+                    aria-hidden="true"
+                    draggable={false}
+                    // v2 sizes the dummy to the cont box exactly.
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                    }}
+                />
+            )}
+        </div>
+    );
+}
+
+const Video: LgPlugin<VideoSettings> = {
+    name: 'video',
+    defaults: videoSettings,
+    slideRenderer: (item, index) => {
+        if (getSlideType(item) !== 'video') {
+            return undefined;
+        }
+        return <VideoSlide item={item} index={index} />;
+    },
+};
+
+declare module '../../types' {
+    interface LightGalleryPluginSettings {
+        video: Partial<VideoSettings>;
+    }
+}
+
+export default Video;

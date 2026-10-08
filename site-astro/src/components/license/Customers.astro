@@ -1,0 +1,28 @@
+---
+/**
+ * License page customers: every customer logo in its own card; hovering a
+ * card lifts the logo and shows the name (always shown on touch screens).
+ */
+import CustomerLogo from '../CustomerLogo.astro';
+import { LOGOS } from '../../data/customer-logos';
+
+const HEADING = "The gallery behind the world's biggest brands.";
+---
+
+<div class="license-section customers-section" id="customers">
+    <div class="license-inner">
+        <h2 class="customers-heading">{HEADING}</h2>
+        <ul class="customers-grid">
+            {
+                LOGOS.map((l) => (
+                    <li class="customers-card">
+                        <span class="customers-logo">
+                            <CustomerLogo logo={l} decorative />
+                        </span>
+                        <span class="customers-name">{l.name}</span>
+                    </li>
+                ))
+            }
+        </ul>
+    </div>
+</div>

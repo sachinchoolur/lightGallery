@@ -3,7 +3,10 @@
  */
 
 import { lGEvents } from '../../lg-events';
-import { LightGallerySettings } from '../../lg-settings';
+import {
+    LightGalleryAllSettings,
+    LightGallerySettings,
+} from '../../lg-settings';
 import { LightGallery } from '../../lightgallery';
 import {
     RelativeCaptionSettings,
@@ -18,7 +21,7 @@ export default class RelativeCaption {
         this.core = instance;
 
         // Override some of lightGallery default settings
-        const defaultSettings: Partial<LightGallerySettings> = {
+        const defaultSettings: Partial<LightGalleryAllSettings> = {
             addClass: this.core.settings.addClass + ' lg-relative-caption',
         };
 

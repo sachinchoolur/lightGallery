@@ -1,0 +1,113 @@
+import { useEffect, useMemo, useRef, type ReactElement } from 'react';
+import { getSlidePoolIndexes } from '@lightgallery/headless';
+
+import {
+    useGalleryActions,
+    useGalleryInternal,
+    useGallerySettings,
+    useGalleryState,
+} from './context';
+import type { OriginAnimation, SlideTimeline } from './GalleryOutlet';
+import { Slide } from './Slide';
+
+export interface SlidesProps {
+    timeline: SlideTimeline;
+    originAnim: OriginAnimation | null;
+    /**
+     * True once the close animation has fully finished. The `.lg-inner`
+     * shell stays mounted (the persistent layer iOS reopens against),
+     * but the items unmount — 2.x empties `$inner` at the same moment.
+     * Stale items would otherwise keep `lg-current` and flash into the
+     * next entrance.
+     */
+    cleared: boolean;
+}
+
+/**
+ * Windowed slide mounting: only the slides around the current index (per
+ * `numberOfSlideItemsInDom`) exist in the DOM, matching 2.x
+ * `organizeSlideItems`. `speed`/`easing` land as inline styles on
+ * `.lg-inner`; the vanilla CSS inherits them into the slide transitions.
+ */
+export function Slides({
+    timeline,
+    originAnim,
+    cleared,
+}: SlidesProps): ReactElement {
+    const state = useGalleryState();
+    const settings = useGallerySettings();
+    const internal = useGalleryInternal();
+    const actions = useGalleryActions();
+
+    // Pool size: virtualization.slides overrides the classic
+    // numberOfSlideItemsInDom. The current slide is always in the window,
+    // and zoom resets when a slide stops being current, so the pool never
+    // recycles live zoom state.
+    const poolSize =
+        settings.virtualization?.slides ?? settings.numberOfSlideItemsInDom;
+    const indexes = useMemo(
+        () =>
+            getSlidePoolIndexes({
+                index: state.currentIndex,
+                prevIndex: state.previousIndex,
+                slidesCount: state.slidesCount,
+                poolSize,
+                loop: state.loop,
+            }).sort((a, b) => a - b),
+        [
+            state.currentIndex,
+            state.previousIndex,
+            state.slidesCount,
+            poolSize,
+            state.loop,
+        ],
+    );
+
+    // A slide that leaves the pool unmounts its media. Its loaded flag
+    // must go with it: a remount would otherwise land as `lg-complete`
+    // (no loader) while the image downloads again.
+    const mountedRef = useRef<number[]>([]);
+    useEffect(() => {
+        const previous = mountedRef.current;
+        mountedRef.current = indexes;
+        previous.forEach((index) => {
+            if (indexes.indexOf(index) === -1) {
+                actions.dispatch({ type: 'SLIDE_UNLOADED', index });
+            }
+        });
+    }, [indexes, actions]);
+
+    return (
+        <div
+            className="lg-inner"
+            ref={(element) => internal.registerElements({ inner: element })}
+            style={{
+                transitionTimingFunction: settings.easing,
+                transitionDuration: `${settings.speed}ms`,
+                // Per-property durations: the transform runs for the full
+                // speed while the crossfade stays short (see the mode
+                // transitions in the stylesheet).
+                ['--lg-speed' as string]: `${settings.speed}ms`,
+                // Pointer events cannot preventDefault scrolling; this is
+                // what keeps the page still during swipes. Pinch is handled
+                // by the zoom plugin, never by the browser.
+                touchAction: 'none',
+            }}
+        >
+            {!cleared &&
+                indexes.map((index) => (
+                    <Slide
+                        key={index}
+                        index={index}
+                        item={internal.items[index]}
+                        isShown={timeline.shownIndex === index}
+                        position={timeline.positions[index]}
+                        inProgress={timeline.progressIndex === index}
+                        originAnim={
+                            originAnim?.index === index ? originAnim : null
+                        }
+                    />
+                ))}
+        </div>
+    );
+}

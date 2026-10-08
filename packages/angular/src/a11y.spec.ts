@@ -1,0 +1,290 @@
+import { Component, signal, viewChild } from '@angular/core';
+import { TestBed, type ComponentFixture } from '@angular/core/testing';
+import { axe } from 'vitest-axe';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgFeature,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withAutoplay } from '@lightgallery/angular/plugins/autoplay';
+import { withFullscreen } from '@lightgallery/angular/plugins/fullscreen';
+import { withPager } from '@lightgallery/angular/plugins/pager';
+import { withRotate } from '@lightgallery/angular/plugins/rotate';
+import { withShare } from '@lightgallery/angular/plugins/share';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withVideo } from '@lightgallery/angular/plugins/video';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
+
+const ITEMS: LgGalleryItem[] = [
+    { src: 'a.jpg', thumb: 'a-t.jpg', alt: 'a', caption: 'Caption A' },
+    { src: 'b.jpg', thumb: 'b-t.jpg', alt: 'b' },
+    { src: 'c.jpg', thumb: 'c-t.jpg', alt: 'c' },
+];
+
+function query(selector: string): HTMLElement | null {
+    return document.querySelector(selector);
+}
+
+async function flush<T>(fixture: ComponentFixture<T>): Promise<void> {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+}
+
+@Component({
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery
+            [slides]="slides() ? items : undefined"
+            [zoomFromOrigin]="false"
+            [ariaLabelledby]="labelledby()"
+            [ariaAnnouncements]="announcements()"
+            [features]="features()"
+            [speed]="0"
+            [backdropDuration]="0"
+        >
+            @if (!slides()) { @for (item of items; track item.src) {
+            <a href="#" class="trigger" [lgGalleryItem]="item">
+                <img [src]="item.thumb" [alt]="item.alt" />
+            </a>
+            } }
+        </lg-gallery>
+        <h2 id="gallery-heading">My photos</h2>
+    `,
+})
+class A11yHost {
+    readonly gallery = viewChild.required(LgGalleryComponent);
+    readonly items = ITEMS;
+    readonly slides = signal(true);
+    readonly labelledby = signal<string | undefined>(undefined);
+    readonly announcements = signal<boolean | undefined>(undefined);
+    readonly features = signal<readonly LgFeature[]>([]);
+}
+
+describe('accessibility', () => {
+    describe('with fake timers', () => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+        afterEach(() => {
+            vi.runOnlyPendingTimers();
+            vi.useRealTimers();
+        });
+
+        async function advance(
+            fixture: ComponentFixture<A11yHost>,
+            ms: number,
+        ): Promise<void> {
+            vi.advanceTimersByTime(ms);
+            await flush(fixture);
+        }
+
+        it('has dialog semantics with an accessible name (and labelledby override)', async () => {
+            const fixture = TestBed.createComponent(A11yHost);
+            const host = fixture.componentInstance;
+            await flush(fixture);
+            host.gallery().openGallery(0);
+            await flush(fixture);
+
+            const dialog = query('.lg-container')!;
+            expect(dialog.getAttribute('role')).toBe('dialog');
+            expect(dialog.getAttribute('aria-modal')).toBe('true');
+            expect(dialog.getAttribute('aria-label')).toBe('Gallery');
+
+            host.labelledby.set('gallery-heading');
+            await flush(fixture);
+            expect(dialog.getAttribute('aria-label')).toBeNull();
+            expect(dialog.getAttribute('aria-labelledby')).toBe(
+                'gallery-heading',
+            );
+        });
+
+        it('moves focus in, traps it with CDK, and returns it to the trigger', async () => {
+            const fixture = TestBed.createComponent(A11yHost);
+            const host = fixture.componentInstance;
+            host.slides.set(false);
+            await flush(fixture);
+
+            const trigger =
+                document.querySelector<HTMLAnchorElement>('.trigger')!;
+            trigger.focus();
+            trigger.click();
+            await flush(fixture);
+
+            const dialog = query('.lg-container')!;
+            expect(document.activeElement).toBe(dialog);
+            // CDK FocusTrap sentinels wrap the dialog content.
+            expect(
+                document.querySelectorAll('.cdk-focus-trap-anchor').length,
+            ).toBe(2);
+
+            host.gallery().closeGallery();
+            await flush(fixture);
+            await advance(fixture, 550);
+            expect(query('.lg-container.lg-show')).toBeNull();
+            expect(document.activeElement).toBe(trigger);
+        });
+
+        it('links an anchor trigger without href to item.src so it is focusable', async () => {
+            @Component({
+                imports: [LgGalleryComponent, LgGalleryItemDirective],
+                template: `
+                    <lg-gallery>
+                        <a class="plain" [lgGalleryItem]="items[0]">
+                            <img [src]="items[0].thumb" [alt]="items[0].alt" />
+                        </a>
+                        <a class="static" href="#b" [lgGalleryItem]="items[1]">
+                            <img [src]="items[1].thumb" [alt]="items[1].alt" />
+                        </a>
+                        <a
+                            class="bound"
+                            [href]="bound()"
+                            [lgGalleryItem]="items[1]"
+                        >
+                            <img [src]="items[1].thumb" [alt]="items[1].alt" />
+                        </a>
+                        <button class="button" [lgGalleryItem]="items[2]">
+                            <img [src]="items[2].thumb" [alt]="items[2].alt" />
+                        </button>
+                    </lg-gallery>
+                `,
+            })
+            class HrefHost {
+                readonly items = ITEMS;
+                readonly bound = signal('#bound');
+            }
+            const fixture = TestBed.createComponent(HrefHost);
+            await flush(fixture);
+
+            const plain = query('.plain')!;
+            expect(plain.getAttribute('href')).toBe('a.jpg');
+            plain.focus();
+            expect(document.activeElement).toBe(plain);
+            expect(query('.static')!.getAttribute('href')).toBe('#b');
+            expect(query('.bound')!.getAttribute('href')).toBe('#bound');
+            fixture.componentInstance.bound.set('#rebound');
+            await flush(fixture);
+            expect(query('.bound')!.getAttribute('href')).toBe('#rebound');
+            expect(query('.button')!.hasAttribute('href')).toBe(false);
+        });
+
+        it('announces slide changes and demotes the counter/caption', async () => {
+            const fixture = TestBed.createComponent(A11yHost);
+            const host = fixture.componentInstance;
+            await flush(fixture);
+            host.gallery().openGallery(0);
+            await flush(fixture);
+
+            const announcer = query('.lg-announcer')!;
+            expect(announcer.getAttribute('role')).toBe('status');
+            expect(announcer.getAttribute('aria-live')).toBe('polite');
+            expect(announcer.textContent!.trim()).toBe(
+                'Image 1 of 3, Caption A',
+            );
+
+            await advance(fixture, 450);
+            host.gallery().goToSlide(1);
+            await flush(fixture);
+            expect(announcer.textContent!.trim()).toBe('Image 2 of 3');
+
+            const counter = query('.lg-counter')!;
+            expect(counter.getAttribute('aria-hidden')).toBe('true');
+            expect(counter.getAttribute('role')).toBeNull();
+            const caption = query('.lg-sub-html')!;
+            expect(caption.getAttribute('role')).toBeNull();
+            expect(caption.getAttribute('aria-live')).toBeNull();
+        });
+
+        it('restores the 2.x live regions when announcements are disabled', async () => {
+            const fixture = TestBed.createComponent(A11yHost);
+            const host = fixture.componentInstance;
+            host.announcements.set(false);
+            await flush(fixture);
+            host.gallery().openGallery(0);
+            await flush(fixture);
+
+            expect(query('.lg-announcer')).toBeNull();
+            const counter = query('.lg-counter')!;
+            expect(counter.getAttribute('role')).toBe('status');
+            expect(counter.getAttribute('aria-live')).toBe('polite');
+            expect(counter.getAttribute('aria-hidden')).toBeNull();
+            const caption = query('.lg-sub-html')!;
+            expect(caption.getAttribute('role')).toBe('status');
+            expect(caption.getAttribute('aria-live')).toBe('polite');
+        });
+
+        it('collapses every animation under prefers-reduced-motion', async () => {
+            const originalMatchMedia = window.matchMedia;
+            window.matchMedia = ((query: string) => ({
+                matches: query.includes('prefers-reduced-motion'),
+                media: query,
+                addEventListener: () => undefined,
+                removeEventListener: () => undefined,
+                addListener: () => undefined,
+                removeListener: () => undefined,
+                onchange: null,
+                dispatchEvent: () => false,
+            })) as typeof window.matchMedia;
+            try {
+                const fixture = TestBed.createComponent(A11yHost);
+                const host = fixture.componentInstance;
+                await flush(fixture);
+                host.gallery().openGallery(0);
+                await flush(fixture);
+                // backdropDuration collapsed to 0: fully visible at +10ms.
+                await advance(fixture, 10);
+                const outer = query('.lg-outer')!;
+                expect(outer.classList.contains('lg-visible')).toBe(true);
+                // slide-end bounce disabled.
+                host.gallery().goToSlide(2);
+                await flush(fixture);
+                host.gallery().nextSlide();
+                await flush(fixture);
+                expect(outer.classList.contains('lg-right-end')).toBe(false);
+            } finally {
+                window.matchMedia = originalMatchMedia;
+            }
+        });
+    });
+
+    describe('with real timers (axe)', () => {
+        it('has zero detectable WCAG A/AA violations with features enabled', async () => {
+            const fixture = TestBed.createComponent(A11yHost);
+            const host = fixture.componentInstance;
+            host.features.set([
+                withThumbnail(),
+                withZoom({ showZoomInOutIcons: true }),
+                withVideo(),
+                withAutoplay(),
+                withFullscreen(),
+                withPager(),
+                withShare(),
+                withRotate(),
+            ]);
+            await flush(fixture);
+            host.gallery().openGallery(0);
+            await flush(fixture);
+            await new Promise((resolve) => setTimeout(resolve, 150));
+            await flush(fixture);
+            document
+                .querySelector<HTMLImageElement>('img.lg-image')
+                ?.dispatchEvent(new Event('load'));
+            await flush(fixture);
+
+            const results = await axe(query('.lg-container')!, {
+                runOnly: {
+                    type: 'tag',
+                    values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'],
+                },
+                // jsdom has no canvas; contrast is a manual/browser check.
+                rules: { 'color-contrast': { enabled: false } },
+            });
+            expect(results.violations).toEqual([]);
+
+            fixture.destroy();
+        }, 20000);
+    });
+});

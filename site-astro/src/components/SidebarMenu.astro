@@ -1,0 +1,98 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { DEMO_GROUPS } from '../lib/demo-groups';
+
+/**
+ * Docs/demos sidebar, port of `partials/sidebar/{docs,demos}-menu.html`.
+ * Docs groups come from the collection entries' `menu.docs.parent`,
+ * children ordered by `weight`, groups by their lightest child (the Hugo
+ * behaviour). Demos are grouped the way the /demos/ index is, from
+ * lib/demo-groups, in that order; anything unlisted lands in "More demos".
+ */
+interface Props {
+    section: 'docs' | 'demos';
+    entries: (CollectionEntry<'docs'> | CollectionEntry<'demos'>)[];
+}
+
+const { section, entries } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+interface Item {
+    label: string;
+    url: string;
+    weight: number;
+    slug: string;
+}
+
+const byLabel = (a: Item, b: Item) => a.label.localeCompare(b.label);
+const items: Item[] = [];
+const groups = new Map<string, Item[]>();
+for (const entry of entries) {
+    const menu = (
+        entry.data.menu as
+            | Record<string, { parent: string; name?: string }>
+            | undefined
+    )?.[section];
+    if (!menu) continue;
+    const slug = entry.id.replace(/\/index$/, '');
+    const item: Item = {
+        label: menu.name ?? entry.data.title,
+        url: `/${section}/${slug}/`,
+        weight: entry.data.weight ?? 0,
+        slug: slug.toLowerCase(),
+    };
+    items.push(item);
+    const group = groups.get(menu.parent) ?? [];
+    group.push(item);
+    groups.set(menu.parent, group);
+}
+
+let ordered: { name: string; items: Item[] }[];
+if (section === 'demos') {
+    const bySlug = new Map(items.map((item) => [item.slug, item]));
+    const listed = new Set(DEMO_GROUPS.flatMap((group) => group.slugs));
+    ordered = DEMO_GROUPS.map((group) => ({
+        name: group.name,
+        items: group.slugs
+            .map((slug) => bySlug.get(slug))
+            .filter((item): item is Item => !!item),
+    })).filter((group) => group.items.length);
+    const leftovers = items.filter((item) => !listed.has(item.slug)).sort(byLabel);
+    if (leftovers.length) ordered.push({ name: 'More demos', items: leftovers });
+} else {
+    ordered = [...groups.entries()]
+        .map(([name, group]) => ({
+            name,
+            // Hugo breaks equal weights alphabetically.
+            items: group.sort((a, b) => a.weight - b.weight || byLabel(a, b)),
+        }))
+        .sort(
+            (a, b) =>
+                Math.min(...a.items.map((i) => i.weight)) -
+                Math.min(...b.items.map((i) => i.weight)),
+        );
+}
+---
+
+{
+    ordered.map((group) => (
+        <>
+            <h3>{group.name}</h3>
+            <ul class="list-unstyled">
+                {group.items.map((item) => (
+                    <li>
+                        <a
+                            class:list={[
+                                'docs-link',
+                                { active: currentPath === item.url },
+                            ]}
+                            href={item.url}
+                        >
+                            {item.label}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </>
+    ))
+}

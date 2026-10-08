@@ -1,0 +1,654 @@
+import {
+    Directive,
+    effect,
+    ElementRef,
+    inject,
+    input,
+    OnDestroy,
+    untracked,
+} from '@angular/core';
+import {
+    getEdgeFrictionedDelta,
+    getHorizontalDragTransforms,
+    getSwipeAxis,
+    getSwipeReleaseVerdict,
+    getWindowedVelocity,
+    pushVelocitySample,
+    getVerticalDragEffects,
+    removePointer,
+    resolveSwipeTarget,
+    shouldCloseOnVerticalDrag,
+    upsertPointer,
+    type PointerRecord,
+    type SwipeAxis,
+    type VelocitySample,
+} from '@lightgallery/headless';
+
+import { runSprings } from './spring-runner';
+
+import { LgGalleryRuntime } from './runtime';
+import { LightGalleryStore } from './store';
+
+/**
+ * Swipe/drag gestures (2.x `enableSwipe`/`enableDrag` via pointer events) —
+ * the Angular twin of the React track's `useGalleryGestures`.
+ *
+ * PERFORMANCE CONTRACT (load-bearing — deliberately "un-Angular" and
+ * load-bearing): while a pointer moves, transforms are written
+ * DIRECTLY to the slide elements and the backdrop. No signal is written and
+ * no change detection runs per move — Angular renders exactly twice per
+ * gesture (position classes at drag start, navigation commit at release).
+ * Everything here is plain fields + native listeners on purpose:
+ * - `pointerdown` is a native listener (a template `(pointerdown)` binding
+ *   would notify the zoneless scheduler on every press);
+ * - move/up/cancel listeners are window-level so drags that leave the
+ *   gallery (or the viewport, for mouse) keep tracking — 2.x parity;
+ * - signal reads inside the handlers are untracked plain reads.
+ * The pure math lives in `@lightgallery/headless`; this directive only wires
+ * pointer events to it and dispatches its verdicts. Angular's `[class]` /
+ * `[style.*]` bindings reconcile against their own previous values, so the
+ * classes and inline styles written here survive unrelated CD passes and are
+ * handed back explicitly in `restoreDragVisuals`.
+ */
+
+interface DragSession {
+    pointerId: number;
+    isMouse: boolean;
+    startX: number;
+    startY: number;
+    samples: VelocitySample[];
+    lastX: number;
+    lastY: number;
+    axis: SwipeAxis | undefined;
+    moved: boolean;
+    /** A second pointer arrived — reserved for the zoom feature's pinch. */
+    suspended: boolean;
+    els: {
+        current: HTMLElement | null;
+        prev: HTMLElement | null;
+        next: HTMLElement | null;
+        backdrop: HTMLElement | null;
+    } | null;
+    /** UI-chrome classes we toggled mid-drag and must hand back to Angular. */
+    hidUi: boolean;
+}
+
+@Directive({
+    selector: '[lgGestures]',
+})
+export class LgGesturesDirective implements OnDestroy {
+    /** Gestures act only while the gallery is open (not closing). */
+    readonly lgGestures = input.required<boolean>();
+
+    private readonly host = inject(ElementRef).nativeElement as HTMLElement;
+    private readonly store = inject(LightGalleryStore);
+    private readonly runtime = inject(LgGalleryRuntime);
+
+    private session: DragSession | null = null;
+    private detachWindow: (() => void) | null = null;
+    private springCancel: (() => void) | null = null;
+    private navSpringActive = false;
+
+    constructor() {
+        // The overlay view only ever attaches in the browser, so a
+        // constructor-time native listener is SSR-safe here.
+        this.host.addEventListener('pointerdown', this.onPointerDown);
+        // React counterpart: useGalleryGestures' `active` cleanup effect —
+        // close/deactivate mid-drag must leave nothing behind.
+        effect(() => {
+            if (!this.lgGestures()) {
+                untracked(() => this.cancelSession());
+            }
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.stopReleaseSpring();
+        this.host.removeEventListener('pointerdown', this.onPointerDown);
+        this.cancelSession();
+    }
+
+    private cancelSession(): void {
+        this.stopReleaseSpring();
+        const session = this.session;
+        if (session) {
+            this.endSession(session);
+            this.restoreDragVisuals(session);
+        } else {
+            this.detachWindow?.();
+            this.detachWindow = null;
+        }
+    }
+
+    private queryEls(session: DragSession): NonNullable<DragSession['els']> {
+        const outer = this.host;
+        session.els = {
+            current:
+                outer.querySelector<HTMLElement>('.lg-item.lg-current') ?? null,
+            prev:
+                outer.querySelector<HTMLElement>('.lg-item.lg-prev-slide') ??
+                null,
+            next:
+                outer.querySelector<HTMLElement>('.lg-item.lg-next-slide') ??
+                null,
+            backdrop:
+                outer.parentElement?.querySelector<HTMLElement>(
+                    '.lg-backdrop',
+                ) ?? null,
+        };
+        return session.els;
+    }
+
+    private stopReleaseSpring(): void {
+        this.springCancel?.();
+        this.springCancel = null;
+        // A cancelled navigation spring still owes the mode restore.
+        if (this.navSpringActive) {
+            this.navSpringActive = false;
+            this.runtime.gestureHooks.settleTouchNavigation();
+        }
+    }
+
+    // Resolved reading direction ('auto' is resolved at settings time).
+    private getDirection(): 'ltr' | 'rtl' {
+        return this.runtime.settings().direction === 'rtl' ? 'rtl' : 'ltr';
+    }
+
+    // Snap the dragged slides back to rest on a spring seeded with the
+    // release velocity; lg-dragging stays on (transitions down) until it
+    // settles, then the visuals are restored to the rendered state.
+    private springHorizontalBack(
+        session: DragSession,
+        deltaX: number,
+        velocityX: number,
+    ): void {
+        const els = session.els;
+        const width = els?.current?.offsetWidth || this.host.offsetWidth || 0;
+        if (!els || !width || Math.abs(deltaX) < 1) {
+            this.restoreDragVisuals(session);
+            return;
+        }
+        this.stopReleaseSpring();
+        this.springCancel = runSprings(
+            [{ from: deltaX, velocity: velocityX, target: 0 }],
+            ([x]) => {
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    this.getDirection(),
+                );
+                if (els.current) {
+                    els.current.style.transform = transforms.current;
+                }
+                if (els.prev) {
+                    els.prev.style.transform = transforms.prev;
+                }
+                if (els.next) {
+                    els.next.style.transform = transforms.next;
+                }
+            },
+            () => {
+                this.springCancel = null;
+                this.restoreDragVisuals(session);
+            },
+        );
+    }
+
+    // Navigate at release (fromTouch semantics: events, counter and classes
+    // flip immediately) while a spring carries the drag geometry to the x
+    // where the arriving slide sits at exactly 0. The class flip is purely
+    // declarative, so the inline transforms keep ruling the visuals until
+    // the spring settles and hands everything back.
+    private springHorizontalNavigate(
+        session: DragSession,
+        verdict: 'next' | 'prev',
+        target: number,
+        deltaX: number,
+        velocityX: number,
+    ): void {
+        const els = session.els;
+        const width = els?.current?.offsetWidth || this.host.offsetWidth || 0;
+        this.stopReleaseSpring();
+        // The commit render may rewrite the outer classes (dropping the
+        // classList-added lg-dragging), so the driven slides opt out of
+        // transitions inline for the flight.
+        if (els && width) {
+            [els.current, els.prev, els.next].forEach((el) => {
+                if (el) {
+                    el.style.transitionProperty = 'none';
+                }
+            });
+        }
+        this.runtime.gestureHooks.commitTouchNavigation(target, verdict);
+        if (!els || !width) {
+            this.restoreDragVisuals(session);
+            this.runtime.gestureHooks.settleTouchNavigation();
+            return;
+        }
+        // The x where the arriving slide's drag transform lands at 0:
+        // slideWidth + x + gutter(x) = 0  →  x = ∓ width·115/110.
+        const springTarget =
+            (verdict === 'next' ? -1 : 1) *
+            (this.getDirection() === 'rtl' ? -1 : 1) *
+            ((width * 115) / 110);
+        this.navSpringActive = true;
+        this.springCancel = runSprings(
+            [{ from: deltaX, velocity: velocityX, target: springTarget }],
+            ([x]) => {
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    this.getDirection(),
+                );
+                if (els.current) {
+                    els.current.style.transform = transforms.current;
+                }
+                if (els.prev) {
+                    els.prev.style.transform = transforms.prev;
+                }
+                if (els.next) {
+                    els.next.style.transform = transforms.next;
+                }
+            },
+            () => {
+                this.springCancel = null;
+                this.navSpringActive = false;
+                this.restoreDragVisuals(session);
+                this.runtime.gestureHooks.settleTouchNavigation();
+            },
+        );
+    }
+
+    // Same for a non-closing vertical drag: slide transform and backdrop
+    // opacity spring home together.
+    private springVerticalBack(
+        session: DragSession,
+        deltaY: number,
+        velocityY: number,
+    ): void {
+        const els = session.els;
+        if (!els?.current || Math.abs(deltaY) < 1) {
+            this.restoreDragVisuals(session);
+            return;
+        }
+        this.stopReleaseSpring();
+        this.springCancel = runSprings(
+            [{ from: deltaY, velocity: velocityY, target: 0 }],
+            ([y]) => {
+                const effects = getVerticalDragEffects(
+                    y!,
+                    window.innerWidth,
+                    window.innerHeight,
+                );
+                els.current!.style.transform = effects.transform;
+                if (els.backdrop) {
+                    els.backdrop.style.opacity = String(
+                        effects.backdropOpacity,
+                    );
+                }
+            },
+            () => {
+                this.springCancel = null;
+                this.restoreDragVisuals(session);
+            },
+        );
+    }
+
+    /** Return every mid-drag DOM mutation to what Angular last rendered. */
+    private restoreDragVisuals(session: DragSession): void {
+        const outer = this.host;
+        outer.parentElement?.classList.remove('lg-dragging-vertical');
+        if (session.hidUi) {
+            outer.classList.remove('lg-hide-items');
+            outer.classList.add('lg-components-open');
+            session.hidUi = false;
+        }
+        // Every slide, not just the session's trio: a navigation spring
+        // cancelled mid-flight leaves transforms on slides that are no
+        // longer positioned around the new current index. EXCEPT slides
+        // the zoom-from-origin flight owns: a backdrop-tap close runs
+        // closeOnTap (outer pointerup) BEFORE this release (window
+        // pointerup), and real events drain microtasks between the two
+        // listeners — the closing transform is already painted and this
+        // wipe would kill the exit flight in place.
+        // Drop the transforms while the inline `transition-property:
+        // none` still holds, so each slide snaps to its resting place in
+        // a single frame. Clearing that first animates the snap instead,
+        // and the outgoing slide is seen travelling back toward the
+        // centre while its fade is still running.
+        const settled = Array.from(
+            outer.querySelectorAll<HTMLElement>('.lg-item'),
+        ).filter((el) => !el.classList.contains('lg-start-end-progress'));
+        settled.forEach((el) => {
+            el.style.transform = '';
+        });
+        // The gesture forced lg-slide geometry onto whatever mode is
+        // configured; drop it inside the same suppressed frame. The
+        // framework's own state flip lands a render later, once
+        // transitions are live, and every slide then animates from the
+        // slide-mode resting place to the configured one.
+        if (this.runtime.settings().mode !== 'lg-slide') {
+            outer.classList.remove('lg-slide');
+        }
+        // Flush the snap before transitions come back.
+        void outer.offsetHeight;
+        settled.forEach((el) => {
+            el.style.transitionProperty = '';
+        });
+        outer.classList.remove('lg-dragging');
+        if (session.els?.backdrop) {
+            session.els.backdrop.style.opacity = '';
+        }
+    }
+
+    private endSession(session: DragSession): void {
+        this.detachWindow?.();
+        this.detachWindow = null;
+        this.session = null;
+        // The ledger is session-scoped: once the window listeners detach
+        // nothing can remove records, so clear them here (a suspended
+        // second pointer would otherwise be stranded).
+        this.runtime.gestureSeam.pointers = [];
+        if (session.isMouse && this.runtime.settings().enableDrag) {
+            this.host.classList.remove('lg-grabbing');
+            this.host.classList.add('lg-grab');
+        }
+    }
+
+    private readonly onWindowPointerMove = (event: PointerEvent): void => {
+        const seam = this.runtime.gestureSeam;
+        // Update only pointers that registered at pointerdown — hovering
+        // mouse moves have no down/up lifecycle and would be stranded.
+        if (seam.pointers.some((r) => r.id === event.pointerId)) {
+            seam.pointers = upsertPointer(
+                seam.pointers,
+                seamRecord(seam.pointers, event),
+            );
+        }
+        const session = this.session;
+        if (
+            !session ||
+            event.pointerId !== session.pointerId ||
+            session.suspended ||
+            seam.lockOwner !== null
+        ) {
+            return;
+        }
+        session.lastX = event.clientX;
+        session.lastY = event.clientY;
+        session.samples = pushVelocitySample(session.samples, {
+            x: event.clientX,
+            y: event.clientY,
+            t: performance.now(),
+        });
+        const deltaX = event.clientX - session.startX;
+        const deltaY = event.clientY - session.startY;
+        session.axis = getSwipeAxis(deltaX, deltaY, session.axis);
+        if (!session.axis) {
+            return;
+        }
+        session.moved = true;
+        const outer = this.host;
+        const els = session.els ?? this.queryEls(session);
+
+        if (session.axis === 'horizontal') {
+            outer.classList.add('lg-dragging');
+            const width = els.current?.offsetWidth || outer.offsetWidth || 0;
+            // Rubber-band past the gallery ends: a missing neighbor in
+            // the drag direction means there is nothing there.
+            const transforms = getHorizontalDragTransforms(
+                getEdgeFrictionedDelta(
+                    deltaX,
+                    !!els.prev,
+                    !!els.next,
+                    this.getDirection(),
+                ),
+                width,
+                this.getDirection(),
+            );
+            if (els.current) {
+                els.current.style.transform = transforms.current;
+            }
+            if (els.prev) {
+                els.prev.style.transform = transforms.prev;
+            }
+            if (els.next) {
+                els.next.style.transform = transforms.next;
+            }
+        } else if (this.runtime.settings().swipeToClose) {
+            outer.parentElement?.classList.add('lg-dragging-vertical');
+            const effects = getVerticalDragEffects(
+                deltaY,
+                window.innerWidth,
+                window.innerHeight,
+            );
+            if (els.backdrop) {
+                els.backdrop.style.opacity = String(effects.backdropOpacity);
+            }
+            if (els.current) {
+                els.current.style.transform = effects.transform;
+            }
+            if (effects.hideUi !== session.hidUi) {
+                session.hidUi = effects.hideUi;
+                outer.classList.toggle('lg-hide-items', effects.hideUi);
+                outer.classList.toggle('lg-components-open', !effects.hideUi);
+            }
+        }
+
+        if (session.isMouse) {
+            this.runtime.emit('dragMove', undefined);
+        }
+    };
+
+    private readonly onWindowPointerUp = (event: PointerEvent): void => {
+        const seam = this.runtime.gestureSeam;
+        seam.pointers = removePointer(seam.pointers, event.pointerId);
+        const session = this.session;
+        if (!session || event.pointerId !== session.pointerId) {
+            return;
+        }
+        this.endSession(session);
+        if (session.isMouse && session.moved) {
+            this.runtime.emit('dragEnd', undefined);
+        }
+        const state = this.store.state();
+        const settings = this.runtime.settings();
+
+        if (session.suspended || !session.moved || !session.axis) {
+            this.restoreDragVisuals(session);
+            return;
+        }
+
+        const deltaX = session.lastX - session.startX;
+        const deltaY = session.lastY - session.startY;
+        const releaseVelocity = getWindowedVelocity(
+            session.samples,
+            performance.now(),
+        );
+
+        if (session.axis === 'horizontal') {
+            const verdict = getSwipeReleaseVerdict({
+                deltaX,
+                velocityX: releaseVelocity.x,
+                viewportWidth: this.host.offsetWidth || window.innerWidth,
+                threshold: settings.swipeThreshold,
+                flickVelocity: settings.flickVelocity,
+                direction: this.getDirection(),
+            });
+            const target = resolveSwipeTarget(
+                verdict,
+                state.currentIndex,
+                state.slidesCount,
+                state.loop,
+            );
+            // Springs start from the RENDERED delta — rubber-banded at
+            // the gallery ends, identical to raw elsewhere.
+            const renderedDeltaX = getEdgeFrictionedDelta(
+                deltaX,
+                !!session.els?.prev,
+                !!session.els?.next,
+                this.getDirection(),
+            );
+            if (target !== null) {
+                this.springHorizontalNavigate(
+                    session,
+                    verdict === 'next' ? 'next' : 'prev',
+                    target,
+                    renderedDeltaX,
+                    releaseVelocity.x,
+                );
+            } else {
+                this.springHorizontalBack(
+                    session,
+                    renderedDeltaX,
+                    releaseVelocity.x,
+                );
+            }
+            return;
+        }
+
+        if (
+            shouldCloseOnVerticalDrag(
+                deltaY,
+                releaseVelocity.y,
+                window.innerHeight,
+                {
+                    closable: settings.closable,
+                    swipeToClose: settings.swipeToClose,
+                },
+            )
+        ) {
+            this.restoreDragVisuals(session);
+            this.runtime.actions.closeGallery();
+        } else {
+            // Only spring back what actually moved: with swipeToClose
+            // off (a non-closable gallery, inline being the common case)
+            // the drag applied nothing, so springing here would jump the
+            // slide to the drag offset and animate it back.
+            if (settings.swipeToClose) {
+                this.springVerticalBack(session, deltaY, releaseVelocity.y);
+            }
+        }
+    };
+
+    private readonly onWindowPointerCancel = (event: PointerEvent): void => {
+        const seam = this.runtime.gestureSeam;
+        seam.pointers = removePointer(seam.pointers, event.pointerId);
+        const session = this.session;
+        if (!session || event.pointerId !== session.pointerId) {
+            return;
+        }
+        this.endSession(session);
+        this.restoreDragVisuals(session);
+    };
+
+    private readonly onPointerDown = (event: PointerEvent): void => {
+        if (!this.lgGestures()) {
+            return;
+        }
+        const seam = this.runtime.gestureSeam;
+        const registerPointer = (): void => {
+            seam.pointers = upsertPointer(seam.pointers, {
+                id: event.pointerId,
+                startX: event.clientX,
+                startY: event.clientY,
+                x: event.clientX,
+                y: event.clientY,
+            });
+        };
+
+        const session = this.session;
+        if (session) {
+            // Second pointer: core swipe stands down (pinch belongs to zoom).
+            registerPointer();
+            session.suspended = true;
+            this.restoreDragVisuals(session);
+            return;
+        }
+        if (seam.lockOwner !== null) {
+            return;
+        }
+        const state = this.store.state();
+        const settings = this.runtime.settings();
+        if (state.transitioning) {
+            return;
+        }
+        const isMouse = event.pointerType === 'mouse';
+        if (isMouse ? !settings.enableDrag : !settings.enableSwipe) {
+            return;
+        }
+        const target = event.target as Element | null;
+        if (!target?.closest?.('.lg-item')) {
+            return;
+        }
+
+        if (isMouse) {
+            // Stop text selection / native image drag (2.x mousedown).
+            event.preventDefault();
+            this.host.classList.remove('lg-grab');
+            this.host.classList.add('lg-grabbing');
+            this.runtime.emit('dragStart', undefined);
+        }
+
+        // The new session claims the visuals from a settling spring — only
+        // here: a blocked tap (transitioning, chrome) must not freeze an
+        // in-flight spring mid-glide.
+        this.stopReleaseSpring();
+        // Register only once a session actually starts — early-return paths
+        // must not leave stale records behind (nothing would remove them).
+        registerPointer();
+        this.runtime.gestureHooks.prepareDrag();
+
+        this.session = {
+            pointerId: event.pointerId,
+            isMouse,
+            startX: event.clientX,
+            startY: event.clientY,
+            samples: [
+                {
+                    x: event.clientX,
+                    y: event.clientY,
+                    t: performance.now(),
+                },
+            ],
+            lastX: event.clientX,
+            lastY: event.clientY,
+            axis: undefined,
+            moved: false,
+            suspended: false,
+            els: null,
+            hidUi: false,
+        };
+
+        // Window-level listeners so drags that leave the gallery keep
+        // tracking. Passive move is fine: scrolling is prevented by
+        // touch-action on `.lg-inner`, not by preventDefault here.
+        window.addEventListener('pointermove', this.onWindowPointerMove, {
+            passive: true,
+        });
+        window.addEventListener('pointerup', this.onWindowPointerUp);
+        window.addEventListener('pointercancel', this.onWindowPointerCancel);
+        this.detachWindow = () => {
+            window.removeEventListener('pointermove', this.onWindowPointerMove);
+            window.removeEventListener('pointerup', this.onWindowPointerUp);
+            window.removeEventListener(
+                'pointercancel',
+                this.onWindowPointerCancel,
+            );
+        };
+    };
+}
+
+function seamRecord(
+    pointers: readonly PointerRecord[],
+    event: PointerEvent,
+): PointerRecord {
+    const existing = pointers.find((p) => p.id === event.pointerId);
+    return {
+        id: event.pointerId,
+        startX: existing?.startX ?? event.clientX,
+        startY: existing?.startY ?? event.clientY,
+        x: event.clientX,
+        y: event.clientY,
+    };
+}

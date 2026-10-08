@@ -1,0 +1,397 @@
+// Static thumbnails demo: three CSS columns (no layout script), items
+// flow top to bottom with the same gutter between and below them.
+.lg-masonry-gallery {
+    .gallery-demo > div {
+        columns: 3;
+        column-gap: 12px;
+    }
+    .gallery-item {
+        display: block;
+        width: 100%;
+        margin: 0 0 12px;
+        break-inside: avoid;
+    }
+}
+
+//swiper
+.swiper {
+    width: 100%;
+    height: 100%;
+    position: absolute !important;
+}
+
+.swiper-lg-wrap {
+    width: 1200px;
+    height: 0;
+    padding-bottom: 65%;
+    position: relative;
+    max-width: 100%;
+}
+
+//bootstrap
+#bootstrap-gallery-carousel {
+    &.carousel {
+        .lg-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            img {
+                width: unset !important;
+                height: 500px;
+            }
+        }
+
+        .carousel-item {
+            .lg-item {
+                img {
+                    height: 600px;
+                }
+            }
+        }
+    }
+}
+
+#bootstrap-video-carousel {
+    &.carousel {
+        .lg-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            img {
+                width: unset !important;
+                height: 500px;
+            }
+        }
+
+        .carousel-item {
+            .lg-item {
+                img {
+                    height: 600px;
+                }
+            }
+        }
+    }
+}
+
+//slick
+#slick-carousel-gallery-demo {
+    img {
+        height: 500px;
+    }
+    .slick-track {
+        gap: 10px;
+        display: flex;
+    }
+    .slick-prev,
+    .slick-next {
+        padding: 10px;
+        position: absolute;
+        top: 50%;
+        z-index: 1;
+        cursor: pointer;
+        zoom: 2;
+    }
+    .slick-prev {
+        left: -8px;
+    }
+    .slick-next {
+        right: 12px;
+    }
+}
+
+//flickity
+#flickity-carousel-gallery-demo {
+    .flickity-slider {
+        gap: 10px;
+        display: flex;
+
+        .lg-item {
+            img {
+                height: 600px;
+            }
+        }
+    }
+}
+
+//masonry
+// The React island grid gets the same pre-init column sizing as the
+// vanilla demo below: without it the items stack full width until
+// Masonry positions them, and the collapse shifts the whole page.
+.masonry-grid {
+    column-count: 3;
+    column-gap: 10px;
+
+    .lg-item {
+        break-inside: avoid;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .lg-item img {
+        display: block;
+        height: auto;
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+#masonry-gallery-demo {
+    margin: 0 auto;
+
+    &:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+
+    .grid-sizer,
+    .lg-item {
+        width: 33.33%;
+    }
+
+    .lg-item {
+        float: left;
+        margin-bottom: 10px;
+    }
+
+    .lg-item img {
+        display: block;
+        max-width: 100%;
+    }
+}
+
+//owl
+
+#owl-carousel-gallery-demo {
+    .owl-nav {
+        text-align: center;
+    }
+
+    .owl-carousel-item {
+        img {
+            height: 500px;
+        }
+    }
+}
+
+// ---- Demo galleries: the homepage hero's card ----------------------------
+// Every thumbnail grid on a docs or blog page is framed like the hero:
+// one bordered card around the grid, square tiles inside it, and the
+// neighbours fading under a white veil on hover. The column's prose
+// link line and image radius stop at the card.
+body.demos.single .docs-content,
+.blog-wrap {
+    .gallery-demo,
+    .gallery-demo-sm,
+    .gallery-demo-videos,
+    .gallery-demo-tiles {
+        margin: 0 0 1.5rem;
+        padding: 8px;
+        border: 1px solid $gray-100;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 5px 6px 40px -4px rgba(9, 18, 36, 0.06);
+        @media (max-width: 767px) {
+            padding: 6px;
+            border-radius: 14px;
+        }
+        > div {
+            overflow: hidden;
+            border-radius: 12px;
+            @media (max-width: 767px) {
+                border-radius: 8px;
+            }
+        }
+        a {
+            border-bottom: 0;
+            background: none;
+            &:hover {
+                border-bottom: 0;
+            }
+        }
+        img {
+            border-radius: 0;
+        }
+        // No zoom on hover: the open/close flight measures the thumbnail,
+        // so a scaled tile would fly from a box a few percent off the one
+        // on screen. The neighbours fade under a white veil instead.
+        .lg-justified-item {
+            background: $gray-100;
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: #fff;
+                opacity: 0;
+                transition: opacity 0.25s ease;
+                pointer-events: none;
+            }
+            &:focus-visible {
+                outline: 2px solid $orange-500;
+                outline-offset: -2px;
+            }
+        }
+        @media (hover: hover) {
+            .lg-justified:hover .lg-justified-item:not(:hover)::after {
+                opacity: 0.3;
+            }
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .lg-justified-item::after {
+            transition: none;
+        }
+    }
+}
+
+// ---- Demo pages: the demo links sit on the column's left edge -------------
+body.demos.single .docs-content .demo-btns-container {
+    justify-content: flex-start;
+    margin: 16px 0 32px;
+}
+
+// ---- Demo pages: the framework tabs as one segmented control -------------
+// The code-tab groups already switch together and remember the stack, so
+// the tabs read as a page-level switch rather than per-block underlines.
+body.demos.single .docs-content {
+    .code-tabs-list {
+        display: inline-grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        gap: 0;
+        margin: 0 0 16px;
+        padding: 3px;
+        border: 1px solid $gray-100;
+        border-radius: 999px;
+        background: $gray-50;
+    }
+    // With the demo links on the row, the row's gap does the spacing.
+    .code-tabs-with-demos {
+        row-gap: 16px;
+        .code-tabs-list,
+        .demo-btns-container {
+            margin: 0;
+        }
+        .demo-btns-container {
+            justify-content: flex-end;
+        }
+    }
+    .demo-btn a {
+        border-bottom: 0;
+    }
+    .code-tabs-tab {
+        height: 30px;
+        margin: 0;
+        padding: 0 16px;
+        border: 0;
+        border-radius: 999px;
+        color: $gray-500;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 30px;
+        white-space: nowrap;
+        transition:
+            color 0.15s ease,
+            background-color 0.15s ease,
+            box-shadow 0.15s ease;
+        &:hover {
+            color: $gray-800;
+        }
+        &:focus-visible {
+            outline-offset: 0;
+        }
+        &[aria-selected='true'] {
+            background: #fff;
+            color: $gray-800;
+            box-shadow:
+                0 1px 2px rgba($gray-800, 0.12),
+                0 0 0 1px rgba($gray-800, 0.05);
+        }
+    }
+    @media (max-width: 575px) {
+        .code-tabs-list {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+        .code-tabs-tab {
+            padding: 0 8px;
+            font-size: 12px;
+        }
+    }
+}
+// Pre-paint: a remembered or deep-linked stack is applied as a root
+// attribute before the tabs module syncs the aria state (see
+// _code-tabs.scss); the same look, so nothing shifts once it does.
+@each $fw in vanilla, react, vue, angular {
+    :root[data-lg-framework='#{$fw}']
+        body.demos.single
+        .docs-content
+        .code-tabs:has(.code-tabs-panel[data-framework='#{$fw}']) {
+        .code-tabs-tab {
+            background: none;
+            color: $gray-500;
+            box-shadow: none;
+        }
+        .code-tabs-tab[data-framework='#{$fw}'] {
+            background: #fff;
+            color: $gray-800;
+            box-shadow:
+                0 1px 2px rgba($gray-800, 0.12),
+                0 0 0 1px rgba($gray-800, 0.05);
+        }
+    }
+}
+
+// ---- Demo pages: the other demos of the page's group, after the content ---
+body.demos.single .docs-content .demo-related {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid $gray-100;
+    h2 {
+        margin: 0 0 16px;
+    }
+    .demo-related-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        @media (max-width: 575px) {
+            grid-template-columns: 1fr;
+        }
+    }
+    .demo-related-card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+        border: 1px solid $gray-100;
+        border-radius: 14px;
+        color: $gray-800;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        text-decoration: none;
+        transition: border-color 0.15s ease;
+        &:hover {
+            border-color: $orange-300;
+            color: $gray-800;
+            text-decoration: none;
+        }
+        > span:last-child {
+            padding: 0 4px 2px;
+        }
+    }
+    .demo-related-thumb {
+        display: block;
+        overflow: hidden;
+        border-radius: 8px;
+        img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            border-radius: 0;
+        }
+    }
+}

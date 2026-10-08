@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>lightGallery with a Bootstrap carousel example</title>
+    </head>
+    <body>
+        <h1>lightGallery with a Bootstrap carousel</h1>
+
+        <!-- Every slide holds a link to its full-size image. data-lg-size is
+             that image's WIDTH-HEIGHT; it lets the image open from its slide. -->
+        <div id="bootstrap-gallery-carousel" class="carousel slide">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <a
+                        class="lg-item"
+                        href="https://picsum.photos/id/10/1600/1067"
+                        data-lg-size="1600-1067"
+                    >
+                        <img
+                            src="https://picsum.photos/id/10/960/640"
+                            class="d-block w-100"
+                            alt="Sample photo 1"
+                        />
+                    </a>
+                </div>
+                <div class="carousel-item">
+                    <a
+                        class="lg-item"
+                        href="https://picsum.photos/id/11/1600/1067"
+                        data-lg-size="1600-1067"
+                    >
+                        <img
+                            src="https://picsum.photos/id/11/960/640"
+                            class="d-block w-100"
+                            alt="Sample photo 2"
+                        />
+                    </a>
+                </div>
+                <div class="carousel-item">
+                    <a
+                        class="lg-item"
+                        href="https://picsum.photos/id/15/1600/1067"
+                        data-lg-size="1600-1067"
+                    >
+                        <img
+                            src="https://picsum.photos/id/15/960/640"
+                            class="d-block w-100"
+                            alt="Sample photo 3"
+                        />
+                    </a>
+                </div>
+            </div>
+            <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#bootstrap-gallery-carousel"
+                data-bs-slide="prev"
+            >
+                <span
+                    class="carousel-control-prev-icon"
+                    aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#bootstrap-gallery-carousel"
+                data-bs-slide="next"
+            >
+                <span
+                    class="carousel-control-next-icon"
+                    aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
+</html>

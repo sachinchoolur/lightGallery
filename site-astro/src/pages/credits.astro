@@ -1,0 +1,50 @@
+---
+import { allPhotos } from '../lib/photos';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+/** Photo credits for the demo galleries, grouped by collection. */
+const groups = allPhotos();
+const count = groups.reduce((n, g) => n + g.photos.length, 0);
+---
+
+<BaseLayout
+    bodyClass="credits"
+    meta={{
+        title: 'Photo credits',
+        description:
+            'The photographers behind the images in the lightGallery demos. All photos are used under the Unsplash License.',
+        breadcrumbs: [{ name: 'Photo credits', url: '/credits/' }],
+    }}
+>
+    <div class="wrap container-xxl page-wrap" role="document">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-10 col-xl-8">
+                <article class="docs-content-body">
+                    <h1>Photo credits</h1>
+                    <p>
+                        The demos on this site use {count} photographs by the
+                        photographers below, all published on
+                        <a href="https://unsplash.com">Unsplash</a> under the
+                        <a href="https://unsplash.com/license">Unsplash License</a>.
+                        Each link opens the original photo.
+                    </p>
+                    {
+                        groups.map((group) => (
+                            <section>
+                                <h2>{group.title}</h2>
+                                <ul>
+                                    {group.photos.map((p) => (
+                                        <li>
+                                            <a href={p.page}>{p.title}</a> by {p.photographer}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </section>
+                        ))
+                    }
+                </article>
+            </div>
+        </div>
+    </div>
+</BaseLayout>

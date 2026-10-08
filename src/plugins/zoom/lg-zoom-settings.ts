@@ -11,7 +11,7 @@ export interface ZoomStrings {
 
 export interface ZoomSettings {
     /**
-     * Value of zoom should be incremented/decremented
+     * Value by which zoom should be incremented/decremented
      */
     scale: number;
 
@@ -32,7 +32,7 @@ export interface ZoomSettings {
     actualSize: boolean;
 
     /**
-     * Once the slide transition is completed, how much time should take zoom plugin to activate
+     * Once the slide transition is completed, how much time the zoom plugin should take to activate
      * @description Some css styles will be added to the images if zoom is enabled.
      * So it might conflict if you add any custom styles to the images such as the initial transition while opening the gallery.
      * So you can delay adding zoom related styles to the images by changing the value of enableZoomAfter.
@@ -54,8 +54,11 @@ export interface ZoomSettings {
 
     /**
      * Custom translation strings for aria-labels
+     * @deprecated Set these labels on the core `strings` object instead,
+     * every user-facing string lives in that one contract. An explicitly set
+     * key here still wins (alias).
      */
-    zoomPluginStrings: ZoomStrings;
+    zoomPluginStrings?: Partial<ZoomStrings>;
 }
 
 export const zoomSettings: ZoomSettings = {
@@ -69,9 +72,4 @@ export const zoomSettings: ZoomSettings = {
         zoomOut: 'lg-zoom-out',
     } as ActualSizeIcons,
     enableZoomAfter: 300,
-    zoomPluginStrings: {
-        zoomIn: 'Zoom in',
-        zoomOut: 'Zoom out',
-        viewActualSize: 'View actual size',
-    } as ZoomStrings,
 };

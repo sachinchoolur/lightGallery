@@ -1,0 +1,328 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+
+import BaseLayout from './BaseLayout.astro';
+import PageTools from '../components/PageTools.astro';
+import SidebarMenu from '../components/SidebarMenu.astro';
+import { SITE } from '../lib/site';
+import { demoGroupOf, demoPhoto } from '../lib/demo-groups';
+
+/**
+ * Shared docs/demos page shell, port of `layouts/docs/single.html` and
+ * `layouts/demos/single.html` (identical apart from the sidebar source
+ * and the docs-only TOC column).
+ */
+interface Props {
+    section: 'docs' | 'demos';
+    entry: CollectionEntry<'docs'> | CollectionEntry<'demos'>;
+    entries: (CollectionEntry<'docs'> | CollectionEntry<'demos'>)[];
+    headings: MarkdownHeading[];
+}
+
+const { section, entry, entries, headings } = Astro.props;
+const withToc = section === 'docs';
+const showToc = withToc && entry.data.toc !== false;
+
+const sorted = [...entries].sort(
+    (a, b) => (a.data.weight ?? 0) - (b.data.weight ?? 0),
+);
+const index = sorted.findIndex((e) => e.id === entry.id);
+const prev = index > 0 ? sorted[index - 1] : undefined;
+const next = index >= 0 && index < sorted.length - 1
+    ? sorted[index + 1]
+    : undefined;
+const pageUrl = (e: CollectionEntry<'docs'> | CollectionEntry<'demos'>) =>
+    `/${section}/${e.id.replace(/\/index$/, '')}/`;
+
+const editUrl = `${SITE.docsRepo}/site-astro/${entry.filePath ?? `src/content/${section}/${entry.id}.md`}`;
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+// Group name above the title (the sidebar group the page belongs to).
+const kicker = (entry.data.menu as Record<string, { parent?: string }> | undefined)?.[section]?.parent;
+
+// Demo pages end with the other demos of their group, at most three,
+// in the group's own order (lib/demo-groups).
+const slug = entry.id.replace(/\/index$/, '');
+const group = section === 'demos' ? demoGroupOf(slug) : undefined;
+const label = (e: CollectionEntry<'docs'> | CollectionEntry<'demos'>) =>
+    (e.data.menu as Record<string, { name?: string }> | undefined)?.[section]?.name ?? e.data.title;
+const related = group
+    ? group.slugs
+          .filter((s) => s !== slug.toLowerCase())
+          .map((s) => entries.find((e) => e.id.replace(/\/index$/, '').toLowerCase() === s))
+          .filter((e): e is CollectionEntry<'demos'> => !!e)
+          .slice(0, 3)
+    : [];
+
+// Per-page vendor stylesheets, keyed by slug (the Hugo head conditionals
+// keyed off the title, which moves whenever a page is retitled). The
+// matching vendor JS loads from the demo-galleries runtime,
+// element-guarded.
+const VENDOR_CSS: Record<string, string[]> = {
+    swiper: ['https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css'],
+    'slick-carousel-demo': [
+        'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css',
+    ],
+    'owl-carousel-with-lightbox': [
+        'https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css',
+    ],
+    'flickity-demo': ['https://unpkg.com/flickity@2/dist/flickity.min.css'],
+    'video-gallery': ['https://cdn.jsdelivr.net/npm/video.js@8/dist/video-js.min.css'],
+};
+const vendorCss = VENDOR_CSS[entry.id.toLowerCase()] ?? [];
+/**
+ * Pages that are *about* a shipped package get SoftwareApplication
+ * structured data; the rest are documentation of it.
+ */
+const SOFTWARE: Record<string, { name: string; description: string }> = {
+    'react-image-video-gallery': {
+        name: '@lightgallery/react',
+        description:
+            'Native React image and video gallery component built on the lightGallery headless core.',
+    },
+    'vue-image-video-gallery': {
+        name: '@lightgallery/vue',
+        description:
+            'Native Vue 3 image and video gallery component built on the lightGallery headless core.',
+    },
+    'angular-image-video-gallery': {
+        name: '@lightgallery/angular',
+        description:
+            'Native Angular image and video gallery component built on the lightGallery headless core.',
+    },
+};
+
+const hasVideo =
+    'has_video' in entry.data ? (entry.data.has_video ?? false) : false;
+---
+
+<BaseLayout
+    bodyClass={`${section} single`}
+    meta={{
+        title: entry.data.title,
+        description: entry.data.description,
+        breadcrumbs: [
+            { name: section === 'docs' ? 'Docs' : 'Demos', url: `/${section}/` },
+            { name: entry.data.title, url: pageUrl(entry) },
+        ],
+        software: SOFTWARE[entry.id.toLowerCase()],
+    }}
+>
+    <Fragment slot="head">
+        <link
+            rel="alternate"
+            type="text/markdown"
+            href={`${pageUrl(entry)}index.md`}
+            title="Markdown version"
+        />
+        {vendorCss.map((href) => <link rel="stylesheet" href={href} />)}
+        {
+            hasVideo && (
+                <>
+                    <link
+                        href="https://vjs.zencdn.net/7.10.2/video-js.css"
+                        rel="stylesheet"
+                    />
+                    {/* Player APIs the video plugin drives. Loaded on the
+                        first interaction instead of eagerly, playing a
+                        video needs a click on a trigger plus the open
+                        animation, so the scripts are always in flight
+                        before a video slide can append. The plugin
+                        degrades gracefully if one loses the race:
+                        Vimeo/Wistia orchestration is guarded and Wistia
+                        commands queue on `_wq`. */}
+                    <script is:inline>
+                        (function () {
+                            var urls = [
+                                'https://player.vimeo.com/api/player.js',
+                                'https://fast.wistia.com/assets/external/E-v1.js',
+                                'https://vjs.zencdn.net/7.10.2/video.min.js',
+                            ];
+                            var events = [
+                                'pointermove',
+                                'pointerdown',
+                                'touchstart',
+                                'keydown',
+                            ];
+                            var load = function () {
+                                events.forEach(function (event) {
+                                    removeEventListener(event, load, true);
+                                });
+                                urls.forEach(function (url) {
+                                    var script =
+                                        document.createElement('script');
+                                    script.src = url;
+                                    document.head.appendChild(script);
+                                });
+                            };
+                            events.forEach(function (event) {
+                                addEventListener(event, load, true);
+                            });
+                        })();
+                    </script>
+                </>
+            )
+        }
+    </Fragment>
+    <div class="wrap container-xxl page-wrap" role="document">
+        <div class="row flex-xl-nowrap">
+            <main class="docs-content col-lg-10 col-xl-8">
+                {kicker && <span class="docs-kicker">{kicker}</span>}
+                <h1>{entry.data.title}</h1>
+                <PageTools url={pageUrl(entry)} title={entry.data.title} />
+                <p class="lead" set:html={entry.data.lead ?? ''} />
+                <slot />
+                {
+                    group && related.length > 0 && (
+                        <section class="demo-related" id="more-demos" aria-label="Related demos">
+                            <h2>More in {group.name}</h2>
+                            <div class="demo-related-grid">
+                                {related.map((e) => (
+                                    <a class="demo-related-card" href={pageUrl(e)}>
+                                        <span class="demo-related-thumb">
+                                            <img src={demoPhoto(e.id).thumb} alt="" loading="lazy" />
+                                        </span>
+                                        <span>{label(e)}</span>
+                                    </a>
+                                ))}
+                            </div>
+                        </section>
+                    )
+                }
+                <p class="edit-page">
+                    <a href={editUrl}>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"
+                            ></path>
+                        </svg>Edit this page on GitHub
+                    </a>
+                </p>
+                {
+                    (prev || next) && (
+                        <nav class="page-nav" aria-label="Previous and next page">
+                            {prev && (
+                                <a class="page-nav-card page-nav-prev" href={pageUrl(prev)}>
+                                    <span class="page-nav-arrow" aria-hidden="true">
+                                        &larr;
+                                    </span>
+                                    <span class="page-nav-text">
+                                        <span class="page-nav-dir">Previous</span>
+                                        <strong>{label(prev)}</strong>
+                                    </span>
+                                </a>
+                            )}
+                            {next && (
+                                <a class="page-nav-card page-nav-next" href={pageUrl(next)}>
+                                    <span class="page-nav-text">
+                                        <span class="page-nav-dir">Next</span>
+                                        <strong>{label(next)}</strong>
+                                    </span>
+                                    <span class="page-nav-arrow" aria-hidden="true">
+                                        &rarr;
+                                    </span>
+                                </a>
+                            )}
+                        </nav>
+                    )
+                }
+            </main>
+            <div class="col-lg-2 col-xl-2 docs-sidebar">
+                <nav class="docs-links" aria-label="Main navigation">
+                    <SidebarMenu section={section} entries={entries} />
+                </nav>
+            </div>
+            {
+                withToc && (
+                    <nav
+                        class="docs-toc d-none d-xl-block col-xl-2"
+                        aria-label="Secondary navigation"
+                    >
+                        {showToc && (
+                            <div class="page-links">
+                                <h3>On this page</h3>
+                                <nav id="TableOfContents">
+                                    <ul>
+                                        {tocHeadings.map((h) => (
+                                            <li
+                                                class:list={{
+                                                    'toc-h3': h.depth === 3,
+                                                }}
+                                            >
+                                                <a href={`#${h.slug}`}>
+                                                    {h.text}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </nav>
+                            </div>
+                        )}
+                    </nav>
+                )
+            }
+        </div>
+    </div>
+    <script>
+        // "On this page": highlight the heading currently in view.
+        const links = [...document.querySelectorAll<HTMLAnchorElement>('#TableOfContents a[href^="#"]')];
+        if (links.length && 'IntersectionObserver' in window) {
+            const byId = new Map(links.map((a) => [a.getAttribute('href')!.slice(1), a]));
+            const targets = [...byId.keys()].map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el);
+            let current: HTMLAnchorElement | undefined;
+            const activate = (id: string) => {
+                const link = byId.get(id);
+                if (!link || link === current) return;
+                current?.classList.remove('active');
+                link.classList.add('active');
+                current = link;
+            };
+            const visible = new Set<string>();
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    for (const e of entries) e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id);
+                    const first = targets.find((t) => visible.has(t.id));
+                    if (first) activate(first.id);
+                },
+                { rootMargin: '-72px 0px -70% 0px', threshold: 0 },
+            );
+            targets.forEach((t) => observer.observe(t));
+            if (targets[0]) activate(targets[0].id);
+        }
+    </script>
+    <script>
+        // Copy button for agent prompt blocks (`<div class="agent-prompt">`
+        // around a fenced block in the page markdown).
+        document.querySelectorAll<HTMLPreElement>('.agent-prompt pre').forEach((pre) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'page-tools-btn agent-prompt-copy';
+            button.textContent = 'Copy prompt';
+            button.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(pre.textContent?.trim() ?? '');
+                    button.textContent = 'Copied';
+                } catch {
+                    button.textContent = 'Copy failed';
+                }
+                setTimeout(() => {
+                    button.textContent = 'Copy prompt';
+                }, 1800);
+            });
+            pre.parentElement?.insertBefore(button, pre);
+        });
+    </script>
+</BaseLayout>

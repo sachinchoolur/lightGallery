@@ -60,8 +60,18 @@
         "fileName": "lg-relative-caption"
     },
     {
+        "name": "originCrop",
+        "folder": "plugins/originCrop/",
+        "fileName": "lg-origin-crop"
+    },
+    {
         "name": "vimeoThumbnail",
         "folder": "plugins/vimeoThumbnail/",
         "fileName": "lg-vimeo-thumbnail"
+    },
+    {
+        "name": "justified",
+        "folder": "plugins/justified/",
+        "fileName": "lg-justified"
     }
 ]

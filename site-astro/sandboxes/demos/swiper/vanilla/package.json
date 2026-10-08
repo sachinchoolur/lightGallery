@@ -1,0 +1,16 @@
+{
+    "name": "lightgallery-example",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "dependencies": {
+        "lightgallery": "__LIGHTGALLERY_VERSION__",
+        "swiper": "^14.0.0"
+    },
+    "devDependencies": {
+        "vite": "^6.0.0"
+    }
+}

@@ -1,0 +1,340 @@
+import {
+    computed,
+    defineComponent,
+    h,
+    inject,
+    onBeforeUnmount,
+    shallowRef,
+    watch,
+    type PropType,
+} from 'vue';
+import {
+    flipHorizontal,
+    flipVertical,
+    getRotateFitScale,
+    getRotateTransform,
+    isOrientationSwapped,
+    getSlideType,
+    initialRotateSlice,
+    rotateLeft,
+    rotateRight,
+    type RotateSlice,
+    rotateDefaultIcons,
+} from '@lightgallery/headless';
+
+import { LG_PLUGIN_CONTEXT, type LgVuePlugin } from '../types';
+import {
+    LG_ICONS,
+    resolveCustomIcons,
+} from '../../icons';
+import type { LgGalleryItem } from '../../types';
+
+/**
+ * Rotate plugin (2.x `lg-rotate`): rotate/flip the current image.
+ * Transform ownership follows the slide-wrapper pattern; compose with
+ * zoom as `[Zoom, Rotate]` so zoom stays outermost (2.x DOM order).
+ *
+ * Deviation (shared with the siblings): 2.x kept rotate values for every
+ * visited slide until close; here values live in the slide's wrapper, so
+ * they reset if a slide leaves the windowed DOM.
+ */
+
+export interface RotateStrings {
+    flipVertical: string;
+    flipHorizontal: string;
+    rotateLeft: string;
+    rotateRight: string;
+}
+
+export interface RotateSettings {
+    /** Enable the rotate buttons. */
+    rotate: boolean;
+    /** Rotate transition speed (ms). */
+    rotateSpeed: number;
+    rotateLeft: boolean;
+    rotateRight: boolean;
+    flipHorizontal: boolean;
+    flipVertical: boolean;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    rotatePluginStrings?: Partial<RotateStrings>;
+}
+
+export const rotateSettings: RotateSettings = {
+    rotate: true,
+    rotateSpeed: 400,
+    rotateLeft: true,
+    rotateRight: true,
+    flipHorizontal: true,
+    flipVertical: true,
+};
+
+const ROTATE_LEFT_EVENT = 'lg-rotate-left';
+const ROTATE_RIGHT_EVENT = 'lg-rotate-right';
+const FLIP_HOR_EVENT = 'lg-flip-hor';
+const FLIP_VER_EVENT = 'lg-flip-ver';
+
+type RotateResolved = RotateSettings & Record<string, unknown>;
+
+export const RotateToolbar = defineComponent({
+    name: 'LgRotateToolbar',
+    setup() {
+        const ctx = inject(LG_PLUGIN_CONTEXT)!;
+        const lgIcons = inject(LG_ICONS, undefined);
+        const emitBus = (name: string): void =>
+            ctx.events.emit(name, undefined);
+        return () => {
+            const cfg = ctx.settings.value as unknown as RotateResolved;
+            if (!cfg.rotate) {
+                return null;
+            }
+            const legacy = cfg.rotatePluginStrings;
+            const coreStrings = ctx.settings.value.strings;
+            const strings = {
+                flipVertical: legacy?.flipVertical ?? coreStrings.flipVertical,
+                flipHorizontal:
+                    legacy?.flipHorizontal ?? coreStrings.flipHorizontal,
+                rotateLeft: legacy?.rotateLeft ?? coreStrings.rotateLeft,
+                rotateRight: legacy?.rotateRight ?? coreStrings.rotateRight,
+            };
+            const ciflipVertical = resolveCustomIcons(
+                lgIcons?.value,
+                ['flipVertical'],
+                rotateDefaultIcons,
+            );
+            const ciflipHorizontal = resolveCustomIcons(
+                lgIcons?.value,
+                ['flipHorizontal'],
+                rotateDefaultIcons,
+            );
+            const cirotateLeft = resolveCustomIcons(
+                lgIcons?.value,
+                ['rotateLeft'],
+                rotateDefaultIcons,
+            );
+            const cirotateRight = resolveCustomIcons(
+                lgIcons?.value,
+                ['rotateRight'],
+                rotateDefaultIcons,
+            );
+            return [
+                cfg.flipVertical
+                    ? h(
+                          'button',
+                          {
+                              type: 'button',
+                              class: [
+                                  'lg-flip-ver lg-icon',
+                                  ciflipVertical?.cls,
+                              ],
+                              'aria-label': strings.flipVertical,
+                              onClick: () => emitBus(FLIP_VER_EVENT),
+                          },
+                          ciflipVertical?.children,
+                      )
+                    : null,
+                cfg.flipHorizontal
+                    ? h(
+                          'button',
+                          {
+                              type: 'button',
+                              class: [
+                                  'lg-flip-hor lg-icon',
+                                  ciflipHorizontal?.cls,
+                              ],
+                              'aria-label': strings.flipHorizontal,
+                              onClick: () => emitBus(FLIP_HOR_EVENT),
+                          },
+                          ciflipHorizontal?.children,
+                      )
+                    : null,
+                cfg.rotateLeft
+                    ? h(
+                          'button',
+                          {
+                              type: 'button',
+                              class: [
+                                  'lg-rotate-left lg-icon',
+                                  cirotateLeft?.cls,
+                              ],
+                              'aria-label': strings.rotateLeft,
+                              onClick: () => emitBus(ROTATE_LEFT_EVENT),
+                          },
+                          cirotateLeft?.children,
+                      )
+                    : null,
+                cfg.rotateRight
+                    ? h(
+                          'button',
+                          {
+                              type: 'button',
+                              class: [
+                                  'lg-rotate-right lg-icon',
+                                  cirotateRight?.cls,
+                              ],
+                              'aria-label': strings.rotateRight,
+                              onClick: () => emitBus(ROTATE_RIGHT_EVENT),
+                          },
+                          cirotateRight?.children,
+                      )
+                    : null,
+            ];
+        };
+    },
+});
+
+export const RotateWrapper = defineComponent({
+    name: 'LgRotateWrapper',
+    props: {
+        item: {
+            type: Object as PropType<LgGalleryItem>,
+            required: true,
+        },
+        index: { type: Number, required: true },
+        isCurrent: { type: Boolean, default: false },
+    },
+    setup(props, { slots }) {
+        const ctx = inject(LG_PLUGIN_CONTEXT)!;
+        const settings = computed(
+            () => ctx.settings.value as unknown as RotateResolved,
+        );
+        const enabled = computed(
+            () => settings.value.rotate && getSlideType(props.item) === 'image',
+        );
+        const slice = shallowRef<RotateSlice>(initialRotateSlice);
+        const fitScale = shallowRef(1);
+        const wrapperEl = shallowRef<HTMLDivElement | null>(null);
+        const emitTimers = new Set<ReturnType<typeof setTimeout>>();
+
+        // At 90°/270° the image must refit the stage (offset dimensions
+        // are transform-independent, so measuring stays correct
+        // mid-rotation).
+        function measureFitScale(): number {
+            const wrapper = wrapperEl.value;
+            const image = wrapper?.querySelector<HTMLElement>('.lg-object');
+            if (!wrapper || !image) {
+                return 1;
+            }
+            return getRotateFitScale(
+                image.offsetWidth,
+                image.offsetHeight,
+                wrapper.clientWidth,
+                wrapper.clientHeight,
+                slice.value,
+            );
+        }
+        const onResize = (): void => {
+            fitScale.value = measureFitScale();
+        };
+        watch(
+            slice,
+            (next, _prev, onCleanup) => {
+                fitScale.value = measureFitScale();
+                if (!isOrientationSwapped(next)) {
+                    return;
+                }
+                window.addEventListener('resize', onResize);
+                onCleanup(() => window.removeEventListener('resize', onResize));
+            },
+            { flush: 'post' },
+        );
+
+        function commit(
+            transition: (slice: RotateSlice) => RotateSlice,
+            eventName:
+                | 'rotateLeft'
+                | 'rotateRight'
+                | 'flipHorizontal'
+                | 'flipVertical',
+        ): void {
+            const next = transition(slice.value);
+            slice.value = next;
+            // The public event fires once the transition settled (2.x).
+            const timer = setTimeout(() => {
+                emitTimers.delete(timer);
+                switch (eventName) {
+                    case 'rotateLeft':
+                        ctx.emit('rotateLeft', { rotate: next.rotate });
+                        break;
+                    case 'rotateRight':
+                        ctx.emit('rotateRight', { rotate: next.rotate });
+                        break;
+                    case 'flipHorizontal':
+                        ctx.emit('flipHorizontal', {
+                            flipHorizontal: next.flipHorizontal,
+                        });
+                        break;
+                    case 'flipVertical':
+                        ctx.emit('flipVertical', {
+                            flipVertical: next.flipVertical,
+                        });
+                }
+            }, settings.value.rotateSpeed + 10);
+            emitTimers.add(timer);
+        }
+
+        watch(
+            [computed(() => props.isCurrent), enabled],
+            ([current, isEnabled], _prev, onCleanup) => {
+                if (!current || !isEnabled) {
+                    return;
+                }
+                const offs = [
+                    ctx.events.on(ROTATE_LEFT_EVENT, () =>
+                        commit(rotateLeft, 'rotateLeft'),
+                    ),
+                    ctx.events.on(ROTATE_RIGHT_EVENT, () =>
+                        commit(rotateRight, 'rotateRight'),
+                    ),
+                    ctx.events.on(FLIP_HOR_EVENT, () =>
+                        commit(flipHorizontal, 'flipHorizontal'),
+                    ),
+                    ctx.events.on(FLIP_VER_EVENT, () =>
+                        commit(flipVertical, 'flipVertical'),
+                    ),
+                ];
+                onCleanup(() => offs.forEach((off) => off()));
+            },
+            { immediate: true },
+        );
+        onBeforeUnmount(() =>
+            emitTimers.forEach((timer) => clearTimeout(timer)),
+        );
+
+        return () => {
+            if (!enabled.value) {
+                return slots.default?.();
+            }
+            return h(
+                'div',
+                {
+                    ref: wrapperEl,
+                    class: 'lg-img-rotate',
+                    style: {
+                        position: 'absolute',
+                        inset: '0',
+                        transform: getRotateTransform(
+                            slice.value,
+                            fitScale.value,
+                        ),
+                        transitionDuration: `${settings.value.rotateSpeed}ms`,
+                    },
+                },
+                slots.default?.(),
+            );
+        };
+    },
+});
+
+const Rotate: LgVuePlugin<RotateSettings> = {
+    name: 'rotate',
+    defaults: rotateSettings,
+    slots: {
+        toolbar: RotateToolbar,
+        slideWrapper: RotateWrapper,
+    },
+};
+
+export default Rotate;

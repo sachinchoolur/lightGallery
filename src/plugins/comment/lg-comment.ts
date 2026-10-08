@@ -9,6 +9,7 @@
  *
  */
 
+import { commentDefaultIcons } from '@lightgallery/headless';
 import { lGEvents } from '../../lg-events';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
@@ -33,6 +34,7 @@ export default class CommentBox {
     }
 
     public init(): void {
+        this.core.registerDefaultIcons(commentDefaultIcons);
         if (!this.settings.commentBox) {
             return;
         }
@@ -51,7 +53,10 @@ export default class CommentBox {
                 '<div class="lg-comment-overlay"></div>',
         );
 
-        const commentToggleBtn = `<button type="button" aria-label="${this.settings.commentPluginStrings['toggleComments']}" class="lg-comment-toggle lg-icon"></button>`;
+        const commentToggleBtn = `<button type="button" aria-label="${
+            this.settings.commentPluginStrings?.toggleComments ??
+            this.core.settings.strings.toggleComments
+        }" class="lg-comment-toggle lg-icon"></button>`;
         this.core.$toolbar.append(commentToggleBtn);
     }
 
@@ -124,7 +129,7 @@ export default class CommentBox {
                                         index
                                     ].disqusIdentifier;
                                 this.page.url =
-                                    _this.core.galleryItems[index].disqusURL;
+                                    _this.core.galleryItems[index].disqusUrl;
                                 this.page.title =
                                     _this.settings.disqusConfig.title;
                                 this.language =
@@ -133,7 +138,7 @@ export default class CommentBox {
                         });
                     } catch (err) {
                         console.error(
-                            'Make sure you have included disqus JavaScript code in your document. Ex - https://lg-disqus.disqus.com/admin/install/platforms/universalcode/',
+                            'lightGallery: make sure you have included the Disqus JavaScript code in your document. See https://www.lightgalleryjs.com/docs/settings/#comment-box-plugin',
                         );
                     }
                 },

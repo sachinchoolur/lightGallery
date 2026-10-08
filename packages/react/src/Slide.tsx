@@ -1,0 +1,383 @@
+import {
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+    type CSSProperties,
+    type ReactElement,
+    type ReactNode,
+} from 'react';
+import {
+    awaitDecode,
+    getPreloadIndexes,
+    getSlideType,
+    type ImageSize,
+} from '@lightgallery/headless';
+
+import { CaptionContent } from './Caption';
+import { cx } from './cx';
+import {
+    useGalleryActions,
+    useGalleryInternal,
+    useGallerySettings,
+    useGalleryState,
+} from './context';
+import type { OriginAnimation } from './GalleryOutlet';
+import { useEventCallback, useIsoLayoutEffect } from './hooks';
+import { IframeSlide } from './IframeSlide';
+import { ImageSlide } from './ImageSlide';
+import {
+    resolvePluginSlideContent,
+    usePluginContext,
+    wrapSlideContent,
+} from './plugins/runtime';
+import type { GalleryItem } from './types';
+
+export interface SlideProps {
+    index: number;
+    item: GalleryItem | undefined;
+    isShown: boolean;
+    position: 'prev' | 'next' | undefined;
+    inProgress: boolean;
+    originAnim: OriginAnimation | null;
+}
+
+/**
+ * One `.lg-item`. Content mounts lazily (2.x parity): the current slide loads
+ * immediately; neighbors within `preload` load once the current slide's media
+ * completes; once loaded, a slide keeps its content for as long as it stays
+ * in the DOM window. The vanilla CSS shows the loading spinner until
+ * `lg-complete` lands.
+ */
+export function Slide({
+    index,
+    item,
+    isShown,
+    position,
+    inProgress,
+    originAnim,
+}: SlideProps): ReactElement {
+    const state = useGalleryState();
+    const settings = useGallerySettings();
+    const actions = useGalleryActions();
+    const internal = useGalleryInternal();
+
+    const [error, setError] = useState(false);
+
+    const isCurrent = state.currentIndex === index;
+    const completed = state.loadedSlides.has(index) || error;
+    const currentLoaded = state.loadedSlides.has(state.currentIndex);
+    const inPreloadRange = useMemo(
+        () =>
+            getPreloadIndexes(
+                state.currentIndex,
+                settings.preload,
+                state.slidesCount,
+            ).indexOf(index) !== -1,
+        [state.currentIndex, settings.preload, state.slidesCount, index],
+    );
+    const stickyLoadRef = useRef(false);
+    // Sticky content survives `state.open` flipping false at close-START:
+    // the close flight animates this slide back to the thumbnail, and an
+    // `open`-gated unmount would fly an EMPTY item (invisible close).
+    // Teardown belongs to the item's own unmount once the close settles
+    // (Slides `cleared`) — the moment 2.x empties `$inner`.
+    const shouldLoad =
+        stickyLoadRef.current ||
+        (state.open && (isCurrent || (currentLoaded && inPreloadRange)));
+    if (shouldLoad) {
+        stickyLoadRef.current = true;
+    }
+
+    // 2.x afterAppendSlide: fired once when the slide's content mounts.
+    const appendedRef = useRef(false);
+    useEffect(() => {
+        if (shouldLoad && !appendedRef.current) {
+            appendedRef.current = true;
+            internal.emit('onAfterAppendSlide', { index });
+            if (settings.captionPosition === 'slide') {
+                internal.emit('onAfterAppendSubHtml', { index });
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [shouldLoad]);
+
+    const handleLoad = useEventCallback(
+        (event?: { currentTarget?: EventTarget | null }) => {
+            if (state.loadedSlides.has(index)) {
+                return;
+            }
+            const isFirstSlide = !state.galleryOn;
+            const complete = () => {
+                actions.dispatch({ type: 'SLIDE_LOADED', index });
+                internal.emit('onSlideItemLoad', {
+                    index,
+                    delay: loadDelay(isFirstSlide),
+                    isFirstSlide,
+                });
+            };
+            const proceed = () => {
+                if (unmountedRef.current) {
+                    return;
+                }
+                // While the zoom-from-origin flight is animating THIS
+                // slide, hold the completion: the class/state flip
+                // rewrites the flying element's attributes
+                // mid-transition, which Safari answers by restarting the
+                // transition (visible flicker whenever a cached image
+                // loads instantly — e.g. reopening on the same slide).
+                // v2 is immune because it flies an isolated dummy image.
+                if (isFirstSlide && internal.zoomOriginOpenRef.current) {
+                    loadSettleRef.current = window.setTimeout(
+                        complete,
+                        settings.startAnimationDuration + 120,
+                    );
+                    return;
+                }
+                complete();
+            };
+            // Decode gate: `lg-complete` flips only once the browser can
+            // paint the FULL image — a loaded-but-undecoded flip paints
+            // partially on slow devices. Synchronous when `decode()` is
+            // unavailable (the load event already fired); the timeout
+            // fallback keeps a stalling decode from stranding the
+            // spinner.
+            const target = event?.currentTarget;
+            if (
+                target instanceof HTMLImageElement &&
+                typeof target.decode === 'function'
+            ) {
+                void awaitDecode(target).then(proceed);
+                return;
+            }
+            proceed();
+        },
+    );
+    const unmountedRef = useRef(false);
+    useEffect(() => {
+        // Reset on mount, not just set on unmount: StrictMode's
+        // mount→cleanup→remount cycle would otherwise leave the flag
+        // stuck true and silently swallow every completion.
+        unmountedRef.current = false;
+        return () => {
+            unmountedRef.current = true;
+        };
+    }, []);
+    const loadSettleRef = useRef<number | undefined>(undefined);
+    useEffect(() => () => window.clearTimeout(loadSettleRef.current), []);
+    const loadDelay = (isFirstSlide: boolean): number =>
+        isFirstSlide
+            ? (settings.zoomFromOrigin
+                  ? settings.startAnimationDuration
+                  : settings.backdropDuration) + 10
+            : 0;
+    const handleError = useEventCallback(() => {
+        if (state.loadedSlides.has(index)) {
+            return;
+        }
+        const isFirstSlide = !state.galleryOn;
+        // A failed load settles the slide too (2.x fires slideItemLoad on
+        // error): the error message is on screen, neighbours may preload
+        // and the slideshow moves on instead of waiting forever.
+        const complete = () => {
+            if (unmountedRef.current) {
+                return;
+            }
+            setError(true);
+            actions.dispatch({ type: 'SLIDE_ERROR', index });
+            internal.emit('onSlideItemLoad', {
+                index,
+                delay: loadDelay(isFirstSlide),
+                isFirstSlide,
+            });
+        };
+        // Same hold as a load: swapping the flying element's content
+        // mid-flight restarts the transition in Safari.
+        if (isFirstSlide && internal.zoomOriginOpenRef.current) {
+            loadSettleRef.current = window.setTimeout(
+                complete,
+                settings.startAnimationDuration + 120,
+            );
+            return;
+        }
+        complete();
+    });
+
+    let style: CSSProperties | undefined;
+    let originClasses: string | false = false;
+    if (originAnim) {
+        if (originAnim.stage === 'init') {
+            style = {
+                transform: originAnim.transform,
+                // The origin transform must LAND, never animate: measuring
+                // (computeOrigin) forces a recalc that baselines the item
+                // at identity, and the `:not(.lg-start-end-progress)`
+                // inherit rule would transition identity → origin — a
+                // visible fullscreen→thumbnail shrink before the flight.
+                // (v2 batches transform + flight classes into one style
+                // change event, so it never trips this.)
+                transitionProperty: 'none',
+            };
+        } else {
+            style = {
+                transform:
+                    originAnim.stage === 'run' && !originAnim.closing
+                        ? 'translate3d(0, 0, 0)'
+                        : originAnim.transform,
+                transitionDuration: `${settings.startAnimationDuration}ms`,
+            };
+            originClasses = originAnim.closing
+                ? 'lg-start-end-progress'
+                : 'lg-start-progress lg-start-end-progress';
+        }
+    }
+
+    const slideType = item ? getSlideType(item) : 'image';
+    const pluginCtx = usePluginContext();
+
+    // 2.x first-slide dummy (`getDummyImageContent`): while the
+    // zoom-from-origin flight runs, the trigger's already-decoded
+    // thumbnail flies enlarged in place of the still-loading image; the
+    // real image loads beneath it and the dummy drops shortly after the
+    // load settles (`loadContentOnFirstSlideLoad`). Layout effect: the
+    // dummy must be in the flight's FIRST painted frame.
+    const [dummySrc, setDummySrc] = useState<string | null>(null);
+    const [dummySize, setDummySize] = useState<ImageSize | null>(null);
+    const [dummyOffset, setDummyOffset] = useState<{
+        x: number;
+        y: number;
+    } | null>(null);
+    const dummyDoneRef = useRef(false);
+    useIsoLayoutEffect(() => {
+        if (
+            dummyDoneRef.current ||
+            dummySrc ||
+            !originAnim ||
+            originAnim.closing ||
+            completed ||
+            slideType !== 'image'
+        ) {
+            return;
+        }
+        const src = originAnim.dummySrc ?? internal.getDummySrc(index);
+        if (src) {
+            setDummySrc(src);
+            // A plugin's flight may cover only a region of the image with
+            // the dummy (origin crop's pre-cropped thumbnail files).
+            const { imageSize, region } = originAnim;
+            if (imageSize && region) {
+                setDummySize({
+                    width: imageSize.width * region.width,
+                    height: imageSize.height * region.height,
+                });
+                setDummyOffset({
+                    x: imageSize.width * (region.x + region.width / 2 - 0.5),
+                    y: imageSize.height * (region.y + region.height / 2 - 0.5),
+                });
+            } else {
+                setDummySize(imageSize ?? null);
+                setDummyOffset(null);
+            }
+        } else {
+            dummyDoneRef.current = true;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [originAnim]);
+    useEffect(() => {
+        if (!dummySrc || !completed) {
+            return;
+        }
+        const timeout = window.setTimeout(() => {
+            dummyDoneRef.current = true;
+            setDummySrc(null);
+        }, 300);
+        return () => window.clearTimeout(timeout);
+    }, [dummySrc, completed]);
+    useEffect(() => {
+        if (!dummySrc) {
+            return;
+        }
+        internal.layout.setOuterClass('lg-first-slide-loading', true);
+        return () =>
+            internal.layout.setOuterClass('lg-first-slide-loading', false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dummySrc]);
+
+    let content: ReactNode = null;
+    if (shouldLoad && item && !error) {
+        // Plugin slide renderers win (video plugin); undefined passes
+        // through to the built-in renderers.
+        content = resolvePluginSlideContent(
+            internal.plugins,
+            item,
+            index,
+            pluginCtx,
+        );
+        if (content === undefined) {
+            if (slideType === 'image') {
+                content = (
+                    <ImageSlide
+                        item={item}
+                        index={index}
+                        dummySrc={dummySrc}
+                        dummySize={dummySize}
+                        dummyOffset={dummyOffset}
+                        // v2 appends the real image only once the flight
+                        // lands (startAnimationDuration + 100): its fetch
+                        // and decode must never jank the flight's frames.
+                        deferSrc={
+                            !!dummySrc && !!originAnim && !originAnim.closing
+                        }
+                        onLoad={handleLoad}
+                        onError={handleError}
+                    />
+                );
+            } else if (slideType === 'iframe') {
+                content = (
+                    <IframeSlide
+                        item={item}
+                        index={index}
+                        onLoad={handleLoad}
+                    />
+                );
+            } else {
+                // Video items render nothing without the video plugin.
+                content = null;
+            }
+        }
+        content = wrapSlideContent(internal.plugins, content, {
+            item,
+            index,
+            isCurrent,
+        });
+    }
+
+    return (
+        <div
+            className={cx(
+                'lg-item',
+                isShown && 'lg-current',
+                position === 'prev' && 'lg-prev-slide',
+                position === 'next' && 'lg-next-slide',
+                inProgress && 'lg-slide-progress',
+                shouldLoad && 'lg-loaded',
+                completed && 'lg-complete lg-complete_',
+                dummySrc && 'lg-first-slide',
+                originClasses,
+            )}
+            style={style}
+        >
+            {content}
+            {error && (
+                <span className="lg-error-msg">
+                    {settings.strings.mediaLoadingFailed}
+                </span>
+            )}
+            {settings.captionPosition === 'slide' && shouldLoad && item && (
+                <div className="lg-sub-html">
+                    <CaptionContent item={item} index={index} />
+                </div>
+            )}
+        </div>
+    );
+}

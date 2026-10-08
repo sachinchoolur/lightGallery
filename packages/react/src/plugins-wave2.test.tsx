@@ -1,0 +1,721 @@
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { LightGallery, type GalleryItem } from './index';
+import Autoplay from './plugins/autoplay';
+import Comment from './plugins/comment';
+import Fullscreen from './plugins/fullscreen';
+import Hash from './plugins/hash';
+import MediumZoom from './plugins/mediumZoom';
+import Pager from './plugins/pager';
+import RelativeCaption from './plugins/relativeCaption';
+import Rotate from './plugins/rotate';
+import Share from './plugins/share';
+import Thumbnail from './plugins/thumbnail';
+import Video from './plugins/video';
+import VimeoThumbnail from './plugins/vimeoThumbnail';
+import Zoom from './plugins/zoom';
+
+const slides: GalleryItem[] = [
+    { src: 'a.jpg', alt: 'a', thumb: 'a-t.jpg', caption: 'Caption A' },
+    { src: 'b.jpg', alt: 'b', thumb: 'b-t.jpg' },
+    { src: 'c.jpg', alt: 'c', thumb: 'c-t.jpg' },
+];
+
+function tick(ms: number) {
+    act(() => {
+        vi.advanceTimersByTime(ms);
+    });
+}
+
+function renderGallery(props: Record<string, unknown> = {}) {
+    const utils = render(
+        <LightGallery
+            slides={slides}
+            open={true}
+            onClose={() => undefined}
+            {...props}
+        />,
+    );
+    tick(450);
+    return utils;
+}
+
+function loadCurrent(alt = 'a') {
+    fireEvent.load(document.querySelector(`img.lg-image[alt="${alt}"]`)!);
+}
+
+function counterText(): string | undefined {
+    return (
+        document.querySelector('.lg-counter-current')?.textContent ?? undefined
+    );
+}
+
+beforeEach(() => {
+    vi.useFakeTimers();
+});
+
+afterEach(() => {
+    act(() => {
+        vi.runOnlyPendingTimers();
+    });
+    vi.useRealTimers();
+    window.history.replaceState(null, '', window.location.pathname);
+});
+
+describe('autoplay plugin', () => {
+    it('starts/stops the slideshow from the toolbar button', () => {
+        const onAutoplayStart = vi.fn();
+        const onAutoplayStop = vi.fn();
+        renderGallery({
+            plugins: [Autoplay],
+            onAutoplayStart,
+            onAutoplayStop,
+        });
+        loadCurrent();
+
+        fireEvent.click(screen.getByLabelText('Toggle Autoplay'));
+        expect(onAutoplayStart).toHaveBeenCalledWith({ index: 0 });
+        const outer = document.querySelector('.lg-outer');
+        expect(outer).toHaveClass('lg-show-autoplay');
+        // Two-phase start: the bar paints a frame at width 0 first —
+        // lg-start in the same frame would render it full instead of
+        // animating.
+        expect(document.querySelector('.lg-progress-bar')).not.toHaveClass(
+            'lg-start',
+        );
+        tick(25);
+        expect(document.querySelector('.lg-progress-bar')).toHaveClass(
+            'lg-start',
+        );
+
+        // speed 400 + interval 5000 → next slide fires at 5400.
+        tick(5500);
+        expect(counterText()).toBe('2');
+        tick(600);
+
+        fireEvent.click(screen.getByLabelText('Toggle Autoplay'));
+        expect(onAutoplayStop).toHaveBeenCalled();
+        expect(outer).not.toHaveClass('lg-show-autoplay');
+        tick(6000);
+        expect(counterText()).toBe('2');
+    });
+
+    it('stops on user navigation (forceSlideShowAutoplay off)', () => {
+        renderGallery({ plugins: [Autoplay] });
+        loadCurrent();
+        fireEvent.click(screen.getByLabelText('Toggle Autoplay'));
+        fireEvent.click(screen.getByLabelText('Next slide'));
+        tick(600);
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-show-autoplay',
+        );
+    });
+
+    it('holds the countdown until the slide on screen has loaded', () => {
+        renderGallery({ plugins: [Autoplay] });
+        loadCurrent();
+        fireEvent.click(screen.getByLabelText('Toggle Autoplay'));
+        tick(5500);
+        expect(counterText()).toBe('2');
+
+        // Slide b is still downloading: the show holds and the progress
+        // bar sits at zero, however long that takes.
+        tick(25);
+        expect(document.querySelector('.lg-progress-bar')).not.toHaveClass(
+            'lg-start',
+        );
+        tick(20000);
+        expect(counterText()).toBe('2');
+
+        // Once it lands the full interval counts from there.
+        loadCurrent('b');
+        tick(25);
+        expect(document.querySelector('.lg-progress-bar')).toHaveClass(
+            'lg-start',
+        );
+        tick(5200);
+        expect(counterText()).toBe('2');
+        tick(300);
+        expect(counterText()).toBe('3');
+    });
+
+    it('moves on from a slide that failed to load', () => {
+        renderGallery({ plugins: [Autoplay] });
+        loadCurrent();
+        fireEvent.click(screen.getByLabelText('Toggle Autoplay'));
+        tick(5500);
+        expect(counterText()).toBe('2');
+        fireEvent.error(document.querySelector('img.lg-image[alt="b"]')!);
+        // Let the transition settle (its state must render before the
+        // next navigation inside a later act), then the countdown runs.
+        tick(600);
+        tick(5000);
+        expect(counterText()).toBe('3');
+    });
+});
+
+describe('fullscreen plugin', () => {
+    it('renders nothing when the Fullscreen API is unavailable', () => {
+        renderGallery({ plugins: [Fullscreen] });
+        expect(document.querySelector('.lg-fullscreen')).toBeNull();
+    });
+
+    it('toggles fullscreen when supported', () => {
+        Object.defineProperty(document, 'fullscreenEnabled', {
+            value: true,
+            configurable: true,
+        });
+        const request = vi.fn();
+        document.documentElement.requestFullscreen = request;
+
+        renderGallery({ plugins: [Fullscreen] });
+        fireEvent.click(screen.getByLabelText('Toggle Fullscreen'));
+        expect(request).toHaveBeenCalledTimes(1);
+
+        delete (document.documentElement as { requestFullscreen?: unknown })
+            .requestFullscreen;
+        Reflect.deleteProperty(document, 'fullscreenEnabled');
+    });
+});
+
+describe('hash plugin', () => {
+    it('opens from a deep link with a clamped slide index', () => {
+        window.location.hash = '#lg=g1&slide=99';
+        render(
+            <LightGallery
+                plugins={[Hash]}
+                slides={slides}
+                hash={{ galleryId: 'g1' }}
+            >
+                {null}
+            </LightGallery>,
+        );
+        tick(150);
+        expect(document.querySelector('.lg-container')).toBeInTheDocument();
+        // slide=99 clamps to the last slide (2.x passed it through).
+        expect(counterText()).toBe('3');
+        expect(document.body).toHaveClass('lg-from-hash');
+        tick(500);
+    });
+
+    it('runs on the Navigation API driver with identical URLs', () => {
+        const calls: Array<[string, { history?: string }]> = [];
+        const listeners = new Set<() => void>();
+        const navigation = {
+            currentEntry: { url: 'http://localhost/' },
+            navigate: (url: string, options: { history?: string }) => {
+                calls.push([url, options]);
+                navigation.currentEntry = {
+                    url: new URL(url, 'http://localhost/').href,
+                };
+                // The real API fires currententrychange for replaces too —
+                // the handlers must be re-entrant-safe.
+                listeners.forEach((listener) => listener());
+                return {
+                    committed: Promise.resolve(),
+                    finished: Promise.resolve(),
+                };
+            },
+            addEventListener: (type: string, listener: () => void) => {
+                if (type === 'currententrychange') {
+                    listeners.add(listener);
+                }
+            },
+            removeEventListener: (_type: string, listener: () => void) => {
+                listeners.delete(listener);
+            },
+        };
+        Object.defineProperty(window, 'navigation', {
+            value: navigation,
+            configurable: true,
+        });
+        try {
+            renderGallery({
+                plugins: [Hash],
+                hash: { galleryId: 'g3' },
+            });
+            // afterOpen wrote the deep link through a replace navigation.
+            const lastWrite = calls[calls.length - 1]!;
+            expect(lastWrite[0]).toContain('#lg=g3&slide=0');
+            expect(lastWrite[1]).toMatchObject({ history: 'replace' });
+
+            // Back/forward: the entry changes → the gallery follows.
+            navigation.currentEntry = {
+                url: 'http://localhost/#lg=g3&slide=2',
+            };
+            act(() => {
+                listeners.forEach((listener) => listener());
+            });
+            tick(600);
+            expect(counterText()).toBe('3');
+        } finally {
+            delete (window as { navigation?: unknown }).navigation;
+        }
+    });
+
+    it('writes the slide to the hash and restores it on close', () => {
+        render(
+            <LightGallery
+                plugins={[Hash]}
+                slides={slides}
+                hash={{ galleryId: 'g2' }}
+            >
+                {null}
+            </LightGallery>,
+        );
+        act(() => {
+            fireEvent.click(document.body); // no-op, settle
+        });
+        // Open via deep-link is not used here; open through the ref-less
+        // uncontrolled path: simulate afterSlide by opening from hash.
+        window.location.hash = '#lg=g2&slide=1';
+        tick(150);
+        expect(counterText()).toBe('2');
+        loadCurrent('b');
+
+        fireEvent.keyDown(document, { key: 'Escape' });
+        tick(500);
+        expect(window.location.hash).not.toContain('lg=g2');
+    });
+});
+
+describe('pager plugin', () => {
+    it('renders dots with active sync and click navigation', () => {
+        renderGallery({ plugins: [Pager] });
+        loadCurrent();
+        const dots = document.querySelectorAll('.lg-pager-cont');
+        expect(dots.length).toBe(3);
+        expect(dots[0]).toHaveClass('lg-pager-active');
+
+        fireEvent.click(dots[2]!.querySelector('.lg-pager')!);
+        expect(counterText()).toBe('3');
+        tick(600);
+        expect(dots[2]).toHaveClass('lg-pager-active');
+    });
+});
+
+describe('share plugin', () => {
+    it('renders per-slide share links and toggles the dropdown', () => {
+        renderGallery({ plugins: [Share] });
+        const button = screen.getByLabelText('Share');
+        // The dropdown is the button's sibling inside the wrapper that
+        // anchors it, so it hangs under the button (nesting the list in
+        // the button would be invalid).
+        const wrapper = document.querySelector('.lg-toolbar .lg-share-outer')!;
+        expect(wrapper.contains(button)).toBe(true);
+        expect(wrapper.querySelector(':scope > .lg-dropdown')).not.toBeNull();
+        const links = document.querySelectorAll('.lg-dropdown a');
+        expect(links.length).toBe(3);
+        expect(links[0]!.getAttribute('href')).toContain('facebook.com');
+        expect(links[1]!.getAttribute('href')).toContain('x.com/intent/post');
+        expect(links[2]!.getAttribute('href')).toContain(
+            encodeURIComponent('a.jpg'),
+        );
+
+        fireEvent.click(button);
+        expect(document.querySelector('.lg-outer')).toHaveClass(
+            'lg-dropdown-active',
+        );
+        // A press inside the dropdown keeps it open; one on another
+        // control closes it and passes through (not cancelled), so the
+        // same click runs that control.
+        fireEvent.pointerDown(links[0]!);
+        expect(document.querySelector('.lg-outer')).toHaveClass(
+            'lg-dropdown-active',
+        );
+        expect(
+            fireEvent.pointerDown(document.querySelector('.lg-close')!),
+        ).toBe(true);
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-dropdown-active',
+        );
+        expect(button).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('dismisses on a backdrop press and on Escape, keeping the gallery open', () => {
+        const onClose = vi.fn();
+        renderGallery({ plugins: [Share], onClose });
+        const button = screen.getByLabelText('Share');
+        fireEvent.click(button);
+        // The backdrop press is consumed: closeOnTap never arms, so the
+        // release that follows does not close the gallery.
+        const item = document.querySelector('.lg-item')!;
+        expect(fireEvent.pointerDown(item)).toBe(false);
+        fireEvent.pointerUp(item);
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-dropdown-active',
+        );
+        expect(onClose).not.toHaveBeenCalled();
+
+        fireEvent.click(button);
+        button.focus();
+        fireEvent.keyDown(button, { key: 'Escape' });
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-dropdown-active',
+        );
+        expect(document.activeElement).toBe(button);
+        expect(onClose).not.toHaveBeenCalled();
+    });
+
+    it('closes the dropdown when the gallery closes', () => {
+        const { rerender } = renderGallery({ plugins: [Share] });
+        fireEvent.click(screen.getByLabelText('Share'));
+        expect(document.querySelector('.lg-outer')).toHaveClass(
+            'lg-dropdown-active',
+        );
+
+        // Closing with the dropdown open must not leave it open for the
+        // next open.
+        const gallery = (open: boolean) => (
+            <LightGallery
+                slides={slides}
+                open={open}
+                onClose={() => undefined}
+                plugins={[Share]}
+            />
+        );
+        rerender(gallery(false));
+        tick(600);
+        rerender(gallery(true));
+        tick(600);
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-dropdown-active',
+        );
+    });
+
+    it('prefers the native share sheet when enabled and available', () => {
+        const share = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(window.navigator, 'share', {
+            value: share,
+            configurable: true,
+        });
+        try {
+            renderGallery({
+                plugins: [Share],
+                share: { preferNativeShare: true },
+            });
+            const button = screen.getByLabelText('Share');
+            // Native-first buttons do not advertise a popup.
+            expect(button).not.toHaveAttribute('aria-haspopup');
+            fireEvent.click(button);
+            expect(share).toHaveBeenCalledWith({
+                url: window.location.href,
+                title: 'a',
+            });
+            expect(document.querySelector('.lg-outer')).not.toHaveClass(
+                'lg-dropdown-active',
+            );
+        } finally {
+            delete (window.navigator as { share?: unknown }).share;
+        }
+    });
+
+    it('keeps the dropdown when preferNativeShare is false', () => {
+        const share = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(window.navigator, 'share', {
+            value: share,
+            configurable: true,
+        });
+        try {
+            renderGallery({
+                plugins: [Share],
+                share: { preferNativeShare: false },
+            });
+            fireEvent.click(screen.getByLabelText('Share'));
+            expect(share).not.toHaveBeenCalled();
+            expect(document.querySelector('.lg-outer')).toHaveClass(
+                'lg-dropdown-active',
+            );
+        } finally {
+            delete (window.navigator as { share?: unknown }).share;
+        }
+    });
+
+    it('falls back to the dropdown when canShare vetoes the payload', () => {
+        const share = vi.fn().mockResolvedValue(undefined);
+        Object.defineProperty(window.navigator, 'share', {
+            value: share,
+            configurable: true,
+        });
+        Object.defineProperty(window.navigator, 'canShare', {
+            value: () => false,
+            configurable: true,
+        });
+        try {
+            renderGallery({
+                plugins: [Share],
+                share: { preferNativeShare: true },
+            });
+            fireEvent.click(screen.getByLabelText('Share'));
+            expect(share).not.toHaveBeenCalled();
+            expect(document.querySelector('.lg-outer')).toHaveClass(
+                'lg-dropdown-active',
+            );
+        } finally {
+            delete (window.navigator as { share?: unknown }).share;
+            delete (window.navigator as { canShare?: unknown }).canShare;
+        }
+    });
+});
+
+describe('rotate plugin', () => {
+    it('rotates and flips the current slide with the axis correction', () => {
+        const onRotateRight = vi.fn();
+        renderGallery({ plugins: [Rotate], onRotateRight });
+        loadCurrent();
+        const wrapper = () =>
+            document.querySelector<HTMLElement>(
+                '.lg-item.lg-current .lg-img-rotate',
+            )!;
+        expect(wrapper()).not.toBeNull();
+
+        fireEvent.click(screen.getByLabelText('Rotate right'));
+        expect(wrapper().style.transform).toBe(
+            'rotate(90deg) scale3d(1, 1, 1)',
+        );
+        tick(450);
+        expect(onRotateRight).toHaveBeenCalledWith({ rotate: 90 });
+
+        // At 90°, a horizontal flip toggles the vertical axis (2.x).
+        fireEvent.click(screen.getByLabelText('Flip horizontal'));
+        expect(wrapper().style.transform).toBe(
+            'rotate(90deg) scale3d(1, -1, 1)',
+        );
+        tick(450);
+    });
+
+    it('composes inside the zoom wrapper', () => {
+        renderGallery({ plugins: [Zoom, Rotate] });
+        loadCurrent();
+        const zoomWrap = document.querySelector(
+            '.lg-item.lg-current .lg-zoom-scale',
+        );
+        expect(zoomWrap?.querySelector('.lg-img-rotate')).not.toBeNull();
+    });
+
+    it('refits a landscape image into the stage at 90 degrees', () => {
+        renderGallery({ plugins: [Rotate] });
+        loadCurrent();
+        const wrapper = document.querySelector<HTMLElement>(
+            '.lg-item.lg-current .lg-img-rotate',
+        )!;
+        const image = wrapper.querySelector<HTMLElement>('.lg-object')!;
+        // Landscape image (921x614) fitted into a 1265x614 stage — its
+        // 921px width runs vertically after a 90° rotation.
+        Object.defineProperty(image, 'offsetWidth', { value: 921 });
+        Object.defineProperty(image, 'offsetHeight', { value: 614 });
+        Object.defineProperty(wrapper, 'clientWidth', { value: 1265 });
+        Object.defineProperty(wrapper, 'clientHeight', { value: 614 });
+
+        fireEvent.click(screen.getByLabelText('Rotate right'));
+        const scale = 614 / 921;
+        expect(wrapper.style.transform).toBe(
+            `rotate(90deg) scale3d(${scale}, ${scale}, 1)`,
+        );
+        tick(450);
+
+        // Back at 180° the laid-out fit applies again: scale 1.
+        fireEvent.click(screen.getByLabelText('Rotate right'));
+        expect(wrapper.style.transform).toBe('rotate(180deg) scale3d(1, 1, 1)');
+        tick(450);
+    });
+});
+
+describe('comment plugin', () => {
+    it('renders the panel via renderComments and toggles it', () => {
+        renderGallery({
+            plugins: [Comment],
+            comment: {
+                commentBox: true,
+                renderComments: (item: GalleryItem) => (
+                    <p data-testid="comments">Comments for {item.alt}</p>
+                ),
+            },
+        });
+        expect(screen.getByTestId('comments')).toHaveTextContent(
+            'Comments for a',
+        );
+        fireEvent.click(screen.getByLabelText('Toggle Comments'));
+        expect(document.querySelector('.lg-outer')).toHaveClass(
+            'lg-comment-active',
+        );
+        fireEvent.click(document.querySelector('.lg-comment-overlay')!);
+        expect(document.querySelector('.lg-outer')).not.toHaveClass(
+            'lg-comment-active',
+        );
+    });
+});
+
+describe('media position', () => {
+    it('reserves the toolbar, caption and thumbnail strip around the media', () => {
+        // jsdom has no layout: give the bars real-looking heights.
+        const heights = vi
+            .spyOn(Element.prototype, 'clientHeight', 'get')
+            .mockImplementation(function (this: Element) {
+                if (this.classList.contains('lg-toolbar')) return 40;
+                if (this.classList.contains('lg-thumb-outer')) return 100;
+                // A caption only takes space once it has content.
+                if (this.classList.contains('lg-sub-html')) {
+                    return this.textContent?.trim() ? 30 : 0;
+                }
+                return 0;
+            });
+        try {
+            renderGallery({ plugins: [Thumbnail] });
+            const content = document.querySelector<HTMLElement>('.lg-content')!;
+            expect(content.style.top).toBe('40px');
+            expect(content.style.bottom).toBe('130px');
+        } finally {
+            heights.mockRestore();
+        }
+    });
+});
+
+describe('mediumZoom plugin', () => {
+    it('applies presets, backdrop color and click-to-close', () => {
+        const onClose = vi.fn();
+        renderGallery({
+            plugins: [MediumZoom],
+            onClose,
+            slides: [
+                { ...slides[0], lgBackgroundColor: 'rgb(20, 30, 40)' },
+                ...slides.slice(1),
+            ],
+        });
+        // Presets: controls/counter/close hidden.
+        expect(document.querySelector('.lg-counter')).toBeNull();
+        expect(document.querySelector('.lg-prev')).toBeNull();
+        expect(document.querySelector('.lg-close')).toBeNull();
+        expect(document.querySelector('.lg-outer')).toHaveClass(
+            'lg-medium-zoom',
+        );
+        expect(
+            (document.querySelector('.lg-backdrop') as HTMLElement).style
+                .backgroundColor,
+        ).toBe('rgb(20, 30, 40)');
+
+        fireEvent.click(document.querySelector('.lg-outer')!);
+        expect(onClose).toHaveBeenCalled();
+    });
+
+    it('overrides the media container position with the margin', () => {
+        renderGallery({ plugins: [MediumZoom], mediumZoom: { margin: 25 } });
+        const content = document.querySelector<HTMLElement>('.lg-content')!;
+        expect(content.style.top).toBe('25px');
+        expect(content.style.bottom).toBe('25px');
+    });
+});
+
+describe('relativeCaption plugin', () => {
+    it('moves captions into the slide and reveals them after load', () => {
+        renderGallery({ plugins: [RelativeCaption] });
+        // Preset captionPosition: 'slide' → caption inside .lg-item.
+        const caption = document.querySelector<HTMLElement>(
+            '.lg-item .lg-sub-html',
+        );
+        expect(caption).not.toBeNull();
+        expect(
+            document.querySelector('.lg-components .lg-sub-html'),
+        ).toBeNull();
+        expect(document.querySelector('.lg-outer')).toHaveClass(
+            'lg-relative-caption',
+        );
+
+        loadCurrent();
+        tick(100);
+        expect(caption!.style.opacity).toBe('1');
+    });
+});
+
+describe('vimeoThumbnail plugin', () => {
+    it('swaps vimeo item thumbs via the oEmbed API', async () => {
+        const fetchMock = vi.fn().mockResolvedValue({
+            json: () =>
+                Promise.resolve({
+                    thumbnail_url: 'https://i.vimeocdn.com/thumb.jpg',
+                }),
+        });
+        vi.stubGlobal('fetch', fetchMock);
+
+        renderGallery({
+            plugins: [VimeoThumbnail, Thumbnail],
+            slides: [
+                { src: 'https://vimeo.com/112836958', alt: 'v' },
+                ...slides.slice(1),
+            ],
+        });
+        await act(async () => undefined);
+
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(fetchMock.mock.calls[0]![0]).toContain('vimeo.com/api/oembed');
+        const thumb = document.querySelector(
+            '.lg-thumb-item img',
+        ) as HTMLImageElement;
+        expect(thumb.src).toContain('i.vimeocdn.com/thumb.jpg');
+
+        vi.unstubAllGlobals();
+    });
+});
+
+describe('all 13 plugins together', () => {
+    it('composes without conflicts', () => {
+        renderGallery({
+            plugins: [
+                Thumbnail,
+                Zoom,
+                Video,
+                Autoplay,
+                Fullscreen,
+                Hash,
+                Pager,
+                Share,
+                Rotate,
+                Comment,
+                MediumZoom,
+                RelativeCaption,
+                VimeoThumbnail,
+            ],
+            comment: { commentBox: true },
+        });
+        loadCurrent();
+        const outer = document.querySelector('.lg-outer')!;
+        expect(outer).toHaveClass(
+            'lg-has-thumb',
+            'lg-use-transition-for-zoom',
+            'lg-medium-zoom',
+            'lg-relative-caption',
+        );
+        // mediumZoom presets suppress the counter/controls; the strip,
+        // pager, share and autoplay UI all render.
+        expect(document.querySelector('.lg-thumb-outer')).not.toBeNull();
+        expect(document.querySelector('.lg-pager-outer')).not.toBeNull();
+        expect(document.querySelector('.lg-share')).not.toBeNull();
+        expect(document.querySelector('.lg-autoplay-button')).not.toBeNull();
+        expect(document.querySelector('.lg-counter')).toBeNull();
+        tick(600);
+    });
+});
+
+describe('plugin label strings (core alias)', () => {
+    it('resolves labels from core strings, legacy plugin strings winning', () => {
+        renderGallery({
+            plugins: [Autoplay, Share],
+            strings: { toggleAutoplay: 'Diaporama', share: 'Partager' },
+            autoplay: {
+                autoplayPluginStrings: { toggleAutoplay: 'Legacy autoplay' },
+            },
+        });
+        loadCurrent();
+        // The deprecated per-plugin alias wins where explicitly set…
+        expect(document.querySelector('.lg-autoplay-button')).toHaveAttribute(
+            'aria-label',
+            'Legacy autoplay',
+        );
+        // …and the core strings drive every other plugin label.
+        expect(document.querySelector('.lg-share')).toHaveAttribute(
+            'aria-label',
+            'Partager',
+        );
+    });
+});

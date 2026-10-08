@@ -1,0 +1,212 @@
+// API entries (events, methods, framework callbacks): a mono name with
+// a quiet anchor, the summary, then labelled blocks (detail table,
+// example, see also). Entries are separated by a hairline.
+body.docs.single .docs-content .api-entry {
+    padding: 28px 0 32px;
+    border-top: 1px solid $gray-200;
+    &:first-child {
+        border-top: 0;
+        padding-top: 8px;
+    }
+    .api-entry-name {
+        margin: 0 0 8px;
+        font-size: 17px;
+        line-height: 28px;
+        code {
+            padding: 0;
+            border: 0;
+            background: none;
+            color: $gray-800;
+            font-family: $font-family-monospace;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .anchor {
+            opacity: 0;
+            transition: opacity 120ms ease;
+        }
+        &:hover .anchor,
+        .anchor:focus-visible {
+            opacity: 1;
+        }
+    }
+    .api-entry-desc {
+        margin: 0 0 12px;
+        color: $gray-700;
+    }
+    .api-entry-label {
+        display: block;
+        margin-bottom: 6px;
+        color: $gray-500;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 16px;
+        text-transform: uppercase;
+    }
+    .api-entry-block {
+        margin: 16px 0 0;
+        pre,
+        table {
+            margin: 0;
+        }
+    }
+    .api-entry-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 10px;
+        margin: 16px 0 0;
+        font-size: 14.5px;
+        .api-entry-label {
+            margin: 0;
+        }
+    }
+    .alert {
+        margin: 16px 0 0;
+    }
+
+    // Detail table: mono name and type, prose description.
+    .api-detail-table {
+        width: 100%;
+        margin: 0;
+        border: 1px solid $gray-200;
+        border-radius: 12px;
+        border-collapse: separate;
+        border-spacing: 0;
+        overflow: hidden;
+        font-size: 14px;
+        line-height: 22px;
+        th,
+        td {
+            padding: 9px 16px;
+            border: 0;
+            border-bottom: 1px solid $gray-100;
+            vertical-align: top;
+            text-align: left;
+        }
+        thead th {
+            background: $gray-50;
+            border-bottom-color: $gray-200;
+            color: $gray-500;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            line-height: 16px;
+            text-transform: uppercase;
+        }
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+        .api-detail-name {
+            width: 28%;
+            font-family: $font-family-monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: $gray-800;
+            code {
+                padding: 0;
+                border: 0;
+                background: none;
+                color: inherit;
+                font-size: inherit;
+                font-weight: inherit;
+            }
+        }
+        .api-detail-type {
+            width: 22%;
+            color: $gray-600;
+            font-family: $font-family-monospace;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+        .api-detail-desc {
+            color: $gray-600;
+            p {
+                margin: 6px 0 0;
+            }
+        }
+        @media (max-width: 575px) {
+            thead {
+                display: none;
+            }
+            tbody,
+            tr,
+            td,
+            .api-detail-name,
+            .api-detail-type {
+                display: block;
+                width: auto;
+            }
+            tr {
+                padding: 10px 16px;
+                border-bottom: 1px solid $gray-100;
+                &:last-child {
+                    border-bottom: 0;
+                }
+            }
+            td {
+                padding: 0;
+                border: 0;
+            }
+            .api-detail-type {
+                margin-bottom: 4px;
+            }
+        }
+    }
+}
+
+#paritybar .pb-bar {
+    border-top: 3px solid #0cc523;
+}
+// Per-page tools (markdown twin, copy, open in an assistant).
+.page-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: -0.25rem 0 1.25rem;
+}
+
+// A copyable prompt for coding agents: the button sits over the block's
+// top-right corner, and the prose wraps so phones need no sideways scroll.
+.agent-prompt {
+    position: relative;
+}
+
+// Matches the docs layout's own `pre` selector plus one class, so the extra
+// top padding that clears the button wins over its `padding` shorthand.
+body.docs.single .docs-content .agent-prompt pre {
+    padding-top: 3.25rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.agent-prompt-copy {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    z-index: 1;
+}
+
+.page-tools-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid rgba($black, 0.12);
+    border-radius: 999px;
+    background: #fff;
+    color: $brand-dark;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+    &:hover,
+    &:focus-visible {
+        border-color: rgba($brand, 0.6);
+        color: $brand-light;
+        text-decoration: none;
+    }
+}

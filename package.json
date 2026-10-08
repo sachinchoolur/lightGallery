@@ -1,18 +1,132 @@
 {
   "name": "lightgallery",
-  "version": "2.9.0",
+  "version": "3.0.0-beta.5",
+  "packageManager": "pnpm@9.15.0",
+  "pnpm": {
+    "overrides": {
+      "@types/babel__traverse": "7.11.1",
+      "@types/express": "4.17.11",
+      "@types/express-serve-static-core": "4.17.19",
+      "@types/react": "18.0.15",
+      "@types/serve-static": "1.13.10"
+    },
+    "packageExtensions": {
+      "@analogjs/vite-plugin-angular": {
+        "dependencies": {
+          "typescript": "~5.9.0"
+        }
+      }
+    }
+  },
   "description": "lightGallery is a feature-rich, modular JavaScript gallery plugin for building beautiful image and video galleries for the web and the mobile",
   "keywords": [
-    "JavaScript",
-    "Gallery",
-    "Video",
-    "slider",
-    "lightBox"
+    "lightgallery",
+    "gallery",
+    "lightbox",
+    "image-gallery",
+    "video-gallery",
+    "carousel",
+    "zoom",
+    "thumbnails",
+    "javascript",
+    "typescript"
   ],
   "main": "dist/lightgallery.umd.js",
   "min": "dist/lightgallery.min.js",
+  "unpkg": "dist/lightgallery.min.js",
+  "jsdelivr": "dist/lightgallery.min.js",
   "module": "dist/lightgallery.es5.js",
   "typings": "dist/types/index.d.ts",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/lightgallery.es5.js",
+      "require": "./dist/lightgallery.umd.js",
+      "script": "./dist/lightgallery.min.js"
+    },
+    "./plugins/thumbnail": {
+      "types": "./dist/types/plugins/thumbnail/lg-thumbnail.d.ts",
+      "import": "./dist/plugins/thumbnail/lg-thumbnail.es5.js",
+      "require": "./dist/plugins/thumbnail/lg-thumbnail.umd.js"
+    },
+    "./plugins/video": {
+      "types": "./dist/types/plugins/video/lg-video.d.ts",
+      "import": "./dist/plugins/video/lg-video.es5.js",
+      "require": "./dist/plugins/video/lg-video.umd.js"
+    },
+    "./plugins/zoom": {
+      "types": "./dist/types/plugins/zoom/lg-zoom.d.ts",
+      "import": "./dist/plugins/zoom/lg-zoom.es5.js",
+      "require": "./dist/plugins/zoom/lg-zoom.umd.js"
+    },
+    "./plugins/share": {
+      "types": "./dist/types/plugins/share/lg-share.d.ts",
+      "import": "./dist/plugins/share/lg-share.es5.js",
+      "require": "./dist/plugins/share/lg-share.umd.js"
+    },
+    "./plugins/rotate": {
+      "types": "./dist/types/plugins/rotate/lg-rotate.d.ts",
+      "import": "./dist/plugins/rotate/lg-rotate.es5.js",
+      "require": "./dist/plugins/rotate/lg-rotate.umd.js"
+    },
+    "./plugins/pager": {
+      "types": "./dist/types/plugins/pager/lg-pager.d.ts",
+      "import": "./dist/plugins/pager/lg-pager.es5.js",
+      "require": "./dist/plugins/pager/lg-pager.umd.js"
+    },
+    "./plugins/hash": {
+      "types": "./dist/types/plugins/hash/lg-hash.d.ts",
+      "import": "./dist/plugins/hash/lg-hash.es5.js",
+      "require": "./dist/plugins/hash/lg-hash.umd.js"
+    },
+    "./plugins/justified": {
+      "types": "./dist/types/plugins/justified/lg-justified.d.ts",
+      "import": "./dist/plugins/justified/lg-justified.es5.js",
+      "require": "./dist/plugins/justified/lg-justified.umd.js"
+    },
+    "./plugins/fullscreen": {
+      "types": "./dist/types/plugins/fullscreen/lg-fullscreen.d.ts",
+      "import": "./dist/plugins/fullscreen/lg-fullscreen.es5.js",
+      "require": "./dist/plugins/fullscreen/lg-fullscreen.umd.js"
+    },
+    "./plugins/comment": {
+      "types": "./dist/types/plugins/comment/lg-comment.d.ts",
+      "import": "./dist/plugins/comment/lg-comment.es5.js",
+      "require": "./dist/plugins/comment/lg-comment.umd.js"
+    },
+    "./plugins/autoplay": {
+      "types": "./dist/types/plugins/autoplay/lg-autoplay.d.ts",
+      "import": "./dist/plugins/autoplay/lg-autoplay.es5.js",
+      "require": "./dist/plugins/autoplay/lg-autoplay.umd.js"
+    },
+    "./plugins/mediumZoom": {
+      "types": "./dist/types/plugins/mediumZoom/lg-medium-zoom.d.ts",
+      "import": "./dist/plugins/mediumZoom/lg-medium-zoom.es5.js",
+      "require": "./dist/plugins/mediumZoom/lg-medium-zoom.umd.js"
+    },
+    "./plugins/originCrop": {
+      "types": "./dist/types/plugins/originCrop/lg-origin-crop.d.ts",
+      "import": "./dist/plugins/originCrop/lg-origin-crop.es5.js",
+      "require": "./dist/plugins/originCrop/lg-origin-crop.umd.js"
+    },
+    "./plugins/relativeCaption": {
+      "types": "./dist/types/plugins/relativeCaption/lg-relative-caption.d.ts",
+      "import": "./dist/plugins/relativeCaption/lg-relative-caption.es5.js",
+      "require": "./dist/plugins/relativeCaption/lg-relative-caption.umd.js"
+    },
+    "./plugins/vimeoThumbnail": {
+      "types": "./dist/types/plugins/vimeoThumbnail/lg-vimeo-thumbnail.d.ts",
+      "import": "./dist/plugins/vimeoThumbnail/lg-vimeo-thumbnail.es5.js",
+      "require": "./dist/plugins/vimeoThumbnail/lg-vimeo-thumbnail.umd.js"
+    },
+    "./css/*": "./dist/css/*",
+    "./scss/*": "./dist/scss/*",
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist"
   ],
@@ -24,51 +138,68 @@
   "bugs": {
     "url": "https://github.com/sachinchoolur/lightGallery/issues"
   },
-  "license": "GPLv3",
+  "license": "(GPL-3.0-only OR LicenseRef-Commercial)",
   "author": {
     "name": "Sachin Neravath",
     "email": "sachi77n@gmail.com",
     "url": "https://github.com/sachinchoolur"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=18"
   },
   "scripts": {
-    "lint": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet --fix",
+    "lint": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet",
+    "lint:fix": "eslint 'src/**/*.ts' 'test/**/*.ts' --quiet --fix",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && npm run build-scss && npm run copyAssets && rollup -c rollup.config.ts && npm run docs && npm run minify-css && npm run copyScss && npm run copyAssetsToSite && npm run copyJsToSite && npm run copyPackages && npm run buildLibraries && npm run updatePackageFields",
-    "build:travis": "tsc --module commonjs && rollup -c rollup.config.ts",
+    "build": "npm run build:all:vite",
+    "build:all:vite": "turbo run build:vite build:types --filter=@lightgallery/core && turbo run build:css build:css:min copy:assets copy:scss assemble:dist --filter=lightgallery",
+    "build:vite": "turbo run build:vite build:types --filter=@lightgallery/core",
+    "verify:parity": "tsx scripts/verify-build-parity.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "build-scss": "sass src/scss/:dist/css/ --style=expanded",
+    "build:css": "sass src/scss/:dist/css/ --style=expanded",
+    "build:css:min": "cleancss -o dist/css/lightgallery-bundle.min.css dist/css/lightgallery-bundle.css",
     "build-scss-dev": "sass src/scss/:site/static/css/ --style=expanded",
     "watch-css": "nodemon --watch 'src/**/*' -e scss -x \"npm run build-scss-dev\"",
     "watch-site-content": "nodemon --watch dist -x \"npm run copyAssetsToSite\"",
     "minify-css": "cleancss -o dist/css/lightgallery-bundle.min.css dist/css/lightgallery-bundle.css",
-    "start": "concurrently \"rollup -c rollup-dev.config.ts -w $LG_PLUGINS\" \"npm run watch-site-content \" \"npm run watch-css \" ",
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
-    "test:prod": "npm run lint && npm run test -- --no-cache",
+    "start": "concurrently \"vite build --config packages/core/vite.config.dev.ts --watch\" \"npm run watch-site-content \" \"npm run watch-css \" ",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:prod": "npm run lint && npm run test:coverage -- --no-cache --runInBand",
     "deploy-docs": "ts-node tools/gh-pages-publish",
-    "docs": "typedoc --json site/data/doc.json --target es6 --theme default --mode file src",
+    "docs": "typedoc --json site/data/doc.json --entryPointStrategy expand --skipErrorChecking --categorizeByGroup src",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "precommit": "lint-staged",
     "travis-deploy-once": "travis-deploy-once",
-    "copyAssets": "copyfiles -u 1 src/fonts/** dist && copyfiles -u 1 src/images/** dist",
+    "copyAssets": "copyfiles -u 1 src/images/** dist",
+    "copy:assets": "copyfiles -u 1 src/images/** dist",
+    "copy:scss": "copyfiles -f -u 1 src/scss/** dist/scss && copyfiles -u 2 src/scss/**/* dist/scss",
+    "assemble:dist": "tsx scripts/assemble-vite-dist.ts",
+    "sync:site": "copyfiles -f dist/*.js site/assets/js && copyfiles -u 1 dist/plugins/**/* site/assets/js && copyfiles -f dist/images/** site/static/images",
     "copyPackages": "copyfiles README.md dist && copyfiles -u 1 packages/**/**/* dist && copyfiles -u 1 packages/**/* dist && copyfiles -u 1 packages/* dist",
     "updatePackageFields": "ts-node tools/update-packages",
     "copyReactBuild": "copyfiles -f -u 1 -e '**/*.d.ts' lightgallery-react/dist/* dist/react && copyfiles -f -u 1 lightgallery-react/dist/Lightgallery.d.ts dist/react",
     "copyLitBuild": "copyfiles -f -u 1 lightgallery-lit/dist/* dist/lit",
     "copyVueBuild": "copyfiles -f -u 1 -e '**/*.html' lightgallery-vue/dist/* dist/vue && copyfiles -f lightgallery-vue/dist/lightgallery-vue/src/components/LightGallery.vue.d.ts dist/vue ",
     "copyAngularBuild": "ts-node tools/copy-angular-build",
-    "copyAssetsToSite": "copyfiles -f dist/images/** site/static/images && copyfiles -f dist/fonts/** site/static/fonts",
+    "copyAssetsToSite": "copyfiles -f dist/images/** site/static/images",
     "copyJsToSite": "copyfiles -f dist/*.js site/assets/js && copyfiles -u 1 dist/plugins/**/* site/assets/js",
     "copyScss": "copyfiles -f -u 1 src/scss/** dist/scss && copyfiles -u 2 src/scss/**/* dist/scss",
     "prepush": "npm run test:prod && npm run build",
     "commitmsg": "commitlint -E HUSKY_GIT_PARAMS",
     "buildLibraries": "ts-node tools/build-libraries",
-    "publishToNpm": "ts-node tools/npm-publish"
+    "publishToNpm": "pnpm publish",
+    "release": "node scripts/release.mjs publish",
+    "release:check": "node scripts/release.mjs check",
+    "check:consumers": "node scripts/check-consumers.mjs",
+    "release:bump": "node scripts/release.mjs bump",
+    "prepack": "node scripts/assert-built.mjs dist/lightgallery.umd.js dist/lightgallery.es5.js dist/lightgallery.min.js dist/css/lightgallery.css dist/types/index.d.ts dist/types/headless/index.d.ts",
+    "prepublishOnly": "node scripts/assert-publish-tag.mjs"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -81,33 +212,6 @@
       "path": "node_modules/cz-conventional-changelog"
     }
   },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
-    "testEnvironment": "jsdom",
-    "testRegex": "(/__tests__/.*|\\.(test))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 0,
-        "functions": 0,
-        "lines": 0,
-        "statements": 0
-      }
-    },
-    "collectCoverageFrom": [
-      "src/*.{js,ts}"
-    ]
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -116,15 +220,17 @@
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
     "@commitlint/config-conventional": "^7.1.2",
+    "@lightgallery/headless": "workspace:*",
     "@testing-library/dom": "^7.30.4",
     "@testing-library/jest-dom": "^5.12.0",
-    "@types/jest": "^26.0.23",
-    "@types/node": "^10.11.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.13.2",
     "@types/react": "^17.0.3",
     "@types/testing-library__dom": "^7.5.0",
     "@types/testing-library__jest-dom": "^5.9.5",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
+    "axe-core": "^4.12.1",
     "clean-css-cli": "^4.3.0",
     "colors": "^1.3.2",
     "commitizen": "^3.0.0",
@@ -138,41 +244,31 @@
     "eslint-plugin-prettier": "^3.1.4",
     "fs-extra": "^7.0.1",
     "husky": "^1.0.1",
-    "jest": "^26.6.3",
-    "jest-config": "^26.6.3",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1",
     "lint-staged": "^8.0.0",
     "lodash.camelcase": "^4.3.0",
-    "sass": "^1.69.5",
     "nodemon": "^2.0.4",
     "prettier": "^2.1.2",
     "prompt": "^1.0.0",
     "replace-in-file": "^3.4.4",
     "rimraf": "^2.6.2",
-    "rollup": "^2.52.2",
-    "rollup-plugin-commonjs": "^9.1.8",
-    "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-license": "^2.2.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-sourcemaps": "^0.4.2",
-    "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.27.3",
+    "sass": "^1.69.5",
     "semantic-release": "^17.4.2",
     "semantic-release-cli": "^5.4.3",
     "shelljs": "^0.8.3",
+    "terser": "^5.36.0",
     "travis-deploy-once": "^5.0.9",
-    "ts-jest": "^26.5.6",
+    "ts-jest": "^29.4.11",
     "ts-node": "^9.1.1",
-    "typedoc": "^0.19.2",
-    "typescript": "^3.0.3"
+    "tsx": "^4.19.2",
+    "turbo": "^2.3.3",
+    "typedoc": "^0.26.11",
+    "typescript": "5.0.4",
+    "vite": "^5.4.11"
   },
-  "dependencies": {
-    "@types/picturefill": "^3.0.0",
-    "i": "^0.3.6",
-    "npm": "^6.14.8",
-    "video.js": "^7.0.3"
-  },
-  "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+  "publishConfig": {
+    "tag": "next"
   }
 }

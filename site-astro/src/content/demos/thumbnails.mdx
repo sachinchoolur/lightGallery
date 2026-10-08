@@ -1,0 +1,473 @@
+---
+title: 'JavaScript image gallery with thumbnails'
+description: 'Add an animated, drag-scrollable thumbnail strip to any image or video gallery. Live demo plus the markup and settings to copy into your project.'
+lead:
+    'Create JavaScript image and video galleries with animated thumbnails. lightGallery thumbnails plugin supports touch swipe
+    navigation on touchscreen devices as well as mouse drag for desktops. It
+    allows users to navigate between slides by clicking on the thumbnails.
+    Thumbnails plugin also allows you to load thumbnails automatically for
+    YouTube, Vimeo, and other video sources. Find out more options in the <a
+    href="/docs/settings/#thumbnails-plugin"> docs </a>'
+date: 2020-10-06T08:48:57+00:00
+draft: false
+images: []
+menu: {demos: {parent: Demos, name: Thumbnails}}
+weight: 1
+toc: true
+---
+
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
+import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
+
+<div class="alert alert-warning" role="alert">
+    You need to include thumbnails plugin in the document.
+</div>
+
+### Animated thumbnails
+
+<GalleryDemo size="xl" id="animated-thumbnails-gallery" photos="street,alley" />
+
+<CodeTabs sandbox="thumbnails">
+<Fragment slot="vanilla">
+
+**HTML**
+
+```html
+<div id="animated-thumbnails-gallery">
+    <a href="img/img1.jpg">
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a href="img/img2.jpg">
+        <img src="img/thumb2.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+
+lightGallery(document.getElementById('animated-thumbnails-gallery'), {
+    plugins: [lgThumbnail],
+    thumbnail: true,
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// The strip is built from each item's `thumb`.
+<LightGallery plugins={[Thumbnail]} thumbnail={{ animateThumb: true }}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+
+const plugins = [Thumbnail];
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+</script>
+
+<template>
+    <!-- The strip is built from each item's `thumb`. -->
+    <LightGallery :plugins="plugins" :thumbnail="{ animateThumb: true }">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withThumbnail({ animateThumb: true })];
+
+    // The strip is built from each item's `thumb`.
+    items: LgGalleryItem[] = [
+        { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+        { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+    ];
+}
+```
+
+</Fragment>
+</CodeTabs>
+
+### Scrub the gallery from the strip
+
+Turn the strip into a scrubber with
+[`scrubThumbnails`](/docs/thumbnail-scrubbing/): drag it and the
+gallery follows instantly, the slide under the strip's travel
+position becomes current with no transitions, and a flick keeps
+scrubbing through the glide. Taps still navigate normally.
+
+<GalleryDemo size="xl" id="scrub-thumbnails-gallery" photos="morocco" />
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+```js
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+
+lightGallery(document.getElementById('scrub-thumbnails-gallery'), {
+    plugins: [lgThumbnail],
+    scrubThumbnails: true,
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+
+<LightGallery plugins={[Thumbnail]} thumbnail={{ scrubThumbnails: true }}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+
+const plugins = [Thumbnail];
+</script>
+
+<template>
+    <LightGallery :plugins="plugins" :thumbnail="{ scrubThumbnails: true }">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+
+// The template stays as above: <lg-gallery [features]="features">
+features = [withThumbnail({ scrubThumbnails: true })];
+```
+
+</Fragment>
+</CodeTabs>
+
+### Static thumbnails
+
+<div class="lg-masonry-gallery">
+    <GalleryDemo size="xl" id="static-thumbnails-gallery" photos="desert,warm" />
+</div>
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
+
+```html
+<div id="static-thumbnails">
+    <a href="img/img1.jpg">
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a href="img/img2.jpg">
+        <img src="img/thumb2.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+lightGallery(document.getElementById('static-thumbnails'), {
+    plugins: [lgThumbnail],
+    animateThumb: false,
+    zoomFromOrigin: false,
+    allowMediaOverlap: true,
+    toggleThumb: true,
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+<LightGallery
+    plugins={[Thumbnail]}
+    thumbnail={{ animateThumb: false, toggleThumb: true }}
+    zoomFromOrigin={false}
+    allowMediaOverlap
+>
+    {/* items as above */}
+</LightGallery>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<template>
+    <LightGallery
+        :plugins="plugins"
+        :thumbnail="{ animateThumb: false, toggleThumb: true }"
+        :zoom-from-origin="false"
+        :allow-media-overlap="true"
+    >
+        <!-- items as above -->
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+features = [withThumbnail({ animateThumb: false, toggleThumb: true })];
+```
+
+```html
+<lg-gallery
+    [features]="features"
+    [zoomFromOrigin]="false"
+    [allowMediaOverlap]="true"
+>
+    <!-- items as above -->
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
+
+### Customize more
+
+You can customize the look and feel of the thumbnails however you want just by
+updating the css files. Let's see how we can place the thumbnails on the right
+hand side of the slide.
+
+<GalleryDemo size="xl" id="customize-thumbnails-gallery" photos="alley,street" />
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
+
+```html
+<div id="customize-thumbnails-gallery">
+    <a href="img/img1.jpg">
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a href="img/img2.jpg">
+        <img src="img/thumb2.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+lightGallery(document.getElementById('customize-thumbnails-gallery'), {
+    plugins: [lgThumbnail],
+    // Add a custom class to apply style only for the particular gallery
+    addClass: 'lg-custom-thumbnails',
+
+    appendThumbnailsTo: '.lg-outer',
+
+    // Remove the starting animations.
+    // This can be done by overriding CSS as well
+    animateThumb: false,
+    allowMediaOverlap: true,
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// The native packages render the strip in one place and leave the
+// placement to CSS, scope it with a class of your own.
+<LightGallery
+    plugins={[Thumbnail]}
+    className="lg-custom-thumbnails"
+    thumbnail={{ animateThumb: false }}
+    allowMediaOverlap
+>
+    {/* items as above */}
+</LightGallery>
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<template>
+    <!-- The native packages render the strip in one place and leave the
+         placement to CSS, scope it with a class of your own. -->
+    <LightGallery
+        :plugins="plugins"
+        class-name="lg-custom-thumbnails"
+        :thumbnail="{ animateThumb: false }"
+        :allow-media-overlap="true"
+    >
+        <!-- items as above -->
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+features = [withThumbnail({ animateThumb: false })];
+```
+
+```html
+<!-- The native packages render the strip in one place and leave the
+     placement to CSS, scope it with a class of your own. -->
+<lg-gallery
+    className="lg-custom-thumbnails"
+    [features]="features"
+    [allowMediaOverlap]="true"
+>
+    <!-- items as above -->
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
+
+##### CSS
+
+```scss
+// `addClass` puts the class on the gallery's container, above `.lg-outer`.
+.lg-custom-thumbnails {
+    .lg-outer {
+        width: auto;
+        // Set space for the container to occupy thumbnails
+        right: 240px;
+
+        // Add some spacing on the left to match with the right hand side spacing
+        left: 10px;
+
+        .lg-thumb-outer {
+            // Set the position of the thumbnails
+            left: auto;
+            top: 0;
+            // Room for two 100px thumbs, their 5px gaps, the padding
+            // and a thin scrollbar
+            width: 240px;
+            bottom: 0;
+            position: fixed;
+            right: 0;
+
+            // Reset max height
+            max-height: none;
+
+            // Customize the layout (Optional)
+            background-color: #999;
+            padding-left: 5px;
+            padding-right: 5px;
+            margin: 0 -10px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+
+            // Update transition values
+            // By default thumbnails animates from bottom to top
+            // Change that from right to left.
+            // Also, add a tiny opacity transition to look better
+            transform: translate3d(30%, 0, 0);
+            opacity: 0;
+            will-change: transform, opacity;
+            transition:
+                transform 0.15s cubic-bezier(0, 0, 0.25, 1) 0s,
+                opacity 0.15s cubic-bezier(0, 0, 0.25, 1) 0.15s;
+        }
+
+        // The strip is a component: it opens with the gallery's components
+        &.lg-components-open {
+            .lg-thumb-outer {
+                transform: translate3d(0, 0, 0);
+                opacity: 1;
+            }
+        }
+
+        // Add a hover effect (optional)
+        .lg-thumb-item {
+            float: left;
+            filter: grayscale(100%);
+            will-change: filter;
+            transition: filter 0.12s ease-in, border-color 0.12s ease;
+            &:hover,
+            &.active {
+                filter: grayscale(0);
+                border-color: #545454;
+            }
+        }
+
+        .lg-thumb {
+            padding: 5px 0;
+        }
+    }
+}
+```

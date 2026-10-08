@@ -11,7 +11,7 @@ export interface MediumZoomSettings {
 
     /**
      * Background color for the gallery
-     * This can be overwritten by passing background color via `lg-background-color` for each item
+     * This can be overwritten by passing background color via `data-lg-background-color` for each item
      */
     backgroundColor: string;
 }

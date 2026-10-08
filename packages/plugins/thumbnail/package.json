@@ -1,7 +1,0 @@
-{
-    "name": "lightgallery/plugins/thumbnail",
-    "private": true,
-    "main": "lg-thumbnail.umd.js",
-    "module": "lg-thumbnail.es5.js",
-    "typings": "lg-thumbnail.d.ts"
-}

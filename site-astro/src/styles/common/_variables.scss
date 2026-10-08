@@ -1,0 +1,181 @@
+// Color system
+
+// Brand palette (orange scale).
+$orange-50: #ffe8e0;
+$orange-100: #ffd6c3;
+$orange-200: #ffb199;
+$orange-300: #ff8c66;
+$orange-400: #ff7040;
+$orange-500: #ff5722;
+$orange-600: #ff4c19;
+$orange-700: #ff4500;
+$orange-800: #ff4b00;
+$orange-900: #691f01;
+// Semantic scales from the same token set (callouts, states).
+$blue-50: #f0f7ff;
+$blue-200: #dfefff;
+$blue-600: #006bff;
+$blue-900: #002359;
+$yellow-50: #fff6de;
+$yellow-300: #ffdc73;
+$yellow-900: #5f370e;
+$red-50: #ffeeef;
+$red-300: #ffd7d6;
+$red-900: #47000c;
+$green-50: #ecfdec;
+$green-700: #279141;
+
+// Neutrals — the design-system gray scale.
+$gray-10: #fbfdfd;
+$gray-50: #f7fafc;
+$gray-100: #edf2f7;
+$gray-200: #e2e8f0;
+$gray-300: #cbd5e0;
+$gray-400: #a0aec0;
+$gray-500: #718096;
+$gray-600: #4a5568;
+$gray-700: #2d3748;
+$gray-800: #1a202c;
+$gray-900: #171923;
+
+$lg-theme-color: #fff;
+$white: #fff;
+$black: $gray-800;
+$gray-darker: $gray-500;
+$gray-dark: $gray-600;
+$gray: $gray-200;
+$gray-light: $gray-50;
+$body-color: $black;
+$line: $gray-100;
+$dark-surface: #1a1a1a;
+
+// Semantic brand tokens. Text is black: `brand-dark` (headings, nav,
+// and the tint base for borders) and `brand-shade` (muted copy) are
+// neutrals; orange is reserved for `brand` (buttons, active tabs,
+// Bootstrap's $primary), links and accents.
+$brand: $orange-500;
+$brand-dark: $black;
+$brand-shade: $gray-darker;
+$brand-light: $orange-700;
+$brand-light-shade: $orange-400;
+$brand-dark-shade: $orange-800;
+$brand-wash: $orange-50;
+
+$primary: $brand;
+// Bootstrap picks button text color by contrast ratio; the orange brand
+// sits just under its default 4.5 threshold and would get dark text.
+// Orange buttons always carry white text.
+$min-contrast-ratio: 3;
+
+/** Bootstrap navbar fix (https://git.io/fADqW) */
+$navbar-dark-toggler-icon-bg: none;
+$navbar-light-toggler-icon-bg: none;
+$navbar-toggler-focus-width: 0;
+$navbar-light-toggler-border-color: $brand-dark;
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+
+$enable-responsive-font-sizes: true;
+
+// Grid columns
+//
+// Set the number of columns and specify the width of the gutters.
+
+$grid-columns: 12;
+$grid-gutter-width: 48px;
+$grid-row-columns: 6;
+
+// Prefix for :root CSS variables
+
+$variable-prefix: bs-;
+
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+
+// stylelint-disable value-keyword-case
+$font-family-sans-serif: 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-family-monospace: 'Geist Mono Variable', SFMono-Regular, Menlo, Consolas, monospace;
+// stylelint-enable value-keyword-case
+$font-family-base: $font-family-sans-serif;
+$font-family-code: var(--#{$variable-prefix}font-monospace);
+
+$font-size-base: 1rem; // Assumes the browser default, typically `16px`
+$font-size-xl: $font-size-base * 1.375;
+$font-size-lg: $font-size-base * 1.25;
+$font-size-md: $font-size-base * 1.125;
+$font-size-sm: $font-size-base * 0.875;
+
+$font-weight-bold: 500;
+
+$line-height-base: 1.5;
+
+$headings-font-family: $font-family-sans-serif;
+$font-family-serif-accent: 'Roboto Serif Variable', 'Roboto Serif', Georgia, serif;
+$headings-font-weight: 500;
+$headings-line-height: 1.3;
+
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$spacer: 1rem;
+
+// Navbar
+
+$navbar-padding-y: $spacer * 1.5;
+$navbar-padding-x: $spacer;
+$navbar-nav-link-padding-x: $spacer;
+$navbar-toggler-font-size: 1rem;
+$navbar-brand-font-size: 1rem;
+$navbar-font-size: 1rem;
+
+$navbar-light-color: $brand-dark;
+$navbar-light-brand-color: $brand-dark;
+$navbar-light-hover-color: $brand-light-shade;
+$navbar-light-active-color: $brand-light;
+
+// Alerts
+//
+// Define alert colors, border radius, and padding.
+
+$alert-padding-y: 1.5rem;
+$alert-padding-x: 1rem;
+$alert-margin-bottom: 0;
+$alert-border-radius: 2px;
+$alert-link-font-weight: $headings-font-weight;
+$alert-border-width: 0;
+
+$alert-bg-level: 0;
+$alert-border-level: 0;
+$alert-color-level: 0;
+
+// Links
+//
+// Style anchor elements.
+
+$link-color: $brand-light;
+$link-decoration: none;
+$link-shade-percentage: 20%;
+$link-hover-color: $brand-dark-shade;
+$link-hover-active: $brand-light;
+$link-hover-decoration: underline;
+
+$stretched-link-pseudo-element: after;
+$stretched-link-z-index: 1;
+
+// typography
+$h3-font-size: 1.4rem;
+
+$gutters: (
+    0: 0,
+    1: $spacer * 0.25,
+    2: $spacer * 0.5,
+    3: $spacer,
+    4: $spacer * 8,
+    5: $spacer * 3,
+);

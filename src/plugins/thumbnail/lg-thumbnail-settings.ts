@@ -8,7 +8,7 @@ export interface ThumbnailsSettings {
      */
     thumbnail: boolean;
 
-    /*
+    /**
      * Enable thumbnail animation.
      */
     animateThumb: boolean;
@@ -25,17 +25,17 @@ export interface ThumbnailsSettings {
     alignThumbnails: 'left' | 'middle' | 'right';
 
     /**
-     * Width of each thumbnails.
+     * Width of each thumbnail.
      */
     thumbWidth: number;
 
     /**
-     * Height of each thumbnails.
+     * Height of each thumbnail.
      */
     thumbHeight: string;
 
     /**
-     * Spacing between each thumbnails
+     * Spacing between each thumbnail
      */
     thumbMargin: number;
 
@@ -43,7 +43,7 @@ export interface ThumbnailsSettings {
      * control where the thumbnails should be appended.
      * By default, thumbnails are appended to '.lg-components' which has inbuilt open close transitions
      * If you don't want initial thumbnails transitions, or want to do more customization,
-     * you can append thumbnails to the lightGalley outer div -
+     * you can append thumbnails to the lightGallery outer div -
      * <a href="/demos/thumbnails/#static-thumbnails">Demo</a>
      */
     appendThumbnailsTo: '.lg-outer' | '.lg-components';
@@ -70,6 +70,19 @@ export interface ThumbnailsSettings {
     thumbnailSwipeThreshold: number;
 
     /**
+     * Scrub the gallery with the thumbnail strip: while the strip is
+     * dragged (or gliding after a fling), the slide under the strip's
+     * travel position becomes current immediately, without slide
+     * transitions, the strip works like a scrubber instead of an
+     * independent scroll area. The full strip travel spans the whole
+     * gallery, so the first and last slides are always reachable.
+     * Requires `animateThumb`; taps still navigate normally.
+     * See <a href="/docs/thumbnail-scrubbing/">Thumbnail scrubbing</a>.
+     * @version V3.0.0
+     */
+    scrubThumbnails: boolean;
+
+    /**
      * You can automatically load thumbnails for YouTube videos from YouTube by setting loadYouTubeThumbnail true
      */
     loadYouTubeThumbnail: boolean;
@@ -82,8 +95,11 @@ export interface ThumbnailsSettings {
 
     /**
      * Custom translation strings for aria-labels
+     * @deprecated Set these labels on the core `strings` object instead,
+     * every user-facing string lives in that one contract. An explicitly set
+     * key here still wins (alias).
      */
-    thumbnailPluginStrings: ThumbnailStrings;
+    thumbnailPluginStrings?: Partial<ThumbnailStrings>;
 }
 
 export const thumbnailsSettings: ThumbnailsSettings = {
@@ -103,11 +119,8 @@ export const thumbnailsSettings: ThumbnailsSettings = {
     enableThumbDrag: true,
     enableThumbSwipe: true,
     thumbnailSwipeThreshold: 10,
+    scrubThumbnails: false,
 
     loadYouTubeThumbnail: true,
     youTubeThumbSize: 1,
-
-    thumbnailPluginStrings: {
-        toggleThumbnails: 'Toggle thumbnails',
-    } as ThumbnailStrings,
 };

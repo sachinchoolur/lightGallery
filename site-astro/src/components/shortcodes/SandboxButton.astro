@@ -1,0 +1,22 @@
+---
+/** The link itself, shared by CodeTabs and SandboxLink. */
+interface Props {
+    href: string;
+}
+
+const { href } = Astro.props;
+---
+
+<a target="_blank" rel="noopener" href={href}>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentcolor"
+        viewBox="0 0 32 32"
+        aria-hidden="true"
+    >
+        <path
+            d="M5.853 18.647h8.735L9.45 31l16.697-17.647h-8.735L22.55 1 5.853 18.647z"
+        ></path>
+    </svg>
+    Open in StackBlitz
+</a>

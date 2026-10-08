@@ -1,0 +1,18 @@
+/* Square tiles: each shows a window of its photo. */
+.tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+}
+
+.tiles a {
+    display: block;
+}
+
+.tiles img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 4px;
+}

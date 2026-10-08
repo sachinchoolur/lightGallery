@@ -1,0 +1,22 @@
+---
+/**
+ * Virtualization stress demo: a button that opens a 1,000-slide dynamic
+ * gallery, plus a live mounted-slide/thumb counter (see demo-galleries.js).
+ */
+interface Props {
+    id: string;
+}
+const { id } = Astro.props;
+---
+
+<div class="gallery-demo">
+    <button type="button" class="btn btn-primary" id={`${id}-open`}>
+        Open the 1,000-slide gallery
+    </button>
+    <p id={`${id}-stats`} role="status"></p>
+    <div id={id}></div>
+</div>
+
+<script>
+    import '../../scripts/demo-galleries.js';
+</script>

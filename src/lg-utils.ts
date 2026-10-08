@@ -1,3 +1,11 @@
+import {
+    fitImageSize,
+    getOriginTransform,
+    isUsableOriginRect,
+    getVideoInfo,
+    parseImageSize,
+} from '@lightgallery/headless';
+
 import { $LG, lgQuery } from './lgQuery';
 import { VideoSource } from './plugins/video/types';
 import { VideoInfo } from './types';
@@ -17,13 +25,13 @@ export interface ImageSources {
 export interface GalleryItem {
     /**
      * url of the media
-     * @data-attr data-src
+     * @dataAttr data-src
      */
     src?: string;
 
     /**
      * Source attributes for the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source#attributes">picture</a> element
-     * @data-attr data-sources
+     * @dataAttr data-sources
      */
     sources?: ImageSources[];
 
@@ -41,89 +49,91 @@ export interface GalleryItem {
      * lightGallery(document.getElementById('lightGallery'), {
      *     exThumbImage: 'data-external-thumb-image'
      * })
-     * @data-attr data-*
+     * @dataAttr data-*
      */
     thumb?: string;
 
     /**
      * alt attribute for the image
-     * @data-attr alt
+     * @dataAttr alt
      */
     alt?: string;
 
     /**
-     * Title attribute for the video
-     * @data-attr title
+     * Title attribute for the image or video. With the
+     * getCaptionFromTitleOrAlt setting, it is used as the caption when
+     * subHtml is not set.
+     * @dataAttr title
      */
     title?: string;
 
     /**
      * Title for iframe
-     * @data-attr data-iframe-title
+     * @dataAttr data-iframe-title
      */
     iframeTitle?: string;
 
     /**
      * Caption for the slide
      * @description You can either pass the HTML markup or the ID or class name of the element which contains the captions
-     * @data-attr data-sub-html
+     * @dataAttr data-sub-html
      */
     subHtml?: string;
 
     /**
      * url of the file which contain the sub html.
      * @description Note - Does not support Internet Explorer browser
-     * @data-attr data-sub-html-url
+     * @dataAttr data-sub-html-url
      */
     subHtmlUrl?: string;
 
     /**
      * Video source
-     * @data-attr data-video
+     * @dataAttr data-video
      */
     video?: VideoSource;
 
     /**
      * Poster url
-     * @data-attr data-poster
+     * @dataAttr data-poster
      */
     poster?: string;
 
     /**
      * Custom slide name to use in the url when hash plugin is enabled
-     * @data-attr data-slide-name
+     * @dataAttr data-slide-name
      */
     slideName?: string;
 
     /**
      * List of images and viewport's max width separated by comma.
      * @description Ex?: img/1-375.jpg 375, img/1-480.jpg 480, img/1-757.jpg 757.
-     * @data-attr data-responsive
+     * @dataAttr data-responsive
      */
     responsive?: string;
 
     /**
      * srcset attribute values for the main image
-     * @data-attr data-srcset
+     * @dataAttr data-srcset
      */
     srcset?: string;
 
     /**
      * srcset sizes attribute for the main image
-     * @data-attr data-sizes
+     * @dataAttr data-sizes
      */
     sizes?: string;
 
     /**
      * Set true is you want to open your url in an iframe
-     * @data-attr data-iframe
+     * @dataAttr data-iframe
      */
     iframe?: boolean;
 
     /**
      * Download url for your image/video.
      * @description Pass false if you want to disable the download button.
-     * @data-attr data-download-url
+     * @dataAttr data-download-url
      */
     downloadUrl?: string | boolean;
 
@@ -133,34 +143,43 @@ export interface GalleryItem {
      * There are no restrictions on allowed values, and the browser will automatically
      * detect the correct file extension and add it to the file (.img, .pdf, .txt, .html, etc.).
      * <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attr-download">More info</a>
-     * @data-attr data-download
+     * @dataAttr data-download
      */
     download?: string | boolean;
 
     /**
      * Actual size of the image in px.
-     * @description This is used in zoom plugin to see the actual size of the image when double taped on the image.
-     * @data-attr data-width
+     * @description This is used in zoom plugin to see the actual size of the image when double-tapped on the image.
+     * @dataAttr data-width
      */
     width?: string;
 
     /**
+     * Canonical share URL for the native share sheet (Web Share API).
+     * @description Specify only if you want a separate URL for the specific
+     * slide. Falls back to the network-specific share URLs, then the current
+     * browser URL.
+     * @dataAttr data-share-url
+     */
+    shareUrl?: string;
+
+    /**
      * Facebook share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL is taken.
-     * @data-attr data-facebook-share-url
+     * @dataAttr data-facebook-share-url
      */
     facebookShareUrl?: string;
 
     /**
      * Tweet text
-     * @data-attr data-tweet-text
+     * @dataAttr data-tweet-text
      */
     tweetText?: string;
 
     /**
      * Twitter share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL will be taken.
-     * @data-attr data-twitter-share-url
+     * @dataAttr data-twitter-share-url
      */
     twitterShareUrl?: string;
 
@@ -168,13 +187,13 @@ export interface GalleryItem {
      * Pinterest share URL.
      * @description Specify only if you want to provide separate share URL for the specific slide. By default, current browser URL will be taken.
      * Note?: Pinterest requires absolute URL
-     * @data-attr data-pinterest-share-url
+     * @dataAttr data-pinterest-share-url
      */
     pinterestShareUrl?: string;
 
     /**
      * Description for Pinterest post.
-     * @data-attr data-pinterest-text
+     * @dataAttr data-pinterest-text
      */
     pinterestText?: string;
 
@@ -184,27 +203,38 @@ export interface GalleryItem {
      * @example
      * <div
      *      class="fb-comments"
-     *      data-href="https://www.lightgalleryjs.com/demos/comment-box/#facebook-comments-demo"
+     *      data-href="https://www.example.com/your-page/#lg=1&slide=0"
      *      data-width="400"
      *      data-numposts="5">
      * </div>
-     * @data-attr data-fb-html
+     * @dataAttr data-fb-html
      */
     fbHtml?: string;
 
     /**
      * Disqus page identifier
      * @description Please refer official <a href="https://help.disqus.com/en/articles/1717084-javascript-configuration-variables">disqus documentation</a> for more info
-     * @data-attr data-disqus-identifier
+     * @dataAttr data-disqus-identifier
      */
     disqusIdentifier?: string;
 
     /**
      * Disqus page url
      * @description Please refer official <a href="https://help.disqus.com/en/articles/1717084-javascript-configuration-variables">disqus documentation</a> for more info
-     * @data-attr data-disqus-url
+     * @dataAttr data-disqus-url
      */
     disqusUrl?: string;
+
+    /**
+     * Original size of the media as `"WIDTH-HEIGHT"`, for example `1600-1067`.
+     * @description Drives the zoom-from-origin opening and closing animation
+     * and the size of video slides. In a gallery built from markup it is read
+     * from the item element. In dynamic mode set it on the item and pass the
+     * element the slide should grow out of as the second argument of
+     * `openGallery`; a `data-lg-size` attribute on that element still wins.
+     * @dataAttr data-lg-size
+     */
+    lgSize?: string;
 
     __slideVideoInfo?: VideoInfo;
     [key: string]: any;
@@ -226,6 +256,7 @@ const defaultDynamicOptions = [
     'downloadUrl',
     'download',
     'width',
+    'shareUrl',
     'facebookShareUrl',
     'tweetText',
     'iframeTitle',
@@ -235,11 +266,11 @@ const defaultDynamicOptions = [
     'fbHtml',
     'disqusIdentifier',
     'disqusUrl',
+    'lgSize',
 ];
 
 // Convert html data-attribute to camalcase
 export function convertToData(attr: string): string {
-    // FInd a way for lgsize
     if (attr === 'href') {
         return 'src';
     }
@@ -276,54 +307,30 @@ const utils = {
             });
     },
     /**
-     * get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
+     * Fit the media's original size into the container. The size comes from
+     * the element's `data-lg-size` attribute, then the item's `lgSize`
+     * field, then `defaultLgSize`. Used for the zoom-from-origin animation.
      */
     getSize(
         el: HTMLElement,
         container: lgQuery,
         spacing = 0,
         defaultLgSize?: string,
+        itemLgSize?: string,
     ): ImageSize | undefined {
         const LGel = $LG(el);
-        let lgSize = LGel.attr('data-lg-size') || defaultLgSize;
+        const lgSize = LGel.attr('data-lg-size') || itemLgSize || defaultLgSize;
 
-        if (!lgSize) {
+        const parsed = parseImageSize(lgSize, window.innerWidth);
+        if (!parsed) {
             return;
         }
 
-        const isResponsiveSizes = lgSize.split(',');
-        // if at-least two viewport sizes are available
-        if (isResponsiveSizes[1]) {
-            const wWidth = window.innerWidth;
-            for (let i = 0; i < isResponsiveSizes.length; i++) {
-                const size = isResponsiveSizes[i];
-                const responsiveWidth = parseInt(size.split('-')[2], 10);
-                if (responsiveWidth > wWidth) {
-                    lgSize = size;
-                    break;
-                }
-
-                // take last item as last option
-                if (i === isResponsiveSizes.length - 1) {
-                    lgSize = size;
-                }
-            }
-        }
-
-        const size = lgSize.split('-');
-
-        const width = parseInt(size[0], 10);
-        const height = parseInt(size[1], 10);
-
-        const cWidth = container.width();
-        const cHeight = container.height() - spacing;
-
-        const maxWidth = Math.min(cWidth, width);
-        const maxHeight = Math.min(cHeight, height);
-
-        const ratio = Math.min(maxWidth / width, maxHeight / height);
-
-        return { width: width * ratio, height: height * ratio };
+        return fitImageSize(
+            parsed,
+            container.width(),
+            container.height() - spacing,
+        );
     },
 
     /**
@@ -338,54 +345,55 @@ const utils = {
         bottom: number,
         imageSize?: ImageSize,
     ): string | undefined {
-        if (!imageSize) {
+        // Degenerate measurement (zero-sized/hidden viewport, offsets
+        // taller than the stage): the shared math would emit a mirrored
+        // flight, fall back to the startClass fade instead (the sibling
+        // bindings guard the same way).
+        if (!imageSize || imageSize.width <= 0 || imageSize.height <= 0) {
             return;
         }
-        const LGel = $LG(el).find('img').first();
-        if (!LGel.get()) {
+        // Measure the image inside the trigger, or the trigger itself when
+        // it is the image (the framework packages use the same rule).
+        const origin = $LG(el).find('img').first().get() || el;
+        if (!origin) {
             return;
         }
 
         const containerRect = container.get().getBoundingClientRect();
 
-        const wWidth = containerRect.width;
+        // Viewport coords straight from the rect. `offset()` folds in a
+        // body-margin correction that shifts the origin on any centered
+        // body (`margin: auto`), the long-standing "flight starts beside
+        // the thumbnail" bug, and the old padding/border terms adjusted
+        // in the wrong direction on styled thumbnails.
+        const rect = origin.getBoundingClientRect();
+        const triggerRect = {
+            left: rect.left,
+            top: rect.top,
+            width: rect.width,
+            height: rect.height,
+        };
+        // A hidden or collapsed trigger (a collage's overflow items behind
+        // a "+N photos" tile) measures 0×0 at the viewport origin: no
+        // flight, the caller falls back to the centred animation.
+        if (!isUsableOriginRect(triggerRect)) {
+            return;
+        }
 
-        // using innerWidth to include mobile safari bottom bar
-        const wHeight = container.height() - (top + bottom);
-
-        const elWidth = LGel.width();
-        const elHeight = LGel.height();
-
-        const elStyle = LGel.style();
-        let x =
-            (wWidth - elWidth) / 2 -
-            LGel.offset().left +
-            (parseFloat(elStyle.paddingLeft) || 0) +
-            (parseFloat(elStyle.borderLeft) || 0) +
-            $LG(window).scrollLeft() +
-            containerRect.left;
-        let y =
-            (wHeight - elHeight) / 2 -
-            LGel.offset().top +
-            (parseFloat(elStyle.paddingTop) || 0) +
-            (parseFloat(elStyle.borderTop) || 0) +
-            $LG(window).scrollTop() +
-            top;
-
-        const scX = elWidth / imageSize.width;
-        const scY = elHeight / imageSize.height;
-
-        const transform =
-            'translate3d(' +
-            (x *= -1) +
-            'px, ' +
-            (y *= -1) +
-            'px, 0) scale3d(' +
-            scX +
-            ', ' +
-            scY +
-            ', 1)';
-        return transform;
+        return getOriginTransform({
+            triggerRect,
+            containerRect: {
+                left: containerRect.left,
+                top: containerRect.top,
+                width: containerRect.width,
+                // Element height, not rect height, includes the mobile
+                // safari bottom bar handling this always had.
+                height: container.height(),
+            },
+            top,
+            bottom,
+            imageSize,
+        });
     },
 
     getIframeMarkup(
@@ -489,6 +497,10 @@ const utils = {
             videoClass = 'lg-has-youtube';
         } else if (_isVideo && _isVideo.vimeo) {
             videoClass = 'lg-has-vimeo';
+        } else if (_isVideo && _isVideo.wistia) {
+            // Wistia fell into lg-has-html5 in 2.x; the facades made the
+            // gap visible (binding providerClass had it right all along).
+            videoClass = 'lg-has-wistia';
         } else {
             videoClass = 'lg-has-html5';
         }
@@ -522,13 +534,22 @@ const utils = {
 
     getFocusableElements(container: HTMLElement): NodeListOf<Element> {
         const elements = container.querySelectorAll(
-            'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])',
+            'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])',
         );
-        const visibleElements = [].filter.call(elements, (element) => {
-            const style = window.getComputedStyle(element);
-            return style.display !== 'none' && style.visibility !== 'hidden';
-        });
-        return (visibleElements as unknown) as NodeListOf<Element>;
+        const visibleElements = [].filter.call(
+            elements,
+            (element: HTMLElement) => {
+                const style = window.getComputedStyle(element);
+                return (
+                    style.display !== 'none' &&
+                    style.visibility !== 'hidden' &&
+                    // Hidden or moved into the toolbar's More menu, whatever
+                    // the stylesheet says about their display.
+                    !element.closest('[hidden], [data-lg-overflow]')
+                );
+            },
+        );
+        return visibleElements as unknown as NodeListOf<Element>;
     },
 
     /**
@@ -562,6 +583,19 @@ const utils = {
                     if (label) {
                         (dynamicEl as any)[label] = attr.value;
                     }
+                }
+            }
+            // `data-sources` is JSON on the element; the item carries the
+            // parsed array so every consumer (slide markup, the zoom
+            // plugin's actual-size lookup) sees the headless shape.
+            if (typeof dynamicEl.sources === 'string') {
+                try {
+                    dynamicEl.sources = JSON.parse(dynamicEl.sources);
+                } catch (e) {
+                    console.warn(
+                        'lightGallery :- data-sources must be a JSON array of picture source objects. See https://www.lightgalleryjs.com/docs/responsive-loading/',
+                    );
+                    delete dynamicEl.sources;
                 }
             }
             const currentItem = $LG(item);
@@ -613,29 +647,10 @@ const utils = {
             }
         }
 
-        const youtube = src.match(
-            /\/\/(?:www\.)?youtu(?:\.be|be\.com|be-nocookie\.com)\/(?:watch\?v=|embed\/)?([a-z0-9\-\_\%]+)([\&|?][\S]*)*/i,
-        );
-        const vimeo = src.match(
-            /\/\/(?:www\.)?(?:player\.)?vimeo.com\/(?:video\/)?([0-9a-z\-_]+)(.*)?/i,
-        );
-        const wistia = src.match(
-            /https?:\/\/(.+)?(wistia\.com|wi\.st)\/(medias|embed)\/([0-9a-z\-_]+)(.*)/,
-        );
-
-        if (youtube) {
-            return {
-                youtube,
-            };
-        } else if (vimeo) {
-            return {
-                vimeo,
-            };
-        } else if (wistia) {
-            return {
-                wistia,
-            };
-        }
+        // Documented deviation from the shared helper: 2.x ignores the
+        // html5 flag once a src is present, a URL matching no provider
+        // is not a video, video payload or not.
+        return getVideoInfo(src, false);
     },
 };
 

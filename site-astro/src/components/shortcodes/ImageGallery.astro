@@ -1,0 +1,38 @@
+---
+/**
+ * Justified grid with responsive sources plus the per-slide attributes the
+ * hash, share and comment demos read (`data-slide-name`, `data-reddit-title`,
+ * `data-disqus-*`, `data-fb-html`).
+ */
+import { photos as pick, slug } from '../../lib/photos';
+
+interface Props {
+    id: string;
+    photos?: string;
+    limit?: number;
+}
+const { id, limit = 6 } = Astro.props;
+const items = pick(Astro.props.photos ?? 'desert', limit);
+---
+<div class="gallery-demo-sm">
+    <div id={id} class="list-unstyled">
+        {items.map((p, i) => (
+            <a
+                data-lg-size={p.size}
+                data-src={p.src}
+                data-responsive={p.responsive}
+                data-sub-html={p.caption}
+                data-slide-name={slug(p)}
+                data-tweet-text={`lightGallery slide ${i + 1}`}
+                data-pinterest-text={p.title}
+                data-reddit-title={p.title}
+            >
+                <img class="img-responsive" alt={p.alt} src={p.thumb} />
+            </a>
+        ))}
+    </div>
+</div>
+
+<script>
+    import '../../scripts/demo-galleries.js';
+</script>

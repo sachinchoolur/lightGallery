@@ -1,0 +1,17 @@
+/* The grid needs Bootstrap's stylesheet only, none of its JavaScript. */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'lightgallery/css/lightgallery.css';
+@import 'lightgallery/css/lg-thumbnail.css';
+@import 'lightgallery/css/lg-video.css';
+
+/* This file loads after demo.css, so Bootstrap would set the size of the
+   heading. Keep the one from demo.css. */
+h1 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+/* The HTML5 video item is a link without an href, so it needs the cursor. */
+#bootstrap-video-gallery a {
+    cursor: pointer;
+}

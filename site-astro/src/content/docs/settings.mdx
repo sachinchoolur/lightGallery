@@ -1,0 +1,224 @@
+---
+title: 'Settings and options reference'
+description: 'Every lightGallery option with its type, default value and description, core settings plus all plugin settings, in one reference.'
+lead: lightGallery comes with a lot of settings, events, and methods to customize the gallery without touching the core code. You can find both lightGallery core settings, and the built in plugin settings here.
+date: 2020-10-06T08:48:57.000Z
+draft: false
+images: []
+menu: { docs: { parent: 'API Docs', name: 'Settings' } }
+weight: 2
+toc: true
+---
+
+import Options from '../../components/api/Options.astro';
+
+## Passing settings
+
+lightGallery accepts two parameters, an HTML element as the first parameter and
+library settings as the second parameter. You need to pass settings only if you
+want to modify default behaviors.
+
+```javascript
+lightGallery(document.getElementById('gallery-container'), {
+    speed: 500,
+    mode: 'lg-fade',
+    // other settings
+});
+```
+
+The same names apply in every package. In [React](/docs/react/) and
+[Vue](/docs/vue/) each core setting is a prop and each plugin's settings
+are one object prop named after the plugin, such as `zoom={{ scale: 1.5 }}`.
+In [Angular](/docs/angular/) core settings are signal inputs and plugin
+settings go to the plugin's factory, such as `withZoom({ scale: 1.5 })`.
+
+## lightGallery core
+
+lightGallery comes with modular architecture. All the basic functionalities are
+available in the core module. You need to include plugins if you need
+additional functionalities such as thumbnails, video support, zoom, etc. Here you
+can find all lightGallery core settings. If you think something is missing,
+please check the respective plugins settings as well.
+
+<Options interface="LightGalleryCoreSettings" variable="lightGalleryCoreSettings" />
+
+<div class="options-section">
+
+## Zoom plugin
+
+lightGallery zoom plugins enable functionalities like pinch to zoom, double-tap,
+or double click to see the actual size, zoom in, zoom out, and more.
+
+<Options pluginName="Zoom" interface="ZoomSettings" variable="zoomSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Thumbnails plugin
+
+The thumbnails plugin adds the thumbnail strip to your gallery. It supports
+animated thumbnails, thumbnail scrubbing, and loads thumbnails for YouTube
+videos automatically.
+
+<Options pluginName="Thumbnails" interface="ThumbnailsSettings" variable="thumbnailsSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Justified layout plugin
+
+Justified layout plugin arranges the gallery's trigger thumbnails in rows of
+equal height and varying widths that fill the container edge to edge. See the
+[justified layout guide](/docs/justified-layout/) for usage across all
+frameworks.
+<span class="badge rounded-pill bg-danger font-12" title="Available since version 3.0.0">v3.0.0</span>
+
+<Options pluginName="Justified layout" interface="JustifiedSettings" variable="justifiedSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Video plugin
+
+Video plugin is required to display videos in lightGallery. Video plugin
+supports YouTube, Vimeo, Wistia and HTML5 videos.
+
+<div class="alert alert-info" role="alert">
+    <b>Player scripts</b> - Vimeo and Wistia player control (automatic play and pause, moving to the next slide when a video ends) needs each provider's player script. The plugin loads <a href="https://github.com/vimeo/player.js/">player.js</a> and the <a href="https://wistia.com/support/developers/player-api">Wistia player API</a> on demand the first time a video plays, so there is nothing to include yourself.
+</div>
+
+<Options pluginName="Video" interface="VideoSettings" variable="videoSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Hash plugin
+
+lightGallery hash plugin lets you provide custom unique URLs for each gallery
+image. This link can be used to share media anywhere on the web. It allows you
+to navigate to different slides via browser back/forward buttons too.
+
+<Options pluginName="Hash" interface="HashSettings" variable="hashSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Autoplay plugin
+
+lightGallery autoplay plugin supports automatic slideshow which can be stopped
+on the first user action. It supports progress bar that indicates the duration
+of the current slide. After the last slide the slideshow continues from the
+first; see [stopping autoplay at the end](/docs/troubleshooting/#autoplay-restarts-from-the-first-slide-instead-of-stopping).
+
+<Options pluginName="Autoplay" interface="AutoplaySettings" variable="autoplaySettings" />
+
+</div>
+
+<div class="options-section">
+
+## Rotate plugin
+
+The rotate plugin adds rotate clockwise, rotate anticlockwise, flip horizontal
+and flip vertical, each with a single click.
+
+<Options pluginName="Rotate" interface="RotateSettings" variable="rotateSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Share plugin
+
+lightGallery share plugin allows you to share your images/videos to social media
+platforms such as X (Twitter) or Facebook with unique url. It supports adding your
+own social share button too.
+
+<Options pluginName="Share" interface="ShareSettings" variable="shareSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Pager plugin
+
+If you prefer minimal layouts, you can opt pagers plugin instead of thumbnails
+using the pager plugin. Pagers create minimal graphics that represent each
+slide, and hovering over each pager item, shows the correspondent thumbnails.
+
+<Options pluginName="Pager" interface="PagerSettings" variable="pagerSettings" />
+
+</div>
+
+<div class="options-section">
+
+## FullScreen plugin
+
+The fullscreen plugin uses the browser's native fullscreen API. You can toggle
+fullscreen with one click.
+
+<Options pluginName="FullScreen" interface="FullscreenSettings" variable="fullscreenSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Comment box plugin
+
+The comment plugin supports Facebook and Disqus comments out of the box, so
+people can comment on slides with their Facebook or Disqus accounts. You can
+add your own comment widget as well.
+
+<Options pluginName="Comment box" interface="CommentSettings" variable="commentSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Medium zoom plugin
+
+The medium zoom plugin opens an image in place with a minimal interface, the
+zooming experience seen on Medium: no toolbar, no thumbnails, and a click
+closes it again.
+
+<Options pluginName="Medium zoom" interface="MediumZoomSettings" variable="mediumZoomSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Vimeo thumbnails plugin
+
+The Vimeo thumbnails plugin loads thumbnails for Vimeo videos automatically.
+
+<Options pluginName="Vimeo Thumbnails" interface="VimeoThumbnailSettings" variable="vimeoSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Relative caption plugin
+
+The relative caption plugin places each caption relative to its image instead
+of at the bottom of the gallery.
+
+<Options pluginName="Relative caption" interface="RelativeCaptionSettings" variable="relativeCaptionSettings" />
+
+</div>
+
+<div class="options-section">
+
+## Origin crop plugin
+
+Origin crop plugin flies the zoom-from-origin animation from a cropped
+thumbnail's crop, so a cover-fitted grid tile grows into the full photo
+instead of being squashed into its box.
+<span class="badge rounded-pill bg-danger font-12" title="Available since version 3.0.0">v3.0.0</span>
+
+<Options pluginName="Origin crop" interface="OriginCropSettings" variable="originCropSettings" />
+
+</div>

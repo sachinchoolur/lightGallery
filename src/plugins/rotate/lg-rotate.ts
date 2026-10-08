@@ -1,3 +1,4 @@
+import { rotateDefaultIcons } from '@lightgallery/headless';
 import { lGEvents } from '../../lg-events';
 import { LgQuery } from '../../lgQuery';
 import { LightGallery } from '../../lightgallery';
@@ -26,21 +27,34 @@ export default class Rotate {
     buildTemplates(): void {
         let rotateIcons = '';
         if (this.settings.flipVertical) {
-            rotateIcons += `<button type="button" id="lg-flip-ver" aria-label="${this.settings.rotatePluginStrings['flipVertical']}" class="lg-flip-ver lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-flip-ver" aria-label="${
+                this.settings.rotatePluginStrings?.flipVertical ??
+                this.core.settings.strings.flipVertical
+            }" class="lg-flip-ver lg-icon"></button>`;
         }
         if (this.settings.flipHorizontal) {
-            rotateIcons += `<button type="button" id="lg-flip-hor" aria-label="${this.settings.rotatePluginStrings['flipHorizontal']}" class="lg-flip-hor lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-flip-hor" aria-label="${
+                this.settings.rotatePluginStrings?.flipHorizontal ??
+                this.core.settings.strings.flipHorizontal
+            }" class="lg-flip-hor lg-icon"></button>`;
         }
         if (this.settings.rotateLeft) {
-            rotateIcons += `<button type="button" id="lg-rotate-left" aria-label="${this.settings.rotatePluginStrings['rotateLeft']}" class="lg-rotate-left lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-rotate-left" aria-label="${
+                this.settings.rotatePluginStrings?.rotateLeft ??
+                this.core.settings.strings.rotateLeft
+            }" class="lg-rotate-left lg-icon"></button>`;
         }
         if (this.settings.rotateRight) {
-            rotateIcons += `<button type="button" id="lg-rotate-right" aria-label="${this.settings.rotatePluginStrings['rotateRight']}" class="lg-rotate-right lg-icon"></button>`;
+            rotateIcons += `<button type="button" id="lg-rotate-right" aria-label="${
+                this.settings.rotatePluginStrings?.rotateRight ??
+                this.core.settings.strings.rotateRight
+            }" class="lg-rotate-right lg-icon"></button>`;
         }
         this.core.$toolbar.append(rotateIcons);
     }
 
     init(): void {
+        this.core.registerDefaultIcons(rotateDefaultIcons);
         if (!this.settings.rotate) {
             return;
         }
@@ -106,6 +120,46 @@ export default class Rotate {
                 };
             }
         });
+
+        // A rotated image's fit scale depends on the stage size.
+        this.$LG(window).on(`resize.lg.rotate.global${this.core.lgId}`, () => {
+            if (
+                this.core.lgOpened &&
+                this.rotateValuesList[this.core.index] &&
+                this.isImageOrientationChanged()
+            ) {
+                this.applyStyles();
+            }
+        });
+    }
+
+    // At 90/270 degrees the image's rendered width runs vertically, so it
+    // must be scaled down to keep fitting the stage; rotation never
+    // upscales. Offset dimensions ignore transforms, so measuring stays
+    // correct regardless of the current rotation.
+    getFitScale(): number {
+        const rotateValue = this.rotateValuesList[this.core.index];
+        const normalized = ((rotateValue.rotate % 360) + 360) % 360;
+        if (normalized !== 90 && normalized !== 270) {
+            return 1;
+        }
+        const $rotateEl = this.core
+            .getSlideItem(this.core.index)
+            .find('.lg-img-rotate')
+            .first();
+        const stage = $rotateEl.get() as HTMLElement;
+        const image = stage && stage.querySelector('.lg-object');
+        if (!stage || !image) {
+            return 1;
+        }
+        const imageWidth = (image as HTMLElement).offsetWidth;
+        const imageHeight = (image as HTMLElement).offsetHeight;
+        const stageWidth = stage.clientWidth;
+        const stageHeight = stage.clientHeight;
+        if (!imageWidth || !imageHeight || !stageWidth || !stageHeight) {
+            return 1;
+        }
+        return Math.min(stageWidth / imageHeight, stageHeight / imageWidth, 1);
     }
 
     applyStyles(): void {
@@ -113,16 +167,18 @@ export default class Rotate {
             .getSlideItem(this.core.index)
             .find('.lg-img-rotate')
             .first();
+        const rotateValue = this.rotateValuesList[this.core.index];
+        const fitScale = this.getFitScale();
 
         $image.css(
             'transform',
             'rotate(' +
-                this.rotateValuesList[this.core.index].rotate +
+                rotateValue.rotate +
                 'deg)' +
                 ' scale3d(' +
-                this.rotateValuesList[this.core.index].flipHorizontal +
+                rotateValue.flipHorizontal * fitScale +
                 ', ' +
-                this.rotateValuesList[this.core.index].flipVertical +
+                rotateValue.flipVertical * fitScale +
                 ', 1)',
         );
     }
@@ -220,6 +276,8 @@ export default class Rotate {
     }
 
     closeGallery(): void {
+        // Nothing to reset when the plugin was switched off at init.
+        if (!this.settings.rotate) return;
         if (this.isImageOrientationChanged()) {
             this.core.getSlideItem(this.core.index).css('opacity', 0);
         }
@@ -230,5 +288,6 @@ export default class Rotate {
         // Unbind all events added by lightGallery rotate plugin
         this.core.LGel.off('.lg.rotate');
         this.core.LGel.off('.rotate');
+        this.$LG(window).off(`.lg.rotate.global${this.core.lgId}`);
     }
 }

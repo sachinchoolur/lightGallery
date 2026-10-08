@@ -15,6 +15,8 @@ export interface AutoplaySettings {
 
     /**
      * The time (in ms) between each auto transition.
+     * The countdown starts once the slide on screen has loaded, so a slow
+     * connection never advances past an image before it is visible.
      */
     slideShowInterval: number;
 
@@ -40,8 +42,11 @@ export interface AutoplaySettings {
 
     /**
      * Custom translation strings for aria-labels
+     * @deprecated Set these labels on the core `strings` object instead,
+     * every user-facing string lives in that one contract. An explicitly set
+     * key here still wins (alias).
      */
-    autoplayPluginStrings: AutoplayStrings;
+    autoplayPluginStrings?: Partial<AutoplayStrings>;
 }
 export const autoplaySettings: AutoplaySettings = {
     autoplay: true,
@@ -51,7 +56,4 @@ export const autoplaySettings: AutoplaySettings = {
     forceSlideShowAutoplay: false,
     autoplayControls: true,
     appendAutoplayControlsTo: '.lg-toolbar',
-    autoplayPluginStrings: {
-        toggleAutoplay: 'Toggle Autoplay',
-    } as AutoplayStrings,
 };

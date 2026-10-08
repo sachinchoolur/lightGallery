@@ -1,0 +1,60 @@
+import { getCollection } from 'astro:content';
+import type { APIRoute } from 'astro';
+
+import { SITE, docsGroup, docsMarkdownUrl, docsUrl } from '../lib/markdown-twin';
+
+/**
+ * /llms.txt, the machine-readable index of the site (llmstxt.org).
+ * Generated from the content collections, so it never drifts from the
+ * sidebar.
+ */
+export const GET: APIRoute = async () => {
+    const docs = (await getCollection('docs', ({ data }) => !data.draft)).sort(
+        (a, b) => (a.data.weight ?? 999) - (b.data.weight ?? 999),
+    );
+    const demos = (await getCollection('demos', ({ data }) => !data.draft)).sort(
+        (a, b) => (a.data.weight ?? 999) - (b.data.weight ?? 999),
+    );
+    const one = (text: string) => text.replace(/\s+/g, ' ').trim();
+
+    const groups = new Map<string, string[]>();
+    for (const entry of docs) {
+        const group = docsGroup(entry);
+        const line = `- [${entry.data.title}](${docsMarkdownUrl(entry)}): ${one(entry.data.description)}`;
+        groups.set(group, [...(groups.get(group) ?? []), line]);
+    }
+    const order = ['Guides and reference', 'Framework packages', 'Features', 'Archive (version 2 wrappers)'];
+
+    const out = [
+        '# lightGallery',
+        '',
+        '> A lightweight, modular JavaScript lightbox and gallery for images and video, with native React, Vue and Angular packages. Plugins (thumbnails, zoom, video, autoplay, fullscreen, share, hash, rotate, pager, comments, justified layout) are separate entries, import only what you use.',
+        '',
+        'Packages: `lightgallery` (vanilla JavaScript/TypeScript), `@lightgallery/react`, `@lightgallery/vue`, `@lightgallery/angular`, `@lightgallery/headless` (the framework-free core).',
+        '',
+        'Default recipe for an image gallery, in every stack: the `zoom` and `thumbnail` plugins, `lightgallery/css/lightgallery.css` plus one CSS file per plugin (the framework packages ship no CSS), and `lgSize: "WIDTH-HEIGHT"` (`data-lg-size` in markup) on every image item, the natural size of the full image, so the slide opens from its thumbnail and closes back to it (zoom from origin). Without `lgSize` the slide fades in instead. Leave a plugin out only when asked to.',
+        '',
+        `Coding agents: the skill at https://github.com/sachinchoolur/lightGallery/tree/v3/skills/lightgallery covers install, imports, plugins and the common pitfalls; the "Ask your coding agent" prompt is on ${SITE}/docs/getting-started/index.md.`,
+        '',
+        'License: free and open source under the GPLv3 for any project distributed under GPLv3-compatible terms. Projects that keep their source proprietary buy a one-time commercial license; same code, every plugin, nothing gated. SPDX: `GPL-3.0-only OR LicenseRef-Commercial`.',
+        '',
+        `Every docs page below links to its markdown version; the HTML page is the same URL without \`index.md\`. The complete docs in one file: ${SITE}/llms-full.txt`,
+        '',
+    ];
+    for (const group of order) {
+        const lines = groups.get(group);
+        if (!lines?.length) continue;
+        out.push(`## ${group}`, '', ...lines, '');
+    }
+    out.push('## Demos', '', '_Each demo page carries the example code for all four stacks; the markdown version keeps the code and links to the live gallery._', '');
+    for (const entry of demos) {
+        out.push(`- [${entry.data.title}](${docsMarkdownUrl(entry)}): ${one(entry.data.description)}`);
+    }
+    out.push('', '## API (JSON)', '', `- [Settings](${SITE}/api/settings.json): every option with type, default and description, per interface`, `- [Events](${SITE}/api/events.json): custom events with their detail fields`, `- [Methods](${SITE}/api/methods.json): instance methods`);
+    out.push('', '## Optional', '', `- [Changelog](${SITE}/changelog/index.md): what changed in each release`, `- [Blog](${SITE}/blog/)`, `- [License](${SITE}/docs/license/index.md): free under the GPLv3; commercial license for proprietary projects, plans at ${SITE}/license/`, `- [GitHub](https://github.com/sachinchoolur/lightGallery)`, '');
+    // Keep docsUrl referenced for consumers that want HTML links.
+    void docsUrl;
+    return new Response(out.join('\n'), {
+        headers: { 'content-type': 'text/plain; charset=utf-8' },
+    });
+};

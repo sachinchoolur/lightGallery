@@ -1,0 +1,18 @@
+@import 'lightgallery/css/lightgallery.css';
+@import 'lightgallery/css/lg-medium-zoom.css';
+
+.article {
+    max-width: 640px;
+    line-height: 1.6;
+}
+
+.article a {
+    display: block;
+    margin: 24px 0;
+    cursor: zoom-in;
+}
+
+.article img {
+    display: block;
+    width: 100%;
+}

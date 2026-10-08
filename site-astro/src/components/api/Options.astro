@@ -1,0 +1,177 @@
+---
+import { Code } from 'astro:components';
+
+import {
+    interfaceProps,
+    settingsDefaults,
+    tagText,
+} from '../../lib/apidocs';
+
+/** Settings table, port of `shortcodes/options.html`. */
+interface Props {
+    interface: string;
+    variable?: string;
+    pluginName?: string;
+}
+
+const { interface: interfaceName, variable, pluginName } = Astro.props;
+const props = interfaceProps(interfaceName);
+const defaults = variable ? settingsDefaults(variable) : undefined;
+const columns = variable ? 3 : 2;
+
+/**
+ * Object literals and long strings do not fit the default column; they
+ * are shown as a code block under the description instead.
+ */
+const isLongDefault = (value: string) =>
+    value.includes('\n') || value.length > 40;
+const versionLabel = (text: string) => `v${text.trim().replace(/^v/i, '')}`;
+/** Unions longer than this list their values under the description. */
+const MAX_INLINE_UNION = 5;
+---
+
+{
+    pluginName && (
+        <div class="alert alert-warning" role="alert">
+            <b>Plugin dependency</b> - You need to include {pluginName} plugin
+            in the document to use the following options.
+        </div>
+    )
+}
+
+<table class="options-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            {variable && <th>Default</th>}
+        </tr>
+    </thead>
+    {
+        props.map((prop) => {
+            const defaultValue = defaults?.get(prop.name);
+            const longDefault =
+                defaultValue !== undefined && isLongDefault(defaultValue);
+            const versions = tagText(prop.comment, 'version');
+            const union = prop.unionValues ?? [];
+            const longUnion = union.length > MAX_INLINE_UNION;
+            return (
+                <tbody
+                    class="options-entry"
+                    style={
+                        prop.name.startsWith('__')
+                            ? 'display: none;'
+                            : undefined
+                    }
+                >
+                    <tr class="options-table-tr-head">
+                        <td class="options-name">
+                            <span class="anchor-id" id={prop.name}>
+                                <code>{prop.name}</code>{' '}
+                                <a
+                                    href={`#${prop.name}`}
+                                    class="anchor"
+                                    aria-hidden="true"
+                                >
+                                    #
+                                </a>
+                                <span />
+                            </span>
+                        </td>
+                        <td class="options-type" data-label="Type">
+                            {union.length && !longUnion ? (
+                                <span class="options-union">
+                                    {union.map((value) => (
+                                        <code>{value}</code>
+                                    ))}
+                                </span>
+                            ) : longUnion ? (
+                                <>
+                                    string{' '}
+                                    <span class="options-type-hint">
+                                        ({union.length} values)
+                                    </span>
+                                </>
+                            ) : (
+                                prop.typeName
+                            )}
+                        </td>
+                        {variable && (
+                            <td class="options-default" data-label="Default">
+                                {defaultValue === undefined ||
+                                defaultValue === '' ? (
+                                    <span class="options-default-empty">
+                                        —
+                                    </span>
+                                ) : longDefault ? (
+                                    <span class="options-default-ref">
+                                        {defaultValue.startsWith('{')
+                                            ? '{ … }'
+                                            : defaultValue.startsWith('[')
+                                              ? '[ … ]'
+                                              : '"…"'}
+                                    </span>
+                                ) : (
+                                    <code>{defaultValue}</code>
+                                )}
+                            </td>
+                        )}
+                    </tr>
+                    <tr class="options-table-description">
+                        <td colspan={columns}>
+                            <p set:html={prop.comment.summary} />
+                            {tagText(prop.comment, 'description').map(
+                                (text) => <p set:html={text} />,
+                            )}
+                            {tagText(prop.comment, 'deprecated').map(
+                                (text) => (
+                                    <p class="alert alert-warning" role="alert">
+                                        <span>
+                                            <b>Deprecated.</b>{' '}
+                                            <span set:html={text} />
+                                        </span>
+                                    </p>
+                                ),
+                            )}
+                            {tagText(prop.comment, 'example').map((text) => (
+                                <Code code={text.trim()} lang="js" />
+                            ))}
+                            {longUnion && (
+                                <div class="options-default-block">
+                                    <span class="options-default-label">
+                                        Accepted values
+                                    </span>
+                                    <span class="options-union">
+                                        {union.map((value) => (
+                                            <code>{value}</code>
+                                        ))}
+                                    </span>
+                                </div>
+                            )}
+                            {longDefault && (
+                                <div class="options-default-block">
+                                    <span class="options-default-label">
+                                        Default
+                                    </span>
+                                    <Code code={defaultValue} lang="js" />
+                                </div>
+                            )}
+                            {versions.length > 0 && (
+                                <p class="options-meta">
+                                    {versions.map((text) => (
+                                        <span
+                                            class="options-version"
+                                            title={`Minimum lightGallery version required: ${text.trim()}`}
+                                        >
+                                            Added in {versionLabel(text)}
+                                        </span>
+                                    ))}
+                                </p>
+                            )}
+                        </td>
+                    </tr>
+                </tbody>
+            );
+        })
+    }
+</table>

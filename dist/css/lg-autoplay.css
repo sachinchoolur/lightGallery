@@ -8,9 +8,6 @@
   z-index: 1083;
   opacity: 0;
   will-change: opacity;
-  -webkit-transition: opacity 0.08s ease 0s;
-  -moz-transition: opacity 0.08s ease 0s;
-  -o-transition: opacity 0.08s ease 0s;
   transition: opacity 0.08s ease 0s;
 }
 .lg-progress-bar .lg-progress {
@@ -25,11 +22,14 @@
   opacity: 1;
 }
 
-.lg-autoplay-button:after {
-  content: "\e01d";
+.lg-autoplay-button.lg-icon-custom .lg-ci-autoplay-pause {
+  display: none;
 }
-.lg-show-autoplay .lg-autoplay-button:after {
-  content: "\e01a";
+.lg-show-autoplay .lg-autoplay-button.lg-icon-custom .lg-ci-autoplay-play {
+  display: none;
+}
+.lg-show-autoplay .lg-autoplay-button.lg-icon-custom .lg-ci-autoplay-pause {
+  display: inline-flex;
 }
 .lg-single-item .lg-autoplay-button {
   opacity: 0.75;

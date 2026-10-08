@@ -1,0 +1,89 @@
+---
+import { getCollection } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { DEMO_GROUPS, demoFramework, demoPhoto } from '../../lib/demo-groups';
+
+/**
+ * The /demos/ index: one grid of every demo as a photo card, filtered by
+ * the groups from lib/demo-groups (shared with the demo sidebar) through
+ * CSS-only chips: the radios at the top of the page decide which cards
+ * show. Anything unlisted lands in "More demos".
+ */
+const entries = await getCollection('demos', ({ data }) => !data.draft);
+const bySlug = new Map(
+    entries.map((entry) => [entry.id.replace(/\/index$/, '').toLowerCase(), entry]),
+);
+type Entry = (typeof entries)[number];
+const card = (slug: string, entry: Entry) => ({
+    slug,
+    title: entry.data.title,
+    href: `/demos/${slug}/`,
+    framework: demoFramework(slug),
+    video: /video/.test(slug),
+    photo: demoPhoto(slug),
+});
+const groups = DEMO_GROUPS.map((group, index) => ({
+    name: group.name,
+    index,
+    cards: group.slugs.filter((slug) => bySlug.has(slug)).map((slug) => card(slug, bySlug.get(slug)!)),
+}));
+const listed = new Set(DEMO_GROUPS.flatMap((group) => group.slugs));
+const leftovers = [...bySlug.entries()]
+    .filter(([slug]) => !listed.has(slug))
+    .map(([slug, entry]) => card(slug, entry))
+    .sort((a, b) => a.title.localeCompare(b.title));
+if (leftovers.length) groups.push({ name: 'More demos', index: groups.length, cards: leftovers });
+const total = groups.reduce((n, group) => n + group.cards.length, 0);
+---
+
+<BaseLayout
+    bodyClass="demos list"
+    meta={{
+        title: `Demos: ${entries.length} JavaScript gallery examples`,
+        description:
+            'Live lightGallery demos: thumbnails, zoom, video, captions, carousels, React, justified layout and more, each with the code to copy.',
+        breadcrumbs: [{ name: 'Demos', url: '/demos/' }],
+    }}
+>
+    <div class="demos-index">
+        <input type="radio" class="demos-filter" name="demos-filter" id="demos-filter-all" checked />
+        {groups.map((group) => <input type="radio" class="demos-filter" name="demos-filter" id={`demos-filter-${group.index}`} />)}
+        <div class="demos-index-head">
+            <h1>Demos</h1>
+            <p class="demos-index-count">{total} demos</p>
+            <div class="demos-chips" role="group" aria-label="Show">
+                <label for="demos-filter-all">All</label>
+                {groups.map((group) => <label for={`demos-filter-${group.index}`}>{group.name}</label>)}
+            </div>
+        </div>
+        <div class="demos-grid">
+            {
+                groups.flatMap((group) =>
+                    group.cards.map((item) => (
+                        <a
+                            class:list={[
+                                'demos-card',
+                                `demos-card-group-${group.index}`,
+                                { 'demos-card-video': item.video },
+                            ]}
+                            href={item.href}
+                        >
+                            <span class="demos-card-thumb">
+                                <img src={item.photo.thumb} alt="" loading="lazy" />
+                            </span>
+                            <span class="demos-card-group">{group.name}</span>
+                            <span class="demos-card-title">{item.title}</span>
+                            {item.framework && (
+                                <span class="demos-badge">
+                                    <i class={`demos-fw demos-fw-${item.framework.toLowerCase()}`} />
+                                    {item.framework}
+                                </span>
+                            )}
+                        </a>
+                    )),
+                )
+            }
+        </div>
+    </div>
+</BaseLayout>

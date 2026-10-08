@@ -1,0 +1,30 @@
+---
+/** Responsive demo using `data-sources`, the `<picture>` style media queries. */
+import { photos as pick } from '../../lib/photos';
+
+interface Props {
+    id: string;
+    photos?: string;
+    limit?: number;
+}
+const { id, limit = 3 } = Astro.props;
+const items = pick(Astro.props.photos ?? 'facade', limit);
+const sources = (sizes: { src: string }[]) =>
+    JSON.stringify([
+        { srcset: sizes[2].src, media: '(min-width:481px)' },
+        { srcset: sizes[1].src, media: '(min-width:376px)' },
+    ]);
+---
+<div class="gallery-demo-sm">
+    <div id={id} class="list-unstyled">
+        {items.map((p) => (
+            <a data-lg-size={p.size} data-src={p.sizes[0].src} data-sources={sources(p.sizes)} data-sub-html={p.caption}>
+                <img class="img-fluid" alt={p.alt} src={p.thumb} />
+            </a>
+        ))}
+    </div>
+</div>
+
+<script>
+    import '../../scripts/demo-galleries.js';
+</script>

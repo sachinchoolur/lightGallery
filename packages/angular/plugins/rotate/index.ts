@@ -1,0 +1,332 @@
+import { NgTemplateOutlet } from '@angular/common';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    input,
+    signal,
+    untracked,
+    viewChild,
+    type ElementRef,
+    type TemplateRef,
+} from '@angular/core';
+import {
+    flipHorizontal,
+    flipVertical,
+    getRotateFitScale,
+    getRotateTransform,
+    getSlideType,
+    isOrientationSwapped,
+    initialRotateSlice,
+    rotateLeft,
+    rotateRight,
+    type RotateSlice,
+    rotateDefaultIcons,
+} from '@lightgallery/headless';
+import {
+    LG_PLUGIN_CONTEXT,
+    type LgFeature,
+    type LgGalleryItem,
+    LgCiComponent,
+    resolveIconSlot,
+} from '@lightgallery/angular';
+
+/**
+ * Rotate feature (2.x `lg-rotate`): rotate/flip the current image.
+ * Transform ownership follows the zoom slide-wrapper pattern; compose with
+ * zoom as `[withZoom(), withRotate()]` so zoom stays outermost (2.x DOM).
+ *
+ * Deviation (noted, shared with React): 2.x kept rotate values for every
+ * visited slide until close; here values live in the slide's wrapper, so
+ * they reset if a slide leaves the windowed DOM.
+ */
+
+export interface RotateStrings {
+    flipVertical: string;
+    flipHorizontal: string;
+    rotateLeft: string;
+    rotateRight: string;
+}
+
+export interface RotateSettings {
+    /** Enable the rotate buttons. */
+    rotate: boolean;
+    /** Rotate transition speed (ms). */
+    rotateSpeed: number;
+    rotateLeft: boolean;
+    rotateRight: boolean;
+    flipHorizontal: boolean;
+    flipVertical: boolean;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    rotatePluginStrings?: Partial<RotateStrings>;
+}
+
+export const rotateSettings: RotateSettings = {
+    rotate: true,
+    rotateSpeed: 400,
+    rotateLeft: true,
+    rotateRight: true,
+    flipHorizontal: true,
+    flipVertical: true,
+};
+
+const ROTATE_LEFT_EVENT = 'lg-rotate-left';
+const ROTATE_RIGHT_EVENT = 'lg-rotate-right';
+const FLIP_HOR_EVENT = 'lg-flip-hor';
+const FLIP_VER_EVENT = 'lg-flip-ver';
+
+type RotateResolved = RotateSettings & Record<string, unknown>;
+
+@Component({
+    selector: 'lg-rotate-toolbar',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [LgCiComponent],
+    template: `
+        @if (settings().rotate) { @if (settings().flipVertical) {
+        <button
+            type="button"
+            class="lg-flip-ver lg-icon lg-icon-custom"
+            [attr.aria-label]="strings().flipVertical"
+            (click)="emit(FLIP_VER)"
+        >
+            <lg-ci
+                [slot]="ciFlipVertical()"
+                [names]="['flipVertical']"
+                [icons]="defaultIcons"
+            />
+        </button>
+        } @if (settings().flipHorizontal) {
+        <button
+            type="button"
+            class="lg-flip-hor lg-icon lg-icon-custom"
+            [attr.aria-label]="strings().flipHorizontal"
+            (click)="emit(FLIP_HOR)"
+        >
+            <lg-ci
+                [slot]="ciFlipHorizontal()"
+                [names]="['flipHorizontal']"
+                [icons]="defaultIcons"
+            />
+        </button>
+        } @if (settings().rotateLeft) {
+        <button
+            type="button"
+            class="lg-rotate-left lg-icon lg-icon-custom"
+            [attr.aria-label]="strings().rotateLeft"
+            (click)="emit(ROTATE_LEFT)"
+        >
+            <lg-ci
+                [slot]="ciRotateLeft()"
+                [names]="['rotateLeft']"
+                [icons]="defaultIcons"
+            />
+        </button>
+        } @if (settings().rotateRight) {
+        <button
+            type="button"
+            class="lg-rotate-right lg-icon lg-icon-custom"
+            [attr.aria-label]="strings().rotateRight"
+            (click)="emit(ROTATE_RIGHT)"
+        >
+            <lg-ci
+                [slot]="ciRotateRight()"
+                [names]="['rotateRight']"
+                [icons]="defaultIcons"
+            />
+        </button>
+        } }
+    `,
+})
+export class LgRotateToolbarComponent {
+    private readonly ctx = inject(LG_PLUGIN_CONTEXT);
+    protected readonly defaultIcons = rotateDefaultIcons;
+    protected readonly ciFlipVertical = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['flipVertical']),
+    );
+    protected readonly ciFlipHorizontal = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['flipHorizontal']),
+    );
+    protected readonly ciRotateLeft = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['rotateLeft']),
+    );
+    protected readonly ciRotateRight = computed(() =>
+        resolveIconSlot(this.ctx.icons?.(), ['rotateRight']),
+    );
+    protected readonly settings = computed(
+        () => this.ctx.settings() as unknown as RotateResolved,
+    );
+    protected readonly strings = computed(() => {
+        const legacy = this.settings().rotatePluginStrings;
+        const coreStrings = this.ctx.settings().strings;
+        return {
+            flipVertical: legacy?.flipVertical ?? coreStrings.flipVertical,
+            flipHorizontal:
+                legacy?.flipHorizontal ?? coreStrings.flipHorizontal,
+            rotateLeft: legacy?.rotateLeft ?? coreStrings.rotateLeft,
+            rotateRight: legacy?.rotateRight ?? coreStrings.rotateRight,
+        };
+    });
+    protected readonly ROTATE_LEFT = ROTATE_LEFT_EVENT;
+    protected readonly ROTATE_RIGHT = ROTATE_RIGHT_EVENT;
+    protected readonly FLIP_HOR = FLIP_HOR_EVENT;
+    protected readonly FLIP_VER = FLIP_VER_EVENT;
+
+    protected emit(name: string): void {
+        this.ctx.events.emit(name, undefined);
+    }
+}
+
+@Component({
+    selector: 'lg-rotate-wrapper',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgTemplateOutlet],
+    template: `
+        @if (enabled()) {
+        <div
+            #wrapperEl
+            class="lg-img-rotate"
+            [style.position]="'absolute'"
+            [style.inset]="'0'"
+            [style.transform]="transform()"
+            [style.transition-duration]="settings().rotateSpeed + 'ms'"
+        >
+            <ng-container [ngTemplateOutlet]="content()" />
+        </div>
+        } @else {
+        <ng-container [ngTemplateOutlet]="content()" />
+        }
+    `,
+})
+export class LgRotateWrapperComponent {
+    readonly item = input.required<LgGalleryItem>();
+    readonly index = input.required<number>();
+    readonly isCurrent = input(false);
+    readonly content = input.required<TemplateRef<unknown>>();
+
+    private readonly ctx = inject(LG_PLUGIN_CONTEXT);
+    protected readonly settings = computed(
+        () => this.ctx.settings() as unknown as RotateResolved,
+    );
+    protected readonly enabled = computed(
+        () => this.settings().rotate && getSlideType(this.item()) === 'image',
+    );
+
+    private readonly slice = signal<RotateSlice>(initialRotateSlice);
+    private readonly fitScale = signal(1);
+    private readonly wrapperEl =
+        viewChild<ElementRef<HTMLDivElement>>('wrapperEl');
+    protected readonly transform = computed(() =>
+        getRotateTransform(this.slice(), this.fitScale()),
+    );
+
+    // At 90°/270° the image must refit the stage (offset dimensions are
+    // transform-independent, so measuring stays correct mid-rotation).
+    private measureFitScale(): number {
+        const wrapper = this.wrapperEl()?.nativeElement;
+        const image = wrapper?.querySelector<HTMLElement>('.lg-object');
+        if (!wrapper || !image) {
+            return 1;
+        }
+        return getRotateFitScale(
+            image.offsetWidth,
+            image.offsetHeight,
+            wrapper.clientWidth,
+            wrapper.clientHeight,
+            untracked(this.slice),
+        );
+    }
+
+    private readonly emitTimers = new Set<ReturnType<typeof setTimeout>>();
+
+    constructor() {
+        effect((onCleanup) => {
+            if (!this.isCurrent() || !this.enabled()) {
+                return;
+            }
+            const events = this.ctx.events;
+            const offs = [
+                events.on(ROTATE_LEFT_EVENT, () =>
+                    this.commit(rotateLeft, 'rotateLeft'),
+                ),
+                events.on(ROTATE_RIGHT_EVENT, () =>
+                    this.commit(rotateRight, 'rotateRight'),
+                ),
+                events.on(FLIP_HOR_EVENT, () =>
+                    this.commit(flipHorizontal, 'flipHorizontal'),
+                ),
+                events.on(FLIP_VER_EVENT, () =>
+                    this.commit(flipVertical, 'flipVertical'),
+                ),
+            ];
+            onCleanup(() => offs.forEach((off) => off()));
+        });
+        effect((onCleanup) => {
+            const slice = this.slice();
+            this.wrapperEl();
+            this.fitScale.set(this.measureFitScale());
+            if (!isOrientationSwapped(slice)) {
+                return;
+            }
+            const onResize = () => this.fitScale.set(this.measureFitScale());
+            window.addEventListener('resize', onResize);
+            onCleanup(() => window.removeEventListener('resize', onResize));
+        });
+        inject(DestroyRef).onDestroy(() =>
+            this.emitTimers.forEach((timer) => clearTimeout(timer)),
+        );
+    }
+
+    private commit(
+        transition: (slice: RotateSlice) => RotateSlice,
+        eventName:
+            | 'rotateLeft'
+            | 'rotateRight'
+            | 'flipHorizontal'
+            | 'flipVertical',
+    ): void {
+        const next = transition(this.slice());
+        this.slice.set(next);
+        // The public event fires once the transition has settled (2.x).
+        const timer = setTimeout(() => {
+            this.emitTimers.delete(timer);
+            switch (eventName) {
+                case 'rotateLeft':
+                    this.ctx.emit('rotateLeft', { rotate: next.rotate });
+                    break;
+                case 'rotateRight':
+                    this.ctx.emit('rotateRight', { rotate: next.rotate });
+                    break;
+                case 'flipHorizontal':
+                    this.ctx.emit('flipHorizontal', {
+                        flipHorizontal: next.flipHorizontal,
+                    });
+                    break;
+                case 'flipVertical':
+                    this.ctx.emit('flipVertical', {
+                        flipVertical: next.flipVertical,
+                    });
+            }
+        }, untracked(this.settings).rotateSpeed + 10);
+        this.emitTimers.add(timer);
+    }
+}
+
+export function withRotate(
+    options: Partial<RotateSettings> = {},
+): LgFeature<RotateSettings> {
+    return {
+        name: 'rotate',
+        defaults: rotateSettings,
+        options,
+        slots: {
+            toolbar: LgRotateToolbarComponent,
+            slideWrapper: LgRotateWrapperComponent,
+        },
+    };
+}

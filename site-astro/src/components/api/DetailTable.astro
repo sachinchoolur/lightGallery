@@ -1,0 +1,39 @@
+---
+import type { ApiProperty } from '../../lib/apidocs';
+import { tagText } from '../../lib/apidocs';
+
+/** Name / type / description table for an event or callback detail object. */
+interface Props {
+    props: ApiProperty[];
+}
+
+const { props } = Astro.props;
+---
+
+<table class="api-detail-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {
+            props.map((prop) => (
+                <tr>
+                    <td class="api-detail-name">
+                        <code>{prop.name}</code>
+                    </td>
+                    <td class="api-detail-type">{prop.typeName}</td>
+                    <td class="api-detail-desc">
+                        <Fragment set:html={prop.comment.summary} />
+                        {tagText(prop.comment, 'description').map((text) => (
+                            <p set:html={text} />
+                        ))}
+                    </td>
+                </tr>
+            ))
+        }
+    </tbody>
+</table>

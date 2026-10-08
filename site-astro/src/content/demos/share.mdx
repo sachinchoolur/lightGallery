@@ -1,0 +1,494 @@
+---
+title: 'Social sharing'
+description:
+    'lightGallery allows sharing your images and videos across social media
+    platforms using the unique url created by lightGallery.'
+lead:
+    'Share your images and videos across social media platforms using the unique
+    url created by lightGallery.'
+date: 2020-10-06T08:48:57+00:00
+draft: false
+images: []
+menu:
+    demos:
+        parent: 'Demos'
+weight: 3
+toc: true
+---
+
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
+import ImageGallery from '../../components/shortcodes/ImageGallery.astro';
+
+#### Demo
+
+<div class="alert alert-info" role="alert">
+    On touch devices the share button prefers the OS share sheet
+    (<code>navigator.share</code>) when the browser supports it; the dropdown
+    below remains the automatic fallback and the desktop default. See the
+    <a href="/docs/web-share/">Web Share guide</a> and the
+    <a href="/docs/settings/#preferNativeShare">preferNativeShare</a> setting.
+</div>
+
+<ImageGallery id="gallery-share-demo" photos="morocco" />
+
+<CodeTabs sandbox="share">
+<Fragment slot="vanilla">
+
+**HTML**
+
+```html
+<div id="gallery-share-demo">
+    <a
+        data-pinterest-text="Pin it1"
+        data-tweet-text="lightGallery slide 1"
+        href="img/img1.jpg"
+    >
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a
+        data-pinterest-text="Pin it2"
+        data-tweet-text="lightGallery slide 2"
+        href="img/img2.jpg"
+    >
+        <img src="img/thumb2.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+Optionally you can pass a separate url for each image instead of the current
+browser url.
+
+```html
+<div id="gallery-share-demo">
+    <a
+        data-pinterest-text="Pin it1"
+        data-tweet-text="lightGallery slide 1"
+        data-facebook-share-url="share/facebook-share-url"
+        data-twitter-share-url="share/twitter-share-url"
+        data-pinterest-share-url="share/pinterest-share-url"
+        href="img/img1.jpg"
+    >
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a
+        data-pinterest-text="Pin it2"
+        data-tweet-text="lightGallery slide 2"
+        data-facebook-share-url="share/facebook-share-url"
+        data-twitter-share-url="share/twitter-share-url"
+        data-pinterest-share-url="share/pinterest-share-url"
+        href="img/img2.jpg"
+    >
+        <img src="img/thumb2.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+import lightGallery from 'lightgallery';
+import lgShare from 'lightgallery/plugins/share';
+
+lightGallery(document.getElementById('gallery-share-demo'), {
+    plugins: [lgShare],
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Share from '@lightgallery/react/plugins/share';
+
+// tweetText and pinterestText are the text the post on X and the pin on
+// Pinterest start with; facebookShareUrl, twitterShareUrl and
+// pinterestShareUrl replace the current page URL per item.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        tweetText: 'lightGallery slide 1',
+        pinterestText: 'Pin it1',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        tweetText: 'lightGallery slide 2',
+        pinterestText: 'Pin it2',
+    },
+];
+
+// Share adds a share button to the toolbar. On touch devices it opens the
+// device share sheet first; share={{ preferNativeShare: true }} (or false)
+// chooses one for every device.
+<LightGallery plugins={[Share]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Share from '@lightgallery/vue/plugins/share';
+
+// Share adds a share button to the toolbar. On touch devices it opens the
+// device share sheet first; :share="{ preferNativeShare: true }" (or
+// false) chooses one for every device.
+const plugins = [Share];
+
+// tweetText and pinterestText are the text the post on X and the pin on
+// Pinterest start with; facebookShareUrl, twitterShareUrl and
+// pinterestShareUrl replace the current page URL per item.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        tweetText: 'lightGallery slide 1',
+        pinterestText: 'Pin it1',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        tweetText: 'lightGallery slide 2',
+        pinterestText: 'Pin it2',
+    },
+];
+</script>
+
+<template>
+    <LightGallery :plugins="plugins">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withShare } from '@lightgallery/angular/plugins/share';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // withShare() adds a share button to the toolbar. On touch devices it
+    // opens the device share sheet first; withShare({ preferNativeShare:
+    // true }) (or false) chooses one for every device.
+    features = [withShare()];
+
+    // tweetText and pinterestText are the text the post on X and the pin
+    // on Pinterest start with; facebookShareUrl, twitterShareUrl and
+    // pinterestShareUrl replace the current page URL per item.
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Mountains',
+            tweetText: 'lightGallery slide 1',
+            pinterestText: 'Pin it1',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Forest path',
+            tweetText: 'lightGallery slide 2',
+            pinterestText: 'Pin it2',
+        },
+    ];
+}
+```
+
+</Fragment>
+</CodeTabs>
+
+#### Add new share options
+
+By default, lightGallery supports sharing on Facebook, X (Twitter) and Pinterest.
+Missing something? You can easily add your own share buttons in lightGallery.
+
+Let's see how we can add
+<a href="https://www.reddit.com/" target="_blank">Reddit</a> share button.
+
+<ImageGallery id="gallery-share-reddit-demo" photos="street" />
+
+To share a post on Reddit, you need to create the following url structure
+
+```
+https://reddit.com/submit?url={url}&title={title}
+```
+
+**Step 1 -**
+
+We need to fetch title attribute from each slide. lightGallery allows you to
+fetch custom props from the selector element by passing the prop name via
+extraProps settings
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
+
+```html
+<div id="gallery-share-reddit-demo">
+    <a data-reddit-title="slide title" href="img/img1.jpg">
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a data-reddit-title="slide title - 2" href="img/img2.jpg">
+        <img src="img/thumb2.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+lightGallery(document.getElementById('gallery-share-reddit-demo'), {
+    extraProps: ['redditTitle'],
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// There is no extraProps: generateLink receives the item itself, so
+// the title is a field on it.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        title: 'slide title',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        title: 'slide title - 2',
+    },
+];
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```ts
+// There is no extraProps: generateLink receives the item itself, so
+// the title is a field on it.
+const items: LgGalleryItem[] = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        title: 'slide title',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        title: 'slide title - 2',
+    },
+];
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+// There is no extraProps: generateLink receives the item itself, so
+// the title is a field on it.
+items: LgGalleryItem[] = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        title: 'slide title',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        title: 'slide title - 2',
+    },
+];
+```
+
+</Fragment>
+</CodeTabs>
+
+**Step 2 -**
+
+Using setting `additionalShareOptions` provide the required data to lightGallery
+share plugin
+
+#### JavaScript
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+```js
+lightGallery(document.getElementById('gallery-share-reddit-demo'), {
+    extraProps: ['redditTitle'],
+    additionalShareOptions: [
+        {
+            // Selector for the anchor tag inside share list item
+            selector: '.lg-share-reddit',
+
+            // HTML to be appended to the share dropdown menu
+            dropdownHTML:
+                '<li class="lg-share-item-reddit"><a class="lg-share-reddit" target="_blank"><svg class="lg-reddit">...</svg><span class="lg-dropdown-text">Reddit</span></a></li>',
+
+            // Construct url
+            generateLink: (galleryItem) => {
+                const url = window.location.href;
+
+                // The prop data-reddit-title is converted to redditTitle and added to the gallery item
+                const title = galleryItem.redditTitle;
+                const redditShareLink = `https://reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
+                return redditShareLink;
+            },
+        },
+    ],
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Share from '@lightgallery/react/plugins/share';
+
+// The packages take typed options instead of dropdown HTML strings:
+// { text, className, generateLink }.
+<LightGallery
+    plugins={[Share]}
+    share={{
+        additionalShareOptions: [
+            {
+                text: 'Reddit',
+                className: 'lg-share-reddit',
+                generateLink: (item, currentUrl) =>
+                    `https://reddit.com/submit?url=${encodeURIComponent(
+                        currentUrl,
+                    )}&title=${encodeURIComponent(item.title ?? '')}`,
+            },
+        ],
+    }}
+>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Share from '@lightgallery/vue/plugins/share';
+
+const plugins = [Share];
+
+// The packages take typed options instead of dropdown HTML strings:
+// { text, className, generateLink }.
+const reddit = {
+    text: 'Reddit',
+    className: 'lg-share-reddit',
+    generateLink: (item, currentUrl) =>
+        `https://reddit.com/submit?url=${encodeURIComponent(currentUrl)}&title=${encodeURIComponent(
+            item.title ?? '',
+        )}`,
+};
+</script>
+
+<template>
+    <LightGallery
+        :plugins="plugins"
+        :share="{ additionalShareOptions: [reddit] }"
+    >
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import { withShare } from '@lightgallery/angular/plugins/share';
+
+// The packages take typed options instead of dropdown HTML strings:
+// { text, className, generateLink }. The items are the ones above.
+features = [
+    withShare({
+        additionalShareOptions: [
+            {
+                text: 'Reddit',
+                className: 'lg-share-reddit',
+                generateLink: (item, currentUrl) =>
+                    `https://reddit.com/submit?url=${encodeURIComponent(
+                        currentUrl,
+                    )}&title=${encodeURIComponent(item.title ?? '')}`,
+            },
+        ],
+    }),
+];
+```
+
+```html
+<lg-gallery [features]="features">
+    @for (item of items; track item.src) {
+        <a [lgGalleryItem]="item">
+            <img [src]="item.thumb" [alt]="item.alt" />
+        </a>
+    }
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
+
+That's it. Now you can see the additional Reddit button in the share dropdown menu.
+
+Reference - https://github.com/bradvin/social-share-urls

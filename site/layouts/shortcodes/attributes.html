@@ -26,7 +26,7 @@
             <td>
                 {{ if eq $data "true"}}
                     {{ range .comment.tags -}}
-                        {{ if eq .tag "data-attr"}}
+                        {{ if eq .tag "dataAttr"}}
                             <p>
                                 <span class="anchor-id" id="{{.text}}">{{.text | safeHTML}} <a href="#{{.text}}" class="anchor" aria-hidden="true">#</a><span></span>
                             </p>

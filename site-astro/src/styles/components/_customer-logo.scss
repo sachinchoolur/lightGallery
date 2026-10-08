@@ -1,0 +1,35 @@
+// Customer logos (components/CustomerLogo.astro), on the homepage and the
+// license page. Each is a mask filled with currentColor, so the
+// surrounding text colour tints it and one rule colours a whole row;
+// `--zoom` evens out optical weight. Files flagged `img` render directly,
+// desaturated.
+
+.customer-logo {
+    display: inline-block;
+    width: 132px;
+    height: 60px;
+    flex: 0 0 auto;
+    background: currentColor;
+    mask: var(--logo) center / contain no-repeat;
+    -webkit-mask: var(--logo) center / contain no-repeat;
+    transform: scale(var(--zoom, 1));
+    transition: color 0.2s ease;
+    &.customer-logo-img {
+        mask: none;
+        -webkit-mask: none;
+        background: none;
+        object-fit: contain;
+        filter: grayscale(1) brightness(1.15) opacity(0.55);
+        transition: filter 0.2s ease;
+        &:hover {
+            filter: grayscale(1) brightness(0.6) opacity(1);
+        }
+    }
+    &.customer-logo-wide {
+        width: 150px;
+        height: 44px;
+    }
+    &:hover {
+        color: $gray-800;
+    }
+}

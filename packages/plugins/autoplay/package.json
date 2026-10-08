@@ -1,7 +1,0 @@
-{
-    "name": "lightgallery/plugins/autoplay",
-    "private": true,
-    "main": "lg-autoplay.umd.js",
-    "module": "lg-autoplay.es5.js",
-    "typings": "lg-autoplay.d.ts"
-}

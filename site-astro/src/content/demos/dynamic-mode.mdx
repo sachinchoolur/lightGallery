@@ -1,0 +1,405 @@
+---
+title: 'Dynamic mode'
+description: 'Dynamic mode demo: open a gallery from a JavaScript array of items, with no trigger markup on the page.'
+lead:
+    'lightGallery can be instantiated and launched programmatically by setting
+    dynamic option to true and populating dynamicEl option by passing array of
+    objects representing the gallery elements. See available dynamic options <a
+    href="../../docs/dynamic-variables/">Docs.</a>'
+date: 2020-10-06T08:48:57+00:00
+draft: false
+images: []
+menu:
+    demos:
+        parent: 'Demos'
+weight: 9
+toc: true
+---
+
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
+import GalleryDemoSm from '../../components/shortcodes/GalleryDemoSm.astro';
+
+<div>
+<button type="button" class="btn btn-success" id="dynamic-gallery-demo">Launch
+Gallery</button>
+
+
+</div>
+
+<CodeTabs sandbox="dynamic-mode">
+<Fragment slot="vanilla">
+
+**HTML**
+
+```html
+<button type="button" id="dynamic-gallery-demo">Open Gallery</button>
+```
+
+**JavaScript**
+
+```js
+const $dynamicGallery = document.getElementById('dynamic-gallery-demo');
+const dynamicEl = [
+    {
+        src: 'img/1.jpg',
+        thumb: 'img/thumb-1.jpg',
+        subHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',
+    },
+    {
+        src: 'img/2.jpg',
+        thumb: 'img/thumb-2.jpg',
+        subHtml: '<h4>Image 2 title</h4><p>Image 2 descriptions.</p>',
+    },
+    {
+        src: 'img/3.jpg',
+        thumb: 'img/thumb-3.jpg',
+        subHtml: '<h4>Image 3 title</h4><p>Image 3 descriptions.</p>',
+    },
+];
+const dynamicGallery = lightGallery($dynamicGallery, {
+    dynamic: true,
+    dynamicEl,
+});
+$dynamicGallery.addEventListener('click', function () {
+    // Starts with third item.(Optional).
+    // This is useful if you want use dynamic mode with
+    // custom thumbnails (thumbnails outside gallery),
+    dynamicGallery.openGallery(2);
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { useState } from 'react';
+import { LightGallery } from '@lightgallery/react';
+
+// The slides are data: there is no gallery markup on the page.
+const slides = [
+    {
+        src: 'img/1.jpg',
+        thumb: 'img/thumb-1.jpg',
+        alt: 'Image 1',
+        captionHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',
+    },
+    {
+        src: 'img/2.jpg',
+        thumb: 'img/thumb-2.jpg',
+        alt: 'Image 2',
+        captionHtml: '<h4>Image 2 title</h4><p>Image 2 descriptions.</p>',
+    },
+    {
+        src: 'img/3.jpg',
+        thumb: 'img/thumb-3.jpg',
+        alt: 'Image 3',
+        captionHtml: '<h4>Image 3 title</h4><p>Image 3 descriptions.</p>',
+    },
+];
+
+// Controlled mode is React's equivalent of dynamic mode: the
+// slides are data and you own the open state.
+const [open, setOpen] = useState(false);
+
+<>
+    <button type="button" onClick={() => setOpen(true)}>
+        Open gallery
+    </button>
+    {/* defaultIndex={2} opens on the third slide. */}
+    <LightGallery
+        slides={slides}
+        open={open}
+        defaultIndex={2}
+        onClose={() => setOpen(false)}
+    />
+</>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { ref } from 'vue';
+import { LightGallery } from '@lightgallery/vue';
+
+// The slides are data: there is no gallery markup on the page.
+const slides = [
+    {
+        src: 'img/1.jpg',
+        thumb: 'img/thumb-1.jpg',
+        alt: 'Image 1',
+        captionHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',
+    },
+    {
+        src: 'img/2.jpg',
+        thumb: 'img/thumb-2.jpg',
+        alt: 'Image 2',
+        captionHtml: '<h4>Image 2 title</h4><p>Image 2 descriptions.</p>',
+    },
+    {
+        src: 'img/3.jpg',
+        thumb: 'img/thumb-3.jpg',
+        alt: 'Image 3',
+        captionHtml: '<h4>Image 3 title</h4><p>Image 3 descriptions.</p>',
+    },
+];
+
+const open = ref(false);
+// Opens on the third slide.
+const index = ref(2);
+</script>
+
+<template>
+    <button type="button" @click="open = true">Open gallery</button>
+    <LightGallery v-model:open="open" v-model:index="index" :slides="slides" />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import { Component, signal } from '@angular/core';
+import { LgGalleryComponent, type LgGalleryItem } from '@lightgallery/angular';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent],
+    template: `
+        <button type="button" (click)="open.set(true)">Open gallery</button>
+        <lg-gallery
+            [slides]="slides()"
+            [open]="open()"
+            (closed)="open.set(false)"
+            [(index)]="index"
+        />
+    `,
+})
+export class Gallery {
+    // The slides are data: there is no gallery markup on the page. A
+    // signal, so the next example can append to it.
+    slides = signal<LgGalleryItem[]>([
+        {
+            src: 'img/1.jpg',
+            thumb: 'img/thumb-1.jpg',
+            alt: 'Image 1',
+            captionHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',
+        },
+        {
+            src: 'img/2.jpg',
+            thumb: 'img/thumb-2.jpg',
+            alt: 'Image 2',
+            captionHtml: '<h4>Image 2 title</h4><p>Image 2 descriptions.</p>',
+        },
+        {
+            src: 'img/3.jpg',
+            thumb: 'img/thumb-3.jpg',
+            alt: 'Image 3',
+            captionHtml: '<h4>Image 3 title</h4><p>Image 3 descriptions.</p>',
+        },
+    ]);
+
+    open = signal(false);
+    // Opens on the third slide.
+    index = signal(2);
+}
+```
+
+</Fragment>
+</CodeTabs>
+
+### Load more slides dynamically
+
+You can add or remove slides of a dynamic gallery by passing the updated
+dynamicEl list via the refresh method.
+
+<button type="button" class="btn btn-success"
+id="dynamic-gallery-demo-load-more"> Launch Gallery with more images </button>
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
+
+```html
+<button
+    type="button"
+    class="btn btn-success"
+    id="dynamic-gallery-demo-load-more"
+>
+    Launch Gallery with additional images
+</button>
+```
+
+**JavaScript**
+
+```js
+document
+    .getElementById('dynamic-gallery-demo-load-more')
+    .addEventListener('click', () => {
+        const newItems = [
+            {
+                src: 'img/4.jpg',
+                thumb: 'img/thumb-4.jpg',
+                subHtml: '<h4>Image 4 title</h4><p>Image 4 descriptions.</p>',
+            },
+            {
+                src: 'img/5.jpg',
+                thumb: 'img/thumb-5.jpg',
+                subHtml: '<h4>Image 5 title</h4><p>Image 5 descriptions.</p>',
+            },
+        ];
+        const updatedDynamicElements = [...dynamicEl, ...newItems];
+        dynamicGallery.refresh(updatedDynamicElements);
+
+        // To open gallery after updating slides,
+        dynamicGallery.openGallery();
+    });
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { useState } from 'react';
+import { LightGallery, type GalleryItem } from '@lightgallery/react';
+
+const moreSlides = [
+    {
+        src: 'img/4.jpg',
+        thumb: 'img/thumb-4.jpg',
+        alt: 'Image 4',
+        captionHtml: '<h4>Image 4 title</h4><p>Image 4 descriptions.</p>',
+    },
+    {
+        src: 'img/5.jpg',
+        thumb: 'img/thumb-5.jpg',
+        alt: 'Image 5',
+        captionHtml: '<h4>Image 5 title</h4><p>Image 5 descriptions.</p>',
+    },
+];
+
+// Appending is a state update, no refresh() call. The state starts
+// with the three slides of the first example.
+const [slides, setSlides] = useState<GalleryItem[]>([/* slides as above */]);
+const [open, setOpen] = useState(false);
+
+const loadMore = () => {
+    setSlides([...slides, ...moreSlides]);
+    // Open the gallery with the updated slides
+    setOpen(true);
+};
+
+<>
+    <button type="button" onClick={loadMore}>
+        Load more
+    </button>
+    <LightGallery slides={slides} open={open} onClose={() => setOpen(false)} />
+</>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { ref } from 'vue';
+import { LightGallery } from '@lightgallery/vue';
+
+const moreSlides = [
+    {
+        src: 'img/4.jpg',
+        thumb: 'img/thumb-4.jpg',
+        alt: 'Image 4',
+        captionHtml: '<h4>Image 4 title</h4><p>Image 4 descriptions.</p>',
+    },
+    {
+        src: 'img/5.jpg',
+        thumb: 'img/thumb-5.jpg',
+        alt: 'Image 5',
+        captionHtml: '<h4>Image 5 title</h4><p>Image 5 descriptions.</p>',
+    },
+];
+
+// Appending is a state update, no refresh() call. The ref starts with
+// the three slides of the first example.
+const slides = ref([/* slides as above */]);
+const open = ref(false);
+
+function loadMore() {
+    slides.value.push(...moreSlides);
+    // Open the gallery with the updated slides
+    open.value = true;
+}
+</script>
+
+<template>
+    <button type="button" @click="loadMore">Load more</button>
+    <LightGallery v-model:open="open" :slides="slides" />
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import { Component, signal } from '@angular/core';
+import { LgGalleryComponent, type LgGalleryItem } from '@lightgallery/angular';
+
+const moreSlides: LgGalleryItem[] = [
+    {
+        src: 'img/4.jpg',
+        thumb: 'img/thumb-4.jpg',
+        alt: 'Image 4',
+        captionHtml: '<h4>Image 4 title</h4><p>Image 4 descriptions.</p>',
+    },
+    {
+        src: 'img/5.jpg',
+        thumb: 'img/thumb-5.jpg',
+        alt: 'Image 5',
+        captionHtml: '<h4>Image 5 title</h4><p>Image 5 descriptions.</p>',
+    },
+];
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent],
+    template: `
+        <button type="button" (click)="loadMore()">Load more</button>
+        <lg-gallery
+            [slides]="slides()"
+            [open]="open()"
+            (closed)="open.set(false)"
+        />
+    `,
+})
+export class Gallery {
+    // Appending is a signal update, no refresh() call. The signal starts
+    // with the three slides of the first example.
+    slides = signal<LgGalleryItem[]>([/* slides as above */]);
+    open = signal(false);
+
+    loadMore() {
+        this.slides.update((current) => [...current, ...moreSlides]);
+        // Open the gallery with the updated slides
+        this.open.set(true);
+    }
+}
+```
+
+</Fragment>
+</CodeTabs>
+
+### Load more slides with images
+
+You can use dynamic mode to show a grid of thumbnails and open the full set from a button.
+
+<div class="dynamic-mode-images">
+    <GalleryDemoSm id="gallery-dynamic-thumbnails" />
+    <button type="button" class="btn btn-dynamic"
+        id="dynamic-mode-images" >
+        See all 14 photos
+    </button>
+</div>
+

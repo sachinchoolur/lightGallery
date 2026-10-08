@@ -1,0 +1,9 @@
+/* Optional: the size of the carousel on the page. */
+.carousel {
+    max-width: 960px;
+}
+
+/* The HTML5 video item is a link without an href, so it needs the cursor. */
+.carousel-item a {
+    cursor: pointer;
+}

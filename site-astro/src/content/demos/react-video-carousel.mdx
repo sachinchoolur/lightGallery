@@ -1,0 +1,91 @@
+---
+title: 'React video carousel with lightbox'
+description: 'Native React video carousel, slide through YouTube, Vimeo and HTML5 video inline, then expand any of them into a full-screen lightbox player.'
+lead:
+    'The same inline carousel as the image version, with the Video plugin
+    added: YouTube, Vimeo, Wistia and HTML5 video play in place, and the
+    maximize icon expands the carousel into the full-screen lightbox. Provider
+    slides render as poster facades until play. The full component API is in
+    the <a href="/docs/react/">React package docs</a>.'
+date: 2020-10-06T08:48:57.000Z
+draft: false
+images: []
+has_video: true
+menu: { demos: { parent: Demos, name: 'React video carousel' } }
+weight: 30
+toc: true
+---
+
+import InlineGallery from '../../components/shortcodes/InlineGallery.astro';
+import SandboxLink from '../../components/shortcodes/SandboxLink.astro';
+
+#### Demo
+
+<InlineGallery id="inline-video-gallery-container" />
+
+<SandboxLink demo="video-carousel" framework="react" />
+
+##### Inline video carousel
+
+```tsx
+import { useState } from 'react';
+import { LightGallery } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Video from '@lightgallery/react/plugins/video';
+
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-video.css';
+
+const videos = [
+    {
+        src: 'https://youtu.be/IUN664s7N-c',
+        caption: <h4>Peck Pocketed by Kevin Herron</h4>,
+    },
+    {
+        src: 'https://vimeo.com/112836958',
+        poster: 'img/vimeo-poster.jpg',
+        caption: <h4>Nature</h4>,
+    },
+];
+
+export function VideoCarousel() {
+    const [container, setContainer] = useState<HTMLElement | null>(null);
+
+    return (
+        <>
+            <div className="inline-gallery-container" ref={setContainer} />
+            {container && (
+                <LightGallery
+                    container={container}
+                    open
+                    closable={false}
+                    showMaximizeIcon
+                    slides={videos}
+                    plugins={[Thumbnail, Video]}
+                    thumbnail={{ thumbWidth: 130, thumbHeight: '100px' }}
+                    video={{ autoplayFirstVideo: false }}
+                />
+            )}
+        </>
+    );
+}
+```
+
+`autoplayFirstVideo` defaults to `true` and forces the first slide's provider
+iframe to mount immediately; turning it off keeps the poster facade on every
+slide until the viewer presses play.
+
+##### CSS
+
+```scss
+.inline-gallery-container {
+    width: 100%;
+    height: 0;
+    padding-bottom: 65%;
+}
+```
+
+More in the [React package docs](/docs/react/), or see the
+[React carousel](/demos/react-carousel/) and
+[React video gallery](/demos/react-video-gallery/) demos.

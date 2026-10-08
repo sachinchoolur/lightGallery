@@ -1,0 +1,708 @@
+---
+title: 'Video gallery for YouTube, Vimeo and HTML5'
+description: 'Responsive video gallery demo, play YouTube, Vimeo, Wistia and self-hosted HTML5 video in a full-screen lightbox, with poster facades and thumbnails.'
+lead: lightGallery supports YouTube, Vimeo, Wistia and all other types of HTML5 video formats, such as MP4, WebM, Ogg, etc.
+date: 2020-10-06T08:48:57.000Z
+draft: false
+images: []
+has_video: true
+menu: {demos: {parent: Demos, name: Video gallery}}
+weight: 2
+toc: true
+---
+
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
+import Html5VideoGallery from '../../components/shortcodes/Html5VideoGallery.astro';
+import VideosGallery from '../../components/shortcodes/VideosGallery.astro';
+
+#### External videos
+
+<p>To display YouTube, Vimeo and Wistia videos, you just need to paste the video URL, or share URL of the video in the data-src attribute. The same way you display images in the gallery. lightGallery will check the data-src attribute and if it is a video URL, it will create the respective video slide.</p>
+
+<p>Provider videos render as lightweight facades by default: a poster with a play button, with the provider iframe created only when the user presses play. The poster falls back from the data-poster attribute to the YouTube thumbnail endpoint to the item thumb, so YouTube slides get a facade even without an explicit poster. Users can navigate to other slides by using mouse drag or swipe without loading any player code. See the <a href="/demos/video-facades/">video facades demo</a> for details and how to opt out.</p>
+
+<p>lightGallery allows you to load thumbnail images automatically from YouTube and Vimeo. You can specify the size of the thumbnails in the settings. You need to use <a href="/docs/settings/#vimeo-thumbnails-plugin">Vimeo thumbnail plugin</a> to load thumbnails for vimeo videos. Videos will be automatically paused when a user starts to navigate to another slide.</p>
+
+#### HTML5 videos
+
+<p>For displaying HTML5 videos, you need to construct an object with array of video sources and types, and videos attributes objects as shown below and pass it via data-video attribute</p>
+Note - data-src should not be provided when you use HTML5 videos.
+
+<CodeTabs sandbox="video-gallery">
+<Fragment slot="vanilla">
+
+```js
+{
+    source: [
+        {
+            src: '/videos/video1.mp4',
+            type: 'video/mp4',
+        },
+        // more items
+    ],
+    // Optional video tracks - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/track
+    tracks: [
+        {
+            src: '/videos/title.txt',
+            kind: 'captions',
+        },
+    ],
+    attributes: { preload: false, controls: true },
+};
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import {
+    LightGallery,
+    LightGalleryItem,
+    type GalleryItem,
+} from '@lightgallery/react';
+import Video from '@lightgallery/react/plugins/video';
+
+const items: GalleryItem[] = [
+    // YouTube, Vimeo and Wistia: `src` is the address of the video page.
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        lgSize: '1280-720',
+    },
+    // HTML5 video: no `src`. The same object as the vanilla data-video
+    // attribute, as the item's `video` field.
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            tracks: [
+                {
+                    src: '/videos/title.txt',
+                    kind: 'captions',
+                    srclang: 'en',
+                    label: 'English',
+                    default: 'true',
+                },
+            ],
+            attributes: { preload: false, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        lgSize: '1280-720',
+    },
+];
+
+// Video slides need the Video plugin.
+<LightGallery plugins={[Video]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.poster} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup lang="ts">
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+import Video from '@lightgallery/vue/plugins/video';
+
+// Video slides need the Video plugin.
+const plugins = [Video];
+
+const items: LgGalleryItem[] = [
+    // YouTube, Vimeo and Wistia: `src` is the address of the video page.
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        lgSize: '1280-720',
+    },
+    // HTML5 video: no `src`. The same object as the vanilla data-video
+    // attribute, as the item's `video` field.
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            tracks: [
+                {
+                    src: '/videos/title.txt',
+                    kind: 'captions',
+                    srclang: 'en',
+                    label: 'English',
+                    default: 'true',
+                },
+            ],
+            attributes: { preload: false, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        lgSize: '1280-720',
+    },
+];
+</script>
+
+<template>
+    <LightGallery :plugins="plugins">
+        <LgItem v-for="item of items" :key="item.poster" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withVideo } from '@lightgallery/angular/plugins/video';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.poster) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // Video slides need the video feature.
+    features = [withVideo()];
+
+    items: LgGalleryItem[] = [
+        // YouTube, Vimeo and Wistia: `src` is the address of the video page.
+        {
+            src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+            poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+            thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+            alt: 'Puffin Hunts Fish To Feed Puffling',
+            lgSize: '1280-720',
+        },
+        // HTML5 video: no `src`. The same object as the vanilla data-video
+        // attribute, as the item's `video` field.
+        {
+            video: {
+                source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+                tracks: [
+                    {
+                        src: '/videos/title.txt',
+                        kind: 'captions',
+                        srclang: 'en',
+                        label: 'English',
+                        default: 'true',
+                    },
+                ],
+                attributes: { preload: false, controls: true },
+            },
+            poster: '/images/demo/html5-video-poster.jpg',
+            thumb: '/images/demo/html5-video-poster.jpg',
+            alt: 'Peck Pocketed',
+            lgSize: '1280-720',
+        },
+    ];
+}
+```
+
+</Fragment>
+</CodeTabs>
+
+<div class="alert alert-warning" role="alert">
+    Note: You need to include the lightGallery video plugin in the document to enable video slides.
+</div>
+
+<VideosGallery id="gallery-videos-demo" />
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
+
+```html
+<div id="gallery-videos-demo">
+    <!-- YouTube Video --->
+    <a
+        data-lg-size="1280-720"
+        data-src="//www.youtube.com/watch?v=EIUJfXk3_3w"
+        data-poster="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+        data-sub-html="<h4>Puffin Hunts Fish To Feed Puffling | Blue Planet II | BBC Earth</h4><p>On the heels of Planet Earth II's record-breaking Emmy nominations, BBC America presents stunning visual soundscapes from the series' amazing habitats.</p>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg"
+        />
+    </a>
+
+    <!-- Vimeo Video --->
+    <a
+        data-lg-size="1280-720"
+        data-src="//vimeo.com/112836958"
+        data-poster="/images/demo/vimeo-video-poster.jpg"
+        data-sub-html="<h4>Nature</h4><p>Video by <a target='_blank' href='https://vimeo.com/charliekaye'>Charlie Kaye</a></p>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="/images/demo/vimeo-video-poster.jpg"
+        />
+    </a>
+
+    <!-- Wistia Video --->
+    <a
+        data-lg-size="1280-720"
+        data-src="https://private-sharing.wistia.com/medias/mwhrulrucj"
+        data-poster="/images/demo/wistia-video-poster.jpeg"
+        data-sub-html="<h4>Thank You!</h4><p> Sample Wistia video </p>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="/images/demo/wistia-video-poster.jpeg"
+        />
+    </a>
+
+    <!-- HTML5 Video --->
+    <a
+        data-lg-size="1280-720"
+        data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "tracks": [{"src": "/videos/title.txt", "kind":"captions", "srclang": "en", "label": "English", "default": "true"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}'
+        data-poster="/images/demo/html5-video-poster.jpg"
+        data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="/images/demo/html5-video-poster.jpg"
+        />
+    </a>
+</div>
+```
+
+**JavaScript**
+
+```js
+import lightGallery from 'lightgallery';
+import lgVideo from 'lightgallery/plugins/video';
+
+lightGallery(document.getElementById('gallery-videos-demo'), {
+    plugins: [lgVideo],
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// One item per provider; `captionHtml` is the data-sub-html string.
+const items: GalleryItem[] = [
+    // YouTube
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        captionHtml: '<h4>Puffin Hunts Fish To Feed Puffling</h4>',
+        lgSize: '1280-720',
+    },
+    // Vimeo
+    {
+        src: '//vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        captionHtml: '<h4>Nature</h4><p>Video by Charlie Kaye</p>',
+        lgSize: '1280-720',
+    },
+    // Wistia
+    {
+        src: 'https://private-sharing.wistia.com/medias/mwhrulrucj',
+        poster: '/images/demo/wistia-video-poster.jpeg',
+        thumb: '/images/demo/wistia-video-poster.jpeg',
+        alt: 'Thank You!',
+        captionHtml: '<h4>Thank You!</h4><p>Sample Wistia video</p>',
+        lgSize: '1280-720',
+    },
+    // HTML5 video
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, playsInline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        captionHtml: "<h4>'Peck Pocketed' by Kevin Herron</h4>",
+        lgSize: '1280-720',
+    },
+];
+
+// Rendered as above: <LightGallery plugins={[Video]}> with a
+// LightGalleryItem per item.
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```ts
+// One item per provider; `captionHtml` is the data-sub-html string.
+const items: LgGalleryItem[] = [
+    // YouTube
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        captionHtml: '<h4>Puffin Hunts Fish To Feed Puffling</h4>',
+        lgSize: '1280-720',
+    },
+    // Vimeo
+    {
+        src: '//vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        captionHtml: '<h4>Nature</h4><p>Video by Charlie Kaye</p>',
+        lgSize: '1280-720',
+    },
+    // Wistia
+    {
+        src: 'https://private-sharing.wistia.com/medias/mwhrulrucj',
+        poster: '/images/demo/wistia-video-poster.jpeg',
+        thumb: '/images/demo/wistia-video-poster.jpeg',
+        alt: 'Thank You!',
+        captionHtml: '<h4>Thank You!</h4><p>Sample Wistia video</p>',
+        lgSize: '1280-720',
+    },
+    // HTML5 video
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, playsinline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        captionHtml: "<h4>'Peck Pocketed' by Kevin Herron</h4>",
+        lgSize: '1280-720',
+    },
+];
+
+// Rendered as above: <LightGallery :plugins="plugins"> with an LgItem
+// per item.
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+// One item per provider; `captionHtml` is the data-sub-html string.
+items: LgGalleryItem[] = [
+    // YouTube
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        captionHtml: '<h4>Puffin Hunts Fish To Feed Puffling</h4>',
+        lgSize: '1280-720',
+    },
+    // Vimeo
+    {
+        src: '//vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        captionHtml: '<h4>Nature</h4><p>Video by Charlie Kaye</p>',
+        lgSize: '1280-720',
+    },
+    // Wistia
+    {
+        src: 'https://private-sharing.wistia.com/medias/mwhrulrucj',
+        poster: '/images/demo/wistia-video-poster.jpeg',
+        thumb: '/images/demo/wistia-video-poster.jpeg',
+        alt: 'Thank You!',
+        captionHtml: '<h4>Thank You!</h4><p>Sample Wistia video</p>',
+        lgSize: '1280-720',
+    },
+    // HTML5 video
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, playsinline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        captionHtml: "<h4>'Peck Pocketed' by Kevin Herron</h4>",
+        lgSize: '1280-720',
+    },
+];
+
+// Template and `features = [withVideo()]` as above.
+```
+
+</Fragment>
+</CodeTabs>
+
+#### Video.js example
+
+<a href="https://videojs.com/" target="_blank">Video.js</a> is a web video
+player built from the ground up for an HTML5 world. lightGallery has built-in
+Video.js support: include Video.js on the page, then pass `videojs: true`
+via lightGallery settings. You can also pass Video.js options via
+`videojsOptions`.
+
+Note - Make sure that you pass a proper JSON object in the data-video attribute.
+
+##### Demo
+
+<Html5VideoGallery id="gallery-videojs-demo" />
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
+
+```html
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/video.js@8/dist/video-js.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/video.js@8/dist/video.min.js"></script>
+
+<div id="gallery-videojs-demo">
+    <a
+        data-lg-size="1280-720"
+        data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "controls": true}}'
+        data-poster="/images/demo/html5-video-poster.jpg"
+        data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="/images/demo/html5-video-poster.jpg"
+        />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+lightGallery(document.getElementById('gallery-videojs-demo'), {
+    plugins: [lgVideo],
+    videojs: true,
+    videojsOptions: {
+        muted: true,
+    },
+});
+```
+
+</Fragment>
+</CodeTabs>
+
+The `videojs` bridge is vanilla-only. The React, Vue and Angular
+packages render HTML5 video with the native `<video>` element and leave
+custom players to your own slide markup.
+
+#### Video Autoplay
+
+Browsers block autoplay with sound, and whether a video may start on its
+own depends on [several conditions](https://developer.chrome.com/blog/autoplay/).
+To stay within the policy, lightGallery mutes the video when it autoplays the
+first slide. To unmute, pass `?mute=0` (YouTube) or `?muted=false` (Vimeo) in
+the video URL; lightGallery forwards query parameters to the player.
+
+On iOS, HTML5 videos may also need `"playsinline": true` to play inside the
+page rather than full screen.
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+```html
+<div id="gallery-autoplay-demo">
+    <!-- YouTube Video --->
+    <a
+        data-lg-size="1280-720"
+        data-src="//www.youtube.com/watch?v=EIUJfXk3_3w&mute=0"
+        data-poster="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+        data-sub-html="<h4>Puffin Hunts Fish To Feed Puffling | Blue Planet II | BBC Earth</h4><p>On the heels of Planet Earth II's record-breaking Emmy nominations, BBC America presents stunning visual soundscapes from the series' amazing habitats.</p>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg"
+        />
+    </a>
+
+    <!-- Vimeo Video --->
+    <a
+        data-lg-size="1280-720"
+        data-src="//vimeo.com/112836958?muted=false"
+        data-poster="/images/demo/vimeo-video-poster.jpg"
+        data-sub-html="<h4>Nature</h4><p>Video by <a target='_blank' href='https://vimeo.com/charliekaye'>Charlie Kaye</a></p>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="/images/demo/vimeo-video-poster.jpg"
+        />
+    </a>
+    <!-- HTML5 videos -->
+    <a
+        data-lg-size="1280-720"
+        data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}'
+        data-poster="/images/demo/html5-video-poster.jpg"
+        data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="/images/demo/html5-video-poster.jpg"
+        />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+// React spells the video attribute playsInline.
+const items: GalleryItem[] = [
+    {
+        // YouTube: mute=0 is forwarded to the player
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w&mute=0',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        lgSize: '1280-720',
+    },
+    {
+        // Vimeo
+        src: '//vimeo.com/112836958?muted=false',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        lgSize: '1280-720',
+    },
+    {
+        // HTML5 video
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { playsInline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        lgSize: '1280-720',
+    },
+];
+
+// Rendered as above: <LightGallery plugins={[Video]}> with a
+// LightGalleryItem per item.
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```ts
+const items: LgGalleryItem[] = [
+    {
+        // YouTube: mute=0 is forwarded to the player
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w&mute=0',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        lgSize: '1280-720',
+    },
+    {
+        // Vimeo
+        src: '//vimeo.com/112836958?muted=false',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        lgSize: '1280-720',
+    },
+    {
+        // HTML5 video
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { playsinline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        lgSize: '1280-720',
+    },
+];
+
+// Rendered as above: <LightGallery :plugins="plugins"> with an LgItem
+// per item.
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+items: LgGalleryItem[] = [
+    {
+        // YouTube: mute=0 is forwarded to the player
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w&mute=0',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        lgSize: '1280-720',
+    },
+    {
+        // Vimeo
+        src: '//vimeo.com/112836958?muted=false',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        lgSize: '1280-720',
+    },
+    {
+        // HTML5 video
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { playsinline: true, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        lgSize: '1280-720',
+    },
+];
+
+// Template and `features = [withVideo()]` as above.
+```
+
+</Fragment>
+</CodeTabs>

@@ -1,0 +1,85 @@
+---
+/**
+ * The "Trusted by" strip: two rows of cells, each swapping between its
+ * logos with a blur. Desktop has 2 x 6 cells showing two logos each,
+ * phones 2 x 3 showing four, so all 24 appear at either size.
+ *
+ * Cells are built by shape, not by rank: the logos sort by their ink's
+ * aspect ratio and consecutive ones share a cell, so a swap replaces a
+ * mark with a mark and a wordmark with a wordmark of nearly the same
+ * width. The cells fall into three shape classes (square marks, short
+ * lockups, long wordmarks); the columns keep one class each, mirrored
+ * about the centre on desktop. Each logo keeps the size the data gives
+ * it (its box, then `zoom` for optical weight), set as an explicit box
+ * here so the cell centres the ink itself.
+ * A delay from the cell's column and row runs the swap as a diagonal
+ * wave. The logos live in data/customer-logos, the base logo rules in
+ * `components/_customer-logo.scss`.
+ */
+import CustomerLogo from '../CustomerLogo.astro';
+import { LOGOS } from '../../data/customer-logos';
+
+// Seconds each logo stays.
+const SLOT = 2.6;
+// The shape classes, from the squarest to the longest; a class's cells
+// are a third of the grid.
+const SHAPES = ['mark', 'lockup', 'wordmark'];
+// The logo boxes of the other logo rows, before `zoom`.
+const BOX = { wide: [136, 40], square: [120, 52] };
+// Which class each column holds, left to right.
+const LAYOUTS = [
+    { size: 'wide', columns: [2, 1, 0, 0, 1, 2] },
+    { size: 'narrow', columns: [0, 1, 2] },
+];
+const ROWS = 2;
+
+const byShape = [...LOGOS].sort((a, b) => a.ratio - b.ratio);
+const delay = (col: number, row: number) => +((col + row) * 0.06).toFixed(2);
+const box = (l: (typeof LOGOS)[number]) => {
+    const [w, h] = BOX[l.wide ? 'wide' : 'square'];
+    const width = Math.min(w, h * l.ratio) * l.zoom;
+    return `--w:${width.toFixed(1)}px;--h:${(width / l.ratio).toFixed(1)}px`;
+};
+
+const grids = LAYOUTS.map((layout) => {
+    const cells = layout.columns.length * ROWS;
+    const n = LOGOS.length / cells;
+    // Consecutive chunks of the sorted logos; the first third of them
+    // are marks, the next lockups, the last wordmarks.
+    const chunks = Array.from({ length: cells }, (_, c) => byShape.slice(c * n, c * n + n));
+    const perShape = cells / SHAPES.length;
+    const next = SHAPES.map((_, s) => s * perShape);
+    const positions = Array.from({ length: cells }, (_, p) => {
+        const col = p % layout.columns.length;
+        const row = Math.floor(p / layout.columns.length);
+        const shape = layout.columns[col];
+        return { col, row, shape: SHAPES[shape], logos: chunks[next[shape]++] };
+    });
+    return { ...layout, n, positions };
+});
+---
+
+<div class="container-xl trusted-by">
+    <h2 class="trusted-by-label">The gallery behind the world's biggest brands.</h2>
+    {
+        grids.map((grid) => (
+            <div
+                class={`trusted-by-grid trusted-by-grid-${grid.size} trusted-by-n-${grid.n}`}
+                style={`--cols:${grid.columns.length};--n:${grid.n};--slot:${SLOT}s`}
+            >
+                {grid.positions.map((cell) => (
+                    <span
+                        class={`trusted-by-cell trusted-by-${cell.shape}`}
+                        style={`--d:${delay(cell.col, cell.row)}s`}
+                    >
+                        {cell.logos.map((l, i) => (
+                            <span class="trusted-by-slot" style={`--i:${i};${box(l)}`}>
+                                <CustomerLogo logo={l} />
+                            </span>
+                        ))}
+                    </span>
+                ))}
+            </div>
+        ))
+    }
+</div>

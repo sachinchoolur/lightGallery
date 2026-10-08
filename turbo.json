@@ -1,0 +1,55 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
+    "build:all:vite": { "cache": true, "outputs": ["$TURBO_ROOT$/dist/**"] },
+    "build:legacy": { "cache": true, "outputs": ["dist/**"] },
+    "build:vite": {
+      "cache": true,
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/src/**",
+        "$TURBO_ROOT$/.banner",
+        "$TURBO_ROOT$/plugins-config-rollup.json"
+      ],
+      "outputs": ["$TURBO_ROOT$/dist/**"]
+    },
+    "build:types": {
+      "cache": true,
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/src/**",
+        "$TURBO_ROOT$/packages/headless/src/**",
+        "$TURBO_ROOT$/scripts/inline-headless-types.mjs"
+      ],
+      "outputs": ["$TURBO_ROOT$/dist/types/**"]
+    },
+    "build:css": { "cache": true, "outputs": ["$TURBO_ROOT$/dist/css/**"] },
+    "build:css:min": {
+      "dependsOn": ["build:css"],
+      "cache": true,
+      "outputs": ["$TURBO_ROOT$/dist/css/lightgallery-bundle.min.css"]
+    },
+    "copy:assets": {
+      "cache": true,
+      "outputs": [
+        "$TURBO_ROOT$/dist/fonts/**",
+        "$TURBO_ROOT$/dist/images/**"
+      ]
+    },
+    "copy:scss": { "cache": true, "outputs": ["$TURBO_ROOT$/dist/scss/**"] },
+    "assemble:dist": {
+      "cache": true,
+      "outputs": [
+        "$TURBO_ROOT$/dist/package.json",
+        "$TURBO_ROOT$/dist/README.md",
+        "$TURBO_ROOT$/dist/LICENSE",
+        "$TURBO_ROOT$/dist/LICENSE-COMMERCIAL.md",
+        "$TURBO_ROOT$/dist/plugins/**/package.json"
+      ]
+    },
+    "lint": {},
+    "typecheck": {},
+    "test": { "dependsOn": ["build:vite"] }
+  }
+}

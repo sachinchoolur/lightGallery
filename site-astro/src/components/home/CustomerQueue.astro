@@ -1,0 +1,25 @@
+---
+/**
+ * The "Get started" queue: customer logos move up a line that ends at the
+ * visitor's own, still empty, slot.
+ */
+import CustomerLogo from '../CustomerLogo.astro';
+import { LOGOS } from '../../data/customer-logos';
+---
+
+<div class="home-cta-queue">
+    <div class="home-cta-queue-line">
+        <div class="home-cta-queue-track">
+            {
+                [...LOGOS, ...LOGOS].map((l, i) => (
+                    <span class="home-cta-pill">
+                        <CustomerLogo logo={l} decorative={i >= LOGOS.length} />
+                    </span>
+                ))
+            }
+        </div>
+    </div>
+    <span class="home-cta-you">
+        Your team<span class="home-cta-caret" aria-hidden="true"></span>
+    </span>
+</div>

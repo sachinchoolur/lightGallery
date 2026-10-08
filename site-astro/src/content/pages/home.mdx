@@ -1,0 +1,472 @@
+---
+title: 'lightGallery'
+description:
+    'An image and video lightbox gallery for the modern web.
+    Available natively for JavaScript, React, Vue and Angular.'
+lead:
+    'An image and video lightbox gallery for the modern web.
+    Available natively for JavaScript, React, Vue and Angular.'
+date: 2026-09-03T00:00:00+00:00
+draft: false
+images: []
+---
+
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
+import GalleryDemo from '../../components/shortcodes/GalleryDemo.astro';
+import { photos } from '../../lib/photos';
+import FeatureIcon from '../../components/home/FeatureIcon.astro';
+import FeatureGrid from '../../components/home/FeatureGrid.astro';
+import PluginSizes from '../../components/home/PluginSizes.astro';
+import TrustedBy from '../../components/home/TrustedBy.astro';
+import CustomerQueue from '../../components/home/CustomerQueue.astro';
+
+{/* Customization demos, in the order their galleries open: the listing's
+    whole set (five in the mosaic, the rest behind "+N photos"), the
+    backpack's four views, the portfolio grid. */}
+
+export const customizeHotel = photos('hotel');
+export const customizeShop = photos('shop');
+export const customizePortfolio = [0, 3, 4, 6, 7, 9, 10].map((i) => photos('street')[i]);
+
+<div class="container-fluid home-hero-gallery">
+    <div class="row justify-content-center clip-path-bg">
+        <div class="col-lg-10 text-center clip-path-bg-inner">
+            <GalleryDemo size="xl" id="animated-thumbnails-gallery" photos="hero,warm,alley" limit={24} justified phoneLimit={10} rowHeights={{ phone: 100, desktop: 190 }} />
+            <p class="open-gallery-text"> Click on any thumbnail to open lightGallery</p>
+        </div>
+    </div>
+</div>
+<TrustedBy />
+<div class="container-xl home-stack" id="stack">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <span class="label1 home-kicker">Frameworks</span>
+            <h2>Native, not <span class="serif-accent">wrapped</span></h2>
+            <p>Real components for React, Vue and Angular, and plain JavaScript, each written for its framework, with the same features in every one of them.</p>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+<CodeTabs label="Stack">
+<Fragment slot="vanilla">
+
+<p class="home-stack-desc">Plain JavaScript, no dependencies. Point it at your markup or an array of items, from npm or a CDN.</p>
+
+```bash
+npm install lightgallery
+```
+
+```js
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+import 'lightgallery/css/lightgallery-bundle.css';
+
+lightGallery(document.getElementById('gallery'), {
+    plugins: [lgZoom, lgThumbnail],
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+<p class="home-stack-desc">A real React component: props, children, refs and callbacks, all typed. Your state stays in React.</p>
+
+```bash
+npm install @lightgallery/react lightgallery
+```
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Zoom from '@lightgallery/react/plugins/zoom';
+
+<LightGallery plugins={[Zoom, Thumbnail]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+<p class="home-stack-desc"><code>v-model</code> for the open state, slots for captions and controls, <code>Teleport</code> for the overlay.</p>
+
+```bash
+npm install @lightgallery/vue lightgallery
+```
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+</script>
+
+<template>
+    <LightGallery :plugins="[Zoom, Thumbnail]">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+<p class="home-stack-desc">Standalone components, signals, zoneless change detection and a CDK overlay, nothing bolted on.</p>
+
+```bash
+npm install @lightgallery/angular @angular/cdk lightgallery
+```
+
+```html
+<lg-gallery [features]="[withZoom(), withThumbnail()]">
+    @for (item of items; track item.src) {
+        <a [lgGalleryItem]="item">
+            <img [src]="item.thumb" [alt]="item.alt" />
+        </a>
+    }
+</lg-gallery>
+```
+
+</Fragment>
+</CodeTabs>
+
+<p class="home-section-link home-stack-note">Building for something else? The gallery's core ships standalone, without a renderer, <a href="/docs/headless/">@lightgallery/headless</a>.</p>
+
+        </div>
+    </div>
+</div>
+<div class="container-xl home-v3-features" id="features">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <span class="label1 home-kicker">Features</span>
+            <h2>Everything a gallery <span class="serif-accent">needs</span></h2>
+            <p>Each of these has a page with a live demo and the settings behind it.</p>
+            <span class="home-feature-legend"><i class="home-new-dot" aria-hidden="true"></i>New in v3</span>
+        </div>
+    </div>
+    <FeatureGrid />
+</div>
+<div class="home-dark-band">
+    <div class="container-xl home-physics vertical-bg-inner" id="physics">
+        <div class="row justify-content-center home-section-header">
+            <div class="col-lg-7 text-center">
+                <span class="label1 home-kicker">Gestures and motion</span>
+                <h2>Physics, not transitions.</h2>
+                <p>Every release is a spring seeded with the user's velocity. Flings land where they should, edges push back, nothing snaps.</p>
+            </div>
+        </div>
+        <ul class="home-gesture-chips" aria-label="Gestures">
+            <li><strong>Swipe</strong> change slides, a quick flick advances even on a short swipe</li>
+            <li><strong>Pinch</strong> zoom, anchored between your fingertips; keep pinching past 1× to close</li>
+            <li><strong>Double-tap</strong> zoom in on that spot, again to go back</li>
+            <li><strong>Drag vertically</strong> to dismiss; let go early and it springs back</li>
+            <li><strong>Drag the strip</strong> to browse thumbnails, or scrub the gallery with it</li>
+            <li><strong>Mouse</strong> drag to swipe, drag to pan, drag the strip, nothing is touch-only</li>
+        </ul>
+        <div class="home-physics-grid">
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-velocity" aria-hidden="true"><span class="physics-dot"></span></div>
+                <h3>Velocity carries over</h3>
+                <p>The last 100&nbsp;ms of your gesture seed the release spring. Motion continues from the speed you let go at, it never restarts from zero.</p>
+            </div>
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-momentum" aria-hidden="true"><span class="physics-dot"></span></div>
+                <h3>Momentum knows where it lands</h3>
+                <p>A fling projects its landing point with the same deceleration curve native scroll views use, then settles there.</p>
+            </div>
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-edge" aria-hidden="true"><span class="physics-bar"></span></div>
+                <h3>Edges push back</h3>
+                <p>Slides, the thumbnail strip and zoom panning resist at the boundary with friction instead of stopping dead, and return with a single soft bounce.</p>
+            </div>
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-pinch" aria-hidden="true"><span class="physics-ring"></span><span class="physics-dot"></span></div>
+                <h3>Zoom stays under your fingers</h3>
+                <p>Pinch anchors to the point between your fingertips, pan included, so what you zoom into is what you look at.</p>
+            </div>
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-interrupt" aria-hidden="true"><span class="physics-dot"></span></div>
+                <h3>Interruptible everywhere</h3>
+                <p>Catch a slide mid-spring and it hands you its live position and velocity; the next release starts a new spring from exactly there.</p>
+            </div>
+            <div class="home-physics-card">
+                <div class="physics-anim physics-anim-parity" aria-hidden="true"><span class="physics-dot"></span><span class="physics-dot"></span><span class="physics-dot"></span><span class="physics-dot"></span></div>
+                <h3>Identical on every stack</h3>
+                <p>JavaScript, React, Vue and Angular share the same feel, not a port of it, so nothing is tuned differently in yours.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-xl home-customize-gallery" id="customize">
+    <div class="home-customize-layout">
+        <div class="home-customize-text">
+            <span class="label1 home-kicker">Customization</span>
+            <h2>Looks like your site, not like a <span class="serif-accent">plugin</span></h2>
+            <p class="home-customize-lead">Settings for behavior, SCSS variables for looks, your own icons, and a plugin API for everything else. The core stays untouched.</p>
+            <div class="home-customize-points">
+                <div class="home-customize-point">
+                    <span class="home-customize-point-icon"><img src="/images/icons/options.svg" alt="" /></span>
+                    <div>
+                        <h3>150+ settings</h3>
+                        <p>Core and per-plugin options, with a separate set for mobile, every one documented in the generated reference</p>
+                    </div>
+                </div>
+                <div class="home-customize-point">
+                    <span class="home-customize-point-icon"><img src="/images/icons/variables.svg" alt="" /></span>
+                    <div>
+                        <h3>SCSS variables</h3>
+                        <p>Colors, spacing and transitions are variables, retheme the gallery from one file</p>
+                    </div>
+                </div>
+                <div class="home-customize-point">
+                    <span class="home-customize-point-icon"><img src="/images/icons/plugins.svg" alt="" /></span>
+                    <div>
+                        <h3>Plugin API</h3>
+                        <p>Thumbnails, zoom, video and the rest are plugins built on the same API you get, add your own</p>
+                    </div>
+                </div>
+                <div class="home-customize-point">
+                    <span class="home-customize-point-icon"><img src="/images/icons/html-markup.svg" alt="" /></span>
+                    <div>
+                        <h3>Custom icons</h3>
+                        <p>Every control icon is an inline SVG you can replace by name, bring your own set, no CSS required</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="home-customize-stage">
+            <div class="home-customize-demos">
+                <input type="radio" class="home-customize-in-1" name="home-customize-demo" id="home-customize-hotel" checked />
+                <input type="radio" class="home-customize-in-2" name="home-customize-demo" id="home-customize-shop" />
+                <input type="radio" class="home-customize-in-3" name="home-customize-demo" id="home-customize-portfolio" />
+                <div class="home-customize-tabs">
+                    <label for="home-customize-hotel">Hotel</label>
+                    <label for="home-customize-shop">E-commerce</label>
+                    <label for="home-customize-portfolio">Portfolio</label>
+                </div>
+                <div class="home-customize-stack">
+                    <div class="home-customize-scene" data-customize-demo="hotel">
+                        <div class="home-customize-page home-customize-hotel">
+                            <div class="home-customize-hotel-head">
+                                <div>
+                                    <strong>Riad Dar Azul</strong>
+                                    <span>Marrakech · ★ 4.9 · Superhost</span>
+                                </div>
+                                <span class="home-customize-hotel-price">$128 <em>/ night</em></span>
+                            </div>
+                            <div class="home-customize-mosaic">
+                                {customizeHotel.map((p, i) => (
+                                    <a class={i === 4 ? 'gallery-item home-customize-more' : 'gallery-item'} href={p.src} data-src={p.src} data-thumb={p.thumbSmall} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title} hidden={i > 4}>
+                                        <img src={p.thumb} srcset={p.thumbSrcset} sizes="auto, 480px" alt={p.alt} loading="lazy" />
+                                        {i === 4 && <b>+{customizeHotel.length - 5} photos</b>}
+                                    </a>
+                                ))}
+                            </div>
+                            <div class="home-customize-lines" aria-hidden="true"><span style="--w: 70%"></span><span style="--w: 52%"></span></div>
+                        </div>
+                        <code class="home-customize-legend"><span>$lg-theme-color: <em>#fff</em>;</span> <span>$lg-icon-color: <em>#555</em>;</span> <span>$lg-theme-highlight: <em>#333</em>;</span></code>
+                    </div>
+                    <div class="home-customize-scene" data-customize-demo="shop">
+                        <div class="home-customize-page home-customize-shop">
+                            <div class="home-customize-shop-thumbs">
+                                {customizeShop.map((p, i) => (
+                                    <a class="gallery-item" href={p.src} data-src={p.src} data-thumb={p.thumbSmall} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title}>
+                                        <img class={i === 0 ? 'is-current' : undefined} src={p.thumbSmall} alt={p.alt} loading="lazy" />
+                                    </a>
+                                ))}
+                            </div>
+                            <a class="home-customize-shop-main" href={customizeShop[0].src} data-customize-open="0">
+                                <img src={customizeShop[0].thumb} srcset={customizeShop[0].thumbSrcset} sizes="auto, 480px" alt={customizeShop[0].alt} loading="lazy" />
+                                <span class="home-customize-shop-zoom"><FeatureIcon name="zoom" /></span>
+                            </a>
+                            <div class="home-customize-shop-info">
+                                <span class="home-customize-shop-kicker">Full-grain leather</span>
+                                <strong>Day Pack, Tan</strong>
+                                <span class="home-customize-shop-price">$168.00</span>
+                                <div class="home-customize-shop-sizes"><b class="is-current">Tan</b><b>Black</b><b>Oxblood</b></div>
+                                <span class="home-customize-shop-button">Add to cart</span>
+                                <div class="home-customize-lines" aria-hidden="true"><span style="--w: 90%"></span><span style="--w: 70%"></span></div>
+                            </div>
+                        </div>
+                        <code class="home-customize-legend"><span>plugins: [lgZoom, <em>buyNow</em>]</span> <span>icons: <em>boldIcons</em></span> <span>download: <em>false</em></span> <span>.lg-icon {'{'} border-radius: <em>50%</em> {'}'}</span></code>
+                    </div>
+                    <div class="home-customize-scene" data-customize-demo="portfolio">
+                        <div class="home-customize-page home-customize-portfolio">
+                            <div class="home-customize-portfolio-nav"><b>STUDIO NORTH</b><span>Work</span><span>About</span><span>Contact</span></div>
+                            <div class="home-customize-portfolio-grid">
+                                {customizePortfolio.map((p, i) => (
+                                    <a class={i === 1 || i === 4 ? 'gallery-item is-tall' : 'gallery-item'} href={p.src} data-src={p.src} data-thumb={p.thumbSmall} data-lg-size={p.size} data-responsive={p.responsive} data-sub-html={p.caption} data-pinterest-text={p.title} data-tweet-text={p.title}>
+                                        <img src={p.thumb} srcset={p.thumbSrcset} sizes="auto, 480px" alt={p.alt} loading="lazy" />
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                        <code class="home-customize-legend"><span>mode: <em>'lg-fade'</em></span> <span>icons: <em>tileIcons</em></span> <span>$lg-theme-color: <em>#2b2118</em>;</span></code>
+                    </div>
+                </div>
+            </div>
+            <p class="open-gallery-text home-customize-note">Click on any thumbnail to open lightGallery</p>
+        </div>
+    </div>
+</div>
+<div class="vertical-bg">
+    <div class="container-xl home-inline-gallery text-center vertical-bg-inner" id="inline">
+        <div class="row justify-content-center home-section-header home-inline-gallery-header">
+            <div class="col-lg-7">
+                <h2>Inline <span class="serif-accent">Gallery</span></h2>
+                <p>The same gallery, embedded in the page. One click on the maximize icon takes it fullscreen, same settings, same plugins.</p>
+            </div>
+        </div>
+        <div id="home-inline-gallery" class="home-inline-embed"></div>
+    </div>
+</div>
+<div class="container-xl home-modular home-split" id="modular">
+    <div class="row home-split-row">
+        <div class="col-lg-4 home-section-header home-section-header-left">
+            <span class="label1 home-kicker">Bundle size</span>
+            <h2>Modular by <span class="serif-accent">design</span></h2>
+            <p>Every feature outside the core is a plugin with its own entry point. Import the two you use and the rest never reach your bundle. Sizes are from this site's build, minified and gzipped.</p>
+        </div>
+        <div class="col-lg-8">
+            <PluginSizes />
+            <figure class="home-code-card">
+                <div class="home-code-card-inner">
+                    <button type="button" class="home-code-copy" data-home-copy aria-label="Copy code">Copy</button>
+
+```js
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+
+// Two plugins, two imports, nothing else ships.
+lightGallery(el, { plugins: [lgZoom, lgThumbnail] });
+```
+
+                </div>
+                <figcaption class="home-code-card-caption">Two plugins, two imports. Everything else stays out of the bundle.</figcaption>
+            </figure>
+        </div>
+    </div>
+</div>
+<div class="container-xl home-everyone" id="everyone">
+    <div class="row justify-content-center home-section-header">
+        <div class="col-lg-7 text-center">
+            <span class="label1 home-kicker">Mobile and accessibility</span>
+            <h2>Optimized for <span class="serif-accent">everyone</span></h2>
+            <p>Most gallery views happen on a phone, and some happen without a mouse or a screen. The defaults assume both.</p>
+        </div>
+    </div>
+    <div class="home-everyone-cols">
+        <div class="home-everyone-col">
+            <div class="home-everyone-phone-panel" aria-hidden="true">
+                <div class="home-everyone-phone">
+                    <span class="home-everyone-phone-button is-action"></span>
+                    <span class="home-everyone-phone-button is-volume-up"></span>
+                    <span class="home-everyone-phone-button is-volume-down"></span>
+                    <span class="home-everyone-phone-button is-side"></span>
+                    <div class="home-everyone-screen">
+                        <img class="home-everyone-photo" src={photos('street')[8].thumb} srcset={photos('street')[8].thumbSrcset} sizes="auto, 480px" alt="" loading="lazy" />
+                        <div class="home-everyone-status">
+                            <span class="home-everyone-time">9:41</span>
+                            <span class="home-everyone-island"></span>
+                            <span class="home-everyone-status-icons">
+                                <svg viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.8" /><rect x="4.6" y="5" width="3" height="6" rx="0.8" /><rect x="9.2" y="2.6" width="3" height="8.4" rx="0.8" /><rect x="13.8" y="0" width="3" height="11" rx="0.8" /></svg>
+                                <svg viewBox="0 0 15 11" fill="currentColor"><path d="M7.5 2.1a8 8 0 0 1 5.6 2.3l1.3-1.3A9.8 9.8 0 0 0 7.5.3 9.8 9.8 0 0 0 .6 3.1l1.3 1.3a8 8 0 0 1 5.6-2.3zm0 3.2a4.9 4.9 0 0 1 3.4 1.4l1.3-1.3a6.7 6.7 0 0 0-9.4 0l1.3 1.3a4.9 4.9 0 0 1 3.4-1.4zm0 3.1c.5 0 1 .2 1.3.5L7.5 10.2 6.2 8.9c.3-.3.8-.5 1.3-.5z" /></svg>
+                                <svg viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="3.3" fill="none" stroke="currentColor" stroke-opacity="0.45" /><rect x="2" y="2" width="19" height="8" rx="2" fill="currentColor" /><path d="M24 4.2v3.6c.8-.3 1.4-1 1.4-1.8s-.6-1.5-1.4-1.8z" fill="currentColor" fill-opacity="0.45" /></svg>
+                            </span>
+                        </div>
+                        <div class="home-everyone-viewer-bar">
+                            <span class="home-everyone-glass"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.6 3.4L5 8l4.6 4.6" /></svg></span>
+                            <span class="home-everyone-title">3 of 24</span>
+                            <span class="home-everyone-glass"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.8v8.4M5.2 4.4L8 1.6l2.8 2.8" /><path d="M5.6 6.6H4.4a1 1 0 0 0-1 1v5.6a1 1 0 0 0 1 1h7.2a1 1 0 0 0 1-1V7.6a1 1 0 0 0-1-1h-1.2" /></svg></span>
+                        </div>
+                        <div class="home-everyone-filmstrip">{photos('street').slice(4, 13).map((p, i) => <img class={i === 4 ? 'is-current' : undefined} src={p.thumbSmall} alt="" loading="lazy" />)}</div>
+                        <span class="home-everyone-home-bar"></span>
+                    </div>
+                </div>
+                <span class="home-everyone-tag">controls off · close on · download off</span>
+            </div>
+            <div class="home-everyone-body">
+            <h3>On a phone</h3>
+            <ul class="home-checklist">
+                <li><strong>Separate mobile settings.</strong> A second settings object applies on small screens, so the toolbar can be lean where space is tight.</li>
+                <li><strong>CSS does the sizing.</strong> Images and videos fit by stylesheet rules, not per-slide measurement, so rotation and resize cost nothing.</li>
+                <li><strong>Phone-sized files.</strong> Responsive image ladders and <code>srcset</code> mean a phone never downloads the desktop original.</li>
+                <li><strong>Video on a budget.</strong> Facades keep cellular data for the videos people actually press play on.</li>
+                <li><strong>The native share sheet</strong> where the browser has one, social links where it doesn't.</li>
+            </ul>
+            </div>
+        </div>
+        <div class="home-everyone-col">
+            <div class="home-everyone-keys is-dark">
+                <div class="home-everyone-board" aria-hidden="true">
+                    <div class="home-everyone-keyrow"><kbd class="is-live" data-key="esc">Esc</kbd><kbd>F1</kbd><kbd>F2</kbd><kbd>F3</kbd><kbd class="is-extra">F4</kbd><kbd class="is-extra">F5</kbd><kbd class="is-extra">F6</kbd></div>
+                    <div class="home-everyone-keyrow"><kbd class="is-live is-wide" data-key="tab">Tab ⇥</kbd><kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd class="is-extra">R</kbd><kbd class="is-extra">T</kbd></div>
+                    <div class="home-everyone-keyrow is-arrows"><kbd class="is-live" data-key="lr">←</kbd><kbd class="is-live" data-key="ud">↑</kbd><kbd class="is-live" data-key="ud">↓</kbd><kbd class="is-live" data-key="lr">→</kbd></div>
+                </div>
+                <dl class="home-everyone-legend">
+                    <div data-key="esc"><dt><kbd>Esc</kbd></dt><dd>Close the gallery</dd></div>
+                    <div data-key="lr"><dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>Previous and next slide, following the reading direction on RTL pages</dd></div>
+                    <div data-key="ud"><dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Show and hide the thumbnail strip when toggling is enabled</dd></div>
+                    <div data-key="tab"><dt><kbd>Tab</kbd></dt><dd>Cycles through the gallery's controls and never escapes to the page behind</dd></div>
+                </dl>
+                <p class="home-everyone-hint" aria-hidden="true">Hover a key</p>
+            </div>
+            <div class="home-everyone-body">
+            <h3>With a keyboard or a screen reader</h3>
+            <ul class="home-checklist">
+                <li><strong>A dialog, not a div.</strong> Focus moves into the gallery on open and returns to the trigger that opened it on close.</li>
+                <li><strong>Every slide is announced</strong> once, through a polite live region, from a template string you can localize.</li>
+                <li><strong>Labelled controls.</strong> Every button carries a label from the strings settings, translate them and the labels follow.</li>
+                <li><strong>Reduced motion</strong> is honored for transitions and the opening animation.</li>
+            </ul>
+            <p class="home-section-link"><a href="/docs/accessibility/">The full accessibility contract →</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-xl home-faq home-split" id="faq">
+    <div class="row home-split-row">
+        <div class="col-lg-4 home-section-header home-section-header-left">
+            <span class="label1 home-kicker">FAQ</span>
+            <h2>Questions people ask <span class="serif-accent">first</span></h2>
+        </div>
+        <div class="col-lg-8">
+            <details class="home-faq-item"><summary>Is it free?</summary><p>Yes. lightGallery is free and open source under the GPLv3, for personal and commercial projects alike, as long as your project is distributed under GPLv3-compatible terms. If you keep your source proprietary, a <a href="/license/">commercial license</a> covers it: same code, no feature gates, one-time payment.</p></details>
+            <details class="home-faq-item"><summary>Does it need jQuery?</summary><p>No. lightGallery has no dependencies. The only jQuery on this site is for the two demos that integrate third-party jQuery carousels.</p></details>
+            <details class="home-faq-item"><summary>Which frameworks are supported?</summary><p>Plain JavaScript and TypeScript, plus native packages for React, Vue and Angular, the same features in all of them. For anything else, the gallery's core is available on its own as <code>@lightgallery/headless</code>.</p></details>
+            <details class="home-faq-item"><summary>Which browsers?</summary><p>Current evergreen browsers and iOS Safari. There are no polyfills and no legacy builds.</p></details>
+            <details class="home-faq-item"><summary>I'm on version 2. What changes?</summary><p>Version 3 is a complete rewrite with smoother touch gestures, faster loading, accessibility and new features like justified layouts, while the vanilla API stays unchanged. The framework wrappers are replaced by native packages and the icon font is gone. The <a href="/blog/lightgallery-v3/">release post</a> has what's new, and the <a href="/docs/migration/">migration guide</a> lists every step.</p></details>
+            <details class="home-faq-item"><summary>Are TypeScript types included?</summary><p>Yes, every package ships its own types; settings, events and plugin options are fully typed.</p></details>
+        </div>
+    </div>
+</div>
+<div class="container-xl home-cta" id="start">
+    <div class="home-cta-head">
+        <span class="label1 home-kicker">Get started</span>
+        <h2>Start with your <span class="serif-accent">stack</span></h2>
+        <p class="home-cta-lede">In production at thousands of teams since 2014, from solo developers to the world's biggest brands. Live in minutes.</p>
+    </div>
+    <CustomerQueue />
+    <div class="home-cta-actions">
+        <a href="/docs/getting-started/" class="home-cta-tile is-current" data-framework="vanilla"><span class="home-cta-logo home-cta-logo-vanilla" aria-hidden="true"></span><strong>JavaScript</strong><span class="home-cta-tile-cta">Get started →</span></a>
+        <a href="/docs/react/" class="home-cta-tile" data-framework="react"><span class="home-cta-logo home-cta-logo-react" aria-hidden="true"></span><strong>React</strong><span class="home-cta-tile-cta">Get started →</span></a>
+        <a href="/docs/vue/" class="home-cta-tile" data-framework="vue"><span class="home-cta-logo home-cta-logo-vue" aria-hidden="true"></span><strong>Vue</strong><span class="home-cta-tile-cta">Get started →</span></a>
+        <a href="/docs/angular/" class="home-cta-tile" data-framework="angular"><span class="home-cta-logo home-cta-logo-angular" aria-hidden="true"></span><strong>Angular</strong><span class="home-cta-tile-cta">Get started →</span></a>
+    </div>
+    <p class="home-cta-secondary">or <a href="/demos/">browse the demos</a> first.</p>
+</div>
+
+
+
+
+
+

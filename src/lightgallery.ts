@@ -1,4 +1,25 @@
 import {
+    takeLicenseNotice,
+    awaitDecode,
+    formatSlideAnnouncement,
+    getCenterCloseTransform,
+    getEdgeFrictionedDelta,
+    getFacadePoster,
+    getYouTubePosterUrl,
+    getHorizontalDragTransforms,
+    getSwipeAxis,
+    getSwipeReleaseVerdict,
+    getVerticalDragEffects,
+    getWindowedVelocity,
+    onTransitionSettle,
+    pushVelocitySample,
+    resolveSwipeTarget,
+    shouldCloseOnVerticalDrag,
+    type VelocitySample,
+    coreDefaultIcons,
+} from '@lightgallery/headless';
+
+import {
     AfterAppendSlideEventDetail,
     AfterAppendSubHtmlDetail,
     BeforeSlideDetail,
@@ -10,6 +31,9 @@ import {
     lightGalleryCoreSettings,
     LightGallerySettings,
 } from './lg-settings';
+import { ToolbarOverflow } from './lg-toolbar-overflow';
+import { applyCustomIcons, LgIcons } from './lg-icons';
+import { runSprings } from './lg-spring-runner';
 import utils, { GalleryItem, ImageSize } from './lg-utils';
 import { $LG, lgQuery } from './lgQuery';
 import {
@@ -18,8 +42,6 @@ import {
     SlideDirection,
     VideoInfo,
 } from './types';
-
-declare let picturefill: any;
 
 // @ref - https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
 // @ref - https://2ality.com/2017/04/setting-up-multi-platform-packages.html
@@ -48,12 +70,22 @@ export class LightGallery {
 
     // True when a slide animation is in progress
     public lgBusy = false;
+    // Built-in icon SVGs: core defaults + whatever the instantiated
+    // plugins register; `settings.icons` overrides per name at apply.
+    private defaultIcons: LgIcons = { ...coreDefaultIcons };
+    private toolbarOverflow?: ToolbarOverflow;
 
     // Type of touch action - {swipe, zoomSwipe, pinch}
     public touchAction?: 'swipe' | 'zoomSwipe' | 'pinch';
 
     // Direction of swipe/drag - {horizontal, vertical}
     public swipeDirection?: 'horizontal' | 'vertical';
+
+    // Rolling gesture samples, for the windowed release velocity
+    private swipeSamples: VelocitySample[] = [];
+
+    // Cancels a running release spring (slide snap-back / drag restore)
+    private cancelSlideSpring?: () => void;
 
     // Timeout function for hiding controls;
     public hideBarTimeout: any;
@@ -76,11 +108,16 @@ export class LightGallery {
     // Scroll top value before lightGallery is opened
     public prevScrollTop = 0;
 
+    // Element that held focus before the gallery opened; focus is returned
+    // to it after close (dialog pattern; captured only when trapFocus runs).
+    private prevActiveElement?: HTMLElement;
+
     public bodyPaddingRight = 0;
 
     private zoomFromOrigin!: boolean;
 
-    private currentImageSize?: ImageSize;
+    // Read by the zoom plugin (upstream 2.x exposes it the same way).
+    public currentImageSize?: ImageSize;
 
     private isDummyImageRemoved = false;
 
@@ -131,6 +168,11 @@ export class LightGallery {
         this.settings = {
             ...lightGalleryCoreSettings,
             ...options,
+            // Strings merge per-key (headless resolveSettings parity), // a partial override keeps every other default.
+            strings: {
+                ...lightGalleryCoreSettings.strings,
+                ...(options?.strings ?? {}),
+            },
         } as LightGalleryAllSettings;
         if (
             this.settings.isMobile &&
@@ -143,9 +185,36 @@ export class LightGallery {
             };
             this.settings = { ...this.settings, ...mobileSettings };
         }
+
+        // prefers-reduced-motion collapses every animation to 0ms and
+        // disables the zoom-from-origin/bounce effects (a11y; checked once
+        // per instance, matching the React/Vue/Angular bindings).
+        if (
+            typeof window !== 'undefined' &&
+            typeof window.matchMedia === 'function' &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
+            this.settings = {
+                ...this.settings,
+                speed: 0,
+                backdropDuration: 0,
+                startAnimationDuration: 0,
+                zoomFromOrigin: false,
+                slideEndAnimation: false,
+            };
+        }
     }
 
     private normalizeSettings() {
+        // Resolve direction 'auto' against the gallery element once, // every direction-aware call site reads the resolved value.
+        if (this.settings.direction === 'auto') {
+            this.settings.direction =
+                typeof window !== 'undefined' &&
+                typeof window.getComputedStyle === 'function' &&
+                window.getComputedStyle(this.el).direction === 'rtl'
+                    ? 'rtl'
+                    : 'ltr';
+        }
         if (this.settings.slideEndAnimation) {
             this.settings.hideControlOnEnd = false;
         }
@@ -154,13 +223,9 @@ export class LightGallery {
         }
 
         // And reset it on close to get the correct value next time
+        // A dynamic gallery flies too, from the element passed to
+        // openGallery, when that element or the item carries the media size.
         this.zoomFromOrigin = this.settings.zoomFromOrigin;
-
-        // At the moment, Zoom from image doesn't support dynamic options
-        // @todo add zoomFromOrigin support for dynamic images
-        if (this.settings.dynamic) {
-            this.zoomFromOrigin = false;
-        }
 
         if (this.settings.container) {
             const { container } = this.settings;
@@ -241,13 +306,8 @@ export class LightGallery {
     }
 
     validateLicense(): void {
-        if (!this.settings.licenseKey) {
-            console.error('Please provide a valid license key');
-        } else if (this.settings.licenseKey === '0000-0000-000-0000') {
-            console.warn(
-                `lightGallery: ${this.settings.licenseKey} license key is not valid for production use`,
-            );
-        }
+        const notice = takeLicenseNotice(this.settings.licenseKey);
+        if (notice) console[notice.level](notice.message);
     }
 
     getSlideItem(index: number): lgQuery {
@@ -296,8 +356,11 @@ export class LightGallery {
         }
 
         if (this.settings.appendSubHtmlTo !== '.lg-item') {
-            subHtmlCont =
-                '<div class="lg-sub-html" role="status" aria-live="polite"></div>';
+            // When the announcer owns slide-change announcements the caption
+            // bar must not be a second live region (double announcements).
+            subHtmlCont = this.settings.ariaAnnouncements
+                ? '<div class="lg-sub-html"></div>'
+                : '<div class="lg-sub-html" role="status" aria-live="polite"></div>';
         }
 
         let addClasses = '';
@@ -307,9 +370,11 @@ export class LightGallery {
             addClasses += 'lg-media-overlap ';
         }
 
+        // Dialogs need an accessible name; fall back to a localizable
+        // aria-label when the consumer doesn't provide ariaLabelledby.
         const ariaLabelledby = this.settings.ariaLabelledby
             ? 'aria-labelledby="' + this.settings.ariaLabelledby + '"'
-            : '';
+            : `aria-label="${this.settings.strings['galleryLabel']}"`;
         const ariaDescribedby = this.settings.ariaDescribedby
             ? 'aria-describedby="' + this.settings.ariaDescribedby + '"'
             : '';
@@ -335,11 +400,18 @@ export class LightGallery {
         const template = `
         <div class="${containerClassName}" id="${this.getIdName(
             'lg-container',
-        )}" tabindex="-1" aria-modal="true" ${ariaLabelledby} ${ariaDescribedby} role="dialog"
+        )}" tabindex="-1" aria-modal="true" ${ariaLabelledby} ${ariaDescribedby} role="dialog" dir="${this.getDirection()}"
         >
             <div id="${this.getIdName(
                 'lg-backdrop',
             )}" class="lg-backdrop"></div>
+            ${
+                this.settings.ariaAnnouncements
+                    ? `<div id="${this.getIdName(
+                          'lg-announcer',
+                      )}" class="lg-announcer" role="status" aria-live="polite"></div>`
+                    : ''
+            }
 
             <div id="${this.getIdName(
                 'lg-outer',
@@ -405,6 +477,10 @@ export class LightGallery {
 
         this.$inner.css('transition-timing-function', this.settings.easing);
         this.$inner.css('transition-duration', this.settings.speed + 'ms');
+        // Slides read the speed per property: the transform runs for the
+        // full duration while the crossfade stays short (see the mode
+        // transitions in the stylesheet).
+        this.$inner.css('--lg-speed', this.settings.speed + 'ms');
 
         if (this.settings.download) {
             this.$toolbar.append(
@@ -431,6 +507,62 @@ export class LightGallery {
         this.toggleMaximize();
 
         this.initModules();
+
+        // After the plugins have appended their buttons, and before the
+        // icon pass, so the More options button gets its icon too.
+        if (this.settings.toolbarOverflow) {
+            this.toolbarOverflow = new ToolbarOverflow(this.$toolbar.get(), {
+                id: this.getIdName('lg-more'),
+                label: this.settings.strings.moreOptions,
+            });
+            const update = () => this.toolbarOverflow?.update();
+            this.LGel.on(`${lGEvents.afterOpen}.lg`, update);
+            this.LGel.on(`${lGEvents.afterSlide}.lg`, update);
+            this.LGel.on(`${lGEvents.containerResize}.lg`, update);
+            this.LGel.on(`${lGEvents.beforeClose}.lg`, () =>
+                this.toolbarOverflow?.close(false),
+            );
+        }
+
+        // Icons: one pass after the plugins have appended their buttons
+        // and registered their default sets, every icon element exists
+        // by now. `settings.icons` overrides per name; pairs fall back
+        // whole (see lg-icons.ts).
+        applyCustomIcons(
+            this.$container.get(),
+            this.defaultIcons,
+            this.settings.icons,
+        );
+    }
+
+    /**
+     * Merge a plugin's built-in icon SVGs into the default set (called
+     * from plugin `init()`, before the icon pass runs). Consumer
+     * `settings.icons` still win over anything registered here.
+     */
+    registerDefaultIcons(icons: LgIcons): void {
+        this.defaultIcons = { ...this.defaultIcons, ...icons };
+    }
+
+    /**
+     * Cache the fitted (contain) size of a slide's media. Every consumer
+     * of `currentImageSize` measures against the CURRENT slide: the
+     * actual-size zoom divides the natural width by it, and the
+     * zoom-from-origin close flight positions against it. Recomputed on
+     * every slide change, not just at open — one cached landscape size
+     * makes a portrait slide zoom to the wrong scale and then snap to
+     * its real size when the natural-px swap lands.
+     */
+    private updateCurrentImageSize(index: number): void {
+        const { __slideVideoInfo, lgSize } = this.galleryItems[index];
+        const { top, bottom } = this.mediaContainerPosition;
+        this.currentImageSize = utils.getSize(
+            this.items[index],
+            this.outer,
+            top + bottom,
+            __slideVideoInfo && this.settings.videoMaxSize,
+            lgSize,
+        );
     }
 
     refreshOnResize(): void {
@@ -439,13 +571,7 @@ export class LightGallery {
             const { __slideVideoInfo } = currentGalleryItem;
 
             this.mediaContainerPosition = this.getMediaContainerPosition();
-            const { top, bottom } = this.mediaContainerPosition;
-            this.currentImageSize = utils.getSize(
-                this.items[this.index],
-                this.outer,
-                top + bottom,
-                __slideVideoInfo && this.settings.videoMaxSize,
-            );
+            this.updateCurrentImageSize(this.index);
             if (__slideVideoInfo) {
                 this.resizeVideoSlide(this.index, this.currentImageSize);
             }
@@ -472,9 +598,9 @@ export class LightGallery {
      * Modify the current gallery items and pass it via updateSlides method
      * @note
      * - Do not mutate existing lightGallery items directly.
-     * - Always pass new list of gallery items
+     * - Always pass a new list of gallery items
      * - You need to take care of thumbnails outside the gallery if any
-     * - user this method only if you want to update slides when the gallery is opened. Otherwise, use `refresh()` method.
+     * - use this method only if you want to update slides when the gallery is opened. Otherwise, use `refresh()` method.
      * @param items Gallery items
      * @param index After the update operation, which slide gallery should navigate to
      * @category lGPublicMethods
@@ -502,10 +628,10 @@ export class LightGallery {
      *
      * // Remove slides dynamically
      * galleryItems = JSON.parse(
-     *   JSON.stringify(updateSlideInstance.galleryItems),
+     *   JSON.stringify(plugin.galleryItems),
      * );
      * galleryItems.shift();
-     * updateSlideInstance.updateSlides(galleryItems, 1);
+     * plugin.updateSlides(galleryItems, 1);
      * @see <a href="/demos/update-slides/">Demo</a>
      */
     updateSlides(items: GalleryItem[], index: number): void {
@@ -668,21 +794,16 @@ export class LightGallery {
         if (!this.settings.allowMediaOverlap) {
             this.setMediaContainerPosition(top, bottom);
         }
-        const { __slideVideoInfo } = this.galleryItems[index];
+        const { __slideVideoInfo, lgSize } = this.galleryItems[index];
         if (this.zoomFromOrigin && element) {
             this.currentImageSize = utils.getSize(
                 element,
                 this.outer,
                 top + bottom,
                 __slideVideoInfo && this.settings.videoMaxSize,
+                lgSize,
             );
-            transform = utils.getTransform(
-                element,
-                this.outer,
-                top,
-                bottom,
-                this.currentImageSize,
-            );
+            transform = this.getOriginTransform(element, this.currentImageSize);
         }
         if (!this.zoomFromOrigin || !transform) {
             this.outer.addClass(this.settings.startClass);
@@ -703,6 +824,19 @@ export class LightGallery {
         this.lGalleryOn = false;
         // Store the current scroll top value to scroll back after closing the gallery..
         this.prevScrollTop = $LG(window).scrollTop();
+
+        // Remember where focus came from so it can be returned on close
+        // (dialog pattern). Captured under the same condition that moves
+        // focus into the gallery, never touched otherwise.
+        if (
+            this.settings.trapFocus &&
+            document.body === this.settings.container
+        ) {
+            this.prevActiveElement =
+                document.activeElement instanceof HTMLElement
+                    ? document.activeElement
+                    : undefined;
+        }
 
         setTimeout(() => {
             // Need to check both zoomFromOrigin and transform values as we need to set set the
@@ -758,10 +892,25 @@ export class LightGallery {
     }
 
     /**
+     * The zoom-from-origin transform for a trigger: it lands the slide on
+     * the trigger's thumbnail, the start of the opening flight and the end
+     * of the closing one. Undefined when the trigger cannot anchor a flight,
+     * and the gallery opens or closes about the stage centre instead.
+     * Plugins may replace it on the instance to fly differently.
+     */
+    public getOriginTransform(
+        element: HTMLElement,
+        imageSize?: ImageSize,
+    ): string | undefined {
+        const { top, bottom } = this.mediaContainerPosition;
+        return utils.getTransform(element, this.outer, top, bottom, imageSize);
+    }
+
+    /**
      * Note - Changing the position of the media on every slide transition creates a flickering effect.
-     * Therefore, The height of the caption is calculated dynamically, only once based on the first slide caption.
+     * Therefore, the height of the caption is calculated dynamically, only once based on the first slide caption.
      * if you have dynamic captions for each media,
-     * you can provide an appropriate height for the captions via allowMediaOverlap option
+     * you can provide an appropriate height for the captions via defaultCaptionHeight option
      */
     public getMediaContainerPosition(): MediaContainerPosition {
         if (this.settings.allowMediaOverlap) {
@@ -809,27 +958,18 @@ export class LightGallery {
         }, this.settings.showBarsAfter);
     }
 
-    initPictureFill($img: lgQuery): void {
-        if (this.settings.supportLegacyBrowser) {
-            try {
-                picturefill({
-                    elements: [$img.get()],
-                });
-            } catch (e) {
-                console.warn(
-                    'lightGallery :- If you want srcset or picture tag to be supported for older browser please include picturefil javascript library in your document.',
-                );
-            }
-        }
-    }
-
     /**
      *  @desc Create image counter
      *  Ex: 1/10
      */
     counter(): void {
         if (this.settings.counter) {
-            const counterHtml = `<div class="lg-counter" role="status" aria-live="polite">
+            // With the announcer active the counter is decorative, the
+            // announcer already conveys the position in a friendlier form.
+            const counterA11yAttrs = this.settings.ariaAnnouncements
+                ? 'aria-hidden="true"'
+                : 'role="status" aria-live="polite"';
+            const counterHtml = `<div class="lg-counter" ${counterA11yAttrs}>
                 <span id="${this.getIdName(
                     'lg-counter-current',
                 )}" class="lg-counter-current">${this.index + 1} </span> /
@@ -876,7 +1016,7 @@ export class LightGallery {
                         }
                     } catch (error) {
                         console.warn(
-                            `Error processing subHtml selector "${subHtml}"`,
+                            `lightGallery: error processing subHtml selector "${subHtml}". See https://www.lightgalleryjs.com/demos/captions/`,
                         );
                         subHtml = '';
                     }
@@ -1034,14 +1174,27 @@ export class LightGallery {
         onError: () => void,
     ): void {
         const mediaObject = $slide.find('.lg-object').first();
-        if (
-            utils.isImageLoaded(mediaObject.get() as HTMLImageElement) ||
-            isHTML5VideoWithoutPoster
-        ) {
-            onLoad();
+        const media = mediaObject.get() as HTMLImageElement;
+        // Decode gate (shared contract with the bindings): completion
+        // flips only once the browser can paint the FULL image, a
+        // loaded-but-undecoded flip paints partially on slow devices.
+        // Synchronous when `decode()` is unavailable; the timeout
+        // fallback keeps a stalling decode from stranding the spinner.
+        const gated = (handler: () => void) => {
+            if (
+                media instanceof HTMLImageElement &&
+                typeof media.decode === 'function'
+            ) {
+                void awaitDecode(media).then(handler);
+            } else {
+                handler();
+            }
+        };
+        if (utils.isImageLoaded(media) || isHTML5VideoWithoutPoster) {
+            gated(onLoad);
         } else {
             mediaObject.on('load.lg error.lg', () => {
-                onLoad && onLoad();
+                gated(() => onLoad && onLoad());
             });
             mediaObject.on('error.lg', () => {
                 onError && onError();
@@ -1131,13 +1284,28 @@ export class LightGallery {
                 !!element.video,
                 index,
             );
-            if (
-                element.__slideVideoInfo &&
+            const videoInfo = element.__slideVideoInfo;
+            if (!videoInfo) {
+                return;
+            }
+            if (this.settings.videoFacade !== false) {
+                // Lite-embed facade: provider slides get a poster (item
+                // poster → YouTube thumbnail endpoint → item thumb) so the
+                // iframe is created only on play. The headless chain never
+                // synthesizes a poster for html5 slides.
+                element.poster = getFacadePoster(
+                    element,
+                    videoInfo,
+                    this.settings.loadYouTubePoster,
+                );
+            } else if (
                 this.settings.loadYouTubePoster &&
                 !element.poster &&
-                element.__slideVideoInfo.youtube
+                videoInfo.youtube
             ) {
-                element.poster = `//img.youtube.com/vi/${element.__slideVideoInfo.youtube[1]}/maxresdefault.jpg`;
+                // videoFacade:false, 2.x behavior: only the YouTube
+                // poster is synthesized.
+                element.poster = getYouTubePosterUrl(videoInfo);
             }
         });
     }
@@ -1190,6 +1358,7 @@ export class LightGallery {
                     this.outer,
                     top + bottom,
                     videoInfo && this.settings.videoMaxSize,
+                    this.galleryItems[index].lgSize,
                 );
                 lgVideoStyle = this.getVideoContStyle(videoSize);
             }
@@ -1230,10 +1399,6 @@ export class LightGallery {
                 $currentSlide.prepend(markup);
             } else {
                 this.setImgMarkup(src as string, $currentSlide, index);
-                if (srcset || sources) {
-                    const $img = $currentSlide.find('.lg-object');
-                    this.initPictureFill($img);
-                }
             }
             if (poster || videoInfo) {
                 this.LGel.trigger(lGEvents.hasVideo, {
@@ -1268,13 +1433,26 @@ export class LightGallery {
 
         // Only for first slide and zoomFromOrigin is enabled
         if (this.isFirstSlideWithZoomAnimation()) {
-            setTimeout(() => {
+            // The real image lands only once the zoom-from-origin flight
+            // has actually ended. The flight's transition starts at the
+            // first style recalc after the transform reset, which the
+            // gallery's own first layout can push well past the fixed
+            // offset, and a fast (cached) image appended on that offset then
+            // swaps in over the still-scaling thumbnail.
+            const settleFlight = (onLanded: () => void) =>
+                onTransitionSettle(
+                    $currentSlide.get(),
+                    'transform',
+                    this.settings.startAnimationDuration + 100,
+                    onLanded,
+                );
+            settleFlight(() => {
                 $currentSlide
                     .removeClass('lg-start-end-progress lg-start-progress')
                     .removeAttr('style');
-            }, this.settings.startAnimationDuration + 100);
+            });
             if (!$currentSlide.hasClass('lg-loaded')) {
-                setTimeout(() => {
+                settleFlight(() => {
                     if (this.getSlideType(currentGalleryItem) === 'image') {
                         const { alt } = currentGalleryItem;
                         const altAttr = alt ? 'alt="' + alt + '"' : '';
@@ -1291,10 +1469,6 @@ export class LightGallery {
                                     currentGalleryItem.sources,
                                 ),
                             );
-                        if (srcset || sources) {
-                            const $img = $currentSlide.find('.lg-object');
-                            this.initPictureFill($img);
-                        }
                     }
                     if (
                         this.getSlideType(currentGalleryItem) === 'image' ||
@@ -1330,7 +1504,7 @@ export class LightGallery {
                             },
                         );
                     }
-                }, this.settings.startAnimationDuration + 100);
+                });
             }
         }
 
@@ -1476,10 +1650,15 @@ export class LightGallery {
     }
 
     organizeSlideItems(index: number, prevIndex: number): string[] {
+        // Pool size: virtualization.slides (large-gallery setting)
+        // overrides the classic numberOfSlideItemsInDom. The current
+        // slide is always in the window, and the zoom plugin resets zoom
+        // on slide change, so removal never touches live zoom state.
         const itemsToBeInsertedToDom = this.getItemsToBeInsertedToDom(
             index,
             prevIndex,
-            this.settings.numberOfSlideItemsInDom,
+            this.settings.virtualization?.slides ??
+                this.settings.numberOfSlideItemsInDom,
         );
 
         itemsToBeInsertedToDom.forEach((item) => {
@@ -1610,6 +1789,7 @@ export class LightGallery {
             if (this.settings.counter) {
                 this.updateCurrentCounter(index);
             }
+            this.announceSlide(index);
 
             const currentSlideItem = this.getSlideItem(index);
             const previousSlideItem = this.getSlideItem(prevIndex);
@@ -1623,6 +1803,10 @@ export class LightGallery {
             );
             this.setDownloadValue(index);
 
+            // The fitted size belongs to the slide on screen; consumers
+            // (actual-size zoom, the close flight) measure against it.
+            this.updateCurrentImageSize(index);
+
             if (videoInfo) {
                 const { top, bottom } = this.mediaContainerPosition;
                 const videoSize = utils.getSize(
@@ -1630,6 +1814,7 @@ export class LightGallery {
                     this.outer,
                     top + bottom,
                     videoInfo && this.settings.videoMaxSize,
+                    this.galleryItems[index].lgSize,
                 );
                 this.resizeVideoSlide(index, videoSize);
             }
@@ -1729,6 +1914,66 @@ export class LightGallery {
         this.getElementById('lg-counter-current').html(index + 1 + '');
     }
 
+    /**
+     * Plain-text caption of a slide for the aria-live announcer. Resolves
+     * the same sources addHtml uses (inline subHtml markup or a selector)
+     * and strips the markup down to readable text. Remote captions
+     * (subHtmlUrl) are skipped, announcing can't wait on a fetch.
+     */
+    private getSlideCaptionText(index: number): string {
+        const currentGalleryItem = this.galleryItems[index];
+        if (!currentGalleryItem || currentGalleryItem.subHtmlUrl) {
+            return '';
+        }
+        let subHtml = currentGalleryItem.subHtml || '';
+        const firstLetter = subHtml.substring(0, 1);
+        if (firstLetter === '.' || firstLetter === '#') {
+            try {
+                if (
+                    this.settings.subHtmlSelectorRelative &&
+                    !this.settings.dynamic
+                ) {
+                    subHtml = $LG(this.items)
+                        .eq(index)
+                        .find(subHtml)
+                        .first()
+                        .html();
+                } else {
+                    subHtml = $LG(subHtml).first().html();
+                }
+            } catch (error) {
+                subHtml = '';
+            }
+        }
+        if (!subHtml) {
+            return '';
+        }
+        const container = document.createElement('div');
+        container.innerHTML = subHtml;
+        return container.textContent || '';
+    }
+
+    /**
+     * Update the polite live region with the shown slide's position and
+     * caption ("Image X of Y, caption"). The single announcement source,
+     * counter and caption bar are not live regions while this is enabled.
+     */
+    private announceSlide(index: number): void {
+        if (!this.settings.ariaAnnouncements) {
+            return;
+        }
+        const announcer = this.getElementById('lg-announcer').get();
+        if (!announcer) {
+            return;
+        }
+        announcer.textContent = formatSlideAnnouncement({
+            template: this.settings.strings['slideAnnouncement'],
+            index: index + 1,
+            total: this.galleryItems.length,
+            caption: this.getSlideCaptionText(index),
+        });
+    }
+
     updateCounterTotal(): void {
         this.getElementById('lg-counter-all').html(
             this.galleryItems.length + '',
@@ -1745,24 +1990,30 @@ export class LightGallery {
         }
     }
 
+    /** Stop a running release spring; visuals stay at the live frame. */
+    stopSlideSpring(): void {
+        if (this.cancelSlideSpring) {
+            this.cancelSlideSpring();
+            this.cancelSlideSpring = undefined;
+        }
+    }
+
     touchMove(startCoords: Coords, endCoords: Coords, e?: TouchEvent): void {
         const distanceX = endCoords.pageX - startCoords.pageX;
         const distanceY = endCoords.pageY - startCoords.pageY;
-        let allowSwipe = false;
 
-        if (this.swipeDirection) {
-            allowSwipe = true;
-        } else {
-            if (Math.abs(distanceX) > 15) {
-                this.swipeDirection = 'horizontal';
-                allowSwipe = true;
-            } else if (Math.abs(distanceY) > 15) {
-                this.swipeDirection = 'vertical';
-                allowSwipe = true;
-            }
-        }
+        this.swipeSamples = pushVelocitySample(this.swipeSamples, {
+            x: endCoords.pageX,
+            y: endCoords.pageY,
+            t: Date.now(),
+        });
 
-        if (!allowSwipe) {
+        this.swipeDirection = getSwipeAxis(
+            distanceX,
+            distanceY,
+            this.swipeDirection,
+        );
+        if (!this.swipeDirection) {
             return;
         }
 
@@ -1773,35 +2024,36 @@ export class LightGallery {
             // reset opacity and transition duration
             this.outer.addClass('lg-dragging');
 
-            // move current slide
-            this.setTranslate($currentSlide, distanceX, 0);
-
-            // move next and prev slide with current slide
-            const width = $currentSlide.get().offsetWidth;
-            const slideWidthAmount = (width * 15) / 100;
-            const gutter = slideWidthAmount - Math.abs((distanceX * 10) / 100);
-            this.setTranslate(
-                this.outer.find('.lg-prev-slide').first(),
-                -width + distanceX - gutter,
-                0,
+            // move current slide and its neighbors, keeping the gutter;
+            // past the gallery ends the drag rubber-bands instead of
+            // tracking 1:1
+            const transforms = getHorizontalDragTransforms(
+                this.getEdgeDragDelta(distanceX),
+                $currentSlide.get().offsetWidth,
+                this.getDirection(),
             );
-
-            this.setTranslate(
-                this.outer.find('.lg-next-slide').first(),
-                width + distanceX + gutter,
-                0,
-            );
+            $currentSlide.css('transform', transforms.current);
+            this.outer
+                .find('.lg-prev-slide')
+                .first()
+                .css('transform', transforms.prev);
+            this.outer
+                .find('.lg-next-slide')
+                .first()
+                .css('transform', transforms.next);
         } else if (this.swipeDirection === 'vertical') {
             if (this.settings.swipeToClose) {
                 e?.preventDefault();
                 this.$container.addClass('lg-dragging-vertical');
 
-                const opacity = 1 - Math.abs(distanceY) / window.innerHeight;
-                this.$backdrop.css('opacity', opacity);
-
-                const scale = 1 - Math.abs(distanceY) / (window.innerWidth * 2);
-                this.setTranslate($currentSlide, 0, distanceY, scale, scale);
-                if (Math.abs(distanceY) > 100) {
+                const effects = getVerticalDragEffects(
+                    distanceY,
+                    window.innerWidth,
+                    window.innerHeight,
+                );
+                this.$backdrop.css('opacity', effects.backdropOpacity);
+                $currentSlide.css('transform', effects.transform);
+                if (effects.hideUi) {
                     this.outer
                         .addClass('lg-hide-items')
                         .removeClass('lg-components-open');
@@ -1810,8 +2062,191 @@ export class LightGallery {
         }
     }
 
+    /**
+     * The horizontal delta as rendered: rubber-banded when the drag
+     * points past the first/last slide with nothing there (loop counts).
+     */
+    private getEdgeDragDelta(distanceX: number): number {
+        const count = this.galleryItems.length;
+        return getEdgeFrictionedDelta(
+            distanceX,
+            resolveSwipeTarget(
+                'prev',
+                this.index,
+                count,
+                this.settings.loop,
+            ) !== null,
+            resolveSwipeTarget(
+                'next',
+                this.index,
+                count,
+                this.settings.loop,
+            ) !== null,
+            this.getDirection(),
+        );
+    }
+
+    /** Resolved reading direction ('auto' is resolved at init). */
+    private getDirection(): 'ltr' | 'rtl' {
+        return this.settings.direction === 'rtl' ? 'rtl' : 'ltr';
+    }
+
+    /**
+     * Spring the dragged slides back to rest, seeded with the release
+     * velocity. Returns false (no spring) for sub-pixel drags.
+     */
+    private springSlidesBack(deltaX: number, velocityX: number): boolean {
+        if (Math.abs(deltaX) < 1) {
+            return false;
+        }
+        const $currentSlide = this.getSlideItem(this.index);
+        const $prev = this.outer.find('.lg-prev-slide').first();
+        const $next = this.outer.find('.lg-next-slide').first();
+        const width = $currentSlide.get().offsetWidth;
+        this.stopSlideSpring();
+        this.cancelSlideSpring = runSprings(
+            [{ from: deltaX, velocity: velocityX, target: 0 }],
+            ([x]) => {
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    this.getDirection(),
+                );
+                $currentSlide.css('transform', transforms.current);
+                $prev.css('transform', transforms.prev);
+                $next.css('transform', transforms.next);
+            },
+            () => {
+                this.cancelSlideSpring = undefined;
+                this.endDragVisuals();
+            },
+        );
+        return true;
+    }
+
+    /**
+     * Carry the release velocity into a gesture navigation: navigate
+     * immediately (events, counter and busy-lock on time; fromTouch
+     * classes flip underneath, inline transforms keep the visuals),
+     * then spring the same drag geometry until the arriving slide lands
+     * at rest. Falls back to a snap-back when navigation declines
+     * (busy, or an edge without loop, the 2.x end animation plays).
+     */
+    private springSlideNavigation(
+        verdict: 'next' | 'prev',
+        deltaX: number,
+        velocityX: number,
+    ): boolean {
+        const $current = this.getSlideItem(this.index);
+        const $prev = this.outer.find('.lg-prev-slide').first();
+        const $next = this.outer.find('.lg-next-slide').first();
+        const width = $current.get().offsetWidth;
+        if (!width) {
+            return false;
+        }
+
+        const prevIndex = this.index;
+        if (verdict === 'next') {
+            this.goToNextSlide(true);
+        } else {
+            this.goToPrevSlide(true);
+        }
+        if (this.index === prevIndex) {
+            return this.springSlidesBack(deltaX, velocityX);
+        }
+
+        // The x at which the arriving neighbor sits exactly at 0 in the
+        // drag geometry (gutter included): width + x + (0.15w - 0.1|x|).
+        const target =
+            (verdict === 'next' ? -1 : 1) *
+            (this.getDirection() === 'rtl' ? -1 : 1) *
+            ((width * 115) / 110);
+        this.stopSlideSpring();
+        this.cancelSlideSpring = runSprings(
+            [{ from: deltaX, velocity: velocityX, target }],
+            ([x]) => {
+                const transforms = getHorizontalDragTransforms(
+                    x!,
+                    width,
+                    this.getDirection(),
+                );
+                $current.css('transform', transforms.current);
+                $prev.css('transform', transforms.prev);
+                $next.css('transform', transforms.next);
+            },
+            () => {
+                this.cancelSlideSpring = undefined;
+                // Hands the slides back AND drops the forced lg-slide
+                // geometry (the timer-based restore skips while
+                // lg-dragging is on).
+                this.endDragVisuals();
+            },
+        );
+        return true;
+    }
+
+    /**
+     * Hand the slides back to CSS after a gesture. The inline transforms
+     * go first, while lg-dragging still pins transition-duration to 0s,
+     * so the snap from the released position to the slide's resting
+     * place lands in a single frame. Dropping the class first animates
+     * that snap instead, and the outgoing slide is seen travelling back
+     * toward the centre while its fade is still running.
+     */
+    private endDragVisuals(): void {
+        this.outer.find('.lg-item').removeAttr('style');
+        // The gesture forced lg-slide geometry onto whatever mode is
+        // configured; drop it inside the same suppressed frame. Restoring
+        // the mode after the hand-back animates every slide from the
+        // slide-mode resting place to the configured one, which is the
+        // outgoing slide gliding back to the centre as it fades.
+        if (this.settings.mode !== 'lg-slide') {
+            this.outer.removeClass('lg-slide');
+        }
+        // Flush the snap before transitions come back.
+        void this.outer.get().offsetHeight;
+        this.outer.removeClass('lg-dragging');
+    }
+
+    /**
+     * Spring a non-closing vertical drag back to rest, slide transform
+     * and backdrop opacity together, seeded with the release velocity.
+     */
+    private springVerticalRestore(deltaY: number, velocityY: number): boolean {
+        if (Math.abs(deltaY) < 1) {
+            return false;
+        }
+        const $currentSlide = this.getSlideItem(this.index);
+        this.stopSlideSpring();
+        this.$container.addClass('lg-dragging-vertical');
+        this.cancelSlideSpring = runSprings(
+            [{ from: deltaY, velocity: velocityY, target: 0 }],
+            ([y]) => {
+                const effects = getVerticalDragEffects(
+                    y!,
+                    window.innerWidth,
+                    window.innerHeight,
+                );
+                this.$backdrop.css('opacity', effects.backdropOpacity);
+                $currentSlide.css('transform', effects.transform);
+            },
+            () => {
+                this.cancelSlideSpring = undefined;
+                this.$container.removeClass('lg-dragging-vertical');
+                this.endDragVisuals();
+                this.$backdrop.css('opacity', 1);
+            },
+        );
+        return true;
+    }
+
     touchEnd(endCoords: Coords, startCoords: Coords, event: TouchEvent): void {
-        let distance;
+        // Read the release velocity NOW, the work below is deferred a
+        // tick, and velocity is defined at the moment the finger lifts.
+        const releaseVelocity = getWindowedVelocity(
+            this.swipeSamples,
+            Date.now(),
+        );
 
         // keep slide animation for any mode while dragg/swipe
         if (this.settings.mode !== 'lg-slide') {
@@ -1822,43 +2257,76 @@ export class LightGallery {
         setTimeout(() => {
             this.$container.removeClass('lg-dragging-vertical');
             this.outer
-                .removeClass('lg-dragging lg-hide-items')
+                .removeClass('lg-hide-items')
                 .addClass('lg-components-open');
 
             let triggerClick = true;
+            let springing = false;
 
             if (this.swipeDirection === 'horizontal') {
-                distance = endCoords.pageX - startCoords.pageX;
-                const distanceAbs = Math.abs(
+                // Navigate past swipeThreshold, a quick flick, or a
+                // momentum projection past the midpoint, shared release
+                // verdict, all runtimes.
+                const verdict = getSwipeReleaseVerdict({
+                    deltaX: endCoords.pageX - startCoords.pageX,
+                    velocityX: releaseVelocity.x,
+                    threshold: this.settings.swipeThreshold,
+                    flickVelocity: this.settings.flickVelocity,
+                    viewportWidth: this.outer.get().offsetWidth,
+                    direction: this.getDirection(),
+                });
+                // Springs start from the RENDERED delta, rubber-banded
+                // at the gallery ends, identical to raw elsewhere.
+                const renderedDeltaX = this.getEdgeDragDelta(
                     endCoords.pageX - startCoords.pageX,
                 );
-                if (
-                    distance < 0 &&
-                    distanceAbs > this.settings.swipeThreshold
-                ) {
-                    this.goToNextSlide(true);
+                if (verdict === 'next' || verdict === 'prev') {
                     triggerClick = false;
-                } else if (
-                    distance > 0 &&
-                    distanceAbs > this.settings.swipeThreshold
-                ) {
-                    this.goToPrevSlide(true);
-                    triggerClick = false;
+                    springing = this.springSlideNavigation(
+                        verdict,
+                        renderedDeltaX,
+                        releaseVelocity.x,
+                    );
+                } else {
+                    // Snap back on a spring seeded with the release
+                    // velocity; lg-dragging stays on (transitions down)
+                    // until it settles.
+                    springing = this.springSlidesBack(
+                        renderedDeltaX,
+                        releaseVelocity.x,
+                    );
                 }
             } else if (this.swipeDirection === 'vertical') {
-                distance = Math.abs(endCoords.pageY - startCoords.pageY);
                 if (
-                    this.settings.closable &&
-                    this.settings.swipeToClose &&
-                    distance > 100
+                    shouldCloseOnVerticalDrag(
+                        endCoords.pageY - startCoords.pageY,
+                        releaseVelocity.y,
+                        window.innerHeight,
+                        {
+                            closable: this.settings.closable,
+                            swipeToClose: this.settings.swipeToClose,
+                        },
+                    )
                 ) {
                     this.closeGallery();
                     return;
-                } else {
-                    this.$backdrop.css('opacity', 1);
+                }
+                // Only spring back what actually moved. With
+                // swipeToClose off (a non-closable gallery, inline being
+                // the common case) the drag applied nothing, so springing
+                // here would jump the slide to the drag offset and
+                // animate it back.
+                if (this.settings.swipeToClose) {
+                    springing = this.springVerticalRestore(
+                        endCoords.pageY - startCoords.pageY,
+                        releaseVelocity.y,
+                    );
                 }
             }
-            this.outer.find('.lg-item').removeAttr('style');
+            if (!springing) {
+                this.endDragVisuals();
+                this.$backdrop.css('opacity', 1);
+            }
 
             if (
                 triggerClick &&
@@ -1904,7 +2372,21 @@ export class LightGallery {
                 ) {
                     isSwiping = true;
                     this.touchAction = 'swipe';
+                    // A swipe hijacked by a pinch never reaches its
+                    // touchend, stale isMoved/endCoords would make the
+                    // NEXT tap run touchEnd on garbage deltas (same
+                    // pattern zoomSwipe had).
+                    isMoved = false;
+                    endCoords = {} as Coords;
+                    this.stopSlideSpring();
                     this.manageSwipeClass();
+                    this.swipeSamples = [
+                        {
+                            x: e.touches[0].pageX,
+                            y: e.touches[0].pageY,
+                            t: Date.now(),
+                        },
+                    ];
                     startCoords = {
                         pageX: e.touches[0].pageX,
                         pageY: e.touches[0].pageY,
@@ -1960,7 +2442,11 @@ export class LightGallery {
                 ) {
                     if (!this.outer.hasClass('lg-zoomed') && !this.lgBusy) {
                         e.preventDefault();
+                        this.stopSlideSpring();
                         this.manageSwipeClass();
+                        this.swipeSamples = [
+                            { x: e.pageX, y: e.pageY, t: Date.now() },
+                        ];
                         startCoords = {
                             pageX: e.pageX,
                             pageY: e.pageY,
@@ -2086,7 +2572,7 @@ export class LightGallery {
     }
 
     /**
-     * Go to previous slides
+     * Go to previous slide
      * @param {Boolean} fromTouch - true if slide function called via touch event
      * @category lGPublicMethods
      * @example
@@ -2146,14 +2632,24 @@ export class LightGallery {
                 }
             }
             if (this.lgOpened && this.galleryItems.length > 1) {
+                // Physical arrows follow the reading direction.
+                const rtl = this.getDirection() === 'rtl';
                 if (e.keyCode === 37) {
                     e.preventDefault();
-                    this.goToPrevSlide();
+                    if (rtl) {
+                        this.goToNextSlide();
+                    } else {
+                        this.goToPrevSlide();
+                    }
                 }
 
                 if (e.keyCode === 39) {
                     e.preventDefault();
-                    this.goToNextSlide();
+                    if (rtl) {
+                        this.goToPrevSlide();
+                    } else {
+                        this.goToNextSlide();
+                    }
                 }
             }
         });
@@ -2249,8 +2745,9 @@ export class LightGallery {
     }
 
     /**
-     * Maximize minimize inline gallery.
-     * @category lGPublicMethods
+     * Bind the inline gallery's maximize button: each click toggles the
+     * gallery between its container and the full viewport. Called once
+     * during initialization.
      */
     toggleMaximize(): void {
         this.getElementById('lg-maximize').on('click.lg', () => {
@@ -2366,15 +2863,16 @@ export class LightGallery {
                 top + bottom,
                 __slideVideoInfo && poster && this.settings.videoMaxSize,
             );
-            transform = utils.getTransform(
-                currentItem,
-                this.outer,
-                top,
-                bottom,
-                imageSize,
-            );
+            transform = this.getOriginTransform(currentItem, imageSize);
         }
-        if (this.zoomFromOrigin && transform) {
+        // No thumbnail to fly back to (hidden or collapsed trigger, no
+        // lg-size, zoomFromOrigin off, a dynamic gallery): shrink about the
+        // stage centre and fade, the mirror of the startClass open.
+        if (!transform) {
+            transform = getCenterCloseTransform();
+            this.outer.addClass('lg-close-to-center');
+        }
+        if (transform) {
             this.outer.addClass('lg-closing lg-zoom-from-image');
             this.getSlideItem(this.index)
                 .addClass('lg-start-end-progress')
@@ -2409,18 +2907,17 @@ export class LightGallery {
         // Resetting opacity to 0 isd required as  vertical swipe to close function adds inline opacity.
         this.$backdrop.removeClass('in').css('opacity', 0);
 
-        const removeTimeout =
-            this.zoomFromOrigin && transform
-                ? Math.max(
-                      this.settings.startAnimationDuration,
-                      this.settings.backdropDuration,
-                  )
-                : this.settings.backdropDuration;
+        const removeTimeout = transform
+            ? Math.max(
+                  this.settings.startAnimationDuration,
+                  this.settings.backdropDuration,
+              )
+            : this.settings.backdropDuration;
         this.$container.removeClass('lg-show-in');
 
         // Once the closign animation is completed and gallery is invisible
         setTimeout(() => {
-            if (this.zoomFromOrigin && transform) {
+            if (transform) {
                 this.outer.removeClass('lg-zoom-from-image');
             }
             this.$container.removeClass('lg-show');
@@ -2436,10 +2933,20 @@ export class LightGallery {
                     this.settings.backdropDuration + 'ms',
                 );
 
-            this.outer.removeClass(`lg-closing ${this.settings.startClass}`);
+            this.outer.removeClass(
+                `lg-closing lg-close-to-center ${this.settings.startClass}`,
+            );
 
             this.getSlideItem(this.index).removeClass('lg-start-end-progress');
             this.$inner.empty();
+
+            // Clear the announcer so reopening at the same slide is a fresh
+            // live-region mutation (otherwise identical text = silence).
+            const announcer = this.getElementById('lg-announcer').get();
+            if (announcer) {
+                announcer.textContent = '';
+            }
+
             if (this.lgOpened) {
                 this.LGel.trigger(lGEvents.afterClose, {
                     instance: this,
@@ -2448,6 +2955,13 @@ export class LightGallery {
             if (this.$container.get()) {
                 this.$container.get().blur();
             }
+
+            // Return focus to where it was before the gallery opened
+            // (dialog pattern; captured only when trapFocus moved it).
+            if (this.prevActiveElement && this.prevActiveElement.isConnected) {
+                this.prevActiveElement.focus({ preventScroll: true });
+            }
+            this.prevActiveElement = undefined;
 
             this.lgOpened = false;
         }, removeTimeout + 100);
@@ -2460,7 +2974,7 @@ export class LightGallery {
                 module.init();
             } catch (err) {
                 console.warn(
-                    `lightGallery:- make sure lightGallery module is properly initiated`,
+                    `lightGallery:- make sure lightGallery module is properly initiated. See https://www.lightgalleryjs.com/docs/methods/`,
                 );
             }
         });
@@ -2476,7 +2990,7 @@ export class LightGallery {
                 }
             } catch (err) {
                 console.warn(
-                    `lightGallery:- make sure lightGallery module is properly destroyed`,
+                    `lightGallery:- make sure lightGallery module is properly destroyed. See https://www.lightgalleryjs.com/docs/methods/`,
                 );
             }
         });
@@ -2523,6 +3037,8 @@ export class LightGallery {
         }
         $LG(window).off(`.lg.global${this.lgId}`);
         this.LGel.off('.lg');
+        this.toolbarOverflow?.destroy();
+        this.toolbarOverflow = undefined;
         this.$container.remove();
     }
 
@@ -2530,9 +3046,9 @@ export class LightGallery {
      * Destroy lightGallery.
      * Destroy lightGallery and its plugin instances completely
      *
-     * @description This method also calls CloseGallery function internally. Returns the time takes to completely close and destroy the instance.
+     * @description This method also calls closeGallery function internally. Returns the time it takes to completely close and destroy the instance.
      * In case if you want to re-initialize lightGallery right after destroying it, initialize it only once the destroy process is completed.
-     * You can use refresh method most of the times.
+     * You can use refresh method most of the time.
      * @category lGPublicMethods
      * @example
      *  const plugin = lightGallery();

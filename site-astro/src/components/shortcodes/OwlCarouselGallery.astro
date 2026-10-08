@@ -1,0 +1,30 @@
+---
+/** Carousel cells for the Owl, Slick and Flickity integration demos. */
+import { photos as pick } from '../../lib/photos';
+
+interface Props {
+    id: string;
+    photos?: string;
+    limit?: number;
+}
+const { id, limit } = Astro.props;
+const items = pick(Astro.props.photos ?? 'street', limit);
+---
+<div id={id} class="carousel owl-carousel owl-theme main-carousel">
+    {items.map((p, i) => (
+        <a
+            data-lg-size={`${p.width}-${p.height}`}
+            data-pinterest-text={p.title}
+            data-tweet-text={`lightGallery slide ${i + 1}`}
+            class="lg-item  carousel-cell owl-carousel-item"
+            data-src={p.src}
+            data-sub-html={p.caption}
+        >
+            <img alt={p.alt} class="img-responsive" src={p.thumb} />
+        </a>
+    ))}
+</div>
+
+<script>
+    import '../../scripts/demo-galleries.js';
+</script>

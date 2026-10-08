@@ -1,0 +1,265 @@
+---
+title: 'lightGallery 3 is out'
+description: 'lightGallery 3 release: native React, Vue and Angular packages on a shared headless core, justified layout, virtualization, video facades, custom icons, localization and RTL, and the upgrade path from v2.'
+date: 2026-09-26T00:00:00.000Z
+lastmod: 2026-09-26T00:00:00.000Z
+draft: false
+tags: ['gallery', 'release']
+images: ['header.png']
+contributors: ['Sachin Neravath']
+---
+
+import GalleryDemo from '../../../components/shortcodes/GalleryDemo.astro';
+import CodeTabs from '../../../components/shortcodes/CodeTabs.astro';
+
+lightGallery 3 is out. It is a complete rewrite and the biggest release since the library left jQuery behind. The gallery now runs on a framework-free core, and React, Vue and Angular get native packages that render their own DOM instead of wrapping the vanilla one. The vanilla API is unchanged, so a 2.x gallery keeps working, and a long list of features that people have asked for over the years now ships in every package.
+
+This post walks through what changed and why, what is new, and what to do when you upgrade. The gallery below runs on the release build. Click any thumbnail.
+
+<GalleryDemo id="blog-v3-gallery" photos="morocco" limit={10} justified />
+
+*The grid is the new justified layout plugin with its default settings. The lightbox has thumbnails, zoom, fullscreen, autoplay, share and rotate enabled, so on a narrow screen you also get the new toolbar overflow menu.*
+
+## Native, not wrapped
+
+In 2.x, the React, Vue and Angular integrations were thin wrappers. Each one mounted the vanilla runtime inside a component, and the runtime built the lightbox DOM on its own. It worked, but the framework never owned that DOM: state lived in two places, server rendering needed workarounds, and every wrapper lagged behind the vanilla package.
+
+In 3.0 there is one gallery and four packages:
+
+| Stack | Package |
+| --- | --- |
+| Vanilla JavaScript / TypeScript | `lightgallery` |
+| React | `@lightgallery/react` |
+| Vue 3 | `@lightgallery/vue` |
+| Angular | `@lightgallery/angular` |
+
+Each framework package is written for its framework, and the framework renders every node.
+
+-   **React.** Components, children or a `slides` array, callbacks with the documented event names, an imperative handle through `ref`, and a controlled mode (`open`, `index`, `onClose`, `onIndexChange`) that the wrapper never had. It works in the Next.js App Router as a client component, with no `dynamic()` wrapper. See the [React guide](/docs/react/).
+-   **Vue 3.** `<script setup>` components, `v-model:open` and `v-model:index`, scoped slots for the caption and the controls, typed emits, and a `Teleport` overlay that never server-renders, so Nuxt pages hydrate without warnings. See the [Vue guide](/docs/vue/).
+-   **Angular.** Standalone components, signal inputs and outputs, zoneless change detection, a CDK overlay and a `with<Plugin>()` factory per plugin. It works with `@angular/ssr`. See the [Angular guide](/docs/angular/).
+
+Settings keep their vanilla names everywhere, so `speed`, `mode` or `thumbWidth` mean the same thing whether you pass them as a prop, a signal input or a settings object. The framework packages ship no CSS; the stylesheets still come from the `lightgallery` package, unchanged.
+
+<CodeTabs label="Stack">
+<Fragment slot="vanilla">
+
+```js
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+
+lightGallery(document.getElementById('gallery'), {
+    plugins: [lgThumbnail, lgZoom],
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Zoom from '@lightgallery/react/plugins/zoom';
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+
+const items = [
+    { src: 'img/1.jpg', thumb: 'img/1-thumb.jpg', alt: 'Mountains', lgSize: '1600-1067' },
+];
+
+export function Gallery() {
+    return (
+        <LightGallery plugins={[Thumbnail, Zoom]}>
+            {items.map((item) => (
+                <LightGalleryItem key={item.src} item={item} href={item.src}>
+                    <img src={item.thumb} alt={item.alt} />
+                </LightGalleryItem>
+            ))}
+        </LightGallery>
+    );
+}
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup lang="ts">
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+
+const plugins = [Thumbnail, Zoom];
+const items: LgGalleryItem[] = [
+    { src: 'img/1.jpg', thumb: 'img/1-thumb.jpg', alt: 'Mountains', lgSize: '1600-1067' },
+];
+</script>
+
+<template>
+    <LightGallery :plugins="plugins">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
+
+// Styles go in angular.json: lightgallery/css/lightgallery.css,
+// lg-thumbnail.css and lg-zoom.css.
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class GalleryComponent {
+    features = [withThumbnail(), withZoom()];
+    items: LgGalleryItem[] = [
+        { src: 'img/1.jpg', thumb: 'img/1-thumb.jpg', alt: 'Mountains', lgSize: '1600-1067' },
+    ];
+}
+```
+
+</Fragment>
+</CodeTabs>
+
+## One core behind all four
+
+The logic that makes a gallery feel like lightGallery is now a package of its own, [`@lightgallery/headless`](/docs/headless/): the state machine, settings resolution, the slide window and preload math, gesture verdicts, the zoom, thumbnail and rotate math, the justified row layout, the URL drivers behind deep links and the video URL builders. It has no DOM and no framework. Its TypeScript config excludes the DOM library, so `window` and `document` do not even type-check there.
+
+```ts
+import { createGalleryState, galleryReducer } from '@lightgallery/headless';
+
+let state = createGalleryState({ slidesCount: 5, loop: true });
+state = galleryReducer(state, { type: 'OPEN', index: 2 });
+state = galleryReducer(state, { type: 'NEXT' });
+```
+
+Every package applies that core to its own DOM. That is what turns behavior parity from a goal into a rule: a swipe threshold, a zoom clamp or a plugin setting behaves the same in vanilla JavaScript, React, Vue and Angular because it is the same code. If a gallery behaves differently after you migrate, that is a bug, and we would like to [hear about it](https://github.com/sachinchoolur/lightGallery/issues). The package also lets you build your own binding, for Svelte, Solid or a web component, on the same foundation.
+
+## What is new
+
+Everything below ships in all four packages, with the same settings.
+
+### Justified layout
+
+The trigger grid was never lightGallery's job: you brought a layout library and pointed the lightbox at it. The new [justified layout](/docs/justified-layout/) plugin lays the thumbnails out in rows of equal height that fill the container edge to edge, from the aspect ratios in `data-lg-size`. It reflows on resize, mirrors under RTL and doubles as the trigger grid for the lightbox. Thumbnails stay out of flow until the layout has positioned them, each box shows a placeholder and its thumbnail fades in once loaded, so the grid is never seen unorganized. The gallery at the top of this post is that plugin with default settings.
+
+### Virtualization
+
+Galleries with thousands of items keep a small, constant DOM. With [`virtualization`](/docs/virtualization/) only the current slide, its neighbors and the visible thumbnails plus an overscan are mounted, and spacers keep the strip's geometry identical to a fully rendered strip. The window advances at commit points, never per pointer move, so dragging costs nothing extra. It is one setting, off by default. The [1,000-slide stress demo](/demos/virtualization/) shows the mounted-slide counter while you navigate.
+
+### Thumbnail scrubbing
+
+[`scrubThumbnails`](/docs/thumbnail-scrubbing/) turns the thumbnail strip into a scrubber: drag it and the gallery follows your finger with instant slide changes, all the way through the release glide. It is the interaction native photo apps have, and it pairs with virtualization for very large galleries.
+
+### Video facades
+
+Provider video slides (YouTube, Vimeo, Wistia) now render as a poster with a play button. The iframe, and the JavaScript that comes with it, loads only when someone presses play, so sliding past a video costs nothing. YouTube embeds go through `youtube-nocookie.com` by default. Both are settings, [`videoFacade`](/docs/video-facades/) and `youTubeNoCookie`, if you want the old behavior.
+
+### A toolbar that fits
+
+The toolbar stays on one row. When its buttons do not fit beside the counter, the lowest-priority ones move into a "More options" menu. Touch devices also leave out the zoom in, zoom out and actual-size buttons, because pinch and double-tap already do that. Open the gallery above on a narrow screen to see it; `toolbarOverflow` and `showGestureButtons` control both.
+
+### Custom icons
+
+Every control icon is an inline SVG, and the [`icons`](/docs/custom-icons/) setting replaces any of them by name. The icon font from 2.x is gone, together with its font files and `@font-face` rule. Icons follow the button's color through `currentColor`, and state pairs such as play and pause are swapped together, so no state ends up without an icon.
+
+### Localization and RTL
+
+Every user-facing label, in the core and in the plugins, lives in one [`strings`](/docs/localization-rtl/) object. Pass the keys you translate and they merge over the English defaults. `direction: 'rtl'` (or `'auto'` to follow the page) plus the opt-in `lg-rtl.css` layer mirrors the navigation, the swipe direction and the chrome.
+
+### Accessibility
+
+The open gallery is a modal dialog with an [accessible name](/docs/accessibility/). Focus moves in on open, Tab is trapped while the gallery is open, and focus returns to the trigger on close. A polite live region announces each slide change, every control is a real `<button>` with a localizable label, and `prefers-reduced-motion` disables the animations. The test suites of all four packages run axe checks against the WCAG A and AA rules.
+
+### Responsive loading
+
+Slides render [real responsive markup](/docs/responsive-loading/): `srcset` and `sizes` on the image, and a `<picture>` element when you provide `sources`, so format negotiation and art direction work exactly as they do in page markup. A slide counts as loaded only once its image is decoded, so the first paint never flashes.
+
+### Sharing and deep links
+
+The share button opens the device's native share sheet where the [Web Share API](/docs/web-share/) exists, native-first on touch devices, and falls back to the classic dropdown everywhere else. The Twitter target is now X. The hash plugin syncs deep links through the Navigation API where the browser has it, with the History API as the fallback; the URL format is unchanged, and stepping through slides never floods the browser history. [`hashDriver`](/docs/hash-drivers/) picks the engine.
+
+### Gesture physics
+
+Every release, of a swipe, a fling of the strip, a zoom pan or a drag to dismiss, lands in a spring seeded with the velocity of the last hundred milliseconds of your gesture, so motion continues from the speed you let go at instead of restarting from zero. A fling projects its landing point with the deceleration curve native scroll views use. Boundaries resist with friction instead of stopping dead. Catch a slide mid-spring and the next release starts from its live position. Pinch-to-close is new, and `flickVelocity` tunes how eager a flick is.
+
+## Fixes that waited too long
+
+Rebuilding the DOM layer was the chance to fix behavior that shipped in every 2.x release:
+
+-   Slide transitions crossfaded the whole slide, so the outgoing image ghosted across the transition. Transform and opacity now keep their own durations.
+-   Zooming near an edge parked the image where the next tap immediately moved it away from. A repositioning zoom now clamps against the same bounds as the release settle.
+-   Rotating an image and then zooming voided the transform, and panning silently stopped tracking.
+-   Medium zoom closed the gallery on every click, toolbar buttons included.
+-   The thumbnail strip animated its first positioning, so opening a gallery far along the strip slid it across while the image was still flying in.
+-   The share dropdown hung from the toolbar's corner instead of the share button, and stayed open across a close.
+
+The full list is in the [changelog](/changelog/).
+
+## A modern build
+
+The packages target ES2017 and run in current evergreen browsers and iOS Safari without transpiling or polyfills. Internet Explorer is no longer supported; v2 remains available for it. The vanilla package ships ES module and UMD builds with an `exports` map, so bundlers and Node resolve `lightgallery/plugins/zoom` or `lightgallery/css/lg-zoom.css` without deep-path workarounds, and a plain `<script>` tag still works.
+
+Plugins are separate entries in every package. Import what you use and the rest never reaches your bundle: the core is about 19 KB minified and gzipped, and each plugin only costs you when you import it.
+
+## Upgrading from v2
+
+The [migration guide](/docs/migration/) has the details. The short version:
+
+**Vanilla JavaScript.** The API and the imports are unchanged. The icon font is gone, and [custom icons](/docs/custom-icons/) replace it if you restyled glyphs; so is Internet Explorer. Four defaults changed:
+
+| Setting | 2.x | 3.0 |
+| --- | --- | --- |
+| `videoFacade` | eager iframe | `true`, a poster until play |
+| `youTubeNoCookie` | `youtube.com` | `true` |
+| `preferNativeShare` | dropdown | native share sheet on touch devices |
+| `hashDriver` | History API | `'auto'`, the Navigation API where available |
+
+Every other new setting is opt-in. The per-plugin string objects such as `thumbnailPluginStrings` still work but are deprecated in favor of the single `strings` object.
+
+**React, Vue and Angular.** Install the native package and keep `lightgallery` installed for the CSS. The wrappers scraped anchors for `data-*` attributes and took plugin settings flat on the component; the native packages take items or a `slides` array, one settings object per plugin, and the controlled and imperative APIs described above. The guide has a wrapper-to-native table for each framework, and the 2.x wrapper docs stay archived under [/docs/v2/](/docs/v2/react/).
+
+**Licenses.** lightGallery 3 keys start with `LIG`. A v1 or v2 key is not valid for version 3: the gallery keeps working and logs a warning asking you to upgrade. If you bought your license in the last six months, email [contact@lightgalleryjs.com](mailto:contact@lightgalleryjs.com) for a v3 key. Open-source projects under a GPLv3-compatible license can use every package under the GPLv3, as before, and the [temporary key](/docs/license/#license-key) lets you try everything before you buy. Plans are on the [license page](/license/).
+
+## Docs for people and for coding agents
+
+Every docs page now has a markdown twin at `/docs/<page>/index.md`, and [llms.txt](/llms.txt) indexes them. The [getting started](/docs/getting-started/#ask-your-coding-agent) page has a prompt you can paste into a coding agent; it points the agent at the guide for your stack and at the settings reference, which avoids the setup mistakes behind most bug reports. The repository also ships an agent skill for the same purpose.
+
+## Get started
+
+-   [Getting started](/docs/getting-started/) for vanilla JavaScript, and the [React](/docs/react/), [Vue](/docs/vue/) and [Angular](/docs/angular/) guides.
+-   [Demos](/demos/thumbnails/) for every feature, with the code for all four stacks on each page.
+-   [Settings](/docs/settings/), [events](/docs/events/) and [methods](/docs/methods/).
+-   The [changelog](/changelog/) and the [migration guide](/docs/migration/).
+
+Thank you to everyone who reported bugs, tested the previews on their devices and asked for the features above over the years. If something misbehaves in your project, please [open an issue](https://github.com/sachinchoolur/lightGallery/issues) with the package and the setting involved.

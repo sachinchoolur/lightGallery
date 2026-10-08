@@ -1,0 +1,252 @@
+import { useEffect, useRef, useState, type ReactElement } from 'react';
+import {
+    flipHorizontal,
+    flipVertical,
+    getRotateFitScale,
+    getRotateTransform,
+    getSlideType,
+    initialRotateSlice,
+    isOrientationSwapped,
+    rotateLeft,
+    rotateRight,
+    type RotateSlice,
+    rotateDefaultIcons,
+} from '@lightgallery/headless';
+
+import { useGalleryInternal } from '../../context';
+import { cx } from '../../cx';
+import { useCustomIcons } from '../../icons';
+import { usePluginSettings } from '../runtime';
+import type { LgPlugin, SlideWrapperProps } from '../types';
+
+/**
+ * Rotate plugin (2.x `lg-rotate`): rotate/flip the current image. Transform
+ * ownership follows the zoom plugin's slide-wrapper pattern; compose with
+ * zoom as `plugins={[Zoom, Rotate]}` so zoom stays outermost (2.x DOM order).
+ *
+ * Deviation (noted): 2.x kept rotate values for every visited slide until
+ * close; here values live in the slide's wrapper, so they reset if a slide
+ * leaves the windowed DOM.
+ */
+
+export interface RotateStrings {
+    flipVertical: string;
+    flipHorizontal: string;
+    rotateLeft: string;
+    rotateRight: string;
+}
+
+export interface RotateSettings {
+    /** Enable the rotate buttons. */
+    rotate: boolean;
+    /** Rotate transition speed (ms). */
+    rotateSpeed: number;
+    rotateLeft: boolean;
+    rotateRight: boolean;
+    flipHorizontal: boolean;
+    flipVertical: boolean;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    rotatePluginStrings?: Partial<RotateStrings>;
+}
+
+export const rotateSettings: RotateSettings = {
+    rotate: true,
+    rotateSpeed: 400,
+    rotateLeft: true,
+    rotateRight: true,
+    flipHorizontal: true,
+    flipVertical: true,
+};
+
+const ROTATE_LEFT_EVENT = 'lg-rotate-left';
+const ROTATE_RIGHT_EVENT = 'lg-rotate-right';
+const FLIP_HOR_EVENT = 'lg-flip-hor';
+const FLIP_VER_EVENT = 'lg-flip-ver';
+
+function RotateToolbar(): ReactElement | null {
+    const internal = useGalleryInternal();
+    const settings = usePluginSettings<RotateSettings>();
+    const flipVerIcon = useCustomIcons(['flipVertical'], rotateDefaultIcons);
+    const flipHorIcon = useCustomIcons(['flipHorizontal'], rotateDefaultIcons);
+    const rotateLeftIcon = useCustomIcons(['rotateLeft'], rotateDefaultIcons);
+    const rotateRightIcon = useCustomIcons(['rotateRight'], rotateDefaultIcons);
+    if (!settings.rotate) {
+        return null;
+    }
+    const emit = (name: string) => internal.events.emit(name, undefined);
+    const legacy = settings.rotatePluginStrings;
+    const strings = {
+        flipVertical: legacy?.flipVertical ?? settings.strings.flipVertical,
+        flipHorizontal:
+            legacy?.flipHorizontal ?? settings.strings.flipHorizontal,
+        rotateLeft: legacy?.rotateLeft ?? settings.strings.rotateLeft,
+        rotateRight: legacy?.rotateRight ?? settings.strings.rotateRight,
+    };
+    return (
+        <>
+            {settings.flipVertical && (
+                <button
+                    type="button"
+                    aria-label={strings.flipVertical}
+                    className={cx('lg-flip-ver lg-icon', flipVerIcon.className)}
+                    onClick={() => emit(FLIP_VER_EVENT)}
+                >
+                    {flipVerIcon.content}
+                </button>
+            )}
+            {settings.flipHorizontal && (
+                <button
+                    type="button"
+                    aria-label={strings.flipHorizontal}
+                    className={cx('lg-flip-hor lg-icon', flipHorIcon.className)}
+                    onClick={() => emit(FLIP_HOR_EVENT)}
+                >
+                    {flipHorIcon.content}
+                </button>
+            )}
+            {settings.rotateLeft && (
+                <button
+                    type="button"
+                    aria-label={strings.rotateLeft}
+                    className={cx('lg-rotate-left lg-icon', rotateLeftIcon.className)}
+                    onClick={() => emit(ROTATE_LEFT_EVENT)}
+                >
+                    {rotateLeftIcon.content}
+                </button>
+            )}
+            {settings.rotateRight && (
+                <button
+                    type="button"
+                    aria-label={strings.rotateRight}
+                    className={cx('lg-rotate-right lg-icon', rotateRightIcon.className)}
+                    onClick={() => emit(ROTATE_RIGHT_EVENT)}
+                >
+                    {rotateRightIcon.content}
+                </button>
+            )}
+        </>
+    );
+}
+
+function RotateWrapper({
+    item,
+    isCurrent,
+    children,
+}: SlideWrapperProps): ReactElement {
+    const internal = useGalleryInternal();
+    const settings = usePluginSettings<RotateSettings>();
+    const enabled = settings.rotate && getSlideType(item) === 'image';
+    const [slice, setSlice] = useState<RotateSlice>(initialRotateSlice);
+    const [fitScale, setFitScale] = useState(1);
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    // At 90°/270° the image must refit the stage (offset dimensions are
+    // transform-independent, so measuring stays correct mid-rotation).
+    useEffect(() => {
+        const measure = () => {
+            const wrapper = wrapperRef.current;
+            const image = wrapper?.querySelector<HTMLElement>('.lg-object');
+            if (!wrapper || !image) {
+                return 1;
+            }
+            return getRotateFitScale(
+                image.offsetWidth,
+                image.offsetHeight,
+                wrapper.clientWidth,
+                wrapper.clientHeight,
+                slice,
+            );
+        };
+        setFitScale(measure());
+        if (!isOrientationSwapped(slice)) {
+            return;
+        }
+        const onResize = () => setFitScale(measure());
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, [slice, enabled, isCurrent]);
+
+    useEffect(() => {
+        if (!isCurrent || !enabled) {
+            return;
+        }
+        const { events } = internal;
+        const commit = (
+            transition: (slice: RotateSlice) => RotateSlice,
+            eventName: string,
+            payload: (next: RotateSlice) => Record<string, number>,
+        ) => {
+            setSlice((previous) => {
+                const next = transition(previous);
+                window.setTimeout(
+                    () => events.emit(eventName, payload(next)),
+                    settings.rotateSpeed + 10,
+                );
+                return next;
+            });
+        };
+        const offs = [
+            events.on(ROTATE_LEFT_EVENT, () =>
+                commit(rotateLeft, 'rotateLeft', (next) => ({
+                    rotate: next.rotate,
+                })),
+            ),
+            events.on(ROTATE_RIGHT_EVENT, () =>
+                commit(rotateRight, 'rotateRight', (next) => ({
+                    rotate: next.rotate,
+                })),
+            ),
+            events.on(FLIP_HOR_EVENT, () =>
+                commit(flipHorizontal, 'flipHorizontal', (next) => ({
+                    flipHorizontal: next.flipHorizontal,
+                })),
+            ),
+            events.on(FLIP_VER_EVENT, () =>
+                commit(flipVertical, 'flipVertical', (next) => ({
+                    flipVertical: next.flipVertical,
+                })),
+            ),
+        ];
+        return () => offs.forEach((off) => off());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isCurrent, enabled]);
+
+    if (!enabled) {
+        return <>{children}</>;
+    }
+
+    return (
+        <div
+            ref={wrapperRef}
+            className="lg-img-rotate"
+            style={{
+                position: 'absolute',
+                inset: 0,
+                transform: getRotateTransform(slice, fitScale),
+                transitionDuration: `${settings.rotateSpeed}ms`,
+            }}
+        >
+            {children}
+        </div>
+    );
+}
+
+const Rotate: LgPlugin<RotateSettings> = {
+    name: 'rotate',
+    defaults: rotateSettings,
+    slots: {
+        toolbar: RotateToolbar,
+        slideWrapper: RotateWrapper,
+    },
+};
+
+declare module '../../types' {
+    interface LightGalleryPluginSettings {
+        rotate: Partial<RotateSettings>;
+    }
+}
+
+export default Rotate;

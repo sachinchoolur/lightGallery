@@ -1,0 +1,20 @@
+.choose-select-option-wrap {
+    margin-top: 20px;
+    .choose-select-option {
+        margin-right: 10px;
+        font-size: 14px;
+        color: #333;
+    }
+    .choose-select-option,
+    .select {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    // The chosen curve, selectable for copying.
+    .easing-value {
+        display: block;
+        margin-top: 10px;
+        font-size: 13px;
+        user-select: all;
+    }
+}

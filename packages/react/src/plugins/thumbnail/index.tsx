@@ -1,0 +1,678 @@
+import {
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+    type PointerEvent as ReactPointerEvent,
+    type ReactElement,
+} from 'react';
+import {
+    clampThumbTranslate,
+    getActiveThumbTranslate,
+    getElasticThumbTranslate,
+    getScrubThumbIndex,
+    getThumbCorridorWindow,
+    getThumbTotalWidth,
+    getThumbWindow,
+    getVideoInfo,
+    getWindowedVelocity,
+    project,
+    pushVelocitySample,
+    type ThumbPagerPosition,
+    type VelocitySample,
+    thumbnailDefaultIcons,
+} from '@lightgallery/headless';
+
+import { cx } from '../../cx';
+import {
+    useGalleryActions,
+    useGalleryInternal,
+    useGalleryState,
+} from '../../context';
+import { useEventCallback } from '../../hooks';
+import { useCustomIcons } from '../../icons';
+import { runSprings } from '../../springRunner';
+import { usePluginSettings } from '../runtime';
+import type { GalleryItem } from '../../types';
+import type { LgPlugin, PluginContext } from '../types';
+
+/** Thumbnail plugin (2.x `lg-thumbnail`): footer strip + toggle button. */
+
+export interface ThumbnailStrings {
+    toggleThumbnails: string;
+}
+
+export interface ThumbnailSettings {
+    /** Enable the thumbnail strip. */
+    thumbnail: boolean;
+    /** Animate the strip to keep the active thumb at the pager position. */
+    animateThumb: boolean;
+    /** Where the active thumbnail sits in the strip. */
+    currentPagerPosition: ThumbPagerPosition;
+    /** Strip alignment when the thumbs are narrower than the gallery. */
+    alignThumbnails: 'left' | 'middle' | 'right';
+    /** Width of each thumbnail (px). */
+    thumbWidth: number;
+    /** Height of each thumbnail (CSS length). */
+    thumbHeight: string;
+    /** Spacing between thumbnails (px). */
+    thumbMargin: number;
+    /** Show the toggle button (needs `allowMediaOverlap`, 2.x rule). */
+    toggleThumb: boolean;
+    /** Enable strip dragging (mouse and touch, via pointer events). */
+    enableThumbDrag: boolean;
+    /** Below this drag distance (px) a release still counts as a click. */
+    thumbnailSwipeThreshold: number;
+    /**
+     * Scrub the gallery with the thumbnail strip: while the strip is
+     * dragged (or gliding after a fling), the slide under the strip's
+     * travel position becomes current immediately, without slide
+     * transitions. The full strip travel spans the whole gallery, so
+     * the first and last slides are always reachable. Requires
+     * `animateThumb`; taps still navigate normally.
+     */
+    scrubThumbnails: boolean;
+    /** Load YouTube thumbs from img.youtube.com. */
+    loadYouTubeThumbnail: boolean;
+    /** YouTube thumb size suffix (`<n>.jpg`). */
+    youTubeThumbSize: number;
+    /**
+     * @deprecated Set these labels on the core `strings` object instead —
+     * an explicitly set key here still wins (alias).
+     */
+    thumbnailPluginStrings?: Partial<ThumbnailStrings>;
+}
+
+export const thumbnailSettings: ThumbnailSettings = {
+    thumbnail: true,
+    animateThumb: true,
+    currentPagerPosition: 'middle',
+    alignThumbnails: 'middle',
+    thumbWidth: 100,
+    thumbHeight: '80px',
+    thumbMargin: 5,
+    toggleThumb: false,
+    enableThumbDrag: true,
+    thumbnailSwipeThreshold: 10,
+    scrubThumbnails: false,
+    loadYouTubeThumbnail: true,
+    youTubeThumbSize: 1,
+};
+
+function getThumbSrc(
+    item: GalleryItem,
+    settings: ThumbnailSettings,
+): string | undefined {
+    const videoInfo = getVideoInfo(item.src, !!item.video);
+    if (videoInfo?.youtube && settings.loadYouTubeThumbnail) {
+        return `//img.youtube.com/vi/${videoInfo.youtube[1]}/${settings.youTubeThumbSize}.jpg`;
+    }
+    return item.thumb ?? item.src;
+}
+
+function ThumbnailStrip(): ReactElement | null {
+    const state = useGalleryState();
+    const actions = useGalleryActions();
+    const internal = useGalleryInternal();
+    const settings = usePluginSettings<ThumbnailSettings>();
+
+    const outerRef = useRef<HTMLDivElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
+    const [stripWidth, setStripWidth] = useState(0);
+    const [translate, setTranslate] = useState(0);
+    const [dragging, setDragging] = useState(false);
+    // The strip's first positioning belongs to the open flight: a
+    // gallery opened from a thumbnail far down the strip would slide it
+    // across while the image is still flying in.
+    const [instantOpen, setInstantOpen] = useState(true);
+    // Fling corridor: set at release so the window covers the
+    // whole flight path; cleared at settle.
+    const [corridor, setCorridor] = useState<{
+        from: number;
+        to: number;
+    } | null>(null);
+    const translateRef = useRef(0);
+    if (!dragging) {
+        // While a gesture/glide owns the track, the ref is the live
+        // (frame-written) value — do not clobber it from stale state.
+        translateRef.current = translate;
+    }
+    const clickableRef = useRef(true);
+    // Scrub session (scrubThumbnails): while the strip moves it drives
+    // the gallery — each step navigates on the instant no-animation
+    // timeline path (navigate + TRANSITION_END batch into one render),
+    // and the pager-follow effect stands down.
+    const scrubActiveRef = useRef(false);
+    const scrubIndexRef = useRef(-1);
+    const dragRef = useRef<{
+        pointerId: number;
+        startX: number;
+        startTranslate: number;
+        moved: boolean;
+    } | null>(null);
+    const detachRef = useRef<(() => void) | null>(null);
+    const samplesRef = useRef<VelocitySample[]>([]);
+    const springCancelRef = useRef<(() => void) | null>(null);
+
+    const totalWidth = getThumbTotalWidth(
+        internal.items.length,
+        settings.thumbWidth,
+        settings.thumbMargin,
+    );
+
+    // Thumbnail windowing: with virtualization.thumbs set, only
+    // the visible thumbs plus overscan render; spacers preserve the strip
+    // geometry. The window keys off the COMMITTED translate — it advances
+    // at release/slide-change/resize, never per pointermove, so the
+    // zero-reactivity drag contract holds (overscan covers the in-flight
+    // stretch of a drag).
+    const thumbsOverscan = settings.virtualization?.thumbs;
+    const windowGeometry = {
+        stripWidth,
+        thumbWidth: settings.thumbWidth,
+        thumbMargin: settings.thumbMargin,
+        count: internal.items.length,
+        overscan: thumbsOverscan,
+    };
+    const thumbWindow =
+        thumbsOverscan !== undefined && settings.animateThumb
+            ? corridor
+                ? getThumbCorridorWindow({ ...windowGeometry, ...corridor })
+                : getThumbWindow({ ...windowGeometry, translate })
+            : null;
+    const thumbWindowRef = useRef(thumbWindow);
+    thumbWindowRef.current = thumbWindow;
+
+    // Strip width measurement (2.x measures the outer element on open and
+    // on resize).
+    const measureStrip = useEventCallback(() =>
+        setStripWidth(
+            outerRef.current?.parentElement?.closest<HTMLElement>('.lg-outer')
+                ?.offsetWidth ??
+                outerRef.current?.offsetWidth ??
+                0,
+        ),
+    );
+    useLayoutEffect(() => {
+        measureStrip();
+        window.addEventListener('resize', measureStrip);
+        return () => window.removeEventListener('resize', measureStrip);
+    }, [measureStrip]);
+    // The strip mounts one commit before `lg-show` lands (persistent
+    // container), so the mount measurement can read a hidden 0-width
+    // outer — the stale width mis-clamps the pager translate and, when
+    // windowed, shrinks the thumb window. Re-measure shortly after the
+    // gallery opens, once the container is visible (vanilla measures on
+    // beforeOpen for the same reason).
+    useEffect(() => {
+        if (!state.open) {
+            return;
+        }
+        const timeout = window.setTimeout(measureStrip, 50);
+        return () => window.clearTimeout(timeout);
+    }, [state.open, measureStrip]);
+
+    // The translate scalar lives in logical strip space; in RTL the
+    // strip flows right-to-left (lg-rtl.css floats the thumbs right), so
+    // the applied sign and the finger mapping mirror together.
+    const isRtl = settings.direction === 'rtl';
+    const toTrackX = (value: number) => (isRtl ? value : -value);
+
+    const beginScrub = () => {
+        if (scrubActiveRef.current) {
+            return;
+        }
+        scrubActiveRef.current = true;
+        scrubIndexRef.current = state.currentIndex;
+        internal.layout.setOuterClass('lg-thumb-scrubbing', true);
+    };
+    const endScrub = () => {
+        if (!scrubActiveRef.current) {
+            return;
+        }
+        scrubActiveRef.current = false;
+        scrubIndexRef.current = -1;
+        internal.layout.setOuterClass('lg-thumb-scrubbing', false);
+    };
+    /** Live translate → slide, on drag frames and glide frames alike. */
+    const scrubTo = (value: number) => {
+        const index = getScrubThumbIndex(
+            value,
+            totalWidth,
+            stripWidth,
+            internal.items.length,
+        );
+        if (index === scrubIndexRef.current) {
+            return;
+        }
+        const direction = index > scrubIndexRef.current ? 'next' : 'prev';
+        scrubIndexRef.current = index;
+        // Batched into one render: the navigation lands with
+        // `transitioning` already false, so the outlet takes its
+        // instant no-animation timeline path — no staging, no timers.
+        actions.navigate(index, direction);
+        actions.dispatch({ type: 'TRANSITION_END' });
+    };
+
+    useEffect(() => {
+        setInstantOpen(true);
+        if (!state.open) {
+            return;
+        }
+        const timer = setTimeout(() => setInstantOpen(false), settings.speed);
+        return () => clearTimeout(timer);
+    }, [state.open, settings.speed]);
+
+    // Keep the active thumbnail at the pager position.
+    useEffect(() => {
+        if (!settings.animateThumb) {
+            return;
+        }
+        // Mid-scrub the finger owns the strip; re-centering against the
+        // scrub's own navigation would fight it.
+        if (scrubActiveRef.current) {
+            return;
+        }
+        setTranslate(
+            getActiveThumbTranslate(
+                state.currentIndex,
+                settings.thumbWidth,
+                settings.thumbMargin,
+                stripWidth,
+                totalWidth,
+                settings.currentPagerPosition,
+                isRtl ? 'rtl' : 'ltr',
+            ),
+        );
+    }, [
+        state.currentIndex,
+        stripWidth,
+        totalWidth,
+        settings.animateThumb,
+        settings.thumbWidth,
+        settings.thumbMargin,
+        settings.currentPagerPosition,
+        isRtl,
+    ]);
+
+    useEffect(
+        () => () => {
+            detachRef.current?.();
+            springCancelRef.current?.();
+            // A strip unmounting mid-scrub must not strand the outer
+            // class (the root outlives the strip).
+            if (scrubActiveRef.current) {
+                scrubActiveRef.current = false;
+                internal.layout.setOuterClass('lg-thumb-scrubbing', false);
+            }
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [],
+    );
+
+    // Strip physics: drags rubber-band past the edges, and the
+    // release glides on a velocity-seeded spring (the same headless
+    // project/spring stack the slide gestures ride). Frames write the DOM
+    // directly; state commits once at settle — the windowed strip
+    // re-renders there.
+    const writeTrackTranslate = (value: number) => {
+        translateRef.current = value;
+        const track = trackRef.current;
+        if (track) {
+            track.style.transform = `translate3d(${toTrackX(
+                value,
+            )}px, 0px, 0px)`;
+        }
+    };
+
+    const onPointerDown = (event: ReactPointerEvent) => {
+        if (
+            !settings.enableThumbDrag ||
+            !settings.animateThumb ||
+            totalWidth <= stripWidth ||
+            dragRef.current
+        ) {
+            return;
+        }
+        event.preventDefault();
+        // A press mid-glide takes over from the current position.
+        springCancelRef.current?.();
+        springCancelRef.current = null;
+        setCorridor(null);
+        samplesRef.current = pushVelocitySample([], {
+            x: event.clientX,
+            y: event.clientY,
+            t: Date.now(),
+        });
+        dragRef.current = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startTranslate: translateRef.current,
+            moved: false,
+        };
+        setDragging(true);
+        const onMove = (moveEvent: PointerEvent) => {
+            const drag = dragRef.current;
+            if (!drag || moveEvent.pointerId !== drag.pointerId) {
+                return;
+            }
+            const delta = moveEvent.clientX - drag.startX;
+            if (Math.abs(delta) > 2) {
+                drag.moved = true;
+                clickableRef.current = false;
+            }
+            // The scrub starts once the press has travelled the swipe
+            // threshold: below it the move is the wobble of a click, and
+            // on a long strip even one pixel of it would navigate.
+            if (
+                settings.scrubThumbnails &&
+                settings.animateThumb &&
+                Math.abs(delta) >= settings.thumbnailSwipeThreshold
+            ) {
+                beginScrub();
+            }
+            samplesRef.current = pushVelocitySample(samplesRef.current, {
+                x: moveEvent.clientX,
+                y: moveEvent.clientY,
+                t: Date.now(),
+            });
+            // Elastic: overshoot past the edges compresses instead of
+            // clamping dead.
+            writeTrackTranslate(
+                getElasticThumbTranslate(
+                    drag.startTranslate + (isRtl ? delta : -delta),
+                    totalWidth,
+                    stripWidth,
+                ),
+            );
+            if (scrubActiveRef.current) {
+                scrubTo(translateRef.current);
+            }
+            // Windowed strips: a long finger drag can outrun the
+            // rendered window — one commit recenters it (rare; routine
+            // moves stay zero-render).
+            const rendered = thumbWindowRef.current;
+            if (rendered) {
+                const unit = settings.thumbWidth + settings.thumbMargin;
+                // Clamped first: a rubber-band overshoot past either end
+                // needs no thumbs that are not already rendered.
+                const live = clampThumbTranslate(
+                    translateRef.current,
+                    totalWidth,
+                    stripWidth,
+                );
+                if (
+                    live < rendered.start * unit ||
+                    live + stripWidth > (rendered.end + 1) * unit
+                ) {
+                    setTranslate(live);
+                }
+            }
+        };
+        const onUp = (upEvent: PointerEvent) => {
+            const drag = dragRef.current;
+            if (!drag || upEvent.pointerId !== drag.pointerId) {
+                return;
+            }
+            detachRef.current?.();
+            detachRef.current = null;
+            dragRef.current = null;
+            clickableRef.current =
+                Math.abs(upEvent.clientX - drag.startX) <
+                settings.thumbnailSwipeThreshold;
+
+            // Fling: project the release velocity to a target, clamp into
+            // the strip bounds, and spring there (bounces off the edge
+            // when the projection overshoots; pulls back when released
+            // inside the rubber band).
+            const pointerVelocity = getWindowedVelocity(
+                samplesRef.current,
+                Date.now(),
+            ).x;
+            const translateVelocity = isRtl
+                ? pointerVelocity
+                : -pointerVelocity;
+            const target = clampThumbTranslate(
+                translateRef.current + project(translateVelocity),
+                totalWidth,
+                stripWidth,
+            );
+            // A press that released without moving, or moved less than
+            // the swipe threshold, is a click: no spring runs and the
+            // scrub session ends here, or the click's own slide change
+            // would find the scrub still active and skip re-centering.
+            if (!drag.moved || clickableRef.current) {
+                endScrub();
+                setDragging(false);
+                // Back to where the press found the strip: a wobble must
+                // not leave it offset by a few pixels. Written to the DOM
+                // as well, since a state value equal to the last render's
+                // does not overwrite what the drag frames wrote.
+                const start = clampThumbTranslate(
+                    drag.startTranslate,
+                    totalWidth,
+                    stripWidth,
+                );
+                writeTrackTranslate(start);
+                setTranslate(start);
+                return;
+            }
+            // Windowed strips: render the whole flight corridor before
+            // the glide starts — the destination is known at release, so
+            // the spring never crosses unrendered thumbs.
+            if (thumbWindowRef.current) {
+                setCorridor({ from: translateRef.current, to: target });
+            }
+            springCancelRef.current = runSprings(
+                [
+                    {
+                        from: translateRef.current,
+                        velocity: translateVelocity,
+                        target,
+                    },
+                ],
+                ([value]) => {
+                    writeTrackTranslate(value!);
+                    // The glide keeps scrubbing — a flicked strip drives
+                    // the gallery to where it decelerates.
+                    if (scrubActiveRef.current) {
+                        scrubTo(value!);
+                    }
+                },
+                () => {
+                    springCancelRef.current = null;
+                    endScrub();
+                    // One commit: drop the drag styling, clear the
+                    // corridor and publish the settled translate
+                    // (windowed strips re-render here).
+                    setDragging(false);
+                    setCorridor(null);
+                    setTranslate(target);
+                },
+            );
+        };
+        window.addEventListener('pointermove', onMove, { passive: true });
+        window.addEventListener('pointerup', onUp);
+        window.addEventListener('pointercancel', onUp);
+        detachRef.current = () => {
+            window.removeEventListener('pointermove', onMove);
+            window.removeEventListener('pointerup', onUp);
+            window.removeEventListener('pointercancel', onUp);
+        };
+    };
+
+    if (!settings.thumbnail) {
+        return null;
+    }
+
+    return (
+        <div
+            ref={outerRef}
+            className={cx(
+                'lg-thumb-outer',
+                `lg-thumb-align-${settings.alignThumbnails}`,
+                settings.enableThumbDrag && 'lg-grab',
+                dragging && 'lg-dragging lg-grabbing',
+            )}
+            // The strip lives outside .lg-inner's touch-action:none, and
+            // its pointermove is passive — without this the browser owns
+            // the pan and cancels the drag (2.x prevented via touchmove).
+            // Static mode has no drag, so the browser keeps the touch.
+            style={settings.animateThumb ? { touchAction: 'none' } : undefined}
+        >
+            <div
+                ref={trackRef}
+                className="lg-thumb lg-group"
+                // Static mode (2.x parity): no width/transform — the
+                // items wrap into rows and every thumbnail stays visible.
+                style={
+                    settings.animateThumb
+                        ? {
+                              width: `${totalWidth}px`,
+                              position: 'relative',
+                              transitionDuration:
+                                  dragging || instantOpen
+                                      ? '0ms'
+                                      : `${settings.speed}ms`,
+                              transform: `translate3d(${toTrackX(
+                                  dragging ? translateRef.current : translate,
+                              )}px, 0px, 0px)`,
+                          }
+                        : undefined
+                }
+                onPointerDown={onPointerDown}
+            >
+                {thumbWindow && thumbWindow.leadingPad > 0 && (
+                    <div
+                        className="lg-thumb-spacer"
+                        aria-hidden="true"
+                        style={{
+                            width: `${thumbWindow.leadingPad}px`,
+                            height: 1,
+                            float: isRtl ? 'right' : 'left',
+                        }}
+                    />
+                )}
+                {(thumbWindow
+                    ? internal.items
+                          .map((item, index) => ({ item, index }))
+                          .slice(thumbWindow.start, thumbWindow.end + 1)
+                    : internal.items.map((item, index) => ({ item, index }))
+                ).map(({ item, index }) => (
+                    <div
+                        key={index}
+                        data-lg-item-id={index}
+                        className={cx(
+                            'lg-thumb-item',
+                            index === state.currentIndex && 'active',
+                        )}
+                        style={{
+                            width: `${settings.thumbWidth}px`,
+                            height: settings.thumbHeight,
+                            [isRtl
+                                ? 'marginLeft'
+                                : 'marginRight']: `${settings.thumbMargin}px`,
+                        }}
+                        onClick={() => {
+                            if (clickableRef.current) {
+                                actions.goToSlide(index);
+                            }
+                            clickableRef.current = true;
+                        }}
+                    >
+                        <img
+                            loading="lazy"
+                            decoding="async"
+                            src={getThumbSrc(item, settings)}
+                            alt={item.alt ?? ''}
+                            draggable={false}
+                        />
+                    </div>
+                ))}
+                {thumbWindow && thumbWindow.trailingPad > 0 && (
+                    <div
+                        className="lg-thumb-spacer"
+                        aria-hidden="true"
+                        style={{
+                            width: `${thumbWindow.trailingPad}px`,
+                            height: 1,
+                            float: isRtl ? 'right' : 'left',
+                        }}
+                    />
+                )}
+            </div>
+        </div>
+    );
+}
+
+function ThumbnailToggleButton(): ReactElement | null {
+    const internal = useGalleryInternal();
+    const toggleIcon = useCustomIcons(
+        ['toggleThumbnails'],
+        thumbnailDefaultIcons,
+    );
+    const settings = usePluginSettings<ThumbnailSettings>();
+    // 2.x rule: the toggle only exists when media may overlap the strip.
+    if (
+        !settings.thumbnail ||
+        !settings.toggleThumb ||
+        !settings.allowMediaOverlap
+    ) {
+        return null;
+    }
+    return (
+        <button
+            type="button"
+            aria-label={
+                settings.thumbnailPluginStrings?.toggleThumbnails ??
+                settings.strings.toggleThumbnails
+            }
+            className={cx('lg-toggle-thumb lg-icon', toggleIcon.className)}
+            onClick={() => internal.layout.toggleComponents()}
+        >
+            {toggleIcon.content}
+        </button>
+    );
+}
+
+function useThumbnailPlugin(ctx: PluginContext): void {
+    const settings = ctx.settings as unknown as ThumbnailSettings & {
+        allowMediaOverlap: boolean;
+    };
+    const enabled = settings.thumbnail;
+    const animate = settings.animateThumb;
+    const canToggle =
+        enabled && settings.toggleThumb && settings.allowMediaOverlap;
+    const { layout } = ctx;
+    useEffect(() => {
+        if (!enabled) {
+            return;
+        }
+        layout.setOuterClass('lg-has-thumb', true);
+        layout.setOuterClass('lg-animate-thumb', animate);
+        layout.setOuterClass('lg-can-toggle', canToggle);
+        return () => {
+            layout.setOuterClass('lg-has-thumb', false);
+            layout.setOuterClass('lg-animate-thumb', false);
+            layout.setOuterClass('lg-can-toggle', false);
+        };
+    }, [enabled, animate, canToggle, layout]);
+}
+
+const Thumbnail: LgPlugin<ThumbnailSettings> = {
+    name: 'thumbnail',
+    defaults: thumbnailSettings,
+    slots: {
+        components: ThumbnailStrip,
+        toolbar: ThumbnailToggleButton,
+    },
+    usePlugin: useThumbnailPlugin,
+};
+
+declare module '../../types' {
+    interface LightGalleryPluginSettings {
+        thumbnail: Partial<ThumbnailSettings>;
+    }
+}
+
+export default Thumbnail;

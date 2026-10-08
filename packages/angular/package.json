@@ -1,0 +1,70 @@
+{
+  "name": "@lightgallery/angular",
+  "version": "3.0.0-beta.5",
+  "private": false,
+  "description": "Native Angular lightGallery over @lightgallery/headless — standalone components, signals, zoneless-ready",
+  "license": "(GPL-3.0-only OR LicenseRef-Commercial)",
+  "author": "Sachin Neravath <sachi77n@gmail.com>",
+  "homepage": "https://www.lightgalleryjs.com/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sachinchoolur/lightGallery.git",
+    "directory": "packages/angular"
+  },
+  "keywords": [
+    "lightgallery",
+    "gallery",
+    "lightbox",
+    "angular",
+    "signals",
+    "zoneless",
+    "carousel",
+    "image-gallery",
+    "video-gallery"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  },
+  "scripts": {
+    "build": "ng-packagr -p ng-package.json -c tsconfig.lib.json",
+    "dev": "vite dev --config dev/vite.config.mts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint 'src/**/*.ts' 'plugins/**/*.ts' --quiet",
+    "prepack": "node ../../scripts/assert-built.mjs --refuse publish from packages/angular/dist, the ng-packagr output, not from the source folder."
+  },
+  "dependencies": {
+    "@lightgallery/headless": "^3.0.0-beta.5",
+    "tslib": "^2.6.0"
+  },
+  "peerDependencies": {
+    "@angular/cdk": ">=21.0.0 <23.0.0",
+    "@angular/common": ">=21.0.0 <23.0.0",
+    "@angular/core": ">=21.0.0 <23.0.0",
+    "@angular/platform-browser": ">=21.0.0 <23.0.0"
+  },
+  "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^2.6.3",
+    "@angular/build": "^21.2.0",
+    "@angular/cdk": "^21.2.0",
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/compiler-cli": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/platform-server": "^21.2.0",
+    "@eslint/js": "^9.17.0",
+    "axe-core": "^4.12.1",
+    "eslint": "^9.17.0",
+    "jsdom": "^26.0.0",
+    "ng-packagr": "^21.2.5",
+    "typescript": "~5.9.0",
+    "typescript-eslint": "^8.19.0",
+    "vite": "^7.0.0",
+    "vitest": "^4.1.0",
+    "vitest-axe": "^0.1.0"
+  }
+}

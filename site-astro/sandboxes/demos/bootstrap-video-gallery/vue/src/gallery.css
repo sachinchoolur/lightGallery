@@ -1,0 +1,4 @@
+/* The HTML5 video item is a link without an href, so it needs the cursor. */
+#bootstrap-video-gallery a {
+    cursor: pointer;
+}

@@ -1,0 +1,548 @@
+---
+title: 'Infinite scrolling'
+description: 'Infinite scrolling gallery demo: load more thumbnails as the page scrolls and keep the lightbox in sync with refresh().'
+lead:
+    'Infinite scrolling is a web-design technique that loads content
+    continuously as the user scrolls down the page, eliminating the need for
+    pagination. Let''s see how we can implement infinite scrolling with
+    lightGallery.'
+date: 2020-10-06T08:48:57+00:00
+draft: false
+images: []
+menu:
+    demos:
+        parent: 'Demos'
+weight: 16
+toc: true
+---
+import DemoRuntime from '../../components/shortcodes/DemoRuntime.astro';
+import CodeTabs from '../../components/shortcodes/CodeTabs.astro';
+import { photos } from '../../lib/photos';
+
+<DemoRuntime />
+
+
+Start with a regular gallery.
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
+
+```html
+<div id="infinite-scroll-gallery">
+    <a href="img/img1.jpg">
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a href="img/img2.jpg">
+        <img src="img/thumb2.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+const gallery = document.getElementById('infinite-scroll-gallery');
+const lg = lightGallery(gallery, {
+    speed: 500,
+});
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { useState } from 'react';
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+
+const firstPage = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+const [items, setItems] = useState(firstPage);
+
+<LightGallery speed={500}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item} href={item.src}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { ref } from 'vue';
+import { LightGallery, LgItem } from '@lightgallery/vue';
+
+const firstPage = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+const items = ref([...firstPage]);
+</script>
+
+<template>
+    <LightGallery :speed="500">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import { Component, signal } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+
+const firstPage: LgGalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [speed]="500">
+            @for (item of items(); track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    items = signal(firstPage);
+}
+```
+
+</Fragment>
+</CodeTabs>
+
+Put an element after the gallery, a status line works well, and watch it
+with an `IntersectionObserver`. It reports when the element scrolls within
+200px of the viewport, with no scroll listener to throttle and no library.
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+**HTML**
+
+```html
+<p id="infinite-scroll-status">Scroll for more</p>
+```
+
+**JavaScript**
+
+```js
+const status = document.getElementById('infinite-scroll-status');
+const observer = new IntersectionObserver(
+    ([entry]) => {
+        if (entry.isIntersecting) {
+            // The status line is in view: load the next page
+        }
+    },
+    { rootMargin: '200px' },
+);
+observer.observe(status);
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+const status = useRef<HTMLParagraphElement>(null);
+
+useEffect(() => {
+    const observer = new IntersectionObserver(
+        ([entry]) => {
+            if (entry.isIntersecting) {
+                // The status line is in view: load the next page
+            }
+        },
+        { rootMargin: '200px' },
+    );
+    observer.observe(status.current!);
+    return () => observer.disconnect();
+}, []);
+
+<p ref={status}>Scroll for more</p>;
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup>
+import { onMounted, onUnmounted, ref } from 'vue';
+
+const status = ref(null);
+const observer = new IntersectionObserver(
+    ([entry]) => {
+        if (entry.isIntersecting) {
+            // The status line is in view: load the next page
+        }
+    },
+    { rootMargin: '200px' },
+);
+
+onMounted(() => observer.observe(status.value));
+onUnmounted(() => observer.disconnect());
+</script>
+
+<template>
+    <p ref="status">Scroll for more</p>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+// In the template: <p #status>Scroll for more</p>
+status = viewChild.required<ElementRef<HTMLElement>>('status');
+
+constructor() {
+    const observer = new IntersectionObserver(
+        ([entry]) => {
+            if (entry.isIntersecting) {
+                // The status line is in view: load the next page
+            }
+        },
+        { rootMargin: '200px' },
+    );
+    afterNextRender(() => observer.observe(this.status().nativeElement));
+    inject(DestroyRef).onDestroy(() => observer.disconnect());
+}
+```
+
+</Fragment>
+</CodeTabs>
+
+Then append the new thumbnails and call `refresh()`. The gallery picks up
+the new items as they are; there is no need to destroy and re-create it.
+In React, Vue and Angular, adding to the list is the whole update.
+
+<CodeTabs>
+<Fragment slot="vanilla">
+
+```js
+gallery.insertAdjacentHTML('beforeend', thumbnails);
+lg.refresh();
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+setItems((current) => [...current, ...nextPage]);
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```js
+items.value.push(...nextPage);
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+append(nextPage: LgGalleryItem[]) {
+    this.items.update((current) => [...current, ...nextPage]);
+}
+```
+
+</Fragment>
+</CodeTabs>
+
+That's it. Here is the full example: a `loading` flag keeps one request in
+flight at a time, and the observer disconnects after the last page.
+
+<CodeTabs sandbox="infinite-scrolling">
+<Fragment slot="vanilla">
+
+```js
+const gallery = document.getElementById('infinite-scroll-gallery');
+const status = document.getElementById('infinite-scroll-status');
+const lg = lightGallery(gallery, {
+    speed: 500,
+});
+
+let loading = false;
+const observer = new IntersectionObserver(
+    async ([entry]) => {
+        if (!entry.isIntersecting || loading) return;
+        loading = true;
+        status.textContent = 'Loading more photos…';
+
+        // Your request; resolves to the next page's thumbnails as HTML,
+        // or null when there are no more.
+        const thumbnails = await fetchNextPage();
+        if (!thumbnails) {
+            status.textContent = "That's everything.";
+            observer.disconnect();
+            return;
+        }
+
+        gallery.insertAdjacentHTML('beforeend', thumbnails);
+        lg.refresh();
+        status.textContent = 'Scroll for more';
+        loading = false;
+    },
+    { rootMargin: '200px' },
+);
+observer.observe(status);
+```
+
+</Fragment>
+<Fragment slot="react">
+
+```tsx
+import { useEffect, useRef, useState } from 'react';
+import {
+    LightGallery,
+    LightGalleryItem,
+    type GalleryItem,
+} from '@lightgallery/react';
+
+const firstPage: GalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// Your request; resolves to the next page's items, or null when there
+// are no more.
+declare function fetchNextPage(): Promise<GalleryItem[] | null>;
+
+export default function Gallery() {
+    const [items, setItems] = useState(firstPage);
+    const [done, setDone] = useState(false);
+    const status = useRef<HTMLParagraphElement>(null);
+
+    // The status line sits after the gallery. When it comes within 200px
+    // of the viewport, the next page loads. The effect runs again after
+    // every page, so a status line that is still in view after a short
+    // page loads the next one too.
+    useEffect(() => {
+        if (done) return;
+        const observer = new IntersectionObserver(
+            async ([entry]) => {
+                if (!entry.isIntersecting) return;
+                // One request at a time.
+                observer.disconnect();
+                const next = await fetchNextPage();
+                if (!next) {
+                    setDone(true);
+                    return;
+                }
+                // Appending to the list is the whole update: the gallery
+                // picks up the new slides on the next render.
+                setItems((current) => [...current, ...next]);
+            },
+            { rootMargin: '200px' },
+        );
+        observer.observe(status.current!);
+        return () => observer.disconnect();
+    }, [items, done]);
+
+    return (
+        <>
+            <LightGallery speed={500}>
+                {items.map((item) => (
+                    <LightGalleryItem key={item.src} item={item} href={item.src}>
+                        <img src={item.thumb} alt={item.alt} />
+                    </LightGalleryItem>
+                ))}
+            </LightGallery>
+            <p ref={status}>
+                {done ? "That's everything." : 'Scroll for more'}
+            </p>
+        </>
+    );
+}
+```
+
+</Fragment>
+<Fragment slot="vue">
+
+```vue
+<script setup lang="ts">
+import { nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+
+const firstPage: LgGalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// Your request; resolves to the next page's items, or null when there
+// are no more.
+declare function fetchNextPage(): Promise<LgGalleryItem[] | null>;
+
+const items = ref([...firstPage]);
+const done = ref(false);
+const status = useTemplateRef('status');
+
+let loading = false;
+
+// The status line sits after the gallery. When it comes within 200px of
+// the viewport, the next page loads.
+const observer = new IntersectionObserver(
+    async ([entry]) => {
+        if (!entry.isIntersecting || loading) return;
+        loading = true;
+        const next = await fetchNextPage();
+        if (!next) {
+            done.value = true;
+            observer.disconnect();
+            return;
+        }
+        // Appending to the list is the whole update: the gallery picks up
+        // the new slides on the next render.
+        items.value.push(...next);
+        loading = false;
+
+        // Once the new thumbnails are on the page, observe again, so a
+        // status line that is still in view after a short page loads the
+        // next one too.
+        await nextTick();
+        observer.unobserve(status.value!);
+        observer.observe(status.value!);
+    },
+    { rootMargin: '200px' },
+);
+
+onMounted(() => observer.observe(status.value!));
+onUnmounted(() => observer.disconnect());
+</script>
+
+<template>
+    <LightGallery :speed="500">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+    <p ref="status">{{ done ? "That's everything." : 'Scroll for more' }}</p>
+</template>
+```
+
+</Fragment>
+<Fragment slot="angular">
+
+```ts
+import {
+    afterRenderEffect,
+    Component,
+    DestroyRef,
+    ElementRef,
+    inject,
+    signal,
+    viewChild,
+} from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+
+const firstPage: LgGalleryItem[] = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// Your request; resolves to the next page's items, or null when there
+// are no more.
+declare function fetchNextPage(): Promise<LgGalleryItem[] | null>;
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [speed]="500">
+            @for (item of items(); track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+        <p #status>{{ done() ? "That's everything." : 'Scroll for more' }}</p>
+    `,
+})
+export class Gallery {
+    items = signal(firstPage);
+    done = signal(false);
+
+    private status = viewChild.required<ElementRef<HTMLElement>>('status');
+    private loading = false;
+
+    constructor() {
+        // The status line sits after the gallery. When it comes within
+        // 200px of the viewport, the next page loads.
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    this.loadNextPage();
+                }
+            },
+            { rootMargin: '200px' },
+        );
+        // Runs after the first render and after each page is rendered.
+        // Observing again makes a status line that is still in view after
+        // a short page load the next one too.
+        afterRenderEffect(() => {
+            observer.disconnect();
+            if (!this.done()) {
+                observer.observe(this.status().nativeElement);
+            }
+        });
+        inject(DestroyRef).onDestroy(() => observer.disconnect());
+    }
+
+    private async loadNextPage(): Promise<void> {
+        // One request at a time.
+        if (this.loading) return;
+        this.loading = true;
+        const next = await fetchNextPage();
+        if (!next) {
+            this.done.set(true);
+            return;
+        }
+        // Appending to the list is the whole update: the gallery picks up
+        // the new slides on the next render.
+        this.items.update((current) => [...current, ...next]);
+        this.loading = false;
+    }
+}
+```
+
+</Fragment>
+</CodeTabs>
+
+### Infinite scrolling
+
+<div class="infinite-scroll-gallery" id="infinite-scroll-gallery">
+    {photos('desert', 6).map((p) => (
+        <a data-lg-size={`${p.width}-${p.height}`} class="gallery-item" data-src={p.src} data-sub-html={p.caption}>
+            <img class="img-responsive" alt={p.alt} src={p.thumb} />
+        </a>
+    ))}
+</div>
+<p class="infinite-scroll-status" id="infinite-scroll-status" aria-live="polite">Scroll for more</p>

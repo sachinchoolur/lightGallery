@@ -1,3 +1,6 @@
+import { VirtualizationSettings } from '@lightgallery/headless';
+
+import { LgIcons } from './lg-icons';
 import { GalleryItem } from './lg-utils';
 import { LgQuery } from './lgQuery';
 import { LightGallery } from './lightgallery';
@@ -5,6 +8,7 @@ import { AutoplaySettings } from './plugins/autoplay/lg-autoplay-settings';
 import { CommentSettings } from './plugins/comment/lg-comment-settings';
 import { FullscreenSettings } from './plugins/fullscreen/lg-fullscreen-settings';
 import { HashSettings } from './plugins/hash/lg-hash-settings';
+import { JustifiedSettings } from './plugins/justified/lg-justified-settings';
 import { MediumZoomSettings } from './plugins/mediumZoom/lg-medium-zoom-settings';
 import { PagerSettings } from './plugins/pager/lg-pager-settings';
 import { RotateSettings } from './plugins/rotate/lg-rotate-settings';
@@ -40,6 +44,44 @@ export interface LightGalleryCoreStrings {
     download: string;
     playVideo: string;
     mediaLoadingFailed: string;
+    /** Accessible name of the gallery dialog when `ariaLabelledby` is not set. */
+    galleryLabel: string;
+    /**
+     * Template announced to assistive technology on every slide change.
+     * `{index}` and `{total}` are replaced with the 1-based slide position
+     * and the slide count; the slide caption, when present, is appended.
+     */
+    slideAnnouncement: string;
+    /** Label of the toolbar's More options menu button. */
+    moreOptions: string;
+
+    // Plugin labels: every user-facing string lives in this one contract.
+    // The legacy per-plugin *PluginStrings objects remain as deprecated
+    // aliases, an explicitly set legacy key wins.
+    /** Share plugin: share button label. */
+    share: string;
+    /** Thumbnail plugin: strip toggle button label. */
+    toggleThumbnails: string;
+    /** Autoplay plugin: slideshow toggle button label. */
+    toggleAutoplay: string;
+    /** Fullscreen plugin: fullscreen toggle button label. */
+    toggleFullscreen: string;
+    /** Zoom plugin: zoom-in button label. */
+    zoomIn: string;
+    /** Zoom plugin: zoom-out button label. */
+    zoomOut: string;
+    /** Zoom plugin: actual-size button label. */
+    viewActualSize: string;
+    /** Rotate plugin: rotate-left button label. */
+    rotateLeft: string;
+    /** Rotate plugin: rotate-right button label. */
+    rotateRight: string;
+    /** Rotate plugin: horizontal flip button label. */
+    flipHorizontal: string;
+    /** Rotate plugin: vertical flip button label. */
+    flipVertical: string;
+    /** Comment plugin: comments toggle button label. */
+    toggleComments: string;
 }
 
 export type LightGalleryAllSettings = LightGalleryCoreSettings &
@@ -50,12 +92,18 @@ export type LightGalleryAllSettings = LightGalleryCoreSettings &
     CommentSettings &
     FullscreenSettings &
     HashSettings &
+    JustifiedSettings &
     PagerSettings &
     RotateSettings &
     ShareSettings &
     MediumZoomSettings;
 
-export type LightGallerySettings = Partial<LightGalleryAllSettings>;
+// User-facing input: everything optional, strings mergeable per-key
+// (headless UserSettings parity, a partial strings object merges over
+// the defaults instead of replacing the whole contract).
+export type LightGallerySettings = Partial<
+    Omit<LightGalleryAllSettings, 'strings'>
+> & { strings?: Partial<LightGalleryCoreStrings> };
 
 export interface LightGalleryCoreSettings {
     /**
@@ -100,16 +148,19 @@ export interface LightGalleryCoreSettings {
     easing: string;
 
     /**
-     *Transition duration (in ms).
+     * Transition duration (in ms).
      */
     speed: number;
 
     /**
-     * If you are using lightGallery for commercial projects, you need to purchase a commercial license
-     * to get the license key. For projects that are compatible with GPLv3 license,
-     * please contact us for getting a license key at <a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a>.
-     * If you want to test lightGallery before purchasing a commercial license, you can
-     * use `0000-0000-000-0000` as a temporary license key
+     * License key. lightGallery is free under the GPLv3; projects that keep
+     * their source proprietary need a commercial license, and its key arrives
+     * by email. Open-source projects can request a key at
+     * <a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a>.
+     * `0000-0000-000-0000` is a temporary key for evaluation: it does not
+     * limit any feature, it only logs a console warning. lightGallery 3 keys
+     * start with `LIG`; a key from v1 or v2 logs a warning asking you to
+     * upgrade. See <a href="/docs/license/">License</a>.
      */
 
     licenseKey: string;
@@ -136,7 +187,7 @@ export interface LightGalleryCoreSettings {
      * Start animation class for the gallery.
      * @description
      * <ul>
-     * <li>startClass will be empty zoomFromOrigin is true.</li>
+     * <li>startClass will be empty if zoomFromOrigin is true.</li>
      * <li>This can be used to change the starting effect when the image is loaded</li>
      * <li>This is also applied when navigating to new slides</li>
      * </ul>
@@ -145,9 +196,9 @@ export interface LightGalleryCoreSettings {
 
     /**
      * Enable zoom from origin effect.
-     * @description You need to know the original image size upfront and provide it via data-lg-size attribute as <code> data-lg-size="1920-1280</code>"
+     * @description You need to know the original image size upfront and provide it via data-lg-size attribute as <code>data-lg-size="1920-1280"</code>
      *
-     * If you don't know, the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides,
+     * If you don't know the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides,
      * lightGallery will show the default animation if data-lg-size is not available
      *
      * If you are using responsive images,
@@ -158,13 +209,19 @@ export interface LightGalleryCoreSettings {
      * data-responsive="img-240.jpg 375, img-400.jpg 480"
      * data-src="img-1600.jpg" </code>
      *
-     * In the above example, upto 375 width img.240.jpg and lg-size 240-160 will be used.
-     * Similarly, upto 480 pixel width size 400-267 and img-400.jpg will be used
+     * In the above example, up to 375 width img-240.jpg and lg-size 240-160 will be used.
+     * Similarly, up to 480 pixel width size 400-267 and img-400.jpg will be used
      * And above 480, lg-size 1600-1067 and img-1600.jpg will be used
      *
+     * When the gallery closes on a slide that has no thumbnail to return to
+     * (the trigger is hidden or collapsed, as with the overflow items behind a
+     * "+9 photos" tile, it has no data-lg-size, or the gallery is dynamic), the
+     * slide shrinks to the centre of the stage and fades out instead of flying
+     * to the thumbnail.
+     *
      * <ul>
-     * <li>At the moment, zoomFromOrigin options is supported only for image slides.</li>
-     * <li>Will be false if dynamic option is enabled or galleryID found in the URL.</li>
+     * <li>At the moment, the zoomFromOrigin option is supported only for image slides.</li>
+     * <li>The opening flight is skipped if dynamic option is enabled or galleryID found in the URL.</li>
      * <li>startClass will be empty if zoomFromOrigin is true to avoid css conflicts.</li>
      * </ul>
      */
@@ -211,15 +268,8 @@ export interface LightGalleryCoreSettings {
     slideDelay: number;
 
     /**
-     * Support legacy browsers
-     * @description Currently this is used only for adding support to srcset attribute via picturefill library
-     * If true lightGallery will show warning message to include picturefill library
-     */
-    supportLegacyBrowser: boolean;
-
-    /**
      * If true, toolbar, captions and thumbnails will not overlap with media element
-     * This will not effect thumbnails if animateThumb is false
+     * This will not affect thumbnails if animateThumb is false
      * Also, toggle thumbnails button is not displayed if allowMediaOverlap is false
      * <section>
      * Note - Changing the position of the media on every slide transition creates a flickering effect.
@@ -227,7 +277,7 @@ export interface LightGalleryCoreSettings {
      * </section>
      * <section>
      * if you have dynamic captions for each media,
-     * you can provide an appropriate height for the captions via allowMediaOverlap option
+     * you can provide an appropriate height for the captions via defaultCaptionHeight option
      * </section>
      */
     allowMediaOverlap: boolean;
@@ -235,7 +285,7 @@ export interface LightGalleryCoreSettings {
     /**
      * Video max size.
      * @description This can be over-written by passing specific size via data-lg-size attribute
-     * Recommended video resolution and & aspect ratios <a href="https://support.google.com/youtube/answer/6375112">https://support.google.com/youtube/answer/6375112</a>
+     * Recommended video resolution and aspect ratios <a href="https://support.google.com/youtube/answer/6375112">https://support.google.com/youtube/answer/6375112</a>
      */
     videoMaxSize: string;
 
@@ -253,7 +303,7 @@ export interface LightGalleryCoreSettings {
     defaultCaptionHeight: number;
 
     /**
-     * aria-labelledby attribute fot gallery
+     * aria-labelledby attribute for gallery
      */
     ariaLabelledby: string;
 
@@ -261,6 +311,33 @@ export interface LightGalleryCoreSettings {
      * aria-describedby attribute for gallery
      */
     ariaDescribedby: string;
+
+    /**
+     * Large-gallery virtualization. Off when undefined, the classic
+     * behavior: every thumbnail renders and the mounted-slide window is
+     * numberOfSlideItemsInDom.
+     * @description slides overrides the mounted-slide pool size; thumbs
+     * turns on thumbnail-strip windowing (only the visible thumbs plus an
+     * overscan render, with spacers preserving the strip geometry), a
+     * number is the overscan thumb count per side, 'auto' derives one
+     * extra viewport per side. The window advances at commit points
+     * (release, slide change, resize), never per pointer move.
+     * See <a href="/docs/virtualization/">Virtualization</a>.
+     * @version V3.0.0
+     */
+    virtualization?: VirtualizationSettings;
+
+    /**
+     * Announce slide changes to assistive technology through a dedicated
+     * polite live region (strings.slideAnnouncement + the slide caption).
+     * @description While enabled, the counter and caption bar are not
+     * separate live regions, the announcer is the single source of
+     * slide-change announcements. Set to false to restore the previous
+     * behavior (live counter and caption, no announcer).
+     * See <a href="/docs/accessibility/">Accessibility</a>.
+     * @version V3.0.0
+     */
+    ariaAnnouncements: boolean;
 
     /**
      * Hide scrollbar when gallery is opened
@@ -305,12 +382,32 @@ export interface LightGalleryCoreSettings {
     showMaximizeIcon: boolean;
 
     /**
+     * Keep the toolbar on one row.
+     * @description When the toolbar buttons do not fit beside the counter,
+     * the lowest-priority ones move into a "More options" menu. Set to
+     * false to let the buttons wrap onto a second row instead.
+     * See <a href="/docs/settings/#toolbarOverflow">toolbarOverflow</a>.
+     * @version V3.0.0
+     */
+    toolbarOverflow: boolean;
+
+    /**
+     * Show the toolbar buttons that repeat a touch gesture.
+     * @description Zoom in, zoom out and actual size do what pinch and
+     * double-tap already do. On by default, and turned off on touch
+     * devices through mobileSettings.
+     * See <a href="/docs/settings/#showGestureButtons">showGestureButtons</a>.
+     * @version V3.0.0
+     */
+    showGestureButtons: boolean;
+
+    /**
      * If false, will disable the ability to loop back to the beginning of the gallery from the last slide.
      */
     loop: boolean;
 
     /**
-     * Whether the LightGallery could be closed by pressing the "Esc" key.
+     * Whether the lightGallery could be closed by pressing the "Esc" key.
      */
     escKey: boolean;
 
@@ -347,6 +444,18 @@ export interface LightGalleryCoreSettings {
     mousewheel: boolean;
 
     /**
+     * Gallery reading direction: keyboard arrows, swipe advance and the
+     * slide/thumbnail transforms follow it. Visual mirroring is the
+     * opt-in lg-rtl.css layer - load it whenever this resolves to 'rtl'.
+     * 'auto' inherits the computed direction of the gallery element;
+     * the default stays 'ltr' so upgrades never change behavior on
+     * existing pages.
+     * See <a href="/docs/localization-rtl/">Localization &amp; RTL</a>.
+     * @version V3.0.0
+     */
+    direction: 'ltr' | 'rtl' | 'auto';
+
+    /**
      * Option to get captions from alt or title tags.
      */
     getCaptionFromTitleOrAlt: boolean;
@@ -354,7 +463,7 @@ export interface LightGalleryCoreSettings {
     /**
      * control where the sub-html should be appended.
      * If you choose '.lg-outer', you are responsible for placing the div at the right position.
-     * '.lg-outer' is useful if you want show custom HTML outside the normal gallery
+     * '.lg-outer' is useful if you want to show custom HTML outside the normal gallery
      */
     appendSubHtmlTo: '.lg-sub-html' | '.lg-item' | '.lg-outer';
 
@@ -365,9 +474,9 @@ export interface LightGalleryCoreSettings {
 
     /**
      * number of preload slides
-     * @description will exicute only after the current slide is fully loaded.
+     * @description will execute only after the current slide is fully loaded.
      * for example, if you click on 4th image and if preload = 1 then 3rd slide and 5th
-     * slide will be loaded in the background after the 4th slide is fully loaded..
+     * slide will be loaded in the background after the 4th slide is fully loaded.
      * if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.
      */
     preload: number;
@@ -390,10 +499,10 @@ export interface LightGalleryCoreSettings {
     selector: string | HTMLCollection[];
 
     /**
-     * By default selector element relative to the current gallery.
+     * By default the selector element is relative to the current gallery.
      * Instead of that you can tell lightGallery to select element relative to another element.
      * Example - '.my-selector-container' | '#my-selector-container'
-     * In the code this become selector =  document.querySelector(this.s.selectWithin ).querySelectorAll(this.s.selector);
+     * In the code this becomes selector = document.querySelector(this.s.selectWithin).querySelectorAll(this.s.selector);
      */
     selectWithin: string;
 
@@ -434,7 +543,7 @@ export interface LightGalleryCoreSettings {
 
     /**
      * Enable download button.
-     * @description By default download url will be taken from data-src/href attribute but it supports only for modern browsers.
+     * @description By default download url will be taken from data-src/href attribute but it is supported only in modern browsers.
      * If you want you can provide another url for download via data-download-url.
      * pass false in data-download-url if you want to hide download button for the particular slide.
      */
@@ -456,6 +565,22 @@ export interface LightGalleryCoreSettings {
     swipeThreshold: number;
 
     /**
+     * Release velocity (px/ms, measured over the gesture's final ~100ms)
+     * at which a short swipe still changes slides, a flick.
+     * @version V3.0.0
+     */
+    flickVelocity: number;
+
+    /**
+     * Pinching down on an un-zoomed image and releasing closes the
+     * gallery (iOS Photos). Guarded: a pinch that went past fit zoom at
+     * any point is a zoom correction and never closes. Requires
+     * `closable` and the zoom plugin.
+     * @version V3.0.0
+     */
+    pinchToClose: boolean;
+
+    /**
      * Enables swipe support for touch devices
      */
     enableSwipe: boolean;
@@ -466,7 +591,7 @@ export interface LightGalleryCoreSettings {
     enableDrag: boolean;
 
     /**
-     * LightGallery can be instantiated and launched programmatically by setting this option to true and populating dynamicEl option (see below) with the definitions of images.
+     * lightGallery can be instantiated and launched programmatically by setting this option to true and populating dynamicEl option (see below) with the definitions of images.
      */
     dynamic: boolean;
 
@@ -478,10 +603,10 @@ export interface LightGalleryCoreSettings {
     /**
      * Fetch custom properties from the selector
      * @description this is useful for plugin development
-     * By default lightGallery fetches and store all the props selectors to
+     * By default lightGallery fetches and stores all the props selectors to
      * reduce frequent dom interaction for fetching props every time.
      *
-     * If you need any addition data to be fetched and stored in the galleryItems variable,
+     * If you need any additional data to be fetched and stored in the galleryItems variable,
      * you can do this just by passing the prop names via extraProps
      * @example
      * HTML:
@@ -531,20 +656,42 @@ export interface LightGalleryCoreSettings {
      * Separate settings for mobile devices
      * @description Note - this is applied only at the time of loading
      * by default controls and close buttons are disabled on mobile devices.
-     * use this options if you want to enable them or change any other settings for mobile devices
-     * Note - mobileSettings does not merge default values, You need to provide all mobileSettings including default values
+     * use this option if you want to enable them or change any other settings for mobile devices
+     * Note - mobileSettings does not merge default values, you need to provide all mobileSettings including default values
      */
     mobileSettings: Partial<MobileSettings>;
 
     /**
-     * Customize string.
+     * Customize strings.
      * @description This can be useful if you want to localize the lightGallery strings to other languages.
      * Use your own service to translate the strings and pass it via settings.strings
-     * You can find dedicated strings option for all lightGallery modules in their respective documentation.
-     * Note - You need to provide values for all the strings. For example, even if you just want to change the closeGallery string, you need to provide all the other strings as well.
+     * Every core and plugin label lives here; the per-plugin `*PluginStrings` objects are deprecated.
+     * Strings merge per-key over the defaults, override only the keys
+     * you need (the old provide-everything requirement is gone).
+     * See <a href="/docs/localization-rtl/">Localization &amp; RTL</a>.
+     * @version V3.0.0
      */
     strings: LightGalleryCoreStrings;
 
+    /**
+     * Custom icons: SVG markup per icon name, rendered instead of the
+     * built-in SVG icon set, bring your own icons without touching CSS.
+     * @description Omitted names keep the built-in icon. State-pair
+     * buttons (`maximize`/`minimize`, `autoplayPlay`/`autoplayPause`,
+     * `fullscreen`/`fullscreenExit`) need both names provided; a
+     * half-provided pair keeps the built-in pair. Size and color follow
+     * the button (`1em`/`currentColor`-friendly SVGs recommended).
+     * See <a href="/docs/custom-icons/">Custom icons</a>.
+     * @version V3.0.0
+     */
+    icons: LgIcons;
+
+    /**
+     * The plugins to enable for this gallery, as the constructors exported
+     * by each plugin entry, for example `[lgZoom, lgThumbnail]`. A plugin's
+     * settings do nothing until the plugin is listed here.
+     * See <a href="/docs/getting-started/#plugins">Plugins</a>.
+     */
     plugins: (new (instance: LightGallery, $LG: LgQuery) => any)[];
 }
 
@@ -564,13 +711,13 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     hideBarsDelay: 0,
     showBarsAfter: 10000,
     slideDelay: 0,
-    supportLegacyBrowser: true,
     allowMediaOverlap: false,
     videoMaxSize: '1280-720',
     loadYouTubePoster: true,
     defaultCaptionHeight: 0,
     ariaLabelledby: '',
     ariaDescribedby: '',
+    ariaAnnouncements: true,
     resetScrollPosition: true,
     hideScrollbar: false,
     closable: true,
@@ -586,6 +733,7 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     slideEndAnimation: true,
     hideControlOnEnd: false,
     mousewheel: false,
+    direction: 'ltr',
     getCaptionFromTitleOrAlt: true,
     appendSubHtmlTo: '.lg-sub-html',
     subHtmlSelectorRelative: false,
@@ -604,17 +752,22 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
     counter: true,
     appendCounterTo: '.lg-toolbar',
     swipeThreshold: 50,
+    flickVelocity: 0.5,
+    pinchToClose: true,
     enableSwipe: true,
     enableDrag: true,
     dynamic: false,
     dynamicEl: [],
     extraProps: [],
     exThumbImage: '',
+    toolbarOverflow: true,
+    showGestureButtons: true,
     isMobile: undefined,
     mobileSettings: {
         controls: false,
         showCloseIcon: false,
         download: false,
+        showGestureButtons: false,
     } as MobileSettings,
     plugins: [],
     strings: {
@@ -625,5 +778,21 @@ export const lightGalleryCoreSettings: LightGalleryCoreSettings = {
         download: 'Download',
         playVideo: 'Play video',
         mediaLoadingFailed: 'Oops... Failed to load content...',
+        galleryLabel: 'Gallery',
+        slideAnnouncement: 'Image {index} of {total}',
+        moreOptions: 'More options',
+        share: 'Share',
+        toggleThumbnails: 'Toggle thumbnails',
+        toggleAutoplay: 'Toggle Autoplay',
+        toggleFullscreen: 'Toggle Fullscreen',
+        zoomIn: 'Zoom in',
+        zoomOut: 'Zoom out',
+        viewActualSize: 'View actual size',
+        rotateLeft: 'Rotate left',
+        rotateRight: 'Rotate right',
+        flipHorizontal: 'Flip horizontal',
+        flipVertical: 'Flip vertical',
+        toggleComments: 'Toggle Comments',
     } as LightGalleryCoreStrings,
+    icons: {},
 };

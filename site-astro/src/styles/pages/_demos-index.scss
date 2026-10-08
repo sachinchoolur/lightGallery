@@ -1,0 +1,216 @@
+// The /demos/ index (pages/demos/index.astro): filter chips over one grid
+// of photo cards. The chips are labels for radios at the top of the page;
+// the checked one decides which cards show, no script involved.
+
+body.demos.list {
+    // The header is fixed and 60px tall; the page starts under it.
+    .demos-index {
+        position: relative;
+        max-width: 1128px;
+        margin: 0 auto;
+        padding: calc(60px + 72px) 24px 96px;
+        @media (max-width: 767px) {
+            padding: calc(60px + 40px) 16px 64px;
+        }
+        > .demos-filter {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+
+    // ---- Head: title, count, chips --------------------------------------
+    .demos-index-head {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 48px;
+        text-align: center;
+        h1 {
+            margin: 0 0 8px;
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 56px;
+            letter-spacing: -0.96px;
+            color: $gray-800;
+            @media (max-width: 767px) {
+                font-size: 36px;
+                line-height: 44px;
+                letter-spacing: -0.5px;
+            }
+        }
+    }
+    .demos-index-count {
+        margin: 0;
+        font-family: $font-family-monospace;
+        font-size: 13px;
+        letter-spacing: 0.02em;
+        color: $gray-500;
+    }
+    .demos-chips {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 28px;
+        label {
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: 1px solid $gray-200;
+            background: #fff;
+            color: $gray-600;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            cursor: pointer;
+            transition:
+                background-color 0.15s ease,
+                border-color 0.15s ease,
+                color 0.15s ease;
+            &:hover {
+                border-color: $gray-300;
+                color: $gray-800;
+            }
+        }
+    }
+
+    // ---- Cards ------------------------------------------------------------
+    .demos-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+        @include media-breakpoint-down(lg) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        @media (max-width: 575px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+    .demos-card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px;
+        border: 1px solid $gray-100;
+        border-radius: 18px;
+        background: #fff;
+        color: $gray-800;
+        text-decoration: none;
+        transition:
+            border-color 0.15s ease,
+            box-shadow 0.15s ease;
+        &:hover {
+            border-color: $gray-200;
+            box-shadow: 0 12px 28px -14px rgba($gray-800, 0.25);
+            color: $gray-800;
+            text-decoration: none;
+            .demos-card-thumb img {
+                transform: scale(1.04);
+            }
+        }
+        &:focus-visible {
+            outline: 2px solid $orange-500;
+            outline-offset: 2px;
+        }
+    }
+    .demos-card-thumb {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        border-radius: 12px;
+        background: $gray-100;
+        img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+    }
+    .demos-card-video .demos-card-thumb::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 40px;
+        height: 40px;
+        margin: -20px 0 0 -20px;
+        border-radius: 50%;
+        background:
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M9 6.5v11l9-5.5z'/></svg>") center / 22px no-repeat,
+            rgba($gray-900, 0.55);
+        backdrop-filter: blur(4px);
+    }
+    .demos-card-group {
+        margin: 0 4px -8px;
+        font-size: 12px;
+        line-height: 18px;
+        color: $gray-500;
+    }
+    .demos-card-title {
+        padding: 0 4px;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 22px;
+        letter-spacing: -0.16px;
+    }
+    .demos-badge {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        gap: 5px;
+        margin: -4px 4px 4px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid $gray-200;
+        background: #fff;
+        color: $gray-600;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 18px;
+        white-space: nowrap;
+    }
+    .demos-fw {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        flex: 0 0 12px;
+        background: center / contain no-repeat;
+        &.demos-fw-react {
+            background-image: url('/images/logos/react.svg');
+        }
+        &.demos-fw-vue {
+            background-image: url('/images/logos/vue.png');
+        }
+        &.demos-fw-angular {
+            background-image: url('/images/logos/angular.svg');
+        }
+    }
+
+    // ---- Filter: the checked radio lights its chip and hides the rest ----
+    // The first radio is "All"; radio n + 2 is group n (lib/demo-groups
+    // order, then "More demos"). Eight slots cover every possible group.
+    .demos-filter:first-of-type:checked ~ .demos-index-head .demos-chips label:first-child {
+        background: $gray-800;
+        border-color: $gray-800;
+        color: #fff;
+    }
+    .demos-filter:first-of-type:focus-visible ~ .demos-index-head .demos-chips label:first-child {
+        outline: 2px solid $orange-500;
+        outline-offset: 2px;
+    }
+    @for $i from 0 through 7 {
+        .demos-filter:nth-of-type(#{$i + 2}):checked ~ .demos-index-head .demos-chips label:nth-child(#{$i + 2}) {
+            background: $gray-800;
+            border-color: $gray-800;
+            color: #fff;
+        }
+        .demos-filter:nth-of-type(#{$i + 2}):focus-visible ~ .demos-index-head .demos-chips label:nth-child(#{$i + 2}) {
+            outline: 2px solid $orange-500;
+            outline-offset: 2px;
+        }
+        .demos-filter:nth-of-type(#{$i + 2}):checked ~ .demos-grid .demos-card:not(.demos-card-group-#{$i}) {
+            display: none;
+        }
+    }
+}

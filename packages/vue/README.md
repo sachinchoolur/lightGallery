@@ -1,0 +1,256 @@
+# @lightgallery/vue
+
+A native Vue 3 component, not a wrapper around the vanilla script. Vue
+renders every node, in the trigger grid and in the lightbox, so nothing
+else touches your DOM. You get `<script setup>` components, `v-model` for
+the open state and index, typed emits, scoped slots, a Teleport overlay
+and a separate import per plugin. It shares its logic with the React,
+Angular and vanilla packages, so every feature and setting works the same
+way, and it uses the published `lightgallery/css/*` files, so the lightbox
+looks exactly like the vanilla one.
+
+## Install
+
+```bash
+npm install @lightgallery/vue lightgallery
+```
+
+Peer range: `vue >=3.4` (uses `defineModel`).
+
+```ts
+// Global styles (main.ts or your root stylesheet):
+import 'lightgallery/css/lightgallery.css';
+// plus the CSS of each plugin you use, e.g.:
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+```
+
+## Quick start — uncontrolled
+
+Thumbnails on the page open the lightbox; mount order defines slide order.
+
+```vue
+<script setup lang="ts">
+import {
+    LightGallery,
+    LgItem,
+    type LgGalleryItem,
+    type SlideEventDetail,
+} from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+
+const plugins = [Thumbnail, Zoom];
+const items: LgGalleryItem[] = [
+    {
+        src: 'img/1.jpg',
+        thumb: 'img/1-t.jpg',
+        alt: '…',
+        caption: '…',
+        lgSize: '1600-1067', // natural size, enables the zoom-from-origin open animation
+    },
+];
+
+function onSlide({ index }: SlideEventDetail) {
+    console.log('slide', index);
+}
+</script>
+
+<template>
+    <LightGallery
+        :plugins="plugins"
+        :thumbnail="{ thumbWidth: 120 }"
+        @after-slide="onSlide"
+    >
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+## Controlled + imperative
+
+```vue
+<!-- Controlled: -->
+<LightGallery :slides="items" v-model:open="open" v-model:index="index" />
+
+<!-- Imperative (template ref handle): -->
+<LightGallery ref="lg" :slides="items" />
+<button @click="lg?.openGallery(2)">Open at slide 3</button>
+```
+
+Settings are same-named props (`:mode`, `:speed`, `:loop`,
+`:caption-position`, …); events are kebab-case emits without the `on`
+prefix (`@before-open`, `@after-slide`, `@slide-item-load`, …). Slots are
+named scoped slots: `#caption`, `#counter`, `#prev-button`, `#next-button`.
+Inline gallery: `:container="element"`.
+
+## Plugins
+
+Each plugin is its own tree-shakable subpath
+`@lightgallery/vue/plugins/<name>` exporting a plugin object for the
+`:plugins` prop. Per-plugin settings go on a same-named gallery prop
+(e.g. `:zoom="{ scale: 1.5 }"`). A multi-word plugin name works in either
+spelling, `:medium-zoom="{ margin: 24 }"` or `:mediumZoom`:
+
+| Plugin | Subpath | Notable options |
+|---|---|---|
+| thumbnail | `plugins/thumbnail` | `thumbWidth`, `thumbHeight`, `animateThumb`, `toggleThumb` |
+| zoom | `plugins/zoom` | `scale`, `actualSize`, `showZoomInOutIcons`, `infiniteZoom` |
+| video | `plugins/video` | `videoFacade` (lite embed, default on), `youTubeNoCookie` (default on), `autoplayFirstVideo`, `autoplayVideoOnSlide`, `youTubePlayerParams` |
+| autoplay | `plugins/autoplay` | `slideShowInterval`, `slideShowAutoplay`, `progressBar` |
+| fullscreen | `plugins/fullscreen` | — |
+| hash | `plugins/hash` | `galleryId`, `customSlideName`, `hashDriver` (`auto` = Navigation API where supported, History fallback) |
+| pager | `plugins/pager` | — |
+| share | `plugins/share` | `preferNativeShare` (OS share sheet; default on touch), `facebook`/`twitter` (X intent)/`pinterest`, `additionalShareOptions` (typed) |
+| rotate | `plugins/rotate` | `rotateSpeed`, per-button toggles |
+| comment | `plugins/comment` | `commentBox`; comment body via the `#comments` gallery slot |
+| mediumZoom | `plugins/mediumZoom` | `margin`, `backgroundColor` (presets a minimal UI) |
+| relativeCaption | `plugins/relativeCaption` | — (presets `captionPosition: 'slide'`) |
+| vimeoThumbnail | `plugins/vimeoThumbnail` | `showThumbnailWithPlayButton` |
+| originCrop | `plugins/originCrop` | `originCrop`: flies a cropped thumbnail (`object-fit: cover`, `background-size: cover`) from its crop instead of squashing the whole image into the tile |
+
+Plugins compose per gallery instance — two galleries on one page can have
+different plugin sets. Order matters for slide wrappers: put `Zoom` before
+`Rotate` (zoom outermost, 2.x DOM order).
+
+## Large galleries (virtualization)
+
+For 1,000+ item galleries, `virtualization` bounds the DOM (default off):
+
+- `virtualization.slides` — mounted-slide pool size (overrides
+  `numberOfSlideItemsInDom`).
+- `virtualization.thumbs` — thumbnail-strip windowing: only the visible
+  thumbs plus an overscan render, with spacers preserving the strip
+  geometry (`'auto'` = one extra viewport per side, or a thumb count).
+  The window advances at commit points (release, slide change, resize),
+  never per pointer move.
+
+## SSR / Nuxt
+
+- Server-safe: every entry imports without browser globals, and the closed
+  gallery server-renders only your trigger markup. The lightbox overlay
+  **never server-renders** (even with `open` true at first render) — the
+  `<Teleport>` mounts client-side only, so there is no teleport buffer to
+  wire up and no hydration mismatch surface. Verified with
+  `vue/server-renderer` render + hydrate tests (zero hydration warnings).
+- In Nuxt, use the component directly in server-rendered pages — no
+  `<ClientOnly>` wrapper needed. Deep-link flows (hash plugin) run after
+  hydration.
+- Import the CSS globally (`nuxt.config` `css: ['lightgallery/css/...']`).
+
+## Accessibility
+
+`role="dialog"`/`aria-modal` with accessible-name fallback
+(`:aria-labelledby` override supported), hand-rolled focus trap (focus in
+on open, Tab/Shift+Tab wrapped, returned to the trigger on close), labelled
+buttons everywhere, slide changes announced to screen readers,
+`prefers-reduced-motion` support. Automated axe run (WCAG A/AA): zero
+violations.
+
+## Localizing labels
+
+Every UI label — core controls and plugin buttons alike — lives on the
+`strings` setting and merges per-key over the English defaults:
+
+```vue
+<LightGallery
+    :slides="items"
+    :plugins="[Zoom, Thumbnail]"
+    :strings="{
+        closeGallery: 'Galerie schließen',
+        toggleThumbnails: 'Vorschaubilder umschalten',
+        zoomIn: 'Vergrößern',
+    }"
+/>
+```
+
+The per-plugin string objects (`zoomPluginStrings`, `sharePluginStrings`,
+…) are deprecated aliases — a key set there still wins over `strings`.
+
+## Right-to-left galleries
+
+Set `direction: 'rtl'` (or `'auto'`, which inherits the page's `dir`
+attribute — the default is `'ltr'`) and load the opt-in RTL stylesheet — keyboard
+arrows, swipe advance, slide transforms and the thumbnail strip all
+mirror; LTR galleries pay zero CSS bytes:
+
+```vue
+<script setup>
+import 'lightgallery/css/lg-rtl.css';
+</script>
+
+<LightGallery :slides="items" direction="rtl" />
+```
+
+The stylesheet only styles `.lg-container[dir='rtl']`, so a forced-LTR
+gallery inside an RTL page stays untouched. The decorative horizontal
+transitions (`lg-slide-skew`, `lg-tube`, …) keep their LTR choreography.
+
+## Justified layout
+
+Lay the trigger thumbnails out in justified rows — equal heights,
+varying widths, filling the container edge to edge — with the
+`lightgallery/css/lg-justified.css` stylesheet and the `JustifiedGrid` wrapper. Aspect
+ratios come from `data-lg-size`, the thumbnail's `width`/`height`
+attributes, or the loaded image (one relayout). The grid reflows on
+resize, mirrors under RTL, and writes precise `sizes` attributes on
+`srcset` thumbnails. `lastRow` controls the leftover row (`'start'`
+default, `'justify'`, `'hide'`).
+
+```vue
+<script setup>
+import { JustifiedGrid } from '@lightgallery/vue/plugins/justified';
+import 'lightgallery/css/lg-justified.css';
+</script>
+
+<LightGallery :plugins="[Thumbnail, Zoom]">
+    <JustifiedGrid :row-height="180" :gap="8">
+        <LgItem
+            v-for="item of items"
+            :key="item.src"
+            :item="item"
+            :data-lg-size="item.lgSize"
+        >
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </JustifiedGrid>
+</LightGallery>
+```
+
+## Migrating from the legacy `lightgallery/vue` wrapper
+
+The old wrapper (`lightgallery-vue*` folders / `lightgallery` v2 with
+`lgQuery`) wrapped the vanilla runtime; this package renders natively. Key
+renames (full table in the
+[migration guide](https://www.lightgalleryjs.com/docs/migration/)):
+
+- `dynamicEl` → `:slides` (typed `LgGalleryItem[]`), or `<LgItem>` trigger
+  components for uncontrolled galleries.
+- `onAfterSlide` etc. → kebab-case emits without the prefix:
+  `@after-slide`.
+- `appendSubHtmlTo` → `captionPosition: 'bar' | 'slide' | 'outer'`;
+  `subHtml` strings → `caption` (plain string), the `#caption` slot, or the
+  explicit raw-HTML `captionHtml` opt-in.
+- Plugin constructor arrays → plugin objects on `:plugins`, options via
+  same-named gallery props.
+- Dropped (2.x DOM-scraping/HTML-string era): `selector`, `extraProps`,
+  `getCaptionFromTitleOrAlt`, `nextHtml`/`prevHtml`, `appendCounterTo`,
+  `videojs`.
+
+## Documentation
+
+- Guide: https://www.lightgalleryjs.com/docs/vue/
+- Settings reference: https://www.lightgalleryjs.com/docs/settings/
+- Markdown index for tools and agents: https://www.lightgalleryjs.com/llms.txt
+
+## License
+
+Free and open source under the GPLv3, like every lightGallery package. If
+your project keeps its source proprietary, a
+[commercial license](https://www.lightgalleryjs.com/license/) covers it: same
+code, nothing gated. See `LICENSE-COMMERCIAL.md` in this package.
+Open-source projects can request a key at contact@lightgalleryjs.com so the
+gallery runs without the console notice, and `0000-0000-000-0000` is a
+temporary `licenseKey` for evaluation.

@@ -1,0 +1,27 @@
+{
+    "name": "lightgallery-angular-example",
+    "private": true,
+    "scripts": {
+        "start": "ng serve",
+        "build": "ng build"
+    },
+    "dependencies": {
+        "@angular/cdk": "^21.0.0",
+        "@angular/common": "^21.0.0",
+        "@angular/compiler": "^21.0.0",
+        "@angular/core": "^21.0.0",
+        "@angular/platform-browser": "^21.0.0",
+        "@lightgallery/angular": "__LIGHTGALLERY_VERSION__",
+        "bootstrap": "^5.0.0",
+        "lightgallery": "__LIGHTGALLERY_VERSION__",
+        "rxjs": "^7.8.0",
+        "tslib": "^2.6.0"
+    },
+    "devDependencies": {
+        "@angular/build": "^21.0.0",
+        "@angular/cli": "^21.0.0",
+        "@angular/compiler-cli": "^21.0.0",
+        "@types/bootstrap": "^5.2.0",
+        "typescript": "~5.9.0"
+    }
+}

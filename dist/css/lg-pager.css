@@ -20,7 +20,6 @@
 }
 .lg-outer .lg-pager-cont:hover .lg-pager-thumb-cont {
   opacity: 1;
-  -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
 .lg-outer .lg-pager-cont.lg-pager-active .lg-pager {
@@ -40,11 +39,7 @@
   width: 120px;
   border-radius: 3px;
   will-change: transform, opacity;
-  -webkit-transition: opacity 0.15s ease 0s, -webkit-transform 0.15s ease 0s;
-  -moz-transition: opacity 0.15s ease 0s, -moz-transform 0.15s ease 0s;
-  -o-transition: opacity 0.15s ease 0s, -o-transform 0.15s ease 0s;
   transition: opacity 0.15s ease 0s, transform 0.15s ease 0s;
-  -webkit-transform: translate3d(0, 5px, 0);
   transform: translate3d(0, 5px, 0);
 }
 .lg-outer .lg-pager-thumb-cont img {
@@ -57,8 +52,6 @@
   box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.7) inset;
   display: block;
   height: 12px;
-  -webkit-transition: box-shadow 0.3s ease 0s;
-  -o-transition: box-shadow 0.3s ease 0s;
   transition: box-shadow 0.3s ease 0s;
   width: 12px;
 }

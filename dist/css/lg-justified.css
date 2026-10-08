@@ -1,0 +1,37 @@
+.lg-justified {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+.lg-justified > * {
+  position: absolute;
+  opacity: 0;
+}
+.lg-justified .lg-justified-item {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  opacity: 1;
+}
+.lg-justified .lg-justified-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.lg-justified .lg-justified-item-hidden {
+  display: none;
+}
+
+.lg-justified-reveal .lg-justified-item {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+.lg-justified-reveal .lg-justified-item img {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.lg-justified-reveal .lg-justified-item-visible img {
+  opacity: 1;
+}
+
+/*# sourceMappingURL=lg-justified.css.map */

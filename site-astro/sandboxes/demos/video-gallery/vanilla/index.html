@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>lightGallery video gallery example</title>
+    </head>
+    <body>
+        <h1>lightGallery video gallery</h1>
+
+        <div id="gallery" class="gallery">
+            <!-- YouTube, Vimeo and Wistia: link to the video page.
+                 data-poster is the image shown before the video plays. -->
+            <a
+                href="https://www.youtube.com/watch?v=EIUJfXk3_3w"
+                data-lg-size="1280-720"
+                data-poster="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+                data-sub-html="YouTube video: Puffin Hunts Fish To Feed Puffling, BBC Earth"
+            >
+                <img
+                    src="https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg"
+                    alt="Puffin Hunts Fish To Feed Puffling"
+                />
+            </a>
+            <a
+                href="https://vimeo.com/112836958"
+                data-lg-size="1280-720"
+                data-poster="https://www.lightgalleryjs.com/images/demo/vimeo-video-poster.jpg"
+                data-sub-html="Vimeo video: Nature, by Charlie Kaye"
+            >
+                <img
+                    src="https://www.lightgalleryjs.com/images/demo/vimeo-video-poster.jpg"
+                    alt="Nature"
+                />
+            </a>
+            <a
+                href="https://private-sharing.wistia.com/medias/mwhrulrucj"
+                data-lg-size="1280-720"
+                data-poster="https://www.lightgalleryjs.com/images/demo/wistia-video-poster.jpeg"
+                data-sub-html="Wistia video: Thank You!"
+            >
+                <img
+                    src="https://www.lightgalleryjs.com/images/demo/wistia-video-poster.jpeg"
+                    alt="Thank You!"
+                />
+            </a>
+
+            <!-- A video file you host yourself: no href or data-src. The
+                 files and the <video> attributes go in data-video, as JSON. -->
+            <a
+                data-lg-size="1280-720"
+                data-video='{"source": [{"src": "https://www.lightgalleryjs.com/videos/video1.mp4", "type": "video/mp4"}], "attributes": {"preload": "metadata", "controls": true}}'
+                data-poster="https://www.lightgalleryjs.com/images/demo/html5-video-poster.jpg"
+                data-sub-html="HTML5 video: Peck Pocketed, by Kevin Herron"
+            >
+                <img
+                    src="https://www.lightgalleryjs.com/images/demo/html5-video-poster.jpg"
+                    alt="Peck Pocketed"
+                />
+            </a>
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
+</html>

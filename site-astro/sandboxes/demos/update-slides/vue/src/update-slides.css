@@ -1,0 +1,6 @@
+/* The buttons, shown in the caption area of the gallery. */
+.slide-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}

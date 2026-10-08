@@ -1,0 +1,984 @@
+import { enableAutoUnmount, mount } from '@vue/test-utils';
+import { defineComponent, h, inject, nextTick, type PropType } from 'vue';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import LightGallery from './LightGallery.vue';
+import { LG_RUNTIME, type LgGalleryRuntime } from './runtime';
+import type { LgGalleryItem } from './types';
+import { LG_PLUGIN_CONTEXT, type LgVuePlugin } from './plugins/types';
+import Thumbnail from './plugins/thumbnail';
+import Video from './plugins/video';
+import Zoom from './plugins/zoom';
+
+const ITEMS: LgGalleryItem[] = [
+    { src: 'a.jpg', thumb: 'a-t.jpg', alt: 'a' },
+    { src: 'b.jpg', thumb: 'b-t.jpg', alt: 'b' },
+    {
+        src: 'https://www.youtube.com/watch?v=abc123xyz90',
+        alt: 'video slide',
+    },
+];
+
+function query(selector: string): HTMLElement | null {
+    return document.querySelector(selector);
+}
+
+function queryAll(selector: string): HTMLElement[] {
+    return [...document.querySelectorAll<HTMLElement>(selector)];
+}
+
+async function advance(ms: number): Promise<void> {
+    vi.advanceTimersByTime(ms);
+    await nextTick();
+}
+
+async function settle(): Promise<void> {
+    for (let i = 0; i < 3; i++) {
+        await nextTick();
+    }
+}
+
+/**
+ * jsdom has no PointerEvent constructor; a MouseEvent with the pointer
+ * fields defined on it walks and quacks enough for the native listeners.
+ */
+function firePointer(
+    target: EventTarget,
+    type: 'pointerdown' | 'pointermove' | 'pointerup',
+    init: { x: number; y: number; pointerId?: number },
+): void {
+    const event = new MouseEvent(type, {
+        bubbles: true,
+        cancelable: true,
+        clientX: init.x,
+        clientY: init.y,
+    });
+    Object.defineProperty(event, 'pointerId', { value: init.pointerId ?? 1 });
+    Object.defineProperty(event, 'pointerType', { value: 'touch' });
+    target.dispatchEvent(event);
+}
+
+const Host = defineComponent({
+    components: { LightGallery },
+    props: {
+        plugins: { type: Array, required: true },
+        log: { type: Array, required: true },
+        pinchToClose: { type: Boolean, default: true },
+        zoomSettings: {
+            type: Object,
+            default: () => ({ showZoomInOutIcons: true }),
+        },
+        thumbnailSettings: { type: Object, default: () => ({}) },
+    },
+    setup: () => ({ items: ITEMS }),
+    template: `
+        <LightGallery
+            :slides="items"
+            :zoom-from-origin="false"
+            :plugins="plugins"
+            :zoom="zoomSettings"
+            :thumbnail="thumbnailSettings"
+            :pinch-to-close="pinchToClose"
+            @poster-click="log.push('posterClick')"
+            @has-video="log.push('hasVideo:' + $event.index)"
+        />
+    `,
+});
+
+function mountHost(
+    plugins: readonly LgVuePlugin[],
+    extraProps: Record<string, unknown> = {},
+): {
+    wrapper: ReturnType<typeof mount>;
+    log: string[];
+} {
+    const log: string[] = [];
+    const wrapper = mount(Host, {
+        props: { plugins: plugins as never[], log, ...extraProps },
+        attachTo: document.body,
+    });
+    return { wrapper, log };
+}
+
+async function openAndLoad(
+    wrapper: ReturnType<typeof mount>,
+    index = 0,
+): Promise<void> {
+    (
+        wrapper.findComponent(LightGallery).vm as unknown as {
+            openGallery(i?: number): void;
+        }
+    ).openGallery(index);
+    await settle();
+    await advance(450);
+    document
+        .querySelector<HTMLImageElement>(`img.lg-image[data-index="${index}"]`)
+        ?.dispatchEvent(new Event('load'));
+    await settle();
+}
+
+function runtimeOf(wrapper: ReturnType<typeof mount>): LgGalleryRuntime {
+    return (
+        wrapper.findComponent(LightGallery).vm.$ as unknown as {
+            provides: Record<symbol, unknown>;
+        }
+    ).provides[LG_RUNTIME as symbol] as LgGalleryRuntime;
+}
+
+enableAutoUnmount(afterEach);
+
+beforeEach(() => {
+    vi.useFakeTimers();
+});
+afterEach(() => {
+    vi.runOnlyPendingTimers();
+    vi.useRealTimers();
+    document.body.innerHTML = '';
+});
+
+describe('plugin runtime + wave-1', () => {
+    it('does not animate the thumbnail strip while the gallery opens', async () => {
+        // Opening from the end of the strip would otherwise slide it
+        // across while the image is still flying in.
+        const { wrapper } = mountHost([Thumbnail]);
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                openGallery(i?: number): void;
+            }
+        ).openGallery(0);
+        await settle();
+        await advance(50);
+        const track = query('.lg-thumb')!;
+        expect(track.style.transitionDuration).toBe('0ms');
+
+        await advance(600);
+        await settle();
+        expect(track.style.transitionDuration).toBe('400ms');
+    });
+
+    it('merges plugin defaults/presets/per-plugin attrs without mutating inputs', async () => {
+        const defaults = Object.freeze({ probeOption: 'default' });
+        const presets = Object.freeze({ loop: false });
+        const probe: LgVuePlugin = {
+            name: 'probe',
+            defaults,
+            presets,
+        };
+        const { wrapper } = mountHost([probe]);
+        await openAndLoad(wrapper);
+
+        // Presets land below user settings: no :loop prop -> preset wins
+        // (prev from slide 0 stays put).
+        const vm = wrapper.findComponent(LightGallery).vm as unknown as {
+            prevSlide(): void;
+        };
+        vm.prevSlide();
+        await settle();
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('1');
+        expect(defaults.probeOption).toBe('default');
+        expect(presets.loop).toBe(false);
+    });
+
+    it('ignores duplicate plugins by name, warning once', async () => {
+        const warn = vi
+            .spyOn(console, 'warn')
+            .mockImplementation(() => undefined);
+        const { wrapper } = mountHost([
+            { name: 'probe', defaults: { v: 'first' } },
+            { name: 'probe', defaults: { v: 'second' } },
+        ]);
+        await openAndLoad(wrapper);
+        expect(warn).toHaveBeenCalledWith(
+            'lightGallery: duplicate plugin "probe" ignored. See https://www.lightgalleryjs.com/docs/vue/',
+        );
+        warn.mockRestore();
+    });
+
+    it('runs plugin setup(ctx) with scope cleanup and transformItems', async () => {
+        const cleanup = vi.fn();
+        const probe: LgVuePlugin = {
+            name: 'probe',
+            setup(ctx) {
+                ctx.layout.setOuterClass('lg-probe-setup', true);
+                // onScopeDispose path is exercised through unmount below.
+                void import('vue').then(() => undefined);
+                cleanup.mockImplementation(() => undefined);
+            },
+            transformItems: (items) =>
+                Promise.resolve(
+                    items.map((item) => ({
+                        ...item,
+                        alt: `${item.alt}-transformed`,
+                    })),
+                ),
+        };
+        const { wrapper } = mountHost([probe]);
+        await settle();
+        for (let i = 0; i < 6; i++) {
+            await Promise.resolve();
+        }
+        await settle();
+        await openAndLoad(wrapper);
+
+        expect(query('.lg-outer')!.classList.contains('lg-probe-setup')).toBe(
+            true,
+        );
+        expect(query('.lg-item.lg-current img')!.getAttribute('alt')).toBe(
+            'a-transformed',
+        );
+    });
+
+    it('thumbnail: renders every item, tracks the active index, navigates on click', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+
+        const outer = query('.lg-outer')!;
+        expect(outer.classList.contains('lg-has-thumb')).toBe(true);
+        expect(outer.classList.contains('lg-animate-thumb')).toBe(true);
+        expect(outer.classList.contains('lg-use-transition-for-zoom')).toBe(
+            true,
+        );
+
+        const thumbs = queryAll('.lg-thumb-item');
+        expect(thumbs.length).toBe(3);
+        expect(thumbs[0]!.classList.contains('active')).toBe(true);
+        // The video item derives its thumb from img.youtube.com (2.x).
+        expect(thumbs[2]!.querySelector('img')!.getAttribute('src')).toContain(
+            'img.youtube.com/vi/abc123xyz90',
+        );
+        // Strip images are lazy so a closed gallery fetches none of them.
+        for (const thumb of thumbs) {
+            const img = thumb.querySelector('img')!;
+            expect(img.getAttribute('loading')).toBe('lazy');
+            expect(img.getAttribute('decoding')).toBe('async');
+        }
+
+        thumbs[1]!.click();
+        await settle();
+        await advance(500);
+        expect(query('.lg-counter-current')!.textContent!.trim()).toBe('2');
+        expect(
+            queryAll('.lg-thumb-item')[1]!.classList.contains('active'),
+        ).toBe(true);
+    });
+
+    it('thumbnail: static mode wraps instead of clipping (animateThumb: false)', async () => {
+        const { wrapper } = mountHost([Thumbnail], {
+            thumbnail: { animateThumb: false },
+        });
+        await openAndLoad(wrapper);
+
+        // 2.x parity: no fixed width/transform on the track — the items
+        // wrap into rows, so every thumbnail stays reachable without the
+        // drag machinery (which static mode disables).
+        expect(query('.lg-thumb')!.getAttribute('style')).toBeNull();
+        expect(query('.lg-thumb-outer')!.getAttribute('style')).toBeNull();
+        expect(query('.lg-outer')!.classList.contains('lg-animate-thumb')).toBe(
+            false,
+        );
+    });
+
+    it('zoom: the actual-size button follows the zoom state and carries both zoom icons', async () => {
+        const { wrapper } = mountHost([Zoom]);
+        await openAndLoad(wrapper);
+        const actual = query('[aria-label="View actual size"]')!;
+        // Vanilla parity: the zoom-in class until the slide is zoomed,
+        // both zoom icons inside so the class can pick the one that shows.
+        expect(actual.classList.contains('lg-zoom-in')).toBe(true);
+        expect(actual.classList.contains('lg-actual-size')).toBe(false);
+        expect(actual.querySelector('.lg-ci-zoom-in')).not.toBeNull();
+        expect(actual.querySelector('.lg-ci-zoom-out')).not.toBeNull();
+
+        actual.click();
+        await settle();
+        expect(actual.classList.contains('lg-zoom-out')).toBe(true);
+        expect(actual.classList.contains('lg-zoom-in')).toBe(false);
+
+        actual.click();
+        await settle();
+        expect(actual.classList.contains('lg-zoom-in')).toBe(true);
+    });
+
+    it('zoom: strips the zoom transform instantly when the gallery closes', async () => {
+        const { wrapper } = mountHost([Zoom]);
+        await openAndLoad(wrapper);
+        await advance(350); // enableZoomAfter
+        query('[aria-label="View actual size"]')!.click();
+        await settle();
+        const pan = query('.lg-zoom-pan')!;
+        const scaleEl = query('.lg-zoom-scale')!;
+        expect(scaleEl.style.transform).not.toBe('scale3d(1, 1, 1)');
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(true);
+
+        // Vanilla parity: the close flight shrinks the slide item, so the
+        // zoom wrappers must be at identity in its first frame — with no
+        // transition composing with the flight.
+        (query('.lg-close') as HTMLButtonElement).click();
+        await settle();
+        expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
+        expect(pan.style.transform).toBe('translate3d(0px, 0px, 0)');
+        expect(scaleEl.style.transition).toBe('none');
+        expect(pan.style.transition).toBe('none');
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(false);
+    });
+
+    it('zoom: keeps fixed classes on zoom in/out and follows actualSizeIcons on actual size', async () => {
+        const { wrapper } = mountHost([Zoom], {
+            zoomSettings: {
+                showZoomInOutIcons: true,
+                actualSizeIcons: {
+                    zoomIn: 'lg-actual-size',
+                    zoomOut: 'lg-zoom-out',
+                },
+            },
+        });
+        await openAndLoad(wrapper);
+        // actualSizeIcons never reaches the dedicated zoom buttons.
+        expect(
+            query('[aria-label="Zoom in"]')!.classList.contains('lg-zoom-in'),
+        ).toBe(true);
+        expect(
+            query('[aria-label="Zoom out"]')!.classList.contains('lg-zoom-out'),
+        ).toBe(true);
+        const actual = query('[aria-label="View actual size"]')!;
+        expect(actual.classList.contains('lg-actual-size')).toBe(true);
+
+        actual.click();
+        await settle();
+        expect(actual.classList.contains('lg-zoom-out')).toBe(true);
+        expect(actual.classList.contains('lg-actual-size')).toBe(false);
+
+        actual.click();
+        await settle();
+        expect(actual.classList.contains('lg-actual-size')).toBe(true);
+    });
+
+    it('thumbnail: treats a press below the swipe threshold as a click, not a glide', async () => {
+        const { wrapper } = mountHost([Thumbnail], {
+            thumbnailSettings: { scrubThumbnails: true },
+        });
+        await openAndLoad(wrapper);
+        const track = query('.lg-thumb')!;
+        const outer = query('.lg-outer')!;
+        const thumb = queryAll('.lg-thumb-item')[1]!;
+        // A click with a 3px wobble: below the swipe threshold no scrub
+        // session starts and the gallery does not move...
+        firePointer(thumb, 'pointerdown', { x: 600, y: 0 });
+        await settle();
+        firePointer(window, 'pointermove', { x: 597, y: 0 });
+        await settle();
+        expect(outer.classList.contains('lg-thumb-scrubbing')).toBe(false);
+        expect(
+            query('.lg-thumb-item.active')!.getAttribute('data-lg-item-id'),
+        ).toBe('0');
+        firePointer(window, 'pointerup', { x: 597, y: 0 });
+        await settle();
+        // ...and the release runs no glide: the strip snaps back.
+        expect(outer.classList.contains('lg-thumb-scrubbing')).toBe(false);
+        await advance(48);
+        expect(track.style.transform).toBe('translate3d(-49px, 0px, 0px)');
+
+        // The click then navigates and the strip centers on the slide
+        // (105px unit × 1 - 1 + 50 for the 0-width jsdom strip).
+        thumb.click();
+        await settle();
+        expect(
+            query('.lg-thumb-item.active')!.getAttribute('data-lg-item-id'),
+        ).toBe('1');
+        expect(track.style.transform).toBe('translate3d(-154px, 0px, 0px)');
+    });
+
+    it('zoom: actual-size toggles committed scale, claims the seam, resets on navigation', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        const runtime = runtimeOf(wrapper);
+
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
+        await settle();
+
+        const scaleEl = query(
+            '.lg-item.lg-current .lg-zoom-scale',
+        ) as HTMLElement;
+        // jsdom has no image metrics -> actual-size falls back to scale 2.
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(true);
+        expect(runtime.gestureSeam.lockOwner).toBe('zoomSwipe');
+
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
+        await settle();
+        expect(runtime.gestureSeam.lockOwner).toBeNull();
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(false);
+
+        // Zoom again, then navigate: the wrapper resets (2.x parity).
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
+        await settle();
+        expect(runtime.gestureSeam.lockOwner).toBe('zoomSwipe');
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                nextSlide(): void;
+            }
+        ).nextSlide();
+        await settle();
+        await advance(500);
+        expect(runtime.gestureSeam.lockOwner).toBeNull();
+        expect(query('.lg-outer')!.classList.contains('lg-zoomed')).toBe(false);
+    });
+
+    it('zoom: does not leak a tap into a phantom pinch (pointer ledger)', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        // Pointer interactions arm `enableZoomAfter` ms after the load.
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+        const scaleEl = query('.lg-item.lg-current .lg-zoom-scale')!;
+
+        // A plain tap on the (unzoomed) slide: down + up, no gesture.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 11 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 11 });
+
+        // Next single finger must NOT read as a second pinch pointer.
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 12 });
+        firePointer(window, 'pointermove', { x: 260, y: 160, pointerId: 12 });
+        // A leaked tap pointer would misroute this into a pinch and
+        // scale the slide; the rendered rest transform must not change.
+        expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
+        firePointer(window, 'pointerup', { x: 260, y: 160, pointerId: 12 });
+    });
+
+    it('zoom: pans (not pinches) after a double-tap zoom', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        await advance(350);
+        const img = query('img.lg-image[data-index="0"]')!;
+        const scaleEl = query('.lg-item.lg-current .lg-zoom-scale')!;
+
+        // Touch double-tap on the image zooms in (fallback scale 2).
+        firePointer(img, 'pointerdown', { x: 50, y: 50, pointerId: 21 });
+        firePointer(window, 'pointerup', { x: 50, y: 50, pointerId: 21 });
+        vi.advanceTimersByTime(100);
+        firePointer(img, 'pointerdown', { x: 50, y: 50, pointerId: 22 });
+        firePointer(window, 'pointerup', { x: 50, y: 50, pointerId: 22 });
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
+
+        // The next single finger pans — a leaked tap pointer would
+        // misroute this into a pinch and change the scale.
+        firePointer(img, 'pointerdown', { x: 60, y: 60, pointerId: 23 });
+        firePointer(window, 'pointermove', { x: 120, y: 120, pointerId: 23 });
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
+        firePointer(window, 'pointerup', { x: 120, y: 120, pointerId: 23 });
+    });
+
+    it('zoom: snaps a pinch release into [1, actual size] despite infiniteZoom', async () => {
+        // pinchToClose off: the under-fit part of this test exercises the
+        // disarmed spring-back (armed default would close the gallery).
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video], {
+            pinchToClose: false,
+        });
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+        const scaleEl = query('.lg-item.lg-current .lg-zoom-scale')!;
+
+        // Pinch far beyond the actual-size scale (jsdom fallback max: 2).
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 41 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 42 });
+        firePointer(window, 'pointermove', { x: 500, y: 100, pointerId: 42 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 41 });
+        // 2.x pinch touchend rule: release lands on actual size even with
+        // the infiniteZoom default (the spring settles it).
+        vi.advanceTimersByTime(2000);
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
+        firePointer(window, 'pointerup', { x: 500, y: 100, pointerId: 42 });
+
+        // Reset to the unzoomed state, then pinch inwards below fit and
+        // release: back to scale 1. Starting from scale 1 guards the
+        // commit-equals-previous-state path (the styles must still land).
+        query('img.lg-image[data-index="0"]')!.dispatchEvent(
+            new MouseEvent('dblclick', { bubbles: true }),
+        );
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 43 });
+        firePointer(panEl, 'pointerdown', { x: 300, y: 100, pointerId: 44 });
+        firePointer(window, 'pointermove', { x: 140, y: 100, pointerId: 44 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 43 });
+        vi.advanceTimersByTime(2000);
+        expect(scaleEl.style.transform).toBe('scale3d(1, 1, 1)');
+        firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 44 });
+    });
+
+    it('supports the optimizer recipe contract (docs/recipes)', async () => {
+        // The NuxtImg recipe shape: a custom slideRenderer component
+        // that manages its own srcset, injects the plugin context for
+        // completion, and keeps the lg-image class (the zoom target
+        // contract).
+        const OptimizerSlide = defineComponent({
+            props: {
+                item: {
+                    type: Object as PropType<LgGalleryItem>,
+                    required: true,
+                },
+                index: { type: Number, required: true },
+            },
+            setup(props) {
+                const ctx = inject(LG_PLUGIN_CONTEXT)!;
+                return () =>
+                    h('picture', { class: 'lg-img-wrap' }, [
+                        h('img', {
+                            class: 'lg-object lg-image optimizer-img',
+                            'data-index': props.index,
+                            src: props.item.src,
+                            sizes: '100vw',
+                            alt: props.item.alt,
+                            onLoad: () =>
+                                ctx.actions.dispatch({
+                                    type: 'SLIDE_LOADED',
+                                    index: props.index,
+                                }),
+                        }),
+                    ]);
+            },
+        });
+        const recipe: LgVuePlugin = {
+            name: 'optimizerRecipe',
+            slideRenderer: {
+                component: OptimizerSlide,
+                canRender: (item) => item.src === 'a.jpg',
+            },
+        };
+        const { wrapper } = mountHost([recipe, Zoom, Video]);
+        // Open WITHOUT the helper's load dispatch — completion timing
+        // is what this test asserts.
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                openGallery(i?: number): void;
+            }
+        ).openGallery(0);
+        await settle();
+        await advance(450);
+
+        // The custom renderer replaced the built-in image slide, and
+        // the zoom wrapper chain still wraps it.
+        const img =
+            document.querySelector<HTMLImageElement>('img.optimizer-img')!;
+        expect(img).not.toBeNull();
+        expect(
+            document
+                .querySelector('.lg-item.lg-current .lg-zoom-scale')!
+                .contains(img),
+        ).toBe(true);
+
+        // Completion flows through the public dispatch.
+        expect(query('.lg-item.lg-current.lg-complete')).toBeNull();
+        img.dispatchEvent(new Event('load'));
+        await settle();
+        expect(query('.lg-item.lg-current.lg-complete')).not.toBeNull();
+
+        // Double-click zoom works on the custom slide.
+        await advance(350);
+        img.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+        await settle();
+        expect(
+            query('.lg-item.lg-current .lg-zoom-scale')!.style.transform,
+        ).toBe('scale3d(2, 2, 1)');
+        expect(query('.lg-outer.lg-zoomed')).not.toBeNull();
+    });
+
+    it('zoom: a tap that kills a release glide re-settles the scale', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video], {
+            pinchToClose: false,
+            zoomSettings: { showZoomInOutIcons: true, infiniteZoom: false },
+        });
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+        const scaleEl = query('.lg-item.lg-current .lg-zoom-scale')!;
+
+        // Pinch far beyond the cap (jsdom fallback max: 2) and release —
+        // the spring starts gliding the scale back down to the cap.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 81 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 82 });
+        firePointer(window, 'pointermove', { x: 500, y: 100, pointerId: 82 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 81 });
+        firePointer(window, 'pointerup', { x: 500, y: 100, pointerId: 82 });
+
+        // A few frames in: mid-glide, still above the cap.
+        vi.advanceTimersByTime(48);
+        const midGlide = parseFloat(
+            /scale3d\(([\d.]+)/.exec(scaleEl.style.transform)![1]!,
+        );
+        expect(midGlide).toBeGreaterThan(2);
+
+        // Tap: pointerdown grabs the glide (kills the spring); the
+        // no-move release must settle the scale back into [1, cap] —
+        // pre-fix it committed the stranded mid-glide value.
+        firePointer(panEl, 'pointerdown', { x: 150, y: 100, pointerId: 83 });
+        firePointer(window, 'pointerup', { x: 150, y: 100, pointerId: 83 });
+        vi.advanceTimersByTime(2000);
+        expect(scaleEl.style.transform).toBe('scale3d(2, 2, 1)');
+    });
+
+    it('zoom: pans with the pinch midpoint (fused zoom-and-pan)', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video], {
+            pinchToClose: false,
+        });
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+
+        // Two fingers 100 apart; move BOTH +60px right, spread unchanged:
+        // scale stays 1, the image follows the midpoint 1:1.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 61 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 62 });
+        firePointer(window, 'pointermove', { x: 160, y: 100, pointerId: 61 });
+        firePointer(window, 'pointermove', { x: 260, y: 100, pointerId: 62 });
+        expect(panEl.style.transform).toBe('translate3d(60px, 0px, 0)');
+
+        // Release: same-tick samples read zero velocity (windowed guard),
+        // and scale 1 clamps the pan back to center on the spring.
+        firePointer(window, 'pointerup', { x: 160, y: 100, pointerId: 61 });
+        vi.advanceTimersByTime(2000);
+        expect(panEl.style.transform).toBe('translate3d(0px, 0px, 0)');
+        firePointer(window, 'pointerup', { x: 260, y: 100, pointerId: 62 });
+    });
+
+    it('zoom: re-baselines the pinch when a pair finger lifts under a third', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video], {
+            pinchToClose: false,
+        });
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+
+        // Pinch 61+62: spread 100 → 160 (scale 1.6), midpoint 150 → 180.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 61 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 62 });
+        firePointer(window, 'pointermove', { x: 260, y: 100, pointerId: 62 });
+        expect(panEl.style.transform).toBe('translate3d(-60px, -60px, 0)');
+
+        // Third finger rests, then pair finger 61 lifts: re-baseline,
+        // no midpoint leap.
+        firePointer(panEl, 'pointerdown', { x: 400, y: 100, pointerId: 63 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 61 });
+        expect(panEl.style.transform).toBe('translate3d(-60px, -60px, 0)');
+
+        // Both remaining fingers +10px, spread unchanged: pan 1:1.
+        firePointer(window, 'pointermove', { x: 270, y: 100, pointerId: 62 });
+        firePointer(window, 'pointermove', { x: 410, y: 100, pointerId: 63 });
+        expect(panEl.style.transform).toBe('translate3d(-50px, -60px, 0)');
+
+        firePointer(window, 'pointerup', { x: 270, y: 100, pointerId: 62 });
+        firePointer(window, 'pointerup', { x: 410, y: 100, pointerId: 63 });
+        vi.advanceTimersByTime(2000);
+    });
+
+    it('zoom: closes on a pinch released below fit (default pinchToClose)', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+
+        // Squeeze from fit: distance 200 → 40 (scale 0.2), release.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 51 });
+        firePointer(panEl, 'pointerdown', { x: 300, y: 100, pointerId: 52 });
+        firePointer(window, 'pointermove', { x: 140, y: 100, pointerId: 52 });
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 51 });
+        await settle();
+        await advance(1000);
+        expect(query('.lg-container.lg-show')).toBeNull();
+        firePointer(window, 'pointerup', { x: 140, y: 100, pointerId: 52 });
+    });
+
+    it('zoom: disables transitions during a pinch and settles on release', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        await advance(350);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+        const scaleEl = query('.lg-item.lg-current .lg-zoom-scale')!;
+
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 31 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 32 });
+        // Live pinch tracks 1:1 — no easing between finger positions.
+        expect(panEl.style.transition).toBe('none');
+        expect(scaleEl.style.transition).toBe('none');
+
+        firePointer(window, 'pointerup', { x: 100, y: 100, pointerId: 31 });
+        // The release spring drives frames directly — still no easing.
+        expect(scaleEl.style.transition).toBe('none');
+        // Once settled, the button-zoom transition is restored.
+        vi.advanceTimersByTime(2000);
+        expect(scaleEl.style.transition).toBe(
+            'transform 0.3s cubic-bezier(0, 0, 0.25, 1)',
+        );
+        firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 32 });
+    });
+
+    it('zoom: projects a zoomed-pan release with 2.x momentum, clamped to bounds', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        // Pointer interactions arm `enableZoomAfter` ms after the load.
+        await advance(350);
+
+        // jsdom has no layout: stub the metrics the pan bounds derive
+        // from. Image fitted at 400x300, natural 1600 → actual-size scale
+        // 4; at that scale the pan bounds are ±600 x, ±450 y.
+        const img = query('img.lg-image[data-index="0"]')!;
+        Object.defineProperty(img, 'offsetWidth', { value: 400 });
+        Object.defineProperty(img, 'offsetHeight', { value: 300 });
+        Object.defineProperty(img, 'naturalWidth', { value: 1600 });
+        const slide = img.closest<HTMLElement>('.lg-item')!;
+        Object.defineProperty(slide, 'offsetWidth', { value: 400 });
+        Object.defineProperty(slide, 'offsetHeight', { value: 300 });
+
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
+        await settle();
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+        expect(
+            query('.lg-item.lg-current .lg-zoom-scale')!.style.transform,
+        ).toBe('scale3d(4, 4, 1)');
+
+        const panX = (): number =>
+            parseFloat(
+                panEl.style.transform.match(/translate3d\((-?[\d.]+)px/)![1]!,
+            );
+
+        // 100px drag over 100ms (1 px/ms release): the spring glides the
+        // pan to current + project(v) = -100 - 199 = -299, inside bounds.
+        firePointer(panEl, 'pointerdown', { x: 300, y: 100, pointerId: 61 });
+        vi.advanceTimersByTime(100);
+        firePointer(window, 'pointermove', { x: 200, y: 100, pointerId: 61 });
+        firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 61 });
+        // Spring in flight: transitions stand down.
+        expect(panEl.style.transition).toBe('none');
+        vi.advanceTimersByTime(2000);
+        expect(panX()).toBeCloseTo(-299, 0);
+        // Settled: the button-zoom transition is restored.
+        expect(panEl.style.transition).toBe(
+            'transform 0.3s cubic-bezier(0, 0, 0.25, 1)',
+        );
+
+        // A flick (100px in 20ms, 5 px/ms): projection -399 - 995 clamps
+        // into the -600 bound; the spring bounces softly against it.
+        firePointer(panEl, 'pointerdown', { x: 300, y: 100, pointerId: 62 });
+        vi.advanceTimersByTime(20);
+        firePointer(window, 'pointermove', { x: 200, y: 100, pointerId: 62 });
+        firePointer(window, 'pointerup', { x: 200, y: 100, pointerId: 62 });
+        vi.advanceTimersByTime(3000);
+        expect(panX()).toBeCloseTo(-600, 0);
+    });
+
+    it('video: a poster that fails to load still settles the slide', async () => {
+        const PosterHost = defineComponent({
+            components: { LightGallery },
+            setup: () => ({
+                items: [
+                    {
+                        src: 'https://vimeo.com/112836958',
+                        alt: 'vimeo',
+                        poster: 'poster.jpg',
+                    },
+                ],
+                plugins: [Video],
+            }),
+            template: `
+                <LightGallery
+                    :slides="items"
+                    :zoom-from-origin="false"
+                    :plugins="plugins"
+                    :video="{ autoplayFirstVideo: false }"
+                />
+            `,
+        });
+        const wrapper = mount(PosterHost, { attachTo: document.body });
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                openGallery(i?: number): void;
+            }
+        ).openGallery(0);
+        await settle();
+        await advance(450);
+
+        const current = query('.lg-item.lg-current')!;
+        expect(current.classList.contains('lg-complete')).toBe(false);
+        current
+            .querySelector('img.lg-video-poster')!
+            .dispatchEvent(new Event('error'));
+        await settle();
+        expect(current.classList.contains('lg-complete')).toBe(true);
+        // The slide stays playable.
+        expect(current.querySelector('.lg-video-poster-wrap')).not.toBeNull();
+    });
+
+    it('video: facades a posterless provider slide via the thumb fallback', async () => {
+        const FacadeHost = defineComponent({
+            components: { LightGallery },
+            props: {
+                videoCfg: { type: Object, default: () => ({}) },
+            },
+            setup: () => ({
+                items: [
+                    {
+                        src: 'https://vimeo.com/112836958',
+                        alt: 'vimeo',
+                        thumb: 'v-t.jpg',
+                    },
+                ],
+                plugins: [Video],
+            }),
+            template: `
+                <LightGallery
+                    :slides="items"
+                    :zoom-from-origin="false"
+                    :plugins="plugins"
+                    :video="{ autoplayFirstVideo: false, ...videoCfg }"
+                />
+            `,
+        });
+        const wrapper = mount(FacadeHost, { attachTo: document.body });
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                openGallery(i?: number): void;
+            }
+        ).openGallery(0);
+        await settle();
+        await advance(450);
+
+        // The thumb feeds the facade — no iframe before user intent.
+        const cont = query('.lg-item.lg-current .lg-video-cont')!;
+        const posterImg = cont.querySelector<HTMLImageElement>(
+            'img.lg-video-poster',
+        )!;
+        expect(posterImg.getAttribute('src')).toBe('v-t.jpg');
+        expect(cont.querySelector('iframe')).toBeNull();
+
+        (
+            cont.querySelector('.lg-video-poster-wrap') as HTMLButtonElement
+        ).click();
+        await settle();
+        expect(cont.querySelector('iframe.lg-vimeo')).not.toBeNull();
+        wrapper.unmount();
+    });
+
+    it('video: videoFacade:false keeps the eager iframe for posterless slides', async () => {
+        const EagerHost = defineComponent({
+            components: { LightGallery },
+            setup: () => ({
+                items: [
+                    {
+                        src: 'https://vimeo.com/112836958',
+                        alt: 'vimeo',
+                        thumb: 'v-t.jpg',
+                    },
+                ],
+                plugins: [Video],
+            }),
+            template: `
+                <LightGallery
+                    :slides="items"
+                    :zoom-from-origin="false"
+                    :plugins="plugins"
+                    :video="{ autoplayFirstVideo: false, videoFacade: false }"
+                />
+            `,
+        });
+        const wrapper = mount(EagerHost, { attachTo: document.body });
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                openGallery(i?: number): void;
+            }
+        ).openGallery(0);
+        await settle();
+        await advance(450);
+
+        const cont = query('.lg-item.lg-current .lg-video-cont')!;
+        expect(cont.querySelector('iframe.lg-vimeo')).not.toBeNull();
+        expect(cont.querySelector('img.lg-video-poster')).toBeNull();
+        wrapper.unmount();
+    });
+
+    it('video: renders the video slide, swaps poster for the player, pauses on leave', async () => {
+        const { wrapper, log } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper, 2);
+        await settle();
+
+        const cont = query('.lg-item.lg-current .lg-video-cont')!;
+        expect(cont.classList.contains('lg-has-youtube')).toBe(true);
+        expect(log).toContain('hasVideo:2');
+        const posterImg = cont.querySelector<HTMLImageElement>(
+            'img.lg-video-poster',
+        )!;
+        expect(posterImg.getAttribute('src')).toContain(
+            'img.youtube.com/vi/abc123xyz90/maxresdefault.jpg',
+        );
+        expect(cont.querySelector('iframe')).toBeNull();
+        // Poster load marks the slide loaded (spinner + galleryOn).
+        posterImg.dispatchEvent(new Event('load'));
+        await settle();
+        expect(
+            query('.lg-item.lg-current')!.classList.contains('lg-complete'),
+        ).toBe(true);
+
+        // Poster click -> player swap + poster-click emit.
+        (
+            cont.querySelector('.lg-video-poster-wrap') as HTMLButtonElement
+        ).click();
+        await settle();
+        expect(log).toContain('posterClick');
+        const frame = query(
+            '.lg-video-cont iframe.lg-youtube',
+        ) as HTMLIFrameElement;
+        expect(frame).not.toBeNull();
+        expect(frame.getAttribute('src')).toContain(
+            'youtube-nocookie.com/embed/abc123xyz90',
+        );
+
+        // Navigating away pauses the player (postMessage command).
+        const postMessage = vi.fn();
+        Object.defineProperty(frame, 'contentWindow', {
+            value: { postMessage },
+        });
+        (
+            wrapper.findComponent(LightGallery).vm as unknown as {
+                prevSlide(): void;
+            }
+        ).prevSlide();
+        await settle();
+        expect(postMessage).toHaveBeenCalledWith(
+            '{"event":"command","func":"pauseVideo","args":""}',
+            '*',
+        );
+    });
+
+    it('leak check: unmount while open releases timers, locks and DOM', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        const runtime = runtimeOf(wrapper);
+        (query('[aria-label="View actual size"]') as HTMLButtonElement).click();
+        await settle();
+        expect(runtime.gestureSeam.lockOwner).toBe('zoomSwipe');
+
+        wrapper.unmount();
+        expect(query('.lg-container')).toBeNull();
+        expect(runtime.gestureSeam.lockOwner).toBeNull();
+        vi.runOnlyPendingTimers();
+        expect(vi.getTimerCount()).toBe(0);
+    });
+
+    it('leak check: unmount mid-pinch releases the seam lock', async () => {
+        const { wrapper } = mountHost([Thumbnail, Zoom, Video]);
+        await openAndLoad(wrapper);
+        await advance(350);
+        const runtime = runtimeOf(wrapper);
+        const panEl = query('.lg-item.lg-current .lg-zoom-pan')!;
+
+        // A forming pinch claims the seam BEFORE anything is zoomed.
+        firePointer(panEl, 'pointerdown', { x: 100, y: 100, pointerId: 71 });
+        firePointer(panEl, 'pointerdown', { x: 200, y: 100, pointerId: 72 });
+        expect(runtime.gestureSeam.lockOwner).toBe('pinch');
+
+        // Fingers never lift: the gallery unmounts mid-gesture. The lock
+        // must not survive into the next open (core swipe would stay
+        // stood down).
+        wrapper.unmount();
+        expect(runtime.gestureSeam.lockOwner).toBeNull();
+        vi.runOnlyPendingTimers();
+    });
+});

@@ -1,0 +1,891 @@
+import {
+    useEffect,
+    useRef,
+    useState,
+    type CSSProperties,
+    type PointerEvent as ReactPointerEvent,
+    type ReactElement,
+} from 'react';
+import { createPortal } from 'react-dom';
+import {
+    fitImageSize,
+    formatSlideAnnouncement,
+    getCenterCloseTransform,
+    getOriginTransform,
+    getSlideType,
+    onTransitionSettle,
+    parseImageSize,
+    type SlideDirection,
+    type ImageSize,
+    type FractionRect,
+} from '@lightgallery/headless';
+
+import { Caption } from './Caption';
+import { Controls } from './Controls';
+import { cx } from './cx';
+import {
+    useGalleryActions,
+    useGalleryInternal,
+    useGallerySettings,
+    useGalleryState,
+} from './context';
+import {
+    getFocusableElements,
+    useBodyLock,
+    useEventCallback,
+    useHideBars,
+    useIsoLayoutEffect,
+    useTimeouts,
+} from './hooks';
+import { PluginSlots, wrapSlides } from './plugins/runtime';
+import { Slides } from './Slides';
+import { Toolbar } from './Toolbar';
+import { useGalleryGestures } from './useGalleryGestures';
+
+/**
+ * Open/close lifecycle phases, mirroring the vanilla class timeline:
+ * `pre-open`  — portal mounted (`lg-show`), backdrop still transparent
+ * `opening`   — `lg-show-in` + backdrop `in` (fading in)
+ * `open`      — backdrop settled, outer `lg-visible`
+ * `closing`   — reverse animation; portal stays mounted until it finishes
+ */
+type OpenPhase = 'closed' | 'pre-open' | 'opening' | 'open' | 'closing';
+
+export interface OriginAnimation {
+    index: number;
+    transform: string;
+    /**
+     * Fitted image box the flight lands on (capped at the natural size).
+     * Absent for a centre close, which has no thumbnail to size against.
+     */
+    imageSize?: ImageSize;
+    /**
+     * `init`  — slide parked on the trigger rect, no transition classes yet
+     * `armed` — transition classes + duration applied, still on the rect
+     * `run`   — animating to identity (or back to the rect when closing)
+     */
+    stage: 'init' | 'armed' | 'run';
+    closing?: boolean;
+    /**
+     * A plugin's flight (`layout.overrideOriginFlight`, origin crop):
+     * transforms for a `slidesWrapper`'s stage boxes, the part of the
+     * image the dummy covers, and the dummy's source when the gallery
+     * has none.
+     */
+    boxes?: { outer: string; inner: string };
+    region?: FractionRect;
+    dummySrc?: string;
+    /**
+     * Closing with no thumbnail to return to (hidden or collapsed trigger,
+     * no lgSize): shrink about the stage centre and fade instead.
+     */
+    toCenter?: boolean;
+}
+
+export interface SlideTimeline {
+    /** Which slide carries `lg-current` right now. */
+    shownIndex: number;
+    /** `lg-prev-slide` / `lg-next-slide` assignments. */
+    positions: Record<number, 'prev' | 'next'>;
+    /** Outer `lg-no-trans` while slides are re-positioned. */
+    noTrans: boolean;
+    /** Slide carrying `lg-slide-progress` (outgoing slide). */
+    progressIndex: number | null;
+}
+
+export interface GalleryOutletProps {
+    className?: string;
+    container?: HTMLElement | null;
+}
+
+export function GalleryOutlet({
+    className,
+    container = null,
+}: GalleryOutletProps): ReactElement | null {
+    const state = useGalleryState();
+    const settings = useGallerySettings();
+    const actions = useGalleryActions();
+    const internal = useGalleryInternal();
+
+    // Portal targets exist only in the browser; render nothing during SSR.
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const timers = useTimeouts();
+    const containerElRef = useRef<HTMLDivElement>(null);
+    const outerRef = useRef<HTMLDivElement>(null);
+    const toolbarRef = useRef<HTMLDivElement>(null);
+    const setOuterElement = (element: HTMLDivElement | null) => {
+        (outerRef as { current: HTMLDivElement | null }).current = element;
+        internal.registerElements({ outer: element });
+    };
+
+    const [phase, setPhase] = useState<OpenPhase>('closed');
+    const [visible, setVisible] = useState(false);
+    const [componentsOpen, setComponentsOpen] = useState(false);
+    // Register the components-open toggle for plugins (thumbnail toggle).
+    useEffect(() => {
+        internal.componentsToggleRef.current = () =>
+            setComponentsOpen((value) => !value);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    const [useStartClass, setUseStartClass] = useState(false);
+    const [zoomFromImage, setZoomFromImage] = useState(false);
+    const [maximized, setMaximized] = useState(false);
+    const [originAnim, setOriginAnim] = useState<OriginAnimation | null>(null);
+    const [contentOffsets, setContentOffsets] = useState<{
+        top: number;
+        bottom: number;
+    } | null>(null);
+    // Shared with Slide: load-completion defers while the origin
+    // flight is running (attribute churn on a transitioning element
+    // restarts the transition in Safari — visible reopen flicker when
+    // a cached image loads instantly).
+    const usedZoomRef = internal.zoomOriginOpenRef;
+    // Disposer for the pending flight-landing gate (see runEntrance).
+    const originSettleRef = useRef<(() => void) | null>(null);
+    const clearOriginSettle = () => {
+        originSettleRef.current?.();
+        originSettleRef.current = null;
+    };
+    useEffect(() => clearOriginSettle, []);
+    const returnFocusRef = useRef<HTMLElement | null>(null);
+    /** Latched at first open — the portal persists afterwards (v2). */
+    const everOpenedRef = useRef(false);
+
+    const isBodyContainer =
+        typeof document !== 'undefined' &&
+        (container ?? document.body) === document.body;
+
+    /** Toolbar, caption and thumbnail-strip offsets for media (2.x parity). */
+    const measureOffsets = useEventCallback(() => {
+        // mediumZoom overrides the measurement entirely via the layout seam.
+        const override = internal.mediaPositionOverrideRef.current;
+        if (override) {
+            return override();
+        }
+        if (settings.allowMediaOverlap) {
+            return { top: 0, bottom: 0 };
+        }
+        const top = toolbarRef.current?.clientHeight ?? 0;
+        const caption = outerRef.current?.querySelector<HTMLElement>(
+            '.lg-components .lg-sub-html',
+        );
+        const captionHeight =
+            settings.defaultCaptionHeight || caption?.clientHeight || 0;
+        // 2.x reserves the thumbnail strip as well as the caption, so the
+        // media centers in the space left between the bars.
+        const thumbs =
+            outerRef.current?.querySelector<HTMLElement>('.lg-thumb-outer');
+        const bottom = (thumbs?.clientHeight ?? 0) + captionHeight;
+        return { top, bottom };
+    });
+
+    const computeOrigin = useEventCallback(
+        (
+            index: number,
+        ): {
+            transform: string;
+            imageSize: ImageSize;
+            boxes?: { outer: string; inner: string };
+            region?: FractionRect;
+            dummySrc?: string;
+        } | null => {
+            if (!settings.zoomFromOrigin) {
+                return null;
+            }
+            const item = internal.items[index];
+            const outerEl = outerRef.current;
+            if (!item?.lgSize || !outerEl) {
+                return null;
+            }
+            const triggerRect = internal.getOriginRect(index);
+            if (!triggerRect) {
+                return null;
+            }
+            const natural = parseImageSize(item.lgSize, window.innerWidth);
+            if (!natural) {
+                return null;
+            }
+            const rect = outerEl.getBoundingClientRect();
+            const containerRect = {
+                left: rect.left,
+                top: rect.top,
+                width: rect.width,
+                height: rect.height,
+            };
+            const { top, bottom } = measureOffsets();
+            const imageSize = fitImageSize(
+                natural,
+                containerRect.width,
+                containerRect.height - (top + bottom),
+            );
+            // Degenerate measurement (zero-sized/hidden viewport, offsets
+            // taller than the stage): the shared math would emit a
+            // mirrored flight — fall back to the startClass fade instead.
+            if (imageSize.width <= 0 || imageSize.height <= 0) {
+                return null;
+            }
+            // A plugin's flight (origin crop) in place of the built-in one.
+            const override = internal.originFlightOverrideRef.current?.({
+                index,
+                trigger: internal.getOriginTrigger(index),
+                triggerRect,
+                containerRect,
+                top,
+                bottom,
+                imageSize,
+            });
+            if (override) {
+                return { ...override, imageSize };
+            }
+            return {
+                transform: getOriginTransform({
+                    triggerRect,
+                    containerRect,
+                    top,
+                    bottom,
+                    imageSize,
+                }),
+                // The dummy flies at this box: capped at the natural size, so
+                // an image smaller than the stage never flies stage-sized.
+                imageSize,
+            };
+        },
+    );
+
+    const beginClose = useEventCallback(() => {
+        clearOriginSettle();
+        internal.emit('onBeforeClose');
+        setPhase('closing');
+        setVisible(false);
+        setComponentsOpen(false);
+
+        const origin = usedZoomRef.current
+            ? computeOrigin(state.currentIndex)
+            : null;
+        // Fly back to the thumbnail, or shrink about the stage centre when
+        // there is nothing to fly to (hidden or collapsed trigger, no
+        // lgSize, no trigger elements, zoomFromOrigin off).
+        setOriginAnim({
+            index: state.currentIndex,
+            transform: origin?.transform ?? getCenterCloseTransform(),
+            imageSize: origin?.imageSize,
+            boxes: origin?.boxes,
+            stage: 'run',
+            closing: true,
+            toCenter: !origin,
+        });
+        setZoomFromImage(true);
+        const closeDuration = Math.max(
+            settings.startAnimationDuration,
+            settings.backdropDuration,
+        );
+
+        timers.set(() => {
+            setPhase('closed');
+            setOriginAnim(null);
+            setZoomFromImage(false);
+            setUseStartClass(false);
+            setContentOffsets(null);
+            usedZoomRef.current = false;
+            // Return focus to the element that opened the gallery.
+            if (returnFocusRef.current?.isConnected) {
+                returnFocusRef.current.focus({ preventScroll: true });
+            }
+            returnFocusRef.current = null;
+            internal.emit('onAfterClose');
+        }, closeDuration + 100);
+    });
+
+    // state.open → phase machine.
+    useIsoLayoutEffect(() => {
+        if (state.open) {
+            if (phase === 'closed' || phase === 'closing') {
+                timers.clearAll();
+                clearOriginSettle();
+                setOriginAnim(null);
+                setPhase('pre-open');
+            }
+        } else if (phase !== 'closed' && phase !== 'closing') {
+            beginClose();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state.open]);
+
+    // Entrance timeline, once the portal is in the DOM.
+    useIsoLayoutEffect(() => {
+        if (phase !== 'pre-open') {
+            return;
+        }
+        setContentOffsets(measureOffsets());
+
+        // Belt for unmount-mid-gesture leaks: no gesture can be live at
+        // open, so a lingering seam claim or pointer record is stale.
+        internal.gestureSeam.claim(null);
+        internal.gestureSeam.pointers = [];
+
+        const origin = computeOrigin(state.currentIndex);
+        const transform = origin?.transform ?? null;
+        usedZoomRef.current = transform !== null;
+        setUseStartClass(transform === null);
+        if (origin) {
+            const index = state.currentIndex;
+            setOriginAnim({
+                index,
+                transform: origin.transform,
+                imageSize: origin.imageSize,
+                boxes: origin.boxes,
+                region: origin.region,
+                dummySrc: origin.dummySrc,
+                stage: 'init',
+            });
+            timers.set(() => {
+                setZoomFromImage(true);
+                setOriginAnim((anim) => anim && { ...anim, stage: 'armed' });
+            }, 10);
+            timers.set(() => {
+                setOriginAnim((anim) => anim && { ...anim, stage: 'run' });
+                const land = () => {
+                    originSettleRef.current = null;
+                    setOriginAnim(null);
+                    // 2.x adds lg-visible once the start animation lands —
+                    // the zoom-from-origin path was missing it entirely.
+                    setVisible(true);
+                };
+                // Land on the flight's own transitionend (fixed offset as
+                // the no-transition fallback): the transition starts at
+                // the first style recalc after the transform reset, which
+                // the gallery's first layout can push past the offset — a
+                // cached image mounted on the offset swaps in over the
+                // still-scaling thumb.
+                const flying = outerRef.current?.querySelector(
+                    '.lg-item.lg-current',
+                );
+                if (flying) {
+                    originSettleRef.current = onTransitionSettle(
+                        flying,
+                        'transform',
+                        settings.startAnimationDuration + 100,
+                        land,
+                    );
+                } else {
+                    timers.set(land, settings.startAnimationDuration);
+                }
+            }, 110);
+        }
+
+        timers.set(() => setPhase('opening'), 10);
+        timers.set(() => {
+            setPhase('open');
+            if (!usedZoomRef.current) {
+                setVisible(true);
+            }
+        }, 10 + settings.backdropDuration);
+        timers.set(
+            () => setComponentsOpen(true),
+            settings.zoomFromOrigin ? 100 : settings.backdropDuration,
+        );
+
+        if (settings.trapFocus && isBodyContainer) {
+            // Remember where focus came from; restored when the portal
+            // unmounts (dialog pattern).
+            returnFocusRef.current =
+                document.activeElement instanceof HTMLElement
+                    ? document.activeElement
+                    : null;
+            containerElRef.current?.focus({ preventScroll: true });
+        }
+        internal.emit('onAfterOpen');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [phase]);
+
+    const bodyLockActive =
+        phase === 'pre-open' || phase === 'opening' || phase === 'open';
+
+    useBodyLock(
+        bodyLockActive,
+        isBodyContainer,
+        settings.hideScrollbar,
+        settings.resetScrollPosition,
+    );
+
+    // Keyboard: ESC close (escKey) and arrow navigation (keyPress) —
+    // listener removed on close/unmount.
+    const slidesCount = internal.items.length;
+    useEffect(() => {
+        if (!bodyLockActive || (!settings.escKey && !settings.keyPress)) {
+            return;
+        }
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (settings.escKey && event.key === 'Escape') {
+                event.preventDefault();
+                actions.closeGallery();
+            }
+            if (settings.keyPress && slidesCount > 1) {
+                // Physical arrows follow the reading direction.
+                const rtl = settings.direction === 'rtl';
+                if (event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    (rtl ? actions.nextSlide : actions.prevSlide)();
+                } else if (event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    (rtl ? actions.prevSlide : actions.nextSlide)();
+                }
+            }
+            // Focus trap: Tab cycles within the dialog (2.x trapFocus).
+            if (settings.trapFocus && event.key === 'Tab') {
+                const containerEl = containerElRef.current;
+                if (!containerEl) {
+                    return;
+                }
+                const focusable = getFocusableElements(containerEl);
+                if (focusable.length === 0) {
+                    event.preventDefault();
+                    return;
+                }
+                const first = focusable[0]!;
+                const last = focusable[focusable.length - 1]!;
+                const active = document.activeElement;
+                const inside =
+                    active instanceof Node && containerEl.contains(active);
+                if (event.shiftKey) {
+                    if (!inside || active === first) {
+                        event.preventDefault();
+                        last.focus();
+                    }
+                } else if (!inside || active === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            }
+        };
+        document.addEventListener('keydown', onKeyDown);
+        return () => document.removeEventListener('keydown', onKeyDown);
+    }, [
+        bodyLockActive,
+        settings.escKey,
+        settings.keyPress,
+        settings.trapFocus,
+        slidesCount,
+        actions,
+    ]);
+
+    // Mousewheel navigation, throttled to one slide per second (2.x parity).
+    useEffect(() => {
+        if (!bodyLockActive || !settings.mousewheel || slidesCount < 2) {
+            return;
+        }
+        const outerEl = outerRef.current;
+        if (!outerEl) {
+            return;
+        }
+        let lastCall = 0;
+        // Non-passive on purpose: the gallery owns the wheel while open; the
+        // page behind must not scroll.
+        const onWheel = (event: WheelEvent) => {
+            if (!event.deltaY) {
+                return;
+            }
+            event.preventDefault();
+            const now = Date.now();
+            if (now - lastCall < 1000) {
+                return;
+            }
+            lastCall = now;
+            if (event.deltaY > 0) {
+                actions.nextSlide();
+            } else {
+                actions.prevSlide();
+            }
+        };
+        outerEl.addEventListener('wheel', onWheel, { passive: false });
+        return () => outerEl.removeEventListener('wheel', onWheel);
+    }, [bodyLockActive, settings.mousewheel, slidesCount, actions]);
+
+    const barsHidden = useHideBars(
+        bodyLockActive,
+        settings.hideBarsDelay,
+        settings.showBarsAfter,
+        outerRef,
+    );
+
+    // 2.x containerResize: window resizes while open re-measure the media
+    // position and notify listeners.
+    const onResize = useEventCallback(() => {
+        setContentOffsets(measureOffsets());
+        internal.emit('onContainerResize', { index: state.currentIndex });
+    });
+    useEffect(() => {
+        if (!bodyLockActive) {
+            return;
+        }
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, [bodyLockActive, onResize]);
+
+    // Slide transition timeline (2.x makeSlideAnimation).
+    const [timeline, setTimeline] = useState<SlideTimeline>({
+        shownIndex: state.currentIndex,
+        positions: {},
+        noTrans: false,
+        progressIndex: null,
+    });
+    const prevShownRef = useRef<number | null>(null);
+    const runTransition = useEventCallback(
+        (from: number, to: number, direction: SlideDirection) => {
+            const start = () => {
+                setTimeline({
+                    shownIndex: from,
+                    positions: {
+                        [to]: direction === 'next' ? 'next' : 'prev',
+                        [from]: direction === 'next' ? 'prev' : 'next',
+                    },
+                    noTrans: true,
+                    progressIndex: from,
+                });
+                timers.set(() => {
+                    setTimeline((tl) => ({
+                        ...tl,
+                        shownIndex: to,
+                        noTrans: false,
+                    }));
+                }, 50);
+                timers.set(() => {
+                    setTimeline((tl) => ({ ...tl, progressIndex: null }));
+                    actions.dispatch({ type: 'TRANSITION_END' });
+                    internal.emit('onAfterSlide', {
+                        index: to,
+                        prevIndex: from,
+                        fromTouch: false,
+                        fromThumb: false,
+                    });
+                }, settings.speed + 100 + settings.slideDelay);
+            };
+            internal.emit('onBeforeSlide', {
+                index: to,
+                prevIndex: from,
+                fromTouch: false,
+                fromThumb: false,
+            });
+            if (settings.slideDelay > 0) {
+                setTimeline((tl) => ({ ...tl, progressIndex: from }));
+                timers.set(start, settings.slideDelay);
+            } else {
+                start();
+            }
+        },
+    );
+    const fromTouchRef = useRef(false);
+    const [touchSlideMode, setTouchSlideMode] = useState(false);
+    const runTouchTransition = useEventCallback(
+        (from: number, to: number, direction: SlideDirection) => {
+            internal.emit('onBeforeSlide', {
+                index: to,
+                prevIndex: from,
+                fromTouch: true,
+                fromThumb: false,
+            });
+            // 2.x fromTouch path: slides are already positioned by the drag —
+            // switch lg-current immediately (no lg-no-trans / 50ms phase) and
+            // keep only the incoming-side neighbor positioned.
+            const count = state.slidesCount;
+            const positions: Record<number, 'prev' | 'next'> = {};
+            if (direction === 'prev') {
+                let neighbor = to + 1;
+                if (neighbor >= count) {
+                    neighbor = state.loop && count > 2 ? 0 : -1;
+                }
+                if (neighbor >= 0 && neighbor !== to) {
+                    positions[neighbor] = 'next';
+                }
+            } else {
+                let neighbor = to - 1;
+                if (neighbor < 0) {
+                    neighbor = state.loop && count > 2 ? count - 1 : -1;
+                }
+                if (neighbor >= 0 && neighbor !== to) {
+                    positions[neighbor] = 'prev';
+                }
+            }
+            setTimeline({
+                shownIndex: to,
+                positions,
+                noTrans: false,
+                progressIndex: null,
+            });
+            timers.set(() => {
+                actions.dispatch({ type: 'TRANSITION_END' });
+                internal.emit('onAfterSlide', {
+                    index: to,
+                    prevIndex: from,
+                    fromTouch: true,
+                    fromThumb: false,
+                });
+            }, settings.speed + 100);
+        },
+    );
+    // Layout effect, not effect: reopening at another index must correct
+    // `timeline.shownIndex` BEFORE the browser paints, or the previous
+    // slide flashes as lg-current for a frame on every cross-index reopen.
+    useIsoLayoutEffect(() => {
+        const fromTouch = fromTouchRef.current;
+        fromTouchRef.current = false;
+        if (!state.open) {
+            prevShownRef.current = null;
+            setTimeline({
+                shownIndex: state.currentIndex,
+                positions: {},
+                noTrans: false,
+                progressIndex: null,
+            });
+            return;
+        }
+        const current = state.currentIndex;
+        const previous = prevShownRef.current;
+        prevShownRef.current = current;
+        if (previous === null || previous === current) {
+            setTimeline((tl) => ({ ...tl, shownIndex: current }));
+            return;
+        }
+        if (!state.transitioning) {
+            // Index changed without animation (e.g. slides prop shrank).
+            setTimeline({
+                shownIndex: current,
+                positions: {},
+                noTrans: false,
+                progressIndex: null,
+            });
+            return;
+        }
+        const direction =
+            state.slideDirection ?? (current > previous ? 'next' : 'prev');
+        if (fromTouch) {
+            runTouchTransition(previous, current, direction);
+            return;
+        }
+        runTransition(previous, current, direction);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state.open, state.currentIndex]);
+
+    // Gesture wiring: position classes at drag start, commit at release.
+    const prepareDrag = useEventCallback(() => {
+        const count = state.slidesCount;
+        const index = state.currentIndex;
+        let prevN = index - 1;
+        let nextN = index + 1;
+        if (state.loop && count > 2) {
+            if (index === 0) {
+                prevN = count - 1;
+            } else if (index === count - 1) {
+                nextN = 0;
+            }
+        }
+        const positions: Record<number, 'prev' | 'next'> = {};
+        if (prevN >= 0 && prevN < count && prevN !== index) {
+            positions[prevN] = 'prev';
+        }
+        if (nextN >= 0 && nextN < count && nextN !== index && nextN !== prevN) {
+            positions[nextN] = 'next';
+        }
+        setTimeline((tl) => ({ ...tl, positions }));
+    });
+    const commitTouchNavigation = useEventCallback(
+        (target: number, direction: SlideDirection) => {
+            fromTouchRef.current = true;
+            // Drags animate as slide whatever the mode (2.x adds lg-slide
+            // for the release animation); the gesture layer restores it via
+            // settleTouchNavigation once its spring settles — a fixed timer
+            // here could revert mid-flight.
+            if (settings.mode !== 'lg-slide') {
+                setTouchSlideMode(true);
+            }
+            actions.navigate(target, direction);
+        },
+    );
+    const settleTouchNavigation = useEventCallback(() => {
+        setTouchSlideMode(false);
+    });
+    const gestures = useGalleryGestures({
+        outerRef,
+        active: bodyLockActive,
+        prepareDrag,
+        commitTouchNavigation,
+        settleTouchNavigation,
+    });
+
+    // Close on tap of the black area around the slide (2.x closeOnTap).
+    const mouseDownOnSlideRef = useRef(false);
+    const isSlideElement = (target: EventTarget | null): boolean => {
+        if (!(target instanceof Element)) {
+            return false;
+        }
+        return ['lg-outer', 'lg-item', 'lg-img-wrap', 'lg-img-rotate'].some(
+            (name) => target.classList.contains(name),
+        );
+    };
+    // closeOnTap rides POINTER events, never the synthesized mouse
+    // burst iOS fires ~300ms after a tap: that burst can land on the
+    // freshly opened overlay (same screen point as the trigger) and
+    // close the gallery right after it opened — the reopen bounce.
+    const onOuterPointerDown = (event: ReactPointerEvent) => {
+        mouseDownOnSlideRef.current = isSlideElement(event.target);
+        gestures.onPointerDown(event);
+    };
+    const onOuterPointerMove = () => {
+        mouseDownOnSlideRef.current = false;
+    };
+    const onOuterPointerUp = (event: ReactPointerEvent) => {
+        if (
+            settings.closeOnTap &&
+            mouseDownOnSlideRef.current &&
+            isSlideElement(event.target)
+        ) {
+            actions.closeGallery();
+        }
+    };
+
+    // v2 parity: after the first open the container STAYS in the DOM
+    // across close/reopen (CSS hides it — `.lg-container` is
+    // display:none without `lg-show`). Unmounting the whole portal per
+    // open makes iOS Safari re-composite a fresh layer tree while the
+    // entrance transitions run, which paints as visible flicker on
+    // reopen; class toggles on a persistent tree (what vanilla does)
+    // don't.
+    if (phase !== 'closed') {
+        everOpenedRef.current = true;
+    }
+    if (!mounted || (phase === 'closed' && !everOpenedRef.current)) {
+        return null;
+    }
+
+    const portalTarget = container ?? document.body;
+    const currentItem = internal.items[state.currentIndex];
+    const showIn = phase === 'opening' || phase === 'open';
+    const zoomClosing = phase === 'closing' && originAnim?.closing === true;
+
+    const containerClasses = cx(
+        'lg-container',
+        phase !== 'closed' && 'lg-show',
+        className,
+        showIn && 'lg-show-in',
+        !isBodyContainer && !maximized && 'lg-inline',
+    );
+
+    const outerClasses = cx(
+        'lg-outer',
+        'lg-use-css3',
+        'lg-css3',
+        settings.mode,
+        settings.enableDrag && 'lg-grab',
+        internal.items.length < 2 && 'lg-single-item',
+        settings.allowMediaOverlap && 'lg-media-overlap',
+        useStartClass && settings.startClass,
+        zoomFromImage && 'lg-zoom-from-image',
+        visible && 'lg-visible',
+        componentsOpen && 'lg-components-open',
+        (barsHidden || (phase === 'closing' && !zoomClosing)) &&
+            'lg-hide-items',
+        zoomClosing && 'lg-closing',
+        zoomClosing && originAnim?.toCenter && 'lg-close-to-center',
+        timeline.noTrans && 'lg-no-trans',
+        touchSlideMode && settings.mode !== 'lg-slide' && 'lg-slide',
+        internal.edgeBounce === 'right' && 'lg-right-end',
+        internal.edgeBounce === 'left' && 'lg-left-end',
+        internal.pluginOuterClassNames,
+        settings.download &&
+            currentItem?.downloadUrl === false &&
+            'lg-hide-download',
+    );
+
+    const contentStyle: CSSProperties | undefined =
+        !settings.allowMediaOverlap && contentOffsets
+            ? {
+                  top: `${contentOffsets.top}px`,
+                  bottom: `${contentOffsets.bottom}px`,
+              }
+            : undefined;
+
+    // Slide-change announcement for the polite live region. Cleared while
+    // closed so reopening at the same slide is a fresh mutation (identical
+    // text would not re-announce). Non-string captions (ReactNode) are
+    // omitted — only plain text can be voiced.
+    const announcement =
+        settings.ariaAnnouncements && phase !== 'closed' && currentItem
+            ? formatSlideAnnouncement({
+                  template: settings.strings.slideAnnouncement,
+                  index: state.currentIndex + 1,
+                  total: internal.items.length,
+                  caption:
+                      typeof currentItem.caption === 'string'
+                          ? currentItem.caption
+                          : undefined,
+              })
+            : '';
+
+    return createPortal(
+        <div
+            ref={containerElRef}
+            className={containerClasses}
+            tabIndex={-1}
+            dir={settings.direction === 'rtl' ? 'rtl' : 'ltr'}
+            role="dialog"
+            aria-modal="true"
+            aria-label={
+                settings.ariaLabelledby
+                    ? undefined
+                    : settings.strings.galleryLabel
+            }
+            aria-labelledby={settings.ariaLabelledby || undefined}
+            aria-describedby={settings.ariaDescribedby || undefined}
+        >
+            <div
+                className={cx('lg-backdrop', showIn && 'in')}
+                style={{
+                    transitionDuration: `${settings.backdropDuration}ms`,
+                }}
+            />
+            {settings.ariaAnnouncements && (
+                <div className="lg-announcer" role="status" aria-live="polite">
+                    {announcement}
+                </div>
+            )}
+            <div
+                ref={setOuterElement}
+                className={outerClasses}
+                data-lg-slide-type={
+                    currentItem ? getSlideType(currentItem) : undefined
+                }
+                onPointerDown={onOuterPointerDown}
+                onPointerMove={onOuterPointerMove}
+                onPointerUp={onOuterPointerUp}
+            >
+                <div className="lg-content" style={contentStyle}>
+                    {wrapSlides(
+                        internal.plugins,
+                        <Slides
+                            timeline={timeline}
+                            originAnim={originAnim}
+                            cleared={phase === 'closed'}
+                        />,
+                        originAnim,
+                    )}
+                    <Controls />
+                </div>
+                <Toolbar
+                    toolbarRef={toolbarRef}
+                    onToggleMaximize={() => setMaximized((value) => !value)}
+                />
+                {settings.captionPosition === 'outer' && <Caption />}
+                <PluginSlots kind="outer" />
+                <div className="lg-components">
+                    {settings.captionPosition === 'bar' && <Caption />}
+                    <PluginSlots kind="components" />
+                </div>
+            </div>
+        </div>,
+        portalTarget,
+    );
+}

@@ -4,9 +4,6 @@
   right: 0;
   top: 0;
   bottom: 0;
-  -webkit-transition: -webkit-transform 0.4s cubic-bezier(0, 0, 0.25, 1) 0s;
-  -moz-transition: -moz-transform 0.4s cubic-bezier(0, 0, 0.25, 1) 0s;
-  -o-transition: -o-transform 0.4s cubic-bezier(0, 0, 0.25, 1) 0s;
   transition: transform 0.4s cubic-bezier(0, 0, 0.25, 1) 0s;
 }
 .lg-outer[data-lg-slide-type=video] .lg-rotate-left,
@@ -26,24 +23,8 @@
   vertical-align: middle;
 }
 
-.lg-rotate-left:after {
-  content: "\e900";
-}
-
-.lg-rotate-right:after {
-  content: "\e901";
-}
-
 .lg-icon.lg-flip-hor, .lg-icon.lg-flip-ver {
   font-size: 26px;
-}
-
-.lg-flip-ver:after {
-  content: "\e903";
-}
-
-.lg-flip-hor:after {
-  content: "\e902";
 }
 
 /*# sourceMappingURL=lg-rotate.css.map */

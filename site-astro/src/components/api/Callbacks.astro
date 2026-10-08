@@ -1,0 +1,55 @@
+---
+import { Code } from 'astro:components';
+
+import {
+    commentOf,
+    findReflection,
+    interfaceProps,
+    tagText,
+} from '../../lib/apidocs';
+import DetailTable from './DetailTable.astro';
+
+/**
+ * Framework callback doc block, port of `shortcodes/callbacks.html`
+ * (the event docs re-voiced for callback props: `@method` names,
+ * "Fired" → "Called").
+ */
+interface Props {
+    interface: string;
+}
+
+const { interface: interfaceName } = Astro.props;
+const meta = commentOf(findReflection(interfaceName));
+const detail = interfaceProps(interfaceName);
+const methods = tagText(meta, 'method');
+---
+
+<section class="api-entry">
+    {
+        methods.map((name) => (
+            <h3 class="api-entry-name" id={name}>
+                <code>{name}</code>{' '}
+                <a href={`#${name}`} class="anchor" aria-hidden="true">
+                    #
+                </a>
+            </h3>
+        ))
+    }
+    <p class="api-entry-desc">{meta.summary.replace(/Fired/g, 'Called')}</p>
+    {
+        detail.length > 0 && (
+            <div class="api-entry-block">
+                <span class="api-entry-label">Callback detail</span>
+                <DetailTable props={detail} />
+            </div>
+        )
+    }
+    {
+        tagText(meta, 'example').map((example) => (
+            <div class="api-entry-block">
+                <span class="api-entry-label">Example</span>
+                <Code code={example.trim()} lang="js" />
+            </div>
+        ))
+    }
+</section>

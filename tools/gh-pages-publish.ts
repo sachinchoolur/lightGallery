@@ -18,7 +18,7 @@ let repository = (parsedUrl.host || "") + (parsedUrl.path || "")
 let ghToken = process.env.GH_TOKEN
 
 echo("Deploying docs!!!")
-cd("docs")
+cd("site-astro/dist")
 touch(".nojekyll")
 exec("git init")
 exec("git add .")

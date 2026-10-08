@@ -2,26 +2,8 @@
 @use 'lg-mixins' as *;
 
 .lg-outer {
-    .lg-dropdown-overlay {
-        background-color: rgba(0, 0, 0, 0.25);
-        bottom: 0;
-        cursor: default;
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-        z-index: $zindex-toolbar - 1;
-        opacity: 0;
-        visibility: hidden;
-        will-change: visibility, opacity;
-        @include transition(
-            visibility 0s linear 0.18s,
-            opacity 0.18s linear 0s
-        );
-    }
     &.lg-dropdown-active {
-        .lg-dropdown,
-        .lg-dropdown-overlay {
+        .lg-dropdown {
             @include transition-delay(0s);
             @include transform(translate3d(0, 0px, 0));
             opacity: 1;
@@ -104,34 +86,25 @@
             width: auto;
         }
     }
-    .lg-share {
+    // The button and its dropdown share a wrapper, so the menu hangs
+    // under the control that opened it instead of the toolbar's corner.
+    .lg-share-outer {
+        float: right;
         position: relative;
-        &:after {
-            content: '\e80d';
-        }
     }
     .lg-share-facebook {
         .lg-icon {
             color: #3b5998;
-            &:after {
-                content: '\e904';
-            }
         }
     }
     .lg-share-twitter {
         .lg-icon {
-            color: #00aced;
-            &:after {
-                content: '\e907';
-            }
+            color: #000;
         }
     }
     .lg-share-pinterest {
         .lg-icon {
             color: #cb2027;
-            &:after {
-                content: '\e906';
-            }
         }
     }
 }

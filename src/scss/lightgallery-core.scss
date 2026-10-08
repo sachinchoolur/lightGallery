@@ -17,6 +17,19 @@
         display: block;
     }
 }
+
+// Screen-reader-only live region announcing slide changes
+.lg-announcer {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
 .lg-on {
     scroll-behavior: unset;
 }
@@ -102,13 +115,20 @@
         opacity: 1;
     }
 
-    // Set transition speed and timing function
+    // Set transition speed and timing function. The duration is a list:
+    // the mode transitions all declare `transform` then `opacity`, and a
+    // single inherited value would stretch the crossfade to the whole
+    // slide, leaving the outgoing image ghosting across it. Modes whose
+    // effect IS the fade opt back in with --lg-opacity-speed.
     &.lg-css3 {
         .lg-item:not(.lg-start-end-progress) {
             &.lg-prev-slide,
             &.lg-next-slide,
             &.lg-current {
-                @include transition-duration(inherit !important);
+                @include transition-duration(
+                    var(--lg-speed, 400ms),
+                    var(--lg-opacity-speed, 100ms) !important
+                );
                 @include transition-timing-function(inherit !important);
             }
         }
@@ -273,7 +293,6 @@
 
     .lg-has-iframe {
         .lg-media-cont {
-            -webkit-overflow-scrolling: touch;
             overflow: auto;
         }
     }
@@ -340,6 +359,22 @@
             &.lg-start-end-progress {
                 @include transitionCustom(
                     transform 1s cubic-bezier(0, 0, 0.25, 1) 0s
+                );
+            }
+        }
+
+        // Close without a thumbnail to land on (hidden or collapsed
+        // trigger, no lg-size, zoomFromOrigin off, a dynamic gallery): the
+        // slide shrinks about the stage centre and fades over the flight
+        // duration, the mirror of the lg-start-zoom open. Outscores the
+        // per-mode .lg-current rules so the fade is not clamped to their
+        // transitions (lg-fade animates opacity only, for 0.1s).
+        &.lg-closing.lg-close-to-center {
+            .lg-item.lg-current.lg-start-end-progress {
+                opacity: 0;
+                @include transitionCustom(
+                    transform 1s cubic-bezier(0, 0, 0.25, 1) 0s,
+                    opacity 1s cubic-bezier(0, 0, 0.25, 1) 0s
                 );
             }
         }
@@ -412,10 +447,41 @@
     .lg-outer {
         z-index: 2;
     }
-    .lg-maximize {
-        &:after {
-            content: '\e909';
-        }
+}
+
+// Custom icons (settings.icons): user SVGs replace the font glyphs. The
+// wrapper spans center the SVG in the button; sizing follows the
+// button's font-size so custom icons land where the glyphs did. Color
+// is deliberately NOT forced, currentColor-based SVGs inherit the
+// button color, and fills/strokes authored into the SVG are respected.
+.lg-icon-custom {
+    &::after {
+        content: none !important;
+    }
+    .lg-ci {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+    svg {
+        width: 1em;
+        height: 1em;
+    }
+}
+
+// Maximize/minimize custom pair follows the same lg-inline state that
+// swaps the font glyphs above.
+.lg-maximize.lg-icon-custom .lg-ci-maximize {
+    display: none;
+}
+.lg-inline .lg-maximize.lg-icon-custom {
+    .lg-ci-maximize {
+        display: inline-flex;
+    }
+    .lg-ci-minimize {
+        display: none;
     }
 }
 

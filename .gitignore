@@ -19,9 +19,51 @@ lightgallery-lit/lib
 dist/vue/
 dist/lit/
 dist/package.json
+dist/LICENSE
 dist/plugins/**/*.json
 compiled
 .awcache
 .rpt2_cache
 /docs
 /site/data
+
+# build/tooling caches (v3 stack)
+.turbo/
+.pnpm-store/
+packages/*/dist/
+# hand-written ambient types (the global *.d.ts rule targets v2 build output)
+!packages/*/test/*.d.ts
+
+# local agent tooling (npx skills)
+.agents/
+.claude/
+skills-lock.json
+
+# private planning repo (symlinks -> ../lightGallery-plans, never publish)
+/v3-plans
+/plans-react
+/plans-angular
+/plans-vue
+
+# recipe demos (scratch consumers)
+demos/**/.next/
+demos/**/.nuxt/
+demos/**/next-env.d.ts
+
+# Astro generated types
+.astro/
+
+# consumer apps, when run in place (the check uses a scratch copy)
+consumers/**/.next/
+consumers/**/.nuxt/
+consumers/**/.output/
+consumers/**/.angular/
+consumers/**/.astro/
+consumers/**/.react-router/
+consumers/**/build/
+consumers/**/dist/
+consumers/**/next-env.d.ts
+consumers/**/public/photos/
+consumers/**/package-lock.json
+consumers/**/lg-declarations.ts
+consumers/**/tsconfig.lg-declarations.json

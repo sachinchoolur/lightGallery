@@ -1,6 +1,17 @@
 @use 'lg-variables' as *;
 @use 'lg-mixins' as *;
 
+// The actual-size button carries both zoom icons; its live class
+// (toggled by the plugin as the zoom state changes) picks one. The
+// dedicated zoom-in/out buttons carry a single icon each, so these
+// rules are inert on them.
+.lg-icon-custom.lg-zoom-in .lg-ci-zoom-out {
+    display: none;
+}
+.lg-icon-custom.lg-zoom-out .lg-ci-zoom-in {
+    display: none;
+}
+
 .lg-outer {
     // reset transition duration
     &.lg-css3.lg-zoom-dragging {
@@ -29,6 +40,41 @@
                         transform 0.8s cubic-bezier(0, 0, 0.25, 1) 0s
                     );
                 }
+            }
+        }
+        // Gesture releases settle the image scale on the same monotonic
+        // ease as the wrap pan. The default bouncy bezier below overshoots
+        // by ~19% of the delta, fine for one-step button zooms, a violent
+        // excursion when an infinite-zoom pinch releases far above actual
+        // size. Both :not() guards keep this high-specificity rule from
+        // outranking the two !important kill switches it must lose to:
+        // lg-zoom-dragging (fingers still down) and no-transition (the
+        // actual-size natural-px swap, which must never animate).
+        &.lg-zoom-drag-transition:not(.lg-zoom-dragging) {
+            .lg-item.lg-complete.lg-zoomable {
+                .lg-image:not(.no-transition),
+                .lg-dummy-img:not(.no-transition) {
+                    @include transitionCustom(
+                        transform 0.8s cubic-bezier(0, 0, 0.25, 1) 0s,
+                        opacity 0.15s !important
+                    );
+                }
+            }
+        }
+    }
+
+    // Close-while-zoomed: the core starts the zoom-from-origin shrink on
+    // the slide item and resetZoom strips the pan/scale styles in the
+    // same frame. The strip has to land instantly, animated through the
+    // transitions above it composes with the slide shrink, and the image
+    // never reaches the trigger rect before the close timeout hides the
+    // gallery.
+    &.lg-closing {
+        .lg-item.lg-complete.lg-zoomable {
+            .lg-img-wrap,
+            .lg-image,
+            .lg-dummy-img {
+                transition: none !important;
             }
         }
     }
@@ -81,29 +127,15 @@
 .lg-icon {
     // zoom buttons
     &.lg-zoom-in {
-        &:after {
-            content: '\e311';
-        }
         .lg-actual-size & {
             opacity: 1;
             pointer-events: auto;
         }
     }
 
-    &.lg-actual-size {
-        font-size: 20px;
-        &:after {
-            content: '\e033';
-        }
-    }
-
     &.lg-zoom-out {
         opacity: 0.5;
         pointer-events: none;
-
-        &:after {
-            content: '\e312';
-        }
 
         .lg-zoomed & {
             opacity: 1;

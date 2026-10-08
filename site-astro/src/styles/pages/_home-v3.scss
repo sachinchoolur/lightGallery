@@ -1,0 +1,2630 @@
+@use 'sass:math';
+
+// Homepage (/home-v3/) on the design system: white sections
+// separated by hairlines, content inside a 1080px rail with 1px edges,
+// dotted backgrounds on selected sections, one dark developer-voice
+// section, kickers + serif-accent headings, 24px cards.
+// Sections kept from the live homepage (Mixed Contents, Inline Gallery)
+// are re-skinned here too.
+
+$home-section-y: 96px;
+$home-section-y-m: 64px;
+
+// Customization demos: a demo that is not the chosen one. From lg up the
+// three share one grid cell, so it only fades out and the section keeps
+// its height; below lg, where the stage sits under the text, it collapses.
+@mixin home-customize-off {
+    visibility: hidden;
+    opacity: 0;
+    @include media-breakpoint-down(lg) {
+        display: none;
+    }
+}
+
+// Trusted-by swap for n logos sharing one cell: each is in for 1/n of
+// the loop, blurring in over the first quarter and out over the next
+// logo's.
+@mixin trusted-by-swap-keys($n) {
+    $f: math.div(100%, $n);
+    @keyframes trusted-by-swap-#{$n} {
+        0% {
+            opacity: 0;
+            filter: blur(8px);
+            transform: scale(0.96);
+        }
+        #{$f * 0.25},
+        #{$f} {
+            opacity: 1;
+            filter: blur(0);
+            transform: none;
+        }
+        #{$f * 1.25},
+        100% {
+            opacity: 0;
+            filter: blur(8px);
+            transform: scale(1.04);
+        }
+    }
+}
+// Desktop cells hold two logos, phone cells four.
+@each $n in 2, 4 {
+    @include trusted-by-swap-keys($n);
+}
+
+body.home-v3 {
+    overflow-x: clip;
+    background: #fff;
+
+    // Inline code in prose: the same pill as the docs content. The
+    // customize legends are code elements with their own styling.
+    :not(pre) > code:not(.home-customize-legend) {
+        padding: 1px 5px;
+        border: 1px solid $gray-200;
+        border-radius: 6px;
+        background: $gray-50;
+        color: $gray-800;
+        font-size: 0.85em;
+        font-weight: 500;
+    }
+
+    // ---- Sections: Bootstrap container widths, as on the original page ---
+    .container-xl,
+    .home-hero-gallery,
+    .trusted-by {
+        position: relative;
+        padding-top: $home-section-y;
+        padding-bottom: $home-section-y;
+        @media (max-width: 767px) {
+            padding-top: $home-section-y-m;
+            padding-bottom: $home-section-y-m;
+        }
+    }
+    // Structure behind the sections: a full-bleed hairline along each
+    // section's top edge and, from xl up, the two 1px rails of the
+    // 1080px column (the hero card sits exactly between them). The
+    // colors are custom properties so the dark band can dim them.
+    --home-hairline: #{$gray-100};
+    --home-rail: #{$gray-100};
+    .container-xl:not(.home-hero),
+    .trusted-by {
+        z-index: 0;
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 100vw;
+            margin-left: -50vw;
+            z-index: -1;
+            pointer-events: none;
+            border-top: 1px solid var(--home-hairline);
+            @include media-breakpoint-up(xl) {
+                background:
+                    linear-gradient(var(--home-rail), var(--home-rail)) no-repeat
+                        calc(50% - 540px) 0 / 1px 100%,
+                    linear-gradient(var(--home-rail), var(--home-rail)) no-repeat
+                        calc(50% + 539px) 0 / 1px 100%;
+            }
+        }
+    }
+    // Once the rails show, the sections live inside them: the 1080px
+    // container puts every column 24px in from the lines, the same
+    // inset the hero card has.
+    @include media-breakpoint-up(xl) {
+        .container-xl:not(.home-hero) {
+            max-width: 1080px;
+        }
+    }
+    .home-dark-band {
+        --home-hairline: transparent;
+        --home-rail: rgba(255, 255, 255, 0.07);
+    }
+    // The band's first section abuts the hero gallery, which has no line.
+    .trusted-by::after {
+        border-top-color: var(--home-hairline);
+    }
+    // Full-viewport background behind a section, without touching markup.
+    @mixin full-bleed-bg {
+        position: relative;
+        z-index: 0;
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 100vw;
+            margin-left: -50vw;
+            z-index: -1;
+            @content;
+        }
+    }
+
+    // Nested containers inside the band wrappers (dark / plain).
+    .home-dark-band,
+    .home-plain-band,
+    .vertical-bg,
+    .gradient-bg-light-blue {
+        background: none;
+        padding: 0;
+        &::before {
+            display: none;
+        }
+    }
+
+    // ---- Hero -------------------------------------------------------------
+    .home-hero-band {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        // Dots in the margins: the site's dot grid fills the empty sides and
+        // fades out beside the gallery, leaving the text on plain white.
+        // It sits behind everything; the gallery card is above it.
+        &::before {
+            --home-hero-clear: radial-gradient(ellipse 620px 360px at 50% 316px, transparent 50%, #000 100%);
+            --home-hero-fade: linear-gradient(#000 0, #000 516px, transparent 816px);
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+            height: 840px;
+            pointer-events: none;
+            background-image: radial-gradient($gray-300 1px, transparent 1.5px);
+            background-size: 16px 16px;
+            background-position: center 0;
+            -webkit-mask-image: var(--home-hero-clear), var(--home-hero-fade);
+            -webkit-mask-composite: source-in;
+            mask-image: var(--home-hero-clear), var(--home-hero-fade);
+            mask-composite: intersect;
+            @media (max-width: 767px) {
+                --home-hero-clear: radial-gradient(ellipse 240px 330px at 50% 296px, transparent 55%, #000 100%);
+                --home-hero-fade: linear-gradient(#000 0, #000 556px, transparent 756px);
+                height: 780px;
+            }
+        }
+    }
+    .home-hero {
+        padding: 0;
+    }
+    .home-hero-decor {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        pointer-events: none;
+        @media (max-width: 767px) {
+            display: none;
+        }
+    }
+    .home-hero-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 160px 24px 72px;
+        @media (max-width: 767px) {
+            // The header is fixed and 60px tall; keep the title clear of it.
+            padding: 108px 16px 48px;
+        }
+    }
+    // The v3 pill over the title
+    .home-hero-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        padding: 6px 14px 6px 10px;
+        border: 1px solid $gray-100;
+        border-radius: 999px;
+        background: #fff;
+        color: $gray-600;
+        font-size: 13px;
+        font-weight: 600;
+        i {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: $orange-500;
+        }
+    }
+    // Balanced lines, so a wrapped title never leaves one word alone
+    .main-title {
+        max-width: 860px;
+        margin: 0 0 24px;
+        text-wrap: balance;
+    }
+    .home-hero-lead {
+        max-width: 600px;
+        margin: 0 0 32px;
+        color: $gray-600;
+    }
+    .home-hero-github {
+        flex: none;
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+    }
+    .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: stretch;
+        @media (max-width: 767px) {
+            flex-direction: column;
+            width: 100%;
+            max-width: 720px;
+            .kq-btn {
+                width: 100%;
+            }
+        }
+    }
+    // The hero gallery: the product itself, framed as a card on the
+    // 1080px rail. The runtime lays the tiles out with the justified
+    // plugin (row height follows the width, phones show ten photos in
+    // three rows); the container-query min-heights reserve roughly that
+    // space so nothing below shifts while the layout runs.
+    .home-hero-gallery {
+        padding-top: 0;
+        padding-bottom: 24px;
+        .clip-path-bg-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+        .gallery-demo {
+            container-type: inline-size;
+            padding: 8px;
+            border: 1px solid $gray-100;
+            border-radius: 24px;
+            background: #fff;
+            box-shadow: 5px 6px 40px -4px rgba(9, 18, 36, 0.06);
+            @media (max-width: 767px) {
+                padding: 6px;
+                border-radius: 16px;
+            }
+        }
+        .lg-justified {
+            min-height: 80cqw;
+            border-radius: 16px;
+            @media (max-width: 767px) {
+                min-height: 40cqw;
+                border-radius: 10px;
+            }
+            @media (max-width: 480px) {
+                min-height: 90cqw;
+            }
+        }
+        // Square tiles; the grid's own radius above rounds only the four
+        // outer corners.
+        .gallery-item {
+            // No zoom on hover: the open/close flight measures the
+            // thumbnail, so a scaled tile would fly from a box a few
+            // percent off the one on screen. The neighbours fade under
+            // a white veil instead.
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: #fff;
+                opacity: 0;
+                transition: opacity 0.25s ease;
+                pointer-events: none;
+            }
+            &:focus-visible {
+                outline: 2px solid $orange-500;
+                outline-offset: -2px;
+            }
+        }
+        @media (hover: hover) {
+            .lg-justified:hover .gallery-item:not(:hover)::after {
+                opacity: 0.3;
+            }
+        }
+        .gallery-item-phone-hidden {
+            @media (max-width: 767px) {
+                display: none;
+            }
+        }
+        .open-gallery-text {
+            margin: 12px 0 0;
+            color: $gray-500;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .home-hero-gallery .gallery-item::after {
+            transition: none;
+        }
+    }
+
+    // ---- Section headers --------------------------------------------------
+    .home-section-header {
+        margin-bottom: 56px;
+        @media (max-width: 767px) {
+            margin-bottom: 40px;
+        }
+        .home-kicker {
+            display: block;
+            margin-bottom: 20px;
+        }
+        h2 {
+            max-width: 620px;
+            margin: 0 auto 20px;
+        }
+        p {
+            max-width: 660px;
+            margin: 0 auto;
+            @extend .para1;
+            color: $gray-500;
+        }
+    }
+    // Split sections: the header sits in a left column next to the
+    // content, and stays in view while the taller content scrolls.
+    .home-section-header-left {
+        text-align: left;
+        h2,
+        p {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        p {
+            max-width: 440px;
+        }
+        .home-section-link {
+            margin-top: 20px;
+            text-align: left;
+        }
+    }
+    .home-split-row {
+        align-items: flex-start;
+        row-gap: 40px;
+        // Stacked below lg, the row gap is the only space the header needs.
+        @include media-breakpoint-down(lg) {
+            .home-section-header {
+                margin-bottom: 0;
+            }
+        }
+        @include media-breakpoint-up(lg) {
+            .home-section-header {
+                position: sticky;
+                top: 108px;
+                margin-bottom: 0;
+                padding-right: 48px;
+            }
+        }
+    }
+    // Optimized for everyone: two columns under a centered header, each led
+    // by a picture of its point, a phone on the left and a keyboard on the
+    // right. From lg up the columns share their rows, so the two panels are
+    // one height and the headings under them line up.
+    .home-everyone-cols {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 48px;
+        h3 {
+            margin-bottom: 16px;
+        }
+        .home-checklist {
+            margin-top: 0;
+        }
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            column-gap: 48px;
+            row-gap: 0;
+        }
+    }
+    .home-everyone-col {
+        min-width: 0;
+        @include media-breakpoint-up(lg) {
+            display: grid;
+            grid-row: span 2;
+            grid-template-rows: subgrid;
+        }
+    }
+    .home-everyone-phone-panel,
+    .home-everyone-keys {
+        margin-bottom: 28px;
+    }
+    // The phone: the gallery as it opens on one, with the mobile settings'
+    // effect as a tag.
+    .home-everyone-phone-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 28px 24px;
+        border: 1px solid $gray-100;
+        border-radius: 24px;
+        background: $gray-50;
+    }
+    // An iPhone, drawn at 216x444 and scaled down under lg: a titanium rim,
+    // thin black bezels, the side buttons, and on screen the photo viewer
+    // as iOS shows it, black, with the status bar, glass buttons, a
+    // filmstrip and the home indicator.
+    .home-everyone-phone {
+        position: relative;
+        flex: none;
+        width: 216px;
+        height: 444px;
+        padding: 3px;
+        border-radius: 40px;
+        background: linear-gradient(150deg, #a3a4a8 0%, #57585c 22%, #8d8e92 48%, #46474b 74%, #9c9da1 100%);
+        box-shadow:
+            0 0 0 1px rgba(0, 0, 0, 0.35),
+            0 30px 60px -20px rgba(0, 0, 0, 0.45);
+        @include media-breakpoint-down(lg) {
+            zoom: 0.75;
+        }
+    }
+    .home-everyone-phone-button {
+        position: absolute;
+        width: 3px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, #5a5b5f, #9a9ba0);
+        &.is-action {
+            left: -2px;
+            top: 92px;
+            height: 22px;
+        }
+        &.is-volume-up {
+            left: -2px;
+            top: 128px;
+            height: 38px;
+        }
+        &.is-volume-down {
+            left: -2px;
+            top: 174px;
+            height: 38px;
+        }
+        &.is-side {
+            right: -2px;
+            top: 140px;
+            height: 62px;
+            background: linear-gradient(90deg, #9a9ba0, #5a5b5f);
+        }
+    }
+    .home-everyone-screen {
+        position: relative;
+        height: 100%;
+        overflow: hidden;
+        border: 5px solid #000;
+        border-radius: 37px;
+        background: #000;
+        color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, $font-family-sans-serif;
+    }
+    .home-everyone-photo {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        object-fit: cover;
+        transform: translateY(-50%);
+    }
+    // The time and the icons each sit centered beside the island, as on iOS.
+    .home-everyone-status {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 34px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr);
+        align-items: center;
+        padding: 1px 6px 0;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: -0.1px;
+    }
+    .home-everyone-time {
+        grid-column: 1;
+        justify-self: center;
+    }
+    .home-everyone-island {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        width: 64px;
+        height: 19px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: #000;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05);
+        // the front camera, at the island's right end
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            width: 6px;
+            height: 6px;
+            margin-top: -3px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #3a3f55, #0b0c12 70%);
+        }
+    }
+    .home-everyone-status-icons {
+        grid-column: 3;
+        justify-self: center;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        svg:nth-child(1) {
+            width: 14px;
+            height: 9px;
+        }
+        svg:nth-child(2) {
+            width: 12px;
+            height: 9px;
+        }
+        svg:nth-child(3) {
+            width: 20px;
+            height: 10px;
+        }
+    }
+    .home-everyone-viewer-bar {
+        position: absolute;
+        top: 38px;
+        left: 12px;
+        right: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .home-everyone-glass {
+        width: 26px;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(118, 118, 128, 0.34);
+        backdrop-filter: blur(12px);
+        svg {
+            width: 13px;
+            height: 13px;
+        }
+    }
+    .home-everyone-title {
+        font-size: 11px;
+        font-weight: 600;
+    }
+    .home-everyone-filmstrip {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 22px;
+        display: flex;
+        justify-content: center;
+        gap: 2px;
+        img {
+            width: 12px;
+            height: 26px;
+            object-fit: cover;
+            border-radius: 2px;
+            opacity: 0.75;
+            &.is-current {
+                width: 22px;
+                margin: 0 3px;
+                opacity: 1;
+            }
+        }
+    }
+    .home-everyone-home-bar {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        width: 76px;
+        height: 4px;
+        margin-left: -38px;
+        border-radius: 2px;
+        background: rgba(#fff, 0.9);
+    }
+    .home-everyone-tag {
+        padding: 4px 10px;
+        border: 1px solid $gray-200;
+        border-radius: 999px;
+        background: #fff;
+        color: $gray-600;
+        font-family: $font-family-monospace;
+        font-size: 11px;
+    }
+    // The keyboard: the gallery's keys on a board, each with its line of the
+    // legend. Point at a key and its line lights up, point at a line and its
+    // key does.
+    .home-everyone-keys {
+        @extend .kq-card;
+        padding: 24px;
+    }
+    .home-everyone-board {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 18px;
+        border: 1px solid $gray-100;
+        border-radius: 16px;
+        background: $gray-50;
+        kbd {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 10px;
+            border: 1px solid $gray-200;
+            border-bottom-width: 3px;
+            border-radius: 8px;
+            background: #fff;
+            color: $gray-500;
+            font-family: $font-family-monospace;
+            font-size: 13px;
+            font-weight: 500;
+            transition:
+                background-color 0.2s ease,
+                color 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
+            &.is-live {
+                border-color: $orange-200;
+                color: $gray-800;
+            }
+            &.is-wide {
+                min-width: 84px;
+            }
+            // A phone gets the short rows, the long ones would not fit.
+            &.is-extra {
+                @include media-breakpoint-down(sm) {
+                    display: none;
+                }
+            }
+        }
+    }
+    .home-everyone-keyrow {
+        display: flex;
+        gap: 8px;
+        &.is-arrows {
+            margin-top: 10px;
+        }
+    }
+    .home-everyone-legend {
+        display: grid;
+        gap: 4px;
+        margin: 18px 0 0;
+        > div {
+            display: flex;
+            gap: 12px;
+            align-items: baseline;
+            padding: 8px 10px;
+            border-radius: 10px;
+            transition: background-color 0.2s ease;
+        }
+        dt {
+            flex: 0 0 96px;
+            white-space: nowrap;
+            kbd {
+                display: inline-block;
+                min-width: 1.9em;
+                padding: 2px 8px;
+                border: 1px solid $gray-200;
+                border-bottom-width: 2px;
+                border-radius: 6px;
+                background: #fff;
+                color: $gray-800;
+                font-family: $font-family-monospace;
+                font-size: 12px;
+                text-align: center;
+            }
+        }
+        dd {
+            @extend .para3;
+            margin: 0;
+            color: $gray-500;
+            transition: color 0.2s ease;
+        }
+    }
+    .home-everyone-hint {
+        margin: 10px 0 0;
+        color: $gray-400;
+        font-family: $font-family-monospace;
+        font-size: 11px;
+        text-align: right;
+        // Nothing to point at without a pointer.
+        @media (hover: none) {
+            display: none;
+        }
+    }
+    @each $key in esc, tab, lr, ud {
+        .home-everyone-keys:has([data-key='#{$key}']:hover) {
+            .home-everyone-legend [data-key='#{$key}'] {
+                background: $orange-50;
+                dd {
+                    color: $gray-800;
+                }
+            }
+            .home-everyone-board [data-key='#{$key}'] {
+                border-color: $orange-800;
+                background: $orange-700;
+                color: #fff;
+                transform: translateY(1px);
+            }
+        }
+    }
+    // The keyboard box on the dark surface; the text under it stays light.
+    .home-everyone-keys.is-dark {
+        border-color: $dark-surface;
+        border-radius: 24px;
+        @include kq-dots-dark;
+        box-shadow: none;
+        .home-everyone-board {
+            border-color: rgba(#fff, 0.1);
+            background: rgba(#fff, 0.04);
+            kbd {
+                border-color: rgba(#fff, 0.14);
+                background: rgba(#fff, 0.06);
+                color: rgba(#fff, 0.45);
+                &.is-live {
+                    border-color: rgba($orange-500, 0.6);
+                    color: #fff;
+                }
+            }
+        }
+        .home-everyone-legend {
+            dt kbd {
+                border-color: rgba(#fff, 0.2);
+                background: rgba(#fff, 0.08);
+                color: #fff;
+            }
+            dd {
+                color: rgba(#fff, 0.65);
+            }
+        }
+        .home-everyone-hint {
+            color: rgba(#fff, 0.35);
+        }
+        @each $key in esc, tab, lr, ud {
+            &:has([data-key='#{$key}']:hover) {
+                .home-everyone-legend [data-key='#{$key}'] {
+                    background: rgba($orange-500, 0.16);
+                    dd {
+                        color: #fff;
+                    }
+                }
+                .home-everyone-board [data-key='#{$key}'] {
+                    border-color: $orange-800;
+                    background: $orange-700;
+                    color: #fff;
+                }
+            }
+        }
+    }
+    // Two-column prose blocks
+    .home-mobile,
+    .home-cdn {
+        .home-kicker {
+            display: block;
+            margin-bottom: 24px;
+        }
+        h2 {
+            margin-bottom: 24px;
+        }
+        p {
+            @extend .para1;
+            color: $gray-500;
+        }
+        .row {
+            row-gap: 32px;
+        }
+        pre {
+            margin: 0;
+        }
+    }
+
+    // ---- Code ---------------------------------------------------------------
+    pre {
+        border-radius: 16px;
+        overflow-x: auto;
+    }
+    // The stack section: logo pills switch the samples, which sit in a white
+    // panel over a soft orange glow. The pills are CodeTabs' own tabs, so the
+    // choice follows the visitor across the page and between visits.
+    .home-stack {
+        // The panel's glow reaches 60px past its sides; below lg the panel
+        // spans the container, so the glow stops at the container's edge
+        // instead of widening the page. From xl the column is 1080px and
+        // the glow fits inside it; clipping there would also cut the
+        // section's full-bleed hairline and rails to the column.
+        @include media-breakpoint-down(xl) {
+            overflow-x: clip;
+        }
+        .code-tabs {
+            margin: 0;
+        }
+        .code-tabs-list {
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 28px;
+            border-bottom: 0;
+        }
+        .code-tabs-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            padding: 10px 18px 10px 12px;
+            border: 1px solid $gray-100;
+            border-radius: 999px;
+            background: #fff;
+            color: $gray-700;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 24px;
+            box-shadow: 0 0 0 0 rgba($orange-500, 0.18);
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                transform 0.2s ease;
+            &::before {
+                content: '';
+                flex: 0 0 24px;
+                width: 24px;
+                height: 24px;
+                background: center / contain no-repeat;
+            }
+            &[data-framework='vanilla']::before {
+                background-image: url('/images/logos/javascript.svg');
+                border-radius: 5px;
+            }
+            &[data-framework='react']::before {
+                background-image: url('/images/logos/react.svg');
+            }
+            &[data-framework='vue']::before {
+                background-image: url('/images/logos/vue.png');
+            }
+            &[data-framework='angular']::before {
+                background-image: url('/images/logos/angular.svg');
+            }
+            &:hover {
+                color: $gray-700;
+                transform: translateY(-1px);
+            }
+            &:focus-visible {
+                outline: 2px solid $orange-500;
+                outline-offset: 2px;
+            }
+            &[aria-selected='true'] {
+                border-color: $orange-500;
+                color: $gray-700;
+                box-shadow: 0 0 0 3px rgba($orange-500, 0.18);
+            }
+        }
+        .code-tabs-panel {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 16px;
+            border: 1px solid $gray-100;
+            border-radius: 24px;
+            background: #fff;
+            &[data-hidden] {
+                display: none;
+            }
+            // The glow behind the panel
+            &::before {
+                content: '';
+                position: absolute;
+                inset: -40px -60px;
+                z-index: -1;
+                background: radial-gradient(60% 60% at 50% 40%, rgba($orange-500, 0.16), transparent 70%);
+                pointer-events: none;
+            }
+        }
+        pre {
+            margin: 0;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    }
+    // A remembered framework is painted before the tabs script runs (see
+    // components/_code-tabs.scss); the pills follow the same rule.
+    @each $fw in vanilla, react, vue, angular {
+        @at-root :root[data-lg-framework='#{$fw}'] body.home-v3 .home-stack .code-tabs:has(.code-tabs-panel[data-framework='#{$fw}']) {
+            .code-tabs-tab {
+                border-color: $gray-100;
+                box-shadow: 0 0 0 0 rgba($orange-500, 0.18);
+            }
+            .code-tabs-tab[data-framework='#{$fw}'] {
+                border-color: $orange-500;
+                box-shadow: 0 0 0 3px rgba($orange-500, 0.18);
+            }
+        }
+    }
+    .home-stack-desc {
+        margin: 4px 8px 12px;
+        @extend .para2;
+        color: $gray-500;
+        // Never strand a single word on the second line.
+        text-wrap: pretty;
+    }
+    .home-stack-note {
+        margin: 20px 0 0;
+        text-align: center;
+        @extend .para3;
+        color: $gray-500;
+        a {
+            color: $orange-700;
+            font-weight: 600;
+        }
+    }
+
+    // ---- Trusted by: the client strip ---------------------------------------
+    // Two rows of cells that swap their logo in place with a blur
+    // (components/home/TrustedBy.astro, which also sizes and groups the
+    // logos by shape). Every slot runs the same loop,
+    // offset by its index; the cell's --d shifts the whole cell along a
+    // diagonal. One loop is subtracted so every delay is negative and the
+    // first frame is full. Two grids: 2 x 6 from lg, 2 x 3 below it.
+    .trusted-by {
+        padding-top: 48px;
+        padding-bottom: 48px;
+        color: $gray-400;
+    }
+    .trusted-by-label {
+        @extend .label1;
+        margin: 0 0 24px;
+        text-align: center;
+    }
+    .trusted-by-grid {
+        display: grid;
+        grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+        // Scaled logos may poke past the page edge on phones.
+        overflow-x: clip;
+        &.trusted-by-grid-wide {
+            @include media-breakpoint-down(lg) {
+                display: none;
+            }
+        }
+        &.trusted-by-grid-narrow {
+            @include media-breakpoint-up(lg) {
+                display: none;
+            }
+        }
+        // Each slot sizes its logo from the ink's ratio (--w, --h), one
+        // height per shape class, so the data's zoom does not apply.
+        // Phone columns are narrower, so everything scales down a step.
+        --trusted-by-scale: 1;
+        @include media-breakpoint-down(lg) {
+            --trusted-by-scale: 0.85;
+        }
+        .customer-logo {
+            width: calc(var(--w) * var(--trusted-by-scale));
+            height: calc(var(--h) * var(--trusted-by-scale));
+            transform: none;
+        }
+    }
+    .trusted-by-cell {
+        display: grid;
+        place-items: center;
+        height: 88px;
+    }
+    .trusted-by-slot {
+        grid-area: 1 / 1;
+        display: flex;
+        animation-duration: calc(var(--slot) * var(--n));
+        animation-timing-function: cubic-bezier(0.6, 0, 0.2, 1);
+        animation-iteration-count: infinite;
+        animation-fill-mode: both;
+        animation-delay: calc(
+            var(--i) * var(--slot) - var(--slot) * 0.3 + var(--d, 0s) - var(--slot) * var(--n)
+        );
+    }
+    @each $n in 2, 4 {
+        .trusted-by-n-#{$n} .trusted-by-slot {
+            animation-name: trusted-by-swap-#{$n};
+        }
+    }
+    // No swapping under reduced motion: each cell keeps its first logo.
+    @media (prefers-reduced-motion: reduce) {
+        .trusted-by-slot {
+            animation: none;
+            opacity: 0;
+            &:first-child {
+                opacity: 1;
+            }
+        }
+    }
+
+    // ---- Dotted backgrounds on selected rails --------------------------------
+    .home-v3-features,
+    .home-touch {
+        @include full-bleed-bg {
+            @include kq-dots;
+        }
+    }
+
+    // ---- Grids ----------------------------------------------------------------
+    .home-gesture-grid,
+    .home-physics-grid,
+    .home-trust-grid,
+    .home-posts {
+        display: grid;
+        gap: 24px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        grid-template-columns: 1fr;
+        @media (min-width: 481px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @include media-breakpoint-up(md) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    .home-gesture-grid,
+    .home-physics-grid,
+    .home-trust-grid,
+    .home-posts {
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    .home-share .home-trust-grid {
+        @include media-breakpoint-up(md) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    // ---- Cards ------------------------------------------------------------------
+    .home-gesture-card,
+    .home-trust-card,
+    .home-post,
+    .home-a11y-card {
+        @extend .kq-card;
+        display: block;
+        padding: 24px;
+        color: inherit;
+        text-decoration: none;
+        h3 {
+            font-size: 18px;
+            line-height: 28px;
+            margin: 0 0 8px;
+        }
+        p,
+        span {
+            @extend .para2;
+            color: $gray-500;
+            margin: 0;
+        }
+    }
+    a.home-trust-card,
+    a.home-post {
+        transition:
+            border-color 0.18s ease,
+            box-shadow 0.18s ease,
+            transform 0.18s ease;
+        &:hover,
+        &:focus-visible {
+            border-color: $gray-200;
+            box-shadow: 5px 6px 40px -4px rgba(9, 18, 36, 0.08);
+            color: inherit;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+        &:focus-visible {
+            outline: 2px solid $orange-500;
+            outline-offset: 2px;
+        }
+    }
+    .feature-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: $orange-700;
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    // The new-in-v3 marker: one legend in the header, a dot on each card.
+    .home-new-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin: 0 0 2px 6px;
+        border-radius: 50%;
+        background: $orange-500;
+        vertical-align: middle;
+        font-style: normal;
+    }
+    .home-feature-legend {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        padding: 6px 12px 6px 10px;
+        border: 1px solid $gray-100;
+        border-radius: 999px;
+        background: #fff;
+        color: $gray-600;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 16px;
+        .home-new-dot {
+            margin: 0;
+        }
+    }
+    .home-gesture-kicker {
+        display: block;
+        margin-bottom: 8px;
+        @extend .label1;
+        font-size: 12px;
+    }
+    .home-badge {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 6px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: $orange-50;
+        color: $orange-700;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 16px;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .home-trust-card {
+        display: flex;
+        flex-direction: column;
+        p {
+            flex: 1;
+            margin-bottom: 12px;
+        }
+    }
+    .home-trust-link {
+        color: $orange-700;
+        font-weight: 600;
+    }
+    .home-post {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        time {
+            @extend .label2;
+            color: $gray-500;
+        }
+        strong {
+            color: $gray-800;
+            font-size: 16px;
+            line-height: 24px;
+        }
+    }
+
+    // ---- Bundle size: the sample in a card, a caption under it ------------------
+    .home-modular .home-plugin-chips {
+        margin-bottom: 20px;
+    }
+    .home-code-card {
+        @extend .kq-card;
+        margin: 0;
+        padding: 12px 12px 4px;
+    }
+    .home-code-card-inner {
+        position: relative;
+        overflow: hidden;
+        border-radius: 14px;
+        pre {
+            margin: 0;
+            padding: 20px 24px;
+            border-radius: 0;
+            font-size: 13px;
+            line-height: 1.65;
+            // Where the copy button is always on, the code starts under it.
+            @media (hover: none) {
+                padding-top: 52px;
+            }
+        }
+    }
+    .home-code-card-caption {
+        margin: 0;
+        padding: 12px 8px;
+        @extend .para3;
+        color: $gray-500;
+    }
+    // The copy button floats top right on the code and shows on hover or
+    // keyboard focus; touch screens, with no hover, always show it.
+    .home-code-copy {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border: 1px solid rgba(#fff, 0.14);
+        border-radius: 8px;
+        background: rgba(#fff, 0.08);
+        color: rgba(#fff, 0.75);
+        font-family: $font-family-sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 16px;
+        cursor: pointer;
+        opacity: 0;
+        transition:
+            background-color 0.15s ease,
+            border-color 0.15s ease,
+            color 0.15s ease,
+            opacity 0.15s ease;
+        &::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            margin: 0 2px 0 0;
+            border: 1.5px solid currentColor;
+            border-radius: 3px;
+            box-shadow: 2px -2px 0 -0.5px currentColor;
+        }
+        &:hover {
+            border-color: rgba(#fff, 0.3);
+            background: rgba(#fff, 0.14);
+            color: #fff;
+        }
+        &.is-done {
+            border-color: rgba($green-700, 0.6);
+            color: #7ee2a0;
+            &::before {
+                width: 6px;
+                height: 10px;
+                border: 0;
+                border-right: 2px solid currentColor;
+                border-bottom: 2px solid currentColor;
+                border-radius: 0;
+                box-shadow: none;
+                transform: rotate(45deg) translate(-1px, -2px);
+            }
+        }
+        @media (hover: none) {
+            opacity: 1;
+        }
+    }
+    .home-code-card-inner:hover .home-code-copy,
+    .home-code-card-inner:focus-within .home-code-copy {
+        opacity: 1;
+    }
+
+    // ---- Plugin chips -----------------------------------------------------------
+    .home-plugin-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        list-style: none;
+        margin: 0 0 24px;
+        padding: 0;
+    }
+    .home-plugin-chip {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 8px;
+        padding: 8px 16px;
+        border: 1px solid $gray-100;
+        border-radius: 12px;
+        background: #fff;
+        color: $gray-800;
+        @extend .para3-semibold;
+        text-decoration: none;
+        transition: border-color 0.15s ease;
+        &:hover,
+        &:focus-visible {
+            border-color: $gray-300;
+            color: $gray-800;
+            text-decoration: none;
+        }
+    }
+    .home-plugin-size {
+        color: $gray-500;
+        font-family: $font-family-monospace;
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    // ---- Checklist / a11y cards ------------------------------------------------------
+    .home-checklist {
+        list-style: none;
+        margin: 24px 0 0;
+        padding: 0;
+        li {
+            position: relative;
+            margin-bottom: 12px;
+            padding-left: 24px;
+            @extend .para2;
+            color: $gray-500;
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 10px;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: $orange-500;
+            }
+            strong {
+                color: $gray-800;
+            }
+        }
+    }
+    .home-a11y-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+    }
+    .home-a11y-card {
+        padding: 20px;
+        h3 {
+            font-size: 16px;
+            line-height: 24px;
+        }
+        p {
+            @extend .para3;
+        }
+    }
+    .home-section-link {
+        margin: 24px 0 0;
+        @extend .para3-semibold;
+        a {
+            color: $orange-700;
+        }
+    }
+
+    // ---- FAQ ----------------------------------------------------------------------
+    .home-faq-item {
+        border-bottom: 1px solid $gray-100;
+        padding: 6px 0;
+        summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            cursor: pointer;
+            list-style: none;
+            color: $gray-800;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 24px;
+            &::-webkit-details-marker {
+                display: none;
+            }
+            &::after {
+                content: '+';
+                color: $orange-700;
+                font-size: 20px;
+                font-weight: 400;
+                transition: transform 0.18s ease;
+            }
+        }
+        &[open] summary::after {
+            transform: rotate(45deg);
+        }
+        p {
+            margin: 0 0 14px;
+            @extend .para2;
+            color: $gray-500;
+        }
+    }
+
+    // ---- Dark sections: developer voice (Geist Mono on #1A1A1A) -------------------
+    .home-dark-band,
+    .home-cdn {
+        @extend .kq-dev;
+        color: rgba(#fff, 0.72);
+        h2,
+        h3 {
+            color: #fff;
+        }
+        p,
+        .home-section-header p {
+            color: rgba(#fff, 0.72);
+        }
+        .home-kicker,
+        .label1 {
+            color: $orange-500;
+        }
+        a {
+            color: $orange-300;
+        }
+    }
+    .home-dark-band {
+        @include kq-dots-dark;
+        .home-physics {
+            background: none;
+        }
+        .open-gallery-text {
+            color: rgba(#fff, 0.55);
+        }
+    }
+    .home-cdn {
+        background: $dark-surface;
+        @include full-bleed-bg {
+            @include kq-dots-dark;
+        }
+        pre {
+            border: 1px solid rgba(#fff, 0.12);
+        }
+        .home-browser-note {
+            color: rgba(#fff, 0.55);
+            @extend .para3;
+        }
+    }
+    .home-gesture-chips {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px 24px;
+        list-style: none;
+        margin: 0 0 40px;
+        padding: 0;
+        @include media-breakpoint-up(md) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        li {
+            padding: 12px 16px;
+            border: 1px solid rgba(#fff, 0.1);
+            border-radius: 12px;
+            background: rgba(#fff, 0.04);
+            @extend .para3;
+            color: rgba(#fff, 0.7);
+            strong {
+                display: block;
+                margin-bottom: 2px;
+                color: #fff;
+                font-weight: 600;
+            }
+        }
+    }
+    .home-physics-card {
+        padding: 24px;
+        border: 1px solid rgba(#fff, 0.1);
+        border-radius: 24px;
+        background: rgba(#fff, 0.04);
+        h3 {
+            margin: 16px 0 8px;
+            color: #fff;
+            font-size: 16px;
+            line-height: 24px;
+        }
+        p {
+            @extend .para3;
+            color: rgba(#fff, 0.7);
+        }
+    }
+
+    // ---- Super customizable ----------------------------------------------------------
+    // The copy and its four points on the left; on the right three demo
+    // pages (a hotel listing, a print shop, a portfolio) under one row of
+    // tabs, each page's photos opening a real gallery in its own look (set
+    // up in scripts/demo-galleries.js). The tabs are radios, so they work
+    // before any script runs.
+    // The v2 page clips this section for its rotated background. Nothing
+    // here overflows, and the clip would cut the rails and hairline that
+    // the section paints past its own column.
+    .home-customize-gallery {
+        overflow: visible;
+    }
+    .home-customize-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+        align-items: center;
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+            gap: 64px;
+        }
+    }
+    .home-customize-text {
+        .home-kicker {
+            display: block;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin: 0 0 16px;
+        }
+    }
+    .home-customize-lead {
+        @extend .para2;
+        margin: 0 0 28px;
+        color: $gray-500;
+    }
+    .home-customize-points {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px 20px;
+        @media (min-width: 481px) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    .home-customize-point {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        h3 {
+            margin: 0 0 2px;
+            color: $gray-800;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 22px;
+            letter-spacing: inherit;
+        }
+        p {
+            @extend .para3;
+            margin: 0;
+            color: $gray-500;
+            // From md up the lines keep the body's spacing, a touch looser
+            // than para3's.
+            @include media-breakpoint-up(md) {
+                line-height: 1.45 * $font-size-md;
+            }
+        }
+    }
+    .home-customize-point-icon {
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: $orange-50;
+        img {
+            width: 18px;
+            height: 18px;
+        }
+    }
+    .home-customize-note {
+        margin-top: 12px;
+        color: $gray-500;
+        text-align: center;
+    }
+
+    // Tabs, underlined in orange like the header links.
+    .home-customize-demos {
+        position: relative;
+        > input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        @for $i from 1 through 3 {
+            > .home-customize-in-#{$i}:checked ~ .home-customize-tabs label:nth-child(#{$i}) {
+                color: $gray-800;
+                &::after {
+                    transform: scaleX(1);
+                }
+            }
+            > .home-customize-in-#{$i}:focus-visible ~ .home-customize-tabs label:nth-child(#{$i}) {
+                outline: 2px solid $orange-500;
+                outline-offset: 4px;
+                border-radius: 4px;
+            }
+            > .home-customize-in-#{$i}:checked ~ .home-customize-stack > :not(:nth-child(#{$i})) {
+                @include home-customize-off;
+            }
+        }
+    }
+    .home-customize-tabs {
+        display: flex;
+        gap: 28px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid $gray-100;
+        label {
+            position: relative;
+            padding-bottom: 12px;
+            color: $gray-500;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 22px;
+            cursor: pointer;
+            transition: color 0.15s ease;
+            &::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -1px;
+                height: 2px;
+                border-radius: 2px;
+                background: $orange-700;
+                transform: scaleX(0);
+                transform-origin: left center;
+                transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            @media (hover: hover) {
+                &:hover {
+                    color: $gray-800;
+                }
+            }
+        }
+    }
+
+    // The three demos share one grid cell (see home-customize-off).
+    .home-customize-stack {
+        display: grid;
+    }
+    .home-customize-scene {
+        grid-area: 1 / 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        transition:
+            opacity 0.25s ease,
+            visibility 0.25s;
+    }
+    // Every photo on a page is a gallery item.
+    .home-customize-page {
+        flex: 1 1 auto;
+        min-width: 0;
+        a {
+            display: block;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        // No hover zoom: the flight measures the thumbnail, so the tile
+        // must be still when it is clicked.
+        img {
+            transition: filter 0.3s ease;
+        }
+        @media (hover: hover) {
+            .home-customize-more:hover img {
+                filter: brightness(0.42);
+            }
+        }
+        a:focus-visible {
+            outline: 2px solid $orange-500;
+            outline-offset: 2px;
+        }
+    }
+    // Under each page, the settings that give its gallery the look.
+    .home-customize-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px 18px;
+        margin-top: 12px;
+        padding: 9px 14px;
+        border: 1px solid $gray-100;
+        border-radius: 10px;
+        background: $gray-50;
+        color: $gray-600;
+        font-size: 12px;
+        line-height: 20px;
+        span {
+            white-space: nowrap;
+        }
+        em {
+            color: $orange-700;
+            font-style: normal;
+        }
+    }
+    // Page copy stand-ins.
+    .home-customize-lines span {
+        display: block;
+        width: var(--w, 100%);
+        height: 8px;
+        margin: 10px 0;
+        border-radius: 4px;
+        background: $gray-100;
+    }
+
+    // Hotel listing: a mosaic of five, the rest of the set behind the last.
+    .home-customize-hotel {
+        @extend .kq-card;
+        padding: 20px;
+        .home-customize-lines {
+            margin-top: 14px;
+        }
+    }
+    .home-customize-hotel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 14px;
+        strong {
+            display: block;
+            color: $gray-800;
+            font-size: 18px;
+            line-height: 26px;
+        }
+        span {
+            @extend .para3;
+            color: $gray-500;
+        }
+        .home-customize-hotel-price {
+            color: $gray-800;
+            font-size: 18px;
+            font-weight: 600;
+            em {
+                font-style: normal;
+                font-weight: 400;
+                color: $gray-500;
+                font-size: 13px;
+            }
+        }
+    }
+    .home-customize-mosaic {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 6px;
+        height: 260px;
+        border-radius: 12px;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        > a:first-child {
+            grid-row: span 2;
+        }
+        .home-customize-more {
+            position: relative;
+            img {
+                filter: brightness(0.5);
+            }
+            b {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 600;
+            }
+        }
+    }
+
+    // Print shop: four views down the side, the print, the buy box.
+    .home-customize-shop {
+        @extend .kq-card;
+        display: grid;
+        grid-template-columns: 56px minmax(0, 1fr) 190px;
+        gap: 16px;
+        padding: 20px;
+        align-items: start;
+    }
+    .home-customize-shop-thumbs {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        a {
+            border-radius: 6px;
+            overflow: visible;
+        }
+        img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 6px;
+            opacity: 0.6;
+            &.is-current {
+                opacity: 1;
+                outline: 2px solid $orange-500;
+                outline-offset: 1px;
+            }
+        }
+    }
+    .home-customize-shop-main {
+        position: relative;
+        display: block;
+        aspect-ratio: 4 / 5;
+        border-radius: 10px;
+        overflow: hidden;
+        background: $gray-50;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    .home-customize-shop-zoom {
+        position: absolute;
+        right: 12px;
+        bottom: 12px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+        .feature-icon {
+            width: 18px;
+            height: 18px;
+            color: $gray-800;
+        }
+    }
+    .home-customize-shop-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        strong {
+            color: $gray-800;
+            font-size: 18px;
+            line-height: 26px;
+        }
+        .home-customize-lines {
+            display: contents;
+        }
+    }
+    .home-customize-shop-kicker {
+        @extend .label1;
+        font-size: 11px;
+        color: $gray-500;
+    }
+    .home-customize-shop-price {
+        color: $gray-800;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .home-customize-shop-sizes {
+        display: flex;
+        gap: 6px;
+        b {
+            padding: 4px 10px;
+            border: 1px solid $gray-200;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: $gray-600;
+            &.is-current {
+                border-color: $gray-800;
+                color: $gray-800;
+            }
+        }
+    }
+    .home-customize-shop-button {
+        margin-top: 4px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: $gray-800;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    // Photographer's portfolio: a dark page, a dense grid.
+    .home-customize-portfolio {
+        padding: 20px;
+        border-radius: 16px;
+        background: #111;
+        color: #fff;
+    }
+    .home-customize-portfolio-nav {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 16px;
+        b {
+            margin-right: auto;
+            letter-spacing: 0.16em;
+            font-size: 12px;
+        }
+        span {
+            font-size: 12px;
+            color: rgba(#fff, 0.55);
+        }
+    }
+    .home-customize-portfolio-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-auto-rows: 100px;
+        grid-auto-flow: dense;
+        gap: 6px;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        > a.is-tall {
+            grid-row: span 2;
+        }
+    }
+
+    // On a phone the shop drops its side views and the hotel and portfolio
+    // pages get shorter.
+    @include media-breakpoint-down(md) {
+        .home-customize-mosaic {
+            height: 200px;
+        }
+        .home-customize-portfolio-nav {
+            gap: 14px;
+            b {
+                white-space: nowrap;
+            }
+        }
+        .home-customize-portfolio-grid {
+            grid-auto-rows: 80px;
+        }
+        .home-customize-shop {
+            grid-template-columns: minmax(0, 44fr) minmax(0, 56fr);
+            gap: 14px;
+        }
+        .home-customize-shop-thumbs {
+            display: none;
+        }
+        .home-customize-shop-info strong {
+            font-size: 16px;
+            line-height: 22px;
+        }
+    }
+    // From lg up the three pages fill the tallest one: the mosaic, the print
+    // and the portfolio grid grow, and photos never size a row.
+    @include media-breakpoint-up(lg) {
+        .home-customize-hotel,
+        .home-customize-portfolio {
+            display: flex;
+            flex-direction: column;
+        }
+        .home-customize-mosaic {
+            flex: 1 1 auto;
+            height: auto;
+            min-height: 240px;
+        }
+        .home-customize-portfolio-grid {
+            flex: 1 1 auto;
+            grid-auto-rows: minmax(90px, 1fr);
+        }
+        .home-customize-shop {
+            grid-template-rows: 1fr;
+        }
+        .home-customize-shop-main {
+            align-self: stretch;
+            aspect-ratio: auto;
+            min-height: 240px;
+        }
+        .home-customize-mosaic img,
+        .home-customize-portfolio-grid img,
+        .home-customize-shop-main img {
+            contain: size;
+        }
+    }
+
+    // The demos' galleries. lightGallery's container carries `addClass`: the
+    // hotel uses the site's white theme, the shop and portfolio these.
+    // The toolbar rules below style its buttons only: the share dropdown
+    // hangs inside the toolbar and its social icons are `.lg-icon` spans
+    // too, which keep the library's look.
+    // The shop: every action a round button, bold icons, and the Buy now
+    // button its plugin adds, as a pill.
+    .home-lg-round {
+        .lg-toolbar {
+            padding: 6px 8px 0 0;
+            .lg-icon:not(.lg-dropdown .lg-icon):not(.home-lg-buy-now) {
+                width: 40px;
+                height: 40px;
+                margin: 4px 0 0 8px;
+                padding: 0;
+                border-radius: 50%;
+                background: rgba(#fff, 0.12);
+                color: #fff;
+                font-size: 20px;
+                transition: background-color 0.2s ease;
+                &:hover {
+                    background: rgba(#fff, 0.22);
+                }
+            }
+            // Buy now is the one action with a label, so it stays a pill
+            // instead of a circle; the round rule above skips it.
+            .lg-icon.home-lg-buy-now {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                width: auto;
+                height: 40px;
+                margin: 4px 0 0 8px;
+                padding: 0 16px 0 14px;
+                border-radius: 999px;
+                background: $orange-700;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 1;
+                white-space: nowrap;
+                transition: background-color 0.2s ease;
+                svg {
+                    flex: none;
+                    width: 17px;
+                    height: 17px;
+                }
+                &:hover {
+                    background: $orange-500;
+                    color: #fff;
+                }
+                &.is-done {
+                    background: $green-700;
+                }
+            }
+        }
+        .lg-counter {
+            padding-top: 18px;
+        }
+        .lg-prev,
+        .lg-next {
+            width: 48px;
+            height: 48px;
+            margin-top: -24px;
+            padding: 0;
+            border-radius: 50%;
+            background: rgba(#fff, 0.12);
+            color: #fff;
+            font-size: 22px;
+            &:hover:not(.disabled) {
+                background: rgba(#fff, 0.22);
+                color: #fff;
+            }
+        }
+    }
+    // The portfolio: a warm backdrop, tile buttons, gold arrows.
+    .home-lg-warm {
+        $warm: #2b2118;
+        $cream: #f6e7d2;
+        $gold: #e0a458;
+        .lg-backdrop {
+            background-color: $warm;
+        }
+        .lg-counter,
+        .lg-sub-html,
+        .lg-sub-html a {
+            color: $cream;
+        }
+        .lg-toolbar {
+            padding: 6px 8px 0 0;
+            .lg-icon:not(.lg-dropdown .lg-icon) {
+                width: 40px;
+                height: 40px;
+                margin: 4px 0 0 6px;
+                padding: 0;
+                border-radius: 10px;
+                background: rgba($cream, 0.12);
+                color: $cream;
+                font-size: 20px;
+                transition: background-color 0.2s ease;
+                &:hover {
+                    background: rgba($cream, 0.22);
+                    color: #fff;
+                }
+            }
+        }
+        .lg-counter {
+            padding-top: 18px;
+        }
+        .lg-prev,
+        .lg-next {
+            width: 44px;
+            height: 44px;
+            margin-top: -22px;
+            padding: 0;
+            border-radius: 12px;
+            background: $gold;
+            color: $warm;
+            font-size: 22px;
+            &:hover:not(.disabled) {
+                background: lighten($gold, 6%);
+                color: $warm;
+            }
+        }
+    }
+
+    // ---- Inline gallery --------------------------------------------------------------
+    // The live inline gallery rail to rail under the centered header: a
+    // rounded frame with a deep shadow, the strip laid over the photo, line
+    // icons, and the maximize button the copy points at in orange. Set up
+    // in scripts/demo-galleries.js.
+    // Maximized, the gallery leaves its frame for the whole window; every
+    // section is its own layer (z-index 0), so lift this one above the
+    // sections after it and the fixed header while that lasts.
+    .home-inline-gallery:has(.home-inline-embed .lg-container:not(.lg-inline)) {
+        z-index: $zindex-fixed + 1;
+    }
+    .home-inline-embed {
+        position: relative;
+        aspect-ratio: 8 / 7;
+        overflow: hidden;
+        border-radius: 20px;
+        background: #111;
+        box-shadow: 0 40px 80px -30px rgba(9, 18, 36, 0.4);
+        text-align: left;
+        // The photos are 3:2, so from sm up they fill the frame.
+        @include media-breakpoint-up(sm) {
+            aspect-ratio: 3 / 2;
+        }
+        .lg-backdrop {
+            background-color: #111;
+        }
+        .lg-counter {
+            padding: 16px 0 0 18px;
+            color: rgba(#fff, 0.9);
+            font-family: $font-family-monospace;
+            font-size: 12px;
+        }
+        .lg-toolbar {
+            padding-right: 6px;
+            .lg-icon:not(.lg-dropdown .lg-icon) {
+                width: 44px;
+                color: rgba(#fff, 0.85);
+                font-size: 20px;
+                &:hover {
+                    color: #fff;
+                }
+            }
+            .lg-maximize {
+                width: 36px;
+                height: 36px;
+                margin: 8px 8px 0 4px;
+                padding: 0;
+                border-radius: 9px;
+                background: $orange-700;
+                color: #fff;
+                box-shadow: 0 0 0 4px rgba($orange-500, 0.25);
+                transition: background-color 0.2s ease;
+                &:hover {
+                    background: $orange-500;
+                    color: #fff;
+                }
+            }
+        }
+        .lg-prev,
+        .lg-next {
+            width: 40px;
+            height: 40px;
+            margin-top: -20px;
+            padding: 0;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-size: 20px;
+            &:hover:not(.disabled) {
+                background: rgba(0, 0, 0, 0.6);
+                color: #fff;
+            }
+        }
+        .lg-prev {
+            left: 16px;
+        }
+        .lg-next {
+            right: 16px;
+        }
+        // The caption sits inside the slide (appendSubHtmlTo: '.lg-item'),
+        // so it can animate with it, and the strip overlays the photo. The
+        // caption's bottom padding reaches under the strip, so one gradient
+        // runs behind the caption and the strip together.
+        .lg-components {
+            background: none;
+        }
+        .lg-item .lg-sub-html {
+            padding-bottom: calc(var(--home-strip-height, 66px) + 10px);
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+        }
+        .lg-thumb-outer {
+            padding: 0 12px;
+            background: none;
+        }
+        .lg-thumb {
+            padding: 12px 0 14px;
+        }
+        .lg-thumb-item {
+            border: 0;
+            border-radius: 3px;
+            opacity: 0.65;
+            outline: 2px solid transparent;
+            outline-offset: 1px;
+            transition:
+                opacity 0.2s ease,
+                outline-color 0.2s ease;
+            &:hover {
+                opacity: 1;
+            }
+            &.active {
+                opacity: 1;
+                outline-color: $orange-500;
+            }
+        }
+        .lg-progress-bar .lg-progress {
+            background-color: $orange-500;
+        }
+    }
+
+    // ---- Closing CTA ----------------------------------------------------------------
+    // Split: the call on the left, four stack tiles on the right. The tile of
+    // the visitor's stack (the one the code tabs remember) carries the same
+    // orange ring as the framework pills.
+    .home-cta {
+        .home-kicker {
+            display: block;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin: 0 0 16px;
+        }
+    }
+    .home-cta-head {
+        max-width: 640px;
+        margin: 0 auto 32px;
+        text-align: center;
+    }
+    .home-cta-lede {
+        max-width: 520px;
+        margin: 0 auto;
+        color: $gray-600;
+        font-size: 18px;
+        line-height: 28px;
+    }
+    // The queue: customers move up a line (right to left) that ends at the
+    // visitor's empty slot.
+    .home-cta-queue {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 32px;
+        @media (max-width: 767px) {
+            gap: 8px;
+        }
+    }
+    .home-cta-queue-line {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        color: $gray-400;
+        mask-image: linear-gradient(to right, transparent, #000 18%);
+        &:hover .home-cta-queue-track {
+            animation-play-state: paused;
+        }
+    }
+    .home-cta-queue-track {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: max-content;
+        animation: home-cta-queue 70s linear infinite;
+    }
+    @keyframes home-cta-queue {
+        to {
+            transform: translateX(-50%);
+        }
+    }
+    .home-cta-pill {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 56px;
+        padding: 0 18px;
+        border: 1px solid $gray-100;
+        border-radius: 999px;
+        background: #fff;
+        .customer-logo {
+            width: 92px;
+            height: 34px;
+            &.customer-logo-wide {
+                width: 104px;
+                height: 26px;
+            }
+        }
+        @media (max-width: 767px) {
+            height: 48px;
+            padding: 0 12px;
+            .customer-logo,
+            .customer-logo.customer-logo-wide {
+                width: 72px;
+                height: 26px;
+            }
+        }
+    }
+    .home-cta-you {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        height: 56px;
+        padding: 0 22px;
+        border: 1.5px dashed $orange-500;
+        border-radius: 999px;
+        background: rgba($orange-500, 0.05);
+        color: $gray-800;
+        font-weight: 600;
+        @media (max-width: 767px) {
+            height: 48px;
+            padding: 0 16px;
+        }
+    }
+    .home-cta-caret {
+        display: inline-block;
+        width: 2px;
+        height: 1.1em;
+        margin-left: 3px;
+        vertical-align: -0.15em;
+        background: $orange-700;
+        animation: home-cta-blink 1s steps(1) infinite;
+    }
+    @keyframes home-cta-blink {
+        50% {
+            opacity: 0;
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .home-cta-queue-track,
+        .home-cta-caret {
+            animation: none;
+        }
+    }
+    // Four stacks in a row from md, 2 x 2 below.
+    .home-cta-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        @include media-breakpoint-up(md) {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+    .home-cta-tile {
+        @extend .kq-card;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 20px;
+        color: inherit;
+        text-decoration: none;
+        transition:
+            border-color 0.15s ease,
+            box-shadow 0.15s ease,
+            transform 0.15s ease;
+        strong {
+            color: $gray-800;
+            font-size: 16px;
+        }
+        &:hover {
+            border-color: $gray-200;
+            color: inherit;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+        &.is-current {
+            border-color: $orange-500;
+            box-shadow:
+                0 0 0 3px rgba($orange-500, 0.18),
+                5px 6px 40px -4px rgba(9, 18, 36, 0.03);
+        }
+    }
+    .home-cta-tile-cta {
+        color: $orange-700;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .home-cta-logo {
+        display: inline-block;
+        flex: 0 0 22px;
+        width: 22px;
+        height: 22px;
+        margin-bottom: 6px;
+        background: center / contain no-repeat;
+        &.home-cta-logo-vanilla {
+            background-image: url('/images/logos/javascript.svg');
+            border-radius: 5px;
+        }
+        &.home-cta-logo-react {
+            background-image: url('/images/logos/react.svg');
+        }
+        &.home-cta-logo-vue {
+            background-image: url('/images/logos/vue.png');
+        }
+        &.home-cta-logo-angular {
+            background-image: url('/images/logos/angular.svg');
+        }
+    }
+    .home-cta-secondary {
+        margin: 20px 0 0;
+        text-align: center;
+        @extend .para3;
+        color: $gray-500;
+        a {
+            color: $orange-700;
+            font-weight: 600;
+        }
+    }
+}
+
+// ---- Physics illustrations (dark band) -------------------------------------------
+// Each card's animation is a small illustration of the rule it describes.
+// Durations are long and loops pause on hover so the motion reads rather
+// than distracts; reduced-motion shows the resting frame only.
+.physics-anim {
+    position: relative;
+    height: 44px;
+    border-radius: 8px;
+    background: rgba(#fff, 0.06);
+    overflow: hidden;
+}
+
+.physics-dot,
+.physics-ring,
+.physics-bar {
+    position: absolute;
+    top: 50%;
+    display: block;
+}
+
+.physics-dot {
+    width: 14px;
+    height: 14px;
+    margin-top: -7px;
+    border-radius: 50%;
+    background: $brand;
+}
+
+.physics-ring {
+    width: 28px;
+    height: 28px;
+    margin-top: -14px;
+    left: 50%;
+    margin-left: -14px;
+    border: 2px solid $orange-300;
+    border-radius: 50%;
+}
+
+.physics-bar {
+    left: 12px;
+    right: 40%;
+    height: 8px;
+    margin-top: -4px;
+    border-radius: 4px;
+    background: $orange-300;
+    transform-origin: left center;
+}
+
+.physics-anim-velocity .physics-dot {
+    left: 12px;
+    animation: physics-velocity 3.2s cubic-bezier(0.2, 0.9, 0.3, 1) infinite;
+}
+
+.physics-anim-momentum .physics-dot {
+    left: 12px;
+    animation: physics-momentum 3.6s cubic-bezier(0.05, 0.7, 0.1, 1) infinite;
+}
+
+.physics-anim-edge .physics-bar {
+    animation: physics-edge 3s ease-in-out infinite;
+}
+
+.physics-anim-pinch .physics-dot {
+    left: 50%;
+    margin-left: -7px;
+}
+
+.physics-anim-pinch .physics-ring {
+    animation: physics-pinch 3.4s ease-in-out infinite;
+}
+
+.physics-anim-interrupt .physics-dot {
+    left: 12px;
+    animation: physics-interrupt 4s ease-out infinite;
+}
+
+.physics-anim-parity .physics-dot {
+    left: 12px;
+    animation: physics-parity 3.2s cubic-bezier(0.2, 0.9, 0.3, 1) infinite;
+    @for $i from 1 through 4 {
+        &:nth-child(#{$i}) {
+            top: percentage(math.div($i, 5));
+            width: 10px;
+            height: 10px;
+            margin-top: -5px;
+            opacity: 0.55 + $i * 0.1;
+        }
+    }
+}
+
+.home-physics-card:hover .physics-dot,
+.home-physics-card:hover .physics-ring,
+.home-physics-card:hover .physics-bar {
+    animation-play-state: paused;
+}
+
+@keyframes physics-velocity {
+    0% {
+        transform: translateX(0);
+    }
+    35% {
+        transform: translateX(120px);
+    }
+    // The hand-off: no pause, no restart — the glide continues at speed.
+    70%,
+    100% {
+        transform: translateX(300px);
+    }
+}
+
+@keyframes physics-momentum {
+    0% {
+        transform: translateX(0);
+    }
+    60%,
+    100% {
+        transform: translateX(200px);
+    }
+}
+
+@keyframes physics-edge {
+    0%,
+    100% {
+        transform: scaleX(1);
+    }
+    40% {
+        transform: scaleX(1.35);
+    }
+    55% {
+        transform: scaleX(0.97);
+    }
+    70% {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes physics-pinch {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(2.2);
+    }
+}
+
+@keyframes physics-interrupt {
+    0% {
+        transform: translateX(0);
+    }
+    30% {
+        transform: translateX(150px);
+    }
+    // Caught mid-flight and sent back from wherever it was.
+    45% {
+        transform: translateX(110px);
+    }
+    75%,
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes physics-parity {
+    0% {
+        transform: translateX(0);
+    }
+    50%,
+    100% {
+        transform: translateX(200px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .physics-dot,
+    .physics-ring,
+    .physics-bar {
+        animation: none !important;
+    }
+}
+

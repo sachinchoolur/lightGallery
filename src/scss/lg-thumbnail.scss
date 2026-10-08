@@ -4,6 +4,15 @@
 $thumbnails-margin: 5px;
 
 .lg-outer {
+    // Scrub session (scrubThumbnails): the strip drives the gallery
+    // frame by frame, slide swaps must land instantly, so every slide
+    // transition is off while the session runs.
+    &.lg-thumb-scrubbing {
+        .lg-item {
+            transition: none !important;
+        }
+    }
+
     .lg-thumb-outer {
         background-color: $lg-thumb-bg;
         width: 100%;
@@ -62,6 +71,13 @@ $thumbnails-margin: 5px;
         }
     }
 
+    // Virtualized-strip spacer: stands in for the unrendered thumbs so
+    // the track keeps its full scroll geometry.
+    .lg-thumb-spacer {
+        float: left;
+        height: 1px;
+    }
+
     .lg-thumb-item {
         cursor: pointer;
         float: left;
@@ -95,11 +111,6 @@ $thumbnails-margin: 5px;
         }
     }
 
-    .lg-toggle-thumb {
-        &:after {
-            content: '\e1ff';
-        }
-    }
     &.lg-animate-thumb {
         .lg-thumb {
             @include transition-timing-function(

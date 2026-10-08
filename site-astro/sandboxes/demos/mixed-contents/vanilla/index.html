@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>lightGallery mixed contents example</title>
+    </head>
+    <body>
+        <h1>lightGallery mixed contents</h1>
+
+        <!-- One gallery, a different kind of slide for each link. -->
+        <div id="gallery" class="gallery">
+            <!-- Image -->
+            <a
+                href="https://picsum.photos/id/10/1600/1067"
+                data-lg-size="1600-1067"
+            >
+                <img
+                    src="https://picsum.photos/id/10/360/240"
+                    alt="Sample photo 1"
+                />
+            </a>
+
+            <!-- YouTube video -->
+            <a
+                href="https://www.youtube.com/watch?v=EIUJfXk3_3w"
+                data-lg-size="1280-720"
+                data-poster="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+                data-sub-html="YouTube video: Puffin Hunts Fish To Feed Puffling, BBC Earth"
+            >
+                <img
+                    src="https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg"
+                    alt="Puffin Hunts Fish To Feed Puffling"
+                />
+            </a>
+
+            <!-- Vimeo video -->
+            <a
+                href="https://vimeo.com/112836958"
+                data-lg-size="1280-720"
+                data-poster="https://www.lightgalleryjs.com/images/demo/vimeo-video-poster.jpg"
+                data-sub-html="Vimeo video: Nature, by Charlie Kaye"
+            >
+                <img
+                    src="https://www.lightgalleryjs.com/images/demo/vimeo-video-poster.jpg"
+                    alt="Nature"
+                />
+            </a>
+
+            <!-- HTML5 video: no href; the files go in data-video, as JSON. -->
+            <a
+                data-lg-size="1280-720"
+                data-video='{"source": [{"src": "https://www.lightgalleryjs.com/videos/video1.mp4", "type": "video/mp4"}], "attributes": {"preload": "metadata", "controls": true}}'
+                data-poster="https://www.lightgalleryjs.com/images/demo/html5-video-poster.jpg"
+                data-sub-html="HTML5 video: Peck Pocketed, by Kevin Herron"
+            >
+                <img
+                    src="https://www.lightgalleryjs.com/images/demo/html5-video-poster.jpg"
+                    alt="Peck Pocketed"
+                />
+            </a>
+
+            <!-- Iframe: data-iframe shows the linked page inside the slide. -->
+            <a
+                href="https://www.openstreetmap.org/export/embed.html?bbox=-5.2884,35.1588,-5.2484,35.1788"
+                data-iframe="true"
+                data-iframe-title="Map"
+                data-sub-html="Iframe: a map"
+            >
+                <img src="https://picsum.photos/id/49/360/240" alt="Map" />
+            </a>
+
+            <!-- Image -->
+            <a
+                href="https://picsum.photos/id/11/1600/1067"
+                data-lg-size="1600-1067"
+            >
+                <img
+                    src="https://picsum.photos/id/11/360/240"
+                    alt="Sample photo 2"
+                />
+            </a>
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
+</html>

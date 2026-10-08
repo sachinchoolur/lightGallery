@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>lightgallery — justified slow-load page</title>
+        <!-- The layout stylesheet arrives with the markup, as a site's
+             <link> would, so the pre-init rules apply from first paint.
+             lg-justified.scss is a symlink to src/scss (vite serves it
+             compiled with ?direct), so scss edits hot-reload here too. -->
+        <link rel="stylesheet" href="/lg-justified.scss?direct" />
+        <style>
+            body {
+                font-family: system-ui, sans-serif;
+                margin: 0 auto;
+                max-width: 960px;
+                padding: 24px;
+            }
+            .knobs {
+                color: #667;
+                font-size: 14px;
+                margin: 0 0 12px;
+            }
+            .knobs a {
+                margin-right: 12px;
+            }
+            .timeline {
+                color: #667;
+                font: 12px/1.5 ui-monospace, monospace;
+                margin: 12px 0 0;
+                white-space: pre-wrap;
+            }
+            /* Tall page so scroll lock/restore is visible. */
+            .demo-spacer {
+                height: 60vh;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>lightgallery — justified slow-load page</h1>
+        <p>
+            Server-rendered markup with the justified container class
+            already in place, Unsplash thumbnails held back one after
+            another by the dev server, and the script delayed so the
+            pre-init window is visible. The grid must never be seen
+            unorganized: placeholders fill the rows at init and
+            thumbnails fade in row by row as they arrive.
+        </p>
+        <p class="knobs">
+            <a href="/justified-slow.html">default (thumbs held 400ms apart by the dev server, 1500ms script delay)</a>
+            <a href="/justified-slow.html?slow=1000">thumbs 1s apart</a>
+            <a href="/justified-slow.html?reveal=image">per-image reveal</a>
+            <a href="/justified-slow.html?delay=4000">4s script delay</a>
+            <a href="/justified-slow.html?noclass=1">without the markup class (the old flash)</a>
+            <a href="/justified-slow.html?slow=0">real network speed (cache-busted)</a>
+            <a href="/justified-slow.html?slow=0&small=1&delay=0">small thumbs, real speed, no delay</a>
+            <a href="/">back to the scenarios</a>
+        </p>
+
+        <!--
+            The `lg-justified` class ships in the markup: the stylesheet
+            keeps the children invisible until the layout has positioned
+            them and their thumbnail has loaded. `?noclass=1` strips it
+            before first paint to show what a page without it looks like.
+        -->
+        <div id="justified-slow" class="lg-justified">
+            <a href="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Mountain ridge at sunrise</h4>"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2400&q=90&fm=jpg" alt="Mountain ridge at sunrise" /></a>
+            <a href="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Valley in golden light</h4>"><img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=2400&q=90&fm=jpg" alt="Valley in golden light" /></a>
+            <a href="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1600&q=80&fm=jpg" data-lg-size="2400-1428" data-sub-html="<h4>Foggy hills</h4>"><img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=2400&q=90&fm=jpg" alt="Foggy hills" /></a>
+            <a href="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Forest path</h4>"><img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=2400&q=90&fm=jpg" alt="Forest path" /></a>
+            <a href="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Rolling farmland</h4>"><img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=2400&q=90&fm=jpg" alt="Rolling farmland" /></a>
+            <a href="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Forest canopy</h4>"><img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=2400&q=90&fm=jpg" alt="Forest canopy" /></a>
+            <a href="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1600&q=80&fm=jpg" data-lg-size="1600-2400" data-sub-html="<h4>Waterfall (portrait)</h4>"><img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=2400&q=90&fm=jpg" alt="Waterfall" /></a>
+            <a href="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Lake at dusk</h4>"><img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=2400&q=90&fm=jpg" alt="Lake at dusk" /></a>
+            <a href="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Alpine meadow</h4>"><img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=2400&q=90&fm=jpg" alt="Alpine meadow" /></a>
+            <a href="https://images.unsplash.com/photo-1454372182658-c712e4c5a1db?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Winter forest</h4>"><img src="https://images.unsplash.com/photo-1454372182658-c712e4c5a1db?w=2400&q=90&fm=jpg" alt="Winter forest" /></a>
+            <a href="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1600&q=80&fm=jpg" data-lg-size="1600-2400" data-sub-html="<h4>Misty peak (portrait)</h4>"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=2400&q=90&fm=jpg" alt="Misty peak" /></a>
+            <a href="https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Coastal cliffs</h4>"><img src="https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=2400&q=90&fm=jpg" alt="Coastal cliffs" /></a>
+            <a href="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Mountain lake</h4>"><img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2400&q=90&fm=jpg" alt="Mountain lake" /></a>
+            <a href="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Night sky over the mountains</h4>"><img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=2400&q=90&fm=jpg" alt="Night sky over the mountains" /></a>
+            <a href="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Ocean wave</h4>"><img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=2400&q=90&fm=jpg" alt="Ocean wave" /></a>
+            <a href="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80&fm=jpg" data-lg-size="2400-1600" data-sub-html="<h4>Desert dunes</h4>"><img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=2400&q=90&fm=jpg" alt="Desert dunes" /></a>
+        </div>
+        <script>
+            // Runs before first paint: the knobs that must apply to the
+            // server-rendered markup itself.
+            (function () {
+                var params = new URLSearchParams(location.search);
+                var grid = document.getElementById('justified-slow');
+                if (params.get('noclass')) {
+                    grid.classList.remove('lg-justified');
+                }
+                if (params.get('small')) {
+                    grid.querySelectorAll('img').forEach(function (img) {
+                        img.src = img.src.replace('w=2400&q=90', 'w=400&q=60');
+                    });
+                }
+                // Thumbnails go through the dev server's /slow proxy, each
+                // held back a bit longer than the one before (default
+                // 400ms apart), never cached: the placeholders and the row
+                // reveal are observable on every reload, on any network.
+                // `slow=0` fetches the real URLs, cache-busted.
+                var step = params.has('slow') ? Number(params.get('slow')) : 400;
+                var stamp = '&cb=' + Date.now();
+                grid.querySelectorAll('img').forEach(function (img, index) {
+                    var src = img.getAttribute('src') + stamp;
+                    img.src = step > 0
+                        ? '/slow/' + (800 + index * step) + '/' + encodeURIComponent(src)
+                        : src;
+                });
+            })();
+        </script>
+        <pre class="timeline" id="timeline"></pre>
+        <div class="demo-spacer">(spacer to verify scroll lock/restore)</div>
+        <script type="module" src="/justified-slow.ts"></script>
+    </body>
+</html>
