@@ -24,8 +24,9 @@ and mirrored its DOM, are replaced by components that render natively.
 
 ## Vanilla JavaScript
 
-The API is unchanged. The upgrade is packaging, a handful of new settings,
-a few changed defaults and four removals:
+Version 3 is a complete rewrite, but the API is unchanged. The upgrade is
+packaging, a handful of new settings, a few changed defaults and four
+removals.
 
 -   **Imports are unchanged**, `import lightGallery from 'lightgallery'`,
     plugins from `lightgallery/plugins/<name>`, CSS from

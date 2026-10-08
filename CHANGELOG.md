@@ -10,9 +10,10 @@ Prerelease: `3.0.0-beta.4` (2026-10-06), published under the `next` tag for
 every package. `@lightgallery/headless@3.0.0-beta.1` was published without
 its build output and is deprecated; no other package shipped that version.
 
-Version 3 restructures lightGallery around a shared, framework-free core
-and ships native packages for React, Vue and Angular. The vanilla API is
-unchanged; what moved is the packaging and the framework integrations.
+Version 3 is a complete rewrite of lightGallery around a shared,
+framework-free core, with native packages for React, Vue and Angular and
+performance and experience improvements throughout. The vanilla API is
+unchanged, so a 2.x gallery keeps working.
 
 ### Packages
 

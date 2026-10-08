@@ -2210,12 +2210,16 @@ body.home-v3 {
         .lg-next {
             right: 16px;
         }
-        // One gradient behind the caption and the strip together.
+        // The caption sits inside the slide (appendSubHtmlTo: '.lg-item'),
+        // so it can animate with it, and the strip overlays the photo. The
+        // caption's bottom padding reaches under the strip, so one gradient
+        // runs behind the caption and the strip together.
         .lg-components {
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
-        }
-        .lg-sub-html {
             background: none;
+        }
+        .lg-item .lg-sub-html {
+            padding-bottom: calc(var(--home-strip-height, 66px) + 10px);
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
         }
         .lg-thumb-outer {
             padding: 0 12px;

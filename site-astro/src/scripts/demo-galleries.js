@@ -967,6 +967,12 @@ const lineIcons = (weight = 1.8) =>
 const homeInline = document.getElementById('home-inline-gallery');
 if (homeInline) {
     const phone = window.innerWidth < 768;
+    // The strip's height (thumbnails plus the padding in _home-v3.scss),
+    // for the caption's gradient to reach under it.
+    homeInline.style.setProperty(
+        '--home-strip-height',
+        phone ? '56px' : '66px',
+    );
     const homeInlineGallery = window.lightGallery(homeInline, {
         container: homeInline,
         dynamic: true,
@@ -979,6 +985,10 @@ if (homeInline) {
         download: false,
         mode: 'lg-scale-up',
         slideShowAutoplay: true,
+        // The caption lives inside the slide so the title and credit can
+        // slide in with it (the animation is in components/_demo-gallery.scss);
+        // slideDelay gives them time to leave before the next slide.
+        appendSubHtmlTo: '.lg-item',
         slideDelay: 400,
         allowMediaOverlap: true,
         plugins: [lgZoom, lgAutoplay, lgShare, lgThumbnail],
