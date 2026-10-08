@@ -23,7 +23,7 @@ export const SITE = {
     schemaLinkedIn: 'https://www.linkedin.com/in/sachinchoolur/',
     schemaGitHub: 'https://github.com/sachinchoolur',
     schemaSection: 'blog',
-    docsRepo: 'https://github.com/sachinchoolur/lightGallery/tree/master',
+    docsRepo: 'https://github.com/sachinchoolur/lightGallery/tree/HEAD',
     themeColor: '#fff',
     ahrefsVerification:
         '96bd744dcfe6c078a1994c8d9e0e0ca6a5cf16004f63946a0cd349ca937c1b24',

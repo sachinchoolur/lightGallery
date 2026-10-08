@@ -152,8 +152,8 @@ of the following methods to download lightGallery
     yarn add lightgallery
     ```
 
--   [GitHub](https://github.com/sachinchoolur/lightGallery/archive/master.zip) -
-    You can also directly download lightgallery from GitHub
+-   [GitHub](https://github.com/sachinchoolur/lightGallery/releases) -
+    You can also download a release directly from GitHub
 
 -   CDN - If you prefer to use a CDN, you can load files via
     [jsdelivr](https://www.jsdelivr.com/package/npm/lightgallery),
@@ -290,7 +290,7 @@ with the browser and version.
 ## License
 
 lightGallery is free and open source under the
-[GPLv3](https://github.com/sachinchoolur/lightGallery/blob/master/LICENSE).
+[GPLv3](https://github.com/sachinchoolur/lightGallery/blob/HEAD/LICENSE).
 Use it in any project, personal or commercial, that is distributed under
 GPLv3-compatible terms.
 

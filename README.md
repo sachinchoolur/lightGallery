@@ -1,4 +1,4 @@
-![commit](https://badgen.net/github/last-commit/sachinchoolur/lightGallery/master)
+![commit](https://badgen.net/github/last-commit/sachinchoolur/lightGallery)
 ![npm](https://img.shields.io/npm/v/lightgallery.svg?color=red)
 ![npm-tag](https://badgen.net/github/tag/sachinchoolur/lightgallery)
 ![size](https://badgen.net/bundlephobia/minzip/lightgallery?color=cyan)
@@ -110,7 +110,6 @@ The framework-free core they share is available on its own as
 -   [Migrating from v2](https://www.lightgalleryjs.com/docs/migration/)
 -   [Troubleshooting](https://www.lightgalleryjs.com/docs/troubleshooting/)
 -   [Demos](https://www.lightgalleryjs.com/demos/thumbnails/)
--   [CodePen](https://codepen.io/collection/BNNjpR)
 
 Every docs page has a markdown twin at the same URL plus `index.md`, and
 [llms.txt](https://www.lightgalleryjs.com/llms.txt) indexes them all.
@@ -148,8 +147,8 @@ of the following methods to download lightGallery.
     yarn add lightgallery
     ```
 
--   [GitHub](https://github.com/sachinchoolur/lightGallery/archive/master.zip) -
-    You can also directly download lightgallery from GitHub
+-   [GitHub](https://github.com/sachinchoolur/lightGallery/releases) -
+    You can also download a release directly from GitHub
 
 -   CDN - If you prefer to use a CDN, you can load files via
     [jsdelivr](https://www.jsdelivr.com/package/npm/lightgallery),
@@ -250,8 +249,6 @@ Finally, you need to initiate the gallery by adding the following code.
     });
 </script>
 ```
-
-[CodePen Demos](https://codepen.io/collection/BNNjpR)
 
 #### License Key
 
