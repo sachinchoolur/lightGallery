@@ -1,6 +1,6 @@
 {
   "name": "@lightgallery/angular",
-  "version": "3.0.0-beta.5",
+  "version": "3.0.0",
   "private": false,
   "description": "Native Angular lightGallery over @lightgallery/headless — standalone components, signals, zoneless-ready",
   "license": "(GPL-3.0-only OR LicenseRef-Commercial)",
@@ -37,7 +37,7 @@
     "prepack": "node ../../scripts/assert-built.mjs --refuse publish from packages/angular/dist, the ng-packagr output, not from the source folder."
   },
   "dependencies": {
-    "@lightgallery/headless": "^3.0.0-beta.5",
+    "@lightgallery/headless": "^3.0.0",
     "tslib": "^2.6.0"
   },
   "peerDependencies": {

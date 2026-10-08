@@ -1,6 +1,6 @@
 {
   "name": "@lightgallery/headless",
-  "version": "3.0.0-beta.5",
+  "version": "3.0.0",
   "description": "The framework-free core of lightGallery: state machine, settings, gesture, zoom and thumbnail math, with no DOM",
   "private": false,
   "type": "module",

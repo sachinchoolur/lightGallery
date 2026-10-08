@@ -437,7 +437,7 @@ importers:
         version: 26.6.0(ts-node@9.1.1(typescript@4.7.4))
       jest-circus:
         specifier: 26.6.0
-        version: 26.6.0
+        version: 26.6.0(ts-node@9.1.1(typescript@4.7.4))
       jest-resolve:
         specifier: 26.6.0
         version: 26.6.0
@@ -611,7 +611,7 @@ importers:
   packages/angular:
     dependencies:
       '@lightgallery/headless':
-        specifier: ^3.0.0-beta.5
+        specifier: ^3.0.0
         version: link:../headless
       tslib:
         specifier: ^2.6.0
@@ -20800,7 +20800,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@jest/test-sequencer@26.6.3':
+  '@jest/test-sequencer@26.6.3(ts-node@9.1.1(typescript@4.7.4))':
     dependencies:
       '@jest/test-result': 26.6.2
       graceful-fs: 4.2.11
@@ -20808,7 +20808,11 @@ snapshots:
       jest-runner: 26.6.3(ts-node@9.1.1(typescript@4.7.4))
       jest-runtime: 26.6.3(ts-node@9.1.1(typescript@4.7.4))
     transitivePeerDependencies:
+      - bufferutil
+      - canvas
       - supports-color
+      - ts-node
+      - utf-8-validate
 
   '@jest/test-sequencer@30.4.1':
     dependencies:
@@ -30382,7 +30386,7 @@ snapshots:
       jest-util: 30.4.1
       p-limit: 3.1.0
 
-  jest-circus@26.6.0:
+  jest-circus@26.6.0(ts-node@9.1.1(typescript@4.7.4)):
     dependencies:
       '@babel/traverse': 7.29.7
       '@jest/environment': 26.6.2
@@ -30406,7 +30410,11 @@ snapshots:
       stack-utils: 2.0.6
       throat: 5.0.0
     transitivePeerDependencies:
+      - bufferutil
+      - canvas
       - supports-color
+      - ts-node
+      - utf-8-validate
 
   jest-circus@30.4.2(babel-plugin-macros@3.1.0):
     dependencies:
@@ -30524,7 +30532,7 @@ snapshots:
   jest-config@26.6.3(ts-node@9.1.1(typescript@4.7.4)):
     dependencies:
       '@babel/core': 7.12.3
-      '@jest/test-sequencer': 26.6.3
+      '@jest/test-sequencer': 26.6.3(ts-node@9.1.1(typescript@4.7.4))
       '@jest/types': 26.6.2
       babel-jest: 26.6.3(@babel/core@7.12.3)
       chalk: 4.1.2
