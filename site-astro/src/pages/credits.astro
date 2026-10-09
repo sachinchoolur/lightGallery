@@ -3,48 +3,80 @@ import { allPhotos } from '../lib/photos';
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-/** Photo credits for the demo galleries, grouped by collection. */
+/**
+ * /credits/: thanks for the icon permission and to the photographers
+ * behind the demo galleries, grouped by collection. Same reading layout
+ * and type as a docs page (`docs single` + `.docs-content`, as /changelog/).
+ */
 const groups = allPhotos();
 const count = groups.reduce((n, g) => n + g.photos.length, 0);
 ---
 
 <BaseLayout
-    bodyClass="credits"
+    bodyClass="docs single credits"
     meta={{
-        title: 'Photo credits',
+        title: 'Credits',
         description:
-            'The photographers behind the images in the lightGallery demos. All photos are used under the Unsplash License.',
-        breadcrumbs: [{ name: 'Photo credits', url: '/credits/' }],
+            'Thanks to Untitled UI for the icon permission, and to the photographers behind the images in the lightGallery demos. All photos are used under the Unsplash License.',
+        breadcrumbs: [{ name: 'Credits', url: '/credits/' }],
     }}
 >
-    <div class="wrap container-xxl page-wrap" role="document">
+    <div class="container-xl docs-content credits-page">
         <div class="row justify-content-center">
-            <div class="col-md-12 col-lg-10 col-xl-8">
-                <article class="docs-content-body">
-                    <h1>Photo credits</h1>
-                    <p>
-                        The demos on this site use {count} photographs by the
-                        photographers below, all published on
-                        <a href="https://unsplash.com">Unsplash</a> under the
-                        <a href="https://unsplash.com/license">Unsplash License</a>.
-                        Each link opens the original photo.
-                    </p>
-                    {
-                        groups.map((group) => (
-                            <section>
-                                <h2>{group.title}</h2>
-                                <ul>
-                                    {group.photos.map((p) => (
-                                        <li>
-                                            <a href={p.page}>{p.title}</a> by {p.photographer}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </section>
-                        ))
-                    }
-                </article>
+            <div class="col-lg-8">
+                <h1>Credits</h1>
+                <p class="lead">
+                    The people behind the photographs in the demo galleries,
+                    and an icon set lightGallery has permission to use.
+                </p>
+
+                <h2>Icons</h2>
+                <p>
+                    Thanks to
+                    <a href="https://x.com/jordanphughes">Jordan Hughes</a>,
+                    founder of
+                    <a href="https://www.untitledui.com/">Untitled UI</a>, for
+                    permission to use the Untitled UI icons in lightGallery.
+                </p>
+
+                <h2>Photos</h2>
+                <p>
+                    The demos on this site use {count} photographs by the
+                    photographers below, all published on
+                    <a href="https://unsplash.com">Unsplash</a> under the
+                    <a href="https://unsplash.com/license">Unsplash License</a>.
+                    Each link opens the original photo.
+                </p>
+                {
+                    groups.map((group) => (
+                        <>
+                            <h3>{group.title}</h3>
+                            <ul>
+                                {group.photos.map((p) => (
+                                    <li>
+                                        <a href={p.page}>{p.title}</a> by {p.photographer}
+                                    </li>
+                                ))}
+                            </ul>
+                        </>
+                    ))
+                }
             </div>
         </div>
     </div>
 </BaseLayout>
+
+<style>
+    /* Same offsets as a docs page's reading column: the fixed header
+       (60px) plus its 2.5rem top padding, 2rem side gutters (1rem on
+       phones), 4rem below. The Bootstrap row's negative margins cancel
+       the column padding, so the gutter has to come from here. */
+    .credits-page {
+        padding: calc(60px + 2.5rem) 2rem 4rem;
+    }
+    @media (max-width: 767px) {
+        .credits-page {
+            padding: calc(60px + 2.5rem) 1rem 4rem;
+        }
+    }
+</style>
