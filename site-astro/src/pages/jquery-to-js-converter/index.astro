@@ -2,59 +2,122 @@
 import { getEntry, render } from 'astro:content';
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SecondaryButton from '../../components/ds/SecondaryButton.astro';
 import replaceJquerySrcUrl from '../../scripts/tools/replaceJquerySrc.js?url';
 import replaceJqueryUrl from '../../scripts/tools/replaceJquery.js?url';
 
-// Converter tooling: CodeMirror + prettier from CDN plus the two local
-// converter scripts, exactly as the Hugo head/script-footer loaded them
-// (classic scripts, they attach to globals, order matters).
+/**
+ * The jQuery to JavaScript converter (`pages/jquery-to-js-converter`):
+ * hero, the two editors in a card, then the why / FAQ / CLI sections
+ * from the content file.
+ *
+ * Converter tooling: CodeMirror 5 and prettier from CDN plus the two local
+ * scripts (classic scripts that attach to globals, so the order matters).
+ */
 const page = await getEntry('pages', 'jquery-to-js-converter');
-if (!page) throw new Error('pages/jquery-to-js-converter.md missing');
+if (!page) throw new Error('pages/jquery-to-js-converter.mdx missing');
 const { Content } = await render(page);
+
+const GITHUB_PATH =
+    'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12';
+
+const CODEMIRROR = 'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16';
+const PRETTIER = 'https://unpkg.com/prettier@3.2.5';
 ---
 
 <BaseLayout
-    bodyClass="jquery-to-js-converter list"
+    bodyClass="jquery-to-js-converter"
     meta={{ title: page.data.title, description: page.data.description }}
 >
     <Fragment slot="head">
-        <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.css"
-            rel="stylesheet"
-        />
-        <style>
-            .CodeMirror {
-                font-size: 13px !important;
-            }
-            .rjq-main.show-alert .alert-dialogue-box {
-                display: block;
-            }
-        </style>
+        <link href={`${CODEMIRROR}/codemirror.min.css`} rel="stylesheet" />
     </Fragment>
-    <div class="wrap container-xxl page-wrap" role="document">
-        <div class="row justify-content-center">
-            <div class="col-md-12 col-lg-10 col-xl-8">
-                <article>
-                    <h1 class="text-center">{page.data.title}</h1>
-                    <Content />
-                </article>
+
+    <div class="jq-hero-band">
+        <div class="container-xl jq-hero">
+            <span class="jq-pill"><i aria-hidden="true"></i>Free tool</span>
+            <h1 class="kq-h1">jQuery to <span class="serif-accent">JavaScript</span> converter</h1>
+            <p class="para1 jq-hero-lead" set:html={page.data.lead ?? page.data.description} />
+            <div class="jq-hero-actions">
+                <SecondaryButton
+                    href="https://github.com/sachinchoolur/jquery-to-javascript-converter"
+                    rel="noopener"
+                >
+                    <svg class="jq-hero-github" viewBox="0 0 24 24" aria-hidden="true"><path d={GITHUB_PATH} /></svg>
+                    View on GitHub
+                </SecondaryButton>
+                <span class="jq-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" /></svg>
+                    100% test coverage
+                </span>
             </div>
         </div>
     </div>
-    <script
-        is:inline
-        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.js"
-    ></script>
-    <script
-        is:inline
-        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/javascript/javascript.min.js"
-    ></script>
-    <script is:inline src="https://unpkg.com/prettier@3.2.5/standalone.js"
-    ></script>
-    <script is:inline src="https://unpkg.com/prettier@3.2.5/plugins/babel.js"
-    ></script>
-    <script is:inline src="https://unpkg.com/prettier@3.2.5/plugins/estree.js"
-    ></script>
+
+    <div class="container-xl jq-tool" id="converter">
+        <div class="kq-card jq-card">
+            <div class="jq-panes">
+                <section class="jq-pane" id="jq-input-pane" aria-labelledby="jq-input-title">
+                    <header class="jq-pane-bar">
+                        <h2 class="jq-pane-title" id="jq-input-title">jQuery</h2>
+                        <div class="jq-pane-actions">
+                            <button type="button" class="jq-action" id="jq-clear">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" /></svg>
+                                Clear
+                            </button>
+                            <button type="button" class="jq-action" data-fullscreen="jq-input-pane" aria-pressed="false">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3" /></svg>
+                                <span class="jq-action-label">Fullscreen</span>
+                            </button>
+                        </div>
+                    </header>
+                    <div class="jq-editor" id="jq-input-editor"></div>
+                </section>
+                <section class="jq-pane" id="jq-output-pane" aria-labelledby="jq-output-title">
+                    <header class="jq-pane-bar">
+                        <h2 class="jq-pane-title" id="jq-output-title">JavaScript</h2>
+                        <div class="jq-pane-actions">
+                            <button type="button" class="jq-action" id="jq-copy">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                                <span class="jq-action-label">Copy</span>
+                            </button>
+                            <button type="button" class="jq-action" data-fullscreen="jq-output-pane" aria-pressed="false">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3" /></svg>
+                                <span class="jq-action-label">Fullscreen</span>
+                            </button>
+                        </div>
+                    </header>
+                    <div class="jq-editor" id="jq-output-editor"></div>
+                </section>
+            </div>
+            <div class="jq-notice" id="jq-notice" role="status" hidden>
+                <p class="para3"><strong id="jq-notice-title">No JavaScript for these methods yet:</strong> <span id="jq-notice-body"></span></p>
+                <button type="button" class="jq-notice-close" id="jq-notice-close" aria-label="Dismiss">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <footer class="jq-card-footer">
+                <p class="para3 jq-hint">Runs in your browser; nothing is uploaded. <kbd>Ctrl</kbd> + <kbd>Enter</kbd> converts.</p>
+                <button type="button" class="kq-btn kq-btn-primary jq-convert" id="jq-convert">
+                    <span class="kq-btn-inner">
+                        <span class="kq-btn-label">Convert to JavaScript</span>
+                        <svg class="kq-btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <path d="M10.1309 3.73067V3.736M12.2642 5.864V5.86933M10.1309 5.864V5.86933M12.2642 7.99733V8.00266M10.1309 7.99733V8.00266M7.99756 7.99733V8.00266M5.86401 7.99733V8.00266M3.73071 7.99733V8.00266M1.59741 7.99733V8.00266M12.2642 10.1307V10.136M10.1309 10.1307V10.136M10.1309 12.264V12.2693M14.3975 7.99733V8.00266" stroke="white" stroke-width="2.13333" stroke-linecap="square" />
+                        </svg>
+                    </span>
+                </button>
+            </footer>
+        </div>
+    </div>
+
+    <Content />
+
+    <script is:inline src={`${CODEMIRROR}/codemirror.min.js`}></script>
+    <script is:inline src={`${CODEMIRROR}/mode/javascript/javascript.min.js`}></script>
+    <script is:inline src={`${CODEMIRROR}/addon/display/placeholder.min.js`}></script>
+    <script is:inline src={`${PRETTIER}/standalone.js`}></script>
+    <script is:inline src={`${PRETTIER}/plugins/babel.js`}></script>
+    <script is:inline src={`${PRETTIER}/plugins/estree.js`}></script>
     <script is:inline defer src={replaceJquerySrcUrl}></script>
     <script is:inline defer src={replaceJqueryUrl}></script>
 </BaseLayout>

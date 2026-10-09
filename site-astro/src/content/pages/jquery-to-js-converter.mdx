@@ -1,0 +1,106 @@
+---
+title: jQuery to JavaScript converter
+description:
+    'Convert jQuery code to plain JavaScript in your browser. Get a small, chainable utility that replaces jQuery in your existing code, without rewriting it.'
+lead:
+    'Paste jQuery, get plain JavaScript. The output is a small, chainable utility that stands in for jQuery, so your existing code keeps working without a rewrite.'
+date: 2024-05-01T08:48:57.000Z
+---
+
+<section class="jq-section jq-why" id="why">
+    <div class="container-xl">
+        <div class="row justify-content-center jq-section-header">
+            <div class="col-lg-7 text-center">
+                <span class="label1 jq-kicker">Why</span>
+                <h2 class="kq-h2">Most of jQuery is already in the <span class="serif-accent">browser</span></h2>
+                <p>Many projects use a small fraction of jQuery, and modern browsers cover that fraction natively. Dropping the library is usually worth it; rewriting every call site is not. The converter does the rewrite for you.</p>
+            </div>
+        </div>
+        <ol class="jq-points">
+            <li class="jq-point">
+                <span class="jq-point-num">01</span>
+                <h3 class="kq-h3">Your code stays as it is</h3>
+                <p class="para2">The tool reads the jQuery methods your code calls and generates a utility that implements only those. Your calls do not change; jQuery itself does.</p>
+            </li>
+            <li class="jq-point">
+                <span class="jq-point-num">02</span>
+                <h3 class="kq-h3">Chainable, modern, tested</h3>
+                <p class="para2">The generated methods chain like jQuery's and are written in modern JavaScript with full test coverage, so the utility is small enough to read.</p>
+            </li>
+            <li class="jq-point">
+                <span class="jq-point-num">03</span>
+                <h3 class="kq-h3">Runs where you are</h3>
+                <p class="para2">Conversion happens in your browser; nothing is uploaded. The same engine ships as a CLI for whole projects and continuous integration.</p>
+            </li>
+        </ol>
+    </div>
+</section>
+
+<section class="jq-section jq-faq" id="faq">
+    <div class="container-xl">
+        <div class="row jq-split-row">
+            <div class="col-lg-4 jq-section-header jq-section-header-left">
+                <span class="label1 jq-kicker">FAQ</span>
+                <h2 class="kq-h2">Questions people ask <span class="serif-accent">first</span></h2>
+            </div>
+            <div class="col-lg-8">
+                <details class="jq-faq-item"><summary>What does the converter do?</summary><p>It turns the jQuery your code uses into plain JavaScript: a small utility that replaces the jQuery library while your original code stays unchanged.</p></details>
+                <details class="jq-faq-item"><summary>Do I need to modify my existing jQuery code?</summary><p>No. The generated JavaScript is a drop-in for jQuery, so the code you already have runs as before, without the jQuery library.</p></details>
+                <details class="jq-faq-item"><summary>Which browsers does the generated code support?</summary><p>All modern browsers, and Internet Explorer 11 and newer, so the output works across the environments your users have.</p></details>
+                <details class="jq-faq-item"><summary>Are all jQuery methods supported?</summary><p>Most of them. For a few, such as Ajax, a small dedicated library is the better replacement; the converter tells you which methods it skipped. The full list of supported methods is in the <a href="https://github.com/sachinchoolur/jquery-to-javascript-converter" rel="noopener">repository</a>.</p></details>
+                <details class="jq-faq-item"><summary>How does the conversion work?</summary><p>Your source is parsed into an abstract syntax tree. The tool walks the tree, finds the jQuery methods in use and emits the matching vanilla implementations from its tested library, then formats the result.</p></details>
+                <details class="jq-faq-item"><summary>Can I use it on a large project?</summary><p>Yes. For many files, use the CLI below: it batch-processes files that match a pattern and writes one utility for the whole project.</p></details>
+                <details class="jq-faq-item"><summary>Is there a VS Code extension?</summary><p>Not yet. The project is open source and contributions are welcome if you would like to build one.</p></details>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="jq-section jq-cli kq-dev" id="cli">
+    <div class="container-xl">
+        <div class="row justify-content-center jq-section-header">
+            <div class="col-lg-7 text-center">
+                <span class="label1 jq-kicker">CLI</span>
+                <h2 class="kq-h2">Whole projects, from the <span class="serif-accent">terminal</span></h2>
+                <p>The same converter as a command line tool, for many files at once and for build pipelines.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8 jq-cli-body">
+
+<p class="para2">Install it from npm:</p>
+
+```sh
+npm install -g replace-jquery
+```
+
+<p class="para2">Convert one file, writing the vanilla JavaScript to another:</p>
+
+```sh
+replace-jquery src/sample.js out.js
+```
+
+<p class="para2">Convert every file that matches a pattern:</p>
+
+```sh
+replace-jquery "src/*.js" out.js
+```
+
+<p class="para2">Generate vanilla alternatives for every jQuery method the tool knows:</p>
+
+```sh
+replace-jquery --build-all out.js
+```
+
+<p class="para2">Or only for the methods you name:</p>
+
+```sh
+replace-jquery --methods "addClass, removeClass, attr" -o utils.js
+```
+
+<p class="para3 jq-cli-note">The generated utilities are not equivalent to jQuery in every edge case. Treat the output as a starting point and test it before you adopt it.</p>
+
+            </div>
+        </div>
+    </div>
+</section>
