@@ -29,6 +29,7 @@ export default defineConfig({
             '/blog/top-6-best-javascript-lightbox-galleries/',
         '/demos/comment-box/': '/docs/settings/#comment-box-plugin',
         '/docs/custom-work/': '/license/',
+        '/download-youtube-thumbnails/': '/',
         '/docs/lg-query/': '/docs/creating-plugins/',
         '/docs/v3/': '/docs/getting-started/',
         '/docs/v3/react/': '/docs/react/',
