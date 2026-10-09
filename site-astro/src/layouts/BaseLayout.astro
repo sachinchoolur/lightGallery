@@ -78,6 +78,21 @@ const { bodyClass, meta } = Astro.props;
                 />
             )
         }
+        {
+            import.meta.env.PROD && (
+                <>
+                    <script
+                        is:inline
+                        async
+                        src="https://www.googletagmanager.com/gtag/js?id=G-960P19JL1K"
+                    />
+                    <script
+                        is:inline
+                        set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-960P19JL1K');`}
+                    />
+                </>
+            )
+        }
     </head>
     <body class={bodyClass}>
         <Header />
