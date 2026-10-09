@@ -1,0 +1,13 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "lightGallery 2.x",
+  "description": "lightGallery version 2: the vanilla JavaScript lightbox and gallery with its plugins and the lightgallery/react, lightgallery/vue and lightgallery/angular wrappers. Version 3 is on the main branch.",
+  "folders": ["site/content/docs", "site/content/demos"],
+  "excludeFolders": ["node_modules", "dist", "test", "site/node_modules", "site/public", "site/resources"],
+  "excludeFiles": ["CHANGELOG.md"],
+  "rules": [
+    "This is the 2.x line. The React, Vue and Angular wrappers are imported from lightgallery/react, lightgallery/vue and lightgallery/angular; the @lightgallery/* packages are version 3.",
+    "Plugins are separate entries under lightgallery/plugins/<name> and are passed in the plugins array.",
+    "Each plugin ships its own CSS under lightgallery/css/, or use lightgallery/css/lightgallery-bundle.css."
+  ]
+}
