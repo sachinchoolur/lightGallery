@@ -30,6 +30,7 @@ export default defineConfig({
         '/demos/comment-box/': '/docs/settings/#comment-box-plugin',
         '/docs/custom-work/': '/license/',
         '/download-youtube-thumbnails/': '/',
+        '/libstracker/': '/',
         '/docs/lg-query/': '/docs/creating-plugins/',
         '/docs/v3/': '/docs/getting-started/',
         '/docs/v3/react/': '/docs/react/',
