@@ -5,7 +5,7 @@
   "folders": ["site-astro/src/content/docs", "skills", "packages/headless", "packages/react", "packages/vue", "packages/angular"],
   "excludeFolders": ["site-astro/src/content/docs/v2", "node_modules", "dist", "test", "dev", "dev-vanilla"],
   "excludeFiles": ["CHANGELOG.md"],
-  "previousVersions": [{ "tag": "2.9.0", "title": "version 2.9.0" }],
+  "previousVersions": [{ "branch": "v2" }],
   "rules": [
     "Plugins are separate entries: import them from lightgallery/plugins/<name> (or @lightgallery/<framework>/plugins/<name>) and pass them in the plugins list; their settings are ignored otherwise.",
     "CSS is a consumer import in every stack: import lightgallery/css/lightgallery.css plus one file per plugin, or lightgallery/css/lightgallery-bundle.css.",
