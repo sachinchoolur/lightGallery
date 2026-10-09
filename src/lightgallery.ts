@@ -2018,6 +2018,9 @@ export class LightGallery {
         }
 
         const $currentSlide = this.getSlideItem(this.index);
+        if (!$currentSlide.get()) {
+            return;
+        }
 
         if (this.swipeDirection === 'horizontal') {
             e?.preventDefault();
