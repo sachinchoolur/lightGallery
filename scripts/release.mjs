@@ -6,7 +6,10 @@
  *
  *   npm run release:bump <version>  set the version everywhere, rebuild dist
  *   npm run release:check           run every verification, publish nothing
- *   npm run release                 verify, publish, move dist-tags, tag the commit
+ *   npm run release                 verify, publish, move dist-tags, tag the
+ *                                   commit, create the GitHub release
+ *   npm run release:github          create the GitHub release for a version
+ *                                   that is already published and tagged
  *
  * Options (after `--`, e.g. `npm run release -- --skip-ci`):
  *   --tag <name>   dist-tag to publish under (default: `next` for a
@@ -19,6 +22,10 @@
  * A release uploads the exact tarballs the verification inspected and
  * installed. Run again after a failure: packages already on the registry
  * are skipped.
+ *
+ * The GitHub release takes its notes from the version's section in
+ * CHANGELOG.md and needs a token with write access to the repository:
+ * `GITHUB_TOKEN`, or the GitHub CLI's login (`gh auth token`).
  */
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -283,6 +290,108 @@ async function assertCiPassed(sha) {
         );
     }
     info(`${runs.length} CI jobs passed on ${sha.slice(0, 8)}`);
+}
+
+// ---------------------------------------------------------------------------
+// GitHub release
+
+/** The CHANGELOG.md section under the version's stable heading, as notes. */
+function releaseNotes(version) {
+    const core = parseVersion(version).core.join('.');
+    const heading = new RegExp(`^## ${escapeRegExp(core)}\\b`);
+    const lines = fs
+        .readFileSync(path.join(rootDir, 'CHANGELOG.md'), 'utf8')
+        .split('\n');
+    const start = lines.findIndex((line) => heading.test(line));
+    if (start === -1) {
+        fail(
+            `CHANGELOG.md has no "## ${core}" section to use as the release notes.`,
+        );
+    }
+    let end = lines.findIndex((line, i) => i > start && /^## /.test(line));
+    if (end === -1) {
+        end = lines.length;
+    }
+    const notes = lines
+        .slice(start + 1, end)
+        .join('\n')
+        .trim();
+    if (!notes) {
+        fail(`The "## ${core}" section of CHANGELOG.md is empty.`);
+    }
+    return notes;
+}
+
+/** `GITHUB_TOKEN`, or the GitHub CLI's token when it is signed in. */
+function githubToken() {
+    if (process.env.GITHUB_TOKEN) {
+        return process.env.GITHUB_TOKEN;
+    }
+    try {
+        return run('gh', ['auth', 'token'], {
+            capture: true,
+            allowFailure: true,
+        });
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Creates the GitHub release for `version` from `notes`; a prerelease is
+ * marked as one and does not become the repository's latest release. Does
+ * nothing when the release already exists. A missing token or a refused
+ * request is a warning unless `strict`, because by then the packages are
+ * on the registry.
+ */
+async function createGitHubRelease(version, notes, strict = false) {
+    const slug = repoSlug();
+    const page = `https://github.com/${slug}/releases`;
+    const report = strict ? fail : warn;
+    const token = githubToken();
+    if (!token) {
+        report(
+            `No GitHub token: set GITHUB_TOKEN or run \`gh auth login\`, then \`npm run release:github\`. ${page}`,
+        );
+        return;
+    }
+    const headers = {
+        accept: 'application/vnd.github+json',
+        'user-agent': 'lightgallery-release',
+        authorization: `Bearer ${token}`,
+    };
+    const api = `https://api.github.com/repos/${slug}/releases`;
+    const existing = await fetchJson(`${api}/tags/${version}`, headers);
+    if (existing) {
+        info(`release ${version} already exists: ${existing.html_url}`);
+        return;
+    }
+    let response;
+    try {
+        response = await fetch(api, {
+            method: 'POST',
+            headers: { ...headers, 'content-type': 'application/json' },
+            body: JSON.stringify({
+                tag_name: version,
+                name: version,
+                body: notes,
+                prerelease: isPrerelease(version),
+                make_latest: isPrerelease(version) ? 'false' : 'true',
+            }),
+        });
+    } catch (error) {
+        report(`Could not reach api.github.com: ${error.message}. ${page}`);
+        return;
+    }
+    if (!response.ok) {
+        const text = (await response.text()).slice(0, 200);
+        report(
+            `GitHub refused the release (HTTP ${response.status}): ${text}. Run \`npm run release:github\` once fixed. ${page}`,
+        );
+        return;
+    }
+    const created = await response.json();
+    info(`created ${created.html_url}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -937,6 +1046,11 @@ function tagCommit(version, gitState) {
 async function verify(options, publishing) {
     await step('Tooling', assertTooling);
     const version = await step('Versions', readReleaseVersion);
+    const notes = await step('Release notes', () => {
+        const text = releaseNotes(version);
+        info(`${text.split('\n').length} lines from CHANGELOG.md`);
+        return text;
+    });
     const tag = resolveTag(version, options.tag);
     const gitState = await step('Git', () => assertGitReady(version));
 
@@ -967,7 +1081,14 @@ async function verify(options, publishing) {
     });
     const pending = PACKAGES.filter((pkg) => !published.has(pkg.name));
     if (publishing && pending.length === 0) {
-        return { version, tag, gitState, pending, tarballs: new Map() };
+        return {
+            version,
+            notes,
+            tag,
+            gitState,
+            pending,
+            tarballs: new Map(),
+        };
     }
 
     if (options.skipCi) {
@@ -1003,7 +1124,7 @@ async function verify(options, publishing) {
     } else {
         await step('Consumer apps', () => verifyConsumerApps(tarballs));
     }
-    return { version, tag, gitState, pending, tarballs, workDir };
+    return { version, notes, tag, gitState, pending, tarballs, workDir };
 }
 
 function printWarnings() {
@@ -1025,10 +1146,8 @@ async function check(options) {
 }
 
 async function publish(options) {
-    const { version, tag, gitState, pending, tarballs, workDir } = await verify(
-        options,
-        true,
-    );
+    const { version, notes, tag, gitState, pending, tarballs, workDir } =
+        await verify(options, true);
     if (pending.length === 0) {
         console.log(
             `\nEvery package is already on the registry at ${version}.`,
@@ -1071,6 +1190,7 @@ async function publish(options) {
     }
 
     await step('Git tag', () => tagCommit(version, gitState));
+    await step('GitHub release', () => createGitHubRelease(version, notes));
     await step('Registry state', async () => {
         for (const pkg of PACKAGES) {
             const tags = await distTags(pkg.name);
@@ -1082,6 +1202,36 @@ async function publish(options) {
     });
     printWarnings();
     console.log(`\nReleased ${version}.`);
+}
+
+/** Creates the GitHub release for the current version, which must be tagged on the remote. */
+async function githubRelease() {
+    const version = await step('Versions', readReleaseVersion);
+    const notes = await step('Release notes', () => {
+        const text = releaseNotes(version);
+        info(`${text.split('\n').length} lines from CHANGELOG.md`);
+        return text;
+    });
+    await step('Git', () => {
+        const upstream = run(
+            'git',
+            ['rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}'],
+            { capture: true, allowFailure: true },
+        );
+        const remote = upstream ? upstream.split('/')[0] : 'origin';
+        run('git', ['fetch', '--quiet', '--tags', remote]);
+        const commit = remoteTagCommit(remote, version);
+        if (!commit) {
+            fail(
+                `Tag ${version} is not on ${remote}. Publish first with \`npm run release\`.`,
+            );
+        }
+        info(`tag ${version} is ${commit.slice(0, 8)} on ${remote}`);
+    });
+    await step('GitHub release', () =>
+        createGitHubRelease(version, notes, true),
+    );
+    printWarnings();
 }
 
 function replaceOnce(file, pattern, replacement, what) {
@@ -1191,9 +1341,11 @@ async function main() {
         await check(options);
     } else if (command === 'publish') {
         await publish(options);
+    } else if (command === 'github') {
+        await githubRelease();
     } else {
         fail(
-            'Usage: npm run release | release:check | release:bump <version>   options after `--`: --tag <name>, --skip-tests, --skip-ci, --skip-consumers, --yes',
+            'Usage: npm run release | release:check | release:github | release:bump <version>   options after `--`: --tag <name>, --skip-tests, --skip-ci, --skip-consumers, --yes',
         );
     }
 }

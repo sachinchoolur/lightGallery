@@ -37,7 +37,8 @@ under one version.
 ```bash
 npm run release:bump <version>   # set the version in every package, rebuild dist
 npm run release:check            # every release verification; publishes nothing
-npm run release                  # verify, publish, move dist-tags, tag the commit
+npm run release                  # verify, publish, move dist-tags, tag, GitHub release
+npm run release:github           # GitHub release for a version already published and tagged
 ```
 
 ## Rules that matter
