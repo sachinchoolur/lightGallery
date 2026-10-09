@@ -234,15 +234,19 @@ lightGalleryJustified('animated-thumbnails-wp', {
         rotate: false,
     },
 });
-// Homepage hero grid. The row height follows the container width so
-// the 24 photos always land in four rows on wide screens, and phones
-// show the first ten in three rows instead of a column of large tiles
-// (the rest carry `gallery-item-phone-hidden` and stay out of the
-// gallery there). Crossing a breakpoint rebuilds the gallery with the
-// matching settings; if the lightbox is open the rebuild waits for it
-// to close.
-const heroGalleryEl = document.getElementById('animated-thumbnails-gallery');
-if (heroGalleryEl) {
+// The hero grid, on the homepage and in the v3 release post. The row
+// height follows the container width so the 24 photos always land in
+// four rows on wide screens, and phones show the first ten in three rows
+// instead of a column of large tiles (the rest carry
+// `gallery-item-phone-hidden` and stay out of the gallery there).
+// Crossing a breakpoint rebuilds the gallery with the matching settings;
+// if the lightbox is open the rebuild waits for it to close. `overrides`
+// are lightGallery settings applied over the hero's.
+function setUpHeroGallery(id, overrides = {}) {
+    const heroGalleryEl = document.getElementById(id);
+    if (!heroGalleryEl) {
+        return;
+    }
     const phone = window.matchMedia('(max-width: 767.98px)');
     const tablet = window.matchMedia('(max-width: 991.98px)');
     const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -301,7 +305,7 @@ if (heroGalleryEl) {
             ? '.gallery-item:not(.gallery-item-phone-hidden)'
             : '.gallery-item';
         const gap = phone.matches ? 4 : 6;
-        heroGallery = lightGalleryJustified('animated-thumbnails-gallery', {
+        heroGallery = lightGalleryJustified(id, {
             selector,
             justifiedRowHeight: pickRowHeight(
                 heroRatios(selector),
@@ -315,7 +319,6 @@ if (heroGalleryEl) {
             justifiedLastRow: 'justify',
             autoplayFirstVideo: false,
             pager: false,
-            galleryId: 'nature',
             // The strip and the open animation reuse a thumbnail the grid
             // has already fetched: its srcset resolves to the 480px file on
             // dense desktop screens and to the 240px data-thumb elsewhere.
@@ -343,6 +346,7 @@ if (heroGalleryEl) {
                 download: false,
                 rotate: false,
             },
+            ...overrides,
         });
         heroGallery.LGel.on('lgAfterClose.hero', () => {
             // The instance still counts as open while this fires;
@@ -376,6 +380,10 @@ if (heroGalleryEl) {
         query.addEventListener('change', rebuildHeroGallery),
     );
 }
+
+setUpHeroGallery('animated-thumbnails-gallery', { galleryId: 'nature' });
+// The v3 release post opens with the homepage gallery.
+setUpHeroGallery('blog-v3-gallery', { galleryId: 'v3' });
 
 lightGalleryJustified('scrub-thumbnails-gallery', {
     justifiedLastRow: 'hide',
@@ -1525,15 +1533,6 @@ lightGalleryJustified('gallery-justified-custom-demo', {
     pager: false,
     hash: false,
     plugins: [lgZoom, lgThumbnail],
-});
-
-// The v3 release post: the justified grid with a full toolbar, so the
-// overflow menu shows on phones.
-lightGalleryJustified('blog-v3-gallery', {
-    justifiedRowHeight: 150,
-    justifiedGap: 6,
-    justifiedLastRow: 'justify',
-    plugins: [lgZoom, lgThumbnail, lgFullscreen, lgAutoplay, lgShare, lgRotate],
 });
 
 // RTL demo page: the grid carries dir="rtl"; direction 'auto' inherits it.

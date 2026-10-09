@@ -16,6 +16,21 @@
         margin-bottom: 60px;
     }
 
+    // The v3 release post's gallery is the homepage hero grid: bled to the
+    // header image's width, and on phones the tiles past the first ten
+    // stay out of the grid, as on the homepage.
+    .blog-hero-gallery {
+        @include media-breakpoint-up(md) {
+            margin-left: -120px;
+            margin-right: -120px;
+        }
+        .gallery-item-phone-hidden {
+            @media (max-width: 767px) {
+                display: none;
+            }
+        }
+    }
+
     // Tables carry setting names in code; let them wrap so a three-column
     // table never widens the page on a phone.
     table code {
