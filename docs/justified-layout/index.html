@@ -1,0 +1,272 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="robots" content="index, follow"><meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>Justified layout - lightGallery</title><meta name="description" content="Lay gallery thumbnails out in justified rows, equal heights, varying widths, filling the container edge to edge, in vanilla JavaScript, React, Vue and Angular."><link rel="canonical" href="https://www.lightgalleryjs.com/docs/justified-layout/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta name="twitter:title" content="Justified layout"><meta name="twitter:description" content="Lay gallery thumbnails out in justified rows, equal heights, varying widths, filling the container edge to edge, in vanilla JavaScript, React, Vue and Angular."><meta name="twitter:site" content="@SachinNeravath"><meta name="twitter:creator" content="@SachinNeravath"><meta property="og:title" content="Justified layout"><meta property="og:description" content="Lay gallery thumbnails out in justified rows, equal heights, varying widths, filling the container edge to edge, in vanilla JavaScript, React, Vue and Angular."><meta property="og:type" content="website"><meta property="og:url" content="https://www.lightgalleryjs.com/docs/justified-layout/"><meta property="og:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta property="article:publisher" content="https://www.facebook.com/sachinchoolur"><meta property="article:author" content="https://www.facebook.com/sachinchoolur"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="lightGallery"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"lightGallery","item":"https://www.lightgalleryjs.com/"},{"@type":"ListItem","position":2,"name":"Docs","item":"https://www.lightgalleryjs.com/docs/"},{"@type":"ListItem","position":3,"name":"Justified layout","item":"https://www.lightgalleryjs.com/docs/justified-layout/"}]}</script><meta name="ahrefs-site-verification" content="96bd744dcfe6c078a1994c8d9e0e0ca6a5cf16004f63946a0cd349ca937c1b24"><meta name="theme-color" content="#fff"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="manifest" href="/site.webmanifest"><link rel="alternate" type="application/rss+xml" title="lightGallery blog" href="/index.xml"><script>
+            // Framework code tabs: apply the deep-linked or remembered
+            // framework before first paint, so the panels never swap
+            // once the deferred module runs. CodeTabs.astro takes over
+            // (and drops the attribute) as soon as it has synced.
+            (() => {
+                const valid = ['vanilla', 'react', 'vue', 'angular'];
+                const url = new URL(window.location.href);
+                const query = url.searchParams.get('framework');
+                const hash = url.hash.replace(/^#/, '');
+                let framework = null;
+                if (query && valid.includes(query)) framework = query;
+                else if (valid.includes(hash)) framework = hash;
+                else
+                    try {
+                        const stored = localStorage.getItem('lg-framework');
+                        if (stored && valid.includes(stored)) framework = stored;
+                    } catch {
+                        /* storage blocked */
+                    }
+                if (framework)
+                    document.documentElement.dataset.lgFramework = framework;
+            })();
+        </script> <link rel="alternate" type="text/markdown" href="/docs/justified-layout/index.md" title="Markdown version"> <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);posthog.init('phc_uyDcoLpTSdtPcDLf2SswgknmWiBsUfV2EzjhzYi3Ke4',{api_host:'https://app.posthog.com'})</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-960P19JL1K"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-960P19JL1K');</script><link rel="stylesheet" href="/_astro/_slug_.C1T_l066.css"></head> <body class="docs single"> <header id="nav-header" class="site-header"> <div class="site-header-bar"> <div class="container-xxl site-header-inner"> <a class="site-header-brand" href="/"><img src="/images/lightgallery-logo.png" alt="" width="294" height="312">lightGallery</a> <nav class="site-header-nav" aria-label="Main"> <a class="site-header-link is-active" href="/docs/getting-started/" aria-current="page"> Docs </a><a class="site-header-link" href="/demos/thumbnails/"> Demos </a> <div class="site-header-menu" data-site-menu> <button class="site-header-link" type="button" aria-expanded="false" aria-controls="site-header-frameworks">
+Frameworks
+<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg> </button> <div class="site-header-menu-panel" id="site-header-frameworks"> <a class="site-header-menu-item" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> Angular </a><a class="site-header-menu-item" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> React </a><a class="site-header-menu-item" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> Vue </a> </div> </div> <a class="site-header-link" href="/license/"> License </a> </nav> <div class="site-header-actions"> <a class="site-header-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener" aria-label="GitHub"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> <a class="site-header-cta" href="/docs/getting-started/">Get started</a> </div> <button class="site-header-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-header-sheet"> <svg class="site-header-icon-menu" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path></svg> <svg class="site-header-icon-close" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path></svg> </button> </div> </div> <div class="site-header-scrim" data-site-scrim></div> <div class="site-header-sheet" id="site-header-sheet"> <nav class="container-xxl site-header-sheet-inner" aria-label="Main"> <a class="site-header-sheet-link is-active" href="/docs/getting-started/" aria-current="page"> <span>Docs</span> </a><a class="site-header-sheet-link" href="/demos/thumbnails/"> <span>Demos</span> </a> <div class="site-header-sheet-group"> <span class="site-header-sheet-label">Frameworks</span> <div class="site-header-sheet-frameworks"> <a class="site-header-sheet-framework" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> <span>Angular</span> </a><a class="site-header-sheet-framework" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> <span>React</span> </a><a class="site-header-sheet-framework" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> <span>Vue</span> </a> </div> </div> <a class="site-header-sheet-link" href="/license/"> <span>License</span> </a> <a class="site-header-sheet-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+GitHub
+</a> </nav> </div> </header> <script type="module">const s=document.getElementById("nav-header"),t=s?.querySelector("[data-site-menu]"),a=t?.querySelector("button"),c=s?.querySelector(".site-header-toggle"),d=s?.querySelector("[data-site-scrim]");if(s&&t&&a&&c&&d){const n=e=>{t.classList.toggle("is-open",e),a.setAttribute("aria-expanded",String(e))};a.addEventListener("click",()=>n(!t.classList.contains("is-open"))),t.addEventListener("focusout",e=>{const o=e.relatedTarget;o&&!t.contains(o)&&n(!1)});const i=e=>{s.classList.toggle("is-sheet-open",e),c.setAttribute("aria-expanded",String(e)),document.documentElement.classList.toggle("site-header-locked",e)};c.addEventListener("click",()=>i(!s.classList.contains("is-sheet-open"))),d.addEventListener("click",()=>i(!1)),matchMedia("(min-width: 992px)").addEventListener("change",e=>{e.matches&&i(!1)}),document.addEventListener("click",e=>{t.contains(e.target)||n(!1)}),document.addEventListener("keydown",e=>{e.key==="Escape"&&(t.classList.contains("is-open")&&(n(!1),a.focus()),s.classList.contains("is-sheet-open")&&(i(!1),c.focus()))}),window.addEventListener("pageshow",e=>{e.persisted&&(n(!1),i(!1))})}</script>   <div class="wrap container-xxl page-wrap" role="document"> <div class="row flex-xl-nowrap"> <main class="docs-content col-lg-10 col-xl-8"> <span class="docs-kicker">Features</span> <h1>Justified layout</h1> <div class="page-tools" data-page-tools> <button type="button" class="page-tools-btn" data-copy-markdown data-src="/docs/justified-layout/index.md">
+Copy as Markdown
+</button> <a class="page-tools-btn" href="/docs/justified-layout/index.md">View as Markdown</a> <a class="page-tools-btn" href="https://claude.ai/new?q=Read%20https%3A%2F%2Fwww.lightgalleryjs.com%2Fdocs%2Fjustified-layout%2Findex.md%20and%20help%20me%20with%20%22Justified%20layout%22%20from%20lightGallery.%20Answer%20with%20code%20I%20can%20paste." target="_blank" rel="noopener">Open in Claude</a> <a class="page-tools-btn" href="https://chatgpt.com/?q=Read%20https%3A%2F%2Fwww.lightgalleryjs.com%2Fdocs%2Fjustified-layout%2Findex.md%20and%20help%20me%20with%20%22Justified%20layout%22%20from%20lightGallery.%20Answer%20with%20code%20I%20can%20paste." target="_blank" rel="noopener">Open in ChatGPT</a> </div> <script type="module">document.querySelectorAll("[data-copy-markdown]").forEach(t=>{const e=t.textContent;t.addEventListener("click",async()=>{try{const a=await(await fetch(t.dataset.src??"")).text();await navigator.clipboard.writeText(a),t.textContent="Copied"}catch{t.textContent="Copy failed"}setTimeout(()=>{t.textContent=e},1800)})});</script> <p class="lead">Justified thumbnail rows for every lightGallery package, no extra dependencies.</p>  <p>lightGallery v3 ships a <strong>justified layout</strong> for the trigger
+thumbnails: rows of equal height and varying widths that fill the
+container edge to edge, like the photo grids on popular photography
+sites. The row math lives in
+<a href="/docs/headless/"><code>@lightgallery/headless</code></a> and is shared by all
+four packages, so the same options produce the same grid everywhere. The
+<a href="/demos/justified-layout/">justified layout demo</a> shows it running with
+the code for each stack.</p>
+<p>How it works, in every package:</p>
+<ul>
+<li><strong>Aspect ratios</strong> come from the trigger’s <code>data-lg-size</code>
+attribute, then the thumbnail’s <code>width</code>/<code>height</code> attributes, then
+the loaded image’s natural size (one relayout when the last
+unknown resolves). Provide <code>data-lg-size</code> for a layout with zero
+reflows.</li>
+<li>The grid <strong>reflows on container resize</strong> (one <code>ResizeObserver</code>),
+mirrors automatically under <strong>RTL</strong>, and writes a precise <code>sizes</code>
+attribute on thumbnails that carry <code>srcset</code>.</li>
+<li><code>lastRow</code> controls the leftover row: <code>'start'</code> (default) keeps it
+at the natural height aligned to the reading start, <code>'justify'</code>
+stretches it edge to edge, <code>'hide'</code> hides the leftover
+thumbnails.</li>
+<li><code>maxScale</code> clamps how tall a sparse row may grow, as a multiple
+of the target row height.</li>
+</ul>
+<p>All packages share one stylesheet, it is not part of the bundle, so
+galleries that do not use the layout pay zero bytes:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lg-justified.css'</span><span style="color:#E1E4E8">;</span></span></code></pre>
+<h2 id="how-the-grid-loads">How the grid loads</h2>
+<p>A justified grid cannot be positioned until the script has measured
+the container, so the stylesheet keeps the thumbnails out of flow and
+invisible until the layout has run. Nothing is ever seen unorganised,
+and an oversized thumbnail cannot widen the page in the meantime.</p>
+<p>Put the container class in your <strong>markup</strong>, not just in the script.
+The plugin adds it too, but only once it runs, and the flash you are
+avoiding happens before that:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="html"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> id</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"gallery"</span><span style="color:#B392F0"> class</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"lg-justified"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">a</span><span style="color:#B392F0"> href</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"full-1.jpg"</span><span style="color:#B392F0"> data-lg-size</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"1600-1067"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> src</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"thumb-1.jpg"</span><span style="color:#B392F0"> alt</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">a</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span></code></pre>
+<p>Once the layout has positioned a trigger, its box shows immediately as
+a placeholder and the thumbnail fades in on top when it has loaded, so
+the rows fill in as the images arrive. <code>justifiedReveal</code> picks the
+order:</p>
+<ul>
+<li><code>'row'</code> (default) reveals whole rows top to bottom, each once
+every thumbnail in it has loaded.</li>
+<li><code>'image'</code> reveals each thumbnail on its own, as soon as it has
+loaded.</li>
+</ul>
+<p>Two details worth knowing. Before the layout runs the container has no
+height, so content below it shifts down when the rows appear; give the
+container a <code>min-height</code> if that matters on your page. And the
+placeholder and fade only apply to grids lightGallery lays out, so
+your own layout code using the same class names is left alone.</p>
+<h2 id="vanilla-javascript">Vanilla JavaScript</h2>
+<p>The layout ships as a regular plugin. Adding it to <code>plugins</code> lays the
+gallery’s inline triggers out; dynamic galleries (no trigger grid) are
+left untouched. The grid follows <code>refresh()</code> and <code>updateSlides()</code>, so
+adding or removing triggers relays the rows out automatically.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> lightGallery </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> 'lightgallery'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> lgJustified </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> 'lightgallery/plugins/justified'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> lgThumbnail </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> 'lightgallery/plugins/thumbnail'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> lgZoom </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> 'lightgallery/plugins/zoom'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lightgallery.css'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lg-justified.css'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">lightGallery</span><span style="color:#E1E4E8">(document.</span><span style="color:#B392F0">getElementById</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'gallery'</span><span style="color:#E1E4E8">), {</span></span>
+<span class="line"><span style="color:#E1E4E8">    plugins: [lgJustified, lgThumbnail, lgZoom],</span></span>
+<span class="line"><span style="color:#E1E4E8">    justifiedRowHeight: </span><span style="color:#79B8FF">180</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    justifiedGap: </span><span style="color:#79B8FF">8</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    justifiedLastRow: </span><span style="color:#9ECBFF">'start'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span></code></pre>
+<div class="table-wrap">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Setting</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>justified</code></td><td><code>true</code></td><td>Enable the layout (the plugin must be in <code>plugins</code>)</td></tr><tr><td><code>justifiedRowHeight</code></td><td><code>180</code></td><td>Row height (px) the layout aims for</td></tr><tr><td><code>justifiedGap</code></td><td><code>8</code></td><td>Gap between thumbnails and between rows (px)</td></tr><tr><td><code>justifiedLastRow</code></td><td><code>'start'</code></td><td>Leftover-row policy: <code>'justify'</code>, <code>'start'</code> or <code>'hide'</code></td></tr><tr><td><code>justifiedMaxScale</code></td><td><code>1.75</code></td><td>Row-height clamp as a multiple of <code>justifiedRowHeight</code></td></tr><tr><td><code>justifiedReveal</code></td><td><code>'row'</code></td><td>Reveal order as thumbnails load: <code>'row'</code> or <code>'image'</code></td></tr></tbody></table></div>
+<p>The <a href="/docs/settings/#justified-layout-plugin">settings reference</a> carries
+the generated descriptions for the same six settings.</p>
+<h2 id="react">React</h2>
+<p>Wrap the <code>LightGalleryItem</code> triggers in the <code>JustifiedGrid</code> component.
+The rendered markup stays unpositioned until the first client-side
+measure, so SSR output is hydration-safe.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="tsx"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { LightGallery, LightGalleryItem } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/react'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { JustifiedGrid } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/react/plugins/justified'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Thumbnail </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/react/plugins/thumbnail'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Zoom </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/react/plugins/zoom'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lightgallery.css'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lg-justified.css'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#79B8FF">LightGallery</span><span style="color:#B392F0"> plugins</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{[Thumbnail, Zoom]}></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#79B8FF">JustifiedGrid</span><span style="color:#B392F0"> rowHeight</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">180</span><span style="color:#E1E4E8">} </span><span style="color:#B392F0">gap</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">8</span><span style="color:#E1E4E8">}></span></span>
+<span class="line"><span style="color:#E1E4E8">        {items.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">LightGalleryItem</span></span>
+<span class="line"><span style="color:#B392F0">                key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.src}</span></span>
+<span class="line"><span style="color:#B392F0">                item</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item}</span></span>
+<span class="line"><span style="color:#B392F0">                data-lg-size</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.lgSize}</span></span>
+<span class="line"><span style="color:#E1E4E8">            ></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.thumb} </span><span style="color:#B392F0">alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.alt} /></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#79B8FF">LightGalleryItem</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#79B8FF">JustifiedGrid</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#79B8FF">LightGallery</span><span style="color:#E1E4E8">>;</span></span></code></pre>
+<h2 id="vue">Vue</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="vue"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">script</span><span style="color:#B392F0"> setup</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { LightGallery, LgItem } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/vue'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { JustifiedGrid } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/vue/plugins/justified'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Thumbnail </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/vue/plugins/thumbnail'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Zoom </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/vue/plugins/zoom'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lightgallery.css'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lg-justified.css'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">script</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">template</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">LightGallery</span><span style="color:#B392F0"> :plugins</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"[Thumbnail, Zoom]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">JustifiedGrid</span><span style="color:#B392F0"> :row-height</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"180"</span><span style="color:#B392F0"> :gap</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"8"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">LgItem</span></span>
+<span class="line"><span style="color:#B392F0">                v-for</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item of items"</span></span>
+<span class="line"><span style="color:#B392F0">                :key</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item.src"</span></span>
+<span class="line"><span style="color:#B392F0">                :item</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item"</span></span>
+<span class="line"><span style="color:#B392F0">                :data-lg-size</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item.lgSize"</span></span>
+<span class="line"><span style="color:#E1E4E8">            ></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> :src</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item.thumb"</span><span style="color:#B392F0"> :alt</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item.alt"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">LgItem</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">JustifiedGrid</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">LightGallery</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">template</span><span style="color:#E1E4E8">></span></span></code></pre>
+<h2 id="angular">Angular</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { LgJustifiedGridComponent } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/angular/plugins/justified'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lightgallery.css'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lg-justified.css'</span><span style="color:#E1E4E8">;</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="html"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">lg-gallery</span><span style="color:#B392F0"> [features]</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"features"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">lg-justified-grid</span><span style="color:#B392F0"> [rowHeight]</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"180"</span><span style="color:#B392F0"> [gap]</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"8"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        @for (item of items; track item.src) {</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">a</span><span style="color:#B392F0"> [lgGalleryItem]</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item"</span><span style="color:#B392F0"> [attr.data-lg-size]</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item.lgSize"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> [src]</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item.thumb"</span><span style="color:#B392F0"> [alt]</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item.alt"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">a</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">lg-justified-grid</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">lg-gallery</span><span style="color:#E1E4E8">></span></span></code></pre>
+<h2 id="component-props-react-vue-angular">Component props (React, Vue, Angular)</h2>
+<p>The three framework components share one prop surface:</p>
+<div class="table-wrap">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Prop</th><th>Default</th><th>Description</th></tr></thead><tbody><tr><td><code>rowHeight</code></td><td><code>180</code></td><td>Row height (px) the layout aims for</td></tr><tr><td><code>gap</code></td><td><code>8</code></td><td>Gap between thumbnails and between rows (px)</td></tr><tr><td><code>lastRow</code></td><td><code>'start'</code></td><td>Leftover-row policy: <code>'justify'</code>, <code>'start'</code> or <code>'hide'</code></td></tr><tr><td><code>maxScale</code></td><td><code>1.75</code></td><td>Row-height clamp as a multiple of <code>rowHeight</code></td></tr><tr><td><code>reveal</code></td><td><code>'row'</code></td><td>Reveal order as thumbnails load: <code>'row'</code> or <code>'image'</code></td></tr><tr><td><code>direction</code></td><td><code>'auto'</code></td><td>Reading direction; <code>'auto'</code> inherits the nearest ancestor <code>dir</code> attribute</td></tr></tbody></table></div>
+<h2 id="standalone-grids">Standalone grids</h2>
+<p>The row math itself is a pure function you can use without a gallery:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { getJustifiedLayout } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/headless'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#E1E4E8"> { </span><span style="color:#79B8FF">boxes</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">containerHeight</span><span style="color:#E1E4E8"> } </span><span style="color:#F97583">=</span><span style="color:#B392F0"> getJustifiedLayout</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#E1E4E8">    ratios: [</span><span style="color:#79B8FF">1.5</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.66</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1.5</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">    containerWidth: </span><span style="color:#79B8FF">960</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    targetRowHeight: </span><span style="color:#79B8FF">180</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    gap: </span><span style="color:#79B8FF">8</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    lastRow: </span><span style="color:#9ECBFF">'justify'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span>
+<span class="line"><span style="color:#6A737D">// boxes: [{ top, start, width, height }, ...] in reading order.</span></span></code></pre>
+<p><code>start</code> offsets are logical, measured from the reading-start edge, so the same output positions a grid in LTR and RTL.</p>   <p class="edit-page"> <a href="https://github.com/sachinchoolur/lightGallery/tree/HEAD/site-astro/src/content/docs/justified-layout.md"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path> </svg>Edit this page on GitHub
+</a> </p> <nav class="page-nav" aria-label="Previous and next page"> <a class="page-nav-card page-nav-prev" href="/docs/angular/"> <span class="page-nav-arrow" aria-hidden="true">
+&larr;
+</span> <span class="page-nav-text"> <span class="page-nav-dir">Previous</span> <strong>@lightgallery/angular</strong> </span> </a> <a class="page-nav-card page-nav-next" href="/docs/localization-rtl/"> <span class="page-nav-text"> <span class="page-nav-dir">Next</span> <strong>Localization &amp; RTL</strong> </span> <span class="page-nav-arrow" aria-hidden="true">
+&rarr;
+</span> </a> </nav> </main> <div class="col-lg-2 col-xl-2 docs-sidebar"> <nav class="docs-links" aria-label="Main navigation"> <h3>API Docs</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/getting-started/">Get started</a></li><li><a class="docs-link" href="/docs/settings/">Settings</a></li><li><a class="docs-link" href="/docs/events/">Events</a></li><li><a class="docs-link" href="/docs/methods/">Methods</a></li><li><a class="docs-link" href="/docs/dynamic-variables/">Dynamic variables</a></li><li><a class="docs-link" href="/docs/attributes/">Attributes</a></li><li><a class="docs-link" href="/docs/react-image-video-gallery/">React</a></li><li><a class="docs-link" href="/docs/vue-image-video-gallery/">Vue</a></li><li><a class="docs-link" href="/docs/angular-image-video-gallery/">Angular</a></li><li><a class="docs-link" href="/docs/license/">License</a></li><li><a class="docs-link" href="/docs/migration/">Migration</a></li><li><a class="docs-link" href="/docs/troubleshooting/">Troubleshooting</a></li><li><a class="docs-link" href="/docs/creating-plugins/">Creating plugins</a></li></ul><h3>Frameworks</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/headless/">@lightgallery/headless</a></li><li><a class="docs-link" href="/docs/react/">@lightgallery/react</a></li><li><a class="docs-link" href="/docs/vue/">@lightgallery/vue</a></li><li><a class="docs-link" href="/docs/angular/">@lightgallery/angular</a></li></ul><h3>Features</h3><ul class="list-unstyled"><li><a class="docs-link active" href="/docs/justified-layout/">Justified layout</a></li><li><a class="docs-link" href="/docs/localization-rtl/">Localization &amp; RTL</a></li><li><a class="docs-link" href="/docs/virtualization/">Virtualization</a></li><li><a class="docs-link" href="/docs/video-facades/">Video facades</a></li><li><a class="docs-link" href="/docs/accessibility/">Accessibility</a></li><li><a class="docs-link" href="/docs/web-share/">Web Share</a></li><li><a class="docs-link" href="/docs/hash-drivers/">Hash drivers</a></li><li><a class="docs-link" href="/docs/responsive-loading/">Responsive loading</a></li><li><a class="docs-link" href="/docs/thumbnail-scrubbing/">Thumbnail scrubbing</a></li><li><a class="docs-link" href="/docs/custom-icons/">Custom icons</a></li></ul> </nav> </div> <nav class="docs-toc d-none d-xl-block col-xl-2" aria-label="Secondary navigation"> <div class="page-links"> <h3>On this page</h3> <nav id="TableOfContents"> <ul> <li> <a href="#how-the-grid-loads"> How the grid loads </a> </li><li> <a href="#vanilla-javascript"> Vanilla JavaScript </a> </li><li> <a href="#react"> React </a> </li><li> <a href="#vue"> Vue </a> </li><li> <a href="#angular"> Angular </a> </li><li> <a href="#component-props-react-vue-angular"> Component props (React, Vue, Angular) </a> </li><li> <a href="#standalone-grids"> Standalone grids </a> </li> </ul> </nav> </div> </nav> </div> </div> <script type="module">document.querySelectorAll(".agent-prompt pre").forEach(e=>{const t=document.createElement("button");t.type="button",t.className="page-tools-btn agent-prompt-copy",t.textContent="Copy prompt",t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent?.trim()??""),t.textContent="Copied"}catch{t.textContent="Copy failed"}setTimeout(()=>{t.textContent="Copy prompt"},1800)}),e.parentElement?.insertBefore(t,e)});</script> <script type="module">const a=[...document.querySelectorAll('#TableOfContents a[href^="#"]')];if(a.length&&"IntersectionObserver"in window){const o=new Map(a.map(e=>[e.getAttribute("href").slice(1),e])),s=[...o.keys()].map(e=>document.getElementById(e)).filter(e=>!!e);let i;const c=e=>{const t=o.get(e);!t||t===i||(i?.classList.remove("active"),t.classList.add("active"),i=t)},r=new Set,d=new IntersectionObserver(e=>{for(const n of e)n.isIntersecting?r.add(n.target.id):r.delete(n.target.id);const t=s.find(n=>r.has(n.id));t&&c(t.id)},{rootMargin:"-72px 0px -70% 0px",threshold:0});s.forEach(e=>d.observe(e)),s[0]&&c(s[0].id)}</script>  <footer class="footer"> <div class="container-xxl"> <div class="footer-grid"> <div class="footer-brandcol"> <a class="footer-brand" href="/">lightGallery</a> <p class="footer-tagline">An image and video lightbox gallery for the modern web.</p> <a class="footer-gh" href="https://github.com/sachinchoolur/lightGallery" aria-label="GitHub" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> </div> <nav class="footer-col" aria-label="Components"> <h2 class="footer-h">Components</h2> <ul class="footer-list"> <li> <a href="/docs/react-image-video-gallery/">React</a> </li><li> <a href="/docs/vue-image-video-gallery/">Vue.js</a> </li><li> <a href="/docs/angular-image-video-gallery/">Angular</a> </li><li> <a href="/jquery-to-js-converter/">jQuery to JavaScript converter</a> </li> </ul> </nav><nav class="footer-col" aria-label="Docs"> <h2 class="footer-h">Docs</h2> <ul class="footer-list"> <li> <a href="/docs/getting-started/">Get started</a> </li><li> <a href="/docs/settings/">Settings</a> </li><li> <a href="/docs/events/">Events</a> </li><li> <a href="/docs/methods/">Methods</a> </li><li> <a href="/blog/">Blog</a> </li> </ul> </nav><nav class="footer-col" aria-label="Demos"> <h2 class="footer-h">Demos</h2> <ul class="footer-list"> <li> <a href="/demos/thumbnails/">Thumbnails</a> </li><li> <a href="/demos/dynamic-mode/">Dynamic</a> </li><li> <a href="/demos/carousel-gallery/">Carousel</a> </li><li> <a href="/demos/video-gallery/">Video</a> </li><li> <a href="/demos/transitions/">Transitions</a> </li> </ul> </nav><nav class="footer-col" aria-label="Social"> <h2 class="footer-h">Social</h2> <ul class="footer-list"> <li> <a href="https://github.com/sachinchoolur/lightGallery">GitHub</a> </li><li> <a href="https://x.com/SachinNeravath" target="_blank" rel="noopener">X</a> </li><li> <a href="https://stackblitz.com/@sachinchoolur" target="_blank" rel="noopener">StackBlitz</a> </li><li> <a href="https://docs.google.com/forms/d/e/1FAIpQLSfcxknmKJAF9btnCg8HugFadxyWRZ3TgC0ZKxOtIjdaGfqxIw/viewform?usp=pp_url&entry.34608024=Yes" target="_blank" rel="noopener">Write a review</a> </li> </ul> </nav> </div> <div class="footer-bottom"> <span>lightGallery. Actively maintained since 2014, 12+ years and counting.</span> <span><a href="/license/">Free under GPLv3, commercial license available</a></span> <span><a href="/credits/">Credits</a></span> </div> </div> </footer> <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DaGkoOg8.js"></script> </body> </html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="robots" content="index, follow"><meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>@lightgallery/vue - lightGallery</title><meta name="description" content="A native Vue 3 lightGallery component. Vue renders the triggers and the lightbox, with v-model, typed emits, scoped slots and a subpath per plugin."><link rel="canonical" href="https://www.lightgalleryjs.com/docs/vue/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta name="twitter:title" content="@lightgallery/vue"><meta name="twitter:description" content="A native Vue 3 lightGallery component. Vue renders the triggers and the lightbox, with v-model, typed emits, scoped slots and a subpath per plugin."><meta name="twitter:site" content="@SachinNeravath"><meta name="twitter:creator" content="@SachinNeravath"><meta property="og:title" content="@lightgallery/vue"><meta property="og:description" content="A native Vue 3 lightGallery component. Vue renders the triggers and the lightbox, with v-model, typed emits, scoped slots and a subpath per plugin."><meta property="og:type" content="website"><meta property="og:url" content="https://www.lightgalleryjs.com/docs/vue/"><meta property="og:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta property="article:publisher" content="https://www.facebook.com/sachinchoolur"><meta property="article:author" content="https://www.facebook.com/sachinchoolur"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="lightGallery"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"lightGallery","item":"https://www.lightgalleryjs.com/"},{"@type":"ListItem","position":2,"name":"Docs","item":"https://www.lightgalleryjs.com/docs/"},{"@type":"ListItem","position":3,"name":"@lightgallery/vue","item":"https://www.lightgalleryjs.com/docs/vue/"}]}</script><meta name="ahrefs-site-verification" content="96bd744dcfe6c078a1994c8d9e0e0ca6a5cf16004f63946a0cd349ca937c1b24"><meta name="theme-color" content="#fff"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="manifest" href="/site.webmanifest"><link rel="alternate" type="application/rss+xml" title="lightGallery blog" href="/index.xml"><script>
+            // Framework code tabs: apply the deep-linked or remembered
+            // framework before first paint, so the panels never swap
+            // once the deferred module runs. CodeTabs.astro takes over
+            // (and drops the attribute) as soon as it has synced.
+            (() => {
+                const valid = ['vanilla', 'react', 'vue', 'angular'];
+                const url = new URL(window.location.href);
+                const query = url.searchParams.get('framework');
+                const hash = url.hash.replace(/^#/, '');
+                let framework = null;
+                if (query && valid.includes(query)) framework = query;
+                else if (valid.includes(hash)) framework = hash;
+                else
+                    try {
+                        const stored = localStorage.getItem('lg-framework');
+                        if (stored && valid.includes(stored)) framework = stored;
+                    } catch {
+                        /* storage blocked */
+                    }
+                if (framework)
+                    document.documentElement.dataset.lgFramework = framework;
+            })();
+        </script> <link rel="alternate" type="text/markdown" href="/docs/vue/index.md" title="Markdown version"> <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);posthog.init('phc_uyDcoLpTSdtPcDLf2SswgknmWiBsUfV2EzjhzYi3Ke4',{api_host:'https://app.posthog.com'})</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-960P19JL1K"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-960P19JL1K');</script><link rel="stylesheet" href="/_astro/_slug_.C1T_l066.css"></head> <body class="docs single"> <header id="nav-header" class="site-header"> <div class="site-header-bar"> <div class="container-xxl site-header-inner"> <a class="site-header-brand" href="/"><img src="/images/lightgallery-logo.png" alt="" width="294" height="312">lightGallery</a> <nav class="site-header-nav" aria-label="Main"> <a class="site-header-link is-active" href="/docs/getting-started/" aria-current="page"> Docs </a><a class="site-header-link" href="/demos/thumbnails/"> Demos </a> <div class="site-header-menu" data-site-menu> <button class="site-header-link" type="button" aria-expanded="false" aria-controls="site-header-frameworks">
+Frameworks
+<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg> </button> <div class="site-header-menu-panel" id="site-header-frameworks"> <a class="site-header-menu-item" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> Angular </a><a class="site-header-menu-item" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> React </a><a class="site-header-menu-item" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> Vue </a> </div> </div> <a class="site-header-link" href="/license/"> License </a> </nav> <div class="site-header-actions"> <a class="site-header-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener" aria-label="GitHub"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> <a class="site-header-cta" href="/docs/getting-started/">Get started</a> </div> <button class="site-header-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-header-sheet"> <svg class="site-header-icon-menu" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path></svg> <svg class="site-header-icon-close" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path></svg> </button> </div> </div> <div class="site-header-scrim" data-site-scrim></div> <div class="site-header-sheet" id="site-header-sheet"> <nav class="container-xxl site-header-sheet-inner" aria-label="Main"> <a class="site-header-sheet-link is-active" href="/docs/getting-started/" aria-current="page"> <span>Docs</span> </a><a class="site-header-sheet-link" href="/demos/thumbnails/"> <span>Demos</span> </a> <div class="site-header-sheet-group"> <span class="site-header-sheet-label">Frameworks</span> <div class="site-header-sheet-frameworks"> <a class="site-header-sheet-framework" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> <span>Angular</span> </a><a class="site-header-sheet-framework" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> <span>React</span> </a><a class="site-header-sheet-framework" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> <span>Vue</span> </a> </div> </div> <a class="site-header-sheet-link" href="/license/"> <span>License</span> </a> <a class="site-header-sheet-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+GitHub
+</a> </nav> </div> </header> <script type="module">const s=document.getElementById("nav-header"),t=s?.querySelector("[data-site-menu]"),a=t?.querySelector("button"),c=s?.querySelector(".site-header-toggle"),d=s?.querySelector("[data-site-scrim]");if(s&&t&&a&&c&&d){const n=e=>{t.classList.toggle("is-open",e),a.setAttribute("aria-expanded",String(e))};a.addEventListener("click",()=>n(!t.classList.contains("is-open"))),t.addEventListener("focusout",e=>{const o=e.relatedTarget;o&&!t.contains(o)&&n(!1)});const i=e=>{s.classList.toggle("is-sheet-open",e),c.setAttribute("aria-expanded",String(e)),document.documentElement.classList.toggle("site-header-locked",e)};c.addEventListener("click",()=>i(!s.classList.contains("is-sheet-open"))),d.addEventListener("click",()=>i(!1)),matchMedia("(min-width: 992px)").addEventListener("change",e=>{e.matches&&i(!1)}),document.addEventListener("click",e=>{t.contains(e.target)||n(!1)}),document.addEventListener("keydown",e=>{e.key==="Escape"&&(t.classList.contains("is-open")&&(n(!1),a.focus()),s.classList.contains("is-sheet-open")&&(i(!1),c.focus()))}),window.addEventListener("pageshow",e=>{e.persisted&&(n(!1),i(!1))})}</script>   <div class="wrap container-xxl page-wrap" role="document"> <div class="row flex-xl-nowrap"> <main class="docs-content col-lg-10 col-xl-8"> <span class="docs-kicker">Frameworks</span> <h1>@lightgallery/vue</h1> <div class="page-tools" data-page-tools> <button type="button" class="page-tools-btn" data-copy-markdown data-src="/docs/vue/index.md">
+Copy as Markdown
+</button> <a class="page-tools-btn" href="/docs/vue/index.md">View as Markdown</a> <a class="page-tools-btn" href="https://claude.ai/new?q=Read%20https%3A%2F%2Fwww.lightgalleryjs.com%2Fdocs%2Fvue%2Findex.md%20and%20help%20me%20with%20%22%40lightgallery%2Fvue%22%20from%20lightGallery.%20Answer%20with%20code%20I%20can%20paste." target="_blank" rel="noopener">Open in Claude</a> <a class="page-tools-btn" href="https://chatgpt.com/?q=Read%20https%3A%2F%2Fwww.lightgalleryjs.com%2Fdocs%2Fvue%2Findex.md%20and%20help%20me%20with%20%22%40lightgallery%2Fvue%22%20from%20lightGallery.%20Answer%20with%20code%20I%20can%20paste." target="_blank" rel="noopener">Open in ChatGPT</a> </div> <script type="module">document.querySelectorAll("[data-copy-markdown]").forEach(t=>{const e=t.textContent;t.addEventListener("click",async()=>{try{const a=await(await fetch(t.dataset.src??"")).text();await navigator.clipboard.writeText(a),t.textContent="Copied"}catch{t.textContent="Copy failed"}setTimeout(()=>{t.textContent=e},1800)})});</script> <p class="lead">A native Vue 3 lightGallery component. Vue renders the triggers and the lightbox, with v-model, typed emits, scoped slots and a subpath per plugin.</p>  <p><code>@lightgallery/vue</code> is a native Vue 3 component, not a wrapper around the
+vanilla script. Vue renders every node, in the trigger grid and in the
+lightbox, so nothing else mutates your DOM. You get <code>&#x3C;script setup></code> SFCs,
+<code>v-model</code> for the open state and index, typed emits, scoped slots, a
+Teleport overlay and a tree-shakable subpath per plugin. Styling reuses
+the published <code>lightgallery/css/*</code> files, so the lightbox looks exactly
+like the vanilla one.</p>
+<h2 id="install">Install</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> install</span><span style="color:#9ECBFF"> @lightgallery/vue</span><span style="color:#9ECBFF"> lightgallery</span></span></code></pre>
+<p>Peer range: <code>vue >=3.4</code> (uses <code>defineModel</code>).</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#6A737D">// Global styles (main.ts or your root stylesheet):</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lightgallery.css'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#6A737D">// plus the CSS of each plugin you use, e.g.:</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lg-thumbnail.css'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> 'lightgallery/css/lg-zoom.css'</span><span style="color:#E1E4E8">;</span></span></code></pre>
+<h2 id="quick-start-uncontrolled">Quick start, uncontrolled</h2>
+<p>Thumbnails on the page open the lightbox; mount order defines slide order.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="vue"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">script</span><span style="color:#B392F0"> setup</span><span style="color:#B392F0"> lang</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"ts"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    LightGallery,</span></span>
+<span class="line"><span style="color:#E1E4E8">    LgItem,</span></span>
+<span class="line"><span style="color:#F97583">    type</span><span style="color:#E1E4E8"> LgGalleryItem,</span></span>
+<span class="line"><span style="color:#F97583">    type</span><span style="color:#E1E4E8"> SlideEventDetail,</span></span>
+<span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/vue'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Thumbnail </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/vue/plugins/thumbnail'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Zoom </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/vue/plugins/zoom'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> plugins</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [Thumbnail, Zoom];</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> items</span><span style="color:#F97583">:</span><span style="color:#B392F0"> LgGalleryItem</span><span style="color:#E1E4E8">[] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">    {</span></span>
+<span class="line"><span style="color:#E1E4E8">        src: </span><span style="color:#9ECBFF">'img/1.jpg'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        thumb: </span><span style="color:#9ECBFF">'img/1-t.jpg'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        alt: </span><span style="color:#9ECBFF">'…'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        caption: </span><span style="color:#9ECBFF">'…'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        lgSize: </span><span style="color:#9ECBFF">'1600-1067'</span><span style="color:#E1E4E8">, </span><span style="color:#6A737D">// natural size, enables the zoom-from-origin open animation</span></span>
+<span class="line"><span style="color:#E1E4E8">    },</span></span>
+<span class="line"><span style="color:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> onSlide</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">index</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#B392F0"> SlideEventDetail</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#E1E4E8">    console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'slide'</span><span style="color:#E1E4E8">, index);</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">script</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">template</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">LightGallery</span></span>
+<span class="line"><span style="color:#B392F0">        :plugins</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"plugins"</span></span>
+<span class="line"><span style="color:#B392F0">        :thumbnail</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"{ thumbWidth: 120 }"</span></span>
+<span class="line"><span style="color:#B392F0">        @after-slide</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"onSlide"</span></span>
+<span class="line"><span style="color:#E1E4E8">    ></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">LgItem</span><span style="color:#B392F0"> v-for</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item of items"</span><span style="color:#B392F0"> :key</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item.src"</span><span style="color:#B392F0"> :item</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> :src</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item.thumb"</span><span style="color:#B392F0"> :alt</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"item.alt"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">LgItem</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">LightGallery</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">template</span><span style="color:#E1E4E8">></span></span></code></pre>
+<h2 id="controlled">Controlled</h2>
+<p>Pass <code>:slides</code> instead of <code>&#x3C;LgItem></code> children and the component renders no
+triggers; <code>v-model:open</code> and <code>v-model:index</code> give you the state.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="vue"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">script</span><span style="color:#B392F0"> setup</span><span style="color:#B392F0"> lang</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"ts"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { ref } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> 'vue'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { LightGallery, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> LgGalleryItem } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/vue'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> open</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> ref</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> index</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> ref</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> items</span><span style="color:#F97583">:</span><span style="color:#B392F0"> LgGalleryItem</span><span style="color:#E1E4E8">[] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">    { src: </span><span style="color:#9ECBFF">'img/1.jpg'</span><span style="color:#E1E4E8">, thumb: </span><span style="color:#9ECBFF">'img/1-t.jpg'</span><span style="color:#E1E4E8">, alt: </span><span style="color:#9ECBFF">'Mountains'</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    { src: </span><span style="color:#9ECBFF">'img/2.jpg'</span><span style="color:#E1E4E8">, thumb: </span><span style="color:#9ECBFF">'img/2-t.jpg'</span><span style="color:#E1E4E8">, alt: </span><span style="color:#9ECBFF">'Forest'</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">];</span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">script</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">template</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">button</span><span style="color:#B392F0"> @click</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"open = true"</span><span style="color:#E1E4E8">>Open gallery&#x3C;/</span><span style="color:#85E89D">button</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">LightGallery</span><span style="color:#B392F0"> :slides</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"items"</span><span style="color:#B392F0"> v-model:open</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"open"</span><span style="color:#B392F0"> v-model:index</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"index"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">template</span><span style="color:#E1E4E8">></span></span></code></pre>
+<h2 id="imperative">Imperative</h2>
+<p>A template ref exposes <code>openGallery(index?)</code>, <code>closeGallery()</code>,
+<code>goToSlide(index)</code>, <code>nextSlide()</code>, <code>prevSlide()</code> and <code>refresh()</code>.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="vue"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">script</span><span style="color:#B392F0"> setup</span><span style="color:#B392F0"> lang</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"ts"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { ref } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> 'vue'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { LightGallery, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> LgGalleryItem } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@lightgallery/vue'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> gallery</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> ref</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">InstanceType</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#F97583">typeof</span><span style="color:#E1E4E8"> LightGallery> </span><span style="color:#F97583">|</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">>(</span><span style="color:#79B8FF">null</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> items</span><span style="color:#F97583">:</span><span style="color:#B392F0"> LgGalleryItem</span><span style="color:#E1E4E8">[] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">    { src: </span><span style="color:#9ECBFF">'img/1.jpg'</span><span style="color:#E1E4E8">, thumb: </span><span style="color:#9ECBFF">'img/1-t.jpg'</span><span style="color:#E1E4E8">, alt: </span><span style="color:#9ECBFF">'Mountains'</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    { src: </span><span style="color:#9ECBFF">'img/2.jpg'</span><span style="color:#E1E4E8">, thumb: </span><span style="color:#9ECBFF">'img/2-t.jpg'</span><span style="color:#E1E4E8">, alt: </span><span style="color:#9ECBFF">'Forest'</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">];</span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">script</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">template</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">button</span><span style="color:#B392F0"> @click</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"gallery?.openGallery(1)"</span><span style="color:#E1E4E8">>Open at slide 2&#x3C;/</span><span style="color:#85E89D">button</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">LightGallery</span><span style="color:#B392F0"> ref</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"gallery"</span><span style="color:#B392F0"> :slides</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"items"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">template</span><span style="color:#E1E4E8">></span></span></code></pre>
+<h2 id="settings-events-and-slots">Settings, events and slots</h2>
+<p>Settings are same-named props (<code>:mode</code>, <code>:speed</code>, <code>:loop</code>,
+<code>:caption-position</code>, …); the <a href="/docs/settings/">settings reference</a> lists
+every one. Events are kebab-case emits of the documented
+<a href="/docs/events/">event names</a> without the <code>on</code> prefix (<code>@before-open</code>,
+<code>@after-slide</code>, <code>@slide-item-load</code>, …).</p>
+<p>Scoped slots swap parts of the chrome for your own markup: <code>#caption</code>
+(<code>{ item, index }</code>), <code>#counter</code> (<code>{ current, total }</code>), <code>#prev-button</code>,
+<code>#next-button</code> and, with the comment plugin, <code>#comments</code> (<code>{ item, index }</code>).
+The <code>:icons</code> prop replaces any <a href="/docs/custom-icons/">control icon</a> by
+name. An inline gallery mounts into the element you pass as <code>:container</code>.</p>
+<h2 id="plugins-all-14-plus-the-justified-layout">Plugins (all 14, plus the justified layout)</h2>
+<p>Each plugin is its own tree-shakable subpath
+<code>@lightgallery/vue/plugins/&#x3C;name></code> exporting a plugin object for the
+<code>:plugins</code> prop. Per-plugin settings go on a same-named gallery prop
+(e.g. <code>:zoom="{ scale: 1.5 }"</code>). A multi-word plugin name works in either
+spelling, <code>:medium-zoom="{ margin: 24 }"</code> or <code>:mediumZoom</code>:</p>
+<div class="table-wrap">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Plugin</th><th>Subpath</th><th>Key options (prop of the same name)</th></tr></thead><tbody><tr><td>thumbnail</td><td><code>plugins/<wbr>thumbnail</code></td><td><code>thumbWidth</code>, <code>thumbHeight</code>, <code>thumbMargin</code>, <code>animateThumb</code>, <code>toggleThumb</code></td></tr><tr><td>zoom</td><td><code>plugins/<wbr>zoom</code></td><td><code>scale</code>, <code>actualSize</code>, <code>showZoomInOutIcons</code>, <code>infiniteZoom</code>, <code>enableZoomAfter</code></td></tr><tr><td>video</td><td><code>plugins/<wbr>video</code></td><td><code>autoplayFirstVideo</code>, <code>autoplayVideoOnSlide</code>, <code>youTubePlayerParams</code>, <code>vimeoPlayerParams</code>, <code>gotoNextSlideOnVideoEnd</code></td></tr><tr><td>autoplay</td><td><code>plugins/<wbr>autoplay</code></td><td><code>slideShowAutoplay</code>, <code>slideShowInterval</code>, <code>progressBar</code>, <code>forceSlideShowAutoplay</code></td></tr><tr><td>fullscreen</td><td><code>plugins/<wbr>fullscreen</code></td><td><code>fullScreen</code></td></tr><tr><td>hash</td><td><code>plugins/<wbr>hash</code></td><td><code>galleryId</code>, <code>customSlideName</code></td></tr><tr><td>pager</td><td><code>plugins/<wbr>pager</code></td><td><code>pager</code></td></tr><tr><td>share</td><td><code>plugins/<wbr>share</code></td><td><code>facebook</code>, <code>twitter</code>, <code>pinterest</code>, <code>additionalShareOptions</code> (typed objects)</td></tr><tr><td>rotate</td><td><code>plugins/<wbr>rotate</code></td><td><code>rotateSpeed</code>, <code>rotateLeft/<wbr>Right</code>, <code>flipHorizontal/<wbr>Vertical</code></td></tr><tr><td>comment</td><td><code>plugins/<wbr>comment</code></td><td><code>commentBox</code>; the comment body comes from the <code>#comments</code> slot</td></tr><tr><td>mediumZoom</td><td><code>plugins/<wbr>mediumZoom</code></td><td><code>margin</code>, <code>backgroundColor</code> (+ per-item <code>lgBackgroundColor</code>)</td></tr><tr><td>relativeCaption</td><td><code>plugins/<wbr>relativeCaption</code></td><td><code>relativeCaption</code> (presets <code>captionPosition: 'slide'</code>)</td></tr><tr><td>vimeoThumbnail</td><td><code>plugins/<wbr>vimeoThumbnail</code></td><td><code>showVimeoThumbnails</code>, <code>showThumbnailWithPlayButton</code></td></tr><tr><td>originCrop</td><td><code>plugins/<wbr>originCrop</code></td><td><code>originCrop</code>: flies a cropped thumbnail from its crop (<a href="/demos/zoom-from-origin/">zoom from origin</a>)</td></tr><tr><td>justified</td><td><code>plugins/<wbr>justified</code></td><td>Not a plugin: the <code>&#x3C;JustifiedGrid></code> component wraps the triggers, with <code>row-height</code>, <code>gap</code>, <code>last-row</code> (<a href="/docs/justified-layout/">justified layout</a>)</td></tr></tbody></table></div>
+<p>Plugins compose per gallery instance, two galleries on one page can have
+different plugin sets. Order matters for slide wrappers: put <code>Zoom</code> before
+<code>Rotate</code> so zoom stays the outermost transform.</p>
+<h2 id="ssr--nuxt">SSR / Nuxt</h2>
+<ul>
+<li>Server-safe: every entry imports without browser globals, and the closed
+gallery server-renders only your trigger markup. The lightbox overlay
+<strong>never server-renders</strong> (even with <code>open</code> true at first render), the
+<code>&#x3C;Teleport></code> mounts client-side only, so there is no teleport buffer to
+wire up and no hydration mismatch surface.</li>
+<li>In Nuxt, use the component directly in server-rendered pages, no
+<code>&#x3C;ClientOnly></code> wrapper needed. Deep-link flows (hash plugin) run after
+hydration.</li>
+<li>Import the CSS globally (<code>nuxt.config</code> <code>css: ['lightgallery/css/...']</code>).</li>
+</ul>
+<h2 id="accessibility">Accessibility</h2>
+<p>The open gallery is a modal dialog (<code>role="dialog"</code>, <code>aria-modal</code>, an
+accessible name, with an <code>:aria-labelledby</code> override). Focus moves in on
+open, Tab and Shift+Tab are trapped while it is open and focus returns to
+the trigger on close. Every button is labelled, thumbnails and pager dots
+are keyboard-operable, and <code>prefers-reduced-motion</code> disables the
+animations. The open gallery passes axe WCAG A/AA checks in CI. The
+<a href="/docs/accessibility/">accessibility page</a> covers the live region, the
+labels and the settings involved.</p>
+<h2 id="migrating-from-the-legacy-lightgalleryvue-wrapper">Migrating from the legacy <code>lightgallery/vue</code> wrapper</h2>
+<p>Coming from <code>lightgallery/vue</code>, the wrapper that shipped inside the
+vanilla 2.x package? The full list is in the
+<a href="/docs/migration/#vue">migration guide</a>; the key changes:</p>
+<ul>
+<li><code>dynamicEl</code> → <code>:slides</code> (typed <code>LgGalleryItem[]</code>), or <code>&#x3C;LgItem></code> trigger
+components for uncontrolled galleries.</li>
+<li><code>onAfterSlide</code> etc. → kebab-case emits without the prefix:
+<code>@after-slide</code>.</li>
+<li><code>appendSubHtmlTo</code> → <code>captionPosition: 'bar' | 'slide' | 'outer'</code>;
+<code>subHtml</code> strings → <code>caption</code> (plain string), the <code>#caption</code> slot, or the
+explicit raw-HTML <code>captionHtml</code> opt-in.</li>
+<li>Plugin constructor arrays → plugin objects on <code>:plugins</code>, options via
+same-named gallery props.</li>
+<li>Dropped (2.x DOM-scraping/HTML-string era): <code>selector</code>, <code>extraProps</code>,
+<code>getCaptionFromTitleOrAlt</code>, <code>nextHtml</code>/<code>prevHtml</code>, <code>appendCounterTo</code>,
+<code>videojs</code>.</li>
+</ul>
+<h2 id="next-steps">Next steps</h2>
+<ul>
+<li><a href="/demos/vue-image-gallery/">Vue image gallery</a> and
+<a href="/demos/vue-video-gallery/">video gallery</a> demos, each with the code
+behind it.</li>
+<li>Features that work the same in every package:
+<a href="/docs/justified-layout/">justified layout</a>,
+<a href="/docs/virtualization/">virtualization</a>,
+<a href="/docs/thumbnail-scrubbing/">thumbnail scrubbing</a>,
+<a href="/docs/video-facades/">video facades</a>,
+<a href="/docs/custom-icons/">custom icons</a>,
+<a href="/docs/localization-rtl/">localization and RTL</a> and
+<a href="/docs/responsive-loading/">responsive loading</a>.</li>
+<li>The <a href="/docs/settings/">settings reference</a>, every setting is a prop of
+the same name, and the <a href="/docs/events/">events</a> list, each one a
+kebab-case emit here.</li>
+</ul>
+<h2 id="license">License</h2>
+<p>Free and open source under the GPLv3, like every lightGallery package. If
+your project keeps its source proprietary, a <a href="/license/">commercial license</a>
+covers it: same code, nothing gated. Use <code>0000-0000-000-0000</code> as a temporary
+<code>licenseKey</code> for evaluation.</p>   <p class="edit-page"> <a href="https://github.com/sachinchoolur/lightGallery/tree/HEAD/site-astro/src/content/docs/vue.md"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path> </svg>Edit this page on GitHub
+</a> </p> <nav class="page-nav" aria-label="Previous and next page"> <a class="page-nav-card page-nav-prev" href="/docs/react/"> <span class="page-nav-arrow" aria-hidden="true">
+&larr;
+</span> <span class="page-nav-text"> <span class="page-nav-dir">Previous</span> <strong>@lightgallery/react</strong> </span> </a> <a class="page-nav-card page-nav-next" href="/docs/angular/"> <span class="page-nav-text"> <span class="page-nav-dir">Next</span> <strong>@lightgallery/angular</strong> </span> <span class="page-nav-arrow" aria-hidden="true">
+&rarr;
+</span> </a> </nav> </main> <div class="col-lg-2 col-xl-2 docs-sidebar"> <nav class="docs-links" aria-label="Main navigation"> <h3>API Docs</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/getting-started/">Get started</a></li><li><a class="docs-link" href="/docs/settings/">Settings</a></li><li><a class="docs-link" href="/docs/events/">Events</a></li><li><a class="docs-link" href="/docs/methods/">Methods</a></li><li><a class="docs-link" href="/docs/dynamic-variables/">Dynamic variables</a></li><li><a class="docs-link" href="/docs/attributes/">Attributes</a></li><li><a class="docs-link" href="/docs/react-image-video-gallery/">React</a></li><li><a class="docs-link" href="/docs/vue-image-video-gallery/">Vue</a></li><li><a class="docs-link" href="/docs/angular-image-video-gallery/">Angular</a></li><li><a class="docs-link" href="/docs/license/">License</a></li><li><a class="docs-link" href="/docs/migration/">Migration</a></li><li><a class="docs-link" href="/docs/troubleshooting/">Troubleshooting</a></li><li><a class="docs-link" href="/docs/creating-plugins/">Creating plugins</a></li></ul><h3>Frameworks</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/headless/">@lightgallery/headless</a></li><li><a class="docs-link" href="/docs/react/">@lightgallery/react</a></li><li><a class="docs-link active" href="/docs/vue/">@lightgallery/vue</a></li><li><a class="docs-link" href="/docs/angular/">@lightgallery/angular</a></li></ul><h3>Features</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/justified-layout/">Justified layout</a></li><li><a class="docs-link" href="/docs/localization-rtl/">Localization &amp; RTL</a></li><li><a class="docs-link" href="/docs/virtualization/">Virtualization</a></li><li><a class="docs-link" href="/docs/video-facades/">Video facades</a></li><li><a class="docs-link" href="/docs/accessibility/">Accessibility</a></li><li><a class="docs-link" href="/docs/web-share/">Web Share</a></li><li><a class="docs-link" href="/docs/hash-drivers/">Hash drivers</a></li><li><a class="docs-link" href="/docs/responsive-loading/">Responsive loading</a></li><li><a class="docs-link" href="/docs/thumbnail-scrubbing/">Thumbnail scrubbing</a></li><li><a class="docs-link" href="/docs/custom-icons/">Custom icons</a></li></ul> </nav> </div> <nav class="docs-toc d-none d-xl-block col-xl-2" aria-label="Secondary navigation"> <div class="page-links"> <h3>On this page</h3> <nav id="TableOfContents"> <ul> <li> <a href="#install"> Install </a> </li><li> <a href="#quick-start-uncontrolled"> Quick start, uncontrolled </a> </li><li> <a href="#controlled"> Controlled </a> </li><li> <a href="#imperative"> Imperative </a> </li><li> <a href="#settings-events-and-slots"> Settings, events and slots </a> </li><li> <a href="#plugins-all-14-plus-the-justified-layout"> Plugins (all 14, plus the justified layout) </a> </li><li> <a href="#ssr--nuxt"> SSR / Nuxt </a> </li><li> <a href="#accessibility"> Accessibility </a> </li><li> <a href="#migrating-from-the-legacy-lightgalleryvue-wrapper"> Migrating from the legacy lightgallery/vue wrapper </a> </li><li> <a href="#next-steps"> Next steps </a> </li><li> <a href="#license"> License </a> </li> </ul> </nav> </div> </nav> </div> </div> <script type="module">document.querySelectorAll(".agent-prompt pre").forEach(e=>{const t=document.createElement("button");t.type="button",t.className="page-tools-btn agent-prompt-copy",t.textContent="Copy prompt",t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent?.trim()??""),t.textContent="Copied"}catch{t.textContent="Copy failed"}setTimeout(()=>{t.textContent="Copy prompt"},1800)}),e.parentElement?.insertBefore(t,e)});</script> <script type="module">const a=[...document.querySelectorAll('#TableOfContents a[href^="#"]')];if(a.length&&"IntersectionObserver"in window){const o=new Map(a.map(e=>[e.getAttribute("href").slice(1),e])),s=[...o.keys()].map(e=>document.getElementById(e)).filter(e=>!!e);let i;const c=e=>{const t=o.get(e);!t||t===i||(i?.classList.remove("active"),t.classList.add("active"),i=t)},r=new Set,d=new IntersectionObserver(e=>{for(const n of e)n.isIntersecting?r.add(n.target.id):r.delete(n.target.id);const t=s.find(n=>r.has(n.id));t&&c(t.id)},{rootMargin:"-72px 0px -70% 0px",threshold:0});s.forEach(e=>d.observe(e)),s[0]&&c(s[0].id)}</script>  <footer class="footer"> <div class="container-xxl"> <div class="footer-grid"> <div class="footer-brandcol"> <a class="footer-brand" href="/">lightGallery</a> <p class="footer-tagline">An image and video lightbox gallery for the modern web.</p> <a class="footer-gh" href="https://github.com/sachinchoolur/lightGallery" aria-label="GitHub" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> </div> <nav class="footer-col" aria-label="Components"> <h2 class="footer-h">Components</h2> <ul class="footer-list"> <li> <a href="/docs/react-image-video-gallery/">React</a> </li><li> <a href="/docs/vue-image-video-gallery/">Vue.js</a> </li><li> <a href="/docs/angular-image-video-gallery/">Angular</a> </li><li> <a href="/jquery-to-js-converter/">jQuery to JavaScript converter</a> </li> </ul> </nav><nav class="footer-col" aria-label="Docs"> <h2 class="footer-h">Docs</h2> <ul class="footer-list"> <li> <a href="/docs/getting-started/">Get started</a> </li><li> <a href="/docs/settings/">Settings</a> </li><li> <a href="/docs/events/">Events</a> </li><li> <a href="/docs/methods/">Methods</a> </li><li> <a href="/blog/">Blog</a> </li> </ul> </nav><nav class="footer-col" aria-label="Demos"> <h2 class="footer-h">Demos</h2> <ul class="footer-list"> <li> <a href="/demos/thumbnails/">Thumbnails</a> </li><li> <a href="/demos/dynamic-mode/">Dynamic</a> </li><li> <a href="/demos/carousel-gallery/">Carousel</a> </li><li> <a href="/demos/video-gallery/">Video</a> </li><li> <a href="/demos/transitions/">Transitions</a> </li> </ul> </nav><nav class="footer-col" aria-label="Social"> <h2 class="footer-h">Social</h2> <ul class="footer-list"> <li> <a href="https://github.com/sachinchoolur/lightGallery">GitHub</a> </li><li> <a href="https://x.com/SachinNeravath" target="_blank" rel="noopener">X</a> </li><li> <a href="https://stackblitz.com/@sachinchoolur" target="_blank" rel="noopener">StackBlitz</a> </li><li> <a href="https://docs.google.com/forms/d/e/1FAIpQLSfcxknmKJAF9btnCg8HugFadxyWRZ3TgC0ZKxOtIjdaGfqxIw/viewform?usp=pp_url&entry.34608024=Yes" target="_blank" rel="noopener">Write a review</a> </li> </ul> </nav> </div> <div class="footer-bottom"> <span>lightGallery. Actively maintained since 2014, 12+ years and counting.</span> <span><a href="/license/">Free under GPLv3, commercial license available</a></span> <span><a href="/credits/">Credits</a></span> </div> </div> </footer> <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DaGkoOg8.js"></script> </body> </html>

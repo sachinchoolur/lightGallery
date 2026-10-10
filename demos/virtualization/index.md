@@ -1,0 +1,159 @@
+# Virtualization, 1,000 slide stress test
+
+> Open a JavaScript lightbox gallery with 1,000 slides. Virtualization keeps the DOM small: only a window of slides and thumbnails render.
+
+lightGallery virtualization bounds the number of slides and thumbnails that exist in the DOM at any moment, so galleries with thousands of items open instantly and stay smooth. The gallery below holds 1,000 slides, watch the mounted-slide counter while you navigate. Read how it works in the [virtualization guide](https://www.lightgalleryjs.com/docs/virtualization/).
+
+Canonical page: https://www.lightgalleryjs.com/demos/virtualization/
+
+### 1,000-item stress demo
+
+The slide pool and the thumbnail strip are both windowed: only the slides
+around the active index and the visible thumbnails (plus an overscan) are in
+the DOM, with spacers preserving the strip geometry. The window advances at
+commit points, release, slide change, resize, never per pointer move.
+
+**JavaScript**
+
+```js
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+
+const slides = Array.from({ length: 1000 }, (_, i) => ({
+    src: `https://picsum.photos/seed/lg-${i}/1600/1067`,
+    thumb: `https://picsum.photos/seed/lg-${i}/240/160`,
+    subHtml: `<h4>Slide ${i + 1} / 1000</h4>`,
+}));
+
+const gallery = lightGallery(document.getElementById('stress-gallery'), {
+    dynamic: true,
+    dynamicEl: slides,
+    plugins: [lgThumbnail],
+    virtualization: {
+        // Mounted-slide pool around the active index.
+        slides: 7,
+        // Thumbnail-strip windowing; 'auto' derives one extra
+        // viewport of overscan per side.
+        thumbs: 'auto',
+    },
+});
+
+document
+    .getElementById('open-button')
+    .addEventListener('click', () => gallery.openGallery(0));
+```
+
+**React**
+
+```tsx
+import { useState } from 'react';
+import { LightGallery } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+
+const slides = Array.from({ length: 1000 }, (_, i) => ({
+    src: `https://picsum.photos/seed/lg-${i}/1600/1067`,
+    thumb: `https://picsum.photos/seed/lg-${i}/240/160`,
+    captionHtml: `<h4>Slide ${i + 1} / 1000</h4>`,
+}));
+
+const [open, setOpen] = useState(false);
+const [index, setIndex] = useState(0);
+
+<>
+    <button type="button" onClick={() => setOpen(true)}>
+        Open the 1,000-slide gallery
+    </button>
+    {/* slides: how many slides are in the DOM at once, around the
+        current one. thumbs: only the visible thumbnails are in the
+        DOM, plus one more viewport of them on each side. */}
+    <LightGallery
+        slides={slides}
+        plugins={[Thumbnail]}
+        virtualization={{ slides: 7, thumbs: 'auto' }}
+        open={open}
+        onClose={() => setOpen(false)}
+        index={index}
+        onIndexChange={setIndex}
+    />
+</>;
+```
+
+**Vue**
+
+```vue
+<script setup>
+import { ref } from 'vue';
+import { LightGallery } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+
+const slides = Array.from({ length: 1000 }, (_, i) => ({
+    src: `https://picsum.photos/seed/lg-${i}/1600/1067`,
+    thumb: `https://picsum.photos/seed/lg-${i}/240/160`,
+    captionHtml: `<h4>Slide ${i + 1} / 1000</h4>`,
+}));
+
+const plugins = [Thumbnail];
+const open = ref(false);
+const index = ref(0);
+</script>
+
+<template>
+    <button type="button" @click="open = true">
+        Open the 1,000-slide gallery
+    </button>
+    <!-- slides: how many slides are in the DOM at once, around the current
+         one. thumbs: only the visible thumbnails are in the DOM, plus one
+         more viewport of them on each side. -->
+    <LightGallery
+        v-model:open="open"
+        v-model:index="index"
+        :slides="slides"
+        :plugins="plugins"
+        :virtualization="{ slides: 7, thumbs: 'auto' }"
+    />
+</template>
+```
+
+**Angular**
+
+```ts
+import { Component, signal } from '@angular/core';
+import { LgGalleryComponent } from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent],
+    template: `
+        <button type="button" (click)="open.set(true)">
+            Open the 1,000-slide gallery
+        </button>
+        <!-- slides: how many slides are in the DOM at once, around the
+             current one. thumbs: only the visible thumbnails are in the DOM,
+             plus one more viewport of them on each side. -->
+        <lg-gallery
+            [slides]="slides"
+            [features]="features"
+            [virtualization]="{ slides: 7, thumbs: 'auto' }"
+            [open]="open()"
+            (closed)="open.set(false)"
+            [(index)]="index"
+        />
+    `,
+})
+export class Gallery {
+    slides = Array.from({ length: 1000 }, (_, i) => ({
+        src: `https://picsum.photos/seed/lg-${i}/1600/1067`,
+        thumb: `https://picsum.photos/seed/lg-${i}/240/160`,
+        captionHtml: `<h4>Slide ${i + 1} / 1000</h4>`,
+    }));
+    features = [withThumbnail()];
+
+    open = signal(false);
+    index = signal(0);
+}
+```
+
+Virtualization is off when the `virtualization` setting is `undefined`, the
+classic behavior, where every thumbnail renders. See all the knobs in the
+<a href="/docs/settings/#virtualization">settings reference</a>.

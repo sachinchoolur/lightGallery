@@ -1,0 +1,94 @@
+# Image and video gallery for Vue
+
+> Native Vue 3 image and video gallery component, v-model, scoped slots, Teleport, thumbnails, pinch zoom and Nuxt SSR support.
+
+Full featured image and video gallery component for Vue.
+
+Canonical page: https://www.lightgalleryjs.com/docs/vue-image-video-gallery/
+
+lightGallery 3 ships **`@lightgallery/vue`**, a native Vue 3 component, not
+a wrapper. Every node is rendered by Vue, with `v-model` for the open state
+and the index, typed emits, scoped slots and a Teleport overlay. State and
+gallery logic come from the shared headless core, so behavior matches the
+vanilla, React and Angular packages exactly.
+
+## Install
+
+```bash
+npm install @lightgallery/vue lightgallery
+```
+
+Peer range is `vue >=3.4`. Import the stylesheets globally, they ship from
+the `lightgallery` package and are shared by every binding:
+
+```ts
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+```
+
+## A gallery in one SFC
+
+```vue
+<script setup lang="ts">
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+
+const items: LgGalleryItem[] = [
+    {
+        src: 'img/1-1600.jpg',
+        thumb: 'img/1-240.jpg',
+        alt: 'Mountains',
+        lgSize: '1600-1067',
+        caption: 'Mountains',
+    },
+];
+</script>
+
+<template>
+    <LightGallery :plugins="[Thumbnail, Zoom]" :zoom="{ scale: 1.5 }">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+Prefer to own the state? Pass `:slides` with `v-model:open` and
+`v-model:index`. Both modes are documented in the
+[Vue package docs](/docs/vue/).
+
+## What you get
+
+-   **All 14 plugins** as tree-shakable subpaths, thumbnails, zoom, video,
+    autoplay, fullscreen, hash deep links, pager, share, rotate, comments,
+    medium-style zoom, relative captions, Vimeo thumbnails and origin crop,
+    plus the justified layout.
+-   **Idiomatic Vue API**: settings are same-named props (`:speed`,
+    `:loop`, `:caption-position`), per-plugin settings are one object prop
+    per plugin, events are kebab-case emits (`@after-slide`), and the
+    gallery chrome comes from named scoped slots (`#caption`, `#counter`,
+    `#prev-button`, `#next-button`).
+-   **Typed end to end**, including `LgGalleryItem` for slide data and a
+    template-ref handle for imperative control.
+-   **Nuxt-ready**: entries import without browser globals and the overlay
+    never server-renders, so no `` wrapper and no hydration
+    mismatch.
+-   **Accessibility**: dialog semantics, focus trap and restore, keyboard
+    operable thumbnails and pager, `prefers-reduced-motion` support; axe
+    reports zero violations.
+
+## Next steps
+
+-   [Vue package docs](/docs/vue/), the full prop surface, all plugins,
+    SSR and accessibility notes.
+-   [Vue image gallery demo](/demos/vue-image-gallery/) and
+    [Vue video gallery demo](/demos/vue-video-gallery/), live galleries
+    with the code behind them.
+-   [Settings reference](/docs/settings/), every setting, shared by all
+    four packages.
+
+> **Using the 2.x wrapper?** The old `lightgallery/vue` component is
+> documented in the [2.x Vue archive](/docs/v2/vue/), and the
+> [migration guide](/docs/migration/) covers the move to the native package.

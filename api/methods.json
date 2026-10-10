@@ -1,0 +1,62 @@
+{
+  "generated": "2026-10-10T05:30:09.985Z",
+  "docs": "https://www.lightgalleryjs.com/docs/methods/",
+  "methods": [
+    {
+      "name": "closeGallery",
+      "description": "Close lightGallery if it is opened. If closable is false in the settings, you need to pass true via closeGallery method to force close gallery",
+      "examples": [
+        "const plugin = lightGallery();\n plugin.closeGallery();"
+      ]
+    },
+    {
+      "name": "destroy",
+      "description": "Destroy lightGallery. Destroy lightGallery and its plugin instances completely This method also calls closeGallery function internally. Returns the time it takes to completely close and destroy the instance. In case if you want to re-initialize lightGallery right after destroying it, initialize it only once the destroy process is completed. You can use refresh method most of the time.",
+      "examples": [
+        "const plugin = lightGallery();\n plugin.destroy();"
+      ]
+    },
+    {
+      "name": "goToNextSlide",
+      "description": "Go to next slide",
+      "examples": [
+        "const plugin = lightGallery();\n plugin.goToNextSlide();"
+      ]
+    },
+    {
+      "name": "goToPrevSlide",
+      "description": "Go to previous slide",
+      "examples": [
+        "const plugin = lightGallery({});\n plugin.goToPrevSlide();"
+      ]
+    },
+    {
+      "name": "openGallery",
+      "description": "Open lightGallery. Open gallery with specific slide by passing index of the slide as parameter.",
+      "examples": [
+        "const $dynamicGallery = document.getElementById('dynamic-gallery-demo');\nconst dynamicGallery = lightGallery($dynamicGallery, {\n    dynamic: true,\n    dynamicEl: [\n        {\n             src: 'img/1.jpg',\n             thumb: 'img/thumb-1.jpg',\n             subHtml: '<h4>Image 1 title</h4><p>Image 1 descriptions.</p>',\n        },\n        ...\n    ],\n});\n$dynamicGallery.addEventListener('click', function () {\n    // Starts with third item.(Optional).\n    // This is useful if you want use dynamic mode with\n    // custom thumbnails (thumbnails outside gallery),\n    dynamicGallery.openGallery(2);\n});"
+      ]
+    },
+    {
+      "name": "refresh",
+      "description": "Refresh lightGallery with new set of children. This is useful to update the gallery when the child elements are changed without calling destroy method. If you are using dynamic mode, you can pass the modified array of dynamicEl as the first parameter to refresh the dynamic gallery",
+      "examples": [
+        "const plugin = lightGallery();\n // Delete or add children, then call\n plugin.refresh();"
+      ]
+    },
+    {
+      "name": "slide",
+      "description": "Goto a specific slide.",
+      "examples": [
+        "const plugin = lightGallery();\n // to go to 3rd slide\n plugin.slide(2);"
+      ]
+    },
+    {
+      "name": "updateSlides",
+      "description": "Update slides dynamically. Add, edit or delete slides dynamically when lightGallery is opened. Modify the current gallery items and pass it via updateSlides method",
+      "examples": [
+        "const plugin = lightGallery();\n\n// Adding slides dynamically\nlet galleryItems = [\n// Access existing lightGallery items\n// galleryItems are automatically generated internally from the gallery HTML markup\n// or directly from galleryItems when dynamic gallery is used\n  ...plugin.galleryItems,\n    ...[\n      {\n        src: 'img/img-1.png',\n          thumb: 'img/thumb1.png',\n        },\n    ],\n  ];\n  plugin.updateSlides(\n    galleryItems,\n    plugin.index,\n  );\n\n\n// Remove slides dynamically\ngalleryItems = JSON.parse(\n  JSON.stringify(plugin.galleryItems),\n);\ngalleryItems.shift();\nplugin.updateSlides(galleryItems, 1);"
+      ]
+    }
+  ]
+}

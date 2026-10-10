@@ -1,0 +1,306 @@
+# Bootstrap image gallery with lightbox
+
+> Bootstrap image gallery demo with a full-screen lightbox, responsive grid markup, thumbnails, zoom and captions, and no jQuery required.
+
+Bootstrap is the most popular CSS Framework for developing responsive and mobile-first websites. Here is the demo adding lightbox gallery support for Bootstrap.
+
+Canonical page: https://www.lightgalleryjs.com/demos/bootstrap-image-gallery/
+
+### Demo
+
+    
+        <a class="lg-item" data-lg-size="1600-1067"
+            data-src="/img/photos/morocco/01-1600.avif"
+            data-sub-html="<h4>Blue and white painted houses on the cliff</h4><p>Photo by <a href='https://unsplash.com/photos/NncAbldgViA'>Pretty Pink</a> on <a href='https://unsplash.com'>Unsplash</a></p>">
+            <img src="/img/photos/morocco/01-480.avif"
+                class="w-100 shadow-1-strong mb-3" alt="blue and white painted houses on the cliff" />
+        </a>
+        <a class="lg-item" data-lg-size="1600-1071"
+            data-src="/img/photos/morocco/02-1600.avif"
+            data-sub-html="<h4>Concrete houses surrounded by trees</h4><p>Photo by <a href='https://unsplash.com/photos/i-P1lmY_e1w'>Sergey Pesterev</a> on <a href='https://unsplash.com'>Unsplash</a></p>">
+            <img src="/img/photos/morocco/02-480.avif"
+                class="w-100 shadow-1-strong" alt="concrete houses surrounded by trees" />
+        </a>
+    
+    
+        <a class="lg-item" data-lg-size="1600-2133"
+            data-src="/img/photos/morocco/03-1600.avif"
+            data-sub-html="<h4>Blue stairs in Chefchaouen market</h4><p>Photo by <a href='https://unsplash.com/photos/CBfUGtVP0QE'>Mohammed</a> on <a href='https://unsplash.com'>Unsplash</a></p>">
+            <img src="/img/photos/morocco/03-480.avif"
+                class="w-100 shadow-1-strong mb-3" alt="blue stairs in Chefchaouen market" />
+        </a>
+        <a class="lg-item" data-lg-size="1600-1200"
+            data-src="/img/photos/morocco/04-1600.avif"
+            data-sub-html="<h4>Boats docked near houses</h4><p>Photo by <a href='https://unsplash.com/photos/aqJfoLKFz6c'>Louis Hansel</a> on <a href='https://unsplash.com'>Unsplash</a></p>">
+            <img src="/img/photos/morocco/04-480.avif"
+                class="w-100 shadow-1-strong" alt="boats docked near houses" />
+        </a>
+    
+    
+        <a class="lg-item" data-lg-size="1600-1067"
+            data-src="/img/photos/morocco/05-1600.avif"
+            data-sub-html="<h4>Textiles hanged beside concrete buildings</h4><p>Photo by <a href='https://unsplash.com/photos/LhVJaRPweJc'>Frida Aguilar Estrada</a> on <a href='https://unsplash.com'>Unsplash</a></p>">
+            <img src="/img/photos/morocco/05-480.avif"
+                class="w-100 shadow-1-strong mb-3" alt="textiles hanged beside concrete buildings" />
+        </a>
+        <a class="lg-item" data-lg-size="1600-1067"
+            data-src="/img/photos/morocco/06-1600.avif"
+            data-sub-html="<h4>Bird's eye view of town</h4><p>Photo by <a href='https://unsplash.com/photos/pcbSQTQr2-I'>Toa Heftiba</a> on <a href='https://unsplash.com'>Unsplash</a></p>">
+            <img src="/img/photos/morocco/06-480.avif"
+                class="w-100 shadow-1-strong" alt="bird's eye view of town" />
+        </a>
+    
+
+**JavaScript**
+
+**HTML**
+
+```html
+<div class="row mx-0" id="bootstrap-image-gallery">
+    <div class="col-lg-4 col-md-12 mb-4 mb-lg-0 px-2">
+        <a class="lg-item" data-lg-size="1600-1067"
+            data-src="img/img1.jpg">
+            <img src="img/thumb1.jpg"
+                class="w-100 shadow-1-strong mb-3" alt="Boat on Calm Water" />
+        </a>
+        <a class="lg-item" data-lg-size="1600-2400"
+            data-src="img/img2.jpg">
+            <img src="img/thumb2.jpg"
+                class="w-100 shadow-1-strong" alt="Wintry Mountain Landscape" />
+        </a>
+    </div>
+    <div class="col-lg-4 mb-4 mb-lg-0 px-2">
+        <a class="lg-item" data-lg-size="1600-2398"
+            data-src="img/img3.jpg">
+            <img src="img/thumb3.jpg"
+                class="w-100 shadow-1-strong mb-3" alt="Mountains in the Clouds" />
+        </a>
+        <a class="lg-item" data-lg-size="1600-1065"
+            data-src="img/img4.jpg">
+            <img src="img/thumb4.jpg"
+                class="w-100 shadow-1-strong" alt="Boat on Calm Water" />
+        </a>
+    </div>
+</div>
+```
+
+**JavaScript**
+
+```js
+const container = document.querySelector('#bootstrap-image-gallery');
+window.lightGallery(container, {
+    selector: '.lg-item',
+    plugins: [
+        lgZoom,
+        lgThumbnail
+    ],
+});
+```
+
+**React**
+
+```tsx
+import {
+    LightGallery,
+    LightGalleryItem,
+    type GalleryItem,
+} from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Zoom from '@lightgallery/react/plugins/zoom';
+
+// The items of each grid column. `lgSize` is the full-size image's
+// WIDTH-HEIGHT; it lets the image open from its thumbnail.
+const columns: GalleryItem[][] = [
+    [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Boat on Calm Water',
+            lgSize: '1600-1067',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Wintry Mountain Landscape',
+            lgSize: '1600-2400',
+        },
+    ],
+    [
+        {
+            src: 'img/img3.jpg',
+            thumb: 'img/thumb3.jpg',
+            alt: 'Mountains in the Clouds',
+            lgSize: '1600-2398',
+        },
+        {
+            src: 'img/img4.jpg',
+            thumb: 'img/thumb4.jpg',
+            alt: 'Boat on Calm Water',
+            lgSize: '1600-1065',
+        },
+    ],
+];
+
+// The items can sit at any depth inside the gallery, so the Bootstrap
+// grid keeps its own markup.
+<LightGallery plugins={[Zoom, Thumbnail]}>
+    <div className="row g-2">
+        {columns.map((column, index) => (
+            <div key={index} className="col-4">
+                {column.map((item) => (
+                    <LightGalleryItem
+                        key={item.src}
+                        item={item}
+                        className="d-block mb-2"
+                    >
+                        <img
+                            src={item.thumb}
+                            className="d-block w-100"
+                            alt={item.alt}
+                        />
+                    </LightGalleryItem>
+                ))}
+            </div>
+        ))}
+    </div>
+</LightGallery>;
+```
+
+**Vue**
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+
+const plugins = [Zoom, Thumbnail];
+
+// The items of each grid column. `lgSize` is the full-size image's
+// WIDTH-HEIGHT; it lets the image open from its thumbnail.
+const columns = [
+    [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Boat on Calm Water',
+            lgSize: '1600-1067',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Wintry Mountain Landscape',
+            lgSize: '1600-2400',
+        },
+    ],
+    [
+        {
+            src: 'img/img3.jpg',
+            thumb: 'img/thumb3.jpg',
+            alt: 'Mountains in the Clouds',
+            lgSize: '1600-2398',
+        },
+        {
+            src: 'img/img4.jpg',
+            thumb: 'img/thumb4.jpg',
+            alt: 'Boat on Calm Water',
+            lgSize: '1600-1065',
+        },
+    ],
+];
+</script>
+
+<template>
+    <!-- The items can sit at any depth inside the gallery, so the Bootstrap
+         grid keeps its own markup. -->
+    <LightGallery :plugins="plugins">
+        <div class="row g-2">
+            <div v-for="(column, index) of columns" :key="index" class="col-4">
+                <LgItem
+                    v-for="item of column"
+                    :key="item.src"
+                    :item="item"
+                    class="d-block mb-2"
+                >
+                    <img :src="item.thumb" class="d-block w-100" :alt="item.alt" />
+                </LgItem>
+            </div>
+        </div>
+    </LightGallery>
+</template>
+```
+
+**Angular**
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <!-- The items can sit at any depth inside the gallery, so the
+             Bootstrap grid keeps its own markup. -->
+        <lg-gallery [features]="features">
+            <div class="row g-2">
+                @for (column of columns; track $index) {
+                    <div class="col-4">
+                        @for (item of column; track item.src) {
+                            <a class="d-block mb-2" [lgGalleryItem]="item">
+                                <img
+                                    [src]="item.thumb"
+                                    class="d-block w-100"
+                                    [alt]="item.alt"
+                                />
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withZoom(), withThumbnail()];
+
+    // The items of each grid column. `lgSize` is the full-size image's
+    // WIDTH-HEIGHT; it lets the image open from its thumbnail.
+    columns: LgGalleryItem[][] = [
+        [
+            {
+                src: 'img/img1.jpg',
+                thumb: 'img/thumb1.jpg',
+                alt: 'Boat on Calm Water',
+                lgSize: '1600-1067',
+            },
+            {
+                src: 'img/img2.jpg',
+                thumb: 'img/thumb2.jpg',
+                alt: 'Wintry Mountain Landscape',
+                lgSize: '1600-2400',
+            },
+        ],
+        [
+            {
+                src: 'img/img3.jpg',
+                thumb: 'img/thumb3.jpg',
+                alt: 'Mountains in the Clouds',
+                lgSize: '1600-2398',
+            },
+            {
+                src: 'img/img4.jpg',
+                thumb: 'img/thumb4.jpg',
+                alt: 'Boat on Calm Water',
+                lgSize: '1600-1065',
+            },
+        ],
+    ];
+}
+```

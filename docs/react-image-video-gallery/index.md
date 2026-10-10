@@ -1,0 +1,97 @@
+# Image and video gallery for React
+
+> Native React image and video gallery component, thumbnails, pinch zoom, YouTube and Vimeo support, SSR-safe, fully typed, no jQuery.
+
+Full featured image and video gallery lightbox component for React.
+
+Canonical page: https://www.lightgalleryjs.com/docs/react-image-video-gallery/
+
+lightGallery 3 ships **`@lightgallery/react`**, a native React component,
+not a wrapper. React renders every node, in the trigger grid and in the
+lightbox, so there is no second runtime mutating your DOM and no jQuery
+anywhere. State and gallery logic come from the shared headless core, which
+is why behavior is identical across the vanilla, React, Vue and Angular
+packages.
+
+## Install
+
+```bash
+npm install @lightgallery/react lightgallery
+```
+
+The React package ships no CSS of its own, stylesheets come from the
+`lightgallery` package:
+
+```tsx
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
+```
+
+## A gallery in one component
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Zoom from '@lightgallery/react/plugins/zoom';
+
+const items = [
+    {
+        src: 'img/1-1600.jpg',
+        thumb: 'img/1-240.jpg',
+        alt: 'Mountains',
+        lgSize: '1600-1067',
+        caption: <h4>Mountains</h4>,
+    },
+];
+
+export function Gallery() {
+    return (
+        <LightGallery plugins={[Thumbnail, Zoom]} zoom={{ scale: 1.5 }}>
+            {items.map((item) => (
+                <LightGalleryItem key={item.src} item={item} href={item.src}>
+                    <img src={item.thumb} alt={item.alt} />
+                </LightGalleryItem>
+            ))}
+        </LightGallery>
+    );
+}
+```
+
+Prefer to own the state? Pass `slides` with `open`/`index` and drive it from
+your own UI. Both modes are documented in the
+[React package docs](/docs/react/).
+
+## What you get
+
+-   **All 14 plugins** as tree-shakable imports, thumbnails, zoom, video,
+    autoplay, fullscreen, hash deep links, pager, share, rotate, comments,
+    medium-style zoom, relative captions, Vimeo thumbnails and origin crop,
+    plus the justified layout.
+-   **Settings and events as props**: core settings keep their documented
+    names, per-plugin settings are one object prop per plugin
+    (`zoom={{ scale: 1.5 }}`), and lifecycle events are typed callbacks
+    (`onBeforeSlide`, `onAfterSlide`, …).
+-   **TypeScript throughout**, including `GalleryItem` for slide data and a
+    `LightGalleryRefHandle` for imperative control.
+-   **SSR-safe by construction**, works in the Next.js App Router without a
+    `dynamic(() => …, { ssr: false })` wrapper; trigger markup
+    server-renders, so galleries stay crawlable.
+-   **Accessibility**: dialog semantics, focus trap and restore, keyboard
+    operable thumbnails and pager, `prefers-reduced-motion` support.
+
+## Next steps
+
+-   [React package docs](/docs/react/), the full prop surface, plugins,
+    SSR and accessibility notes.
+-   [React image gallery demo](/demos/react-image-gallery/) and
+    [React video gallery demo](/demos/react-video-gallery/), live galleries
+    with the code behind them.
+-   [React carousel demo](/demos/react-carousel/), the inline variant that
+    expands into the lightbox.
+-   [Settings reference](/docs/settings/), every setting, shared by all
+    four packages.
+
+> **Using the 2.x wrapper?** The old `lightgallery/react` component is
+> documented in the [2.x React archive](/docs/v2/react/), and the
+> [migration guide](/docs/migration/) covers the move to the native package.

@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-spbtv2v5> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>lightGallery HTML markup (React)</title><style>body{align-items:center;color:#1f2933;display:flex;font-family:system-ui,sans-serif;justify-content:center;margin:0;min-height:100vh;text-align:center}button[data-astro-cid-spbtv2v5]{background:#0d0a0a;border:0;border-radius:6px;color:#fff;cursor:pointer;font:inherit;padding:10px 18px}
+</style></head> <body data-astro-cid-spbtv2v5> <form id="sandbox" method="post" action="https://stackblitz.com/run?file=src%2FApp.tsx" data-astro-cid-spbtv2v5> <input type="hidden" name="project[title]" value="lightGallery HTML markup (React)" data-astro-cid-spbtv2v5> <input type="hidden" name="project[description]" value="lightGallery HTML markup (React), from the lightGallery docs." data-astro-cid-spbtv2v5> <input type="hidden" name="project[template]" value="node" data-astro-cid-spbtv2v5> <input type="hidden" name="project[files][.stackblitzrc]" value="{
+    &#34;installDependencies&#34;: true,
+    &#34;startCommand&#34;: &#34;npm run dev&#34;
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][index.html]" value="<!DOCTYPE html>
+<html lang=&#34;en&#34;>
+    <head>
+        <meta charset=&#34;UTF-8&#34; />
+        <meta name=&#34;viewport&#34; content=&#34;width=device-width, initial-scale=1.0&#34; />
+        <title>lightGallery React example</title>
+    </head>
+    <body>
+        <div id=&#34;root&#34;></div>
+        <script type=&#34;module&#34; src=&#34;/src/main.tsx&#34;></script>
+    </body>
+</html>
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][package.json]" value="{
+    &#34;name&#34;: &#34;lightgallery-react-example&#34;,
+    &#34;private&#34;: true,
+    &#34;type&#34;: &#34;module&#34;,
+    &#34;scripts&#34;: {
+        &#34;dev&#34;: &#34;vite&#34;,
+        &#34;build&#34;: &#34;tsc --noEmit &#38;&#38; vite build&#34;
+    },
+    &#34;dependencies&#34;: {
+        &#34;@lightgallery/react&#34;: &#34;3.0.0&#34;,
+        &#34;lightgallery&#34;: &#34;3.0.0&#34;,
+        &#34;react&#34;: &#34;^19.0.0&#34;,
+        &#34;react-dom&#34;: &#34;^19.0.0&#34;
+    },
+    &#34;devDependencies&#34;: {
+        &#34;@types/react&#34;: &#34;^19.0.0&#34;,
+        &#34;@types/react-dom&#34;: &#34;^19.0.0&#34;,
+        &#34;@vitejs/plugin-react&#34;: &#34;^4.3.4&#34;,
+        &#34;typescript&#34;: &#34;~5.9.0&#34;,
+        &#34;vite&#34;: &#34;^6.0.0&#34;
+    }
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/main.tsx]" value="import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+
+import App from './App';
+import './demo.css';
+
+createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+        <App />
+    </StrictMode>,
+);
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][tsconfig.json]" value="{
+    &#34;compilerOptions&#34;: {
+        &#34;target&#34;: &#34;ES2020&#34;,
+        &#34;lib&#34;: [&#34;ES2020&#34;, &#34;DOM&#34;, &#34;DOM.Iterable&#34;],
+        &#34;module&#34;: &#34;ESNext&#34;,
+        &#34;moduleResolution&#34;: &#34;bundler&#34;,
+        &#34;jsx&#34;: &#34;react-jsx&#34;,
+        &#34;strict&#34;: true,
+        &#34;noEmit&#34;: true,
+        &#34;isolatedModules&#34;: true,
+        &#34;skipLibCheck&#34;: true
+    },
+    &#34;include&#34;: [&#34;src&#34;]
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][vite.config.ts]" value="import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+    plugins: [react()],
+});
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/demo.css]" value="body {
+    margin: 0;
+    padding: 24px;
+    font-family: system-ui, sans-serif;
+    color: #1f2933;
+}
+
+h1 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+}
+
+.gallery a {
+    display: block;
+}
+
+.gallery img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 4px;
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/photos.ts]" value="/** Sample photos. Replace them with your own. */
+export interface Photo {
+    /** Full-size image, shown in the gallery. */
+    src: string;
+    /** Small image, shown on the page and in the thumbnail strip. */
+    thumb: string;
+    alt: string;
+    /** &#34;WIDTH-HEIGHT&#34; of the full-size image; lets it open from its thumbnail. */
+    lgSize: string;
+}
+
+const photo = (id: number, alt: string): Photo => ({
+    src: `https://picsum.photos/id/${id}/1600/1067`,
+    thumb: `https://picsum.photos/id/${id}/360/240`,
+    alt,
+    lgSize: '1600-1067',
+});
+
+export const photos: Photo[] = [
+    photo(10, 'Sample photo 1'),
+    photo(11, 'Sample photo 2'),
+    photo(15, 'Sample photo 3'),
+    photo(16, 'Sample photo 4'),
+    photo(28, 'Sample photo 5'),
+    photo(29, 'Sample photo 6'),
+    photo(37, 'Sample photo 7'),
+    photo(110, 'Sample photo 8'),
+];
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/App.tsx]" value="import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+
+import 'lightgallery/css/lightgallery.css';
+
+import { photos } from './photos';
+
+export default function App() {
+    return (
+        <>
+            <h1>lightGallery HTML markup</h1>
+            {/* A trigger is a component: it renders a link, and its `item`
+                carries the slide data that data attributes hold in plain
+                HTML. */}
+            <LightGallery>
+                <div className=&#34;gallery&#34;>
+                    {photos.map((photo) => (
+                        <LightGalleryItem
+                            key={photo.src}
+                            item={photo}
+                            href={photo.src}
+                        >
+                            <img src={photo.thumb} alt={photo.alt} />
+                        </LightGalleryItem>
+                    ))}
+                </div>
+            </LightGallery>
+        </>
+    );
+}
+" data-astro-cid-spbtv2v5> <p data-astro-cid-spbtv2v5>Opening the React example on StackBlitz.</p> <button type="submit" data-astro-cid-spbtv2v5>Open in StackBlitz</button> </form> <script>
+            // Coming back with the browser's Back button must not send the
+            // reader straight to StackBlitz again.
+            const [navigation] = performance.getEntriesByType('navigation');
+            if (navigation?.type !== 'back_forward') {
+                document.getElementById('sandbox').submit();
+            }
+        </script> </body> </html>

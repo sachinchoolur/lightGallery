@@ -1,0 +1,1590 @@
+{
+  "generated": "2026-10-10T05:30:10.027Z",
+  "docs": "https://www.lightgalleryjs.com/docs/settings/",
+  "interfaces": [
+    {
+      "interface": "LightGalleryCoreSettings",
+      "plugin": null,
+      "settings": [
+        {
+          "name": "addClass",
+          "type": "string",
+          "values": null,
+          "default": "''",
+          "description": "Add custom class for gallery container This can be used to set different style for different galleries",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "allowMediaOverlap",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "If true, toolbar, captions and thumbnails will not overlap with media element This will not affect thumbnails if animateThumb is false Also, toggle thumbnails button is not displayed if allowMediaOverlap is false Note - Changing the position of the media on every slide transition creates a flickering effect. Therefore, the height of the caption is calculated dynamically, only once based on the first slide caption. if you have dynamic captions for each media, you can provide an appropriate height for the captions via defaultCaptionHeight option",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "appendCounterTo",
+          "type": "string",
+          "values": null,
+          "default": "'.lg-toolbar'",
+          "description": "Where the counter should be appended",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "appendSubHtmlTo",
+          "type": "\".lg-sub-html\" | \".lg-item\" | \".lg-outer\"",
+          "values": [
+            ".lg-sub-html",
+            ".lg-item",
+            ".lg-outer"
+          ],
+          "default": "'.lg-sub-html'",
+          "description": "control where the sub-html should be appended. If you choose '.lg-outer', you are responsible for placing the div at the right position. '.lg-outer' is useful if you want to show custom HTML outside the normal gallery",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "ariaAnnouncements",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Announce slide changes to assistive technology through a dedicated polite live region (strings.slideAnnouncement + the slide caption). While enabled, the counter and caption bar are not separate live regions, the announcer is the single source of slide-change announcements. Set to false to restore the previous behavior (live counter and caption, no announcer). See Accessibility.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "ariaDescribedby",
+          "type": "string",
+          "values": null,
+          "default": "''",
+          "description": "aria-describedby attribute for gallery",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "ariaLabelledby",
+          "type": "string",
+          "values": null,
+          "default": "''",
+          "description": "aria-labelledby attribute for gallery",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "backdropDuration",
+          "type": "number",
+          "values": null,
+          "default": "300",
+          "description": "Backdrop transition duration. Note - Do not change the value of backdrop via css.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "closable",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "If false user won't be able to close the gallery at all This is useful for creating inline galleries.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "closeOnTap",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "allows clicks on black area to close gallery.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "container",
+          "type": "null | string | HTMLElement | function",
+          "values": [
+            "null",
+            "string",
+            "HTMLElement",
+            "function"
+          ],
+          "default": "''",
+          "description": "Configure where the gallery should be appended. Useful to create inline galleries and more It is an empty string in the default settings and later assigned to document.body to avoid accessing document for SSR",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "controls",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "If false, prev/next buttons will not be displayed.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "counter",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Whether to show total number of images and index number of currently displayed image.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "defaultCaptionHeight",
+          "type": "number",
+          "values": null,
+          "default": "0",
+          "description": "Height of the caption for calculating allowMediaOverlap positions Note - this is only used to find the position of media item if allowMediaOverlap is true. Not for setting height of the captions Set 0 if you want to calculate the height of captions dynamically",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "direction",
+          "type": "\"ltr\" | \"rtl\" | \"auto\"",
+          "values": [
+            "ltr",
+            "rtl",
+            "auto"
+          ],
+          "default": "'ltr'",
+          "description": "Gallery reading direction: keyboard arrows, swipe advance and the slide/thumbnail transforms follow it. Visual mirroring is the opt-in lg-rtl.css layer - load it whenever this resolves to 'rtl'. 'auto' inherits the computed direction of the gallery element; the default stays 'ltr' so upgrades never change behavior on existing pages. See Localization &amp; RTL.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "download",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable download button. By default download url will be taken from data-src/href attribute but it is supported only in modern browsers. If you want you can provide another url for download via data-download-url. pass false in data-download-url if you want to hide download button for the particular slide.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "dynamic",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "lightGallery can be instantiated and launched programmatically by setting this option to true and populating dynamicEl option (see below) with the definitions of images.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "dynamicEl",
+          "type": "GalleryItem[]",
+          "values": null,
+          "default": "[]",
+          "description": "An array of objects (src, iframe, subHtml, thumb, poster, responsive, srcset sizes) representing gallery elements.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "easing",
+          "type": "string",
+          "values": null,
+          "default": "'ease'",
+          "description": "Slide animation CSS easing property",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "enableDrag",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enables desktop mouse drag support",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "enableSwipe",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enables swipe support for touch devices",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "escKey",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Whether the lightGallery could be closed by pressing the \"Esc\" key.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "exThumbImage",
+          "type": "string",
+          "values": null,
+          "default": "''",
+          "description": "Option to fetch different thumbnail image other than first image If you want to use external image for thumbnail, add the path of that image inside \"data-\" attribute and set value of this option to the name of your custom attribute.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "extraProps",
+          "type": "string[]",
+          "values": null,
+          "default": "[]",
+          "description": "Fetch custom properties from the selector this is useful for plugin development By default lightGallery fetches and stores all the props selectors to reduce frequent dom interaction for fetching props every time. If you need any additional data to be fetched and stored in the galleryItems variable, you can do this just by passing the prop names via extraProps",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "flickVelocity",
+          "type": "number",
+          "values": null,
+          "default": "0.5",
+          "description": "Release velocity (px/ms, measured over the gesture's final ~100ms) at which a short swipe still changes slides, a flick.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "getCaptionFromTitleOrAlt",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Option to get captions from alt or title tags.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "height",
+          "type": "string",
+          "values": null,
+          "default": "'100%'",
+          "description": "Height of the gallery. example '100%' , '300px'",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "hideBarsDelay",
+          "type": "number",
+          "values": null,
+          "default": "0",
+          "description": "Delay for hiding gallery controls in ms. Pass 0 if you don't want to hide the controls",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "hideControlOnEnd",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "If true, prev/next button will be hidden on first/last image. Note - this option will be ignored if loop or slideEndAnimation is set to true",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "hideScrollbar",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Hide scrollbar when gallery is opened",
+          "since": "V2.5.0",
+          "deprecated": null
+        },
+        {
+          "name": "icons",
+          "type": "Partial<Record<LgIconName, string>>",
+          "values": null,
+          "default": "{}",
+          "description": "Custom icons: SVG markup per icon name, rendered instead of the built-in SVG icon set, bring your own icons without touching CSS. Omitted names keep the built-in icon. State-pair buttons (maximize/minimize, autoplayPlay/autoplayPause, fullscreen/fullscreenExit) need both names provided; a half-provided pair keeps the built-in pair. Size and color follow the button (1em/currentColor-friendly SVGs recommended). See Custom icons.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "iframeHeight",
+          "type": "string",
+          "values": null,
+          "default": "'100%'",
+          "description": "Set height for iframe.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "iframeMaxHeight",
+          "type": "string",
+          "values": null,
+          "default": "'100%'",
+          "description": "Set max height for iframe.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "iframeMaxWidth",
+          "type": "string",
+          "values": null,
+          "default": "'100%'",
+          "description": "Set max width for iframe.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "iframeWidth",
+          "type": "string",
+          "values": null,
+          "default": "'100%'",
+          "description": "Set width for iframe.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "index",
+          "type": "number",
+          "values": null,
+          "default": "0",
+          "description": "specify which slide should load initially",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "isMobile",
+          "type": "function",
+          "values": null,
+          "default": "undefined",
+          "description": "Function to detect mobile devices",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "keyPress",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable keyboard navigation",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "licenseKey",
+          "type": "string",
+          "values": null,
+          "default": "'0000-0000-000-0000'",
+          "description": "License key. lightGallery is free under the GPLv3; projects that keep their source proprietary need a commercial license, and its key arrives by email. Open-source projects can request a key at contact@lightgalleryjs.com. 0000-0000-000-0000 is a temporary key for evaluation: it does not limit any feature, it only logs a console warning. lightGallery 3 keys start with LIG; a key from v1 or v2 logs a warning asking you to upgrade. See License.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "loadYouTubePoster",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Automatically load poster image for YouTube videos",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "If false, will disable the ability to loop back to the beginning of the gallery from the last slide.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "mobileSettings",
+          "type": "Partial<MobileSettings>",
+          "values": null,
+          "default": "{\n        controls: false,\n        showCloseIcon: false,\n        download: false,\n        showGestureButtons: false,\n    }",
+          "description": "Separate settings for mobile devices Note - this is applied only at the time of loading by default controls and close buttons are disabled on mobile devices. use this option if you want to enable them or change any other settings for mobile devices Note - mobileSettings does not merge default values, you need to provide all mobileSettings including default values",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "mode",
+          "type": "\"lg-slide\" | \"lg-fade\" | \"lg-zoom-in\" | \"lg-zoom-in-big\" | \"lg-zoom-out\" | \"lg-zoom-out-big\" | \"lg-zoom-out-in\" | \"lg-zoom-in-out\" | \"lg-soft-zoom\" | \"lg-scale-up\" | \"lg-slide-circular\" | \"lg-slide-circular-vertical\" | \"lg-slide-vertical\" | \"lg-slide-vertical-growth\" | \"lg-slide-skew-only\" | \"lg-slide-skew-only-rev\" | \"lg-slide-skew-only-y\" | \"lg-slide-skew-only-y-rev\" | \"lg-slide-skew\" | \"lg-slide-skew-rev\" | \"lg-slide-skew-cross\" | \"lg-slide-skew-cross-rev\" | \"lg-slide-skew-ver\" | \"lg-slide-skew-ver-rev\" | \"lg-slide-skew-ver-cross\" | \"lg-slide-skew-ver-cross-rev\" | \"lg-lollipop\" | \"lg-lollipop-rev\" | \"lg-rotate\" | \"lg-rotate-rev\" | \"lg-tube\"",
+          "values": [
+            "lg-slide",
+            "lg-fade",
+            "lg-zoom-in",
+            "lg-zoom-in-big",
+            "lg-zoom-out",
+            "lg-zoom-out-big",
+            "lg-zoom-out-in",
+            "lg-zoom-in-out",
+            "lg-soft-zoom",
+            "lg-scale-up",
+            "lg-slide-circular",
+            "lg-slide-circular-vertical",
+            "lg-slide-vertical",
+            "lg-slide-vertical-growth",
+            "lg-slide-skew-only",
+            "lg-slide-skew-only-rev",
+            "lg-slide-skew-only-y",
+            "lg-slide-skew-only-y-rev",
+            "lg-slide-skew",
+            "lg-slide-skew-rev",
+            "lg-slide-skew-cross",
+            "lg-slide-skew-cross-rev",
+            "lg-slide-skew-ver",
+            "lg-slide-skew-ver-rev",
+            "lg-slide-skew-ver-cross",
+            "lg-slide-skew-ver-cross-rev",
+            "lg-lollipop",
+            "lg-lollipop-rev",
+            "lg-rotate",
+            "lg-rotate-rev",
+            "lg-tube"
+          ],
+          "default": "'lg-slide'",
+          "description": "Type of transition between images.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "mousewheel",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "ability to navigate to next/prev slides on mousewheel",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "nextHtml",
+          "type": "string",
+          "values": null,
+          "default": "''",
+          "description": "Custom html for next control",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "numberOfSlideItemsInDom",
+          "type": "number",
+          "values": null,
+          "default": "10",
+          "description": "Control how many slide items should be kept in dom at a time To improve performance by reducing number of gallery items in the dom, lightGallery keeps only the lowest possible number of slides in the dom at a time. This has a minimum value of 3",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "pinchToClose",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Pinching down on an un-zoomed image and releasing closes the gallery (iOS Photos). Guarded: a pinch that went past fit zoom at any point is a zoom correction and never closes. Requires closable and the zoom plugin.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "plugins",
+          "type": "function[]",
+          "values": null,
+          "default": "[]",
+          "description": "The plugins to enable for this gallery, as the constructors exported by each plugin entry, for example [lgZoom, lgThumbnail]. A plugin's settings do nothing until the plugin is listed here. See Plugins.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "preload",
+          "type": "number",
+          "values": null,
+          "default": "2",
+          "description": "number of preload slides will execute only after the current slide is fully loaded. for example, if you click on 4th image and if preload = 1 then 3rd slide and 5th slide will be loaded in the background after the 4th slide is fully loaded. if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "prevHtml",
+          "type": "string",
+          "values": null,
+          "default": "''",
+          "description": "Custom html for prev control",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "resetScrollPosition",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Reset to previous scrollPosition when lightGallery is closed By default, lightGallery doesn't hide the scrollbar for a smooth opening transition. If a user changes the scroll position, lightGallery resets it to the previous value",
+          "since": "V2.5.0",
+          "deprecated": null
+        },
+        {
+          "name": "selector",
+          "type": "string | HTMLCollection[]",
+          "values": [
+            "string",
+            "HTMLCollection[]"
+          ],
+          "default": "''",
+          "description": "Custom selector property instead of direct children. Based on your markup structure, you can specify custom selectors to fetch media data for the gallery Pass \"this\" to select same element You can also pass HTMLCollection directly Example - '.my-selector' | '#my-selector' | this | document.querySelectorAll('.my-selector')",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "selectWithin",
+          "type": "string",
+          "values": null,
+          "default": "''",
+          "description": "By default the selector element is relative to the current gallery. Instead of that you can tell lightGallery to select element relative to another element. Example - '.my-selector-container' | '#my-selector-container' In the code this becomes selector = document.querySelector(this.s.selectWithin).querySelectorAll(this.s.selector);",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "showBarsAfter",
+          "type": "number",
+          "values": null,
+          "default": "10000",
+          "description": "Delay in hiding controls for the first time when gallery is opened",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "showCloseIcon",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "If false, close button won't be displayed. Useful for creating inline galleries.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "showGestureButtons",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Show the toolbar buttons that repeat a touch gesture. Zoom in, zoom out and actual size do what pinch and double-tap already do. On by default, and turned off on touch devices through mobileSettings. See showGestureButtons.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "showMaximizeIcon",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Show maximize icon. Useful for creating inline galleries.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "slideDelay",
+          "type": "number",
+          "values": null,
+          "default": "0",
+          "description": "Delay slide transitions. This is useful if you want to do any action in the current slide before moving to next slide. For example, fading out the captions before going to next slide. .lg-slide-progress class name is added to the current slide immediately after calling the slide method. But transition begins only after the delay",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "slideEndAnimation",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable slideEnd animation",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "speed",
+          "type": "number",
+          "values": null,
+          "default": "400",
+          "description": "Transition duration (in ms).",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "startAnimationDuration",
+          "type": "number",
+          "values": null,
+          "default": "400",
+          "description": "Zoom from image animation duration",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "startClass",
+          "type": "string",
+          "values": null,
+          "default": "'lg-start-zoom'",
+          "description": "Start animation class for the gallery. startClass will be empty if zoomFromOrigin is true. This can be used to change the starting effect when the image is loaded This is also applied when navigating to new slides",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "strings",
+          "type": "LightGalleryCoreStrings",
+          "values": null,
+          "default": "{\n        closeGallery: 'Close gallery',\n        toggleMaximize: 'Toggle maximize',\n        previousSlide: 'Previous slide',\n        nextSlide: 'Next slide',\n        download: 'Download',\n        playVideo: 'Play video',\n        mediaLoadingFailed: 'Oops... Failed to load content...',\n        galleryLabel: 'Gallery',\n        slideAnnouncement: 'Image {index} of {total}',\n        moreOptions: 'More options',\n        share: 'Share',\n        toggleThumbnails: 'Toggle thumbnails',\n        toggleAutoplay: 'Toggle Autoplay',\n        toggleFullscreen: 'Toggle Fullscreen',\n        zoomIn: 'Zoom in',\n        zoomOut: 'Zoom out',\n        viewActualSize: 'View actual size',\n        rotateLeft: 'Rotate left',\n        rotateRight: 'Rotate right',\n        flipHorizontal: 'Flip horizontal',\n        flipVertical: 'Flip vertical',\n        toggleComments: 'Toggle Comments',\n    }",
+          "description": "Customize strings. This can be useful if you want to localize the lightGallery strings to other languages. Use your own service to translate the strings and pass it via settings.strings Every core and plugin label lives here; the per-plugin *PluginStrings objects are deprecated. Strings merge per-key over the defaults, override only the keys you need (the old provide-everything requirement is gone). See Localization &amp; RTL.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "subHtmlSelectorRelative",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Set to true if the selector in \"data-sub-html\" should use the current item as its origin.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "swipeThreshold",
+          "type": "number",
+          "values": null,
+          "default": "50",
+          "description": "By setting the swipeThreshold (in px) you can set how far the user must swipe for the next/prev image.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "swipeToClose",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "allows vertical drag/swipe to close gallery false if option closable is false",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "toolbarOverflow",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Keep the toolbar on one row. When the toolbar buttons do not fit beside the counter, the lowest-priority ones move into a \"More options\" menu. Set to false to let the buttons wrap onto a second row instead. See toolbarOverflow.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "trapFocus",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Trap focus within the lightGallery",
+          "since": "V2.5.0",
+          "deprecated": null
+        },
+        {
+          "name": "videoMaxSize",
+          "type": "string",
+          "values": null,
+          "default": "'1280-720'",
+          "description": "Video max size. This can be over-written by passing specific size via data-lg-size attribute Recommended video resolution and aspect ratios https://support.google.com/youtube/answer/6375112",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "virtualization",
+          "type": "VirtualizationSettings",
+          "values": null,
+          "default": null,
+          "description": "Large-gallery virtualization. Off when undefined, the classic behavior: every thumbnail renders and the mounted-slide window is numberOfSlideItemsInDom. slides overrides the mounted-slide pool size; thumbs turns on thumbnail-strip windowing (only the visible thumbs plus an overscan render, with spacers preserving the strip geometry), a number is the overscan thumb count per side, 'auto' derives one extra viewport per side. The window advances at commit points (release, slide change, resize), never per pointer move. See Virtualization.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "width",
+          "type": "string",
+          "values": null,
+          "default": "'100%'",
+          "description": "Width of the gallery. example '100%' , '300px'",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "zoomFromOrigin",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable zoom from origin effect. You need to know the original image size upfront and provide it via data-lg-size attribute as data-lg-size=\"1920-1280\" If you don't know the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides, lightGallery will show the default animation if data-lg-size is not available If you are using responsive images, you can pass a comma separated list of sizes combined with a max-width (up to what size the particular image should be used) example - data-lg-size=\"240-160-375, 400-267-480, 1600-1067\" data-responsive=\"img-240.jpg 375, img-400.jpg 480\" data-src=\"img-1600.jpg\" In the above example, up to 375 width img-240.jpg and lg-size 240-160 will be used. Similarly, up to 480 pixel width size 400-267 and img-400.jpg will be used And above 480, lg-size 1600-1067 and img-1600.jpg will be used When the gallery closes on a slide that has no thumbnail to return to (the trigger is hidden or collapsed, as with the overflow items behind a \"+9 photos\" tile, it has no data-lg-size, or the gallery is dynamic), the slide shrinks to the centre of the stage and fades out instead of flying to the thumbnail. At the moment, the zoomFromOrigin option is supported only for image slides. The opening flight is skipped if dynamic option is enabled or galleryID found in the URL. startClass will be empty if zoomFromOrigin is true to avoid css conflicts.",
+          "since": null,
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "ZoomSettings",
+      "plugin": "Zoom",
+      "settings": [
+        {
+          "name": "actualSize",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable actual size icon.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "actualSizeIcons",
+          "type": "ActualSizeIcons",
+          "values": null,
+          "default": "{\n        zoomIn: 'lg-zoom-in',\n        zoomOut: 'lg-zoom-out',\n    }",
+          "description": "Actual size icons classnames. Specify classnames for both ZoomIn and ZoomOut states You can use actualSizeIcons: { zoomIn: 'lg-actual-size', zoomOut: 'lg-zoom-out' } to show actual size icons instead of zoom in and zoom out icons.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "enableZoomAfter",
+          "type": "number",
+          "values": null,
+          "default": "300",
+          "description": "Once the slide transition is completed, how much time the zoom plugin should take to activate Some css styles will be added to the images if zoom is enabled. So it might conflict if you add any custom styles to the images such as the initial transition while opening the gallery. So you can delay adding zoom related styles to the images by changing the value of enableZoomAfter.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "infiniteZoom",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable/Disable infinite zoom If you set this to true, you can zoom in more than the original size of the image.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "scale",
+          "type": "number",
+          "values": null,
+          "default": "1",
+          "description": "Value by which zoom should be incremented/decremented",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "showZoomInOutIcons",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Show zoom in, zoom out icons",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "zoom",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable/Disable zoom option",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "zoomPluginStrings",
+          "type": "Partial<ZoomStrings>",
+          "values": null,
+          "default": null,
+          "description": "Custom translation strings for aria-labels",
+          "since": null,
+          "deprecated": "Set these labels on the core strings object instead, every user-facing string lives in that one contract. An explicitly set key here still wins (alias)."
+        }
+      ]
+    },
+    {
+      "interface": "ThumbnailsSettings",
+      "plugin": "Thumbnails",
+      "settings": [
+        {
+          "name": "alignThumbnails",
+          "type": "\"left\" | \"middle\" | \"right\"",
+          "values": [
+            "left",
+            "middle",
+            "right"
+          ],
+          "default": "'middle'",
+          "description": "Position of thumbnails when the width of all thumbnails combined is less than the gallery's width.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "animateThumb",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable thumbnail animation.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "appendThumbnailsTo",
+          "type": "\".lg-outer\" | \".lg-components\"",
+          "values": [
+            ".lg-outer",
+            ".lg-components"
+          ],
+          "default": "'.lg-components'",
+          "description": "control where the thumbnails should be appended. By default, thumbnails are appended to '.lg-components' which has inbuilt open close transitions If you don't want initial thumbnails transitions, or want to do more customization, you can append thumbnails to the lightGallery outer div - Demo",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "currentPagerPosition",
+          "type": "\"left\" | \"middle\" | \"right\"",
+          "values": [
+            "left",
+            "middle",
+            "right"
+          ],
+          "default": "'middle'",
+          "description": "Position of selected thumbnail.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "enableThumbDrag",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enables desktop mouse drag support for thumbnails.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "enableThumbSwipe",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enables thumbnail touch/swipe support for touch devices",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "loadYouTubeThumbnail",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "You can automatically load thumbnails for YouTube videos from YouTube by setting loadYouTubeThumbnail true",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "scrubThumbnails",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Scrub the gallery with the thumbnail strip: while the strip is dragged (or gliding after a fling), the slide under the strip's travel position becomes current immediately, without slide transitions, the strip works like a scrubber instead of an independent scroll area. The full strip travel spans the whole gallery, so the first and last slides are always reachable. Requires animateThumb; taps still navigate normally. See Thumbnail scrubbing.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "thumbHeight",
+          "type": "string",
+          "values": null,
+          "default": "'80px'",
+          "description": "Height of each thumbnail.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "thumbMargin",
+          "type": "number",
+          "values": null,
+          "default": "5",
+          "description": "Spacing between each thumbnail",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "thumbnail",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable thumbnails for the gallery",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "thumbnailPluginStrings",
+          "type": "Partial<ThumbnailStrings>",
+          "values": null,
+          "default": null,
+          "description": "Custom translation strings for aria-labels",
+          "since": null,
+          "deprecated": "Set these labels on the core strings object instead, every user-facing string lives in that one contract. An explicitly set key here still wins (alias)."
+        },
+        {
+          "name": "thumbnailSwipeThreshold",
+          "type": "number",
+          "values": null,
+          "default": "10",
+          "description": "By setting the thumbnailSwipeThreshold (in px) you can set how far the user must swipe for the next/prev slide.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "thumbWidth",
+          "type": "number",
+          "values": null,
+          "default": "100",
+          "description": "Width of each thumbnail.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "toggleThumb",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Enable toggle captions and thumbnails. not applicable if allowMediaOverlap is false",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "youTubeThumbSize",
+          "type": "number",
+          "values": null,
+          "default": "1",
+          "description": "You can specify the thumbnail size by setting respective number.",
+          "since": null,
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "JustifiedSettings",
+      "plugin": "Justified layout",
+      "settings": [
+        {
+          "name": "justified",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable the justified layout for the gallery's trigger thumbnails: rows of equal height and varying widths that fill the container edge to edge. Inline galleries only, dynamic mode has no trigger grid to lay out. Each box shows as a placeholder and its thumbnail fades in once loaded; put class=\"lg-justified\" on the container markup so nothing shows unorganized before the script runs. See Justified layout.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "justifiedGap",
+          "type": "number",
+          "values": null,
+          "default": "8",
+          "description": "Gap between thumbnails and between rows (px).",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "justifiedLastRow",
+          "type": "\"justify\" | \"start\" | \"hide\"",
+          "values": [
+            "justify",
+            "start",
+            "hide"
+          ],
+          "default": "'start'",
+          "description": "Last-row policy: 'justify' scales the leftover row to fill the width like every other row, 'start' keeps the row height aligned to the reading start, 'hide' hides the leftover thumbnails.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "justifiedMaxScale",
+          "type": "number",
+          "values": null,
+          "default": "1.75",
+          "description": "Row-height clamp as a multiple of justifiedRowHeight, a sparse row never renders taller than this.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "justifiedReveal",
+          "type": "\"image\" | \"row\"",
+          "values": [
+            "image",
+            "row"
+          ],
+          "default": "'row'",
+          "description": "How thumbnails appear as they load: 'row' reveals whole rows top to bottom, each once every thumbnail in it has loaded; 'image' reveals each thumbnail on its own as soon as it has loaded. Until a thumbnail is revealed its box shows as a placeholder. See Justified layout.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "justifiedRowHeight",
+          "type": "number",
+          "values": null,
+          "default": "180",
+          "description": "Row height (px) the layout aims for; actual rows land as close to it as the aspect ratios allow.",
+          "since": "V3.0.0",
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "VideoSettings",
+      "plugin": "Video",
+      "settings": [
+        {
+          "name": "autoplayFirstVideo",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable/Disable first video autoplay. Autoplay has to be managed using this setting. Autoplay in PlayerParams doesn't have any effect.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "autoplayVideoOnSlide",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Autoplay video on slide change Make sure you set preload:\"none\"",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "gotoNextSlideOnVideoEnd",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Go to next slide when video is ended Note - this doesn't work with YouTube videos at the moment",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "videoFacade",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Render provider video slides (YouTube/Vimeo/Wistia) as lite facades: a poster with a play button, with the provider iframe created only when the user presses play. The facade poster falls back from the item poster to the YouTube thumbnail endpoint (see loadYouTubePoster) to the item thumb; a slide with no resolvable poster keeps the previous eager-iframe behavior. Note autoplayFirstVideo/autoplayVideoOnSlide force an immediate materialize by design. Set false for 2.x eager-iframe behavior on all provider slides. See Video facades.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "videojs",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Enable videojs custom video player Dependency - You need to include videoJs on your document to enable videojs player",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "videojsOptions",
+          "type": "any",
+          "values": null,
+          "default": "{}",
+          "description": "Videojs player options",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "videojsTheme",
+          "type": "string",
+          "values": null,
+          "default": "''",
+          "description": "Class name of the videojs theme You need to include the theme stylesheet on your document. More info",
+          "since": "V2.5.0",
+          "deprecated": null
+        },
+        {
+          "name": "vimeoPlayerParams",
+          "type": "PlayerParams",
+          "values": null,
+          "default": "false",
+          "description": "Change Vimeo player parameters. You can find the list of vimeo player parameters from the following link Vimeo player parameters",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "wistiaPlayerParams",
+          "type": "any",
+          "values": null,
+          "default": "false",
+          "description": "Change Wistia player parameters. You can find the list of Wistia player parameters from the following link Wistia player parameters",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "youTubeNoCookie",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Embed YouTube videos through the privacy-enhanced youtube-nocookie.com host. Set false to embed through youtube.com instead. Slide URLs that already point at youtube-nocookie.com always keep it. See Video facades.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "youTubePlayerParams",
+          "type": "any",
+          "values": null,
+          "default": "false",
+          "description": "Change YouTube player parameters. You can find the list of YouTube player parameters from the following link YouTube player parameters",
+          "since": null,
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "HashSettings",
+      "plugin": "Hash",
+      "settings": [
+        {
+          "name": "customSlideName",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Custom slide name to use in the url when hash plugin is enabled",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "galleryId",
+          "type": "string",
+          "values": null,
+          "default": "'1'",
+          "description": "Unique id for each gallery. It is mandatory when you use hash plugin for multiple galleries on the same page.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "hash",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable/Disable hash option",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "hashDriver",
+          "type": "HashDriverPreference",
+          "values": null,
+          "default": "'auto'",
+          "description": "URL engine behind the hash syncing. 'auto' uses the Navigation API where the browser supports it and falls back to the History API everywhere else; 'history' and 'navigation' force an engine (an unsupported 'navigation' quietly falls back, the enhancement is never load-bearing). The deep-link URL format is identical either way. See Hash drivers.",
+          "since": "V3.0.0",
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "AutoplaySettings",
+      "plugin": "Autoplay",
+      "settings": [
+        {
+          "name": "appendAutoplayControlsTo",
+          "type": "string",
+          "values": null,
+          "default": "'.lg-toolbar'",
+          "description": "Specify where the autoplay controls should be appended.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "autoplay",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable autoplay plugin",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "autoplayControls",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Show/hide autoplay controls.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "autoplayPluginStrings",
+          "type": "Partial<AutoplayStrings>",
+          "values": null,
+          "default": null,
+          "description": "Custom translation strings for aria-labels",
+          "since": null,
+          "deprecated": "Set these labels on the core strings object instead, every user-facing string lives in that one contract. An explicitly set key here still wins (alias)."
+        },
+        {
+          "name": "forceSlideShowAutoplay",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "If false autoplay will be stopped after first user action",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "progressBar",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Show autoplay progressBar",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "slideShowAutoplay",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Enable slideshow autoplay",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "slideShowInterval",
+          "type": "number",
+          "values": null,
+          "default": "5000",
+          "description": "The time (in ms) between each auto transition. The countdown starts once the slide on screen has loaded, so a slow connection never advances past an image before it is visible.",
+          "since": null,
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "RotateSettings",
+      "plugin": "Rotate",
+      "settings": [
+        {
+          "name": "flipHorizontal",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable flip horizontal.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "flipVertical",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable flip vertical.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "rotate",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable/Disable rotate option",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "rotateLeft",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable rotate left.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "rotatePluginStrings",
+          "type": "Partial<RotateStrings>",
+          "values": null,
+          "default": null,
+          "description": "Custom translation strings for aria-labels",
+          "since": null,
+          "deprecated": "Set these labels on the core strings object instead, every user-facing string lives in that one contract. An explicitly set key here still wins (alias)."
+        },
+        {
+          "name": "rotateRight",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable rotate right.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "rotateSpeed",
+          "type": "number",
+          "values": null,
+          "default": "400",
+          "description": "Rotate speed in milliseconds",
+          "since": null,
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "ShareSettings",
+      "plugin": "Share",
+      "settings": [
+        {
+          "name": "additionalShareOptions",
+          "type": "ShareOption[]",
+          "values": null,
+          "default": "[]",
+          "description": "Array of additional share options This can be used to build additional share options. Demo",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "facebook",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable Facebook share.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "facebookDropdownText",
+          "type": "string",
+          "values": null,
+          "default": "'Facebook'",
+          "description": "Facebook dropdown text.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "pinterest",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable Pinterest share.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "pinterestDropdownText",
+          "type": "string",
+          "values": null,
+          "default": "'Pinterest'",
+          "description": "Pinterest dropdown text.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "preferNativeShare",
+          "type": "boolean",
+          "values": null,
+          "default": null,
+          "description": "Prefer the OS share sheet (navigator.share) over the dropdown menu when the browser supports it. The share button then opens the native sheet with the slide's URL (per-item shareUrl, falling back to the network share URLs, then the page URL); the dropdown remains as the automatic fallback. URL-sharing only, the image file itself is never attached. Defaults to true on touch devices and false on desktop, where the branded dropdown is kept for consistency. See Web Share.",
+          "since": "V3.0.0",
+          "deprecated": null
+        },
+        {
+          "name": "share",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable/Disable share options",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "sharePluginStrings",
+          "type": "Partial<ShareStrings>",
+          "values": null,
+          "default": null,
+          "description": "Custom translation strings for aria-labels",
+          "since": null,
+          "deprecated": "Set these labels on the core strings object instead, every user-facing string lives in that one contract. An explicitly set key here still wins (alias)."
+        },
+        {
+          "name": "twitter",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable Twitter share.",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "twitterDropdownText",
+          "type": "string",
+          "values": null,
+          "default": "'X'",
+          "description": "Twitter dropdown text.",
+          "since": null,
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "PagerSettings",
+      "plugin": "Pager",
+      "settings": [
+        {
+          "name": "pager",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable/Disable pager option",
+          "since": null,
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "FullscreenSettings",
+      "plugin": "FullScreen",
+      "settings": [
+        {
+          "name": "fullScreen",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable/Disable fullscreen option",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "fullscreenPluginStrings",
+          "type": "Partial<FullscreenStrings>",
+          "values": null,
+          "default": null,
+          "description": "Custom translation strings for aria-labels",
+          "since": null,
+          "deprecated": "Set these labels on the core strings object instead, every user-facing string lives in that one contract. An explicitly set key here still wins (alias)."
+        }
+      ]
+    },
+    {
+      "interface": "CommentSettings",
+      "plugin": "Comment box",
+      "settings": [
+        {
+          "name": "commentBox",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Enable comment box",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "commentPluginStrings",
+          "type": "Partial<CommentStrings>",
+          "values": null,
+          "default": null,
+          "description": "Custom translation strings for aria-labels",
+          "since": null,
+          "deprecated": "Set these labels on the core strings object instead, every user-facing string lives in that one contract. An explicitly set key here still wins (alias)."
+        },
+        {
+          "name": "commentsMarkup",
+          "type": "string",
+          "values": null,
+          "default": "'<div id=\"lg-comment-box\" class=\"lg-comment-box lg-fb-comment-box\"><div class=\"lg-comment-header\"><h3 class=\"lg-comment-title\">Leave a comment.</h3><span class=\"lg-comment-close lg-icon\"></span></div><div class=\"lg-comment-body\"></div></div>'",
+          "description": "Facebook comments default markup",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "disqusComments",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Enable Disqus comment box",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "disqusConfig",
+          "type": "function",
+          "values": null,
+          "default": "{\n        title: undefined,\n        language: 'en',\n    }",
+          "description": "Disqus comment config",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "fbComments",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Enable Facebook comment box",
+          "since": null,
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "MediumZoomSettings",
+      "plugin": "Medium zoom",
+      "settings": [
+        {
+          "name": "backgroundColor",
+          "type": "string",
+          "values": null,
+          "default": "'#000'",
+          "description": "Background color for the gallery This can be overwritten by passing background color via data-lg-background-color for each item",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "margin",
+          "type": "number",
+          "values": null,
+          "default": "40",
+          "description": "Space between the gallery outer area and images",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "mediumZoom",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable/Disable medium like zoom experience",
+          "since": null,
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "VimeoThumbnailSettings",
+      "plugin": "Vimeo Thumbnails",
+      "settings": [
+        {
+          "name": "showThumbnailWithPlayButton",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Show thumbnails with play button",
+          "since": null,
+          "deprecated": null
+        },
+        {
+          "name": "showVimeoThumbnails",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Auto load thumbnails for Vimeo videos",
+          "since": null,
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "RelativeCaptionSettings",
+      "plugin": "Relative caption",
+      "settings": [
+        {
+          "name": "relativeCaption",
+          "type": "boolean",
+          "values": null,
+          "default": "false",
+          "description": "Enable/Disable relative captions",
+          "since": null,
+          "deprecated": null
+        }
+      ]
+    },
+    {
+      "interface": "OriginCropSettings",
+      "plugin": "Origin crop",
+      "settings": [
+        {
+          "name": "originCrop",
+          "type": "boolean",
+          "values": null,
+          "default": "true",
+          "description": "Enable/Disable the origin crop plugin: zoom-from-origin flights from cropped thumbnails (object-fit: cover, background-size: cover) start from the part of the image the thumbnail shows, at a uniform scale, and reveal the rest around it. See Zoom from origin.",
+          "since": "V3.0.0",
+          "deprecated": null
+        }
+      ]
+    }
+  ]
+}

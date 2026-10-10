@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-spbtv2v5> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>lightGallery Bootstrap image carousel (Vue)</title><style>body{align-items:center;color:#1f2933;display:flex;font-family:system-ui,sans-serif;justify-content:center;margin:0;min-height:100vh;text-align:center}button[data-astro-cid-spbtv2v5]{background:#0d0a0a;border:0;border-radius:6px;color:#fff;cursor:pointer;font:inherit;padding:10px 18px}
+</style></head> <body data-astro-cid-spbtv2v5> <form id="sandbox" method="post" action="https://stackblitz.com/run?file=src%2FApp.vue" data-astro-cid-spbtv2v5> <input type="hidden" name="project[title]" value="lightGallery Bootstrap image carousel (Vue)" data-astro-cid-spbtv2v5> <input type="hidden" name="project[description]" value="lightGallery Bootstrap image carousel (Vue), from the lightGallery docs." data-astro-cid-spbtv2v5> <input type="hidden" name="project[template]" value="node" data-astro-cid-spbtv2v5> <input type="hidden" name="project[files][.stackblitzrc]" value="{
+    &#34;installDependencies&#34;: true,
+    &#34;startCommand&#34;: &#34;npm run dev&#34;
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][index.html]" value="<!DOCTYPE html>
+<html lang=&#34;en&#34;>
+    <head>
+        <meta charset=&#34;UTF-8&#34; />
+        <meta name=&#34;viewport&#34; content=&#34;width=device-width, initial-scale=1.0&#34; />
+        <title>lightGallery Vue example</title>
+    </head>
+    <body>
+        <div id=&#34;app&#34;></div>
+        <script type=&#34;module&#34; src=&#34;/src/main.ts&#34;></script>
+    </body>
+</html>
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][package.json]" value="{
+    &#34;name&#34;: &#34;lightgallery-vue-example&#34;,
+    &#34;private&#34;: true,
+    &#34;type&#34;: &#34;module&#34;,
+    &#34;scripts&#34;: {
+        &#34;dev&#34;: &#34;vite&#34;,
+        &#34;build&#34;: &#34;vue-tsc --noEmit &#38;&#38; vite build&#34;
+    },
+    &#34;dependencies&#34;: {
+        &#34;@lightgallery/vue&#34;: &#34;3.0.0&#34;,
+        &#34;bootstrap&#34;: &#34;^5.0.0&#34;,
+        &#34;lightgallery&#34;: &#34;3.0.0&#34;,
+        &#34;vue&#34;: &#34;^3.5.0&#34;
+    },
+    &#34;devDependencies&#34;: {
+        &#34;@types/bootstrap&#34;: &#34;^5.2.0&#34;,
+        &#34;@vitejs/plugin-vue&#34;: &#34;^5.2.0&#34;,
+        &#34;typescript&#34;: &#34;~5.9.0&#34;,
+        &#34;vite&#34;: &#34;^6.0.0&#34;,
+        &#34;vue-tsc&#34;: &#34;^3.0.0&#34;
+    }
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/main.ts]" value="import { createApp } from 'vue';
+
+import App from './App.vue';
+import './demo.css';
+
+createApp(App).mount('#app');
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][tsconfig.json]" value="{
+    &#34;compilerOptions&#34;: {
+        &#34;target&#34;: &#34;ES2020&#34;,
+        &#34;lib&#34;: [&#34;ES2020&#34;, &#34;DOM&#34;, &#34;DOM.Iterable&#34;],
+        &#34;module&#34;: &#34;ESNext&#34;,
+        &#34;moduleResolution&#34;: &#34;bundler&#34;,
+        &#34;jsx&#34;: &#34;preserve&#34;,
+        &#34;strict&#34;: true,
+        &#34;noEmit&#34;: true,
+        &#34;isolatedModules&#34;: true,
+        &#34;skipLibCheck&#34;: true
+    },
+    &#34;include&#34;: [&#34;src/**/*.ts&#34;, &#34;src/**/*.vue&#34;]
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][vite.config.ts]" value="import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+    plugins: [vue()],
+});
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/demo.css]" value="body {
+    margin: 0;
+    padding: 24px;
+    font-family: system-ui, sans-serif;
+    color: #1f2933;
+}
+
+h1 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+}
+
+.gallery a {
+    display: block;
+}
+
+.gallery img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 4px;
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/photos.ts]" value="/** Sample photos. Replace them with your own. */
+export interface Photo {
+    /** Full-size image, shown in the gallery. */
+    src: string;
+    /** Small image, shown on the page and in the thumbnail strip. */
+    thumb: string;
+    alt: string;
+    /** &#34;WIDTH-HEIGHT&#34; of the full-size image; lets it open from its thumbnail. */
+    lgSize: string;
+}
+
+const photo = (id: number, alt: string): Photo => ({
+    src: `https://picsum.photos/id/${id}/1600/1067`,
+    thumb: `https://picsum.photos/id/${id}/360/240`,
+    alt,
+    lgSize: '1600-1067',
+});
+
+export const photos: Photo[] = [
+    photo(10, 'Sample photo 1'),
+    photo(11, 'Sample photo 2'),
+    photo(15, 'Sample photo 3'),
+    photo(16, 'Sample photo 4'),
+    photo(28, 'Sample photo 5'),
+    photo(29, 'Sample photo 6'),
+    photo(37, 'Sample photo 7'),
+    photo(110, 'Sample photo 8'),
+];
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/App.vue]" value="<script setup lang=&#34;ts&#34;>
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import Carousel from 'bootstrap/js/dist/carousel';
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import './carousel.css';
+
+const plugins = [Thumbnail];
+
+// `thumb` is the image on the slide. `lgSize` is the full-size image's
+// WIDTH-HEIGHT; it lets the image open from its slide.
+const slides: LgGalleryItem[] = [
+    {
+        src: 'https://picsum.photos/id/10/1600/1067',
+        thumb: 'https://picsum.photos/id/10/960/640',
+        alt: 'Sample photo 1',
+        lgSize: '1600-1067',
+    },
+    {
+        src: 'https://picsum.photos/id/11/1600/1067',
+        thumb: 'https://picsum.photos/id/11/960/640',
+        alt: 'Sample photo 2',
+        lgSize: '1600-1067',
+    },
+    {
+        src: 'https://picsum.photos/id/15/1600/1067',
+        thumb: 'https://picsum.photos/id/15/960/640',
+        alt: 'Sample photo 3',
+        lgSize: '1600-1067',
+    },
+];
+
+const carouselEl = ref<HTMLElement | null>(null);
+let carousel: Carousel | undefined;
+
+// The Bootstrap carousel
+onMounted(() => {
+    carousel = new Carousel(carouselEl.value!, {
+        interval: 2000,
+        wrap: false,
+    });
+});
+onBeforeUnmount(() => carousel?.dispose());
+</script>
+
+<template>
+    <h1>lightGallery with a Bootstrap carousel</h1>
+    <!-- One gallery over the carousel: every slide holds an item that
+         opens its full-size image. -->
+    <LightGallery :plugins=&#34;plugins&#34;>
+        <div
+            id=&#34;bootstrap-gallery-carousel&#34;
+            ref=&#34;carouselEl&#34;
+            class=&#34;carousel slide&#34;
+        >
+            <div class=&#34;carousel-inner&#34;>
+                <div
+                    v-for=&#34;(photo, index) of slides&#34;
+                    :key=&#34;photo.src&#34;
+                    class=&#34;carousel-item&#34;
+                    :class=&#34;{ active: index === 0 }&#34;
+                >
+                    <LgItem :item=&#34;photo&#34;>
+                        <img
+                            :src=&#34;photo.thumb&#34;
+                            class=&#34;d-block w-100&#34;
+                            :alt=&#34;photo.alt&#34;
+                        />
+                    </LgItem>
+                </div>
+            </div>
+            <button
+                class=&#34;carousel-control-prev&#34;
+                type=&#34;button&#34;
+                data-bs-target=&#34;#bootstrap-gallery-carousel&#34;
+                data-bs-slide=&#34;prev&#34;
+            >
+                <span class=&#34;carousel-control-prev-icon&#34; aria-hidden=&#34;true&#34; />
+                <span class=&#34;visually-hidden&#34;>Previous</span>
+            </button>
+            <button
+                class=&#34;carousel-control-next&#34;
+                type=&#34;button&#34;
+                data-bs-target=&#34;#bootstrap-gallery-carousel&#34;
+                data-bs-slide=&#34;next&#34;
+            >
+                <span class=&#34;carousel-control-next-icon&#34; aria-hidden=&#34;true&#34; />
+                <span class=&#34;visually-hidden&#34;>Next</span>
+            </button>
+        </div>
+    </LightGallery>
+</template>
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/carousel.css]" value="/* Optional: the size of the carousel on the page. */
+.carousel {
+    max-width: 960px;
+}
+" data-astro-cid-spbtv2v5> <p data-astro-cid-spbtv2v5>Opening the Vue example on StackBlitz.</p> <button type="submit" data-astro-cid-spbtv2v5>Open in StackBlitz</button> </form> <script>
+            // Coming back with the browser's Back button must not send the
+            // reader straight to StackBlitz again.
+            const [navigation] = performance.getEntriesByType('navigation');
+            if (navigation?.type !== 'back_forward') {
+                document.getElementById('sandbox').submit();
+            }
+        </script> </body> </html>

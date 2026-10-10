@@ -1,0 +1,795 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="robots" content="index, follow"><meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>Settings and options reference - lightGallery</title><meta name="description" content="Every lightGallery option with its type, default value and description, core settings plus all plugin settings, in one reference."><link rel="canonical" href="https://www.lightgalleryjs.com/docs/settings/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta name="twitter:title" content="Settings and options reference"><meta name="twitter:description" content="Every lightGallery option with its type, default value and description, core settings plus all plugin settings, in one reference."><meta name="twitter:site" content="@SachinNeravath"><meta name="twitter:creator" content="@SachinNeravath"><meta property="og:title" content="Settings and options reference"><meta property="og:description" content="Every lightGallery option with its type, default value and description, core settings plus all plugin settings, in one reference."><meta property="og:type" content="website"><meta property="og:url" content="https://www.lightgalleryjs.com/docs/settings/"><meta property="og:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta property="article:publisher" content="https://www.facebook.com/sachinchoolur"><meta property="article:author" content="https://www.facebook.com/sachinchoolur"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="lightGallery"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"lightGallery","item":"https://www.lightgalleryjs.com/"},{"@type":"ListItem","position":2,"name":"Docs","item":"https://www.lightgalleryjs.com/docs/"},{"@type":"ListItem","position":3,"name":"Settings and options reference","item":"https://www.lightgalleryjs.com/docs/settings/"}]}</script><meta name="ahrefs-site-verification" content="96bd744dcfe6c078a1994c8d9e0e0ca6a5cf16004f63946a0cd349ca937c1b24"><meta name="theme-color" content="#fff"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="manifest" href="/site.webmanifest"><link rel="alternate" type="application/rss+xml" title="lightGallery blog" href="/index.xml"><script>
+            // Framework code tabs: apply the deep-linked or remembered
+            // framework before first paint, so the panels never swap
+            // once the deferred module runs. CodeTabs.astro takes over
+            // (and drops the attribute) as soon as it has synced.
+            (() => {
+                const valid = ['vanilla', 'react', 'vue', 'angular'];
+                const url = new URL(window.location.href);
+                const query = url.searchParams.get('framework');
+                const hash = url.hash.replace(/^#/, '');
+                let framework = null;
+                if (query && valid.includes(query)) framework = query;
+                else if (valid.includes(hash)) framework = hash;
+                else
+                    try {
+                        const stored = localStorage.getItem('lg-framework');
+                        if (stored && valid.includes(stored)) framework = stored;
+                    } catch {
+                        /* storage blocked */
+                    }
+                if (framework)
+                    document.documentElement.dataset.lgFramework = framework;
+            })();
+        </script> <link rel="alternate" type="text/markdown" href="/docs/settings/index.md" title="Markdown version"> <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);posthog.init('phc_uyDcoLpTSdtPcDLf2SswgknmWiBsUfV2EzjhzYi3Ke4',{api_host:'https://app.posthog.com'})</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-960P19JL1K"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-960P19JL1K');</script><link rel="stylesheet" href="/_astro/_slug_.C1T_l066.css"></head> <body class="docs single"> <header id="nav-header" class="site-header"> <div class="site-header-bar"> <div class="container-xxl site-header-inner"> <a class="site-header-brand" href="/"><img src="/images/lightgallery-logo.png" alt="" width="294" height="312">lightGallery</a> <nav class="site-header-nav" aria-label="Main"> <a class="site-header-link is-active" href="/docs/getting-started/" aria-current="page"> Docs </a><a class="site-header-link" href="/demos/thumbnails/"> Demos </a> <div class="site-header-menu" data-site-menu> <button class="site-header-link" type="button" aria-expanded="false" aria-controls="site-header-frameworks">
+Frameworks
+<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg> </button> <div class="site-header-menu-panel" id="site-header-frameworks"> <a class="site-header-menu-item" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> Angular </a><a class="site-header-menu-item" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> React </a><a class="site-header-menu-item" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> Vue </a> </div> </div> <a class="site-header-link" href="/license/"> License </a> </nav> <div class="site-header-actions"> <a class="site-header-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener" aria-label="GitHub"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> <a class="site-header-cta" href="/docs/getting-started/">Get started</a> </div> <button class="site-header-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-header-sheet"> <svg class="site-header-icon-menu" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path></svg> <svg class="site-header-icon-close" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path></svg> </button> </div> </div> <div class="site-header-scrim" data-site-scrim></div> <div class="site-header-sheet" id="site-header-sheet"> <nav class="container-xxl site-header-sheet-inner" aria-label="Main"> <a class="site-header-sheet-link is-active" href="/docs/getting-started/" aria-current="page"> <span>Docs</span> </a><a class="site-header-sheet-link" href="/demos/thumbnails/"> <span>Demos</span> </a> <div class="site-header-sheet-group"> <span class="site-header-sheet-label">Frameworks</span> <div class="site-header-sheet-frameworks"> <a class="site-header-sheet-framework" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> <span>Angular</span> </a><a class="site-header-sheet-framework" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> <span>React</span> </a><a class="site-header-sheet-framework" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> <span>Vue</span> </a> </div> </div> <a class="site-header-sheet-link" href="/license/"> <span>License</span> </a> <a class="site-header-sheet-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+GitHub
+</a> </nav> </div> </header> <script type="module">const s=document.getElementById("nav-header"),t=s?.querySelector("[data-site-menu]"),a=t?.querySelector("button"),c=s?.querySelector(".site-header-toggle"),d=s?.querySelector("[data-site-scrim]");if(s&&t&&a&&c&&d){const n=e=>{t.classList.toggle("is-open",e),a.setAttribute("aria-expanded",String(e))};a.addEventListener("click",()=>n(!t.classList.contains("is-open"))),t.addEventListener("focusout",e=>{const o=e.relatedTarget;o&&!t.contains(o)&&n(!1)});const i=e=>{s.classList.toggle("is-sheet-open",e),c.setAttribute("aria-expanded",String(e)),document.documentElement.classList.toggle("site-header-locked",e)};c.addEventListener("click",()=>i(!s.classList.contains("is-sheet-open"))),d.addEventListener("click",()=>i(!1)),matchMedia("(min-width: 992px)").addEventListener("change",e=>{e.matches&&i(!1)}),document.addEventListener("click",e=>{t.contains(e.target)||n(!1)}),document.addEventListener("keydown",e=>{e.key==="Escape"&&(t.classList.contains("is-open")&&(n(!1),a.focus()),s.classList.contains("is-sheet-open")&&(i(!1),c.focus()))}),window.addEventListener("pageshow",e=>{e.persisted&&(n(!1),i(!1))})}</script>   <div class="wrap container-xxl page-wrap" role="document"> <div class="row flex-xl-nowrap"> <main class="docs-content col-lg-10 col-xl-8"> <span class="docs-kicker">API Docs</span> <h1>Settings and options reference</h1> <div class="page-tools" data-page-tools> <button type="button" class="page-tools-btn" data-copy-markdown data-src="/docs/settings/index.md">
+Copy as Markdown
+</button> <a class="page-tools-btn" href="/docs/settings/index.md">View as Markdown</a> <a class="page-tools-btn" href="https://claude.ai/new?q=Read%20https%3A%2F%2Fwww.lightgalleryjs.com%2Fdocs%2Fsettings%2Findex.md%20and%20help%20me%20with%20%22Settings%20and%20options%20reference%22%20from%20lightGallery.%20Answer%20with%20code%20I%20can%20paste." target="_blank" rel="noopener">Open in Claude</a> <a class="page-tools-btn" href="https://chatgpt.com/?q=Read%20https%3A%2F%2Fwww.lightgalleryjs.com%2Fdocs%2Fsettings%2Findex.md%20and%20help%20me%20with%20%22Settings%20and%20options%20reference%22%20from%20lightGallery.%20Answer%20with%20code%20I%20can%20paste." target="_blank" rel="noopener">Open in ChatGPT</a> </div> <script type="module">document.querySelectorAll("[data-copy-markdown]").forEach(t=>{const e=t.textContent;t.addEventListener("click",async()=>{try{const a=await(await fetch(t.dataset.src??"")).text();await navigator.clipboard.writeText(a),t.textContent="Copied"}catch{t.textContent="Copy failed"}setTimeout(()=>{t.textContent=e},1800)})});</script> <p class="lead">lightGallery comes with a lot of settings, events, and methods to customize the gallery without touching the core code. You can find both lightGallery core settings, and the built in plugin settings here.</p>  <h2 id="passing-settings">Passing settings</h2>
+<p>lightGallery accepts two parameters, an HTML element as the first parameter and
+library settings as the second parameter. You need to pass settings only if you
+want to modify default behaviors.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#B392F0">lightGallery</span><span style="color:#E1E4E8">(document.</span><span style="color:#B392F0">getElementById</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">&#39;gallery-container&#39;</span><span style="color:#E1E4E8">), {</span></span>
+<span class="line"><span style="color:#E1E4E8">    speed: </span><span style="color:#79B8FF">500</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    mode: </span><span style="color:#9ECBFF">&#39;lg-fade&#39;</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#6A737D">    // other settings</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span></code></pre>
+<p>The same names apply in every package. In <a href="/docs/react/">React</a> and
+<a href="/docs/vue/">Vue</a> each core setting is a prop and each plugin’s settings
+are one object prop named after the plugin, such as <code>zoom={{ scale: 1.5 }}</code>.
+In <a href="/docs/angular/">Angular</a> core settings are signal inputs and plugin
+settings go to the plugin’s factory, such as <code>withZoom({ scale: 1.5 })</code>.</p>
+<h2 id="lightgallery-core">lightGallery core</h2>
+<p>lightGallery comes with modular architecture. All the basic functionalities are
+available in the core module. You need to include plugins if you need
+additional functionalities such as thumbnails, video support, zoom, etc. Here you
+can find all lightGallery core settings. If you think something is missing,
+please check the respective plugins settings as well.</p>
+<table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="addClass"> <code>addClass</code>  <a href="#addClass" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Add custom class for gallery container
+This can be used to set different style for different galleries</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="allowMediaOverlap"> <code>allowMediaOverlap</code>  <a href="#allowMediaOverlap" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>If true, toolbar, captions and thumbnails will not overlap with media element
+This will not affect thumbnails if animateThumb is false
+Also, toggle thumbnails button is not displayed if allowMediaOverlap is false
+<section>
+Note - Changing the position of the media on every slide transition creates a flickering effect.
+Therefore, the height of the caption is calculated dynamically, only once based on the first slide caption.
+</section>
+<section>
+if you have dynamic captions for each media,
+you can provide an appropriate height for the captions via defaultCaptionHeight option
+</section></p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="appendCounterTo"> <code>appendCounterTo</code>  <a href="#appendCounterTo" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;.lg-toolbar&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Where the counter should be appended</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="appendSubHtmlTo"> <code>appendSubHtmlTo</code>  <a href="#appendSubHtmlTo" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> <span class="options-union"> <code>.lg-sub-html</code><code>.lg-item</code><code>.lg-outer</code> </span> </td> <td class="options-default" data-label="Default"> <code>&#39;.lg-sub-html&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>control where the sub-html should be appended.
+If you choose '.lg-outer', you are responsible for placing the div at the right position.
+'.lg-outer' is useful if you want to show custom HTML outside the normal gallery</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="ariaAnnouncements"> <code>ariaAnnouncements</code>  <a href="#ariaAnnouncements" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Announce slide changes to assistive technology through a dedicated
+polite live region (strings.slideAnnouncement + the slide caption).</p> <p>While enabled, the counter and caption bar are not
+separate live regions, the announcer is the single source of
+slide-change announcements. Set to false to restore the previous
+behavior (live counter and caption, no announcer).
+See <a href="/docs/accessibility/">Accessibility</a>.</p>     <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="ariaDescribedby"> <code>ariaDescribedby</code>  <a href="#ariaDescribedby" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>aria-describedby attribute for gallery</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="ariaLabelledby"> <code>ariaLabelledby</code>  <a href="#ariaLabelledby" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>aria-labelledby attribute for gallery</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="backdropDuration"> <code>backdropDuration</code>  <a href="#backdropDuration" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>300</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Backdrop transition duration.
+Note - Do not change the value of backdrop via css.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="closable"> <code>closable</code>  <a href="#closable" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>If false user won't be able to close the gallery at all
+This is useful for creating inline galleries.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="closeOnTap"> <code>closeOnTap</code>  <a href="#closeOnTap" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>allows clicks on black area to close gallery.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="container"> <code>container</code>  <a href="#container" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> <span class="options-union"> <code>null</code><code>string</code><code>HTMLElement</code><code>function</code> </span> </td> <td class="options-default" data-label="Default"> <code>&#39;&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Configure where the gallery should be appended.
+Useful to create inline galleries and more
+It is an empty string in the default settings and later assigned to document.body to avoid accessing document for SSR</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="controls"> <code>controls</code>  <a href="#controls" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>If false, prev/next buttons will not be displayed.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="counter"> <code>counter</code>  <a href="#counter" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Whether to show total number of images and index number of currently displayed image.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="defaultCaptionHeight"> <code>defaultCaptionHeight</code>  <a href="#defaultCaptionHeight" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>0</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Height of the caption for calculating allowMediaOverlap positions
+Note - this is only used to find the position of media item if allowMediaOverlap is true.
+Not for setting height of the captions
+Set 0 if you want to calculate the height of captions dynamically</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="direction"> <code>direction</code>  <a href="#direction" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> <span class="options-union"> <code>ltr</code><code>rtl</code><code>auto</code> </span> </td> <td class="options-default" data-label="Default"> <code>&#39;ltr&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Gallery reading direction: keyboard arrows, swipe advance and the
+slide/thumbnail transforms follow it. Visual mirroring is the
+opt-in lg-rtl.css layer - load it whenever this resolves to 'rtl'.
+'auto' inherits the computed direction of the gallery element;
+the default stays 'ltr' so upgrades never change behavior on
+existing pages.
+See <a href="/docs/localization-rtl/">Localization &amp; RTL</a>.</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="download"> <code>download</code>  <a href="#download" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable download button.</p> <p>By default download url will be taken from data-src/href attribute but it is supported only in modern browsers.
+If you want you can provide another url for download via data-download-url.
+pass false in data-download-url if you want to hide download button for the particular slide.</p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="dynamic"> <code>dynamic</code>  <a href="#dynamic" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>lightGallery can be instantiated and launched programmatically by setting this option to true and populating dynamicEl option (see below) with the definitions of images.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="dynamicEl"> <code>dynamicEl</code>  <a href="#dynamicEl" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> GalleryItem[] </td> <td class="options-default" data-label="Default"> <code>[]</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>An array of objects (src, iframe, subHtml, thumb, poster, responsive, srcset sizes) representing gallery elements.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="easing"> <code>easing</code>  <a href="#easing" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;ease&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Slide animation CSS easing property</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="enableDrag"> <code>enableDrag</code>  <a href="#enableDrag" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enables desktop mouse drag support</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="enableSwipe"> <code>enableSwipe</code>  <a href="#enableSwipe" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enables swipe support for touch devices</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="escKey"> <code>escKey</code>  <a href="#escKey" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Whether the lightGallery could be closed by pressing the "Esc" key.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="exThumbImage"> <code>exThumbImage</code>  <a href="#exThumbImage" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Option to fetch different thumbnail image other than first image</p> <p>If you want to use external image for thumbnail,
+add the path of that image inside "data-" attribute
+and set value of this option to the name of your custom attribute.</p>  <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"lightGallery"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">a</span><span style="color:#B392F0"> href</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"a.jpg"</span><span style="color:#B392F0"> data-external-thumb-image</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"images/externalThumb.jpg"</span><span style="color:#E1E4E8"> >&#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> src</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"thumb.jpg"</span><span style="color:#E1E4E8"> />&#x3C;/</span><span style="color:#85E89D">a</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">lightGallery</span><span style="color:#E1E4E8">(document.</span><span style="color:#B392F0">getElementById</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'lightGallery'</span><span style="color:#E1E4E8">), {</span></span>
+<span class="line"><span style="color:#E1E4E8">    exThumbImage: </span><span style="color:#9ECBFF">'data-external-thumb-image'</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span></code></pre>    </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="extraProps"> <code>extraProps</code>  <a href="#extraProps" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string[] </td> <td class="options-default" data-label="Default"> <code>[]</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Fetch custom properties from the selector</p> <p>this is useful for plugin development
+By default lightGallery fetches and stores all the props selectors to
+reduce frequent dom interaction for fetching props every time.
+
+If you need any additional data to be fetched and stored in the galleryItems variable,
+you can do this just by passing the prop names via extraProps</p>  <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#B392F0">HTML</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"lightGallery"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">a</span><span style="color:#B392F0"> href</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"a.jpg"</span><span style="color:#B392F0"> data-custom-prop</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"abc"</span><span style="color:#E1E4E8">>&#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> src</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"thumb.jpg"</span><span style="color:#E1E4E8"> />&#x3C;/</span><span style="color:#85E89D">a</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">a</span><span style="color:#B392F0"> href</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"a.jpg"</span><span style="color:#B392F0"> data-custom-prop</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"xyz"</span><span style="color:#E1E4E8">>&#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> src</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"thumb.jpg"</span><span style="color:#E1E4E8"> />&#x3C;/</span><span style="color:#85E89D">a</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#B392F0">JS</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#B392F0">lightGallery</span><span style="color:#E1E4E8">(document.</span><span style="color:#B392F0">getElementById</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'lightGallery'</span><span style="color:#E1E4E8">), {</span></span>
+<span class="line"><span style="color:#E1E4E8">    extraProps: [</span><span style="color:#9ECBFF">'customProp'</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span>
+<span class="line"><span style="color:#6A737D">// Note - If you are using dynamic mode, you can pass any custom prop in the galleryItem</span></span>
+<span class="line"><span style="color:#B392F0">lightGallery</span><span style="color:#E1E4E8">(document.</span><span style="color:#B392F0">getElementById</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'lightGallery'</span><span style="color:#E1E4E8">), {</span></span>
+<span class="line"><span style="color:#E1E4E8">    dynamic: </span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    dynamicEl: [{</span></span>
+<span class="line"><span style="color:#E1E4E8">        src: </span><span style="color:#9ECBFF">'img/img1.jpg'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        customProp:</span><span style="color:#9ECBFF">'abc'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    }]</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span></code></pre>    </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="flickVelocity"> <code>flickVelocity</code>  <a href="#flickVelocity" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>0.5</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Release velocity (px/ms, measured over the gesture's final ~100ms)
+at which a short swipe still changes slides, a flick.</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="getCaptionFromTitleOrAlt"> <code>getCaptionFromTitleOrAlt</code>  <a href="#getCaptionFromTitleOrAlt" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Option to get captions from alt or title tags.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="height"> <code>height</code>  <a href="#height" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;100%&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Height of the gallery.
+example '100%' , '300px'</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="hideBarsDelay"> <code>hideBarsDelay</code>  <a href="#hideBarsDelay" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>0</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Delay for hiding gallery controls in ms.
+Pass <code>0</code> if you don't want to hide the controls</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="hideControlOnEnd"> <code>hideControlOnEnd</code>  <a href="#hideControlOnEnd" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>If true, prev/next button will be hidden on first/last image.</p> <p>Note - this option will be ignored if <code>loop</code> or <code>slideEndAnimation</code> is set to true</p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="hideScrollbar"> <code>hideScrollbar</code>  <a href="#hideScrollbar" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Hide scrollbar when gallery is opened</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V2.5.0">
+Added in v2.5.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="icons"> <code>icons</code>  <a href="#icons" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> Partial&lt;Record&lt;LgIconName, string&gt;&gt; </td> <td class="options-default" data-label="Default"> <code>{}</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom icons: SVG markup per icon name, rendered instead of the
+built-in SVG icon set, bring your own icons without touching CSS.</p> <p>Omitted names keep the built-in icon. State-pair
+buttons (maximize/minimize, autoplayPlay/autoplayPause,
+fullscreen/fullscreenExit) need both names provided; a
+half-provided pair keeps the built-in pair. Size and color follow
+the button (1em/currentColor-friendly SVGs recommended).
+See <a href="/docs/custom-icons/">Custom icons</a>.</p>     <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="iframeHeight"> <code>iframeHeight</code>  <a href="#iframeHeight" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;100%&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Set height for iframe.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="iframeMaxHeight"> <code>iframeMaxHeight</code>  <a href="#iframeMaxHeight" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;100%&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Set max height for iframe.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="iframeMaxWidth"> <code>iframeMaxWidth</code>  <a href="#iframeMaxWidth" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;100%&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Set max width for iframe.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="iframeWidth"> <code>iframeWidth</code>  <a href="#iframeWidth" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;100%&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Set width for iframe.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="index"> <code>index</code>  <a href="#index" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>0</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>specify which slide should load initially</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="isMobile"> <code>isMobile</code>  <a href="#isMobile" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> function </td> <td class="options-default" data-label="Default"> <code>undefined</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Function to detect mobile devices</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="keyPress"> <code>keyPress</code>  <a href="#keyPress" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable keyboard navigation</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="licenseKey"> <code>licenseKey</code>  <a href="#licenseKey" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;0000-0000-000-0000&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>License key. lightGallery is free under the GPLv3; projects that keep
+their source proprietary need a commercial license, and its key arrives
+by email. Open-source projects can request a key at
+<a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a>.
+0000-0000-000-0000 is a temporary key for evaluation: it does not
+limit any feature, it only logs a console warning. lightGallery 3 keys
+start with LIG; a key from v1 or v2 logs a warning asking you to
+upgrade. See <a href="/docs/license/">License</a>.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="loadYouTubePoster"> <code>loadYouTubePoster</code>  <a href="#loadYouTubePoster" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Automatically load poster image for YouTube videos</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="loop"> <code>loop</code>  <a href="#loop" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>If false, will disable the ability to loop back to the beginning of the gallery from the last slide.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="mobileSettings"> <code>mobileSettings</code>  <a href="#mobileSettings" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> Partial&lt;MobileSettings&gt; </td> <td class="options-default" data-label="Default"> <span class="options-default-ref"> { … } </span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Separate settings for mobile devices</p> <p>Note - this is applied only at the time of loading
+by default controls and close buttons are disabled on mobile devices.
+use this option if you want to enable them or change any other settings for mobile devices
+Note - mobileSettings does not merge default values, you need to provide all mobileSettings including default values</p>    <div class="options-default-block"> <span class="options-default-label">
+Default
+</span> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#B392F0">        controls</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        showCloseIcon</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        download</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        showGestureButtons</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span></code></pre> </div>  </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="mode"> <code>mode</code>  <a href="#mode" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> 
+string <span class="options-type-hint">
+(31 values)
+</span>  </td> <td class="options-default" data-label="Default"> <code>&#39;lg-slide&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Type of transition between images.</p>    <div class="options-default-block"> <span class="options-default-label">
+Accepted values
+</span> <span class="options-union"> <code>lg-slide</code><code>lg-fade</code><code>lg-zoom-in</code><code>lg-zoom-in-big</code><code>lg-zoom-out</code><code>lg-zoom-out-big</code><code>lg-zoom-out-in</code><code>lg-zoom-in-out</code><code>lg-soft-zoom</code><code>lg-scale-up</code><code>lg-slide-circular</code><code>lg-slide-circular-vertical</code><code>lg-slide-vertical</code><code>lg-slide-vertical-growth</code><code>lg-slide-skew-only</code><code>lg-slide-skew-only-rev</code><code>lg-slide-skew-only-y</code><code>lg-slide-skew-only-y-rev</code><code>lg-slide-skew</code><code>lg-slide-skew-rev</code><code>lg-slide-skew-cross</code><code>lg-slide-skew-cross-rev</code><code>lg-slide-skew-ver</code><code>lg-slide-skew-ver-rev</code><code>lg-slide-skew-ver-cross</code><code>lg-slide-skew-ver-cross-rev</code><code>lg-lollipop</code><code>lg-lollipop-rev</code><code>lg-rotate</code><code>lg-rotate-rev</code><code>lg-tube</code> </span> </div>   </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="mousewheel"> <code>mousewheel</code>  <a href="#mousewheel" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>ability to navigate to next/prev slides on mousewheel</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="nextHtml"> <code>nextHtml</code>  <a href="#nextHtml" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom html for next control</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="numberOfSlideItemsInDom"> <code>numberOfSlideItemsInDom</code>  <a href="#numberOfSlideItemsInDom" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>10</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Control how many slide items should be kept in dom at a time</p> <p>To improve performance by reducing number of gallery items in the dom,
+lightGallery keeps only the lowest possible number of slides in the dom at a time.
+This has a minimum value of 3</p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="pinchToClose"> <code>pinchToClose</code>  <a href="#pinchToClose" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Pinching down on an un-zoomed image and releasing closes the
+gallery (iOS Photos). Guarded: a pinch that went past fit zoom at
+any point is a zoom correction and never closes. Requires
+closable and the zoom plugin.</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="plugins"> <code>plugins</code>  <a href="#plugins" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> function[] </td> <td class="options-default" data-label="Default"> <code>[]</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>The plugins to enable for this gallery, as the constructors exported
+by each plugin entry, for example [lgZoom, lgThumbnail]. A plugin's
+settings do nothing until the plugin is listed here.
+See <a href="/docs/getting-started/#plugins">Plugins</a>.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="preload"> <code>preload</code>  <a href="#preload" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>2</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>number of preload slides</p> <p>will execute only after the current slide is fully loaded.
+for example, if you click on 4th image and if preload = 1 then 3rd slide and 5th
+slide will be loaded in the background after the 4th slide is fully loaded.
+if preload is 2 then 2nd 3rd 5th 6th slides will be preloaded.</p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="prevHtml"> <code>prevHtml</code>  <a href="#prevHtml" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom html for prev control</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="resetScrollPosition"> <code>resetScrollPosition</code>  <a href="#resetScrollPosition" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Reset to previous scrollPosition when lightGallery is closed</p> <p>By default, lightGallery doesn't hide the scrollbar for a smooth opening transition.
+If a user changes the scroll position, lightGallery resets it to the previous value</p>     <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V2.5.0">
+Added in v2.5.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="selector"> <code>selector</code>  <a href="#selector" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> <span class="options-union"> <code>string</code><code>HTMLCollection[]</code> </span> </td> <td class="options-default" data-label="Default"> <code>&#39;&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom selector property instead of direct children.</p> <p>Based on your markup structure, you can specify custom selectors to fetch media data for the gallery
+Pass "this" to select same element
+You can also pass HTMLCollection directly
+Example - '.my-selector' | '#my-selector' | this | document.querySelectorAll('.my-selector')</p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="selectWithin"> <code>selectWithin</code>  <a href="#selectWithin" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>By default the selector element is relative to the current gallery.
+Instead of that you can tell lightGallery to select element relative to another element.
+Example - '.my-selector-container' | '#my-selector-container'
+In the code this becomes selector = document.querySelector(this.s.selectWithin).querySelectorAll(this.s.selector);</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="showBarsAfter"> <code>showBarsAfter</code>  <a href="#showBarsAfter" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>10000</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Delay in hiding controls for the first time when gallery is opened</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="showCloseIcon"> <code>showCloseIcon</code>  <a href="#showCloseIcon" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>If false, close button won't be displayed.
+Useful for creating inline galleries.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="showGestureButtons"> <code>showGestureButtons</code>  <a href="#showGestureButtons" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Show the toolbar buttons that repeat a touch gesture.</p> <p>Zoom in, zoom out and actual size do what pinch and
+double-tap already do. On by default, and turned off on touch
+devices through mobileSettings.
+See <a href="/docs/settings/#showGestureButtons">showGestureButtons</a>.</p>     <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="showMaximizeIcon"> <code>showMaximizeIcon</code>  <a href="#showMaximizeIcon" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Show maximize icon.
+Useful for creating inline galleries.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="slideDelay"> <code>slideDelay</code>  <a href="#slideDelay" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>0</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Delay slide transitions.</p> <p>This is useful if you want to do any action in the current slide before moving to next slide.
+<section>
+For example, fading out the captions before going to next slide.
+<code>.lg-slide-progress</code> class name is added to the current slide immediately after calling the slide method.
+But transition begins only after the delay
+</section></p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="slideEndAnimation"> <code>slideEndAnimation</code>  <a href="#slideEndAnimation" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable slideEnd animation</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="speed"> <code>speed</code>  <a href="#speed" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>400</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Transition duration (in ms).</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="startAnimationDuration"> <code>startAnimationDuration</code>  <a href="#startAnimationDuration" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>400</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Zoom from image animation duration</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="startClass"> <code>startClass</code>  <a href="#startClass" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;lg-start-zoom&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Start animation class for the gallery.</p> <p><ul>
+<li>startClass will be empty if zoomFromOrigin is true.</li>
+<li>This can be used to change the starting effect when the image is loaded</li>
+<li>This is also applied when navigating to new slides</li>
+</ul></p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="strings"> <code>strings</code>  <a href="#strings" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> LightGalleryCoreStrings </td> <td class="options-default" data-label="Default"> <span class="options-default-ref"> { … } </span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Customize strings.</p> <p>This can be useful if you want to localize the lightGallery strings to other languages.
+Use your own service to translate the strings and pass it via settings.strings
+Every core and plugin label lives here; the per-plugin *PluginStrings objects are deprecated.
+Strings merge per-key over the defaults, override only the keys
+you need (the old provide-everything requirement is gone).
+See <a href="/docs/localization-rtl/">Localization &amp; RTL</a>.</p>    <div class="options-default-block"> <span class="options-default-label">
+Default
+</span> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#B392F0">        closeGallery</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Close gallery'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        toggleMaximize</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Toggle maximize'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        previousSlide</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Previous slide'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        nextSlide</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Next slide'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        download</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Download'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        playVideo</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Play video'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        mediaLoadingFailed</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Oops... Failed to load content...'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        galleryLabel</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Gallery'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        slideAnnouncement</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Image {index} of {total}'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        moreOptions</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'More options'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        share</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Share'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        toggleThumbnails</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Toggle thumbnails'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        toggleAutoplay</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Toggle Autoplay'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        toggleFullscreen</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Toggle Fullscreen'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        zoomIn</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Zoom in'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        zoomOut</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Zoom out'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        viewActualSize</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'View actual size'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        rotateLeft</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Rotate left'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        rotateRight</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Rotate right'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        flipHorizontal</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Flip horizontal'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        flipVertical</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Flip vertical'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        toggleComments</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'Toggle Comments'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span></code></pre> </div> <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="subHtmlSelectorRelative"> <code>subHtmlSelectorRelative</code>  <a href="#subHtmlSelectorRelative" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Set to true if the selector in "data-sub-html" should use the current item as its origin.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="swipeThreshold"> <code>swipeThreshold</code>  <a href="#swipeThreshold" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>50</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>By setting the swipeThreshold (in px) you can set how far the user must swipe for the next/prev image.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="swipeToClose"> <code>swipeToClose</code>  <a href="#swipeToClose" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>allows vertical drag/swipe to close gallery
+<code>false</code> if option <code>closable</code> is <code>false</code></p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="toolbarOverflow"> <code>toolbarOverflow</code>  <a href="#toolbarOverflow" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Keep the toolbar on one row.</p> <p>When the toolbar buttons do not fit beside the counter,
+the lowest-priority ones move into a "More options" menu. Set to
+false to let the buttons wrap onto a second row instead.
+See <a href="/docs/settings/#toolbarOverflow">toolbarOverflow</a>.</p>     <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="trapFocus"> <code>trapFocus</code>  <a href="#trapFocus" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Trap focus within the lightGallery</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V2.5.0">
+Added in v2.5.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="videoMaxSize"> <code>videoMaxSize</code>  <a href="#videoMaxSize" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;1280-720&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Video max size.</p> <p>This can be over-written by passing specific size via data-lg-size attribute
+Recommended video resolution and aspect ratios <a href="https://support.google.com/youtube/answer/6375112">https://support.google.com/youtube/answer/6375112</a></p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="virtualization"> <code>virtualization</code>  <a href="#virtualization" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> VirtualizationSettings </td> <td class="options-default" data-label="Default"> <span class="options-default-empty">
+—
+</span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Large-gallery virtualization. Off when undefined, the classic
+behavior: every thumbnail renders and the mounted-slide window is
+numberOfSlideItemsInDom.</p> <p>slides overrides the mounted-slide pool size; thumbs
+turns on thumbnail-strip windowing (only the visible thumbs plus an
+overscan render, with spacers preserving the strip geometry), a
+number is the overscan thumb count per side, 'auto' derives one
+extra viewport per side. The window advances at commit points
+(release, slide change, resize), never per pointer move.
+See <a href="/docs/virtualization/">Virtualization</a>.</p>     <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="width"> <code>width</code>  <a href="#width" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;100%&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Width of the gallery.
+example '100%' , '300px'</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="zoomFromOrigin"> <code>zoomFromOrigin</code>  <a href="#zoomFromOrigin" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable zoom from origin effect.</p> <p>You need to know the original image size upfront and provide it via data-lg-size attribute as <code>data-lg-size="1920-1280"</code>
+
+If you don't know the size of a few images in the list, you can skip the data-lg-size attribute for the particular slides,
+lightGallery will show the default animation if data-lg-size is not available
+
+If you are using responsive images,
+you can pass a comma separated list of sizes combined with a max-width (up to what size the particular image should be used)
+
+example -
+<code> data-lg-size="240-160-375, 400-267-480, 1600-1067"
+data-responsive="img-240.jpg 375, img-400.jpg 480"
+data-src="img-1600.jpg" </code>
+
+In the above example, up to 375 width img-240.jpg and lg-size 240-160 will be used.
+Similarly, up to 480 pixel width size 400-267 and img-400.jpg will be used
+And above 480, lg-size 1600-1067 and img-1600.jpg will be used
+
+When the gallery closes on a slide that has no thumbnail to return to
+(the trigger is hidden or collapsed, as with the overflow items behind a
+"+9 photos" tile, it has no data-lg-size, or the gallery is dynamic), the
+slide shrinks to the centre of the stage and fades out instead of flying
+to the thumbnail.
+
+<ul>
+<li>At the moment, the zoomFromOrigin option is supported only for image slides.</li>
+<li>The opening flight is skipped if dynamic option is enabled or galleryID found in the URL.</li>
+<li>startClass will be empty if zoomFromOrigin is true to avoid css conflicts.</li>
+</ul></p>      </td> </tr> </tbody> </table>
+<div class="options-section"><h2 id="zoom-plugin">Zoom plugin</h2><p>lightGallery zoom plugins enable functionalities like pinch to zoom, double-tap,
+or double click to see the actual size, zoom in, zoom out, and more.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Zoom plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="actualSize"> <code>actualSize</code>  <a href="#actualSize" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable actual size icon.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="actualSizeIcons"> <code>actualSizeIcons</code>  <a href="#actualSizeIcons" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> ActualSizeIcons </td> <td class="options-default" data-label="Default"> <span class="options-default-ref"> { … } </span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Actual size icons classnames.
+Specify classnames for both ZoomIn and ZoomOut states
+You can use actualSizeIcons: { zoomIn: 'lg-actual-size', zoomOut: 'lg-zoom-out' }
+to show actual size icons instead of zoom in and zoom out icons.</p>     <div class="options-default-block"> <span class="options-default-label">
+Default
+</span> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#B392F0">        zoomIn</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'lg-zoom-in'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        zoomOut</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'lg-zoom-out'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span></code></pre> </div>  </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="enableZoomAfter"> <code>enableZoomAfter</code>  <a href="#enableZoomAfter" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>300</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Once the slide transition is completed, how much time the zoom plugin should take to activate</p> <p>Some css styles will be added to the images if zoom is enabled.
+So it might conflict if you add any custom styles to the images such as the initial transition while opening the gallery.
+So you can delay adding zoom related styles to the images by changing the value of enableZoomAfter.</p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="infiniteZoom"> <code>infiniteZoom</code>  <a href="#infiniteZoom" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable/Disable infinite zoom</p> <p>If you set this to true, you can zoom in more than the original size of the image.</p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="scale"> <code>scale</code>  <a href="#scale" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>1</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Value by which zoom should be incremented/decremented</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="showZoomInOutIcons"> <code>showZoomInOutIcons</code>  <a href="#showZoomInOutIcons" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Show zoom in, zoom out icons</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="zoom"> <code>zoom</code>  <a href="#zoom" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable/Disable zoom option</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="zoomPluginStrings"> <code>zoomPluginStrings</code>  <a href="#zoomPluginStrings" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> Partial&lt;ZoomStrings&gt; </td> <td class="options-default" data-label="Default"> <span class="options-default-empty">
+—
+</span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom translation strings for aria-labels</p>  <p class="alert alert-warning" role="alert"> <span> <b>Deprecated.</b>  <span>Set these labels on the core strings object instead,
+every user-facing string lives in that one contract. An explicitly set
+key here still wins (alias).</span> </span> </p>     </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="thumbnails-plugin">Thumbnails plugin</h2><p>The thumbnails plugin adds the thumbnail strip to your gallery. It supports
+animated thumbnails, thumbnail scrubbing, and loads thumbnails for YouTube
+videos automatically.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Thumbnails plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="alignThumbnails"> <code>alignThumbnails</code>  <a href="#alignThumbnails" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> <span class="options-union"> <code>left</code><code>middle</code><code>right</code> </span> </td> <td class="options-default" data-label="Default"> <code>&#39;middle&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Position of thumbnails when the width of all thumbnails combined is less than the gallery's width.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="animateThumb"> <code>animateThumb</code>  <a href="#animateThumb" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable thumbnail animation.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="appendThumbnailsTo"> <code>appendThumbnailsTo</code>  <a href="#appendThumbnailsTo" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> <span class="options-union"> <code>.lg-outer</code><code>.lg-components</code> </span> </td> <td class="options-default" data-label="Default"> <code>&#39;.lg-components&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>control where the thumbnails should be appended.
+By default, thumbnails are appended to '.lg-components' which has inbuilt open close transitions
+If you don't want initial thumbnails transitions, or want to do more customization,
+you can append thumbnails to the lightGallery outer div -
+<a href="/demos/thumbnails/#static-thumbnails">Demo</a></p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="currentPagerPosition"> <code>currentPagerPosition</code>  <a href="#currentPagerPosition" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> <span class="options-union"> <code>left</code><code>middle</code><code>right</code> </span> </td> <td class="options-default" data-label="Default"> <code>&#39;middle&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Position of selected thumbnail.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="enableThumbDrag"> <code>enableThumbDrag</code>  <a href="#enableThumbDrag" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enables desktop mouse drag support for thumbnails.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="enableThumbSwipe"> <code>enableThumbSwipe</code>  <a href="#enableThumbSwipe" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enables thumbnail touch/swipe support for touch devices</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="loadYouTubeThumbnail"> <code>loadYouTubeThumbnail</code>  <a href="#loadYouTubeThumbnail" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>You can automatically load thumbnails for YouTube videos from YouTube by setting loadYouTubeThumbnail true</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="scrubThumbnails"> <code>scrubThumbnails</code>  <a href="#scrubThumbnails" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Scrub the gallery with the thumbnail strip: while the strip is
+dragged (or gliding after a fling), the slide under the strip's
+travel position becomes current immediately, without slide
+transitions, the strip works like a scrubber instead of an
+independent scroll area. The full strip travel spans the whole
+gallery, so the first and last slides are always reachable.
+Requires animateThumb; taps still navigate normally.
+See <a href="/docs/thumbnail-scrubbing/">Thumbnail scrubbing</a>.</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="thumbHeight"> <code>thumbHeight</code>  <a href="#thumbHeight" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;80px&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Height of each thumbnail.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="thumbMargin"> <code>thumbMargin</code>  <a href="#thumbMargin" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>5</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Spacing between each thumbnail</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="thumbnail"> <code>thumbnail</code>  <a href="#thumbnail" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable thumbnails for the gallery</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="thumbnailPluginStrings"> <code>thumbnailPluginStrings</code>  <a href="#thumbnailPluginStrings" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> Partial&lt;ThumbnailStrings&gt; </td> <td class="options-default" data-label="Default"> <span class="options-default-empty">
+—
+</span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom translation strings for aria-labels</p>  <p class="alert alert-warning" role="alert"> <span> <b>Deprecated.</b>  <span>Set these labels on the core strings object instead,
+every user-facing string lives in that one contract. An explicitly set
+key here still wins (alias).</span> </span> </p>     </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="thumbnailSwipeThreshold"> <code>thumbnailSwipeThreshold</code>  <a href="#thumbnailSwipeThreshold" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>10</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>By setting the thumbnailSwipeThreshold (in px) you can set how far the user must swipe for the next/prev slide.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="thumbWidth"> <code>thumbWidth</code>  <a href="#thumbWidth" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>100</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Width of each thumbnail.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="toggleThumb"> <code>toggleThumb</code>  <a href="#toggleThumb" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable toggle captions and thumbnails.</p> <p>not applicable if allowMediaOverlap is false</p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="youTubeThumbSize"> <code>youTubeThumbSize</code>  <a href="#youTubeThumbSize" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>1</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>You can specify the thumbnail size by setting respective number.</p>       </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="justified-layout-plugin">Justified layout plugin</h2><p>Justified layout plugin arranges the gallery’s trigger thumbnails in rows of
+equal height and varying widths that fill the container edge to edge. See the
+<a href="/docs/justified-layout/">justified layout guide</a> for usage across all
+frameworks.
+<span class="badge rounded-pill bg-danger font-12" title="Available since version 3.0.0">v3.0.0</span></p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Justified layout plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="justified"> <code>justified</code>  <a href="#justified" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable the justified layout for the gallery's trigger thumbnails:
+rows of equal height and varying widths that fill the container
+edge to edge. Inline galleries only, dynamic mode has no trigger
+grid to lay out. Each box shows as a placeholder and its thumbnail
+fades in once loaded; put class="lg-justified" on the container
+markup so nothing shows unorganized before the script runs.
+See <a href="/docs/justified-layout/">Justified layout</a>.</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="justifiedGap"> <code>justifiedGap</code>  <a href="#justifiedGap" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>8</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Gap between thumbnails and between rows (px).</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="justifiedLastRow"> <code>justifiedLastRow</code>  <a href="#justifiedLastRow" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> <span class="options-union"> <code>justify</code><code>start</code><code>hide</code> </span> </td> <td class="options-default" data-label="Default"> <code>&#39;start&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Last-row policy: 'justify' scales the leftover row to fill the
+width like every other row, 'start' keeps the row height aligned
+to the reading start, 'hide' hides the leftover thumbnails.</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="justifiedMaxScale"> <code>justifiedMaxScale</code>  <a href="#justifiedMaxScale" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>1.75</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Row-height clamp as a multiple of justifiedRowHeight, a sparse
+row never renders taller than this.</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="justifiedReveal"> <code>justifiedReveal</code>  <a href="#justifiedReveal" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> <span class="options-union"> <code>image</code><code>row</code> </span> </td> <td class="options-default" data-label="Default"> <code>&#39;row&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>How thumbnails appear as they load: 'row' reveals whole rows top
+to bottom, each once every thumbnail in it has loaded; 'image'
+reveals each thumbnail on its own as soon as it has loaded.
+Until a thumbnail is revealed its box shows as a placeholder.
+See <a href="/docs/justified-layout/">Justified layout</a>.</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="justifiedRowHeight"> <code>justifiedRowHeight</code>  <a href="#justifiedRowHeight" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>180</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Row height (px) the layout aims for; actual rows land as close to
+it as the aspect ratios allow.</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="video-plugin">Video plugin</h2><p>Video plugin is required to display videos in lightGallery. Video plugin
+supports YouTube, Vimeo, Wistia and HTML5 videos.</p><div class="alert alert-info" role="alert"><p><b>Player scripts</b> - Vimeo and Wistia player control (automatic play and pause, moving to the next slide when a video ends) needs each provider’s player script. The plugin loads <a href="https://github.com/vimeo/player.js/">player.js</a> and the <a href="https://wistia.com/support/developers/player-api">Wistia player API</a> on demand the first time a video plays, so there is nothing to include yourself.</p></div><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Video plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="autoplayFirstVideo"> <code>autoplayFirstVideo</code>  <a href="#autoplayFirstVideo" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable/Disable first video autoplay.</p> <p>Autoplay has to be managed using this setting.
+Autoplay in PlayerParams doesn't have any effect.</p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="autoplayVideoOnSlide"> <code>autoplayVideoOnSlide</code>  <a href="#autoplayVideoOnSlide" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Autoplay video on slide change</p> <p>Make sure you set preload:"none"</p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="gotoNextSlideOnVideoEnd"> <code>gotoNextSlideOnVideoEnd</code>  <a href="#gotoNextSlideOnVideoEnd" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Go to next slide when video is ended
+Note - this doesn't work with YouTube videos at the moment</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="videoFacade"> <code>videoFacade</code>  <a href="#videoFacade" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Render provider video slides (YouTube/Vimeo/Wistia) as lite facades:
+a poster with a play button, with the provider iframe created only
+when the user presses play.</p> <p>The facade poster falls back from the item poster to
+the YouTube thumbnail endpoint (see loadYouTubePoster) to the item
+thumb; a slide with no resolvable poster keeps the previous
+eager-iframe behavior. Note autoplayFirstVideo/autoplayVideoOnSlide
+force an immediate materialize by design. Set false for 2.x
+eager-iframe behavior on all provider slides.
+See <a href="/docs/video-facades/">Video facades</a>.</p>     <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="videojs"> <code>videojs</code>  <a href="#videojs" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable videojs custom video player
+<div class="alert alert-info" role="alert">
+    <b>Dependency</b> - You need to include <a href="https://videojs.com/">videoJs</a> on your document to enable videojs player
+</div></p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="videojsOptions"> <code>videojsOptions</code>  <a href="#videojsOptions" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> any </td> <td class="options-default" data-label="Default"> <code>{}</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Videojs player options</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="videojsTheme"> <code>videojsTheme</code>  <a href="#videojsTheme" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Class name of the videojs theme
+You need to include the theme stylesheet on your document. <a href="https://videojs.com/getting-started/#home-page-themes" target="_blank">More info</a></p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V2.5.0">
+Added in v2.5.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="vimeoPlayerParams"> <code>vimeoPlayerParams</code>  <a href="#vimeoPlayerParams" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> PlayerParams </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Change Vimeo player parameters.
+You can find the list of vimeo player parameters from the following link
+<a href="https://developer.vimeo.com/player/embedding#universal-parameters">Vimeo player parameters</a></p>   <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#B392F0">lightGallery</span><span style="color:#E1E4E8">(document.</span><span style="color:#B392F0">getElementById</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'lightGallery'</span><span style="color:#E1E4E8">), {</span></span>
+<span class="line"><span style="color:#E1E4E8">    vimeoPlayerParams: {</span></span>
+<span class="line"><span style="color:#E1E4E8">        byline : </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        portrait : </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        color : </span><span style="color:#9ECBFF">'CCCCCC'</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span></code></pre>    </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="wistiaPlayerParams"> <code>wistiaPlayerParams</code>  <a href="#wistiaPlayerParams" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> any </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Change Wistia player parameters.
+You can find the list of Wistia player parameters from the following link
+<a href="https://wistia.com/support/developers/embed-options#using-embed-options">Wistia player parameters</a></p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="youTubeNoCookie"> <code>youTubeNoCookie</code>  <a href="#youTubeNoCookie" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Embed YouTube videos through the privacy-enhanced
+youtube-nocookie.com host.</p> <p>Set false to embed through youtube.com instead. Slide
+URLs that already point at youtube-nocookie.com always keep it.
+See <a href="/docs/video-facades/">Video facades</a>.</p>     <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="youTubePlayerParams"> <code>youTubePlayerParams</code>  <a href="#youTubePlayerParams" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> any </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Change YouTube player parameters.
+You can find the list of YouTube player parameters from the following link
+<a href="https://developers.google.com/youtube/player_parameters">YouTube player parameters</a></p>   <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#B392F0">lightGallery</span><span style="color:#E1E4E8">(document.</span><span style="color:#B392F0">getElementById</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'lightGallery'</span><span style="color:#E1E4E8">), {</span></span>
+<span class="line"><span style="color:#E1E4E8">    youTubePlayerParams: {</span></span>
+<span class="line"><span style="color:#E1E4E8">        modestbranding : </span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        showinfo : </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        controls : </span><span style="color:#79B8FF">0</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">})</span></span></code></pre>    </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="hash-plugin">Hash plugin</h2><p>lightGallery hash plugin lets you provide custom unique URLs for each gallery
+image. This link can be used to share media anywhere on the web. It allows you
+to navigate to different slides via browser back/forward buttons too.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Hash plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="customSlideName"> <code>customSlideName</code>  <a href="#customSlideName" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom slide name to use in the url when hash plugin is enabled</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="galleryId"> <code>galleryId</code>  <a href="#galleryId" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;1&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Unique id for each gallery.</p> <p>It is mandatory when you use hash plugin for multiple galleries on the same page.</p>      </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="hash"> <code>hash</code>  <a href="#hash" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable/Disable hash option</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="hashDriver"> <code>hashDriver</code>  <a href="#hashDriver" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> HashDriverPreference </td> <td class="options-default" data-label="Default"> <code>&#39;auto&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>URL engine behind the hash syncing.</p> <p>'auto' uses the Navigation API where the browser
+supports it and falls back to the History API everywhere else;
+'history' and 'navigation' force an engine (an unsupported
+'navigation' quietly falls back, the enhancement is never
+load-bearing). The deep-link URL format is identical either way.
+See <a href="/docs/hash-drivers/">Hash drivers</a>.</p>     <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="autoplay-plugin">Autoplay plugin</h2><p>lightGallery autoplay plugin supports automatic slideshow which can be stopped
+on the first user action. It supports progress bar that indicates the duration
+of the current slide. After the last slide the slideshow continues from the
+first; see <a href="/docs/troubleshooting/#autoplay-restarts-from-the-first-slide-instead-of-stopping">stopping autoplay at the end</a>.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Autoplay plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="appendAutoplayControlsTo"> <code>appendAutoplayControlsTo</code>  <a href="#appendAutoplayControlsTo" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;.lg-toolbar&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Specify where the autoplay controls should be appended.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="autoplay"> <code>autoplay</code>  <a href="#autoplay" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable autoplay plugin</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="autoplayControls"> <code>autoplayControls</code>  <a href="#autoplayControls" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Show/hide autoplay controls.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="autoplayPluginStrings"> <code>autoplayPluginStrings</code>  <a href="#autoplayPluginStrings" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> Partial&lt;AutoplayStrings&gt; </td> <td class="options-default" data-label="Default"> <span class="options-default-empty">
+—
+</span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom translation strings for aria-labels</p>  <p class="alert alert-warning" role="alert"> <span> <b>Deprecated.</b>  <span>Set these labels on the core strings object instead,
+every user-facing string lives in that one contract. An explicitly set
+key here still wins (alias).</span> </span> </p>     </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="forceSlideShowAutoplay"> <code>forceSlideShowAutoplay</code>  <a href="#forceSlideShowAutoplay" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>If false autoplay will be stopped after first user action</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="progressBar"> <code>progressBar</code>  <a href="#progressBar" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Show autoplay progressBar</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="slideShowAutoplay"> <code>slideShowAutoplay</code>  <a href="#slideShowAutoplay" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable slideshow autoplay</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="slideShowInterval"> <code>slideShowInterval</code>  <a href="#slideShowInterval" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>5000</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>The time (in ms) between each auto transition.
+The countdown starts once the slide on screen has loaded, so a slow
+connection never advances past an image before it is visible.</p>       </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="rotate-plugin">Rotate plugin</h2><p>The rotate plugin adds rotate clockwise, rotate anticlockwise, flip horizontal
+and flip vertical, each with a single click.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Rotate plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="flipHorizontal"> <code>flipHorizontal</code>  <a href="#flipHorizontal" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable flip horizontal.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="flipVertical"> <code>flipVertical</code>  <a href="#flipVertical" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable flip vertical.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="rotate"> <code>rotate</code>  <a href="#rotate" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable/Disable rotate option</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="rotateLeft"> <code>rotateLeft</code>  <a href="#rotateLeft" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable rotate left.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="rotatePluginStrings"> <code>rotatePluginStrings</code>  <a href="#rotatePluginStrings" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> Partial&lt;RotateStrings&gt; </td> <td class="options-default" data-label="Default"> <span class="options-default-empty">
+—
+</span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom translation strings for aria-labels</p>  <p class="alert alert-warning" role="alert"> <span> <b>Deprecated.</b>  <span>Set these labels on the core strings object instead,
+every user-facing string lives in that one contract. An explicitly set
+key here still wins (alias).</span> </span> </p>     </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="rotateRight"> <code>rotateRight</code>  <a href="#rotateRight" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable rotate right.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="rotateSpeed"> <code>rotateSpeed</code>  <a href="#rotateSpeed" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>400</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Rotate speed in milliseconds</p>       </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="share-plugin">Share plugin</h2><p>lightGallery share plugin allows you to share your images/videos to social media
+platforms such as X (Twitter) or Facebook with unique url. It supports adding your
+own social share button too.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Share plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="additionalShareOptions"> <code>additionalShareOptions</code>  <a href="#additionalShareOptions" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> ShareOption[] </td> <td class="options-default" data-label="Default"> <code>[]</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Array of additional share options
+
+This can be used to build additional share options.
+<a href="/demos/share/">Demo</a></p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="facebook"> <code>facebook</code>  <a href="#facebook" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable Facebook share.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="facebookDropdownText"> <code>facebookDropdownText</code>  <a href="#facebookDropdownText" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;Facebook&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Facebook dropdown text.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="pinterest"> <code>pinterest</code>  <a href="#pinterest" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable Pinterest share.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="pinterestDropdownText"> <code>pinterestDropdownText</code>  <a href="#pinterestDropdownText" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;Pinterest&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Pinterest dropdown text.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="preferNativeShare"> <code>preferNativeShare</code>  <a href="#preferNativeShare" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <span class="options-default-empty">
+—
+</span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Prefer the OS share sheet (navigator.share) over the dropdown menu
+when the browser supports it. The share button then opens the native
+sheet with the slide's URL (per-item shareUrl, falling back to the
+network share URLs, then the page URL); the dropdown remains as the
+automatic fallback. URL-sharing only, the image file itself is never
+attached.</p> <p>Defaults to true on touch devices and false on desktop,
+where the branded dropdown is kept for consistency.
+See <a href="/docs/web-share/">Web Share</a>.</p>     <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="share"> <code>share</code>  <a href="#share" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable/Disable share options</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="sharePluginStrings"> <code>sharePluginStrings</code>  <a href="#sharePluginStrings" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> Partial&lt;ShareStrings&gt; </td> <td class="options-default" data-label="Default"> <span class="options-default-empty">
+—
+</span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom translation strings for aria-labels</p>  <p class="alert alert-warning" role="alert"> <span> <b>Deprecated.</b>  <span>Set these labels on the core strings object instead,
+every user-facing string lives in that one contract. An explicitly set
+key here still wins (alias).</span> </span> </p>     </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="twitter"> <code>twitter</code>  <a href="#twitter" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable Twitter share.</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="twitterDropdownText"> <code>twitterDropdownText</code>  <a href="#twitterDropdownText" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;X&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Twitter dropdown text.</p>       </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="pager-plugin">Pager plugin</h2><p>If you prefer minimal layouts, you can opt pagers plugin instead of thumbnails
+using the pager plugin. Pagers create minimal graphics that represent each
+slide, and hovering over each pager item, shows the correspondent thumbnails.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Pager plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="pager"> <code>pager</code>  <a href="#pager" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable/Disable pager option</p>       </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="fullscreen-plugin">FullScreen plugin</h2><p>The fullscreen plugin uses the browser’s native fullscreen API. You can toggle
+fullscreen with one click.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include FullScreen plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="fullScreen"> <code>fullScreen</code>  <a href="#fullScreen" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable/Disable fullscreen option</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="fullscreenPluginStrings"> <code>fullscreenPluginStrings</code>  <a href="#fullscreenPluginStrings" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> Partial&lt;FullscreenStrings&gt; </td> <td class="options-default" data-label="Default"> <span class="options-default-empty">
+—
+</span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom translation strings for aria-labels</p>  <p class="alert alert-warning" role="alert"> <span> <b>Deprecated.</b>  <span>Set these labels on the core strings object instead,
+every user-facing string lives in that one contract. An explicitly set
+key here still wins (alias).</span> </span> </p>     </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="comment-box-plugin">Comment box plugin</h2><p>The comment plugin supports Facebook and Disqus comments out of the box, so
+people can comment on slides with their Facebook or Disqus accounts. You can
+add your own comment widget as well.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Comment box plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="commentBox"> <code>commentBox</code>  <a href="#commentBox" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable comment box</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="commentPluginStrings"> <code>commentPluginStrings</code>  <a href="#commentPluginStrings" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> Partial&lt;CommentStrings&gt; </td> <td class="options-default" data-label="Default"> <span class="options-default-empty">
+—
+</span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Custom translation strings for aria-labels</p>  <p class="alert alert-warning" role="alert"> <span> <b>Deprecated.</b>  <span>Set these labels on the core strings object instead,
+every user-facing string lives in that one contract. An explicitly set
+key here still wins (alias).</span> </span> </p>     </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="commentsMarkup"> <code>commentsMarkup</code>  <a href="#commentsMarkup" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <span class="options-default-ref"> &quot;…&quot; </span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Facebook comments default markup</p>     <div class="options-default-block"> <span class="options-default-label">
+Default
+</span> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#9ECBFF">'&#x3C;div id="lg-comment-box" class="lg-comment-box lg-fb-comment-box">&#x3C;div class="lg-comment-header">&#x3C;h3 class="lg-comment-title">Leave a comment.&#x3C;/h3>&#x3C;span class="lg-comment-close lg-icon">&#x3C;/span>&#x3C;/div>&#x3C;div class="lg-comment-body">&#x3C;/div>&#x3C;/div>'</span></span></code></pre> </div>  </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="disqusComments"> <code>disqusComments</code>  <a href="#disqusComments" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable Disqus comment box</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="disqusConfig"> <code>disqusConfig</code>  <a href="#disqusConfig" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> function </td> <td class="options-default" data-label="Default"> <span class="options-default-ref"> { … } </span> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Disqus comment config</p>     <div class="options-default-block"> <span class="options-default-label">
+Default
+</span> <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#B392F0">        title</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">undefined</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#B392F0">        language</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">'en'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span></code></pre> </div>  </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="fbComments"> <code>fbComments</code>  <a href="#fbComments" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable Facebook comment box</p>       </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="medium-zoom-plugin">Medium zoom plugin</h2><p>The medium zoom plugin opens an image in place with a minimal interface, the
+zooming experience seen on Medium: no toolbar, no thumbnails, and a click
+closes it again.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Medium zoom plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="backgroundColor"> <code>backgroundColor</code>  <a href="#backgroundColor" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> string </td> <td class="options-default" data-label="Default"> <code>&#39;#000&#39;</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Background color for the gallery
+This can be overwritten by passing background color via data-lg-background-color for each item</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="margin"> <code>margin</code>  <a href="#margin" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> number </td> <td class="options-default" data-label="Default"> <code>40</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Space between the gallery outer area and images</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="mediumZoom"> <code>mediumZoom</code>  <a href="#mediumZoom" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable/Disable medium like zoom experience</p>       </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="vimeo-thumbnails-plugin">Vimeo thumbnails plugin</h2><p>The Vimeo thumbnails plugin loads thumbnails for Vimeo videos automatically.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Vimeo Thumbnails plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="showThumbnailWithPlayButton"> <code>showThumbnailWithPlayButton</code>  <a href="#showThumbnailWithPlayButton" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Show thumbnails with play button</p>       </td> </tr> </tbody><tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="showVimeoThumbnails"> <code>showVimeoThumbnails</code>  <a href="#showVimeoThumbnails" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Auto load thumbnails for Vimeo videos</p>       </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="relative-caption-plugin">Relative caption plugin</h2><p>The relative caption plugin places each caption relative to its image instead
+of at the bottom of the gallery.</p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Relative caption plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="relativeCaption"> <code>relativeCaption</code>  <a href="#relativeCaption" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>false</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable/Disable relative captions</p>       </td> </tr> </tbody> </table></div>
+<div class="options-section"><h2 id="origin-crop-plugin">Origin crop plugin</h2><p>Origin crop plugin flies the zoom-from-origin animation from a cropped
+thumbnail’s crop, so a cover-fitted grid tile grows into the full photo
+instead of being squashed into its box.
+<span class="badge rounded-pill bg-danger font-12" title="Available since version 3.0.0">v3.0.0</span></p><div class="alert alert-warning" role="alert"><b>Plugin dependency</b> - You need to include Origin crop plugin
+            in the document to use the following options.
+</div><table class="options-table"> <thead> <tr> <th>Name</th> <th>Type</th> <th>Default</th> </tr> </thead> <tbody class="options-entry"> <tr class="options-table-tr-head"> <td class="options-name"> <span class="anchor-id" id="originCrop"> <code>originCrop</code>  <a href="#originCrop" class="anchor" aria-hidden="true">
+#
+</a> <span></span> </span> </td> <td class="options-type" data-label="Type"> boolean </td> <td class="options-default" data-label="Default"> <code>true</code> </td> </tr> <tr class="options-table-description"> <td colspan="3"> <p>Enable/Disable the origin crop plugin: zoom-from-origin flights from
+cropped thumbnails (<code>object-fit: cover</code>,
+<code>background-size: cover</code>) start from the part of the image
+the thumbnail shows, at a uniform scale, and reveal the rest around it.
+See <a href="/demos/zoom-from-origin/">Zoom from origin</a>.</p>      <p class="options-meta"> <span class="options-version" title="Minimum lightGallery version required: V3.0.0">
+Added in v3.0.0 </span> </p> </td> </tr> </tbody> </table></div>   <p class="edit-page"> <a href="https://github.com/sachinchoolur/lightGallery/tree/HEAD/site-astro/src/content/docs/settings.mdx"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path> </svg>Edit this page on GitHub
+</a> </p> <nav class="page-nav" aria-label="Previous and next page"> <a class="page-nav-card page-nav-prev" href="/docs/getting-started/"> <span class="page-nav-arrow" aria-hidden="true">
+&larr;
+</span> <span class="page-nav-text"> <span class="page-nav-dir">Previous</span> <strong>Get started</strong> </span> </a> <a class="page-nav-card page-nav-next" href="/docs/events/"> <span class="page-nav-text"> <span class="page-nav-dir">Next</span> <strong>Events</strong> </span> <span class="page-nav-arrow" aria-hidden="true">
+&rarr;
+</span> </a> </nav> </main> <div class="col-lg-2 col-xl-2 docs-sidebar"> <nav class="docs-links" aria-label="Main navigation"> <h3>API Docs</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/getting-started/">Get started</a></li><li><a class="docs-link active" href="/docs/settings/">Settings</a></li><li><a class="docs-link" href="/docs/events/">Events</a></li><li><a class="docs-link" href="/docs/methods/">Methods</a></li><li><a class="docs-link" href="/docs/dynamic-variables/">Dynamic variables</a></li><li><a class="docs-link" href="/docs/attributes/">Attributes</a></li><li><a class="docs-link" href="/docs/react-image-video-gallery/">React</a></li><li><a class="docs-link" href="/docs/vue-image-video-gallery/">Vue</a></li><li><a class="docs-link" href="/docs/angular-image-video-gallery/">Angular</a></li><li><a class="docs-link" href="/docs/license/">License</a></li><li><a class="docs-link" href="/docs/migration/">Migration</a></li><li><a class="docs-link" href="/docs/troubleshooting/">Troubleshooting</a></li><li><a class="docs-link" href="/docs/creating-plugins/">Creating plugins</a></li></ul><h3>Frameworks</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/headless/">@lightgallery/headless</a></li><li><a class="docs-link" href="/docs/react/">@lightgallery/react</a></li><li><a class="docs-link" href="/docs/vue/">@lightgallery/vue</a></li><li><a class="docs-link" href="/docs/angular/">@lightgallery/angular</a></li></ul><h3>Features</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/justified-layout/">Justified layout</a></li><li><a class="docs-link" href="/docs/localization-rtl/">Localization &amp; RTL</a></li><li><a class="docs-link" href="/docs/virtualization/">Virtualization</a></li><li><a class="docs-link" href="/docs/video-facades/">Video facades</a></li><li><a class="docs-link" href="/docs/accessibility/">Accessibility</a></li><li><a class="docs-link" href="/docs/web-share/">Web Share</a></li><li><a class="docs-link" href="/docs/hash-drivers/">Hash drivers</a></li><li><a class="docs-link" href="/docs/responsive-loading/">Responsive loading</a></li><li><a class="docs-link" href="/docs/thumbnail-scrubbing/">Thumbnail scrubbing</a></li><li><a class="docs-link" href="/docs/custom-icons/">Custom icons</a></li></ul> </nav> </div> <nav class="docs-toc d-none d-xl-block col-xl-2" aria-label="Secondary navigation"> <div class="page-links"> <h3>On this page</h3> <nav id="TableOfContents"> <ul> <li> <a href="#passing-settings"> Passing settings </a> </li><li> <a href="#lightgallery-core"> lightGallery core </a> </li><li> <a href="#zoom-plugin"> Zoom plugin </a> </li><li> <a href="#thumbnails-plugin"> Thumbnails plugin </a> </li><li> <a href="#justified-layout-plugin"> Justified layout plugin </a> </li><li> <a href="#video-plugin"> Video plugin </a> </li><li> <a href="#hash-plugin"> Hash plugin </a> </li><li> <a href="#autoplay-plugin"> Autoplay plugin </a> </li><li> <a href="#rotate-plugin"> Rotate plugin </a> </li><li> <a href="#share-plugin"> Share plugin </a> </li><li> <a href="#pager-plugin"> Pager plugin </a> </li><li> <a href="#fullscreen-plugin"> FullScreen plugin </a> </li><li> <a href="#comment-box-plugin"> Comment box plugin </a> </li><li> <a href="#medium-zoom-plugin"> Medium zoom plugin </a> </li><li> <a href="#vimeo-thumbnails-plugin"> Vimeo thumbnails plugin </a> </li><li> <a href="#relative-caption-plugin"> Relative caption plugin </a> </li><li> <a href="#origin-crop-plugin"> Origin crop plugin </a> </li> </ul> </nav> </div> </nav> </div> </div> <script type="module">document.querySelectorAll(".agent-prompt pre").forEach(e=>{const t=document.createElement("button");t.type="button",t.className="page-tools-btn agent-prompt-copy",t.textContent="Copy prompt",t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent?.trim()??""),t.textContent="Copied"}catch{t.textContent="Copy failed"}setTimeout(()=>{t.textContent="Copy prompt"},1800)}),e.parentElement?.insertBefore(t,e)});</script> <script type="module">const a=[...document.querySelectorAll('#TableOfContents a[href^="#"]')];if(a.length&&"IntersectionObserver"in window){const o=new Map(a.map(e=>[e.getAttribute("href").slice(1),e])),s=[...o.keys()].map(e=>document.getElementById(e)).filter(e=>!!e);let i;const c=e=>{const t=o.get(e);!t||t===i||(i?.classList.remove("active"),t.classList.add("active"),i=t)},r=new Set,d=new IntersectionObserver(e=>{for(const n of e)n.isIntersecting?r.add(n.target.id):r.delete(n.target.id);const t=s.find(n=>r.has(n.id));t&&c(t.id)},{rootMargin:"-72px 0px -70% 0px",threshold:0});s.forEach(e=>d.observe(e)),s[0]&&c(s[0].id)}</script>  <footer class="footer"> <div class="container-xxl"> <div class="footer-grid"> <div class="footer-brandcol"> <a class="footer-brand" href="/">lightGallery</a> <p class="footer-tagline">An image and video lightbox gallery for the modern web.</p> <a class="footer-gh" href="https://github.com/sachinchoolur/lightGallery" aria-label="GitHub" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> </div> <nav class="footer-col" aria-label="Components"> <h2 class="footer-h">Components</h2> <ul class="footer-list"> <li> <a href="/docs/react-image-video-gallery/">React</a> </li><li> <a href="/docs/vue-image-video-gallery/">Vue.js</a> </li><li> <a href="/docs/angular-image-video-gallery/">Angular</a> </li><li> <a href="/jquery-to-js-converter/">jQuery to JavaScript converter</a> </li> </ul> </nav><nav class="footer-col" aria-label="Docs"> <h2 class="footer-h">Docs</h2> <ul class="footer-list"> <li> <a href="/docs/getting-started/">Get started</a> </li><li> <a href="/docs/settings/">Settings</a> </li><li> <a href="/docs/events/">Events</a> </li><li> <a href="/docs/methods/">Methods</a> </li><li> <a href="/blog/">Blog</a> </li> </ul> </nav><nav class="footer-col" aria-label="Demos"> <h2 class="footer-h">Demos</h2> <ul class="footer-list"> <li> <a href="/demos/thumbnails/">Thumbnails</a> </li><li> <a href="/demos/dynamic-mode/">Dynamic</a> </li><li> <a href="/demos/carousel-gallery/">Carousel</a> </li><li> <a href="/demos/video-gallery/">Video</a> </li><li> <a href="/demos/transitions/">Transitions</a> </li> </ul> </nav><nav class="footer-col" aria-label="Social"> <h2 class="footer-h">Social</h2> <ul class="footer-list"> <li> <a href="https://github.com/sachinchoolur/lightGallery">GitHub</a> </li><li> <a href="https://x.com/SachinNeravath" target="_blank" rel="noopener">X</a> </li><li> <a href="https://stackblitz.com/@sachinchoolur" target="_blank" rel="noopener">StackBlitz</a> </li><li> <a href="https://docs.google.com/forms/d/e/1FAIpQLSfcxknmKJAF9btnCg8HugFadxyWRZ3TgC0ZKxOtIjdaGfqxIw/viewform?usp=pp_url&entry.34608024=Yes" target="_blank" rel="noopener">Write a review</a> </li> </ul> </nav> </div> <div class="footer-bottom"> <span>lightGallery. Actively maintained since 2014, 12+ years and counting.</span> <span><a href="/license/">Free under GPLv3, commercial license available</a></span> <span><a href="/credits/">Credits</a></span> </div> </div> </footer> <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DaGkoOg8.js"></script> </body> </html>

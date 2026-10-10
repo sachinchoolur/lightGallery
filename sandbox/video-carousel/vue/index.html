@@ -1,0 +1,202 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-spbtv2v5> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>lightGallery video carousel (Vue)</title><style>body{align-items:center;color:#1f2933;display:flex;font-family:system-ui,sans-serif;justify-content:center;margin:0;min-height:100vh;text-align:center}button[data-astro-cid-spbtv2v5]{background:#0d0a0a;border:0;border-radius:6px;color:#fff;cursor:pointer;font:inherit;padding:10px 18px}
+</style></head> <body data-astro-cid-spbtv2v5> <form id="sandbox" method="post" action="https://stackblitz.com/run?file=src%2FApp.vue" data-astro-cid-spbtv2v5> <input type="hidden" name="project[title]" value="lightGallery video carousel (Vue)" data-astro-cid-spbtv2v5> <input type="hidden" name="project[description]" value="lightGallery video carousel (Vue), from the lightGallery docs." data-astro-cid-spbtv2v5> <input type="hidden" name="project[template]" value="node" data-astro-cid-spbtv2v5> <input type="hidden" name="project[files][.stackblitzrc]" value="{
+    &#34;installDependencies&#34;: true,
+    &#34;startCommand&#34;: &#34;npm run dev&#34;
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][index.html]" value="<!DOCTYPE html>
+<html lang=&#34;en&#34;>
+    <head>
+        <meta charset=&#34;UTF-8&#34; />
+        <meta name=&#34;viewport&#34; content=&#34;width=device-width, initial-scale=1.0&#34; />
+        <title>lightGallery Vue example</title>
+    </head>
+    <body>
+        <div id=&#34;app&#34;></div>
+        <script type=&#34;module&#34; src=&#34;/src/main.ts&#34;></script>
+    </body>
+</html>
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][package.json]" value="{
+    &#34;name&#34;: &#34;lightgallery-vue-example&#34;,
+    &#34;private&#34;: true,
+    &#34;type&#34;: &#34;module&#34;,
+    &#34;scripts&#34;: {
+        &#34;dev&#34;: &#34;vite&#34;,
+        &#34;build&#34;: &#34;vue-tsc --noEmit &#38;&#38; vite build&#34;
+    },
+    &#34;dependencies&#34;: {
+        &#34;@lightgallery/vue&#34;: &#34;3.0.0&#34;,
+        &#34;lightgallery&#34;: &#34;3.0.0&#34;,
+        &#34;vue&#34;: &#34;^3.5.0&#34;
+    },
+    &#34;devDependencies&#34;: {
+        &#34;@vitejs/plugin-vue&#34;: &#34;^5.2.0&#34;,
+        &#34;typescript&#34;: &#34;~5.9.0&#34;,
+        &#34;vite&#34;: &#34;^6.0.0&#34;,
+        &#34;vue-tsc&#34;: &#34;^3.0.0&#34;
+    }
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/main.ts]" value="import { createApp } from 'vue';
+
+import App from './App.vue';
+import './demo.css';
+
+createApp(App).mount('#app');
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][tsconfig.json]" value="{
+    &#34;compilerOptions&#34;: {
+        &#34;target&#34;: &#34;ES2020&#34;,
+        &#34;lib&#34;: [&#34;ES2020&#34;, &#34;DOM&#34;, &#34;DOM.Iterable&#34;],
+        &#34;module&#34;: &#34;ESNext&#34;,
+        &#34;moduleResolution&#34;: &#34;bundler&#34;,
+        &#34;jsx&#34;: &#34;preserve&#34;,
+        &#34;strict&#34;: true,
+        &#34;noEmit&#34;: true,
+        &#34;isolatedModules&#34;: true,
+        &#34;skipLibCheck&#34;: true
+    },
+    &#34;include&#34;: [&#34;src/**/*.ts&#34;, &#34;src/**/*.vue&#34;]
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][vite.config.ts]" value="import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+    plugins: [vue()],
+});
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/demo.css]" value="body {
+    margin: 0;
+    padding: 24px;
+    font-family: system-ui, sans-serif;
+    color: #1f2933;
+}
+
+h1 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+}
+
+.gallery a {
+    display: block;
+}
+
+.gallery img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 4px;
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/photos.ts]" value="/** Sample photos. Replace them with your own. */
+export interface Photo {
+    /** Full-size image, shown in the gallery. */
+    src: string;
+    /** Small image, shown on the page and in the thumbnail strip. */
+    thumb: string;
+    alt: string;
+    /** &#34;WIDTH-HEIGHT&#34; of the full-size image; lets it open from its thumbnail. */
+    lgSize: string;
+}
+
+const photo = (id: number, alt: string): Photo => ({
+    src: `https://picsum.photos/id/${id}/1600/1067`,
+    thumb: `https://picsum.photos/id/${id}/360/240`,
+    alt,
+    lgSize: '1600-1067',
+});
+
+export const photos: Photo[] = [
+    photo(10, 'Sample photo 1'),
+    photo(11, 'Sample photo 2'),
+    photo(15, 'Sample photo 3'),
+    photo(16, 'Sample photo 4'),
+    photo(28, 'Sample photo 5'),
+    photo(29, 'Sample photo 6'),
+    photo(37, 'Sample photo 7'),
+    photo(110, 'Sample photo 8'),
+];
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/App.vue]" value="<script setup lang=&#34;ts&#34;>
+import { ref } from 'vue';
+import { LightGallery, type LgGalleryItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Video from '@lightgallery/vue/plugins/video';
+
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-video.css';
+import './carousel.css';
+
+const container = ref<HTMLElement | null>(null);
+const plugins = [Thumbnail, Video];
+
+const videos: LgGalleryItem[] = [
+    // YouTube and Vimeo: `src` is the address of the video page.
+    {
+        src: 'https://www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        caption: 'YouTube video: Puffin Hunts Fish To Feed Puffling, BBC Earth',
+    },
+    {
+        src: 'https://vimeo.com/112836958',
+        poster: 'https://www.lightgalleryjs.com/images/demo/vimeo-video-poster.jpg',
+        thumb: 'https://www.lightgalleryjs.com/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        caption: 'Vimeo video: Nature, by Charlie Kaye',
+    },
+    // A video file you host yourself: no `src`. The files and the <video>
+    // attributes go in `video`.
+    {
+        video: {
+            source: [
+                {
+                    src: 'https://www.lightgalleryjs.com/videos/video1.mp4',
+                    type: 'video/mp4',
+                },
+            ],
+            attributes: { preload: 'metadata', controls: true },
+        },
+        poster: 'https://www.lightgalleryjs.com/images/demo/html5-video-poster.jpg',
+        thumb: 'https://www.lightgalleryjs.com/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        caption: 'HTML5 video: Peck Pocketed, by Kevin Herron',
+    },
+];
+</script>
+
+<template>
+    <h1>lightGallery video carousel</h1>
+    <!-- The gallery is rendered inside this element and takes its size,
+         which is set in carousel.css. -->
+    <div ref=&#34;container&#34; class=&#34;inline-gallery-container&#34; />
+    <!-- The carousel is always open and cannot be closed. The maximize icon
+         expands it to the whole window. -->
+    <LightGallery
+        v-if=&#34;container&#34;
+        :container=&#34;container&#34;
+        :open=&#34;true&#34;
+        :closable=&#34;false&#34;
+        :show-maximize-icon=&#34;true&#34;
+        :slides=&#34;videos&#34;
+        :plugins=&#34;plugins&#34;
+    />
+</template>
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/carousel.css]" value="/* The inline gallery fills this element, so give it a size. */
+.inline-gallery-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 65%;
+}
+" data-astro-cid-spbtv2v5> <p data-astro-cid-spbtv2v5>Opening the Vue example on StackBlitz.</p> <button type="submit" data-astro-cid-spbtv2v5>Open in StackBlitz</button> </form> <script>
+            // Coming back with the browser's Back button must not send the
+            // reader straight to StackBlitz again.
+            const [navigation] = performance.getEntriesByType('navigation');
+            if (navigation?.type !== 'back_forward') {
+                document.getElementById('sandbox').submit();
+            }
+        </script> </body> </html>

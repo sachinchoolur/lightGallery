@@ -1,0 +1,114 @@
+# lightGallery
+
+> A lightweight, modular JavaScript lightbox and gallery for images and video, with native React, Vue and Angular packages. Plugins (thumbnails, zoom, video, autoplay, fullscreen, share, hash, rotate, pager, comments, justified layout) are separate entries, import only what you use.
+
+Packages: `lightgallery` (vanilla JavaScript/TypeScript), `@lightgallery/react`, `@lightgallery/vue`, `@lightgallery/angular`, `@lightgallery/headless` (the framework-free core).
+
+Default recipe for an image gallery, in every stack: the `zoom` and `thumbnail` plugins, `lightgallery/css/lightgallery.css` plus one CSS file per plugin (the framework packages ship no CSS), and `lgSize: "WIDTH-HEIGHT"` (`data-lg-size` in markup) on every image item, the natural size of the full image, so the slide opens from its thumbnail and closes back to it (zoom from origin). Without `lgSize` the slide fades in instead. Leave a plugin out only when asked to.
+
+Coding agents: the skill at https://github.com/sachinchoolur/lightGallery/tree/v3/skills/lightgallery covers install, imports, plugins and the common pitfalls; the "Ask your coding agent" prompt is on https://www.lightgalleryjs.com/docs/getting-started/index.md.
+
+License: free and open source under the GPLv3 for any project distributed under GPLv3-compatible terms. Projects that keep their source proprietary buy a one-time commercial license; same code, every plugin, nothing gated. SPDX: `GPL-3.0-only OR LicenseRef-Commercial`.
+
+Every docs page below links to its markdown version; the HTML page is the same URL without `index.md`. The complete docs in one file: https://www.lightgalleryjs.com/llms-full.txt
+
+## Guides and reference
+
+- [JavaScript image gallery, get started](https://www.lightgalleryjs.com/docs/getting-started/index.md): Install lightGallery with npm or a CDN and build a responsive image and video gallery in a few lines of JavaScript, no dependencies, 15 plugins.
+- [Settings and options reference](https://www.lightgalleryjs.com/docs/settings/index.md): Every lightGallery option with its type, default value and description, core settings plus all plugin settings, in one reference.
+- [Events](https://www.lightgalleryjs.com/docs/events/index.md): Every lightGallery event, from open to close, with the detail object each one carries, and how the same events surface as callbacks in React, Vue and Angular.
+- [Methods](https://www.lightgalleryjs.com/docs/methods/index.md): Every public method on a lightGallery instance, with parameters and examples, and the matching handle methods in React, Vue and Angular.
+- [Dynamic variables](https://www.lightgalleryjs.com/docs/dynamic-variables/index.md): Every field a lightGallery item can carry in dynamic mode, from src and thumb to captions, video, download and share URLs, with the matching data attributes.
+- [Attributes](https://www.lightgalleryjs.com/docs/attributes/index.md): Every HTML attribute lightGallery reads from your gallery markup: the image, thumbnail, size, caption, video, download and share attributes.
+- [Image and video gallery for React](https://www.lightgalleryjs.com/docs/react-image-video-gallery/index.md): Native React image and video gallery component, thumbnails, pinch zoom, YouTube and Vimeo support, SSR-safe, fully typed, no jQuery.
+- [Image and video gallery for Vue](https://www.lightgalleryjs.com/docs/vue-image-video-gallery/index.md): Native Vue 3 image and video gallery component, v-model, scoped slots, Teleport, thumbnails, pinch zoom and Nuxt SSR support.
+- [Image and video gallery for Angular](https://www.lightgalleryjs.com/docs/angular-image-video-gallery/index.md): Native Angular image and video gallery component, standalone, signal inputs, zoneless, CDK overlay, thumbnails, pinch zoom and SSR support.
+- [lightGallery license](https://www.lightgalleryjs.com/docs/license/index.md): lightGallery is free and open source under the GPLv3. The commercial license is for projects that keep their source proprietary: same code, every plugin, one-time payment.
+- [Migrating to lightGallery 3](https://www.lightgalleryjs.com/docs/migration/index.md): Upgrade guide for lightGallery 3, changed defaults and settings for vanilla users, and wrapper-to-native tables for React, Vue and Angular.
+- [Troubleshooting](https://www.lightgalleryjs.com/docs/troubleshooting/index.md): Fixes for the lightGallery problems behind most bug reports: missing styles, plugins that do nothing, empty slides, videos that will not play, Next.js errors, license warnings and import errors after upgrading, for vanilla JavaScript, React, Vue and Angular.
+- [Creating plugins](https://www.lightgalleryjs.com/docs/creating-plugins/index.md): How lightGallery plugins work and how to write your own: the plugin contract, settings, events, styles, and how a plugin is built and shipped.
+
+## Framework packages
+
+- [@lightgallery/headless](https://www.lightgalleryjs.com/docs/headless/index.md): Framework-free lightGallery core: state machine, gesture math and plugin logic shared by every v3 binding.
+- [@lightgallery/react](https://www.lightgalleryjs.com/docs/react/index.md): A native React lightGallery component. React renders the triggers and the lightbox, with no wrapper and no second runtime touching your DOM.
+- [@lightgallery/vue](https://www.lightgalleryjs.com/docs/vue/index.md): A native Vue 3 lightGallery component. Vue renders the triggers and the lightbox, with v-model, typed emits, scoped slots and a subpath per plugin.
+- [@lightgallery/angular](https://www.lightgalleryjs.com/docs/angular/index.md): A native Angular lightGallery component. Angular renders the triggers and the lightbox, with standalone components, signal inputs and outputs and zoneless change detection.
+
+## Features
+
+- [Justified layout](https://www.lightgalleryjs.com/docs/justified-layout/index.md): Lay gallery thumbnails out in justified rows, equal heights, varying widths, filling the container edge to edge, in vanilla JavaScript, React, Vue and Angular.
+- [Localization & RTL](https://www.lightgalleryjs.com/docs/localization-rtl/index.md): Localize every lightGallery label from one strings object and mirror the gallery for right-to-left pages, in vanilla JavaScript, React, Vue and Angular.
+- [Virtualization](https://www.lightgalleryjs.com/docs/virtualization/index.md): Keep thousand-item galleries fast: a bounded slide pool and a windowed thumbnail strip, one setting in vanilla JavaScript, React, Vue and Angular.
+- [Video facades](https://www.lightgalleryjs.com/docs/video-facades/index.md): Provider video slides load as lightweight poster facades, the YouTube, Vimeo or Wistia iframe is created only when the user presses play.
+- [Accessibility](https://www.lightgalleryjs.com/docs/accessibility/index.md): The lightGallery v3 accessibility contract: dialog semantics, focus management, screen-reader announcements and reduced-motion support in all four packages.
+- [Web Share](https://www.lightgalleryjs.com/docs/web-share/index.md): The share plugin opens the native OS share sheet on touch devices and falls back to the classic dropdown, plus the X share target.
+- [Hash drivers](https://www.lightgalleryjs.com/docs/hash-drivers/index.md): The hash plugin syncs deep links through the modern Navigation API where available, with an automatic History API fallback, same URLs everywhere.
+- [Responsive loading](https://www.lightgalleryjs.com/docs/responsive-loading/index.md): Serve the right image to every screen inside the lightbox: srcset, sizes and picture sources on slides, plus a decode gate for flash-free first paint.
+- [Thumbnail scrubbing](https://www.lightgalleryjs.com/docs/thumbnail-scrubbing/index.md): Turn the thumbnail strip into a scrubber, drag it and the gallery follows instantly, the interaction familiar from native photo apps.
+- [Custom icons](https://www.lightgalleryjs.com/docs/custom-icons/index.md): Replace any of the gallery controls' inline SVG icons with your own, per icon name, in vanilla JavaScript, React, Vue, and Angular.
+
+## Archive (version 2 wrappers)
+
+- [lightGallery 2.x Angular wrapper (archive)](https://www.lightgalleryjs.com/docs/v2/angular/index.md): Archived documentation for the lightGallery 2.x Angular wrapper. Version 3 ships a native Angular package, see the migration guide.
+- [lightGallery 2.x Vue wrapper (archive)](https://www.lightgalleryjs.com/docs/v2/vue/index.md): Archived documentation for the lightGallery 2.x Vue wrapper. Version 3 ships a native Vue package, see the migration guide.
+- [lightGallery 2.x React wrapper (archive)](https://www.lightgalleryjs.com/docs/v2/react/index.md): Archived documentation for the lightGallery 2.x React wrapper. Version 3 ships a native React package, see the migration guide.
+
+## Demos
+
+_Each demo page carries the example code for all four stacks; the markdown version keeps the code and links to the live gallery._
+
+- [JavaScript image gallery with thumbnails](https://www.lightgalleryjs.com/demos/thumbnails/index.md): Add an animated, drag-scrollable thumbnail strip to any image or video gallery. Live demo plus the markup and settings to copy into your project.
+- [Video gallery for YouTube, Vimeo and HTML5](https://www.lightgalleryjs.com/demos/video-gallery/index.md): Responsive video gallery demo, play YouTube, Vimeo, Wistia and self-hosted HTML5 video in a full-screen lightbox, with poster facades and thumbnails.
+- [Social sharing](https://www.lightgalleryjs.com/demos/share/index.md): lightGallery allows sharing your images and videos across social media platforms using the unique url created by lightGallery.
+- [Bootstrap carousel with lightbox gallery](https://www.lightgalleryjs.com/demos/bootstrap-image-carousel/index.md): Bootstrap carousel demo with a lightbox gallery on every slide, click any slide to open it full-screen with thumbnails and zoom.
+- [Carousel image gallery with lightbox](https://www.lightgalleryjs.com/demos/carousel-gallery/index.md): Build an inline carousel slider that expands into a full-screen lightbox, one setting switches between the two, with every plugin available in both.
+- [React carousel with lightbox gallery](https://www.lightgalleryjs.com/demos/react-carousel/index.md): Native React carousel component, an inline slider that expands into a full-screen lightbox, with thumbnails, pinch zoom and captions.
+- [Video carousel](https://www.lightgalleryjs.com/demos/video-carousel/index.md): Video carousel demo: an inline gallery of YouTube and HTML5 videos embedded in the page, with thumbnails.
+- [Hash](https://www.lightgalleryjs.com/demos/hash/index.md): lightGallery hash plugin lets you provide a unique URL for each gallery slide.
+- [Responsive image gallery](https://www.lightgalleryjs.com/demos/responsive/index.md): Responsive image gallery demo: serve smaller images to smaller screens with data-responsive breakpoints, srcset and sizes, or picture sources.
+- [Mixed contents](https://www.lightgalleryjs.com/demos/mixed-contents/index.md): Mixed content gallery demo: images, YouTube, Vimeo and HTML5 video and iframes together in one lightbox.
+- [Iframe lightbox](https://www.lightgalleryjs.com/demos/iframe/index.md): Iframe lightbox demo: open a website, a Google map or a PDF inside the gallery as an iframe slide.
+- [Dynamic mode](https://www.lightgalleryjs.com/demos/dynamic-mode/index.md): Dynamic mode demo: open a gallery from a JavaScript array of items, with no trigger markup on the page.
+- [Update slides](https://www.lightgalleryjs.com/demos/update-slides/index.md): Update slides demo: add and remove slides while the gallery is open with updateSlides().
+- [Transitions](https://www.lightgalleryjs.com/demos/transitions/index.md): Twenty-plus slide transitions for image and video galleries, switched with the mode setting, plus how to build your own.
+- [Methods demo](https://www.lightgalleryjs.com/demos/methods/index.md): Gallery methods demo: drive lightGallery from your own buttons with methods such as goToNextSlide, goToPrevSlide and openGallery.
+- [HTML markup](https://www.lightgalleryjs.com/demos/html-markup/index.md): HTML markup demo: the different trigger markups lightGallery accepts, from plain links to data attributes and custom selectors.
+- [Events demo](https://www.lightgalleryjs.com/demos/events/index.md): Gallery events demo: listen to lightGallery events such as lgBeforeSlide and lgAfterOpen to react to what the viewer does.
+- [Custom easing](https://www.lightgalleryjs.com/demos/custom-easing/index.md): Custom easing demo: set the slide transition curve with the lightGallery easing setting, from linear to back-and-forth cubic-bezier curves.
+- [Captions](https://www.lightgalleryjs.com/demos/captions/index.md): Gallery captions demo: HTML captions from data attributes or elements on the page, captions relative to each thumbnail, and animated captions.
+- [Infinite scrolling](https://www.lightgalleryjs.com/demos/infinite-scrolling/index.md): Infinite scrolling gallery demo: load more thumbnails as the page scrolls and keep the lightbox in sync with refresh().
+- [Medium like image zoom](https://www.lightgalleryjs.com/demos/medium-zoom/index.md): Medium-style image zoom: click an image in an article and it grows in place, with no lightbox chrome.
+- [Lightbox with custom icons](https://www.lightgalleryjs.com/demos/custom-icons/index.md): JavaScript lightbox gallery with a custom icon set. Replace the control icons per name with your own inline SVGs, live demo plus the code for vanilla JS, React, Vue, and Angular.
+- [Justified layout gallery](https://www.lightgalleryjs.com/demos/justified-layout/index.md): JavaScript image gallery with a justified layout. Rows of equal height fill the container edge to edge, like the classic photo-stream look.
+- [RTL gallery](https://www.lightgalleryjs.com/demos/rtl/index.md): JavaScript image gallery with right-to-left support. Navigation, swipe direction, and the gallery chrome mirror for RTL languages.
+- [Video facades demo](https://www.lightgalleryjs.com/demos/video-facades/index.md): Embed YouTube and Vimeo videos as lightweight facades. The provider iframe loads only when the user presses play.
+- [Virtualization, 1,000 slide stress test](https://www.lightgalleryjs.com/demos/virtualization/index.md): Open a JavaScript lightbox gallery with 1,000 slides. Virtualization keeps the DOM small: only a window of slides and thumbnails render.
+- [Zoom image from origin](https://www.lightgalleryjs.com/demos/zoom-from-origin/index.md): Zoom-from-origin demo: slides open from the clicked thumbnail's position and close back to it, from cropped thumbnails too.
+- [React image gallery component](https://www.lightgalleryjs.com/demos/react-image-gallery/index.md): Native React image gallery and lightbox component, thumbnails, pinch zoom, captions and sharing, with SSR support and full TypeScript types.
+- [React video gallery component](https://www.lightgalleryjs.com/demos/react-video-gallery/index.md): Native React video gallery, YouTube, Vimeo, Wistia and HTML5 video in a lightbox, with poster facades so the provider iframe loads only on play.
+- [Vue image gallery component](https://www.lightgalleryjs.com/demos/vue-image-gallery/index.md): Native Vue 3 image gallery and lightbox component, v-model, scoped slots and Teleport, with animated thumbnails, pinch zoom and Nuxt SSR support.
+- [Bootstrap image gallery with lightbox](https://www.lightgalleryjs.com/demos/bootstrap-image-gallery/index.md): Bootstrap image gallery demo with a full-screen lightbox, responsive grid markup, thumbnails, zoom and captions, and no jQuery required.
+- [Vue video gallery component](https://www.lightgalleryjs.com/demos/vue-video-gallery/index.md): Native Vue 3 video gallery, YouTube, Vimeo, Wistia and HTML5 video in a lightbox, with poster facades so the provider iframe loads only on play.
+- [Angular image gallery component](https://www.lightgalleryjs.com/demos/angular-image-gallery/index.md): Native Angular image gallery and lightbox, standalone component, signal inputs, zoneless change detection, animated thumbnails and pinch zoom.
+- [Bootstrap video carousel with lightbox](https://www.lightgalleryjs.com/demos/bootstrap-video-carousel/index.md): Bootstrap video carousel demo, slide through YouTube, Vimeo and HTML5 videos and open any of them in a full-screen lightbox player.
+- [Swiper.js demo with lightbox gallery](https://www.lightgalleryjs.com/demos/swiper/index.md): Swiper slider demo with a lightbox gallery on every slide, open any slide full-screen with thumbnails, zoom and video support.
+- [Angular video gallery component](https://www.lightgalleryjs.com/demos/angular-video-gallery/index.md): Native Angular video gallery, YouTube, Vimeo, Wistia and HTML5 video in a lightbox, with poster facades so the provider iframe loads only on play.
+- [Bootstrap video gallery with lightbox](https://www.lightgalleryjs.com/demos/bootstrap-video-gallery/index.md): Bootstrap video gallery demo, YouTube, Vimeo and HTML5 video in a responsive grid that opens in a full-screen lightbox player.
+- [Flickity carousel demo with lightbox gallery](https://www.lightgalleryjs.com/demos/flickity-demo/index.md): Flickity carousel demo with a lightbox gallery on every cell, click to open full-screen, with thumbnails, zoom and video support.
+- [Owl Carousel demo with lightbox gallery](https://www.lightgalleryjs.com/demos/owl-carousel-with-lightbox/index.md): Owl Carousel slider demo with a lightbox gallery on every slide, full-screen images and video, thumbnails and zoom, in a few lines of code.
+- [Slick slider demo with lightbox gallery](https://www.lightgalleryjs.com/demos/slick-carousel-demo/index.md): Slick slider demo with a lightbox gallery on every slide, click a slide to open it full-screen, with thumbnails, zoom and video support.
+- [React video carousel with lightbox](https://www.lightgalleryjs.com/demos/react-video-carousel/index.md): Native React video carousel, slide through YouTube, Vimeo and HTML5 video inline, then expand any of them into a full-screen lightbox player.
+
+## API (JSON)
+
+- [Settings](https://www.lightgalleryjs.com/api/settings.json): every option with type, default and description, per interface
+- [Events](https://www.lightgalleryjs.com/api/events.json): custom events with their detail fields
+- [Methods](https://www.lightgalleryjs.com/api/methods.json): instance methods
+
+## Optional
+
+- [Changelog](https://www.lightgalleryjs.com/changelog/index.md): what changed in each release
+- [Blog](https://www.lightgalleryjs.com/blog/)
+- [License](https://www.lightgalleryjs.com/docs/license/index.md): free under the GPLv3; commercial license for proprietary projects, plans at https://www.lightgalleryjs.com/license/
+- [GitHub](https://github.com/sachinchoolur/lightGallery)

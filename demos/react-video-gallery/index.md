@@ -1,0 +1,104 @@
+# React video gallery component
+
+> Native React video gallery, YouTube, Vimeo, Wistia and HTML5 video in a lightbox, with poster facades so the provider iframe loads only on play.
+
+@lightgallery/react plays YouTube, Vimeo, Wistia and self-hosted HTML5 video (MP4, WebM, Ogg) in a full-screen lightbox. Provider slides render as poster facades, so no third-party iframe, script or cookie loads until the viewer presses play. The full component API is in the [React package docs](https://www.lightgalleryjs.com/docs/react/).
+
+Canonical page: https://www.lightgalleryjs.com/demos/react-video-gallery/
+
+#### Demo
+
+##### Provider videos
+
+Point a slide's `src` at a YouTube, Vimeo or Wistia URL, the Video plugin
+recognises it and builds the embed. `poster` supplies the facade image;
+YouTube posters are fetched automatically when you omit it.
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Video from '@lightgallery/react/plugins/video';
+
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-video.css';
+
+const videos = [
+    {
+        src: 'https://youtu.be/IUN664s7N-c',
+        caption: <h4>Peck Pocketed by Kevin Herron</h4>,
+    },
+    {
+        src: 'https://vimeo.com/112836958',
+        poster: 'img/vimeo-poster.jpg',
+        caption: <h4>Nature</h4>,
+    },
+];
+
+export function VideoGallery() {
+    return (
+        <LightGallery plugins={[Thumbnail, Video]}>
+            {videos.map((video) => (
+                <LightGalleryItem key={video.src} item={video}>
+                    <img src={video.poster ?? 'img/youtube-thumb.jpg'} alt="" />
+                </LightGalleryItem>
+            ))}
+        </LightGallery>
+    );
+}
+```
+
+##### HTML5 videos
+
+Self-hosted video takes a `video` object with the sources, tracks and the
+attributes to put on the `<video>` element. Leave `src` off for these slides:
+
+```tsx
+const items = [
+    {
+        video: {
+            source: [{ src: 'videos/video1.mp4', type: 'video/mp4' }],
+            tracks: [
+                {
+                    src: 'videos/captions-en.vtt',
+                    kind: 'captions',
+                    srclang: 'en',
+                    label: 'English',
+                    default: 'true',
+                },
+            ],
+            attributes: { preload: false, controls: true },
+        },
+        poster: 'img/html5-video-poster.jpg',
+        caption: <h4>Peck Pocketed</h4>,
+    },
+];
+```
+
+##### Facades and playback settings
+
+Every Video plugin setting lives on the `video` prop:
+
+```tsx
+<LightGallery
+    slides={videos}
+    plugins={[Thumbnail, Video]}
+    video={{
+        // both are the defaults
+        videoFacade: true,
+        youTubeNoCookie: true,
+        // autoplay forces an immediate embed by design, turn it off
+        // to keep the facade on the first slide too
+        autoplayFirstVideo: false,
+        gotoNextSlideOnVideoEnd: true,
+    }}
+/>
+```
+
+Facades cut roughly 990 KB and 14 requests per YouTube slide until playback
+starts, how the poster chain resolves is covered in the
+[video facades guide](/docs/video-facades/).
+
+More in the [React package docs](/docs/react/), or see the
+[React image gallery](/demos/react-image-gallery/) and
+[React video carousel](/demos/react-video-carousel/) demos.

@@ -1,0 +1,363 @@
+{
+  "generated": "2026-10-10T05:30:09.984Z",
+  "docs": "https://www.lightgalleryjs.com/docs/events/",
+  "events": [
+    {
+      "names": [
+        "lgInit"
+      ],
+      "interface": "InitDetail",
+      "description": "Fired only once when lightGallery is initialized",
+      "detail": [
+        {
+          "name": "instance",
+          "type": "LightGallery",
+          "description": "The gallery instance, the same object lightGallery() returns."
+        }
+      ],
+      "examples": [
+        "const lg = document.getElementById('custom-events-demo');\n  // Perform any action on lightGallery initialization.\n  // Init event returns the plugin instance that can be used to call any lightGallery public method\n  let pluginInstance = null;\n  lg.addEventListener('lgInit', (event) => {\n     pluginInstance = event.detail.instance;\n  });\n  lightGallery(lg);"
+      ]
+    },
+    {
+      "names": [
+        "lgBeforeOpen"
+      ],
+      "interface": "BeforeOpenDetail",
+      "description": "Fired immediately before opening the gallery",
+      "detail": [],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgAfterOpen"
+      ],
+      "interface": "AfterOpenDetail",
+      "description": "Fired immediately after opening the gallery",
+      "detail": [],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgAfterAppendSlide"
+      ],
+      "interface": "AfterAppendSlideEventDetail",
+      "description": "Fired when the slide content has been inserted into its slide container.",
+      "detail": [
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgAfterAppendSubHtml"
+      ],
+      "interface": "AfterAppendSubHtmlDetail",
+      "description": "Fired when the sub-html content (ex : title/ description) has been appended into the slide.",
+      "detail": [
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgSlideItemLoad"
+      ],
+      "interface": "SlideItemLoadDetail",
+      "description": "Fired once the media inside the slide has been completely loaded, or has failed to load and the slide shows its error message instead.",
+      "detail": [
+        {
+          "name": "delay",
+          "type": "number",
+          "description": "For the first slide, lightGallery adds some delay for displaying the loaded slide item. This delay is required for the transition effect when the slide item is displayed Respect the delay when you use this event"
+        },
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        },
+        {
+          "name": "isFirstSlide",
+          "type": "boolean",
+          "description": "True when the loaded slide is the first one shown after the gallery opened."
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgHasVideo"
+      ],
+      "interface": "HasVideoDetail",
+      "description": "Fired when lightGallery detects video slide",
+      "detail": [
+        {
+          "name": "hasPoster",
+          "type": "boolean",
+          "description": "True if video has poster"
+        },
+        {
+          "name": "html5Video",
+          "type": "VideoSource",
+          "description": "HTML5 video source if available HTML5 video source = source: { src: string; type: string; }[]; attributes: HTMLVideoElement;"
+        },
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Video source"
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgBeforeSlide"
+      ],
+      "interface": "BeforeSlideDetail",
+      "description": "Fired immediately before each slide transition.",
+      "detail": [
+        {
+          "name": "fromThumb",
+          "type": "boolean",
+          "description": "true if slide function called via thumbnail click"
+        },
+        {
+          "name": "fromTouch",
+          "type": "boolean",
+          "description": "true if slide function called via touch event or mouse drag"
+        },
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        },
+        {
+          "name": "prevIndex",
+          "type": "number",
+          "description": "Index of the previous slide"
+        }
+      ],
+      "examples": [
+        "const lg = document.getElementById('custom-events-demo');\n  // Perform any action before each slide transition\n  lg.addEventListener('lgBeforeSlide', (event) => {\n      const { index, prevIndex } = event.detail;\n      alert(index, prevIndex);\n  });\n  lightGallery(lg);"
+      ]
+    },
+    {
+      "names": [
+        "lgAfterSlide"
+      ],
+      "interface": "AfterSlideDetail",
+      "description": "Fired immediately after each slide transition.",
+      "detail": [
+        {
+          "name": "fromThumb",
+          "type": "boolean",
+          "description": "true if slide function called via thumbnail click"
+        },
+        {
+          "name": "fromTouch",
+          "type": "boolean",
+          "description": "true if slide function called via touch event or mouse drag"
+        },
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        },
+        {
+          "name": "prevIndex",
+          "type": "number",
+          "description": "Index of the previous slide"
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgBeforeNextSlide"
+      ],
+      "interface": "BeforeNextSlideDetail",
+      "description": "Fired immediately before each \"next\" slide transition",
+      "detail": [
+        {
+          "name": "fromTouch",
+          "type": "boolean",
+          "description": "true if slide function called via touch event or mouse drag"
+        },
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgBeforePrevSlide"
+      ],
+      "interface": "BeforePrevSlideDetail",
+      "description": "Fired immediately before each \"prev\" slide transition",
+      "detail": [
+        {
+          "name": "fromTouch",
+          "type": "boolean",
+          "description": "true if slide function called via touch event or mouse drag"
+        },
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgPosterClick"
+      ],
+      "interface": "PosterClickDetail",
+      "description": "Fired when the video poster is clicked.",
+      "detail": [],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgDragStart"
+      ],
+      "interface": "DragStartDetail",
+      "description": "Fired when the drag event to move to different slide starts.",
+      "detail": [],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgDragMove"
+      ],
+      "interface": "DragMoveDetail",
+      "description": "Fired periodically during the drag operation.",
+      "detail": [],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgDragEnd"
+      ],
+      "interface": "DragEndDetail",
+      "description": "Fired when the user has finished the drag operation",
+      "detail": [],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgContainerResize"
+      ],
+      "interface": "ContainerResizeDetail",
+      "description": "Fired when the lightGallery container has been resized.",
+      "detail": [
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgBeforeClose"
+      ],
+      "interface": "BeforeCloseDetail",
+      "description": "Fired immediately before the start of the close process.",
+      "detail": [],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgAfterClose"
+      ],
+      "interface": "AfterCloseDetail",
+      "description": "Fired immediately once lightGallery is closed.",
+      "detail": [
+        {
+          "name": "instance",
+          "type": "LightGallery",
+          "description": "The gallery instance, the same object lightGallery() returns."
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgRotateLeft"
+      ],
+      "interface": "RotateLeftDetail",
+      "description": "Fired when the image is rotated in anticlockwise direction",
+      "detail": [
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgRotateRight"
+      ],
+      "interface": "RotateRightDetail",
+      "description": "Fired when the image is rotated in clockwise direction",
+      "detail": [
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgFlipHorizontal"
+      ],
+      "interface": "FlipHorizontalDetail",
+      "description": "Fired when the image is flipped horizontally",
+      "detail": [
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        }
+      ],
+      "examples": []
+    },
+    {
+      "names": [
+        "lgFlipVertical"
+      ],
+      "interface": "FlipVerticalDetail",
+      "description": "Fired when the image is flipped vertically",
+      "detail": [
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Index of the slide"
+        }
+      ],
+      "examples": []
+    }
+  ]
+}

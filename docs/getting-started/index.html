@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="robots" content="index, follow"><meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>JavaScript image gallery, get started - lightGallery</title><meta name="description" content="Install lightGallery with npm or a CDN and build a responsive image and video gallery in a few lines of JavaScript, no dependencies, 15 plugins."><link rel="canonical" href="https://www.lightgalleryjs.com/docs/getting-started/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta name="twitter:title" content="JavaScript image gallery, get started"><meta name="twitter:description" content="Install lightGallery with npm or a CDN and build a responsive image and video gallery in a few lines of JavaScript, no dependencies, 15 plugins."><meta name="twitter:site" content="@SachinNeravath"><meta name="twitter:creator" content="@SachinNeravath"><meta property="og:title" content="JavaScript image gallery, get started"><meta property="og:description" content="Install lightGallery with npm or a CDN and build a responsive image and video gallery in a few lines of JavaScript, no dependencies, 15 plugins."><meta property="og:type" content="website"><meta property="og:url" content="https://www.lightgalleryjs.com/docs/getting-started/"><meta property="og:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta property="article:publisher" content="https://www.facebook.com/sachinchoolur"><meta property="article:author" content="https://www.facebook.com/sachinchoolur"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="lightGallery"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"lightGallery","item":"https://www.lightgalleryjs.com/"},{"@type":"ListItem","position":2,"name":"Docs","item":"https://www.lightgalleryjs.com/docs/"},{"@type":"ListItem","position":3,"name":"JavaScript image gallery, get started","item":"https://www.lightgalleryjs.com/docs/getting-started/"}]}</script><meta name="ahrefs-site-verification" content="96bd744dcfe6c078a1994c8d9e0e0ca6a5cf16004f63946a0cd349ca937c1b24"><meta name="theme-color" content="#fff"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="manifest" href="/site.webmanifest"><link rel="alternate" type="application/rss+xml" title="lightGallery blog" href="/index.xml"><script>
+            // Framework code tabs: apply the deep-linked or remembered
+            // framework before first paint, so the panels never swap
+            // once the deferred module runs. CodeTabs.astro takes over
+            // (and drops the attribute) as soon as it has synced.
+            (() => {
+                const valid = ['vanilla', 'react', 'vue', 'angular'];
+                const url = new URL(window.location.href);
+                const query = url.searchParams.get('framework');
+                const hash = url.hash.replace(/^#/, '');
+                let framework = null;
+                if (query && valid.includes(query)) framework = query;
+                else if (valid.includes(hash)) framework = hash;
+                else
+                    try {
+                        const stored = localStorage.getItem('lg-framework');
+                        if (stored && valid.includes(stored)) framework = stored;
+                    } catch {
+                        /* storage blocked */
+                    }
+                if (framework)
+                    document.documentElement.dataset.lgFramework = framework;
+            })();
+        </script> <link rel="alternate" type="text/markdown" href="/docs/getting-started/index.md" title="Markdown version"> <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);posthog.init('phc_uyDcoLpTSdtPcDLf2SswgknmWiBsUfV2EzjhzYi3Ke4',{api_host:'https://app.posthog.com'})</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-960P19JL1K"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-960P19JL1K');</script><link rel="stylesheet" href="/_astro/_slug_.C1T_l066.css"></head> <body class="docs single"> <header id="nav-header" class="site-header"> <div class="site-header-bar"> <div class="container-xxl site-header-inner"> <a class="site-header-brand" href="/"><img src="/images/lightgallery-logo.png" alt="" width="294" height="312">lightGallery</a> <nav class="site-header-nav" aria-label="Main"> <a class="site-header-link is-active" href="/docs/getting-started/" aria-current="page"> Docs </a><a class="site-header-link" href="/demos/thumbnails/"> Demos </a> <div class="site-header-menu" data-site-menu> <button class="site-header-link" type="button" aria-expanded="false" aria-controls="site-header-frameworks">
+Frameworks
+<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg> </button> <div class="site-header-menu-panel" id="site-header-frameworks"> <a class="site-header-menu-item" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> Angular </a><a class="site-header-menu-item" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> React </a><a class="site-header-menu-item" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> Vue </a> </div> </div> <a class="site-header-link" href="/license/"> License </a> </nav> <div class="site-header-actions"> <a class="site-header-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener" aria-label="GitHub"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> <a class="site-header-cta" href="/docs/getting-started/">Get started</a> </div> <button class="site-header-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-header-sheet"> <svg class="site-header-icon-menu" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path></svg> <svg class="site-header-icon-close" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path></svg> </button> </div> </div> <div class="site-header-scrim" data-site-scrim></div> <div class="site-header-sheet" id="site-header-sheet"> <nav class="container-xxl site-header-sheet-inner" aria-label="Main"> <a class="site-header-sheet-link is-active" href="/docs/getting-started/" aria-current="page"> <span>Docs</span> </a><a class="site-header-sheet-link" href="/demos/thumbnails/"> <span>Demos</span> </a> <div class="site-header-sheet-group"> <span class="site-header-sheet-label">Frameworks</span> <div class="site-header-sheet-frameworks"> <a class="site-header-sheet-framework" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> <span>Angular</span> </a><a class="site-header-sheet-framework" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> <span>React</span> </a><a class="site-header-sheet-framework" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> <span>Vue</span> </a> </div> </div> <a class="site-header-sheet-link" href="/license/"> <span>License</span> </a> <a class="site-header-sheet-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+GitHub
+</a> </nav> </div> </header> <script type="module">const s=document.getElementById("nav-header"),t=s?.querySelector("[data-site-menu]"),a=t?.querySelector("button"),c=s?.querySelector(".site-header-toggle"),d=s?.querySelector("[data-site-scrim]");if(s&&t&&a&&c&&d){const n=e=>{t.classList.toggle("is-open",e),a.setAttribute("aria-expanded",String(e))};a.addEventListener("click",()=>n(!t.classList.contains("is-open"))),t.addEventListener("focusout",e=>{const o=e.relatedTarget;o&&!t.contains(o)&&n(!1)});const i=e=>{s.classList.toggle("is-sheet-open",e),c.setAttribute("aria-expanded",String(e)),document.documentElement.classList.toggle("site-header-locked",e)};c.addEventListener("click",()=>i(!s.classList.contains("is-sheet-open"))),d.addEventListener("click",()=>i(!1)),matchMedia("(min-width: 992px)").addEventListener("change",e=>{e.matches&&i(!1)}),document.addEventListener("click",e=>{t.contains(e.target)||n(!1)}),document.addEventListener("keydown",e=>{e.key==="Escape"&&(t.classList.contains("is-open")&&(n(!1),a.focus()),s.classList.contains("is-sheet-open")&&(i(!1),c.focus()))}),window.addEventListener("pageshow",e=>{e.persisted&&(n(!1),i(!1))})}</script>   <div class="wrap container-xxl page-wrap" role="document"> <div class="row flex-xl-nowrap"> <main class="docs-content col-lg-10 col-xl-8"> <span class="docs-kicker">API Docs</span> <h1>JavaScript image gallery, get started</h1> <div class="page-tools" data-page-tools> <button type="button" class="page-tools-btn" data-copy-markdown data-src="/docs/getting-started/index.md">
+Copy as Markdown
+</button> <a class="page-tools-btn" href="/docs/getting-started/index.md">View as Markdown</a> <a class="page-tools-btn" href="https://claude.ai/new?q=Read%20https%3A%2F%2Fwww.lightgalleryjs.com%2Fdocs%2Fgetting-started%2Findex.md%20and%20help%20me%20with%20%22JavaScript%20image%20gallery%2C%20get%20started%22%20from%20lightGallery.%20Answer%20with%20code%20I%20can%20paste." target="_blank" rel="noopener">Open in Claude</a> <a class="page-tools-btn" href="https://chatgpt.com/?q=Read%20https%3A%2F%2Fwww.lightgalleryjs.com%2Fdocs%2Fgetting-started%2Findex.md%20and%20help%20me%20with%20%22JavaScript%20image%20gallery%2C%20get%20started%22%20from%20lightGallery.%20Answer%20with%20code%20I%20can%20paste." target="_blank" rel="noopener">Open in ChatGPT</a> </div> <script type="module">document.querySelectorAll("[data-copy-markdown]").forEach(t=>{const e=t.textContent;t.addEventListener("click",async()=>{try{const a=await(await fetch(t.dataset.src??"")).text();await navigator.clipboard.writeText(a),t.textContent="Copied"}catch{t.textContent="Copy failed"}setTimeout(()=>{t.textContent=e},1800)})});</script> <p class="lead">lightGallery is a lightweight, modular, JavaScript library for creating beautiful image & video galleries for the web and the mobile.</p>  <h2 id="core-features">Core features</h2>
+<h4 id="packages-and-build">Packages and build</h4>
+<ul>
+<li>One gallery, four packages: <code>lightgallery</code> for plain JavaScript and
+TypeScript, plus native <a href="/docs/react/">React</a>, <a href="/docs/vue/">Vue 3</a> and
+<a href="/docs/angular/">Angular</a> packages that render their own DOM.</li>
+<li>A shared <a href="/docs/headless/">headless core</a> behind every package, so
+settings and behavior are identical in each stack.</li>
+<li>Zero dependencies, TypeScript types, ES module and UMD builds.
+The core is about 19 KB minified and gzipped; plugins are separate
+entries and cost nothing until you import them.</li>
+<li>Modular architecture with 15 built-in plugins, and an API for
+<a href="/docs/creating-plugins/">writing your own</a>.</li>
+<li>Easily customizable via CSS (SCSS) and settings. Multiple instances
+on one page.</li>
+</ul>
+<h4 id="layout-and-performance">Layout and performance</h4>
+<ul>
+<li>Fully responsive, with <a href="/docs/responsive-loading/">srcset, sizes and picture
+sources</a> on every slide.</li>
+<li><a href="/docs/justified-layout/">Justified layout</a> plugin: row-justified
+trigger grids with no layout library in front of the lightbox.</li>
+<li><a href="/docs/virtualization/">Virtualization</a> keeps a small, constant DOM
+for galleries with thousands of slides.</li>
+<li><a href="/demos/dynamic-mode/">Dynamic mode</a> opens a gallery from an array
+of items, and <a href="/demos/update-slides/">live updates</a> add, edit or
+remove slides while it is open.</li>
+<li>Inline gallery and carousel modes.</li>
+<li>Smart preloading of neighboring slides.</li>
+</ul>
+<h4 id="interaction">Interaction</h4>
+<ul>
+<li>Highly optimized for touch devices, with mouse drag on desktops.</li>
+<li>Gesture physics: every release lands in a spring seeded with your
+gesture’s velocity, flings glide, edges resist with friction.</li>
+<li>Swipe, drag or pinch to close.</li>
+<li>Zoom in and out, pinch to zoom, double-click or double-tap for actual
+size. Slides <a href="/demos/zoom-from-origin/">open from the thumbnail’s
+position</a> and close back to it.</li>
+<li>Animated thumbnails, with <a href="/docs/thumbnail-scrubbing/">thumbnail
+scrubbing</a> to drag through the gallery.</li>
+<li>20+ hardware-accelerated CSS3 transitions, plus your own easing.</li>
+<li>Keyboard navigation and full screen support.</li>
+<li>A toolbar that fits: on narrow screens the lowest-priority buttons
+move into a “More options” menu.</li>
+<li><a href="/docs/accessibility/">Accessibility</a>: modal dialog semantics, focus
+trap, screen-reader announcements, reduced-motion support.</li>
+<li><a href="/docs/localization-rtl/">Localization and RTL</a>: every label is a
+setting, and the gallery mirrors for right-to-left pages.</li>
+</ul>
+<h4 id="media-and-plugins">Media and plugins</h4>
+<ul>
+<li>YouTube, Vimeo, Wistia and HTML5 video, with <a href="/docs/video-facades/">video
+facades</a> that load the player only on play.</li>
+<li>HTML iframe support and <a href="/demos/mixed-contents/">mixed content</a>:
+photos, videos, maps and PDFs in one gallery.</li>
+<li>HTML <a href="/demos/captions/">captions</a> per slide, with animated and
+relative-position variants.</li>
+<li>Rotate and flip images.</li>
+<li><a href="/docs/web-share/">Sharing</a> through the native share sheet where it
+exists, social links where it does not.</li>
+<li><a href="/docs/hash-drivers/">Deep links</a> with browser back and forward,
+through the Navigation API or the History API.</li>
+<li>Autoplay slideshow with a progress bar, pager dots, per-slide
+comments, and a <a href="/demos/medium-zoom/">medium-zoom</a> plugin for
+in-page image zoom.</li>
+<li>Inline SVG icons, each <a href="/docs/custom-icons/">replaceable by name</a>.</li>
+</ul>
+<h2 id="ask-your-coding-agent">Ask your coding agent</h2>
+<p>Working with a coding agent? Paste the prompt below into it and replace
+the first line with the gallery you want. It points the agent at the
+markdown version of these docs, so it picks the right package for your
+stack and avoids the setup mistakes behind most bug reports.</p>
+<div class="agent-prompt">
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>Add lightGallery to this project: [describe the gallery you want, for</span></span>
+<span class="line"><span>example "a product photo grid that opens a lightbox with thumbnails and</span></span>
+<span class="line"><span>zoom"].</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>1. Detect the stack and use the matching package:</span></span>
+<span class="line"><span>   - React: @lightgallery/react</span></span>
+<span class="line"><span>   - Vue 3: @lightgallery/vue</span></span>
+<span class="line"><span>   - Angular: @lightgallery/angular</span></span>
+<span class="line"><span>   - Anything else (plain JavaScript, TypeScript, server-rendered HTML):</span></span>
+<span class="line"><span>     lightgallery</span></span>
+<span class="line"><span>2. Before writing code, read the docs index at</span></span>
+<span class="line"><span>   https://www.lightgalleryjs.com/llms.txt and the guide for that stack:</span></span>
+<span class="line"><span>   - React: https://www.lightgalleryjs.com/docs/react/index.md</span></span>
+<span class="line"><span>   - Vue: https://www.lightgalleryjs.com/docs/vue/index.md</span></span>
+<span class="line"><span>   - Angular: https://www.lightgalleryjs.com/docs/angular/index.md</span></span>
+<span class="line"><span>   - Plain JavaScript:</span></span>
+<span class="line"><span>     https://www.lightgalleryjs.com/docs/getting-started/index.md</span></span>
+<span class="line"><span>   Use the install command from that guide exactly. The framework</span></span>
+<span class="line"><span>   packages also need the lightgallery package, which ships the CSS.</span></span>
+<span class="line"><span>3. Import the CSS yourself: lightgallery/css/lightgallery.css plus one</span></span>
+<span class="line"><span>   file per plugin you use, such as lightgallery/css/lg-thumbnail.css.</span></span>
+<span class="line"><span>   The framework packages ship no styles.</span></span>
+<span class="line"><span>4. Plugins are opt-in. Import each one from its plugins/&#x3C;name> entry and</span></span>
+<span class="line"><span>   add it to the plugins list (in Angular, the features input with</span></span>
+<span class="line"><span>   withThumbnail(), withZoom() and so on). A plugin's settings do</span></span>
+<span class="line"><span>   nothing until the plugin is added. Unless I ask for something else,</span></span>
+<span class="line"><span>   include the zoom and thumbnail plugins and their CSS files.</span></span>
+<span class="line"><span>5. Give every item the full-size image URL, a thumbnail and alt text.</span></span>
+<span class="line"><span>   Set lgSize to "WIDTH-HEIGHT" (data-lg-size in HTML markup) on every</span></span>
+<span class="line"><span>   image item, using the natural size of the full image; read it from</span></span>
+<span class="line"><span>   the image files, the image optimizer or the CMS. Without it the slide</span></span>
+<span class="line"><span>   fades in instead of opening from its thumbnail.</span></span>
+<span class="line"><span>6. Check every option name against</span></span>
+<span class="line"><span>   https://www.lightgalleryjs.com/docs/settings/index.md instead of</span></span>
+<span class="line"><span>   guessing. Commercial projects also need the licenseKey setting.</span></span>
+<span class="line"><span>7. When you are done, run the project's build or type check, open the</span></span>
+<span class="line"><span>   gallery in a browser, and confirm the styles are applied and the</span></span>
+<span class="line"><span>   console shows no errors.</span></span></code></pre>
+</div>
+<h2 id="installation">Installation</h2>
+<p>lightGallery is available on NPM, Yarn, CDNs, and GitHub. You can use any
+of the following methods to download lightGallery</p>
+<ul>
+<li>
+<p><a href="https://www.npmjs.com/">NPM</a> - NPM is a package manager for the JavaScript
+programming language. You can install <code>lightgallery</code> using the following
+command</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">npm</span><span style="color:#9ECBFF"> install</span><span style="color:#9ECBFF"> lightgallery</span></span></code></pre>
+</li>
+<li>
+<p><a href="https://yarnpkg.com/">YARN</a> - Yarn is another popular package manager for
+the JavaScript programming language. If you prefer you can use Yarn instead
+of NPM</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="sh"><code><span class="line"><span style="color:#B392F0">yarn</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> lightgallery</span></span></code></pre>
+</li>
+<li>
+<p><a href="https://github.com/sachinchoolur/lightGallery/releases">GitHub</a> -
+You can also download a release directly from GitHub</p>
+</li>
+<li>
+<p>CDN - If you prefer to use a CDN, you can load files via
+<a href="https://www.jsdelivr.com/package/npm/lightgallery">jsdelivr</a>,
+<a href="https://cdnjs.com/libraries/lightgallery">cdnjs</a> or
+<a href="https://unpkg.com/browse/lightgallery@latest/">unpkg</a></p>
+</li>
+</ul>
+<h4 id="include-css-and-javascript-files">Include CSS and Javascript files</h4>
+<p>First of all, include lightgallery.css in the &#x3C;head> of the document. If you
+want to include any lightGallery plugin such as thumbnails or zoom, you need to
+include respective css files as well.</p>
+<p>Alternatively you can include <code>lightgallery-bundle.css</code> which contains
+lightGallery and all plugin styles instead of separate stylesheets.</p>
+<p>If you like you can also import scss files instead of css files from the <code>scss</code>
+folder.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="html"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">head</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">link</span><span style="color:#B392F0"> type</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"text/css"</span><span style="color:#B392F0"> rel</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"stylesheet"</span><span style="color:#B392F0"> href</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"css/lightgallery.css"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    &#x3C;!-- lightgallery plugins --></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">link</span><span style="color:#B392F0"> type</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"text/css"</span><span style="color:#B392F0"> rel</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"stylesheet"</span><span style="color:#B392F0"> href</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"css/lg-zoom.css"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">link</span><span style="color:#B392F0"> type</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"text/css"</span><span style="color:#B392F0"> rel</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"stylesheet"</span><span style="color:#B392F0"> href</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"css/lg-thumbnail.css"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    &#x3C;!-- OR --></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">link</span><span style="color:#B392F0"> type</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"text/css"</span><span style="color:#B392F0"> rel</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"stylesheet"</span><span style="color:#B392F0"> href</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"css/lightgallery-bundle.css"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">head</span><span style="color:#E1E4E8">></span></span></code></pre>
+<p>Then include <code>lightgallery.umd.js</code> into your document. If you want to include
+any lightgallery plugin you can include it after <code>lightgallery.umd.js</code>.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="html"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">body</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    ....</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">script</span><span style="color:#B392F0"> src</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"lightgallery.umd.js"</span><span style="color:#E1E4E8">>&#x3C;/</span><span style="color:#85E89D">script</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#6A737D">    &#x3C;!-- Or use the minified version --></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">script</span><span style="color:#B392F0"> src</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"lightgallery.min.js"</span><span style="color:#E1E4E8">>&#x3C;/</span><span style="color:#85E89D">script</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    &#x3C;!-- lightgallery plugins --></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">script</span><span style="color:#B392F0"> src</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"plugins/thumbnail/lg-thumbnail.umd.js"</span><span style="color:#E1E4E8">>&#x3C;/</span><span style="color:#85E89D">script</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">script</span><span style="color:#B392F0"> src</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"plugins/zoom/lg-zoom.umd.js"</span><span style="color:#E1E4E8">>&#x3C;/</span><span style="color:#85E89D">script</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">body</span><span style="color:#E1E4E8">></span></span></code></pre>
+<p>lightGallery supports AMD, CommonJS and ES6 modules too.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> lightGallery </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> 'lightgallery'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// Plugins</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> lgThumbnail </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> 'lightgallery/plugins/thumbnail'</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> lgZoom </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> 'lightgallery/plugins/zoom'</span></span>
+<span class="line"></span></code></pre>
+<h4 id="the-markup">The markup</h4>
+<p>lightGallery does not force you to use any kind of markup. You can use whatever
+markup you want. <a href="../../demos/html-markup/">Here</a> you can find
+detailed examples of different kinds of markups.</p>
+<p>Give each anchor the natural size of its full image via
+<code>data-lg-size="${width}-${height}"</code>. It drives the
+<a href="/docs/settings/#zoomFromOrigin">zoom-from-origin</a> animation: the slide opens
+from the clicked thumbnail and closes back to it. Without the attribute the
+slide fades in instead.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="html"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> id</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"lightgallery"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">a</span><span style="color:#B392F0"> href</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"img/img1.jpg"</span><span style="color:#B392F0"> data-lg-size</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"1600-2400"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> alt</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"img1"</span><span style="color:#B392F0"> src</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"img/thumb1.jpg"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">a</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">a</span><span style="color:#B392F0"> href</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"img/img2.jpg"</span><span style="color:#B392F0"> data-lg-size</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"1024-800"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> alt</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"img2"</span><span style="color:#B392F0"> src</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"img/thumb2.jpg"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">a</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#6A737D">    &#x3C;!-- more items --></span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span></code></pre>
+<h4 id="initialize-lightgallery">Initialize lightGallery</h4>
+<p>Finally, you need to initiate the gallery by adding the following code.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="html"><code><span class="line"><span style="color:#E1E4E8">&#x3C;</span><span style="color:#85E89D">script</span><span style="color:#B392F0"> type</span><span style="color:#E1E4E8">=</span><span style="color:#9ECBFF">"text/javascript"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#B392F0">    lightGallery</span><span style="color:#E1E4E8">(document.</span><span style="color:#B392F0">getElementById</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'lightgallery'</span><span style="color:#E1E4E8">), {</span></span>
+<span class="line"><span style="color:#E1E4E8">        plugins: [lgZoom, lgThumbnail],</span></span>
+<span class="line"><span style="color:#E1E4E8">        licenseKey: </span><span style="color:#9ECBFF">'your_license_key'</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        speed: </span><span style="color:#79B8FF">500</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#6A737D">        // ... other settings</span></span>
+<span class="line"><span style="color:#E1E4E8">    });</span></span>
+<span class="line"><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">script</span><span style="color:#E1E4E8">></span></span></code></pre>
+<h4 id="license-key">License Key</h4>
+<p>You’ll receive a license key via email once you purchase a license <a href="https://www.lightgalleryjs.com/docs/settings/#licenseKey">More info</a></p>
+<h4 id="plugins">Plugins</h4>
+<p>As shown above, you need to pass the plugins via settings if you want to use any
+lightGallery plugins.</p>
+<p>If you are including lightGallery files via script tag, please use the same
+plugins names as follows.</p>
+<p><code>lgZoom</code>, <code>lgAutoplay</code>, <code>lgComment</code>, <code>lgFullscreen</code>, <code>lgHash</code>, <code>lgJustified</code>,
+<code>lgPager</code>, <code>lgRelativeCaption</code>, <code>lgRotate</code>, <code>lgShare</code>, <code>lgThumbnail</code>, <code>lgVideo</code>,
+<code>lgVimeoThumbnail</code>, <code>lgMediumZoom</code>, <code>lgOriginCrop</code></p>
+<h2 id="browser-support">Browser support</h2>
+<p>lightGallery supports current evergreen browsers and iOS Safari: Chrome,
+Edge, Firefox and Safari on desktop, Safari on iOS and Chrome on Android.
+The builds target ES2017 and run without transpiling or polyfills.</p>
+<ul>
+<li><strong>ES module and UMD builds.</strong> Import it in a bundler, load it as a
+native <code>&#x3C;script type="module"></code>, or drop the UMD file into a plain
+<code>&#x3C;script></code> tag. Nothing is module-only.</li>
+<li><strong>Newer APIs are optional.</strong> Features that rely on newer browser
+APIs, such as the native share sheet or observer-based relayout, are
+feature-detected and fall back cleanly where they are missing.</li>
+</ul>
+<p>If something misbehaves in a browser you care about, please
+<a href="https://github.com/sachinchoolur/lightGallery/issues">open an issue</a>
+with the browser and version.</p>
+<h2 id="license">License</h2>
+<p>lightGallery is free and open source under the
+<a href="https://github.com/sachinchoolur/lightGallery/blob/HEAD/LICENSE">GPLv3</a>.
+Use it in any project, personal or commercial, that is distributed under
+GPLv3-compatible terms.</p>
+<p>If you want to keep your own source proprietary, choose the
+<a href="/license/">commercial license</a>. It covers the same code with every feature
+and plugin included, nothing is gated, and it is a one-time payment. The
+<a href="/docs/license/">license docs</a> explain which license applies and how to pass
+your key.</p>
+<h2 id="support">Support</h2>
+<p>If the gallery misbehaves, the <a href="/docs/troubleshooting/">troubleshooting guide</a>
+covers the symptoms behind most bug reports, with the fix for each package.</p>
+<p>If you have any questions, suggestions, feedback, please reach out to <a href="mailto:contact@lightgalleryjs.com">contact@lightgalleryjs.com</a> or DM me on <a href="https://x.com/SachinNeravath">X</a></p>   <p class="edit-page"> <a href="https://github.com/sachinchoolur/lightGallery/tree/HEAD/site-astro/src/content/docs/getting-started.md"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path> </svg>Edit this page on GitHub
+</a> </p> <nav class="page-nav" aria-label="Previous and next page"> <a class="page-nav-card page-nav-prev" href="/docs/v2/react/"> <span class="page-nav-arrow" aria-hidden="true">
+&larr;
+</span> <span class="page-nav-text"> <span class="page-nav-dir">Previous</span> <strong>lightGallery 2.x React wrapper (archive)</strong> </span> </a> <a class="page-nav-card page-nav-next" href="/docs/settings/"> <span class="page-nav-text"> <span class="page-nav-dir">Next</span> <strong>Settings</strong> </span> <span class="page-nav-arrow" aria-hidden="true">
+&rarr;
+</span> </a> </nav> </main> <div class="col-lg-2 col-xl-2 docs-sidebar"> <nav class="docs-links" aria-label="Main navigation"> <h3>API Docs</h3><ul class="list-unstyled"><li><a class="docs-link active" href="/docs/getting-started/">Get started</a></li><li><a class="docs-link" href="/docs/settings/">Settings</a></li><li><a class="docs-link" href="/docs/events/">Events</a></li><li><a class="docs-link" href="/docs/methods/">Methods</a></li><li><a class="docs-link" href="/docs/dynamic-variables/">Dynamic variables</a></li><li><a class="docs-link" href="/docs/attributes/">Attributes</a></li><li><a class="docs-link" href="/docs/react-image-video-gallery/">React</a></li><li><a class="docs-link" href="/docs/vue-image-video-gallery/">Vue</a></li><li><a class="docs-link" href="/docs/angular-image-video-gallery/">Angular</a></li><li><a class="docs-link" href="/docs/license/">License</a></li><li><a class="docs-link" href="/docs/migration/">Migration</a></li><li><a class="docs-link" href="/docs/troubleshooting/">Troubleshooting</a></li><li><a class="docs-link" href="/docs/creating-plugins/">Creating plugins</a></li></ul><h3>Frameworks</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/headless/">@lightgallery/headless</a></li><li><a class="docs-link" href="/docs/react/">@lightgallery/react</a></li><li><a class="docs-link" href="/docs/vue/">@lightgallery/vue</a></li><li><a class="docs-link" href="/docs/angular/">@lightgallery/angular</a></li></ul><h3>Features</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/justified-layout/">Justified layout</a></li><li><a class="docs-link" href="/docs/localization-rtl/">Localization &amp; RTL</a></li><li><a class="docs-link" href="/docs/virtualization/">Virtualization</a></li><li><a class="docs-link" href="/docs/video-facades/">Video facades</a></li><li><a class="docs-link" href="/docs/accessibility/">Accessibility</a></li><li><a class="docs-link" href="/docs/web-share/">Web Share</a></li><li><a class="docs-link" href="/docs/hash-drivers/">Hash drivers</a></li><li><a class="docs-link" href="/docs/responsive-loading/">Responsive loading</a></li><li><a class="docs-link" href="/docs/thumbnail-scrubbing/">Thumbnail scrubbing</a></li><li><a class="docs-link" href="/docs/custom-icons/">Custom icons</a></li></ul> </nav> </div> <nav class="docs-toc d-none d-xl-block col-xl-2" aria-label="Secondary navigation"> <div class="page-links"> <h3>On this page</h3> <nav id="TableOfContents"> <ul> <li> <a href="#core-features"> Core features </a> </li><li> <a href="#ask-your-coding-agent"> Ask your coding agent </a> </li><li> <a href="#installation"> Installation </a> </li><li> <a href="#browser-support"> Browser support </a> </li><li> <a href="#license"> License </a> </li><li> <a href="#support"> Support </a> </li> </ul> </nav> </div> </nav> </div> </div> <script type="module">document.querySelectorAll(".agent-prompt pre").forEach(e=>{const t=document.createElement("button");t.type="button",t.className="page-tools-btn agent-prompt-copy",t.textContent="Copy prompt",t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent?.trim()??""),t.textContent="Copied"}catch{t.textContent="Copy failed"}setTimeout(()=>{t.textContent="Copy prompt"},1800)}),e.parentElement?.insertBefore(t,e)});</script> <script type="module">const a=[...document.querySelectorAll('#TableOfContents a[href^="#"]')];if(a.length&&"IntersectionObserver"in window){const o=new Map(a.map(e=>[e.getAttribute("href").slice(1),e])),s=[...o.keys()].map(e=>document.getElementById(e)).filter(e=>!!e);let i;const c=e=>{const t=o.get(e);!t||t===i||(i?.classList.remove("active"),t.classList.add("active"),i=t)},r=new Set,d=new IntersectionObserver(e=>{for(const n of e)n.isIntersecting?r.add(n.target.id):r.delete(n.target.id);const t=s.find(n=>r.has(n.id));t&&c(t.id)},{rootMargin:"-72px 0px -70% 0px",threshold:0});s.forEach(e=>d.observe(e)),s[0]&&c(s[0].id)}</script>  <footer class="footer"> <div class="container-xxl"> <div class="footer-grid"> <div class="footer-brandcol"> <a class="footer-brand" href="/">lightGallery</a> <p class="footer-tagline">An image and video lightbox gallery for the modern web.</p> <a class="footer-gh" href="https://github.com/sachinchoolur/lightGallery" aria-label="GitHub" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> </div> <nav class="footer-col" aria-label="Components"> <h2 class="footer-h">Components</h2> <ul class="footer-list"> <li> <a href="/docs/react-image-video-gallery/">React</a> </li><li> <a href="/docs/vue-image-video-gallery/">Vue.js</a> </li><li> <a href="/docs/angular-image-video-gallery/">Angular</a> </li><li> <a href="/jquery-to-js-converter/">jQuery to JavaScript converter</a> </li> </ul> </nav><nav class="footer-col" aria-label="Docs"> <h2 class="footer-h">Docs</h2> <ul class="footer-list"> <li> <a href="/docs/getting-started/">Get started</a> </li><li> <a href="/docs/settings/">Settings</a> </li><li> <a href="/docs/events/">Events</a> </li><li> <a href="/docs/methods/">Methods</a> </li><li> <a href="/blog/">Blog</a> </li> </ul> </nav><nav class="footer-col" aria-label="Demos"> <h2 class="footer-h">Demos</h2> <ul class="footer-list"> <li> <a href="/demos/thumbnails/">Thumbnails</a> </li><li> <a href="/demos/dynamic-mode/">Dynamic</a> </li><li> <a href="/demos/carousel-gallery/">Carousel</a> </li><li> <a href="/demos/video-gallery/">Video</a> </li><li> <a href="/demos/transitions/">Transitions</a> </li> </ul> </nav><nav class="footer-col" aria-label="Social"> <h2 class="footer-h">Social</h2> <ul class="footer-list"> <li> <a href="https://github.com/sachinchoolur/lightGallery">GitHub</a> </li><li> <a href="https://x.com/SachinNeravath" target="_blank" rel="noopener">X</a> </li><li> <a href="https://stackblitz.com/@sachinchoolur" target="_blank" rel="noopener">StackBlitz</a> </li><li> <a href="https://docs.google.com/forms/d/e/1FAIpQLSfcxknmKJAF9btnCg8HugFadxyWRZ3TgC0ZKxOtIjdaGfqxIw/viewform?usp=pp_url&entry.34608024=Yes" target="_blank" rel="noopener">Write a review</a> </li> </ul> </nav> </div> <div class="footer-bottom"> <span>lightGallery. Actively maintained since 2014, 12+ years and counting.</span> <span><a href="/license/">Free under GPLv3, commercial license available</a></span> <span><a href="/credits/">Credits</a></span> </div> </div> </footer> <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DaGkoOg8.js"></script> </body> </html>

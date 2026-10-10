@@ -1,0 +1,266 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="robots" content="index, follow"><meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>Changelog - lightGallery</title><meta name="description" content="What changed in each lightGallery release, new features, changed defaults and removals, with links to the docs."><link rel="canonical" href="https://www.lightgalleryjs.com/changelog/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta name="twitter:title" content="Changelog"><meta name="twitter:description" content="What changed in each lightGallery release, new features, changed defaults and removals, with links to the docs."><meta name="twitter:site" content="@SachinNeravath"><meta name="twitter:creator" content="@SachinNeravath"><meta property="og:title" content="Changelog"><meta property="og:description" content="What changed in each lightGallery release, new features, changed defaults and removals, with links to the docs."><meta property="og:type" content="website"><meta property="og:url" content="https://www.lightgalleryjs.com/changelog/"><meta property="og:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta property="article:publisher" content="https://www.facebook.com/sachinchoolur"><meta property="article:author" content="https://www.facebook.com/sachinchoolur"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="lightGallery"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"lightGallery","item":"https://www.lightgalleryjs.com/"},{"@type":"ListItem","position":2,"name":"Changelog","item":"https://www.lightgalleryjs.com/changelog/"}]}</script><meta name="ahrefs-site-verification" content="96bd744dcfe6c078a1994c8d9e0e0ca6a5cf16004f63946a0cd349ca937c1b24"><meta name="theme-color" content="#fff"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="manifest" href="/site.webmanifest"><link rel="alternate" type="application/rss+xml" title="lightGallery blog" href="/index.xml"><script>
+            // Framework code tabs: apply the deep-linked or remembered
+            // framework before first paint, so the panels never swap
+            // once the deferred module runs. CodeTabs.astro takes over
+            // (and drops the attribute) as soon as it has synced.
+            (() => {
+                const valid = ['vanilla', 'react', 'vue', 'angular'];
+                const url = new URL(window.location.href);
+                const query = url.searchParams.get('framework');
+                const hash = url.hash.replace(/^#/, '');
+                let framework = null;
+                if (query && valid.includes(query)) framework = query;
+                else if (valid.includes(hash)) framework = hash;
+                else
+                    try {
+                        const stored = localStorage.getItem('lg-framework');
+                        if (stored && valid.includes(stored)) framework = stored;
+                    } catch {
+                        /* storage blocked */
+                    }
+                if (framework)
+                    document.documentElement.dataset.lgFramework = framework;
+            })();
+        </script> <link rel="alternate" type="text/markdown" href="/changelog/index.md" title="Markdown version"> <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);posthog.init('phc_uyDcoLpTSdtPcDLf2SswgknmWiBsUfV2EzjhzYi3Ke4',{api_host:'https://app.posthog.com'})</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-960P19JL1K"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-960P19JL1K');</script><style>.changelog-page[data-astro-cid-b3ixuhka]{padding:7rem 0 5rem}
+</style>
+<link rel="stylesheet" href="/_astro/_slug_.C1T_l066.css"></head> <body class="docs single changelog"> <header id="nav-header" class="site-header"> <div class="site-header-bar"> <div class="container-xxl site-header-inner"> <a class="site-header-brand" href="/"><img src="/images/lightgallery-logo.png" alt="" width="294" height="312">lightGallery</a> <nav class="site-header-nav" aria-label="Main"> <a class="site-header-link" href="/docs/getting-started/"> Docs </a><a class="site-header-link" href="/demos/thumbnails/"> Demos </a> <div class="site-header-menu" data-site-menu> <button class="site-header-link" type="button" aria-expanded="false" aria-controls="site-header-frameworks">
+Frameworks
+<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg> </button> <div class="site-header-menu-panel" id="site-header-frameworks"> <a class="site-header-menu-item" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> Angular </a><a class="site-header-menu-item" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> React </a><a class="site-header-menu-item" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> Vue </a> </div> </div> <a class="site-header-link" href="/license/"> License </a> </nav> <div class="site-header-actions"> <a class="site-header-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener" aria-label="GitHub"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> <a class="site-header-cta" href="/docs/getting-started/">Get started</a> </div> <button class="site-header-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-header-sheet"> <svg class="site-header-icon-menu" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path></svg> <svg class="site-header-icon-close" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path></svg> </button> </div> </div> <div class="site-header-scrim" data-site-scrim></div> <div class="site-header-sheet" id="site-header-sheet"> <nav class="container-xxl site-header-sheet-inner" aria-label="Main"> <a class="site-header-sheet-link" href="/docs/getting-started/"> <span>Docs</span> </a><a class="site-header-sheet-link" href="/demos/thumbnails/"> <span>Demos</span> </a> <div class="site-header-sheet-group"> <span class="site-header-sheet-label">Frameworks</span> <div class="site-header-sheet-frameworks"> <a class="site-header-sheet-framework" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> <span>Angular</span> </a><a class="site-header-sheet-framework" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> <span>React</span> </a><a class="site-header-sheet-framework" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> <span>Vue</span> </a> </div> </div> <a class="site-header-sheet-link" href="/license/"> <span>License</span> </a> <a class="site-header-sheet-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+GitHub
+</a> </nav> </div> </header> <script type="module">const s=document.getElementById("nav-header"),t=s?.querySelector("[data-site-menu]"),a=t?.querySelector("button"),c=s?.querySelector(".site-header-toggle"),d=s?.querySelector("[data-site-scrim]");if(s&&t&&a&&c&&d){const n=e=>{t.classList.toggle("is-open",e),a.setAttribute("aria-expanded",String(e))};a.addEventListener("click",()=>n(!t.classList.contains("is-open"))),t.addEventListener("focusout",e=>{const o=e.relatedTarget;o&&!t.contains(o)&&n(!1)});const i=e=>{s.classList.toggle("is-sheet-open",e),c.setAttribute("aria-expanded",String(e)),document.documentElement.classList.toggle("site-header-locked",e)};c.addEventListener("click",()=>i(!s.classList.contains("is-sheet-open"))),d.addEventListener("click",()=>i(!1)),matchMedia("(min-width: 992px)").addEventListener("change",e=>{e.matches&&i(!1)}),document.addEventListener("click",e=>{t.contains(e.target)||n(!1)}),document.addEventListener("keydown",e=>{e.key==="Escape"&&(t.classList.contains("is-open")&&(n(!1),a.focus()),s.classList.contains("is-sheet-open")&&(i(!1),c.focus()))}),window.addEventListener("pageshow",e=>{e.persisted&&(n(!1),i(!1))})}</script>   <div class="container-xl docs-content changelog-page" data-astro-cid-b3ixuhka> <div class="row justify-content-center" data-astro-cid-b3ixuhka> <div class="col-lg-8" data-astro-cid-b3ixuhka> <h1 id="changelog">Changelog</h1>
+<p>All notable changes to lightGallery. The format follows
+<a href="https://keepachangelog.com/">Keep a Changelog</a>; versions follow
+<a href="https://semver.org/">Semantic Versioning</a>.</p>
+<h2 id="300-2026-10-08">3.0.0 (2026-10-08)</h2>
+<p>Published under the <code>latest</code> tag for every package: <code>lightgallery</code>,
+<code>@lightgallery/headless</code>, <code>@lightgallery/react</code>, <code>@lightgallery/vue</code> and
+<code>@lightgallery/angular</code>, all at 3.0.0. The 3.0.0 betas were published under
+<code>next</code>; <code>@lightgallery/headless@3.0.0-beta.1</code> shipped without its build
+output and is deprecated.</p>
+<p>Version 3 is a complete rewrite of lightGallery around a shared,
+framework-free core, with native packages for React, Vue and Angular and
+performance and experience improvements throughout. The vanilla API is
+unchanged, so a 2.x gallery keeps working.</p>
+<h3 id="packages">Packages</h3>
+<ul>
+<li><strong><code>@lightgallery/headless</code></strong>, new. The gallery’s logic without a DOM:
+state machine, settings resolution, gesture and zoom math, thumbnail
+windowing, URL drivers, video URL helpers. Every package below builds on it.</li>
+<li><strong><code>@lightgallery/react</code></strong>, new native React package. Components, render
+slots, callbacks and an imperative handle; React owns every DOM node.
+Replaces the <code>lightgallery/react</code> wrapper.</li>
+<li><strong><code>@lightgallery/vue</code></strong>, new native Vue 3 package. <code>v-model</code> for the open
+state, slots, <code>Teleport</code>. Replaces the <code>lightgallery/vue</code> wrapper.</li>
+<li><strong><code>@lightgallery/angular</code></strong>, new native Angular package. Standalone
+components, signal inputs, zoneless change detection, CDK overlay.
+Replaces the <code>lightgallery/angular</code> wrapper.</li>
+<li><strong><code>lightgallery</code></strong>, the vanilla package, modernized build with an
+<code>exports</code> map; plugins remain separate entries under <code>lightgallery/plugins/*</code>.</li>
+</ul>
+<h3 id="added">Added</h3>
+<ul>
+<li><strong>Justified layout</strong> plugin: row-justified trigger grids from the gallery
+itself (<code>lightgallery/plugins/justified</code>, and grid components in each
+framework package). The grid is never seen unorganised: thumbnails stay
+out of flow until the layout has positioned them, each box then shows as
+a placeholder and its thumbnail fades in once loaded. <code>justifiedReveal</code>
+picks whether rows fill in top to bottom or each thumbnail appears on
+its own. Ship <code>class="lg-justified"</code> in the container markup so the
+hiding also covers the window before the script runs.</li>
+<li><strong>Origin crop</strong> plugin (<code>lightgallery/plugins/originCrop</code>, and in each
+framework package): the zoom-from-origin flight from a cropped thumbnail.
+A tile cropped with <code>object-fit: cover</code> or <code>background-size: cover</code> shows
+a window of the photo, and the built-in flight squashes the whole photo
+into it; with the plugin that window grows from the tile at a uniform
+scale while the rest of the photo is revealed around it, and the close
+flies back the same way. It reads the thumbnail’s computed fit, so no
+markup or stylesheet is needed.</li>
+<li><strong>Toolbar overflow</strong>: the toolbar stays on one row. When its buttons do
+not fit beside the counter, the lowest-priority ones move into a “More
+options” menu (<code>toolbarOverflow</code>, on by default), labelled by
+<code>strings.moreOptions</code> and drawn with the replaceable <code>more</code> icon. Touch
+devices also leave out the zoom in, zoom out and actual size buttons,
+which repeat pinch and double-tap (<code>showGestureButtons</code>, turned off
+through <code>mobileSettings</code>).</li>
+<li><strong>Zoom from origin in dynamic mode</strong>: a dynamic gallery now flies open
+from the element passed to <code>openGallery(index, element)</code>, and closes
+with the centre fade, like the framework packages. The media size comes
+from the new <code>lgSize</code> item field (<code>data-lg-size</code> on markup items fills
+the same field), or from a <code>data-lg-size</code> attribute on that element.
+Dynamic galleries used to force <code>zoomFromOrigin</code> off.</li>
+<li><strong>Virtualization</strong>: <code>virtualization</code> setting keeps a window of slides and
+thumbnails mounted for very large galleries.</li>
+<li><strong>Video facades</strong>: video slides render a poster and load the player on
+first play; <code>videoFacade</code> and <code>youTubeNoCookie</code> settings.</li>
+<li><strong>Thumbnail scrubbing</strong>: <code>scrubThumbnails</code> turns the thumbnail strip into
+a scrubber that drives the gallery through the release glide.</li>
+<li><strong>Custom icons</strong>: <code>icons</code> setting (React <code>render.icon</code>, Vue <code>:icons</code>,
+Angular <code>lgIcon</code> template) replaces any control icon by name. Built-in
+icons are inline SVG; the icon font is gone.</li>
+<li><strong>Localization and RTL</strong>: every UI string is a setting (<code>strings</code>, merged
+per key over the defaults); <code>direction</code> setting with an opt-in
+<code>lg-rtl.css</code> layer that mirrors navigation, swipe and chrome.</li>
+<li><strong>Web Share</strong>: the share button prefers the device’s native share sheet
+(<code>preferNativeShare</code>) with the social links as fallback; X replaces the
+Twitter target.</li>
+<li><strong>Hash drivers</strong>: <code>hashDriver</code> chooses between the hash, history and
+Navigation API drivers behind one interface.</li>
+<li><strong>Responsive loading</strong>: size ladders and <code>srcset</code>/<code>sizes</code> selection for
+the lightbox image, with decode-gated slide completion.</li>
+<li><strong>Accessibility</strong>: dialog semantics, focus trapping and restoration,
+labelled controls from <code>strings</code>, a polite live region announcing slide
+changes (<code>ariaAnnouncements</code>), reduced-motion support.</li>
+<li><strong>Gesture physics</strong>: releases run a velocity-seeded damped spring with
+momentum projection; boundary friction instead of hard clamps;
+pinch-to-close (<code>pinchToClose</code>); a <code>flickVelocity</code> setting.</li>
+<li><strong>Public types</strong>: <code>lightgallery</code> exports the <code>LightGallery</code> instance
+type (for a variable or a plugin’s <code>core</code>, without <code>ReturnType</code>),
+<code>LightGallerySettings</code>, <code>GalleryItem</code> and every event <code>detail</code> type
+(<code>InitDetail</code>, <code>BeforeSlideDetail</code>, …) from the package entry:
+<code>import type { LightGallerySettings } from 'lightgallery'</code>.</li>
+</ul>
+<h3 id="changed">Changed</h3>
+<ul>
+<li>Icons are inline SVG; the <code>lg</code> icon font and its files are removed.</li>
+<li>Plugin labels (aria-labels and titles) come from the core <code>strings</code>
+setting; the per-plugin <code>*PluginStrings</code> settings are deprecated aliases.</li>
+<li>The share plugin’s Twitter target is now X: the <code>shareX</code> icon name, and
+the X mark in place of the old bird.</li>
+<li><code>lightgallery</code> declares Node 18 as its minimum in <code>engines</code>, matching
+the other packages.</li>
+<li>In the React, Vue and Angular packages the zoom plugin’s actual-size
+button now follows the vanilla behaviour: it carries the <code>zoomIn</code> and
+<code>zoomOut</code> icons and switches between the <code>actualSizeIcons</code> classes with
+the zoom state, while the zoom in and zoom out buttons keep their fixed
+<code>lg-zoom-in</code> and <code>lg-zoom-out</code> classes. The button is 24px like every
+other toolbar icon in all packages. The <code>actualSize</code> icon name is no
+longer used by any default rendering.</li>
+<li>In the React, Vue and Angular packages <code>init</code> is always the first event:
+a gallery mounted already open fires <code>init</code>, then <code>beforeOpen</code> and
+<code>afterOpen</code>, as the vanilla gallery does (the betas fired <code>beforeOpen</code>
+first).</li>
+</ul>
+<h3 id="fixed">Fixed</h3>
+<p>Long-standing bugs, nearly all of them present in 2.x:</p>
+<ul>
+<li>
+<p>The vanilla focus trap counts every focusable element in the dialog,
+including <code>tabindex</code> ones, so Tab cannot leave through plugin content.</p>
+</li>
+<li>
+<p>A thumbnail click that moved by a few pixels started a strip drag: with
+<code>scrubThumbnails</code> on, the release glide kept the scrub session alive and
+the click’s own slide change did not re-centre the strip, and on a long
+strip the wobble itself navigated (one pixel is several slides). A press
+that moves less than <code>thumbnailSwipeThreshold</code> is a click in every
+package: it neither scrubs nor glides.
+In a windowed vanilla strip (<code>virtualization.thumbs</code>) the previous
+thumbnail also kept its active mark after a slide change, and a wobble
+toward either end of the strip rebuilt it under the pointer (the elastic
+overshoot read as travel past the rendered window), which swallowed the
+click; the frameworks committed a translate mid-drag for the same reason.</p>
+</li>
+<li>
+<p>Closing a zoomed image in the React, Vue and Angular packages left it
+enlarged: the close flight shrank the slide around the zoom wrappers,
+so the image flew back to its trigger at the zoomed scale, covering the
+thumbnails and the page around it. The zoom now resets in the same frame
+the close starts, as in vanilla, and the image lands on its thumbnail.</p>
+</li>
+<li>
+<p>The slideshow ran on a fixed interval, so on a slow connection it
+advanced past images that had not loaded yet. The countdown (and the
+progress bar) now starts once the slide on screen has loaded; a slide
+that fails to load settles the same way, so a broken image does not
+stall the show.</p>
+</li>
+<li>
+<p>In the React, Vue and Angular packages a slide that left the mounted
+pool kept its loaded flag, so returning to it in a large gallery showed
+no loader while the image downloaded again.</p>
+</li>
+<li>
+<p>The React <code>&#x3C;LightGalleryItem></code> and an Angular <code>[lgGalleryItem]</code> anchor
+rendered without an <code>href</code> unless you passed one, so keyboard users
+could not tab to the thumbnails and the server-rendered markup linked
+nowhere. An anchor trigger now links to <code>item.src</code> by default, as the
+Vue <code>&#x3C;LgItem></code> already did; an explicit <code>href</code> still wins.</p>
+</li>
+<li>
+<p>Slide transitions crossfaded for the whole slide instead of the brief
+fade the modes ask for, so the outgoing image ghosted across the
+transition. Transform and opacity now keep their own durations, and the
+modes whose effect is the fade keep the long one.</p>
+</li>
+<li>
+<p>Zoom clamped a repositioning zoom against a wider window than its own
+release settle uses. Zooming near an edge parked the image where the
+next tap immediately moved it away from.</p>
+</li>
+<li>
+<p>Rotating an image and then zooming divided by a zero previous scale,
+handing the pan origin <code>NaN</code> and voiding the transform, so panning
+silently stopped tracking.</p>
+</li>
+<li>
+<p>Medium zoom closed the gallery on every click, toolbar buttons included,
+so rotating or sharing dismissed the image. Toolbar clicks now leave it
+open; a click on the slide or backdrop still closes.</p>
+</li>
+<li>
+<p>The thumbnail strip animated its first positioning, so opening the
+gallery from a thumbnail far along the strip slid it across while the
+image was still flying in. That first positioning is now instant.</p>
+</li>
+<li>
+<p>The thumbnail strip is built when the gallery initialises, and its
+images loaded eagerly, so every page with a closed gallery downloaded
+all of its strip thumbnails at load. Strip images are now lazy; nothing
+is fetched until the gallery opens, and thumbs far along the strip load
+as they scroll into view.</p>
+</li>
+<li>
+<p>The share dropdown hung from the toolbar’s corner instead of the share
+button, so on narrow screens it opened nowhere near the control (and its
+arrow pointed at the wrong one). Button and menu now share a wrapper that
+anchors the menu under the button, which also gets the list out of the
+<code>&#x3C;button></code> it was nested in. Closing the gallery with the dropdown open
+left it open on the next open; it now closes with the gallery, and the
+share button’s <code>aria-expanded</code> tracks it.</p>
+</li>
+<li>
+<p>The share dropdown stayed open while the other toolbar buttons and the
+arrows were used: its dimming overlay sat below the toolbar, so only a
+click on the slide dismissed it, and Escape closed the whole gallery
+instead. The dropdown now dismisses like the More options menu: on a
+press anywhere outside it, on Escape (the gallery stays open) and when
+focus tabs out of it. A dismissing tap on the backdrop no longer also
+closes the gallery, for the More options menu as well.</p>
+</li>
+</ul>
+<h3 id="removed">Removed</h3>
+<ul>
+<li>The <code>lightgallery/react</code>, <code>lightgallery/vue</code> and <code>lightgallery/angular</code>
+wrappers, replaced by the native packages above.</li>
+<li>The share dropdown’s <code>.lg-dropdown-overlay</code> element.</li>
+<li>The <code>supportLegacyBrowser</code> setting and the responsive-image polyfill
+hook behind it, along with the <code>CustomEvent</code> and <code>Element.matches</code>
+polyfills and the old-browser scroll fallbacks. Galleries with <code>srcset</code>
+or <code>&#x3C;picture></code> sources no longer log a warning asking for a polyfill.</li>
+<li>Vendor prefixes in the stylesheets. The CSS carried <code>-webkit-</code>, <code>-moz-</code>,
+<code>-ms-</code> and <code>-o-</code> copies of every transform, transition, animation and
+grab cursor; every supported browser reads the standard properties, so
+the bundle is about a quarter smaller and Angular’s critical-CSS step no
+longer warns about the prefixed keyframes. <code>-webkit-backface-visibility</code>
+stays for iOS Safari before 15.4. The SCSS mixins keep their names and
+now emit the standard property, so stylesheets that include them still
+compile.</li>
+<li>The <code>moz</code> and <code>ms</code> fullscreen API fallbacks in the vanilla fullscreen
+plugin. The <code>webkit</code> fallback stays for Safari before 16.4, as in the
+framework packages.</li>
+</ul>
+<p>See the <a href="https://www.lightgalleryjs.com/docs/migration/">migration guide</a>
+for the upgrade steps.</p>
+<h2 id="290-and-earlier">2.9.0 and earlier</h2>
+<p>Release notes for the 2.x line are on
+<a href="https://github.com/sachinchoolur/lightGallery/releases">GitHub releases</a>.</p> </div> </div> </div>  <footer class="footer"> <div class="container-xxl"> <div class="footer-grid"> <div class="footer-brandcol"> <a class="footer-brand" href="/">lightGallery</a> <p class="footer-tagline">An image and video lightbox gallery for the modern web.</p> <a class="footer-gh" href="https://github.com/sachinchoolur/lightGallery" aria-label="GitHub" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> </div> <nav class="footer-col" aria-label="Components"> <h2 class="footer-h">Components</h2> <ul class="footer-list"> <li> <a href="/docs/react-image-video-gallery/">React</a> </li><li> <a href="/docs/vue-image-video-gallery/">Vue.js</a> </li><li> <a href="/docs/angular-image-video-gallery/">Angular</a> </li><li> <a href="/jquery-to-js-converter/">jQuery to JavaScript converter</a> </li> </ul> </nav><nav class="footer-col" aria-label="Docs"> <h2 class="footer-h">Docs</h2> <ul class="footer-list"> <li> <a href="/docs/getting-started/">Get started</a> </li><li> <a href="/docs/settings/">Settings</a> </li><li> <a href="/docs/events/">Events</a> </li><li> <a href="/docs/methods/">Methods</a> </li><li> <a href="/blog/">Blog</a> </li> </ul> </nav><nav class="footer-col" aria-label="Demos"> <h2 class="footer-h">Demos</h2> <ul class="footer-list"> <li> <a href="/demos/thumbnails/">Thumbnails</a> </li><li> <a href="/demos/dynamic-mode/">Dynamic</a> </li><li> <a href="/demos/carousel-gallery/">Carousel</a> </li><li> <a href="/demos/video-gallery/">Video</a> </li><li> <a href="/demos/transitions/">Transitions</a> </li> </ul> </nav><nav class="footer-col" aria-label="Social"> <h2 class="footer-h">Social</h2> <ul class="footer-list"> <li> <a href="https://github.com/sachinchoolur/lightGallery">GitHub</a> </li><li> <a href="https://x.com/SachinNeravath" target="_blank" rel="noopener">X</a> </li><li> <a href="https://stackblitz.com/@sachinchoolur" target="_blank" rel="noopener">StackBlitz</a> </li><li> <a href="https://docs.google.com/forms/d/e/1FAIpQLSfcxknmKJAF9btnCg8HugFadxyWRZ3TgC0ZKxOtIjdaGfqxIw/viewform?usp=pp_url&entry.34608024=Yes" target="_blank" rel="noopener">Write a review</a> </li> </ul> </nav> </div> <div class="footer-bottom"> <span>lightGallery. Actively maintained since 2014, 12+ years and counting.</span> <span><a href="/license/">Free under GPLv3, commercial license available</a></span> <span><a href="/credits/">Credits</a></span> </div> </div> </footer> <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.DaGkoOg8.js"></script> </body> </html> 
