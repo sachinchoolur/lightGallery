@@ -19,6 +19,8 @@ interface DocNode {
     id: number;
     name: string;
     kind: number;
+    /** `reference` for a re-export, `declaration` for the definition. */
+    variant?: string;
     children?: DocNode[];
     parameters?: DocNode[];
     flags?: { isOptional?: boolean };
@@ -58,14 +60,14 @@ function doc(): DocNode {
 }
 
 export function findReflection(name: string): DocNode | undefined {
-    // The `index` module re-exports the class as a reference reflection
-    // with no members; the declaration itself lives in its own module, so
-    // prefer the match that carries children.
+    // The `index` module re-exports every symbol as a reference reflection
+    // that carries neither members nor comment; the declaration itself
+    // lives in its own module, so prefer the match that is not a reference.
     let fallback: DocNode | undefined;
     for (const mod of doc().children ?? []) {
         for (const child of mod.children ?? []) {
             if (child.name !== name) continue;
-            if (child.children?.length) return child;
+            if (child.variant !== 'reference') return child;
             fallback ??= child;
         }
     }
