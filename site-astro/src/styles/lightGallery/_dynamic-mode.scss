@@ -5,8 +5,18 @@
 }
 
 .btn-dynamic {
-    color: #333;
-    background-color: white;
+    // The button carries no Bootstrap variant class, so set the variables
+    // its hover and active rules read; otherwise those states fall back to
+    // a transparent background and the button disappears on hover.
+    --bs-btn-color: #{$gray-800};
+    --bs-btn-bg: #fff;
+    --bs-btn-border-color: #fff;
+    --bs-btn-hover-color: #{$gray-800};
+    --bs-btn-hover-bg: #{$gray-100};
+    --bs-btn-hover-border-color: #{$gray-100};
+    --bs-btn-active-color: #{$gray-800};
+    --bs-btn-active-bg: #{$gray-200};
+    --bs-btn-active-border-color: #{$gray-200};
     padding: 5px 10px;
     position: absolute;
     bottom: 15px;

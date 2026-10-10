@@ -70,25 +70,132 @@ if (document.getElementById('gallery-videojs-demo')) {
     await loadVendor('https://cdn.jsdelivr.net/npm/video.js@8/dist/video.min.js');
 }
 
+// Aspect ratios of a grid's triggers from their `data-lg-size`, the
+// same source the plugin reads; a loaded thumbnail stands in when the
+// attribute is missing, and anything else counts as square.
+function triggerRatios(items) {
+    return items.map((item) => {
+        const size = parseImageSize(
+            item.getAttribute('data-lg-size') || undefined,
+            window.innerWidth,
+        );
+        if (size) {
+            return size.width / size.height;
+        }
+        const img = item.querySelector('img');
+        return img && img.complete && img.naturalWidth > 0
+            ? img.naturalWidth / img.naturalHeight
+            : 1;
+    });
+}
+
 // Justified trigger grids: the justified layout plugin positions the
 // thumbnails during lightGallery init, one call replaces the old
-// two-step layout + lightbox wiring.
+// two-step layout + lightbox wiring. Unless the caller fixes the row
+// height or the last-row policy, the row height is picked per container
+// width so the last row fills like the others instead of landing on the
+// plugin's clamp (a sparse row at 1.75x the target, short of the edge),
+// and picked again whenever the container width changes.
 function lightGalleryJustified(id, settings = {}) {
     const el = document.getElementById(id);
     if (!el) {
         return null;
     }
-    return window.lightGallery(el, {
+    const merged = {
         justifiedRowHeight: 180,
         justifiedGap: 5,
         justifiedLastRow: 'justify',
         ...settings,
+    };
+    const fit =
+        settings.justifiedRowHeight === undefined &&
+        merged.justifiedLastRow === 'justify';
+    const triggers = () =>
+        Array.from(
+            typeof merged.selector === 'string'
+                ? el.querySelectorAll(merged.selector)
+                : el.children,
+        );
+    // A wide search range: these grids hold few photos, so a balanced
+    // split (3 + 3 rather than 4 + 2) can sit well away from the target.
+    const rowHeightFor = (width) =>
+        pickRowHeight(
+            triggerRatios(triggers()),
+            width,
+            merged.justifiedGap,
+            merged.justifiedRowHeight,
+            0.35,
+        );
+    let layoutWidth = el.clientWidth;
+    let justified = null;
+    if (fit && typeof ResizeObserver !== 'undefined') {
+        // Registered before the plugin's own observer so it runs first:
+        // the plugin then finds the width already laid out and skips.
+        new ResizeObserver(() => {
+            const width = el.clientWidth;
+            if (!justified || !width || width === layoutWidth) {
+                return;
+            }
+            layoutWidth = width;
+            justified.settings.justifiedRowHeight = rowHeightFor(width);
+            justified.layout();
+        }).observe(el);
+    }
+    const instance = window.lightGallery(el, {
+        ...merged,
+        justifiedRowHeight:
+            fit && layoutWidth
+                ? rowHeightFor(layoutWidth)
+                : merged.justifiedRowHeight,
         plugins: [...(settings.plugins || []), lgJustified],
     });
+    justified = instance.plugins.find(
+        (plugin) => plugin instanceof lgJustified,
+    );
+    return instance;
+}
+
+// The row height nearest `base` (within ±`spread`, a fraction) whose
+// last row still fills the width without stretching past 20% of the
+// target, tried largest first, so a grid never ends on a ragged or
+// oversized row. Falls back to the least-stretched candidate.
+function pickRowHeight(ratios, width, gap, base, spread = 0.15) {
+    let fallback = null;
+    for (
+        let rowHeight = Math.round(base * (1 + spread));
+        rowHeight >= Math.round(base * (1 - spread));
+        rowHeight -= 2
+    ) {
+        const { boxes } = getJustifiedLayout({
+            ratios,
+            containerWidth: width,
+            targetRowHeight: rowHeight,
+            gap,
+            lastRow: 'justify',
+            maxScale: 1.75,
+        });
+        const lastTop = Math.max(...boxes.map((box) => box.top));
+        const last = boxes.filter((box) => box.top === lastTop);
+        const filled =
+            last.reduce((sum, box) => sum + box.width, 0) +
+            gap * (last.length - 1);
+        const drift =
+            filled < width - 1
+                ? Infinity
+                : Math.abs(last[0].height - rowHeight) / rowHeight;
+        if (drift <= 0.2) {
+            return rowHeight;
+        }
+        if (!fallback || drift < fallback.drift) {
+            fallback = { rowHeight, drift };
+        }
+    }
+    return fallback.rowHeight;
 }
 
 // Standalone justified grid (no lightbox bound to the grid element):
-// the same headless row math the plugin uses, applied directly.
+// the same headless row math the plugin uses, applied directly. The row
+// height is picked per width so the last row fills like the others.
 function justifyGrid(container, { rowHeight = 180, gap = 5 } = {}) {
     const items = Array.from(container.children);
     if (!items.length) {
@@ -101,25 +208,19 @@ function justifyGrid(container, { rowHeight = 180, gap = 5 } = {}) {
         if (!containerWidth) {
             return;
         }
-        const ratios = items.map((item) => {
-            const size = parseImageSize(
-                item.getAttribute('data-lg-size') || undefined,
-                window.innerWidth,
-            );
-            if (size) {
-                return size.width / size.height;
-            }
-            const img = item.querySelector('img');
-            return img && img.complete && img.naturalWidth > 0
-                ? img.naturalWidth / img.naturalHeight
-                : 1;
-        });
+        const ratios = triggerRatios(items);
         const { boxes, containerHeight } = getJustifiedLayout({
             ratios,
             containerWidth,
-            targetRowHeight: rowHeight,
+            targetRowHeight: pickRowHeight(
+                ratios,
+                containerWidth,
+                gap,
+                rowHeight,
+            ),
             gap,
             lastRow: 'justify',
+            maxScale: 1.75,
         });
         container.style.height = `${containerHeight}px`;
         items.forEach((item, index) => {
@@ -260,43 +361,6 @@ function setUpHeroGallery(id, overrides = {}) {
             );
             return size ? size.width / size.height : 1;
         });
-    // The row height nearest `base` (within ±15%) whose last row still
-    // fills the width without stretching past 20% of the target, tried
-    // largest first, so the grid never ends on a ragged or oversized
-    // row. Falls back to the least-stretched candidate.
-    const pickRowHeight = (ratios, width, gap, base) => {
-        let fallback = null;
-        for (
-            let rowHeight = Math.round(base * 1.15);
-            rowHeight >= Math.round(base * 0.85);
-            rowHeight -= 2
-        ) {
-            const { boxes } = getJustifiedLayout({
-                ratios,
-                containerWidth: width,
-                targetRowHeight: rowHeight,
-                gap,
-                lastRow: 'justify',
-                maxScale: 1.75,
-            });
-            const lastTop = Math.max(...boxes.map((box) => box.top));
-            const last = boxes.filter((box) => box.top === lastTop);
-            const filled =
-                last.reduce((sum, box) => sum + box.width, 0) +
-                gap * (last.length - 1);
-            const drift =
-                filled < width - 1
-                    ? Infinity
-                    : Math.abs(last[0].height - rowHeight) / rowHeight;
-            if (drift <= 0.2) {
-                return rowHeight;
-            }
-            if (!fallback || drift < fallback.drift) {
-                fallback = { rowHeight, drift };
-            }
-        }
-        return fallback.rowHeight;
-    };
     let heroGallery = null;
     let heroRebuildPending = false;
     const createHeroGallery = () => {
