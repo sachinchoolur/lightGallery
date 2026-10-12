@@ -75,9 +75,11 @@ npm run release:github           # GitHub release for a version already publishe
   run it after editing documentation.
   `pnpm --filter lg-site-astro check:sandboxes` installs every StackBlitz
   sandbox (`site-astro/sandboxes/`) from npm and builds it; run it after
-  editing a sandbox or releasing a version. The site's dev server does not
-  hydrate the React islands; verify those on the built site
-  (`pnpm --filter lg-site-astro preview`).
+  editing a sandbox or releasing a version. If React islands render blank
+  on the site's dev server with "jsxDEV is not a function", the Vite
+  dependency cache holds the production React build; delete
+  `site-astro/node_modules/.vite` and restart `astro dev` (production-mode
+  runs such as `astro check` keep their own cache so this should not recur).
 - Gesture feel (springs, fling, pinch) cannot be judged in a headless
   browser; those changes need a real touch device.
 

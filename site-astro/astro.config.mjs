@@ -76,6 +76,16 @@ export default defineConfig({
         ],
     },
     vite: {
+        // `astro check` and `astro sync` run Vite with NODE_ENV=production,
+        // so the React they pre-bundle into the dependency cache is the
+        // production build. A dev server sharing that cache then serves it
+        // under the development JSX transform and every React island fails
+        // to hydrate ("jsxDEV is not a function"). Production-mode runs get
+        // their own cache so they never overwrite the dev server's.
+        cacheDir:
+            process.env.NODE_ENV === 'production'
+                ? 'node_modules/.vite-prod'
+                : 'node_modules/.vite',
         css: {
             preprocessorOptions: {
                 scss: {
