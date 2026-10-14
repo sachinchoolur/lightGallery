@@ -396,6 +396,20 @@ const utils = {
         });
     },
 
+    /**
+     * Escapes HTML attribute values to prevent XSS attacks
+     * @param {string} value - The attribute value to escape
+     * @returns {string} The escaped attribute value
+     */
+    escapeHtml(value: string): string {
+        return value
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#x27;');
+    },
+
     getIframeMarkup(
         iframeWidth: string,
         iframeHeight: string,
@@ -404,7 +418,9 @@ const utils = {
         src?: string,
         iframeTitle?: string,
     ): string {
-        const title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
+        const title = iframeTitle
+            ? 'title="' + this.escapeHtml(iframeTitle) + '"'
+            : '';
         return `<div class="lg-media-cont lg-has-iframe" style="width:${iframeWidth}; max-width:${iframeMaxWidth}; height: ${iframeHeight}; max-height:${iframeMaxHeight}">
                     <iframe class="lg-object" frameborder="0" ${title} src="${src}"  allowfullscreen="true"></iframe>
                 </div>`;
@@ -418,8 +434,8 @@ const utils = {
         sizes?: string,
         sources?: ImageSources[],
     ): string {
-        const srcsetAttr = srcset ? `srcset="${srcset}"` : '';
-        const sizesAttr = sizes ? `sizes="${sizes}"` : '';
+        const srcsetAttr = srcset ? `srcset="${this.escapeHtml(srcset)}"` : '';
+        const sizesAttr = sizes ? `sizes="${this.escapeHtml(sizes)}"` : '';
         const imgMarkup = `<img ${altAttr} ${srcsetAttr}  ${sizesAttr} class="lg-object lg-image" data-index="${index}" src="${src}" />`;
         let sourceTag = '';
         if (sources) {
@@ -608,7 +624,11 @@ const utils = {
             dynamicEl.thumb = thumb;
 
             if (getCaptionFromTitleOrAlt && !dynamicEl.subHtml) {
-                dynamicEl.subHtml = title || alt || '';
+                // Escape HTML when using title/alt as caption to prevent XSS
+                const captionText = title || alt || '';
+                dynamicEl.subHtml = captionText
+                    ? this.escapeHtml(captionText)
+                    : '';
             }
             dynamicEl.alt = alt || title || '';
             dynamicElements.push(dynamicEl);
