@@ -3,4 +3,44 @@
         margin-left: 6rem;
         margin-right: 6rem;
     }
+
+    // The demo's point is that the zoomed image is larger than the one
+    // in the article. The photos are portrait, so at column width the
+    // viewport height would cap the zoom below the inline size; the
+    // figures stay small and the zoom has somewhere to grow.
+    figure.blog-images {
+        max-width: 360px;
+        margin: 1.5rem auto;
+        cursor: zoom-in;
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        &.blog-images-left,
+        &.blog-images-right {
+            max-width: 300px;
+        }
+
+        &.blog-images-left {
+            float: left;
+            margin: 0.5rem 2rem 1rem 6rem;
+        }
+
+        &.blog-images-right {
+            float: right;
+            margin: 0.5rem 6rem 1rem 2rem;
+        }
+
+        @media (max-width: 767px) {
+            &.blog-images-left,
+            &.blog-images-right {
+                float: none;
+                max-width: 360px;
+                margin: 1.5rem auto;
+            }
+        }
+    }
 }
