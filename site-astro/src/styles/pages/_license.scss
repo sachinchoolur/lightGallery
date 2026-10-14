@@ -16,6 +16,11 @@ body.license {
         background: #fff;
         text-align: left;
         color: $gray-800;
+        // The first section sits right under the header's own rule; two
+        // hairlines a few pixels apart read as a stray line.
+        &#plans {
+            border-top: 0;
+        }
         @media (max-width: 767px) {
             padding: 64px 0;
         }
