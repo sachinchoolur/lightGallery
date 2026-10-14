@@ -173,6 +173,74 @@ body.license {
             box-shadow: 0 0 0 3px $orange-50;
         }
     }
+    // ---- Promotion banner: the Kelviq country offer in the site's style --
+    // The island renders the SDK's bare markup (`unStyled`), so every
+    // rule is ours: a flat white ticket with a tag icon and the coupon as
+    // a dashed chip. Empty unless the visitor's country has a promotion.
+    .plans-promo {
+        &:not(:empty) {
+            margin-bottom: 20px;
+        }
+        .kq-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 14px 24px;
+            border: 1px solid $gray-200;
+            border-radius: 16px;
+            background: #fff;
+            color: $gray-800;
+            font-size: 15px;
+            line-height: 24px;
+            letter-spacing: -0.16px;
+            text-align: center;
+            &::before {
+                content: '';
+                flex: none;
+                width: 22px;
+                height: 22px;
+                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff4500' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z'/%3E%3Ccircle cx='7' cy='7' r='1.5' fill='%23ff4500' stroke='none'/%3E%3C/svg%3E")
+                    center / contain no-repeat;
+            }
+        }
+        .kq-banner-inner img {
+            display: inline-block;
+            width: 20px;
+            height: auto;
+            margin-right: 6px;
+            vertical-align: -3px;
+            border-radius: 3px;
+        }
+        .kq-banner-inner b {
+            font-weight: 600;
+            color: $orange-700;
+        }
+        // The first bold run is the coupon code.
+        .kq-banner-inner b:first-of-type {
+            padding: 2px 10px;
+            border: 1.5px dashed $orange-700;
+            border-radius: 8px;
+            background: $orange-50;
+            color: $orange-800;
+            font-family: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 14px;
+            letter-spacing: 0;
+        }
+        .kq-banner-close-btn {
+            flex: none;
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border: 0;
+            background: none;
+            color: $gray-500;
+            cursor: pointer;
+            &:hover {
+                color: $gray-800;
+            }
+        }
+    }
     // ---- One card, the plans as columns on rails ---------------------------
     .plans-onecard {
         border: 1px solid $gray-100;

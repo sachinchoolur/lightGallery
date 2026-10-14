@@ -4,9 +4,11 @@
  * one card, the Extended license as the card's footer row, and a note for
  * v1 and v2 license holders. One-time payments only. Prices and checkout
  * links match the Kelviq plan identifiers; `data-kq-price` marks each
- * amount.
+ * amount. Above the card, a small island shows the Kelviq promotion
+ * banner for countries that have one.
  */
 import PlanCard, { type Plan } from './PlanCard.astro';
+import PromoBanner from '../islands/PromoBanner';
 
 const TITLE = 'Pricing and commercial license';
 const LEAD =
@@ -32,6 +34,8 @@ const EXTENDED: Plan = { key: 'extended', name: 'Extended', desc: EXT_DESC, pric
             <h1 class="plans-title">{TITLE}</h1>
             <p class="plans-lead">{LEAD}</p>
         </div>
+
+        <div class="plans-promo"><PromoBanner client:idle /></div>
 
         <div class="plans-onecard">
             <div class="plans-onecard-cols">{PLANS.map((p) => <PlanCard plan={p} />)}</div>
