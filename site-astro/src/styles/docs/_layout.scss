@@ -216,7 +216,9 @@ body.demos.single {
         }
         // Prose links. `:where()` keeps this at element specificity, so the
         // footer, callout and card link styles below win as written.
-        a:where(:not(.btn):not(.page-tools-btn):not(.anchor)) {
+        // Gallery triggers are links too, but a thumbnail wants no
+        // underline, whichever demo grid it sits in.
+        a:where(:not(.btn):not(.page-tools-btn):not(.anchor):not(.lg-item):not(.gallery-item)) {
             color: $orange-700;
             text-decoration: none;
             border-bottom: 1px solid rgba($orange-700, 0.3);

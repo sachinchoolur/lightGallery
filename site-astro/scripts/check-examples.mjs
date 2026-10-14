@@ -54,7 +54,7 @@ const externalise = {
     setup(build) {
         // Framework runtimes, relative project files and assets are the
         // consumer's; only lightGallery's own entry points must resolve.
-        build.onResolve({ filter: /^(react|react-dom|vue|@angular\/|rxjs|@vue\/)/ }, (a) => ({ path: a.path, external: true }));
+        build.onResolve({ filter: /^(react|react-dom|next(\/|$)|vue|@angular\/|rxjs|@vue\/)/ }, (a) => ({ path: a.path, external: true }));
         // Carousels the integration demos are about; the site does not install them.
         build.onResolve({ filter: /^(swiper|flickity)(\/|$)/ }, (a) => ({ path: a.path, external: true }));
         build.onResolve({ filter: /^@lightgallery\/angular(\/plugins\/[\w-]+)?$/ }, (a) => {

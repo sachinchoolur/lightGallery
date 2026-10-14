@@ -16,6 +16,8 @@ export interface Sandbox {
     title: string;
     /** File the editor opens on. */
     open: string;
+    /** Directory `npm run build` writes to. */
+    output: string;
     /** Project files by path. */
     files: Record<string, string>;
 }

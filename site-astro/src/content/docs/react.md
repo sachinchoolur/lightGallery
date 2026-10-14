@@ -164,7 +164,9 @@ Import the CSS in your root layout (or any server component):
 import 'lightgallery/css/lightgallery.css';
 ```
 
-No `dynamic(() => …, { ssr: false })` wrapper is needed.
+No `dynamic(() => …, { ssr: false })` wrapper is needed. The
+[Next.js image gallery demo](/demos/nextjs-image-gallery/) walks through
+an App Router page with `next/image` thumbnails.
 
 ## Accessibility
 

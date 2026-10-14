@@ -51,6 +51,7 @@ export const DEMO_GROUPS: DemoGroup[] = [
             'react-video-gallery',
             'react-carousel',
             'react-video-carousel',
+            'nextjs-image-gallery',
             'vue-image-gallery',
             'vue-video-gallery',
             'angular-image-gallery',
@@ -92,9 +93,12 @@ export const DEMO_GROUPS: DemoGroup[] = [
 export const demoGroupOf = (slug: string): DemoGroup | undefined =>
     DEMO_GROUPS.find((group) => group.slugs.includes(slug.toLowerCase()));
 
-/** Framework badge for the packages that have their own demo pages. */
+/**
+ * Framework badge for the packages that have their own demo pages. The
+ * Next.js page is the React package in a Next.js app, so it wears React.
+ */
 export const demoFramework = (slug: string): 'React' | 'Vue' | 'Angular' | null =>
-    slug.startsWith('react-')
+    slug.startsWith('react-') || slug.startsWith('nextjs-')
         ? 'React'
         : slug.startsWith('vue-')
           ? 'Vue'

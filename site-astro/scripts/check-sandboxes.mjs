@@ -112,7 +112,7 @@ for (const sandbox of sandboxes) {
     }
     if (keep) {
         // The framework folder is reused by the next demo.
-        cpSync(join(dir, 'dist'), join(workDir, 'built', name), {
+        cpSync(join(dir, sandbox.output), join(workDir, 'built', name), {
             recursive: true,
         });
     }

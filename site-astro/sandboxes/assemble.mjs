@@ -33,6 +33,15 @@ export const FRAMEWORKS = {
         open: 'src/app/app.ts',
         shared: ['demo.css', 'photos.ts'],
     },
+    // The React package inside a Next.js App Router project (`src/app`);
+    // only the demos with a `next/` folder get one. `next build` writes to
+    // `.next`, not `dist`.
+    next: {
+        label: 'Next.js',
+        open: 'src/app/Gallery.tsx',
+        shared: ['demo.css', 'photos.ts'],
+        output: '.next',
+    },
 };
 
 /**
@@ -74,6 +83,8 @@ export function assembleSandboxes(sources, version) {
                 label: config.label,
                 title: `lightGallery ${meta.title ?? demo} (${config.label})`,
                 open: config.open,
+                /** Where `npm run build` writes, for the check script. */
+                output: config.output ?? 'dist',
                 files,
             });
         }
