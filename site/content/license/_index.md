@@ -170,7 +170,7 @@ images: []
                 <div class="pricing-list-item pricing-list-item-colored">
                     <div class="pricing-type">Extended</div>
                     <div class="pricing-cost">
-                        <span data-kq-price="extended" data-kq-period="ONE_TIME">$99</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"></span>
+                        <span data-kq-price="extended" data-kq-period="ONE_TIME">$239</span> <span class="pricing-cost-label">/ lifetime <span class="pricing-original"></span>
                     </div>
                     <div class="d-grid pricing-btn-wrap">
                         <a href="https://www.kelviq.com/buy/a3d337a7-ade8-4d7a-8dbc-e095dac5082e/?enabled=extended&plan_identifier=extended&charge_period=ONE_TIME" target="_blank" class="btn btn-white">Purchase Now</a>
