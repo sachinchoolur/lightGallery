@@ -1,0 +1,127 @@
+---
+title: 'How to choose the best gallery plugin for your website in 2026'
+description: 'A practical checklist for choosing a JavaScript gallery or lightbox plugin, from media support, touch feel and framework packages to size, accessibility, license and the maintenance signals that matter, and why GitHub stars are the wrong number to rank by.'
+lead: 'The questions to ask before you pick a gallery or lightbox plugin, the numbers that predict whether it will still be maintained in three years, and why stars are not one of them.'
+date: 2026-10-13T00:00:00.000Z
+lastmod: 2026-10-13T00:00:00.000Z
+tags: ['gallery', 'lightbox']
+draft: false
+weight: 10
+images: ['header.png']
+contributors: ['Sachin Neravath']
+---
+
+Every site with photos eventually needs a gallery plugin. Someone clicks a thumbnail, the image opens large, they flick to the next one and close it. Finding a library that does this is not the hard part. There are dozens, and most of them demo well. The hard part is picking one you will not regret in two years, when the site has moved to a new framework, the designer wants video in the same grid, and the library you chose has not had a release since the day you installed it.
+
+A gallery plugin, for the purpose of this guide, is a JavaScript library that turns a set of images or videos on a page into a lightbox or carousel, with navigation, thumbnails, zoom and the rest, in plain JavaScript or through a package for React, Vue or Angular. Some are tiny lightboxes that only open an image. Some are full galleries. The checklist below works for both, because the questions are about your site, not about the library.
+
+I maintain lightGallery, so I know this problem from the inside. The questions people ask us before they buy a license are the questions below, and the checklist is the one I would use whatever library I ended up with. Where lightGallery is the example, the claim links to a page where you can check it.
+
+## What will you show?
+
+Start with the content, not the library. The media you need decides the shortlist faster then any other question.
+
+- Images alone are the easy case. Every lightbox opens an image. Look past that to whether it understands `srcset` and `sizes`, so a phone dose not download the desktop file, and whether it accepts `<picture>` sources if you serve AVIF or WebP with a fallback. lightGallery handles both, see [responsive loading](/docs/responsive-loading/).
+- Video changes the shortlist alot. Ask whether YouTube, Vimeo and self-hosted MP4 open from a plain URL, and ask when the player loads. A library that creates every provider iframe the moment the gallery opens will make a thirty-item gallery crawl. lightGallery loads provider video as a poster image and creates the iframe only when the visitor presses play, see [video facades](/docs/video-facades/).
+- Mixed content is where many lightboxes stop. Iframes for maps and PDFs, inline HTML, slides built from a JavaScript array while the gallery is open. If you need one of these today, you will probably need another next year, so check for all of them. lightGallery's [mixed contents demo](/demos/mixed-contents/) shows images, video, iframes and inline HTML in one gallery.
+- Scale matters more than people expect. A gallery with twenty images is a different problem from one with two thousand. Ask whether the library virtualizes slides and thumbnails, or whether it builds every node up front. lightGallery renders only the slides near the current one, see [virtualization](/docs/virtualization/).
+
+## How does it feel on a phone?
+
+More than half the people who open your gallery will do it with a thumb, and a desktop demo tells you nothing about that. Open the library's demo on a real phone and try five things. Swipe between slides. Pinch to zoom and double tap to zoom. Drag or pinch the image downward to close it. Flick fast and see whether the slide keeps the speed you let go at and settles, or snaps to a stop. Enable reduced motion in the system settings and check that the animation stops.
+
+This is the part of lightGallery I care about most, and I think it has the best touch feel of any gallery library, which I would say even if it were not ours. Swipes, pinches and flings share one physics model. A fling keeps the speed you release it at and settles in a spring. Edges resist with friction instead of a hard stop. Pinch or drag to close shrinks the image back toward the thumbnail it came from. And the reduced-motion setting switches all of it off. Try the [image zoom demo](/demos/image-zoom/) on a phone to judge for yourself.
+
+## Does it fit your stack?
+
+If your site is plain HTML, a script tag or an ES module import is all you need, and most libraries manage that. The question gets harder the moment a framework is involved.
+
+Many libraries offer a "React wrapper" or a "Vue component" that mounts the vanilla library inside a component and lets it build its own DOM. That works until it does not. State lives in two places, server rendering needs a dynamic import or a client-only guard, and the wrapper lags a version behind the core. What you want is a package written for the framework, where the framework renders every node, and where the setting names are the same in every stack so what you learn once carries over.
+
+Ask three concrete questions. Does it work as a client component in the Next.js App Router without a dynamic import? Does a Nuxt page hydrate without warnings? Does it run under Angular server rendering with hydration? lightGallery 3 ships four packages on one shared core, so the answer is yes in all three cases, and `speed`, `mode` or `thumbWidth` mean the same thing whether you pass them as a prop, a signal input or a settings object. The [React](/docs/react/), [Vue](/docs/vue/) and [Angular](/docs/angular/) guides each start with a server-rendered example. Every package ships TypeScript declarations, which is worth checking for any library you shortlist, because an untyped gallery is a gallery you will misconfigure.
+
+## What does it weigh?
+
+Compare gzipped sizes of what you would actually import, not the headline number on the README. A 4 KB lightbox that needs jQuery weighs 34 KB. A 60 KB gallery that ships everything in one file weighs 60 KB whether or not you use the video player.
+
+The architecture you want is a small core with features as separate entry points, so you pay for thumbnails only if you import thumbnails. lightGallery's core is about 19 KB gzipped with no dependencies, and a typical gallery with thumbnails and zoom is about 30 KB. Every plugin's size is measured from the build on the [facts and figures](/docs/facts/) page.
+
+```js
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+
+lightGallery(document.getElementById('gallery'), {
+    plugins: [lgThumbnail, lgZoom],
+});
+```
+
+While you are at it, check the dependency list on npm. A gallery that pulls in a date library, a utility belt and a polyfill set is a gallery whose maintainers are not watching the bundle.
+
+## Can you make it look like part of your site?
+
+A gallery frames other people's photos, so its own chrome should be quiet. Look at a demo and ask whether you would ship it unchanged. If the answer is no, find out how much CSS it takes to fix. Icons are the usual tell. Icon fonts and background images are hard to recolor and impossible to swap one at a time. Inline SVG that takes the button's color recolors with one rule.
+
+lightGallery looks finished out of the box. The toolbar stays on one row and folds its least important buttons into a menu when space runs out, every icon is an inline SVG that takes the button's color, and any icon can be replaced by name through the stack's own mechanism, which is covered in [custom icons](/docs/custom-icons/). There are twenty-odd slide transitions plus your own easing, captions accept any HTML, and a class of your choosing scopes your overrides to one gallery. Restyling is still CSS, same as everywhere, but good defaults mean you rarely need much of it.
+
+## Is it accessible?
+
+Accessibility is where demos lie by omission. The things to check take five minutes with a keyboard and a screen reader. The open gallery should be a dialog, with focus moved inside and trapped there while it is open, and returned to the thumbnail when it closes. Arrow keys should move between slides and Escape should close. Slide changes should be announced. Every control should be a real button with a label, and the labels should be translatable. Right-to-left layouts should mirror the controls. And the reduced-motion preference should be honored without configuration.
+
+lightGallery ships one [accessibility contract](/docs/accessibility/) across all four packages, with dialog semantics, focus management, live announcements, localizable strings, RTL and reduced motion, and the test suites run axe checks against WCAG A and AA rules. No library makes your site compliant on its own, but the gallery should not be the thing that fails the audit.
+
+## Will it still be maintained in three years?
+
+This is the question that decides whether the other answers hold. A gallery is not a weekend dependency. It sits in the public-facing part of the site for years, it touches every image, and the day a browser change breaks it you need a release, not a fork. So most people look for a popularity signal, and most people look at the wrong one.
+
+GitHub stars do not matter. A star is a bookmark. It is given once, costs nothing, and never expires. A library abandoned years ago keeps every star it earned, so the number measures attention at some point in the past, not use or maintenance in the present. Stars are also easy to pump. A spot on a curated list or a launch post adds thousands in a week without a single site shipping the library. Ranking galleries by stars tells you which README was shared most, which is not the question you are asking.
+
+The signals that do predict a maintained library are the ones that are hard to fake because they require someone to actually use it.
+
+| Signal | What it tells you | Where to look |
+| --- | --- | --- |
+| Dependent repositories | How many public projects declare it as a dependency and ship with it. The strongest signal of real use. | GitHub, Insights, Dependency graph, Dependents |
+| Forks | How many people needed the source itself, to read it, patch it or keep a copy they control. | The repository header |
+| Package downloads, as a trend | Whether use is growing or draining away. A flat or falling line on a popular library is an early warning. | The npm package page, or npm-stat for a multi-year chart |
+| CDN requests | Use outside the npm world, from CMS themes and plain script tags. | jsDelivr and cdnjs statistics |
+| Last release and cadence | Whether anyone is still shipping. Months between patch releases is fine. Years is not. | GitHub releases and the changelog |
+| Issue response | Whether bugs get answered, not whether the count is zero. | Open the ten newest issues and look at the replies |
+| Major version history | Whether the project reinvests in itself rather than coasting. A rewrite is a multi-year commitment. | The changelog and the release posts |
+
+Dependents and forks deserve a closer look because they are the two numbers people skip. A dependent repository is a project whose lock file names the library. Nobody adds a dependency for show, so every dependent is a team that chose it, installed it and kept it. A fork is stronger still in one way. It means someone needed the code, to read it, to patch it or to protect themselves against it disappearing. A library with many stars and few forks is a library people admire from a distance. A library with many forks and many dependents is one people live with.
+
+lightGallery is a useful example precisely because its star count is modest. The [repository](https://github.com/sachinchoolur/lightGallery) has about 7,000 stars, with another 5,000 on the earlier dependency-free [lightgallery.js](https://github.com/sachinchoolur/lightgallery.js) repository, and several galleries have more. It also has about 1,300 forks, roughly one for every five stars, and more than 15,000 public repositories on GitHub [declare it as a dependency](https://github.com/sachinchoolur/lightGallery/network/dependents). The [npm package](https://www.npmjs.com/package/lightgallery) is downloaded more than 400,000 times a month, and jsDelivr alone serves about 350 million requests for it a month from sites that never touch npm. The project started in 2014, has shipped three major versions, and the third was a complete rewrite that added native React, Vue and Angular packages. That shape, a modest star count under a large base of dependents and forks, is the shape you want. It means the people who found it used it and stayed. Check those numbers for whatever you are comparing, and compare the shapes, not the stars.
+
+## What does the license allow?
+
+Read the license before the feature list, because the license is the one thing you cannot patch. MIT and similar permissive licenses are the simplest case. You can use the library anywhere, including in a closed-source product, with no further obligation. GPL and other copyleft licenses are fine for open-source sites and for internal tools, but a proprietary front end that bundles a GPL library has to be released under the GPL as well, which most companies will not do. Some projects pair the GPL with a paid commercial license for that case, which is how the maintenance in the previous section gets funded.
+
+lightGallery is free and open source under the GPLv3, and proprietary projects buy a one-time [commercial license](/license/). There is no subscription, the license includes every plugin, and it covers all releases within the major version. If your team requires MIT as a hard rule, that rules lightGallery out, and it is better to know that at the start than after the integration is done.
+
+## Can your tools read the documentation?
+
+Documentation used to be something people read. Now it is also something your editor's assistant reads, and that changes what good documentation looks like. The settings reference should be generated from the source so it cannot drift. Every demo should exist in each framework the library supports, not just in vanilla JavaScript. And the docs should be readable by a language model without scraping, through an `llms.txt` index and a markdown copy of each page.
+
+There is a simple test. Ask your coding assistant to add the gallery to an empty project in your framework and look at what it installs. If it reaches for a years-old version or a jQuery-era snippet, the current docs are not reaching the models, and you will spend your integration correcting it. lightGallery publishes an [llms.txt](/llms.txt) index, a markdown twin of every docs page, a settings reference generated from the TypeScript source, and an agent skill in the repository that teaches assistants the current setup for each stack.
+
+## The checklist
+
+Copy this into your evaluation notes and answer it for each library on the shortlist.
+
+- Which media do we need now, and which will we need next year? Images, responsive images, YouTube and Vimeo, self-hosted video, iframes, inline HTML, dynamic slides.
+- Does it virtualize, or does the biggest gallery on the site build every slide up front?
+- On a real phone, do swipe, pinch, double tap, drag to close and fling all feel right, and does reduced motion turn the animation off?
+- Is there a native package for our framework, and does it render on the server without workarounds?
+- What is the gzipped size of what we would actually import, and what does it depend on?
+- Would we ship the default look, and if not, how much CSS does it take to change?
+- Is the open gallery a dialog, with trapped and returned focus, keyboard navigation, announcements and translatable labels?
+- How many repositories depend on it, how many forks does it have, and which way is the download trend pointing?
+- When was the last release, and how do the maintainers answer issues?
+- What does the license allow, and what does a commercial license cost if we need one?
+- Can our coding assistant set it up correctly from the official docs?
+
+## Where lightGallery lands
+
+Against this checklist, lightGallery is strongest on media, touch feel, framework coverage, accessibility and the maintenance signals, which is why it is the example throughout. The honest trade-offs are the ones named above. It weighs more than a minimal image-only lightbox, because it is a gallery rather than a lightbox. The license is the GPLv3 with a paid option rather than MIT. And the animation that opens a slide from its thumbnail needs the full-size image dimensions, which you have to provide.
+
+If it fits, the [getting started guide](/docs/getting-started/) takes a few minutes in any of the four stacks, and the [thumbnails](/demos/thumbnails/), [video gallery](/demos/video-gallery/) and [image zoom](/demos/image-zoom/) demos show the plugins people use most. If it does not fit, the checklist still works. Run it against the next library on your list, and compare dependents and forks before you compare stars.

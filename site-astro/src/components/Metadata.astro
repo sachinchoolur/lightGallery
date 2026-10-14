@@ -14,6 +14,8 @@ interface Props {
     is404?: boolean;
     /** Article pages (blog) emit article meta + Article JSON-LD. */
     isArticle?: boolean;
+    /** The post's human author; the Article's author is the site otherwise. */
+    author?: string;
     robots?: string;
     /** Frontmatter `images` (paths relative to the page or absolute). */
     images?: string[];
@@ -35,6 +37,7 @@ const {
     isHome = false,
     is404 = false,
     isArticle = false,
+    author,
     robots,
     images = [],
     publishDate,
@@ -193,7 +196,9 @@ const iso = (d: Date) => d.toISOString();
                 image: pageImages,
                 datePublished: iso(publishDate),
                 dateModified: iso(lastmod ?? publishDate),
-                author: { '@type': SITE.schemaType, name: SITE.title },
+                author: author
+                    ? { '@type': 'Person', name: author }
+                    : { '@type': SITE.schemaType, name: SITE.title },
                 publisher: {
                     '@type': SITE.schemaType,
                     name: SITE.title,

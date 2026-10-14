@@ -1,0 +1,562 @@
+---
+/**
+ * Comparison table for the listicle posts. Two shapes:
+ *
+ * Rows mode (the original): one row per library, one column per
+ * criterion, a highlighted row for lightGallery.
+ *
+ *   <CompareTable
+ *     columns={['Thumbnails', 'Video', 'License']}
+ *     rows={[
+ *       { name: 'lightGallery', note: 'Native component', highlight: true,
+ *         cells: [{ mark: 'yes', text: 'Animated strip' }, { mark: 'yes' }, { pill: 'GPLv3 or commercial', tone: 'warn' }] },
+ *     ]}
+ *   />
+ *
+ * Matrix mode: one column per library, one row per feature, feature
+ * rows grouped under small headings, a highlighted column for
+ * lightGallery. Takes any number of features without getting wider.
+ *
+ *   <CompareTable
+ *     libraries={[{ name: 'lightGallery', highlight: true }, { name: 'Another library' }]}
+ *     features={[
+ *       { group: 'Media' },
+ *       { name: 'Thumbnail strip', cells: [{ mark: 'yes' }, { mark: 'no' }] },
+ *     ]}
+ *   />
+ *
+ * In both shapes a cell is a string, or an object with `mark` (yes, no,
+ * partial) and an optional `text`, or a `pill` with a `tone` (good,
+ * warn, bad, neutral). Marks carry their label as text, so the table
+ * reads the same to a screen reader or a crawler as it does on screen.
+ * The first column sticks while the rest scrolls sideways on narrow
+ * screens, so the library or feature name is always in view.
+ */
+export type Mark = 'yes' | 'no' | 'partial';
+export type Tone = 'good' | 'warn' | 'bad' | 'neutral';
+export interface Cell {
+    mark?: Mark;
+    text?: string;
+    pill?: string;
+    tone?: Tone;
+}
+export interface Row {
+    name: string;
+    /** One line under the name: what kind of thing it is. */
+    note?: string;
+    highlight?: boolean;
+    cells: (Cell | string)[];
+}
+export interface Library {
+    name: string;
+    /** One line under the name: what kind of thing it is. */
+    note?: string;
+    highlight?: boolean;
+}
+export type Feature = { group: string } | { name: string; cells: (Cell | string)[] };
+interface Props {
+    /** Rows mode: criteria headers. */
+    columns?: string[];
+    /** Rows mode: one row per library. */
+    rows?: Row[];
+    /** Matrix mode: one column per library. */
+    libraries?: Library[];
+    /** Matrix mode: feature rows and group headings, in order. */
+    features?: Feature[];
+    /** Header of the first column. */
+    firstColumn?: string;
+    /** Shown under the table, after the legend. */
+    footnote?: string;
+}
+
+const { columns = [], rows = [], libraries = [], features = [], footnote } = Astro.props;
+const matrix = libraries.length > 0;
+const firstColumn = Astro.props.firstColumn ?? (matrix ? 'Feature' : 'Library');
+
+const MARK_LABEL: Record<Mark, string> = { yes: 'Yes', no: 'No', partial: 'Partly' };
+
+const normalise = (cell: Cell | string): Cell => (typeof cell === 'string' ? { text: cell } : cell);
+const isGroup = (feature: Feature): feature is { group: string } => 'group' in feature;
+const allCells = matrix
+    ? features.flatMap((feature) => (isGroup(feature) ? [] : feature.cells))
+    : rows.flatMap((row) => row.cells);
+const usedMarks = new Set<Mark>();
+for (const cell of allCells) {
+    const mark = normalise(cell).mark;
+    if (mark) usedMarks.add(mark);
+}
+const legend = (['yes', 'partial', 'no'] as Mark[]).filter((mark) => usedMarks.has(mark));
+const highlighted = libraries.map((library) => Boolean(library.highlight));
+---
+
+<figure class:list={['compare', { 'is-matrix': matrix }]}>
+    <div class="compare-scroll" tabindex="0">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col" class="compare-name">{firstColumn}</th>
+                    {
+                        matrix
+                            ? libraries.map((library) => (
+                                  <th scope="col" class:list={['compare-library', { 'is-highlight': library.highlight }]}>
+                                      <span class="compare-title">{library.name}</span>
+                                      {library.note && <span class="compare-note">{library.note}</span>}
+                                  </th>
+                              ))
+                            : columns.map((column) => <th scope="col">{column}</th>)
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                {
+                    matrix
+                        ? features.map((feature) =>
+                              isGroup(feature) ? (
+                                  <tr class="compare-group">
+                                      <th scope="colgroup" colspan={libraries.length + 1}>
+                                          {feature.group}
+                                      </th>
+                                  </tr>
+                              ) : (
+                                  <tr>
+                                      <th scope="row" class="compare-name">
+                                          <span class="compare-feature">{feature.name}</span>
+                                      </th>
+                                      {feature.cells.map((raw, i) => {
+                                          const cell = normalise(raw);
+                                          return (
+                                              <td class:list={{ 'is-highlight': highlighted[i] }}>
+                                                  {cell.pill ? (
+                                                  <span class:list={['compare-pill', `is-${cell.tone ?? 'neutral'}`]}>{cell.pill}</span>
+                                              ) : cell.mark && !cell.text ? (
+                                                  <span class:list={['compare-mark', 'is-bare', `is-${cell.mark}`]}>
+                                                      <i aria-hidden="true" />
+                                                      <span class="visually-hidden">{MARK_LABEL[cell.mark]}</span>
+                                                  </span>
+                                              ) : cell.mark ? (
+                                                  <span class:list={['compare-mark', `is-${cell.mark}`]}>
+                                                      <i aria-hidden="true" />
+                                                      <span class="compare-mark-label">{cell.text ?? MARK_LABEL[cell.mark]}</span>
+                                                      {cell.text && <span class="visually-hidden">{MARK_LABEL[cell.mark]}: </span>}
+                                                  </span>
+                                              ) : (
+                                                  cell.text
+                                              )}
+                                              </td>
+                                          );
+                                      })}
+                                  </tr>
+                              ),
+                          )
+                        : rows.map((row) => (
+                              <tr class:list={[{ 'is-highlight': row.highlight }]}>
+                                  <th scope="row" class="compare-name">
+                                      <span class="compare-title">{row.name}</span>
+                                      {row.note && <span class="compare-note">{row.note}</span>}
+                                  </th>
+                                  {row.cells.map((raw) => {
+                                      const cell = normalise(raw);
+                                      return (
+                                          <td>
+                                              {cell.pill ? (
+                                                  <span class:list={['compare-pill', `is-${cell.tone ?? 'neutral'}`]}>{cell.pill}</span>
+                                              ) : cell.mark ? (
+                                                  <span class:list={['compare-mark', `is-${cell.mark}`]}>
+                                                      <i aria-hidden="true" />
+                                                      <span class="compare-mark-label">{cell.text ?? MARK_LABEL[cell.mark]}</span>
+                                                      {cell.text && <span class="visually-hidden">{MARK_LABEL[cell.mark]}: </span>}
+                                                  </span>
+                                              ) : (
+                                                  cell.text
+                                              )}
+                                          </td>
+                                      );
+                                  })}
+                              </tr>
+                          ))
+                }
+            </tbody>
+        </table>
+    </div>
+    {
+        (legend.length > 0 || footnote) && (
+            <figcaption>
+                {legend.map((mark) => (
+                    <span class:list={['compare-mark', 'compare-legend', `is-${mark}`]}>
+                        <i aria-hidden="true" />
+                        {MARK_LABEL[mark]}
+                    </span>
+                ))}
+                {footnote && <span class="compare-footnote">{footnote}</span>}
+            </figcaption>
+        )
+    }
+</figure>
+
+<style lang="scss">
+    // Colours are the site's design tokens (styles/common/_variables.scss):
+    // brand orange, the gray ramp, and the green/yellow/red tints.
+    $brand: #ff5722;
+    $brand-strong: #ff4500;
+    $orange-50: #ffe8e0;
+    $gray-50: #f7fafc;
+    $gray-100: #edf2f7;
+    $gray-200: #e2e8f0;
+    $gray-400: #a0aec0;
+    $gray-500: #718096;
+    $gray-700: #2d3748;
+    $gray-900: #171923;
+    $green-50: #ecfdec;
+    $green-700: #279141;
+    $yellow-50: #fff6de;
+    $yellow-900: #5f370e;
+    $red-50: #ffeeef;
+    $red-900: #47000c;
+
+    .compare {
+        margin: 28px 0 36px;
+        font-family: 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+        // The reading column is built for prose; a seven-column table
+        // wants more. On wide screens the table steps out of the column
+        // and centres itself, up to 1000px, so every column fits.
+        @media (min-width: 1100px) {
+            width: min(1000px, calc(100vw - 64px));
+            margin-left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+
+    .compare-scroll {
+        // Positioned so the visually-hidden labels in far-right cells are
+        // contained here and clipped, instead of widening the page.
+        position: relative;
+        overflow-x: auto;
+        border: 1px solid $gray-200;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(23, 25, 35, 0.04);
+        -webkit-overflow-scrolling: touch;
+
+        &:focus-visible {
+            outline: 2px solid $brand;
+            outline-offset: 2px;
+        }
+    }
+
+    table {
+        width: 100%;
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 13.5px;
+        line-height: 1.4;
+        color: $gray-700;
+    }
+
+    th,
+    td {
+        padding: 11px 12px;
+        border-bottom: 1px solid $gray-100;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    thead th {
+        position: sticky;
+        top: 0;
+        background: $gray-50;
+        border-bottom: 1px solid $gray-200;
+        color: $gray-500;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        line-height: 16px;
+        text-transform: uppercase;
+    }
+
+    tbody tr:last-child th,
+    tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    // The name column stays put while the criteria scroll under it.
+    .compare-name {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        min-width: 140px;
+        max-width: 200px;
+        background: #fff;
+        box-shadow: 1px 0 0 $gray-100;
+    }
+
+    thead .compare-name {
+        z-index: 2;
+        background: $gray-50;
+    }
+
+    tbody .compare-name {
+        font-weight: 400;
+    }
+
+    .compare-title {
+        display: block;
+        color: $gray-900;
+        font-weight: 600;
+    }
+
+    .compare-note {
+        display: block;
+        margin-top: 2px;
+        color: $gray-500;
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    // lightGallery's row: a tinted band with the brand colour at the edge.
+    tr.is-highlight {
+        th,
+        td {
+            background: #fff8f5;
+        }
+        .compare-name {
+            background: #fff8f5;
+            box-shadow:
+                inset 3px 0 0 $brand-strong,
+                1px 0 0 $gray-100;
+        }
+        .compare-title {
+            color: $brand-strong;
+        }
+    }
+
+    // Matrix mode: libraries across the top, features down the side.
+    // lightGallery's column is the tinted band, with the brand colour
+    // along the top of its header instead of the left of its row.
+    .is-matrix {
+        thead th {
+            padding-top: 14px;
+            padding-bottom: 14px;
+            vertical-align: middle;
+        }
+
+        .compare-library {
+            min-width: 112px;
+            text-transform: none;
+            letter-spacing: 0;
+
+            .compare-title {
+                font-size: 13px;
+                line-height: 1.3;
+            }
+
+            &.is-highlight {
+                background: #fff8f5;
+                box-shadow: inset 0 3px 0 $brand-strong;
+
+                .compare-title {
+                    color: $brand-strong;
+                }
+            }
+        }
+
+        th,
+        td {
+            padding: 9px 10px;
+        }
+
+        thead .compare-library,
+        tbody td {
+            text-align: center;
+        }
+
+        td {
+            vertical-align: middle;
+        }
+
+        .compare-mark {
+            text-align: left;
+        }
+
+        .compare-mark.is-bare {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 0;
+
+            i {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                margin-top: 0;
+                background-size: 12px 12px;
+            }
+        }
+
+        .compare-name {
+            min-width: 160px;
+            max-width: 200px;
+        }
+
+        tbody .compare-name {
+            font-size: 13.5px;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        .compare-feature {
+            display: block;
+            color: $gray-900;
+            font-weight: 500;
+        }
+
+        td.is-highlight {
+            background: #fff8f5;
+        }
+
+        .compare-group th {
+            padding: 14px 10px 6px;
+            background: #fff;
+            color: $gray-500;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border-bottom: 1px solid $gray-100;
+        }
+
+        .compare-mark {
+            gap: 6px;
+        }
+    }
+
+    .compare-mark {
+        display: inline-flex;
+        align-items: flex-start;
+        gap: 7px;
+
+        i {
+            flex: none;
+            width: 16px;
+            height: 16px;
+            margin-top: 1px;
+            border-radius: 50%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 10px 10px;
+        }
+
+        &.is-yes i {
+            background-color: $green-50;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.5l2.2 2.2L9.5 3.7' fill='none' stroke='%23279141' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+
+        &.is-partial i {
+            background-color: $yellow-50;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1.5a4.5 4.5 0 0 1 0 9z' fill='%235f370e'/%3E%3Ccircle cx='6' cy='6' r='4.5' fill='none' stroke='%235f370e' stroke-width='1.4'/%3E%3C/svg%3E");
+        }
+
+        &.is-no i {
+            background-color: $gray-100;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 6h6' fill='none' stroke='%23718096' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
+        }
+
+        &.is-no .compare-mark-label {
+            color: $gray-500;
+        }
+    }
+
+    .compare-pill {
+        display: inline-block;
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 16px;
+
+        &.is-good {
+            background: $green-50;
+            color: $green-700;
+        }
+        &.is-warn {
+            background: $yellow-50;
+            color: $yellow-900;
+        }
+        &.is-bad {
+            background: $red-50;
+            color: $red-900;
+        }
+        &.is-neutral {
+            background: $gray-100;
+            color: $gray-700;
+        }
+    }
+
+    figcaption {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 18px;
+        margin-top: 10px;
+        padding: 0 4px;
+        color: $gray-500;
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .compare-legend {
+        align-items: center;
+        gap: 6px;
+
+        i {
+            margin-top: 0;
+        }
+    }
+
+    .compare-footnote {
+        flex-basis: 100%;
+    }
+
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    @media (max-width: 767px) {
+        .compare {
+            margin-left: -16px;
+            margin-right: -16px;
+        }
+        .compare-scroll {
+            border-radius: 0;
+            border-left: 0;
+            border-right: 0;
+        }
+        table {
+            min-width: 640px;
+        }
+        .is-matrix table {
+            min-width: 920px;
+        }
+        .is-matrix .compare-name {
+            min-width: 148px;
+            max-width: 180px;
+        }
+        th,
+        td {
+            padding: 10px 12px;
+        }
+        .compare-name {
+            min-width: 136px;
+            max-width: 160px;
+        }
+        figcaption {
+            padding: 0 16px;
+        }
+    }
+</style>

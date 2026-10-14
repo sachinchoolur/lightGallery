@@ -1,0 +1,566 @@
+---
+title: '7 best JavaScript video gallery and YouTube lightbox libraries in 2026'
+description: 'Seven JavaScript lightboxes that play YouTube, Vimeo and HTML5 video, compared for 2026 on providers, thumbnails, autoplay, page weight, dependencies, maintenance and license.'
+lead: 'Seven JavaScript lightbox libraries that open YouTube, Vimeo and HTML5 video in a gallery, compared on providers, thumbnails, what they load before the visitor presses play, dependencies and license.'
+date: 2026-10-12T00:00:00.000Z
+tags: ['lightbox', 'video']
+draft: false
+weight: 30
+images: ['header.png']
+contributors: ['Ujjwal Maheendran']
+---
+
+import BlogFigure from '../../../components/BlogFigure.astro';
+import CompareTable from '../../../components/CompareTable.astro';
+
+import lightGalleryShot from '../lightgallery-v3/header.png';
+import glightboxShot from './glightbox.png';
+import fancyboxShot from './fancybox.png';
+import fslightboxShot from './fslightbox.png';
+import venoboxShot from './venobox.png';
+import bigpictureShot from './bigpicture.png';
+import magnificShot from './magnific-popup.png';
+
+Here's the thing about video galleries that nobody tells you until you've shipped one. The playback is the easy part. YouTube or Vimeo handles that. What actually bites you is everything around it. What does the page load before anyone presses play, given that a single YouTube iframe weighs more than your whole gallery library? What do thumbnails and captions look like when a slide is a video instead of an image? And is the library you picked still maintained, or is it quietly running on a 2019 embed API?
+
+So that's what I compared across seven JavaScript lightboxes that open video, with no framework required, all checked against npm and GitHub. Pure players like Video.js aren't here because they play one video rather than present a gallery, and the React-only lightboxes belong on the React list.
+
+
+## The seven at a glance
+
+<CompareTable
+    libraries={[
+        { name: 'lightGallery', highlight: true },
+        { name: 'GLightbox' },
+        { name: 'Fancybox' },
+        { name: 'Fullscreen Lightbox' },
+        { name: 'VenoBox' },
+        { name: 'BigPicture' },
+        { name: 'Magnific Popup' },
+    ]}
+    features={[
+        { group: 'Setup' },
+        {
+            name: 'Plain JavaScript, no jQuery',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no', text: 'Needs jQuery' },
+            ],
+        },
+        {
+            name: 'React, Vue and Angular packages',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'partial', text: 'React, Vue recipes' },
+                { mark: 'yes', text: 'React, Vue, Angular' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Safe to import on the server',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Lightbox overlay',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Dependencies',
+            cells: [
+                'None',
+                'Plyr for video',
+                'None',
+                'None',
+                'None',
+                'None',
+                'jQuery',
+            ],
+        },
+        { group: 'Video' },
+        {
+            name: 'YouTube',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'By video ID' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Vimeo',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Custom source' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'By video ID' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Wistia',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'HTML5 video',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes', text: 'Via Plyr' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Poster until play, no iframe up front',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Video thumbnails fetched for you',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'partial', text: 'YouTube only' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Autoplay on open',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Next slide when a video ends',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        { group: 'Media' },
+        {
+            name: 'Thumbnail strip',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Paid tier' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Iframe slides, maps and PDFs',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Responsive images, srcset and picture',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Captions',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Paid tier' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        { group: 'Interaction' },
+        {
+            name: 'Pinch and double-tap zoom on images',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Pinch only' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Paid tier' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Swipe or pinch to close',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Opens from the thumbnail',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Thumbnail scrubbing',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Fullscreen',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Video only' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Keyboard navigation',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Screen reader support',
+            cells: [
+                { mark: 'yes', text: 'Dialog, announcements' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Reduced motion',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        { group: 'Layout and scale' },
+        {
+            name: 'Justified grid',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Virtualization',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Right-to-left',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Custom icons',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Paid tier' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Inline gallery mode',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'partial', text: 'Carousel component' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        { group: 'Links and sharing' },
+        {
+            name: 'Deep links, back and forward',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Native share sheet',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Download button',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Paid tier' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        { group: 'Project' },
+        {
+            name: 'Core size, gzipped',
+            cells: [
+                '19 KB',
+                '15 KB',
+                '37 KB',
+                '10 KB',
+                '6 KB and CSS',
+                '4 KB',
+                '7 KB and jQuery',
+            ],
+        },
+        {
+            name: 'Last release',
+            cells: [
+                'Oct 2026',
+                'Jan 2025',
+                'Sep 2026',
+                'Aug 2026',
+                'Jun 2026',
+                'Jun 2025',
+                'Jun 2024',
+            ],
+        },
+        {
+            name: 'License',
+            cells: [
+                { pill: 'GPLv3 or commercial', tone: 'warn' },
+                { pill: 'MIT', tone: 'good' },
+                { pill: 'Paid, every installation', tone: 'bad' },
+                { pill: 'MIT basic, paid pro', tone: 'warn' },
+                { pill: 'MIT', tone: 'good' },
+                { pill: 'MIT', tone: 'good' },
+                { pill: 'MIT', tone: 'good' },
+            ],
+        },
+    ]}
+    footnote="Partly means it takes your own code, a plugin or a paid tier. Safe to import on the server means the module touches no window or document until you call it. Core size is the main entry minified and gzipped, from Bundlephobia for everything but lightGallery. Last release is the latest npm version's publish date."
+/>
+
+## lightGallery
+
+<BlogFigure image={lightGalleryShot} alt="lightGallery video gallery with YouTube, Vimeo and HTML5 video" />
+
+[lightGallery](/demos/video-gallery/) plays YouTube, Vimeo, Wistia and HTML5 video in the same lightbox as your images, with no dependencies. Two things make its video handling different from the rest of this list, and they're the two things I'd want from any of them.
+
+First, provider slides load as [facades](/docs/video-facades/), a poster with a play button that looks like the player, with the real iframe created only when the visitor presses play. A gallery of twenty YouTube videos costs twenty posters, not twenty embedded players. YouTube embeds go through the privacy-enhanced no-cookie host by default. Second, the thumbnail strip handles video on its own, pulling YouTube and Vimeo thumbnails automaticaly, so a mixed gallery of photos and clips gets one consistent strip without you generating anything.
+
+Autoplay on open, moving to the next slide when a video ends, and per-provider player parameters are all settings. The core is about 19 KB gzipped and the video plugin about 3 KB, and the React, Vue and Angular packages share the same core. The vanilla package alone sees around 100,000 npm downloads a week.
+
+Touch is the same as in the image galleries. Swipe between slides, pinch or double tap to zoom a photo, drag or pinch to close, and every fling keeps the speed you let go at and settles in a spring instead of snapping to a stop.
+
+```js
+import lightGallery from 'lightgallery';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgVideo from 'lightgallery/plugins/video';
+
+lightGallery(document.getElementById('gallery'), {
+    plugins: [lgVideo, lgThumbnail],
+    // Advance when a video ends; the facade is the default.
+    gotoNextSlideOnVideoEnd: true,
+});
+```
+
+It's the pick for galleries that mix images and video, and for any page with alot of provider videos where page weight matters. The thing to weigh is the license, which is free under the GPLv3, with a one-time [commercial license](/license/) for proprietary projects.
+
+## GLightbox
+
+<BlogFigure image={glightboxShot} alt="GLightbox" />
+
+<a href="https://github.com/biati-digital/glightbox" rel="nofollow">GLightbox</a> is the free lightbox I recommend most often when someone needs video and doesn't need much else. About 11 KB gzipped, pure JavaScript, and it opens images, YouTube, Vimeo and self-hosted video, inline content and iframes, with keyboard control, swipe, a basic image zoom and optional autoplay. Video plays through the Plyr player, which GLightbox only loads when a video slide actually needs it. About 72,000 weekly downloads and 2,500 stars.
+
+What's missing is a thumbnail strip. The last release was January 2025, with commits through December 2025, and self-hosted video means Plyr rides along on top of the lightbox.
+
+## Fancybox
+
+<BlogFigure image={fancyboxShot} alt="Fancybox" />
+
+<a href="https://fancyapps.com/fancybox/" rel="nofollow">Fancybox</a>, from the Fancyapps UI package, is the polished one. It opens images, YouTube, Vimeo and HTML5 video, iframes and inline content, with thumbnails, a slideshow, zoom and a carousel from the same package. It releases often, most recently September 2026, and its weekly downloads sit in the same range as lightGallery's.
+
+The license is the whole conversation. Every installation needs a paid license, including internal tools and client work, and the terms exclude open-source projects. There's no free tier. If you're building a commercial site and want a finished look with support behind it, that's a fair trade. If you're not, it rules itself out.
+
+## Fullscreen Lightbox
+
+<BlogFigure image={fslightboxShot} alt="Fullscreen Lightbox" />
+
+<a href="https://fslightbox.com/javascript" rel="nofollow">Fullscreen Lightbox</a> opens images, YouTube and HTML5 video, and custom sources in a full-window overlay with no dependencies. The MIT basic edition is about 31 KB and released in August 2026, and there are React, Vue and Angular builds alongside the vanilla one.
+
+Before you plan around it, read the edition split, because thumbnails, zoom, captions and the extra toolbar buttons are pro, wich is paid. Vimeo is a custom source rather than a built-in type. For a free overlay where the basic feature set is enough, it's fine.
+
+## VenoBox
+
+<BlogFigure image={venoboxShot} alt="VenoBox" />
+
+<a href="https://github.com/nicolafranchini/VenoBox" rel="nofollow">VenoBox</a> is a responsive lightbox for images, YouTube and Vimeo, iframes and inline content, with a touch-swipe gallery. Version 2 dropped jQuery, and the current release is from June 2026 with only three open issues, which is a healthy sign for a small project.
+
+It suits a plain HTML site that wants a straightforward free lightbox with video as iframes. No thumbnails, no zoom, and a small community at about 3,000 weekly downloads.
+
+## BigPicture
+
+<BlogFigure image={bigpictureShot} alt="BigPicture" />
+
+<a href="https://github.com/henrygd/bigpicture" rel="nofollow">BigPicture</a> is the one to reach for when weight is the only thing that matters. It's a few kilobytes with no stylesheet to include, and it opens images, YouTube, Vimeo, iframes, audio and remote video files, with galleries that loop and an open animation that starts from the clicked element.
+
+No thumbnails, no zoom, and the last release was June 2025.
+
+## Magnific Popup
+
+<BlogFigure image={magnificShot} alt="Magnific Popup" />
+
+<a href="https://dimsemenov.com/plugins/magnific-popup/" rel="nofollow">Magnific Popup</a> is the jQuery lightbox of the early 2010s, and it's still at about 60,000 weekly downloads and 11,000 stars. Its iframe type opens YouTube and Vimeo, with image galleries, inline content and AJAX alongside.
+
+I've included it because so many sites still run it, not as a recommendation. Its own site now marks it deprecated, with only critical and security fixes to come, and points people to the native dialog element or the author's image gallery instead. If you're already on jQuery and Magnific Popup and not ready to migrate, it keeps working. For anything new, start with something else on this list.
+
+## What to check before choosing
+
+- **What loads before play.** A provider iframe is heavy. A library that shows a poster until the visitor presses play keeps a long gallery light. lightGallery does this by default, and the others create the embed when the slide opens.
+- **Thumbnails for video.** A strip that can show a video's own thumbnail next to image thumbnails is rarer than it sounds. On this list lightGallery and Fancybox ship one, and Fullscreen Lightbox only in its paid edition.
+- **Self-hosted video.** HTML5 video is native in lightGallery, Fancybox and Fullscreen Lightbox, plays through Plyr in GLightbox, and is an iframe or a remote file elsewhere.
+- **License.** Four of the seven are MIT. lightGallery is GPLv3 with a commercial option, Fullscreen Lightbox puts the extras behind a paid edition, and Fancybox is paid for every installation.
+
+If lightGallery is the pick, the [video gallery demo](/demos/video-gallery/), the [video facades guide](/docs/video-facades/) and the [video carousel](/demos/video-carousel/) for an inline player are where to start.

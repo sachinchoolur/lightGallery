@@ -1,0 +1,541 @@
+---
+title: '7 best Angular image gallery libraries in 2026'
+description: 'Seven Angular image gallery and lightbox libraries compared for 2026 on supported Angular versions, standalone components, thumbnails, video, zoom, SSR, maintenance and license.'
+lead: 'Seven Angular gallery and lightbox libraries compared on what decides the choice, from the Angular versions they support to thumbnails, video, zoom, server rendering, how recently they shipped, and license.'
+date: 2026-10-10T00:00:00.000Z
+lastmod: 2026-10-12T00:00:00.000Z
+tags: ['gallery', 'angular']
+draft: false
+weight: 30
+images: ['header.png']
+contributors: ['Ujjwal Maheendran']
+---
+
+import BlogFigure from '../../../components/BlogFigure.astro';
+import CompareTable from '../../../components/CompareTable.astro';
+
+import lightGalleryShot from '../lightgallery-v3/header.png';
+import ngGalleryShot from './ng-gallery.png';
+import ngxLightboxShot from './ngx-lightbox.png';
+import modalGalleryShot from './angular-modal-gallery.png';
+import daelmaakShot from './daelmaak-ngx-gallery.png';
+import ngImageSliderShot from './ng-image-slider.png';
+import owlCarouselShot from './ngx-owl-carousel-o.png';
+
+Angular moves fast, and gallery libraries are where you feel it. A package that was fine on Angular 13 may refuse to install on Angular 22, and an alarming number of the galleries that still rank on Google are pinned to versions nobody starts a project on anymore. So the first thing I checked for every library below is the Angular range its published package actually declares. Not what the README says, what `npm view` says.
+
+After that I asked the usual questions about thumbnails, video, zoom, how it feels on a phone, whether you can make it look like part of your site, server rendering, how recently it shiped, and the license. All the figures come from npm and GitHub, not from anyone's README.
+
+
+## The seven at a glance
+
+<CompareTable
+    libraries={[
+        { name: 'lightGallery', highlight: true },
+        { name: 'ng-gallery' },
+        { name: 'ngx-lightbox' },
+        { name: 'angular-modal-gallery' },
+        { name: 'ngx-gallery by daelmaak' },
+        { name: 'ng-image-slider' },
+        { name: 'ngx-owl-carousel-o' },
+    ]}
+    features={[
+        { group: 'Setup' },
+        {
+            name: 'Angular versions',
+            cells: [
+                '21 to 22',
+                '16 and up',
+                'Not declared',
+                '22',
+                '21 and up',
+                '18',
+                '22',
+            ],
+        },
+        {
+            name: 'Native Angular component',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Angular SSR',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no', text: 'Fixed on next' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Lightbox overlay',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Dependencies',
+            cells: [
+                'None',
+                'Angular CDK',
+                'file-saver',
+                'Angular CDK',
+                'None',
+                'None',
+                'None',
+            ],
+        },
+        { group: 'Media' },
+        {
+            name: 'Thumbnail strip',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes', text: 'Previews row' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Inline strip' },
+                { mark: 'partial', text: 'HTML dots' },
+            ],
+        },
+        {
+            name: 'YouTube and Vimeo video',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'partial', text: 'By video ID' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'partial', text: 'Embed URL' },
+                { mark: 'partial', text: 'YouTube only' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'HTML5 video',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Lazy video embeds',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Video thumbnails fetched for you',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'partial', text: 'YouTube only' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Iframe slides, maps and PDFs',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'partial' },
+                { mark: 'no' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Responsive images, srcset and picture',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Captions',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial' },
+            ],
+        },
+        { group: 'Interaction' },
+        {
+            name: 'Pinch and double-tap zoom',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'partial', text: 'Buttons only' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Swipe or pinch to close',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Opens from the thumbnail',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Thumbnail scrubbing',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Fullscreen',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Keyboard navigation',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Arrows only' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Focus only' },
+            ],
+        },
+        {
+            name: 'Screen reader support',
+            cells: [
+                { mark: 'yes', text: 'Dialog, announcements' },
+                { mark: 'partial' },
+                { mark: 'no' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'no' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Reduced motion',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        { group: 'Layout and scale' },
+        {
+            name: 'Justified grid',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'partial', text: 'Fixed grid' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Virtualization',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Right-to-left',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Custom icons',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'partial' },
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Inline gallery mode',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        { group: 'Links and sharing' },
+        {
+            name: 'Deep links, back and forward',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Native share sheet',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Download button',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        { group: 'Project' },
+        {
+            name: 'Core size, gzipped',
+            cells: [
+                '19 KB',
+                '25 KB',
+                '8 KB',
+                '36 KB',
+                '10 KB',
+                '35 KB',
+                '16 KB',
+            ],
+        },
+        {
+            name: 'Last release',
+            cells: [
+                'Oct 2026',
+                'Oct 2024',
+                'Oct 2022',
+                'Jun 2026',
+                'Mar 2026',
+                'Nov 2024',
+                'Jul 2026',
+            ],
+        },
+        {
+            name: 'License',
+            cells: [
+                { pill: 'GPLv3 or commercial', tone: 'warn' },
+                { pill: 'MIT', tone: 'good' },
+                { pill: 'MIT', tone: 'good' },
+                { pill: 'MIT', tone: 'good' },
+                { pill: 'Apache-2.0', tone: 'good' },
+                { pill: 'MIT', tone: 'good' },
+                { pill: 'MIT', tone: 'good' },
+            ],
+        },
+    ]}
+    footnote="Partly means it takes your own code, a plugin or a paid tier. Angular versions is the @angular/core peer range the latest npm version declares. Core size is the main entry minified and gzipped, from Bundlephobia for everything but lightGallery. Last release is the latest npm version's publish date."
+/>
+
+## lightGallery
+
+<BlogFigure image={lightGalleryShot} alt="lightGallery, a native Angular image gallery and lightbox" />
+
+[lightGallery](/demos/angular-image-gallery/) ships `@lightgallery/angular`, and it's written the way Angular wants things written now, as a standalone component with signal inputs, zoneless change detection and a CDK overlay for the lightbox. Angular renders every node, the grid server-renders under Angular SSR and hydrates, and the same headless core drives the React and Vue packages, so the feature set is identical across the three. Plugins are features you pass in, `withThumbnail()`, `withZoom()`, `withVideo()` and so on, each it's own entry point. The vanilla package alone sees around 100,000 npm downloads a week.
+
+On a phone it behaves like a photos app. Swipe between slides, pinch or double tap to zoom, drag or pinch to close, and every fling keeps the speed you let go at and settles in a spring instead of snapping to a stop. Edges resist with friction, and reduced-motion turns all of it off. It's the best touch experience on this list, and I'd say that even if it weren't ours.
+
+It also looks finished out of the box, which matters more than it sounds for something that frames other people's photos. The chrome is restrained, the toolbar stays on one row and folds its least important buttons into a menu when space runs out, and every icon is an inline SVG that takes the button's color, so recoloring the whole set is one CSS rule. Past that, an `lgIcon` template swaps any icon by name, there are twenty-odd slide transitions plus your own easing, captions take any HTML, and a `className` input scopes your own styles to it. Restyling is still CSS, same as everywhere, but the defaults mean you rarely need much of it.
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withThumbnail(), withZoom()];
+    items: LgGalleryItem[] = [
+        { src: 'img/1-1600.jpg', thumb: 'img/1-240.jpg', alt: 'Mountains', lgSize: '1600-1067' },
+        { src: 'img/2-1600.jpg', thumb: 'img/2-240.jpg', alt: 'Forest path', lgSize: '1600-2400' },
+    ];
+}
+```
+
+It's the pick when you want thumbnails, video, zoom and a proper touch experience on a current Angular with SSR, or when the team also ships React or Vue.
+
+Two things to weigh. The license is free under the GPLv3, with a one-time [commercial license](/license/) for proprietary projects. And the version range follows current Angular, so an application still on an older major has to upgrade first.
+
+## ng-gallery
+
+<BlogFigure image={ngGalleryShot} alt="ng-gallery" />
+
+<a href="https://ngx-gallery.netlify.app/" rel="nofollow">ng-gallery</a> is the long-running Angular gallery, and it comes in three parts. There's a `gallery` component with a thumbnail strip and a `Gallery` service, a `lightbox` directive and `Lightbox` service that open the same gallery in a modal, and a `gallerize` directive that scoops the images out of a container and adds them to the lightbox for you. Items can be images, HTML5 video, YouTube or an iframe. It needs the Angular CDK, and dragging the slider with a mouse needs HammerJS. At about 44,000 weekly downloads and 636 stars it's the most used Angular-specific option, and the repository is active, with a 13.0.0 prerelease sitting on the `next` tag.
+
+I'd pick it for an inline gallery and a modal lightbox fed from one data source, on Angular 16 and up. The stable release is from October 2024, so each new Angular major means either waiting for the next tag or living with a peer warning for a while. There's no zoom.
+
+## ngx-lightbox
+
+<BlogFigure image={ngxLightboxShot} alt="ngx-lightbox" />
+
+<a href="https://github.com/themyth92/ngx-lightbox" rel="nofollow">ngx-lightbox</a> is a port of the original Lightbox2 to Angular. It opens a set of images in a simple overlay with captions, keyboard navigation and a thumbnail option. It still pulls about 21,000 downloads a week, which tells you how many sites just need a plain overlay.
+
+I'd only pick it with eyes open. The last release was October 2022, the package declares no Angular peer range at all, so wether it works with your Angular is something you verify yourself, there's no video, no real zoom, and the issue tracker has over seventy open items.
+
+## angular-modal-gallery
+
+<BlogFigure image={modalGalleryShot} alt="angular-modal-gallery" />
+
+<a href="https://github.com/Ks89/angular-modal-gallery" rel="nofollow">@ks89/angular-modal-gallery</a> is the one that keeps pace with Angular itself. Version 16 shipped for Angular 22 in June 2026. You get a modal gallery with previews, dots, a side-preview layout, keyboard shortcuts and server-side rendering, configured through a set of typed config objects.
+
+It's a good choice for a modal image gallery on the newest Angular where SSR and keyboard access matter. It's images only, there's no zoom, and the configuration surface is bigger than a simple gallery really needs.
+
+## ngx-gallery by daelmaak
+
+<BlogFigure image={daelmaakShot} alt="ngx-gallery by daelmaak" />
+
+<a href="https://daelmaak.github.io/ngx-gallery/" rel="nofollow">@daelmaak/ngx-gallery</a> is the newer, smaller one, and I rather like it. It's a standalone gallery component with a configurable thumbnail strip, YouTube and native video items, descriptions, touch and mouse gestures, lazy loading, right-to-left support and custom templates for items, thumbnails and loading states. It released in March 2026 for Angular 21 and up, and its issue tracker is empty.
+
+Picking it makes you an early adopter, with 19 stars and about 600 downloads a week. It's an inline gallery, so a full-screen lightbox is yours to build, and there's no zoom.
+
+## ng-image-slider
+
+<BlogFigure image={ngImageSliderShot} alt="ng-image-slider" />
+
+<a href="https://github.com/sanjayV/ng-image-slider" rel="nofollow">ng-image-slider</a> is a responsive image and video slider with a lightbox popup, lazy loading, autoplay and YouTube support, released in November 2024 for Angular 18.
+
+That version pin is the issue. The peer range names Angular 18 specifically, so newer applications install it with a warning or not at all, and the last commit was January 2025. If you're on 18 and want a thumbnail slider that pops a lightbox, including YouTube items, it does the job.
+
+## ngx-owl-carousel-o
+
+<BlogFigure image={owlCarouselShot} alt="ngx-owl-carousel-o" />
+
+<a href="https://github.com/vitalii-andriiovskyi/ngx-owl-carousel-o" rel="nofollow">ngx-owl-carousel-o</a> is the Owl Carousel rebuilt as a proper Angular library, no jQuery, and kept in step with Angular. Version 22 shipped in July 2026. About 46,000 weekly downloads. It's here for the same reason the carousel is on the Vue list, because it's what people pair a lightbox with.
+
+It is a carousel, not a lightbox, so the full-screen view, zoom and media handling are all things you add.
+
+## So which one?
+
+- lightGallery for thumbnails, video and zoom in one component on current Angular, with SSR.
+- ng-gallery for the established Angular gallery plus lightbox service.
+- ngx-lightbox if you need a plain overlay for a few images and verify it still installs.
+- angular-modal-gallery for a modal gallery that tracks the newest Angular.
+- ngx-gallery by daelmaak for a small signal-based gallery to grow with.
+- ng-image-slider for a slider with a lightbox popup on Angular 18.
+- ngx-owl-carousel-o for a carousel to pair with any of the above.
+
+If lightGallery is the pick, start with the [Angular image gallery demo](/demos/angular-image-gallery/), the [Angular video gallery](/demos/angular-video-gallery/) and the [Angular package docs](/docs/angular/), which cover Angular SSR.

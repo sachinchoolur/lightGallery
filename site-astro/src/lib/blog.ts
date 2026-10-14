@@ -12,6 +12,50 @@ export const CONTRIBUTOR_IMAGES: Record<string, ImageMetadata> = {
     'Sachin Neravath': sachinNeravath,
 };
 
+/** "Oct 12, 2026": the post and card date format. */
+export const SHORT_DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+});
+
+/** The post's category label: its first tag, capitalised. */
+export function categoryOf(entry: CollectionEntry<'blog'>): string {
+    const tag = entry.data.tags[0] ?? 'Blog';
+    return tag.charAt(0).toUpperCase() + tag.slice(1);
+}
+
+/**
+ * A revision date worth showing: a lastmod at least a day after the
+ * post date (same-day edits are noise).
+ */
+export function updatedOn(entry: CollectionEntry<'blog'>): Date | undefined {
+    const DAY = 24 * 60 * 60 * 1000;
+    const { date, lastmod } = entry.data;
+    return lastmod && date && lastmod.valueOf() - date.valueOf() >= DAY ? lastmod : undefined;
+}
+
+/** The one date a post shows: its revision date when it has one, else when it was published. */
+export function displayDate(entry: CollectionEntry<'blog'>): Date | undefined {
+    return updatedOn(entry) ?? entry.data.date;
+}
+
+/** Up to `limit` other posts, the ones sharing a tag first, newest first. */
+export function relatedPosts(
+    entry: CollectionEntry<'blog'>,
+    all: CollectionEntry<'blog'>[],
+    limit = 3,
+): CollectionEntry<'blog'>[] {
+    const others = all
+        .filter((post) => post.id !== entry.id)
+        .sort((a, b) => (displayDate(b)?.valueOf() ?? 0) - (displayDate(a)?.valueOf() ?? 0));
+    const shared = others.filter((post) =>
+        post.data.tags.some((tag) => entry.data.tags.includes(tag)),
+    );
+    const rest = others.filter((post) => !shared.includes(post));
+    return [...shared, ...rest].slice(0, limit);
+}
+
 export function blogSlug(entry: CollectionEntry<'blog'>): string {
     // The glob loader already honors the frontmatter `slug` override.
     return entry.id.replace(/\/index$/, '');

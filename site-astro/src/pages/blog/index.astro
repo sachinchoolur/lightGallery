@@ -1,16 +1,31 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection, getEntry } from 'astro:content';
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
+import {
+    CONTRIBUTOR_IMAGES,
+    SHORT_DATE_FORMAT,
+    blogUrl,
+    bundleImage,
+    categoryOf,
+    displayDate,
+} from '../../lib/blog';
 
-// Port of `layouts/blog/list.html`. The Hugo paginator (20/page) never
-// paginated in practice (2 posts); a second page becomes relevant only
-// past 20 posts, at which point pagination routes get added here.
+/**
+ * The blog index: the newest post as a two-column feature, header image
+ * beside the title, then the rest as a card grid. Pagination becomes a
+ * question past a few dozen posts.
+ */
 const blogIndex = await getEntry('pages', 'blog-index');
+// Newest first by the date a post shows, so a refreshed post moves up.
 const posts = (await getCollection('blog')).sort(
-    (a, b) => (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0),
+    (a, b) => (displayDate(b)?.valueOf() ?? 0) - (displayDate(a)?.valueOf() ?? 0),
 );
+const [featured, ...rest] = posts;
+const featuredImage = featured ? bundleImage(featured, 'header.png') : undefined;
+const featuredAuthor = featured?.data.contributors[0];
 ---
 
 <BaseLayout
@@ -20,23 +35,57 @@ const posts = (await getCollection('blog')).sort(
         description: blogIndex?.data.description,
     }}
 >
-    <div class="wrap container-xxl page-wrap">
-        <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-6">
-                <article>
-                    <h1 class="visually-hidden">Blog</h1>
-                    <div class="blog-list">
-                        {
-                            posts.map((entry, index) => (
-                                <BlogCard
-                                    entry={entry}
-                                    teaserLength={350}
-                                    eager={index === 0}
+    <div class="post-page">
+        <div class="post-frame">
+            <h1 class="visually-hidden">Blog</h1>
+            {
+                featured && (
+                    <a class="blog-featured" href={blogUrl(featured)}>
+                        <div class="blog-featured-media">
+                            {featuredImage && (
+                                <Image
+                                    alt=""
+                                    src={featuredImage}
+                                    widths={[640, 1080]}
+                                    sizes="(max-width: 767px) 100vw, 520px"
+                                    format="webp"
+                                    loading="eager"
+                                    fetchpriority="high"
                                 />
-                            ))
-                        }
-                    </div>
-                </article>
+                            )}
+                        </div>
+                        <div class="blog-featured-body">
+                            <div class="blog-card-meta">
+                                <span>{categoryOf(featured)}</span>
+                                {displayDate(featured) && (
+                                    <time datetime={displayDate(featured)!.toISOString()}>
+                                        {SHORT_DATE_FORMAT.format(displayDate(featured)!)}
+                                    </time>
+                                )}
+                            </div>
+                            <h2 class="blog-featured-title">{featured.data.title}</h2>
+                            <p class="blog-featured-lead">{featured.data.description}</p>
+                            {featuredAuthor && (
+                                <div class="blog-featured-author">
+                                    {CONTRIBUTOR_IMAGES[featuredAuthor] && (
+                                        <Image
+                                            src={CONTRIBUTOR_IMAGES[featuredAuthor]}
+                                            width={24}
+                                            height={24}
+                                            densities={[1, 2]}
+                                            format="webp"
+                                            alt=""
+                                        />
+                                    )}
+                                    <span>{featuredAuthor}</span>
+                                </div>
+                            )}
+                        </div>
+                    </a>
+                )
+            }
+            <div class="blog-grid blog-grid-index">
+                {rest.map((entry) => <BlogCard entry={entry} />)}
             </div>
         </div>
     </div>

@@ -1,55 +1,321 @@
-.blog-wrap {
-    padding: 100px 0 0 0;
+// The blog, index and posts: a 1080px column with a breadcrumb, the
+// header image across it, and a 752px reading column inside. Type follows the Inter scale the rest of
+// the site uses.
 
-    @include media-breakpoint-up(md) {
-        padding: 100px 75px;
-    }
+$post-ink: $gray-800;
+$post-rail: $gray-100;
+$brand-strong: $orange-700;
 
+.post-page {
+    display: flex;
+    justify-content: center;
     font-family: $font-family-sans-serif;
-    font-style: normal;
-    font-weight: 400;
+    color: $post-ink;
+    -webkit-font-smoothing: antialiased;
+}
+
+.post-frame {
+    width: 100%;
+    // A flex item: without this a wide code block sets the frame's width.
+    min-width: 0;
+    max-width: 1080px;
+    margin: 0 8px;
+    padding-top: 116px;
+
+    @media (max-width: 767px) {
+        margin: 0;
+        padding-top: 92px;
+    }
+}
+
+// ---- Breadcrumb ----------------------------------------------------------
+
+.post-crumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    padding-left: 16px;
+    color: $gray-500;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: -0.16px;
+
+    a {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        color: $gray-500;
+        text-decoration: none;
+
+        svg {
+            color: $gray-700;
+        }
+
+        &:hover {
+            color: $gray-800;
+        }
+    }
+
+    .post-crumbs-current {
+        color: $post-ink;
+    }
+}
+
+// ---- Header image --------------------------------------------------------
+
+.post-hero img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+// ---- Reading column ------------------------------------------------------
+
+.post-column {
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid $post-rail;
+}
+
+.post-inner {
+    width: 100%;
+    min-width: 0;
+    max-width: 752px;
+    margin: 0 8px;
+    padding: 56px 36px 80px;
+
+    @media (max-width: 767px) {
+        margin: 0;
+        padding: 40px 16px 56px;
+    }
+}
+
+.post-title {
+    margin: 0 0 24px;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 44px;
+    letter-spacing: -0.46px;
+    color: $post-ink;
+
+    @media (max-width: 767px) {
+        font-size: 24px;
+        line-height: 36px;
+        letter-spacing: -0.38px;
+    }
+}
+
+.post-subtitle {
+    margin: 0 0 24px;
     font-size: 18px;
-    line-height: 32px;
-    color: #1A202C;
+    font-style: italic;
+    line-height: 30px;
+    letter-spacing: -0.2px;
+    color: $post-ink;
 
-    .docs-hero-image {
-        margin-bottom: 60px;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        line-height: 28px;
     }
 
-    // The v3 release post's gallery is the homepage hero grid: bled to the
-    // header image's width, and on phones the tiles past the first ten
-    // stay out of the grid, as on the homepage.
-    .blog-hero-gallery {
-        @include media-breakpoint-up(md) {
-            margin-left: -120px;
-            margin-right: -120px;
+    a {
+        color: inherit;
+        text-decoration: underline;
+    }
+    code {
+        font-style: normal;
+    }
+}
+
+.post-byline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 24px;
+    padding-bottom: 35px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid $post-rail;
+    line-height: 24px;
+
+    @media (max-width: 575px) {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.post-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    img {
+        display: block;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+}
+
+.post-author-name {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -0.2px;
+    color: $post-ink;
+}
+
+.post-dates {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    line-height: 24px;
+    color: $gray-500;
+}
+
+// ---- Article body --------------------------------------------------------
+
+.post-content {
+    font-size: 16px;
+    line-height: 28px;
+    letter-spacing: -0.2px;
+    color: $post-ink;
+
+    > :first-child {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: 0;
+    }
+
+    p {
+        margin: 20px 0 24px;
+    }
+
+    a {
+        color: $link-color;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
         }
-        .gallery-item-phone-hidden {
-            @media (max-width: 767px) {
-                display: none;
-            }
+    }
+
+    strong {
+        font-weight: 600;
+        color: $post-ink;
+    }
+
+    h2 {
+        margin: 20px 0 16px;
+        padding-top: 56px;
+        border-top: 1px solid $post-rail;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 36px;
+        letter-spacing: -0.38px;
+        color: $post-ink;
+
+        @media (max-width: 767px) {
+            padding-top: 40px;
+            font-size: 22px;
+            line-height: 34px;
+            letter-spacing: -0.2px;
         }
     }
 
-    // Tables carry setting names in code; let them wrap so a three-column
-    // table never widens the page on a phone.
-    table code {
-        white-space: normal;
-        overflow-wrap: anywhere;
-    }
+    h3 {
+        margin: 24px 0 12px;
+        padding-top: 24px;
+        border-top: 1px solid $post-rail;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 32px;
+        letter-spacing: -0.38px;
+        color: $post-ink;
 
-    .figure {
-        display: inline-block;
-        margin: 1rem 0;
-
-        @include media-breakpoint-up(md) {
-            margin: 2rem -80px;
+        @media (max-width: 767px) {
+            font-size: 18px;
+            line-height: 30px;
+            letter-spacing: -0.2px;
         }
     }
 
+    h4 {
+        margin: 24px 0 8px;
+        font-size: 17px;
+        font-weight: 600;
+        line-height: 28px;
+        color: $post-ink;
+    }
 
-    .twitter-tweet {
-        margin-bottom: 2rem !important;
+    // Headings keep their anchor hash, muted until hovered.
+    h2 .anchor,
+    h3 .anchor,
+    h4 .anchor {
+        margin-left: 8px;
+        color: $gray-300;
+        text-decoration: none;
+        opacity: 0;
+    }
+    h2:hover .anchor,
+    h3:hover .anchor,
+    h4:hover .anchor {
+        opacity: 1;
+    }
+
+    ul,
+    ol {
+        margin: 24px 0;
+        padding-left: 24px;
+    }
+    ul {
+        list-style: disc;
+    }
+    li {
+        margin: 6px 0;
+        &::marker {
+            color: $post-ink;
+        }
+    }
+
+    blockquote {
+        margin: 24px 0;
+        padding: 4px 0 4px 20px;
+        border-left: 3px solid $brand;
+        color: $gray-700;
+        font-size: 17px;
+
+        p {
+            margin: 8px 0;
+        }
+    }
+
+    hr {
+        margin: 40px 0;
+        border: 0;
+        border-top: 1px solid $post-rail;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+    }
+
+    figure {
+        margin: 32px 0;
+
+        &.blog-images {
+            cursor: zoom-in;
+        }
+    }
+    figcaption {
+        margin-top: 8px;
+        color: $gray-500;
+        font-size: 13px;
+        line-height: 20px;
     }
 
     // Inline code: the same pill as the docs content.
@@ -62,170 +328,374 @@
         font-size: 14px;
         font-weight: 500;
     }
-    // A linked setting keeps the link colour so it still reads as a link.
     a > code {
         color: inherit;
     }
-    // Inside a heading the pill scales with the heading.
-    h1 > code,
     h2 > code,
     h3 > code,
-    h4 > code,
-    h5 > code {
+    h4 > code {
         padding: 0 0.3em;
         border-radius: 0.3em;
         font-size: 0.85em;
         font-weight: inherit;
     }
 
-    .docs-hero-image {
-        display: block;
-
-        @include media-breakpoint-up(md) {
-            margin-left: -120px;
-            margin-right: -120px;
-        }
+    // Long code lines scroll inside the block instead of widening the page.
+    pre {
+        max-width: 100%;
+        margin: 24px 0;
+        overflow-x: auto;
     }
 
-    .blog-header {
-        margin-top: 40px;
-        margin-bottom: 60px;
-        max-width: 700px;
-
-        h1 {
-
-            font-style: normal;
-            font-weight: 700;
-            font-size: 36px;
-            line-height: 48px;
-            margin: 5px 0 24px 0;
-
-            letter-spacing: 0.01em;
-
-            color: #1A202C;
-        }
-
-        .blog-desc {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .blog-tags {
-            display: inline-block;
-            margin-right: 8px;
-        }
-    }
-}
-
-
-.blog-contributors {
-    .blog-contributors-list {
-        font-weight: 400;
+    // Tables written in markdown wrap at the code they carry, so a
+    // three-column table never widens the page on a phone.
+    table {
+        width: 100%;
+        margin: 24px 0;
         font-size: 14px;
-        line-height: 20px;
-        color: #718096;
+        line-height: 22px;
+
+        th,
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid $post-rail;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            color: $gray-500;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        code {
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
     }
 
-    .contributor-image {
-        img {
-            width: 36px;
-            height: 36px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-right: 8px;
+    // The v3 release post's gallery is the homepage hero grid: bled to
+    // the reading column's rails, and on phones the tiles past the first
+    // ten stay out of the grid, as on the homepage.
+    .blog-hero-gallery {
+        margin: 32px -36px;
+
+        @media (max-width: 767px) {
+            margin: 24px -16px;
         }
+        .gallery-item-phone-hidden {
+            @media (max-width: 767px) {
+                display: none;
+            }
+        }
+    }
+
+    .twitter-tweet {
+        margin-bottom: 2rem !important;
     }
 }
 
-.blog-meta {
-    font-family: $font-family-sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
+// ---- Cards: the index grid and the related posts ------------------------
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px 24px;
+    padding: 0 16px;
+
+    @media (min-width: 640px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.blog-grid-index {
+    padding-bottom: 120px;
+}
+
+.blog-card {
+    padding: 8px;
+    border: 1px solid $gray-50;
+    border-radius: 24px;
+    box-shadow: 5px 6px 40px -4px rgba(9, 18, 36, 0.03);
+    background: #fff;
+}
+
+.blog-card-link {
+    display: block;
+    border-radius: 16px;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+    }
+    &:hover .blog-card-title {
+        color: $brand-strong;
+    }
+}
+
+.blog-card-media {
+    overflow: hidden;
+    border: 1px solid $gray-100;
+    border-radius: 20px;
+    background: $gray-50;
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1200 / 630;
+        object-fit: cover;
+    }
+}
+
+.blog-card-body {
+    padding: 32px 16px 28px;
+}
+
+.blog-card-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: $gray-500;
+    font-size: 13px;
+    line-height: 16px;
+}
+
+.blog-card-title {
+    margin: 20px 0 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 26px;
+    letter-spacing: -0.2px;
+    color: $post-ink;
+    transition: color 0.15s;
+}
+
+.blog-card-author,
+.blog-featured-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    color: $gray-500;
+    font-size: 13px;
     line-height: 16px;
 
-    color: rgba(0, 0, 0, 0.64);
-
-    strong {
-        color: #000;
+    img {
+        border-radius: 50%;
+        object-fit: cover;
     }
 }
 
-.blog-list {
-    padding-top: 120px;
-    padding-bottom: 60px;
+// ---- Index: the featured post ------------------------------------------
 
-    .blog-list-item+.blog-list-item {
-        border-top: 1px solid #e2e2ef;
-        padding-top: 48px;
+.blog-featured {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    align-items: center;
+    margin-bottom: 100px;
+    padding: 0 16px;
+    color: inherit;
+    text-decoration: none;
+
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+    }
+    &:hover .blog-featured-title {
+        color: $brand-strong;
+    }
+}
+
+.blog-featured-media {
+    padding: 8px;
+    border: 1px solid $gray-50;
+    border-radius: 24px;
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border: 1px solid $gray-100;
+        border-radius: 16px;
+    }
+}
+
+.blog-featured-title {
+    margin: 24px 0 0;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 36px;
+    letter-spacing: -0.38px;
+    color: $post-ink;
+    transition: color 0.15s;
+}
+
+.blog-featured-lead {
+    margin: 8px 0 0;
+    font-size: 16px;
+    line-height: 28px;
+    letter-spacing: -0.2px;
+    color: $gray-500;
+}
+
+.blog-featured-author {
+    margin-top: 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: $post-ink;
+
+    img {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+// ---- Under a post: related posts and the call to action -----------------
+
+.post-related {
+    margin-top: 100px;
+    padding-bottom: 100px;
+    border-bottom: 1px solid $post-rail;
+
+    @media (max-width: 767px) {
+        margin-top: 56px;
+        padding-bottom: 56px;
+    }
+}
+
+.post-related-title {
+    margin: 0 0 32px;
+    padding: 0 16px;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 36px;
+    letter-spacing: -0.38px;
+    color: $post-ink;
+}
+
+.post-cta {
+    position: relative;
+    margin-bottom: 56px;
+    padding: 56px 16px;
+    border-bottom: 1px solid $post-rail;
+    background-image: repeating-linear-gradient(
+        130deg,
+        $gray-100 0px,
+        $gray-100 1px,
+        transparent 1px,
+        transparent 8px
+    );
+
+    @media (min-width: 768px) {
+        margin-bottom: 100px;
+        padding: 100px 16px 88px;
+    }
+}
+
+.post-cta-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 26px;
+
+    @media (min-width: 992px) {
+        flex-direction: row;
+        gap: 36px;
+    }
+}
+
+.post-cta-title {
+    max-width: 468px;
+    margin: 0;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    color: $post-ink;
+
+    @media (min-width: 768px) {
+        font-size: 56px;
+        letter-spacing: -1.28px;
+    }
+}
+
+.post-cta-accent {
+    font-family: $font-family-serif-accent;
+    font-style: italic;
+    font-weight: 400;
+    color: $brand-strong;
+}
+
+.post-cta-side {
+    display: flex;
+    flex-direction: column;
+
+    p {
+        max-width: 347px;
+        margin: 14px 0 0;
+        font-size: 16px;
+        line-height: 28px;
+        letter-spacing: -0.2px;
+        color: $gray-500;
+    }
+}
+
+.post-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+
+    @media (min-width: 768px) {
         margin-top: 48px;
     }
-
-    .docs-hero-image {
-        margin-bottom: 24px;
-        display: block;
-    }
-
-    .blog-meta {
-        margin-bottom: 24px;
-    }
-
-    .stretched-link {
-        &:after {
-            content: none;
-        }
-    }
-
-    h2 {
-
-        margin: 0 0 16px 0;
-        font-style: normal;
-        font-weight: 700;
-        font-size: 34px;
-        line-height: 1.2;
-        /* or 133% */
-
-        letter-spacing: 0.01em;
-
-        /* gray/800 */
-
-        color: #1A202C;
-    }
-
-    .blog-body {
-        font-family: $font-family-sans-serif;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 24px;
-        color: #4A5568;
-    }
-
-    .blog-contributors {
-        margin-top: 16px;
-    }
 }
 
-.blog-text {
-    color: #ffffff;
-    font-size: 12px;
-    line-height: 16px;
-    /* identical to box height, or 133% */
-
-    // Inline, so a post with several tags shows them side by side.
+.post-cta-btn {
     display: inline-flex;
     align-items: center;
-    margin-right: 6px;
+    justify-content: center;
+    height: 44px;
+    padding: 0 20px;
+    border-radius: 10px;
+    background: $brand-strong;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.15s;
 
     &:hover {
-        color: #ffffff;
+        background: $orange-600;
+        color: #fff;
         text-decoration: none;
     }
 
-    span {
-        background-color: #805AD5;
-        border-radius: 6px;
-        padding: 4px 10px;
-    }
+    &.is-secondary {
+        border: 1px solid $gray-200;
+        background: #fff;
+        color: $post-ink;
 
+        &:hover {
+            background: $gray-50;
+            color: $post-ink;
+        }
+    }
+}
+
+// Legacy hooks a few post bodies still use.
+.blog-contributors {
+    display: none;
 }

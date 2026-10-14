@@ -6,13 +6,20 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
 import {
     CONTRIBUTOR_IMAGES,
-    POST_DATE_FORMAT,
+    SHORT_DATE_FORMAT,
     blogSlug,
     bundleImage,
+    categoryOf,
+    displayDate,
     readingTime,
+    relatedPosts,
 } from '../../lib/blog';
 
-// Port of `layouts/blog/single.html` + related-posts partial.
+/**
+ * A post: breadcrumb, the header image across the framed column, then a
+ * narrower reading column with the title, subtitle and byline, the
+ * article, three related posts and a call to action.
+ */
 export async function getStaticPaths() {
     const posts = await getCollection('blog');
     return posts.map((entry) => ({
@@ -24,20 +31,11 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const header = bundleImage(entry, 'header.png');
-
-// Hugo `.Site.RegularPages.Related . | first 2`, tag-related, newest
-// first, never the page itself.
-const related = (await getCollection('blog'))
-    .filter((post) => post.id !== entry.id)
-    .filter(
-        (post) =>
-            entry.data.tags.length === 0 ||
-            post.data.tags.some((tag) => entry.data.tags.includes(tag)),
-    )
-    .sort(
-        (a, b) => (b.data.date?.valueOf() ?? 0) - (a.data.date?.valueOf() ?? 0),
-    )
-    .slice(0, 2);
+const related = relatedPosts(entry, await getCollection('blog'));
+const author = entry.data.contributors[0];
+const shown = displayDate(entry);
+const subtitle = entry.data.lead ?? entry.data.description;
+const minutes = readingTime(entry.body ?? '');
 ---
 
 <BaseLayout
@@ -46,113 +44,106 @@ const related = (await getCollection('blog'))
         title: entry.data.title,
         description: entry.data.description,
         isArticle: true,
+        author,
         images: entry.data.images,
         publishDate: entry.data.date,
         lastmod: entry.data.lastmod,
         tags: entry.data.tags,
     }}
 >
-    <div class="container-xxl">
-        <div class="row justify-content-center">
-            <div class="col-md-9 col-lg-12 col-xl-9">
-                <div class="blog-wrapper">
-                    <article class="blog-wrap">
-                        <div class="blog-header">
-                            {
-                                entry.data.tags.length > 0 && (
-                                    <div class="blog-tags">
-                                        {entry.data.tags.map((tag) => (
-                                            <div class="blog-text">
-                                                <span>{tag} </span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )
-                            }
-                            <div class="blog-tags">
-                                <p class="blog-meta">
-                                    Posted on {
-                                        entry.data.date
-                                            ? POST_DATE_FORMAT.format(
-                                                  entry.data.date,
-                                              )
-                                            : ''
-                                    } -
-                                    <strong
-                                        >{readingTime(entry.body ?? '')}&nbsp;min
-                                        read</strong
-                                    >
-                                </p>
-                            </div>
-                            <h1>{entry.data.title}</h1>
-                            <div class="blog-contributors">
+    <div class="post-page">
+        <div class="post-frame">
+            <nav class="post-crumbs" aria-label="Breadcrumb">
+                <a href="/blog/">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M12.6668 8H3.3335M3.3335 8L8.00016 12.6667M3.3335 8L8.00016 3.33334" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>Blog</span>
+                </a>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="post-crumbs-current">{categoryOf(entry)}</span>
+            </nav>
+
+            {
+                header && (
+                    <div class="post-hero">
+                        <Image
+                            alt=""
+                            src={header}
+                            widths={[640, 1080, 1600]}
+                            sizes="(max-width: 1100px) 100vw, 1080px"
+                            format="webp"
+                            loading="eager"
+                            fetchpriority="high"
+                        />
+                    </div>
+                )
+            }
+
+            <div class="post-column">
+                <div class="post-inner">
+                    <header class="post-header">
+                        <h1 class="post-title">{entry.data.title}</h1>
+                        {subtitle && <p class="post-subtitle" set:html={subtitle} />}
+                        <div class="post-byline">
+                            <div class="post-author">
                                 {
-                                    entry.data.contributors.map(
-                                        (contributor, index) => (
-                                            <>
-                                                {index > 0 && ' and '}
-                                                <div class="blog-contributors-list">
-                                                    <span class="contributor-image">
-                                                        {CONTRIBUTOR_IMAGES[
-                                                            contributor
-                                                        ] && (
-                                                            <Image
-                                                                src={
-                                                                    CONTRIBUTOR_IMAGES[
-                                                                        contributor
-                                                                    ]
-                                                                }
-                                                                width={36}
-                                                                height={36}
-                                                                densities={[1, 2]}
-                                                                format="webp"
-                                                                alt=""
-                                                            />
-                                                        )}
-                                                    </span>
-                                                    {contributor}
-                                                </div>
-                                            </>
-                                        ),
+                                    author && CONTRIBUTOR_IMAGES[author] && (
+                                        <Image
+                                            src={CONTRIBUTOR_IMAGES[author]}
+                                            width={24}
+                                            height={24}
+                                            densities={[1, 2]}
+                                            format="webp"
+                                            alt=""
+                                        />
                                     )
                                 }
+                                {author && <span class="post-author-name">{author}</span>}
+                            </div>
+                            <div class="post-dates">
+                                {shown && <time datetime={shown.toISOString()}>{SHORT_DATE_FORMAT.format(shown)}</time>}
+                                <span> · {minutes} min read</span>
                             </div>
                         </div>
-                        {
-                            header && (
-                                <div class="docs-hero-image">
-                                    {/* The post's LCP element: eager, high
-                                        priority, sized for the bleed column. */}
-                                    <Image
-                                        alt="blog header"
-                                        class="img-fluid"
-                                        src={header}
-                                        widths={[480, 820, 1200]}
-                                        sizes="(max-width: 767px) 100vw, 1060px"
-                                        format="webp"
-                                        loading="eager"
-                                        fetchpriority="high"
-                                    />
-                                </div>
-                            )
-                        }
+                    </header>
+
+                    {/* blog-wrapper: the demo runtime opens the post's figures in a
+                        lightbox; blog-wrap: framed thumbnail grids, as on the docs. */}
+                    <article class="post-content blog-wrapper blog-wrap">
                         <Content />
                     </article>
                 </div>
             </div>
-        </div>
-        {
-            related.length > 0 && (
-                <div class="related-posts">
-                    <div class="row row-cols-1 row-cols-lg-2">
-                        {related.map((post) => (
-                            <div class="blog-list">
-                                <BlogCard entry={post} teaserLength={300} />
-                            </div>
-                        ))}
+
+            {
+                related.length > 0 && (
+                    <section class="post-related" aria-labelledby="post-related-title">
+                        <h2 id="post-related-title" class="post-related-title">Read next</h2>
+                        <div class="blog-grid">
+                            {related.map((post) => (
+                                <BlogCard entry={post} />
+                            ))}
+                        </div>
+                    </section>
+                )
+            }
+
+            <section class="post-cta" aria-labelledby="post-cta-title">
+                <div class="post-cta-inner">
+                    <h2 id="post-cta-title" class="post-cta-title">
+                        Build a gallery that feels <span class="post-cta-accent">native.</span>
+                    </h2>
+                    <div class="post-cta-side">
+                        <p>
+                            Images and video, thumbnails, zoom and sharing, in plain JavaScript,
+                            React, Vue and Angular on one shared core.
+                        </p>
+                        <div class="post-cta-actions">
+                            <a class="post-cta-btn" href="/docs/getting-started/">Get started</a>
+                            <a class="post-cta-btn is-secondary" href="/demos/">See the demos</a>
+                        </div>
                     </div>
                 </div>
-            )
-        }
+            </section>
+        </div>
     </div>
 </BaseLayout>

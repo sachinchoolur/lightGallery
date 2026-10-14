@@ -16,7 +16,7 @@ lightGallery 3 is out today.
 
 I started lightGallery in 2014 as a jQuery plugin. Twelve years on, it runs in production at thousands of teams, among them many Fortune 500 companies, serves more than a billion CDN requests a month and is downloaded from npm over 400,000 times a month. I didn't plan for any of that, and I'm grateful for every bit of it.
 
-Version 3 is the largest release in those twelve years and the first complete rewrite. It was built around one goal. We want to make the best gallery we can for the web, for every framework, with the feel of a native gallery on a phone and on a desktop. Whether we're there is for you to judge. What I can say is that 3.0 is the closest we've come, and that the gallery you already have keeps working while you decide.
+Version 3 is the largest release in those twelve years and the first complete rewrite. It was built around one goal. We want to make the best gallery we can for the web, for every framework, with the feel of a native gallery on a phone and on a desktop. Wether we're there is for you to judge. What I can say is that 3.0 is the closest we've come, and that the gallery you already have keeps working while you decide.
 
 The core doesn't depend on any framework. React, Vue and Angular get native packages that render their own DOM instead of wrapping the vanilla one. The vanilla API is unchanged, so a 2.x gallery runs on 3.0 without edits. And the features people have asked for over the years, justified layout, virtualization, video facades, custom icons, localization and RTL, ship in every package at once.
 
@@ -30,7 +30,7 @@ Before the details, try it. The gallery below runs on the release build. Click a
 
 ## Native, not wrapped
 
-In 2.x, the React, Vue and Angular integrations were thin wrappers. Each one mounted the vanilla runtime inside a component and let it build the lightbox DOM on its own. It worked, but the framework never owned that DOM, so state lived in two places, server rendering needed workarounds, and every wrapper lagged a step behind the vanilla package.
+In 2.x, the React, Vue and Angular integrations were thin wrappers. Each one mounted the vanilla runtime inside a component and let it build the lightbox DOM on it's own. It worked, but the framework never owned that DOM, so state lived in two places, server rendering needed workarounds, and every wrapper lagged a step behind the vanilla package.
 
 In 3.0 there is one gallery and four packages.
 
@@ -175,7 +175,7 @@ state = galleryReducer(state, { type: 'OPEN', index: 2 });
 state = galleryReducer(state, { type: 'NEXT' });
 ```
 
-Every package applies that core to its own DOM. A swipe threshold, a zoom clamp or a plugin setting behaves the same in vanilla JavaScript, React, Vue and Angular because it is the same code. If a gallery behaves differently after you migrate, that is a bug, and we would like to [hear about it](https://github.com/sachinchoolur/lightGallery/issues).
+Every package applies that core to its own DOM. A swipe threshold, a zoom clamp or a plugin setting behaves the same in vanilla JavaScript, React, Vue and Angular because it is the same code. If a gallery behaves diferently after you migrate, that is a bug, and we would like to [hear about it](https://github.com/sachinchoolur/lightGallery/issues).
 
 The headless package is public, so if your stack is Svelte, Solid or a web component, you can build your own binding on the same foundation.
 

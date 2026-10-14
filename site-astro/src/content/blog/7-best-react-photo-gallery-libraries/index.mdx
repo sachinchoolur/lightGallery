@@ -1,213 +1,457 @@
 ---
-slug: "7-best-react-image-gallery-components"
-title: "7 Best React Image Gallery Libraries"
-description: "7 Best React Image Gallery components"
-lead: "7 Best React Image Gallery libraries"
+slug: '7-best-react-image-gallery-components'
+title: '7 best React image gallery libraries in 2026'
+description: 'The seven React image gallery and lightbox libraries worth picking in 2026, compared on thumbnails, video, zoom, server rendering, bundle size and license, with what each one is best for.'
+lead: 'Seven React image gallery and lightbox libraries compared on what decides the choice, from native component or wrapper to thumbnails, video, zoom, server rendering and license.'
 date: 2023-12-24T09:19:42+01:00
-tags: ["gallery"]
-lastmod: 2023-12-25T09:19:42+01:00
+lastmod: 2026-10-12T00:00:00.000Z
+tags: ['gallery', 'react']
 draft: false
 weight: 30
 images: []
-contributors: ["Ujjwal Maheendran"]
+contributors: ['Ujjwal Maheendran']
 ---
 
 import BlogFigure from '../../../components/BlogFigure.astro';
+import CompareTable from '../../../components/CompareTable.astro';
 
+import lightGalleryShot from '../lightgallery-v3/header.png';
 import reactImageGalleryShot from './react-image-gallery.png';
-import reactSlickShot from './react-slick.png';
 import photoswipeShot from './photoswipe.png';
-import keenSliderShot from './keen-slider.png';
-import swiperShot from './swiper.png';
-import reactResponsiveCarouselShot from './react-responsive-carousel.png';
 import reactPhotoViewShot from './react-photo-view.png';
+import swiperShot from './swiper.png';
+import keenSliderShot from './keen-slider.png';
+import reactSlickShot from './react-slick.png';
 
-Photo galleries play a crucial role in displaying images in a structured and engaging way, which is essential whether you're showcasing a portfolio, product images, or any other visual content.
+Every React project I've worked on eventually needs a gallery, and every time the same thing happens. Someone searches npm, finds forty packages called some variation of "react gallery", and picks the the one with the most stars. Half of those are carousels, not lightboxes. A few are wrappers around a DOM library that fight React for control of the page. And a couple are genuinely great, as long as you want exactly what they do.
 
-Given the popularity of React in front end development, picking the right photo gallery library is vital for not just the look and feel, but also for enhancing user interaction and engagement.
+So I went through the ones people actually install and asked the questions that end up deciding it in practice. Is it a real React component or a wrapper? Does it do thumbnails and video, or just images? How does it feel on a phone? Can I make it look like part of my site instead of a plugin? Will it render on the server in Next.js without a `dynamic()` wrapper? And what does the license let you do? The numbers come straight from npm and GitHub, and the opinions are mine.
 
-In this concise guide, we present the top 7 React image gallery components, each meticulously handpicked and manually verified for quality and performance. We not only highlight their features but also discuss the pros and cons of each, ensuring you have all the information needed to make an informed choice for your projects.
 
-### React Image Gallery
+## The seven at a glance
+
+<CompareTable
+    libraries={[
+        { name: 'lightGallery', highlight: true },
+        { name: 'React Image Gallery' },
+        { name: 'PhotoSwipe' },
+        { name: 'React Photo View' },
+        { name: 'Swiper' },
+        { name: 'Keen Slider' },
+        { name: 'React Slick' },
+    ]}
+    features={[
+        { group: 'Setup' },
+        {
+            name: 'Native React component',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Init in an effect' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Wraps the core' },
+                { mark: 'yes', text: 'Hook' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Server rendering',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Triggers only' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Lightbox overlay',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Fullscreen mode' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        { group: 'Media' },
+        {
+            name: 'Thumbnail strip',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Second slider' },
+                { mark: 'partial', text: 'Second slider' },
+            ],
+        },
+        {
+            name: 'Video slides',
+            cells: [
+                { mark: 'yes', text: 'YouTube, Vimeo, Wistia, HTML5' },
+                { mark: 'partial' },
+                { mark: 'partial', text: 'HTML5 plugin' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Lazy video embeds',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Video thumbnails fetched for you',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Iframe slides, maps and PDFs',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Responsive images, srcset and picture',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Captions',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial', text: 'Plugin' },
+                { mark: 'partial' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        { group: 'Interaction' },
+        {
+            name: 'Pinch and double-tap zoom',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Swipe or pinch to close',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Opens from the thumbnail',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Thumbnail scrubbing',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Fullscreen',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Keyboard navigation',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Screen reader support',
+            cells: [
+                { mark: 'yes', text: 'Dialog, announcements' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Reduced motion',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        { group: 'Layout and scale' },
+        {
+            name: 'Justified grid',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Virtualization',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+            ],
+        },
+        {
+            name: 'Right-to-left',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+            ],
+        },
+        {
+            name: 'Custom icons',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'yes' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'partial' },
+                { mark: 'yes' },
+            ],
+        },
+        { group: 'Links and sharing' },
+        {
+            name: 'Deep links, back and forward',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        {
+            name: 'Native share sheet',
+            cells: [
+                { mark: 'yes' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+                { mark: 'no' },
+            ],
+        },
+        { group: 'Project' },
+        {
+            name: 'Core size, gzipped',
+            cells: ['19 KB', '10 KB', '17 KB', '8 KB', '20 KB', '6 KB', '15 KB and CSS'],
+        },
+        {
+            name: 'Last release',
+            cells: ['Oct 2026', 'Feb 2026', 'May 2024', 'Jan 2025', 'Sep 2026', 'Jul 2023', 'Aug 2025'],
+        },
+        {
+            name: 'License',
+            cells: [
+                { pill: 'GPLv3 or commercial', tone: 'warn' },
+                { pill: 'MIT', tone: 'good' },
+                { pill: 'MIT', tone: 'good' },
+                { pill: 'Apache-2.0', tone: 'good' },
+                { pill: 'MIT', tone: 'good' },
+                { pill: 'MIT', tone: 'good' },
+                { pill: 'MIT', tone: 'good' },
+            ],
+        },
+    ]}
+    footnote="Partly means it takes your own code, a plugin or a paid tier. Server rendering means the component renders on the server in Next.js without a client-only wrapper, which Keen Slider and React Slick do without documenting it. Core size is the main entry minified and gzipped, from Bundlephobia for everything but lightGallery. Last release is the latest npm version's publish date."
+/>
+
+## lightGallery
+
+<BlogFigure image={lightGalleryShot} alt="lightGallery, a native React image gallery and lightbox" />
+
+I'll start with the one I know best. The thing to understand about [lightGallery](/demos/react-image-gallery/) is that `@lightgallery/react` is a real component now, not a wrapper. React renders the grid and the lightbox, the same core drives the Vue and Angular packages, and the grid server-renders as plain markup, so Next.js is happy without any `dynamic()` tricks. The lightbox portal only mounts after hydration.
+
+Everything that isn't the core lightbox is a plugin with its own import. That covers thumbnails, zoom, video, autoplay, fullscreen, share, rotate, hash URLs, a justified grid, and so on. The core is about 19 KB gzipped, zoom adds about 7 KB, and whatever you don't import never touches your bundle. The vanilla package alone sees around 100,000 npm downloads a week.
+
+On a phone it behaves like a photos app. Swipe between slides, pinch or double tap to zoom, drag or pinch to close, and every fling keeps the speed you let go at and settles in a spring instead of snapping to a stop. Edges resist with friction, and reduced-motion turns all of it off. It's the best touch experience on this list, and I'd say that even if it weren't ours.
+
+It also looks finished out of the box, which matters more than it sounds for something that frames other people's photos. The chrome is restrained, the toolbar stays on one row and folds its least important buttons into a menu when space runs out, and every icon is an inline SVG that takes the button's color, so recoloring the whole set is one CSS rule. Past that, a render slot swaps any icon by name, there are twenty-odd slide transitions plus your own easing, captions take any HTML, and a `className` on the gallery scopes your own styles to it. Restyling is still CSS, same as everywhere, but the defaults mean you rarely need much of it.
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Zoom from '@lightgallery/react/plugins/zoom';
+
+const items = [
+    { src: 'img/1-1600.jpg', thumb: 'img/1-240.jpg', alt: 'Mountains', lgSize: '1600-1067' },
+    { src: 'img/2-1600.jpg', thumb: 'img/2-240.jpg', alt: 'Forest path', lgSize: '1600-2400' },
+];
+
+export function Gallery() {
+    return (
+        <LightGallery plugins={[Thumbnail, Zoom]}>
+            {items.map((item) => (
+                <LightGalleryItem key={item.src} item={item} href={item.src}>
+                    <img src={item.thumb} alt={item.alt} />
+                </LightGalleryItem>
+            ))}
+        </LightGallery>
+    );
+}
+```
+
+Pick it if you want thumbnails, video, zoom and a proper touch experience from one component, if your team also ships Vue or Angular, or if you're on Next.js and care about the grid being in the HTML.
+
+The honest downside is the license. It's free under the GPLv3, which is fine for open source, but a proprietary codebase needs a one-time [commercial license](/license/). You also need the full-size image dimensions (`lgSize`) if you want the open-from-thumbnail animation, which can be a nuisance with images from an API that doesn't give you sizes.
+
+## React Image Gallery
 
 <BlogFigure image={reactImageGalleryShot} alt="React Image Gallery" />
 
-<a href="https://linxtion.com/demo/react-image-gallery/" rel="nofollow">React Image Gallery</a> is a versatile and user-friendly image gallery component for React applications, providing a seamless way to showcase and navigate through a collection of images. Leveraging the customizable options and responsive design, developers can easily create visually appealing galleries with features like thumbnails, captions, and lightbox functionality. React Image Gallery simplifies the process of integrating immersive image displays, making it a popular choice for building interactive and aesthetically pleasing galleries in React projects.
+<a href="https://github.com/xiaolin/react-image-gallery" rel="nofollow">React Image Gallery</a> is the one I reach for when a client says "like a product page", meaning an inline carousel with a row of thumbnails underneath and a fullscreen button. Swipe, keyboard, RTL and autoplay are all there, and any slide can be a custom render, which is how you get video in.
 
-**Pros**
+What it isn't is a lightbox. Fullscreen mode is the carousel scaled up, not a seperate overlay, and there's no pinch or double-tap zoom. If you need either, you'll be adding a second library. Styling past the default theme also means overriding it's CSS, which is fine for a few tweaks and tedious for a redesign.
 
-- Ease of Use: A user-friendly interface and straightforward setup contribute to an easier development process.
-
-- It is responsive and works well on all devices.
-
-- Performance Optimization: Well-optimized for performance, ensuring smooth interactions and fast loading times.
-
-- It has a wide range of features, including support for mobile swipe gestures, thumbnail navigation, fullscreen support, custom rendered slides, RTL support, and tons of customization options.
-
-**Cons**
-
-- Styling Challenges: While customizable, developers might encounter challenges in styling the gallery to match complex design requirements.
-
-- Performance with Many Images: Performance might be affected when dealing with a large number of high-resolution images. Lazy loading and optimization techniques may be necessary.
-
-- Limited Default Styles: The image gallery might require additional styling to achieve a specific look and feel, depending on design preferences.
-
-- Transition Animations: The transition animations might be considered basic compared to more feature-rich gallery libraries. Advanced animation requirements may need additional customization.
-
-### React Slick
-
-<BlogFigure image={reactSlickShot} alt="React Slick" />
-
-<a href="https://react-slick.neostack.com/" rel="nofollow">React Slick</a> is a popular and feature-rich carousel component for React applications, built on top of the Slick carousel library. It offers a smooth and customizable solution for creating responsive image sliders with various transition effects. With a user-friendly API and extensive configuration options, React Slick is widely used for implementing dynamic and engaging carousels in React projects.
-
-**Pros**
-
-- Customizable: React Slick is highly customizable. It offers a wide range of settings and options for customizing the appearance and behavior of the carousel.
-
-- Rich Feature Set: It comes with a variety of features such as lazy loading, infinite looping, autoplay, and more, giving developers flexibility in implementing different carousel behaviors.
-
-- Support for Touch Events: React Slick supports touch events, making it suitable for mobile and touch-enabled devices.
-
-- CSS Transitions: It uses CSS transitions for smooth animations, providing a polished and visually appealing carousel experience.
-
-**Cons**
-
-- Limited Default Styles: While it's customizable, some developers might find that React Slick requires additional styling to achieve a specific look and feel. This could be seen as a downside if you're looking for a carousel component with more built-in styles.
-
-- For beginners, there might be a learning curve associated with understanding and configuring the various settings and options provided by React Slick.
-
-- Potential for Large Bundle Size: Depending on your project configuration, using React Slick might contribute to a larger bundle size. This could be a concern for performance-conscious developers, especially for smaller projects.
-
-- Possible Performance Issues: While React Slick aims to provide smooth animations, complex carousels with many elements might lead to performance issues. Developers should optimize the number of elements and images to ensure a good user experience.
-
-### PhotoSwipe
+## PhotoSwipe
 
 <BlogFigure image={photoswipeShot} alt="PhotoSwipe" />
 
-<a href="https://photoswipe.com/react-image-gallery/" rel="nofollow">PhotoSwipe</a> for React is a React wrapper around the popular PhotoSwipe library, offering an elegant and responsive solution for image galleries and lightboxes. With a focus on simplicity and ease of use, it enables developers to integrate a feature-rich image viewer seamlessly into React applications. PhotoSwipe for React provides smooth gestures, zooming capabilities, and a clean UI, making it an excellent choice for creating visually appealing and user-friendly image galleries in React projects.
+<a href="https://photoswipe.com/" rel="nofollow">PhotoSwipe</a> has the best touch feel of the image-only libraries here. Pinch zoom, double tap and the drag-down-to-close gesture all feel like a native photos app. It's framework-free, so from React you create it in a `useEffect` and point it at your own grid markup. There's no official component, just the documented pattern.
 
-**Pros**
+That's also the catch. Because it touches the DOM directly, it has to be initialised on the client only, and because it's images-first, video and a thumbnail strip are both things you add yourself. It also wants the full-size width and height of every image up front. If you only ever show photos and want good gestures in a small package, none of that will bother you.
 
-- Responsive - works with any screen size
-
-- Faster loading time for web pages
-
-- It provides smooth touch interactions and supports gestures, making it ideal for mobile users who can swipe through images or pinch to zoom.
-
-- It offers a range of customization options, allowing you to adapt the appearance and behavior of the image gallery to fit your specific needs.
-
-**Cons**
-
-- Complex structure and difficult implementation
-
-- Limited features. No Videos, Iframe, or thumbnails support
-
-- If your project requires a highly customized and complex user interface for image galleries, you might find that PhotoSwipe has limitations
-
-### Keen Slider
-
-<BlogFigure image={keenSliderShot} alt="Keen Slider" />
-
-<a href="https://keen-slider.io/" rel="nofollow">Keen Slider</a> is a lightweight and customizable slider library for creating smooth and modern carousel components in React. Known for its simplicity and performance, Keen Slider allows developers to effortlessly implement responsive and touch-friendly sliders with minimal effort. With a focus on flexibility, Keen Slider supports various configurations, making it a user-friendly choice for crafting dynamic and interactive content displays in React applications.
-
-**Pros**
-
-- It has no dependencies and is very lightweight (~5.5KB gzipped).
-
-- Continuous Looping: Offers the option for continuous looping, creating a seamless experience when navigating through slides.
-
-- It supports multi-touch, vertical scrolling, fading effect, free mode, loop mode, and more.
-
-- It has a rich but simple API and clear documentation with examples.
-
-**Cons**
-
-- Some developers might find a learning curve associated with understanding and configuring the various settings and options provided by Keen Slider.
-
-- Not as well-documented as some other libraries: Keen Slider is not as well-documented as some of the other slider libraries available. However, the documentation that is available is clear and easy to follow.
-
-- Limited Features: Depending on your project requirements, Keen Slider might lack certain advanced features compared to other slider solutions.
-
-- Styling Challenges: While customizable, developers might encounter challenges in styling the slider to match complex design requirements.
-
-### Swiper
-
-<BlogFigure image={swiperShot} alt="Swiper" />
-
-<a href="https://swiperjs.com/" rel="nofollow">Swiper</a> is a powerful and touch-friendly carousel component built for React applications, providing a seamless way to create stunning and responsive slideshows. Leveraging the Swiper library, it offers a range of features like smooth transitions, navigation controls, and pagination, enhancing the user experience for dynamic content displays. Swiper's flexibility and customization options make it a popular choice for implementing versatile and engaging sliders in React projects.
-
-**Pros**
-
-- Rich Feature Set: Swiper comes with a comprehensive set of features, including slides, navigation controls, pagination, scrollbar, parallax effects, lazy loading, and more. This makes it versatile for implementing various types of sliders and carousels.
-
-- Modern and Lightweight: Swiper is designed with a modern architecture and is relatively lightweight, contributing to better performance. It's built with a modular structure, allowing developers to include only the components they need.
-
-- CSS Transitions and Hardware Acceleration: Swiper utilizes CSS transitions and hardware acceleration for smooth and efficient animations, enhancing the overall user experience.
-
-- Flexibility and Customization: Swiper offers a high level of customization, allowing developers to tailor the appearance and behavior of the slider to meet specific project requirements.
-
-- Well-Documented: Swiper has thorough documentation with examples, making it easier for developers to understand and implement its features. This can be beneficial for both beginners and experienced developers.
-
-**Cons**
-
-- Complexity for Simple Use Cases: For simple use cases, Swiper might be seen as overkill due to its extensive feature set. If you only need basic functionality, there are simpler alternatives available.
-
-- Bundle Size: Depending on the features you include in your project, Swiper's bundle size can be relatively large. This might be a concern for developers prioritizing minimalism and optimizing page load times.
-
-- Not Native Feel: Some developers might find that Swiper doesn't provide the exact native feel they desire, especially if they have specific UI/UX expectations.
-
-### React Responsive Carousel
-
-<BlogFigure image={reactResponsiveCarouselShot} alt="React Responsive Carousel" />
-
-<a href="http://react-responsive-carousel.js.org/" rel="nofollow">React Responsive Carousel</a> is a flexible and feature-rich carousel component for React applications, designed to create dynamic and responsive image sliders. With customizable options and a user-friendly API, it allows developers to easily integrate and configure carousels for various use cases. Its responsiveness ensures optimal display on different devices, making it a go-to solution for creating visually appealing and interactive slideshows in React projects.
-
-**Pros**
-
-- Customization Options: React Responsive Carousel typically provides a variety of customization options, allowing developers to tailor the appearance and behavior to match project requirements.
-
-- Supports thumbnails, vertical scrolling, and fading effect out of the box.
-
-- It provides advanced options such as server-side rendering, lazy load, and presentation mode.
-
-- It is easy to install and use, with clear documentation and examples.
-
-**Cons**
-
-- Styling Challenges: While customizable, developers might encounter challenges in styling the carousel to match complex design requirements.
-
-- Bundle Size: Depending on the version and configuration, the library's bundle size might be a consideration for projects prioritizing minimalism and optimization.
-
-- Transition Animations: The transition animations might be considered basic compared to more feature-rich carousel libraries. Advanced animation requirements may need additional customization.
-
-- Performance with Many Slides: As with any carousel, performance might be affected when dealing with a large number of slides or images.
-
-### React Photo View
+## React Photo View
 
 <BlogFigure image={reactPhotoViewShot} alt="React Photo View" />
 
-<a href="https://react-photo-view.vercel.app/en-US" rel="nofollow">React Photo View</a> is a popular image viewer component for React applications, offering a seamless and interactive way to display images. It provides zooming and panning functionalities, enhancing the user experience when inspecting detailed photos. With its responsive design, React Photo View is a versatile choice for creating engaging image galleries or immersive viewing experiences in React-based projects.
+<a href="https://react-photo-view.vercel.app/en-US" rel="nofollow">React Photo View</a> is a small native viewer, about 7 KB gzipped, with pinch zoom, drag-and-pan that bounces at the edges, keyboard navigation and server rendering. You wrap the page's images in `PhotoProvider` and `PhotoView` and you're done. A custom node, such as a video element, can be a slide too.
 
-**Pros**
+I'd use it for images in articles or feeds where you don't want a whole gallery system. There's no thumbnail strip and no video providers, and features like fullscreen or rotation are things you build from custom nodes rather than switch on.
 
-- Support custom node expansion, easy to achieve full-screen preview, rotation control, picture introduction and more functions
+## Swiper
 
-- All aspects of animation connection, open and close the rebound touch edge, let the natural interaction effect
+<BlogFigure image={swiperShot} alt="Swiper" />
 
-- Support for custom previews like video or any HTML element
+<a href="https://swiperjs.com/react" rel="nofollow">Swiper</a> is the most capable carousel engine around, and its React components sit on top of it. Thumbnails come from the Thumbs module, pinch zoom from the Zoom module, and there are modules for pagination, navigation, parallax and virtual slides. If your slider has unusual behaviour, Swiper can probably do it.
 
-- Support touch gestures, drag and pan physical effect sliding, two-finger specified position to zoom in and out
+It's a carousel, though, not a lightbox, so the full-screen view is yours to add, and it's heavy for a simple gallery. One more thing worth knowing is that the Swiper team now recommends their web components over the React components for new work.
 
-**Cons**
+## Keen Slider
 
-- Styling Challenges: While customizable, developers might encounter challenges in styling the photo viewer to match complex design requirements.
+<BlogFigure image={keenSliderShot} alt="Keen Slider" />
 
-- Performance with Many Images: Performance might be affected when dealing with a large number of high-resolution images. Lazy loading and optimization techniques may be necessary.
+<a href="https://keen-slider.io/" rel="nofollow">Keen Slider</a> is the headless option, at about 6 KB gzipped with no styles at all and a `useKeenSlider` hook that gives you the slider state and leaves every pixel of markup to you. Thumbnails are a second slider linked to the first, which the docs show how to do.
 
-- Limited Default Styles: The photo viewer might require additional styling to achieve a specific look and feel, depending on design preferences.
+If you're designing a carousel from scratch and want nothing imposed on you, it's lovely. If you want a lightbox, zoom or a thumbnail strip out of the box, it's the wrong tool, because each of those is your own code.
 
-- Transition Animations: The transition animations might be considered basic compared to more feature-rich photo viewer libraries. Advanced animation requirements may need additional customization.
+## React Slick
 
-### Conclusion
+<BlogFigure image={reactSlickShot} alt="React Slick" />
 
-In essence, picking the right React photo gallery component is vital for enhancing project quality. Our article distills the top 7 choices, each evaluated for key features and limitations, aiming to equip developers with the knowledge to make the best selection.
+<a href="https://react-slick.neostack.com/" rel="nofollow">React Slick</a> is the React port of the Slick carousel, which means responsive breakpoints, autoplay, lazy loading, infinite loop and the `asNavFor` trick that links two sliders into a thumbnail row. It has been around so long that nearly every layout question already has a Stack Overflow answer.
+
+It also depends on the jQuery-era CSS from `slick-carousel`, has no lightbox or zoom, and gets fewer updates than anything else here. I'd only pick it for a team already on Slick. If that's you, the [Slick slider with lightbox demo](/demos/slick-carousel-demo/) shows how to pair it with a lightbox for the full-screen view.
+
+## So which one?
+
+- lightGallery if you want one component that does grid, lightbox, thumbnails, video and zoom.
+- React Image Gallery if you want an inline slider with thumbnails and nothing modal, or Swiper if you need more control.
+- PhotoSwipe or React Photo View if you only show images and want good gestures in the smallest package.
+- Keen Slider if you want to design the carousel yourself.
+- React Slick if you're already on Slick, plus a lightbox for full-screen.
+
+If lightGallery is the pick, the [React image gallery demo](/demos/react-image-gallery/), the [Next.js guide](/demos/nextjs-image-gallery/) and the [React package docs](/docs/react/) are where I'd start.
