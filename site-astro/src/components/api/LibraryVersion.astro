@@ -1,0 +1,12 @@
+---
+/**
+ * The lightGallery version this site was built against, read from the
+ * workspace package so prose never carries a stale number.
+ */
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const { version } = require('lightgallery/package.json') as { version: string };
+---
+
+<Fragment>{version}</Fragment>

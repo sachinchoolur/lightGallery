@@ -1,0 +1,158 @@
+---
+/**
+ * Bundle sizes for the facts page, measured from the workspace build at
+ * site build time so the numbers never go stale: the vanilla core and
+ * stylesheet, every plugin, and each framework package's main entry.
+ * Everything is minified and gzipped the way a bundler would ship it
+ * (the framework packages publish readable ESM, so they are minified
+ * here before measuring). A file that is missing from a partial local
+ * build renders as "–" rather than a wrong number.
+ */
+import { gzipSync } from 'node:zlib';
+import { existsSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
+import { transformSync } from 'esbuild';
+
+const require = createRequire(import.meta.url);
+
+/**
+ * Root directory of a workspace package, or null when it is not built.
+ * The scoped packages do not expose package.json through their exports
+ * map, so the root is found from the main entry by walking up to the
+ * directory whose package.json carries the package name.
+ */
+function packageRoot(name: string): string | null {
+    let dir: string;
+    try {
+        dir = dirname(require.resolve(name));
+    } catch {
+        // Not resolvable from the site (the Angular package is not a site
+        // dependency, the headless one exports no CommonJS entry): the
+        // workspace package next to the vanilla build is the one to
+        // measure. The vanilla package root is the monorepo root.
+        let monorepo: string;
+        try {
+            monorepo = dirname(require.resolve('lightgallery/package.json'));
+        } catch {
+            return null;
+        }
+        const workspace = join(monorepo, 'packages', name.replace('@lightgallery/', ''));
+        return existsSync(join(workspace, 'package.json')) ? workspace : null;
+    }
+    for (let i = 0; i < 6; i++) {
+        const manifest = join(dir, 'package.json');
+        if (existsSync(manifest)) {
+            try {
+                if (JSON.parse(readFileSync(manifest, 'utf8')).name === name) return dir;
+            } catch {
+                /* keep walking */
+            }
+        }
+        const parent = dirname(dir);
+        if (parent === dir) break;
+        dir = parent;
+    }
+    return null;
+}
+
+const kb = (bytes: number) => `${(bytes / 1024).toFixed(1)} KB`;
+
+/** Gzipped size of a file as it is, or of its minified form. */
+function measure(path: string | null, minify: boolean): string {
+    if (!path || !existsSync(path)) return '–';
+    let code = readFileSync(path, 'utf8');
+    if (minify) {
+        code = transformSync(code, { minify: true, format: 'esm', loader: 'js' }).code;
+    }
+    return kb(gzipSync(code).length);
+}
+
+// The vanilla package publishes from `dist/`, so its main entry resolves
+// into a nested manifest; the workspace manifest is the one that sits
+// above `dist/`.
+let vanilla: string | null = null;
+try {
+    vanilla = dirname(require.resolve('lightgallery/package.json'));
+} catch {
+    vanilla = null;
+}
+const vanillaFile = (rel: string) => (vanilla ? join(vanilla, 'dist', rel) : null);
+
+const PLUGINS: { dir: string; file: string; label: string }[] = [
+    { dir: 'thumbnail', file: 'lg-thumbnail', label: 'Thumbnails' },
+    { dir: 'zoom', file: 'lg-zoom', label: 'Zoom' },
+    { dir: 'video', file: 'lg-video', label: 'Video' },
+    { dir: 'autoplay', file: 'lg-autoplay', label: 'Autoplay' },
+    { dir: 'fullscreen', file: 'lg-fullscreen', label: 'Fullscreen' },
+    { dir: 'share', file: 'lg-share', label: 'Share' },
+    { dir: 'hash', file: 'lg-hash', label: 'Hash' },
+    { dir: 'rotate', file: 'lg-rotate', label: 'Rotate' },
+    { dir: 'pager', file: 'lg-pager', label: 'Pager' },
+    { dir: 'comment', file: 'lg-comment', label: 'Comments' },
+    { dir: 'mediumZoom', file: 'lg-medium-zoom', label: 'Medium zoom' },
+    { dir: 'relativeCaption', file: 'lg-relative-caption', label: 'Relative caption' },
+    { dir: 'vimeoThumbnail', file: 'lg-vimeo-thumbnail', label: 'Vimeo thumbnails' },
+    { dir: 'justified', file: 'lg-justified', label: 'Justified layout' },
+    { dir: 'originCrop', file: 'lg-origin-crop', label: 'Origin crop' },
+];
+
+const core = [
+    { label: 'Core script (lightgallery.min.js)', size: measure(vanillaFile('lightgallery.min.js'), false) },
+    { label: 'Core stylesheet (lightgallery.css)', size: measure(vanillaFile('css/lightgallery.css'), false) },
+];
+
+const plugins = PLUGINS.map((plugin) => ({
+    label: plugin.label,
+    size: measure(vanillaFile(join('plugins', plugin.dir, `${plugin.file}.min.js`)), false),
+}));
+
+const frameworks = [
+    { label: '@lightgallery/headless', path: packageRoot('@lightgallery/headless'), entry: 'dist/index.js' },
+    { label: '@lightgallery/react', path: packageRoot('@lightgallery/react'), entry: 'dist/index.js' },
+    { label: '@lightgallery/vue', path: packageRoot('@lightgallery/vue'), entry: 'dist/index.js' },
+    {
+        label: '@lightgallery/angular',
+        path: packageRoot('@lightgallery/angular'),
+        entry: 'dist/fesm2022/lightgallery-angular.mjs',
+    },
+].map((pkg) => ({
+    label: pkg.label,
+    size: measure(pkg.path ? join(pkg.path, pkg.entry) : null, true),
+}));
+---
+
+<h3 id="core-size">Core</h3>
+<table>
+    <thead><tr><th>File</th><th>Minified and gzipped</th></tr></thead>
+    <tbody>
+        {core.map((row) => (
+            <tr><td>{row.label}</td><td>{row.size}</td></tr>
+        ))}
+    </tbody>
+</table>
+
+<h3 id="plugin-sizes">Plugins</h3>
+<p>Each plugin is a separate entry point; only the ones you import reach the bundle.</p>
+<table>
+    <thead><tr><th>Plugin</th><th>Minified and gzipped</th></tr></thead>
+    <tbody>
+        {plugins.map((row) => (
+            <tr><td>{row.label}</td><td>{row.size}</td></tr>
+        ))}
+    </tbody>
+</table>
+
+<h3 id="framework-package-sizes">Framework packages</h3>
+<p>
+    The main entry of each package, minified and gzipped, excluding the framework itself.
+    The React, Vue and Angular packages include the headless core they are built on.
+</p>
+<table>
+    <thead><tr><th>Package</th><th>Minified and gzipped</th></tr></thead>
+    <tbody>
+        {frameworks.map((row) => (
+            <tr><td>{row.label}</td><td>{row.size}</td></tr>
+        ))}
+    </tbody>
+</table>
