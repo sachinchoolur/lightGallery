@@ -21,6 +21,7 @@ export const DEMO_GROUPS: DemoGroup[] = [
             'thumbnails',
             'justified-layout',
             'responsive',
+            'image-zoom',
             'zoom-from-origin',
             'medium-zoom',
             'captions',

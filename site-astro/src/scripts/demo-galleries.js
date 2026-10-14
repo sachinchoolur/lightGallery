@@ -463,6 +463,24 @@ lightGalleryJustified('scrub-thumbnails-gallery', {
     },
 });
 
+// Image-zoom demo: every zoom input the plugin has, buttons included
+// (the library hides the in/out buttons by default), plus rotate and
+// flip, on the detail-rich macro set.
+lightGalleryJustified('image-zoom-gallery', {
+    justifiedLastRow: 'hide',
+    pager: false,
+    hash: false,
+    plugins: [lgZoom, lgRotate, lgThumbnail],
+    showZoomInOutIcons: true,
+    actualSize: true,
+    ...getResponsiveThumbnailsSettings(),
+    mobileSettings: {
+        controls: false,
+        showCloseIcon: false,
+        download: false,
+    },
+});
+
 // Custom-icons demo: a thin-stroke set drawn for this page on a 24px
 // grid, applied per name via `settings.icons`. Names not listed keep
 // the built-in artwork, exactly the fallback visitors should see.
