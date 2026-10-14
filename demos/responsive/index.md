@@ -1,0 +1,529 @@
+# Responsive image gallery
+
+> Responsive image gallery demo: serve smaller images to smaller screens with data-responsive breakpoints, srcset and sizes, or picture sources.
+
+Create beautiful responsive html image gallery with lightGallery. You can provide different images for different screen sizes, resolution or devices. Other than its own mechanism, lightGallery supports HTML5 picture tag, srcset and sizes for responsive images.
+
+Canonical page: https://www.lightgalleryjs.com/demos/responsive/
+
+### Demo
+
+For cross browser responsive image support, lightGallery accepts a comma
+separated list of image sources, each with a max width descriptor for
+displaying different images for different screen sizes. For modern browsers you
+can use native srcset and sizes attributes. Please refer to the next demo, and the
+<a href="/docs/responsive-loading/">responsive loading guide</a> for srcset,
+sizes and picture sources on slides, plus the decode gate for flash-free
+first paint.
+
+**JavaScript**
+
+**HTML**
+
+```html
+<!-- above 757px the default href/data-src is used -->
+<div id="responsive-images-demo">
+    <a
+        href="img/img1.jpg"
+        data-responsive="img/1-375.jpg 375, img/1-480.jpg 480, img/1-757.jpg 757"
+    >
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a
+        href="img/img2.jpg"
+        data-responsive="img/2-375.jpg 375, img/2-480.jpg 480, img/2-757.jpg 757"
+    >
+        <img src="img/thumb2.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+lightGallery(document.getElementById('responsive-images-demo'));
+```
+
+**React**
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+
+// The framework packages have no `responsive` field: each item lists the
+// same photo in several widths as native `srcset` and `sizes`, and the
+// browser picks the smallest one that fits. See the responsive loading
+// guide for `<picture>` sources.
+const items = [
+    {
+        src: 'img/1-1600.jpg',
+        srcset: 'img/1-480.jpg 480w, img/1-800.jpg 800w, img/1-1600.jpg 1600w',
+        // The width the slide can take: up to the whole window.
+        sizes: '100vw',
+        thumb: 'img/1-240.jpg',
+        alt: 'Mountains',
+        lgSize: '1600-1067',
+    },
+    {
+        src: 'img/2-1600.jpg',
+        srcset: 'img/2-480.jpg 480w, img/2-800.jpg 800w, img/2-1600.jpg 1600w',
+        sizes: '100vw',
+        thumb: 'img/2-240.jpg',
+        alt: 'Forest path',
+        lgSize: '1600-1067',
+    },
+];
+
+<LightGallery>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+**Vue**
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+
+// The framework packages have no `responsive` field: each item lists the
+// same photo in several widths as native `srcset` and `sizes`, and the
+// browser picks the smallest one that fits. See the responsive loading
+// guide for `<picture>` sources.
+const items = [
+    {
+        src: 'img/1-1600.jpg',
+        srcset: 'img/1-480.jpg 480w, img/1-800.jpg 800w, img/1-1600.jpg 1600w',
+        // The width the slide can take: up to the whole window.
+        sizes: '100vw',
+        thumb: 'img/1-240.jpg',
+        alt: 'Mountains',
+        lgSize: '1600-1067',
+    },
+    {
+        src: 'img/2-1600.jpg',
+        srcset: 'img/2-480.jpg 480w, img/2-800.jpg 800w, img/2-1600.jpg 1600w',
+        sizes: '100vw',
+        thumb: 'img/2-240.jpg',
+        alt: 'Forest path',
+        lgSize: '1600-1067',
+    },
+];
+</script>
+
+<template>
+    <LightGallery>
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+**Angular**
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery>
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // The framework packages have no `responsive` field: each item lists
+    // the same photo in several widths as native `srcset` and `sizes`, and
+    // the browser picks the smallest one that fits. See the responsive
+    // loading guide for `<picture>` sources.
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/1-1600.jpg',
+            srcset: 'img/1-480.jpg 480w, img/1-800.jpg 800w, img/1-1600.jpg 1600w',
+            // The width the slide can take: up to the whole window.
+            sizes: '100vw',
+            thumb: 'img/1-240.jpg',
+            alt: 'Mountains',
+            lgSize: '1600-1067',
+        },
+        {
+            src: 'img/2-1600.jpg',
+            srcset: 'img/2-480.jpg 480w, img/2-800.jpg 800w, img/2-1600.jpg 1600w',
+            sizes: '100vw',
+            thumb: 'img/2-240.jpg',
+            alt: 'Forest path',
+            lgSize: '1600-1067',
+        },
+    ];
+}
+```
+
+### HTML5 srcset and sizes
+
+You can use native srcset and sizes attributes in lightGallery. Pass srcset and
+sizes via data-srcset and data-sizes attributes respectively. lightGallery will
+automatically create the image with srcset and sizes.
+
+**JavaScript**
+
+**HTML**
+
+```html
+<div id="lg-srcset-demo">
+    <a
+        href="img/img1.jpg"
+        data-srcset="img/1-375.jpg 375w, img/1-480.jpg 480w, img/1-757.jpg 757w"
+        data-sizes="(min-width: 40em) 80vw, 100vw"
+    >
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a
+        href="img/img2.jpg"
+        data-srcset="img/2-375.jpg 375w, img/2-480.jpg 480w, img/2-757.jpg 757w"
+        data-sizes="(min-width: 40em) 80vw, 100vw"
+    >
+        <img src="img/thumb2.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+lightGallery(document.getElementById('lg-srcset-demo'));
+```
+
+**React**
+
+```tsx
+// `srcset` and `sizes` are item fields and land on the slide <img>
+// unchanged, so any sizes expression works.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        srcset: 'img/1-375.jpg 375w, img/1-480.jpg 480w, img/1-757.jpg 757w',
+        sizes: '(min-width: 40em) 80vw, 100vw',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+    },
+    {
+        src: 'img/img2.jpg',
+        srcset: 'img/2-375.jpg 375w, img/2-480.jpg 480w, img/2-757.jpg 757w',
+        sizes: '(min-width: 40em) 80vw, 100vw',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+    },
+];
+
+<LightGallery>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+**Vue**
+
+```vue
+<script setup>
+// `srcset` and `sizes` are item fields and land on the slide <img>
+// unchanged, so any sizes expression works.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        srcset: 'img/1-375.jpg 375w, img/1-480.jpg 480w, img/1-757.jpg 757w',
+        sizes: '(min-width: 40em) 80vw, 100vw',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+    },
+    {
+        src: 'img/img2.jpg',
+        srcset: 'img/2-375.jpg 375w, img/2-480.jpg 480w, img/2-757.jpg 757w',
+        sizes: '(min-width: 40em) 80vw, 100vw',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+    },
+];
+</script>
+
+<template>
+    <LightGallery>
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+**Angular**
+
+```ts
+// `srcset` and `sizes` are item fields and land on the slide <img>
+// unchanged, so any sizes expression works.
+items: LgGalleryItem[] = [
+    {
+        src: 'img/img1.jpg',
+        srcset: 'img/1-375.jpg 375w, img/1-480.jpg 480w, img/1-757.jpg 757w',
+        sizes: '(min-width: 40em) 80vw, 100vw',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+    },
+    {
+        src: 'img/img2.jpg',
+        srcset: 'img/2-375.jpg 375w, img/2-480.jpg 480w, img/2-757.jpg 757w',
+        sizes: '(min-width: 40em) 80vw, 100vw',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+    },
+];
+```
+
+```html
+<lg-gallery>
+    @for (item of items; track item.src) {
+        <a [lgGalleryItem]="item">
+            <img [src]="item.thumb" [alt]="item.alt" />
+        </a>
+    }
+</lg-gallery>
+```
+
+### HTML5 picture tag
+
+The `<picture>` tag gives web developers more flexibility in specifying image
+resources. lightGallery will construct picture element if `data-sources`
+attribute is specified. You can specify sources in the form of an array of
+picture source objects.
+
+For example, if you want to construct picture element in lightGallery as shown
+below,
+
+```html
+<picture>
+    <source media="(min-width:620px)" srcset="img/image-medium.jpg" />
+    <source media="(min-width:480px)" srcset="img/image-small.jpg" />
+    <img src="img/image-x-small.jpg" alt="images" />
+</picture>
+```
+
+You need to use `data-sources` (or `sources` if you are using dynamic mode) as
+shown below.
+
+**JavaScript**
+
+```html
+<div>
+    <a
+        data-src="img/image-x-small.jpg"
+        data-sources='[{"srcset": "img/image-medium.jpg", "media":"(min-width:620px)"}, {"srcset": "img/image-small.jpg", "media":"(min-width:480px)"}]'
+    >
+        <img alt="thumb" src="img/thumb.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**React**
+
+```tsx
+// The item's `sources` field takes the same objects.
+const items = [
+    {
+        src: 'img/image-x-small.jpg',
+        sources: [
+            { srcset: 'img/image-medium.jpg', media: '(min-width:620px)' },
+            { srcset: 'img/image-small.jpg', media: '(min-width:480px)' },
+        ],
+        thumb: 'img/thumb.jpg',
+    },
+];
+```
+
+**Vue**
+
+```ts
+// The item's `sources` field takes the same objects.
+const items: LgGalleryItem[] = [
+    {
+        src: 'img/image-x-small.jpg',
+        sources: [
+            { srcset: 'img/image-medium.jpg', media: '(min-width:620px)' },
+            { srcset: 'img/image-small.jpg', media: '(min-width:480px)' },
+        ],
+        thumb: 'img/thumb.jpg',
+    },
+];
+```
+
+**Angular**
+
+```ts
+// The item's `sources` field takes the same objects.
+items: LgGalleryItem[] = [
+    {
+        src: 'img/image-x-small.jpg',
+        sources: [
+            { srcset: 'img/image-medium.jpg', media: '(min-width:620px)' },
+            { srcset: 'img/image-small.jpg', media: '(min-width:480px)' },
+        ],
+        thumb: 'img/thumb.jpg',
+    },
+];
+```
+
+Similarly you can pass all supported
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source#attributes" target="_blank">attributes</a>
+in the form of an object.
+
+If you want to provide `webp` for supported browsers with `jpg` fallback image,
+you can use `data-sources` in the following way
+
+**JavaScript**
+
+```html
+<div>
+    <a
+        data-src="/img/img-1.jpg"
+        data-sources='[{"srcset": "/img/img-1.webp", "type":"image/webp"}]'
+    >
+        <img alt="thumb" src="img/thumb.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**React**
+
+```tsx
+const items = [
+    {
+        src: '/img/img-1.jpg',
+        sources: [{ srcset: '/img/img-1.webp', type: 'image/webp' }],
+        thumb: 'img/thumb.jpg',
+    },
+];
+```
+
+**Vue**
+
+```ts
+const items: LgGalleryItem[] = [
+    {
+        src: '/img/img-1.jpg',
+        sources: [{ srcset: '/img/img-1.webp', type: 'image/webp' }],
+        thumb: 'img/thumb.jpg',
+    },
+];
+```
+
+**Angular**
+
+```ts
+items: LgGalleryItem[] = [
+    {
+        src: '/img/img-1.jpg',
+        sources: [{ srcset: '/img/img-1.webp', type: 'image/webp' }],
+        thumb: 'img/thumb.jpg',
+    },
+];
+```
+
+### Using zoomFromOrigin with responsive images
+
+If you want to use `zoomFromOrigin` option with responsive images, you can
+provide specific `lg-size` values for specific screen size by providing a comma
+separated list of sizes combined with a max-width (up to what size the
+particular image should be used)
+
+For example, if you have similar html structure,
+
+**JavaScript**
+
+```html
+<div>
+    <a
+        data-lg-size="240-160-375, 400-267-480, 1600-1067"
+        data-responsive="/img/img-240.jpg 375, /img/img-400.jpg 480"
+        data-src="/img/img-1600.jpg"
+    >
+        <img alt="thumb" src="img/thumb.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**React**
+
+```tsx
+// `lgSize` takes the same list. The framework packages have no
+// `responsive` field: `sources` picks the image for each width.
+const items = [
+    {
+        src: '/img/img-1600.jpg',
+        sources: [
+            { srcset: '/img/img-240.jpg', media: '(max-width: 374px)' },
+            { srcset: '/img/img-400.jpg', media: '(max-width: 479px)' },
+        ],
+        lgSize: '240-160-375, 400-267-480, 1600-1067',
+        thumb: 'img/thumb.jpg',
+    },
+];
+```
+
+**Vue**
+
+```ts
+// `lgSize` takes the same list. The framework packages have no
+// `responsive` field: `sources` picks the image for each width.
+const items: LgGalleryItem[] = [
+    {
+        src: '/img/img-1600.jpg',
+        sources: [
+            { srcset: '/img/img-240.jpg', media: '(max-width: 374px)' },
+            { srcset: '/img/img-400.jpg', media: '(max-width: 479px)' },
+        ],
+        lgSize: '240-160-375, 400-267-480, 1600-1067',
+        thumb: 'img/thumb.jpg',
+    },
+];
+```
+
+**Angular**
+
+```ts
+// `lgSize` takes the same list. The framework packages have no
+// `responsive` field: `sources` picks the image for each width.
+items: LgGalleryItem[] = [
+    {
+        src: '/img/img-1600.jpg',
+        sources: [
+            { srcset: '/img/img-240.jpg', media: '(max-width: 374px)' },
+            { srcset: '/img/img-400.jpg', media: '(max-width: 479px)' },
+        ],
+        lgSize: '240-160-375, 400-267-480, 1600-1067',
+        thumb: 'img/thumb.jpg',
+    },
+];
+```
+
+Up to `375` width, `img-240.jpg` and `lg-size` `240-160` will be used.
+Similarly, up to `480` pixel width, size `400-267` and `img-400.jpg` will be
+used. And above `480`, `lg-size` `1600-1067` and `img-1600.jpg` will be used.

@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-spbtv2v5> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>lightGallery dynamic mode (JavaScript)</title><style>body{align-items:center;color:#1f2933;display:flex;font-family:system-ui,sans-serif;justify-content:center;margin:0;min-height:100vh;text-align:center}button[data-astro-cid-spbtv2v5]{background:#0d0a0a;border:0;border-radius:6px;color:#fff;cursor:pointer;font:inherit;padding:10px 18px}
+</style></head> <body data-astro-cid-spbtv2v5> <form id="sandbox" method="post" action="https://stackblitz.com/run?file=src%2Fmain.js" data-astro-cid-spbtv2v5> <input type="hidden" name="project[title]" value="lightGallery dynamic mode (JavaScript)" data-astro-cid-spbtv2v5> <input type="hidden" name="project[description]" value="lightGallery dynamic mode (JavaScript), from the lightGallery docs." data-astro-cid-spbtv2v5> <input type="hidden" name="project[template]" value="node" data-astro-cid-spbtv2v5> <input type="hidden" name="project[files][.stackblitzrc]" value="{
+    &#34;installDependencies&#34;: true,
+    &#34;startCommand&#34;: &#34;npm run dev&#34;
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][package.json]" value="{
+    &#34;name&#34;: &#34;lightgallery-example&#34;,
+    &#34;private&#34;: true,
+    &#34;type&#34;: &#34;module&#34;,
+    &#34;scripts&#34;: {
+        &#34;dev&#34;: &#34;vite&#34;,
+        &#34;build&#34;: &#34;vite build&#34;
+    },
+    &#34;dependencies&#34;: {
+        &#34;lightgallery&#34;: &#34;3.0.0&#34;
+    },
+    &#34;devDependencies&#34;: {
+        &#34;vite&#34;: &#34;^6.0.0&#34;
+    }
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/demo.css]" value="body {
+    margin: 0;
+    padding: 24px;
+    font-family: system-ui, sans-serif;
+    color: #1f2933;
+}
+
+h1 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+}
+
+.gallery a {
+    display: block;
+}
+
+.gallery img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 4px;
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][index.html]" value="<!DOCTYPE html>
+<html lang=&#34;en&#34;>
+    <head>
+        <meta charset=&#34;UTF-8&#34; />
+        <meta name=&#34;viewport&#34; content=&#34;width=device-width, initial-scale=1.0&#34; />
+        <title>lightGallery dynamic mode example</title>
+    </head>
+    <body>
+        <h1>lightGallery dynamic mode</h1>
+
+        <button type=&#34;button&#34; id=&#34;open-gallery&#34;>Open gallery</button>
+
+        <script type=&#34;module&#34; src=&#34;/src/main.js&#34;></script>
+    </body>
+</html>
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/main.js]" value="import lightGallery from 'lightgallery';
+
+import 'lightgallery/css/lightgallery.css';
+import './demo.css';
+
+const button = document.getElementById('open-gallery');
+
+// The slides are data: there is no gallery markup on the page.
+const dynamicEl = [
+    {
+        src: 'https://picsum.photos/id/10/1600/1067',
+        thumb: 'https://picsum.photos/id/10/360/240',
+        subHtml: '<h4>Sample photo 1</h4>',
+    },
+    {
+        src: 'https://picsum.photos/id/11/1600/1067',
+        thumb: 'https://picsum.photos/id/11/360/240',
+        subHtml: '<h4>Sample photo 2</h4>',
+    },
+    {
+        src: 'https://picsum.photos/id/15/1600/1067',
+        thumb: 'https://picsum.photos/id/15/360/240',
+        subHtml: '<h4>Sample photo 3</h4>',
+    },
+    {
+        src: 'https://picsum.photos/id/16/1600/1067',
+        thumb: 'https://picsum.photos/id/16/360/240',
+        subHtml: '<h4>Sample photo 4</h4>',
+    },
+];
+
+const gallery = lightGallery(button, {
+    dynamic: true,
+    dynamicEl,
+});
+
+button.addEventListener('click', () => {
+    // Opens on the third slide. With no argument it opens on the first.
+    gallery.openGallery(2);
+});
+" data-astro-cid-spbtv2v5> <p data-astro-cid-spbtv2v5>Opening the JavaScript example on StackBlitz.</p> <button type="submit" data-astro-cid-spbtv2v5>Open in StackBlitz</button> </form> <script>
+            // Coming back with the browser's Back button must not send the
+            // reader straight to StackBlitz again.
+            const [navigation] = performance.getEntriesByType('navigation');
+            if (navigation?.type !== 'back_forward') {
+                document.getElementById('sandbox').submit();
+            }
+        </script> </body> </html>

@@ -1,0 +1,1 @@
+import{l as t,M as r}from"./lg-medium-zoom.es5.BBeafCRB.js";import{S as o}from"./license.D7uASPQ4.js";const e=document.querySelector(".blog-wrapper");e&&!e.hasAttribute("data-lg-figures")&&(e.setAttribute("data-lg-figures",""),t.setLicenseKey(o),t(e,{selector:".blog-images",getCaptionFromTitleOrAlt:!1,backgroundColor:"#FFF",plugins:[r]}));

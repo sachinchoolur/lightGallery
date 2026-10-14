@@ -1,0 +1,1 @@
+const E="LIG-C20C35AE-0180-47D2-BEA7-33B98A2332B2";export{E as S};

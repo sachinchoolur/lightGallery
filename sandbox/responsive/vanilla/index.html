@@ -1,0 +1,164 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-spbtv2v5> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>lightGallery responsive images (JavaScript)</title><style>body{align-items:center;color:#1f2933;display:flex;font-family:system-ui,sans-serif;justify-content:center;margin:0;min-height:100vh;text-align:center}button[data-astro-cid-spbtv2v5]{background:#0d0a0a;border:0;border-radius:6px;color:#fff;cursor:pointer;font:inherit;padding:10px 18px}
+</style></head> <body data-astro-cid-spbtv2v5> <form id="sandbox" method="post" action="https://stackblitz.com/run?file=src%2Fmain.js" data-astro-cid-spbtv2v5> <input type="hidden" name="project[title]" value="lightGallery responsive images (JavaScript)" data-astro-cid-spbtv2v5> <input type="hidden" name="project[description]" value="lightGallery responsive images (JavaScript), from the lightGallery docs." data-astro-cid-spbtv2v5> <input type="hidden" name="project[template]" value="node" data-astro-cid-spbtv2v5> <input type="hidden" name="project[files][.stackblitzrc]" value="{
+    &#34;installDependencies&#34;: true,
+    &#34;startCommand&#34;: &#34;npm run dev&#34;
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][package.json]" value="{
+    &#34;name&#34;: &#34;lightgallery-example&#34;,
+    &#34;private&#34;: true,
+    &#34;type&#34;: &#34;module&#34;,
+    &#34;scripts&#34;: {
+        &#34;dev&#34;: &#34;vite&#34;,
+        &#34;build&#34;: &#34;vite build&#34;
+    },
+    &#34;dependencies&#34;: {
+        &#34;lightgallery&#34;: &#34;3.0.0&#34;
+    },
+    &#34;devDependencies&#34;: {
+        &#34;vite&#34;: &#34;^6.0.0&#34;
+    }
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/demo.css]" value="body {
+    margin: 0;
+    padding: 24px;
+    font-family: system-ui, sans-serif;
+    color: #1f2933;
+}
+
+h1 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+}
+
+.gallery a {
+    display: block;
+}
+
+.gallery img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: 4px;
+}
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][index.html]" value="<!DOCTYPE html>
+<html lang=&#34;en&#34;>
+    <head>
+        <meta charset=&#34;UTF-8&#34; />
+        <meta name=&#34;viewport&#34; content=&#34;width=device-width, initial-scale=1.0&#34; />
+        <title>lightGallery responsive images example</title>
+    </head>
+    <body>
+        <h1>lightGallery responsive images</h1>
+
+        <!-- data-responsive lists smaller versions of the image, each
+             followed by the viewport width (px) below which it is used.
+             From 800px up, the href is used. -->
+        <div id=&#34;gallery&#34; class=&#34;gallery&#34;>
+            <a
+                href=&#34;https://picsum.photos/id/10/1600/1067&#34;
+                data-responsive=&#34;https://picsum.photos/id/10/480/320 480, https://picsum.photos/id/10/800/533 800&#34;
+                data-lg-size=&#34;1600-1067&#34;
+            >
+                <img
+                    src=&#34;https://picsum.photos/id/10/360/240&#34;
+                    alt=&#34;Sample photo 1&#34;
+                />
+            </a>
+            <a
+                href=&#34;https://picsum.photos/id/11/1600/1067&#34;
+                data-responsive=&#34;https://picsum.photos/id/11/480/320 480, https://picsum.photos/id/11/800/533 800&#34;
+                data-lg-size=&#34;1600-1067&#34;
+            >
+                <img
+                    src=&#34;https://picsum.photos/id/11/360/240&#34;
+                    alt=&#34;Sample photo 2&#34;
+                />
+            </a>
+            <a
+                href=&#34;https://picsum.photos/id/15/1600/1067&#34;
+                data-responsive=&#34;https://picsum.photos/id/15/480/320 480, https://picsum.photos/id/15/800/533 800&#34;
+                data-lg-size=&#34;1600-1067&#34;
+            >
+                <img
+                    src=&#34;https://picsum.photos/id/15/360/240&#34;
+                    alt=&#34;Sample photo 3&#34;
+                />
+            </a>
+            <a
+                href=&#34;https://picsum.photos/id/16/1600/1067&#34;
+                data-responsive=&#34;https://picsum.photos/id/16/480/320 480, https://picsum.photos/id/16/800/533 800&#34;
+                data-lg-size=&#34;1600-1067&#34;
+            >
+                <img
+                    src=&#34;https://picsum.photos/id/16/360/240&#34;
+                    alt=&#34;Sample photo 4&#34;
+                />
+            </a>
+            <a
+                href=&#34;https://picsum.photos/id/28/1600/1067&#34;
+                data-responsive=&#34;https://picsum.photos/id/28/480/320 480, https://picsum.photos/id/28/800/533 800&#34;
+                data-lg-size=&#34;1600-1067&#34;
+            >
+                <img
+                    src=&#34;https://picsum.photos/id/28/360/240&#34;
+                    alt=&#34;Sample photo 5&#34;
+                />
+            </a>
+            <a
+                href=&#34;https://picsum.photos/id/29/1600/1067&#34;
+                data-responsive=&#34;https://picsum.photos/id/29/480/320 480, https://picsum.photos/id/29/800/533 800&#34;
+                data-lg-size=&#34;1600-1067&#34;
+            >
+                <img
+                    src=&#34;https://picsum.photos/id/29/360/240&#34;
+                    alt=&#34;Sample photo 6&#34;
+                />
+            </a>
+            <a
+                href=&#34;https://picsum.photos/id/37/1600/1067&#34;
+                data-responsive=&#34;https://picsum.photos/id/37/480/320 480, https://picsum.photos/id/37/800/533 800&#34;
+                data-lg-size=&#34;1600-1067&#34;
+            >
+                <img
+                    src=&#34;https://picsum.photos/id/37/360/240&#34;
+                    alt=&#34;Sample photo 7&#34;
+                />
+            </a>
+            <a
+                href=&#34;https://picsum.photos/id/110/1600/1067&#34;
+                data-responsive=&#34;https://picsum.photos/id/110/480/320 480, https://picsum.photos/id/110/800/533 800&#34;
+                data-lg-size=&#34;1600-1067&#34;
+            >
+                <img
+                    src=&#34;https://picsum.photos/id/110/360/240&#34;
+                    alt=&#34;Sample photo 8&#34;
+                />
+            </a>
+        </div>
+
+        <script type=&#34;module&#34; src=&#34;/src/main.js&#34;></script>
+    </body>
+</html>
+" data-astro-cid-spbtv2v5><input type="hidden" name="project[files][src/main.js]" value="import lightGallery from 'lightgallery';
+
+import 'lightgallery/css/lightgallery.css';
+import './demo.css';
+
+// The image sizes are listed in the data-responsive attributes in
+// index.html, so no setting is needed here.
+lightGallery(document.getElementById('gallery'));
+" data-astro-cid-spbtv2v5> <p data-astro-cid-spbtv2v5>Opening the JavaScript example on StackBlitz.</p> <button type="submit" data-astro-cid-spbtv2v5>Open in StackBlitz</button> </form> <script>
+            // Coming back with the browser's Back button must not send the
+            // reader straight to StackBlitz again.
+            const [navigation] = performance.getEntriesByType('navigation');
+            if (navigation?.type !== 'back_forward') {
+                document.getElementById('sandbox').submit();
+            }
+        </script> </body> </html>

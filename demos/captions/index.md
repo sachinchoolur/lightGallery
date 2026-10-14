@@ -1,0 +1,575 @@
+# Captions
+
+> Gallery captions demo: HTML captions from data attributes or elements on the page, captions relative to each thumbnail, and animated captions.
+
+You can directly pass image caption HTML via the data-sub-html attribute, or pass the id or class name of any HTML element (div) which contains your caption HTML.
+
+Canonical page: https://www.lightgalleryjs.com/demos/captions/
+
+#### Demo
+
+**JavaScript**
+
+**HTML**
+
+```html
+<div id="gallery-captions-demo">
+    <a
+        href="img/img1.jpg"
+        data-sub-html="<h4>Fading Light</h4><p>Classic view from Rigwood Jetty on Coniston Water an old archive shot similar to an old post but a little later on.</p>"
+    >
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a href="img/img2.jpg" data-sub-html="#caption2">
+        <img src="img/thumb2.jpg" />
+    </a>
+    <a href="img/img3.jpg" data-sub-html=".caption3">
+        <img src="img/thumb3.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+
+<div id="caption2" style="display:none">
+    <h4>Bowness Bay</h4>
+    <p>
+        A beautiful Sunrise this morning taken En-route to Keswick not one as
+        planned but I'm extremely happy I was passing the right place at the
+        right time....
+    </p>
+</div>
+<div class="caption3" style="display:none">
+    <h4>Sunset Serenity</h4>
+    <p>A gorgeous Sunset tonight captured at Coniston Water....</p>
+</div>
+```
+
+**JavaScript**
+
+```js
+import lightGallery from 'lightgallery';
+import lgZoom from 'lightgallery/plugins/zoom';
+
+lightGallery(document.getElementById('gallery-captions-demo'), {
+    plugins: [lgZoom],
+});
+```
+
+**React**
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Zoom from '@lightgallery/react/plugins/zoom';
+
+// `caption` takes JSX; `captionHtml` takes an HTML string, like
+// data-sub-html.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Fading Light',
+        caption: (
+            <>
+                <h4>Fading Light</h4>
+                <p>Classic view from Rigwood Jetty on Coniston Water.</p>
+            </>
+        ),
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Bowness Bay',
+        captionHtml: '<h4>Bowness Bay</h4><p>A beautiful sunrise.</p>',
+    },
+];
+
+<LightGallery plugins={[Zoom]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+**Vue**
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+
+const plugins = [Zoom];
+
+// `captionHtml` takes an HTML string, like data-sub-html.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Fading Light',
+        captionHtml: '<h4>Fading Light</h4><p>Classic view from Rigwood Jetty.</p>',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Bowness Bay',
+        captionHtml: '<h4>Bowness Bay</h4><p>A beautiful sunrise.</p>',
+    },
+];
+</script>
+
+<template>
+    <LightGallery :plugins="plugins">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+**Angular**
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withZoom()];
+
+    // `captionHtml` takes an HTML string, like data-sub-html.
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Fading Light',
+            captionHtml: '<h4>Fading Light</h4><p>Classic view from Rigwood Jetty.</p>',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Bowness Bay',
+            captionHtml: '<h4>Bowness Bay</h4><p>A beautiful sunrise.</p>',
+        },
+    ];
+}
+```
+
+### Captions relative to the current element
+
+If you already have captions associated with the thumbnails, you can instruct
+lightGallery to pick up captions from the element within the selector by passing
+`subHtmlSelectorRelative: true` via lightGallery settings.
+
+**JavaScript**
+
+**HTML**
+
+```html
+<div id="relative-caption">
+    <a href="img/img1.jpg" data-sub-html=".caption">
+        <img src="img/thumb1.jpg" />
+
+        <!-- This will appear as caption -->
+        <div class="caption">
+            <h4>Caption1</h4>
+            <p>Desc1</p>
+        </div>
+    </a>
+    <a href="img/img2.jpg" data-sub-html=".caption">
+        <img src="img/thumb2.jpg" />
+        <div class="caption">
+            <h4>Caption1</h4>
+            <p>Desc1</p>
+        </div>
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+import lightGallery from 'lightgallery';
+
+lightGallery(document.getElementById('relative-caption'), {
+    subHtmlSelectorRelative: true,
+});
+```
+
+**React**
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import RelativeCaption from '@lightgallery/react/plugins/relativeCaption';
+
+// There is no markup to scrape: the caption is an item field. The
+// framework packages ship relative captions as a plugin that places it
+// directly under the image instead of in the full-width bar.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        captionHtml: '<h4>Caption1</h4><p>Desc1</p>',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        captionHtml: '<h4>Caption2</h4><p>Desc2</p>',
+    },
+];
+
+<LightGallery plugins={[RelativeCaption]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+**Vue**
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import RelativeCaption from '@lightgallery/vue/plugins/relativeCaption';
+
+// There is no markup to scrape: the caption is an item field. The
+// framework packages ship relative captions as a plugin that places it
+// directly under the image instead of in the full-width bar.
+const plugins = [RelativeCaption];
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        captionHtml: '<h4>Caption1</h4><p>Desc1</p>',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        captionHtml: '<h4>Caption2</h4><p>Desc2</p>',
+    },
+];
+</script>
+
+<template>
+    <LightGallery :plugins="plugins">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+**Angular**
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import {
+    withRelativeCaption,
+} from '@lightgallery/angular/plugins/relativeCaption';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // There is no markup to scrape: the caption is an item field. The
+    // framework packages ship relative captions as a plugin that places
+    // it directly under the image instead of in the full-width bar.
+    features = [withRelativeCaption()];
+
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Mountains',
+            captionHtml: '<h4>Caption1</h4><p>Desc1</p>',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Forest path',
+            captionHtml: '<h4>Caption2</h4><p>Desc2</p>',
+        },
+    ];
+}
+```
+
+### Caption animation
+
+If you like to have animated captions, you can easily create your own animations
+with the help of the lightGallery `slideDelay` option.
+
+`slideDelay` adds a delay between slide transitions. You can use this time
+interval to animate captions before the next slide transition starts.
+
+**JavaScript**
+
+**HTML**
+
+```html
+<div id="gallery-animated-captions-demo">
+    <a
+        href="img/img1.jpg"
+        data-sub-html="<div class='lightGallery-captions'><h4>title</h4><p>description</p></div>"
+    >
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a
+        href="img/img2.jpg"
+        data-sub-html="<div class='lightGallery-captions'><h4>title</h4><p>description</p></div>"
+    >
+        <img src="img/thumb2.jpg" />
+    </a>
+    <a
+        href="img/img3.jpg"
+        data-sub-html="<div class='lightGallery-captions'><h4>title</h4><p>description</p></div>"
+    >
+        <img src="img/thumb3.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+lightGallery(document.getElementById('gallery-animated-captions-demo'), {
+    speed: 500,
+    // Append caption inside the slide item
+    // This way you can make use of lightGallery active slide class names to add animation
+    appendSubHtmlTo: '.lg-item',
+    // Delay slide transition to complete captions animations
+    // before navigating to different slides (Optional)
+    // You can find caption animation demo on the captions demo page
+    slideDelay: 400,
+});
+```
+
+**React**
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+
+// The caption wrapper carries the class the CSS below animates.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        captionHtml:
+            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        captionHtml:
+            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+    },
+];
+
+// captionPosition 'slide' renders the caption inside the slide, so the
+// active-slide classes can drive your animation; slideDelay gives it
+// time before the next slide transition starts.
+<LightGallery speed={500} captionPosition="slide" slideDelay={400}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+**Vue**
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+
+// The caption wrapper carries the class the CSS below animates.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        captionHtml:
+            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        captionHtml:
+            '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+    },
+];
+</script>
+
+<template>
+    <!-- caption-position 'slide' renders the caption inside the slide, so
+         the active-slide classes can drive your animation; slide-delay
+         gives it time before the next slide transition starts. -->
+    <LightGallery :speed="500" caption-position="slide" :slide-delay="400">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+**Angular**
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <!-- captionPosition 'slide' renders the caption inside the slide,
+             so the active-slide classes can drive your animation;
+             slideDelay gives it time before the next slide transition
+             starts. -->
+        <lg-gallery [speed]="500" captionPosition="slide" [slideDelay]="400">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // The caption wrapper carries the class the CSS below animates.
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Mountains',
+            captionHtml:
+                '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Forest path',
+            captionHtml:
+                '<div class="lightGallery-captions"><h4>title</h4><p>description</p></div>',
+        },
+    ];
+}
+```
+
+##### CSS
+
+```scss
+// Add transitions
+.lightGallery-captions {
+    h4,
+    p {
+        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in;
+    }
+}
+.lg-current {
+    .lightGallery-captions {
+        h4,
+        p {
+            transition-delay: 500ms;
+        }
+    }
+    &.lg-slide-progress {
+        .lightGallery-captions {
+            h4,
+            p {
+                transition-delay: 0ms;
+            }
+        }
+    }
+}
+
+// Disappear
+.lightGallery-captions {
+    h4 {
+        transform: translate3d(60px, 0, 0px);
+    }
+    p {
+        transform: translate3d(-60px, 0, 0px);
+    }
+    h4,
+    p {
+        opacity: 0;
+    }
+}
+
+// Active
+.lg-current {
+    .lightGallery-captions {
+        h4,
+        p {
+            transform: translate3d(0, 0, 0px);
+        }
+        h4,
+        p {
+            opacity: 1;
+        }
+    }
+}
+
+// Disappear
+.lg-slide-progress {
+    .lightGallery-captions {
+        h4 {
+            transform: translate3d(-60px, 0, 0px);
+        }
+        p {
+            transform: translate3d(60px, 0, 0px);
+        }
+        h4,
+        p {
+            opacity: 0;
+        }
+    }
+}
+```

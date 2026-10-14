@@ -1,0 +1,282 @@
+# Hash
+
+> lightGallery hash plugin lets you provide a unique URL for each gallery slide.
+
+lightGallery hash plugin allows you to create a unique URL for each gallery image. You can provide custom names for each slide too. If you have multiple galleries on a page, you have to provide a unique id for each gallery via galleryId setting.
+
+Canonical page: https://www.lightgalleryjs.com/demos/hash/
+
+#### Demo
+
+The URL syncing runs on the Navigation API where the browser supports it and
+falls back to the History API everywhere else, the deep-link URL format is
+identical either way. See the
+<a href="/docs/hash-drivers/">hash drivers guide</a>.
+
+**JavaScript**
+
+**HTML**
+
+```html
+<div id="gallery-hash-demo">
+    <a href="img/img1.jpg">
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a href="img/img2.jpg">
+        <img src="img/thumb2.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+import lightGallery from 'lightgallery';
+import lgHash from 'lightgallery/plugins/hash';
+
+lightGallery(document.getElementById('gallery-hash-demo'), {
+    plugins: [lgHash],
+});
+
+// With more than one gallery on a page, give each a unique galleryId.
+/*
+lightGallery(document.getElementById('gallery-hash-demo-2'), {
+    plugins: [lgHash],
+    galleryId: '2',
+});
+*/
+```
+
+**React**
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Hash from '@lightgallery/react/plugins/hash';
+
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+
+// galleryId is the id in the URL: #lg=1&slide=2. Give each gallery on a
+// page its own. hashDriver 'auto' rides the Navigation API where the
+// browser has it and falls back to History, see the hash drivers guide.
+<LightGallery plugins={[Hash]} hash={{ galleryId: '1', hashDriver: 'auto' }}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+**Vue**
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Hash from '@lightgallery/vue/plugins/hash';
+
+const plugins = [Hash];
+const items = [
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+];
+</script>
+
+<template>
+    <!-- galleryId is the id in the URL: #lg=1&slide=2. Give each gallery on
+         a page its own. hashDriver 'auto' rides the Navigation API where the
+         browser has it and falls back to History. -->
+    <LightGallery
+        :plugins="plugins"
+        :hash="{ galleryId: '1', hashDriver: 'auto' }"
+    >
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+**Angular**
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withHash } from '@lightgallery/angular/plugins/hash';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // galleryId is the id in the URL: #lg=1&slide=2. Give each gallery on
+    // a page its own. hashDriver 'auto' rides the Navigation API where the
+    // browser has it and falls back to History, see the hash drivers guide.
+    features = [withHash({ galleryId: '1', hashDriver: 'auto' })];
+
+    items: LgGalleryItem[] = [
+        { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+        { src: 'img/img2.jpg', thumb: 'img/thumb2.jpg', alt: 'Forest path' },
+    ];
+}
+```
+
+#### Custom slide name
+
+You can provide custom slide names for each slide by providing slide name via
+`data-slide-name` attribute or `slideName` if you are using dynamic mode.
+
+**JavaScript**
+
+**HTML**
+
+```html
+<div id="gallery-custom-hash-demo">
+    <a href="img/img1.jpg" data-slide-name="fading-light">
+        <img src="img/thumb1.jpg" />
+    </a>
+    <a href="img/img2.jpg" data-slide-name="Bowness Bay">
+        <img src="img/thumb2.jpg" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+lightGallery(document.getElementById('gallery-custom-hash-demo'), {
+    plugins: [lgHash],
+    customSlideName: true,
+});
+```
+
+**React**
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Hash from '@lightgallery/react/plugins/hash';
+
+// Slide names come from each item's `slideName`, so deep links read
+// /page/#lg=1&slide=fading-light instead of an index.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        slideName: 'fading-light',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        slideName: 'bowness-bay',
+    },
+];
+
+<LightGallery plugins={[Hash]} hash={{ customSlideName: true }}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+**Vue**
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Hash from '@lightgallery/vue/plugins/hash';
+
+const plugins = [Hash];
+
+// Slide names come from each item's `slideName`, so deep links read
+// /page/#lg=1&slide=fading-light instead of an index.
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Mountains',
+        slideName: 'fading-light',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Forest path',
+        slideName: 'bowness-bay',
+    },
+];
+</script>
+
+<template>
+    <LightGallery :plugins="plugins" :hash="{ customSlideName: true }">
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+**Angular**
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withHash } from '@lightgallery/angular/plugins/hash';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    features = [withHash({ customSlideName: true })];
+
+    // Slide names come from each item's `slideName`, so deep links read
+    // /page/#lg=1&slide=fading-light instead of an index.
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Mountains',
+            slideName: 'fading-light',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Forest path',
+            slideName: 'bowness-bay',
+        },
+    ];
+}
+```

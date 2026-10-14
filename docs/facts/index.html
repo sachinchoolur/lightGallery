@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="robots" content="index, follow"><meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"><title>lightGallery facts and figures - lightGallery</title><meta name="description" content="The numbers behind lightGallery: bundle sizes for the core, every plugin and the framework packages, dependencies, supported browsers and framework versions, media types, accessibility, license and prices."><link rel="canonical" href="https://www.lightgalleryjs.com/docs/facts/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta name="twitter:title" content="lightGallery facts and figures"><meta name="twitter:description" content="The numbers behind lightGallery: bundle sizes for the core, every plugin and the framework packages, dependencies, supported browsers and framework versions, media types, accessibility, license and prices."><meta name="twitter:site" content="@SachinNeravath"><meta name="twitter:creator" content="@SachinNeravath"><meta property="og:title" content="lightGallery facts and figures"><meta property="og:description" content="The numbers behind lightGallery: bundle sizes for the core, every plugin and the framework packages, dependencies, supported browsers and framework versions, media types, accessibility, license and prices."><meta property="og:type" content="website"><meta property="og:url" content="https://www.lightgalleryjs.com/docs/facts/"><meta property="og:image" content="https://www.lightgalleryjs.com/lightgallery.png"><meta property="article:publisher" content="https://www.facebook.com/sachinchoolur"><meta property="article:author" content="https://www.facebook.com/sachinchoolur"><meta property="og:locale" content="en_US"><meta property="og:site_name" content="lightGallery"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"lightGallery","item":"https://www.lightgalleryjs.com/"},{"@type":"ListItem","position":2,"name":"Docs","item":"https://www.lightgalleryjs.com/docs/"},{"@type":"ListItem","position":3,"name":"lightGallery facts and figures","item":"https://www.lightgalleryjs.com/docs/facts/"}]}</script><meta name="ahrefs-site-verification" content="96bd744dcfe6c078a1994c8d9e0e0ca6a5cf16004f63946a0cd349ca937c1b24"><meta name="theme-color" content="#fff"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="manifest" href="/site.webmanifest"><link rel="alternate" type="application/rss+xml" title="lightGallery blog" href="/index.xml"><script>
+            // Framework code tabs: apply the deep-linked or remembered
+            // framework before first paint, so the panels never swap
+            // once the deferred module runs. CodeTabs.astro takes over
+            // (and drops the attribute) as soon as it has synced.
+            (() => {
+                const valid = ['vanilla', 'react', 'vue', 'angular'];
+                const url = new URL(window.location.href);
+                const query = url.searchParams.get('framework');
+                const hash = url.hash.replace(/^#/, '');
+                let framework = null;
+                if (query && valid.includes(query)) framework = query;
+                else if (valid.includes(hash)) framework = hash;
+                else
+                    try {
+                        const stored = localStorage.getItem('lg-framework');
+                        if (stored && valid.includes(stored)) framework = stored;
+                    } catch {
+                        /* storage blocked */
+                    }
+                if (framework)
+                    document.documentElement.dataset.lgFramework = framework;
+            })();
+        </script> <link rel="alternate" type="text/markdown" href="/docs/facts/index.md" title="Markdown version"> <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);posthog.init('phc_uyDcoLpTSdtPcDLf2SswgknmWiBsUfV2EzjhzYi3Ke4',{api_host:'https://app.posthog.com'})</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-960P19JL1K"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-960P19JL1K');</script><link rel="stylesheet" href="/_astro/_slug_.Bnag4Ayu.css"></head> <body class="docs single"> <header id="nav-header" class="site-header"> <div class="site-header-bar"> <div class="container-xxl site-header-inner"> <a class="site-header-brand" href="/"><img src="/images/lightgallery-logo.png" alt="" width="294" height="312">lightGallery</a> <nav class="site-header-nav" aria-label="Main"> <a class="site-header-link is-active" href="/docs/getting-started/" aria-current="page"> Docs </a><a class="site-header-link" href="/demos/thumbnails/"> Demos </a> <div class="site-header-menu" data-site-menu> <button class="site-header-link" type="button" aria-expanded="false" aria-controls="site-header-frameworks">
+Frameworks
+<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg> </button> <div class="site-header-menu-panel" id="site-header-frameworks"> <a class="site-header-menu-item" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> Angular </a><a class="site-header-menu-item" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> React </a><a class="site-header-menu-item" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> Vue </a> </div> </div> <a class="site-header-link" href="/license/"> License </a> </nav> <div class="site-header-actions"> <a class="site-header-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener" aria-label="GitHub"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> <a class="site-header-cta" href="/docs/getting-started/">Get started</a> </div> <button class="site-header-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-header-sheet"> <svg class="site-header-icon-menu" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path></svg> <svg class="site-header-icon-close" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></path></svg> </button> </div> </div> <div class="site-header-scrim" data-site-scrim></div> <div class="site-header-sheet" id="site-header-sheet"> <nav class="container-xxl site-header-sheet-inner" aria-label="Main"> <a class="site-header-sheet-link is-active" href="/docs/getting-started/" aria-current="page"> <span>Docs</span> </a><a class="site-header-sheet-link" href="/demos/thumbnails/"> <span>Demos</span> </a> <div class="site-header-sheet-group"> <span class="site-header-sheet-label">Frameworks</span> <div class="site-header-sheet-frameworks"> <a class="site-header-sheet-framework" href="/docs/angular-image-video-gallery/"> <i class="site-header-fw site-header-fw-angular"></i> <span>Angular</span> </a><a class="site-header-sheet-framework" href="/docs/react-image-video-gallery/"> <i class="site-header-fw site-header-fw-react"></i> <span>React</span> </a><a class="site-header-sheet-framework" href="/docs/vue-image-video-gallery/"> <i class="site-header-fw site-header-fw-vue"></i> <span>Vue</span> </a> </div> </div> <a class="site-header-sheet-link" href="/license/"> <span>License</span> </a> <a class="site-header-sheet-github" href="https://github.com/sachinchoolur/lightGallery" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+GitHub
+</a> </nav> </div> </header> <script type="module">const s=document.getElementById("nav-header"),t=s?.querySelector("[data-site-menu]"),a=t?.querySelector("button"),c=s?.querySelector(".site-header-toggle"),d=s?.querySelector("[data-site-scrim]");if(s&&t&&a&&c&&d){const n=e=>{t.classList.toggle("is-open",e),a.setAttribute("aria-expanded",String(e))};a.addEventListener("click",()=>n(!t.classList.contains("is-open"))),t.addEventListener("focusout",e=>{const o=e.relatedTarget;o&&!t.contains(o)&&n(!1)});const i=e=>{s.classList.toggle("is-sheet-open",e),c.setAttribute("aria-expanded",String(e)),document.documentElement.classList.toggle("site-header-locked",e)};c.addEventListener("click",()=>i(!s.classList.contains("is-sheet-open"))),d.addEventListener("click",()=>i(!1)),matchMedia("(min-width: 992px)").addEventListener("change",e=>{e.matches&&i(!1)}),document.addEventListener("click",e=>{t.contains(e.target)||n(!1)}),document.addEventListener("keydown",e=>{e.key==="Escape"&&(t.classList.contains("is-open")&&(n(!1),a.focus()),s.classList.contains("is-sheet-open")&&(i(!1),c.focus()))}),window.addEventListener("pageshow",e=>{e.persisted&&(n(!1),i(!1))})}</script>   <div class="wrap container-xxl page-wrap" role="document"> <div class="row flex-xl-nowrap"> <main class="docs-content col-lg-10 col-xl-8"> <span class="docs-kicker">API Docs</span> <h1>lightGallery facts and figures</h1> <div class="page-tools" data-page-tools> <button type="button" class="page-tools-btn" data-copy-markdown data-src="/docs/facts/index.md">
+Copy as Markdown
+</button> <a class="page-tools-btn" href="/docs/facts/index.md">View as Markdown</a> <a class="page-tools-btn" href="https://claude.ai/new?q=Read%20https%3A%2F%2Fwww.lightgalleryjs.com%2Fdocs%2Ffacts%2Findex.md%20and%20help%20me%20with%20%22lightGallery%20facts%20and%20figures%22%20from%20lightGallery.%20Answer%20with%20code%20I%20can%20paste." target="_blank" rel="noopener">Open in Claude</a> <a class="page-tools-btn" href="https://chatgpt.com/?q=Read%20https%3A%2F%2Fwww.lightgalleryjs.com%2Fdocs%2Ffacts%2Findex.md%20and%20help%20me%20with%20%22lightGallery%20facts%20and%20figures%22%20from%20lightGallery.%20Answer%20with%20code%20I%20can%20paste." target="_blank" rel="noopener">Open in ChatGPT</a> </div> <script type="module">document.querySelectorAll("[data-copy-markdown]").forEach(t=>{const e=t.textContent;t.addEventListener("click",async()=>{try{const a=await(await fetch(t.dataset.src??"")).text();await navigator.clipboard.writeText(a),t.textContent="Copied"}catch{t.textContent="Copy failed"}setTimeout(()=>{t.textContent=e},1800)})});</script> <p class="lead">One page of checkable facts: how big lightGallery is, what it depends on, what it runs in, what it plays, and what it costs. Sizes are measured from the build this site was made with.</p>  <p>lightGallery is an open-source JavaScript lightbox and gallery for images
+and video, with native React, Vue and Angular packages built on one
+shared core, no dependencies, and every feature outside the core shipped
+as an opt-in plugin. This page is the reference for the numbers; the
+figures that come from the build are measured when the site is built, so
+they match the version in the heading below.</p>
+<h2 id="what-is-the-current-version">What is the current version?</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-wrap"><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Version</td><td>3.0.0</td></tr><tr><td>First 3.0 release</td><td>9 October 2026</td></tr><tr><td>Packages</td><td><code>lightgallery</code>, <code>@lightgallery/<wbr/>headless</code>, <code>@lightgallery/<wbr/>react</code>, <code>@lightgallery/<wbr/>vue</code>, <code>@lightgallery/<wbr/>angular</code></td></tr><tr><td>Versioning</td><td>The five packages always ship together under one version number</td></tr><tr><td>Started</td><td>2014, as a jQuery plugin; dependency-free since version 2</td></tr><tr><td>Language</td><td>TypeScript, with type declarations in every package</td></tr></tbody></table></div>
+<h2 id="how-big-is-lightgallery">How big is lightGallery?</h2>
+<p>The core is the lightbox itself. Thumbnails, zoom, video and the rest
+are plugins with their own entry points, so a gallery pays only for the
+features it imports. A typical image gallery with thumbnails and zoom is
+the core plus two plugins, about 30 KB of JavaScript gzipped.</p>
+<h3 id="core-size">Core</h3> <table> <thead><tr><th>File</th><th>Minified and gzipped</th></tr></thead> <tbody> <tr><td>Core script (lightgallery.min.js)</td><td>18.6 KB</td></tr><tr><td>Core stylesheet (lightgallery.css)</td><td>2.7 KB</td></tr> </tbody> </table> <h3 id="plugin-sizes">Plugins</h3> <p>Each plugin is a separate entry point; only the ones you import reach the bundle.</p> <table> <thead><tr><th>Plugin</th><th>Minified and gzipped</th></tr></thead> <tbody> <tr><td>Thumbnails</td><td>4.6 KB</td></tr><tr><td>Zoom</td><td>7.1 KB</td></tr><tr><td>Video</td><td>2.9 KB</td></tr><tr><td>Autoplay</td><td>1.7 KB</td></tr><tr><td>Fullscreen</td><td>1.1 KB</td></tr><tr><td>Share</td><td>3.0 KB</td></tr><tr><td>Hash</td><td>1.3 KB</td></tr><tr><td>Rotate</td><td>2.2 KB</td></tr><tr><td>Pager</td><td>0.9 KB</td></tr><tr><td>Comments</td><td>2.1 KB</td></tr><tr><td>Medium zoom</td><td>0.8 KB</td></tr><tr><td>Relative caption</td><td>0.8 KB</td></tr><tr><td>Vimeo thumbnails</td><td>0.7 KB</td></tr><tr><td>Justified layout</td><td>2.4 KB</td></tr><tr><td>Origin crop</td><td>3.6 KB</td></tr> </tbody> </table> <h3 id="framework-package-sizes">Framework packages</h3> <p>
+The main entry of each package, minified and gzipped, excluding the framework itself.
+    The React, Vue and Angular packages include the headless core they are built on.
+</p> <table> <thead><tr><th>Package</th><th>Minified and gzipped</th></tr></thead> <tbody> <tr><td>@lightgallery/headless</td><td>14.8 KB</td></tr><tr><td>@lightgallery/react</td><td>13.4 KB</td></tr><tr><td>@lightgallery/vue</td><td>15.1 KB</td></tr><tr><td>@lightgallery/angular</td><td>24.3 KB</td></tr> </tbody> </table>
+<h2 id="what-does-it-depend-on">What does it depend on?</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-wrap"><table><thead><tr><th>Package</th><th>Runtime dependencies</th></tr></thead><tbody><tr><td><code>lightgallery</code></td><td>None</td></tr><tr><td><code>@lightgallery/<wbr/>headless</code></td><td>None</td></tr><tr><td><code>@lightgallery/<wbr/>react</code></td><td><code>@lightgallery/<wbr/>headless</code></td></tr><tr><td><code>@lightgallery/<wbr/>vue</code></td><td><code>@lightgallery/<wbr/>headless</code></td></tr><tr><td><code>@lightgallery/<wbr/>angular</code></td><td><code>@lightgallery/<wbr/>headless</code>, <code>tslib</code>, and the Angular CDK as a peer</td></tr></tbody></table></div>
+<p>jQuery is not required anywhere. The stylesheets come from the
+<code>lightgallery</code> package and are shared by every binding.</p>
+<h2 id="which-frameworks-and-versions-does-it-support">Which frameworks and versions does it support?</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-wrap"><table><thead><tr><th>Package</th><th>Framework range</th><th>Server rendering</th></tr></thead><tbody><tr><td><code>lightgallery</code></td><td>Plain JavaScript or TypeScript, ES module and UMD builds, CDN script tags</td><td>Markup renders on the server; the gallery initialises in the browser</td></tr><tr><td><code>@lightgallery/<wbr/>react</code></td><td>React 18 and 19</td><td>Yes: trigger grids render on the server, the lightbox mounts after hydration, no dynamic import needed</td></tr><tr><td><code>@lightgallery/<wbr/>vue</code></td><td>Vue 3.4 and later</td><td>Yes, including Nuxt</td></tr><tr><td><code>@lightgallery/<wbr/>angular</code></td><td>Angular 21 and 22, standalone components, signal inputs, zoneless</td><td>Yes, including Angular SSR with hydration</td></tr><tr><td><code>@lightgallery/<wbr/>headless</code></td><td>Any framework: the state machine, settings, gesture, zoom and thumbnail maths with no DOM</td><td>Not applicable</td></tr></tbody></table></div>
+<p>Node 18 or later is required for the build tooling; the browser bundles
+have no Node requirement.</p>
+<h2 id="which-browsers-does-it-run-in">Which browsers does it run in?</h2>
+<p>Current evergreen browsers: Chrome, Edge, Firefox and Safari on desktop,
+Safari on iOS and Chrome on Android. The builds target ES2017 and run
+without transpiling or polyfills. Internet Explorer is not supported.</p>
+<h2 id="what-media-does-it-show">What media does it show?</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>How</th></tr></thead><tbody><tr><td>Images</td><td><code>src</code>, <code>srcset</code> and <code>sizes</code>, and <code>&lt;picture&gt;</code> sources for art direction and format negotiation</td></tr><tr><td>YouTube, Vimeo and Wistia</td><td>By URL. Provider slides load as a poster facade; the provider iframe is created only when the visitor presses play. YouTube uses the privacy-enhanced no-cookie host by default</td></tr><tr><td>HTML5 video</td><td>MP4, WebM and other formats the browser plays, with poster images</td></tr><tr><td>Iframes</td><td>Any page, map or PDF viewer</td></tr><tr><td>Inline HTML</td><td>Any markup, as a slide</td></tr><tr><td>Dynamic content</td><td>Slides built from a JavaScript array, added and removed while the gallery is open</td></tr></tbody></table></div>
+<h2 id="how-much-of-the-api-is-there">How much of the API is there?</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-wrap"><table><thead><tr><th></th><th>Count</th></tr></thead><tbody><tr><td>Settings</td><td>158, across the core and 15 plugins</td></tr><tr><td>Events</td><td>22</td></tr><tr><td>Methods</td><td>8</td></tr><tr><td>Plugins</td><td>15</td></tr><tr><td>Slide transitions</td><td>20 and more, switched with one setting</td></tr></tbody></table></div>
+<p>The <a href="/docs/settings/">settings</a>, <a href="/docs/events/">events</a> and
+<a href="/docs/methods/">methods</a> references are generated from the source, and
+the same data is served as JSON at <code>/api/settings.json</code>,
+<code>/api/events.json</code> and <code>/api/methods.json</code>.</p>
+<h2 id="is-it-accessible">Is it accessible?</h2>
+<p>The open gallery is a modal dialog with <code>role=&quot;dialog&quot;</code> and
+<code>aria-modal</code>, focus moves into it on open, Tab is trapped while it is
+open and focus returns to the trigger on close. Slide changes are
+announced to screen readers, the controls are labelled and translatable,
+and <code>prefers-reduced-motion</code> disables the animations. All four packages
+run axe checks against WCAG 2.0 and 2.1 A and AA rules in continuous
+integration. The <a href="/docs/accessibility/">accessibility page</a> has the full
+contract.</p>
+<h2 id="is-lightgallery-free">Is lightGallery free?</h2>
+<p>Yes. lightGallery is free and open source under the GPLv3, for personal
+and commercial projects alike, as long as the project is distributed
+under GPLv3-compatible terms.</p>
+<h2 id="how-much-does-the-commercial-license-cost">How much does the commercial license cost?</h2>
+<p>A project that keeps its source proprietary needs a commercial license.
+It is a one-time payment, the code and every plugin are the same, and
+there are no feature gates.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-wrap"><table><thead><tr><th>License</th><th>Price (USD, one-time)</th><th>Covers</th></tr></thead><tbody><tr><td>Hobby</td><td>48</td><td>One developer, one product, not for a product that is sold</td></tr><tr><td>Team</td><td>118</td><td>Up to eight developers, up to five products, products for sale allowed</td></tr><tr><td>Organization</td><td>188</td><td>Unlimited developers and products, products for sale allowed</td></tr><tr><td>Extended</td><td>239</td><td>Unlimited developers, one product that itself produces copies, such as an SDK, site builder, theme or template</td></tr></tbody></table></div>
+<p>Open-source projects under a GPLv3-compatible license can request a free
+key. The <a href="/license/">license page</a> has the purchase links and the full
+terms.</p>
+<h2 id="does-a-version-2-license-cover-version-3">Does a version 2 license cover version 3?</h2>
+<p>No. A license covers every release within the major version it was
+bought for, so a 2.x license covers all 2.x releases and version 3 needs
+a new license. Licenses bought in the six months before the 3.0 release
+can be exchanged by email. Version 3 keys start with <code>LIG</code>; an older key
+keeps the gallery working and logs a console warning.</p>
+<h2 id="how-widely-is-it-used">How widely is it used?</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-wrap"><table><thead><tr><th></th><th>Figure</th></tr></thead><tbody><tr><td>npm downloads of <code>lightgallery</code></td><td>About 90,000 a week in October 2026</td></tr><tr><td>GitHub</td><td>About 7,000 stars</td></tr><tr><td>CDN</td><td>Served by jsDelivr, cdnjs and unpkg</td></tr></tbody></table></div>
+<h2 id="where-do-i-get-it">Where do I get it?</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-wrap"><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>npm</td><td><code>npm install lightgallery</code>, or the framework package plus <code>lightgallery</code> for the stylesheets</td></tr><tr><td>CDN</td><td><code>https:/<wbr/>/<wbr/>cdn.jsdelivr.net/<wbr/>npm/<wbr/>lightgallery@3/<wbr/>lightgallery.min.js</code> and <code>/<wbr/>css/<wbr/>lightgallery.css</code>, the same paths on cdnjs and unpkg; <code>@3</code> follows the latest 3.x release</td></tr><tr><td>Source</td><td><a href="https://github.com/sachinchoolur/lightGallery">github.com/sachinchoolur/lightGallery</a></td></tr><tr><td>For coding agents</td><td><a href="/llms.txt">llms.txt</a>, a markdown twin of every docs page at its URL plus <code>index.md</code>, and the <a href="https://github.com/sachinchoolur/lightGallery/tree/main/skills/lightgallery">agent skill</a></td></tr></tbody></table></div>
+<p>The <a href="/docs/getting-started/">getting started guide</a> takes it from here.</p>   <p class="edit-page"> <a href="https://github.com/sachinchoolur/lightGallery/tree/HEAD/site-astro/src/content/docs/facts.mdx"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path> </svg>Edit this page on GitHub
+</a> </p> <nav class="page-nav" aria-label="Previous and next page"> <a class="page-nav-card page-nav-prev" href="/docs/vue-image-video-gallery/"> <span class="page-nav-arrow" aria-hidden="true">
+&larr;
+</span> <span class="page-nav-text"> <span class="page-nav-dir">Previous</span> <strong>Vue</strong> </span> </a> <a class="page-nav-card page-nav-next" href="/docs/angular-image-video-gallery/"> <span class="page-nav-text"> <span class="page-nav-dir">Next</span> <strong>Angular</strong> </span> <span class="page-nav-arrow" aria-hidden="true">
+&rarr;
+</span> </a> </nav> </main> <div class="col-lg-2 col-xl-2 docs-sidebar"> <nav class="docs-links" aria-label="Main navigation"> <h3>API Docs</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/getting-started/">Get started</a></li><li><a class="docs-link" href="/docs/settings/">Settings</a></li><li><a class="docs-link" href="/docs/events/">Events</a></li><li><a class="docs-link" href="/docs/methods/">Methods</a></li><li><a class="docs-link" href="/docs/dynamic-variables/">Dynamic variables</a></li><li><a class="docs-link" href="/docs/attributes/">Attributes</a></li><li><a class="docs-link" href="/docs/react-image-video-gallery/">React</a></li><li><a class="docs-link active" href="/docs/facts/">Facts and figures</a></li><li><a class="docs-link" href="/docs/vue-image-video-gallery/">Vue</a></li><li><a class="docs-link" href="/docs/angular-image-video-gallery/">Angular</a></li><li><a class="docs-link" href="/docs/license/">License</a></li><li><a class="docs-link" href="/docs/migration/">Migration</a></li><li><a class="docs-link" href="/docs/troubleshooting/">Troubleshooting</a></li><li><a class="docs-link" href="/docs/creating-plugins/">Creating plugins</a></li></ul><h3>Frameworks</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/headless/">@lightgallery/headless</a></li><li><a class="docs-link" href="/docs/react/">@lightgallery/react</a></li><li><a class="docs-link" href="/docs/vue/">@lightgallery/vue</a></li><li><a class="docs-link" href="/docs/angular/">@lightgallery/angular</a></li></ul><h3>Features</h3><ul class="list-unstyled"><li><a class="docs-link" href="/docs/justified-layout/">Justified layout</a></li><li><a class="docs-link" href="/docs/localization-rtl/">Localization &amp; RTL</a></li><li><a class="docs-link" href="/docs/virtualization/">Virtualization</a></li><li><a class="docs-link" href="/docs/video-facades/">Video facades</a></li><li><a class="docs-link" href="/docs/accessibility/">Accessibility</a></li><li><a class="docs-link" href="/docs/web-share/">Web Share</a></li><li><a class="docs-link" href="/docs/hash-drivers/">Hash drivers</a></li><li><a class="docs-link" href="/docs/responsive-loading/">Responsive loading</a></li><li><a class="docs-link" href="/docs/thumbnail-scrubbing/">Thumbnail scrubbing</a></li><li><a class="docs-link" href="/docs/custom-icons/">Custom icons</a></li></ul> </nav> </div> <nav class="docs-toc d-none d-xl-block col-xl-2" aria-label="Secondary navigation"> <div class="page-links"> <h3>On this page</h3> <nav id="TableOfContents"> <ul> <li> <a href="#what-is-the-current-version"> What is the current version? </a> </li><li> <a href="#how-big-is-lightgallery"> How big is lightGallery? </a> </li><li> <a href="#what-does-it-depend-on"> What does it depend on? </a> </li><li> <a href="#which-frameworks-and-versions-does-it-support"> Which frameworks and versions does it support? </a> </li><li> <a href="#which-browsers-does-it-run-in"> Which browsers does it run in? </a> </li><li> <a href="#what-media-does-it-show"> What media does it show? </a> </li><li> <a href="#how-much-of-the-api-is-there"> How much of the API is there? </a> </li><li> <a href="#is-it-accessible"> Is it accessible? </a> </li><li> <a href="#is-lightgallery-free"> Is lightGallery free? </a> </li><li> <a href="#how-much-does-the-commercial-license-cost"> How much does the commercial license cost? </a> </li><li> <a href="#does-a-version-2-license-cover-version-3"> Does a version 2 license cover version 3? </a> </li><li> <a href="#how-widely-is-it-used"> How widely is it used? </a> </li><li> <a href="#where-do-i-get-it"> Where do I get it? </a> </li> </ul> </nav> </div> </nav> </div> </div> <script type="module">document.querySelectorAll(".agent-prompt pre").forEach(e=>{const t=document.createElement("button");t.type="button",t.className="page-tools-btn agent-prompt-copy",t.textContent="Copy prompt",t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(e.textContent?.trim()??""),t.textContent="Copied"}catch{t.textContent="Copy failed"}setTimeout(()=>{t.textContent="Copy prompt"},1800)}),e.parentElement?.insertBefore(t,e)});</script> <script type="module">const a=[...document.querySelectorAll('#TableOfContents a[href^="#"]')];if(a.length&&"IntersectionObserver"in window){const o=new Map(a.map(e=>[e.getAttribute("href").slice(1),e])),s=[...o.keys()].map(e=>document.getElementById(e)).filter(e=>!!e);let i;const c=e=>{const t=o.get(e);!t||t===i||(i?.classList.remove("active"),t.classList.add("active"),i=t)},r=new Set,d=new IntersectionObserver(e=>{for(const n of e)n.isIntersecting?r.add(n.target.id):r.delete(n.target.id);const t=s.find(n=>r.has(n.id));t&&c(t.id)},{rootMargin:"-72px 0px -70% 0px",threshold:0});s.forEach(e=>d.observe(e)),s[0]&&c(s[0].id)}</script>  <footer class="footer"> <div class="container-xxl"> <div class="footer-grid"> <div class="footer-brandcol"> <a class="footer-brand" href="/">lightGallery</a> <p class="footer-tagline">An image and video lightbox gallery for the modern web.</p> <a class="footer-gh" href="https://github.com/sachinchoolur/lightGallery" aria-label="GitHub" target="_blank" rel="noopener"> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg> </a> </div> <nav class="footer-col" aria-label="Components"> <h2 class="footer-h">Components</h2> <ul class="footer-list"> <li> <a href="/docs/react-image-video-gallery/">React</a> </li><li> <a href="/docs/vue-image-video-gallery/">Vue.js</a> </li><li> <a href="/docs/angular-image-video-gallery/">Angular</a> </li><li> <a href="/jquery-to-js-converter/">jQuery to JavaScript converter</a> </li> </ul> </nav><nav class="footer-col" aria-label="Docs"> <h2 class="footer-h">Docs</h2> <ul class="footer-list"> <li> <a href="/docs/getting-started/">Get started</a> </li><li> <a href="/docs/settings/">Settings</a> </li><li> <a href="/docs/events/">Events</a> </li><li> <a href="/docs/methods/">Methods</a> </li><li> <a href="/blog/">Blog</a> </li> </ul> </nav><nav class="footer-col" aria-label="Demos"> <h2 class="footer-h">Demos</h2> <ul class="footer-list"> <li> <a href="/demos/thumbnails/">Thumbnails</a> </li><li> <a href="/demos/dynamic-mode/">Dynamic</a> </li><li> <a href="/demos/carousel-gallery/">Carousel</a> </li><li> <a href="/demos/video-gallery/">Video</a> </li><li> <a href="/demos/transitions/">Transitions</a> </li> </ul> </nav><nav class="footer-col" aria-label="Social"> <h2 class="footer-h">Social</h2> <ul class="footer-list"> <li> <a href="https://github.com/sachinchoolur/lightGallery">GitHub</a> </li><li> <a href="https://x.com/SachinNeravath" target="_blank" rel="noopener">X</a> </li><li> <a href="https://stackblitz.com/@sachinchoolur" target="_blank" rel="noopener">StackBlitz</a> </li><li> <a href="https://docs.google.com/forms/d/e/1FAIpQLSfcxknmKJAF9btnCg8HugFadxyWRZ3TgC0ZKxOtIjdaGfqxIw/viewform?usp=pp_url&entry.34608024=Yes" target="_blank" rel="noopener">Write a review</a> </li> </ul> </nav> </div> <div class="footer-bottom"> <span>lightGallery. Actively maintained since 2014, 12+ years and counting.</span> <span><a href="/license/">Free under GPLv3, commercial license available</a></span> <span><a href="/credits/">Credits</a></span> </div> </div> </footer> <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.Dyw8W9St.js"></script> </body> </html>

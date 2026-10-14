@@ -1,0 +1,240 @@
+# Image gallery with zoom
+
+> JavaScript image gallery with zoom: pinch, double tap, zoom buttons and actual size, drag to pan, rotate and flip. Live demo plus the code for vanilla JS, React, Vue and Angular.
+
+The zoom plugin adds every way of zooming an image in a lightbox: pinch on touch screens, double tap or double click for actual size, zoom in and zoom out buttons, and drag to pan once zoomed. The rotate plugin adds rotate and flip beside it. All the settings are in the [zoom](https://www.lightgalleryjs.com/docs/settings/#zoom-plugin) and [rotate](https://www.lightgalleryjs.com/docs/settings/#rotate-plugin) references.
+
+Canonical page: https://www.lightgalleryjs.com/demos/image-zoom/
+
+#### Demo
+
+Open a photo and zoom in: pinch on a phone, double click on a desktop, or
+use the zoom buttons in the toolbar. Drag the zoomed image to pan.
+
+_Live demo: https://www.lightgalleryjs.com/demos/image-zoom/_
+
+**JavaScript**
+
+**HTML**
+
+```html
+<div id="image-zoom-gallery">
+    <a href="img/img1.jpg" data-lg-size="1600-2400">
+        <img src="img/thumb1.jpg" alt="Close-up of an eye" />
+    </a>
+    <a href="img/img2.jpg" data-lg-size="1600-1067">
+        <img src="img/thumb2.jpg" alt="Dew on a leaf" />
+    </a>
+    <!-- more items -->
+</div>
+```
+
+**JavaScript**
+
+```js
+import lightGallery from 'lightgallery';
+import lgRotate from 'lightgallery/plugins/rotate';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+
+lightGallery(document.getElementById('image-zoom-gallery'), {
+    plugins: [lgZoom, lgRotate, lgThumbnail],
+    // Zoom in and zoom out buttons next to the actual-size button; the
+    // library shows only actual size by default.
+    showZoomInOutIcons: true,
+    actualSize: true,
+    // How much each zoom-in or zoom-out step changes the scale.
+    scale: 1,
+});
+```
+
+**React**
+
+```tsx
+import { LightGallery, LightGalleryItem } from '@lightgallery/react';
+import Rotate from '@lightgallery/react/plugins/rotate';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Zoom from '@lightgallery/react/plugins/zoom';
+
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Close-up of an eye',
+        lgSize: '1600-2400',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Dew on a leaf',
+        lgSize: '1600-1067',
+    },
+];
+
+// Zoom in and zoom out buttons next to the actual-size button; the
+// library shows only actual size by default. `scale` is how much each
+// step changes the scale.
+<LightGallery
+    plugins={[Zoom, Rotate, Thumbnail]}
+    zoom={{ showZoomInOutIcons: true, actualSize: true, scale: 1 }}
+>
+    {items.map((item) => (
+        <LightGalleryItem key={item.src} item={item} href={item.src}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+**Vue**
+
+```vue
+<script setup>
+import { LightGallery, LgItem } from '@lightgallery/vue';
+import Rotate from '@lightgallery/vue/plugins/rotate';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Zoom from '@lightgallery/vue/plugins/zoom';
+
+const plugins = [Zoom, Rotate, Thumbnail];
+const items = [
+    {
+        src: 'img/img1.jpg',
+        thumb: 'img/thumb1.jpg',
+        alt: 'Close-up of an eye',
+        lgSize: '1600-2400',
+    },
+    {
+        src: 'img/img2.jpg',
+        thumb: 'img/thumb2.jpg',
+        alt: 'Dew on a leaf',
+        lgSize: '1600-1067',
+    },
+];
+</script>
+
+<template>
+    <!-- Zoom in and zoom out buttons next to the actual-size button; the
+         library shows only actual size by default. `scale` is how much
+         each step changes the scale. -->
+    <LightGallery
+        :plugins="plugins"
+        :zoom="{ showZoomInOutIcons: true, actualSize: true, scale: 1 }"
+    >
+        <LgItem v-for="item of items" :key="item.src" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+**Angular**
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withRotate } from '@lightgallery/angular/plugins/rotate';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withZoom } from '@lightgallery/angular/plugins/zoom';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.src) {
+                <a [href]="item.src" [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // Zoom in and zoom out buttons next to the actual-size button; the
+    // library shows only actual size by default. `scale` is how much
+    // each step changes the scale.
+    features = [
+        withZoom({ showZoomInOutIcons: true, actualSize: true, scale: 1 }),
+        withRotate(),
+        withThumbnail(),
+    ];
+
+    items: LgGalleryItem[] = [
+        {
+            src: 'img/img1.jpg',
+            thumb: 'img/thumb1.jpg',
+            alt: 'Close-up of an eye',
+            lgSize: '1600-2400',
+        },
+        {
+            src: 'img/img2.jpg',
+            thumb: 'img/thumb2.jpg',
+            alt: 'Dew on a leaf',
+            lgSize: '1600-1067',
+        },
+    ];
+}
+```
+
+### How zooming works
+
+| Input | What happens |
+| --- | --- |
+| Pinch on a touch screen | Zooms around the point between the fingers; the image follows the fingers while they move |
+| Double tap, or double click with a mouse | Switches between the fitted size and the image's actual pixel size, centred on the tap |
+| Zoom in and zoom out buttons | Change the scale by `scale` per press; off by default, `showZoomInOutIcons` turns them on |
+| Actual size button | Same as a double tap, from the toolbar |
+| Drag with one finger or the mouse | Pans a zoomed image; it springs back inside its edges when released |
+| Pinch inwards on an un-zoomed image | Closes the gallery, like a photos app; `pinchToClose` turns it off |
+| Rotate and flip buttons | From the rotate plugin; zoom keeps working on a rotated image |
+| Moving to another slide | Resets the zoom, so every slide opens fitted to the screen |
+
+The toolbar buttons are ordinary buttons, so a keyboard user reaches them
+with Tab and presses them with Enter or Space.
+
+Zoom works on image slides. Video and iframe slides keep their own
+controls and the zoom buttons do nothing on them.
+
+### Settings
+
+Zoom plugin settings, passed at the top level of the settings object in
+vanilla JavaScript and as the `zoom` prop or `withZoom()` options in the
+framework packages:
+
+| Setting | Default | Meaning |
+| --- | --- | --- |
+| `zoom` | `true` | Enables the plugin's zoom behaviour; `false` keeps the plugin loaded but inert |
+| `scale` | `1` | Amount added to or removed from the scale by each zoom-in or zoom-out step |
+| `infiniteZoom` | `true` | Lets zoom-in go past the image's actual pixel size |
+| `actualSize` | `true` | Shows the actual-size button |
+| `showZoomInOutIcons` | `false` | Shows the zoom-in and zoom-out buttons |
+| `enableZoomAfter` | `300` | Milliseconds after the slide transition before zoom styles are applied, so an opening animation and the zoom transforms never fight |
+
+The core setting `pinchToClose` (default `true`) is what makes an inward
+pinch close the gallery; it needs the zoom plugin and `closable`.
+
+Rotate plugin settings: `rotate`, `rotateSpeed` (default `400` ms),
+`rotateLeft`, `rotateRight`, `flipHorizontal` and `flipVertical`, each
+button on by default.
+
+### Does zoom need the image dimensions?
+
+No. Zoom works from the loaded image. The `data-lg-size` attribute
+(`lgSize` on an item) is for the open-from-thumbnail animation, which
+the [zoom from origin demo](/demos/zoom-from-origin/) covers, and the
+actual-size button uses the loaded image's natural size.
+
+### Can the zoomed image be larger than the file?
+
+Yes when `infiniteZoom` is on, which is the default; the browser scales
+the pixels up. For a product shot that must stay sharp when zoomed, serve
+the largest file you have as `src` and let [responsive
+loading](/docs/responsive-loading/) pick smaller variants for small
+screens.
+
+For a zoom that happens in place, without a lightbox, see the
+[Medium-style zoom demo](/demos/medium-zoom/).

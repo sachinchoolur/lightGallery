@@ -1,0 +1,266 @@
+# Mixed contents
+
+> Mixed content gallery demo: images, YouTube, Vimeo and HTML5 video and iframes together in one lightbox.
+
+Create beautiful galleries with images, HTML5 videos, external videos such as YouTube, Vimeo videos and iframes. You can mix all types of supported contents in the same gallery. lightGallery will automatically find the content type from source and create appropriate slides.
+
+Canonical page: https://www.lightgalleryjs.com/demos/mixed-contents/
+
+#### Demo
+
+**JavaScript**
+
+**HTML**
+
+```html
+<div id="gallery-mixed-content-demo">
+    <!-- Image -->
+
+    <a href="img/img1.jpg">
+        <img src="img/thumb1.jpg" />
+    </a>
+
+    <!-- YouTube Video --->
+    <a
+        data-lg-size="1280-720"
+        data-src="//www.youtube.com/watch?v=EIUJfXk3_3w"
+        data-poster="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+        data-sub-html="<h4>Puffin Hunts Fish To Feed Puffling | Blue Planet II | BBC Earth</h4><p>On the heels of Planet Earth II's record-breaking Emmy nominations, BBC America presents stunning visual soundscapes from the series' amazing habitats.</p>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg"
+        />
+    </a>
+
+    <!-- Vimeo Video --->
+    <a
+        data-lg-size="1280-720"
+        data-src="//vimeo.com/112836958"
+        data-poster="/images/demo/vimeo-video-poster.jpg"
+        data-sub-html="<h4>Nature</h4><p>Video by <a target='_blank' href='https://vimeo.com/charliekaye'>Charlie Kaye</a></p>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="/images/demo/vimeo-video-poster.jpg"
+        />
+    </a>
+
+    <!-- Wistia Video --->
+    <a
+        data-lg-size="1280-720"
+        data-src="https://private-sharing.wistia.com/medias/mwhrulrucj"
+        data-poster="/images/demo/wistia-video-poster.jpeg"
+        data-sub-html="<h4>Thank You!</h4><p> Sample Wistia video </p>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="/images/demo/wistia-video-poster.jpeg"
+        />
+    </a>
+
+    <!-- HTML5 Video --->
+    <a
+        data-lg-size="1280-720"
+        data-video='{"source": [{"src":"/videos/video1.mp4", "type":"video/mp4"}], "attributes": {"preload": false, "controls": true}}'
+        data-poster="/images/demo/html5-video-poster.jpg"
+        data-sub-html="<h4>'Peck Pocketed' by Kevin Herron | Disney Favorite</h4>"
+    >
+        <img
+            width="300"
+            height="100"
+            class="img-responsive"
+            src="/images/demo/html5-video-poster.jpg"
+        />
+    </a>
+</div>
+```
+
+**JavaScript**
+
+```js
+lightGallery(document.getElementById('gallery-mixed-content-demo'), {
+    plugins: [lgVideo],
+});
+```
+
+**React**
+
+```tsx
+import {
+    LightGallery,
+    LightGalleryItem,
+    type GalleryItem,
+} from '@lightgallery/react';
+import Thumbnail from '@lightgallery/react/plugins/thumbnail';
+import Video from '@lightgallery/react/plugins/video';
+
+// One gallery, a different kind of slide for each item: images, video
+// URLs and self-hosted video files are item fields rather than markup.
+const items: GalleryItem[] = [
+    // Image
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    // YouTube video
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        lgSize: '1280-720',
+    },
+    // Vimeo video
+    {
+        src: '//vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        lgSize: '1280-720',
+    },
+    // HTML5 video: no `src`; the files go in `video`.
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        lgSize: '1280-720',
+    },
+];
+
+// Images work without a plugin; video slides need Video.
+<LightGallery plugins={[Thumbnail, Video]}>
+    {items.map((item) => (
+        <LightGalleryItem key={item.thumb} item={item}>
+            <img src={item.thumb} alt={item.alt} />
+        </LightGalleryItem>
+    ))}
+</LightGallery>;
+```
+
+**Vue**
+
+```vue
+<script setup lang="ts">
+import { LightGallery, LgItem, type LgGalleryItem } from '@lightgallery/vue';
+import Thumbnail from '@lightgallery/vue/plugins/thumbnail';
+import Video from '@lightgallery/vue/plugins/video';
+
+// Images work without a plugin; video slides need Video.
+const plugins = [Thumbnail, Video];
+
+// One gallery, a different kind of slide for each item: images, video
+// URLs and self-hosted video files are item fields rather than markup.
+const items: LgGalleryItem[] = [
+    // Image
+    { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+    // YouTube video
+    {
+        src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+        poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+        thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+        alt: 'Puffin Hunts Fish To Feed Puffling',
+        lgSize: '1280-720',
+    },
+    // Vimeo video
+    {
+        src: '//vimeo.com/112836958',
+        poster: '/images/demo/vimeo-video-poster.jpg',
+        thumb: '/images/demo/vimeo-video-poster.jpg',
+        alt: 'Nature',
+        lgSize: '1280-720',
+    },
+    // HTML5 video: no `src`; the files go in `video`.
+    {
+        video: {
+            source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+            attributes: { preload: false, controls: true },
+        },
+        poster: '/images/demo/html5-video-poster.jpg',
+        thumb: '/images/demo/html5-video-poster.jpg',
+        alt: 'Peck Pocketed',
+        lgSize: '1280-720',
+    },
+];
+</script>
+
+<template>
+    <LightGallery :plugins="plugins">
+        <LgItem v-for="item of items" :key="item.thumb" :item="item">
+            <img :src="item.thumb" :alt="item.alt" />
+        </LgItem>
+    </LightGallery>
+</template>
+```
+
+**Angular**
+
+```ts
+import { Component } from '@angular/core';
+import {
+    LgGalleryComponent,
+    LgGalleryItemDirective,
+    type LgGalleryItem,
+} from '@lightgallery/angular';
+import { withThumbnail } from '@lightgallery/angular/plugins/thumbnail';
+import { withVideo } from '@lightgallery/angular/plugins/video';
+
+@Component({
+    selector: 'app-gallery',
+    imports: [LgGalleryComponent, LgGalleryItemDirective],
+    template: `
+        <lg-gallery [features]="features">
+            @for (item of items; track item.thumb) {
+                <a [lgGalleryItem]="item">
+                    <img [src]="item.thumb" [alt]="item.alt" />
+                </a>
+            }
+        </lg-gallery>
+    `,
+})
+export class Gallery {
+    // Images work without a feature; video slides need withVideo().
+    features = [withThumbnail(), withVideo()];
+
+    // One gallery, a different kind of slide for each item: images, video
+    // URLs and self-hosted video files are item fields rather than markup.
+    items: LgGalleryItem[] = [
+        // Image
+        { src: 'img/img1.jpg', thumb: 'img/thumb1.jpg', alt: 'Mountains' },
+        // YouTube video
+        {
+            src: '//www.youtube.com/watch?v=EIUJfXk3_3w',
+            poster: 'https://img.youtube.com/vi/EIUJfXk3_3w/maxresdefault.jpg',
+            thumb: 'https://img.youtube.com/vi/EIUJfXk3_3w/mqdefault.jpg',
+            alt: 'Puffin Hunts Fish To Feed Puffling',
+            lgSize: '1280-720',
+        },
+        // Vimeo video
+        {
+            src: '//vimeo.com/112836958',
+            poster: '/images/demo/vimeo-video-poster.jpg',
+            thumb: '/images/demo/vimeo-video-poster.jpg',
+            alt: 'Nature',
+            lgSize: '1280-720',
+        },
+        // HTML5 video: no `src`; the files go in `video`.
+        {
+            video: {
+                source: [{ src: '/videos/video1.mp4', type: 'video/mp4' }],
+                attributes: { preload: false, controls: true },
+            },
+            poster: '/images/demo/html5-video-poster.jpg',
+            thumb: '/images/demo/html5-video-poster.jpg',
+            alt: 'Peck Pocketed',
+            lgSize: '1280-720',
+        },
+    ];
+}
+```
