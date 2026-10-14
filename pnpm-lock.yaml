@@ -831,6 +831,9 @@ importers:
       '@kelviq/react-promotions-ui':
         specifier: 0.0.2
         version: 0.0.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@kelviq/react-sdk':
+        specifier: 2.1.1
+        version: 2.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@lightgallery/headless':
         specifier: workspace:*
         version: link:../packages/headless
@@ -3140,6 +3143,12 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@kelviq/react-sdk@2.1.1':
+    resolution: {integrity: sha512-IUB+p13PMGE2W3A2uMTY8sHiQStUQ6DwwCKST8UuKbyqRa5/H9zq2fPssZUEMN+NAc04QM3ln7NQuzbAW7V5Sg==}
+    peerDependencies:
+      react: ^19.0.0
+      react-dom: ^19.0.0
 
   '@kwsites/file-exists@1.1.1':
     resolution: {integrity: sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw==}
@@ -20803,9 +20812,7 @@ snapshots:
       jest-runner: 24.9.0
       jest-runtime: 24.9.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@jest/test-sequencer@26.6.3(ts-node@9.1.1(typescript@4.7.4))':
     dependencies:
@@ -20937,6 +20944,11 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.5
 
   '@kelviq/react-promotions-ui@0.0.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@kelviq/react-sdk@2.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -29538,7 +29550,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy-middleware@0.19.1(debug@4.4.3(supports-color@6.1.0))(supports-color@6.1.0):
+  http-proxy-middleware@0.19.1(debug@4.4.3)(supports-color@6.1.0):
     dependencies:
       http-proxy: 1.18.1(debug@4.4.3)
       is-glob: 4.0.3
@@ -39389,7 +39401,7 @@ snapshots:
       del: 4.1.1
       express: 4.22.2(supports-color@6.1.0)
       html-entities: 1.4.0
-      http-proxy-middleware: 0.19.1(debug@4.4.3(supports-color@6.1.0))(supports-color@6.1.0)
+      http-proxy-middleware: 0.19.1(debug@4.4.3)(supports-color@6.1.0)
       import-local: 2.0.0
       internal-ip: 4.3.0
       ip: 1.1.9

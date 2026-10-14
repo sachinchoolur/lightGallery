@@ -89,6 +89,18 @@ body.license {
             letter-spacing: -0.8px;
             color: $gray-800;
         }
+        // The list price, struck through on its own line above a lower
+        // localized price, so long currency amounts never push the
+        // "/ lifetime" label onto a second line.
+        .plans-amount-list {
+            display: block;
+            margin-bottom: 2px;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 20px;
+            color: $gray-400;
+            text-decoration-thickness: 2px;
+        }
         .plans-per {
             font-size: 14px;
             color: $gray-500;
